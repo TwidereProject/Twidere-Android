@@ -53,11 +53,11 @@ abstract class GetActivitiesTask(
         val cr = context.contentResolver
         val result = ArrayList<TwitterListResponse<Activity>>()
         val loadItemLimit = preferences[loadItemLimitKey]
-        var saveReadPosition = false
-        for (i in accountKeys.indices) {
-            val accountKey = accountKeys[i]
+        val saveReadPosition = BooleanArray(accountKeys.size)
+        accountKeys.forEachIndexed { i, accountKey ->
             val noItemsBefore = DataStoreUtils.getActivitiesCount(context, contentUri, accountKey) <= 0
-            val credentials = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?: continue
+            val credentials = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey,
+                    true) ?: return@forEachIndexed
             val microBlog = credentials.newMicroBlogInstance(context = context, cls = MicroBlog::class.java)
             val paging = Paging()
             paging.count(loadItemLimit)
@@ -79,7 +79,7 @@ abstract class GetActivitiesTask(
                     paging.sinceId(sinceId)
                     if (maxIds == null || maxId == null) {
                         paging.setLatestResults(true)
-                        saveReadPosition = true
+                        saveReadPosition[i] = true
                     }
                 }
             }
@@ -88,8 +88,8 @@ abstract class GetActivitiesTask(
                 val activities = getActivities(microBlog, credentials, paging)
                 val storeResult = storeActivities(cr, loadItemLimit, credentials, noItemsBefore,
                         activities, sinceId, maxId, false)
-                if (saveReadPosition) {
-                    setLocalReadPosition(accountKey, credentials, microBlog)
+                if (saveReadPosition[i]) {
+
                 }
                 errorInfoStore.remove(errorInfoKey, accountKey)
                 if (storeResult != 0) {
@@ -106,6 +106,7 @@ abstract class GetActivitiesTask(
                 result.add(TwitterListResponse(accountKey, e))
             }
         }
+        setLocalReadPosition(accountKeys, saveReadPosition)
         return result
     }
 
@@ -124,7 +125,7 @@ abstract class GetActivitiesTask(
     @Throws(MicroBlogException::class)
     protected abstract fun getActivities(twitter: MicroBlog, details: AccountDetails, paging: Paging): ResponseList<Activity>
 
-    protected abstract fun setLocalReadPosition(accountKey: UserKey, details: AccountDetails, twitter: MicroBlog)
+    protected abstract fun setLocalReadPosition(accountKeys: Array<UserKey>, saveReadPosition: BooleanArray)
 
     private fun storeActivities(cr: ContentResolver, loadItemLimit: Int, details: AccountDetails,
             noItemsBefore: Boolean, activities: ResponseList<Activity>,

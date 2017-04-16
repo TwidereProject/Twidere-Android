@@ -54,8 +54,7 @@ class GetHomeTimelineTask(context: Context) : GetStatusesTask(context) {
         val syncManager = timelineSyncManagerFactory.get() ?: return
         try {
             val tag = Utils.getReadPositionTagWithAccount(ReadPositionTag.HOME_TIMELINE, accountKey)
-            val positionKey = syncManager.blockingGetPosition(ReadPositionTag.HOME_TIMELINE, tag)
-            readStateManager
+            syncManager.blockingGetPosition(ReadPositionTag.HOME_TIMELINE, tag)
         }catch (e: IOException) {
 
         }

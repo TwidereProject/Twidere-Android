@@ -57,6 +57,9 @@ public class UpdateStatusActionExtras implements ActionExtras {
     @JsonField(name = "extended_reply_mode")
     @ParcelableThisPlease
     boolean extendedReplyMode;
+    @JsonField(name = "editing_text")
+    @ParcelableThisPlease
+    String editingText;
 
     public ParcelableStatus getInReplyToStatus() {
         return inReplyToStatus;
@@ -112,6 +115,14 @@ public class UpdateStatusActionExtras implements ActionExtras {
 
     public void setExtendedReplyMode(final boolean extendedReplyMode) {
         this.extendedReplyMode = extendedReplyMode;
+    }
+
+    public String getEditingText() {
+        return editingText;
+    }
+
+    public void setEditingText(final String editingText) {
+        this.editingText = editingText;
     }
 
     @Override

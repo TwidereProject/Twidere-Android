@@ -33,17 +33,18 @@ import java.util.*
 
 abstract class TimelineSyncManager(val context: Context) {
 
-    private val internalMap = ArrayMap<TimelineKey, Long>()
+    private val stagedCommits = ArrayMap<TimelineKey, Long>()
+    private val cachedPositions = ArrayMap<TimelineKey, Long>()
 
     fun setPosition(@ReadPositionTag positionTag: String, currentTag: String?, positionKey: Long) {
-        internalMap[TimelineKey(positionTag, currentTag)] = positionKey
+        stagedCommits[TimelineKey(positionTag, currentTag)] = positionKey
     }
 
     fun commit() {
-        val data = internalMap.map { (key, value) ->
+        val data = stagedCommits.map { (key, value) ->
             PositionData(key.positionTag, key.currentTag, value)
         }.toTypedArray()
-        internalMap.clear()
+        stagedCommits.clear()
         performSync(data)
     }
 
@@ -78,6 +79,5 @@ abstract class TimelineSyncManager(val context: Context) {
     companion object {
         fun newFactory(): Factory = ServiceLoader.load(Factory::class.java).firstOrNull() ?: DummyFactory
     }
-
 
 }

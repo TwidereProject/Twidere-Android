@@ -102,6 +102,9 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
     protected open val readPositionTag: String?
         get() = null
 
+    protected open val timelineSyncTag: String?
+        get() = null
+
     protected open val readPositionTagWithArguments: String?
         get() = readPositionTag
 
@@ -477,8 +480,10 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
                 val tag = Utils.getReadPositionTagWithAccount(it, accountKey)
                 readStateManager.setPosition(tag, readPosition)
 
-                timelineSyncManager?.setPosition(positionTag, tag, status.position_key)
             }
+        }
+        timelineSyncTag?.let { syncTag ->
+            timelineSyncManager?.setPosition(positionTag, syncTag, status.position_key)
         }
         currentReadPositionTag?.let {
             readStateManager.setPosition(it, readPosition, true)

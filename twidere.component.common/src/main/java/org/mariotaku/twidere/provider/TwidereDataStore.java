@@ -24,6 +24,7 @@ package org.mariotaku.twidere.provider;
 import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.model.DraftTableInfo;
 import org.mariotaku.twidere.model.FiltersData$BaseItemTableInfo;
@@ -588,6 +589,7 @@ public interface TwidereDataStore {
         String TABLE_NAME = "statuses";
         String CONTENT_PATH = TABLE_NAME;
 
+        @NonNull
         Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
 
         /**
@@ -802,6 +804,7 @@ public interface TwidereDataStore {
             String CONTENT_PATH = "activities_about_me";
             String TABLE_NAME = "activities_about_me";
 
+            @NonNull
             Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
         }
 

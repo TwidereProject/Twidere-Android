@@ -19,13 +19,13 @@
 
 package org.mariotaku.twidere.fragment
 
-import android.net.Uri
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.TwidereConstants.NOTIFICATION_ID_HOME_TIMELINE
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_EXTRAS
 import org.mariotaku.twidere.model.ParameterizedExpression
 import org.mariotaku.twidere.model.RefreshTaskParam
+import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.tab.extra.HomeTabExtras
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.DataStoreUtils
@@ -37,17 +37,18 @@ import java.util.*
  */
 class HomeTimelineFragment : CursorStatusesFragment() {
 
-    override val errorInfoKey: String
-        get() = ErrorInfoStore.KEY_HOME_TIMELINE
+    override val errorInfoKey = ErrorInfoStore.KEY_HOME_TIMELINE
 
-    override val contentUri: Uri
-        get() = Statuses.CONTENT_URI
+    override val contentUri = Statuses.CONTENT_URI
 
-    override val notificationType: Int
-        get() = NOTIFICATION_ID_HOME_TIMELINE
+    override val notificationType = NOTIFICATION_ID_HOME_TIMELINE
 
-    override val isFilterEnabled: Boolean
-        get() = true
+    override val isFilterEnabled = true
+
+    override val readPositionTag = ReadPositionTag.HOME_TIMELINE
+
+    override val timelineSyncTag: String?
+        get() = getTimelineSyncTag(accountKeys)
 
     override fun updateRefreshState() {
         val twitter = twitterWrapper
@@ -86,6 +87,11 @@ class HomeTimelineFragment : CursorStatusesFragment() {
         return super.processWhere(where, whereArgs)
     }
 
-    override val readPositionTag: String = ReadPositionTag.HOME_TIMELINE
+    companion object {
 
+        fun getTimelineSyncTag(accountKeys: Array<UserKey>): String {
+            return "${ReadPositionTag.HOME_TIMELINE}_${accountKeys.sorted().joinToString(",")}"
+        }
+
+    }
 }

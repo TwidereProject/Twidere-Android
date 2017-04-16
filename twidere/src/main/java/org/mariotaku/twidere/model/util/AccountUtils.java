@@ -23,6 +23,7 @@ import static org.mariotaku.twidere.TwidereConstants.ACCOUNT_USER_DATA_CREDS_TYP
 import static org.mariotaku.twidere.TwidereConstants.ACCOUNT_USER_DATA_EXTRAS;
 import static org.mariotaku.twidere.TwidereConstants.ACCOUNT_USER_DATA_KEY;
 import static org.mariotaku.twidere.TwidereConstants.ACCOUNT_USER_DATA_POSITION;
+import static org.mariotaku.twidere.TwidereConstants.ACCOUNT_USER_DATA_TEST;
 import static org.mariotaku.twidere.TwidereConstants.ACCOUNT_USER_DATA_TYPE;
 import static org.mariotaku.twidere.TwidereConstants.ACCOUNT_USER_DATA_USER;
 
@@ -41,6 +42,7 @@ public class AccountUtils {
             ACCOUNT_USER_DATA_EXTRAS,
             ACCOUNT_USER_DATA_COLOR,
             ACCOUNT_USER_DATA_POSITION,
+            ACCOUNT_USER_DATA_TEST,
     };
 
     @Nullable

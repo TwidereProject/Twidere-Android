@@ -17,27 +17,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.extension.text.twitter
+package org.mariotaku.twidere.extension
 
-import com.twitter.Extractor
-import com.twitter.Validator
-import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.UserKey
-
-/**
- * Created by mariotaku on 2017/3/31.
- */
+import android.accounts.Account
+import android.accounts.AccountManager
+import org.mariotaku.twidere.TwidereConstants.ACCOUNT_USER_DATA_TEST
+import org.mariotaku.twidere.extension.model.AccountDataQueue
 
 
-fun Validator.getTweetLength(text: String, ignoreMentions: Boolean, inReplyTo: ParcelableStatus?,
-        accountKey: UserKey? = inReplyTo?.account_key): Int {
-    if (!ignoreMentions || inReplyTo == null || accountKey == null) {
-        return getTweetLength(text)
-    }
-
-    val (_, replyText, _, _, _) = InternalExtractor.extractReplyTextAndMentions(text, inReplyTo,
-            accountKey)
-    return getTweetLength(replyText)
+fun Account.isTest(am: AccountManager): Boolean {
+    return AccountDataQueue.getUserData(am, this, ACCOUNT_USER_DATA_TEST)?.toBoolean() ?: true
 }
 
-private object InternalExtractor : Extractor()
+fun Account.setTest(am: AccountManager, test: Boolean) {
+    am.setUserData(this, ACCOUNT_USER_DATA_TEST, test.toString())
+}

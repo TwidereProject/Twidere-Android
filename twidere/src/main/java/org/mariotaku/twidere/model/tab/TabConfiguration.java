@@ -50,6 +50,9 @@ public abstract class TabConfiguration {
     @AccountFlags
     public abstract int getAccountFlags();
 
+    @NonNull
+    public abstract Class<? extends Fragment> getFragmentClass();
+
     public boolean isSingleTab() {
         return false;
     }
@@ -62,9 +65,6 @@ public abstract class TabConfiguration {
     public ExtraConfiguration[] getExtraConfigurations(Context context) {
         return null;
     }
-
-    @NonNull
-    public abstract Class<? extends Fragment> getFragmentClass();
 
     public boolean applyExtraConfigurationTo(@NonNull Tab tab, @NonNull ExtraConfiguration extraConf) {
         return true;

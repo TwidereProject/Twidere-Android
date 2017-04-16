@@ -329,7 +329,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     override fun onDestroy() {
-        if (!shouldSkipDraft && hasComposingStatus() && isFinishing) {
+        if (!shouldSkipDraft && intent.getBooleanExtra(EXTRA_SAVE_DRAFT, true)
+                && hasComposingStatus() && isFinishing) {
             saveToDrafts()
             Toast.makeText(this, R.string.message_toast_status_saved_to_draft, Toast.LENGTH_SHORT).show()
         } else {
@@ -737,11 +738,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         if (intent.action == INTENT_ACTION_EDIT_DRAFT) return true
         if (hasMedia) return true
         val text = editText.text?.toString().orEmpty()
+        if (text == originalText) return false
         val replyTextAndMentions = getTwitterReplyTextAndMentions(text)
         if (replyTextAndMentions != null) {
             return replyTextAndMentions.replyText.isNotEmpty()
         }
-        return text.isNotEmpty() && text != originalText
+        return text.isNotEmpty()
     }
 
     private fun confirmAndUpdateStatus() {
@@ -1051,8 +1053,13 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             editText.append("@${status.user_screen_name} ")
         }
 
-        val selectionEnd = editText.length()
-        editText.setSelection(selectionStart, selectionEnd)
+        val text = intent.getStringExtra(EXTRA_TEXT)
+        if (text != null) {
+            editText.append(text)
+        } else {
+            val selectionEnd = editText.length()
+            editText.setSelection(selectionStart, selectionEnd)
+        }
         accountsAdapter.selectedAccountKeys = arrayOf(status.account_key)
         showReplyLabelAndHint(status)
         return true
@@ -1060,19 +1067,24 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private fun handleEditDraftIntent(draft: Draft?): Boolean {
         if (draft == null) return false
+        val extras = draft.action_extras as? UpdateStatusActionExtras
+        val media = draft.media
         draftUniqueId = draft.unique_id_non_null
-        editText.setText(draft.text)
-        val selectionEnd = editText.length()
-        editText.setSelection(selectionEnd)
-        accountsAdapter.selectedAccountKeys = draft.account_keys ?: emptyArray()
-        if (draft.media != null) {
-            addMedia(Arrays.asList(*draft.media))
-        }
         recentLocation = draft.location
-        (draft.action_extras as? UpdateStatusActionExtras)?.let {
-            possiblySensitive = it.isPossiblySensitive
-            inReplyToStatus = it.inReplyToStatus
+        accountsAdapter.selectedAccountKeys = draft.account_keys ?: emptyArray()
+
+        editText.setText(extras?.editingText ?: draft.text)
+        editText.setSelection(editText.length())
+
+        if (media != null) {
+            addMedia(Arrays.asList(*media))
         }
+
+        if (extras != null) {
+            possiblySensitive = extras.isPossiblySensitive
+            inReplyToStatus = extras.inReplyToStatus
+        }
+
         val tag = Uri.withAppendedPath(Drafts.CONTENT_URI, draft._id.toString()).toString()
         notificationManager.cancel(tag, NOTIFICATION_ID_DRAFTS)
         return true
@@ -1457,7 +1469,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(this), accountKeys, true)
         val maxLength = statusTextCount.maxLength
         val inReplyTo = inReplyToStatus
-        val replyTextAndMentions = getTwitterReplyTextAndMentions(text)
+        val replyTextAndMentions = getTwitterReplyTextAndMentions(text, accounts)
         if (inReplyTo != null && replyTextAndMentions != null) {
             val (replyStartIndex, replyText, _, excludedMentions, replyToOriginalUser) =
                     replyTextAndMentions
@@ -1471,8 +1483,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             val replyToSelf = accounts.singleOrNull()?.key == inReplyTo.user_key
             // Fix status to at least make mentioned user know what status it is
             if (!replyToOriginalUser && !replyToSelf) {
-                update.attachment_url = LinkCreator.getTwitterStatusLink(inReplyTo.user_screen_name,
-                        inReplyTo.id).toString()
+                update.attachment_url = LinkCreator.getStatusWebLink(inReplyTo).toString()
             }
         } else {
             if (text.isEmpty() && media.isEmpty()) throw NoContentException()
@@ -1494,7 +1505,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         update.media = media
         update.in_reply_to_status = inReplyTo
         update.is_possibly_sensitive = possiblySensitive
-        update.draft_extras = update.updateStatusActionExtras()
+        update.draft_extras = update.updateStatusActionExtras().also {
+            it.editingText = text
+        }
         return update
     }
 
@@ -1541,11 +1554,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
     }
 
-    private fun getTwitterReplyTextAndMentions(text: String = editText.text?.toString().orEmpty()):
-            ReplyTextAndMentions? {
+    private fun getTwitterReplyTextAndMentions(text: String = editText.text?.toString().orEmpty(),
+            accounts: Array<AccountDetails> = accountsAdapter.selectedAccounts): ReplyTextAndMentions? {
         val inReplyTo = inReplyToStatus ?: return null
         if (!ignoreMentions) return null
-        return extractor.extractReplyTextAndMentions(text, inReplyTo)
+        val account = accounts.singleOrNull() ?: return null
+        return extractor.extractReplyTextAndMentions(text, inReplyTo, account.key)
     }
 
     private fun saveToDrafts(): Uri? {
@@ -2031,6 +2045,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             it.excludedReplyUserIds = excluded_reply_user_ids
             it.isExtendedReplyMode = extended_reply_mode
         }
+
     }
 }
 

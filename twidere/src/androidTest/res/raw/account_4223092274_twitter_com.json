@@ -1,0 +1,63 @@
+{
+  "account": {
+    "name": "TwidereTest@twitter.com",
+    "type": "org.mariotaku.twidere.account"
+  },
+  "activated": false,
+  "color": "#F44336",
+  "credentials": {
+    "access_token": "4223092274-REDACTED",
+    "access_token_secret": "REDACTED",
+    "consumer_key": "REDACTED",
+    "consumer_secret": "REDACTED",
+    "same_oauth_signing_url": false,
+    "api_url_format": "https:\/\/[DOMAIN.]twitter.com\/",
+    "no_version_suffix": false
+  },
+  "credentials_type": "oauth",
+  "dummy": false,
+  "test": true,
+  "extras": {
+    "official_credentials": false
+  },
+  "key": "4223092274@twitter.com",
+  "position": 4,
+  "type": "twitter",
+  "user": {
+    "account_id": "4223092274@twitter.com",
+    "background_color": "#C0DEED",
+    "created_at": 1447415354000,
+    "description_plain": "Posting test tweets, do not follow",
+    "description_spans": [],
+    "description_unescaped": "Posting test tweets, do not follow",
+    "extras": {
+      "blocked_by": false,
+      "blocking": false,
+      "followed_by": false,
+      "groups_count": -1,
+      "muting": false,
+      "notifications_enabled": false
+    },
+    "favorites_count": 0,
+    "followers_count": 1,
+    "friends_count": 2,
+    "is_basic": false,
+    "is_cache": true,
+    "is_follow_request_sent": false,
+    "is_following": false,
+    "is_protected": true,
+    "is_verified": false,
+    "id": "4223092274@twitter.com",
+    "link_color": "#1DA1F2",
+    "listed_count": 0,
+    "location": "",
+    "media_count": -1,
+    "name": "Twidere Test",
+    "position": 0,
+    "profile_background_url": "https:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
+    "profile_image_url": "https:\/\/pbs.twimg.com\/profile_images\/665134634229874688\/gQA1EEUb_reasonably_small.png",
+    "screen_name": "TwidereTest",
+    "statuses_count": 7,
+    "text_color": "#333333"
+  }
+}

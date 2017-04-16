@@ -23,6 +23,7 @@ import com.twitter.Extractor
 import org.mariotaku.twidere.extension.model.replyMentions
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUserMention
+import org.mariotaku.twidere.model.UserKey
 
 fun Extractor.extractMentionsAndNonMentionStartIndex(text: String, mentions: Array<ParcelableUserMention>?): MentionsAndNonMentionStartIndex {
     var nextExpectedPos = 0
@@ -39,7 +40,8 @@ fun Extractor.extractMentionsAndNonMentionStartIndex(text: String, mentions: Arr
     return MentionsAndNonMentionStartIndex(entities, nextExpectedPos)
 }
 
-fun Extractor.extractReplyTextAndMentions(text: String, inReplyTo: ParcelableStatus): ReplyTextAndMentions {
+fun Extractor.extractReplyTextAndMentions(text: String, inReplyTo: ParcelableStatus,
+        accountKey: UserKey = inReplyTo.account_key): ReplyTextAndMentions {
     // First extract mentions and 'real text' start index
     val (textMentions, index) = extractMentionsAndNonMentionStartIndex(text, inReplyTo.replyMentions)
 
@@ -72,7 +74,7 @@ fun Extractor.extractReplyTextAndMentions(text: String, inReplyTo: ParcelableSta
         }
     }
     // Find reply text contains mention to `inReplyTo.user`
-    val mentioningUser = textMentions.any {
+    val mentioningUser = accountKey == inReplyTo.user_key || textMentions.any {
         it.value.equals(inReplyTo.user_screen_name, ignoreCase = true)
     }
     if (!mentioningUser) {

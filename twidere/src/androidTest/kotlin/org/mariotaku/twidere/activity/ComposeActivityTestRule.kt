@@ -17,27 +17,22 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.extension.text.twitter
+package org.mariotaku.twidere.activity
 
-import com.twitter.Extractor
-import com.twitter.Validator
-import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.UserKey
+import android.support.test.rule.ActivityTestRule
+import org.mariotaku.twidere.util.TestAccountUtils
 
 /**
- * Created by mariotaku on 2017/3/31.
+ * Created by mariotaku on 2017/4/16.
  */
+class ComposeActivityTestRule(initialTouchMode: Boolean = false, launchActivity: Boolean = true) :
+        ActivityTestRule<ComposeActivity>(ComposeActivity::class.java, initialTouchMode, launchActivity) {
 
-
-fun Validator.getTweetLength(text: String, ignoreMentions: Boolean, inReplyTo: ParcelableStatus?,
-        accountKey: UserKey? = inReplyTo?.account_key): Int {
-    if (!ignoreMentions || inReplyTo == null || accountKey == null) {
-        return getTweetLength(text)
+    override fun beforeActivityLaunched() {
+        TestAccountUtils.insertTestAccounts()
     }
 
-    val (_, replyText, _, _, _) = InternalExtractor.extractReplyTextAndMentions(text, inReplyTo,
-            accountKey)
-    return getTweetLength(replyText)
+    override fun afterActivityFinished() {
+        TestAccountUtils.removeTestAccounts()
+    }
 }
-
-private object InternalExtractor : Extractor()

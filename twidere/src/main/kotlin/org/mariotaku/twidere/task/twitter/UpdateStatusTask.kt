@@ -227,7 +227,7 @@ class UpdateStatusTask(
             val textLimit = account.textLimit
             val ignoreMentions = account.type == AccountType.TWITTER
             if (textLimit >= 0 && validator.getTweetLength(text, ignoreMentions,
-                    update.in_reply_to_status) <= textLimit) {
+                    update.in_reply_to_status, account.key) <= textLimit) {
                 continue
             }
             shortener.waitForService()
@@ -399,7 +399,9 @@ class UpdateStatusTask(
             val details = statusUpdate.accounts[index]
             if (details.type == AccountType.TWITTER && statusUpdate.extended_reply_mode) {
                 status.autoPopulateReplyMetadata(true)
-                status.excludeReplyUserIds(statusUpdate.excluded_reply_user_ids)
+                if (statusUpdate.excluded_reply_user_ids.isNotNullOrEmpty()) {
+                    status.excludeReplyUserIds(statusUpdate.excluded_reply_user_ids)
+                }
             }
         }
         if (statusUpdate.repost_status_id != null) {

@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.util.stetho
 
-import android.accounts.Account
 import android.accounts.AccountManager
 import android.content.Context
 import android.util.Base64
@@ -37,10 +36,8 @@ import com.jayway.jsonpath.spi.mapper.MappingProvider
 import org.apache.commons.cli.*
 import org.json.JSONArray
 import org.json.JSONObject
-import org.mariotaku.ktextension.HexColorFormat
 import org.mariotaku.ktextension.subArray
-import org.mariotaku.ktextension.toHexColor
-import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.extensions.model.updateDetails
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
@@ -279,19 +276,6 @@ class AccountsDumperPlugin(val context: Context) : DumperPlugin {
         private fun generateSecret(password: String): SecretKeySpec {
             val spec = PBEKeySpec(password.toCharArray(), salt, 65536, 256)
             return SecretKeySpec(factory.generateSecret(spec).encoded, "AES")
-        }
-
-        private fun Account.updateDetails(am: AccountManager, details: AccountDetails) {
-            am.setUserData(this, ACCOUNT_USER_DATA_KEY, details.key.toString())
-            am.setUserData(this, ACCOUNT_USER_DATA_TYPE, details.type)
-            am.setUserData(this, ACCOUNT_USER_DATA_CREDS_TYPE, details.credentials_type)
-
-            am.setUserData(this, ACCOUNT_USER_DATA_ACTIVATED, true.toString())
-            am.setUserData(this, ACCOUNT_USER_DATA_COLOR, toHexColor(details.color, format = HexColorFormat.RGB))
-
-            am.setUserData(this, ACCOUNT_USER_DATA_USER, JsonSerializer.serialize(details.user))
-            am.setUserData(this, ACCOUNT_USER_DATA_EXTRAS, details.extras?.let { JsonSerializer.serialize(it) })
-            am.setAuthToken(this, ACCOUNT_AUTH_TOKEN_TYPE, JsonSerializer.serialize(details.credentials))
         }
 
         private fun AccountManager.docContext(forKey: String): DocumentContext {

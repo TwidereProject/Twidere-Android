@@ -1,0 +1,60 @@
+{
+  "account_color": -769226,
+  "account_id": "4223092274@twitter.com",
+  "extras": {
+    "display_text_range": [
+      27,
+      33
+    ],
+    "support_entities": true,
+    "user_profile_image_url_fallback": "https://pbs.twimg.com/profile_images/665134634229874688/gQA1EEUb_normal.png"
+  },
+  "favorite_count": 0,
+  "id": "852737226718838790",
+  "in_reply_to_name": "Twidere Project",
+  "in_reply_to_screen_name": "TwidereProject",
+  "in_reply_to_status_id": "852736831107944448",
+  "in_reply_to_user_id": "583328497@twitter.com",
+  "is_favorite": false,
+  "is_gap": false,
+  "is_possibly_sensitive": false,
+  "is_quote": false,
+  "is_retweet": false,
+  "lang": "zh",
+  "media": [],
+  "mentions": [
+    {
+      "id": "583328497@twitter.com",
+      "name": "Twidere Project",
+      "screen_name": "TwidereProject"
+    },
+    {
+      "id": "57610574@twitter.com",
+      "name": "宅撩一边捣鼓着Twidere一边",
+      "screen_name": "mariotaku"
+    }
+  ],
+  "position_key": 1492143372225,
+  "quoted_timestamp": 0,
+  "quoted_user_is_protected": false,
+  "quoted_user_is_verified": false,
+  "quoted_user_id": null,
+  "reply_count": -1,
+  "retweet_count": 0,
+  "retweet_timestamp": -1,
+  "retweeted": false,
+  "retweeted_by_user_id": null,
+  "sort_id": 852737226718838790,
+  "source": "<a href=\"https://github.com/mariotaku/twidere/\" rel=\"nofollow\">Twidere for Android #7</a>",
+  "spans": [],
+  "text_plain": "@TwidereProject @mariotaku 测试回复全部",
+  "text_unescaped": "@TwidereProject @mariotaku 测试回复全部",
+  "timestamp": 1492143372000,
+  "user_is_following": false,
+  "user_is_protected": true,
+  "user_is_verified": false,
+  "user_id": "4223092274@twitter.com",
+  "user_name": "Twidere Test",
+  "user_profile_image_url": "https://pbs.twimg.com/profile_images/665134634229874688/gQA1EEUb_reasonably_small.png",
+  "user_screen_name": "TwidereTest"
+}

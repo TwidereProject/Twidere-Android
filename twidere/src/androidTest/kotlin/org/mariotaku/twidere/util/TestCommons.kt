@@ -17,27 +17,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.extension.text.twitter
+package org.mariotaku.twidere.util
 
-import com.twitter.Extractor
-import com.twitter.Validator
-import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.UserKey
+import android.content.res.Resources
+import android.support.annotation.RawRes
 
 /**
- * Created by mariotaku on 2017/3/31.
+ * Created by mariotaku on 2017/4/16.
  */
-
-
-fun Validator.getTweetLength(text: String, ignoreMentions: Boolean, inReplyTo: ParcelableStatus?,
-        accountKey: UserKey? = inReplyTo?.account_key): Int {
-    if (!ignoreMentions || inReplyTo == null || accountKey == null) {
-        return getTweetLength(text)
-    }
-
-    val (_, replyText, _, _, _) = InternalExtractor.extractReplyTextAndMentions(text, inReplyTo,
-            accountKey)
-    return getTweetLength(replyText)
+inline fun <reified T> Resources.getJsonResource(@RawRes id: Int) = openRawResource(id).use {
+    JsonSerializer.parse(it, T::class.java)
 }
-
-private object InternalExtractor : Extractor()
