@@ -31,7 +31,7 @@ import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.twidere.constant.mediaPreviewStyleKey
 import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.util.SharedPreferencesWrapper
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.view.holder.DraftViewHolder
 import javax.inject.Inject
 
@@ -54,7 +54,7 @@ class DraftsAdapter(
     private var indices: ObjectCursor.CursorIndices<Draft>? = null
 
     init {
-        GeneralComponentHelper.build(context).inject(this)
+        GeneralComponent.get(context).inject(this)
         mediaPreviewStyle = preferences[mediaPreviewStyleKey]
     }
 

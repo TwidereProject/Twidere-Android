@@ -41,7 +41,7 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.util.content.ContentResolverUtils
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import java.util.*
 import javax.inject.Inject
 
@@ -61,7 +61,7 @@ class MultiSelectEventHandler(
     private var accountActionProvider: AccountActionProvider? = null
 
     init {
-        GeneralComponentHelper.build(activity).inject(this)
+        GeneralComponent.get(activity).inject(this)
     }
 
     /**

@@ -13,7 +13,7 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.Utils
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import java.text.Collator
 import java.util.*
 import javax.inject.Inject
@@ -30,7 +30,7 @@ class CacheUserSearchLoader(
     internal lateinit var userColorNameManager: UserColorNameManager
 
     init {
-        GeneralComponentHelper.build(context).inject(this)
+        GeneralComponent.get(context).inject(this)
     }
 
     override fun getUsers(twitter: MicroBlog, details: AccountDetails): List<User> {

@@ -41,7 +41,7 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableUserListUtils
 import org.mariotaku.twidere.util.SharedPreferencesWrapper
 import org.mariotaku.twidere.util.collection.NoDuplicatesArrayList
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import java.util.*
 import javax.inject.Inject
 
@@ -63,7 +63,7 @@ abstract class BaseUserListsLoader(
     override var prevCursor: Long = 0
 
     init {
-        GeneralComponentHelper.build(context).inject(this)
+        GeneralComponent.get(context).inject(this)
         if (data != null) {
             this.data.addAll(data)
         }

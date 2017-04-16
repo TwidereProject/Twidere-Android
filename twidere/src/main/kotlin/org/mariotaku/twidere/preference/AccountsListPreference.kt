@@ -36,7 +36,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.ACCOUNT_PREFERENCES_NAME_PREFIX
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.media.MediaPreloader
 import javax.inject.Inject
 
@@ -88,7 +88,7 @@ abstract class AccountsListPreference(context: Context, attrs: AttributeSet? = n
         internal lateinit var mediaPreloader: MediaPreloader
 
         init {
-            GeneralComponentHelper.build(context).inject(this)
+            GeneralComponent.get(context).inject(this)
             val switchPreferenceName = "$ACCOUNT_PREFERENCES_NAME_PREFIX${account.key}"
             switchPreference = context.getSharedPreferences(switchPreferenceName, Context.MODE_PRIVATE)
             switchPreference.registerOnSharedPreferenceChangeListener(this)

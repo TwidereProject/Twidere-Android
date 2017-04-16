@@ -50,7 +50,7 @@ import org.mariotaku.twidere.model.event.UnreadCountUpdatedEvent
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.SQLiteDatabaseWrapper.LazyLoadCallback
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.database.CachedUsersQueryBuilder
 import org.mariotaku.twidere.util.database.SuggestionsCursorCreator
 import java.util.concurrent.Executor
@@ -86,7 +86,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
 
     override fun onCreate(): Boolean {
         val context = context!!
-        GeneralComponentHelper.build(context).inject(this)
+        GeneralComponent.get(context).inject(this)
         handler = Handler(Looper.getMainLooper())
         databaseWrapper = SQLiteDatabaseWrapper(this)
         backgroundExecutor = Executors.newSingleThreadExecutor()

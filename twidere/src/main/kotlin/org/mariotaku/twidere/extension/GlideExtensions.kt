@@ -131,7 +131,8 @@ fun RequestManager.loadOriginalProfileImage(context: Context, user: ParcelableUs
 }
 
 fun RequestManager.loadProfileBanner(context: Context, user: ParcelableUser, width: Int): DrawableTypeRequest<String?> {
-    return load(user.getBestProfileBanner(width))
+    val ratio = context.resources.getFraction(R.fraction.aspect_ratio_profile_banner, 1, 1)
+    return load(user.getBestProfileBanner(width, (width / ratio).toInt()))
 }
 
 internal inline fun <T> configureLoadProfileImage(context: Context, @ImageShapeStyle shapeStyle: Int,

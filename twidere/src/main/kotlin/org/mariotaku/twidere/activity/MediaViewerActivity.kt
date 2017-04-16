@@ -64,7 +64,7 @@ import org.mariotaku.twidere.util.AsyncTaskUtils
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.PermissionUtils
 import org.mariotaku.twidere.util.ThemeUtils
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.support.WindowSupport
 import org.mariotaku.twidere.view.viewer.MediaSwipeCloseContainer
 import java.io.File
@@ -132,7 +132,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
         }
         super.onCreate(savedInstanceState)
-        GeneralComponentHelper.build(this).inject(this)
+        GeneralComponent.get(this).inject(this)
         mediaViewerHelper = IMediaViewerActivity.Helper(this)
         controlBarShowHideHelper = ControlBarShowHideHelper(this)
         mediaViewerHelper.onCreate(savedInstanceState)

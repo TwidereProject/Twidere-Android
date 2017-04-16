@@ -25,7 +25,7 @@ import org.mariotaku.twidere.text.SafeSpannableString
 
 import org.mariotaku.twidere.util.EmojiSupportUtils
 import org.mariotaku.twidere.util.ExternalThemeManager
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 
 import javax.inject.Inject
 
@@ -38,7 +38,7 @@ class EmojiSpannableFactory(textView: TextView) : Spannable.Factory() {
     lateinit internal var externalThemeManager: ExternalThemeManager
 
     init {
-        GeneralComponentHelper.build(textView.context).inject(this)
+        GeneralComponent.get(textView.context).inject(this)
     }
 
     override fun newSpannable(source: CharSequence): Spannable {

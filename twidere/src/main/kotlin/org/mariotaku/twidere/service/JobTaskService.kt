@@ -31,7 +31,7 @@ import org.mariotaku.twidere.annotation.AutoRefreshType
 import org.mariotaku.twidere.constant.autoRefreshCompatibilityModeKey
 import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.TaskServiceRunner
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.support.JobServiceSupport
 import javax.inject.Inject
 
@@ -50,7 +50,7 @@ class JobTaskService : JobService() {
     override fun onCreate() {
         super.onCreate()
         Log.d(LOGTAG, "JobTaskService started")
-        GeneralComponentHelper.build(this).inject(this)
+        GeneralComponent.get(this).inject(this)
     }
 
     override fun onDestroy() {

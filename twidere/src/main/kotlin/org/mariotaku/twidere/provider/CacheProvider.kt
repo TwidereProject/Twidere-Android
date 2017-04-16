@@ -16,7 +16,7 @@ import org.mariotaku.twidere.model.CacheMetadata
 import org.mariotaku.twidere.task.SaveFileTask
 import org.mariotaku.twidere.util.BitmapUtils
 import org.mariotaku.twidere.util.JsonSerializer
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import java.io.ByteArrayInputStream
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -31,7 +31,7 @@ class CacheProvider : ContentProvider() {
     internal lateinit var fileCache: FileCache
 
     override fun onCreate(): Boolean {
-        GeneralComponentHelper.build(context).inject(this)
+        GeneralComponent.get(context).inject(this)
         return true
     }
 

@@ -30,7 +30,7 @@ import org.mariotaku.twidere.constant.autoRefreshCompatibilityModeKey
 import org.mariotaku.twidere.util.TaskServiceRunner.Companion.ACTION_REFRESH_DIRECT_MESSAGES
 import org.mariotaku.twidere.util.TaskServiceRunner.Companion.ACTION_REFRESH_HOME_TIMELINE
 import org.mariotaku.twidere.util.TaskServiceRunner.Companion.ACTION_REFRESH_NOTIFICATIONS
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 
 class LegacyTaskService : BaseService() {
 
@@ -39,7 +39,7 @@ class LegacyTaskService : BaseService() {
     override fun onCreate() {
         super.onCreate()
         Log.d(LOGTAG, "LegacyTaskService created")
-        GeneralComponentHelper.build(this).inject(this)
+        GeneralComponent.get(this).inject(this)
     }
 
     override fun onDestroy() {

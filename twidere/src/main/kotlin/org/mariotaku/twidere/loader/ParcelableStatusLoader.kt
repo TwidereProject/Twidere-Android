@@ -36,7 +36,7 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.deleteActivityStatus
 import javax.inject.Inject
 
@@ -57,7 +57,7 @@ class ParcelableStatusLoader(
     internal lateinit var restHttpClient: RestHttpClient
 
     init {
-        GeneralComponentHelper.build(context).inject(this)
+        GeneralComponent.get(context).inject(this)
     }
 
     override fun loadInBackground(): SingleResponse<ParcelableStatus> {

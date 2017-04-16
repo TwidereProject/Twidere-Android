@@ -30,7 +30,7 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import javax.inject.Inject
 
 open class BaseArrayAdapter<T>(
@@ -81,7 +81,7 @@ open class BaseArrayAdapter<T>(
 
     init {
         @Suppress("UNCHECKED_CAST")
-        GeneralComponentHelper.build(context).inject(this as BaseArrayAdapter<Any>)
+        GeneralComponent.get(context).inject(this as BaseArrayAdapter<Any>)
         linkify = TwidereLinkify(OnLinkClickHandler(context, multiSelectManager, preferences))
         profileImageStyle = preferences[profileImageStyleKey]
         textSize = preferences[textSizeKey].toFloat()

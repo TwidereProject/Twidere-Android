@@ -7,7 +7,7 @@ import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.media.MediaPreloader
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
@@ -58,6 +58,6 @@ abstract class BaseAbstractTask<Params, Result, Callback>(val context: Context) 
 
     private fun injectMembers() {
         @Suppress("UNCHECKED_CAST")
-        GeneralComponentHelper.build(context).inject(this as BaseAbstractTask<Any, Any, Any>)
+        GeneralComponent.get(context).inject(this as BaseAbstractTask<Any, Any, Any>)
     }
 }

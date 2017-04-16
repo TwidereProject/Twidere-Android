@@ -14,7 +14,7 @@ import org.mariotaku.twidere.extension.newPullParser
 import org.mariotaku.twidere.model.FiltersData
 import org.mariotaku.twidere.util.ETagCache
 import org.mariotaku.twidere.util.JsonSerializer
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import java.io.IOException
 import javax.inject.Inject
 
@@ -30,7 +30,7 @@ class UrlFiltersSubscriptionProvider(context: Context, val arguments: Arguments)
     private var filters: FiltersData? = null
 
     init {
-        GeneralComponentHelper.build(context).inject(this)
+        GeneralComponent.get(context).inject(this)
     }
 
     @Throws(IOException::class)

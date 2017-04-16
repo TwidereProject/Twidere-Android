@@ -67,7 +67,7 @@ import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.CacheProvider
 import org.mariotaku.twidere.task.SaveFileTask
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.media.TwidereMediaDownloader
 import java.io.InputStream
 import javax.inject.Inject
@@ -175,7 +175,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        GeneralComponentHelper.build(context).inject(this)
+        GeneralComponent.get(context).inject(this)
     }
 
     override fun onStart() {

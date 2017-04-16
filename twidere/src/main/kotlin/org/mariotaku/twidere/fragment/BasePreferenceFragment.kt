@@ -36,7 +36,7 @@ import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.preference.RingtonePreference
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.sync.SyncController
 import javax.inject.Inject
 
@@ -65,7 +65,7 @@ abstract class BasePreferenceFragment : PreferenceFragmentCompat(), IBaseFragmen
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        GeneralComponentHelper.build(context).inject(this)
+        GeneralComponent.get(context).inject(this)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

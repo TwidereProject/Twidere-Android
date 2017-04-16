@@ -29,7 +29,7 @@ import org.mariotaku.twidere.util.AsyncTaskManager
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.SharedPreferencesWrapper
 import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 
 import javax.inject.Inject
 
@@ -51,7 +51,7 @@ abstract class ManagedAsyncTask<Params, Progress, Result> @JvmOverloads construc
 
     init {
         @Suppress("UNCHECKED_CAST")
-        GeneralComponentHelper.build(context).inject(this as ManagedAsyncTask<Any, Any, Any>)
+        GeneralComponent.get(context).inject(this as ManagedAsyncTask<Any, Any, Any>)
     }
 
     override fun onCancelled() {

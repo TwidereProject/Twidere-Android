@@ -28,7 +28,7 @@ import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.util.JsonSerializer
 import org.mariotaku.twidere.util.ParseUtils
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.view.ConsumerKeySecretValidator
 import java.io.IOException
 import javax.inject.Inject
@@ -192,7 +192,7 @@ class APIEditorDialogFragment : BaseDialogFragment() {
             lateinit var client: RestHttpClient
 
             init {
-                GeneralComponentHelper.build(context).inject(this)
+                GeneralComponent.get(context).inject(this)
             }
 
             override fun loadInBackground(): List<CustomAPIConfig>? {

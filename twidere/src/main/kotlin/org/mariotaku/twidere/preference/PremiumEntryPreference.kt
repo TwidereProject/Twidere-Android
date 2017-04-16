@@ -9,7 +9,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.REQUEST_PURCHASE_EXTRA_FEATURES
 import org.mariotaku.twidere.extension.findParent
 import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import javax.inject.Inject
 
@@ -23,7 +23,7 @@ class PremiumEntryPreference(context: Context, attrs: AttributeSet) : Preference
     internal lateinit var extraFeaturesService: ExtraFeaturesService
 
     init {
-        GeneralComponentHelper.build(context).inject(this)
+        GeneralComponent.get(context).inject(this)
         val a = context.obtainStyledAttributes(attrs, R.styleable.PremiumEntryPreference)
         val requiredFeature: String = a.getString(R.styleable.PremiumEntryPreference_requiredFeature)
         a.recycle()

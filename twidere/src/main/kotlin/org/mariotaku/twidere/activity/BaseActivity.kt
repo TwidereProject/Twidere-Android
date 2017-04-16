@@ -61,7 +61,7 @@ import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.preference.iface.IDialogPreference
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.gifshare.GifShareProvider
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
@@ -203,7 +203,7 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
         super.onCreate(savedInstanceState)
         ActivitySupport.setTaskDescription(this, TaskDescriptionCompat(title.toString(), null,
                 ColorUtils.setAlphaComponent(overrideTheme.colorToolbar, 0xFF)))
-        GeneralComponentHelper.build(this).inject(this)
+        GeneralComponent.get(this).inject(this)
     }
 
     override fun onResume() {

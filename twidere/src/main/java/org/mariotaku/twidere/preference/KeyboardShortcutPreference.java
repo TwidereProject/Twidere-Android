@@ -15,13 +15,12 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 
-
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.fragment.ThemedPreferenceDialogFragmentCompat;
 import org.mariotaku.twidere.preference.iface.IDialogPreference;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutSpec;
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
+import org.mariotaku.twidere.util.dagger.GeneralComponent;
 
 import javax.inject.Inject;
 
@@ -55,7 +54,7 @@ public class KeyboardShortcutPreference extends DialogPreference implements IDia
     }
 
     private void init(Context context, AttributeSet set) {
-        GeneralComponentHelper.build(context).inject(this);
+        GeneralComponent.Companion.get(context).inject(this);
         TypedArray a = context.obtainStyledAttributes(set, R.styleable.KeyboardShortcutPreference);
         mContextTag = a.getString(R.styleable.KeyboardShortcutPreference_android_tag);
         mAction = a.getString(R.styleable.KeyboardShortcutPreference_android_action);

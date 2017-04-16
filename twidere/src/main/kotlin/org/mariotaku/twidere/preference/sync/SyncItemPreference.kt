@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.TextView
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.util.Utils
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.sync.SyncPreferences
 import javax.inject.Inject
 
@@ -24,7 +24,7 @@ class SyncItemPreference(
     val syncType: String
 
     init {
-        GeneralComponentHelper.build(context).inject(this)
+        GeneralComponent.get(context).inject(this)
         val a = context.obtainStyledAttributes(attrs, R.styleable.SyncItemPreference)
         syncType = a.getString(R.styleable.SyncItemPreference_syncType)
         key = SyncPreferences.getSyncEnabledKey(syncType)

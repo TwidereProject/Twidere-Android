@@ -44,7 +44,7 @@ import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.SharedPreferencesWrapper
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.cache.JsonCache
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import java.io.IOException
 import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
@@ -81,7 +81,7 @@ abstract class MicroBlogAPIStatusesLoader(
     lateinit var userColorNameManager: UserColorNameManager
 
     init {
-        GeneralComponentHelper.build(context).inject(this)
+        GeneralComponent.get(context).inject(this)
     }
 
     @SuppressWarnings("unchecked")

@@ -39,7 +39,7 @@ import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.content.ContentResolverUtils
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import javax.inject.Inject
 
 class FilteredUsersFragment : BaseFiltersFragment() {
@@ -159,7 +159,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
         private val secondaryTextColor = ThemeUtils.getTextColorSecondary(context)
 
         init {
-            GeneralComponentHelper.build(context).inject(this)
+            GeneralComponent.get(context).inject(this)
             nameFirst = preferences[nameFirstKey]
         }
 

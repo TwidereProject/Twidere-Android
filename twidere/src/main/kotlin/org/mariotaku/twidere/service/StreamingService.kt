@@ -44,7 +44,7 @@ import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.dagger.DependencyHolder
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.streaming.TwitterTimelineStreamCallback
 import java.util.*
 import java.util.concurrent.ExecutorService
@@ -66,7 +66,7 @@ class StreamingService : BaseService() {
 
     override fun onCreate() {
         super.onCreate()
-        GeneralComponentHelper.build(this).inject(this)
+        GeneralComponent.get(this).inject(this)
         threadPoolExecutor = Executors.newCachedThreadPool(BasicThreadFactory.Builder()
                 .namingPattern("twidere-streaming-%d")
                 .priority(Thread.NORM_PRIORITY - 1).build())

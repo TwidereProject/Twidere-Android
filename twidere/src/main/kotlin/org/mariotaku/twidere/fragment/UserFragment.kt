@@ -1230,7 +1230,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                         preferences[newDocumentApiKey], preferences[displaySensitiveContentsKey])
             }
             R.id.profileBanner -> {
-                val url = user.getBestProfileBanner(Integer.MAX_VALUE) ?: return
+                val url = user.getBestProfileBanner(0) ?: return
                 val profileBanner = ParcelableMediaUtils.image(url)
                 profileBanner.type = ParcelableMedia.Type.IMAGE
                 val media = arrayOf(profileBanner)

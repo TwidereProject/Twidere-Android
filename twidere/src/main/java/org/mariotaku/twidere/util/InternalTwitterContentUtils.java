@@ -82,25 +82,29 @@ public class InternalTwitterContentUtils {
     }
 
     @NonNull
-    public static String getBestBannerUrl(@NonNull final String baseUrl, final int width) {
-        final String type = getBestBannerType(width);
+    public static String getBestBannerUrl(@NonNull final String baseUrl, final int width, final int height) {
+        final String type;
+        if (width <= 0) {
+            type = "1500x500";
+        } else {
+            type = getBestBannerType(width, height);
+        }
         final String authority = UriUtils.getAuthority(baseUrl);
         return authority != null && authority.endsWith(".twimg.com") ? baseUrl + "/" + type : baseUrl;
     }
 
-    public static String getBestBannerType(final int width) {
-        if (width <= 320)
-            return "mobile";
-        else if (width <= 520)
-            return "web";
-        else if (width <= 626)
-            return "ipad";
-        else if (width <= 640)
-            return "mobile_retina";
-        else if (width <= 1040)
-            return "web_retina";
-        else
-            return "ipad_retina";
+    public static String getBestBannerType(final int width, int height) {
+        if (height > 0 && width / height >= 3) {
+            if (width <= 300) return "300x100";
+            else if (width <= 600) return "600x200";
+            else return "1500x500";
+        }
+        if (width <= 320) return "mobile";
+        else if (width <= 520) return "web";
+        else if (width <= 626) return "ipad";
+        else if (width <= 640) return "mobile_retina";
+        else if (width <= 1040) return "web_retina";
+        else return "ipad_retina";
     }
 
     @Nullable

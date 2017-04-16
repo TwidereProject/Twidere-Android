@@ -50,7 +50,7 @@ import org.mariotaku.twidere.task.UpdateAccountInfoTask
 import org.mariotaku.twidere.util.ContentValuesCreator
 import org.mariotaku.twidere.util.TwitterWrapper
 import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import javax.inject.Inject
 
 class ParcelableUserLoader(
@@ -69,7 +69,7 @@ class ParcelableUserLoader(
     lateinit var userColorNameManager: UserColorNameManager
 
     init {
-        GeneralComponentHelper.build(context).inject(this)
+        GeneralComponent.get(context).inject(this)
     }
 
     override fun loadInBackground(): SingleResponse<ParcelableUser> {

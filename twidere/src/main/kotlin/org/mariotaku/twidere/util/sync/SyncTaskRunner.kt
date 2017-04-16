@@ -5,7 +5,7 @@ import com.squareup.otto.Bus
 import nl.komponents.kovenant.task
 import org.mariotaku.twidere.util.TaskServiceRunner
 import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import java.util.*
 import javax.inject.Inject
 
@@ -23,7 +23,7 @@ abstract class SyncTaskRunner(val context: Context) {
 
     init {
         @Suppress("LeakingThis")
-        GeneralComponentHelper.build(context).inject(this)
+        GeneralComponent.get(context).inject(this)
     }
 
     /**

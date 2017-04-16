@@ -84,7 +84,7 @@ class DependencyHolder internal constructor(context: Context) {
         internal set
 
     init {
-        GeneralComponentHelper.build(context).inject(this)
+        GeneralComponent.get(context).inject(this)
     }
 
     companion object {

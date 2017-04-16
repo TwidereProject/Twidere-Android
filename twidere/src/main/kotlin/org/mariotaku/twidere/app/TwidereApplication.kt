@@ -53,7 +53,7 @@ import org.mariotaku.twidere.receiver.ConnectivityStateReceiver
 import org.mariotaku.twidere.service.StreamingService
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.media.MediaPreloader
 import org.mariotaku.twidere.util.media.ThumborWrapper
 import org.mariotaku.twidere.util.net.TwidereDns
@@ -129,7 +129,7 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
         updateEasterEggIcon()
 
         migrateUsageStatisticsPreferences()
-        GeneralComponentHelper.build(this).inject(this)
+        GeneralComponent.get(this).inject(this)
 
         autoRefreshController.appStarted()
         syncController.appStarted()

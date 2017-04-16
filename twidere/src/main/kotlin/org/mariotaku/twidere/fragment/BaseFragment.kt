@@ -30,7 +30,7 @@ import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
 import org.mariotaku.twidere.util.sync.TimelineSyncManager
@@ -89,7 +89,7 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        GeneralComponentHelper.build(context!!).inject(this)
+        GeneralComponent.get(context!!).inject(this)
     }
 
     override fun executeAfterFragmentResumed(useHandler: Boolean, action: (BaseFragment) -> Unit)

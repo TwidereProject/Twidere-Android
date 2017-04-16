@@ -32,7 +32,7 @@ import org.mariotaku.twidere.constant.showAbsoluteTimeKey
 import org.mariotaku.twidere.constant.textSizeKey
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import javax.inject.Inject
 
 /**
@@ -67,7 +67,7 @@ abstract class BaseRecyclerViewAdapter<VH : RecyclerView.ViewHolder>(
 
     init {
         @Suppress("UNCHECKED_CAST")
-        GeneralComponentHelper.build(context).inject(this as BaseRecyclerViewAdapter<RecyclerView.ViewHolder>)
+        GeneralComponent.get(context).inject(this as BaseRecyclerViewAdapter<RecyclerView.ViewHolder>)
         profileImageStyle = preferences[profileImageStyleKey]
         textSize = preferences[textSizeKey].toFloat()
         profileImageEnabled = preferences[displayProfileImageKey]

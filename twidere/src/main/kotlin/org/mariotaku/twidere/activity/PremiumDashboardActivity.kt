@@ -29,7 +29,7 @@ import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.SharedPreferencesWrapper
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
 import org.mariotaku.twidere.view.ContainerView
@@ -178,7 +178,7 @@ class PremiumDashboardActivity : BaseActivity() {
 
         override fun onCreate() {
             super.onCreate()
-            GeneralComponentHelper.build(context).inject(this)
+            GeneralComponent.get(context).inject(this)
         }
 
         override fun onCreateView(parent: ContainerView): View {

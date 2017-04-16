@@ -24,7 +24,7 @@ import android.net.ConnectivityManager
 import com.twitter.Extractor
 import com.twitter.Validator
 import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import javax.inject.Inject
 
 abstract class BaseService : Service() {
@@ -52,6 +52,6 @@ abstract class BaseService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        GeneralComponentHelper.build(this).inject(this)
+        GeneralComponent.get(this).inject(this)
     }
 }
