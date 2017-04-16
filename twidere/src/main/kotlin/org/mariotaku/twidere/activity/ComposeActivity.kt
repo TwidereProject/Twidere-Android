@@ -210,7 +210,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
             override fun onRemoveClick(position: Int, holder: MediaPreviewViewHolder) {
                 mediaPreviewAdapter.remove(position)
-                updateAttachedMediaView()
+                updateMediaState()
+                setMenu()
             }
 
             override fun onStartDrag(viewHolder: ViewHolder) {
@@ -317,20 +318,18 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                     MENU_GROUP_IMAGE_EXTENSION)
         }
         updateViewStyle()
-        setMenu()
-        updateLocationState()
-        notifyAccountSelectionChanged()
-        updateUpdateStatusIcon()
-
-        textChanged = false
         bottomMenuAnimator.showView(composeMenu, false)
+        textChanged = false
 
-        updateAttachedMediaView()
+        resetButtonsStates()
     }
 
     override fun onDestroy() {
-        if (!shouldSkipDraft && intent.getBooleanExtra(EXTRA_SAVE_DRAFT, true)
-                && hasComposingStatus() && isFinishing) {
+        if (shouldSkipDraft || !isFinishing) {
+            super.onDestroy()
+            return
+        }
+        if (intent.getBooleanExtra(EXTRA_SAVE_DRAFT, true) && hasComposingStatus()) {
             saveToDrafts()
             Toast.makeText(this, R.string.message_toast_status_saved_to_draft, Toast.LENGTH_SHORT).show()
         } else {
@@ -476,6 +475,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         draftUniqueId = savedInstanceState.getString(EXTRA_DRAFT_UNIQUE_ID)
         scheduleInfo = savedInstanceState.getParcelable(EXTRA_SCHEDULE_INFO)
         showLabelAndHint(intent)
+
+        resetButtonsStates()
     }
 
     override fun onClick(view: View) {
@@ -727,91 +728,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         mediaPreviewAdapter.setAltText(position, altText)
     }
 
-
-    private fun discardTweet() {
-        val context = applicationContext
-        val media = mediaList
-        task { media.forEach { media -> Utils.deleteMedia(context, Uri.parse(media.uri)) } }
-    }
-
-    private fun hasComposingStatus(): Boolean {
-        if (intent.action == INTENT_ACTION_EDIT_DRAFT) return true
-        if (hasMedia) return true
-        val text = editText.text?.toString().orEmpty()
-        if (text == originalText) return false
-        val replyTextAndMentions = getTwitterReplyTextAndMentions(text)
-        if (replyTextAndMentions != null) {
-            return replyTextAndMentions.replyText.isNotEmpty()
-        }
-        return text.isNotEmpty()
-    }
-
-    private fun confirmAndUpdateStatus() {
-        val matchResult = Regex("[DM] +([a-z0-9_]{1,20}) +[^ ]+").matchEntire(editText.text)
-        if (matchResult != null) {
-            val screenName = matchResult.groupValues[1]
-            val df = DirectMessageConfirmFragment()
-            df.arguments = Bundle {
-                this[EXTRA_SCREEN_NAME] = screenName
-            }
-            df.show(supportFragmentManager, "send_direct_message_confirm")
-        } else if (isQuotingProtectedStatus) {
-            val df = RetweetProtectedStatusWarnFragment()
-            df.show(supportFragmentManager,
-                    "retweet_protected_status_warning_message")
-        } else if (scheduleInfo != null && !extraFeaturesService.isEnabled(ExtraFeaturesService.FEATURE_SCHEDULE_STATUS)) {
-            ExtraFeaturesIntroductionDialogFragment.show(supportFragmentManager,
-                    feature = ExtraFeaturesService.FEATURE_SCHEDULE_STATUS,
-                    requestCode = REQUEST_PURCHASE_EXTRA_FEATURES)
-        } else {
-            updateStatus()
-        }
-    }
-
-    private fun displaySelectedAccountsIcon() {
-        val accounts = accountsAdapter.selectedAccounts
-        val account = accounts.singleOrNull()
-
-        val displayDoneIcon = isAccountSelectorVisible
-
-        if (account != null) {
-            accountsCount.setText(null)
-
-            if (displayDoneIcon) {
-                Glide.clear(accountProfileImage)
-                accountProfileImage.setColorFilter(ThemeUtils.getColorFromAttribute(this,
-                        android.R.attr.colorForeground))
-                accountProfileImage.scaleType = ImageView.ScaleType.CENTER_INSIDE
-                accountProfileImage.setImageResource(R.drawable.ic_action_confirm)
-            } else {
-                accountProfileImage.clearColorFilter()
-                accountProfileImage.scaleType = ImageView.ScaleType.CENTER_CROP
-                Glide.with(this).loadProfileImage(this, account, accountProfileImage.style)
-                        .into(accountProfileImage)
-            }
-
-            accountProfileImage.setBorderColor(account.color)
-        } else {
-            accountsCount.setText(accounts.size.toString())
-
-            Glide.clear(accountProfileImage)
-            if (displayDoneIcon) {
-                accountProfileImage.setImageResource(R.drawable.ic_action_confirm)
-                accountProfileImage.scaleType = ImageView.ScaleType.CENTER_INSIDE
-            } else {
-                accountProfileImage.setImageDrawable(null)
-            }
-
-            accountProfileImage.setBorderColors(*Utils.getAccountColors(accounts))
-        }
-
-        if (displayDoneIcon) {
-            accountsCount.visibility = View.GONE
-        } else {
-            accountsCount.visibility = View.VISIBLE
-        }
-    }
-
     private fun locationMenuItemSelected(item: MenuItem) {
         item.isChecked = true
         var attachLocationChecked = false
@@ -875,66 +791,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
     }
 
-    private fun updateViewStyle() {
-        accountProfileImage.style = preferences[profileImageStyleKey]
-    }
-
-    private fun setupEditText() {
-        val sendByEnter = preferences.getBoolean(KEY_QUICK_SEND)
-        EditTextEnterHandler.attach(editText, ComposeEnterListener(this), sendByEnter)
-        editText.addTextChangedListener(object : TextWatcher {
-
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                setMenu()
-                updateTextCount()
-                if (s is Spannable && count == 1 && before == 0) {
-                    val imageSpans = s.getSpans(start, start + count, ImageSpan::class.java)
-                    val imageSources = ArrayList<String>()
-                    for (imageSpan in imageSpans) {
-                        imageSources.add(imageSpan.source)
-                        s.setSpan(MarkForDeleteSpan(), start, start + count,
-                                Spanned.SPAN_INCLUSIVE_INCLUSIVE)
-                    }
-                    if (!imageSources.isEmpty()) {
-                        val intent = ThemedMediaPickerActivity.withThemed(this@ComposeActivity)
-                                .getMedia(Uri.parse(imageSources[0]))
-                                .build()
-                        startActivityForResult(intent, REQUEST_PICK_MEDIA)
-                    }
-                }
-            }
-
-            override fun afterTextChanged(s: Editable) {
-                textChanged = s.isEmpty()
-                val deletes = s.getSpans(0, s.length, MarkForDeleteSpan::class.java)
-                for (delete in deletes) {
-                    s.delete(s.getSpanStart(delete), s.getSpanEnd(delete))
-                    s.removeSpan(delete)
-                }
-                for (span in s.getSpans(0, s.length, UpdateAppearance::class.java)) {
-                    trimSpans(s, span)
-                }
-            }
-
-            private fun trimSpans(s: Editable, span: Any) {
-                if (span is EmojiSpan) return
-                if (span is SuggestionSpan) return
-                if (span is MetricAffectingSpan) {
-                    s.removeSpan(span)
-                }
-            }
-        })
-        editText.customSelectionActionModeCallback = this
-        editTextContainer.touchDelegate = ComposeEditTextTouchDelegate(editTextContainer, editText)
-    }
-
     private fun addMedia(media: List<ParcelableMediaUpdate>) {
         mediaPreviewAdapter.addAll(media)
-        updateAttachedMediaView()
+        updateMediaState()
+        setMenu()
     }
 
     private fun removeMedia(list: List<ParcelableMediaUpdate>) {
@@ -943,11 +803,63 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private fun clearMedia() {
         mediaPreviewAdapter.clear()
-        updateAttachedMediaView()
+        updateMediaState()
+        setMenu()
     }
 
-    private fun updateAttachedMediaView() {
+    private fun displaySelectedAccountsIcon() {
+        val accounts = accountsAdapter.selectedAccounts
+        val account = accounts.singleOrNull()
+
+        val displayDoneIcon = isAccountSelectorVisible
+
+        if (account != null) {
+            accountsCount.setText(null)
+
+            if (displayDoneIcon) {
+                Glide.clear(accountProfileImage)
+                accountProfileImage.setColorFilter(ThemeUtils.getColorFromAttribute(this,
+                        android.R.attr.colorForeground))
+                accountProfileImage.scaleType = ImageView.ScaleType.CENTER_INSIDE
+                accountProfileImage.setImageResource(R.drawable.ic_action_confirm)
+            } else {
+                accountProfileImage.clearColorFilter()
+                accountProfileImage.scaleType = ImageView.ScaleType.CENTER_CROP
+                Glide.with(this).loadProfileImage(this, account, accountProfileImage.style)
+                        .into(accountProfileImage)
+            }
+
+            accountProfileImage.setBorderColor(account.color)
+        } else {
+            accountsCount.setText(accounts.size.toString())
+
+            Glide.clear(accountProfileImage)
+            if (displayDoneIcon) {
+                accountProfileImage.setImageResource(R.drawable.ic_action_confirm)
+                accountProfileImage.scaleType = ImageView.ScaleType.CENTER_INSIDE
+            } else {
+                accountProfileImage.setImageDrawable(null)
+            }
+
+            accountProfileImage.setBorderColors(*Utils.getAccountColors(accounts))
+        }
+
+        if (displayDoneIcon) {
+            accountsCount.visibility = View.GONE
+        } else {
+            accountsCount.visibility = View.VISIBLE
+        }
+    }
+
+    private fun updateMediaState() {
         attachedMediaPreview.visibility = if (hasMedia) View.VISIBLE else View.GONE
+    }
+
+    private fun resetButtonsStates() {
+        updateLocationState()
+        updateAccountSelectionState()
+        updateUpdateStatusIcon()
+        updateMediaState()
         setMenu()
     }
 
@@ -1226,7 +1138,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         return true
     }
 
-    private fun notifyAccountSelectionChanged() {
+    private fun updateAccountSelectionState() {
         displaySelectedAccountsIcon()
         val accounts = accountsAdapter.selectedAccounts
         editText.accountKey = accounts.firstOrNull()?.key ?: Utils.getDefaultAccountKey(this)
@@ -1234,7 +1146,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val singleAccount = accounts.singleOrNull()
         ignoreMentions = singleAccount?.type == AccountType.TWITTER
         replyToSelf = singleAccount?.let { it.key == inReplyToStatus?.user_key } ?: false
-        setMenu()
     }
 
     private fun requestOrTakePhoto() {
@@ -1414,6 +1325,41 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
     }
 
+
+    private fun hasComposingStatus(): Boolean {
+        if (intent.action == INTENT_ACTION_EDIT_DRAFT) return true
+        if (hasMedia) return true
+        val text = editText.text?.toString().orEmpty()
+        if (text == originalText) return false
+        val replyTextAndMentions = getTwitterReplyTextAndMentions(text)
+        if (replyTextAndMentions != null) {
+            return replyTextAndMentions.replyText.isNotEmpty()
+        }
+        return text.isNotEmpty()
+    }
+
+    private fun confirmAndUpdateStatus() {
+        val matchResult = Regex("[DM] +([a-z0-9_]{1,20}) +[^ ]+").matchEntire(editText.text)
+        if (matchResult != null) {
+            val screenName = matchResult.groupValues[1]
+            val df = DirectMessageConfirmFragment()
+            df.arguments = Bundle {
+                this[EXTRA_SCREEN_NAME] = screenName
+            }
+            df.show(supportFragmentManager, "send_direct_message_confirm")
+        } else if (isQuotingProtectedStatus) {
+            val df = RetweetProtectedStatusWarnFragment()
+            df.show(supportFragmentManager,
+                    "retweet_protected_status_warning_message")
+        } else if (scheduleInfo != null && !extraFeaturesService.isEnabled(ExtraFeaturesService.FEATURE_SCHEDULE_STATUS)) {
+            ExtraFeaturesIntroductionDialogFragment.show(supportFragmentManager,
+                    feature = ExtraFeaturesService.FEATURE_SCHEDULE_STATUS,
+                    requestCode = REQUEST_PURCHASE_EXTRA_FEATURES)
+        } else {
+            updateStatus()
+        }
+    }
+
     private fun updateStatus() {
         if (isFinishing || editText == null) return
 
@@ -1458,6 +1404,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             shouldSkipDraft = true
             finish()
         }
+    }
+
+    private fun discardTweet() {
+        val context = applicationContext
+        val media = mediaList
+        task { media.forEach { media -> Utils.deleteMedia(context, Uri.parse(media.uri)) } }
     }
 
     private fun getStatusUpdate(): ParcelableStatusUpdate {
@@ -1620,6 +1572,63 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 set.setup()
             }
         }
+    }
+
+    private fun updateViewStyle() {
+        accountProfileImage.style = preferences[profileImageStyleKey]
+    }
+
+    private fun setupEditText() {
+        val sendByEnter = preferences.getBoolean(KEY_QUICK_SEND)
+        EditTextEnterHandler.attach(editText, ComposeEnterListener(this), sendByEnter)
+        editText.addTextChangedListener(object : TextWatcher {
+
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                setMenu()
+                updateTextCount()
+                if (s is Spannable && count == 1 && before == 0) {
+                    val imageSpans = s.getSpans(start, start + count, ImageSpan::class.java)
+                    val imageSources = ArrayList<String>()
+                    for (imageSpan in imageSpans) {
+                        imageSources.add(imageSpan.source)
+                        s.setSpan(MarkForDeleteSpan(), start, start + count,
+                                Spanned.SPAN_INCLUSIVE_INCLUSIVE)
+                    }
+                    if (!imageSources.isEmpty()) {
+                        val intent = ThemedMediaPickerActivity.withThemed(this@ComposeActivity)
+                                .getMedia(Uri.parse(imageSources[0]))
+                                .build()
+                        startActivityForResult(intent, REQUEST_PICK_MEDIA)
+                    }
+                }
+            }
+
+            override fun afterTextChanged(s: Editable) {
+                textChanged = s.isEmpty()
+                val deletes = s.getSpans(0, s.length, MarkForDeleteSpan::class.java)
+                for (delete in deletes) {
+                    s.delete(s.getSpanStart(delete), s.getSpanEnd(delete))
+                    s.removeSpan(delete)
+                }
+                for (span in s.getSpans(0, s.length, UpdateAppearance::class.java)) {
+                    trimSpans(s, span)
+                }
+            }
+
+            private fun trimSpans(s: Editable, span: Any) {
+                if (span is EmojiSpan) return
+                if (span is SuggestionSpan) return
+                if (span is MetricAffectingSpan) {
+                    s.removeSpan(span)
+                }
+            }
+        })
+        editText.customSelectionActionModeCallback = this
+        editTextContainer.touchDelegate = ComposeEditTextTouchDelegate(editTextContainer, editText)
     }
 
     class RetweetProtectedStatusWarnFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
@@ -1837,7 +1846,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             if (accounts == null || position < 0) return
             val account = accounts!![position]
             selection.put(account.key, true != selection[account.key])
-            activity.notifyAccountSelectionChanged()
+            activity.updateAccountSelectionState()
+            activity.setMenu()
             notifyDataSetChanged()
         }
 
@@ -1846,7 +1856,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             val account = accounts!![position]
             selection.clear()
             selection.put(account.key, true != selection[account.key])
-            activity.notifyAccountSelectionChanged()
+            activity.updateAccountSelectionState()
+            activity.setMenu()
             notifyDataSetChanged()
         }
     }
