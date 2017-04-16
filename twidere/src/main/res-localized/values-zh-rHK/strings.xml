@@ -461,7 +461,7 @@
   <string name="label_schedule_time_buffer_default">Buffer 預設</string>
   <string name="label_send_at">發送於</string>
   <string name="label_sensitive_content">敏感內容</string>
-  <string name="label_status_hint">眼見何事，情系何處，身在何方，心思何人？</string>
+  <string name="label_status_hint">有什麼新鮮事？</string>
   <string name="label_status_not_available">推文不可用</string>
   <string name="label_statuses">推文</string>
   <string name="label_statuses_replies">推文與回覆</string>

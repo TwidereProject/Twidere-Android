@@ -977,6 +977,7 @@
   <string name="title_following">Seguindo</string>
   <string name="title_gif_sharing">Compartindo GIF</string>
   <string name="title_home">Liña de tempo</string>
+  <string name="title_like_confirm">Gustar deste chío?</string>
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">Gústanme</string>
   <string name="title_manage_filter_subscriptions">Filtrar subscricións</string>

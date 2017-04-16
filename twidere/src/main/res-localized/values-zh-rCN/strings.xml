@@ -460,7 +460,7 @@
   <string name="label_schedule_time_buffer_default">Buffer 默认</string>
   <string name="label_send_at">发送于</string>
   <string name="label_sensitive_content">敏感内容</string>
-  <string name="label_status_hint">眼见何事，情系何处，身在何方，心思何人？</string>
+  <string name="label_status_hint">有什么新鲜事？</string>
   <string name="label_status_not_available">推文不可用</string>
   <string name="label_statuses">推文</string>
   <string name="label_statuses_replies">推文和回复</string>

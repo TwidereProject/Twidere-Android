@@ -451,6 +451,7 @@
   <string name="label_photos">画像</string>
   <string name="label_poll">投票</string>
   <string name="label_powered_by_giphy">Powered by GIPHY</string>
+  <string name="label_quote_name"><xliff:g id="user_name">%s</xliff:g>さんへの引用</string>
   <string name="label_quote_name_text"><xliff:g id="name">%1$s</xliff:g>さんのツイートを引用: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="label_refresh_and_sync_service">更新＆同期サービス</string>
   <string name="label_refresh_service">サービスをリフレッシュ</string>
@@ -716,6 +717,8 @@
   <string name="preference_summary_background_streaming">バックの代わりにホームで戻るとバックグラウンドでストリーミング接続を維持</string>
   <string name="preference_summary_chrome_custom_tab">Chrome カスタムタブでリンクを開く</string>
   <string name="preference_summary_database_item_limit">各アカウントのデータベースに格納するアイテムの上限数です。\n小さな値に設定すると読み込み速度を速くできます。</string>
+  <string name="preference_summary_favorite_confirmation">ツイートをいいねする前に確認を表示</string>
+  <string name="preference_summary_like_confirmation">ツイートをお気に入りする前に確認を表示</string>
   <string name="preference_summary_media_preload_non_metered_network">Wi-Fi などの無料のネットワーク上でのみメディアを先読みします</string>
   <string name="preference_summary_streaming_non_metered_network">WiFi時のみストリーミングに接続する</string>
   <string name="preference_summary_streaming_power_saving">充電中のみストリーミングに接続する</string>
@@ -727,11 +730,13 @@
   <string name="preference_title_background_streaming">バックグラウンドでストリーミング</string>
   <string name="preference_title_chrome_custom_tab">Chrome カスタムタブ</string>
   <string name="preference_title_database_item_limit">アイテム制限</string>
+  <string name="preference_title_favorite_confirmation">お気に入りの確認</string>
   <string name="preference_title_filter_manage_subscriptions">管理</string>
   <string name="preference_title_filter_subscriptions">フィルタの購読</string>
   <string name="preference_title_floating_detailed_view">フローティング詳細表示</string>
   <string name="preference_title_landscape">ランドスケープ</string>
   <string name="preference_title_light_font">細字フォント</string>
+  <string name="preference_title_like_confirmation">いいねの確認</string>
   <string name="preference_title_media_preload_non_metered_network">無料のネットワークでのみ先読み</string>
   <string name="preference_title_multi_column_tab_width">複数カラムの幅</string>
   <string name="preference_title_multi_column_tabs">多列タブ</string>
@@ -971,6 +976,7 @@
   <string name="title_error_invalid_account">無効なアカウント</string>
   <!-- Enhanced (paid) features title -->
   <string name="title_extra_features">追加機能</string>
+  <string name="title_favorite_confirm">このツイートをお気に入りしますか？</string>
   <!-- [noun] Twitter's favorite, in the plural -->
   <string name="title_favorites">お気に入り</string>
   <string name="title_filters">フィルタ</string>
@@ -980,9 +986,11 @@
   <string name="title_following">フォロー中</string>
   <string name="title_gif_sharing">GIF の共有</string>
   <string name="title_home">ホーム</string>
+  <string name="title_like_confirm">このツイートをいいねしますか？</string>
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">いいね</string>
   <string name="title_manage_filter_subscriptions">フィルタの購読</string>
+  <string name="title_media_timeline">メディアタイムライン</string>
   <string name="title_mentions">つながり</string>
   <string name="title_message_conversation_info">会話の情報</string>
   <string name="title_nicknames">ニックネーム</string>
