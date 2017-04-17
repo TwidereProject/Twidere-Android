@@ -71,7 +71,7 @@ class GroupFragment : AbsToolbarTabPagesFragment(), LoaderCallbacks<SingleRespon
         if (group != null) {
             activity.title = group.fullname
         } else {
-            activity.setTitle(R.string.user_list)
+            activity.setTitle(R.string.title_user_list)
         }
         activity.invalidateOptionsMenu()
     }

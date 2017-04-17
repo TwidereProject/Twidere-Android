@@ -29,8 +29,8 @@ import org.mariotaku.twidere.annotation.ReadPositionTag
 
 class ReadStateManager(context: Context) {
 
-    private val preferences = SharedPreferencesWrapper.getInstance(context,
-            TIMELINE_POSITIONS_PREFERENCES_NAME, Context.MODE_PRIVATE)
+    private val preferences = context.getSharedPreferences(TIMELINE_POSITIONS_PREFERENCES_NAME,
+            Context.MODE_PRIVATE)
 
     fun getPosition(key: String): Long {
         if (TextUtils.isEmpty(key)) return -1

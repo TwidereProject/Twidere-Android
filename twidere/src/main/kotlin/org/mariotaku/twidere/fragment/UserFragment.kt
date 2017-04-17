@@ -654,7 +654,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val activity = activity
-        nameFirst = preferences.getBoolean(KEY_NAME_FIRST)
+        nameFirst = preferences[nameFirstKey]
         cardBackgroundColor = ThemeUtils.getCardBackgroundColor(activity,
                 preferences[themeBackgroundOptionKey], preferences[themeBackgroundAlphaKey])
         actionBarShadowColor = 0xA0000000.toInt()
@@ -1136,7 +1136,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 }
             }
             TAB_TYPE_FAVORITES -> {
-                if (preferences.getBoolean(KEY_I_WANT_MY_STARS_BACK)) {
+                if (preferences[iWantMyStarsBackKey]) {
                     actionBar.subtitle = resources.getQuantityString(R.plurals.N_favorites,
                             user.favorites_count.toInt(), user.favorites_count)
                 } else {
@@ -1458,7 +1458,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 position = TAB_POSITION_STATUSES)
         pagerAdapter.add(cls = UserMediaTimelineFragment::class.java, args = tabArgs,
                 name = getString(R.string.media), type = TAB_TYPE_MEDIA, position = TAB_POSITION_MEDIA)
-        if (preferences.getBoolean(KEY_I_WANT_MY_STARS_BACK)) {
+        if (preferences[iWantMyStarsBackKey]) {
             pagerAdapter.add(cls = UserFavoritesFragment::class.java, args = tabArgs,
                     name = getString(R.string.title_favorites), type = TAB_TYPE_FAVORITES,
                     position = TAB_POSITION_FAVORITES)

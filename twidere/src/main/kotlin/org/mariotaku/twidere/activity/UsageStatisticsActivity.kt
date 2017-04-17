@@ -21,18 +21,19 @@ package org.mariotaku.twidere.activity
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import org.mariotaku.twidere.Constants.KEY_USAGE_STATISTICS
+import org.mariotaku.kpreferences.contains
+import org.mariotaku.kpreferences.get
+import org.mariotaku.kpreferences.set
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_RESID
+import org.mariotaku.twidere.constant.usageStatisticsKey
 import org.mariotaku.twidere.fragment.SettingsDetailsFragment
 
 class UsageStatisticsActivity : BaseActivity() {
 
     override fun onDestroy() {
-        if (!preferences.contains(KEY_USAGE_STATISTICS)) {
-            val editor = preferences.edit()
-            editor.putBoolean(KEY_USAGE_STATISTICS, preferences.getBoolean(KEY_USAGE_STATISTICS))
-            editor.apply()
+        if (isFinishing && usageStatisticsKey !in preferences) {
+            preferences[usageStatisticsKey] = preferences[usageStatisticsKey]
         }
         super.onDestroy()
     }

@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.util.dagger
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.twitter.Validator
 import okhttp3.Cache
 import okhttp3.ConnectionPool
@@ -27,7 +28,10 @@ import okhttp3.Dns
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.model.DefaultFeatures
-import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.ActivityTracker
+import org.mariotaku.twidere.util.ExternalThemeManager
+import org.mariotaku.twidere.util.ReadStateManager
+import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.media.MediaPreloader
 import org.mariotaku.twidere.util.media.ThumborWrapper
 import org.mariotaku.twidere.util.sync.TimelineSyncManager
@@ -56,7 +60,7 @@ class DependencyHolder internal constructor(context: Context) {
     lateinit var validator: Validator
         internal set
     @Inject
-    lateinit var preferences: SharedPreferencesWrapper
+    lateinit var preferences: SharedPreferences
         internal set
     @Inject
     lateinit var connectionPool: ConnectionPool

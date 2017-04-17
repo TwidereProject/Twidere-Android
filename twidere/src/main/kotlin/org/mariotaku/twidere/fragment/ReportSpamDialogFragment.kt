@@ -24,9 +24,10 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AlertDialog
+import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NAME_FIRST
+import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.model.ParcelableUser
 
@@ -47,7 +48,7 @@ class ReportSpamDialogFragment : BaseDialogFragment(), DialogInterface.OnClickLi
         val builder = AlertDialog.Builder(context)
         val user = user
         if (user != null) {
-            val nameFirst = preferences.getBoolean(KEY_NAME_FIRST)
+            val nameFirst = preferences[nameFirstKey]
             val displayName = userColorNameManager.getDisplayName(user, nameFirst)
             builder.setTitle(getString(R.string.report_user, displayName))
             builder.setMessage(getString(R.string.report_user_confirm_message, displayName))

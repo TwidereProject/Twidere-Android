@@ -1230,6 +1230,7 @@
     <string name="title_sync_settings">Sync settings</string>
     <string name="title_user">User</string>
     <string name="title_user_colors">User colors</string>
+    <string name="title_user_list">List</string>
     <string name="title_user_list_memberships">Belongs to</string>
     <string name="title_user_list_ownerships">Created</string>
     <string name="title_user_list_subscriptions">Subscriptions</string>
@@ -1297,7 +1298,6 @@
 
     <string name="user_blocked">Blocked this user.</string>
     <string name="user_filter_name">User: <xliff:g id="name">%s</xliff:g></string>
-    <string name="user_list">List</string>
     <string name="user_list_details">List details</string>
     <!-- User list description -->
     <string name="user_list_details_description">Description</string>

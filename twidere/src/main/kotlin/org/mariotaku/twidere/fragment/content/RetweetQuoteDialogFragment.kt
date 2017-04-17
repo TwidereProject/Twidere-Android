@@ -39,6 +39,7 @@ import android.widget.Toast
 import com.twitter.Validator
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.task
+import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
@@ -46,7 +47,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.content.RetweetQuoteDialogActivity
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.IntentConstants.*
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_QUICK_SEND
+import org.mariotaku.twidere.constant.quickSendKey
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.model.textLimit
@@ -115,7 +116,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
                 }
                 return false
             }
-        }, preferences.getBoolean(KEY_QUICK_SEND))
+        }, preferences[quickSendKey])
         enterHandler.addTextChangedListener(object : SimpleTextWatcher {
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {

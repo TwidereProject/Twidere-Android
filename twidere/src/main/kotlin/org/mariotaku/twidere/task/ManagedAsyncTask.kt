@@ -20,17 +20,14 @@
 package org.mariotaku.twidere.task
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.AsyncTask
-
 import com.squareup.otto.Bus
-
 import org.mariotaku.twidere.model.event.TaskStateChangedEvent
 import org.mariotaku.twidere.util.AsyncTaskManager
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
-import org.mariotaku.twidere.util.SharedPreferencesWrapper
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.dagger.GeneralComponent
-
 import javax.inject.Inject
 
 abstract class ManagedAsyncTask<Params, Progress, Result> @JvmOverloads constructor(
@@ -45,7 +42,7 @@ abstract class ManagedAsyncTask<Params, Progress, Result> @JvmOverloads construc
     @Inject
     lateinit var userColorNameManager: UserColorNameManager
     @Inject
-    lateinit var preferences: SharedPreferencesWrapper
+    lateinit var preferences: SharedPreferences
     @Inject
     lateinit var asyncTwitterWrapper: AsyncTwitterWrapper
 

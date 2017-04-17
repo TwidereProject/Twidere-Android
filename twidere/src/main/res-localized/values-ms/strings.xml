@@ -188,7 +188,7 @@
   <string name="title_user">Pengguna</string>
   <string name="trends">Trend</string>
   <!-- 'Tweet' here is a verb -->
-  <string name="user_list">Senarai</string>
+  <string name="title_user_list">Senarai</string>
   <!-- User list description -->
   <string name="user_list_details_description">Uraian</string>
   <!-- User list is public -->

@@ -733,7 +733,7 @@
   <string name="usage_statistics_notification_summary">Aiutaci a migliorare Twidere!</string>
   <string name="user_blocked">Blocca questo utente.</string>
   <string name="user_filter_name">Utente: <xliff:g id="name">%s</xliff:g></string>
-  <string name="user_list">Lista</string>
+  <string name="title_user_list">Lista</string>
   <string name="user_list_details">Dettagli della lista</string>
   <!-- User list description -->
   <string name="user_list_details_description">Descrizione</string>

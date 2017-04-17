@@ -89,7 +89,7 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     @Inject
     lateinit var bus: Bus
     @Inject
-    lateinit var preferences: SharedPreferencesWrapper
+    lateinit var preferences: SharedPreferences
     @Inject
     lateinit var kPreferences: KPreferences
     @Inject

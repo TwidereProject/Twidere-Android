@@ -21,6 +21,7 @@ package org.mariotaku.twidere.loader
 
 import android.accounts.AccountManager
 import android.content.Context
+import android.content.SharedPreferences
 import android.database.sqlite.SQLiteDatabase
 import android.support.annotation.WorkerThread
 import org.mariotaku.kpreferences.get
@@ -41,7 +42,6 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.task.twitter.GetStatusesTask
 import org.mariotaku.twidere.util.DebugLog
-import org.mariotaku.twidere.util.SharedPreferencesWrapper
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.cache.JsonCache
 import org.mariotaku.twidere.util.dagger.GeneralComponent
@@ -76,7 +76,7 @@ abstract class MicroBlogAPIStatusesLoader(
     @Inject
     lateinit var jsonCache: JsonCache
     @Inject
-    lateinit var preferences: SharedPreferencesWrapper
+    lateinit var preferences: SharedPreferences
     @Inject
     lateinit var userColorNameManager: UserColorNameManager
 

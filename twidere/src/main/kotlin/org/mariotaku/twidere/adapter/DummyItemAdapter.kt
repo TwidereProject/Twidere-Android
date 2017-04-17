@@ -1,6 +1,7 @@
 package org.mariotaku.twidere.adapter
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.support.v4.text.BidiFormatter
 import android.support.v7.widget.RecyclerView
 import com.bumptech.glide.RequestManager
@@ -14,7 +15,6 @@ import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.getActivityStatus
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
-import org.mariotaku.twidere.util.SharedPreferencesWrapper
 import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.dagger.GeneralComponent
@@ -32,7 +32,7 @@ class DummyItemAdapter(
 ) : IStatusesAdapter<Any>, IUsersAdapter<Any>, IUserListsAdapter<Any> {
 
     @Inject
-    lateinit var preferences: SharedPreferencesWrapper
+    lateinit var preferences: SharedPreferences
     @Inject
     override lateinit var twitterWrapper: AsyncTwitterWrapper
     @Inject

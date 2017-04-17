@@ -759,7 +759,7 @@
   <string name="usage_statistics_notification_summary">Twidere\'yi geliştirmemize yardımcı ol!</string>
   <string name="user_blocked">Bu kullanıcıyı engellediniz.</string>
   <string name="user_filter_name">Kullanıcı: <xliff:g id="name">%s</xliff:g></string>
-  <string name="user_list">Liste</string>
+  <string name="title_user_list">Liste</string>
   <string name="user_list_details">Liste ayrıntıları</string>
   <!-- User list description -->
   <string name="user_list_details_description">Açıklama</string>

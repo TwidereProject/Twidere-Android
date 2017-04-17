@@ -750,7 +750,7 @@
   <string name="usage_statistics_notification_summary">Ajuda\'ns a millorar Twidere!</string>
   <string name="user_blocked">S\'ha bloquejat aquest usuari.</string>
   <string name="user_filter_name">Usuari: <xliff:g id="name">%s</xliff:g></string>
-  <string name="user_list">Llista</string>
+  <string name="title_user_list">Llista</string>
   <string name="user_list_details">Detalls de la llista</string>
   <!-- User list description -->
   <string name="user_list_details_description">Descripció</string>

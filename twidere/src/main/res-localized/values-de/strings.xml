@@ -1034,7 +1034,7 @@
   <string name="usage_statistics_notification_summary">Hilf uns Twidere zu verbessern!</string>
   <string name="user_blocked">Dieser Benutzer wurde blockiert.</string>
   <string name="user_filter_name">Benutzer: <xliff:g id="name">%s</xliff:g></string>
-  <string name="user_list">Liste</string>
+  <string name="title_user_list">Liste</string>
   <string name="user_list_details">Listendetails</string>
   <!-- User list description -->
   <string name="user_list_details_description">Beschreibung</string>

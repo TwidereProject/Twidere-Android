@@ -14,7 +14,6 @@ import org.mariotaku.twidere.TwidereConstants.KEY_MEDIA_PRELOAD
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.ImageShapeStyle
 import org.mariotaku.twidere.annotation.PreviewStyle
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.*
 import org.mariotaku.twidere.extension.getNonEmptyString
 import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.model.UserKey
@@ -76,6 +75,22 @@ val multiColumnWidthKey = KStringKey("multi_column_tab_width", "normal")
 val streamingEnabledKey = KBooleanKey("streaming_enabled", false)
 val streamingNonMeteredNetworkKey = KBooleanKey("streaming_non_metered_network", true)
 val streamingPowerSavingKey = KBooleanKey("streaming_power_saving", true)
+val quickSendKey = KBooleanKey(KEY_QUICK_SEND, false)
+val refreshAfterTweetKey = KBooleanKey(KEY_REFRESH_AFTER_TWEET, false)
+val homeRefreshMentionsKey = KBooleanKey(KEY_HOME_REFRESH_MENTIONS, true)
+val homeRefreshDirectMessagesKey = KBooleanKey(KEY_HOME_REFRESH_DIRECT_MESSAGES, true)
+val homeRefreshSavedSearchesKey = KBooleanKey(KEY_HOME_REFRESH_SAVED_SEARCHES, true)
+
+object cacheSizeLimitKey : KSimpleKey<Int>(KEY_CACHE_SIZE_LIMIT, 300) {
+    override fun read(preferences: SharedPreferences) = preferences.getInt(key, def).coerceIn(100,
+            500)
+
+    override fun write(editor: SharedPreferences.Editor, value: Int): Boolean {
+        editor.putInt(key, value)
+        return true
+    }
+
+}
 
 object overrideLanguageKey : KSimpleKey<Locale?>("override_language", null) {
     override fun read(preferences: SharedPreferences): Locale? {

@@ -70,6 +70,7 @@ import android.widget.Toast;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.json.JSONException;
+import org.mariotaku.kpreferences.SharedPreferencesExtensionsKt;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.RateLimitStatus;
 import org.mariotaku.pickncrop.library.PNCUtils;
@@ -78,10 +79,10 @@ import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Columns.Column;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.sqliteqb.library.Selectable;
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.annotation.ProfileImageSize;
+import org.mariotaku.twidere.constant.PreferenceKeysKt;
 import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUserMention;
@@ -102,9 +103,35 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.mariotaku.twidere.TwidereConstants.DEFAULT_SHARE_FORMAT;
+import static org.mariotaku.twidere.TwidereConstants.FORMAT_PATTERN_TITLE;
+import static org.mariotaku.twidere.TwidereConstants.KEY_SHARE_FORMAT;
+import static org.mariotaku.twidere.TwidereConstants.KEY_TAB_DISPLAY_OPTION;
+import static org.mariotaku.twidere.TwidereConstants.LOGTAG;
+import static org.mariotaku.twidere.TwidereConstants.METADATA_KEY_EXTENSION_USE_JSON;
+import static org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_USER_KEY;
+import static org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME;
+import static org.mariotaku.twidere.TwidereConstants.TAB_CODE_DIRECT_MESSAGES;
+import static org.mariotaku.twidere.TwidereConstants.TAB_CODE_HOME_TIMELINE;
+import static org.mariotaku.twidere.TwidereConstants.TAB_CODE_NOTIFICATIONS_TIMELINE;
+import static org.mariotaku.twidere.TwidereConstants.VALUE_TAB_DISPLAY_OPTION_ICON;
+import static org.mariotaku.twidere.TwidereConstants.VALUE_TAB_DISPLAY_OPTION_LABEL;
+import static org.mariotaku.twidere.constant.CompatibilityConstants.EXTRA_ACCOUNT_ID;
+import static org.mariotaku.twidere.constant.CompatibilityConstants.QUERY_PARAM_USER_ID;
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY;
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEYS;
+import static org.mariotaku.twidere.constant.IntentConstants.INTENT_ACTION_PEBBLE_NOTIFICATION;
+import static org.mariotaku.twidere.constant.SharedPreferenceConstants.DEFAULT_QUOTE_FORMAT;
+import static org.mariotaku.twidere.constant.SharedPreferenceConstants.FORMAT_PATTERN_LINK;
+import static org.mariotaku.twidere.constant.SharedPreferenceConstants.FORMAT_PATTERN_NAME;
+import static org.mariotaku.twidere.constant.SharedPreferenceConstants.FORMAT_PATTERN_TEXT;
+import static org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_BANDWIDTH_SAVING_MODE;
+import static org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_DEFAULT_ACCOUNT_KEY;
+import static org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_PEBBLE_NOTIFICATIONS;
+import static org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_QUOTE_FORMAT;
 import static org.mariotaku.twidere.util.TwidereLinkify.PATTERN_TWITTER_PROFILE_IMAGES;
 
-public final class Utils implements Constants {
+public final class Utils {
 
     public static final Pattern PATTERN_XML_RESOURCE_IDENTIFIER = Pattern.compile("res/xml/([\\w_]+)\\.xml");
     public static final Pattern PATTERN_RESOURCE_IDENTIFIER = Pattern.compile("@([\\w_]+)/([\\w_]+)");
@@ -855,10 +882,11 @@ public final class Utils implements Constants {
                 || plugged == BatteryManager.BATTERY_PLUGGED_WIRELESS;
     }
 
-    public static boolean isMediaPreviewEnabled(Context context, SharedPreferencesWrapper preferences) {
-        if (!preferences.getBoolean(KEY_MEDIA_PREVIEW)) return false;
+    public static boolean isMediaPreviewEnabled(Context context, SharedPreferences preferences) {
+        if (!SharedPreferencesExtensionsKt.get(preferences, PreferenceKeysKt.getMediaPreviewKey()))
+            return false;
         final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        return !ConnectivityManagerCompat.isActiveNetworkMetered(cm) || !preferences.getBoolean(KEY_BANDWIDTH_SAVING_MODE);
+        return !ConnectivityManagerCompat.isActiveNetworkMetered(cm) || !preferences.getBoolean(KEY_BANDWIDTH_SAVING_MODE, false);
     }
 
     /**

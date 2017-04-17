@@ -3,16 +3,18 @@ package org.mariotaku.twidere.model.tab;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
 /**
  * Created by mariotaku on 2016/11/28.
  */
 
-public abstract class StringHolder implements Parcelable {
+public abstract class StringHolder {
 
     public abstract String createString(Context context);
 
+    @NonNull
     public static StringHolder resource(@StringRes int resourceId) {
         return new Resource(resourceId);
     }

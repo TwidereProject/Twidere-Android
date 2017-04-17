@@ -46,13 +46,12 @@ import org.mariotaku.twidere.util.SharedPreferencesWrapper
 class HostMappingsListFragment : AbsContentListViewFragment<HostMappingsListFragment.HostMappingAdapter>(),
         AdapterView.OnItemClickListener, MultiChoiceModeListener, OnSharedPreferenceChangeListener {
 
-    private lateinit var hostMapping: SharedPreferencesWrapper
+    private lateinit var hostMapping: SharedPreferences
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
-        hostMapping = SharedPreferencesWrapper.getInstance(activity,
-                Constants.HOST_MAPPING_PREFERENCES_NAME, Context.MODE_PRIVATE)
+        hostMapping = activity.getSharedPreferences(HOST_MAPPING_PREFERENCES_NAME, Context.MODE_PRIVATE)
         hostMapping.registerOnSharedPreferenceChangeListener(this)
         listView.choiceMode = ListView.CHOICE_MODE_MULTIPLE_MODAL
         listView.setMultiChoiceModeListener(this)

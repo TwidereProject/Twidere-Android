@@ -21,6 +21,7 @@ package org.mariotaku.twidere.loader
 
 import android.accounts.AccountManager
 import android.content.Context
+import android.content.SharedPreferences
 import android.support.v4.content.FixedAsyncTaskLoader
 import android.util.Log
 import org.mariotaku.kpreferences.get
@@ -39,7 +40,6 @@ import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableUserListUtils
-import org.mariotaku.twidere.util.SharedPreferencesWrapper
 import org.mariotaku.twidere.util.collection.NoDuplicatesArrayList
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import java.util.*
@@ -53,7 +53,7 @@ abstract class BaseUserListsLoader(
         data: List<ParcelableUserList>?
 ) : FixedAsyncTaskLoader<List<ParcelableUserList>>(context), ICursorSupportLoader {
     @Inject
-    lateinit var preferences: SharedPreferencesWrapper
+    lateinit var preferences: SharedPreferences
 
     protected val data = NoDuplicatesArrayList<ParcelableUserList>()
 

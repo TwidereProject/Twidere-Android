@@ -28,7 +28,6 @@ import org.mariotaku.ktextension.toIntOr
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.TwidereConstants.HOST_MAPPING_PREFERENCES_NAME
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.*
-import org.mariotaku.twidere.util.SharedPreferencesWrapper
 import org.xbill.DNS.*
 import java.io.IOException
 import java.net.InetAddress
@@ -39,15 +38,14 @@ import javax.inject.Singleton
 @Singleton
 class TwidereDns(context: Context, private val preferences: SharedPreferences) : Dns {
 
-    private val hostMapping: SharedPreferences
-    private val systemHosts: SystemHosts
+    private val hostMapping = context.getSharedPreferences(HOST_MAPPING_PREFERENCES_NAME,
+            Context.MODE_PRIVATE)
+    private val systemHosts = SystemHosts()
 
     private var resolver: Resolver? = null
     private var useResolver: Boolean = false
 
     init {
-        hostMapping = SharedPreferencesWrapper.getInstance(context, HOST_MAPPING_PREFERENCES_NAME, Context.MODE_PRIVATE)
-        systemHosts = SystemHosts()
         reloadDnsSettings()
     }
 

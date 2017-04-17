@@ -4,19 +4,22 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.BoolRes;
+import android.support.annotation.NonNull;
 
 /**
  * Created by mariotaku on 2016/11/28.
  */
 
-public abstract class BooleanHolder implements Parcelable {
+public abstract class BooleanHolder {
 
     public abstract boolean createBoolean(Context context);
 
+    @NonNull
     public static BooleanHolder resource(@BoolRes int resourceId) {
         return new Resource(resourceId);
     }
 
+    @NonNull
     public static BooleanHolder constant(boolean value) {
         return new Constant(value);
     }

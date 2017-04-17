@@ -905,7 +905,7 @@
   <string name="usage_statistics_notification_summary">کمک کنید تویدر را بهتر کنیم!</string>
   <string name="user_blocked">این کاربر مسدود شده است.</string>
   <string name="user_filter_name">کاربر: <xliff:g id="name">%s</xliff:g></string>
-  <string name="user_list">فهرست</string>
+  <string name="title_user_list">فهرست</string>
   <string name="user_list_details">فهرست کردن جزییات</string>
   <!-- User list description -->
   <string name="user_list_details_description">توصیف</string>

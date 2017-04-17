@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.util.dagger
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.os.Build
@@ -45,7 +46,6 @@ import org.mariotaku.mediaviewer.library.FileCache
 import org.mariotaku.mediaviewer.library.MediaDownloader
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.Constants
-import org.mariotaku.twidere.constant.SharedPreferenceConstants
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_CACHE_SIZE_LIMIT
 import org.mariotaku.twidere.constant.autoRefreshCompatibilityModeKey
 import org.mariotaku.twidere.model.DefaultFeatures
@@ -86,7 +86,7 @@ class ApplicationModule(private val context: Context) {
 
     @Provides
     @Singleton
-    fun externalThemeManager(preferences: SharedPreferencesWrapper): ExternalThemeManager {
+    fun externalThemeManager(preferences: SharedPreferences): ExternalThemeManager {
         return ExternalThemeManager(context, preferences)
     }
 
@@ -98,14 +98,13 @@ class ApplicationModule(private val context: Context) {
 
     @Provides
     @Singleton
-    fun sharedPreferences(): SharedPreferencesWrapper {
-        return SharedPreferencesWrapper.getInstance(context, Constants.SHARED_PREFERENCES_NAME,
-                Context.MODE_PRIVATE, SharedPreferenceConstants::class.java)
+    fun sharedPreferences(): SharedPreferences {
+        return context.getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
     }
 
     @Provides
     @Singleton
-    fun kPreferences(sharedPreferences: SharedPreferencesWrapper): KPreferences {
+    fun kPreferences(sharedPreferences: SharedPreferences): KPreferences {
         return KPreferences(sharedPreferences)
     }
 
@@ -129,7 +128,7 @@ class ApplicationModule(private val context: Context) {
 
     @Provides
     @Singleton
-    fun restHttpClient(prefs: SharedPreferencesWrapper, dns: Dns,
+    fun restHttpClient(prefs: SharedPreferences, dns: Dns,
             connectionPool: ConnectionPool, cache: Cache): RestHttpClient {
         val conf = HttpClientFactory.HttpClientConfiguration(prefs)
         return HttpClientFactory.createRestHttpClient(conf, dns, connectionPool, cache)
@@ -161,7 +160,7 @@ class ApplicationModule(private val context: Context) {
 
     @Provides
     @Singleton
-    fun asyncTwitterWrapper(bus: Bus, preferences: SharedPreferencesWrapper,
+    fun asyncTwitterWrapper(bus: Bus, preferences: SharedPreferences,
             asyncTaskManager: AsyncTaskManager, notificationManagerWrapper: NotificationManagerWrapper): AsyncTwitterWrapper {
         return AsyncTwitterWrapper(context, bus, preferences, asyncTaskManager, notificationManagerWrapper)
     }
@@ -175,13 +174,14 @@ class ApplicationModule(private val context: Context) {
     @Provides
     @Singleton
     fun contentNotificationManager(activityTracker: ActivityTracker, userColorNameManager: UserColorNameManager,
-            notificationManagerWrapper: NotificationManagerWrapper, preferences: SharedPreferencesWrapper): ContentNotificationManager {
+            notificationManagerWrapper: NotificationManagerWrapper,
+            preferences: SharedPreferences): ContentNotificationManager {
         return ContentNotificationManager(context, activityTracker, userColorNameManager, notificationManagerWrapper, preferences)
     }
 
     @Provides
     @Singleton
-    fun mediaLoaderWrapper(preferences: SharedPreferencesWrapper): MediaPreloader {
+    fun mediaLoaderWrapper(preferences: SharedPreferences): MediaPreloader {
         val preloader = MediaPreloader(context)
         preloader.reloadOptions(preferences)
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -191,13 +191,13 @@ class ApplicationModule(private val context: Context) {
 
     @Provides
     @Singleton
-    fun dns(preferences: SharedPreferencesWrapper): Dns {
+    fun dns(preferences: SharedPreferences): Dns {
         return TwidereDns(context, preferences)
     }
 
     @Provides
     @Singleton
-    fun mediaDownloader(preferences: SharedPreferencesWrapper, client: RestHttpClient,
+    fun mediaDownloader(preferences: SharedPreferences, client: RestHttpClient,
             thumbor: ThumborWrapper): MediaDownloader {
         return TwidereMediaDownloader(context, client, thumbor)
     }
@@ -222,7 +222,7 @@ class ApplicationModule(private val context: Context) {
 
     @Provides
     @Singleton
-    fun thumborWrapper(preferences: SharedPreferencesWrapper): ThumborWrapper {
+    fun thumborWrapper(preferences: SharedPreferences): ThumborWrapper {
         val thumbor = ThumborWrapper()
         thumbor.reloadSettings(preferences)
         return thumbor
@@ -259,13 +259,13 @@ class ApplicationModule(private val context: Context) {
 
     @Provides
     @Singleton
-    fun taskCreator(kPreferences: KPreferences, bus: Bus): TaskServiceRunner {
-        return TaskServiceRunner(context, kPreferences, bus)
+    fun taskCreator(preferences: SharedPreferences, bus: Bus): TaskServiceRunner {
+        return TaskServiceRunner(context, preferences, bus)
     }
 
     @Provides
     @Singleton
-    fun defaultFeatures(preferences: SharedPreferencesWrapper): DefaultFeatures {
+    fun defaultFeatures(preferences: SharedPreferences): DefaultFeatures {
         val features = DefaultFeatures()
         features.load(preferences)
         return features
@@ -294,7 +294,7 @@ class ApplicationModule(private val context: Context) {
     }
 
     @Provides
-    fun okHttpClient(preferences: SharedPreferencesWrapper, dns: Dns, connectionPool: ConnectionPool,
+    fun okHttpClient(preferences: SharedPreferences, dns: Dns, connectionPool: ConnectionPool,
             cache: Cache): OkHttpClient {
         val conf = HttpClientFactory.HttpClientConfiguration(preferences)
         val builder = OkHttpClient.Builder()
@@ -304,7 +304,7 @@ class ApplicationModule(private val context: Context) {
 
     @Provides
     @Singleton
-    fun dataSourceFactory(preferences: SharedPreferencesWrapper, dns: Dns, connectionPool: ConnectionPool,
+    fun dataSourceFactory(preferences: SharedPreferences, dns: Dns, connectionPool: ConnectionPool,
             cache: Cache): DataSource.Factory {
         val conf = HttpClientFactory.HttpClientConfiguration(preferences)
         val builder = OkHttpClient.Builder()
@@ -315,7 +315,7 @@ class ApplicationModule(private val context: Context) {
 
     @Provides
     @Singleton
-    fun cache(preferences: SharedPreferencesWrapper): Cache {
+    fun cache(preferences: SharedPreferences): Cache {
         val cacheSizeMB = preferences.getInt(KEY_CACHE_SIZE_LIMIT, 300).coerceIn(100..500)
         // Convert to bytes
         return Cache(getCacheDir("network", cacheSizeMB * 1048576L), cacheSizeMB * 1048576L)

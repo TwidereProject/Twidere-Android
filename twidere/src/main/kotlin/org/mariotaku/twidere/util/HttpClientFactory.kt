@@ -1,13 +1,16 @@
 package org.mariotaku.twidere.util
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.net.Uri
 import android.util.Base64
 import okhttp3.*
+import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.toIntOr
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.restfu.okhttp3.OkHttpRestClient
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.*
+import org.mariotaku.twidere.constant.cacheSizeLimitKey
 import org.mariotaku.twidere.util.dagger.DependencyHolder
 import java.io.IOException
 import java.net.InetSocketAddress
@@ -41,12 +44,12 @@ object HttpClientFactory {
         builder.cache(cache)
     }
 
-    class HttpClientConfiguration(val prefs: SharedPreferencesWrapper) {
+    class HttpClientConfiguration(val prefs: SharedPreferences) {
 
         var readTimeoutSecs: Long = -1
         var writeTimeoutSecs: Long = -1
         var connectionTimeoutSecs: Long = prefs.getInt(KEY_CONNECTION_TIMEOUT, 10).toLong()
-        var cacheSize: Int = prefs.getInt(KEY_CACHE_SIZE_LIMIT, 300).coerceIn(100..500)
+        var cacheSize: Int = prefs[cacheSizeLimitKey]
 
         internal fun applyTo(builder: OkHttpClient.Builder) {
             if (connectionTimeoutSecs >= 0) {

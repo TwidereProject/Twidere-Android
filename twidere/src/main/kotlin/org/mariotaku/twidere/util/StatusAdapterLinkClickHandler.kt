@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.util
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.support.v7.widget.RecyclerView
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.Constants
@@ -32,7 +33,8 @@ import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 /**
  * Created by mariotaku on 15/4/6.
  */
-class StatusAdapterLinkClickHandler<D>(context: Context, preferences: SharedPreferencesWrapper) : OnLinkClickHandler(context, null, preferences), Constants {
+class StatusAdapterLinkClickHandler<D>(context: Context, preferences: SharedPreferences) :
+        OnLinkClickHandler(context, null, preferences), Constants {
 
     private var adapter: IStatusesAdapter<D>? = null
 

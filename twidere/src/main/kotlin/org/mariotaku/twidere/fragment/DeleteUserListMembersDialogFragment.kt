@@ -24,11 +24,12 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AlertDialog
+import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.toTypedArray
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USERS
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER_LIST
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NAME_FIRST
+import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserList
@@ -54,7 +55,7 @@ class DeleteUserListMembersDialogFragment : BaseDialogFragment(), DialogInterfac
         if (users == null || userList == null) throw NullPointerException()
         if (users.size == 1) {
             val user = users[0]
-            val nameFirst = preferences.getBoolean(KEY_NAME_FIRST)
+            val nameFirst = preferences[nameFirstKey]
             val displayName = userColorNameManager.getDisplayName(user, nameFirst)
             builder.setTitle(getString(R.string.delete_user, displayName))
             builder.setMessage(getString(R.string.delete_user_from_list_confirm, displayName, userList.name))

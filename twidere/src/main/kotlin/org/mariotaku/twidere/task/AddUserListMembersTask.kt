@@ -1,10 +1,11 @@
 package org.mariotaku.twidere.task
 
 import android.content.Context
+import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NAME_FIRST
+import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.SingleResponse
@@ -43,7 +44,7 @@ class AddUserListMembersTask(
             val message: String
             if (users.size == 1) {
                 val user = users.first()
-                val nameFirst = preferences.getBoolean(KEY_NAME_FIRST)
+                val nameFirst = preferences[nameFirstKey]
                 val displayName = userColorNameManager.getDisplayName(user.key, user.name,
                         user.screen_name, nameFirst)
                 message = context.getString(R.string.message_toast_added_user_to_list, displayName, result.data.name)

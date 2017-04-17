@@ -410,7 +410,7 @@
   <string name="usage_statistics">Statistiky využití</string>
   <string name="user_blocked">Blokovat tohoto uživatele.</string>
   <string name="user_filter_name">Uživatel: <xliff:g id="name">%s </xliff:g></string>
-  <string name="user_list">Seznam</string>
+  <string name="title_user_list">Seznam</string>
   <!-- User list description -->
   <string name="user_list_details_description">Popis</string>
   <!-- User list is public -->

@@ -84,7 +84,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
         if (userList != null) {
             activity.title = userList.name
         } else {
-            activity.setTitle(R.string.user_list)
+            activity.setTitle(R.string.title_user_list)
         }
         activity.invalidateOptionsMenu()
     }
@@ -359,7 +359,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val builder = AlertDialog.Builder(context)
             builder.setView(R.layout.dialog_user_list_detail_editor)
-            builder.setTitle(R.string.user_list)
+            builder.setTitle(R.string.title_user_list)
             builder.setPositiveButton(android.R.string.ok, this)
             builder.setNegativeButton(android.R.string.cancel, this)
             val dialog = builder.create()

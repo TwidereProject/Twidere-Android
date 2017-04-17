@@ -1,12 +1,16 @@
 package org.mariotaku.twidere.task
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.squareup.otto.Bus
 import com.twitter.Extractor
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.twidere.model.DefaultFeatures
-import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.AsyncTwitterWrapper
+import org.mariotaku.twidere.util.ErrorInfoStore
+import org.mariotaku.twidere.util.ReadStateManager
+import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.media.MediaPreloader
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
@@ -27,7 +31,7 @@ abstract class BaseAbstractTask<Params, Result, Callback>(val context: Context) 
     @Inject
     lateinit var mediaPreloader: MediaPreloader
     @Inject
-    lateinit var preferences: SharedPreferencesWrapper
+    lateinit var preferences: SharedPreferences
     @Inject
     lateinit var kPreferences: KPreferences
     @Inject

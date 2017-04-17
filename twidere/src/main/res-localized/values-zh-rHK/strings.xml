@@ -1054,7 +1054,7 @@
   <string name="usage_statistics_notification_summary">幫助我們改進Twidere！</string>
   <string name="user_blocked">您封鎖了這個使用者</string>
   <string name="user_filter_name">使用者：<xliff:g id="name">%s</xliff:g></string>
-  <string name="user_list">列表</string>
+  <string name="title_user_list">列表</string>
   <string name="user_list_details">列表詳情</string>
   <!-- User list description -->
   <string name="user_list_details_description">簡介</string>

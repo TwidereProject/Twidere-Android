@@ -21,6 +21,7 @@ package org.mariotaku.twidere.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
 import android.database.Cursor
 import android.net.Uri
 import android.support.v4.widget.SimpleCursorAdapter
@@ -40,7 +41,6 @@ import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
-import org.mariotaku.twidere.util.SharedPreferencesWrapper
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.dagger.GeneralComponent
@@ -54,7 +54,7 @@ class UserAutoCompleteAdapter(
 ) : SimpleCursorAdapter(context, R.layout.list_item_auto_complete, null, emptyArray(), intArrayOf(), 0) {
 
     @Inject
-    lateinit var preferences: SharedPreferencesWrapper
+    lateinit var preferences: SharedPreferences
     @Inject
     lateinit var userColorNameManager: UserColorNameManager
 

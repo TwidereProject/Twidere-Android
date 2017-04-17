@@ -838,7 +838,7 @@
   <string name="usage_statistics_notification_summary">Помогите нам улучшить Twidere!</string>
   <string name="user_blocked">Заблокировать этого пользователя.</string>
   <string name="user_filter_name">Пользователь:<xliff:g id="name">%s</xliff:g></string>
-  <string name="user_list">Список</string>
+  <string name="title_user_list">Список</string>
   <string name="user_list_details">Детали списка</string>
   <!-- User list description -->
   <string name="user_list_details_description">Описание</string>

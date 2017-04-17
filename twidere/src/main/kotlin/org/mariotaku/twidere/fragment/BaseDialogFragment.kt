@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.fragment
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.support.v4.app.DialogFragment
 import com.squareup.otto.Bus
 import com.twitter.Validator
@@ -37,7 +38,7 @@ open class BaseDialogFragment : DialogFragment() {
     @Inject
     lateinit var userColorNameManager: UserColorNameManager
     @Inject
-    lateinit var preferences: SharedPreferencesWrapper
+    lateinit var preferences: SharedPreferences
     @Inject
     lateinit var kPreferences: KPreferences
     @Inject

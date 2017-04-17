@@ -20,6 +20,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.layout_draggable_list_with_empty_view.*
 import nl.komponents.kovenant.task
+import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
 import org.mariotaku.sqliteqb.library.Expression
@@ -31,7 +32,7 @@ import org.mariotaku.twidere.activity.ColorPickerDialogActivity
 import org.mariotaku.twidere.adapter.AccountDetailsAdapter
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NEW_DOCUMENT_API
+import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.model.getAccountKey
 import org.mariotaku.twidere.extension.model.setActivated
@@ -151,8 +152,8 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
 
     override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         val account = adapter.getItem(position)
-        IntentUtils.openUserProfile(context, account.user, preferences.getBoolean(KEY_NEW_DOCUMENT_API), Referral.SELF_PROFILE,
-                null)
+        IntentUtils.openUserProfile(context, account.user, preferences[newDocumentApiKey],
+                Referral.SELF_PROFILE, null)
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<AccountDetails>> {

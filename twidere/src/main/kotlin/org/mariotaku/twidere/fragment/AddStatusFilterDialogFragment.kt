@@ -25,9 +25,10 @@ import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AlertDialog
 import com.twitter.Extractor
+import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_STATUS
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NAME_FIRST
+import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUserMention
@@ -49,7 +50,7 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
         val builder = AlertDialog.Builder(context)
         filterItems = filterItemsInfo
         val entries = arrayOfNulls<String>(filterItems!!.size)
-        val nameFirst = preferences.getBoolean(KEY_NAME_FIRST)
+        val nameFirst = preferences[nameFirstKey]
         for (i in 0 until entries.size) {
             val info = filterItems!![i]
             when (info.type) {

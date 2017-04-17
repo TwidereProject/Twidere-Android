@@ -297,7 +297,7 @@
   <string name="type_to_compose">Tryk for at komponere</string>
   <string name="uninstall">Afinstallér</string>
   <string name="user_blocked">Bloker denne bruger.</string>
-  <string name="user_list">Liste</string>
+  <string name="title_user_list">Liste</string>
   <!-- User list description -->
   <string name="user_list_details_description">Beskrivelse</string>
   <!-- User list is public -->

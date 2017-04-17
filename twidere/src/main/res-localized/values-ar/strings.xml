@@ -680,7 +680,7 @@
   <string name="usage_statistics_notification_summary">ساعدنا كي نحسن تويدر!</string>
   <string name="user_blocked">تم حظر هذا المستخدم.</string>
   <string name="user_filter_name">المستخدم : <xliff:g id="name">%s</xliff:g></string>
-  <string name="user_list">لائحة</string>
+  <string name="title_user_list">لائحة</string>
   <string name="user_list_details">تفاصيل القائمة</string>
   <!-- User list description -->
   <string name="user_list_details_description">الوصف</string>

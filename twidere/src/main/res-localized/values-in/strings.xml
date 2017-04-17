@@ -816,7 +816,7 @@
   <string name="usage_statistics_notification_summary">Bantu kami memperbaiki Twidere!</string>
   <string name="user_blocked">Unlock pengguna ini.</string>
   <string name="user_filter_name">Pengguna: <xliff:g id="name">%s</xliff:g></string>
-  <string name="user_list">Daftar</string>
+  <string name="title_user_list">Daftar</string>
   <string name="user_list_details">Daftar rincian</string>
   <!-- User list description -->
   <string name="user_list_details_description">Deskripsi</string>

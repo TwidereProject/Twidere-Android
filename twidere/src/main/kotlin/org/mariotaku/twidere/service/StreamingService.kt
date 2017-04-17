@@ -133,7 +133,7 @@ class StreamingService : BaseService() {
     private fun updateStreamingInstances(): Boolean {
         val am = AccountManager.get(this)
         val supportedAccounts = AccountUtils.getAllAccountDetails(am, true).filter { it.isStreamingSupported }
-        val supportedPrefs = supportedAccounts.map { AccountPreferences(this, it.key) }
+        val supportedPrefs = supportedAccounts.map { AccountPreferences(this, preferences, it.key) }
         val enabledAccounts = supportedAccounts.filter { account ->
             return@filter supportedPrefs.any {
                 account.key == it.accountKey && it.isStreamingEnabled

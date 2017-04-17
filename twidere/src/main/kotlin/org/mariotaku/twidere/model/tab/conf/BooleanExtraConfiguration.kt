@@ -10,6 +10,7 @@ import android.widget.TextView
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.fragment.CustomTabsFragment
 import org.mariotaku.twidere.model.tab.BooleanHolder
+import org.mariotaku.twidere.model.tab.StringHolder
 import org.mariotaku.twidere.model.tab.TabConfiguration
 
 /**
@@ -17,8 +18,9 @@ import org.mariotaku.twidere.model.tab.TabConfiguration
  */
 open class BooleanExtraConfiguration(
         key: String,
+        title: StringHolder,
         val defaultValue: BooleanHolder
-) : TabConfiguration.ExtraConfiguration(key) {
+) : TabConfiguration.ExtraConfiguration(key, title) {
 
     open var value: Boolean
         get() = checkBox.isChecked
@@ -28,7 +30,11 @@ open class BooleanExtraConfiguration(
 
     private lateinit var checkBox: CheckBox
 
-    constructor(key: String, def: Boolean) : this(key, BooleanHolder.constant(def))
+    constructor(key: String, title: StringHolder, def: Boolean) : this(key, title,
+            BooleanHolder.constant(def))
+
+    constructor(key: String, title: Int, def: Boolean) : this(key, StringHolder.resource(title),
+            BooleanHolder.constant(def))
 
     override fun onCreateView(context: Context, parent: ViewGroup): View {
         return LayoutInflater.from(context).inflate(R.layout.layout_extra_config_checkbox, parent, false)

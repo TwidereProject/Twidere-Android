@@ -3,6 +3,7 @@ package org.mariotaku.twidere.activity
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.NavUtils
@@ -28,7 +29,6 @@ import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.util.Analyzer
-import org.mariotaku.twidere.util.SharedPreferencesWrapper
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
@@ -166,7 +166,7 @@ class PremiumDashboardActivity : BaseActivity() {
         protected lateinit var extraFeaturesService: ExtraFeaturesService
 
         @Inject
-        protected lateinit var preferences: SharedPreferencesWrapper
+        protected lateinit var preferences: SharedPreferences
 
         @Inject
         protected lateinit var mScheduleProviderFactory: StatusScheduleProvider.Factory

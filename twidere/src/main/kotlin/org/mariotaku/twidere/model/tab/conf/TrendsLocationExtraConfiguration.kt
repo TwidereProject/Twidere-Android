@@ -15,14 +15,16 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_LOCATION
 import org.mariotaku.twidere.fragment.CustomTabsFragment.TabEditorDialogFragment
 import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.tab.StringHolder
 import org.mariotaku.twidere.model.tab.TabConfiguration
 
 /**
  * Created by mariotaku on 2016/12/5.
  */
 open class TrendsLocationExtraConfiguration(
-        key: String
-) : TabConfiguration.ExtraConfiguration(key) {
+        key: String,
+        title: StringHolder
+) : TabConfiguration.ExtraConfiguration(key, title) {
 
     open var value: Place? = null
         set(value) {
@@ -36,6 +38,8 @@ open class TrendsLocationExtraConfiguration(
         }
 
     private lateinit var summaryView: TextView
+
+    constructor(key: String, titleRes: Int) : this(key, StringHolder.resource(titleRes))
 
     override fun onCreateView(context: Context, parent: ViewGroup): View {
         return LayoutInflater.from(context).inflate(R.layout.layout_extra_config_checkbox, parent, false)

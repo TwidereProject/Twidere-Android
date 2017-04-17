@@ -127,7 +127,7 @@
   <string name="trends">పోకడలు</string>
   <!-- 'Tweet' here is a verb -->
   <string name="unknown_language">గుర్తుతెలియని భాష</string>
-  <string name="user_list">జాబితా</string>
+  <string name="title_user_list">జాబితా</string>
   <string name="user_list_details">జాబితా వివరాలు</string>
   <!-- User list description -->
   <!-- User list is public -->

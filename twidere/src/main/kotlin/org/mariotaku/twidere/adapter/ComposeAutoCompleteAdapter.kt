@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.adapter
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.database.Cursor
 import android.graphics.PorterDuff.Mode
 import android.support.v4.widget.SimpleCursorAdapter
@@ -35,7 +36,6 @@ import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.SuggestionItem
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Suggestions
-import org.mariotaku.twidere.util.SharedPreferencesWrapper
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.view.ProfileImageView
@@ -45,7 +45,7 @@ class ComposeAutoCompleteAdapter(context: Context, val requestManager: RequestMa
         R.layout.list_item_auto_complete, null, emptyArray(), intArrayOf(), 0) {
 
     @Inject
-    lateinit var preferences: SharedPreferencesWrapper
+    lateinit var preferences: SharedPreferences
     @Inject
     lateinit var userColorNameManager: UserColorNameManager
 

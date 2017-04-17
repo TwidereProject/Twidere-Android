@@ -736,7 +736,7 @@
   <string name="usage_statistics_notification_summary">Auta meitä kehittämään Twidereä!</string>
   <string name="user_blocked">Käyttäjä on estetty.</string>
   <string name="user_filter_name">Käyttäjä: <xliff:g id="name">%s</xliff:g></string>
-  <string name="user_list">Lista</string>
+  <string name="title_user_list">Lista</string>
   <string name="user_list_details">Listaa lisätiedot</string>
   <!-- User list description -->
   <string name="user_list_details_description">Kuvaus</string>

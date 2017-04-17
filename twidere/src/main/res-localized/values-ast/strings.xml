@@ -1029,7 +1029,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="usage_statistics_notification_summary">¡Ayúdamos a ameyorar Twidere!</string>
   <string name="user_blocked">Bloquióse a esti usuariu.</string>
   <string name="user_filter_name">Usuariu: <xliff:g id="name">%s</xliff:g></string>
-  <string name="user_list">Llistáu</string>
+  <string name="title_user_list">Llistáu</string>
   <string name="user_list_details">Detalles del llistáu</string>
   <!-- User list description -->
   <string name="user_list_details_description">Descripción</string>

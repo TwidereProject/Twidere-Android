@@ -443,7 +443,7 @@
   <string name="usage_statistics">סטטיסטיקות שימוש</string>
   <string name="user_blocked">משתמש זה נחסם.</string>
   <string name="user_filter_name">משתמש: <xliff:g id="name">%s</xliff:g></string>
-  <string name="user_list">רשימה</string>
+  <string name="title_user_list">רשימה</string>
   <!-- User list description -->
   <string name="user_list_details_description">תיאור</string>
   <!-- User list is public -->

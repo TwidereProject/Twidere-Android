@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.adapter
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.database.Cursor
 import android.support.v4.widget.SimpleCursorAdapter
 import android.support.v7.widget.RecyclerViewAccessor
@@ -30,7 +31,6 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.twidere.constant.mediaPreviewStyleKey
 import org.mariotaku.twidere.model.Draft
-import org.mariotaku.twidere.util.SharedPreferencesWrapper
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.view.holder.DraftViewHolder
 import javax.inject.Inject
@@ -41,7 +41,7 @@ class DraftsAdapter(
 ) : SimpleCursorAdapter(context, DraftViewHolder.layoutResource, null, emptyArray(), intArrayOf(), 0) {
 
     @Inject
-    lateinit var preferences: SharedPreferencesWrapper
+    lateinit var preferences: SharedPreferences
 
     private val mediaPreviewStyle: Int
 

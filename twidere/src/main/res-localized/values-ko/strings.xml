@@ -937,7 +937,7 @@
   <string name="usage_statistics_notification_summary">Twidere를 보완하는데 도와주세요!</string>
   <string name="user_blocked">사용자 차단</string>
   <string name="user_filter_name">사용자: <xliff:g id="name">%s</xliff:g></string>
-  <string name="user_list">리스트</string>
+  <string name="title_user_list">리스트</string>
   <string name="user_list_details">리스트 상세 정보</string>
   <!-- User list description -->
   <string name="user_list_details_description">설명</string>

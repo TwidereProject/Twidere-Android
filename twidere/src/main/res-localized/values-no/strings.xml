@@ -667,7 +667,7 @@
   <string name="usage_statistics_notification_summary">Hjelp oss å forbedre Twidere!</string>
   <string name="user_blocked">Blokkerte denne brukeren.</string>
   <string name="user_filter_name">Bruker: <xliff:g id="name">%s</xliff:g></string>
-  <string name="user_list">Liste</string>
+  <string name="title_user_list">Liste</string>
   <string name="user_list_details">Listedetaljer</string>
   <!-- User list description -->
   <string name="user_list_details_description">Beskrivelse</string>

@@ -74,6 +74,7 @@ import org.mariotaku.twidere.annotation.ProfileImageSize
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.constant.extraFeaturesNoticeVersionKey
+import org.mariotaku.twidere.constant.iWantMyStarsBackKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.extension.loadProfileBanner
@@ -301,7 +302,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             noAccountContainer.visibility = View.VISIBLE
             profileContainer.visibility = View.INVISIBLE
         }
-        useStarsForLikes = preferences.getBoolean(KEY_I_WANT_MY_STARS_BACK)
+        useStarsForLikes = preferences[iWantMyStarsBackKey]
         accountsAdapter.accounts = accounts
         val defaultKey = preferences.getString(KEY_DEFAULT_ACCOUNT_KEY, null)?.let(UserKey::valueOf)
                 ?: accounts.firstOrNull { it.activated }?.key

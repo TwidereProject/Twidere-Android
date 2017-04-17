@@ -754,7 +754,7 @@
   <string name="usage_statistics_notification_summary">Help ons om Twidere te verbeteren!</string>
   <string name="user_blocked">Deze gebruiker is geblokkeerd.</string>
   <string name="user_filter_name">Gebruiker:<xliff:g id="name">%s</xliff:g></string>
-  <string name="user_list">Lijst</string>
+  <string name="title_user_list">Lijst</string>
   <string name="user_list_details">Lijstdetails</string>
   <!-- User list description -->
   <string name="user_list_details_description">Beschrijving</string>

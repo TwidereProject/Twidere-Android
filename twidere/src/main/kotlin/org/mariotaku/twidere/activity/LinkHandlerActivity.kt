@@ -67,7 +67,6 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
-import org.mariotaku.twidere.util.Utils.LINK_ID_FILTERS_IMPORT_BLOCKS
 import org.mariotaku.twidere.util.linkhandler.TwidereLinkMatcher
 import org.mariotaku.twidere.util.theme.getCurrentThemeResource
 
@@ -356,7 +355,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
                 setTitle(R.string.title_statuses)
             }
             LINK_ID_USER_FAVORITES -> {
-                if (preferences.getBoolean(SharedPreferenceConstants.KEY_I_WANT_MY_STARS_BACK)) {
+                if (preferences[iWantMyStarsBackKey]) {
                     setTitle(R.string.title_favorites)
                 } else {
                     setTitle(R.string.title_likes)
@@ -375,7 +374,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
                 setTitle(R.string.action_twitter_muted_users)
             }
             LINK_ID_USER_LIST -> {
-                setTitle(R.string.user_list)
+                setTitle(R.string.title_user_list)
             }
             LINK_ID_GROUP -> {
                 setTitle(R.string.group)

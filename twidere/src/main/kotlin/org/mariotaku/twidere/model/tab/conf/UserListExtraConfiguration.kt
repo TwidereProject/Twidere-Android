@@ -23,7 +23,8 @@ import org.mariotaku.twidere.view.holder.SimpleUserListViewHolder
  * Created by mariotaku on 2016/11/28.
  */
 
-class UserListExtraConfiguration(key: String) : TabConfiguration.ExtraConfiguration(key) {
+class UserListExtraConfiguration(key: String) : TabConfiguration.ExtraConfiguration(key,
+        R.string.title_user_list) {
     var value: ParcelableUserList? = null
         private set
 

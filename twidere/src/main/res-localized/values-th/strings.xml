@@ -1043,7 +1043,7 @@
   <string name="usage_statistics_notification_summary">มาช่วยเราปรับปรุง Twidere!</string>
   <string name="user_blocked">บล็อคผู้ใช้นี้แล้ว</string>
   <string name="user_filter_name">ผู้ใช้: <xliff:g id="name">%s</xliff:g></string>
-  <string name="user_list">รายการ</string>
+  <string name="title_user_list">รายการ</string>
   <string name="user_list_details">รายละเอียดลิสต์</string>
   <!-- User list description -->
   <string name="user_list_details_description">คำอธิบาย</string>

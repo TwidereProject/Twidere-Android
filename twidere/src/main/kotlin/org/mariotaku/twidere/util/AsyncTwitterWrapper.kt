@@ -21,6 +21,7 @@ package org.mariotaku.twidere.util
 
 import android.content.ContentValues
 import android.content.Context
+import android.content.SharedPreferences
 import android.net.Uri
 import com.squareup.otto.Bus
 import com.squareup.otto.Subscribe
@@ -36,7 +37,9 @@ import org.mariotaku.microblog.library.twitter.model.*
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants
-import org.mariotaku.twidere.constant.SharedPreferenceConstants
+import org.mariotaku.twidere.constant.homeRefreshDirectMessagesKey
+import org.mariotaku.twidere.constant.homeRefreshMentionsKey
+import org.mariotaku.twidere.constant.homeRefreshSavedSearchesKey
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.event.*
@@ -56,7 +59,7 @@ import java.util.*
 class AsyncTwitterWrapper(
         val context: Context,
         private val bus: Bus,
-        private val preferences: SharedPreferencesWrapper,
+        private val preferences: SharedPreferences,
         private val asyncTaskManager: AsyncTaskManager,
         private val notificationManager: NotificationManagerWrapper
 ) {
@@ -280,7 +283,7 @@ class AsyncTwitterWrapper(
                         accountKeys.toNulls())
             }
         })
-        if (preferences.getBoolean(SharedPreferenceConstants.KEY_HOME_REFRESH_MENTIONS)) {
+        if (preferences[homeRefreshMentionsKey]) {
             getActivitiesAboutMeAsync(object : SimpleRefreshTaskParam() {
                 override val accountKeys: Array<UserKey> by lazy { action() }
 
@@ -290,12 +293,12 @@ class AsyncTwitterWrapper(
                 }
             })
         }
-        if (preferences.getBoolean(SharedPreferenceConstants.KEY_HOME_REFRESH_DIRECT_MESSAGES)) {
+        if (preferences[homeRefreshDirectMessagesKey]) {
             getMessagesAsync(object : GetMessagesTask.RefreshMessagesTaskParam(context) {
                 override val accountKeys: Array<UserKey> by lazy { action() }
             })
         }
-        if (preferences.getBoolean(SharedPreferenceConstants.KEY_HOME_REFRESH_SAVED_SEARCHES)) {
+        if (preferences[homeRefreshSavedSearchesKey]) {
             getSavedSearchesAsync(action())
         }
         return true

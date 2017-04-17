@@ -23,7 +23,8 @@ import org.mariotaku.twidere.view.holder.SimpleUserViewHolder
  * Created by mariotaku on 2016/11/28.
  */
 
-class UserExtraConfiguration(key: String) : TabConfiguration.ExtraConfiguration(key) {
+class UserExtraConfiguration(key: String) : TabConfiguration.ExtraConfiguration(key,
+        R.string.title_user) {
     var value: ParcelableUser? = null
         private set
 
@@ -61,8 +62,8 @@ class UserExtraConfiguration(key: String) : TabConfiguration.ExtraConfiguration(
     override fun onActivityResult(fragment: TabEditorDialogFragment, requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             1 -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    val user: ParcelableUser = data!!.getParcelableExtra(EXTRA_USER)
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    val user: ParcelableUser = data.getParcelableExtra(EXTRA_USER)
                     viewHolder.displayUser(user)
                     viewHolder.itemView.visibility = View.VISIBLE
                     hintView.visibility = View.GONE

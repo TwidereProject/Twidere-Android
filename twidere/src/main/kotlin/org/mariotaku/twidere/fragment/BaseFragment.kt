@@ -20,12 +20,14 @@
 package org.mariotaku.twidere.fragment
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.text.BidiFormatter
 import com.squareup.otto.Bus
 import com.twitter.Validator
 import nl.komponents.kovenant.Promise
+import okhttp3.Dns
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.model.DefaultFeatures
@@ -52,7 +54,7 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     @Inject
     lateinit var userColorNameManager: UserColorNameManager
     @Inject
-    lateinit var preferences: SharedPreferencesWrapper
+    lateinit var preferences: SharedPreferences
     @Inject
     lateinit var notificationManager: NotificationManagerWrapper
     @Inject
@@ -73,6 +75,8 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     lateinit var timelineSyncManagerFactory: TimelineSyncManager.Factory
     @Inject
     lateinit var restHttpClient: RestHttpClient
+    @Inject
+    lateinit var dns: Dns
 
     protected val statusScheduleProvider: StatusScheduleProvider?
         get() = statusScheduleProviderFactory.newInstance(context)

@@ -21,18 +21,26 @@ package org.mariotaku.twidere.model
 
 import android.accounts.AccountManager
 import android.content.Context
+import android.content.SharedPreferences
 import android.media.RingtoneManager
 import android.net.Uri
 import android.support.v4.content.ContextCompat
 import android.text.TextUtils
+import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.contains
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.ACCOUNT_PREFERENCES_NAME_PREFIX
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.*
+import org.mariotaku.twidere.constant.defaultAutoRefreshKey
 import org.mariotaku.twidere.model.util.AccountUtils
 
-class AccountPreferences(private val context: Context, val accountKey: UserKey) {
-    private val preferences = context.getSharedPreferences("$ACCOUNT_PREFERENCES_NAME_PREFIX$accountKey", Context.MODE_PRIVATE)
+class AccountPreferences(
+        private val context: Context,
+        private val preferences: SharedPreferences,
+        val accountKey: UserKey
+) {
+    private val accountPreferences = context.getSharedPreferences(
+            "$ACCOUNT_PREFERENCES_NAME_PREFIX$accountKey", Context.MODE_PRIVATE)
 
     val defaultNotificationLightColor: Int
         get() {
@@ -45,20 +53,24 @@ class AccountPreferences(private val context: Context, val accountKey: UserKey) 
         }
 
     val directMessagesNotificationType: Int
-        get() = preferences.getInt(KEY_NOTIFICATION_TYPE_DIRECT_MESSAGES, DEFAULT_NOTIFICATION_TYPE_DIRECT_MESSAGES)
+        get() = accountPreferences.getInt(KEY_NOTIFICATION_TYPE_DIRECT_MESSAGES,
+                DEFAULT_NOTIFICATION_TYPE_DIRECT_MESSAGES)
 
     val homeTimelineNotificationType: Int
-        get() = preferences.getInt(KEY_NOTIFICATION_TYPE_HOME, DEFAULT_NOTIFICATION_TYPE_HOME)
+        get() = accountPreferences.getInt(KEY_NOTIFICATION_TYPE_HOME,
+                DEFAULT_NOTIFICATION_TYPE_HOME)
 
     val mentionsNotificationType: Int
-        get() = preferences.getInt(KEY_NOTIFICATION_TYPE_MENTIONS, DEFAULT_NOTIFICATION_TYPE_MENTIONS)
+        get() = accountPreferences.getInt(KEY_NOTIFICATION_TYPE_MENTIONS,
+                DEFAULT_NOTIFICATION_TYPE_MENTIONS)
 
     val notificationLightColor: Int
-        get() = preferences.getInt(KEY_NOTIFICATION_LIGHT_COLOR, defaultNotificationLightColor)
+        get() = accountPreferences.getInt(KEY_NOTIFICATION_LIGHT_COLOR,
+                defaultNotificationLightColor)
 
     val notificationRingtone: Uri
         get() {
-            val ringtone = preferences.getString(KEY_NOTIFICATION_RINGTONE, null)
+            val ringtone = accountPreferences.getString(KEY_NOTIFICATION_RINGTONE, null)
             if (TextUtils.isEmpty(ringtone)) {
                 return RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
             } else {
@@ -67,57 +79,66 @@ class AccountPreferences(private val context: Context, val accountKey: UserKey) 
         }
 
     val isAutoRefreshEnabled: Boolean
-        get() = preferences.getBoolean(KEY_AUTO_REFRESH, preferences.getBoolean(KEY_DEFAULT_AUTO_REFRESH, false))
+        get() = accountPreferences.getBoolean(KEY_AUTO_REFRESH, preferences[defaultAutoRefreshKey])
 
     val isAutoRefreshHomeTimelineEnabled: Boolean
-        get() = preferences.getBoolean(KEY_AUTO_REFRESH_HOME_TIMELINE, DEFAULT_AUTO_REFRESH_HOME_TIMELINE)
+        get() = accountPreferences.getBoolean(KEY_AUTO_REFRESH_HOME_TIMELINE,
+                DEFAULT_AUTO_REFRESH_HOME_TIMELINE)
 
     val isAutoRefreshMentionsEnabled: Boolean
-        get() = preferences.getBoolean(KEY_AUTO_REFRESH_MENTIONS, DEFAULT_AUTO_REFRESH_MENTIONS)
+        get() = accountPreferences.getBoolean(KEY_AUTO_REFRESH_MENTIONS,
+                DEFAULT_AUTO_REFRESH_MENTIONS)
 
     val isAutoRefreshDirectMessagesEnabled: Boolean
-        get() = preferences.getBoolean(KEY_AUTO_REFRESH_DIRECT_MESSAGES, DEFAULT_AUTO_REFRESH_DIRECT_MESSAGES)
+        get() = accountPreferences.getBoolean(KEY_AUTO_REFRESH_DIRECT_MESSAGES,
+                DEFAULT_AUTO_REFRESH_DIRECT_MESSAGES)
 
     val isAutoRefreshTrendsEnabled: Boolean
-        get() = preferences.getBoolean(KEY_AUTO_REFRESH_TRENDS, DEFAULT_AUTO_REFRESH_TRENDS)
+        get() = accountPreferences.getBoolean(KEY_AUTO_REFRESH_TRENDS, DEFAULT_AUTO_REFRESH_TRENDS)
 
     val isStreamingEnabled: Boolean
-        get() = preferences.getBoolean(KEY_ENABLE_STREAMING, false)
+        get() = accountPreferences.getBoolean(KEY_ENABLE_STREAMING, false)
 
     val isStreamHomeTimelineEnabled: Boolean
-        get() = preferences.getBoolean("stream_home_timeline", true)
+        get() = accountPreferences.getBoolean("stream_home_timeline", true)
 
     val isStreamInteractionsEnabled: Boolean
-        get() = preferences.getBoolean("stream_interactions", true)
+        get() = accountPreferences.getBoolean("stream_interactions", true)
 
     val isStreamDirectMessagesEnabled: Boolean
-        get() = preferences.getBoolean("stream_direct_messages", true)
+        get() = accountPreferences.getBoolean("stream_direct_messages", true)
 
     val isStreamNotificationUsersEnabled: Boolean
-        get() = preferences.getBoolean("stream_notification_users", true)
+        get() = accountPreferences.getBoolean("stream_notification_users", true)
 
     val isDirectMessagesNotificationEnabled: Boolean
-        get() = preferences.getBoolean(KEY_DIRECT_MESSAGES_NOTIFICATION, DEFAULT_DIRECT_MESSAGES_NOTIFICATION)
+        get() = accountPreferences.getBoolean(KEY_DIRECT_MESSAGES_NOTIFICATION,
+                DEFAULT_DIRECT_MESSAGES_NOTIFICATION)
 
     val isHomeTimelineNotificationEnabled: Boolean
-        get() = preferences.getBoolean(KEY_HOME_TIMELINE_NOTIFICATION, DEFAULT_HOME_TIMELINE_NOTIFICATION)
+        get() = accountPreferences.getBoolean(KEY_HOME_TIMELINE_NOTIFICATION,
+                DEFAULT_HOME_TIMELINE_NOTIFICATION)
 
     val isInteractionsNotificationEnabled: Boolean
-        get() = preferences.getBoolean(KEY_MENTIONS_NOTIFICATION, DEFAULT_MENTIONS_NOTIFICATION)
+        get() = accountPreferences.getBoolean(KEY_MENTIONS_NOTIFICATION,
+                DEFAULT_MENTIONS_NOTIFICATION)
 
     val isNotificationFollowingOnly: Boolean
-        get() = preferences.getBoolean(KEY_NOTIFICATION_FOLLOWING_ONLY, false)
+        get() = accountPreferences.getBoolean(KEY_NOTIFICATION_FOLLOWING_ONLY, false)
 
     val isNotificationMentionsOnly: Boolean
-        get() = preferences.getBoolean(KEY_NOTIFICATION_MENTIONS_ONLY, false)
+        get() = accountPreferences.getBoolean(KEY_NOTIFICATION_MENTIONS_ONLY, false)
 
     val isNotificationEnabled: Boolean
-        get() = preferences.getBoolean(KEY_NOTIFICATION, DEFAULT_NOTIFICATION)
+        get() = accountPreferences.getBoolean(KEY_NOTIFICATION, DEFAULT_NOTIFICATION)
 
     companion object {
 
-        fun getAccountPreferences(context: Context, accountKeys: Array<UserKey>): Array<AccountPreferences> {
-            return Array(accountKeys.size) { AccountPreferences(context, accountKeys[it]) }
+        fun getAccountPreferences(context: Context, preferences: SharedPreferences,
+                accountKeys: Array<UserKey>): Array<AccountPreferences> {
+            return Array(accountKeys.size) {
+                AccountPreferences(context, preferences, accountKeys[it])
+            }
         }
 
         fun isNotificationHasLight(flags: Int): Boolean {

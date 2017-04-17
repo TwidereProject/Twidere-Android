@@ -730,7 +730,7 @@
   <string name="usage_statistics_notification_summary">Pomóż nam ulepszyć Twidere!</string>
   <string name="user_blocked">Zablokowano tego użytkownika.</string>
   <string name="user_filter_name">Użytkownik: <xliff:g id="name">%s</xliff:g></string>
-  <string name="user_list">Lista</string>
+  <string name="title_user_list">Lista</string>
   <!-- User list description -->
   <string name="user_list_details_description">Opis</string>
   <!-- User list is public -->

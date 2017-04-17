@@ -1567,7 +1567,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun setupEditText() {
-        val sendByEnter = preferences.getBoolean(KEY_QUICK_SEND)
+        val sendByEnter = preferences[quickSendKey]
         EditTextEnterHandler.attach(editText, ComposeEnterListener(this), sendByEnter)
         editText.addTextChangedListener(object : TextWatcher {
 

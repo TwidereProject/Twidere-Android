@@ -1,11 +1,11 @@
 package org.mariotaku.twidere.service
 
 import android.app.IntentService
+import android.content.SharedPreferences
 import com.twitter.Extractor
 import com.twitter.Validator
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.NotificationManagerWrapper
-import org.mariotaku.twidere.util.SharedPreferencesWrapper
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import javax.inject.Inject
@@ -13,7 +13,7 @@ import javax.inject.Inject
 abstract class BaseIntentService(tag: String) : IntentService(tag) {
 
     @Inject
-    lateinit var preferences: SharedPreferencesWrapper
+    lateinit var preferences: SharedPreferences
     @Inject
     lateinit var twitterWrapper: AsyncTwitterWrapper
     @Inject
