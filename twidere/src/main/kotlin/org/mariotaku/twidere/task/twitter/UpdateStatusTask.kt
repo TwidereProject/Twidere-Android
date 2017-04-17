@@ -393,7 +393,7 @@ class UpdateStatusTask(
         val status = StatusUpdate(overrideText)
         val inReplyToStatus = statusUpdate.in_reply_to_status
 
-        if (inReplyToStatus != null) {
+        if (statusUpdate.draft_action == Draft.Action.REPLY && inReplyToStatus != null) {
             status.inReplyToStatusId(inReplyToStatus.id)
 
             val details = statusUpdate.accounts[index]

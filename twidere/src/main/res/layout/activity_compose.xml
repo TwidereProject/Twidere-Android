@@ -107,10 +107,15 @@
 
     </RelativeLayout>
 
-    <View
+    <ProgressBar
+        android:id="@+id/composeProgress"
+        style="?android:progressBarStyleHorizontal"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?dividerVertical"/>
+        android:indeterminate="true"
+        android:padding="0dp"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <RelativeLayout
         android:id="@+id/composeBottombar"

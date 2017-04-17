@@ -34,7 +34,6 @@ import android.location.*
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
-import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
 import android.support.v7.view.SupportMenuInflater
 import android.support.v7.widget.ActionMenuView.OnMenuItemClickListener
@@ -1244,18 +1243,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private fun setProgressVisible(visible: Boolean) {
         if (isFinishing) return
-        executeAfterFragmentResumed { activity ->
-            val composeActivity = activity as ComposeActivity
-            val fm = composeActivity.supportFragmentManager
-            val f = fm.findFragmentByTag(DISCARD_STATUS_DIALOG_FRAGMENT_TAG)
-            if (!visible && f is DialogFragment) {
-                f.dismiss()
-            } else if (visible) {
-                val df = ProgressDialogFragment()
-                df.show(fm, DISCARD_STATUS_DIALOG_FRAGMENT_TAG)
-                df.isCancelable = false
-            }
-        }
+        composeProgress.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     private fun setRecentLocation(location: ParcelableLocation?) {
@@ -1628,6 +1616,13 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
         })
         editText.customSelectionActionModeCallback = this
+        editText.imageInputListener = { contentInfo ->
+            val task = AddMediaTask(this, arrayOf(contentInfo.contentUri), true, false)
+            TaskStarter.execute(task)
+            task.callback = {
+                contentInfo.releasePermission()
+            }
+        }
         editTextContainer.touchDelegate = ComposeEditTextTouchDelegate(editTextContainer, editText)
     }
 
@@ -1863,22 +1858,25 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private class AddMediaTask(activity: ComposeActivity, sources: Array<Uri>, copySrc: Boolean,
-            deleteSrc: Boolean) : AbsAddMediaTask<ComposeActivity>(activity, sources, copySrc, deleteSrc) {
+            deleteSrc: Boolean) : AbsAddMediaTask<((List<ParcelableMediaUpdate>?) -> Unit)?>(
+            activity,
+            sources, copySrc, deleteSrc) {
 
-        init {
-            callback = activity
-        }
+        private val activityRef = WeakReference(activity)
 
-        override fun afterExecute(activity: ComposeActivity?, result: List<ParcelableMediaUpdate>?) {
-            if (activity == null || result == null) return
+        override fun afterExecute(callback: ((List<ParcelableMediaUpdate>?) -> Unit)?,
+                result: List<ParcelableMediaUpdate>?) {
+            val activity = activityRef.get() ?: return
             activity.setProgressVisible(false)
-            activity.addMedia(result)
+            if (result != null) {
+                activity.addMedia(result)
+            }
             activity.setMenu()
             activity.updateTextCount()
         }
 
         override fun beforeExecute() {
-            val activity = this.callback ?: return
+            val activity = activityRef.get() ?: return
             activity.setProgressVisible(true)
         }
 
@@ -2040,7 +2038,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         private const val EXTRA_SHOULD_SAVE_ACCOUNTS = "should_save_accounts"
         private const val EXTRA_ORIGINAL_TEXT = "original_text"
         private const val EXTRA_DRAFT_UNIQUE_ID = "draft_unique_id"
-        private const val DISCARD_STATUS_DIALOG_FRAGMENT_TAG = "discard_status"
 
         private const val REQUEST_ATTACH_LOCATION_PERMISSION = 301
         private const val REQUEST_PICK_MEDIA_PERMISSION = 302

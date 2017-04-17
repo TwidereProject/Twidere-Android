@@ -36,8 +36,8 @@ android {
         applicationId "org.mariotaku.twidere"
         minSdkVersion project.properties['overrideMinSdkVersion'] ?: 14
         targetSdkVersion 25
-        versionCode 335
-        versionName '3.5.18'
+        versionCode 336
+        versionName '3.5.19'
         multiDexEnabled true
 
         buildConfigField 'boolean', 'LEAK_CANARY_ENABLED', 'Boolean.parseBoolean("true")'
@@ -132,6 +132,7 @@ dependencies {
 
     compile 'com.android.support:multidex:1.0.1'
     compile "com.android.support:support-v4:${libVersions['SupportLib']}"
+    compile "com.android.support:support-v13:${libVersions['SupportLib']}"
     compile "com.android.support:appcompat-v7:${libVersions['SupportLib']}"
     compile "com.android.support:cardview-v7:${libVersions['SupportLib']}"
     compile "com.android.support:recyclerview-v7:${libVersions['SupportLib']}"

@@ -53,17 +53,18 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
 
     String LOGTAG = TWIDERE_APP_NAME;
 
+    String SHARED_PREFERENCES_NAME = "preferences";
     String USER_NICKNAME_PREFERENCES_NAME = "user_nicknames";
     String USER_COLOR_PREFERENCES_NAME = "user_colors";
     String HOST_MAPPING_PREFERENCES_NAME = "host_mapping";
     String MESSAGE_DRAFTS_PREFERENCES_NAME = "message_drafts";
-    String SHARED_PREFERENCES_NAME = "preferences";
     String PERMISSION_PREFERENCES_NAME = "app_permissions";
     String SYNC_PREFERENCES_NAME = "sync_preferences";
     String TIMELINE_POSITIONS_PREFERENCES_NAME = "timeline_positions";
-    String ACCOUNT_PREFERENCES_NAME_PREFIX = "account_preferences_";
     String KEYBOARD_SHORTCUTS_PREFERENCES_NAME = "keyboard_shortcuts_preferences";
     String ETAG_CACHE_PREFERENCES_NAME = "etag_cache";
+    String ETAG_MASTODON_APPS_PREFERENCES_NAME = "mastodon_apps";
+    String ACCOUNT_PREFERENCES_NAME_PREFIX = "account_preferences_";
 
     String TWITTER_CONSUMER_KEY = "0WEJk1x6AlgtjGRhyABXw";
     String TWITTER_CONSUMER_SECRET = "gWXNqEFhO3fMkAqoIKpTdjK0MOJs68xnOky0FRdDTP8";

@@ -33,11 +33,19 @@
         android:scaleType="centerCrop"
         tools:src="@drawable/nyan_stars_background_tile"/>
 
+    <ProgressBar
+        android:id="@+id/loadProgress"
+        style="?android:progressBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
     <ImageView
         android:id="@+id/videoIndicator"
         android:layout_width="@dimen/element_size_msmall"
         android:layout_height="@dimen/element_size_msmall"
         android:layout_gravity="center"
+        android:contentDescription="@string/label_video"
         android:src="@drawable/ic_card_media_play"/>
 
     <com.lnikkila.extendedtouchview.ExtendedTouchView

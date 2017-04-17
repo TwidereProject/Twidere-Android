@@ -162,6 +162,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
             intent.putExtra(EXTRA_STATUS, status)
             intent.putExtra(EXTRA_QUOTE_ORIGINAL_STATUS, quoteOriginalStatus.isChecked)
             startActivity(intent)
+            dismiss()
         }
 
         if (savedInstanceState == null) {

@@ -357,6 +357,12 @@ class ApplicationModule(private val context: Context) {
         return TimelineSyncManager.newFactory()
     }
 
+    @Provides
+    @Singleton
+    fun mastodonApplicationRegistry(): MastodonApplicationRegistry {
+        return MastodonApplicationRegistry(context)
+    }
+
     private fun getCacheDir(dirName: String, sizeInBytes: Long): File {
         return Utils.getExternalCacheDir(context, dirName, sizeInBytes) ?:
                 Utils.getInternalCacheDir(context, dirName)

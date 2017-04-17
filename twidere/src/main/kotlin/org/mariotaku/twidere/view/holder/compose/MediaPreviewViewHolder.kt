@@ -22,17 +22,39 @@ package org.mariotaku.twidere.view.holder.compose
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
+import com.bumptech.glide.load.resource.drawable.GlideDrawable
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.MediaPreviewAdapter
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableMediaUpdate
+import java.lang.Exception
 
 class MediaPreviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnLongClickListener, View.OnClickListener {
 
-    internal val imageView = itemView.findViewById(R.id.image) as ImageView
-    internal val videoIndicatorView = itemView.findViewById(R.id.videoIndicator)
-    internal val removeView = itemView.findViewById(R.id.remove)
-    internal val editView = itemView.findViewById(R.id.edit)
+    private val imageView = itemView.findViewById(R.id.image) as ImageView
+    private val videoIndicatorView = itemView.findViewById(R.id.videoIndicator)
+    private val loadProgress = itemView.findViewById(R.id.loadProgress)
+    private val removeView = itemView.findViewById(R.id.remove)
+    private val editView = itemView.findViewById(R.id.edit)
+
+    private val requestListener = object : RequestListener<String, GlideDrawable> {
+        override fun onException(e: Exception?, model: String?, target: Target<GlideDrawable>?,
+                isFirstResource: Boolean): Boolean {
+            loadProgress.visibility = View.GONE
+            return false
+        }
+
+        override fun onResourceReady(resource: GlideDrawable?, model: String?,
+                target: Target<GlideDrawable>?, isFromMemoryCache: Boolean,
+                isFirstResource: Boolean): Boolean {
+            loadProgress.visibility = View.GONE
+            return false
+        }
+
+    }
+
     var adapter: MediaPreviewAdapter? = null
 
     init {
@@ -43,7 +65,8 @@ class MediaPreviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     }
 
     fun displayMedia(adapter: MediaPreviewAdapter, media: ParcelableMediaUpdate) {
-        adapter.requestManager.load(media.uri).into(imageView)
+        loadProgress.visibility = View.VISIBLE
+        adapter.requestManager.load(media.uri).listener(requestListener).into(imageView)
         videoIndicatorView.visibility = if (media.type == ParcelableMedia.Type.VIDEO) {
             View.VISIBLE
         } else {
