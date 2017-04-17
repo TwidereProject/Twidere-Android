@@ -80,7 +80,7 @@ class UserQrDialogFragment : BaseDialogFragment() {
             fragment.qrView.visibility = View.INVISIBLE
             fragment.qrProgress.visibility = View.VISIBLE
         } and loadProfileImage().then { drawable ->
-            val fragment = weakThis.get() ?: throw InterruptedException()
+            val fragment = weakThis.get()?.takeIf { it.context != null } ?: throw InterruptedException()
             val background = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight,
                     Bitmap.Config.ARGB_8888)
             val canvas = Canvas(background)
@@ -99,7 +99,7 @@ class UserQrDialogFragment : BaseDialogFragment() {
             background.recycle()
             return@then result
         }.successUi { bitmap ->
-            val fragment = weakThis.get()?.takeIf { it.view != null } ?: return@successUi
+            val fragment = weakThis.get()?.takeIf { it.context != null && it.view != null } ?: return@successUi
             fragment.qrView.visibility = View.VISIBLE
             fragment.qrProgress.visibility = View.GONE
             fragment.qrView.setImageDrawable(BitmapDrawable(fragment.resources, bitmap).apply {

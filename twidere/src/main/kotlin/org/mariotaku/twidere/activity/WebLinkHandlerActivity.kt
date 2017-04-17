@@ -15,9 +15,9 @@ import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.IntentUtils
+import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.dagger.DependencyHolder
-import org.mariotaku.twidere.util.ThemeUtils
 import java.util.*
 
 class WebLinkHandlerActivity : Activity() {
@@ -334,6 +334,12 @@ class WebLinkHandlerActivity : Activity() {
                         return Pair(Intent(Intent.ACTION_VIEW, builder.build()), true)
                     }
                 }
+            }
+            "redirect" -> {
+                val url = uri.getQueryParameter("url")?.let(Uri::parse) ?: return Pair(null, false)
+                val preferences = DependencyHolder.get(this).preferences
+                val (intent, _) = IntentUtils.browse(this, preferences, userTheme, url, false)
+                return Pair(intent, true)
             }
         }
         return Pair(null, false)
