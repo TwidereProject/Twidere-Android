@@ -36,8 +36,8 @@ android {
         applicationId "org.mariotaku.twidere"
         minSdkVersion project.properties['overrideMinSdkVersion'] ?: 14
         targetSdkVersion 25
-        versionCode 336
-        versionName '3.5.19'
+        versionCode 337
+        versionName '3.5.20'
         multiDexEnabled true
 
         buildConfigField 'boolean', 'LEAK_CANARY_ENABLED', 'Boolean.parseBoolean("true")'
