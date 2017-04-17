@@ -29,6 +29,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.exoplayer2.*
@@ -47,9 +48,11 @@ import kotlinx.android.synthetic.main.layout_media_viewer_video_overlay.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
+import org.mariotaku.ktextension.contains
 import org.mariotaku.mediaviewer.library.MediaViewerFragment
 import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewerFragment
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.activity.MediaViewerActivity
 import org.mariotaku.twidere.annotation.CacheFileType
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_POSITION
 import org.mariotaku.twidere.extension.model.authorizationHeader
@@ -127,6 +130,8 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
                     }
 
                     hideProgress()
+                    val activity = activity as? MediaViewerActivity
+                    activity?.setBarVisibility(true)
                 }
                 ExoPlayer.STATE_READY -> {
                     playbackCompleted = playWhenReady
@@ -170,6 +175,29 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
             updateVolume()
         }
         playerView.useController = !isControlDisabled
+        playerView.controllerShowTimeoutMs = 0
+        playerView.setOnSystemUiVisibilityChangeListener { visibility ->
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) return@setOnSystemUiVisibilityChangeListener
+            val visible = MediaViewerActivity.FLAG_SYSTEM_UI_HIDE_BARS !in
+                    activity.window.decorView.systemUiVisibility
+            if (visible) {
+                playerView.showController()
+            } else {
+                playerView.hideController()
+            }
+        }
+        playerView.setOnTouchListener { _, event ->
+            if (event.action != MotionEvent.ACTION_DOWN) return@setOnTouchListener false
+            val activity = activity as? MediaViewerActivity ?: return@setOnTouchListener false
+            val visible = !activity.isBarShowing
+            activity.setBarVisibility(visible)
+            if (visible) {
+                playerView.showController()
+            } else {
+                playerView.hideController()
+            }
+            return@setOnTouchListener true
+        }
         updateVolume()
     }
 

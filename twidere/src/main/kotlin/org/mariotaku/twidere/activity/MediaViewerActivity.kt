@@ -26,6 +26,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.Parcelable
+import android.support.annotation.RequiresApi
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -33,14 +34,16 @@ import android.support.v4.graphics.ColorUtils
 import android.support.v4.view.ViewPager
 import android.support.v4.widget.ViewDragHelper
 import android.support.v7.app.WindowDecorActionBar
-import android.support.v7.app.containerView
+import android.support.v7.app.decorToolbar
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_media_viewer.*
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.ktextension.checkAllSelfPermissionsGranted
+import org.mariotaku.ktextension.contains
 import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.ktextension.toTypedArray
 import org.mariotaku.mediaviewer.library.*
@@ -50,6 +53,8 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.iface.IBaseActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarShowHideHelper
 import org.mariotaku.twidere.annotation.CacheFileType
+import org.mariotaku.twidere.extension.addSystemUiVisibility
+import org.mariotaku.twidere.extension.removeSystemUiVisibility
 import org.mariotaku.twidere.fragment.PermissionRequestDialog
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
@@ -95,6 +100,14 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         intent.getParcelableArrayExtra(EXTRA_MEDIA)?.toTypedArray(ParcelableMedia.CREATOR).orEmpty()
     }
 
+    private val currentFragment: MediaViewerFragment? get() {
+        val viewPager = findViewPager()
+        val adapter = viewPager.adapter
+        val currentItem = viewPager.currentItem
+        if (currentItem < 0 || currentItem >= adapter.count) return null
+        return adapter.instantiateItem(viewPager, currentItem) as? MediaViewerFragment
+    }
+
     override val shouldApplyWindowBackground: Boolean = false
 
     override val controlBarHeight: Int
@@ -114,7 +127,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
             val actionBar = supportActionBar
             if (actionBar != null && !hideOffsetNotSupported) {
                 if (actionBar is WindowDecorActionBar) {
-                    val toolbar = actionBar.containerView
+                    val toolbar = actionBar.decorToolbar.viewGroup
                     toolbar.alpha = offset
                 }
                 try {
@@ -157,7 +170,6 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         }
     }
 
-
     override fun onContentChanged() {
         super.onContentChanged()
         mediaViewerHelper.onContentChanged()
@@ -171,11 +183,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         super.onPrepareOptionsMenu(menu)
-        val viewPager = findViewPager()
-        val adapter = viewPager.adapter
-        val currentItem = viewPager.currentItem
-        if (currentItem < 0 || currentItem >= adapter.count) return false
-        val obj = adapter.instantiateItem(viewPager, currentItem) as? MediaViewerFragment ?: return false
+        val obj = currentFragment ?: return false
         if (obj.isDetached || obj.host == null) return false
         val running = obj.isMediaLoading
         val downloaded = obj.isMediaLoaded
@@ -277,12 +285,23 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
     }
 
     override fun isBarShowing(): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            return FLAG_SYSTEM_UI_HIDE_BARS !in window.decorView.systemUiVisibility
+        }
         return controlBarOffset >= 1
     }
 
     override fun setBarVisibility(visible: Boolean) {
         if (isBarShowing == visible) return
-        setControlBarVisibleAnimate(visible)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            if (visible) {
+                window.decorView.removeSystemUiVisibility(FLAG_SYSTEM_UI_HIDE_BARS)
+            } else {
+                window.decorView.addSystemUiVisibility(FLAG_SYSTEM_UI_HIDE_BARS)
+            }
+        } else {
+            setControlBarVisibleAnimate(visible)
+        }
     }
 
     override fun getDownloader(): MediaDownloader {
@@ -361,17 +380,18 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
 
     override fun onSwipeStateChanged(state: Int) {
         supportActionBar?.let {
+            val barShowing = controlBarOffset >= 1
             if (state == ViewDragHelper.STATE_IDLE) {
-                if (wasBarShowing == 1 && !isBarShowing) {
-                    setBarVisibility(true)
+                if (wasBarShowing == 1 && !barShowing) {
+                    setControlBarVisibleAnimate(true)
                 }
                 wasBarShowing = 0
             } else {
                 if (wasBarShowing == 0) {
-                    wasBarShowing = if (isBarShowing) 1 else -1
+                    wasBarShowing = if (barShowing) 1 else -1
                 }
-                if (isBarShowing) {
-                    setBarVisibility(false)
+                if (barShowing) {
+                    setControlBarVisibleAnimate(false)
                 }
             }
         }
@@ -380,7 +400,6 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
     override fun setControlBarVisibleAnimate(visible: Boolean, listener: ControlBarShowHideHelper.ControlBarAnimationListener?) {
         controlBarShowHideHelper.setControlBarVisibleAnimate(visible, listener)
     }
-
 
     override fun onFitSystemWindows(insets: Rect) {
         super.onFitSystemWindows(insets)
@@ -531,6 +550,10 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         private val REQUEST_SHARE_MEDIA = 201
         private val REQUEST_PERMISSION_SAVE_MEDIA = 202
         private val REQUEST_PERMISSION_SHARE_MEDIA = 203
+
+        @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
+        const val FLAG_SYSTEM_UI_HIDE_BARS = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                View.SYSTEM_UI_FLAG_FULLSCREEN
     }
 }
 

@@ -62,6 +62,14 @@ fun View.getLocationInWindow(rect: Rect) {
     rect.set(tempLocation[0], tempLocation[1], tempLocation[0] + width, tempLocation[1] + height)
 }
 
+fun View.addSystemUiVisibility(systemUiVisibility: Int) {
+    this.systemUiVisibility = this.systemUiVisibility or systemUiVisibility
+}
+
+fun View.removeSystemUiVisibility(systemUiVisibility: Int) {
+    this.systemUiVisibility = this.systemUiVisibility and systemUiVisibility.inv()
+}
+
 private fun offsetToRoot(view: View, rect: Rect) {
     var parent = view.parent as? View
     while (parent != null) {

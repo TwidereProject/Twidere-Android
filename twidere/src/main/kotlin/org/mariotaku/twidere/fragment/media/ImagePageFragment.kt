@@ -31,6 +31,7 @@ import com.davemorrissey.labs.subscaleview.decoder.SkiaImageDecoder
 import org.mariotaku.mediaviewer.library.CacheDownloadLoader
 import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewerFragment
 import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.activity.MediaViewerActivity
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.TwidereMathUtils
@@ -94,6 +95,10 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
         imageView.maxScale = resources.displayMetrics.density
         imageView.setBitmapDecoderClass(PreviewBitmapDecoder::class.java)
         imageView.setParallelLoadingEnabled(true)
+        imageView.setOnClickListener {
+            val activity = activity as? MediaViewerActivity ?: return@setOnClickListener
+            activity.toggleBar()
+        }
     }
 
     override fun getImageSource(data: CacheDownloadLoader.Result): ImageSource {

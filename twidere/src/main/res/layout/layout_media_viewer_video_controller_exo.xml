@@ -24,6 +24,7 @@
     android:layout_width="match_parent"
     android:layout_gravity="bottom"
     android:layout_height="?actionBarSize"
+    android:background="@drawable/bg_viewer_actionbar"
     android:clickable="true">
 
     <FrameLayout
