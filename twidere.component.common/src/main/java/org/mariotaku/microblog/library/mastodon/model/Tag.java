@@ -19,8 +19,42 @@
  * under the License.
  */
 
+package org.mariotaku.microblog.library.mastodon.model;
+
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
 /**
- * Remember not to use {@link org.mariotaku.twidere.util.JsonSerializer} because it's single threaded
- * Such operation may lead to dead lock
+ * {@see https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#tag}
+ *
+ * Created by mariotaku on 2017/4/17.
  */
-package org.mariotaku.twidere.model;
+@JsonObject
+public class Tag {
+    /**
+     * The hashtag, not including the preceding {@code #}
+     */
+    @JsonField(name = "name")
+    String name;
+    /**
+     * The URL of the hashtag
+     */
+    @JsonField(name = "url")
+    String url;
+
+    public String getName() {
+        return name;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    @Override
+    public String toString() {
+        return "Tag{" +
+                "name='" + name + '\'' +
+                ", url='" + url + '\'' +
+                '}';
+    }
+}

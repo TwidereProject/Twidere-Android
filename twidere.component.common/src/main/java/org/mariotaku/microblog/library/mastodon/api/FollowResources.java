@@ -19,8 +19,11 @@
  * under the License.
  */
 
+package org.mariotaku.microblog.library.mastodon.api;
+
 /**
- * Remember not to use {@link org.mariotaku.twidere.util.JsonSerializer} because it's single threaded
- * Such operation may lead to dead lock
+ * Created by mariotaku on 2017/4/17.
  */
-package org.mariotaku.twidere.model;
+
+public interface FollowResources {
+}

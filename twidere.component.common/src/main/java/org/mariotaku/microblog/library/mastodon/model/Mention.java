@@ -19,45 +19,62 @@
  * under the License.
  */
 
-package org.mariotaku.microblog.library.twitter.model;
+package org.mariotaku.microblog.library.mastodon.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.mariotaku.microblog.library.twitter.util.TwitterDateConverter;
-
-import java.util.Date;
-
 /**
- * Created by mariotaku on 16/2/26.
+ * {@see https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#mention}
+ *
+ * Created by mariotaku on 2017/4/17.
  */
 @JsonObject
-public class StreamEvent {
-    @JsonField(name = "created_at", typeConverter = TwitterDateConverter.class)
-    Date createdAt;
-    @JsonField(name = "source")
-    User source;
-    @JsonField(name = "target")
-    User target;
+public class Mention {
+    /**
+     * URL of user's profile (can be remote)
+     */
+    @JsonField(name = "url")
+    String url;
+    /**
+     * The username of the account
+     */
+    @JsonField(name = "username")
+    String username;
+    /**
+     * Equals {@code username} for local users, includes {@code @domain} for remote ones
+     */
+    @JsonField(name = "acct")
+    String acct;
+    /**
+     * Account ID
+     */
+    @JsonField(name = "id")
+    String id;
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public String getUrl() {
+        return url;
     }
 
-    public User getSource() {
-        return source;
+    public String getUsername() {
+        return username;
     }
 
-    public User getTarget() {
-        return target;
+    public String getAcct() {
+        return acct;
+    }
+
+    public String getId() {
+        return id;
     }
 
     @Override
     public String toString() {
-        return "StreamEvent{" +
-                "createdAt=" + createdAt +
-                ", source=" + source +
-                ", target=" + target +
+        return "Mention{" +
+                "url='" + url + '\'' +
+                ", username='" + username + '\'' +
+                ", acct='" + acct + '\'' +
+                ", id='" + id + '\'' +
                 '}';
     }
 }

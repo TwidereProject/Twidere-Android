@@ -19,45 +19,54 @@
  * under the License.
  */
 
-package org.mariotaku.microblog.library.twitter.model;
+package org.mariotaku.microblog.library.mastodon.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.mariotaku.microblog.library.twitter.util.TwitterDateConverter;
-
-import java.util.Date;
+import java.util.Arrays;
 
 /**
- * Created by mariotaku on 16/2/26.
+ * {@see https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#results}
+ *
+ * Created by mariotaku on 2017/4/17.
  */
 @JsonObject
-public class StreamEvent {
-    @JsonField(name = "created_at", typeConverter = TwitterDateConverter.class)
-    Date createdAt;
-    @JsonField(name = "source")
-    User source;
-    @JsonField(name = "target")
-    User target;
+public class Results {
+    /**
+     * An array of matched {@link Account}
+     */
+    @JsonField(name = "accounts")
+    Account[] accounts;
+    /**
+     * An array of matched {@link Status}
+     */
+    @JsonField(name = "statuses")
+    Status[] statuses;
+    /**
+     * An array of matched hashtags, as strings
+     */
+    @JsonField(name = "hashtags")
+    String[] hashtags;
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public Account[] getAccounts() {
+        return accounts;
     }
 
-    public User getSource() {
-        return source;
+    public Status[] getStatuses() {
+        return statuses;
     }
 
-    public User getTarget() {
-        return target;
+    public String[] getHashtags() {
+        return hashtags;
     }
 
     @Override
     public String toString() {
-        return "StreamEvent{" +
-                "createdAt=" + createdAt +
-                ", source=" + source +
-                ", target=" + target +
+        return "Results{" +
+                "accounts=" + Arrays.toString(accounts) +
+                ", statuses=" + Arrays.toString(statuses) +
+                ", hashtags=" + Arrays.toString(hashtags) +
                 '}';
     }
 }

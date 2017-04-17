@@ -19,45 +19,44 @@
  * under the License.
  */
 
-package org.mariotaku.microblog.library.twitter.model;
+package org.mariotaku.microblog.library.mastodon.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.mariotaku.microblog.library.twitter.util.TwitterDateConverter;
-
-import java.util.Date;
+import java.util.Arrays;
 
 /**
- * Created by mariotaku on 16/2/26.
+ * {@see https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#context}
+ *
+ * Created by mariotaku on 2017/4/17.
  */
 @JsonObject
-public class StreamEvent {
-    @JsonField(name = "created_at", typeConverter = TwitterDateConverter.class)
-    Date createdAt;
-    @JsonField(name = "source")
-    User source;
-    @JsonField(name = "target")
-    User target;
+public class Context {
+    /**
+     * The ancestors of the status in the conversation, as a list of {@link Status}
+     */
+    @JsonField(name = "ancestors")
+    Status[] ancestors;
+    /**
+     * The descendants of the status in the conversation, as a list of {@link Status}
+     */
+    @JsonField(name = "descendants")
+    Status[] descendants;
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public Status[] getAncestors() {
+        return ancestors;
     }
 
-    public User getSource() {
-        return source;
-    }
-
-    public User getTarget() {
-        return target;
+    public Status[] getDescendants() {
+        return descendants;
     }
 
     @Override
     public String toString() {
-        return "StreamEvent{" +
-                "createdAt=" + createdAt +
-                ", source=" + source +
-                ", target=" + target +
+        return "Context{" +
+                "ancestors=" + Arrays.toString(ancestors) +
+                ", descendants=" + Arrays.toString(descendants) +
                 '}';
     }
 }

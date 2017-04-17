@@ -19,45 +19,42 @@
  * under the License.
  */
 
-package org.mariotaku.microblog.library.twitter.model;
+package org.mariotaku.microblog.library.mastodon.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.mariotaku.microblog.library.twitter.util.TwitterDateConverter;
-
-import java.util.Date;
-
 /**
- * Created by mariotaku on 16/2/26.
+ * {@see https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#report}
+ *
+ * Created by mariotaku on 2017/4/17.
  */
 @JsonObject
-public class StreamEvent {
-    @JsonField(name = "created_at", typeConverter = TwitterDateConverter.class)
-    Date createdAt;
-    @JsonField(name = "source")
-    User source;
-    @JsonField(name = "target")
-    User target;
+public class Report {
+    /**
+     * The ID of the report
+     */
+    @JsonField(name = "id")
+    String id;
+    /**
+     * The action taken in response to the report
+     */
+    @JsonField(name = "action_taken")
+    boolean actionTaken;
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public String getId() {
+        return id;
     }
 
-    public User getSource() {
-        return source;
-    }
-
-    public User getTarget() {
-        return target;
+    public boolean isActionTaken() {
+        return actionTaken;
     }
 
     @Override
     public String toString() {
-        return "StreamEvent{" +
-                "createdAt=" + createdAt +
-                ", source=" + source +
-                ", target=" + target +
+        return "Report{" +
+                "id='" + id + '\'' +
+                ", actionTaken=" + actionTaken +
                 '}';
     }
 }

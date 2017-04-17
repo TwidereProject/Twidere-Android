@@ -19,8 +19,42 @@
  * under the License.
  */
 
+package org.mariotaku.microblog.library.mastodon.model;
+
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
 /**
- * Remember not to use {@link org.mariotaku.twidere.util.JsonSerializer} because it's single threaded
- * Such operation may lead to dead lock
+ * {@see https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#application}
+ *
+ * Created by mariotaku on 2017/4/17.
  */
-package org.mariotaku.twidere.model;
+@JsonObject
+public class Application {
+    /**
+     * Name of the app
+     */
+    @JsonField(name = "name")
+    String name;
+    /**
+     * Homepage URL of the app
+     */
+    @JsonField(name = "website")
+    String website;
+
+    public String getName() {
+        return name;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    @Override
+    public String toString() {
+        return "Application{" +
+                "name='" + name + '\'' +
+                ", website='" + website + '\'' +
+                '}';
+    }
+}

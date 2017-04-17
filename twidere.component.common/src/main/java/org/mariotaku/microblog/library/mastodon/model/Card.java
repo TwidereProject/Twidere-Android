@@ -19,45 +19,62 @@
  * under the License.
  */
 
-package org.mariotaku.microblog.library.twitter.model;
+package org.mariotaku.microblog.library.mastodon.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.mariotaku.microblog.library.twitter.util.TwitterDateConverter;
-
-import java.util.Date;
-
 /**
- * Created by mariotaku on 16/2/26.
+ * {@see https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#card}
+ *
+ * Created by mariotaku on 2017/4/17.
  */
 @JsonObject
-public class StreamEvent {
-    @JsonField(name = "created_at", typeConverter = TwitterDateConverter.class)
-    Date createdAt;
-    @JsonField(name = "source")
-    User source;
-    @JsonField(name = "target")
-    User target;
+public class Card {
+    /**
+     * The url associated with the card
+     */
+    @JsonField(name = "url")
+    String url;
+    /**
+     * The title of the card
+     */
+    @JsonField(name = "title")
+    String title;
+    /**
+     * The card description
+     */
+    @JsonField(name = "description")
+    String description;
+    /**
+     * The image associated with the card, if any
+     */
+    @JsonField(name = "image")
+    String image;
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public String getUrl() {
+        return url;
     }
 
-    public User getSource() {
-        return source;
+    public String getTitle() {
+        return title;
     }
 
-    public User getTarget() {
-        return target;
+    public String getDescription() {
+        return description;
+    }
+
+    public String getImage() {
+        return image;
     }
 
     @Override
     public String toString() {
-        return "StreamEvent{" +
-                "createdAt=" + createdAt +
-                ", source=" + source +
-                ", target=" + target +
+        return "Card{" +
+                "url='" + url + '\'' +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", image='" + image + '\'' +
                 '}';
     }
 }
