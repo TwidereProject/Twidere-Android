@@ -26,8 +26,9 @@ import android.util.AttributeSet
 import android.view.Menu
 import android.view.View
 import android.widget.ImageView
+import org.mariotaku.twidere.extension.findFieldByTypes
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.util.ThemeUtils
-import org.mariotaku.twidere.util.Utils
 
 /**
  * Created by mariotaku on 15/1/16.
@@ -39,10 +40,18 @@ class TwidereToolbar(context: Context, attrs: AttributeSet?) : Toolbar(context, 
     override fun getMenu(): Menu {
         val menu = super.getMenu()
         ThemeUtils.setActionBarOverflowColor(this, itemColor)
-        val menuView = Utils.findFieldOfTypes(this, Toolbar::class.java,
-                ActionMenuView::class.java) as? ActionMenuView ?: return menu
-        val presenter = Utils.findFieldOfTypes(menuView, ActionMenuView::class.java,
-                ActionMenuPresenter::class.java) as? ActionMenuPresenter ?: return menu
+        val menuViewField = try {
+            Toolbar::class.java.findFieldByTypes(ActionMenuView::class.java)
+        } catch (e: Exception) {
+            null
+        } ?: return menu
+        val menuView = this[menuViewField] as? ActionMenuView ?: return menu
+        val presenterField = try {
+            ActionMenuView::class.java.findFieldByTypes(ActionMenuPresenter::class.java)
+        } catch (e: Exception) {
+            null
+        } ?: return menu
+        val presenter = menuView[presenterField] as? ActionMenuPresenter ?: return menu
         setActionBarOverflowColor(presenter, itemColor)
         return menu
     }
@@ -62,8 +71,12 @@ class TwidereToolbar(context: Context, attrs: AttributeSet?) : Toolbar(context, 
     companion object {
 
         private fun setActionBarOverflowColor(presenter: ActionMenuPresenter, itemColor: Int) {
-            val view = Utils.findFieldOfTypes(presenter, ActionMenuPresenter::class.java,
-                    ActionMenuView.ActionMenuChildView::class.java, View::class.java)  as? ImageView ?: return
+            val viewField = try {
+                ActionMenuPresenter::class.java.findFieldByTypes(ActionMenuView.ActionMenuChildView::class.java, View::class.java)
+            } catch (e: Exception) {
+                null
+            } ?: return
+            val view = presenter[viewField] as? ImageView ?: return
             view.setColorFilter(itemColor, PorterDuff.Mode.SRC_ATOP)
         }
     }

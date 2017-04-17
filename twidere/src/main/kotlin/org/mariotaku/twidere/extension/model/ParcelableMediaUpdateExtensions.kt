@@ -16,7 +16,7 @@ fun ParcelableMediaUpdate.getMimeType(resolver: ContentResolver): String? {
         ParcelableMedia.Type.IMAGE -> {
             val o = BitmapFactory.Options()
             o.inJustDecodeBounds = true
-            BitmapFactoryUtils.decodeUri(resolver, uri, null, o)
+            BitmapFactoryUtils.decodeUri(resolver, uri, opts = o)
             return o.outMimeType
         }
         else -> return null

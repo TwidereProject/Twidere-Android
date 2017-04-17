@@ -108,9 +108,7 @@ class OAuthPasswordAuthenticator(
     @Throws(IOException::class, LoginVerificationException::class)
     private fun getVerificationData(authorizeResponseData: AuthorizeResponseData,
             challengeResponse: String?): AuthorizeRequestData {
-        var response: HttpResponse? = null
         try {
-            val data = AuthorizeRequestData()
             val params = MultiValueMap<String>()
             val verification = authorizeResponseData.challenge!!
             params.add("authenticity_token", verification.authenticityToken)
@@ -132,16 +130,16 @@ class OAuthPasswordAuthenticator(
             authorizeResultBuilder.url(endpoint.construct("/account/login_verification"))
             authorizeResultBuilder.headers(requestHeaders)
             authorizeResultBuilder.body(authorizationResultBody)
-            response = client.newCall(authorizeResultBuilder.build()).execute()
-            parseAuthorizeRequestData(response, data)
-            if (TextUtils.isEmpty(data.authenticityToken)) {
-                throw LoginVerificationException()
+            return client.newCall(authorizeResultBuilder.build()).execute().use {
+                val data = AuthorizeRequestData()
+                parseAuthorizeRequestData(it, data)
+                if (data.authenticityToken.isNullOrEmpty()) {
+                    throw LoginVerificationException()
+                }
+                return@use data
             }
-            return data
         } catch (e: ParseException) {
             throw LoginVerificationException("Login verification challenge failed", e)
-        } finally {
-            Utils.closeSilently(response)
         }
     }
 
@@ -188,7 +186,6 @@ class OAuthPasswordAuthenticator(
     private fun getAuthorizeResponseData(requestToken: OAuthToken,
             authorizeRequestData: AuthorizeRequestData,
             username: String, password: String): AuthorizeResponseData {
-        var response: HttpResponse? = null
         try {
             val data = AuthorizeResponseData()
             val params = MultiValueMap<String>()
@@ -209,7 +206,6 @@ class OAuthPasswordAuthenticator(
             authorizeResultBuilder.url(endpoint.construct("/oauth/authorize"))
             authorizeResultBuilder.headers(requestHeaders)
             authorizeResultBuilder.body(authorizationResultBody)
-            response = client.newCall(authorizeResultBuilder.build()).execute()
             val handler = object : AbstractSimpleMarkupHandler() {
                 internal var isOAuthPinDivOpened: Boolean = false
                 internal var isChallengeFormOpened: Boolean = false
@@ -297,18 +293,17 @@ class OAuthPasswordAuthenticator(
                     }
                 }
             }
-            PARSER.parse(SimpleBody.reader(response!!.body), handler)
+            client.newCall(authorizeResultBuilder.build()).execute().use {
+                PARSER.parse(SimpleBody.reader(it.body), handler)
+            }
             return data
         } catch (e: ParseException) {
             throw AuthenticationException("Malformed HTML", e)
-        } finally {
-            Utils.closeSilently(response)
         }
     }
 
     @Throws(IOException::class, AuthenticationException::class)
     private fun getAuthorizeRequestData(requestToken: OAuthToken): AuthorizeRequestData {
-        var response: HttpResponse? = null
         try {
             val data = AuthorizeRequestData()
             val authorizePageBuilder = HttpRequest.Builder()
@@ -321,16 +316,15 @@ class OAuthPasswordAuthenticator(
             requestHeaders.add("User-Agent", userAgent)
             authorizePageBuilder.headers(requestHeaders)
             val authorizePageRequest = authorizePageBuilder.build()
-            response = client.newCall(authorizePageRequest).execute()
-            parseAuthorizeRequestData(response, data)
-            if (TextUtils.isEmpty(data.authenticityToken)) {
+            client.newCall(authorizePageRequest).execute().use {
+                parseAuthorizeRequestData(it, data)
+            }
+            if (data.authenticityToken.isNullOrEmpty()) {
                 throw AuthenticationException()
             }
             return data
         } catch (e: ParseException) {
             throw AuthenticationException("Malformed HTML", e)
-        } finally {
-            Utils.closeSilently(response)
         }
     }
 

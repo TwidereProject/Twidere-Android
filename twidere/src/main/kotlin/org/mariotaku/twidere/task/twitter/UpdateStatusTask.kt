@@ -688,7 +688,7 @@ class UpdateStatusTask(
                         this.deleteAlways = deleteAlways
                     }
                 } finally {
-                    Utils.closeSilently(body)
+                    body?.close()
                 }
                 body?.deleteOnSuccess?.addAllTo(deleteOnSuccess)
                 body?.deleteAlways?.addAllTo(deleteAlways)
@@ -811,7 +811,7 @@ class UpdateStatusTask(
             var mediaType = defaultType
             val o = BitmapFactory.Options()
             o.inJustDecodeBounds = true
-            BitmapFactoryUtils.decodeUri(resolver, mediaUri, null, o)
+            BitmapFactoryUtils.decodeUri(resolver, mediaUri, opts = o)
             // Try to use decoded media type
             if (o.outMimeType != null) {
                 mediaType = o.outMimeType
@@ -823,7 +823,7 @@ class UpdateStatusTask(
 
             if (imageLimit != null) {
                 if (imageLimit.checkGeomentry(o.outWidth, o.outHeight)) return null
-                o.inSampleSize = Utils.calculateInSampleSize(o.outWidth, o.outHeight,
+                o.inSampleSize = BitmapUtils.calculateInSampleSize(o.outWidth, o.outHeight,
                         imageLimit.maxWidth, imageLimit.maxHeight)
             }
             o.inJustDecodeBounds = false

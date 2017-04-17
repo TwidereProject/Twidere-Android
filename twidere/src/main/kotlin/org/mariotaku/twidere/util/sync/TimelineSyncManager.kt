@@ -49,12 +49,27 @@ abstract class TimelineSyncManager(val context: Context) {
     }
 
 
+    fun blockingGetPosition(@ReadPositionTag positionTag: String, currentTag: String?): Long {
+        val position = fetchPosition(positionTag, currentTag)
+        synchronized(cachedPositions) {
+            cachedPositions[TimelineKey(positionTag, currentTag)] = position
+        }
+        return position
+    }
+
+    fun peekPosition(@ReadPositionTag positionTag: String, currentTag: String?): Long {
+        synchronized(cachedPositions) {
+            return cachedPositions[TimelineKey(positionTag, currentTag)] ?: -1
+        }
+    }
+
+
     @UiThread
     protected abstract fun performSync(data: Array<PositionData>)
 
     @WorkerThread
     @Throws(IOException::class)
-    abstract fun blockingGetPosition(@ReadPositionTag positionTag: String, currentTag: String?): Long
+    protected abstract fun fetchPosition(@ReadPositionTag positionTag: String, currentTag: String?): Long
 
     data class TimelineKey(val positionTag: String, val currentTag: String?)
     data class PositionData(val positionTag: String, val currentTag: String?, val positionKey: Long)
@@ -79,5 +94,6 @@ abstract class TimelineSyncManager(val context: Context) {
     companion object {
         fun newFactory(): Factory = ServiceLoader.load(Factory::class.java).firstOrNull() ?: DummyFactory
     }
+
 
 }

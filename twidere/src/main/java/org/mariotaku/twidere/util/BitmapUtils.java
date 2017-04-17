@@ -54,4 +54,11 @@ public class BitmapUtils {
         BitmapFactory.decodeFile(image.getPath(), o);
         return o.outMimeType;
     }
+
+    public static int calculateInSampleSize(final int width, final int height, final int preferredWidth,
+            final int preferredHeight) {
+        if (preferredHeight > height && preferredWidth > width) return 1;
+        final int result = Math.round(Math.max(width, height) / (float) Math.max(preferredWidth, preferredHeight));
+        return Math.max(1, result);
+    }
 }

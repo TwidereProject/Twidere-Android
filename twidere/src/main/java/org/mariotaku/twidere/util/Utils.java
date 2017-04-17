@@ -55,20 +55,15 @@ import android.support.v4.net.ConnectivityManagerCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.accessibility.AccessibilityEventCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.menu.MenuBuilder;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.Toast;
@@ -99,7 +94,6 @@ import org.mariotaku.twidere.view.TabPagerIndicator;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -157,13 +151,6 @@ public final class Utils implements Constants {
         // application only targets SDK 14+, you should just call
         // getParent().requestSendAccessibilityEvent(this, event);
         accessibilityManager.sendAccessibilityEvent(event);
-    }
-
-    public static int calculateInSampleSize(final int width, final int height, final int preferredWidth,
-            final int preferredHeight) {
-        if (preferredHeight > height && preferredWidth > width) return 1;
-        final int result = Math.round(Math.max(width, height) / (float) Math.max(preferredWidth, preferredHeight));
-        return Math.max(1, result);
     }
 
     public static boolean closeSilently(final Closeable c) {
@@ -800,18 +787,6 @@ public final class Utils implements Constants {
         showErrorMessage(context, message, long_message);
     }
 
-    public static void startStatusShareChooser(final Context context, final ParcelableStatus status) {
-        final Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("text/plain");
-        final String name = status.user_name, screenName = status.user_screen_name;
-        final String timeString = formatToLongTimeString(context, status.timestamp);
-        final String subject = context.getString(R.string.status_share_subject_format_with_time, name, screenName, timeString);
-        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        intent.putExtra(Intent.EXTRA_TEXT, status.text_plain);
-        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        context.startActivity(Intent.createChooser(intent, context.getString(R.string.action_share)));
-    }
-
     public static String trimLineBreak(final String orig) {
         if (orig == null) return null;
         return orig.replaceAll("\\n+", "\n");
@@ -861,28 +836,6 @@ public final class Utils implements Constants {
             return TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
         }
         return 0;
-    }
-
-
-    public static <T> Object findFieldOfTypes(T obj, Class<? extends T> cls, Class<?>... checkTypes) {
-        labelField:
-        for (Field field : cls.getDeclaredFields()) {
-            field.setAccessible(true);
-            final Object fieldObj;
-            try {
-                fieldObj = field.get(obj);
-            } catch (Exception ignore) {
-                continue;
-            }
-            if (fieldObj != null) {
-                final Class<?> type = fieldObj.getClass();
-                for (Class<?> checkType : checkTypes) {
-                    if (!checkType.isAssignableFrom(type)) continue labelField;
-                }
-                return fieldObj;
-            }
-        }
-        return null;
     }
 
     public static int getNotificationId(int baseId, @Nullable UserKey accountKey) {
@@ -960,40 +913,6 @@ public final class Utils implements Constants {
 
         }
         return location;
-    }
-
-    public static boolean checkDeviceCompatible() {
-        try {
-            Menu.class.isAssignableFrom(MenuBuilder.class);
-        } catch (Error e) {
-            Analyzer.Companion.logException(e);
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Detect whether screen minimum width is not smaller than 600dp, regardless split screen mode
-     */
-    public static boolean isDeviceTablet(@NonNull Context context) {
-        DisplayMetrics metrics = new DisplayMetrics();
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        final Display defaultDisplay = wm.getDefaultDisplay();
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            defaultDisplay.getMetrics(metrics);
-        } else {
-            defaultDisplay.getRealMetrics(metrics);
-        }
-        final float mw = Math.min(metrics.widthPixels / metrics.density, metrics.heightPixels / metrics.density);
-        return mw >= 600;
-    }
-
-    /*
-     * May return false on tablets when using split window
-     */
-    public static boolean isScreenTablet(@NonNull Context context) {
-        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        return metrics.widthPixels / metrics.density >= 600;
     }
 
 }
