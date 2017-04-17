@@ -96,7 +96,7 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     @JsonField(name = "in_reply_to_screen_name")
     String inReplyToScreenName;
 
-    @JsonField(name = {"user", "friendica_owner"})
+    @JsonField(name = "user")
     User user;
 
     @JsonField(name = "geo")

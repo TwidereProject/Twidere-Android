@@ -28,7 +28,6 @@ import android.support.v7.app.AlertDialog
 import android.view.View
 import android.widget.Toast
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.list_item_status.view.*
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.task
@@ -64,11 +63,17 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
     protected val accountKey: UserKey
         get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)
 
+    private lateinit var adapter: DummyItemAdapter
+
     override final fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(context)
         val accountKey = this.accountKey
 
         builder.setupAlertDialog()
+
+        adapter = DummyItemAdapter(context, requestManager = Glide.with(this))
+        adapter.showCardActions = false
+        adapter.showAccountsColor = true
 
         val dialog = builder.create()
         dialog.setOnShowListener { dialog ->
@@ -81,6 +86,9 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
                 return@setOnShowListener
             }
             val weakThis = WeakReference(this)
+            val weakHolder = WeakReference(StatusViewHolder(adapter, dialog.itemContent).apply {
+                setupViewOptions()
+            })
             promiseOnUi {
                 val currentDialog = weakThis.get()?.dialog as? AlertDialog ?: return@promiseOnUi
                 currentDialog.loadProgress.visibility = View.VISIBLE
@@ -90,17 +98,12 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
             } and showStatus(context, details, statusId, status).successUi { status ->
                 val fragment = weakThis.get() ?: return@successUi
                 val currentDialog = fragment.dialog as? AlertDialog ?: return@successUi
+                val holder = weakHolder.get() ?: return@successUi
                 currentDialog.getButton(DialogInterface.BUTTON_POSITIVE)?.isEnabled = true
                 currentDialog.getButton(DialogInterface.BUTTON_NEUTRAL)?.isEnabled = true
                 currentDialog.itemContent.visibility = View.VISIBLE
                 currentDialog.loadProgress.visibility = View.GONE
                 currentDialog.itemContent.isFocusable = false
-                currentDialog.itemContent.itemMenu.visibility = View.GONE
-                currentDialog.itemContent.actionButtons.visibility = View.GONE
-                val adapter = DummyItemAdapter(fragment.context, requestManager = Glide.with(fragment))
-                adapter.showCardActions = false
-                adapter.showAccountsColor = true
-                val holder = StatusViewHolder(adapter, currentDialog.itemContent)
                 holder.displayStatus(status = status, displayInReplyTo = false)
                 currentDialog.onStatusLoaded(details, status, savedInstanceState)
             }.failUi {
@@ -135,10 +138,10 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
             val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
             val profileImageSize = context.getString(R.string.profile_image_size)
             return task {
-                val status = ParcelableStatusUtils.fromStatus(microBlog.showStatus(statusId),
-                        details.key, details.type, profileImageSize = profileImageSize)
-                status.account_color = details.color
-                return@task status
+                return@task ParcelableStatusUtils.fromStatus(microBlog.showStatus(statusId),
+                        details.key, details.type, profileImageSize = profileImageSize).also {
+                    it.account_color = details.color
+                }
             }
         }
 

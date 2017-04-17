@@ -19,21 +19,22 @@
  * under the License.
  */
 
-package org.mariotaku.twidere.annotation;
+package org.mariotaku.microblog.library.mastodon.model;
 
-import android.support.annotation.StringDef;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import org.mariotaku.restfu.http.SimpleValueMap;
 
 /**
- * Created by mariotaku on 2016/12/3.
+ * Created by mariotaku on 2017/3/27.
  */
-@StringDef({AccountType.TWITTER, AccountType.STATUSNET, AccountType.FANFOU, AccountType.MASTODON})
-@Retention(RetentionPolicy.SOURCE)
-public @interface AccountType {
-    String TWITTER = "twitter";
-    String STATUSNET = "statusnet";
-    String FANFOU = "fanfou";
-    String MASTODON = "mastodon";
+
+public class TimelineOption extends SimpleValueMap {
+    public TimelineOption excludeReplies(boolean excludeReplies) {
+        put("exclude_replies", excludeReplies);
+        return this;
+    }
+
+    public TimelineOption onlyMedia(boolean onlyMedia) {
+        put("only_media", onlyMedia);
+        return this;
+    }
 }

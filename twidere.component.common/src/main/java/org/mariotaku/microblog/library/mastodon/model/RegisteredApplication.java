@@ -19,23 +19,41 @@
  * under the License.
  */
 
-package org.mariotaku.microblog.library.mastodon.api;
+package org.mariotaku.microblog.library.mastodon.model;
 
-import android.support.annotation.Nullable;
-
-import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.mastodon.model.RegisteredApplication;
-import org.mariotaku.restfu.annotation.method.POST;
-import org.mariotaku.restfu.annotation.param.Param;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 /**
  * Created by mariotaku on 2017/4/17.
  */
+@JsonObject
+public class RegisteredApplication {
+    @JsonField(name = "id")
+    String id;
+    @JsonField(name = "client_id")
+    String clientId;
+    @JsonField(name = "client_secret")
+    String clientSecret;
 
-public interface ApplicationResources {
-    @POST("/api/v1/apps")
-    RegisteredApplication registerApplication(@Param("client_name") String clientName,
-            @Param("redirect_uris") String redirectUris,
-            @Param(value = "scopes", arrayDelimiter = ' ') String scopes,
-            @Nullable @Param("website") String website) throws MicroBlogException;
+    public String getId() {
+        return id;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public String getClientSecret() {
+        return clientSecret;
+    }
+
+    @Override
+    public String toString() {
+        return "RegisteredApplication{" +
+                "id='" + id + '\'' +
+                ", clientId='" + clientId + '\'' +
+                ", clientSecret='" + clientSecret + '\'' +
+                '}';
+    }
 }
