@@ -801,7 +801,7 @@
   <string name="refresh_type_interactions">การโต้ตอบ</string>
   <string name="refresh_type_messages">ข้อความส่วนตัว</string>
   <string name="refresh_type_trends">เทรนด์</string>
-  <string name="register">ลงทะเบียน</string>
+  <string name="action_register">ลงทะเบียน</string>
   <string name="remember_position">จำตำแหน่ง</string>
   <string name="remember_position_summary">จำแท็บหรือรายการที่เปิดไว้ก่อนปิด Twidere</string>
   <string name="remove">นำออก</string>
@@ -867,7 +867,7 @@
   <string name="show_absolute_time">แสดงเวลาจริง</string>
   <string name="show_absolute_time_summary">แสดงเวลาจริงในทวีต</string>
   <string name="show_in_timeline">แสดงในไทม์ไลน์</string>
-  <string name="sign_in">เข้าสู่ระบบ</string>
+  <string name="action_sign_in">เข้าสู่ระบบ</string>
   <string name="sign_in_service_email">อีเมล</string>
   <string name="sign_in_service_google_id">รหัส Google</string>
   <string name="sign_in_service_twitter">ทวิตเตอร์</string>

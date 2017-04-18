@@ -806,7 +806,7 @@
   <string name="refresh_type_interactions">Interaccións</string>
   <string name="refresh_type_messages">Mensaxes</string>
   <string name="refresh_type_trends">Tendencias</string>
-  <string name="register">Rexistrar</string>
+  <string name="action_register">Rexistrar</string>
   <string name="remember_position">Lembrar posición</string>
   <string name="remember_position_summary">Lembrar posición das listas/lapelas antes de pechar Twidere</string>
   <string name="remove">Eliminar</string>
@@ -872,7 +872,7 @@
   <string name="show_absolute_time">Amosar hora absoluta</string>
   <string name="show_absolute_time_summary">Amosar a hora absoluta nos chíos</string>
   <string name="show_in_timeline">Amosar na liña de tempo</string>
-  <string name="sign_in">Entrar</string>
+  <string name="action_sign_in">Entrar</string>
   <string name="sign_in_service_email">Email</string>
   <string name="sign_in_service_google_id">Google ID</string>
   <string name="sign_in_service_twitter">Twitter</string>

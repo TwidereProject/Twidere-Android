@@ -794,7 +794,7 @@
   <string name="refresh_type_interactions">Interaktionen</string>
   <string name="refresh_type_messages">Nachrichten</string>
   <string name="refresh_type_trends">Trends</string>
-  <string name="register">Registrieren</string>
+  <string name="action_register">Registrieren</string>
   <string name="remember_position">Position merken</string>
   <string name="remember_position_summary">Listen/Tabposition beim Beenden merken</string>
   <string name="remove">Entfernen</string>
@@ -859,7 +859,7 @@
   <string name="show_absolute_time">Veröffentlichungszeitpunkt anzeigen</string>
   <string name="show_absolute_time_summary">Zeitpunkt der Veröffentlichung von Tweets anzeigen statt vergangener Zeitspanne</string>
   <string name="show_in_timeline">In Zeitleiste anzeigen</string>
-  <string name="sign_in">Einloggen</string>
+  <string name="action_sign_in">Einloggen</string>
   <string name="sign_in_service_email">E-Mail</string>
   <string name="sign_in_service_google_id">Google ID</string>
   <string name="sign_in_service_twitter">Twitter</string>

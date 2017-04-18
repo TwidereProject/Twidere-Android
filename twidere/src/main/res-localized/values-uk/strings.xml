@@ -556,7 +556,7 @@
   <string name="refresh_type_interactions">Сповіщення</string>
   <string name="refresh_type_messages">Повідомлення</string>
   <string name="refresh_type_trends">Тенденції</string>
-  <string name="register">Реєстрація</string>
+  <string name="action_register">Реєстрація</string>
   <string name="remember_position">Запам\'ятати розташування</string>
   <string name="remember_position_summary">Запам\'ятати розташування списку/вкладки перед виходом із Twidere</string>
   <string name="remove">Видалити</string>
@@ -620,7 +620,7 @@
   <string name="show_absolute_time">Показувати безвідносний час</string>
   <string name="show_absolute_time_summary">Показувати безвідносний (реальний) час у твітах</string>
   <string name="show_in_timeline">Показати у стрічці</string>
-  <string name="sign_in">Увійти</string>
+  <string name="action_sign_in">Увійти</string>
   <string name="sign_in_service_email">Email</string>
   <string name="sign_in_service_google_id">Google ID</string>
   <string name="sign_in_service_twitter">Twitter</string>

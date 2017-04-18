@@ -150,7 +150,7 @@
   <string name="settings">सेटिंग्स</string>
   <string name="settings_notifications">सूचनाएँ</string>
   <string name="settings_refresh">ताज़ा</string>
-  <string name="sign_in">साइन इन करें</string>
+  <string name="action_sign_in">साइन इन करें</string>
   <string name="sign_up">साइन अप करें</string>
   <string name="sound">आवाज़</string>
   <!-- [noun] Accessibility label for retweet icon -->

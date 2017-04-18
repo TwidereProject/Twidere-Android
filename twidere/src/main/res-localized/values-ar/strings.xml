@@ -501,7 +501,7 @@
   <string name="refresh_type_home">الرئيسية</string>
   <string name="refresh_type_messages">الرسائل</string>
   <string name="refresh_type_trends">التداولات</string>
-  <string name="register">تسجيل</string>
+  <string name="action_register">تسجيل</string>
   <string name="remember_position">تذكر المكان</string>
   <string name="remember_position_summary">Twidere تذكر مكان القائمة/اللسان قبل إغلاق </string>
   <string name="remove">ازالة</string>
@@ -551,7 +551,7 @@
   <string name="show_absolute_time">إظهار الوقت المطلق</string>
   <string name="show_absolute_time_summary">إظهار الوقت المطلق في التغريدات</string>
   <string name="show_in_timeline">إظهار في الخط الزمني</string>
-  <string name="sign_in">تسجيل الدخول</string>
+  <string name="action_sign_in">تسجيل الدخول</string>
   <string name="sign_in_service_email">البريد الإلكتروني</string>
   <string name="sign_in_service_google_id">معرف جوجل</string>
   <string name="sign_in_service_twitter">تويتر</string>

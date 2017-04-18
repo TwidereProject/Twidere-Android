@@ -66,7 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="@dimen/element_size_normal"
-            android:text="@string/sign_in"
+            android:text="@string/action_sign_in"
             app:backgroundTint="@color/material_light_green"/>
 
         <Button
@@ -76,7 +76,7 @@
             android:layout_height="wrap_content"
             android:gravity="start|center_vertical"
             android:minHeight="@dimen/element_spacing_xsmall"
-            android:text="@string/register"
+            android:text="@string/action_register"
             android:textAppearance="?android:textAppearanceSmall"/>
 
         <Button

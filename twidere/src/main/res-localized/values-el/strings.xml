@@ -127,7 +127,7 @@
   <string name="select_account">Επιλογή λογαριασμού</string>
   <string name="settings">Ρυθμίσεις</string>
   <string name="show_absolute_time">Εμφάνιση απόλυτου χρόνου</string>
-  <string name="sign_in">Σύνδεση</string>
+  <string name="action_sign_in">Σύνδεση</string>
   <string name="sign_up">Εγγραφή</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Ρετουϊτ</string>

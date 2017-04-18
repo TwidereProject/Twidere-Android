@@ -26,7 +26,6 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
-import android.text.TextUtils.isEmpty
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -40,12 +39,10 @@ import org.attoparser.ParseException
 import org.mariotaku.ktextension.removeAllCookiesSupport
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.TwitterOAuth
-import org.mariotaku.restfu.oauth.OAuthAuthorization
 import org.mariotaku.restfu.oauth.OAuthToken
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.TwidereConstants
-import org.mariotaku.twidere.TwidereConstants.LOGTAG
-import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.extension.model.getOAuthAuthorization
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.model.SingleResponse
@@ -181,7 +178,7 @@ class BrowserSignInActivity : BaseActivity() {
             }
         }
 
-        @Suppress("Deprecation")
+        @Suppress("Deprecation", "OverridingDeprecatedMember")
         override fun onReceivedError(view: WebView, errorCode: Int, description: String?,
                 failingUrl: String?) {
             super.onReceivedError(view, errorCode, description, failingUrl)
@@ -190,10 +187,10 @@ class BrowserSignInActivity : BaseActivity() {
             activity.finish()
         }
 
-        @Suppress("Deprecation")
+        @Suppress("Deprecation", "OverridingDeprecatedMember")
         override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
             val uri = Uri.parse(url)
-            if (url.startsWith(TwidereConstants.OAUTH_CALLBACK_URL)) {
+            if (url.startsWith(OAUTH_CALLBACK_URL)) {
                 val oauthVerifier = uri.getQueryParameter(EXTRA_OAUTH_VERIFIER)
                 val activity = activity
                 val requestToken = activity.requestToken
@@ -218,15 +215,16 @@ class BrowserSignInActivity : BaseActivity() {
 
         override fun doInBackground(vararg params: Any): SingleResponse<OAuthToken> {
             val activity = activityRef.get() ?: return SingleResponse(exception = InterruptedException())
-            if (isEmpty(apiConfig.consumerKey) || isEmpty(apiConfig.consumerSecret)) {
-                return SingleResponse()
-            }
             try {
-                val endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(apiConfig.apiUrlFormat,
+                val apiUrlFormat = apiConfig.apiUrlFormat ?:
+                        throw MicroBlogException("Invalid API URL format")
+                val endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(apiUrlFormat,
                         apiConfig.isSameOAuthUrl)
-                val auth = OAuthAuthorization(apiConfig.consumerKey, apiConfig.consumerSecret)
-                val oauth = newMicroBlogInstance(activity, endpoint, auth, apiConfig.type, TwitterOAuth::class.java)
-                return SingleResponse(oauth.getRequestToken(TwidereConstants.OAUTH_CALLBACK_OOB))
+                val auth = apiConfig.getOAuthAuthorization() ?:
+                        throw MicroBlogException("Invalid OAuth credentials")
+                val oauth = newMicroBlogInstance(activity, endpoint, auth, apiConfig.type,
+                        TwitterOAuth::class.java)
+                return SingleResponse(oauth.getRequestToken(OAUTH_CALLBACK_OOB))
             } catch (e: MicroBlogException) {
                 return SingleResponse(exception = e)
             }
@@ -239,7 +237,7 @@ class BrowserSignInActivity : BaseActivity() {
             if (result.hasData()) {
                 val token = result.data!!
                 activity.setRequestToken(token)
-                val endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(apiConfig.apiUrlFormat, true)
+                val endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(apiConfig.apiUrlFormat!!, true)
                 activity.loadUrl(endpoint.construct("/oauth/authorize", arrayOf("oauth_token", token.oauthToken)))
             } else {
                 DebugLog.w(LOGTAG, "Error while browser sign in", result.exception)

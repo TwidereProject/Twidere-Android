@@ -66,7 +66,7 @@
   <string name="provider_default">Twidere</string>
   <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
   <string name="settings">Configurări</string>
-  <string name="sign_in">Autentificare</string>
+  <string name="action_sign_in">Autentificare</string>
   <string name="sign_up">Inregistrare</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <!-- Dark theme -->

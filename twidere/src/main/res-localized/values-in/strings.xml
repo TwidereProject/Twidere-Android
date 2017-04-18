@@ -608,7 +608,7 @@
   <string name="refresh_on_start_summary">Muat ulang timeline dan mention saat memulai.</string>
   <string name="refresh_type_messages">Pesan</string>
   <string name="refresh_type_trends">Tren</string>
-  <string name="register">Registrasi</string>
+  <string name="action_register">Registrasi</string>
   <string name="remember_position">Ingat posisi</string>
   <string name="remember_position_summary">Ingat posisi daftar/tab sebelum menutup Twidere</string>
   <string name="remove">Hapus</string>
@@ -671,7 +671,7 @@
   <string name="show_absolute_time">Tampilkan waktu absolut</string>
   <string name="show_absolute_time_summary">Tampilkan waktu absulut di tweet</string>
   <string name="show_in_timeline">Tunjukkan di linimasa</string>
-  <string name="sign_in">Masuk</string>
+  <string name="action_sign_in">Masuk</string>
   <string name="sign_in_service_email">Surel</string>
   <string name="sign_in_service_google_id">ID Google</string>
   <string name="sign_in_service_twitter">Twitter</string>

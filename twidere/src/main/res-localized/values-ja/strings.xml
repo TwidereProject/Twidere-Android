@@ -815,7 +815,7 @@
   <string name="refresh_type_interactions">みんなの反応</string>
   <string name="refresh_type_messages">メッセージ</string>
   <string name="refresh_type_trends">トレンド</string>
-  <string name="register">新規登録</string>
+  <string name="action_register">新規登録</string>
   <string name="remember_position">位置を記憶</string>
   <string name="remember_position_summary">Twidere を閉じる時にリスト/タブの位置を記憶します。</string>
   <string name="remove">削除</string>
@@ -881,7 +881,7 @@
   <string name="show_absolute_time">絶対時間を表示</string>
   <string name="show_absolute_time_summary">ツイートの時間を絶対時間で表示します。</string>
   <string name="show_in_timeline">TLに表示</string>
-  <string name="sign_in">ログイン</string>
+  <string name="action_sign_in">ログイン</string>
   <string name="sign_in_service_email">メールアドレス</string>
   <string name="sign_in_service_google_id">Google ID</string>
   <string name="sign_in_service_twitter">Twitter</string>

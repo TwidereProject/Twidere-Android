@@ -555,7 +555,7 @@
   <string name="refresh_type_interactions">Etkileşimler</string>
   <string name="refresh_type_messages">Mesajlar</string>
   <string name="refresh_type_trends">Gündem</string>
-  <string name="register">Üye ol</string>
+  <string name="action_register">Üye ol</string>
   <string name="remember_position">Konumu hatırla</string>
   <string name="remember_position_summary">Liste/Sekme konumunu Twidere kapanmadan kaydet</string>
   <string name="remove">Kaldır</string>
@@ -619,7 +619,7 @@
   <string name="show_absolute_time">Tam saati göster</string>
   <string name="show_absolute_time_summary">Tweetlerdeki tam zamanı gösterir</string>
   <string name="show_in_timeline">Timeline\'da göster</string>
-  <string name="sign_in">Giriş yap</string>
+  <string name="action_sign_in">Giriş yap</string>
   <string name="sign_in_service_email">E-posta</string>
   <string name="sign_in_service_google_id">Google Kimliği</string>
   <string name="sign_in_service_twitter">Twitter</string>

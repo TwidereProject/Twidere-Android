@@ -327,7 +327,7 @@
   <string name="show_absolute_time">Zobrazit absolutní čas</string>
   <string name="show_absolute_time_summary">Zobrazit absolutní čas ve tweetech</string>
   <string name="show_in_timeline">Zobrazit na časové ose</string>
-  <string name="sign_in">Přihlásit se</string>
+  <string name="action_sign_in">Přihlásit se</string>
   <string name="sign_in_service_email">E-mail</string>
   <string name="sign_in_service_google_id">Google ID</string>
   <string name="sign_in_service_twitter">Twitter</string>

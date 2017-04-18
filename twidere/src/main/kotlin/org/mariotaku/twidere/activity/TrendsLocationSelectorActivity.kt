@@ -22,6 +22,7 @@ import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.alwaysUi
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
+import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.getTypedArray
 import org.mariotaku.ktextension.set
 import org.mariotaku.microblog.library.MicroBlogException
@@ -65,11 +66,14 @@ class TrendsLocationSelectorActivity : BaseActivity() {
             twitter.availableTrends.forEach { location -> map.put(location) }
             return@task map.pack()
         }.successUi { result ->
-            val df = TrendsLocationDialogFragment()
-            df.arguments = org.mariotaku.ktextension.Bundle {
-                this[EXTRA_DATA] = result
+            val activity = weakThis.get() ?: return@successUi
+            activity.executeAfterFragmentResumed { activity ->
+                val df = TrendsLocationDialogFragment()
+                df.arguments = Bundle {
+                    this[EXTRA_DATA] = result
+                }
+                df.show(activity.supportFragmentManager, "trends_location_selector")
             }
-            df.show(supportFragmentManager, "trends_location_selector")
         }.failUi {
             val activity = weakThis.get() ?: return@failUi
             activity.finish()
@@ -89,13 +93,13 @@ class TrendsLocationSelectorActivity : BaseActivity() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val selectorBuilder = AlertDialog.Builder(context)
             selectorBuilder.setTitle(R.string.trends_location)
-            selectorBuilder.setView(R.layout.dialog_trends_location_selector)
+            selectorBuilder.setView(R.layout.dialog_expandable_list)
             selectorBuilder.setNegativeButton(android.R.string.cancel, null)
             val dialog = selectorBuilder.create()
             dialog.setOnShowListener {
                 it as AlertDialog
                 it.applyTheme()
-                val listView = it.findViewById(R.id.expandable_list) as ExpandableListView
+                val listView = it.findViewById(R.id.expandableList) as ExpandableListView
                 val adapter = ExpandableTrendLocationsListAdapter(context)
                 adapter.data = list
                 listView.setAdapter(adapter)

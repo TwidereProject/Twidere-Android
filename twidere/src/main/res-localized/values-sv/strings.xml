@@ -797,7 +797,7 @@
   <string name="refresh_type_interactions">Interaktioner</string>
   <string name="refresh_type_messages">Meddelanden</string>
   <string name="refresh_type_trends">Trender</string>
-  <string name="register">Registrera</string>
+  <string name="action_register">Registrera</string>
   <string name="remember_position">Kom ihåg position</string>
   <string name="remember_position_summary">Kom ihåg listan och flikens position före nedstängning av Twidere</string>
   <string name="remove">Ta bort</string>
@@ -860,7 +860,7 @@
   <string name="show_absolute_time">Visa absoluta tiden</string>
   <string name="show_absolute_time_summary">Visa absoluta tiden i tweets</string>
   <string name="show_in_timeline">Visa på tidslinje</string>
-  <string name="sign_in">Logga in</string>
+  <string name="action_sign_in">Logga in</string>
   <string name="sign_in_service_email">E-post</string>
   <string name="sign_in_service_google_id">Google-ID</string>
   <string name="sign_in_service_twitter">Twitter</string>

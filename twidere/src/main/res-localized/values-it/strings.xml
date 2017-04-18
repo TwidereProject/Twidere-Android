@@ -536,7 +536,7 @@
   <string name="refresh_type_interactions">Interazioni</string>
   <string name="refresh_type_messages">Messaggi</string>
   <string name="refresh_type_trends">Trends</string>
-  <string name="register">Registrati</string>
+  <string name="action_register">Registrati</string>
   <string name="remember_position">Ricorda posizione</string>
   <string name="remember_position_summary">Ricorda la posizione elenco/tab prima di chiudere Twidere</string>
   <string name="remove">Rimuovi</string>
@@ -598,7 +598,7 @@
   <string name="show_absolute_time">Visualizza il tempo assoluto</string>
   <string name="show_absolute_time_summary">Visualizza il tempo assoluto nei tweets</string>
   <string name="show_in_timeline">Mostra nella timeline</string>
-  <string name="sign_in">Accedi</string>
+  <string name="action_sign_in">Accedi</string>
   <string name="sign_in_with_ellip">Collegati con&#8230;</string>
   <string name="sign_up">Registrati</string>
   <string name="signing_in_error_browser_sign_in_hint">Errore durante il login, potresti aver bisogno di usare il login da browser. (ignorando eventuali impostazioni API personalizzate)</string>

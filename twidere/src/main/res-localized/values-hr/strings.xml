@@ -465,7 +465,7 @@
   <string name="refresh_type_home">Polazno</string>
   <string name="refresh_type_messages">Poruke</string>
   <string name="refresh_type_trends">Trendovi</string>
-  <string name="register">Registriraj se</string>
+  <string name="action_register">Registriraj se</string>
   <string name="remember_position">Zapamti poziciju</string>
   <string name="remember_position_summary">Zapamti poziciju lista/tabova prije zatvaranja aplikacije Twidere</string>
   <string name="remove">Ukloni</string>
@@ -523,7 +523,7 @@
   <string name="show_absolute_time">Pokaži absolutno vrijeme</string>
   <string name="show_absolute_time_summary">Pokaži absolutno vrijeme u tweetovima</string>
   <string name="show_in_timeline">Pokaži u timelineu</string>
-  <string name="sign_in">Prijava</string>
+  <string name="action_sign_in">Prijava</string>
   <string name="sign_up">Registracija</string>
   <string name="signing_in_error_browser_sign_in_hint">Greška kod prijave, možda ćete se morati ponovno prijaviti u pregledniku. (Ovo će ignorirati prilagođene API postavke tijekom prijave)</string>
   <string name="size">Veličina</string>

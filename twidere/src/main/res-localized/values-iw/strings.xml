@@ -324,7 +324,7 @@
   <string name="refresh_on_start_summary">רענן את ציר הזמן והאזכורים בפתיחת האפליקציה.</string>
   <string name="refresh_type_home">בית</string>
   <string name="refresh_type_messages">הודעות</string>
-  <string name="register">הירשם</string>
+  <string name="action_register">הירשם</string>
   <string name="remember_position">זכור מיקום</string>
   <string name="remember_position_summary">זכור מיקום ברשימה/כרטיסיות לפני סגירת Twidere</string>
   <string name="remove">הסר</string>
@@ -359,7 +359,7 @@
   <string name="show_absolute_time">הצג זמן מוחלט</string>
   <string name="show_absolute_time_summary">הצג זמן מוחלט בציוצים</string>
   <string name="show_in_timeline">הצג בציר הזמן</string>
-  <string name="sign_in">היכנס</string>
+  <string name="action_sign_in">היכנס</string>
   <string name="sign_up">הרשם</string>
   <string name="signing_in_error_browser_sign_in_hint">שגיאה בעת כניסה למערכת, ייתכן שצריך להשתמש בכניסה דרך הדפדפן. (זה יתעלם מהגדרות API מותאמות אישית בעת הכניסה)</string>
   <string name="size">גודל</string>

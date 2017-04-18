@@ -624,7 +624,7 @@
   <string name="refresh_type_interactions">Взаимодействия</string>
   <string name="refresh_type_messages">Сообщения</string>
   <string name="refresh_type_trends">Тренды</string>
-  <string name="register">Регистрация</string>
+  <string name="action_register">Регистрация</string>
   <string name="remember_position">Запомнить положение</string>
   <string name="remember_position_summary">Запомнить позицию списка/вкладки перед выходом из Twidere</string>
   <string name="remove">Удалить</string>
@@ -688,7 +688,7 @@
   <string name="show_absolute_time">Показывать абсолютное время</string>
   <string name="show_absolute_time_summary">Показывать абсолютное время в твитах</string>
   <string name="show_in_timeline">Показывать в ленте</string>
-  <string name="sign_in">Войти</string>
+  <string name="action_sign_in">Войти</string>
   <string name="sign_in_service_email">Email</string>
   <string name="sign_in_service_google_id">Google ID</string>
   <string name="sign_in_service_twitter">Twitter</string>

@@ -485,7 +485,7 @@
   <string name="refresh_type_home">Hjem</string>
   <string name="refresh_type_messages">Meldinger</string>
   <string name="refresh_type_trends">Trender</string>
-  <string name="register">Registrer</string>
+  <string name="action_register">Registrer</string>
   <string name="remember_position">Husk posisjon</string>
   <string name="remember_position_summary">Husk liste- og faneplasseringen før Twidere lukkes</string>
   <string name="remove">Fjern</string>
@@ -543,7 +543,7 @@
   <string name="show_absolute_time">Vis absolutt tid</string>
   <string name="show_absolute_time_summary">Vis absolutt tid i tweets</string>
   <string name="show_in_timeline">Vis på tidslinjen</string>
-  <string name="sign_in">Logg inn</string>
+  <string name="action_sign_in">Logg inn</string>
   <string name="sign_up">Registrer deg</string>
   <string name="signing_in_error_browser_sign_in_hint">Feil ved innlogging. Du må kanskje bruke nettleseren. (Dette tar ikke hensyn til tilpassede API-innstillinger under innlogging)</string>
   <string name="size">Størrelse</string>

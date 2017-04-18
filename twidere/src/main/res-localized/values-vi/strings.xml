@@ -54,7 +54,7 @@
   <!-- Normally you don't need to translate this -->
   <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
   <string name="settings">Thiết lập</string>
-  <string name="sign_in">Đăng nhập</string>
+  <string name="action_sign_in">Đăng nhập</string>
   <string name="sign_up">Đăng ký</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <!-- Dark theme -->

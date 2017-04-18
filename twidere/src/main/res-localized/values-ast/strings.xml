@@ -789,7 +789,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="refresh_type_interactions">Interaiciones</string>
   <string name="refresh_type_messages">Mensaxes</string>
   <string name="refresh_type_trends">Tendencies</string>
-  <string name="register">Rexistrase</string>
+  <string name="action_register">Rexistrase</string>
   <string name="remember_position">Recordar posición</string>
   <string name="remember_position_summary">Recuerda la posición de llistes/llingüetes enantes de zarrar Twidere</string>
   <string name="remove">Desaniciar</string>
@@ -854,7 +854,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="show_absolute_time">Amosar hora absoluta</string>
   <string name="show_absolute_time_summary">Amuesa la hora absoluta nos tuits</string>
   <string name="show_in_timeline">Amosar na llinia temporal</string>
-  <string name="sign_in">Aniciar sesión</string>
+  <string name="action_sign_in">Aniciar sesión</string>
   <string name="sign_in_service_email">Corréu</string>
   <string name="sign_in_service_google_id">ID de Google</string>
   <string name="sign_in_service_twitter">Twitter</string>

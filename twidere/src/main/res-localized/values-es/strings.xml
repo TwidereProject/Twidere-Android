@@ -805,7 +805,7 @@
   <string name="refresh_type_interactions">Interacciones</string>
   <string name="refresh_type_messages">Mensajes</string>
   <string name="refresh_type_trends">Tendencias</string>
-  <string name="register">Registrar</string>
+  <string name="action_register">Registrar</string>
   <string name="remember_position">Recordar la posición</string>
   <string name="remember_position_summary">Recordar la posición de la lista/tabla antes de cerrar Twidere</string>
   <string name="remove">Eliminar</string>
@@ -871,7 +871,7 @@
   <string name="show_absolute_time">Mostrar tiempo absoluto</string>
   <string name="show_absolute_time_summary">Mostrar tiempo absoluto en los tweets</string>
   <string name="show_in_timeline">Mostrar en la cronología</string>
-  <string name="sign_in">Inicia sesión</string>
+  <string name="action_sign_in">Inicia sesión</string>
   <string name="sign_in_service_email">Correo electrónico</string>
   <string name="sign_in_service_google_id">ID de Google</string>
   <string name="sign_in_service_twitter">Twitter</string>

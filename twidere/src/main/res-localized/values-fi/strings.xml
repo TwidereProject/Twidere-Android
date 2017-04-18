@@ -539,7 +539,7 @@
   <string name="refresh_type_interactions">Vuorovaikutukset</string>
   <string name="refresh_type_messages">Viestit</string>
   <string name="refresh_type_trends">Trendit</string>
-  <string name="register">Rekistöröidy</string>
+  <string name="action_register">Rekistöröidy</string>
   <string name="remember_position">Muista sijainti</string>
   <string name="remember_position_summary">Muista listan/välilehden sijainti, kun Twidere sulkeutuu</string>
   <string name="remove">Poista</string>
@@ -600,7 +600,7 @@
   <string name="show_absolute_time">Näytä absoluuttinen aika</string>
   <string name="show_absolute_time_summary">Näytä twiiteissä absoluuttinen aika</string>
   <string name="show_in_timeline">Näytä aikajanalla</string>
-  <string name="sign_in">Kirjaudu</string>
+  <string name="action_sign_in">Kirjaudu</string>
   <string name="sign_in_service_email">Sähköposti</string>
   <string name="sign_in_service_google_id">Google tunnus</string>
   <string name="sign_in_service_twitter">Twitter</string>

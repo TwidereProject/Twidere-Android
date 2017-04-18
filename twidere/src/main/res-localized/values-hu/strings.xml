@@ -554,7 +554,7 @@
   <string name="refresh_type_interactions">Interakciók</string>
   <string name="refresh_type_messages">Üzenetek</string>
   <string name="refresh_type_trends">Trendek</string>
-  <string name="register">Regisztrál</string>
+  <string name="action_register">Regisztrál</string>
   <string name="remember_position">Pozíció megjegyzése</string>
   <string name="remember_position_summary">Lista/fül pozíció megjegyzése a Twidere bezárása előtt</string>
   <string name="remove">Eltávolít</string>
@@ -617,7 +617,7 @@
   <string name="show_absolute_time">Abszolút idő megjelenítése</string>
   <string name="show_absolute_time_summary">Abszolút idő megjelenítése tweetekben</string>
   <string name="show_in_timeline">Mutasd az idővonalon</string>
-  <string name="sign_in">Bejelentkezés</string>
+  <string name="action_sign_in">Bejelentkezés</string>
   <string name="sign_in_service_email">E-mail</string>
   <string name="sign_in_service_google_id">Google ID</string>
   <string name="sign_in_service_twitter">Twitter</string>

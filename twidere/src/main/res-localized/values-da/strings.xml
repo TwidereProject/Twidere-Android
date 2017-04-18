@@ -240,7 +240,7 @@
   <string name="share_format_summary">\"[TITLE] = Indholdstitel\n\"[TEXT]\" = Indholdstekst</string>
   <string name="show_absolute_time">Vis absolut tid</string>
   <string name="show_absolute_time_summary">Vis absolut tid i tweets</string>
-  <string name="sign_in">Log ind</string>
+  <string name="action_sign_in">Log ind</string>
   <string name="sign_up">Tilmeld</string>
   <string name="sound">Lyd</string>
   <string name="source"><xliff:g id="source">%s</xliff:g></string>

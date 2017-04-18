@@ -593,7 +593,7 @@
   <string name="refresh_type_interactions">Interações</string>
   <string name="refresh_type_messages">Mensagens</string>
   <string name="refresh_type_trends">Tópicos</string>
-  <string name="register">Registrar</string>
+  <string name="action_register">Registrar</string>
   <string name="remember_position">Lembrar posição</string>
   <string name="remember_position_summary">Lembrar da posição dos tweets na lista/aba antes de fechar o Twidere</string>
   <string name="remove">Apagar</string>
@@ -657,7 +657,7 @@
   <string name="show_absolute_time">Mostrar hora absoluta</string>
   <string name="show_absolute_time_summary">Mostrar hora real nos tweets</string>
   <string name="show_in_timeline">Exibir na timeline</string>
-  <string name="sign_in">Fazer Login</string>
+  <string name="action_sign_in">Fazer Login</string>
   <string name="sign_in_service_email">E-mail</string>
   <string name="sign_in_service_google_id">Google ID</string>
   <string name="sign_in_service_twitter">Twitter</string>

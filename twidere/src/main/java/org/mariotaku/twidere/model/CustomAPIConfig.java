@@ -43,6 +43,7 @@ public final class CustomAPIConfig implements Parcelable {
     @JsonField(name = "localized_name")
     String localizedName;
     @JsonField(name = "api_url_format")
+    @Nullable
     String apiUrlFormat;
     @Credentials.Type
     @JsonField(name = "auth_type")
@@ -52,8 +53,10 @@ public final class CustomAPIConfig implements Parcelable {
     @JsonField(name = "no_version_suffix")
     boolean noVersionSuffix;
     @JsonField(name = "consumer_key")
+    @Nullable
     String consumerKey;
     @JsonField(name = "consumer_secret")
+    @Nullable
     String consumerSecret;
     @Nullable
     @JsonField(name = "sign_up_url")
@@ -62,9 +65,9 @@ public final class CustomAPIConfig implements Parcelable {
     public CustomAPIConfig() {
     }
 
-    public CustomAPIConfig(String name, @Nullable String type, String apiUrlFormat,
-                           String credentialsType, boolean sameOAuthUrl, boolean noVersionSuffix,
-                           String consumerKey, String consumerSecret) {
+    public CustomAPIConfig(@NonNull String name, @Nullable String type, @Nullable String apiUrlFormat,
+            String credentialsType, boolean sameOAuthUrl, boolean noVersionSuffix,
+            @Nullable String consumerKey, @Nullable String consumerSecret) {
         this.name = name;
         this.type = type;
         this.apiUrlFormat = apiUrlFormat;
@@ -106,6 +109,7 @@ public final class CustomAPIConfig implements Parcelable {
         this.localizedName = localizedName;
     }
 
+    @Nullable
     public String getApiUrlFormat() {
         return apiUrlFormat;
     }
@@ -122,23 +126,25 @@ public final class CustomAPIConfig implements Parcelable {
         return noVersionSuffix;
     }
 
+    @Nullable
     public String getConsumerKey() {
         return consumerKey;
     }
 
+    @Nullable
     public String getConsumerSecret() {
         return consumerSecret;
     }
 
-    public void setApiUrlFormat(String apiUrlFormat) {
+    public void setApiUrlFormat(@Nullable String apiUrlFormat) {
         this.apiUrlFormat = apiUrlFormat;
     }
 
-    public void setConsumerKey(String consumerKey) {
+    public void setConsumerKey(@Nullable String consumerKey) {
         this.consumerKey = consumerKey;
     }
 
-    public void setConsumerSecret(String consumerSecret) {
+    public void setConsumerSecret(@Nullable String consumerSecret) {
         this.consumerSecret = consumerSecret;
     }
 
@@ -191,9 +197,7 @@ public final class CustomAPIConfig implements Parcelable {
         InputStream is = null;
         try {
             is = assets.open("data/default_api_configs.json");
-            List<CustomAPIConfig> configList = JsonSerializer.parseList(is, CustomAPIConfig.class);
-            if (configList == null) return listBuiltin(context);
-            return configList;
+            return JsonSerializer.parseList(is, CustomAPIConfig.class);
         } catch (IOException e) {
             return listBuiltin(context);
         } finally {
@@ -205,6 +209,11 @@ public final class CustomAPIConfig implements Parcelable {
         return new CustomAPIConfig(context.getString(R.string.provider_default), AccountType.TWITTER,
                 DEFAULT_TWITTER_API_URL_FORMAT, Credentials.Type.OAUTH, true, false,
                 TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET);
+    }
+
+    public static CustomAPIConfig mastodon(@NonNull Context context) {
+        return new CustomAPIConfig(context.getString(R.string.provider_mastodon), AccountType.MASTODON,
+                null, Credentials.Type.OAUTH2, true, true, null, null);
     }
 
     public static List<CustomAPIConfig> listBuiltin(@NonNull Context context) {

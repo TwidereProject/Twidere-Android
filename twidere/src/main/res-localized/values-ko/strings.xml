@@ -711,7 +711,7 @@
   <string name="refresh_type_interactions">반응</string>
   <string name="refresh_type_messages">쪽지</string>
   <string name="refresh_type_trends">관심사</string>
-  <string name="register">가입</string>
+  <string name="action_register">가입</string>
   <string name="remember_position">위치 기억하기</string>
   <string name="remember_position_summary">Twidere를 종료하기 전에 리스트, 탭의 위치를 기억합니다</string>
   <string name="remove">제거</string>
@@ -776,7 +776,7 @@
   <string name="show_absolute_time">절대시간 표시</string>
   <string name="show_absolute_time_summary">트윗에 절대시간 표시</string>
   <string name="show_in_timeline">타임라인에 표시</string>
-  <string name="sign_in">로그인</string>
+  <string name="action_sign_in">로그인</string>
   <string name="sign_in_service_email">이메일</string>
   <string name="sign_in_service_google_id">구글 ID</string>
   <string name="sign_in_service_twitter">트위터</string>

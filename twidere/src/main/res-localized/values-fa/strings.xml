@@ -682,7 +682,7 @@
   <string name="refresh_type_interactions">برهم‌کنش‌ها</string>
   <string name="refresh_type_messages">پیام‌ها</string>
   <string name="refresh_type_trends">رویدادها</string>
-  <string name="register">ثبت‌نام</string>
+  <string name="action_register">ثبت‌نام</string>
   <string name="remember_position">به خاطر سپردن موقعیّت</string>
   <string name="remember_position_summary">به یاد داشتن موقعیت فهرست/برگه پیش از بستن Twidere</string>
   <string name="remove">برداشتن</string>
@@ -747,7 +747,7 @@
   <string name="show_absolute_time">نمایش زمان خالص</string>
   <string name="show_absolute_time_summary">نمایش زمان خالص در توییت‌ها</string>
   <string name="show_in_timeline">نمایش در خط زمانی</string>
-  <string name="sign_in">ورود</string>
+  <string name="action_sign_in">ورود</string>
   <string name="sign_in_service_email">رایانامه</string>
   <string name="sign_in_service_google_id">شناسهٔ گوگل</string>
   <string name="sign_in_service_twitter">توییتر</string>

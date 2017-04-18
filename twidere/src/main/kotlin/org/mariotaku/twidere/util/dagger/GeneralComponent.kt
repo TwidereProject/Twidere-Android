@@ -115,7 +115,7 @@ interface GeneralComponent {
 
     fun inject(loader: ParcelableStatusLoader)
 
-    fun inject(loader: APIEditorDialogFragment.LoadDefaultsChooserDialogFragment.DefaultAPIConfigLoader)
+    fun inject(loader: DefaultAPIConfigLoader)
 
     fun inject(application: TwidereApplication)
 

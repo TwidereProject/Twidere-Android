@@ -806,7 +806,7 @@
   <string name="refresh_type_interactions">互动</string>
   <string name="refresh_type_messages">私信</string>
   <string name="refresh_type_trends">话题</string>
-  <string name="register">注册</string>
+  <string name="action_register">注册</string>
   <string name="remember_position">记住位置</string>
   <string name="remember_position_summary">打开 Twidere 时，恢复到退出前列表/页面的位置</string>
   <string name="remove">移除</string>
@@ -872,7 +872,7 @@
   <string name="show_absolute_time">显示绝对时间</string>
   <string name="show_absolute_time_summary">在推文等列表里显示绝对时间</string>
   <string name="show_in_timeline">在时间线中显示</string>
-  <string name="sign_in">登录</string>
+  <string name="action_sign_in">登录</string>
   <string name="sign_in_service_email">电子邮件</string>
   <string name="sign_in_service_google_id">Google ID</string>
   <string name="sign_in_service_twitter">Twitter</string>

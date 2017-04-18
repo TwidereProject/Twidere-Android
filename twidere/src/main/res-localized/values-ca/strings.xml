@@ -547,7 +547,7 @@
   <string name="refresh_type_interactions">Interaccions</string>
   <string name="refresh_type_messages">Missatges</string>
   <string name="refresh_type_trends">Tendències</string>
-  <string name="register">Registrar-se</string>
+  <string name="action_register">Registrar-se</string>
   <string name="remember_position">Recorda la posició</string>
   <string name="remember_position_summary">Recorda la posició a la llista/pestanya abans de tancar Twidere</string>
   <string name="remove">Suprimeix</string>
@@ -610,7 +610,7 @@
   <string name="show_absolute_time">Mostra l\'hora absoluta</string>
   <string name="show_absolute_time_summary">Mostra data i hora absolutes a les piulades</string>
   <string name="show_in_timeline">Mostra a la cronologia</string>
-  <string name="sign_in">Inicia la sessió</string>
+  <string name="action_sign_in">Inicia la sessió</string>
   <string name="sign_in_service_email">Correu electrònic</string>
   <string name="sign_in_service_google_id">Compte de Google</string>
   <string name="sign_in_service_twitter">Twitter</string>

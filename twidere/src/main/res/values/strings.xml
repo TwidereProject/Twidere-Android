@@ -2,6 +2,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="account_options">Account options</string>
     <string name="account_type_fanfou">Fanfou</string>
+    <string name="account_type_mastodon">Mastodon</string>
     <string name="account_type_statusnet">StatusNet</string>
     <string name="account_type_twitter">Twitter</string>
 
@@ -95,6 +96,7 @@
     <string name="action_refreshing_direct_messages">refreshing direct messages</string>
     <string name="action_refreshing_home_timeline">refreshing home timeline</string>
     <string name="action_refreshing_mentions">refreshing mentions</string>
+    <string name="action_register">Register</string>
     <string name="action_remove_conversation_avatar">Remove icon</string>
     <string name="action_removing_profile_banner_image">removing profile header image</string>
     <string name="action_reply">Reply</string>
@@ -119,6 +121,7 @@
     <string name="action_set_color">Set color</string>
     <string name="action_set_nickname">Set nickname</string>
     <string name="action_share">Share</string>
+    <string name="action_sign_in">Sign in</string>
     <string name="action_signing_in">signing in</string>
     <!-- [verb] Used for skip some settings -->
     <string name="action_skip">Skip</string>
@@ -216,6 +219,7 @@
 
     <string name="auth_type_basic">Basic</string>
     <string name="auth_type_oauth">OAuth</string>
+    <string name="auth_type_oauth2">OAuth 2</string>
     <string name="auth_type_twip_o">twip O Mode</string>
     <string name="auth_type_xauth">xAuth</string>
 
@@ -570,6 +574,7 @@
     <string name="label_translate_from_language">Translate from <xliff:g id="language">%s</xliff:g></string>
     <string name="label_translation">Translation</string>
     <string name="label_username">Username</string>
+    <string name="label_username_mastodon_host">Username@Mastodon-Site</string>
     <string name="label_video">Video</string>
     <string name="label_your_profile_image">Your profile image</string>
 
@@ -929,6 +934,7 @@
     <string name="provider_gnusocial_de">GNU Social.de</string>
     <string name="provider_gnusocial_net">GNU Social.net</string>
     <string name="provider_loadaverage_org">LoadAverage.org</string>
+    <string name="provider_mastodon">Mastodon</string>
     <string name="provider_quitter_se">Quitter.se</string>
 
     <string name="proxy">Proxy</string>
@@ -967,8 +973,6 @@
     <string name="refresh_type_interactions">Interactions</string>
     <string name="refresh_type_messages">Messages</string>
     <string name="refresh_type_trends">Trends</string>
-
-    <string name="register">Register</string>
 
     <string name="remember_position">Remember position</string>
     <string name="remember_position_summary">Remember list/tab position before closing Twidere</string>
@@ -1066,7 +1070,6 @@
     <string name="show_absolute_time_summary">Show absolute time in tweets</string>
     <string name="show_in_timeline">Show in timeline</string>
 
-    <string name="sign_in">Sign in</string>
     <string name="sign_in_service_email">Email</string>
     <string name="sign_in_service_google_id">Google ID</string>
     <string name="sign_in_service_twitter">Twitter</string>

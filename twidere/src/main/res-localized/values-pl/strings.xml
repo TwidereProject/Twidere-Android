@@ -547,7 +547,7 @@
   <string name="refresh_type_interactions">Interakcje</string>
   <string name="refresh_type_messages">Wiadomości</string>
   <string name="refresh_type_trends">Trendy</string>
-  <string name="register">Zarejestruj się</string>
+  <string name="action_register">Zarejestruj się</string>
   <string name="remember_position">Zapamiętaj pozycję</string>
   <string name="remember_position_summary">Zapamiętaj pozycję listy/zakładki przed zamknięciem Twidere</string>
   <string name="remove">Usuń</string>
@@ -599,7 +599,7 @@
   <string name="show_absolute_time">Pokazuj czas bezwględny</string>
   <string name="show_absolute_time_summary">Pokazuj czas bezwzględny w tweetach</string>
   <string name="show_in_timeline">Pokazuj w strumieniu</string>
-  <string name="sign_in">Zaloguj się</string>
+  <string name="action_sign_in">Zaloguj się</string>
   <string name="sign_in_service_google_id">Identyfikator Google</string>
   <string name="sign_in_service_twitter">Twitter</string>
   <string name="sign_in_with_ellip">Zaloguj się z&#8230;</string>
