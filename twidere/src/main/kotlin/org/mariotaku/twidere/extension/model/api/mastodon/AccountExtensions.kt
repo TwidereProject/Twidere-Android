@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.extension.model.api.mastodon
 
 import org.mariotaku.microblog.library.mastodon.model.Account
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 
@@ -47,6 +48,7 @@ fun Account.toParcelable(accountKey: UserKey, position: Long = 0): ParcelableUse
     obj.favorites_count = -1
     obj.listed_count = -1
     obj.media_count = -1
+    obj.user_type = AccountType.MASTODON
     return obj
 }
 

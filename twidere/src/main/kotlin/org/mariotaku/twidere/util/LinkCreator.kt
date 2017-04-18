@@ -21,6 +21,7 @@ package org.mariotaku.twidere.util
 
 import android.net.Uri
 import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
@@ -133,8 +134,12 @@ object LinkCreator {
         if (user.extras != null && user.extras.statusnet_profile_url != null) {
             return Uri.parse(user.extras.statusnet_profile_url)
         }
-        if (USER_TYPE_FANFOU_COM == user.key.host) {
-            return getFanfouUserLink(user.key.id)
+        when (user.user_type) {
+            AccountType.FANFOU -> return getFanfouUserLink(user.key.id)
+            AccountType.MASTODON -> {
+                val host = user.key.host ?: user.account_key.host
+                return getMastodonUserLink(host!!, user.screen_name)
+            }
         }
         return getTwitterUserLink(user.screen_name)
     }
@@ -171,6 +176,14 @@ object LinkCreator {
         builder.scheme(SCHEME_HTTP)
         builder.authority(AUTHORITY_FANFOU)
         builder.appendPath(id)
+        return builder.build()
+    }
+
+    internal fun getMastodonUserLink(host: String, username: String): Uri {
+        val builder = Uri.Builder()
+        builder.scheme(SCHEME_HTTPS)
+        builder.authority(host)
+        builder.appendEncodedPath(Uri.encode("@$username", "@"))
         return builder.build()
     }
 }

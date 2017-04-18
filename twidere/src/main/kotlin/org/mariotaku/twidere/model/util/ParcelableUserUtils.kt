@@ -3,6 +3,7 @@ package org.mariotaku.twidere.model.util
 import android.text.TextUtils
 import org.mariotaku.ktextension.isNotNullOrEmpty
 import org.mariotaku.microblog.library.twitter.model.User
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.api.getProfileImageOfSize
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
@@ -29,8 +30,8 @@ object ParcelableUserUtils {
     }
 
 
-    private fun fromUserInternal(user: User, accountKey: UserKey?, accountType: String?, position: Long = 0,
-            profileImageSize: String = "normal"): ParcelableUser {
+    private fun fromUserInternal(user: User, accountKey: UserKey?, @AccountType accountType: String?,
+            position: Long = 0, profileImageSize: String = "normal"): ParcelableUser {
         val urlEntities = user.urlEntities
         val obj = ParcelableUser()
         obj.position = position
