@@ -24,20 +24,13 @@ import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.twitter.model.SavedSearch
 import org.mariotaku.microblog.library.twitter.model.Status
-import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
-import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.model.util.getActivityStatus
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches
 
 object ContentValuesCreator {
-
-    fun createCachedUser(user: User, accountType: String, profileImageSize: String = "normal"): ContentValues {
-        return ObjectCursor.valuesCreatorFrom(ParcelableUser::class.java)
-                .create(ParcelableUserUtils.fromUser(user, accountType, profileImageSize = profileImageSize))
-    }
 
     fun createFilteredUser(status: ParcelableStatus): ContentValues {
         val values = ContentValues()

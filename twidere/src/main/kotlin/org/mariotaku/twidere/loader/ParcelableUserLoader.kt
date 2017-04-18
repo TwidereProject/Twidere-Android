@@ -30,13 +30,14 @@ import org.mariotaku.ktextension.set
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.twitter.model.User
+import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.sqliteqb.library.Columns
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.Referral
+import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
@@ -47,7 +48,6 @@ import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.model.util.UserKeyUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
 import org.mariotaku.twidere.task.UpdateAccountInfoTask
-import org.mariotaku.twidere.util.ContentValuesCreator
 import org.mariotaku.twidere.util.TwitterWrapper
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.dagger.GeneralComponent
@@ -96,7 +96,6 @@ class ParcelableUserLoader(
                 }
             }
         }
-        val twitter = details.newMicroBlogInstance(context = context, cls = MicroBlog::class.java)
         if (loadFromCache) {
             val where: Expression
             val whereArgs: Array<String>
@@ -139,27 +138,13 @@ class ParcelableUserLoader(
             }
         }
         try {
-            val twitterUser: User
-            if (extras != null && Referral.SELF_PROFILE == extras.getString(EXTRA_REFERRAL)) {
-                twitterUser = twitter.verifyCredentials()
-            } else {
-                var profileUrl: String? = null
-                if (extras != null) {
-                    profileUrl = extras.getString(EXTRA_PROFILE_URL)
-                }
-                if (details.type == AccountType.STATUSNET && userKey != null && profileUrl != null
-                        && details.key.host != userKey.host) {
-                    twitterUser = twitter.showExternalProfile(profileUrl)
-                } else {
-                    val id = userKey?.id
-                    twitterUser = TwitterWrapper.tryShowUser(twitter, id, screenName, details.type)
-                }
+            val user = when (details.type) {
+                AccountType.MASTODON -> showMastodonUser(details)
+                else -> showMicroBlogUser(details)
             }
-            val cachedUserValues = ContentValuesCreator.createCachedUser(twitterUser, details.type,
-                    profileImageSize)
+            val creator = ObjectCursor.valuesCreatorFrom(ParcelableUser::class.java)
+            val cachedUserValues = creator.create(user)
             resolver.insert(CachedUsers.CONTENT_URI, cachedUserValues)
-            val user = ParcelableUserUtils.fromUser(twitterUser, accountKey, details.type,
-                    profileImageSize = profileImageSize)
             ParcelableUserUtils.updateExtraInformation(user, details, userColorNameManager)
             return SingleResponse(user).apply {
                 extras[EXTRA_ACCOUNT] = details
@@ -169,6 +154,27 @@ class ParcelableUserLoader(
             return SingleResponse(exception = e)
         }
 
+    }
+
+    private fun showMastodonUser(details: AccountDetails): ParcelableUser {
+        val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
+        if (userKey != null) return mastodon.getAccount(userKey.id).toParcelable(details.key)
+        throw MicroBlogException("No user id")
+    }
+
+    private fun showMicroBlogUser(details: AccountDetails): ParcelableUser {
+        val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
+        val profileUrl = extras?.getString(EXTRA_PROFILE_URL)
+        val response = if (extras != null && Referral.SELF_PROFILE == extras.getString(EXTRA_REFERRAL)) {
+            microBlog.verifyCredentials()
+        } else if (details.type == AccountType.STATUSNET && userKey != null && profileUrl != null
+                && details.key.host != userKey.host) {
+            microBlog.showExternalProfile(profileUrl)
+        } else {
+            TwitterWrapper.tryShowUser(microBlog, userKey?.id, screenName, details.type)
+        }
+        return ParcelableUserUtils.fromUser(response, details.key, details.type,
+                profileImageSize = profileImageSize)
     }
 
     override fun onStartLoading() {

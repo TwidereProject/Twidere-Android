@@ -148,7 +148,9 @@ public class AccountUtils {
             case AccountType.STATUSNET: {
                 return R.drawable.ic_account_logo_statusnet;
             }
-
+            case AccountType.MASTODON: {
+                return R.drawable.ic_account_logo_mastodon;
+            }
         }
         return R.drawable.ic_account_logo_twitter;
     }

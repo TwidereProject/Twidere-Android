@@ -65,6 +65,7 @@ import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.restfu.http.Endpoint
 import org.mariotaku.restfu.oauth.OAuthToken
+import org.mariotaku.restfu.oauth2.OAuth2Authorization
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
@@ -74,6 +75,7 @@ import org.mariotaku.twidere.constant.defaultAPIConfigKey
 import org.mariotaku.twidere.constant.randomizeAccountNameKey
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.getNonEmptyString
+import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.getColor
 import org.mariotaku.twidere.extension.model.getOAuthAuthorization
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
@@ -89,10 +91,7 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.account.AccountExtras
 import org.mariotaku.twidere.model.account.StatusNetAccountExtras
 import org.mariotaku.twidere.model.account.TwitterAccountExtras
-import org.mariotaku.twidere.model.account.cred.BasicCredentials
-import org.mariotaku.twidere.model.account.cred.Credentials
-import org.mariotaku.twidere.model.account.cred.EmptyCredentials
-import org.mariotaku.twidere.model.account.cred.OAuthCredentials
+import org.mariotaku.twidere.model.account.cred.*
 import org.mariotaku.twidere.model.analyzer.SignIn
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
@@ -344,7 +343,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
     private fun performMastodonLogin() {
         val weakThis = WeakReference(this)
         val host = editUsername.string?.takeIf(String::isNotEmpty) ?: run {
-            Toast.makeText(this, R.string.message_toast_invalid_mastodon_username,
+            Toast.makeText(this, R.string.message_toast_invalid_mastodon_host,
                     Toast.LENGTH_SHORT).show()
             return
         }
@@ -397,30 +396,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         AsyncTaskUtils.executeTask<AbstractSignInTask, Any>(signInTask)
     }
 
-    private fun finishMastodonBrowserLogin(host: String, clientId: String, clientSecret: String,
-            code: String) {
-        val weakThis = WeakReference(this)
-        executeAfterFragmentResumed { activity ->
-            ProgressDialogFragment.show(activity.supportFragmentManager, "open_browser_auth")
-        } and task {
-            val activity = weakThis.get() ?: throw InterruptedException()
-            val endpoint = Endpoint("https://$host/")
-            val oauth2 = newMicroBlogInstance(activity, endpoint, EmptyAuthorization(),
-                    AccountType.MASTODON, MastodonOAuth2::class.java)
-            return@task oauth2.getToken(clientId, clientSecret, code, MASTODON_CALLBACK_URL)
-        }.successUi { token ->
-            DebugLog.d(msg = "$token")
-        }.failUi {
-            val activity = weakThis.get() ?: return@failUi
-            // TODO show error message
-        }.alwaysUi {
-            executeAfterFragmentResumed {
-                it.supportFragmentManager.dismissDialogFragment("open_browser_auth")
-            }
-        }
-    }
-
-    internal fun onSignInResult(result: SignInResponse) {
+    private fun onSignInResult(result: SignInResponse) {
         val am = AccountManager.get(this)
         setSignInButton()
         if (result.alreadyLoggedIn) {
@@ -429,14 +405,14 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             Toast.makeText(this, R.string.message_toast_already_logged_in, Toast.LENGTH_SHORT).show()
         } else {
             result.addAccount(am, preferences[randomizeAccountNameKey])
-            val (type, extras) = result.typeExtras
-            Analyzer.log(SignIn(true, accountType = type, credentialsType = apiConfig.credentialsType,
-                    officialKey = extras?.official ?: false))
+            Analyzer.log(SignIn(true, accountType = result.type,
+                    credentialsType = apiConfig.credentialsType,
+                    officialKey = result.extras?.official ?: false))
             finishSignIn()
         }
     }
 
-    internal fun dismissDialogFragment(tag: String) {
+    private fun dismissDialogFragment(tag: String) {
         executeAfterFragmentResumed {
             val fm = supportFragmentManager
             val f = fm.findFragmentByTag(tag)
@@ -524,6 +500,12 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                 df.show(fm, "login_type_chooser")
             }
         }
+    }
+
+
+    private fun finishMastodonBrowserLogin(host: String, clientId: String, clientSecret: String, code: String) {
+        signInTask = MastodonLoginTask(this, host, clientId, clientSecret, code)
+        AsyncTaskUtils.executeTask(signInTask)
     }
 
     private fun handleBrowserLoginResult(intent: Intent?) {
@@ -862,62 +844,13 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         }
     }
 
-    internal abstract class AbstractSignInTask(activity: SignInActivity) : AsyncTask<Any, Runnable, SingleResponse<SignInResponse>>() {
-        protected val activityRef = WeakReference(activity)
-
-        protected val profileImageSize: String = activity.getString(R.string.profile_image_size)
-
-        override final fun doInBackground(vararg args: Any?): SingleResponse<SignInResponse> {
-            try {
-                return SingleResponse.getInstance(performLogin())
-            } catch (e: Exception) {
-                return SingleResponse.getInstance(e)
-            }
-        }
-
-        abstract fun performLogin(): SignInResponse
-
-        override fun onPostExecute(result: SingleResponse<SignInResponse>) {
-            val activity = activityRef.get()
-            activity?.dismissDialogFragment(FRAGMENT_TAG_SIGN_IN_PROGRESS)
-            if (result.hasData()) {
-                activity?.onSignInResult(result.data!!)
-            } else {
-                activity?.onSignInError(result.exception!!)
-            }
-        }
-
-        override fun onPreExecute() {
-            val activity = activityRef.get()
-            activity?.onSignInStart()
-        }
-
-        override fun onProgressUpdate(vararg values: Runnable) {
-            for (value in values) {
-                value.run()
-            }
-        }
-
-        @Throws(MicroBlogException::class)
-        internal fun analyseUserProfileColor(user: User?): Int {
-            if (user == null) throw MicroBlogException("Unable to get user info")
-            return ParcelableUserUtils.parseColor(user.profileLinkColor)
-        }
-
-    }
-
-    internal class BrowserSignInTask(context: SignInActivity, private val apiConfig: CustomAPIConfig,
+    internal class BrowserSignInTask(activity: SignInActivity, private val apiConfig: CustomAPIConfig,
             private val requestToken: OAuthToken, private val oauthVerifier: String?) :
-            AbstractSignInTask(context) {
-
-        private val context: Context
-
-        init {
-            this.context = context
-        }
+            AbstractSignInTask(activity) {
 
         @Throws(Exception::class)
         override fun performLogin(): SignInResponse {
+            val context = activityRef.get() ?: throw InterruptedException()
             val versionSuffix = if (apiConfig.isNoVersionSuffix) null else "1.1"
             val apiUrlFormat = apiConfig.apiUrlFormat ?: throw MicroBlogException("No API URL format")
             var auth = apiConfig.getOAuthAuthorization() ?:
@@ -941,10 +874,10 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                     accountType = apiConfig.type, cls = MicroBlog::class.java)
             val apiUser = twitter.verifyCredentials()
             var color = analyseUserProfileColor(apiUser)
-            val typeExtras = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
+            val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
             val userId = apiUser.id
             val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
-            val user = ParcelableUserUtils.fromUser(apiUser, accountKey, typeExtras.first,
+            val user = ParcelableUserUtils.fromUser(apiUser, accountKey, type,
                     profileImageSize = profileImageSize)
             val am = AccountManager.get(context)
             val account = AccountUtils.findByAccountKey(am, accountKey)
@@ -963,11 +896,42 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             credentials.access_token_secret = accessToken.oauthTokenSecret
 
             return SignInResponse(account != null, Credentials.Type.OAUTH, credentials, user, color,
-                    typeExtras)
+                    type, extras)
         }
 
     }
 
+    internal class MastodonLoginTask(context: SignInActivity, val host: String, val clientId: String,
+            val clientSecret: String, val code: String) : AbstractSignInTask(context) {
+        @Throws(Exception::class)
+        override fun performLogin(): SignInResponse {
+            val context = activityRef.get() ?: throw InterruptedException()
+            val oauth2 = newMicroBlogInstance(context, Endpoint("https://$host/"),
+                    EmptyAuthorization(), AccountType.MASTODON, MastodonOAuth2::class.java)
+            val token = oauth2.getToken(clientId, clientSecret, code, MASTODON_CALLBACK_URL)
+
+            val endpoint = Endpoint("https://$host/api/")
+            val auth = OAuth2Authorization(token.accessToken)
+            val mastodon = newMicroBlogInstance(context, endpoint = endpoint, auth = auth,
+                    accountType = AccountType.MASTODON, cls = Mastodon::class.java)
+            val apiAccount = mastodon.verifyCredentials()
+            var color = 0
+            val accountKey = UserKey(apiAccount.id, host)
+            val user = apiAccount.toParcelable(accountKey)
+            val am = AccountManager.get(context)
+            val account = AccountUtils.findByAccountKey(am, accountKey)
+            if (account != null) {
+                color = account.getColor(am)
+            }
+            val credentials = OAuth2Credentials()
+            credentials.api_url_format = endpoint.url
+            credentials.no_version_suffix = true
+
+            credentials.access_token = token.accessToken
+            return SignInResponse(account != null, Credentials.Type.OAUTH2, credentials, user,
+                    color, AccountType.MASTODON, null)
+        }
+    }
 
     internal class SignInTask(
             activity: SignInActivity,
@@ -1052,9 +1016,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
 
             val userId = apiUser.id!!
             var color = analyseUserProfileColor(apiUser)
-            val typeExtras = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
+            val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
             val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
-            val user = ParcelableUserUtils.fromUser(apiUser, accountKey, typeExtras.first,
+            val user = ParcelableUserUtils.fromUser(apiUser, accountKey, type,
                     profileImageSize = profileImageSize)
             val am = AccountManager.get(activity)
             val account = AccountUtils.findByAccountKey(am, accountKey)
@@ -1067,7 +1031,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             credentials.username = username
             credentials.password = password
             return SignInResponse(account != null, Credentials.Type.BASIC, credentials, user,
-                    color, typeExtras)
+                    color, type, extras)
         }
 
 
@@ -1083,9 +1047,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val apiUser = twitter.verifyCredentials()
             val userId = apiUser.id!!
             var color = analyseUserProfileColor(apiUser)
-            val typeExtras = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
+            val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
             val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
-            val user = ParcelableUserUtils.fromUser(apiUser, accountKey, typeExtras.first,
+            val user = ParcelableUserUtils.fromUser(apiUser, accountKey, type,
                     profileImageSize = profileImageSize)
             val am = AccountManager.get(activity)
             val account = AccountUtils.findByAccountKey(am, accountKey)
@@ -1097,7 +1061,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             credentials.no_version_suffix = apiConfig.isNoVersionSuffix
 
             return SignInResponse(account != null, Credentials.Type.EMPTY, credentials, user, color,
-                    typeExtras)
+                    type, extras)
         }
 
         @Throws(MicroBlogException::class)
@@ -1111,9 +1075,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                     accountType = apiConfig.type, cls = MicroBlog::class.java)
             val apiUser = twitter.verifyCredentials()
             var color = analyseUserProfileColor(apiUser)
-            val typeExtras = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
+            val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
             val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
-            val user = ParcelableUserUtils.fromUser(apiUser, accountKey, typeExtras.first,
+            val user = ParcelableUserUtils.fromUser(apiUser, accountKey, type,
                     profileImageSize = profileImageSize)
             val am = AccountManager.get(activity)
             val account = AccountUtils.findByAccountKey(am, accountKey)
@@ -1131,7 +1095,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             credentials.access_token = accessToken.oauthToken
             credentials.access_token_secret = accessToken.oauthTokenSecret
 
-            return SignInResponse(account != null, authType, credentials, user, color, typeExtras)
+            return SignInResponse(account != null, authType, credentials, user, color, type, extras)
         }
 
         internal class WrongBasicCredentialException : OAuthPasswordAuthenticator.AuthenticationException()
@@ -1186,25 +1150,70 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
 
     }
 
+    internal abstract class AbstractSignInTask(activity: SignInActivity) : AsyncTask<Any, Runnable, SingleResponse<SignInResponse>>() {
+        protected val activityRef = WeakReference(activity)
+
+        protected val profileImageSize: String = activity.getString(R.string.profile_image_size)
+
+        override final fun doInBackground(vararg args: Any?): SingleResponse<SignInResponse> {
+            try {
+                return SingleResponse.getInstance(performLogin())
+            } catch (e: Exception) {
+                return SingleResponse.getInstance(e)
+            }
+        }
+
+        abstract fun performLogin(): SignInResponse
+
+        override fun onPostExecute(result: SingleResponse<SignInResponse>) {
+            val activity = activityRef.get()
+            activity?.dismissDialogFragment(FRAGMENT_TAG_SIGN_IN_PROGRESS)
+            if (result.hasData()) {
+                activity?.onSignInResult(result.data!!)
+            } else {
+                activity?.onSignInError(result.exception!!)
+            }
+        }
+
+        override fun onPreExecute() {
+            val activity = activityRef.get()
+            activity?.onSignInStart()
+        }
+
+        override fun onProgressUpdate(vararg values: Runnable) {
+            for (value in values) {
+                value.run()
+            }
+        }
+
+        @Throws(MicroBlogException::class)
+        internal fun analyseUserProfileColor(user: User?): Int {
+            if (user == null) throw MicroBlogException("Unable to get user info")
+            return ParcelableUserUtils.parseColor(user.profileLinkColor)
+        }
+
+    }
+
     internal data class SignInResponse(
             val alreadyLoggedIn: Boolean,
             @Credentials.Type val credsType: String = Credentials.Type.EMPTY,
             val credentials: Credentials,
             val user: ParcelableUser,
             val color: Int = 0,
-            val typeExtras: Pair<String, AccountExtras?>
+            val type: String,
+            val extras: AccountExtras?
     ) {
 
         private fun writeAccountInfo(action: (k: String, v: String?) -> Unit) {
             action(ACCOUNT_USER_DATA_KEY, user.key.toString())
-            action(ACCOUNT_USER_DATA_TYPE, typeExtras.first)
+            action(ACCOUNT_USER_DATA_TYPE, type)
             action(ACCOUNT_USER_DATA_CREDS_TYPE, credsType)
 
             action(ACCOUNT_USER_DATA_ACTIVATED, true.toString())
             action(ACCOUNT_USER_DATA_COLOR, toHexColor(color, format = HexColorFormat.RGB))
 
             action(ACCOUNT_USER_DATA_USER, JsonSerializer.serialize(user))
-            action(ACCOUNT_USER_DATA_EXTRAS, typeExtras.second?.let { JsonSerializer.serialize(it) })
+            action(ACCOUNT_USER_DATA_EXTRAS, extras?.let { JsonSerializer.serialize(it) })
         }
 
         private fun writeAuthToken(am: AccountManager, account: Account) {

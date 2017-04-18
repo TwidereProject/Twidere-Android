@@ -17,10 +17,7 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.account.AccountExtras
 import org.mariotaku.twidere.model.account.StatusNetAccountExtras
 import org.mariotaku.twidere.model.account.TwitterAccountExtras
-import org.mariotaku.twidere.model.account.cred.BasicCredentials
-import org.mariotaku.twidere.model.account.cred.Credentials
-import org.mariotaku.twidere.model.account.cred.EmptyCredentials
-import org.mariotaku.twidere.model.account.cred.OAuthCredentials
+import org.mariotaku.twidere.model.account.cred.*
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.AccountUtils.ACCOUNT_USER_DATA_KEYS
 import org.mariotaku.twidere.util.JsonSerializer
@@ -165,13 +162,12 @@ private fun AccountManager.getNonNullUserData(account: Account, key: String): St
     }
 }
 
-private fun parseCredentials(authToken: String, @Credentials.Type authType: String): Credentials {
-    when (authType) {
-        Credentials.Type.OAUTH, Credentials.Type.XAUTH -> return JsonSerializer.parse(authToken, OAuthCredentials::class.java)
-        Credentials.Type.BASIC -> return JsonSerializer.parse(authToken, BasicCredentials::class.java)
-        Credentials.Type.EMPTY -> return JsonSerializer.parse(authToken, EmptyCredentials::class.java)
-    }
-    throw UnsupportedOperationException()
+private fun parseCredentials(authToken: String, @Credentials.Type authType: String) = when (authType) {
+    Credentials.Type.OAUTH, Credentials.Type.XAUTH -> JsonSerializer.parse(authToken, OAuthCredentials::class.java)
+    Credentials.Type.BASIC -> JsonSerializer.parse(authToken, BasicCredentials::class.java)
+    Credentials.Type.EMPTY -> JsonSerializer.parse(authToken, EmptyCredentials::class.java)
+    Credentials.Type.OAUTH2 -> JsonSerializer.parse(authToken, OAuth2Credentials::class.java)
+    else -> throw UnsupportedOperationException()
 }
 
 internal object AccountDataQueue {
