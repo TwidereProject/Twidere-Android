@@ -181,11 +181,13 @@ open class OnLinkClickHandler(
     companion object {
 
         fun openLink(context: Context, preferences: SharedPreferences, uri: Uri) {
-            val (intent, options) = IntentUtils.browse(context, preferences, uri = uri)
+            val (intent, options) = IntentUtils.browse(context, preferences, uri = uri,
+                    forceBrowser = false)
             try {
                 ContextCompat.startActivity(context, intent, options)
             } catch (e: ActivityNotFoundException) {
-                // Ignore
+                Analyzer.logException(e)
+                DebugLog.w(tr = e)
             }
         }
     }

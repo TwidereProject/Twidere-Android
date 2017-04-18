@@ -194,17 +194,7 @@ object IntentUtils {
         }
         val intent = Intent(Intent.ACTION_VIEW)
         intent.addCategory(Intent.CATEGORY_BROWSABLE)
-        val testBuilder = Uri.Builder()
-        testBuilder.scheme(SCHEME_HTTP)
-        val sb = StringBuilder()
-        val random = Random()
-        val range = 'z' - 'a'
-        for (i in 0..19) {
-            sb.append(('a' + Math.abs(random.nextInt()) % range))
-        }
-        sb.append(".com")
-        testBuilder.authority(sb.toString())
-        intent.data = testBuilder.build()
+        intent.data = Uri.parse("${uri.scheme}://")
 
         return intent.resolveActivity(context.packageManager)?.takeIf {
             it.className != null && it.packageName != "android"
