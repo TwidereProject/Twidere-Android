@@ -33,6 +33,10 @@ public class OAuth2Token {
     String tokenType;
     @JsonField(name = "access_token")
     String accessToken;
+    @JsonField(name = "expires_in")
+    long expiresIn;
+    @JsonField(name = "refresh_token")
+    String refreshToken;
 
     public String getTokenType() {
         return tokenType;
@@ -40,5 +44,23 @@ public class OAuth2Token {
 
     public String getAccessToken() {
         return accessToken;
+    }
+
+    public long getExpiresIn() {
+        return expiresIn;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    @Override
+    public String toString() {
+        return "OAuth2Token{" +
+                "tokenType='" + tokenType + '\'' +
+                ", accessToken='" + accessToken + '\'' +
+                ", expiresIn=" + expiresIn +
+                ", refreshToken='" + refreshToken + '\'' +
+                '}';
     }
 }

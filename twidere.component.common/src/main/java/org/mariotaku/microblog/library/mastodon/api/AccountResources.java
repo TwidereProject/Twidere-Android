@@ -43,48 +43,48 @@ import java.util.List;
 
 public interface AccountResources {
 
-    @GET("/api/v1/accounts/{id}")
+    @GET("/v1/accounts/{id}")
     Account getAccount(@Path("id") String id) throws MicroBlogException;
 
-    @GET("/api/v1/accounts/verify_credentials")
+    @GET("/v1/accounts/verify_credentials")
     Account verifyCredentials() throws MicroBlogException;
 
-    @PATCH("/api/v1/accounts/update_credentials")
+    @PATCH("/v1/accounts/update_credentials")
     Account updateCredentials(@Param AccountUpdate update) throws MicroBlogException;
 
-    @GET("/api/v1/accounts/{id}/followers")
+    @GET("/v1/accounts/{id}/followers")
     List<Account> getFollowers(@Path("id") String id, @Query Paging paging)
             throws MicroBlogException;
 
-    @GET("/api/v1/accounts/{id}/following")
+    @GET("/v1/accounts/{id}/following")
     List<Account> getFollowing(@Path("id") String id, @Query Paging paging)
             throws MicroBlogException;
 
-    @GET("/api/v1/accounts/{id}/statuses")
+    @GET("/v1/accounts/{id}/statuses")
     List<Status> getStatuses(@Path("id") String id, @Query Paging paging,
             @Query TimelineOption option) throws MicroBlogException;
 
-    @POST("/api/v1/accounts/{id}/follow")
+    @POST("/v1/accounts/{id}/follow")
     Relationship followUser(@Path("id") String id) throws MicroBlogException;
 
-    @POST("/api/v1/accounts/{id}/unfollow")
+    @POST("/v1/accounts/{id}/unfollow")
     Relationship unfollowUser(@Path("id") String id) throws MicroBlogException;
 
-    @POST("/api/v1/accounts/{id}/block")
+    @POST("/v1/accounts/{id}/block")
     Relationship blockUser(@Path("id") String id) throws MicroBlogException;
 
-    @POST("/api/v1/accounts/{id}/unblock")
+    @POST("/v1/accounts/{id}/unblock")
     Relationship unblockUser(@Path("id") String id) throws MicroBlogException;
 
-    @POST("/api/v1/accounts/{id}/mute")
+    @POST("/v1/accounts/{id}/mute")
     Relationship muteUser(@Path("id") String id) throws MicroBlogException;
 
-    @POST("/api/v1/accounts/{id}/unmute")
+    @POST("/v1/accounts/{id}/unmute")
     Relationship unmuteUser(@Path("id") String id) throws MicroBlogException;
 
-    @GET("/api/v1/accounts/relationships")
+    @GET("/v1/accounts/relationships")
     List<Relationship> getRelationships(@Path("id") String id) throws MicroBlogException;
 
-    @GET("/api/v1/accounts/search")
+    @GET("/v1/accounts/search")
     List<Account> searchAccounts(@Query("q") String query) throws MicroBlogException;
 }

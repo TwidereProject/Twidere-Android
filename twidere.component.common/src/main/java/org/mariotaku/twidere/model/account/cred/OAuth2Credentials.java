@@ -24,8 +24,10 @@ package org.mariotaku.twidere.model.account.cred;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 /**
  * Created by mariotaku on 2016/12/2.
@@ -34,6 +36,11 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 @ParcelablePlease
 @JsonObject
 public class OAuth2Credentials extends Credentials implements Parcelable {
+
+    @JsonField(name = "access_token")
+    @ParcelableThisPlease
+    public String access_token;
+
     @Override
     public int describeContents() {
         return 0;

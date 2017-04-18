@@ -1323,4 +1323,5 @@
     <string name="users_blocked">Blocked these users.</string>
     <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>\'s lists</string>
     <string name="users_statuses">User\'s tweets</string>
+    <string name="message_toast_invalid_mastodon_username">Invalid Mastodon username (username@mastodon-site)</string>
 </resources>

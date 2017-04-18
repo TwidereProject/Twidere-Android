@@ -19,23 +19,21 @@
  * under the License.
  */
 
-package org.mariotaku.microblog.library.mastodon.api;
-
-import android.support.annotation.Nullable;
+package org.mariotaku.microblog.library.mastodon;
 
 import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.mastodon.model.RegisteredApplication;
-import org.mariotaku.restfu.annotation.method.POST;
-import org.mariotaku.restfu.annotation.param.Param;
+import org.mariotaku.microblog.library.twitter.auth.OAuth2Token;
+import org.mariotaku.restfu.annotation.method.GET;
+import org.mariotaku.restfu.annotation.param.Query;
 
 /**
- * Created by mariotaku on 2017/4/17.
+ * Created by mariotaku on 2017/4/18.
  */
 
-public interface ApplicationResources {
-    @POST("/v1/apps")
-    RegisteredApplication registerApplication(@Param("client_name") String clientName,
-            @Param("redirect_uris") String redirectUris,
-            @Param(value = "scopes", arrayDelimiter = ' ') String[] scopes,
-            @Nullable @Param("website") String website) throws MicroBlogException;
+public interface MastodonOAuth2 {
+
+    @GET("/v1/oauth/token")
+    OAuth2Token getToken(@Query("client_id") String clientId, @Query("client_secret") String clientSecret,
+            @Query("grant_type") String grantType, @Query("code") String code,
+            @Query("redirect_uri") String redirectUri) throws MicroBlogException;
 }

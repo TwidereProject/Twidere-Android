@@ -24,7 +24,6 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
-import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -37,28 +36,17 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_browser_sign_in.*
 import org.attoparser.ParseException
 import org.mariotaku.ktextension.removeAllCookiesSupport
-import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.twitter.TwitterOAuth
 import org.mariotaku.restfu.oauth.OAuthToken
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
-import org.mariotaku.twidere.extension.model.getOAuthAuthorization
-import org.mariotaku.twidere.extension.model.newMicroBlogInstance
-import org.mariotaku.twidere.model.CustomAPIConfig
-import org.mariotaku.twidere.model.SingleResponse
-import org.mariotaku.twidere.util.AsyncTaskUtils
-import org.mariotaku.twidere.util.DebugLog
-import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator
 import org.mariotaku.twidere.util.webkit.DefaultWebViewClient
 import java.io.IOException
 import java.io.StringReader
-import java.lang.ref.WeakReference
 
 class BrowserSignInActivity : BaseActivity() {
 
     private var requestToken: OAuthToken? = null
-    private var task: GetRequestTokenTask? = null
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -84,13 +72,11 @@ class BrowserSignInActivity : BaseActivity() {
         webSettings.javaScriptEnabled = true
         webSettings.blockNetworkImage = false
         webSettings.saveFormData = true
-        getRequestToken()
+
+        webView.loadUrl(intent.dataString)
     }
 
     override fun onDestroy() {
-        if (task?.status == AsyncTask.Status.RUNNING) {
-            task?.cancel(true)
-        }
         webView?.destroy()
         super.onDestroy()
     }
@@ -103,16 +89,6 @@ class BrowserSignInActivity : BaseActivity() {
     override fun onPause() {
         webView.onPause()
         super.onPause()
-    }
-
-    private fun getRequestToken() {
-        if (requestToken != null || task?.status == AsyncTask.Status.RUNNING) return
-        task = GetRequestTokenTask(this)
-        AsyncTaskUtils.executeTask(task)
-    }
-
-    private fun loadUrl(url: String) {
-        webView.loadUrl(url)
     }
 
     private fun readOAuthPin(html: String): String? {
@@ -135,10 +111,6 @@ class BrowserSignInActivity : BaseActivity() {
 
     private fun setLoadProgress(progress: Int) {
         loadProgress.progress = progress
-    }
-
-    private fun setRequestToken(token: OAuthToken) {
-        requestToken = token
     }
 
     internal class AuthorizationWebChromeClient(val activity: BrowserSignInActivity) : WebChromeClient() {
@@ -166,14 +138,11 @@ class BrowserSignInActivity : BaseActivity() {
                 val paramNames = uri.queryParameterNames
                 if ("/oauth/authorize" == path && paramNames.contains("oauth_callback")) {
                     // Sign in successful response.
-                    val requestToken = activity.requestToken
-                    if (requestToken != null) {
-                        val intent = Intent()
-                        intent.putExtra(EXTRA_REQUEST_TOKEN, requestToken.oauthToken)
-                        intent.putExtra(EXTRA_REQUEST_TOKEN_SECRET, requestToken.oauthTokenSecret)
-                        activity.setResult(Activity.RESULT_OK, intent)
-                        activity.finish()
-                    }
+                    val intent = activity.intent
+                    val data = Intent()
+                    data.putExtra(EXTRA_EXTRAS, intent.getBundleExtra(EXTRA_EXTRAS))
+                    activity.setResult(Activity.RESULT_OK, data)
+                    activity.finish()
                 }
             }
         }
@@ -190,67 +159,20 @@ class BrowserSignInActivity : BaseActivity() {
         @Suppress("Deprecation", "OverridingDeprecatedMember")
         override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
             val uri = Uri.parse(url)
+            val data = Intent()
+            data.putExtra(EXTRA_EXTRAS, activity.intent.getBundleExtra(EXTRA_EXTRAS))
             if (url.startsWith(OAUTH_CALLBACK_URL)) {
-                val oauthVerifier = uri.getQueryParameter(EXTRA_OAUTH_VERIFIER)
-                val activity = activity
-                val requestToken = activity.requestToken
-                if (oauthVerifier != null && requestToken != null) {
-                    val intent = Intent()
-                    intent.putExtra(EXTRA_OAUTH_VERIFIER, oauthVerifier)
-                    intent.putExtra(EXTRA_REQUEST_TOKEN, requestToken.oauthToken)
-                    intent.putExtra(EXTRA_REQUEST_TOKEN_SECRET, requestToken.oauthTokenSecret)
-                    activity.setResult(Activity.RESULT_OK, intent)
-                    activity.finish()
-                }
-                return true
-            }
-            return false
-        }
-
-    }
-
-    internal class GetRequestTokenTask(activity: BrowserSignInActivity) : AsyncTask<Any, Any, SingleResponse<OAuthToken>>() {
-        private val activityRef: WeakReference<BrowserSignInActivity> = WeakReference(activity)
-        private val apiConfig: CustomAPIConfig = activity.intent.getParcelableExtra(EXTRA_API_CONFIG)
-
-        override fun doInBackground(vararg params: Any): SingleResponse<OAuthToken> {
-            val activity = activityRef.get() ?: return SingleResponse(exception = InterruptedException())
-            try {
-                val apiUrlFormat = apiConfig.apiUrlFormat ?:
-                        throw MicroBlogException("Invalid API URL format")
-                val endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(apiUrlFormat,
-                        apiConfig.isSameOAuthUrl)
-                val auth = apiConfig.getOAuthAuthorization() ?:
-                        throw MicroBlogException("Invalid OAuth credentials")
-                val oauth = newMicroBlogInstance(activity, endpoint, auth, apiConfig.type,
-                        TwitterOAuth::class.java)
-                return SingleResponse(oauth.getRequestToken(OAUTH_CALLBACK_OOB))
-            } catch (e: MicroBlogException) {
-                return SingleResponse(exception = e)
-            }
-
-        }
-
-        override fun onPostExecute(result: SingleResponse<OAuthToken>) {
-            val activity = activityRef.get() ?: return
-            activity.setLoadProgressShown(false)
-            if (result.hasData()) {
-                val token = result.data!!
-                activity.setRequestToken(token)
-                val endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(apiConfig.apiUrlFormat!!, true)
-                activity.loadUrl(endpoint.construct("/oauth/authorize", arrayOf("oauth_token", token.oauthToken)))
+                val oauthVerifier = uri.getQueryParameter("oauth_verifier") ?: return false
+                data.putExtra(EXTRA_OAUTH_VERIFIER, oauthVerifier)
+            } else if (url.startsWith(MASTODON_CALLBACK_URL)) {
+                val code = uri.getQueryParameter("code") ?: return false
+                data.putExtra(EXTRA_CODE, code)
             } else {
-                DebugLog.w(LOGTAG, "Error while browser sign in", result.exception)
-                if (!activity.isFinishing) {
-                    Toast.makeText(activity, R.string.message_toast_error_occurred, Toast.LENGTH_SHORT).show()
-                    activity.finish()
-                }
+                return false
             }
-        }
-
-        override fun onPreExecute() {
-            val activity = activityRef.get() ?: return
-            activity.setLoadProgressShown(true)
+            activity.setResult(Activity.RESULT_OK, data)
+            activity.finish()
+            return true
         }
 
     }
@@ -260,13 +182,12 @@ class BrowserSignInActivity : BaseActivity() {
         @JavascriptInterface
         fun processHTML(html: String) {
             val oauthVerifier = activity.readOAuthPin(html)
-            val requestToken = activity.requestToken
-            if (oauthVerifier != null && requestToken != null) {
-                val intent = Intent()
-                intent.putExtra(EXTRA_OAUTH_VERIFIER, oauthVerifier)
-                intent.putExtra(EXTRA_REQUEST_TOKEN, requestToken.oauthToken)
-                intent.putExtra(EXTRA_REQUEST_TOKEN_SECRET, requestToken.oauthTokenSecret)
-                activity.setResult(Activity.RESULT_OK, intent)
+            if (oauthVerifier != null) {
+                val intent = activity.intent
+                val data = Intent()
+                data.putExtra(EXTRA_OAUTH_VERIFIER, oauthVerifier)
+                data.putExtra(EXTRA_EXTRAS, intent.getBundleExtra(EXTRA_EXTRAS))
+                activity.setResult(Activity.RESULT_OK, data)
                 activity.finish()
             }
         }

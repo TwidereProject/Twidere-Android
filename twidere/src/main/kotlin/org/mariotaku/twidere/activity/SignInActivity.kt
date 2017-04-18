@@ -49,11 +49,15 @@ import kotlinx.android.synthetic.main.activity_sign_in.*
 import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.alwaysUi
+import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.mastodon.Mastodon
+import org.mariotaku.microblog.library.mastodon.MastodonOAuth2
+import org.mariotaku.microblog.library.mastodon.annotation.AuthScope
 import org.mariotaku.microblog.library.twitter.TwitterOAuth
 import org.mariotaku.microblog.library.twitter.auth.BasicAuthorization
 import org.mariotaku.microblog.library.twitter.auth.EmptyAuthorization
@@ -167,9 +171,19 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                 setSignInButton()
                 invalidateOptionsMenu()
             }
-            REQUEST_BROWSER_SIGN_IN -> {
+            REQUEST_BROWSER_TWITTER_SIGN_IN -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     handleBrowserLoginResult(data)
+                }
+            }
+            REQUEST_BROWSER_MASTODON_SIGN_IN -> {
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    val extras = data.getBundleExtra(EXTRA_EXTRAS)
+                    val host = extras.getString(EXTRA_HOST)
+                    val clientId = extras.getString(EXTRA_CLIENT_ID)
+                    val clientSecret = extras.getString(EXTRA_CLIENT_SECRET)
+                    val code = extras.getString(EXTRA_CODE)
+                    finishMastodonBrowserLogin(host, clientId, clientSecret, code)
                 }
             }
         }
@@ -208,12 +222,16 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                     editUsername.text = null
                     editPassword.text = null
                 }
-                when (apiConfig.credentialsType) {
+                if (apiConfig.type == AccountType.MASTODON) {
+                    performMastodonLogin()
+                } else when (apiConfig.credentialsType) {
                     Credentials.Type.OAUTH -> {
-                        doBrowserLogin()
+                        performBrowserLogin()
                     }
                     else -> {
-                        doLogin()
+                        val username = editUsername.text.toString()
+                        val password = editPassword.text.toString()
+                        performUserPassLogin(username, password)
                     }
                 }
             }
@@ -283,24 +301,125 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         invalidateOptionsMenu()
     }
 
-    internal fun doBrowserLogin(): Boolean {
-        if (apiConfig.credentialsType != Credentials.Type.OAUTH || signInTask != null && signInTask!!.status == AsyncTask.Status.RUNNING)
-            return true
-        val intent = Intent(this, BrowserSignInActivity::class.java)
-        intent.putExtra(EXTRA_API_CONFIG, apiConfig)
-        startActivityForResult(intent, REQUEST_BROWSER_SIGN_IN)
-        return false
+
+    private fun performBrowserLogin() {
+        val weakThis = WeakReference(this)
+        executeAfterFragmentResumed { activity ->
+            ProgressDialogFragment.show(activity.supportFragmentManager, "get_request_token")
+        } and task {
+            val activity = weakThis.get() ?: throw InterruptedException()
+            val apiConfig = activity.apiConfig
+            val apiUrlFormat = apiConfig.apiUrlFormat ?:
+                    throw MicroBlogException("Invalid API URL format")
+            val endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(apiUrlFormat,
+                    apiConfig.isSameOAuthUrl)
+            val auth = apiConfig.getOAuthAuthorization() ?:
+                    throw MicroBlogException("Invalid OAuth credentials")
+            val oauth = newMicroBlogInstance(activity, endpoint, auth, apiConfig.type,
+                    TwitterOAuth::class.java)
+            return@task oauth.getRequestToken(OAUTH_CALLBACK_OOB)
+        }.successUi { requestToken ->
+            val activity = weakThis.get() ?: return@successUi
+            val intent = Intent(activity, BrowserSignInActivity::class.java)
+            val apiConfig = activity.apiConfig
+            val endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(apiConfig.apiUrlFormat!!, true)
+            intent.data = Uri.parse(endpoint.construct("/oauth/authorize", arrayOf("oauth_token",
+                    requestToken.oauthToken)))
+            intent.putExtra(EXTRA_EXTRAS, Bundle {
+                this[EXTRA_REQUEST_TOKEN] = requestToken.oauthToken
+                this[EXTRA_REQUEST_TOKEN_SECRET] = requestToken.oauthTokenSecret
+            })
+            activity.startActivityForResult(intent, REQUEST_BROWSER_TWITTER_SIGN_IN)
+        }.failUi {
+            val activity = weakThis.get() ?: return@failUi
+            // TODO show error message
+        }.alwaysUi {
+            executeAfterFragmentResumed {
+                it.supportFragmentManager.dismissDialogFragment("get_request_token")
+            }
+        }
     }
 
-    internal fun doLogin() {
+    private fun performMastodonLogin() {
+        val weakThis = WeakReference(this)
+        val userKey = editUsername.string?.takeIf(String::isNotEmpty)
+                ?.let(UserKey::valueOf) ?: run {
+            Toast.makeText(this, R.string.message_toast_invalid_mastodon_username,
+                    Toast.LENGTH_SHORT).show()
+            return
+        }
+        val scopes = arrayOf(AuthScope.READ, AuthScope.WRITE, AuthScope.FOLLOW)
+        executeAfterFragmentResumed { activity ->
+            ProgressDialogFragment.show(activity.supportFragmentManager, "open_browser_auth")
+        } and task {
+            val host = userKey.host ?: throw IOException()
+            val activity = weakThis.get() ?: throw InterruptedException()
+            val registry = activity.mastodonApplicationRegistry
+            return@task Pair(host, registry[host] ?: run {
+                val endpoint = Endpoint("https://$host/api/")
+                val mastodon = newMicroBlogInstance(activity, endpoint, EmptyAuthorization(),
+                        AccountType.MASTODON, Mastodon::class.java)
+                val registered = mastodon.registerApplication("Twidere for Android",
+                        MASTODON_CALLBACK_URL, scopes, TWIDERE_PROJECT_URL)
+                registry[host] = registered
+                return@run registered
+            })
+        }.successUi { (host, app) ->
+            val activity = weakThis.get() ?: return@successUi
+            val endpoint = Endpoint("https://$host/")
+            val intent = Intent(activity, BrowserSignInActivity::class.java)
+            intent.data = Uri.parse(endpoint.construct("/oauth/authorize",
+                    arrayOf("response_type", "code"),
+                    arrayOf("client_id", app.clientId),
+                    arrayOf("redirect_uri", MASTODON_CALLBACK_URL),
+                    arrayOf("scope", scopes.joinToString(" "))))
+            intent.putExtra(EXTRA_EXTRAS, Bundle {
+                this[EXTRA_HOST] = host
+                this[EXTRA_CLIENT_ID] = app.clientId
+                this[EXTRA_CLIENT_SECRET] = app.clientSecret
+            })
+            activity.startActivityForResult(intent, REQUEST_BROWSER_MASTODON_SIGN_IN)
+        }.failUi {
+            val activity = weakThis.get() ?: return@failUi
+            // TODO show error message
+        }.alwaysUi {
+            executeAfterFragmentResumed {
+                it.supportFragmentManager.dismissDialogFragment("open_browser_auth")
+            }
+        }
+    }
+
+    private fun performUserPassLogin(username: String, password: String) {
         if (signInTask != null && signInTask!!.status == AsyncTask.Status.RUNNING) {
             signInTask!!.cancel(true)
         }
 
-        val username = editUsername.text.toString()
-        val password = editPassword.text.toString()
         signInTask = SignInTask(this, username, password, apiConfig)
         AsyncTaskUtils.executeTask<AbstractSignInTask, Any>(signInTask)
+    }
+
+    private fun finishMastodonBrowserLogin(host: String, clientId: String, clientSecret: String,
+            code: String) {
+        val weakThis = WeakReference(this)
+        executeAfterFragmentResumed { activity ->
+            ProgressDialogFragment.show(activity.supportFragmentManager, "open_browser_auth")
+        } and task {
+            val activity = weakThis.get() ?: throw InterruptedException()
+            val endpoint = Endpoint("https://$host/api/")
+            val oauth2 = newMicroBlogInstance(activity, endpoint, EmptyAuthorization(),
+                    AccountType.MASTODON, MastodonOAuth2::class.java)
+            return@task oauth2.getToken(clientId, clientSecret, "code", code,
+                    MASTODON_CALLBACK_URL)
+        }.successUi { token ->
+            DebugLog.d(msg = "$token")
+        }.failUi {
+            val activity = weakThis.get() ?: return@failUi
+            // TODO show error message
+        }.alwaysUi {
+            executeAfterFragmentResumed {
+                it.supportFragmentManager.dismissDialogFragment("open_browser_auth")
+            }
+        }
     }
 
     internal fun onSignInResult(result: SignInResponse) {
@@ -373,11 +492,6 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         }
     }
 
-    internal fun setUsernamePassword(username: String, password: String) {
-        editUsername.setText(username)
-        editPassword.setText(password)
-    }
-
     private fun updateDefaultFeatures() {
         val weakThis = WeakReference(this)
         executeAfterFragmentResumed {
@@ -416,14 +530,11 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
 
     private fun handleBrowserLoginResult(intent: Intent?) {
         if (intent == null) return
-        if (signInTask?.status == AsyncTask.Status.RUNNING) {
-            signInTask?.cancel(true)
-        }
         val verifier = intent.getStringExtra(EXTRA_OAUTH_VERIFIER)
         val requestToken = OAuthToken(intent.getStringExtra(EXTRA_REQUEST_TOKEN),
                 intent.getStringExtra(EXTRA_REQUEST_TOKEN_SECRET))
         signInTask = BrowserSignInTask(this, apiConfig, requestToken, verifier)
-        AsyncTaskUtils.executeTask<AbstractSignInTask, Any>(signInTask)
+        AsyncTaskUtils.executeTask(signInTask)
     }
 
     private fun setDefaultAPI() {
@@ -719,9 +830,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                 val editUsername = alertDialog.findViewById(R.id.username) as EditText
                 val editPassword = alertDialog.findViewById(R.id.password) as EditText
                 val activity = activity as SignInActivity
-                activity.setUsernamePassword(editUsername.text.toString(),
-                        editPassword.text.toString())
-                activity.doLogin()
+                val username = editUsername.text.toString()
+                val password = editPassword.text.toString()
+                activity.performUserPassLogin(username, password)
             }
             builder.setNegativeButton(android.R.string.cancel, null)
 
@@ -797,15 +908,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
 
     }
 
-    /**
-     * Created by mariotaku on 16/7/7.
-     */
-    internal class BrowserSignInTask(
-            context: SignInActivity,
-            private val apiConfig: CustomAPIConfig,
-            private val requestToken: OAuthToken,
-            private val oauthVerifier: String?
-    ) : AbstractSignInTask(context) {
+    internal class BrowserSignInTask(context: SignInActivity, private val apiConfig: CustomAPIConfig,
+            private val requestToken: OAuthToken, private val oauthVerifier: String?) :
+            AbstractSignInTask(context) {
 
         private val context: Context
 
@@ -865,64 +970,6 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
 
     }
 
-    internal data class SignInResponse(
-            val alreadyLoggedIn: Boolean,
-            @Credentials.Type val credsType: String = Credentials.Type.EMPTY,
-            val credentials: Credentials,
-            val user: ParcelableUser,
-            val color: Int = 0,
-            val typeExtras: Pair<String, AccountExtras?>
-    ) {
-
-        private fun writeAccountInfo(action: (k: String, v: String?) -> Unit) {
-            action(ACCOUNT_USER_DATA_KEY, user.key.toString())
-            action(ACCOUNT_USER_DATA_TYPE, typeExtras.first)
-            action(ACCOUNT_USER_DATA_CREDS_TYPE, credsType)
-
-            action(ACCOUNT_USER_DATA_ACTIVATED, true.toString())
-            action(ACCOUNT_USER_DATA_COLOR, toHexColor(color, format = HexColorFormat.RGB))
-
-            action(ACCOUNT_USER_DATA_USER, JsonSerializer.serialize(user))
-            action(ACCOUNT_USER_DATA_EXTRAS, typeExtras.second?.let { JsonSerializer.serialize(it) })
-        }
-
-        private fun writeAuthToken(am: AccountManager, account: Account) {
-            val authToken = JsonSerializer.serialize(credentials)
-            am.setAuthToken(account, ACCOUNT_AUTH_TOKEN_TYPE, authToken)
-        }
-
-        fun updateAccount(am: AccountManager) {
-            val account = AccountUtils.findByAccountKey(am, user.key) ?: return
-            writeAccountInfo { k, v ->
-                am.setUserData(account, k, v)
-            }
-            writeAuthToken(am, account)
-        }
-
-        fun addAccount(am: AccountManager, randomizeAccountName: Boolean): Account {
-            var accountName: String
-            if (randomizeAccountName) {
-                val usedNames = ArraySet<String>()
-                AccountUtils.getAccounts(am).mapTo(usedNames, Account::name)
-                do {
-                    accountName = UUID.randomUUID().toString()
-                } while (accountName in usedNames)
-            } else {
-                accountName = generateAccountName(user.screen_name, user.key.host)
-            }
-            val account = Account(accountName, ACCOUNT_TYPE)
-            val accountPosition = AccountUtils.getAccounts(am).size
-            // Don't add UserData in this method, see http://stackoverflow.com/a/29776224/859190
-            am.addAccountExplicitly(account, null, null)
-            writeAccountInfo { k, v ->
-                am.setUserData(account, k, v)
-            }
-            am.setUserData(account, ACCOUNT_USER_DATA_POSITION, accountPosition.toString())
-            writeAuthToken(am, account)
-            return account
-        }
-
-    }
 
     internal class SignInTask(
             activity: SignInActivity,
@@ -1141,8 +1188,68 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
 
     }
 
+    internal data class SignInResponse(
+            val alreadyLoggedIn: Boolean,
+            @Credentials.Type val credsType: String = Credentials.Type.EMPTY,
+            val credentials: Credentials,
+            val user: ParcelableUser,
+            val color: Int = 0,
+            val typeExtras: Pair<String, AccountExtras?>
+    ) {
+
+        private fun writeAccountInfo(action: (k: String, v: String?) -> Unit) {
+            action(ACCOUNT_USER_DATA_KEY, user.key.toString())
+            action(ACCOUNT_USER_DATA_TYPE, typeExtras.first)
+            action(ACCOUNT_USER_DATA_CREDS_TYPE, credsType)
+
+            action(ACCOUNT_USER_DATA_ACTIVATED, true.toString())
+            action(ACCOUNT_USER_DATA_COLOR, toHexColor(color, format = HexColorFormat.RGB))
+
+            action(ACCOUNT_USER_DATA_USER, JsonSerializer.serialize(user))
+            action(ACCOUNT_USER_DATA_EXTRAS, typeExtras.second?.let { JsonSerializer.serialize(it) })
+        }
+
+        private fun writeAuthToken(am: AccountManager, account: Account) {
+            val authToken = JsonSerializer.serialize(credentials)
+            am.setAuthToken(account, ACCOUNT_AUTH_TOKEN_TYPE, authToken)
+        }
+
+        fun updateAccount(am: AccountManager) {
+            val account = AccountUtils.findByAccountKey(am, user.key) ?: return
+            writeAccountInfo { k, v ->
+                am.setUserData(account, k, v)
+            }
+            writeAuthToken(am, account)
+        }
+
+        fun addAccount(am: AccountManager, randomizeAccountName: Boolean): Account {
+            var accountName: String
+            if (randomizeAccountName) {
+                val usedNames = ArraySet<String>()
+                AccountUtils.getAccounts(am).mapTo(usedNames, Account::name)
+                do {
+                    accountName = UUID.randomUUID().toString()
+                } while (accountName in usedNames)
+            } else {
+                accountName = generateAccountName(user.screen_name, user.key.host)
+            }
+            val account = Account(accountName, ACCOUNT_TYPE)
+            val accountPosition = AccountUtils.getAccounts(am).size
+            // Don't add UserData in this method, see http://stackoverflow.com/a/29776224/859190
+            am.addAccountExplicitly(account, null, null)
+            writeAccountInfo { k, v ->
+                am.setUserData(account, k, v)
+            }
+            am.setUserData(account, ACCOUNT_USER_DATA_POSITION, accountPosition.toString())
+            writeAuthToken(am, account)
+            return account
+        }
+
+    }
 
     companion object {
+        const val REQUEST_BROWSER_TWITTER_SIGN_IN = 101
+        const val REQUEST_BROWSER_MASTODON_SIGN_IN = 102
 
         private val FRAGMENT_TAG_SIGN_IN_PROGRESS = "sign_in_progress"
         private val FRAGMENT_TAG_LOADING_DEFAULT_FEATURES = "loading_default_features"

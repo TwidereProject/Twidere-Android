@@ -45,6 +45,7 @@ dependencies {
     compile "com.bluelinelabs:logansquare:${libVersions['LoganSquare']}"
     compile "com.github.mariotaku.RestFu:library:${libVersions['RestFu']}"
     compile "com.github.mariotaku.RestFu:oauth:${libVersions['RestFu']}"
+    compile "com.github.mariotaku.RestFu:oauth2:${libVersions['RestFu']}"
     compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.2'
     compile "com.github.mariotaku.ObjectCursor:core:${libVersions['ObjectCursor']}"
     compile "com.github.mariotaku.CommonsLibrary:objectcursor:${libVersions['MariotakuCommons']}"
