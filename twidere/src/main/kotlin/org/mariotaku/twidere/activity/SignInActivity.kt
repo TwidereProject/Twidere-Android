@@ -66,6 +66,7 @@ import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.restfu.http.Endpoint
 import org.mariotaku.restfu.oauth.OAuthToken
 import org.mariotaku.restfu.oauth2.OAuth2Authorization
+import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
@@ -664,8 +665,12 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val dialog = dialog ?: return
             val listView = dialog.findViewById(R.id.expandableList) as ExpandableListView
             val configGroup = data.groupBy { it.type ?: AccountType.TWITTER }
-            (listView.expandableListAdapter as LoginTypeAdapter).data = arrayOf(AccountType.TWITTER,
-                    AccountType.FANFOU, AccountType.MASTODON, AccountType.STATUSNET).mapNotNull { type ->
+            val supportedAccountTypes = if (BuildConfig.DEBUG) {
+                arrayOf(AccountType.TWITTER, AccountType.FANFOU, AccountType.MASTODON, AccountType.STATUSNET)
+            } else {
+                arrayOf(AccountType.TWITTER, AccountType.FANFOU, AccountType.STATUSNET)
+            }
+            (listView.expandableListAdapter as LoginTypeAdapter).data = supportedAccountTypes.mapNotNull { type ->
                 if (type == AccountType.MASTODON) return@mapNotNull LoginType(type,
                         listOf(CustomAPIConfig.mastodon(context)))
                 return@mapNotNull configGroup[type]?.let { list -> LoginType(type, list) }

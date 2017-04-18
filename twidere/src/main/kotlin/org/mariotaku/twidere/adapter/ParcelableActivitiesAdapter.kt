@@ -295,7 +295,7 @@ class ParcelableActivitiesAdapter(
                         if (mentionsOnly) return ITEM_VIEW_TYPE_EMPTY
                         filteredUserKeys?.let {
                             ParcelableActivityUtils.initAfterFilteredSourceIds(activity, it, followingOnly)
-                            if (activity.after_filtered_source_ids.isEmpty()) {
+                            if (activity.after_filtered_source_ids.isNullOrEmpty()) {
                                 return ITEM_VIEW_TYPE_EMPTY
                             }
                         }
