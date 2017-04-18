@@ -547,6 +547,7 @@
     <string name="label_location_no_location">None</string>
     <string name="label_location_precise">Precise (Coordinate)</string>
     <string name="label_location_your_coarse_location">Your coarse location</string>
+    <string name="label_mastodon_host">Mastodon site</string>
     <string name="label_media">Media</string>
     <string name="label_original_status">Original tweet</string>
     <string name="label_password">Password</string>
@@ -574,7 +575,6 @@
     <string name="label_translate_from_language">Translate from <xliff:g id="language">%s</xliff:g></string>
     <string name="label_translation">Translation</string>
     <string name="label_username">Username</string>
-    <string name="label_username_mastodon_host">Username@Mastodon-Site</string>
     <string name="label_video">Video</string>
     <string name="label_your_profile_image">Your profile image</string>
 
@@ -687,6 +687,7 @@
     <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
     <string name="message_toast_extra_features_not_purchased">Enhanced features not purchased</string>
     <string name="message_toast_filters_import_hint">Press \"+\" to import</string>
+    <string name="message_toast_invalid_mastodon_host">Invalid Mastodon host</string>
     <string name="message_toast_link_copied_to_clipboard">Link copied to clipboard</string>
     <string name="message_toast_livewp_daydream_enabled_message">Here\'s a little present for you, find it in your system settings :)</string>
     <string name="message_toast_login_verification_failed">Login verification failed</string>
@@ -1323,5 +1324,4 @@
     <string name="users_blocked">Blocked these users.</string>
     <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>\'s lists</string>
     <string name="users_statuses">User\'s tweets</string>
-    <string name="message_toast_invalid_mastodon_username">Invalid Mastodon username (username@mastodon-site)</string>
 </resources>

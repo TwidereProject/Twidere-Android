@@ -178,11 +178,12 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             }
             REQUEST_BROWSER_MASTODON_SIGN_IN -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
+                    val code = data.getStringExtra(EXTRA_CODE)
                     val extras = data.getBundleExtra(EXTRA_EXTRAS)
                     val host = extras.getString(EXTRA_HOST)
                     val clientId = extras.getString(EXTRA_CLIENT_ID)
                     val clientSecret = extras.getString(EXTRA_CLIENT_SECRET)
-                    val code = extras.getString(EXTRA_CODE)
+
                     finishMastodonBrowserLogin(host, clientId, clientSecret, code)
                 }
             }
@@ -342,8 +343,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
 
     private fun performMastodonLogin() {
         val weakThis = WeakReference(this)
-        val userKey = editUsername.string?.takeIf(String::isNotEmpty)
-                ?.let(UserKey::valueOf) ?: run {
+        val host = editUsername.string?.takeIf(String::isNotEmpty) ?: run {
             Toast.makeText(this, R.string.message_toast_invalid_mastodon_username,
                     Toast.LENGTH_SHORT).show()
             return
@@ -352,7 +352,6 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         executeAfterFragmentResumed { activity ->
             ProgressDialogFragment.show(activity.supportFragmentManager, "open_browser_auth")
         } and task {
-            val host = userKey.host ?: throw IOException()
             val activity = weakThis.get() ?: throw InterruptedException()
             val registry = activity.mastodonApplicationRegistry
             return@task Pair(host, registry[host] ?: run {
@@ -405,11 +404,10 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             ProgressDialogFragment.show(activity.supportFragmentManager, "open_browser_auth")
         } and task {
             val activity = weakThis.get() ?: throw InterruptedException()
-            val endpoint = Endpoint("https://$host/api/")
+            val endpoint = Endpoint("https://$host/")
             val oauth2 = newMicroBlogInstance(activity, endpoint, EmptyAuthorization(),
                     AccountType.MASTODON, MastodonOAuth2::class.java)
-            return@task oauth2.getToken(clientId, clientSecret, "code", code,
-                    MASTODON_CALLBACK_URL)
+            return@task oauth2.getToken(clientId, clientSecret, code, MASTODON_CALLBACK_URL)
         }.successUi { token ->
             DebugLog.d(msg = "$token")
         }.failUi {
@@ -576,7 +574,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         if (apiConfig.type == AccountType.MASTODON) {
             usernamePasswordContainer.visibility = View.VISIBLE
             editPassword.visibility = View.GONE
-            editUsername.hint = getString(R.string.label_username_mastodon_host)
+            editUsername.hint = getString(R.string.label_mastodon_host)
         } else when (apiConfig.credentialsType) {
             Credentials.Type.XAUTH, Credentials.Type.BASIC -> {
                 usernamePasswordContainer.visibility = View.VISIBLE
