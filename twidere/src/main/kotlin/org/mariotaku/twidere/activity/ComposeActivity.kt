@@ -1415,7 +1415,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             val (replyStartIndex, replyText, _, excludedMentions, replyToOriginalUser) =
                     replyTextAndMentions
             if (replyText.isEmpty() && media.isEmpty()) throw NoContentException()
-            if (!statusShortenerUsed && validator.getTweetLength(replyText) > maxLength) {
+            if (!statusShortenerUsed && maxLength > 0 && validator.getTweetLength(replyText) > maxLength) {
                 throw StatusTooLongException(replyStartIndex + replyText.offsetByCodePoints(0, maxLength))
             }
             update.text = replyText
@@ -1428,7 +1428,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
         } else {
             if (text.isEmpty() && media.isEmpty()) throw NoContentException()
-            if (!statusShortenerUsed && validator.getTweetLength(text) > maxLength) {
+            if (!statusShortenerUsed && maxLength > 0 && validator.getTweetLength(text) > maxLength) {
                 throw StatusTooLongException(text.offsetByCodePoints(0, maxLength))
             }
             update.text = text

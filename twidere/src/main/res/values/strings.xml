@@ -567,6 +567,7 @@
     <string name="label_sensitive_content">Sensitive content</string>
     <string name="label_status_hint">What\'s happening?</string>
     <string name="label_status_not_available">Tweet not available</string>
+    <string name="label_status_type_reply">Reply</string>
     <string name="label_statuses">Tweets</string>
     <string name="label_statuses_replies">Tweets and replies</string>
     <string name="label_statuses_retweets">Tweets and retweets</string>

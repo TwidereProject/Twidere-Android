@@ -26,6 +26,10 @@ inline fun <T, reified R> Array<T>.mapToArray(transform: (T) -> R): Array<R> {
     return Array(size) { transform(this[it]) }
 }
 
+inline fun <T, reified R> Array<T>.mapIndexedToArray(transform: (Int, T) -> R): Array<R> {
+    return Array(size) { transform(it, this[it]) }
+}
+
 inline fun <reified R> LongArray.mapToArray(transform: (Long) -> R): Array<R> {
     return Array(size) { transform(this[it]) }
 }

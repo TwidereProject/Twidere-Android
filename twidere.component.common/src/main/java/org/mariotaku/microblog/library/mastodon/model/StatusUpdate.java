@@ -44,9 +44,9 @@ public class StatusUpdate extends SimpleValueMap {
 
     public StatusUpdate mediaIds(String[] ids) {
         if (ids != null) {
-            put("in_reply_to_id[]", ids);
+            put("media_ids[]", ids);
         } else {
-            remove("in_rpely_to_id[]");
+            remove("media_ids[]");
         }
         return this;
     }

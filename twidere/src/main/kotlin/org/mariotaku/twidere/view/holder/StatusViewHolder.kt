@@ -174,9 +174,13 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
             statusContentUpperSpace.visibility = View.GONE
         } else if (status.in_reply_to_status_id != null && status.in_reply_to_user_key != null && displayInReplyTo) {
-            val inReplyTo = colorNameManager.getDisplayName(status.in_reply_to_user_key!!,
-                    status.in_reply_to_name, status.in_reply_to_screen_name, nameFirst)
-            statusInfoLabel.text = context.getString(R.string.in_reply_to_name, formatter.unicodeWrap(inReplyTo))
+            if (status.in_reply_to_name != null && status.in_reply_to_screen_name != null) {
+                val inReplyTo = colorNameManager.getDisplayName(status.in_reply_to_user_key!!,
+                        status.in_reply_to_name, status.in_reply_to_screen_name, nameFirst)
+                statusInfoLabel.text = context.getString(R.string.in_reply_to_name, formatter.unicodeWrap(inReplyTo))
+            } else {
+                statusInfoLabel.text = context.getString(R.string.label_status_type_reply)
+            }
             statusInfoIcon.setImageResource(R.drawable.ic_activity_action_reply)
             statusInfoLabel.visibility = View.VISIBLE
             statusInfoIcon.visibility = View.VISIBLE
