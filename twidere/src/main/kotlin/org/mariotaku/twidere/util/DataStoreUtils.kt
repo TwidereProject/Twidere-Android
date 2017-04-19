@@ -43,13 +43,13 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.databaseItemLimitKey
 import org.mariotaku.twidere.extension.model.*
+import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.rawQuery
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.tab.extra.HomeTabExtras
 import org.mariotaku.twidere.model.tab.extra.InteractionsTabExtras
 import org.mariotaku.twidere.model.tab.extra.TabExtras
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.provider.TwidereDataStore
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
@@ -928,7 +928,7 @@ object DataStoreUtils {
                 Expression.equalsArgs(Statuses.STATUS_ID)).sql
         val whereArgs = arrayOf(accountKey.toString(), statusId)
         val resolver = context.contentResolver
-        val status = ParcelableStatusUtils.fromStatus(result, accountKey, details.type, false)
+        val status = result.toParcelable(accountKey, details.type)
         resolver.delete(CachedStatuses.CONTENT_URI, where, whereArgs)
         resolver.insert(CachedStatuses.CONTENT_URI, ObjectCursor.valuesCreatorFrom(ParcelableStatus::class.java).create(status))
         return status

@@ -30,6 +30,7 @@ import org.attoparser.simple.AbstractSimpleMarkupHandler
 import org.attoparser.simple.SimpleMarkupParser
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.microblog.library.twitter.model.TimelineOption
@@ -37,18 +38,21 @@ import org.mariotaku.restfu.annotation.method.GET
 import org.mariotaku.restfu.http.Endpoint
 import org.mariotaku.restfu.http.HttpRequest
 import org.mariotaku.restfu.http.mime.SimpleBody
-import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
+import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.timeline.UserTimelineFilter
-import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
 import org.mariotaku.twidere.util.JsonSerializer
 import org.mariotaku.twidere.util.dagger.DependencyHolder
 import java.io.IOException
 import java.util.concurrent.atomic.AtomicReference
+import org.mariotaku.microblog.library.mastodon.model.Status as MastodonStatus
+import org.mariotaku.microblog.library.mastodon.model.TimelineOption as MastodonTimelineOption
 
 class UserTimelineLoader(
         context: Context,
@@ -65,11 +69,10 @@ class UserTimelineLoader(
         loadingMore: Boolean,
         val pinnedStatusIds: Array<String>?,
         val timelineFilter: UserTimelineFilter? = null
-) : MicroBlogAPIStatusesLoader(context, accountKey, sinceId, maxId, -1, data, savedStatusesArgs,
+) : RequestStatusesLoader(context, accountKey, sinceId, maxId, -1, data, savedStatusesArgs,
         tabPosition, fromUser, loadingMore) {
 
     private val pinnedStatusesRef = AtomicReference<List<ParcelableStatus>>()
-    private val profileImageSize = context.getString(R.string.profile_image_size)
 
     var pinnedStatuses: List<ParcelableStatus>?
         get() = pinnedStatusesRef.get()
@@ -78,12 +81,42 @@ class UserTimelineLoader(
         }
 
     @Throws(MicroBlogException::class)
-    override fun getStatuses(microBlog: MicroBlog, details: AccountDetails, paging: Paging):
-            List<Status> {
+    override fun getStatuses(account: AccountDetails, paging: Paging) = when (account.type) {
+        AccountType.MASTODON -> getMastodonStatuses(account, paging).map {
+            it.toParcelable(account.key)
+        }
+        else -> getMicroBlogStatuses(account, paging).map {
+            it.toParcelable(account.key,
+                    account.type, profileImageSize = profileImageSize)
+        }
+    }
+
+    @WorkerThread
+    override fun shouldFilterStatus(database: SQLiteDatabase, status: ParcelableStatus): Boolean {
+        if (accountKey != null && userKey != null && TextUtils.equals(accountKey.id, userKey.id))
+            return false
+        val retweetUserKey = status.user_key.takeIf { status.is_retweet }
+        return InternalTwitterContentUtils.isFiltered(database, retweetUserKey, status.text_plain,
+                status.quoted_text_plain, status.spans, status.quoted_spans, status.source,
+                status.quoted_source, null, status.quoted_user_key)
+    }
+
+    private fun getMastodonStatuses(account: AccountDetails, paging: Paging): List<MastodonStatus> {
+        val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
+        val id = userKey?.id ?: throw MicroBlogException("Only ID are supported at this moment")
+        val option = MastodonTimelineOption()
+        if (timelineFilter != null) {
+            option.excludeReplies(!timelineFilter.isIncludeReplies)
+        }
+        return mastodon.getStatuses(id, paging, option)
+    }
+
+    private fun getMicroBlogStatuses(account: AccountDetails, paging: Paging): List<Status> {
+        val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
         if (pinnedStatusIds != null) {
             pinnedStatuses = try {
                 microBlog.lookupStatuses(pinnedStatusIds).mapIndexed { idx, status ->
-                    val created = ParcelableStatusUtils.fromStatus(status, details.key, details.type,
+                    val created = status.toParcelable(account.key, account.type,
                             profileImageSize = profileImageSize)
                     created.sort_id = idx.toLong()
                     return@mapIndexed created
@@ -98,7 +131,7 @@ class UserTimelineLoader(
             option.setIncludeRetweets(timelineFilter.isIncludeRetweets)
         }
         if (userKey != null) {
-            if (details.type == AccountType.STATUSNET && userKey.host != details.key.host
+            if (account.type == AccountType.STATUSNET && userKey.host != account.key.host
                     && profileUrl != null) {
                 try {
                     return showStatusNetExternalTimeline(profileUrl, paging)
@@ -112,16 +145,6 @@ class UserTimelineLoader(
         } else {
             throw MicroBlogException("Invalid user")
         }
-    }
-
-    @WorkerThread
-    override fun shouldFilterStatus(database: SQLiteDatabase, status: ParcelableStatus): Boolean {
-        if (accountKey != null && userKey != null && TextUtils.equals(accountKey.id, userKey.id))
-            return false
-        val retweetUserKey = status.user_key.takeIf { status.is_retweet }
-        return InternalTwitterContentUtils.isFiltered(database, retweetUserKey, status.text_plain,
-                status.quoted_text_plain, status.spans, status.quoted_spans, status.source,
-                status.quoted_source, null, status.quoted_user_key)
     }
 
     @Throws(IOException::class)

@@ -25,8 +25,9 @@ import android.support.annotation.WorkerThread
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
-import org.mariotaku.microblog.library.twitter.model.ResponseList
-import org.mariotaku.microblog.library.twitter.model.Status
+import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
@@ -42,12 +43,20 @@ class PublicTimelineLoader(
         tabPosition: Int,
         fromUser: Boolean,
         loadingMore: Boolean
-) : MicroBlogAPIStatusesLoader(context, accountKey, sinceId, maxId, -1, adapterData, savedStatusesArgs,
+) : RequestStatusesLoader(context, accountKey, sinceId, maxId, -1, adapterData, savedStatusesArgs,
         tabPosition, fromUser, loadingMore) {
 
     @Throws(MicroBlogException::class)
-    override fun getStatuses(microBlog: MicroBlog, details: AccountDetails, paging: Paging): ResponseList<Status> {
-        return microBlog.getPublicTimeline(paging)
+    override fun getStatuses(account: AccountDetails, paging: Paging): List<ParcelableStatus> {
+        when (account.type) {
+            AccountType.MASTODON -> throw MicroBlogException("STUB")
+            else -> {
+                val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                return microBlog.getPublicTimeline(paging).map {
+                    it.toParcelable(account.key, account.type, profileImageSize = profileImageSize)
+                }
+            }
+        }
     }
 
     @WorkerThread

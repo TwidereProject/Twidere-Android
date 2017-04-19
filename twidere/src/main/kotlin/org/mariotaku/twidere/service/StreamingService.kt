@@ -31,10 +31,10 @@ import org.mariotaku.twidere.constant.streamingEnabledKey
 import org.mariotaku.twidere.constant.streamingNonMeteredNetworkKey
 import org.mariotaku.twidere.constant.streamingPowerSavingKey
 import org.mariotaku.twidere.extension.model.*
+import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils
-import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.model.util.UserKeyUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
@@ -269,8 +269,9 @@ class StreamingService : BaseService() {
                     homeInsertGap = true
                     return false
                 }
-                val parcelableStatus = ParcelableStatusUtils.fromStatus(status, account.key,
-                        account.type, homeInsertGap, profileImageSize)
+                val parcelableStatus = status.toParcelable(account.key, account.type,
+                        profileImageSize = profileImageSize)
+                parcelableStatus.is_gap = homeInsertGap
                 parcelableStatus.account_color = account.color
 
                 val currentTimeMillis = System.currentTimeMillis()

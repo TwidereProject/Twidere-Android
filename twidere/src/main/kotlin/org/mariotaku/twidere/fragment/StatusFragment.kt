@@ -90,6 +90,7 @@ import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.loadProfileImage
+import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.applyTo
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.extension.model.isOfficial
@@ -2101,8 +2102,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                                 Expression.equalsArgs(Activities.STATUS_ID),
                                 Expression.equalsArgs(Activities.STATUS_RETWEET_ID)))
 
-                val pStatus = ParcelableStatusUtils.fromStatus(status, accountKey, details.type,
-                        false)
+                val pStatus = status.toParcelable(accountKey, details.type)
                 cr.insert(CachedStatuses.CONTENT_URI, ObjectCursor.valuesCreatorFrom(ParcelableStatus::class.java).create(pStatus))
 
                 val activityCursor = cr.query(Activities.AboutMe.CONTENT_URI,

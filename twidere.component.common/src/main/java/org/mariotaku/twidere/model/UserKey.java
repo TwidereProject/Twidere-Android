@@ -144,8 +144,13 @@ public class UserKey implements Comparable<UserKey>, Parcelable {
         UserKeyParcelablePlease.writeToParcel(this, dest, flags);
     }
 
-    public boolean check(String accountId, String accountHost) {
-        return this.id.equals(accountId);
+    public boolean check(@NonNull String accountId, @Nullable String accountHost) {
+        if (!accountId.equals(this.id)) {
+            return false;
+        } else if (accountHost != null && this.host != null) {
+            return accountHost.equals(this.host);
+        }
+        return true;
     }
 
     @NonNull

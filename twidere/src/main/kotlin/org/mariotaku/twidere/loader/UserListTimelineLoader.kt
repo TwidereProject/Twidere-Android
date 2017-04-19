@@ -27,6 +27,8 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.ResponseList
 import org.mariotaku.microblog.library.twitter.model.Status
+import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
@@ -46,11 +48,23 @@ class UserListTimelineLoader(
         tabPosition: Int,
         fromUser: Boolean,
         loadingMore: Boolean
-) : MicroBlogAPIStatusesLoader(context, accountKey, sinceId, maxId, -1, adapterData, savedStatusesArgs,
+) : RequestStatusesLoader(context, accountKey, sinceId, maxId, -1, adapterData, savedStatusesArgs,
         tabPosition, fromUser, loadingMore) {
 
     @Throws(MicroBlogException::class)
-    override fun getStatuses(microBlog: MicroBlog, details: AccountDetails, paging: Paging): ResponseList<Status> {
+    override fun getStatuses(account: AccountDetails, paging: Paging): List<ParcelableStatus> {
+        return getMicroBlogStatuses(account, paging).map {
+            it.toParcelable(account.key, account.type, profileImageSize)
+        }
+    }
+
+    @WorkerThread
+    override fun shouldFilterStatus(database: SQLiteDatabase, status: ParcelableStatus): Boolean {
+        return InternalTwitterContentUtils.isFiltered(database, status, true)
+    }
+
+    private fun getMicroBlogStatuses(account: AccountDetails, paging: Paging): ResponseList<Status> {
+        val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
         when {
             listId != null -> {
                 return microBlog.getUserListStatuses(listId, paging)
@@ -65,11 +79,6 @@ class UserListTimelineLoader(
                 throw MicroBlogException("User id or screen name is required for list name")
             }
         }
-    }
-
-    @WorkerThread
-    override fun shouldFilterStatus(database: SQLiteDatabase, status: ParcelableStatus): Boolean {
-        return InternalTwitterContentUtils.isFiltered(database, status, true)
     }
 
 }

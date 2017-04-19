@@ -49,6 +49,7 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.quickSendKey
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.model.textLimit
 import org.mariotaku.twidere.fragment.BaseDialogFragment
@@ -387,8 +388,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
             val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
             val profileImageSize = context.getString(R.string.profile_image_size)
             return task {
-                ParcelableStatusUtils.fromStatus(microBlog.showStatus(statusId), details.key,
-                        details.type, profileImageSize = profileImageSize)
+                microBlog.showStatus(statusId).toParcelable(details.key, details.type, profileImageSize)
             }
         }
 

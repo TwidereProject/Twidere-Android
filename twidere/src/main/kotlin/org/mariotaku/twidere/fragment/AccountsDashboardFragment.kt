@@ -267,6 +267,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
 
 
     override fun onLoadFinished(loader: Loader<AccountsInfo>, data: AccountsInfo) {
+        if (isDetached || host == null) return
         updateAccountProviderData(data)
     }
 

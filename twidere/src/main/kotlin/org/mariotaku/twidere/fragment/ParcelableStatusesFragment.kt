@@ -30,7 +30,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.constant.IntentConstants.*
-import org.mariotaku.twidere.loader.MicroBlogAPIStatusesLoader
+import org.mariotaku.twidere.loader.RequestStatusesLoader
 import org.mariotaku.twidere.model.BaseRefreshTaskParam
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.RefreshTaskParam
@@ -132,7 +132,7 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.NONE)
         if (adapter.itemCount > 0) {
             showContent()
-        } else if (loader is MicroBlogAPIStatusesLoader) {
+        } else if (loader is RequestStatusesLoader) {
             val e = loader.exception
             if (e != null) {
                 showError(R.drawable.ic_info_error_generic, Utils.getErrorMessage(context, e) ?:

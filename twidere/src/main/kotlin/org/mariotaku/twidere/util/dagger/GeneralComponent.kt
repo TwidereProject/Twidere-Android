@@ -101,7 +101,7 @@ interface GeneralComponent {
 
     fun inject(provider: CacheProvider)
 
-    fun inject(loader: MicroBlogAPIStatusesLoader)
+    fun inject(loader: RequestStatusesLoader)
 
     fun inject(activity: MediaViewerActivity)
 

@@ -25,15 +25,12 @@ import android.content.SharedPreferences
 import android.database.sqlite.SQLiteDatabase
 import android.support.annotation.WorkerThread
 import org.mariotaku.kpreferences.get
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
-import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.loadItemLimitKey
-import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ListResponse
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -51,7 +48,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 
-abstract class MicroBlogAPIStatusesLoader(
+abstract class RequestStatusesLoader(
         context: Context,
         val accountKey: UserKey?,
         val sinceId: String?,
@@ -65,14 +62,13 @@ abstract class MicroBlogAPIStatusesLoader(
 ) : ParcelableStatusesLoader(context, adapterData, tabPosition, fromUser) {
     // Statuses sorted descending by default
     var comparator: Comparator<ParcelableStatus>? = ParcelableStatus.REVERSE_COMPARATOR
-    private val exceptionRef = AtomicReference<MicroBlogException?>()
-    private val profileImageSize = context.getString(R.string.profile_image_size)
 
     var exception: MicroBlogException?
         get() = exceptionRef.get()
         private set(value) {
             exceptionRef.set(value)
         }
+
     @Inject
     lateinit var jsonCache: JsonCache
     @Inject
@@ -80,17 +76,28 @@ abstract class MicroBlogAPIStatusesLoader(
     @Inject
     lateinit var userColorNameManager: UserColorNameManager
 
+    private val exceptionRef = AtomicReference<MicroBlogException?>()
+    protected val profileImageSize: String = context.getString(R.string.profile_image_size)
+
+    private val cachedData: List<ParcelableStatus>?
+        get() {
+            val key = serializationKey ?: return null
+            return jsonCache.getList(key, ParcelableStatus::class.java)
+        }
+
+    private val serializationKey: String?
+        get() = savedStatusesArgs?.joinToString("_")
+
     init {
         GeneralComponent.get(context).inject(this)
     }
 
     @SuppressWarnings("unchecked")
-    override fun loadInBackground(): ListResponse<ParcelableStatus> {
+    override final fun loadInBackground(): ListResponse<ParcelableStatus> {
         val context = context
         val accountKey = accountKey ?: return ListResponse.getListInstance<ParcelableStatus>(MicroBlogException("No Account"))
         val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?:
                 return ListResponse.getListInstance<ParcelableStatus>(MicroBlogException("No Account"))
-        val accountType = details.type
 
         if (isFirstLoad && tabPosition >= 0) {
             val cached = cachedData
@@ -105,14 +112,13 @@ abstract class MicroBlogAPIStatusesLoader(
             }
         }
         if (!fromUser) return ListResponse.getListInstance(data)
-        val microBlog = details.newMicroBlogInstance(context = context, cls = MicroBlog::class.java)
-        val statuses: List<Status>
         val noItemsBefore = data.isEmpty()
-        val loadItemLimit = preferences.getInt(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT)
-        try {
-            val paging = Paging()
-            processPaging(details, loadItemLimit, paging)
-            statuses = getStatuses(microBlog, details, paging)
+        val loadItemLimit = preferences[loadItemLimitKey]
+        val statuses = try {
+            val paging = Paging().apply {
+                processPaging(details, loadItemLimit, this)
+            }
+            getStatuses(details, paging)
         } catch (e: MicroBlogException) {
             // mHandler.post(new ShowErrorRunnable(e));
             exception = e
@@ -120,7 +126,6 @@ abstract class MicroBlogAPIStatusesLoader(
             return ListResponse.getListInstance(CopyOnWriteArrayList(data), e)
         }
 
-        val statusIds = arrayOfNulls<String>(statuses.size)
         var minIdx = -1
         var rowsDeleted = 0
         for (i in 0 until statuses.size) {
@@ -128,42 +133,33 @@ abstract class MicroBlogAPIStatusesLoader(
             if (minIdx == -1 || status < statuses[minIdx]) {
                 minIdx = i
             }
-            statusIds[i] = status.id
             if (deleteStatus(data, status.id)) {
                 rowsDeleted++
             }
         }
 
         // Insert a gap.
-        val deletedOldGap = rowsDeleted > 0 && statusIds.contains(maxId)
+        val deletedOldGap = rowsDeleted > 0 && statuses.any { it.id == maxId }
         val noRowsDeleted = rowsDeleted == 0
         val insertGap = minIdx != -1 && (noRowsDeleted || deletedOldGap) && !noItemsBefore
                 && statuses.size >= loadItemLimit && !loadingMore
 
         if (statuses.isNotEmpty()) {
-            val firstSortId = statuses.first().sortId
-            val lastSortId = statuses.last().sortId
+            val firstSortId = statuses.first().sort_id
+            val lastSortId = statuses.last().sort_id
             // Get id diff of first and last item
             val sortDiff = firstSortId - lastSortId
-            for (i in 0 until statuses.size) {
-                val status = statuses[i]
-                val isGap = insertGap && isGapEnabled && minIdx == i
-                val item = ParcelableStatusUtils.fromStatus(status, accountKey, accountType, isGap,
-                        profileImageSize)
-                item.position_key = GetStatusesTask.getPositionKey(item.timestamp, item.sort_id, lastSortId,
-                        sortDiff, i, statuses.size)
-                ParcelableStatusUtils.updateExtraInformation(item, details)
-                data.add(item)
+            statuses.forEachIndexed { i, status ->
+                status.is_gap = insertGap && isGapEnabled && minIdx == i
+                status.position_key = GetStatusesTask.getPositionKey(status.timestamp, status.sort_id,
+                        lastSortId, sortDiff, i, statuses.size)
+                ParcelableStatusUtils.updateExtraInformation(status, details)
             }
+            data.addAll(statuses)
         }
 
         val db = TwidereApplication.getInstance(context).sqLiteDatabase
-        val array = data.toTypedArray()
-        val size = array.size
-        for (i in (0 until size)) {
-            val status = array[i]
-            status.is_filtered = shouldFilterStatus(db, status)
-        }
+        data.forEach { it.is_filtered = shouldFilterStatus(db, it) }
 
         if (comparator != null) {
             data.sortWith(comparator!!)
@@ -174,18 +170,17 @@ abstract class MicroBlogAPIStatusesLoader(
         return ListResponse.getListInstance(CopyOnWriteArrayList(data))
     }
 
-    @Throws(MicroBlogException::class)
-    protected abstract fun getStatuses(microBlog: MicroBlog, details: AccountDetails,
-            paging: Paging): List<Status>
-
-    @WorkerThread
-    protected abstract fun shouldFilterStatus(database: SQLiteDatabase, status: ParcelableStatus): Boolean
-
-
-    override fun onStartLoading() {
+    override final fun onStartLoading() {
         exception = null
         super.onStartLoading()
     }
+
+    @Throws(MicroBlogException::class)
+    protected abstract fun getStatuses(account: AccountDetails, paging: Paging): List<ParcelableStatus>
+
+
+    @WorkerThread
+    protected abstract fun shouldFilterStatus(database: SQLiteDatabase, status: ParcelableStatus): Boolean
 
     protected open fun processPaging(details: AccountDetails, loadItemLimit: Int, paging: Paging) {
         paging.setCount(loadItemLimit)
@@ -202,15 +197,6 @@ abstract class MicroBlogAPIStatusesLoader(
 
     protected open val isGapEnabled: Boolean
         get() = true
-
-    private val cachedData: List<ParcelableStatus>?
-        get() {
-            val key = serializationKey ?: return null
-            return jsonCache.getList(key, ParcelableStatus::class.java)
-        }
-
-    private val serializationKey: String?
-        get() = savedStatusesArgs?.joinToString("_")
 
     private fun saveCachedData(data: List<ParcelableStatus>?) {
         val key = serializationKey

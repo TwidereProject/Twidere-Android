@@ -19,6 +19,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_NOTIFY_CHANGE
 import org.mariotaku.twidere.constant.loadItemLimitKey
+import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -168,8 +169,7 @@ abstract class GetStatusesTask(
             val creator = ObjectCursor.valuesCreatorFrom(ParcelableStatus::class.java)
             for (i in 0 until statuses.size) {
                 val item = statuses[i]
-                val status = ParcelableStatusUtils.fromStatus(item, accountKey, details.type, false,
-                        profileImageSize)
+                val status = item.toParcelable(accountKey, details.type, profileImageSize)
                 ParcelableStatusUtils.updateExtraInformation(status, details)
                 status.position_key = getPositionKey(status.timestamp, status.sort_id, lastSortId,
                         sortDiff, i, statuses.size)

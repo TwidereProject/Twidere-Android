@@ -30,6 +30,8 @@ import org.mariotaku.microblog.library.twitter.model.SearchQuery
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.microblog.library.twitter.model.UniversalSearchQuery
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.model.official
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -49,32 +51,32 @@ open class MediaStatusesSearchLoader(
         fromUser: Boolean,
         override val isGapEnabled: Boolean,
         loadingMore: Boolean
-) : MicroBlogAPIStatusesLoader(context, accountKey, sinceId, maxId, page, adapterData, savedStatusesArgs,
+) : RequestStatusesLoader(context, accountKey, sinceId, maxId, page, adapterData, savedStatusesArgs,
         tabPosition, fromUser, loadingMore) {
 
     @Throws(MicroBlogException::class)
-    override fun getStatuses(microBlog: MicroBlog,
-            details: AccountDetails,
-            paging: Paging): List<Status> {
-        if (query == null) throw MicroBlogException("Empty query")
-        val queryText = processQuery(details, query)
-        when (details.type) {
-            AccountType.TWITTER -> {
-                if (details.extras?.official ?: false) {
-                    val universalQuery = UniversalSearchQuery(queryText)
-                    universalQuery.setModules(UniversalSearchQuery.Module.TWEET)
-                    universalQuery.setResultType(UniversalSearchQuery.ResultType.RECENT)
-                    universalQuery.setPaging(paging)
-                    val searchResult = microBlog.universalSearch(universalQuery)
-                    return searchResult.modules.mapNotNull { it.status?.data }
-                }
-
-                val searchQuery = SearchQuery(queryText)
-                searchQuery.paging(paging)
-                return microBlog.search(searchQuery)
-            }
+    override fun getStatuses(account: AccountDetails, paging: Paging): List<ParcelableStatus> {
+        return getMicroBlogStatuses(account, paging).map {
+            it.toParcelable(account.key, account.type, profileImageSize)
         }
-        throw MicroBlogException("Not implemented")
+    }
+
+    @WorkerThread
+    override fun shouldFilterStatus(database: SQLiteDatabase, status: ParcelableStatus): Boolean {
+        if (status.media.isNullOrEmpty()) return true
+        return InternalTwitterContentUtils.isFiltered(database, status, true)
+    }
+
+    override fun processPaging(details: AccountDetails, loadItemLimit: Int, paging: Paging) {
+        if (details.type == AccountType.STATUSNET) {
+            paging.setRpp(loadItemLimit)
+            val page = page
+            if (page > 0) {
+                paging.setPage(page)
+            }
+        } else {
+            super.processPaging(details, loadItemLimit, paging)
+        }
     }
 
     protected open fun processQuery(details: AccountDetails, query: String): String {
@@ -98,22 +100,27 @@ open class MediaStatusesSearchLoader(
         return universalQueryText
     }
 
-    @WorkerThread
-    override fun shouldFilterStatus(database: SQLiteDatabase, status: ParcelableStatus): Boolean {
-        if (status.media.isNullOrEmpty()) return true
-        return InternalTwitterContentUtils.isFiltered(database, status, true)
-    }
+    private fun getMicroBlogStatuses(account: AccountDetails, paging: Paging): List<Status> {
+        if (query == null) throw MicroBlogException("Empty query")
+        val queryText = processQuery(account, query)
+        val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
+        when (account.type) {
+            AccountType.TWITTER -> {
+                if (account.extras?.official ?: false) {
+                    val universalQuery = UniversalSearchQuery(queryText)
+                    universalQuery.setModules(UniversalSearchQuery.Module.TWEET)
+                    universalQuery.setResultType(UniversalSearchQuery.ResultType.RECENT)
+                    universalQuery.setPaging(paging)
+                    val searchResult = microBlog.universalSearch(universalQuery)
+                    return searchResult.modules.mapNotNull { it.status?.data }
+                }
 
-    override fun processPaging(details: AccountDetails, loadItemLimit: Int, paging: Paging) {
-        if (details.type == AccountType.STATUSNET) {
-            paging.setRpp(loadItemLimit)
-            val page = page
-            if (page > 0) {
-                paging.setPage(page)
+                val searchQuery = SearchQuery(queryText)
+                searchQuery.paging(paging)
+                return microBlog.search(searchQuery)
             }
-        } else {
-            super.processPaging(details, loadItemLimit, paging)
         }
+        throw MicroBlogException("Not implemented")
     }
 
 }

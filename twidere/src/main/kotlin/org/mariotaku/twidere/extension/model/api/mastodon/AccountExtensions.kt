@@ -32,7 +32,7 @@ fun Account.toParcelable(accountKey: UserKey, position: Long = 0): ParcelableUse
     val obj = ParcelableUser()
     obj.position = position
     obj.account_key = accountKey
-    obj.key = UserKey(id, host ?: accountKey.host)
+    obj.key = getKey(accountKey.host)
     obj.created_at = createdAt?.time ?: -1
     obj.is_protected = isLocked
     obj.name = displayName
@@ -53,3 +53,5 @@ fun Account.toParcelable(accountKey: UserKey, position: Long = 0): ParcelableUse
 }
 
 val Account.host: String? get() = acct?.let(UserKey::valueOf)?.host
+
+fun Account.getKey(host: String?) = UserKey(id, acct?.let(UserKey::valueOf)?.host ?: host)

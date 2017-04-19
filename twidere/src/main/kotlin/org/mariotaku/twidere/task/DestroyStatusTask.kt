@@ -6,6 +6,7 @@ import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.ErrorInfo
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.SingleResponse
@@ -35,8 +36,7 @@ class DestroyStatusTask(
         var status: ParcelableStatus? = null
         var deleteStatus: Boolean = false
         try {
-            status = ParcelableStatusUtils.fromStatus(microBlog.destroyStatus(statusId),
-                    accountKey, details.type, false)
+            status = microBlog.destroyStatus(statusId).toParcelable(accountKey, details.type)
             ParcelableStatusUtils.updateExtraInformation(status, details)
             deleteStatus = true
             return SingleResponse(status)

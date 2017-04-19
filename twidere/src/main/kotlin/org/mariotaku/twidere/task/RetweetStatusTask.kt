@@ -9,6 +9,7 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants
+import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -50,8 +51,7 @@ class RetweetStatusTask(
         val microBlog = details.newMicroBlogInstance(
                 context, MicroBlog::class.java)
         try {
-            val result = ParcelableStatusUtils.fromStatus(microBlog.retweetStatus(statusId),
-                    accountKey, details.type, false)
+            val result = microBlog.retweetStatus(statusId).toParcelable(accountKey, details.type)
             ParcelableStatusUtils.updateExtraInformation(result, details)
             Utils.setLastSeen(context, result.mentions, System.currentTimeMillis())
             val values = ContentValues()

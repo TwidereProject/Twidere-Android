@@ -33,6 +33,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.app.TwidereApplication
+import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.applyUpdateStatus
 import org.mariotaku.twidere.extension.model.mediaSizeLimit
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
@@ -43,7 +44,6 @@ import org.mariotaku.twidere.model.account.AccountExtras
 import org.mariotaku.twidere.model.analyzer.UpdateStatus
 import org.mariotaku.twidere.model.schedule.ScheduleInfo
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
-import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.preference.ServicePickerPreference
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.task.BaseAbstractTask
@@ -306,8 +306,7 @@ class UpdateStatusTask(
                         twitterUpdateStatus(microBlog, statusUpdate, pendingUpdate, i)
                     }
                 }
-                result.statuses[i] = ParcelableStatusUtils.fromStatus(requestResult,
-                        account.key, account.type, false)
+                result.statuses[i] = requestResult.toParcelable(account.key, account.type)
             } catch (e: MicroBlogException) {
                 result.exceptions[i] = e
             }

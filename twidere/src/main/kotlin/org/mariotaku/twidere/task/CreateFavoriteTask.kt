@@ -10,6 +10,7 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -54,12 +55,10 @@ class CreateFavoriteTask(
         try {
             val result = when (details.type) {
                 AccountType.FANFOU -> {
-                    ParcelableStatusUtils.fromStatus(microBlog.createFanfouFavorite(statusId), accountKey,
-                            details.type, false)
+                    microBlog.createFanfouFavorite(statusId).toParcelable(accountKey, details.type)
                 }
                 else -> {
-                    ParcelableStatusUtils.fromStatus(microBlog.createFavorite(statusId), accountKey,
-                            details.type, false)
+                    microBlog.createFavorite(statusId).toParcelable(accountKey, details.type)
                 }
             }
             ParcelableStatusUtils.updateExtraInformation(result, details)

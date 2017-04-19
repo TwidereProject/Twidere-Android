@@ -9,6 +9,7 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.SingleResponse
@@ -16,7 +17,6 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.provider.TwidereDataStore
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.AsyncTwitterWrapper.Companion.calculateHashCode
@@ -41,12 +41,12 @@ class DestroyFavoriteTask(
             val result: ParcelableStatus
             when (details.type) {
                 AccountType.FANFOU -> {
-                    result = ParcelableStatusUtils.fromStatus(microBlog.destroyFanfouFavorite(statusId),
-                            accountKey, details.type, false)
+                    result = microBlog.destroyFanfouFavorite(statusId).toParcelable(accountKey,
+                            details.type)
                 }
                 else -> {
-                    result = ParcelableStatusUtils.fromStatus(microBlog.destroyFavorite(statusId),
-                            accountKey, details.type, false)
+                    result = microBlog.destroyFavorite(statusId).toParcelable(accountKey,
+                            details.type)
                 }
             }
             val values = ContentValues()

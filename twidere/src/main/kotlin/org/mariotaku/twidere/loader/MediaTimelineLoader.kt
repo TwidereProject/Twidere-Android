@@ -27,7 +27,9 @@ import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.*
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.isOfficial
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
@@ -48,19 +50,43 @@ class MediaTimelineLoader(
         tabPosition: Int,
         fromUser: Boolean,
         loadingMore: Boolean
-) : MicroBlogAPIStatusesLoader(context, accountKey, sinceId, maxId, -1, data, savedStatusesArgs,
+) : RequestStatusesLoader(context, accountKey, sinceId, maxId, -1, data, savedStatusesArgs,
         tabPosition, fromUser, loadingMore) {
 
     private var user: User? = null
 
+    private val isMyTimeline: Boolean
+        get() {
+            val accountKey = accountKey ?: return false
+            if (userKey != null) {
+                return userKey.maybeEquals(accountKey)
+            } else {
+                val accountScreenName = DataStoreUtils.getAccountScreenName(context, accountKey)
+                return accountScreenName != null && accountScreenName.equals(screenName!!, ignoreCase = true)
+            }
+        }
+
     @Throws(MicroBlogException::class)
-    override fun getStatuses(microBlog: MicroBlog,
-            details: AccountDetails,
-            paging: Paging): ResponseList<Status> {
-        val context = context
-        when (details.type) {
+    override fun getStatuses(account: AccountDetails, paging: Paging): List<ParcelableStatus> {
+        return getMicroBlogStatuses(account, paging).map {
+            it.toParcelable(account.key, account.type, profileImageSize)
+        }
+    }
+
+    @WorkerThread
+    override fun shouldFilterStatus(database: SQLiteDatabase, status: ParcelableStatus): Boolean {
+        if (status.media.isNullOrEmpty()) return false
+        val retweetUserKey = status.user_key.takeIf { status.is_retweet }
+        return !isMyTimeline && InternalTwitterContentUtils.isFiltered(database, retweetUserKey,
+                status.text_plain, status.quoted_text_plain, status.spans, status.quoted_spans,
+                status.source, status.quoted_source, null, status.quoted_user_key)
+    }
+
+    private fun getMicroBlogStatuses(account: AccountDetails, paging: Paging): ResponseList<Status> {
+        val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
+        when (account.type) {
             AccountType.TWITTER -> {
-                if (details.isOfficial(context)) {
+                if (account.isOfficial(context)) {
                     if (userKey != null) {
                         return microBlog.getMediaTimeline(userKey.id, paging)
                     }
@@ -68,17 +94,14 @@ class MediaTimelineLoader(
                         return microBlog.getMediaTimelineByScreenName(screenName, paging)
                     }
                 } else {
-                    val screenName: String
-                    if (this.screenName != null) {
-                        screenName = this.screenName
-                    } else if (userKey != null) {
-                        if (user == null) {
-                            user = TwitterWrapper.tryShowUser(microBlog, userKey.id, null,
-                                    details.type)
-                        }
-                        screenName = user!!.screenName
-                    } else {
-                        throw MicroBlogException("Invalid parameters")
+                    val screenName = this.screenName ?: run {
+                        return@run this.user ?: run fetchUser@ {
+                            if (userKey == null) throw MicroBlogException("Invalid parameters")
+                            val user = TwitterWrapper.tryShowUser(microBlog, userKey.id, null,
+                                    account.type)
+                            this.user = user
+                            return@fetchUser user
+                        }.screenName
                     }
                     val query = SearchQuery("from:$screenName filter:media exclude:retweets")
                     query.paging(paging)
@@ -104,24 +127,4 @@ class MediaTimelineLoader(
         }
         throw MicroBlogException("Not implemented")
     }
-
-    @WorkerThread
-    override fun shouldFilterStatus(database: SQLiteDatabase, status: ParcelableStatus): Boolean {
-        if (status.media.isNullOrEmpty()) return false
-        val retweetUserKey = status.user_key.takeIf { status.is_retweet }
-        return !isMyTimeline && InternalTwitterContentUtils.isFiltered(database, retweetUserKey,
-                status.text_plain, status.quoted_text_plain, status.spans, status.quoted_spans,
-                status.source, status.quoted_source, null, status.quoted_user_key)
-    }
-
-    private val isMyTimeline: Boolean
-        get() {
-            val accountKey = accountKey ?: return false
-            if (userKey != null) {
-                return userKey.maybeEquals(accountKey)
-            } else {
-                val accountScreenName = DataStoreUtils.getAccountScreenName(context, accountKey)
-                return accountScreenName != null && accountScreenName.equals(screenName!!, ignoreCase = true)
-            }
-        }
 }

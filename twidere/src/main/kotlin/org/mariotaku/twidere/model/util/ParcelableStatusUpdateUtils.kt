@@ -39,7 +39,7 @@ object ParcelableStatusUpdateUtils {
                 val onlyAccount = statusUpdate.accounts.singleOrNull()
                 val status = actionExtras.status
                 val quoteOriginalStatus = actionExtras.isQuoteOriginalStatus
-                if (onlyAccount != null) {
+                if (status != null && onlyAccount != null) {
                     when (onlyAccount.type) {
                         AccountType.FANFOU -> {
                             if (!status.is_quote || !quoteOriginalStatus) {

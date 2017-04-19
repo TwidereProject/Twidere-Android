@@ -39,13 +39,13 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.DummyItemAdapter
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.view.holder.StatusViewHolder
 import java.lang.ref.WeakReference
 
@@ -138,10 +138,8 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
             val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
             val profileImageSize = context.getString(R.string.profile_image_size)
             return task {
-                return@task ParcelableStatusUtils.fromStatus(microBlog.showStatus(statusId),
-                        details.key, details.type, profileImageSize = profileImageSize).also {
-                    it.account_color = details.color
-                }
+                microBlog.showStatus(statusId).toParcelable(details.key, details.type,
+                        profileImageSize).also { it.account_color = details.color }
             }
         }
 
