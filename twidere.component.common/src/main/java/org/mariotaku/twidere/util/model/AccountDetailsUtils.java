@@ -23,6 +23,7 @@ package org.mariotaku.twidere.util.model;
 
 import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.model.account.AccountExtras;
+import org.mariotaku.twidere.model.account.MastodonAccountExtras;
 import org.mariotaku.twidere.model.account.StatusNetAccountExtras;
 import org.mariotaku.twidere.model.account.TwitterAccountExtras;
 import org.mariotaku.twidere.model.account.cred.BasicCredentials;
@@ -71,6 +72,9 @@ public class AccountDetailsUtils {
                 }
                 case AccountType.STATUSNET: {
                     return JsonSerializer.parse(json, StatusNetAccountExtras.class);
+                }
+                case AccountType.MASTODON: {
+                    return JsonSerializer.parse(json, MastodonAccountExtras.class);
                 }
             }
         } catch (IOException e) {

@@ -37,7 +37,7 @@ abstract class CursorSupportUsersLoader(
         accountKey: UserKey?,
         data: List<ParcelableUser>?,
         fromUser: Boolean
-) : MicroBlogAPIUsersLoader(context, accountKey, data, fromUser), ICursorSupportLoader {
+) : AbsRequestUsersLoader(context, accountKey, data, fromUser), ICursorSupportLoader {
 
     var page = -1
     override var cursor: Long = 0

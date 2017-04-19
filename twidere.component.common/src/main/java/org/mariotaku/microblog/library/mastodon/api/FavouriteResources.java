@@ -21,9 +21,24 @@
 
 package org.mariotaku.microblog.library.mastodon.api;
 
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.mastodon.model.Status;
+import org.mariotaku.microblog.library.twitter.model.Paging;
+import org.mariotaku.restfu.annotation.method.GET;
+import org.mariotaku.restfu.annotation.param.Query;
+
+import java.util.List;
+
 /**
  * Created by mariotaku on 2017/4/17.
  */
 
 public interface FavouriteResources {
+
+    /**
+     * @return An array of {@link Status} favourited by the authenticated user.
+     */
+    @GET("/v1/favourites")
+    List<Status> getFavourites(@Query Paging paging) throws MicroBlogException;
+
 }

@@ -26,6 +26,7 @@ import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.Status
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
@@ -33,23 +34,16 @@ import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
 
-class GroupTimelineLoader(
-        context: Context,
-        accountKey: UserKey?,
-        private val groupId: String?,
-        private val groupName: String?,
-        sinceId: String?,
-        maxId: String?,
-        adapterData: List<ParcelableStatus>?,
-        savedStatusesArgs: Array<String>?,
-        tabPosition: Int,
-        fromUser: Boolean,
-        loadingMore: Boolean
-) : RequestStatusesLoader(context, accountKey, sinceId, maxId, -1, adapterData, savedStatusesArgs,
-        tabPosition, fromUser, loadingMore) {
+class GroupTimelineLoader(context: Context, accountKey: UserKey?, private val groupId: String?,
+        private val groupName: String?, sinceId: String?, maxId: String?,
+        adapterData: List<ParcelableStatus>?, savedStatusesArgs: Array<String>?,
+        tabPosition: Int, fromUser: Boolean, loadingMore: Boolean) : AbsRequestStatusesLoader(context,
+        accountKey, sinceId, maxId, -1, adapterData, savedStatusesArgs, tabPosition, fromUser,
+        loadingMore) {
 
     @Throws(MicroBlogException::class)
     override fun getStatuses(account: AccountDetails, paging: Paging): List<ParcelableStatus> {
+        if (account.type != AccountType.STATUSNET) throw MicroBlogException("Not supported")
         return getMicroBlogStatuses(account, paging).map {
             it.toParcelable(account.key, account.type, profileImageSize)
         }

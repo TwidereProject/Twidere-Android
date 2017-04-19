@@ -1136,13 +1136,18 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 }
             }
             TAB_TYPE_FAVORITES -> {
-                if (preferences[iWantMyStarsBackKey]) {
+                if (user.favorites_count < 0) {
+                    if (preferences[iWantMyStarsBackKey]) {
+                        actionBar.setSubtitle(R.string.title_favorites)
+                    } else {
+                        actionBar.setSubtitle(R.string.title_likes)
+                    }
+                } else if (preferences[iWantMyStarsBackKey]) {
                     actionBar.subtitle = resources.getQuantityString(R.plurals.N_favorites,
                             user.favorites_count.toInt(), user.favorites_count)
                 } else {
                     actionBar.subtitle = resources.getQuantityString(R.plurals.N_likes,
                             user.favorites_count.toInt(), user.favorites_count)
-
                 }
             }
             else -> {

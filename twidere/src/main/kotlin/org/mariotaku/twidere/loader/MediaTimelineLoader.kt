@@ -50,7 +50,7 @@ class MediaTimelineLoader(
         tabPosition: Int,
         fromUser: Boolean,
         loadingMore: Boolean
-) : RequestStatusesLoader(context, accountKey, sinceId, maxId, -1, data, savedStatusesArgs,
+) : AbsRequestStatusesLoader(context, accountKey, sinceId, maxId, -1, data, savedStatusesArgs,
         tabPosition, fromUser, loadingMore) {
 
     private var user: User? = null

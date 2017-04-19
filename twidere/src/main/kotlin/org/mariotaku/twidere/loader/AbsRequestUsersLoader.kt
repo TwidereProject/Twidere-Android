@@ -36,7 +36,7 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import java.util.*
 
-abstract class MicroBlogAPIUsersLoader(
+abstract class AbsRequestUsersLoader(
         context: Context,
         val accountKey: UserKey?,
         data: List<ParcelableUser>?,

@@ -15,6 +15,7 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.account.AccountExtras
+import org.mariotaku.twidere.model.account.MastodonAccountExtras
 import org.mariotaku.twidere.model.account.StatusNetAccountExtras
 import org.mariotaku.twidere.model.account.TwitterAccountExtras
 import org.mariotaku.twidere.model.account.cred.*
@@ -23,6 +24,7 @@ import org.mariotaku.twidere.model.util.AccountUtils.ACCOUNT_USER_DATA_KEYS
 import org.mariotaku.twidere.util.JsonSerializer
 import org.mariotaku.twidere.util.ParseUtils
 import org.mariotaku.twidere.util.TwitterContentUtils
+import org.mariotaku.twidere.util.model.AccountDetailsUtils
 import java.io.IOException
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
@@ -76,15 +78,7 @@ fun Account.getPosition(am: AccountManager): Int {
 
 fun Account.getAccountExtras(am: AccountManager): AccountExtras? {
     val json = AccountDataQueue.getUserData(am, this, ACCOUNT_USER_DATA_EXTRAS) ?: return null
-    when (getAccountType(am)) {
-        AccountType.TWITTER -> {
-            return JsonSerializer.parse(json, TwitterAccountExtras::class.java)
-        }
-        AccountType.STATUSNET -> {
-            return JsonSerializer.parse(json, StatusNetAccountExtras::class.java)
-        }
-    }
-    return null
+    return AccountDetailsUtils.parseAccountExtras(json, getAccountType(am))
 }
 
 @AccountType

@@ -48,7 +48,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 
-abstract class RequestStatusesLoader(
+abstract class AbsRequestStatusesLoader(
         context: Context,
         val accountKey: UserKey?,
         val sinceId: String?,

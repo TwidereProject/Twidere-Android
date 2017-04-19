@@ -5,6 +5,7 @@ import com.twitter.Validator
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.account.AccountExtras
+import org.mariotaku.twidere.model.account.MastodonAccountExtras
 import org.mariotaku.twidere.model.account.StatusNetAccountExtras
 import org.mariotaku.twidere.model.account.TwitterAccountExtras
 import org.mariotaku.twidere.model.account.cred.Credentials
@@ -66,6 +67,12 @@ val AccountDetails.textLimit: Int get() {
             val extras = this.extras as? StatusNetAccountExtras
             if (extras != null) {
                 return extras.textLimit
+            }
+        }
+        AccountType.MASTODON -> {
+            val extras = this.extras as? MastodonAccountExtras
+            if (extras != null) {
+                return extras.statusTextLimit
             }
         }
     }

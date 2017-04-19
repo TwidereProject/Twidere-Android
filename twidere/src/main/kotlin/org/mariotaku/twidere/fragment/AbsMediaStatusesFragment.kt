@@ -31,7 +31,7 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_FROM_USER
 import org.mariotaku.twidere.extension.reachingEnd
 import org.mariotaku.twidere.extension.reachingStart
-import org.mariotaku.twidere.loader.RequestStatusesLoader
+import org.mariotaku.twidere.loader.AbsRequestStatusesLoader
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.util.IntentUtils
@@ -136,7 +136,7 @@ abstract class AbsMediaStatusesFragment : AbsContentRecyclerViewFragment<Stagger
 
     protected open fun hasMoreData(loader: Loader<List<ParcelableStatus>?>,
             data: List<ParcelableStatus>?, changed: Boolean): Boolean {
-        if (loader !is RequestStatusesLoader) return false
+        if (loader !is AbsRequestStatusesLoader) return false
         val maxId = loader.maxId?.takeIf(String::isNotEmpty)
         val sinceId = loader.sinceId?.takeIf(String::isNotEmpty)
         if (sinceId == null && maxId != null) {

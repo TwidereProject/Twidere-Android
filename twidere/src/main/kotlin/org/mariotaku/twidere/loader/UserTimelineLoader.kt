@@ -69,7 +69,7 @@ class UserTimelineLoader(
         loadingMore: Boolean,
         val pinnedStatusIds: Array<String>?,
         val timelineFilter: UserTimelineFilter? = null
-) : RequestStatusesLoader(context, accountKey, sinceId, maxId, -1, data, savedStatusesArgs,
+) : AbsRequestStatusesLoader(context, accountKey, sinceId, maxId, -1, data, savedStatusesArgs,
         tabPosition, fromUser, loadingMore) {
 
     private val pinnedStatusesRef = AtomicReference<List<ParcelableStatus>>()

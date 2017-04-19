@@ -17,15 +17,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.extension.model.api.mastodon
+package org.mariotaku.twidere.extension.model
 
-import org.mariotaku.microblog.library.mastodon.model.Application
-import org.mariotaku.twidere.util.HtmlEscapeHelper
+import org.mariotaku.twidere.model.UserKey
 
 /**
  * Created by mariotaku on 2017/4/19.
  */
-val Application.sourceHtml: String get() {
-    if (website == null) return HtmlEscapeHelper.escape(name)
-    return "<a href='${HtmlEscapeHelper.escape(website)}'>${HtmlEscapeHelper.escape(name)}</a>"
-}
+
+private const val mastodonPlaceholderId = "#mastodon*placeholder#"
+
+val UserKey.isMastodonPlaceholder get() = mastodonPlaceholderId == id && host != null
