@@ -21,9 +21,39 @@
 
 package org.mariotaku.microblog.library.mastodon.api;
 
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.mastodon.model.Account;
+import org.mariotaku.microblog.library.mastodon.model.Card;
+import org.mariotaku.microblog.library.mastodon.model.Context;
+import org.mariotaku.microblog.library.mastodon.model.Status;
+import org.mariotaku.microblog.library.mastodon.model.StatusUpdate;
+import org.mariotaku.restfu.annotation.method.GET;
+import org.mariotaku.restfu.annotation.method.POST;
+import org.mariotaku.restfu.annotation.param.Param;
+import org.mariotaku.restfu.annotation.param.Path;
+
+import java.util.List;
+
 /**
  * Created by mariotaku on 2017/4/17.
  */
 
 public interface StatusResources {
+    @GET("/v1/statuses/{id}")
+    Status fetchStatus(@Path("id") String id) throws MicroBlogException;
+
+    @GET("/v1/statuses/{id}/context")
+    Context getStatusContext(@Path("id") String id) throws MicroBlogException;
+
+    @GET("/v1/statuses/{id}/card")
+    Card getStatusCard(@Path("id") String id) throws MicroBlogException;
+
+    @GET("/v1/statuses/{id}/reblogged_by")
+    List<Account> getStatusRebloggedBy(@Path("id") String id) throws MicroBlogException;
+
+    @GET("/v1/statuses/{id}/favourited_by")
+    List<Account> getStatusFavouritedBy(@Path("id") String id) throws MicroBlogException;
+
+    @POST("/v1/statuses")
+    Status postStatus(@Param StatusUpdate update) throws MicroBlogException;
 }

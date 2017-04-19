@@ -119,9 +119,9 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
             }
             if (withCredentials) {
                 val uri = Uri.parse(url)
-                requestManager.load(AuthenticatedUri(uri, accountKey)).into(this)
+                requestManager.load(AuthenticatedUri(uri, accountKey)).asBitmap().into(this)
             } else {
-                requestManager.load(url).into(this)
+                requestManager.load(url).asBitmap().into(this)
             }
             if (this is MediaPreviewImageView) {
                 setHasPlayIcon(ParcelableMediaUtils.hasPlayIcon(item.type))
