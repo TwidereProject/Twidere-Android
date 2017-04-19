@@ -69,7 +69,8 @@ class AccountsDumperPlugin(val context: Context) : DumperPlugin {
     override fun dump(dumpContext: DumperContext) {
         val argsAsList = dumpContext.argsAsList
         val subCommands = listOf(ExportCommand(context), ImportCommand(context),
-                ListCommand(context), GetCommand(context), SetCommand(context))
+                ListCommand(context), GetCommand(context), SetCommand(context),
+                SetJsonCommand(context))
         val subCommandName = argsAsList.firstOrNull()
         val subCommand = subCommands.find { it.name == subCommandName } ?: run {
             throw DumpException("Usage: accounts <${subCommands.joinToString("|", transform = SubCommand::name)}> <args>")
@@ -201,6 +202,33 @@ class AccountsDumperPlugin(val context: Context) : DumperPlugin {
             val value = args[2]
             val path = args[1]
             docContext.set(path, value)
+            val details = docContext.read("$", Object::class.java)?.let {
+                JsonSerializer.parse(it.toString(), AccountDetails::class.java)
+            } ?: return
+            details.account.updateDetails(am, details)
+            dumpContext.stdout.println("$path = ${docContext.read(path, Object::class.java)?.prettyPrint()}")
+        }
+
+    }
+
+    class SetJsonCommand(val context: Context) : SubCommand("set-json") {
+        override fun execute(dumpContext: DumperContext, args: Array<String>) {
+            if (args.size != 3) {
+                throw DumpException("Usage: accounts $name <account_key> <field> <json>")
+            }
+            val am = AccountManager.get(context)
+            val docContext = try {
+                am.docContext(args[0])
+            } catch (e: Utils.NoAccountException) {
+                throw DumpException("Account not found")
+            }
+            val value = args[2]
+            val path = args[1]
+            if (value.startsWith("{")) {
+                docContext.set(path, JSONObject(value))
+            } else if (value.startsWith("[")) {
+                docContext.set(path, JSONArray(value))
+            }
             val details = docContext.read("$", Object::class.java)?.let {
                 JsonSerializer.parse(it.toString(), AccountDetails::class.java)
             } ?: return

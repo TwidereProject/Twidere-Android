@@ -1463,14 +1463,16 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 position = TAB_POSITION_STATUSES)
         pagerAdapter.add(cls = UserMediaTimelineFragment::class.java, args = tabArgs,
                 name = getString(R.string.media), type = TAB_TYPE_MEDIA, position = TAB_POSITION_MEDIA)
-        if (preferences[iWantMyStarsBackKey]) {
-            pagerAdapter.add(cls = UserFavoritesFragment::class.java, args = tabArgs,
-                    name = getString(R.string.title_favorites), type = TAB_TYPE_FAVORITES,
-                    position = TAB_POSITION_FAVORITES)
-        } else {
-            pagerAdapter.add(cls = UserFavoritesFragment::class.java, args = tabArgs,
-                    name = getString(R.string.title_likes), type = TAB_TYPE_FAVORITES,
-                    position = TAB_POSITION_FAVORITES)
+        if (account?.type != AccountType.MASTODON || account?.key == userKey) {
+            if (preferences[iWantMyStarsBackKey]) {
+                pagerAdapter.add(cls = UserFavoritesFragment::class.java, args = tabArgs,
+                        name = getString(R.string.title_favorites), type = TAB_TYPE_FAVORITES,
+                        position = TAB_POSITION_FAVORITES)
+            } else {
+                pagerAdapter.add(cls = UserFavoritesFragment::class.java, args = tabArgs,
+                        name = getString(R.string.title_likes), type = TAB_TYPE_FAVORITES,
+                        position = TAB_POSITION_FAVORITES)
+            }
         }
     }
 

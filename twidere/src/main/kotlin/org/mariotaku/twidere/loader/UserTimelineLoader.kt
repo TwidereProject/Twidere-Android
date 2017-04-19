@@ -191,4 +191,12 @@ class UserTimelineLoader(
             }
         }
     }
+
+    companion object {
+        fun getMastodonStatuses(mastodon: Mastodon, userKey: UserKey?, screenName: String?, paging: Paging,
+                option: MastodonTimelineOption?): List<MastodonStatus> {
+            val id = userKey?.id ?: throw MicroBlogException("Only ID are supported at this moment")
+            return mastodon.getStatuses(id, paging, option)
+        }
+    }
 }
