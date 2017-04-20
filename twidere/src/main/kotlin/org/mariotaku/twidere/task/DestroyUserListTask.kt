@@ -21,47 +21,34 @@ package org.mariotaku.twidere.task
 
 import android.content.Context
 import android.widget.Toast
-import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUserList
-import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.UserListDestroyedEvent
 import org.mariotaku.twidere.model.util.ParcelableUserListUtils
-import org.mariotaku.twidere.util.MicroBlogAPIFactory
-import org.mariotaku.twidere.util.Utils
 
 /**
  * Created by mariotaku on 2017/2/10.
  */
 class DestroyUserListTask(
         context: Context,
-        private val accountKey: UserKey,
+        accountKey: UserKey,
         private val listId: String
-) : BaseAbstractTask<Any?, SingleResponse<ParcelableUserList>, Any?>(context) {
+) : AbsAccountRequestTask<Any?, ParcelableUserList, Any?>(context, accountKey) {
 
-    override fun doLongOperation(params: Any?): SingleResponse<ParcelableUserList> {
-        val microBlog = MicroBlogAPIFactory.getInstance(context, accountKey) ?:
-                return SingleResponse(MicroBlogException("No account"))
-        try {
+    override fun onExecute(account: AccountDetails, params: Any?): ParcelableUserList {
+        val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
             val userList = microBlog.destroyUserList(listId)
-            val list = ParcelableUserListUtils.from(userList, accountKey)
-            return SingleResponse(list)
-        } catch (e: MicroBlogException) {
-            return SingleResponse(e)
-        }
-
+        return ParcelableUserListUtils.from(userList, account.key)
     }
 
-    override fun afterExecute(callback: Any?, result: SingleResponse<ParcelableUserList>) {
-        val context = context
-        if (result.data != null) {
-            val message = context.getString(R.string.deleted_list, result.data.name)
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-            bus.post(UserListDestroyedEvent(result.data))
-        } else {
-            Utils.showErrorMessage(context, R.string.action_deleting, result.exception, true)
-        }
+    override fun onSucceed(callback: Any?, result: ParcelableUserList) {
+        val message = context.getString(R.string.deleted_list, result.name)
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        bus.post(UserListDestroyedEvent(result))
     }
 
 }

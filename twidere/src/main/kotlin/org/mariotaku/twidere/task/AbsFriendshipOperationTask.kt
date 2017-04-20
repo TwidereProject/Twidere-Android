@@ -6,6 +6,7 @@ import android.widget.Toast
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.User
+import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
@@ -53,7 +54,7 @@ abstract class AbsFriendshipOperationTask(
     override fun onExecute(params: Arguments): ParcelableUser {
         val am = AccountManager.get(context)
         val details = AccountUtils.getAccountDetails(am, params.accountKey, true)
-                ?: throw MicroBlogException("No account")
+                ?: throw AccountNotFoundException()
         val twitter = details.newMicroBlogInstance(context, cls = MicroBlog::class.java)
         val user = perform(twitter, details, params)
         val parcelableUser = ParcelableUserUtils.fromUser(user, params.accountKey, details.type)
@@ -66,10 +67,8 @@ abstract class AbsFriendshipOperationTask(
             details: AccountDetails,
             args: Arguments): User
 
-    protected abstract fun succeededWorker(twitter: MicroBlog,
-            details: AccountDetails,
-            args: Arguments,
-            user: ParcelableUser)
+    protected abstract fun succeededWorker(twitter: MicroBlog, details: AccountDetails,
+            args: Arguments, user: ParcelableUser)
 
     protected abstract fun showSucceededMessage(params: Arguments, user: ParcelableUser)
 
