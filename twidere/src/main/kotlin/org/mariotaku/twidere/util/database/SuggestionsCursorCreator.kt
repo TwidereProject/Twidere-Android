@@ -134,7 +134,7 @@ object SuggestionsCursorCreator {
                 val whereArgs = nicknameKeys + queryEscaped + queryEscaped
                 val orderBy = arrayOf(CachedUsers.SCORE, CachedUsers.LAST_SEEN, CachedUsers.SCREEN_NAME, CachedUsers.NAME)
                 val ascending = booleanArrayOf(false, false, true, true)
-                val mappedProjection = nonNullProjection.mapToArray { autoCompleteUsersProjectionMap[it] }
+                val mappedProjection = nonNullProjection.mapToArray { autoCompleteUsersProjectionMap[it]!! }
                 val (sql, bindingArgs) = CachedUsersQueryBuilder.withScore(mappedProjection,
                         where.sql, whereArgs, OrderBy(orderBy, ascending).sql, accountKey, 0)
                 return db.rawQuery(sql.sql, bindingArgs)
@@ -162,7 +162,7 @@ object SuggestionsCursorCreator {
         val order = arrayOf(CachedUsers.LAST_SEEN, CachedUsers.SCORE, CachedUsers.SCREEN_NAME, CachedUsers.NAME)
         val ascending = booleanArrayOf(false, false, true, true)
         val orderBy = OrderBy(order, ascending)
-        val usersProjection = selection.mapToArray { suggestionUsersProjectionMap[it] }
+        val usersProjection = selection.mapToArray { suggestionUsersProjectionMap[it]!! }
         val usersQuery = CachedUsersQueryBuilder.withScore(usersProjection,
                 usersSelection.sql, selectionArgs, orderBy.sql, accountKey, 0)
         return db.rawQuery(usersQuery.first.sql, usersQuery.second)
