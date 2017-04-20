@@ -18,6 +18,8 @@
 
 package org.mariotaku.microblog.library.mastodon.api;
 
+import android.support.annotation.Nullable;
+
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.mastodon.model.Account;
 import org.mariotaku.microblog.library.mastodon.model.AccountUpdate;
@@ -83,5 +85,5 @@ public interface AccountResources {
     List<Relationship> getRelationships(@Path("id") String id) throws MicroBlogException;
 
     @GET("/v1/accounts/search")
-    List<Account> searchAccounts(@Query("q") String query) throws MicroBlogException;
+    List<Account> searchAccounts(@Query("q") String query, @Nullable @Query Paging paging) throws MicroBlogException;
 }

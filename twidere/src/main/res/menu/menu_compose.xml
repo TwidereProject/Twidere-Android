@@ -36,6 +36,10 @@
                 android:id="@+id/schedule"
                 android:icon="@drawable/ic_action_time"
                 android:title="@string/action_status_schedule"/>
+            <item
+                android:id="@+id/edit_summary"
+                android:icon="@drawable/ic_action_content_warning"
+                android:title="@string/action_add_content_warning"/>
         </menu>
     </item>
     <item

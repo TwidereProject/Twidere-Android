@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 43.1 (39012) - http://www.bohemiancoding.com/sketch -->
+    <title>ic_action_content_warning-mdpi</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Action-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" transform="translate(-6.000000, -6.000000)" fill-rule="nonzero" fill="#FFFFFF">
+            <path d="M25.99,8 L26,26 L22,22 L8,22 C6.895,22 6,21.105 6,20 L6,8 C6,6.895 6.895,6 8,6 L24,6 C25.105,6 25.99,6.895 25.99,8 Z M15,17 L15,19 L17,19 L17,17 L15,17 Z M15,9 L15,15 L17,15 L17,9 L15,9 Z" id="ic_action_content_warning-mdpi"></path>
+        </g>
+    </g>
+</svg>

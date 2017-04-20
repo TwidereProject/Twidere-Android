@@ -462,6 +462,9 @@ class UpdateStatusTask(
         if (statusUpdate.is_possibly_sensitive) {
             status.sensitive(statusUpdate.is_possibly_sensitive)
         }
+        if (statusUpdate.summary != null) {
+            status.spoilerText(statusUpdate.summary)
+        }
         return mastodon.postStatus(status).toParcelable(details.key)
     }
 

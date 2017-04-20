@@ -1774,7 +1774,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                                 states[pos] = checked
                             }
                         }
-                        Utils.showErrorMessage(context, R.string.action_modifying_lists, e, false)
+                        Toast.makeText(context, e.getErrorMessage(context), Toast.LENGTH_SHORT).show()
                     }
                 }
                 dialog.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener {

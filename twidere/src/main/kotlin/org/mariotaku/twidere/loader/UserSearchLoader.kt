@@ -22,9 +22,12 @@ package org.mariotaku.twidere.loader
 import android.content.Context
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.twitter.model.Paging
-import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
+import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
@@ -39,15 +42,29 @@ open class UserSearchLoader(
 ) : AbsRequestUsersLoader(context, accountKey, data, fromUser) {
 
     @Throws(MicroBlogException::class)
-    override fun getUsers(twitter: MicroBlog, details: AccountDetails): List<User> {
+    override fun getUsers(details: AccountDetails): List<ParcelableUser> {
         val paging = Paging()
         paging.page(page)
         when (details.type) {
+            AccountType.MASTODON -> {
+                val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
+                return mastodon.searchAccounts(query, paging).map {
+                    it.toParcelable(details.key)
+                }
+            }
             AccountType.FANFOU -> {
-                return twitter.searchFanfouUsers(query, paging)
+                val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
+                return microBlog.searchFanfouUsers(query, paging).map {
+                    it.toParcelable(details.key, details.type, profileImageSize = profileImageSize)
+                }
+            }
+            else -> {
+                val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
+                return microBlog.searchUsers(query, paging).map {
+                    it.toParcelable(details.key, details.type, profileImageSize = profileImageSize)
+                }
             }
         }
-        return twitter.searchUsers(query, paging)
     }
 
 }

@@ -9,6 +9,8 @@ import org.mariotaku.ktextension.useCursor
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.model.ParcelableRelationship
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
@@ -35,7 +37,7 @@ class CacheUserRelationshipTask(
         fun cacheUserRelationships(cr: ContentResolver, accountKey: UserKey, accountType: String,
                 users: Collection<User>) {
 
-            val parcelableUsers = users.map { ParcelableUserUtils.fromUser(it, accountKey, accountType) }
+            val parcelableUsers = users.map { it.toParcelable(accountKey, accountType) }
 
             val userValuesCreator = ObjectCursor.valuesCreatorFrom(ParcelableUser::class.java)
             ContentResolverUtils.bulkInsert(cr, CachedUsers.CONTENT_URI, parcelableUsers.map(userValuesCreator::create))

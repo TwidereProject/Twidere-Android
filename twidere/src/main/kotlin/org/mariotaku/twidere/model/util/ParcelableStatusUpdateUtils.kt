@@ -34,6 +34,7 @@ object ParcelableStatusUpdateUtils {
                 statusUpdate.attachment_url = actionExtras.attachmentUrl
                 statusUpdate.excluded_reply_user_ids = actionExtras.excludedReplyUserIds
                 statusUpdate.extended_reply_mode = actionExtras.isExtendedReplyMode
+                statusUpdate.summary  = actionExtras.summaryText
             }
             is QuoteStatusActionExtras -> {
                 val onlyAccount = statusUpdate.accounts.singleOrNull()

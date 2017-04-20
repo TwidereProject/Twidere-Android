@@ -100,9 +100,9 @@ fun Status.toParcelable(accountKey: UserKey, accountType: String, profileImageSi
         // We should treat this as an html
         if (quotedText.isHtml) {
             val html = HtmlSpanBuilder.fromHtml(quotedText, quoted.extendedText)
-            result.quoted_text_unescaped = html.toString()
+            result.quoted_text_unescaped = html?.toString()
             result.quoted_text_plain = result.quoted_text_unescaped
-            result.quoted_spans = html.spanItems
+            result.quoted_spans = html?.spanItems
         } else {
             val textWithIndices = InternalTwitterContentUtils.formatStatusTextWithIndices(quoted)
             result.quoted_text_plain = InternalTwitterContentUtils.unescapeTwitterStatusText(quotedText)
@@ -153,9 +153,9 @@ fun Status.toParcelable(accountKey: UserKey, accountType: String, profileImageSi
     // We should treat this as an html
     if (text.isHtml) {
         val html = HtmlSpanBuilder.fromHtml(text, status.extendedText)
-        result.text_unescaped = html.toString()
+        result.text_unescaped = html?.toString()
         result.text_plain = result.text_unescaped
-        result.spans = html.spanItems
+        result.spans = html?.spanItems
     } else {
         val textWithIndices = InternalTwitterContentUtils.formatStatusTextWithIndices(status)
         result.text_unescaped = textWithIndices.text
@@ -188,7 +188,7 @@ internal inline val CharSequence.spanItems get() = (this as? Spanned)?.let { tex
     text.getSpans(0, length, URLSpan::class.java).mapToArray { SpanItem.from(text, it) }
 }
 
-private inline val String.isHtml get() = contains('<') && contains('>')
+internal inline val String.isHtml get() = contains('<') && contains('>')
 
 private inline val Status.inReplyToName get() = userMentionEntities?.firstOrNull {
     inReplyToUserId == it.id

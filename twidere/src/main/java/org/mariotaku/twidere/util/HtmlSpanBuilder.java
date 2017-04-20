@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.util;
 
 import android.graphics.Typeface;
+import android.support.annotation.Nullable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -57,7 +58,9 @@ public class HtmlSpanBuilder {
         return handler.getText();
     }
 
-    public static CharSequence fromHtml(String html, CharSequence fallback) {
+    @Nullable
+    public static CharSequence fromHtml(String html, @Nullable CharSequence fallback) {
+        if (html == null) return fallback;
         try {
             return fromHtml(html);
         } catch (HtmlParseException e) {

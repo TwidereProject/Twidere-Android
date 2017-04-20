@@ -29,6 +29,8 @@ import org.mariotaku.microblog.library.twitter.model.NewDm
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
@@ -36,7 +38,6 @@ import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.ParcelableNewMessage
 import org.mariotaku.twidere.model.event.SendMessageTaskEvent
 import org.mariotaku.twidere.model.util.ParcelableMessageUtils
-import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.ExceptionHandlingAbstractTask
 import org.mariotaku.twidere.task.twitter.UpdateStatusTask
@@ -179,10 +180,8 @@ class SendMessageTask(
         val conversations = hashMapOf<String, ParcelableMessageConversation>()
         conversations.addLocalConversations(context, accountKey, conversationIds)
         val message = ParcelableMessageUtils.fromMessage(accountKey, dm, true)
-        val sender = ParcelableUserUtils.fromUser(dm.sender, accountKey, details.type,
-                profileImageSize = profileImageSize)
-        val recipient = ParcelableUserUtils.fromUser(dm.recipient, accountKey, details.type,
-                profileImageSize = profileImageSize)
+        val sender = dm.sender.toParcelable(accountKey, details.type, profileImageSize = profileImageSize)
+        val recipient = dm.recipient.toParcelable(accountKey, details.type, profileImageSize = profileImageSize)
         conversations.addConversation(message.conversation_id, details, message, setOf(sender, recipient), appendUsers = true)
         return GetMessagesTask.DatabaseUpdateData(conversations.values, listOf(message))
     }

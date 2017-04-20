@@ -78,6 +78,8 @@ import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.extension.getNonEmptyString
 import org.mariotaku.twidere.extension.model.*
+import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.fragment.APIEditorDialogFragment
 import org.mariotaku.twidere.fragment.BaseDialogFragment
@@ -879,8 +881,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
             val userId = apiUser.id
             val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
-            val user = ParcelableUserUtils.fromUser(apiUser, accountKey, type,
-                    profileImageSize = profileImageSize)
+            val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
             val am = AccountManager.get(context)
             val account = AccountUtils.findByAccountKey(am, accountKey)
             if (account != null) {
@@ -1020,8 +1021,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             var color = analyseUserProfileColor(apiUser)
             val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
             val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
-            val user = ParcelableUserUtils.fromUser(apiUser, accountKey, type,
-                    profileImageSize = profileImageSize)
+            val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
             val am = AccountManager.get(activity)
             val account = AccountUtils.findByAccountKey(am, accountKey)
             if (account != null) {
@@ -1051,8 +1051,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             var color = analyseUserProfileColor(apiUser)
             val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
             val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
-            val user = ParcelableUserUtils.fromUser(apiUser, accountKey, type,
-                    profileImageSize = profileImageSize)
+            val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
             val am = AccountManager.get(activity)
             val account = AccountUtils.findByAccountKey(am, accountKey)
             if (account != null) {
@@ -1079,8 +1078,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             var color = analyseUserProfileColor(apiUser)
             val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
             val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
-            val user = ParcelableUserUtils.fromUser(apiUser, accountKey, type,
-                    profileImageSize = profileImageSize)
+            val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
             val am = AccountManager.get(activity)
             val account = AccountUtils.findByAccountKey(am, accountKey)
             if (account != null) {

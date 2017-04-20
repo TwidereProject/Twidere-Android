@@ -22,10 +22,15 @@ package org.mariotaku.twidere.loader
 import android.content.Context
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.mastodon.Mastodon
+import org.mariotaku.microblog.library.mastodon.model.Account
+import org.mariotaku.microblog.library.twitter.model.CursorSupport
 import org.mariotaku.microblog.library.twitter.model.Paging
-import org.mariotaku.microblog.library.twitter.model.ResponseList
 import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
+import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
@@ -40,22 +45,48 @@ class UserFollowersLoader(
 ) : CursorSupportUsersLoader(context, accountKey, data, fromUser) {
 
     @Throws(MicroBlogException::class)
-    override fun getCursoredUsers(twitter: MicroBlog, details: AccountDetails, paging: Paging): ResponseList<User> {
+    override fun getUsers(details: AccountDetails, paging: Paging): List<ParcelableUser> {
+        when (details.type) {
+            AccountType.MASTODON -> return getMastodonUsers(details, paging).map {
+                it.toParcelable(details.key)
+            }
+            else -> return getMicroBlogUsers(details, paging).map {
+                it.toParcelable(details.key, details.type, profileImageSize = profileImageSize)
+            }
+        }
+    }
+
+    private fun getMastodonUsers(details: AccountDetails, paging: Paging): List<Account> {
+        val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
+        if (userKey == null) throw MicroBlogException("Only ID supported")
+        return mastodon.getFollowers(userKey.id, paging)
+    }
+
+    private fun getMicroBlogUsers(details: AccountDetails, paging: Paging): List<User> {
+        val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
         when (details.type) {
             AccountType.STATUSNET -> if (userKey != null) {
-                return twitter.getStatusesFollowersList(userKey.id, paging)
+                return microBlog.getStatusesFollowersList(userKey.id, paging).also {
+                    setCursors(it as? CursorSupport)
+                }
             } else if (screenName != null) {
-                return twitter.getStatusesFollowersListByScreenName(screenName, paging)
+                return microBlog.getStatusesFollowersListByScreenName(screenName, paging).also {
+                    setCursors(it as? CursorSupport)
+                }
             }
             AccountType.FANFOU -> if (userKey != null) {
-                return twitter.getUsersFollowers(userKey.id, paging)
+                return microBlog.getUsersFollowers(userKey.id, paging)
             } else if (screenName != null) {
-                return twitter.getUsersFollowers(screenName, paging)
+                return microBlog.getUsersFollowers(screenName, paging)
             }
             else -> if (userKey != null) {
-                return twitter.getFollowersList(userKey.id, paging)
+                return microBlog.getFollowersList(userKey.id, paging).also {
+                    setCursors(it as? CursorSupport)
+                }
             } else if (screenName != null) {
-                return twitter.getFollowersListByScreenName(screenName, paging)
+                return microBlog.getFollowersListByScreenName(screenName, paging).also {
+                    setCursors(it as? CursorSupport)
+                }
             }
         }
         throw MicroBlogException("user_id or screen_name required")

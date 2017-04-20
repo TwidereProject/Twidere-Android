@@ -7,13 +7,14 @@ import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
+import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.ProfileUpdatedEvent
-import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.task.twitter.UpdateStatusTask
 import org.mariotaku.twidere.util.DebugLog
 import java.io.IOException
@@ -49,8 +50,7 @@ open class UpdateProfileBackgroundImageTask<ResultHandler>(
             DebugLog.w(LOGTAG, tr = e)
         }
         val user = microBlog.verifyCredentials()
-        return ParcelableUserUtils.fromUser(user, account.key, account.type,
-                profileImageSize = profileImageSize)
+        return user.toParcelable(account.key, account.type, profileImageSize = profileImageSize)
     }
 
     override fun onSucceed(callback: ResultHandler?, result: ParcelableUser) {

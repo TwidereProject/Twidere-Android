@@ -22,8 +22,12 @@ package org.mariotaku.twidere.loader
 import android.content.Context
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.twitter.model.IDs
+import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.twitter.model.Paging
+import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
+import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
@@ -37,11 +41,25 @@ class StatusRetweetersLoader(
 ) : CursorSupportUsersLoader(context, accountKey, data, fromUser) {
 
     @Throws(MicroBlogException::class)
-    override fun getIDs(twitter: MicroBlog, details: AccountDetails, paging: Paging): IDs {
-        return twitter.getRetweetersIDs(statusId, paging)
+    override fun getUsers(details: AccountDetails, paging: Paging): List<ParcelableUser> {
+        when (details.type) {
+            AccountType.MASTODON -> {
+                val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
+                return mastodon.getStatusFavouritedBy(statusId).map {
+                    it.toParcelable(details.key)
+                }
+            }
+            AccountType.TWITTER -> {
+                val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
+                val ids = microBlog.getRetweetersIDs(statusId, paging).iDs
+                return microBlog.lookupUsers(ids).map {
+                    it.toParcelable(details.key, details.type, profileImageSize = profileImageSize)
+                }
+            }
+            else -> {
+                throw MicroBlogException("Not supported")
+            }
+        }
     }
 
-    override fun useIDs(details: AccountDetails): Boolean {
-        return true
-    }
 }

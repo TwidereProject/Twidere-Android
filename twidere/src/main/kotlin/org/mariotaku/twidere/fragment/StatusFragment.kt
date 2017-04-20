@@ -64,10 +64,7 @@ import kotlinx.android.synthetic.main.header_status.view.*
 import kotlinx.android.synthetic.main.layout_content_fragment_common.*
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
-import org.mariotaku.ktextension.applyFontFamily
-import org.mariotaku.ktextension.contains
-import org.mariotaku.ktextension.findPositionByItemId
-import org.mariotaku.ktextension.setItemAvailability
+import org.mariotaku.ktextension.*
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
@@ -94,6 +91,7 @@ import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.*
+import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.view.calculateSpaceItemHeight
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.Companion.handleActionClick
@@ -750,7 +748,10 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         private val linkClickHandler: StatusLinkClickHandler
         private val linkify: TwidereLinkify
 
-
+        private val profileTypeView = itemView.profileType
+        private val nameView = itemView.name
+        private val summaryView = itemView.summary
+        private val textView = itemView.text
         private val locationView = itemView.locationView
         private val retweetedByView = itemView.retweetedBy
 
@@ -789,6 +790,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
             val layoutPosition = layoutPosition
             val skipLinksInText = status.extras?.support_entities ?: false
+
             if (status.is_quote) {
 
                 itemView.quotedView.visibility = View.VISIBLE
@@ -854,7 +856,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     // Not available
                     val string = SpannableString.valueOf(context.getString(R.string.label_status_not_available))
                     string.setSpan(ForegroundColorSpan(ThemeUtils.getColorFromAttribute(context,
-                            android.R.attr.textColorTertiary, itemView.text.currentTextColor)), 0,
+                            android.R.attr.textColorTertiary, textView.currentTextColor)), 0,
                             string.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                     itemView.quotedText.text = string
 
@@ -875,9 +877,9 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 timestamp = status.timestamp
             }
 
-            itemView.name.name = colorNameManager.getUserNickname(status.user_key, status.user_name)
-            itemView.name.screenName = String.format("@%s", status.user_screen_name)
-            itemView.name.updateText(formatter)
+            nameView.name = colorNameManager.getUserNickname(status.user_key, status.user_name)
+            nameView.screenName = String.format("@%s", status.user_screen_name)
+            nameView.updateText(formatter)
 
             adapter.requestManager.loadProfileImage(context, status, adapter.profileImageStyle,
                     itemView.profileImage.cornerRadius, itemView.profileImage.cornerRadiusRatio)
@@ -886,14 +888,15 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             val typeIconRes = Utils.getUserTypeIconRes(status.user_is_verified, status.user_is_protected)
             val typeDescriptionRes = Utils.getUserTypeDescriptionRes(status.user_is_verified, status.user_is_protected)
 
+
             if (typeIconRes != 0 && typeDescriptionRes != 0) {
-                itemView.profileType.setImageResource(typeIconRes)
-                itemView.profileType.contentDescription = context.getString(typeDescriptionRes)
-                itemView.profileType.visibility = View.VISIBLE
+                profileTypeView.setImageResource(typeIconRes)
+                profileTypeView.contentDescription = context.getString(typeDescriptionRes)
+                profileTypeView.visibility = View.VISIBLE
             } else {
-                itemView.profileType.setImageDrawable(null)
-                itemView.profileType.contentDescription = null
-                itemView.profileType.visibility = View.GONE
+                profileTypeView.setImageDrawable(null)
+                profileTypeView.contentDescription = null
+                profileTypeView.visibility = View.GONE
             }
 
             val timeString = Utils.formatToLongTimeString(context, timestamp)
@@ -913,17 +916,15 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                         status.is_possibly_sensitive, skipLinksInText)
             }
 
+            summaryView.text = status.extras?.summary_text
+            summaryView.hideIfEmpty()
+
             if (displayEnd != -1 && displayEnd <= text.length) {
-                itemView.text.text = text.subSequence(0, displayEnd)
+                textView.text = text.subSequence(0, displayEnd)
             } else {
-                itemView.text.text = text
+                textView.text = text
             }
-            if (itemView.text.length() == 0) {
-                // No text
-                itemView.text.visibility = View.GONE
-            } else {
-                itemView.text.visibility = View.VISIBLE
-            }
+            textView.hideIfEmpty()
 
             val location: ParcelableLocation? = status.location
             val placeFullName: String? = status.place_full_name
@@ -1020,10 +1021,10 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 itemView.translateContainer.visibility = View.GONE
             }
 
-            itemView.text.setTextIsSelectable(true)
+            textView.setTextIsSelectable(true)
             itemView.translateResult.setTextIsSelectable(true)
 
-            itemView.text.movementMethod = LinkMovementMethod.getInstance()
+            textView.movementMethod = LinkMovementMethod.getInstance()
             itemView.quotedText.movementMethod = null
         }
 
@@ -1116,9 +1117,11 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             itemView.translateLabel.setOnClickListener(this)
 
             val textSize = adapter.textSize
-            itemView.name.setPrimaryTextSize(textSize * 1.25f)
-            itemView.name.setSecondaryTextSize(textSize * 0.85f)
-            itemView.text.textSize = textSize * 1.25f
+
+            nameView.setPrimaryTextSize(textSize * 1.25f)
+            nameView.setSecondaryTextSize(textSize * 0.85f)
+            summaryView.textSize = textSize * 1.25f
+            textView.textSize = textSize * 1.25f
 
             itemView.quotedName.setPrimaryTextSize(textSize * 1.25f)
             itemView.quotedName.setSecondaryTextSize(textSize * 0.85f)
@@ -1132,7 +1135,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             itemView.countsUsersHeightHolder.count.textSize = textSize * 1.25f
             itemView.countsUsersHeightHolder.label.textSize = textSize * 0.85f
 
-            itemView.name.nameFirst = adapter.nameFirst
+            nameView.nameFirst = adapter.nameFirst
             itemView.quotedName.nameFirst = adapter.nameFirst
 
             itemView.mediaPreview.style = adapter.mediaPreviewStyle
@@ -1151,8 +1154,9 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             itemView.countsUsers.addItemDecoration(SpacingItemDecoration(resources.getDimensionPixelOffset(R.dimen.element_spacing_normal)))
 
             // Apply font families
-            itemView.name.applyFontFamily(adapter.lightFont)
-            itemView.text.applyFontFamily(adapter.lightFont)
+            nameView.applyFontFamily(adapter.lightFont)
+            summaryView.applyFontFamily(adapter.lightFont)
+            textView.applyFontFamily(adapter.lightFont)
             itemView.quotedName.applyFontFamily(adapter.lightFont)
             itemView.quotedText.applyFontFamily(adapter.lightFont)
             itemView.locationView.applyFontFamily(adapter.lightFont)
@@ -2073,7 +2077,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             try {
                 activitySummary.retweeters = twitter.getRetweets(statusId, paging)
                         .filterNot { DataStoreUtils.isFilteringUser(context, UserKeyUtils.fromUser(it.user)) }
-                        .map { ParcelableUserUtils.fromUser(it.user, accountKey, details.type) }
+                        .map { it.user.toParcelable(accountKey, details.type) }
                 val countValues = ContentValues()
                 val status = twitter.showStatus(statusId)
                 activitySummary.favoriteCount = status.favoriteCount

@@ -21,19 +21,14 @@ package org.mariotaku.twidere.loader
 
 import android.accounts.AccountManager
 import android.content.Context
-import android.util.Log
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.TwidereConstants
-import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ListResponse
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.model.util.ParcelableUserUtils
+import org.mariotaku.twidere.util.DebugLog
 import java.util.*
 
 abstract class AbsRequestUsersLoader(
@@ -43,7 +38,7 @@ abstract class AbsRequestUsersLoader(
         fromUser: Boolean
 ) : ParcelableUsersLoader(context, data, fromUser) {
 
-    private val profileImageSize = context.getString(R.string.profile_image_size)
+    protected val profileImageSize: String = context.getString(R.string.profile_image_size)
 
     override fun loadInBackground(): List<ParcelableUser> {
         if (accountKey == null) {
@@ -52,27 +47,25 @@ abstract class AbsRequestUsersLoader(
         val am = AccountManager.get(context)
         val details = AccountUtils.getAccountDetails(am, accountKey, true) ?:
                 return ListResponse.getListInstance(MicroBlogException("No Account"))
-        val twitter: MicroBlog = details.newMicroBlogInstance(context = context, cls = MicroBlog::class.java)
         val data = data
-        val users: List<User>
+        val users: List<ParcelableUser>
         try {
-            users = getUsers(twitter, details)
+            users = getUsers(details)
         } catch (e: MicroBlogException) {
-            Log.w(TwidereConstants.LOGTAG, e)
+            DebugLog.w(tr = e)
             return ListResponse.getListInstance(data)
         }
 
         var pos = data.size
         for (user in users) {
-            if (hasId(user.id)) {
+            if (hasId(user.key)) {
                 continue
             }
-            val item = ParcelableUserUtils.fromUser(user, accountKey, details.type, pos.toLong(),
-                    profileImageSize = profileImageSize)
-            processUser(details, item)
-            data.add(item)
+            user.position = pos.toLong()
+            processUser(details, user)
             pos++
         }
+        data.addAll(users)
         processUsersData(details, data)
         return ListResponse.getListInstance(data)
     }
@@ -82,7 +75,7 @@ abstract class AbsRequestUsersLoader(
     }
 
     @Throws(MicroBlogException::class)
-    protected abstract fun getUsers(twitter: MicroBlog, details: AccountDetails): List<User>
+    protected abstract fun getUsers(details: AccountDetails): List<ParcelableUser>
 
     protected open fun processUsersData(details: AccountDetails, list: MutableList<ParcelableUser>) {
         Collections.sort(data)

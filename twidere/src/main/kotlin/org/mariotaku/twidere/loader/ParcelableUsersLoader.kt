@@ -21,9 +21,9 @@ package org.mariotaku.twidere.loader
 
 import android.content.Context
 import android.support.v4.content.FixedAsyncTaskLoader
-import android.text.TextUtils
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.ParcelableUser
+import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.collection.NoDuplicatesArrayList
 import java.util.*
 
@@ -45,8 +45,8 @@ abstract class ParcelableUsersLoader(
         forceLoad()
     }
 
-    protected fun hasId(id: String): Boolean {
-        return data.indices.any { TextUtils.equals(data[it].key.id, id) }
+    protected fun hasId(key: UserKey): Boolean {
+        return data.indices.any { data[it].key == key }
     }
 
 }

@@ -3,8 +3,6 @@ package org.mariotaku.twidere.loader
 import android.annotation.SuppressLint
 import android.content.Context
 import org.mariotaku.library.objectcursor.ObjectCursor
-import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.sqliteqb.library.Columns
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.model.AccountDetails
@@ -33,9 +31,9 @@ class CacheUserSearchLoader(
         GeneralComponent.get(context).inject(this)
     }
 
-    override fun getUsers(twitter: MicroBlog, details: AccountDetails): List<User> {
+    override fun getUsers(details: AccountDetails): List<ParcelableUser> {
         if (query.isEmpty() || !fromNetwork) return emptyList()
-        return super.getUsers(twitter, details)
+        return super.getUsers(details)
     }
 
     override fun processUsersData(details: AccountDetails, list: MutableList<ParcelableUser>) {

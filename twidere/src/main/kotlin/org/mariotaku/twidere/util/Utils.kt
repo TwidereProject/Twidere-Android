@@ -36,7 +36,6 @@ import android.nfc.NfcAdapter.CreateNdefMessageCallback
 import android.os.BatteryManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Parcelable
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 import android.support.v4.net.ConnectivityManagerCompat
@@ -98,8 +97,8 @@ object Utils {
 
     class NoAccountException(var accountHost: String? = null) : Exception()
 
-    val PATTERN_XML_RESOURCE_IDENTIFIER = Pattern.compile("res/xml/([\\w_]+)\\.xml")
-    val PATTERN_RESOURCE_IDENTIFIER = Pattern.compile("@([\\w_]+)/([\\w_]+)")
+    private val PATTERN_XML_RESOURCE_IDENTIFIER = Pattern.compile("res/xml/([\\w_]+)\\.xml")
+    private val PATTERN_RESOURCE_IDENTIFIER = Pattern.compile("@([\\w_]+)/([\\w_]+)")
 
     private val HOME_TABS_URI_MATCHER = UriMatcher(UriMatcher.NO_MATCH)
 
@@ -455,13 +454,6 @@ object Utils {
     }
 
 
-    fun <T : Parcelable> newParcelableArray(array: Array<Parcelable>?, creator: Parcelable.Creator<T>): Array<T>? {
-        if (array == null) return null
-        val result = creator.newArray(array.size)
-        System.arraycopy(array, 0, result, 0, array.size)
-        return result
-    }
-
     fun setNdefPushMessageCallback(activity: Activity, callback: CreateNdefMessageCallback): Boolean {
         try {
             val adapter = NfcAdapter.getDefaultAdapter(activity) ?: return false
@@ -502,9 +494,6 @@ object Utils {
     internal fun isMyStatus(status: ParcelableStatus): Boolean {
         if (isMyRetweet(status)) return true
         return status.account_key.maybeEquals(status.user_key)
-    }
-
-    fun showErrorMessage(context: Context, action: Int, t: Throwable?, long_message: Boolean) {
     }
 
     fun showMenuItemToast(v: View, text: CharSequence, isBottomBar: Boolean) {

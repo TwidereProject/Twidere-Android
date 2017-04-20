@@ -13,6 +13,7 @@
     <string name="action_accepting_follow_request">accepting follow request</string>
     <!-- [verb] Add an item to a list/collection -->
     <string name="action_add">Add</string>
+    <string name="action_add_content_warning">Add content warning</string>
     <!-- [verb] Add a member to a message conversation -->
     <string name="action_add_conversation_participant">Add member</string>
     <!-- [verb] Add mute filter rule -->
@@ -618,6 +619,8 @@
 
     <string name="mark_as_sensitive">Mark as sensitive</string>
 
+    <string name="massage_toast_profile_image_updated">Profile image updated.</string>
+
     <string name="media">Media</string>
     <string name="media_preload">Media preload</string>
     <string name="media_preview">Media preview</string>
@@ -919,7 +922,6 @@
     <string name="profile_banner">Profile banner</string>
     <string name="profile_image">Profile image</string>
     <string name="profile_image_style">Profile image style</string>
-    <string name="massage_toast_profile_image_updated">Profile image updated.</string>
     <string name="profile_images">Profile images</string>
     <string name="profile_link_color_main_color">Link color (main color)</string>
     <string name="profile_text_color">Text color</string>
@@ -1327,4 +1329,5 @@
     <string name="users_blocked">Blocked these users.</string>
     <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>\'s lists</string>
     <string name="users_statuses">User\'s tweets</string>
+    <string name="label_content_warning">Content warning</string>
 </resources>

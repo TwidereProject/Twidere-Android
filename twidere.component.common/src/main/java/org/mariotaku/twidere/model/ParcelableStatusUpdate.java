@@ -76,6 +76,9 @@ public class ParcelableStatusUpdate implements Parcelable {
     @JsonField(name = "extended_reply_mode")
     @ParcelableThisPlease
     public boolean extended_reply_mode;
+    @JsonField(name = "summary")
+    @ParcelableThisPlease
+    public String summary;
     @JsonField(name = "draft_unique_id")
     @ParcelableThisPlease
     public String draft_unique_id;

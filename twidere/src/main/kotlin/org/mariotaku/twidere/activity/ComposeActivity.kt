@@ -42,7 +42,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.text.*
+import android.text.Editable
+import android.text.Spannable
+import android.text.Spanned
+import android.text.TextUtils
 import android.text.method.LinkMovementMethod
 import android.text.style.*
 import android.view.*
@@ -99,6 +102,7 @@ import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.EditTextEnterHandler.EnterListener
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
+import org.mariotaku.twidere.util.view.SimpleTextWatcher
 import org.mariotaku.twidere.util.view.ViewAnimator
 import org.mariotaku.twidere.util.view.ViewProperties
 import org.mariotaku.twidere.view.CheckableLinearLayout
@@ -151,6 +155,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private var nameFirst: Boolean = false
     private var draftUniqueId: String? = null
     private var shouldSkipDraft: Boolean = false
+    private var hasEditSummary: Boolean = false
     private var ignoreMentions: Boolean = false
     private var replyToSelf: Boolean = false
     private var scheduleInfo: ScheduleInfo? = null
@@ -554,6 +559,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             R.id.add_gif -> {
                 val provider = gifShareProvider ?: return true
                 startActivityForResult(provider.createGifSelectorIntent(), REQUEST_ADD_GIF)
+            }
+            R.id.edit_summary -> {
+                editSummary.visibility = View.VISIBLE
             }
             else -> {
                 when (item.groupId) {
@@ -986,6 +994,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         recentLocation = draft.location
         accountsAdapter.selectedAccountKeys = draft.account_keys ?: emptyArray()
 
+        editSummary.setText(extras?.summaryText)
+
         editText.setText(extras?.editingText ?: draft.text)
         editText.setSelection(editText.length())
 
@@ -1150,6 +1160,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         editText.accountKey = accounts.firstOrNull()?.key ?: Utils.getDefaultAccountKey(this)
         statusTextCount.maxLength = accounts.textLimit
         val singleAccount = accounts.singleOrNull()
+        hasEditSummary = accounts.all { it.type == AccountType.MASTODON }
         ignoreMentions = singleAccount?.type == AccountType.TWITTER
         replyToSelf = singleAccount?.let { it.key == inReplyToStatus?.user_key } ?: false
     }
@@ -1215,13 +1226,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         if (menuBar == null) return
         val menu = menuBar.menu
         val hasMedia = this.hasMedia
-
-        /*
-         * No media & Not reply: [Take photo][Add image][Attach location][Drafts]
-         * Has media & Not reply: [Take photo][Media menu][Attach location][Drafts]
-         * Is reply: [Media menu][View status][Attach location][Drafts]
-         */
         menu.setItemAvailability(R.id.toggle_sensitive, hasMedia)
+        menu.setItemAvailability(R.id.edit_summary, hasEditSummary)
         menu.setItemAvailability(R.id.schedule, extraFeaturesService.isSupported(
                 ExtraFeaturesService.FEATURE_SCHEDULE_STATUS))
         menu.setItemAvailability(R.id.add_gif, extraFeaturesService.isSupported(
@@ -1413,6 +1419,14 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val update = ParcelableStatusUpdate()
         val media = this.media
         val text = editText.string?.let { Normalizer.normalize(it, Normalizer.Form.NFC) }.orEmpty()
+        var summary: String? = null
+        var summaryLength = 0
+        if (editSummary.visibility == View.VISIBLE) {
+            summary = editSummary.string?.takeIf(String::isNotEmpty)?.let {
+                Normalizer.normalize(it, Normalizer.Form.NFC)
+            }
+            summaryLength = summary?.let { validator.getTweetLength(it) } ?: 0
+        }
         val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(this), accountKeys, true)
         val maxLength = statusTextCount.maxLength
         val inReplyTo = inReplyToStatus
@@ -1421,8 +1435,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             val (replyStartIndex, replyText, _, excludedMentions, replyToOriginalUser) =
                     replyTextAndMentions
             if (replyText.isEmpty() && media.isEmpty()) throw NoContentException()
-            if (!statusShortenerUsed && maxLength > 0 && validator.getTweetLength(replyText) > maxLength) {
-                throw StatusTooLongException(replyStartIndex + replyText.offsetByCodePoints(0, maxLength))
+            val totalLength = summaryLength + validator.getTweetLength(replyText)
+            if (!statusShortenerUsed && maxLength > 0 && totalLength > maxLength) {
+                throw StatusTooLongException(replyStartIndex +
+                        replyText.offsetByCodePoints(0, maxLength - summaryLength))
             }
             update.text = replyText
             update.extended_reply_mode = true
@@ -1434,12 +1450,14 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
         } else {
             if (text.isEmpty() && media.isEmpty()) throw NoContentException()
-            if (!statusShortenerUsed && maxLength > 0 && validator.getTweetLength(text) > maxLength) {
-                throw StatusTooLongException(text.offsetByCodePoints(0, maxLength))
+            val totalLength = summaryLength + validator.getTweetLength(text)
+            if (!statusShortenerUsed && maxLength > 0 && totalLength > maxLength) {
+                throw StatusTooLongException(text.offsetByCodePoints(0, maxLength - summaryLength))
             }
             update.text = text
             update.extended_reply_mode = false
         }
+        update.summary = summary
 
         val attachLocation = kPreferences[attachLocationKey]
         val attachPreciseLocation = kPreferences[attachPreciseLocationKey]
@@ -1460,23 +1478,27 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private fun updateTextCount() {
         val editable = editText.editableText ?: return
+        var summaryLength = 0
+        if (editSummary.visibility == View.VISIBLE) {
+            summaryLength = validator.getTweetLength(editSummary.string.orEmpty())
+        }
         val text = editable.toString()
         val textAndMentions = getTwitterReplyTextAndMentions(text)
         if (textAndMentions == null) {
             hintLabel.visibility = View.GONE
             editable.clearSpans(MentionColorSpan::class.java)
-            statusTextCount.textCount = validator.getTweetLength(text)
+            statusTextCount.textCount = summaryLength + validator.getTweetLength(text)
         } else if (textAndMentions.replyToOriginalUser || replyToSelf) {
             hintLabel.visibility = View.GONE
             val mentionColor = ThemeUtils.getTextColorSecondary(this)
             editable.clearSpans(MentionColorSpan::class.java)
             editable.setSpan(MentionColorSpan(mentionColor), 0, textAndMentions.replyStartIndex,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            statusTextCount.textCount = validator.getTweetLength(textAndMentions.replyText)
+            statusTextCount.textCount = summaryLength + validator.getTweetLength(textAndMentions.replyText)
         } else {
             hintLabel.visibility = View.VISIBLE
             editable.clearSpans(MentionColorSpan::class.java)
-            statusTextCount.textCount = validator.getTweetLength(textAndMentions.replyText)
+            statusTextCount.textCount = summaryLength + validator.getTweetLength(textAndMentions.replyText)
         }
     }
 
@@ -1576,11 +1598,13 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private fun setupEditText() {
         val sendByEnter = preferences[quickSendKey]
         EditTextEnterHandler.attach(editText, ComposeEnterListener(this), sendByEnter)
-        editText.addTextChangedListener(object : TextWatcher {
-
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-
+        editText.addTextChangedListener(object : SimpleTextWatcher {
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                setMenu()
+                updateTextCount()
             }
+        })
+        editText.addTextChangedListener(object : SimpleTextWatcher {
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 setMenu()
@@ -2059,6 +2083,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             it.displayCoordinates = display_coordinates
             it.excludedReplyUserIds = excluded_reply_user_ids
             it.isExtendedReplyMode = extended_reply_mode
+            it.summaryText = summary
         }
 
     }

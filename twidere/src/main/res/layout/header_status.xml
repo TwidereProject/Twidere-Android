@@ -150,12 +150,29 @@
 
 
     <org.mariotaku.twidere.view.TimelineContentTextView
-        android:id="@+id/text"
+        android:id="@+id/summary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/profileContainer"
         android:layout_alignStart="@+id/profileContainer"
         android:layout_below="@+id/profileContainer"
+        android:layout_marginBottom="@dimen/element_spacing_small"
+        android:layout_marginTop="@dimen/element_spacing_small"
+        android:paddingLeft="@dimen/element_spacing_normal"
+        android:paddingRight="@dimen/element_spacing_normal"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textColor="?android:textColorPrimary"
+        android:visibility="visible"
+        tools:text="@string/sample_summary_text"
+        tools:visibility="visible"/>
+
+    <org.mariotaku.twidere.view.TimelineContentTextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/profileContainer"
+        android:layout_alignStart="@+id/profileContainer"
+        android:layout_below="@+id/summary"
         android:layout_marginBottom="@dimen/element_spacing_small"
         android:layout_marginTop="@dimen/element_spacing_small"
         android:paddingLeft="@dimen/element_spacing_normal"

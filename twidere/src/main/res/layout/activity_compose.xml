@@ -61,11 +61,20 @@
                     android:paddingBottom="@dimen/element_spacing_normal">
 
                     <org.mariotaku.twidere.view.ComposeEditText
+                        android:id="@+id/editSummary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/label_content_warning"
+                        android:background="@null"
+                        android:visibility="gone"
+                        android:inputType="textMultiLine|textLongMessage|textCapSentences"
+                        android:padding="@dimen/element_spacing_normal"/>
+
+                    <org.mariotaku.twidere.view.ComposeEditText
                         android:id="@+id/editText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@null"
-                        android:gravity="top"
                         android:hint="@string/label_status_hint"
                         android:inputType="textMultiLine|textLongMessage|textCapSentences"
                         android:padding="@dimen/element_spacing_normal"/>

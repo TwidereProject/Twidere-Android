@@ -22,9 +22,13 @@ package org.mariotaku.twidere.loader
 import android.content.Context
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.mastodon.Mastodon
+import org.mariotaku.microblog.library.twitter.model.CursorSupport
 import org.mariotaku.microblog.library.twitter.model.Paging
-import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
+import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
@@ -36,15 +40,29 @@ class UserBlocksLoader(context: Context, accountKey: UserKey?, data: List<Parcel
     private var filteredUsers: Array<UserKey>? = null
 
     @Throws(MicroBlogException::class)
-    override fun getCursoredUsers(twitter: MicroBlog,
-            details: AccountDetails,
-            paging: Paging): List<User> {
+    override fun getUsers(details: AccountDetails, paging: Paging): List<ParcelableUser> {
         when (details.type) {
+            AccountType.MASTODON -> {
+                val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
+                return mastodon.getBlocks(paging).map {
+                    it.toParcelable(details.key)
+                }
+            }
             AccountType.FANFOU -> {
-                return twitter.getFanfouBlocking(paging)
+                val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
+                return microBlog.getFanfouBlocking(paging).map {
+                    it.toParcelable(details.key, details.type, profileImageSize = profileImageSize)
+                }
+            }
+            else -> {
+                val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
+                return microBlog.getBlocksList(paging).also {
+                    setCursors(it as? CursorSupport)
+                }.map {
+                    it.toParcelable(details.key, details.type, profileImageSize = profileImageSize)
+                }
             }
         }
-        return twitter.getBlocksList(paging)
     }
 
     override fun onLoadInBackground(): List<ParcelableUser> {

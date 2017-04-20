@@ -57,6 +57,9 @@ public class UpdateStatusActionExtras implements ActionExtras {
     @JsonField(name = "editing_text")
     @ParcelableThisPlease
     String editingText;
+    @JsonField(name = "summary_text")
+    @ParcelableThisPlease
+    String summaryText;
 
     public ParcelableStatus getInReplyToStatus() {
         return inReplyToStatus;
@@ -120,6 +123,14 @@ public class UpdateStatusActionExtras implements ActionExtras {
 
     public void setEditingText(final String editingText) {
         this.editingText = editingText;
+    }
+
+    public String getSummaryText() {
+        return summaryText;
+    }
+
+    public void setSummaryText(String summaryText) {
+        this.summaryText = summaryText;
     }
 
     @Override

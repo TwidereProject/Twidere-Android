@@ -25,11 +25,12 @@ import org.attoparser.simple.AbstractSimpleMarkupHandler
 import org.attoparser.simple.SimpleMarkupParser
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.twitter.TwitterWeb
-import org.mariotaku.microblog.library.twitter.model.IDs
-import org.mariotaku.microblog.library.twitter.model.IDsAccessor
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
+import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
@@ -46,21 +47,31 @@ class StatusFavoritersLoader(
 ) : CursorSupportUsersLoader(context, accountKey, data, fromUser) {
 
     @Throws(MicroBlogException::class)
-    override fun getIDs(twitter: MicroBlog, details: AccountDetails, paging: Paging): IDs {
-        if (details.isOfficial(context)) {
-            return twitter.getStatusActivitySummary(statusId).favoriters
-        } else if (details.type == AccountType.TWITTER) {
-            val web = details.newMicroBlogInstance(context, TwitterWeb::class.java)
-            val htmlUsers = web.getFavoritedPopup(statusId).htmlUsers
-            return IDs().also {
-                IDsAccessor.setIds(it, parseUserIds(htmlUsers))
+    override fun getUsers(details: AccountDetails, paging: Paging): List<ParcelableUser> {
+        when (details.type) {
+            AccountType.MASTODON -> {
+                val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
+                return mastodon.getStatusFavouritedBy(statusId).map {
+                    it.toParcelable(details.key)
+                }
+            }
+            AccountType.TWITTER -> {
+                val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
+                val ids = if (details.isOfficial(context)) {
+                    microBlog.getStatusActivitySummary(statusId).favoriters.iDs
+                } else {
+                    val web = details.newMicroBlogInstance(context, TwitterWeb::class.java)
+                    val htmlUsers = web.getFavoritedPopup(statusId).htmlUsers
+                    parseUserIds(htmlUsers)
+                }
+                return microBlog.lookupUsers(ids).map {
+                    it.toParcelable(details.key, details.type, profileImageSize = profileImageSize)
+                }
+            }
+            else -> {
+                throw MicroBlogException("Not supported")
             }
         }
-        throw MicroBlogException("Not supported")
-    }
-
-    override fun useIDs(details: AccountDetails): Boolean {
-        return true
     }
 
     @Throws(MicroBlogException::class)

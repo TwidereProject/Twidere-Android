@@ -8,13 +8,14 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.extension.getErrorMessage
+import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.model.util.ParcelableUserUtils
 
 /**
  * Created by mariotaku on 16/3/11.
@@ -57,7 +58,7 @@ abstract class AbsFriendshipOperationTask(
                 ?: throw AccountNotFoundException()
         val twitter = details.newMicroBlogInstance(context, cls = MicroBlog::class.java)
         val user = perform(twitter, details, params)
-        val parcelableUser = ParcelableUserUtils.fromUser(user, params.accountKey, details.type)
+        val parcelableUser = user.toParcelable(params.accountKey, details.type)
         succeededWorker(twitter, details, params, parcelableUser)
         return parcelableUser
     }

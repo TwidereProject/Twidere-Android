@@ -85,9 +85,9 @@ fun Status.toParcelable(accountKey: UserKey): ParcelableStatus {
     // Twitter will escape <> to &lt;&gt;, so if a status contains those symbols unescaped
     // We should treat this as an html
     val html = HtmlSpanBuilder.fromHtml(status.content, status.content)
-    result.text_unescaped = html.toString()
+    result.text_unescaped = html?.toString()
     result.text_plain = result.text_unescaped
-    result.spans = html.spanItems
+    result.spans = html?.spanItems
     result.media = mediaAttachments?.mapToArray { it.toParcelable() }
     result.source = status.application?.sourceHtml
     result.is_favorite = status.isFavourited

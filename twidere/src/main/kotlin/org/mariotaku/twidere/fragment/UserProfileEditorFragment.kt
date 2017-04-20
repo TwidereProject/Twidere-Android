@@ -51,6 +51,8 @@ import org.mariotaku.twidere.activity.ColorPickerDialogActivity
 import org.mariotaku.twidere.activity.ThemedMediaPickerActivity
 import org.mariotaku.twidere.extension.loadProfileBanner
 import org.mariotaku.twidere.extension.loadProfileImage
+import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.loader.ParcelableUserLoader
 import org.mariotaku.twidere.model.AccountDetails
@@ -374,8 +376,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
             profileUpdate.backgroundColor(backgroundColor)
             val user = microBlog.updateProfile(profileUpdate)
             val profileImageSize = context.getString(R.string.profile_image_size)
-            return Pair(ParcelableUserUtils.fromUser(user, account.key,
-                    account.type, profileImageSize = profileImageSize), account)
+            return Pair(user.toParcelable(account.key, account.type, profileImageSize = profileImageSize), account)
 
         }
 
