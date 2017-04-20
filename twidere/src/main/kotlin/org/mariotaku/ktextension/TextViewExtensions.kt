@@ -1,6 +1,7 @@
 package org.mariotaku.ktextension
 
 import android.graphics.Typeface
+import android.view.View
 import android.widget.TextView
 
 val TextView.empty: Boolean
@@ -12,5 +13,13 @@ val TextView.string: String?
 fun TextView.applyFontFamily(lightFont: Boolean) {
     if (lightFont) {
         typeface = Typeface.create("sans-serif-light", typeface?.style ?: Typeface.NORMAL)
+    }
+}
+
+fun TextView.hideIfEmpty() {
+    visibility = if (empty) {
+        View.GONE
+    } else {
+        View.VISIBLE
     }
 }

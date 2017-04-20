@@ -23,7 +23,12 @@ import org.mariotaku.microblog.library.mastodon.model.Attachment
 import org.mariotaku.twidere.model.ParcelableMedia
 
 /**
+ * Extension functions for `Attachment` class
  * Created by mariotaku on 2017/4/19.
+ */
+
+/**
+ * @return [ParcelableMedia] converted media for Twidere
  */
 fun Attachment.toParcelable(): ParcelableMedia {
     val result = ParcelableMedia()

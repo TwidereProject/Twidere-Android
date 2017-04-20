@@ -22,7 +22,9 @@ package org.mariotaku.twidere.extension.model.api.mastodon
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.microblog.library.mastodon.model.Status
 import org.mariotaku.twidere.extension.model.api.spanItems
+import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
+import org.mariotaku.twidere.model.SpanItem
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils.addFilterFlag
 import org.mariotaku.twidere.util.HtmlSpanBuilder
@@ -38,7 +40,7 @@ fun Status.toParcelable(accountKey: UserKey): ParcelableStatus {
     result.id = id
     result.timestamp = createdAt?.time ?: 0
 
-    extras.spoiler_text = spoilerText
+    extras.summary_text = spoilerText
     extras.external_url = url
 
     val retweetedStatus = reblog
@@ -67,7 +69,6 @@ fun Status.toParcelable(accountKey: UserKey): ParcelableStatus {
         }
     }
 
-
     result.reply_count = -1
     result.retweet_count = status.reblogsCount
     result.favorite_count = status.favouritesCount
@@ -87,14 +88,20 @@ fun Status.toParcelable(accountKey: UserKey): ParcelableStatus {
     result.text_unescaped = html.toString()
     result.text_plain = result.text_unescaped
     result.spans = html.spanItems
-
     result.media = mediaAttachments?.mapToArray { it.toParcelable() }
     result.source = status.application?.sourceHtml
     result.is_favorite = status.isFavourited
     result.is_possibly_sensitive = status.isSensitive
     result.mentions = mentions?.mapToArray { it.toParcelable(accountKey) }
 
+    extras.display_text_range = calculateDisplayTextRange(result.spans, result.media)
+
     result.extras = extras
     return result
 }
 
+private fun calculateDisplayTextRange(spans: Array<SpanItem>?, media: Array<ParcelableMedia>?): IntArray? {
+    if (spans == null || media == null) return null
+    val lastMatch = spans.lastOrNull { span -> media.any { span.link == it.page_url } } ?: return null
+    return intArrayOf(0, lastMatch.start)
+}

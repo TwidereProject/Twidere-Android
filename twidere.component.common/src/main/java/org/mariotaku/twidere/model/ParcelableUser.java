@@ -36,7 +36,7 @@ import org.mariotaku.commons.objectcursor.LoganSquareCursorFieldConverter;
 import org.mariotaku.library.objectcursor.annotation.AfterCursorObjectCreated;
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
-import org.mariotaku.twidere.model.util.RGBHexColorConverter;
+import org.mariotaku.twidere.model.util.ContentObjectColorConverter;
 import org.mariotaku.twidere.model.util.UserKeyConverter;
 import org.mariotaku.twidere.model.util.UserKeyCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore;
@@ -161,15 +161,15 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
     public long media_count = -1;
 
     @ParcelableThisPlease
-    @JsonField(name = "background_color", typeConverter = RGBHexColorConverter.class)
+    @JsonField(name = "background_color", typeConverter = ContentObjectColorConverter.class)
     @CursorField(CachedUsers.BACKGROUND_COLOR)
     public int background_color;
     @ParcelableThisPlease
-    @JsonField(name = "link_color", typeConverter = RGBHexColorConverter.class)
+    @JsonField(name = "link_color", typeConverter = ContentObjectColorConverter.class)
     @CursorField(CachedUsers.LINK_COLOR)
     public int link_color;
     @ParcelableThisPlease
-    @JsonField(name = "text_color", typeConverter = RGBHexColorConverter.class)
+    @JsonField(name = "text_color", typeConverter = ContentObjectColorConverter.class)
     @CursorField(CachedUsers.TEXT_COLOR)
     public int text_color;
 

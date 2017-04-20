@@ -16,6 +16,7 @@ import android.widget.TextView
 import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.list_item_status.view.*
 import org.mariotaku.ktextension.applyFontFamily
+import org.mariotaku.ktextension.hideIfEmpty
 import org.mariotaku.ktextension.isNotNullOrEmpty
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
@@ -53,6 +54,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
     private val itemContent by lazy { itemView.itemContent }
     private val mediaPreview by lazy { itemView.mediaPreview }
     private val statusContentUpperSpace by lazy { itemView.statusContentUpperSpace }
+    private val summaryView by lazy { itemView.summary }
     private val textView by lazy { itemView.text }
     private val nameView by lazy { itemView.name }
     private val itemMenu by lazy { itemView.itemMenu }
@@ -351,6 +353,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
         val displayEnd = status.extras?.display_text_range?.getOrNull(1) ?: -1
 
+        summaryView.text = status.extras?.summary_text
+        summaryView.hideIfEmpty()
+
         val text: CharSequence
         if (adapter.linkHighlightingStyle != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
             text = SpannableStringBuilder.valueOf(status.text_unescaped).apply {
@@ -368,12 +373,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         } else {
             textView.text = text
         }
-        if (textView.length() == 0) {
-            // No text
-            textView.visibility = View.GONE
-        } else {
-            textView.visibility = View.VISIBLE
-        }
+        textView.hideIfEmpty()
 
         if (replyCount > 0) {
             replyCountView.text = UnitConvertUtils.calculateProperCount(replyCount)
@@ -490,6 +490,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
     override fun setTextSize(textSize: Float) {
         nameView.setPrimaryTextSize(textSize)
         quotedNameView.setPrimaryTextSize(textSize)
+        summaryView.textSize = textSize
         textView.textSize = textSize
         quotedTextView.textSize = textSize
         nameView.setSecondaryTextSize(textSize * 0.85f)
@@ -542,6 +543,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
         nameView.applyFontFamily(adapter.lightFont)
         timeView.applyFontFamily(adapter.lightFont)
+        summaryView.applyFontFamily(adapter.lightFont)
         textView.applyFontFamily(adapter.lightFont)
         mediaLabel.applyFontFamily(adapter.lightFont)
 

@@ -1373,12 +1373,12 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     private fun setUiColor(color: Int) {
-        uiColor = color
+        val theme = Chameleon.getOverrideTheme(activity, activity)
+        uiColor = if (color != 0) color else theme.colorPrimary
         previousActionBarItemIsDark = 0
         previousTabItemIsDark = 0
         setupBaseActionBar()
         val activity = activity as BaseActivity
-        val theme = Chameleon.getOverrideTheme(activity, activity)
         if (theme.isToolbarColored) {
             primaryColor = color
         } else {
