@@ -77,8 +77,8 @@ open class AbsAddMediaTask<Callback>(
                 DebugLog.w(Constants.LOGTAG, tr = e)
                 return@mapIndexedNotNull null
             } finally {
-                Utils.closeSilently(os)
-                Utils.closeSilently(st)
+                os?.close()
+                st?.close()
             }
         }
     }

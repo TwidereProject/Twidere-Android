@@ -71,6 +71,7 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_SCREEN_NAME
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.getCachedLocation
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.applyUpdateStatus
 import org.mariotaku.twidere.extension.model.textLimit
@@ -841,7 +842,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 accountProfileImage.setImageDrawable(null)
             }
 
-            accountProfileImage.setBorderColors(*Utils.getAccountColors(accounts))
+            accountProfileImage.setBorderColors(*IntArray(accounts.size) { accounts[it].color })
         }
 
         if (displayDoneIcon) {
@@ -1041,7 +1042,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
         val extraSubject = intent.getCharSequenceExtra(Intent.EXTRA_SUBJECT)
         val extraText = intent.getCharSequenceExtra(Intent.EXTRA_TEXT)
-        editText.setText(Utils.getShareStatus(this, extraSubject, extraText))
+        if (extraSubject != null && extraText != null) {
+            editText.setText("$extraSubject - $extraText")
+        } else if (extraText != null){
+            editText.setText(extraText)
+        }
+
         val selectionEnd = editText.length()
         editText.setSelection(selectionEnd)
         return true
@@ -1290,7 +1296,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             locationLabel.setText(R.string.getting_location)
             locationListener = ComposeLocationListener(this)
             locationManager.requestLocationUpdates(provider, 0, 0f, locationListener)
-            val location = Utils.getCachedLocation(this)
+            val location = locationManager.getCachedLocation()
             if (location != null) {
                 locationListener?.onLocationChanged(location)
             }

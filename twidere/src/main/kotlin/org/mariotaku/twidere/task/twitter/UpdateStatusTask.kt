@@ -215,8 +215,7 @@ class UpdateStatusTask(
                 }
             }
             // Override status text
-            pending.overrideTexts[i] = Utils.getMediaUploadStatus(context,
-                    uploadResult.media_uris, pending.overrideTexts[i])
+            pending.overrideTexts[i] = "${pending.overrideTexts[i]} ${uploadResult.media_uris.joinToString(" ")}"
         }
     }
 
@@ -777,53 +776,60 @@ class UpdateStatusTask(
         }
 
         @Throws(IOException::class)
-        fun getBodyFromMedia(
-                context: Context,
-                media: ParcelableMediaUpdate,
-                sizeLimit: SizeLimit? = null,
-                chucked: Boolean,
-                readListener: ContentLengthInputStream.ReadListener
-        ): MediaStreamBody {
-            val resolver = context.contentResolver
-            val mediaUri = Uri.parse(media.uri)
-            val type = media.type
-            val mediaType = resolver.getType(mediaUri) ?: run {
-                if (mediaUri.scheme == ContentResolver.SCHEME_FILE) {
-                    mediaUri.lastPathSegment?.substringAfterLast(".")?.let { ext ->
-                        return@run MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext)
+        fun getBodyFromMedia(context: Context, media: ParcelableMediaUpdate, sizeLimit: SizeLimit? = null,
+                chucked: Boolean, readListener: ContentLengthInputStream.ReadListener): MediaStreamBody {
+            return getBodyFromMedia(context, Uri.parse(media.uri), media.type, media.delete_always,
+                    media.delete_on_success, sizeLimit, chucked, readListener)
+        }
+
+        @Throws(IOException::class)
+        fun getBodyFromMedia(context: Context, mediaUri: Uri, @ParcelableMedia.Type type: Int,
+                isDeleteAlways: Boolean, isDeleteOnSuccess: Boolean, sizeLimit: SizeLimit? = null,
+                chucked: Boolean, readListener: ContentLengthInputStream.ReadListener?): MediaStreamBody {
+            val deleteOnSuccessList: MutableList<MediaDeletionItem> = mutableListOf()
+            val deleteAlwaysList: MutableList<MediaDeletionItem> = mutableListOf()
+
+            val deletionItem = UriMediaDeletionItem(mediaUri)
+            if (isDeleteAlways) {
+                deleteAlwaysList.add(deletionItem)
+            } else if (isDeleteOnSuccess) {
+                deleteOnSuccessList.add(deletionItem)
+            }
+            try {
+                val resolver = context.contentResolver
+                val mediaType = resolver.getType(mediaUri) ?: run {
+                    return@run mediaUri.lastPathSegment?.substringAfterLast(".")?.let { ext ->
+                        MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext)
                     }
                 }
-                return@run null
-            }
 
-            val data = when (type) {
-                ParcelableMedia.Type.IMAGE -> imageStream(context, resolver, mediaUri, mediaType,
-                        sizeLimit?.image)
-                ParcelableMedia.Type.VIDEO -> videoStream(context, resolver, mediaUri, mediaType,
-                        sizeLimit?.video, chucked)
-                else -> null
-            }
+                val data = when (type) {
+                    ParcelableMedia.Type.IMAGE -> imageStream(context, resolver, mediaUri, mediaType,
+                            sizeLimit?.image)
+                    ParcelableMedia.Type.VIDEO -> videoStream(context, resolver, mediaUri, mediaType,
+                            sizeLimit?.video, chucked)
+                    else -> null
+                }
 
-            val cis = data?.stream ?: run {
-                val st = resolver.openInputStream(mediaUri) ?: throw FileNotFoundException(mediaUri.toString())
-                val length = st.available().toLong()
-                return@run ContentLengthInputStream(st, length)
+                val cis = data?.stream ?: run {
+                    val st = resolver.openInputStream(mediaUri) ?: throw FileNotFoundException(mediaUri.toString())
+                    val length = st.available().toLong()
+                    return@run ContentLengthInputStream(st, length)
+                }
+                cis.setReadListener(readListener)
+                val mimeType = data?.type ?: mediaType ?: "application/octet-stream"
+                val extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType) ?: ".bin"
+                val fileName = mediaUri.lastPathSegment?.substringBeforeLast(".") ?: "attachment"
+                val body = FileBody(cis, "$fileName.$extension", cis.length(), ContentType.parse(mimeType))
+
+                data?.deleteOnSuccess?.addAllTo(deleteOnSuccessList)
+                data?.deleteAlways?.addAllTo(deleteAlwaysList)
+                return MediaStreamBody(body, data?.geometry, deleteOnSuccessList, deleteAlwaysList)
+            } finally {
+                if (isDeleteAlways) {
+                    deleteAlwaysList.forEach { it.delete(context) }
+                }
             }
-            cis.setReadListener(readListener)
-            val mimeType = data?.type ?: mediaType ?: "application/octet-stream"
-            val extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType) ?: ".bin"
-            val fileName = mediaUri.lastPathSegment?.substringBeforeLast(".") ?: "attachment"
-            val body = FileBody(cis, "$fileName.$extension", cis.length(), ContentType.parse(mimeType))
-            val deleteOnSuccess: MutableList<MediaDeletionItem> = mutableListOf()
-            val deleteAlways: MutableList<MediaDeletionItem> = mutableListOf()
-            if (media.delete_always) {
-                deleteAlways.add(UriMediaDeletionItem(mediaUri))
-            } else if (media.delete_on_success) {
-                deleteOnSuccess.add(UriMediaDeletionItem(mediaUri))
-            }
-            data?.deleteOnSuccess?.addAllTo(deleteOnSuccess)
-            data?.deleteAlways?.addAllTo(deleteAlways)
-            return MediaStreamBody(body, data?.geometry, deleteOnSuccess, deleteAlways)
         }
 
 

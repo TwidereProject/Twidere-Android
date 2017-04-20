@@ -80,7 +80,7 @@ val refreshAfterTweetKey = KBooleanKey(KEY_REFRESH_AFTER_TWEET, false)
 val homeRefreshMentionsKey = KBooleanKey(KEY_HOME_REFRESH_MENTIONS, true)
 val homeRefreshDirectMessagesKey = KBooleanKey(KEY_HOME_REFRESH_DIRECT_MESSAGES, true)
 val homeRefreshSavedSearchesKey = KBooleanKey(KEY_HOME_REFRESH_SAVED_SEARCHES, true)
-
+val shareFormatKey = KStringKey(KEY_SHARE_FORMAT, DEFAULT_SHARE_FORMAT, String::isNotEmpty)
 object cacheSizeLimitKey : KSimpleKey<Int>(KEY_CACHE_SIZE_LIMIT, 300) {
     override fun read(preferences: SharedPreferences) = preferences.getInt(key, def).coerceIn(100,
             500)
@@ -257,6 +257,17 @@ object composeAccountsKey : KSimpleKey<Array<UserKey>?>(KEY_COMPOSE_ACCOUNTS, nu
         return true
     }
 
+}
+
+object defaultAccountKey: KSimpleKey<UserKey?>(KEY_DEFAULT_ACCOUNT_KEY, null) {
+    override fun read(preferences: SharedPreferences): UserKey? {
+        return preferences.getString(key, null)?.let(UserKey::valueOf)
+    }
+
+    override fun write(editor: SharedPreferences.Editor, value: UserKey?): Boolean {
+        editor.putString(key, value?.toString())
+        return true
+    }
 }
 
 object userTimelineFilterKey : KSimpleKey<UserTimelineFilter>("user_timeline_filter", UserTimelineFilter()) {

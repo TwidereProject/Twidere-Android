@@ -48,6 +48,7 @@ import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_CACHE_SIZE_LIMIT
 import org.mariotaku.twidere.constant.autoRefreshCompatibilityModeKey
+import org.mariotaku.twidere.extension.model.load
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.cache.DiskLRUFileCache
@@ -148,12 +149,6 @@ class ApplicationModule(private val context: Context) {
 
     @Provides
     @Singleton
-    fun asyncTaskManager(): AsyncTaskManager {
-        return AsyncTaskManager()
-    }
-
-    @Provides
-    @Singleton
     fun activityTracker(): ActivityTracker {
         return ActivityTracker()
     }
@@ -161,8 +156,8 @@ class ApplicationModule(private val context: Context) {
     @Provides
     @Singleton
     fun asyncTwitterWrapper(bus: Bus, preferences: SharedPreferences,
-            asyncTaskManager: AsyncTaskManager, notificationManagerWrapper: NotificationManagerWrapper): AsyncTwitterWrapper {
-        return AsyncTwitterWrapper(context, bus, preferences, asyncTaskManager, notificationManagerWrapper)
+            notificationManagerWrapper: NotificationManagerWrapper): AsyncTwitterWrapper {
+        return AsyncTwitterWrapper(context, bus, preferences, notificationManagerWrapper)
     }
 
     @Provides

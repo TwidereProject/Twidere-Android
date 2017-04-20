@@ -764,7 +764,7 @@
   <string name="profile_banner">橫幅</string>
   <string name="profile_image">個人資料圖片</string>
   <string name="profile_image_style">個人資料圖片樣式</string>
-  <string name="profile_image_updated">個人資料圖片已更新</string>
+  <string name="massage_toast_profile_image_updated">個人資料圖片已更新</string>
   <string name="profile_images">個人資料圖片</string>
   <string name="profile_link_color_main_color">連結顏色（主色調）</string>
   <string name="profile_text_color">文字顏色</string>

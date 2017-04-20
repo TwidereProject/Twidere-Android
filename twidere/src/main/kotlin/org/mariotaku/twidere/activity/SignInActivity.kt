@@ -75,12 +75,10 @@ import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_CREDENTIALS_
 import org.mariotaku.twidere.constant.defaultAPIConfigKey
 import org.mariotaku.twidere.constant.randomizeAccountNameKey
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.extension.getNonEmptyString
+import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
-import org.mariotaku.twidere.extension.model.getColor
-import org.mariotaku.twidere.extension.model.getOAuthAuthorization
-import org.mariotaku.twidere.extension.model.newMicroBlogInstance
-import org.mariotaku.twidere.extension.model.official
 import org.mariotaku.twidere.fragment.APIEditorDialogFragment
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
@@ -443,10 +441,8 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         } else if (exception is LoginVerificationException) {
             Toast.makeText(this, R.string.message_toast_login_verification_failed, Toast.LENGTH_SHORT).show()
             errorReason = "login_verification_failed"
-        } else if (exception is AuthenticationException) {
-            Utils.showErrorMessage(this, getString(R.string.action_signing_in), exception.cause, true)
         } else {
-            Utils.showErrorMessage(this, getString(R.string.action_signing_in), exception, true)
+            Toast.makeText(this, exception.getErrorMessage(this), Toast.LENGTH_SHORT).show()
         }
         Analyzer.log(SignIn(false, credentialsType = apiConfig.credentialsType,
                 errorReason = errorReason, accountType = apiConfig.type))

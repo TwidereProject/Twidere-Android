@@ -2,6 +2,7 @@ package org.mariotaku.twidere.task
 
 import android.content.ContentValues
 import android.content.Context
+import android.widget.Toast
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.User
@@ -12,7 +13,6 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships
-import org.mariotaku.twidere.util.Utils
 
 /**
  * Created by mariotaku on 16/3/11.
@@ -46,13 +46,8 @@ class DestroyUserBlockTask(context: Context) : AbsFriendshipOperationTask(contex
 
     override fun showSucceededMessage(params: AbsFriendshipOperationTask.Arguments, user: ParcelableUser) {
         val nameFirst = kPreferences[nameFirstKey]
-        val message = context.getString(R.string.unblocked_user, manager.getDisplayName(user,
-                nameFirst))
-        Utils.showInfoMessage(context, message, false)
+        val message = context.getString(R.string.unblocked_user, manager.getDisplayName(user, nameFirst))
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 
-    }
-
-    override fun showErrorMessage(params: AbsFriendshipOperationTask.Arguments, exception: Exception?) {
-        Utils.showErrorMessage(context, R.string.action_unblocking, exception, true)
     }
 }

@@ -38,6 +38,7 @@ import android.util.Log
 import android.view.ContextMenu
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
@@ -204,7 +205,7 @@ object MenuUtils {
         when (item.itemId) {
             R.id.copy -> {
                 if (ClipboardUtils.setText(context, status.text_plain)) {
-                    Utils.showOkMessage(context, R.string.text_copied, false)
+                    Toast.makeText(context, R.string.text_copied, Toast.LENGTH_SHORT).show()
                 }
             }
             R.id.retweet -> {
@@ -318,7 +319,8 @@ object MenuUtils {
             R.id.copy_url -> {
                 val uri = LinkCreator.getStatusWebLink(status)
                 ClipboardUtils.setText(context, uri.toString())
-                Utils.showOkMessage(context, R.string.message_toast_link_copied_to_clipboard, false)
+                Toast.makeText(context, R.string.message_toast_link_copied_to_clipboard,
+                        Toast.LENGTH_SHORT).show()
             }
             R.id.mute_users -> {
                 val df = MuteStatusUsersDialogFragment()

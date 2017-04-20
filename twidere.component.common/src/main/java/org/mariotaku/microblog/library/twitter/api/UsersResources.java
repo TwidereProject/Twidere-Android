@@ -39,6 +39,7 @@ import org.mariotaku.restfu.annotation.param.Param;
 import org.mariotaku.restfu.annotation.param.Params;
 import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.restfu.http.BodyType;
+import org.mariotaku.restfu.http.mime.Body;
 import org.mariotaku.restfu.http.mime.FileBody;
 
 @SuppressWarnings("RedundantThrows")
@@ -101,7 +102,7 @@ public interface UsersResources {
     User updateProfile(@Param ProfileUpdate profileUpdate) throws MicroBlogException;
 
     @POST("/account/update_profile_background_image.json")
-    User updateProfileBackgroundImage(@Param("image") FileBody data, @Param("tile") boolean tile) throws MicroBlogException;
+    User updateProfileBackgroundImage(@Param("image") Body data, @Param("tile") boolean tile) throws MicroBlogException;
 
     @POST("/account/update_profile_background_image.json")
     User updateProfileBackgroundImage(@Param("media_id") long mediaId, @Param("tile") boolean tile) throws MicroBlogException;
@@ -113,10 +114,10 @@ public interface UsersResources {
             throws MicroBlogException;
 
     @POST("/account/update_profile_banner.json")
-    ResponseCode updateProfileBannerImage(@Param("banner") FileBody data) throws MicroBlogException;
+    ResponseCode updateProfileBannerImage(@Param("banner") Body data) throws MicroBlogException;
 
     @POST("/account/update_profile_image.json")
-    User updateProfileImage(@Param("image") FileBody data) throws MicroBlogException;
+    User updateProfileImage(@Param("image") Body data) throws MicroBlogException;
 
     @GET("/account/verify_credentials.json")
     User verifyCredentials() throws MicroBlogException;

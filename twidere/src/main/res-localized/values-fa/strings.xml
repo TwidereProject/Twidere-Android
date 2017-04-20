@@ -637,7 +637,7 @@
   <string name="profile_banner">بیرق نمایه</string>
   <string name="profile_image">تصویر نمایه</string>
   <string name="profile_image_style">نوع تصویر نمایه</string>
-  <string name="profile_image_updated">تصویر نمایه به‌روز شد.</string>
+  <string name="massage_toast_profile_image_updated">تصویر نمایه به‌روز شد.</string>
   <string name="profile_images">تصاویر نمایه</string>
   <string name="profile_link_color_main_color">رنگ پیوند (رنگ اصلی)</string>
   <string name="profile_text_color">رنگ متن</string>

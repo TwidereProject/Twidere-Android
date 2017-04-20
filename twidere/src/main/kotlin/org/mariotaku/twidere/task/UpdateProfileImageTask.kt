@@ -1,22 +1,21 @@
 package org.mariotaku.twidere.task
 
-import android.accounts.AccountManager
 import android.content.Context
 import android.net.Uri
-import android.util.Log
+import android.widget.Toast
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableUser
-import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.ProfileUpdatedEvent
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
-import org.mariotaku.twidere.util.TwitterWrapper
-import org.mariotaku.twidere.util.Utils
+import org.mariotaku.twidere.task.twitter.UpdateStatusTask
+import org.mariotaku.twidere.util.DebugLog
 import java.io.IOException
 
 /**
@@ -24,46 +23,38 @@ import java.io.IOException
  */
 open class UpdateProfileImageTask<ResultHandler>(
         context: Context,
-        private val accountKey: UserKey,
+        accountKey: UserKey,
         private val imageUri: Uri,
         private val deleteImage: Boolean
-) : BaseAbstractTask<Any?, SingleResponse<ParcelableUser>, ResultHandler>(context) {
+) : AbsAccountRequestTask<Any?, ParcelableUser, ResultHandler>(context, accountKey) {
 
     private val profileImageSize = context.getString(R.string.profile_image_size)
 
-    override fun doLongOperation(params: Any?): SingleResponse<ParcelableUser> {
+    override fun onExecute(account: AccountDetails, params: Any?): ParcelableUser {
+        val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
         try {
-            val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey,
-                    true) ?: throw MicroBlogException("No account")
-            val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
-            TwitterWrapper.updateProfileImage(context, microBlog, imageUri, deleteImage)
-            // Wait for 5 seconds, see
-            // https://dev.twitter.com/rest/reference/post/account/update_profile_image
-            try {
-                Thread.sleep(5000L)
-            } catch (e: InterruptedException) {
-                Log.w(TwidereConstants.LOGTAG, e)
+            UpdateStatusTask.getBodyFromMedia(context, imageUri, ParcelableMedia.Type.IMAGE,
+                    deleteImage, false, null, false, null).use {
+                microBlog.updateProfileImage(it.body)
             }
-
-            val user = microBlog.verifyCredentials()
-            return SingleResponse(ParcelableUserUtils.fromUser(user, accountKey, details.type,
-                    profileImageSize = profileImageSize))
-        } catch (e: MicroBlogException) {
-            return SingleResponse(exception = e)
         } catch (e: IOException) {
-            return SingleResponse(exception = e)
+            throw MicroBlogException(e)
         }
-
+        // Wait for 5 seconds, see
+        // https://dev.twitter.com/docs/api/1.1/post/account/update_profile_image
+        try {
+            Thread.sleep(5000L)
+        } catch (e: InterruptedException) {
+            DebugLog.w(TwidereConstants.LOGTAG, tr = e)
+        }
+        val user = microBlog.verifyCredentials()
+        return ParcelableUserUtils.fromUser(user, account.key, account.type,
+                profileImageSize = profileImageSize)
     }
 
-    override fun afterExecute(callback: ResultHandler?, result: SingleResponse<ParcelableUser>) {
-        super.afterExecute(callback, result)
-        if (result.hasData()) {
-            Utils.showOkMessage(context, R.string.profile_image_updated, false)
-            bus.post(ProfileUpdatedEvent(result.data!!))
-        } else {
-            Utils.showErrorMessage(context, R.string.action_updating_profile_image, result.exception, true)
-        }
+    override fun onSucceed(callback: ResultHandler?, result: ParcelableUser) {
+        Toast.makeText(context, R.string.massage_toast_profile_image_updated, Toast.LENGTH_SHORT).show()
+        bus.post(ProfileUpdatedEvent(result))
     }
 
 }

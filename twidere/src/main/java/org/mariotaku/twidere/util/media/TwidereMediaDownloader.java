@@ -134,7 +134,7 @@ public class TwidereMediaDownloader implements MediaDownloader {
         }
         final Body body = resp.getBody();
         final CacheMetadata metadata = new CacheMetadata();
-        metadata.setContentType(Utils.sanitizeMimeType(body.contentType().getContentType()));
+        metadata.setContentType(Utils.INSTANCE.sanitizeMimeType(body.contentType().getContentType()));
         return new TwidereDownloadResult(body, metadata);
     }
 

@@ -1,27 +1,26 @@
 package org.mariotaku.twidere.task
 
-import android.accounts.AccountManager
 import android.content.ContentValues
 import android.content.Context
+import android.widget.Toast
 import org.apache.commons.collections.primitives.ArrayIntList
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.AsyncTwitterWrapper.Companion.calculateHashCode
 import org.mariotaku.twidere.util.DataStoreUtils
-import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.updateActivityStatus
 
 /**
@@ -29,24 +28,21 @@ import org.mariotaku.twidere.util.updateActivityStatus
  */
 class DestroyFavoriteTask(
         context: Context,
-        private val accountKey: UserKey,
+        accountKey: UserKey,
         private val statusId: String
-) : BaseAbstractTask<Any?, SingleResponse<ParcelableStatus>, Any?>(context) {
-    override fun doLongOperation(params: Any?): SingleResponse<ParcelableStatus> {
+) : AbsAccountRequestTask<Any?, ParcelableStatus, Any?>(context, accountKey) {
+    override fun onExecute(account: AccountDetails, params: Any?): ParcelableStatus {
         val resolver = context.contentResolver
-        val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)
-                ?: return SingleResponse.getInstance<ParcelableStatus>()
-        val microBlog = details.newMicroBlogInstance(context, cls = MicroBlog::class.java)
-        try {
+        val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
             val result: ParcelableStatus
-            when (details.type) {
+        when (account.type) {
                 AccountType.FANFOU -> {
-                    result = microBlog.destroyFanfouFavorite(statusId).toParcelable(accountKey,
-                            details.type)
+                    result = microBlog.destroyFanfouFavorite(statusId).toParcelable(account.key,
+                            account.type)
                 }
                 else -> {
-                    result = microBlog.destroyFavorite(statusId).toParcelable(accountKey,
-                            details.type)
+                    result = microBlog.destroyFavorite(statusId).toParcelable(account.key,
+                            account.type)
                 }
             }
             val values = ContentValues()
@@ -63,7 +59,7 @@ class DestroyFavoriteTask(
                 resolver.update(uri, values, where.sql, whereArgs)
             }
 
-            resolver.updateActivityStatus(accountKey, statusId) { activity ->
+        resolver.updateActivityStatus(account.key, statusId) { activity ->
                 val statusesMatrix = arrayOf(activity.target_statuses, activity.target_object_statuses)
                 for (statusesArray in statusesMatrix) {
                     if (statusesArray == null) continue
@@ -76,10 +72,7 @@ class DestroyFavoriteTask(
                     }
                 }
             }
-            return SingleResponse.getInstance(result)
-        } catch (e: MicroBlogException) {
-            return SingleResponse.getInstance<ParcelableStatus>(e)
-        }
+        return result
 
     }
 
@@ -91,18 +84,18 @@ class DestroyFavoriteTask(
         bus.post(StatusListChangedEvent())
     }
 
-    override fun afterExecute(callback: Any?, result: SingleResponse<ParcelableStatus>) {
+    override fun afterExecute(callback: Any?, result: ParcelableStatus?, exception: MicroBlogException?) {
         destroyingFavoriteIds.removeElement(AsyncTwitterWrapper.calculateHashCode(accountKey, statusId))
         val taskEvent = FavoriteTaskEvent(FavoriteTaskEvent.Action.DESTROY, accountKey, statusId)
         taskEvent.isFinished = true
-        if (result.hasData()) {
-            val status = result.data
+        if (result != null) {
+            val status = result
             taskEvent.status = status
             taskEvent.isSucceeded = true
-            Utils.showInfoMessage(context, R.string.message_toast_status_unfavorited, false)
+            Toast.makeText(context, R.string.message_toast_status_unfavorited, Toast.LENGTH_SHORT).show()
         } else {
             taskEvent.isSucceeded = false
-            Utils.showErrorMessage(context, R.string.action_unfavoriting, result.exception, true)
+            Toast.makeText(context, exception?.getErrorMessage(context), Toast.LENGTH_SHORT).show()
         }
         bus.post(taskEvent)
         bus.post(StatusListChangedEvent())

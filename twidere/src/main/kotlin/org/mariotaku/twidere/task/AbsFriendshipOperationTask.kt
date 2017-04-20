@@ -2,9 +2,11 @@ package org.mariotaku.twidere.task
 
 import android.accounts.AccountManager
 import android.content.Context
+import android.widget.Toast
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.User
+import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
@@ -42,7 +44,7 @@ abstract class AbsFriendshipOperationTask(
             showSucceededMessage(params, user)
             event.isSucceeded = true
             event.user = user
-        } else {
+        } else if (exception != null) {
             showErrorMessage(params, exception)
         }
         bus.post(event)
@@ -71,7 +73,9 @@ abstract class AbsFriendshipOperationTask(
 
     protected abstract fun showSucceededMessage(params: Arguments, user: ParcelableUser)
 
-    protected abstract fun showErrorMessage(params: Arguments, exception: Exception?)
+    protected open fun showErrorMessage(params: Arguments, exception: Exception) {
+        Toast.makeText(context, exception.getErrorMessage(context), Toast.LENGTH_SHORT).show()
+    }
 
     fun setup(accountKey: UserKey, userKey: UserKey) {
         params = Arguments(accountKey, userKey)

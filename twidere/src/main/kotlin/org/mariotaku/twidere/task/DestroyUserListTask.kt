@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.task
 
 import android.content.Context
+import android.widget.Toast
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.model.ParcelableUserList
@@ -56,7 +57,7 @@ class DestroyUserListTask(
         val context = context
         if (result.data != null) {
             val message = context.getString(R.string.deleted_list, result.data.name)
-            Utils.showInfoMessage(context, message, false)
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
             bus.post(UserListDestroyedEvent(result.data))
         } else {
             Utils.showErrorMessage(context, R.string.action_deleting, result.exception, true)

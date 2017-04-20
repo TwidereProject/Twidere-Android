@@ -579,7 +579,7 @@
   <string name="profile_banner">Обложка профиля</string>
   <string name="profile_image">Изображение пользователя</string>
   <string name="profile_image_style">Стиль аватара</string>
-  <string name="profile_image_updated">Изображение профиля обновлено</string>
+  <string name="massage_toast_profile_image_updated">Изображение профиля обновлено</string>
   <string name="profile_images">Изображения профиля</string>
   <string name="profile_link_color_main_color">Цвет ссылок (основной цвет)</string>
   <string name="profile_text_color">Цвет текста</string>

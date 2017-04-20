@@ -211,7 +211,7 @@ public class CustomTabUtils implements Constants {
 
     public static boolean hasAccountKey(final Context context, @NonNull final Bundle args,
             final UserKey[] activatedAccountKeys, UserKey accountKey) {
-        final UserKey[] accountKeys = Utils.getAccountKeys(context, args);
+        final UserKey[] accountKeys = Utils.INSTANCE.getAccountKeys(context, args);
         if (accountKeys != null) {
             return ArrayUtils.contains(accountKeys, accountKey);
         }

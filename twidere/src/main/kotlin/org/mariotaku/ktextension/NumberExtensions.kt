@@ -1,5 +1,8 @@
 package org.mariotaku.ktextension
 
+import java.text.NumberFormat
+import java.util.*
+
 /**
  * Created by mariotaku on 16/7/30.
  */
@@ -42,3 +45,8 @@ operator fun Int.contains(i: Int): Boolean = (this and i) == i
  * Convenience method checking long flags
  */
 operator fun Long.contains(i: Long): Boolean = (this and i) == i
+
+fun Number.toLocalizedString(locale: Locale = Locale.getDefault()): String {
+    val nf = NumberFormat.getInstance(locale)
+    return nf.format(this)
+}

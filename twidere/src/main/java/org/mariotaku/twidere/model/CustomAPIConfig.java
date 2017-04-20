@@ -12,11 +12,11 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
+import org.mariotaku.restfu.RestFuUtils;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.model.account.cred.Credentials;
 import org.mariotaku.twidere.util.JsonSerializer;
-import org.mariotaku.twidere.util.Utils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -201,7 +201,7 @@ public final class CustomAPIConfig implements Parcelable {
         } catch (IOException e) {
             return listBuiltin(context);
         } finally {
-            Utils.closeSilently(is);
+            RestFuUtils.closeSilently(is);
         }
     }
 

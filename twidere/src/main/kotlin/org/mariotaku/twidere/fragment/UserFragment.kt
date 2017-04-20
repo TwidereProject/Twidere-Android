@@ -107,10 +107,7 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
-import org.mariotaku.twidere.extension.applyTheme
-import org.mariotaku.twidere.extension.loadOriginalProfileImage
-import org.mariotaku.twidere.extension.loadProfileBanner
-import org.mariotaku.twidere.extension.loadProfileImage
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.applyTo
 import org.mariotaku.twidere.extension.model.getBestProfileBanner
 import org.mariotaku.twidere.extension.model.originalProfileImage
@@ -257,7 +254,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     loaderManager.restartLoader(LOADER_ID_USER, args, this)
                 }
                 updateOptionsMenuVisibility()
-            } else if (user != null && user!!.is_cache) {
+            } else if (user?.is_cache ?: false) {
                 cardContent.visibility = View.VISIBLE
                 errorContainer.visibility = View.GONE
                 progressContainer.visibility = View.GONE
@@ -265,7 +262,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 updateOptionsMenuVisibility()
             } else {
                 if (data.hasException()) {
-                    errorText.text = Utils.getErrorMessage(activity, data.exception)
+                    errorText.text = data.exception?.getErrorMessage(activity)
                     errorText.visibility = View.VISIBLE
                 }
                 cardContent.visibility = View.GONE
@@ -877,7 +874,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 if (userRelationship == null) return true
                 if (userRelationship.filtering) {
                     DataStoreUtils.removeFromFilter(context, listOf(user))
-                    Utils.showInfoMessage(activity, R.string.message_toast_user_filters_removed, false)
+                    Toast.makeText(activity, R.string.message_toast_user_filters_removed,
+                            Toast.LENGTH_SHORT).show()
                     getFriendship()
                 } else {
                     AddUserFilterDialogFragment.show(fragmentManager, user)
@@ -927,59 +925,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 SetUserNicknameDialogFragment.show(fragmentManager, user.key, nick)
             }
             R.id.add_to_list -> {
-                executeAfterFragmentResumed {
-                    ProgressDialogFragment.show(it.fragmentManager, "get_list_progress")
-                }.then {
-                    fun MicroBlog.getUserListOwnerMemberships(id: String): ArrayList<UserList> {
-                        val result = ArrayList<UserList>()
-                        var nextCursor: Long
-                        val paging = Paging()
-                        paging.count(100)
-                        do {
-                            val resp = getUserListMemberships(id, paging, true)
-                            result.addAll(resp)
-                            nextCursor = resp.nextCursor
-                            paging.cursor(nextCursor)
-                        } while (nextCursor > 0)
-
-                        return result
-                    }
-
-                    val microBlog = MicroBlogAPIFactory.getInstance(context, user.account_key)
-                    val ownedLists = ArrayList<ParcelableUserList>()
-                    val listMemberships = microBlog.getUserListOwnerMemberships(user.key.id)
-                    val paging = Paging()
-                    paging.count(100)
-                    var nextCursor: Long
-                    do {
-                        val resp = microBlog.getUserListOwnerships(paging)
-                        resp.mapTo(ownedLists) { item ->
-                            val userList = ParcelableUserListUtils.from(item, user.account_key)
-                            userList.is_user_inside = listMemberships.any { it.id == item.id }
-                            return@mapTo userList
-                        }
-                        nextCursor = resp.nextCursor
-                        paging.cursor(nextCursor)
-                    } while (nextCursor > 0)
-                    return@then ownedLists.toTypedArray()
-                }.alwaysUi {
-                    executeAfterFragmentResumed {
-                        val df = fragmentManager.findFragmentByTag("get_list_progress") as? DialogFragment
-                        df?.dismiss()
-                    }
-                }.successUi { result ->
-                    executeAfterFragmentResumed { fragment ->
-                        val df = AddRemoveUserListDialogFragment()
-                        df.arguments = Bundle {
-                            this[EXTRA_ACCOUNT_KEY] = user.account_key
-                            this[EXTRA_USER_KEY] = user.key
-                            this[EXTRA_USER_LISTS] = result
-                        }
-                        df.show(fragment.fragmentManager, "add_remove_list")
-                    }
-                }.failUi {
-                    Utils.showErrorMessage(context, R.string.action_getting_user_lists, it, false)
-                }
+                showAddToListDialog(user)
             }
             R.id.open_with_account -> {
                 val intent = Intent(INTENT_ACTION_SELECT_ACCOUNT)
@@ -1070,6 +1016,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         }
         return true
     }
+
 
     override fun handleKeyboardShortcutSingle(handler: KeyboardShortcutsHandler, keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
         if (handleFragmentKeyboardShortcutSingle(handler, keyCode, event, metaState)) return true
@@ -1584,6 +1531,67 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         ViewCompat.setBackgroundTintMode(followButton, PorterDuff.Mode.SRC_ATOP)
         ViewCompat.setBackgroundTintList(followButton, ContextCompat.getColorStateList(context, color))
         followButton.contentDescription = getString(label)
+    }
+
+    private fun showAddToListDialog(user: ParcelableUser) {
+        val weakThis = WeakReference(this)
+        executeAfterFragmentResumed {
+            ProgressDialogFragment.show(it.childFragmentManager, "get_list_progress")
+        }.then {
+            val fragment = weakThis.get() ?: throw InterruptedException()
+            fun MicroBlog.getUserListOwnerMemberships(id: String): ArrayList<UserList> {
+                val result = ArrayList<UserList>()
+                var nextCursor: Long
+                val paging = Paging()
+                paging.count(100)
+                do {
+                    val resp = getUserListMemberships(id, paging, true)
+                    result.addAll(resp)
+                    nextCursor = resp.nextCursor
+                    paging.cursor(nextCursor)
+                } while (nextCursor > 0)
+
+                return result
+            }
+
+            val microBlog = MicroBlogAPIFactory.getInstance(fragment.context, user.account_key)
+            val ownedLists = ArrayList<ParcelableUserList>()
+            val listMemberships = microBlog.getUserListOwnerMemberships(user.key.id)
+            val paging = Paging()
+            paging.count(100)
+            var nextCursor: Long
+            do {
+                val resp = microBlog.getUserListOwnerships(paging)
+                resp.mapTo(ownedLists) { item ->
+                    val userList = ParcelableUserListUtils.from(item, user.account_key)
+                    userList.is_user_inside = listMemberships.any { it.id == item.id }
+                    return@mapTo userList
+                }
+                nextCursor = resp.nextCursor
+                paging.cursor(nextCursor)
+            } while (nextCursor > 0)
+            return@then ownedLists.toTypedArray()
+        }.alwaysUi {
+            val fragment = weakThis.get() ?: return@alwaysUi
+            fragment.executeAfterFragmentResumed {
+                it.childFragmentManager.dismissDialogFragment("get_list_progress")
+            }
+        }.successUi { result ->
+            val fragment = weakThis.get() ?: return@successUi
+            fragment.executeAfterFragmentResumed { fragment ->
+                val df = AddRemoveUserListDialogFragment()
+                df.arguments = Bundle {
+                    this[EXTRA_ACCOUNT_KEY] = user.account_key
+                    this[EXTRA_USER_KEY] = user.key
+                    this[EXTRA_USER_LISTS] = result
+                }
+                df.show(fragment.childFragmentManager, "add_remove_list")
+            }
+        }.failUi {
+            val fragment = weakThis.get() ?: return@failUi
+            Toast.makeText(fragment.context, it.getErrorMessage(fragment.context),
+                    Toast.LENGTH_SHORT).show()
+        }
     }
 
     private class ActionBarDrawable(shadow: Drawable) : LayerDrawable(arrayOf(shadow, ActionBarColorDrawable.create(true))) {

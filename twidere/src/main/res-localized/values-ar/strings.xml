@@ -463,7 +463,7 @@
   <string name="profile_background_color">لون الخلفيّة</string>
   <string name="profile_image">صورة الملف الشخصي</string>
   <string name="profile_image_style">شكل صورة الملف الشخصي</string>
-  <string name="profile_image_updated">حُدّثت صورة الملف الشخصي.</string>
+  <string name="massage_toast_profile_image_updated">حُدّثت صورة الملف الشخصي.</string>
   <string name="profile_images">صورة الملف الشخصي</string>
   <string name="profile_text_color">لون النص</string>
   <string name="profile_updated">حُدّث الملف الشخصي.</string>

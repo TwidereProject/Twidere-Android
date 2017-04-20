@@ -50,7 +50,7 @@ public final class CachedUsersQueryBuilder {
             final String[] selectionArgs,
             final String sortOrder,
             final UserKey accountKey) {
-        return withRelationship(Utils.getColumnsFromProjection(projection), selection,
+        return withRelationship(Utils.INSTANCE.getColumnsFromProjection(projection), selection,
                 selectionArgs, sortOrder, accountKey);
     }
 
@@ -104,7 +104,7 @@ public final class CachedUsersQueryBuilder {
             final UserKey accountKey,
             final int limit) {
         final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
-        final Selectable select = Utils.getColumnsFromProjection(projection);
+        final Selectable select = Utils.INSTANCE.getColumnsFromProjection(projection);
         final Columns.Column[] columns = new Columns.Column[TwidereDataStore.CachedUsers.COLUMNS.length + 1];
         for (int i = 0, j = columns.length - 1; i < j; i++) {
             final String column = TwidereDataStore.CachedUsers.COLUMNS[i];

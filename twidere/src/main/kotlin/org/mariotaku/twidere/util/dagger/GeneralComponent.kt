@@ -28,7 +28,10 @@ import org.mariotaku.twidere.activity.MediaViewerActivity
 import org.mariotaku.twidere.activity.PremiumDashboardActivity
 import org.mariotaku.twidere.adapter.*
 import org.mariotaku.twidere.app.TwidereApplication
-import org.mariotaku.twidere.fragment.*
+import org.mariotaku.twidere.fragment.BaseDialogFragment
+import org.mariotaku.twidere.fragment.BaseFragment
+import org.mariotaku.twidere.fragment.BasePreferenceFragment
+import org.mariotaku.twidere.fragment.ThemedPreferenceDialogFragmentCompat
 import org.mariotaku.twidere.fragment.filter.FilteredUsersFragment
 import org.mariotaku.twidere.fragment.media.ExoPlayerPageFragment
 import org.mariotaku.twidere.loader.*
@@ -41,7 +44,6 @@ import org.mariotaku.twidere.provider.CacheProvider
 import org.mariotaku.twidere.provider.TwidereDataProvider
 import org.mariotaku.twidere.service.*
 import org.mariotaku.twidere.task.BaseAbstractTask
-import org.mariotaku.twidere.task.ManagedAsyncTask
 import org.mariotaku.twidere.text.util.EmojiEditableFactory
 import org.mariotaku.twidere.text.util.EmojiSpannableFactory
 import org.mariotaku.twidere.util.MultiSelectEventHandler
@@ -84,8 +86,6 @@ interface GeneralComponent {
     fun inject(obj: BaseArrayAdapter<Any>)
 
     fun inject(obj: DraftsAdapter)
-
-    fun inject(obj: ManagedAsyncTask<Any, Any, Any>)
 
     fun inject(obj: BasePreferenceFragment)
 

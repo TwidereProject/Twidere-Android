@@ -28,6 +28,7 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.twitter.model.*
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.api.tryShowUser
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.isOfficial
@@ -37,7 +38,6 @@ import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
-import org.mariotaku.twidere.util.TwitterWrapper
 import org.mariotaku.microblog.library.mastodon.model.TimelineOption as MastodonTimelineOption
 
 class MediaTimelineLoader(
@@ -102,8 +102,7 @@ class MediaTimelineLoader(
                     val screenName = this.screenName ?: run {
                         return@run this.user ?: run fetchUser@ {
                             if (userKey == null) throw MicroBlogException("Invalid parameters")
-                            val user = TwitterWrapper.tryShowUser(microBlog, userKey.id, null,
-                                    account.type)
+                            val user = microBlog.tryShowUser(userKey.id, null, account.type)
                             this.user = user
                             return@fetchUser user
                         }.screenName

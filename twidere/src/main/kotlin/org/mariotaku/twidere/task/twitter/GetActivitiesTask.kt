@@ -27,7 +27,7 @@ import org.mariotaku.twidere.model.util.ParcelableActivityUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.util.TwitterWrapper.TwitterListResponse
+import org.mariotaku.twidere.model.TwitterListResponse
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import java.util.*
 

@@ -21,6 +21,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
+import org.mariotaku.restfu.RestFuUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,7 +45,7 @@ public class BitmapUtils {
         } catch (IOException e) {
             return null;
         } finally {
-            Utils.closeSilently(is);
+            RestFuUtils.closeSilently(is);
         }
     }
 

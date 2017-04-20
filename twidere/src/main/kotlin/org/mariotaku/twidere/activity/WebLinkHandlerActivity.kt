@@ -16,7 +16,6 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.ThemeUtils
-import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.dagger.DependencyHolder
 import java.util.*
 
@@ -133,9 +132,8 @@ class WebLinkHandlerActivity : Activity() {
                 "share" -> {
                     val handledIntent = Intent(this, ComposeActivity::class.java)
                     handledIntent.action = Intent.ACTION_SEND
-                    val text = uri.getQueryParameter("text")
-                    val url = uri.getQueryParameter("url")
-                    handledIntent.putExtra(Intent.EXTRA_TEXT, Utils.getShareStatus(this, text, url))
+                    handledIntent.putExtra(Intent.EXTRA_TEXT, uri.getQueryParameter("text"))
+                    handledIntent.putExtra(Intent.EXTRA_SUBJECT, uri.getQueryParameter("url"))
                     return Pair(handledIntent, true)
                 }
                 "search" -> {

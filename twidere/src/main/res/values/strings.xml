@@ -567,6 +567,7 @@
     <string name="label_sensitive_content">Sensitive content</string>
     <string name="label_status_hint">What\'s happening?</string>
     <string name="label_status_not_available">Tweet not available</string>
+    <string name="label_status_show_more">Show more</string>
     <string name="label_status_type_reply">Reply</string>
     <string name="label_statuses">Tweets</string>
     <string name="label_statuses_replies">Tweets and replies</string>
@@ -700,6 +701,7 @@
     <string name="message_toast_no_user_selected">No user selected</string>
     <string name="message_toast_notification_enabled_hint">Only available when streaming is on, and not 100% reliable.</string>
     <string name="message_toast_press_again_to_close">Press again to close</string>
+    <string name="message_toast_profile_background_image_updated">Profile background image updated</string>
     <string name="message_toast_profile_banner_image_updated">Profile banner image updated</string>
     <string name="message_toast_qr_scan_link_not_supported">Link not supported</string>
     <string name="message_toast_qr_scanner_not_supported">QR scanner not supported</string>
@@ -917,7 +919,7 @@
     <string name="profile_banner">Profile banner</string>
     <string name="profile_image">Profile image</string>
     <string name="profile_image_style">Profile image style</string>
-    <string name="profile_image_updated">Profile image updated.</string>
+    <string name="massage_toast_profile_image_updated">Profile image updated.</string>
     <string name="profile_images">Profile images</string>
     <string name="profile_link_color_main_color">Link color (main color)</string>
     <string name="profile_text_color">Text color</string>

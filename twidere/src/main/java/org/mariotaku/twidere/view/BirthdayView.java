@@ -86,7 +86,7 @@ public final class BirthdayView extends LayeredCanvasView {
     @SuppressWarnings("deprecation")
     @Override
     protected boolean fitSystemWindows(@NonNull Rect insets) {
-        final int stripTop = Utils.getInsetsTopWithoutActionBarHeight(getContext(), insets.top);
+        final int stripTop = Utils.INSTANCE.getInsetsTopWithoutActionBarHeight(getContext(), insets.top);
         final Layer[] layers = getLayers();
         ((AnimatedBitmapLayer) layers[2]).setPosition(0, stripTop);
         return super.fitSystemWindows(insets);

@@ -1,5 +1,6 @@
 package org.mariotaku.twidere.view.holder
 
+import android.graphics.Typeface
 import android.support.v4.content.ContextCompat
 import android.support.v4.widget.TextViewCompat
 import android.support.v7.widget.RecyclerView
@@ -8,6 +9,7 @@ import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
@@ -16,6 +18,7 @@ import android.widget.TextView
 import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.list_item_status.view.*
 import org.mariotaku.ktextension.applyFontFamily
+import org.mariotaku.ktextension.empty
 import org.mariotaku.ktextension.hideIfEmpty
 import org.mariotaku.ktextension.isNotNullOrEmpty
 import org.mariotaku.twidere.Constants.*
@@ -107,6 +110,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         nameView.name = TWIDERE_PREVIEW_NAME
         nameView.screenName = "@" + TWIDERE_PREVIEW_SCREEN_NAME
         nameView.updateText(adapter.bidiFormatter)
+        summaryView.hideIfEmpty()
         if (adapter.linkHighlightingStyle == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
             textView.text = toPlainText(TWIDERE_PREVIEW_TEXT_HTML)
         } else {
@@ -351,21 +355,30 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             mediaPreview.visibility = View.GONE
         }
 
-        val displayEnd = status.extras?.display_text_range?.getOrNull(1) ?: -1
 
         summaryView.text = status.extras?.summary_text
         summaryView.hideIfEmpty()
 
         val text: CharSequence
-        if (adapter.linkHighlightingStyle != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
+        val displayEnd: Int
+        if (!summaryView.empty) {
+            text = SpannableStringBuilder.valueOf(context.getString(R.string.label_status_show_more)).apply {
+                val colorSecondary = ThemeUtils.getTextColorSecondary(context)
+                setSpan(ForegroundColorSpan(colorSecondary), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                setSpan(StyleSpan(Typeface.ITALIC), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+            displayEnd = -1
+        } else if (adapter.linkHighlightingStyle != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
             text = SpannableStringBuilder.valueOf(status.text_unescaped).apply {
                 status.spans?.applyTo(this)
                 linkify.applyAllLinks(this, status.account_key, layoutPosition.toLong(),
                         status.is_possibly_sensitive, adapter.linkHighlightingStyle,
                         skipLinksInText)
             }
+            displayEnd = status.extras?.display_text_range?.getOrNull(1) ?: -1
         } else {
             text = status.text_unescaped
+            displayEnd = status.extras?.display_text_range?.getOrNull(1) ?: -1
         }
 
         if (displayEnd != -1 && displayEnd <= text.length) {

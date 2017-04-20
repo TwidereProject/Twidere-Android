@@ -19,10 +19,10 @@
 
 package org.mariotaku.twidere.util
 
-import android.content.ContentValues
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
+import android.widget.Toast
 import com.squareup.otto.Bus
 import com.squareup.otto.Subscribe
 import org.apache.commons.collections.primitives.ArrayIntList
@@ -32,6 +32,7 @@ import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.toNulls
+import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.*
 import org.mariotaku.sqliteqb.library.Expression
@@ -41,6 +42,7 @@ import org.mariotaku.twidere.constant.homeRefreshDirectMessagesKey
 import org.mariotaku.twidere.constant.homeRefreshMentionsKey
 import org.mariotaku.twidere.constant.homeRefreshSavedSearchesKey
 import org.mariotaku.twidere.constant.nameFirstKey
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.event.*
 import org.mariotaku.twidere.model.util.AccountUtils
@@ -54,13 +56,11 @@ import org.mariotaku.twidere.task.twitter.GetSavedSearchesTask
 import org.mariotaku.twidere.task.twitter.GetTrendsTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
 import org.mariotaku.twidere.util.collection.CompactHashSet
-import java.util.*
 
 class AsyncTwitterWrapper(
         val context: Context,
         private val bus: Bus,
         private val preferences: SharedPreferences,
-        private val asyncTaskManager: AsyncTaskManager,
         private val notificationManager: NotificationManagerWrapper
 ) {
     private val resolver = context.contentResolver
@@ -147,9 +147,7 @@ class AsyncTwitterWrapper(
         TaskStarter.execute(task)
     }
 
-    fun createMultiBlockAsync(accountKey: UserKey, userIds: Array<String>): Int {
-        val task = CreateMultiBlockTask(context, accountKey, userIds)
-        return asyncTaskManager.add(task, true)
+    fun createMultiBlockAsync(accountKey: UserKey, userIds: Array<String>) {
     }
 
     fun createMuteAsync(accountKey: UserKey, userKey: UserKey, filterEverywhere: Boolean) {
@@ -158,26 +156,26 @@ class AsyncTwitterWrapper(
         TaskStarter.execute(task)
     }
 
-    fun createSavedSearchAsync(accountKey: UserKey, query: String): Int {
-        val task = CreateSavedSearchTask(accountKey, query)
-        return asyncTaskManager.add(task, true)
+    fun createSavedSearchAsync(accountKey: UserKey, query: String) {
+        val task = CreateSavedSearchTask(context, accountKey, query)
+        TaskStarter.execute(task)
     }
 
     fun createUserListAsync(accountKey: UserKey, listName: String, isPublic: Boolean,
-            description: String): Int {
+            description: String) {
         val task = CreateUserListTask(context, accountKey, listName, isPublic,
                 description)
-        return asyncTaskManager.add(task, true)
+        TaskStarter.execute(task)
     }
 
-    fun createUserListSubscriptionAsync(accountKey: UserKey, listId: String): Int {
-        val task = CreateUserListSubscriptionTask(accountKey, listId)
-        return asyncTaskManager.add(task, true)
+    fun createUserListSubscriptionAsync(accountKey: UserKey, listId: String) {
+        val task = CreateUserListSubscriptionTask(context, accountKey, listId)
+        TaskStarter.execute(task)
     }
 
-    fun deleteUserListMembersAsync(accountKey: UserKey, listId: String, vararg users: ParcelableUser): Int {
-        val task = DeleteUserListMembersTask(accountKey, listId, users)
-        return asyncTaskManager.add(task, true)
+    fun deleteUserListMembersAsync(accountKey: UserKey, listId: String, users: Array<ParcelableUser>) {
+        val task = DeleteUserListMembersTask(context, accountKey, listId, users)
+        TaskStarter.execute(task)
     }
 
     fun denyFriendshipAsync(accountKey: UserKey, userKey: UserKey) {
@@ -209,9 +207,9 @@ class AsyncTwitterWrapper(
         TaskStarter.execute(task)
     }
 
-    fun destroySavedSearchAsync(accountKey: UserKey, searchId: Long): Int {
+    fun destroySavedSearchAsync(accountKey: UserKey, searchId: Long) {
         val task = DestroySavedSearchTask(context, accountKey, searchId)
-        return asyncTaskManager.add(task, true)
+        TaskStarter.execute(task)
     }
 
     fun destroyStatusAsync(accountKey: UserKey, statusId: String) {
@@ -224,9 +222,9 @@ class AsyncTwitterWrapper(
         TaskStarter.execute(task)
     }
 
-    fun destroyUserListSubscriptionAsync(accountKey: UserKey, listId: String): Int {
+    fun destroyUserListSubscriptionAsync(accountKey: UserKey, listId: String) {
         val task = DestroyUserListSubscriptionTask(context, accountKey, listId)
-        return asyncTaskManager.add(task, true)
+        TaskStarter.execute(task)
     }
 
     fun getHomeTimelineAsync(param: RefreshTaskParam): Boolean {
@@ -238,7 +236,7 @@ class AsyncTwitterWrapper(
 
     fun getLocalTrendsAsync(accountKey: UserKey, woeId: Int) {
         val task = GetTrendsTask(context, accountKey, woeId)
-        TaskStarter.execute<Any, Unit, Any>(task)
+        TaskStarter.execute(task)
     }
 
     fun getMessagesAsync(param: GetMessagesTask.RefreshMessagesTaskParam) {
@@ -250,7 +248,7 @@ class AsyncTwitterWrapper(
     fun getSavedSearchesAsync(accountKeys: Array<UserKey>) {
         val task = GetSavedSearchesTask(context)
         task.params = accountKeys
-        TaskStarter.execute<Array<UserKey>, SingleResponse<Unit>, Any>(task)
+        TaskStarter.execute(task)
     }
 
     fun getSendingDraftIds(): LongArray {
@@ -403,258 +401,138 @@ class AsyncTwitterWrapper(
         return updatingRelationshipIds.contains(ParcelableUser.calculateHashCode(accountKey, userKey))
     }
 
-    internal inner class CreateMultiBlockTask(
+    internal class CreateSavedSearchTask(context: Context, accountKey: UserKey,
+            private val query: String) : AbsAccountRequestTask<Any?, SavedSearch, Any?>(context,
+            accountKey) {
+
+        override fun onExecute(account: AccountDetails, params: Any?): SavedSearch {
+            val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
+            return microBlog.createSavedSearch(query)
+        }
+
+        override fun onSucceed(callback: Any?, result: SavedSearch) {
+            val message = context.getString(R.string.message_toast_search_name_saved, result.query)
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
+
+        override fun onException(callback: Any?, exception: MicroBlogException) {
+            if (exception.statusCode == 403) {
+                Toast.makeText(context, R.string.saved_searches_already_saved_hint,
+                        Toast.LENGTH_SHORT).show()
+                return
+            }
+            super.onException(callback, exception)
+        }
+
+    }
+
+    internal class CreateUserListSubscriptionTask(context: Context, accountKey: UserKey,
+            private val listId: String) : AbsAccountRequestTask<Any?, ParcelableUserList, Any?>(context, accountKey) {
+
+        override fun onExecute(account: AccountDetails, params: Any?): ParcelableUserList {
+            val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
+            val userList = microBlog.createUserListSubscription(listId)
+            return ParcelableUserListUtils.from(userList, account.key)
+        }
+
+        override fun onSucceed(callback: Any?, result: ParcelableUserList) {
+            val message = context.getString(R.string.subscribed_to_list, result.name)
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            bus.post(UserListSubscriptionEvent(UserListSubscriptionEvent.Action.SUBSCRIBE, result))
+        }
+
+    }
+
+    internal class CreateUserListTask(context: Context, accountKey: UserKey,
+            private val listName: String, private val isPublic: Boolean,
+            private val description: String) : AbsAccountRequestTask<Any?, ParcelableUserList, Any?>(context, accountKey) {
+        override fun onExecute(account: AccountDetails, params: Any?): ParcelableUserList {
+            val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
+            val userListUpdate = UserListUpdate()
+            userListUpdate.setName(listName)
+            userListUpdate.setMode(if (isPublic) UserList.Mode.PUBLIC else UserList.Mode.PRIVATE)
+            userListUpdate.setDescription(description)
+            val list = microBlog.createUserList(userListUpdate)
+            return ParcelableUserListUtils.from(list, account.key)
+        }
+
+        override fun onSucceed(callback: Any?, result: ParcelableUserList) {
+            val message = context.getString(R.string.created_list, result.name)
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            bus.post(UserListCreatedEvent(result))
+        }
+
+    }
+
+    internal class DeleteUserListMembersTask(
             context: Context,
-            private val accountKey: UserKey,
-            private val userIds: Array<String>
-    ) : ManagedAsyncTask<Any, Any, ListResponse<String>>(context) {
-
-        private fun deleteCaches(list: List<String>) {
-            // I bet you don't want to see these users in your auto complete list.
-            //TODO insert to blocked users data
-            val values = ContentValues()
-            values.put(CachedRelationships.BLOCKING, true)
-            values.put(CachedRelationships.FOLLOWING, false)
-            values.put(CachedRelationships.FOLLOWED_BY, false)
-            val where = Expression.inArgs(CachedRelationships.USER_KEY, list.size).sql
-            val selectionArgs = list.toTypedArray()
-            resolver.update(CachedRelationships.CONTENT_URI, values, where, selectionArgs)
-        }
-
-        override fun doInBackground(vararg params: Any): ListResponse<String> {
-            val blockedUsers = ArrayList<String>()
-            val microBlog = MicroBlogAPIFactory.getInstance(context, accountKey)
-            if (microBlog != null) {
-                for (userId in userIds) {
-                    try {
-                        val user = microBlog.createBlock(userId)
-                        blockedUsers.add(user.id)
-                    } catch (e: MicroBlogException) {
-                        deleteCaches(blockedUsers)
-                        return ListResponse.getListInstance<String>(e)
-                    }
-
-                }
-            }
-            deleteCaches(blockedUsers)
-            return ListResponse.getListInstance(blockedUsers)
-        }
-
-        override fun onPostExecute(result: ListResponse<String>) {
-            if (result.hasData()) {
-                Utils.showInfoMessage(context, R.string.users_blocked, false)
-            } else {
-                Utils.showErrorMessage(context, R.string.action_blocking, result.exception, true)
-            }
-            bus.post(UsersBlockedEvent(accountKey, userIds))
-            super.onPostExecute(result)
-        }
-
-
-    }
-
-    internal inner class CreateSavedSearchTask(private val mAccountKey: UserKey, private val mQuery: String) : ManagedAsyncTask<Any, Any, SingleResponse<SavedSearch>>(context) {
-
-        override fun doInBackground(vararg params: Any): SingleResponse<SavedSearch>? {
-            val microBlog = MicroBlogAPIFactory.getInstance(context, mAccountKey) ?: return null
-            try {
-                return SingleResponse.getInstance(microBlog.createSavedSearch(mQuery))
-            } catch (e: MicroBlogException) {
-                return SingleResponse.getInstance<SavedSearch>(e)
-            }
-
-        }
-
-        override fun onPostExecute(result: SingleResponse<SavedSearch>) {
-            if (result.hasData()) {
-                val message = context.getString(R.string.message_toast_search_name_saved, result.data!!.query)
-                Utils.showOkMessage(context, message, false)
-            } else if (result.hasException()) {
-                val exception = result.exception
-                // https://github.com/TwidereProject/Twidere-Android/issues/244
-                if (exception is MicroBlogException && exception.statusCode == 403) {
-                    val desc = context.getString(R.string.saved_searches_already_saved_hint)
-                    Utils.showErrorMessage(context, R.string.action_saving_search, desc, false)
-                } else {
-                    Utils.showErrorMessage(context, R.string.action_saving_search, exception, false)
-                }
-            }
-            super.onPostExecute(result)
-        }
-
-    }
-
-    internal inner class CreateUserListSubscriptionTask(private val mAccountKey: UserKey, private val mListId: String) : ManagedAsyncTask<Any, Any, SingleResponse<ParcelableUserList>>(context) {
-
-        override fun doInBackground(vararg params: Any): SingleResponse<ParcelableUserList> {
-            val microBlog = MicroBlogAPIFactory.getInstance(context, mAccountKey) ?: return SingleResponse.getInstance<ParcelableUserList>()
-            try {
-                val userList = microBlog.createUserListSubscription(mListId)
-                val list = ParcelableUserListUtils.from(userList, mAccountKey)
-                return SingleResponse.getInstance(list)
-            } catch (e: MicroBlogException) {
-                return SingleResponse.getInstance<ParcelableUserList>(e)
-            }
-
-        }
-
-        override fun onPostExecute(result: SingleResponse<ParcelableUserList>) {
-            val succeed = result.hasData()
-            if (succeed) {
-                val message = context.getString(R.string.subscribed_to_list, result.data!!.name)
-                Utils.showOkMessage(context, message, false)
-                bus.post(UserListSubscriptionEvent(UserListSubscriptionEvent.Action.SUBSCRIBE,
-                        result.data))
-            } else {
-                Utils.showErrorMessage(context, R.string.action_subscribing_to_list, result.exception, true)
-            }
-            super.onPostExecute(result)
-        }
-
-    }
-
-    internal class CreateUserListTask(context: Context, private val mAccountKey: UserKey, private val mListName: String?,
-            private val mIsPublic: Boolean, private val mDescription: String) : ManagedAsyncTask<Any, Any, SingleResponse<ParcelableUserList>>(context) {
-
-        override fun doInBackground(vararg params: Any): SingleResponse<ParcelableUserList> {
-            val microBlog = MicroBlogAPIFactory.getInstance(context, mAccountKey
-            )
-            if (microBlog == null || mListName == null)
-                return SingleResponse.getInstance<ParcelableUserList>()
-            try {
-                val userListUpdate = UserListUpdate()
-                userListUpdate.setName(mListName)
-                userListUpdate.setMode(if (mIsPublic) UserList.Mode.PUBLIC else UserList.Mode.PRIVATE)
-                userListUpdate.setDescription(mDescription)
-                val list = microBlog.createUserList(userListUpdate)
-                return SingleResponse.getInstance(ParcelableUserListUtils.from(list, mAccountKey))
-            } catch (e: MicroBlogException) {
-                return SingleResponse.getInstance<ParcelableUserList>(e)
-            }
-
-        }
-
-        override fun onPostExecute(result: SingleResponse<ParcelableUserList>) {
-            val context = context
-            if (result.hasData()) {
-                val userList = result.data
-                val message = context.getString(R.string.created_list, userList!!.name)
-                Utils.showOkMessage(context, message, false)
-                bus.post(UserListCreatedEvent(userList))
-            } else {
-                Utils.showErrorMessage(context, R.string.action_creating_list, result.exception, true)
-            }
-            super.onPostExecute(result)
-        }
-
-    }
-
-    internal inner class DeleteUserListMembersTask(
-            private val accountKey: UserKey,
+            accountKey: UserKey,
             private val userListId: String,
-            private val users: Array<out ParcelableUser>
-    ) : ManagedAsyncTask<Any, Any, SingleResponse<ParcelableUserList>>(context) {
+            private val users: Array<ParcelableUser>
+    ) : AbsAccountRequestTask<Any?, ParcelableUserList, Any?>(context, accountKey) {
 
-        override fun doInBackground(vararg params: Any): SingleResponse<ParcelableUserList> {
-            val microBlog = MicroBlogAPIFactory.getInstance(context, accountKey) ?: return SingleResponse.getInstance<ParcelableUserList>()
-            try {
-                val userKeys = users.mapToArray(ParcelableUser::key)
-                val userList = microBlog.deleteUserListMembers(userListId, UserKey.getIds(userKeys))
-                val list = ParcelableUserListUtils.from(userList, accountKey)
-                return SingleResponse.getInstance(list)
-            } catch (e: MicroBlogException) {
-                return SingleResponse.getInstance<ParcelableUserList>(e)
-            }
-
+        override fun onExecute(account: AccountDetails, params: Any?): ParcelableUserList {
+            val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
+            val userKeys = users.mapToArray(ParcelableUser::key)
+            val userList = microBlog.deleteUserListMembers(userListId, UserKey.getIds(userKeys))
+            return ParcelableUserListUtils.from(userList, account.key)
         }
 
-        override fun onPostExecute(result: SingleResponse<ParcelableUserList>) {
-            val succeed = result.hasData()
-            val message: String
-            if (succeed) {
-                if (users.size == 1) {
-                    val user = users[0]
-                    val nameFirst = preferences[nameFirstKey]
-                    val displayName = userColorNameManager.getDisplayName(user.key,
-                            user.name, user.screen_name, nameFirst)
-                    message = context.getString(R.string.deleted_user_from_list, displayName,
-                            result.data!!.name)
-                } else {
-                    val res = context.resources
-                    message = res.getQuantityString(R.plurals.deleted_N_users_from_list, users.size, users.size,
-                            result.data!!.name)
-                }
-                bus.post(UserListMembersChangedEvent(UserListMembersChangedEvent.Action.REMOVED,
-                        result.data, users))
-                Utils.showInfoMessage(context, message, false)
+        override fun onSucceed(callback: Any?, result: ParcelableUserList) {
+            val message = if (users.size == 1) {
+                val user = users[0]
+                val nameFirst = preferences[nameFirstKey]
+                val displayName = userColorNameManager.getDisplayName(user.key,
+                        user.name, user.screen_name, nameFirst)
+                context.getString(R.string.deleted_user_from_list, displayName,
+                        result.name)
             } else {
-                Utils.showErrorMessage(context, R.string.action_deleting, result.exception, true)
+                context.resources.getQuantityString(R.plurals.deleted_N_users_from_list, users.size,
+                        users.size, result.name)
             }
-            super.onPostExecute(result)
+            bus.post(UserListMembersChangedEvent(UserListMembersChangedEvent.Action.REMOVED,
+                    result, users))
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         }
 
     }
 
 
-    internal inner class DestroySavedSearchTask(
+    internal class DestroySavedSearchTask(
             context: Context,
-            private val accountKey: UserKey,
+            accountKey: UserKey,
             private val searchId: Long
-    ) : ManagedAsyncTask<Any, Any, SingleResponse<SavedSearch>>(context) {
+    ) : AbsAccountRequestTask<Any?, SavedSearch, Any?>(context, accountKey) {
 
-        override fun doInBackground(vararg params: Any): SingleResponse<SavedSearch> {
-            val microBlog = MicroBlogAPIFactory.getInstance(context, accountKey) ?: return SingleResponse.getInstance<SavedSearch>()
-            try {
-                return SingleResponse.getInstance(microBlog.destroySavedSearch(searchId))
-            } catch (e: MicroBlogException) {
-                return SingleResponse.getInstance<SavedSearch>(e)
-            }
-
+        override fun onExecute(account: AccountDetails, params: Any?): SavedSearch {
+            val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
+            return microBlog.destroySavedSearch(searchId)
         }
 
-        override fun onPostExecute(result: SingleResponse<SavedSearch>) {
-            if (result.hasData()) {
-                val message = context.getString(R.string.message_toast_search_name_deleted, result.data!!.query)
-                Utils.showOkMessage(context, message, false)
-                bus.post(SavedSearchDestroyedEvent(accountKey, searchId))
-            } else {
-                Utils.showErrorMessage(context, R.string.action_deleting_search, result.exception, false)
-            }
-            super.onPostExecute(result)
+        override fun onSucceed(callback: Any?, result: SavedSearch) {
+            val message = context.getString(R.string.message_toast_search_name_deleted, result.query)
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            bus.post(SavedSearchDestroyedEvent(accountKey, searchId))
         }
 
     }
 
-    internal inner class DestroyUserListSubscriptionTask(
+    internal class DestroyUserListSubscriptionTask(
             context: Context,
-            private val accountKey: UserKey,
+            accountKey: UserKey,
             private val listId: String
-    ) : ManagedAsyncTask<Any, Any, SingleResponse<ParcelableUserList>>(context) {
+    ) : AbsAccountRequestTask<Any?, ParcelableUserList, Any?>(context, accountKey) {
 
-        override fun doInBackground(vararg params: Any): SingleResponse<ParcelableUserList> {
-
-            val microBlog = MicroBlogAPIFactory.getInstance(context, accountKey) ?: return SingleResponse.getInstance<ParcelableUserList>()
-            try {
-                val userList = microBlog.destroyUserListSubscription(listId)
-                val list = ParcelableUserListUtils.from(userList, accountKey)
-                return SingleResponse.getInstance(list)
-            } catch (e: MicroBlogException) {
-                return SingleResponse.getInstance<ParcelableUserList>(e)
-            }
-
+        override fun onExecute(account: AccountDetails, params: Any?): ParcelableUserList {
+            val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
+            val userList = microBlog.destroyUserListSubscription(listId)
+            return ParcelableUserListUtils.from(userList, account.key)
         }
 
-        override fun onPostExecute(result: SingleResponse<ParcelableUserList>) {
-            val succeed = result.hasData()
-            if (succeed) {
-                val message = context.getString(R.string.unsubscribed_from_list, result.data!!.name)
-                Utils.showOkMessage(context, message, false)
-                bus.post(UserListSubscriptionEvent(UserListSubscriptionEvent.Action.UNSUBSCRIBE,
-                        result.data))
-            } else {
-                Utils.showErrorMessage(context, R.string.action_unsubscribing_from_list, result.exception, true)
-            }
-            super.onPostExecute(result)
+        override fun onSucceed(callback: Any?, result: ParcelableUserList) {
+            val message = context.getString(R.string.unsubscribed_from_list, result.name)
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            bus.post(UserListSubscriptionEvent(UserListSubscriptionEvent.Action.UNSUBSCRIBE, result))
         }
 
     }
@@ -667,10 +545,7 @@ class AsyncTwitterWrapper(
         }
 
         fun <T : Response<*>> getException(responses: List<T>): Exception? {
-            for (response in responses) {
-                if (response.hasException()) return response.exception
-            }
-            return null
+            return responses.firstOrNull { it.hasException() }?.exception
         }
     }
 }

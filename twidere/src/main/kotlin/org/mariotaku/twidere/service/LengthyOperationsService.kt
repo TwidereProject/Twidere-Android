@@ -57,6 +57,7 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.constant.refreshAfterTweetKey
+import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtras
 import org.mariotaku.twidere.model.draft.StatusObjectActionExtras
@@ -68,7 +69,6 @@ import org.mariotaku.twidere.task.CreateFavoriteTask
 import org.mariotaku.twidere.task.RetweetStatusTask
 import org.mariotaku.twidere.task.twitter.UpdateStatusTask
 import org.mariotaku.twidere.task.twitter.message.SendMessageTask
-import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.deleteDrafts
 import java.io.IOException
 import java.util.concurrent.TimeUnit
@@ -104,12 +104,14 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
         }
     }
 
-    private fun showErrorMessage(actionRes: Int, e: Exception?, longMessage: Boolean) {
-        handler.post { Utils.showErrorMessage(this@LengthyOperationsService, actionRes, e, longMessage) }
+    private fun showToast(e: Exception, longMessage: Boolean) {
+        handler.post {
+            Toast.makeText(this, e.getErrorMessage(this), if (longMessage) Toast.LENGTH_LONG else Toast.LENGTH_SHORT).show()
+        }
     }
 
-    private fun showOkMessage(message: Int, longMessage: Boolean) {
-        handler.post { Toast.makeText(this@LengthyOperationsService, message, if (longMessage) Toast.LENGTH_LONG else Toast.LENGTH_SHORT).show() }
+    private fun showToast(message: Int, longMessage: Boolean) {
+        handler.post { Toast.makeText(this, message, if (longMessage) Toast.LENGTH_LONG else Toast.LENGTH_SHORT).show() }
     }
 
     private fun handleSendDraftIntent(intent: Intent) {
@@ -198,7 +200,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
         invokeAfterExecute(task, result)
 
         if (result.hasData()) {
-            showOkMessage(R.string.message_direct_message_sent, false)
+            showToast(R.string.message_direct_message_sent, false)
         } else {
             UpdateStatusTask.saveDraft(this, Draft.Action.SEND_DIRECT_MESSAGE) {
                 account_keys = arrayOf(message.account.key)
@@ -209,7 +211,10 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
                     conversationId = message.conversation_id
                 }
             }
-            showErrorMessage(R.string.action_sending_direct_message, result.exception, true)
+            val exception = result.exception
+            if (exception != null) {
+                showToast(exception, true)
+            }
         }
         stopForeground(false)
         notificationManager.cancel(NOTIFICATION_ID_SEND_DIRECT_MESSAGE)
@@ -283,10 +288,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
                     } else for (e in exceptions) {
                         if (e != null) {
                             // Show error
-                            var errorMessage = Utils.getErrorMessage(context, e)
-                            if (TextUtils.isEmpty(errorMessage)) {
-                                errorMessage = context.getString(R.string.status_not_updated)
-                            }
+                            val errorMessage = e.getErrorMessage(context)
                             Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
                             failed = true
                             break

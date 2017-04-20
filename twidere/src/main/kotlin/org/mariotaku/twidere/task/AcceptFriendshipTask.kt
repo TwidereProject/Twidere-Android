@@ -32,10 +32,6 @@ class AcceptFriendshipTask(context: Context) : AbsFriendshipOperationTask(contex
         Utils.setLastSeen(context, user.key, System.currentTimeMillis())
     }
 
-    override fun showErrorMessage(params: AbsFriendshipOperationTask.Arguments, exception: Exception?) {
-        Utils.showErrorMessage(context, R.string.action_accepting_follow_request, exception, false)
-    }
-
     override fun showSucceededMessage(params: AbsFriendshipOperationTask.Arguments, user: ParcelableUser) {
         val nameFirst = kPreferences[nameFirstKey]
         Toast.makeText(context, context.getString(R.string.message_toast_accepted_users_follow_request,

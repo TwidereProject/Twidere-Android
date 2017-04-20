@@ -61,10 +61,7 @@ import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
-import org.mariotaku.twidere.task.UpdateAccountInfoTask
-import org.mariotaku.twidere.task.UpdateProfileBackgroundImageTask
-import org.mariotaku.twidere.task.UpdateProfileBannerImageTask
-import org.mariotaku.twidere.task.UpdateProfileImageTask
+import org.mariotaku.twidere.task.*
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener
 
@@ -239,22 +236,22 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
                 val task = currentTask
                 if (task != null && !task.isFinished) return
                 if (resultCode == RESULT_REMOVE_BANNER) {
-                    currentTask = RemoveProfileBannerTaskInternal(accountKey)
+                    currentTask = RemoveProfileBannerTaskInternal(context, accountKey)
                 } else {
-                    currentTask = UpdateProfileBannerImageTaskInternal(activity, accountKey,
+                    currentTask = UpdateProfileBannerImageTaskInternal(this, accountKey,
                             data.data, true)
                 }
             }
             REQUEST_UPLOAD_PROFILE_BACKGROUND_IMAGE -> {
                 val task = currentTask
                 if (task != null && !task.isFinished) return
-                currentTask = UpdateProfileBackgroundImageTaskInternal(activity, accountKey,
+                currentTask = UpdateProfileBackgroundImageTaskInternal(this, accountKey,
                         data.data, false, true)
             }
             REQUEST_UPLOAD_PROFILE_IMAGE -> {
                 val task = currentTask
                 if (task != null && !task.isFinished) return
-                currentTask = UpdateProfileImageTaskInternal(activity, accountKey,
+                currentTask = UpdateProfileImageTaskInternal(this, accountKey,
                         data.data, true)
             }
             REQUEST_PICK_LINK_COLOR -> {
@@ -439,89 +436,100 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
 
     }
 
-    internal inner class RemoveProfileBannerTaskInternal(
-            private val accountKey: UserKey
-    ) : AbstractTask<Any?, SingleResponse<Boolean>, UserProfileEditorFragment>() {
-
-        override fun doLongOperation(params: Any?): SingleResponse<Boolean> {
-            return TwitterWrapper.deleteProfileBannerImage(activity, accountKey)
-        }
-
-        override fun afterExecute(callback: UserProfileEditorFragment?, result: SingleResponse<Boolean>) {
-            super.afterExecute(callback, result)
-            if (result.data != null) {
-                getUserInfo()
-                Toast.makeText(activity, R.string.message_toast_profile_banner_image_updated, Toast.LENGTH_SHORT).show()
-            } else {
-                Utils.showErrorMessage(activity, R.string.action_removing_profile_banner_image,
-                        result.exception, true)
-            }
-            setUpdateState(false)
-        }
-
-        override fun beforeExecute() {
-            super.beforeExecute()
-            setUpdateState(true)
-        }
-
-    }
-
-    private inner class UpdateProfileBannerImageTaskInternal(context: Context, accountKey: UserKey,
-            imageUri: Uri, deleteImage: Boolean) : UpdateProfileBannerImageTask<UserProfileEditorFragment>(context, accountKey, imageUri, deleteImage) {
-
-        override fun afterExecute(callback: UserProfileEditorFragment?, result: SingleResponse<ParcelableUser>?) {
-            super.afterExecute(callback, result)
-            setUpdateState(false)
-            getUserInfo()
-        }
-
-        override fun beforeExecute() {
-            super.beforeExecute()
-            setUpdateState(true)
-        }
-
-    }
-
-    private inner class UpdateProfileBackgroundImageTaskInternal(
+    internal class RemoveProfileBannerTaskInternal(
             context: Context,
+            accountKey: UserKey
+    ) : AbsAccountRequestTask<Any?, Boolean, UserProfileEditorFragment>(context, accountKey) {
+        override fun onExecute(account: AccountDetails, params: Any?): Boolean {
+            return account.newMicroBlogInstance(context, MicroBlog::class.java)
+                    .removeProfileBannerImage().isSuccessful
+        }
+
+        override fun onSucceed(callback: UserProfileEditorFragment?, result: Boolean) {
+            if (callback == null) return
+            val context = callback.context
+            callback.getUserInfo()
+            Toast.makeText(context, R.string.message_toast_profile_banner_image_updated,
+                    Toast.LENGTH_SHORT).show()
+        }
+
+        override fun beforeExecute() {
+            super.beforeExecute()
+            callback?.setUpdateState(true)
+        }
+
+    }
+
+    private class UpdateProfileBannerImageTaskInternal(
+            fragment: UserProfileEditorFragment,
+            accountKey: UserKey,
+            imageUri: Uri,
+            deleteImage: Boolean
+    ) : UpdateProfileBannerImageTask<UserProfileEditorFragment>(fragment.context, accountKey, imageUri, deleteImage) {
+
+        init {
+            callback = fragment
+        }
+
+        override fun afterExecute(callback: UserProfileEditorFragment?, result: ParcelableUser?, exception: MicroBlogException?) {
+            callback?.setUpdateState(false)
+            callback?.getUserInfo()
+        }
+
+        override fun beforeExecute() {
+            callback?.setUpdateState(true)
+        }
+
+    }
+
+    private class UpdateProfileBackgroundImageTaskInternal(
+            fragment: UserProfileEditorFragment,
             accountKey: UserKey,
             imageUri: Uri,
             tile: Boolean,
             deleteImage: Boolean
-    ) : UpdateProfileBackgroundImageTask<UserProfileEditorFragment>(context, accountKey, imageUri,
+    ) : UpdateProfileBackgroundImageTask<UserProfileEditorFragment>(fragment.context, accountKey, imageUri,
             tile, deleteImage) {
 
-        override fun afterExecute(callback: UserProfileEditorFragment?, result: SingleResponse<ParcelableUser>) {
-            super.afterExecute(callback, result)
-            setUpdateState(false)
-            getUserInfo()
+        init {
+            callback = fragment
+        }
+
+        override fun afterExecute(callback: UserProfileEditorFragment?, result: ParcelableUser?, exception: MicroBlogException?) {
+            super.afterExecute(callback, result, exception)
+            callback?.setUpdateState(false)
+            callback?.getUserInfo()
         }
 
         override fun beforeExecute() {
             super.beforeExecute()
-            setUpdateState(true)
+            callback?.setUpdateState(true)
         }
 
     }
 
-    private inner class UpdateProfileImageTaskInternal(
-            context: Context,
+    private class UpdateProfileImageTaskInternal(
+            fragment: UserProfileEditorFragment,
             accountKey: UserKey,
             imageUri: Uri,
             deleteImage: Boolean
-    ) : UpdateProfileImageTask<UserProfileEditorFragment>(context, accountKey, imageUri, deleteImage) {
+    ) : UpdateProfileImageTask<UserProfileEditorFragment>(fragment.context, accountKey, imageUri, deleteImage) {
 
-        override fun afterExecute(callback: UserProfileEditorFragment?, result: SingleResponse<ParcelableUser>) {
-            super.afterExecute(callback, result)
-            if (result.data != null) {
-                displayUser(result.data)
+        init {
+            callback = fragment
+        }
+
+        override fun afterExecute(callback: UserProfileEditorFragment?, result: ParcelableUser?, exception: MicroBlogException?) {
+            super.afterExecute(callback, result, exception)
+            if (result != null) {
+                callback?.displayUser(result)
             }
-            setUpdateState(false)
+            callback?.setUpdateState(false)
         }
 
         override fun beforeExecute() {
             super.beforeExecute()
-            setUpdateState(true)
+            callback?.setUpdateState(true)
         }
 
     }

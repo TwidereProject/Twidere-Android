@@ -48,8 +48,6 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     @Inject
     lateinit var bus: Bus
     @Inject
-    lateinit var asyncTaskManager: AsyncTaskManager
-    @Inject
     lateinit var multiSelectManager: MultiSelectManager
     @Inject
     lateinit var userColorNameManager: UserColorNameManager

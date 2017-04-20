@@ -102,7 +102,7 @@ public class MicroBlogException extends Exception implements TwitterResponse, Ht
      * Twitter Developers</a>
      * @since Twitter4J 2.1.2
      */
-    public boolean exceededRateLimitation() {
+    public boolean isRateLimitExceeded() {
         return statusCode == 400 && getRateLimitStatus() != null // REST API
                 || statusCode == ENHANCE_YOUR_CLAIM // Streaming API
                 || statusCode == TOO_MANY_REQUESTS; // API 1.1

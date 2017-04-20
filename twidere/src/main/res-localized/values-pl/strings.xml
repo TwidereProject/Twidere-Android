@@ -507,7 +507,7 @@
   <string name="profile_background_color">Kolor tła</string>
   <string name="profile_banner">Nagłówek profilu</string>
   <string name="profile_image">Zdjęcie profilowe</string>
-  <string name="profile_image_updated">Zdjęcie profilowe zaktualizowane.</string>
+  <string name="massage_toast_profile_image_updated">Zdjęcie profilowe zaktualizowane.</string>
   <string name="profile_images">Zdjęcia profilowe</string>
   <string name="profile_text_color">Kolor tekstu</string>
   <string name="profile_updated">Profil zaktualizowany.</string>

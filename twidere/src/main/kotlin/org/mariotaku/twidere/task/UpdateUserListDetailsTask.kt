@@ -20,49 +20,37 @@
 package org.mariotaku.twidere.task
 
 import android.content.Context
-import org.mariotaku.microblog.library.MicroBlogException
+import android.widget.Toast
+import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.twitter.model.UserListUpdate
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUserList
-import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.UserListUpdatedEvent
 import org.mariotaku.twidere.model.util.ParcelableUserListUtils
-import org.mariotaku.twidere.util.MicroBlogAPIFactory
-import org.mariotaku.twidere.util.Utils
 
 /**
  * Created by mariotaku on 2017/2/10.
  */
 class UpdateUserListDetailsTask(
         context: Context,
-        private val accountKey: UserKey,
+        accountKey: UserKey,
         private val listId: String,
         private val update: UserListUpdate
-) : BaseAbstractTask<Any?, SingleResponse<ParcelableUserList>, Any>(context) {
+) : AbsAccountRequestTask<Any?, ParcelableUserList, Any?>(context, accountKey) {
 
-    override fun doLongOperation(params: Any?): SingleResponse<ParcelableUserList> {
-        val microBlog = MicroBlogAPIFactory.getInstance(context, accountKey)
-        if (microBlog != null) {
-            try {
-                val list = microBlog.updateUserList(listId, update)
-                return SingleResponse(ParcelableUserListUtils.from(list, accountKey))
-            } catch (e: MicroBlogException) {
-                return SingleResponse(e)
-            }
-
-        }
-        return SingleResponse.getInstance<ParcelableUserList>()
+    override fun onExecute(account: AccountDetails, params: Any?): ParcelableUserList {
+        val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
+        val list = microBlog.updateUserList(listId, update)
+        return ParcelableUserListUtils.from(list, account.key)
     }
 
-    override fun afterExecute(callback: Any?, result: SingleResponse<ParcelableUserList>) {
-        if (result.data != null) {
-            val message = context.getString(R.string.updated_list_details, result.data.name)
-            Utils.showOkMessage(context, message, false)
-            bus.post(UserListUpdatedEvent(result.data))
-        } else {
-            Utils.showErrorMessage(context, R.string.action_updating_details, result.exception, true)
-        }
+    override fun onSucceed(callback: Any?, result: ParcelableUserList) {
+        val message = context.getString(R.string.updated_list_details, result.name)
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        bus.post(UserListUpdatedEvent(result))
     }
 
 }

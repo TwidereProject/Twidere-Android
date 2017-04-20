@@ -1,23 +1,22 @@
 package org.mariotaku.twidere.task
 
-import android.accounts.AccountManager
 import android.content.Context
+import android.widget.Toast
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.ErrorInfo
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.StatusDestroyedEvent
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.DataStoreUtils
-import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.deleteActivityStatus
 
 /**
@@ -25,30 +24,21 @@ import org.mariotaku.twidere.util.deleteActivityStatus
  */
 class DestroyStatusTask(
         context: Context,
-        private val accountKey: UserKey,
+        accountKey: UserKey,
         private val statusId: String
-) : BaseAbstractTask<Any?, SingleResponse<ParcelableStatus>, Any?>(context) {
+) : AbsAccountRequestTask<Any?, ParcelableStatus, Any?>(context, accountKey) {
 
-    override fun doLongOperation(params: Any?): SingleResponse<ParcelableStatus> {
-        val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)
-                ?: return SingleResponse()
-        val microBlog = details.newMicroBlogInstance(context, cls = MicroBlog::class.java)
-        var status: ParcelableStatus? = null
-        var deleteStatus: Boolean = false
-        try {
-            status = microBlog.destroyStatus(statusId).toParcelable(accountKey, details.type)
-            ParcelableStatusUtils.updateExtraInformation(status, details)
-            deleteStatus = true
-            return SingleResponse(status)
-        } catch (e: MicroBlogException) {
-            deleteStatus = e.errorCode == ErrorInfo.STATUS_NOT_FOUND
-            return SingleResponse(exception = e)
-        } finally {
-            if (deleteStatus) {
-                DataStoreUtils.deleteStatus(context.contentResolver, accountKey, statusId, status)
-                context.contentResolver.deleteActivityStatus(accountKey, statusId, status)
-            }
-        }
+    override fun onExecute(account: AccountDetails, params: Any?): ParcelableStatus {
+        val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
+        val status = microBlog.destroyStatus(statusId).toParcelable(account.key, account.type)
+        ParcelableStatusUtils.updateExtraInformation(status, account)
+        return status
+    }
+
+    override fun onCleanup(account: AccountDetails, params: Any?, result: ParcelableStatus?, exception: MicroBlogException?) {
+        if (result == null && exception?.errorCode != ErrorInfo.STATUS_NOT_FOUND) return
+        DataStoreUtils.deleteStatus(context.contentResolver, account.key, statusId, result)
+        context.contentResolver.deleteActivityStatus(account.key, statusId, result)
     }
 
     override fun beforeExecute() {
@@ -59,19 +49,17 @@ class DestroyStatusTask(
         bus.post(StatusListChangedEvent())
     }
 
-    override fun afterExecute(callback: Any?, result: SingleResponse<ParcelableStatus>) {
-
+    override fun afterExecute(callback: Any?, result: ParcelableStatus?, exception: MicroBlogException?) {
         microBlogWrapper.destroyingStatusIds.removeElement(AsyncTwitterWrapper.calculateHashCode(accountKey, statusId))
-        if (result.hasData()) {
-            val status = result.data!!
-            if (status.retweet_id != null) {
-                Utils.showInfoMessage(context, R.string.message_toast_retweet_cancelled, false)
+        if (result != null) {
+            if (result.retweet_id != null) {
+                Toast.makeText(context, R.string.message_toast_retweet_cancelled, Toast.LENGTH_SHORT).show()
             } else {
-                Utils.showInfoMessage(context, R.string.message_toast_status_deleted, false)
+                Toast.makeText(context, R.string.message_toast_status_deleted, Toast.LENGTH_SHORT).show()
             }
-            bus.post(StatusDestroyedEvent(status))
+            bus.post(StatusDestroyedEvent(result))
         } else {
-            Utils.showErrorMessage(context, R.string.action_deleting, result.exception, true)
+            Toast.makeText(context, exception?.getErrorMessage(context), Toast.LENGTH_SHORT).show()
         }
     }
 

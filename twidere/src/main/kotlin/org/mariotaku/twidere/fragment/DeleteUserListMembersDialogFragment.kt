@@ -41,7 +41,7 @@ class DeleteUserListMembersDialogFragment : BaseDialogFragment(), DialogInterfac
             DialogInterface.BUTTON_POSITIVE -> {
                 val users = users ?: return
                 val userList = userList ?: return
-                twitterWrapper.deleteUserListMembersAsync(userList.account_key, userList.id, *users)
+                twitterWrapper.deleteUserListMembersAsync(userList.account_key, userList.id, users)
             }
             else -> {
             }

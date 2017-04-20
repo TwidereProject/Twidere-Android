@@ -1,46 +1,39 @@
 package org.mariotaku.twidere.task
 
-import android.accounts.AccountManager
 import android.content.ContentValues
 import android.content.Context
+import android.widget.Toast
 import org.apache.commons.collections.primitives.ArrayIntList
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.sqliteqb.library.Expression
-import org.mariotaku.twidere.R
-import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.draft.StatusObjectActionExtras
 import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.provider.TwidereDataStore
 import org.mariotaku.twidere.task.twitter.UpdateStatusTask
 import org.mariotaku.twidere.util.AsyncTwitterWrapper.Companion.calculateHashCode
 import org.mariotaku.twidere.util.DataStoreUtils
-import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.updateActivityStatus
 
 /**
  * Created by mariotaku on 2017/2/7.
  */
-class CreateFavoriteTask(
-        context: Context,
-        private val accountKey: UserKey,
-        private val status: ParcelableStatus
-) : BaseAbstractTask<Any?, SingleResponse<ParcelableStatus>, Any?>(context) {
+class CreateFavoriteTask(context: Context, accountKey: UserKey, private val status: ParcelableStatus) :
+        AbsAccountRequestTask<Any?, ParcelableStatus, Any?>(context, accountKey) {
 
     private val statusId = status.id
-
-    override fun doLongOperation(params: Any?): SingleResponse<ParcelableStatus> {
+    override fun onExecute(account: AccountDetails, params: Any?): ParcelableStatus {
         val draftId = UpdateStatusTask.saveDraft(context, Draft.Action.FAVORITE) {
             this@saveDraft.account_keys = arrayOf(accountKey)
             this@saveDraft.action_extras = StatusObjectActionExtras().apply {
@@ -49,19 +42,18 @@ class CreateFavoriteTask(
         }
         microBlogWrapper.addSendingDraftId(draftId)
         val resolver = context.contentResolver
-        val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)
-                ?: return SingleResponse(exception = MicroBlogException("No account"))
-        val microBlog = details.newMicroBlogInstance(context, cls = MicroBlog::class.java)
         try {
-            val result = when (details.type) {
+            val result = when (account.type) {
                 AccountType.FANFOU -> {
-                    microBlog.createFanfouFavorite(statusId).toParcelable(accountKey, details.type)
+                    val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
+                    microBlog.createFanfouFavorite(statusId).toParcelable(account.key, account.type)
                 }
                 else -> {
-                    microBlog.createFavorite(statusId).toParcelable(accountKey, details.type)
+                    val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
+                    microBlog.createFavorite(statusId).toParcelable(account.key, account.type)
                 }
             }
-            ParcelableStatusUtils.updateExtraInformation(result, details)
+            ParcelableStatusUtils.updateExtraInformation(result, account)
             Utils.setLastSeen(context, result.mentions, System.currentTimeMillis())
             val values = ContentValues()
             values.put(TwidereDataStore.Statuses.IS_FAVORITE, true)
@@ -75,11 +67,11 @@ class CreateFavoriteTask(
                             Expression.equalsArgs(TwidereDataStore.Statuses.RETWEET_ID)
                     )
             ).sql
-            val statusWhereArgs = arrayOf(accountKey.toString(), statusId, statusId)
+            val statusWhereArgs = arrayOf(account.key.toString(), statusId, statusId)
             for (uri in DataStoreUtils.STATUSES_URIS) {
                 resolver.update(uri, values, statusWhere, statusWhereArgs)
             }
-            resolver.updateActivityStatus(accountKey, statusId) { activity ->
+            resolver.updateActivityStatus(account.key, statusId) { activity ->
                 val statusesMatrix = arrayOf(activity.target_statuses, activity.target_object_statuses)
                 for (statusesArray in statusesMatrix) {
                     if (statusesArray == null) continue
@@ -93,10 +85,7 @@ class CreateFavoriteTask(
                 }
             }
             UpdateStatusTask.deleteDraft(context, draftId)
-            return SingleResponse(result)
-        } catch (e: MicroBlogException) {
-            DebugLog.w(TwidereConstants.LOGTAG, tr = e)
-            return SingleResponse(e)
+            return result
         } finally {
             microBlogWrapper.removeSendingDraftId(draftId)
         }
@@ -110,17 +99,16 @@ class CreateFavoriteTask(
         bus.post(StatusListChangedEvent())
     }
 
-    override fun afterExecute(callback: Any?, result: SingleResponse<ParcelableStatus>) {
+    override fun afterExecute(callback: Any?, result: ParcelableStatus?, exception: MicroBlogException?) {
         creatingFavoriteIds.removeElement(calculateHashCode(accountKey, statusId))
         val taskEvent = FavoriteTaskEvent(FavoriteTaskEvent.Action.CREATE, accountKey, statusId)
         taskEvent.isFinished = true
-        if (result.hasData()) {
-            val status = result.data
-            taskEvent.status = status
+        if (result != null) {
+            taskEvent.status = result
             taskEvent.isSucceeded = true
         } else {
             taskEvent.isSucceeded = false
-            Utils.showErrorMessage(context, R.string.action_favoriting, result.exception, true)
+            Toast.makeText(context, exception?.getErrorMessage(context), Toast.LENGTH_SHORT).show()
         }
         bus.post(taskEvent)
         bus.post(StatusListChangedEvent())

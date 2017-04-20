@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -16,17 +17,19 @@
   ~  You should have received a copy of the GNU General Public License
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardContent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?selectableItemBackground"
     android:clipChildren="false"
     android:focusable="true"
     android:orientation="vertical"
     android:splitMotionEvents="false"
+    tools:background="?cardItemBackgroundColor"
     tools:ignore="Overdraw">
 
     <org.mariotaku.twidere.view.FixedTextView
@@ -43,7 +46,7 @@
         android:padding="@dimen/element_spacing_normal"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="?android:textColorSecondary"
-        tools:text="Retweeted by Mariotaku" />
+        tools:text="Retweeted by Mariotaku"/>
 
     <org.mariotaku.twidere.view.ColorLabelRelativeLayout
         android:id="@+id/profileContainer"
@@ -67,7 +70,7 @@
             android:scaleType="centerCrop"
             app:sivBorder="true"
             app:sivBorderWidth="1dp"
-            tools:src="@drawable/ic_profile_image_twidere" />
+            tools:src="@drawable/ic_profile_image_twidere"/>
 
         <ImageView
             android:id="@+id/profileType"
@@ -80,7 +83,7 @@
             android:layout_marginEnd="@dimen/element_spacing_minus_small"
             android:layout_marginRight="@dimen/element_spacing_minus_small"
             android:scaleType="fitCenter"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -105,7 +108,7 @@
                 android:layout_height="wrap_content"
                 app:nv_primaryTextColor="?android:textColorPrimary"
                 app:nv_secondaryTextColor="?android:textColorSecondary"
-                app:nv_twoLine="false" />
+                app:nv_twoLine="false"/>
 
             <org.mariotaku.twidere.view.TimelineContentTextView
                 android:id="@+id/timeSource"
@@ -114,7 +117,7 @@
                 android:layout_marginTop="@dimen/element_spacing_small"
                 android:gravity="center_vertical"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                tools:text="Jan 1 2015 0:00 · Twidere" />
+                tools:text="Jan 1 2015 0:00 · Twidere"/>
 
         </LinearLayout>
 
@@ -132,7 +135,7 @@
                 style="?android:attr/buttonStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/action_follow" />
+                android:text="@string/action_follow"/>
 
             <ProgressBar
                 android:id="@+id/followInfoProgress"
@@ -141,7 +144,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp" />
+                android:layout_marginRight="8dp"/>
         </FrameLayout>
     </org.mariotaku.twidere.view.ColorLabelRelativeLayout>
 
@@ -161,7 +164,7 @@
         android:textColor="?android:textColorPrimary"
         android:visibility="visible"
         tools:text="@string/sample_status_text"
-        tools:visibility="visible" />
+        tools:visibility="visible"/>
 
     <LinearLayout
         android:id="@+id/translateContainer"
@@ -184,7 +187,7 @@
             android:padding="@dimen/element_spacing_normal"
             android:text="@string/unknown_language"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="?android:textColorSecondary" />
+            android:textColor="?android:textColorSecondary"/>
 
         <org.mariotaku.twidere.view.FixedTextView
             android:id="@+id/translateResult"
@@ -193,7 +196,7 @@
             android:padding="@dimen/element_spacing_normal"
             android:textColor="?android:textColorPrimary"
             android:visibility="gone"
-            tools:text="@string/sample_status_text" />
+            tools:text="@string/sample_status_text"/>
     </LinearLayout>
 
     <FrameLayout
@@ -214,7 +217,7 @@
 
             <include
                 layout="@layout/layout_card_media_preview"
-                tools:ignore="DuplicateIncludedIds" />
+                tools:ignore="DuplicateIncludedIds"/>
 
         </org.mariotaku.twidere.view.CardMediaContainer>
 
@@ -238,7 +241,7 @@
                 android:gravity="center_vertical"
                 android:text="@string/load_media"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
         </LinearLayout>
 
     </FrameLayout>
@@ -248,7 +251,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/mediaPreviewContainer"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <org.mariotaku.twidere.view.ColorLabelLinearLayout
         android:id="@+id/quotedView"
@@ -272,7 +275,7 @@
             app:nv_primaryTextColor="?android:textColorPrimary"
             app:nv_secondaryTextColor="?android:textColorSecondary"
             app:nv_twoLine="false"
-            tools:visibility="visible" />
+            tools:visibility="visible"/>
 
         <org.mariotaku.twidere.view.TimelineContentTextView
             android:id="@+id/quotedText"
@@ -285,7 +288,7 @@
             android:textColor="?android:textColorPrimary"
             android:visibility="gone"
             tools:text="@string/sample_status_text"
-            tools:visibility="visible" />
+            tools:visibility="visible"/>
 
 
         <LinearLayout
@@ -305,7 +308,7 @@
                 android:color="?android:textColorSecondary"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_action_gallery"
-                tools:tint="?android:textColorSecondary" />
+                tools:tint="?android:textColorSecondary"/>
 
             <org.mariotaku.twidere.view.FixedTextView
                 android:id="@+id/quotedMediaLabelText"
@@ -314,7 +317,7 @@
                 android:layout_weight="1"
                 android:text="@string/media"
                 android:textAppearance="?android:textAppearanceSmall"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
 
         </LinearLayout>
 
@@ -328,7 +331,7 @@
             tools:visibility="visible">
 
             <!-- Child views will be inflated if media preview enabled in ViewHolder -->
-            <include layout="@layout/layout_card_media_preview" />
+            <include layout="@layout/layout_card_media_preview"/>
 
         </org.mariotaku.twidere.view.CardMediaContainer>
 
@@ -348,7 +351,7 @@
         android:padding="@dimen/element_spacing_normal"
         android:text="@string/action_view_map"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="?android:textColorSecondary" />
+        android:textColor="?android:textColorSecondary"/>
 
     <LinearLayout
         android:id="@+id/countsUsersHeightHolder"
@@ -359,9 +362,9 @@
         android:visibility="invisible"
         tools:visibility="visible">
 
-        <include layout="@layout/adapter_item_status_count_label" />
+        <include layout="@layout/adapter_item_status_count_label"/>
 
-        <include layout="@layout/adapter_item_status_interact_user" />
+        <include layout="@layout/adapter_item_status_interact_user"/>
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
@@ -374,7 +377,7 @@
         android:layout_marginRight="@dimen/element_spacing_small"
         android:overScrollMode="never"
         android:splitMotionEvents="false"
-        tools:visibility="invisible" />
+        tools:visibility="invisible"/>
 
     <android.support.v7.widget.TwidereActionMenuView
         android:id="@+id/menuBar"
@@ -382,6 +385,6 @@
         android:layout_height="?android:actionBarSize"
         android:layout_below="@+id/countsUsersHeightHolder"
         android:clipChildren="false"
-        android:tag="ate_ignore" />
+        android:tag="ate_ignore"/>
 
 </RelativeLayout>

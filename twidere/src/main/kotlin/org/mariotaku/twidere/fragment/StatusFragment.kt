@@ -28,7 +28,6 @@ import android.graphics.Rect
 import android.nfc.NdefMessage
 import android.nfc.NdefRecord
 import android.nfc.NfcAdapter.CreateNdefMessageCallback
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.annotation.UiThread
 import android.support.v4.app.LoaderManager.LoaderCallbacks
@@ -56,18 +55,21 @@ import android.view.*
 import android.view.View.OnClickListener
 import android.widget.Space
 import android.widget.TextView
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.adapter_item_status_count_label.view.*
 import kotlinx.android.synthetic.main.fragment_status.*
-import kotlinx.android.synthetic.main.header_status_common.view.*
+import kotlinx.android.synthetic.main.header_status.view.*
 import kotlinx.android.synthetic.main.layout_content_fragment_common.*
+import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.applyFontFamily
 import org.mariotaku.ktextension.contains
 import org.mariotaku.ktextension.findPositionByItemId
 import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.library.objectcursor.ObjectCursor
+import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.TranslationResult
@@ -89,12 +91,10 @@ import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.extension.loadProfileImage
+import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.toParcelable
-import org.mariotaku.twidere.extension.model.applyTo
-import org.mariotaku.twidere.extension.model.getAccountType
-import org.mariotaku.twidere.extension.model.isOfficial
-import org.mariotaku.twidere.extension.model.media_type
 import org.mariotaku.twidere.extension.view.calculateSpaceItemHeight
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.Companion.handleActionClick
 import org.mariotaku.twidere.loader.ConversationLoader
@@ -107,6 +107,7 @@ import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.model.util.*
 import org.mariotaku.twidere.provider.TwidereDataStore.*
+import org.mariotaku.twidere.task.AbsAccountRequestTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.ContentScrollHandler.ContentListSupport
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
@@ -120,6 +121,7 @@ import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
 import org.mariotaku.twidere.view.holder.StatusViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder.StatusClickListener
+import java.lang.ref.WeakReference
 import java.util.*
 
 /**
@@ -562,11 +564,12 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     private fun loadTranslation(status: ParcelableStatus?) {
         if (status == null) return
-        if (AsyncTaskUtils.isTaskRunning(loadTranslationTask)) {
-            loadTranslationTask!!.cancel(true)
+        if (loadTranslationTask?.isFinished ?: false) return
+        loadTranslationTask = run {
+            val task = LoadTranslationTask(this, status)
+            TaskStarter.execute(task)
+            return@run task
         }
-        loadTranslationTask = LoadTranslationTask(this)
-        AsyncTaskUtils.executeTask<LoadTranslationTask, ParcelableStatus>(loadTranslationTask, status)
     }
 
 
@@ -707,41 +710,35 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         }
     }
 
-    internal class LoadTranslationTask(val fragment: StatusFragment) : AsyncTask<ParcelableStatus, Any, SingleResponse<TranslationResult>>() {
-        private val context = fragment.activity
+    internal class LoadTranslationTask(fragment: StatusFragment, val status: ParcelableStatus) :
+            AbsAccountRequestTask<Any?, TranslationResult, Any?>(fragment.context, status.account_key) {
 
-        override fun doInBackground(vararg params: ParcelableStatus): SingleResponse<TranslationResult> {
-            val status = params[0]
-            val twitter = MicroBlogAPIFactory.getInstance(context, status.account_key
-            )
-            val prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
-                    Context.MODE_PRIVATE)
-            if (twitter == null) return SingleResponse.Companion.getInstance<TranslationResult>()
-            try {
-                val prefDest = prefs.getString(SharedPreferenceConstants.KEY_TRANSLATION_DESTINATION, null)
-                val dest: String
-                if (TextUtils.isEmpty(prefDest)) {
-                    dest = twitter.accountSettings.language
-                    val editor = prefs.edit()
-                    editor.putString(SharedPreferenceConstants.KEY_TRANSLATION_DESTINATION, dest)
-                    editor.apply()
-                } else {
-                    dest = prefDest
-                }
-                val statusId = if (status.is_retweet) status.retweet_id else status.id
-                return SingleResponse.Companion.getInstance(twitter.showTranslation(statusId, dest))
-            } catch (e: MicroBlogException) {
-                return SingleResponse.Companion.getInstance<TranslationResult>(e)
+        val weakFragment = WeakReference(fragment)
+
+        override fun onExecute(account: AccountDetails, params: Any?): TranslationResult {
+            val twitter = account.newMicroBlogInstance(context, MicroBlog::class.java)
+            val prefDest = preferences.getString(KEY_TRANSLATION_DESTINATION, null)
+            val dest: String
+            if (TextUtils.isEmpty(prefDest)) {
+                dest = twitter.accountSettings.language
+                val editor = preferences.edit()
+                editor.putString(KEY_TRANSLATION_DESTINATION, dest)
+                editor.apply()
+            } else {
+                dest = prefDest
             }
-
+            val statusId = if (status.is_retweet) status.retweet_id else status.id
+            return twitter.showTranslation(statusId, dest)
         }
 
-        override fun onPostExecute(result: SingleResponse<TranslationResult>) {
-            if (result.data != null) {
-                fragment.displayTranslation(result.data)
-            } else if (result.hasException()) {
-                Utils.showErrorMessage(context, R.string.action_translate, result.exception, false)
-            }
+        override fun onSucceed(callback: Any?, result: TranslationResult) {
+            val fragment = weakFragment.get() ?: return
+            fragment.displayTranslation(result)
+        }
+
+        override fun onException(callback: Any?, exception: MicroBlogException) {
+            val context = this.context ?: return
+            Toast.makeText(context, exception.getErrorMessage(context), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -1637,9 +1634,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     if (detachedStatusViewHolder != null) {
                         return detachedStatusViewHolder
                     }
-                    val view = inflater.inflate(R.layout.header_status_compact, parent, false)
-                    val cardView = view.findViewById(R.id.compact_card)
-                    cardView.setBackgroundColor(cardBackgroundColor)
+                    val view = inflater.inflate(R.layout.header_status, parent, false)
+                    view.setBackgroundColor(cardBackgroundColor)
                     return DetailStatusViewHolder(this, view)
                 }
                 VIEW_TYPE_LIST_STATUS -> {

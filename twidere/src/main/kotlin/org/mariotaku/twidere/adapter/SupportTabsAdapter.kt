@@ -114,8 +114,10 @@ class SupportTabsAdapter(
     }
 
     override fun onPageSelected(position: Int) {
-        if (indicator == null || position < 0 || position >= count) return
-        announceForAccessibilityCompat(context, indicator as View?, getPageTitle(position), javaClass)
+        if (position < 0 || position >= count) return
+        val text = getPageTitle(position) ?: return
+        val view = indicator as? View ?: return
+        announceForAccessibilityCompat(context, view, text, javaClass)
     }
 
     override fun onTabLongClick(position: Int): Boolean {

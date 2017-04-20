@@ -30,6 +30,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.loader.AbsRequestStatusesLoader
 import org.mariotaku.twidere.model.BaseRefreshTaskParam
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -135,8 +136,7 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         } else if (loader is AbsRequestStatusesLoader) {
             val e = loader.exception
             if (e != null) {
-                showError(R.drawable.ic_info_error_generic, Utils.getErrorMessage(context, e) ?:
-                        context.getString(R.string.error_unknown_error))
+                showError(R.drawable.ic_info_error_generic, e.getErrorMessage(context))
             } else {
                 showEmpty(R.drawable.ic_info_refresh, getString(R.string.swipe_down_to_refresh))
             }

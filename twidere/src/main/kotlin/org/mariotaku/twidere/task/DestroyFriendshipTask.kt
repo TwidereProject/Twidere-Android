@@ -1,6 +1,7 @@
 package org.mariotaku.twidere.task
 
 import android.content.Context
+import android.widget.Toast
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.User
@@ -40,15 +41,10 @@ class DestroyFriendshipTask(context: Context) : AbsFriendshipOperationTask(conte
         resolver.delete(Statuses.CONTENT_URI, where.sql, whereArgs)
     }
 
-    override fun showErrorMessage(params: AbsFriendshipOperationTask.Arguments, exception: Exception?) {
-        Utils.showErrorMessage(context, R.string.action_unfollowing, exception, false)
-    }
-
     override fun showSucceededMessage(params: AbsFriendshipOperationTask.Arguments, user: ParcelableUser) {
         val nameFirst = kPreferences[nameFirstKey]
-        val message = context.getString(R.string.unfollowed_user,
-                manager.getDisplayName(user, nameFirst))
-        Utils.showInfoMessage(context, message, false)
+        val message = context.getString(R.string.unfollowed_user, manager.getDisplayName(user, nameFirst))
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
 }

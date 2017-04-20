@@ -28,6 +28,7 @@ import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.restfu.RestAPIFactory;
+import org.mariotaku.restfu.RestFuUtils;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.http.Endpoint;
 import org.mariotaku.restfu.http.HttpRequest;
@@ -42,7 +43,6 @@ import org.mariotaku.twidere.model.account.cred.OAuthCredentials;
 import org.mariotaku.twidere.model.util.AccountUtils;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.MicroBlogAPIFactory;
-import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
 import org.mariotaku.twidere.util.net.TwidereDns;
 import org.xbill.DNS.ResolverConfig;
@@ -234,7 +234,7 @@ public class NetworkDiagnosticsFragment extends BaseFragment {
                 } catch (IOException e) {
                     publishProgress(new LogText("ERROR: " + e.getMessage(), LogText.State.ERROR));
                 } finally {
-                    Utils.closeSilently(response);
+                    RestFuUtils.closeSilently(response);
                 }
                 publishProgress(LogText.LINEBREAK, LogText.LINEBREAK);
 

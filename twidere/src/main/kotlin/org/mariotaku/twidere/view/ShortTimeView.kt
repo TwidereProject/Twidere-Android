@@ -22,7 +22,6 @@ package org.mariotaku.twidere.view
 import android.content.Context
 import android.os.SystemClock
 import android.support.v7.widget.AppCompatTextView
-import android.text.TextUtils
 import android.text.format.DateUtils
 import android.util.AttributeSet
 import org.mariotaku.twidere.Constants
@@ -73,8 +72,8 @@ class ShortTimeView(
         }
     }
 
-    private fun setTextIfChanged(text: CharSequence) {
-        if (TextUtils.equals(text, getText())) return
+    private fun setTextIfChanged(text: CharSequence?) {
+        if (text == this.text) return
         setText(text)
     }
 
