@@ -25,7 +25,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.TabAccountFlags
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
-import org.mariotaku.twidere.fragment.UserFavoritesFragment
+import org.mariotaku.twidere.fragment.statuses.UserFavoritesFragment
 import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.model.tab.StringHolder

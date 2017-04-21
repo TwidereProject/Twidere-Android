@@ -114,11 +114,14 @@ import org.mariotaku.twidere.extension.model.getBestProfileBanner
 import org.mariotaku.twidere.extension.model.originalProfileImage
 import org.mariotaku.twidere.extension.model.urlPreferred
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.StatusesFragmentDelegate
-import org.mariotaku.twidere.fragment.UserTimelineFragment.UserTimelineFragmentDelegate
+import org.mariotaku.twidere.fragment.statuses.UserTimelineFragment.UserTimelineFragmentDelegate
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback
 import org.mariotaku.twidere.fragment.iface.IToolBarSupportFragment
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
+import org.mariotaku.twidere.fragment.statuses.UserFavoritesFragment
+import org.mariotaku.twidere.fragment.statuses.UserMediaTimelineFragment
+import org.mariotaku.twidere.fragment.statuses.UserTimelineFragment
 import org.mariotaku.twidere.graphic.ActionBarColorDrawable
 import org.mariotaku.twidere.graphic.ActionIconDrawable
 import org.mariotaku.twidere.loader.ParcelableUserLoader
@@ -869,7 +872,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 }
             }
             R.id.report_spam -> {
-                ReportSpamDialogFragment.show(fragmentManager, user)
+                ReportUserSpamDialogFragment.show(fragmentManager, user)
             }
             R.id.add_to_filter -> {
                 if (userRelationship == null) return true

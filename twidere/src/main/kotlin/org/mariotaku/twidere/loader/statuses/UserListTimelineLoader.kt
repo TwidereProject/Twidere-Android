@@ -29,10 +29,10 @@ import org.mariotaku.microblog.library.twitter.model.ResponseList
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
-import org.mariotaku.twidere.loader.statuses.AbsRequestStatusesLoader
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.pagination.PaginatedList
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
 
 class UserListTimelineLoader(
@@ -42,19 +42,16 @@ class UserListTimelineLoader(
         private val userKey: UserKey?,
         private val screenName: String?,
         private val listName: String?,
-        sinceId: String?,
-        maxId: String?,
         adapterData: List<ParcelableStatus>?,
         savedStatusesArgs: Array<String>?,
         tabPosition: Int,
         fromUser: Boolean,
         loadingMore: Boolean
-) : AbsRequestStatusesLoader(context, accountKey, sinceId, maxId, -1, adapterData, savedStatusesArgs,
-        tabPosition, fromUser, loadingMore) {
+) : AbsRequestStatusesLoader(context, accountKey, adapterData, savedStatusesArgs, tabPosition, fromUser, loadingMore) {
 
     @Throws(MicroBlogException::class)
-    override fun getStatuses(account: AccountDetails, paging: Paging): List<ParcelableStatus> {
-        return getMicroBlogStatuses(account, paging).map {
+    override fun getStatuses(account: AccountDetails, paging: Paging): PaginatedList<ParcelableStatus> {
+        return getMicroBlogStatuses(account, paging).mapMicroBlogToPaginated {
             it.toParcelable(account.key, account.type, profileImageSize)
         }
     }

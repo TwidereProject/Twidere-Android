@@ -1,7 +1,7 @@
 /*
- * Twidere - Twitter client for Android
+ *             Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,13 +17,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.fragment
+package org.mariotaku.twidere.fragment.statuses
 
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.content.Loader
 import org.mariotaku.twidere.TwidereConstants.*
-import org.mariotaku.twidere.loader.statuses.PublicTimelineLoader
+import org.mariotaku.twidere.fragment.ParcelableStatusesFragment
+import org.mariotaku.twidere.loader.statuses.NetworkPublicTimelineLoader
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.util.Utils
 import java.util.*
@@ -31,20 +32,7 @@ import java.util.*
 /**
  * Created by mariotaku on 14/12/2.
  */
-class PublicTimelineFragment : ParcelableStatusesFragment() {
-
-    override fun onCreateStatusesLoader(context: Context, args: Bundle,
-            fromUser: Boolean): Loader<List<ParcelableStatus>?> {
-        refreshing = true
-        val data = adapterData
-        val accountKey = Utils.getAccountKey(context, args)
-        val maxId = args.getString(EXTRA_MAX_ID)
-        val sinceId = args.getString(EXTRA_SINCE_ID)
-        val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
-        val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-        return PublicTimelineLoader(context, accountKey, sinceId, maxId, data,
-                savedStatusesFileArgs, tabPosition, fromUser, loadingMore)
-    }
+class NetworkPublicTimelineFragment : ParcelableStatusesFragment() {
 
     override val savedStatusesFileArgs: Array<String>?
         get() {
@@ -55,14 +43,23 @@ class PublicTimelineFragment : ParcelableStatusesFragment() {
             return result.toTypedArray()
         }
 
-    fun onLoadMoreContents(position: Int) {
-        // Ignore for now cause Fanfou doesn't support load more for public timeline.
-    }
-
     override val readPositionTagWithArguments: String?
         get() {
             val tabPosition = arguments.getInt(EXTRA_TAB_POSITION, -1)
             if (tabPosition < 0) return null
-            return "public_timeline"
+            return "networkpublic_timeline"
         }
+
+    override fun onCreateStatusesLoader(context: Context, args: Bundle,
+            fromUser: Boolean): Loader<List<ParcelableStatus>?> {
+        refreshing = true
+        val data = adapterData
+        val accountKey = Utils.getAccountKey(context, args)
+        val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
+        val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
+        return NetworkPublicTimelineLoader(context, accountKey, data, savedStatusesFileArgs,
+                tabPosition, fromUser, loadingMore).apply {
+            pagination = args.toPagination()
+        }
+    }
 }

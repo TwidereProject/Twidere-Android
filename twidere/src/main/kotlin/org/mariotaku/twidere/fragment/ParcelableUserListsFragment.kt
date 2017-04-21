@@ -111,15 +111,18 @@ abstract class ParcelableUserListsFragment : AbsContentListRecyclerViewFragment<
         loaderManager.restartLoader(0, loaderArgs, this)
     }
 
-    override fun handleKeyboardShortcutSingle(handler: KeyboardShortcutsHandler, keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
+    override fun handleKeyboardShortcutSingle(handler: KeyboardShortcutsHandler, keyCode: Int,
+            event: KeyEvent, metaState: Int): Boolean {
         return navigationHelper.handleKeyboardShortcutSingle(handler, keyCode, event, metaState)
     }
 
-    override fun handleKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler, keyCode: Int, repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
+    override fun handleKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler, keyCode: Int,
+            repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
         return navigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
     }
 
-    override fun isKeyboardShortcutHandled(handler: KeyboardShortcutsHandler, keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
+    override fun isKeyboardShortcutHandled(handler: KeyboardShortcutsHandler, keyCode: Int,
+            event: KeyEvent, metaState: Int): Boolean {
         return navigationHelper.isKeyboardShortcutHandled(handler, keyCode, event, metaState)
     }
 
@@ -166,5 +169,6 @@ abstract class ParcelableUserListsFragment : AbsContentListRecyclerViewFragment<
         return true
     }
 
-    protected abstract fun onCreateUserListsLoader(context: Context, args: Bundle, fromUser: Boolean): Loader<List<ParcelableUserList>>
+    protected abstract fun onCreateUserListsLoader(context: Context, args: Bundle, fromUser: Boolean):
+            Loader<List<ParcelableUserList>>
 }

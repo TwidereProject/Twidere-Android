@@ -36,6 +36,7 @@ import org.mariotaku.restfu.http.mime.SimpleBody
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.alias.MastodonStatusUpdate
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
@@ -62,7 +63,6 @@ import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.*
 import java.util.concurrent.TimeUnit
-import org.mariotaku.microblog.library.mastodon.model.StatusUpdate as MastodonStatusUpdate
 
 /**
  * Update status

@@ -42,6 +42,15 @@ class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapte
         LoaderCallbacks<ResponseList<SavedSearch>?>, AdapterView.OnItemClickListener,
         AdapterView.OnItemLongClickListener {
 
+    override var refreshing: Boolean
+        get() = loaderManager.hasRunningLoadersSafe()
+        set(value) {
+            super.refreshing = value
+        }
+
+    val accountKey: UserKey
+        get() = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         listView.onItemClickListener = this
@@ -67,9 +76,6 @@ class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapte
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<ResponseList<SavedSearch>?> {
         return SavedSearchesLoader(activity, accountKey)
     }
-
-    val accountKey: UserKey
-        get() = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
 
     override fun onItemLongClick(view: AdapterView<*>, child: View, position: Int, id: Long): Boolean {
         val item = adapter.findItem(id) ?: return false
@@ -99,12 +105,6 @@ class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapte
         if (refreshing) return
         loaderManager.restartLoader(0, null, this)
     }
-
-    override var refreshing: Boolean
-        get() = loaderManager.hasRunningLoadersSafe()
-        set(value) {
-            super.refreshing = value
-        }
 
     @Subscribe
     fun onSavedSearchDestroyed(event: SavedSearchDestroyedEvent) {

@@ -1,7 +1,7 @@
 /*
- * Twidere - Twitter client for Android
+ *             Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.fragment
+package org.mariotaku.twidere.fragment.statuses
 
 import android.content.Context
 import android.content.Intent
@@ -29,6 +29,7 @@ import android.view.MenuItem
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.ComposeActivity
+import org.mariotaku.twidere.fragment.ParcelableStatusesFragment
 import org.mariotaku.twidere.loader.statuses.GroupTimelineLoader
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.util.Utils
@@ -105,12 +106,12 @@ class GroupTimelineFragment : ParcelableStatusesFragment() {
         val accountKey = Utils.getAccountKey(context, args)
         val groupId = args.getString(EXTRA_GROUP_ID)
         val groupName = args.getString(EXTRA_GROUP_NAME)
-        val maxId = args.getString(EXTRA_MAX_ID)
-        val sinceId = args.getString(EXTRA_SINCE_ID)
         val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-        return GroupTimelineLoader(activity, accountKey, groupId, groupName, sinceId,
-                maxId, adapterData, savedStatusesFileArgs, tabPosition, fromUser, loadingMore)
+        return GroupTimelineLoader(activity, accountKey, groupId, groupName, adapterData,
+                savedStatusesFileArgs, tabPosition, fromUser, loadingMore).apply {
+            pagination = args.toPagination()
+        }
     }
 
 }

@@ -62,6 +62,8 @@ import org.mariotaku.twidere.fragment.message.MessageConversationInfoFragment
 import org.mariotaku.twidere.fragment.message.MessageNewConversationFragment
 import org.mariotaku.twidere.fragment.message.MessagesConversationFragment
 import org.mariotaku.twidere.fragment.message.MessagesEntriesFragment
+import org.mariotaku.twidere.fragment.status.*
+import org.mariotaku.twidere.fragment.statuses.*
 import org.mariotaku.twidere.fragment.users.*
 import org.mariotaku.twidere.graphic.EmptyDrawable
 import org.mariotaku.twidere.model.UserKey

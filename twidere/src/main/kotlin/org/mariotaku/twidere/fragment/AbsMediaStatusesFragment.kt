@@ -31,9 +31,10 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_FROM_USER
 import org.mariotaku.twidere.extension.reachingEnd
 import org.mariotaku.twidere.extension.reachingStart
-import org.mariotaku.twidere.loader.statuses.AbsRequestStatusesLoader
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
+import org.mariotaku.twidere.loader.statuses.AbsRequestStatusesLoader
 import org.mariotaku.twidere.model.ParcelableStatus
+import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
@@ -137,8 +138,9 @@ abstract class AbsMediaStatusesFragment : AbsContentRecyclerViewFragment<Stagger
     protected open fun hasMoreData(loader: Loader<List<ParcelableStatus>?>,
             data: List<ParcelableStatus>?, changed: Boolean): Boolean {
         if (loader !is AbsRequestStatusesLoader) return false
-        val maxId = loader.maxId?.takeIf(String::isNotEmpty)
-        val sinceId = loader.sinceId?.takeIf(String::isNotEmpty)
+        val pagination = loader.pagination as? SinceMaxPagination
+        val maxId = pagination?.maxId?.takeIf(String::isNotEmpty)
+        val sinceId = pagination?.sinceId?.takeIf(String::isNotEmpty)
         if (sinceId == null && maxId != null) {
             if (data != null && !data.isEmpty()) {
                 return changed

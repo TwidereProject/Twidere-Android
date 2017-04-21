@@ -17,35 +17,36 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.fragment
+package org.mariotaku.twidere.fragment.statuses
 
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.content.Loader
-import org.mariotaku.twidere.TwidereConstants.*
-import org.mariotaku.twidere.loader.statuses.MediaStatusesSearchLoader
+import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.fragment.AbsMediaStatusesFragment
+import org.mariotaku.twidere.fragment.ParcelableStatusesFragment.Companion.toPagination
+import org.mariotaku.twidere.loader.statuses.MediaTimelineLoader
 import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.util.Utils
+import org.mariotaku.twidere.model.UserKey
 
 /**
  * Created by mariotaku on 14/11/5.
  */
-class MediaStatusesSearchFragment : AbsMediaStatusesFragment() {
+class UserMediaTimelineFragment : AbsMediaStatusesFragment() {
 
     override fun onCreateStatusesLoader(context: Context, args: Bundle, fromUser: Boolean):
             Loader<List<ParcelableStatus>?> {
-        refreshing = true
-        val accountKey = Utils.getAccountKey(context, args)
-        val maxId = args.getString(EXTRA_MAX_ID)
-        val sinceId = args.getString(EXTRA_SINCE_ID)
-        val page = args.getInt(EXTRA_PAGE, -1)
-        val query = args.getString(EXTRA_QUERY)
+        val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
+        val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
+        val screenName = args.getString(EXTRA_SCREEN_NAME)
         val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
-        val makeGap = args.getBoolean(EXTRA_MAKE_GAP, true)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-        return MediaStatusesSearchLoader(activity, accountKey, query, sinceId, maxId, page,
-                adapter.getData(), null, tabPosition, fromUser, makeGap, loadingMore)
+        return MediaTimelineLoader(context, accountKey, userKey, screenName, adapter.getData(), null,
+                tabPosition, fromUser, loadingMore).apply {
+            pagination = args.toPagination()
+        }
     }
+
 
     override fun getStatuses(maxId: String?, sinceId: String?): Int {
         if (context == null) return -1

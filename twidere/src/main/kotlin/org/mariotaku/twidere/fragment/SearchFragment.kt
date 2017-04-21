@@ -44,6 +44,8 @@ import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
+import org.mariotaku.twidere.fragment.statuses.MediaStatusesSearchFragment
+import org.mariotaku.twidere.fragment.statuses.StatusesSearchFragment
 import org.mariotaku.twidere.fragment.users.SearchUsersFragment
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.analyzer.Search

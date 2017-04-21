@@ -59,6 +59,7 @@ import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
+import org.mariotaku.twidere.fragment.statuses.UserListTimelineFragment
 import org.mariotaku.twidere.fragment.users.UserListMembersFragment
 import org.mariotaku.twidere.fragment.users.UserListSubscribersFragment
 import org.mariotaku.twidere.model.ParcelableUser

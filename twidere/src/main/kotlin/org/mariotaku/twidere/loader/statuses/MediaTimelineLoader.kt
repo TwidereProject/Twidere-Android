@@ -27,35 +27,32 @@ import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.twitter.model.*
+import org.mariotaku.twidere.alias.MastodonTimelineOption
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.api.tryShowUser
+import org.mariotaku.twidere.extension.model.api.mastodon.mapToPaginated
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
-import org.mariotaku.twidere.loader.statuses.AbsRequestStatusesLoader
-import org.mariotaku.twidere.loader.statuses.UserTimelineLoader
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.pagination.PaginatedList
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
-import org.mariotaku.microblog.library.mastodon.model.TimelineOption as MastodonTimelineOption
 
 class MediaTimelineLoader(
         context: Context,
         accountKey: UserKey?,
         private val userKey: UserKey?,
         private val screenName: String?,
-        sinceId: String?,
-        maxId: String?,
         data: List<ParcelableStatus>?,
         savedStatusesArgs: Array<String>?,
         tabPosition: Int,
         fromUser: Boolean,
         loadingMore: Boolean
-) : AbsRequestStatusesLoader(context, accountKey, sinceId, maxId, -1, data, savedStatusesArgs,
-        tabPosition, fromUser, loadingMore) {
+) : AbsRequestStatusesLoader(context, accountKey, data, savedStatusesArgs, tabPosition, fromUser, loadingMore) {
 
     private var user: User? = null
 
@@ -71,10 +68,10 @@ class MediaTimelineLoader(
         }
 
     @Throws(MicroBlogException::class)
-    override fun getStatuses(account: AccountDetails, paging: Paging): List<ParcelableStatus> {
+    override fun getStatuses(account: AccountDetails, paging: Paging): PaginatedList<ParcelableStatus> {
         when (account.type) {
             AccountType.MASTODON -> return getMastodonStatuses(account, paging)
-            else -> return getMicroBlogStatuses(account, paging).map {
+            else -> return getMicroBlogStatuses(account, paging).mapMicroBlogToPaginated {
                 it.toParcelable(account.key, account.type, profileImageSize)
             }
         }
@@ -134,11 +131,11 @@ class MediaTimelineLoader(
         throw MicroBlogException("Not implemented")
     }
 
-    private fun getMastodonStatuses(account: AccountDetails, paging: Paging): List<ParcelableStatus> {
+    private fun getMastodonStatuses(account: AccountDetails, paging: Paging): PaginatedList<ParcelableStatus> {
         val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
-        val option = org.mariotaku.microblog.library.mastodon.model.TimelineOption()
+        val option = MastodonTimelineOption()
         option.onlyMedia(true)
         return UserTimelineLoader.getMastodonStatuses(mastodon, userKey, screenName, paging,
-                option).map { it.toParcelable(account.key) }
+                option).mapToPaginated { it.toParcelable(account.key) }
     }
 }

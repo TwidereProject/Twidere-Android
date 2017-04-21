@@ -92,11 +92,11 @@ import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.toParcelable
-import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.view.calculateSpaceItemHeight
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.Companion.handleActionClick
-import org.mariotaku.twidere.loader.statuses.ConversationLoader
+import org.mariotaku.twidere.fragment.ParcelableStatusesFragment.Companion.toPagination
 import org.mariotaku.twidere.loader.ParcelableStatusLoader
+import org.mariotaku.twidere.loader.statuses.ConversationLoader
 import org.mariotaku.twidere.menu.FavoriteItemProvider
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.analyzer.Share
@@ -157,11 +157,12 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             val maxSortId = args.getLong(EXTRA_MAX_SORT_ID)
             val sinceSortId = args.getLong(EXTRA_SINCE_SORT_ID)
             val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-            val loader = ConversationLoader(activity, status, sinceId, maxId, sinceSortId, maxSortId,
-                    adapter.getData(), true, loadingMore)
-            // Setting comparator to null lets statuses sort ascending
-            loader.comparator = null
-            return loader
+            return ConversationLoader(activity, status, sinceSortId, maxSortId, adapter.getData(),
+                    true, loadingMore).apply {
+                pagination = args.toPagination()
+                // Setting comparator to null lets statuses sort ascending
+                comparator = null
+            }
         }
 
         override fun onLoadFinished(loader: Loader<List<ParcelableStatus>>, data: List<ParcelableStatus>?) {

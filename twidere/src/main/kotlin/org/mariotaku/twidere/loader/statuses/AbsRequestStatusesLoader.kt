@@ -27,14 +27,21 @@ import android.support.annotation.WorkerThread
 import org.mariotaku.kpreferences.get
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
+import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.loadItemLimitKey
+import org.mariotaku.twidere.extension.model.api.applyLoadLimit
+import org.mariotaku.twidere.loader.iface.IPaginationLoader
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ListResponse
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.pagination.PaginatedArrayList
+import org.mariotaku.twidere.model.pagination.PaginatedList
+import org.mariotaku.twidere.model.pagination.Pagination
+import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.task.twitter.GetStatusesTask
@@ -51,15 +58,12 @@ import javax.inject.Inject
 abstract class AbsRequestStatusesLoader(
         context: Context,
         val accountKey: UserKey?,
-        val sinceId: String?,
-        val maxId: String?,
-        val page: Int,
         adapterData: List<ParcelableStatus>?,
         private val savedStatusesArgs: Array<String>?,
         tabPosition: Int,
         fromUser: Boolean,
         private val loadingMore: Boolean
-) : ParcelableStatusesLoader(context, adapterData, tabPosition, fromUser) {
+) : ParcelableStatusesLoader(context, adapterData, tabPosition, fromUser), IPaginationLoader {
     // Statuses sorted descending by default
     var comparator: Comparator<ParcelableStatus>? = ParcelableStatus.REVERSE_COMPARATOR
 
@@ -69,6 +73,16 @@ abstract class AbsRequestStatusesLoader(
             exceptionRef.set(value)
         }
 
+    override var pagination: Pagination? = null
+    override var nextPagination: Pagination? = null
+        protected set
+    override var prevPagination: Pagination? = null
+        protected set
+
+    protected open val isGapEnabled: Boolean = true
+
+    protected val profileImageSize: String = context.getString(R.string.profile_image_size)
+
     @Inject
     lateinit var jsonCache: JsonCache
     @Inject
@@ -77,7 +91,6 @@ abstract class AbsRequestStatusesLoader(
     lateinit var userColorNameManager: UserColorNameManager
 
     private val exceptionRef = AtomicReference<MicroBlogException?>()
-    protected val profileImageSize: String = context.getString(R.string.profile_image_size)
 
     private val cachedData: List<ParcelableStatus>?
         get() {
@@ -116,16 +129,17 @@ abstract class AbsRequestStatusesLoader(
         val loadItemLimit = preferences[loadItemLimitKey]
         val statuses = try {
             val paging = Paging().apply {
-                processPaging(details, loadItemLimit, this)
+                processPaging(this, details, loadItemLimit)
             }
             getStatuses(details, paging)
         } catch (e: MicroBlogException) {
             // mHandler.post(new ShowErrorRunnable(e));
             exception = e
             DebugLog.w(tr = e)
-            return ListResponse.getListInstance(CopyOnWriteArrayList(data), e)
+            return ListResponse.getListInstance(data, e)
         }
-
+        nextPagination = statuses.nextPage
+        prevPagination = statuses.previousPage
         var minIdx = -1
         var rowsDeleted = 0
         for (i in 0 until statuses.size) {
@@ -139,7 +153,7 @@ abstract class AbsRequestStatusesLoader(
         }
 
         // Insert a gap.
-        val deletedOldGap = rowsDeleted > 0 && statuses.any { it.id == maxId }
+        val deletedOldGap = rowsDeleted > 0 && statuses.foundInPagination()
         val noRowsDeleted = rowsDeleted == 0
         val insertGap = minIdx != -1 && (noRowsDeleted || deletedOldGap) && !noItemsBefore
                 && statuses.size >= loadItemLimit && !loadingMore
@@ -175,28 +189,25 @@ abstract class AbsRequestStatusesLoader(
         super.onStartLoading()
     }
 
-    @Throws(MicroBlogException::class)
-    protected abstract fun getStatuses(account: AccountDetails, paging: Paging): List<ParcelableStatus>
-
-
     @WorkerThread
     protected abstract fun shouldFilterStatus(database: SQLiteDatabase, status: ParcelableStatus): Boolean
 
-    protected open fun processPaging(details: AccountDetails, loadItemLimit: Int, paging: Paging) {
-        paging.setCount(loadItemLimit)
-        if (maxId != null) {
-            paging.setMaxId(maxId)
-        }
-        if (sinceId != null) {
-            paging.setSinceId(sinceId)
-            if (maxId == null) {
-                paging.setLatestResults(true)
-            }
+
+    protected open fun processPaging(paging: Paging, details: AccountDetails, loadItemLimit: Int) {
+        paging.applyLoadLimit(details, loadItemLimit)
+        pagination?.applyTo(paging)
+    }
+
+    protected open fun List<ParcelableStatus>.foundInPagination(): Boolean {
+        val pagination = this@AbsRequestStatusesLoader.pagination
+        return when (pagination) {
+            is SinceMaxPagination -> return any { it.id == pagination.maxId }
+            else -> false
         }
     }
 
-    protected open val isGapEnabled: Boolean
-        get() = true
+    @Throws(MicroBlogException::class)
+    protected abstract fun getStatuses(account: AccountDetails, paging: Paging): PaginatedList<ParcelableStatus>
 
     private fun saveCachedData(data: List<ParcelableStatus>?) {
         val key = serializationKey
@@ -212,6 +223,14 @@ abstract class AbsRequestStatusesLoader(
             }
         }
 
+    }
+
+    companion object {
+        inline fun <R> List<Status>.mapMicroBlogToPaginated(transform: (Status) -> R): PaginatedList<R> {
+            val result = mapTo(PaginatedArrayList(size), transform)
+            result.nextPage = SinceMaxPagination().apply { maxId = lastOrNull()?.id }
+            return result
+        }
     }
 
 }
