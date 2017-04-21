@@ -42,6 +42,10 @@ public class CursorPagination implements Pagination, Parcelable {
         return cursor;
     }
 
+    public void setCursor(String cursor) {
+        this.cursor = cursor;
+    }
+
     @Override
     public void applyTo(Paging paging) {
         paging.cursor(cursor);
@@ -68,6 +72,14 @@ public class CursorPagination implements Pagination, Parcelable {
             return new CursorPagination[size];
         }
     };
+
+    @Nullable
+    public static CursorPagination valueOf(String cursor) {
+        if (cursor == null) return null;
+        final CursorPagination pagination = new CursorPagination();
+        pagination.cursor = cursor;
+        return pagination;
+    }
 
     @Nullable
     public static CursorPagination valueOf(long cursor) {

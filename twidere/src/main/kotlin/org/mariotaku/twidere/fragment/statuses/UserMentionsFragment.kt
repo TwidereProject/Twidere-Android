@@ -50,10 +50,8 @@ class UserMentionsFragment : StatusesSearchFragment() {
         val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
         val makeGap = args.getBoolean(EXTRA_MAKE_GAP, true)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-        return UserMentionsLoader(activity, accountKey, screenName, adapterData, savedStatusesFileArgs,
-                tabPosition, fromUser, makeGap, loadingMore).apply {
-            pagination = args.toPagination()
-        }
+        return UserMentionsLoader(activity, accountKey, screenName, adapterData,
+                savedStatusesFileArgs, tabPosition, fromUser, makeGap, loadingMore)
     }
 
 }

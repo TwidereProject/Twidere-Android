@@ -109,9 +109,7 @@ class GroupTimelineFragment : ParcelableStatusesFragment() {
         val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
         return GroupTimelineLoader(activity, accountKey, groupId, groupName, adapterData,
-                savedStatusesFileArgs, tabPosition, fromUser, loadingMore).apply {
-            pagination = args.toPagination()
-        }
+                savedStatusesFileArgs, tabPosition, fromUser, loadingMore)
     }
 
 }

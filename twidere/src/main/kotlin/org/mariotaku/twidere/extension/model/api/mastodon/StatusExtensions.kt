@@ -38,6 +38,7 @@ fun Status.toParcelable(accountKey: UserKey): ParcelableStatus {
     val extras = ParcelableStatus.Extras()
     result.account_key = accountKey
     result.id = id
+    result.sort_id = sortId
     result.timestamp = createdAt?.time ?: 0
 
     extras.summary_text = spoilerText

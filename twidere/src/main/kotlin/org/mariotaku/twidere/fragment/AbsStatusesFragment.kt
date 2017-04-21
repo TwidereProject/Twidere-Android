@@ -57,6 +57,7 @@ import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.analyzer.Share
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
+import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.timeline.TimelineFilter
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
@@ -351,10 +352,8 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         DebugLog.v(msg = "Load activity gap $status")
         adapter.addGapLoadingId(ObjectId(status.account_key, status.id))
         val accountKeys = arrayOf(status.account_key)
-        val maxIds = arrayOf<String?>(status.id)
-        val maxSortIds = longArrayOf(status.sort_id)
-        getStatuses(BaseRefreshTaskParam(accountKeys = accountKeys, maxIds = maxIds, sinceIds = null,
-                maxSortIds = maxSortIds, sinceSortIds = null))
+        val pagination = arrayOf(SinceMaxPagination.maxId(status.id, status.sort_id))
+        getStatuses(BaseRefreshTaskParam(accountKeys, pagination))
     }
 
     override fun onMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia,

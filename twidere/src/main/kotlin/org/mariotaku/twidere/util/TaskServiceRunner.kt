@@ -15,8 +15,10 @@ import org.mariotaku.twidere.constant.IntentConstants.INTENT_PACKAGE_PREFIX
 import org.mariotaku.twidere.constant.dataSyncProviderInfoKey
 import org.mariotaku.twidere.constant.stopAutoRefreshWhenBatteryLowKey
 import org.mariotaku.twidere.model.AccountPreferences
-import org.mariotaku.twidere.model.SimpleRefreshTaskParam
+import org.mariotaku.twidere.model.RefreshTaskParam
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.pagination.Pagination
+import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.filter.RefreshFiltersSubscriptionsTask
@@ -105,7 +107,8 @@ class TaskServiceRunner(
             val preferences: SharedPreferences,
             val refreshable: (AccountPreferences) -> Boolean,
             val getSinceIds: (Array<UserKey>) -> Array<String?>?
-    ) : SimpleRefreshTaskParam() {
+    ) : RefreshTaskParam {
+
         override val accountKeys: Array<UserKey> by lazy {
             return@lazy AccountPreferences.getAccountPreferences(context, preferences,
                     DataStoreUtils.getAccountKeys(context)).filter {
@@ -113,8 +116,10 @@ class TaskServiceRunner(
             }.mapToArray(AccountPreferences::accountKey)
         }
 
-        override val sinceIds: Array<String?>?
-            get() = getSinceIds(accountKeys)
+        override val pagination: Array<Pagination?>?
+            get() = getSinceIds(accountKeys)?.mapToArray { sinceId ->
+                SinceMaxPagination().also { it.sinceId = sinceId }
+            }
 
     }
 

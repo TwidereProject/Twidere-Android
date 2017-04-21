@@ -136,6 +136,8 @@ public class Status {
     @JsonField(name = "application")
     Application application;
 
+    private long sortId = -1;
+
     public String getId() {
         return id;
     }
@@ -215,6 +217,21 @@ public class Status {
 
     public Application getApplication() {
         return application;
+    }
+
+    public long getSortId() {
+        if (sortId != -1) return sortId;
+        // Try use long id
+        try {
+            sortId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            // Ignore
+        }
+        if (sortId == -1 && createdAt != null) {
+            // Try use timestamp
+            sortId = createdAt.getTime();
+        }
+        return sortId;
     }
 
     @Override

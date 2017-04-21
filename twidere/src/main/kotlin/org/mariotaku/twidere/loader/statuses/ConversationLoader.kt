@@ -43,8 +43,6 @@ import java.util.*
 class ConversationLoader(
         context: Context,
         status: ParcelableStatus,
-        val sinceSortId: Long,
-        val maxSortId: Long,
         adapterData: List<ParcelableStatus>?,
         fromUser: Boolean,
         loadingMore: Boolean
@@ -100,6 +98,8 @@ class ConversationLoader(
         val pagination = this.pagination as? SinceMaxPagination
         val maxId = pagination?.maxId
         val sinceId = pagination?.sinceId
+        val maxSortId = pagination?.maxSortId ?: -1
+        val sinceSortId = pagination?.sinceSortId ?: -1
         val noSinceMaxId = maxId == null && sinceId == null
         // Load conversations
         if (maxId != null && maxSortId < status.sort_id || noSinceMaxId) {

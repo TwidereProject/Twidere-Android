@@ -46,6 +46,7 @@ import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.event.*
+import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableRelationshipUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.*
@@ -272,28 +273,33 @@ class AsyncTwitterWrapper(
     }
 
     fun refreshAll(action: () -> Array<UserKey>): Boolean {
-        getHomeTimelineAsync(object : SimpleRefreshTaskParam() {
+        getHomeTimelineAsync(object : RefreshTaskParam {
 
-            override val accountKeys: Array<UserKey> by lazy { action() }
+            override val accountKeys by lazy { action() }
 
-            override val sinceIds: Array<String?>? by lazy {
-                DataStoreUtils.getNewestStatusIds(context, Statuses.CONTENT_URI,
-                        accountKeys.toNulls())
+            override val pagination by lazy {
+                return@lazy DataStoreUtils.getNewestStatusIds(context, Statuses.CONTENT_URI,
+                        accountKeys.toNulls()).mapToArray {
+                    return@mapToArray SinceMaxPagination.sinceId(it, -1)
+                }
             }
         })
         if (preferences[homeRefreshMentionsKey]) {
-            getActivitiesAboutMeAsync(object : SimpleRefreshTaskParam() {
-                override val accountKeys: Array<UserKey> by lazy { action() }
+            getActivitiesAboutMeAsync(object : RefreshTaskParam {
 
-                override val sinceIds: Array<String?>? by lazy {
-                    DataStoreUtils.getRefreshNewestActivityMaxPositions(context,
-                            Activities.AboutMe.CONTENT_URI, accountKeys.toNulls())
+                override val accountKeys by lazy { action() }
+
+                override val pagination by lazy {
+                    return@lazy DataStoreUtils.getRefreshNewestActivityMaxPositions(context,
+                            Activities.AboutMe.CONTENT_URI, accountKeys.toNulls()).mapToArray {
+                        return@mapToArray SinceMaxPagination.sinceId(it, -1)
+                    }
                 }
             })
         }
         if (preferences[homeRefreshDirectMessagesKey]) {
             getMessagesAsync(object : GetMessagesTask.RefreshMessagesTaskParam(context) {
-                override val accountKeys: Array<UserKey> by lazy { action() }
+                override val accountKeys by lazy { action() }
             })
         }
         if (preferences[homeRefreshSavedSearchesKey]) {

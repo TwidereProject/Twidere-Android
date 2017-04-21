@@ -23,6 +23,7 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.TwidereConstants.NOTIFICATION_ID_HOME_TIMELINE
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_EXTRAS
+import org.mariotaku.twidere.extension.model.hasMaxIds
 import org.mariotaku.twidere.model.ParameterizedExpression
 import org.mariotaku.twidere.model.RefreshTaskParam
 import org.mariotaku.twidere.model.UserKey
@@ -95,3 +96,4 @@ class HomeTimelineFragment : CursorStatusesFragment() {
 
     }
 }
+

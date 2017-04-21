@@ -148,8 +148,9 @@ class UserListSelectorActivity : BaseActivity(),
     override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableUserList>> {
         val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
         val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
-        val nextCursor = args.getLong(EXTRA_NEXT_CURSOR)
-        return UserListOwnershipsLoader(this, accountKey, userKey, null, adapter.all)
+        return UserListOwnershipsLoader(this, accountKey, userKey, null, adapter.all).apply {
+            pagination = args.getParcelable(EXTRA_PAGINATION)
+        }
     }
 
     override fun onLoaderReset(loader: Loader<List<ParcelableUserList>>?) {

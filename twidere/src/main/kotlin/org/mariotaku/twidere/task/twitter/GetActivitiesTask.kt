@@ -17,9 +17,13 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_NOTIFY_CHANGE
 import org.mariotaku.twidere.constant.loadItemLimitKey
+import org.mariotaku.twidere.extension.model.getMaxId
+import org.mariotaku.twidere.extension.model.getMaxSortId
+import org.mariotaku.twidere.extension.model.getSinceId
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.RefreshTaskParam
+import org.mariotaku.twidere.model.TwitterListResponse
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.GetActivitiesTaskEvent
 import org.mariotaku.twidere.model.util.AccountUtils
@@ -27,7 +31,6 @@ import org.mariotaku.twidere.model.util.ParcelableActivityUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.model.TwitterListResponse
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import java.util.*
 
@@ -47,9 +50,6 @@ abstract class GetActivitiesTask(
     override fun doLongOperation(param: RefreshTaskParam): List<TwitterListResponse<Activity>> {
         if (param.shouldAbort) return emptyList()
         val accountKeys = param.accountKeys
-        val maxIds = param.maxIds
-        val maxSortIds = param.maxSortIds
-        val sinceIds = param.sinceIds
         val cr = context.contentResolver
         val result = ArrayList<TwitterListResponse<Activity>>()
         val loadItemLimit = preferences[loadItemLimitKey]
@@ -61,26 +61,17 @@ abstract class GetActivitiesTask(
             val microBlog = credentials.newMicroBlogInstance(context = context, cls = MicroBlog::class.java)
             val paging = Paging()
             paging.count(loadItemLimit)
-            var maxId: String? = null
-            var maxSortId: Long = -1
-            if (maxIds != null) {
-                maxId = maxIds[i]
-                if (maxSortIds != null) {
-                    maxSortId = maxSortIds[i]
-                }
-                if (maxId != null) {
+            val maxId = param.getMaxId(i)
+            val maxSortId = param.getMaxSortId(i)
+            if (maxId != null) {
                     paging.maxId(maxId)
-                }
             }
-            var sinceId: String? = null
-            if (sinceIds != null) {
-                sinceId = sinceIds[i]
-                if (sinceId != null) {
-                    paging.sinceId(sinceId)
-                    if (maxIds == null || maxId == null) {
-                        paging.setLatestResults(true)
-                        saveReadPosition[i] = true
-                    }
+            val sinceId = param.getSinceId(i)
+            if (sinceId != null) {
+                paging.sinceId(sinceId)
+                if (maxId == null) {
+                    paging.setLatestResults(true)
+                    saveReadPosition[i] = true
                 }
             }
             // We should delete old activities has intersection with new items

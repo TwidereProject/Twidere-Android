@@ -113,9 +113,7 @@ class UserTimelineFragment : ParcelableStatusesFragment() {
         val pinnedIds = if (adapter.hasPinnedStatuses) null else pinnedStatusIds
         return UserTimelineLoader(context, accountKey, userKey, screenName, profileUrl, data,
                 savedStatusesFileArgs, tabPosition, fromUser, loadingMore, pinnedIds,
-                timelineFilter as? UserTimelineFilter).apply {
-            pagination = args.toPagination()
-        }
+                timelineFilter as? UserTimelineFilter)
     }
 
     override fun onStatusesLoaded(loader: Loader<List<ParcelableStatus>?>, data: List<ParcelableStatus>?) {

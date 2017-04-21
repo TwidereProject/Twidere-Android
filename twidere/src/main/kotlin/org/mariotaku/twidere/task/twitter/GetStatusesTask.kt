@@ -19,8 +19,8 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_NOTIFY_CHANGE
 import org.mariotaku.twidere.constant.loadItemLimitKey
+import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.toParcelable
-import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.event.GetStatusesTaskEvent
 import org.mariotaku.twidere.model.util.AccountUtils
@@ -52,10 +52,6 @@ abstract class GetStatusesTask(
     override fun doLongOperation(param: RefreshTaskParam): List<StatusListResponse> {
         if (param.shouldAbort) return emptyList()
         val accountKeys = param.accountKeys
-        val maxIds = param.maxIds
-        val sinceIds = param.sinceIds
-        val maxSortIds = param.maxSortIds
-        val sinceSortIds = param.sinceSortIds
         val result = ArrayList<StatusListResponse>()
         val loadItemLimit = preferences[loadItemLimitKey]
         var saveReadPosition = false
@@ -67,22 +63,14 @@ abstract class GetStatusesTask(
             try {
                 val paging = Paging()
                 paging.count(loadItemLimit)
-                val maxId: String?
-                val sinceId: String?
-                var maxSortId: Long = -1
-                var sinceSortId: Long = -1
-                if (maxIds != null && maxIds[i] != null) {
-                    maxId = maxIds[i]
+                val maxId = param.getMaxId(i)
+                val sinceId = param.getSinceId(i)
+                val maxSortId = param.getMaxSortId(i)
+                val sinceSortId = param.getSinceSortId(i)
+                if (maxId != null) {
                     paging.maxId(maxId)
-                    if (maxSortIds != null) {
-                        maxSortId = maxSortIds[i]
-                    }
-                } else {
-                    maxSortId = -1
-                    maxId = null
                 }
-                if (sinceIds != null && sinceIds[i] != null) {
-                    sinceId = sinceIds[i]
+                if (sinceId != null) {
                     val sinceIdLong = sinceId.toLongOr(-1L)
                     //TODO handle non-twitter case
                     if (sinceIdLong != -1L) {
@@ -90,15 +78,11 @@ abstract class GetStatusesTask(
                     } else {
                         paging.sinceId(sinceId)
                     }
-                    if (sinceSortIds != null) {
-                        sinceSortId = sinceSortIds[i]
-                    }
-                    if (maxIds == null) {
+
+                    if (maxId == null) {
                         paging.setLatestResults(true)
                     }
                     saveReadPosition = true
-                } else {
-                    sinceId = null
                 }
                 val statuses = getStatuses(microBlog, paging)
                 val storeResult = storeStatus(accountKey, details, statuses, sinceId, maxId,

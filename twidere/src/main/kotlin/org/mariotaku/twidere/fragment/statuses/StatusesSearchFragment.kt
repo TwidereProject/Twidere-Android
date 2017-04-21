@@ -74,9 +74,7 @@ open class StatusesSearchFragment : ParcelableStatusesFragment() {
         val makeGap = args.getBoolean(EXTRA_MAKE_GAP, true)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
         return TweetSearchLoader(activity, accountKey, query, adapterData, savedStatusesFileArgs, tabPosition, fromUser,
-                makeGap, loadingMore).apply {
-            pagination = args.toPagination()
-        }
+                makeGap, loadingMore)
     }
 
     override fun fitSystemWindows(insets: Rect) {

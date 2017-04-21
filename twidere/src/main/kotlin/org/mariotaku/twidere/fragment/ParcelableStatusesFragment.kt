@@ -31,6 +31,7 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.extension.getErrorMessage
+import org.mariotaku.twidere.extension.model.getMaxId
 import org.mariotaku.twidere.loader.statuses.AbsRequestStatusesLoader
 import org.mariotaku.twidere.model.BaseRefreshTaskParam
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -67,13 +68,12 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         get() = Utils.getAccountKeys(context, arguments) ?: emptyArray()
 
     private var lastId: String? = null
-    private var page = 1
-    private var pageDelta: Int = 0
+    private var nextPagination: Pagination? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (savedInstanceState != null) {
-            page = savedInstanceState.getInt(EXTRA_PAGE)
+            nextPagination = savedInstanceState.getParcelable(EXTRA_NEXT_PAGINATION)
         }
     }
 
@@ -89,28 +89,27 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt(EXTRA_PAGE, page)
+        outState.putParcelable(EXTRA_NEXT_PAGINATION, nextPagination)
+    }
+
+    override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableStatus>?> {
+        val loader = super.onCreateLoader(id, args)
+        if (loader is AbsRequestStatusesLoader) {
+            loader.pagination = args.getParcelable(EXTRA_PAGINATION)
+        }
+        return loader
     }
 
     override fun getStatuses(param: RefreshTaskParam): Boolean {
         if (!loaderInitialized) return false
         val args = Bundle(arguments)
-        val maxIds = param.maxIds
-        if (maxIds != null) {
-            args.putString(EXTRA_MAX_ID, maxIds[0])
+        val maxId = param.getMaxId(0)
+        if (maxId != null) {
             args.putBoolean(EXTRA_MAKE_GAP, false)
-        }
-        val sinceIds = param.sinceIds
-        if (sinceIds != null) {
-            args.putString(EXTRA_SINCE_ID, sinceIds[0])
         }
         args.putBoolean(EXTRA_LOADING_MORE, param.isLoadingMore)
         args.putBoolean(EXTRA_FROM_USER, true)
-        if (param is StatusesRefreshTaskParam) {
-            if (param.page > 0) {
-                args.putInt(EXTRA_PAGE, param.page)
-            }
-        }
+        args.putParcelable(EXTRA_PAGINATION, param.pagination?.getOrNull(0))
         loaderManager.restartLoader(loaderId, args, this)
         return true
     }
@@ -160,8 +159,8 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         if (statusCount <= 0) return
         val status = adapter.getStatus(startIdx + statusCount - 1, true)
         val accountKeys = arrayOf(status.account_key)
-        val maxIds = arrayOf<String?>(status.id)
-        val param = StatusesRefreshTaskParam(accountKeys, maxIds, null, page + pageDelta)
+        val pagination = arrayOf<Pagination?>(SinceMaxPagination.maxId(status.id, -1))
+        val param = BaseRefreshTaskParam(accountKeys, pagination)
         param.isLoadingMore = true
         getStatuses(param)
     }
@@ -172,18 +171,18 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         val statusStartIndex = adapter.statusStartIndex
         if (statusStartIndex >= 0 && adapter.getStatusCount(true) > 0) {
             val firstStatus = adapter.getStatus(statusStartIndex, true)
-            val sinceIds = Array(accountKeys.size) {
-                return@Array if (firstStatus.account_key == accountKeys[it]) firstStatus.id else null
+            val pagination = Array(accountKeys.size) {
+                if (firstStatus.account_key == accountKeys[it]) {
+                    SinceMaxPagination.sinceId(firstStatus.id, -1)
+                } else {
+                    null
+                }
             }
-            getStatuses(BaseRefreshTaskParam(accountKeys, null, sinceIds))
+            getStatuses(BaseRefreshTaskParam(accountKeys, pagination))
         } else {
-            getStatuses(BaseRefreshTaskParam(accountKeys, null, null))
+            getStatuses(BaseRefreshTaskParam(accountKeys, null))
         }
         return true
-    }
-
-    override fun onHasMoreDataChanged(hasMoreData: Boolean) {
-        pageDelta = if (hasMoreData) 1 else 0
     }
 
     fun removeStatus(statusId: String) {
@@ -221,7 +220,6 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         }
         adapter.notifyItemRangeChanged(rangeStart, rangeEnd)
     }
-
 
     private fun updateFavoritedStatus(status: ParcelableStatus) {
         replaceStatusStates(status)
@@ -281,21 +279,4 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
 
     }
 
-    protected class StatusesRefreshTaskParam(
-            accountKeys: Array<UserKey>,
-            maxIds: Array<String?>?,
-            sinceIds: Array<String?>?,
-            var page: Int = -1
-    ) : BaseRefreshTaskParam(accountKeys, maxIds, sinceIds)
-
-    companion object {
-        fun Bundle.toPagination(): Pagination {
-            val maxId = getString(EXTRA_MAX_ID)
-            val sinceId = getString(EXTRA_SINCE_ID)
-            return SinceMaxPagination().apply {
-                this.maxId = maxId
-                this.sinceId = sinceId
-            }
-        }
-    }
 }

@@ -21,6 +21,7 @@ package org.mariotaku.twidere.model.pagination;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
@@ -35,6 +36,8 @@ public class SinceMaxPagination implements Pagination, Parcelable {
 
     String sinceId;
     String maxId;
+    long sinceSortId;
+    long maxSortId;
 
     public String getSinceId() {
         return sinceId;
@@ -50,6 +53,22 @@ public class SinceMaxPagination implements Pagination, Parcelable {
 
     public void setMaxId(String maxId) {
         this.maxId = maxId;
+    }
+
+    public long getSinceSortId() {
+        return sinceSortId;
+    }
+
+    public void setSinceSortId(long sinceSortId) {
+        this.sinceSortId = sinceSortId;
+    }
+
+    public long getMaxSortId() {
+        return maxSortId;
+    }
+
+    public void setMaxSortId(long maxSortId) {
+        this.maxSortId = maxSortId;
     }
 
     @Override
@@ -70,6 +89,24 @@ public class SinceMaxPagination implements Pagination, Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         SinceMaxPaginationParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    @Nullable
+    public static SinceMaxPagination sinceId(String sinceId, long sinceSortId) {
+        if (sinceId == null) return null;
+        SinceMaxPagination pagination = new SinceMaxPagination();
+        pagination.setSinceId(sinceId);
+        pagination.setSinceSortId(sinceSortId);
+        return pagination;
+    }
+
+    @Nullable
+    public static SinceMaxPagination maxId(String maxId, long maxSortId) {
+        if (maxId == null) return null;
+        SinceMaxPagination pagination = new SinceMaxPagination();
+        pagination.setMaxId(maxId);
+        pagination.setMaxSortId(maxSortId);
+        return pagination;
     }
 
     public static final Creator<SinceMaxPagination> CREATOR = new Creator<SinceMaxPagination>() {

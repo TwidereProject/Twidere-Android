@@ -24,7 +24,6 @@ import android.os.Bundle
 import android.support.v4.content.Loader
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.fragment.AbsMediaStatusesFragment
-import org.mariotaku.twidere.fragment.ParcelableStatusesFragment.Companion.toPagination
 import org.mariotaku.twidere.loader.statuses.MediaTimelineLoader
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
@@ -41,10 +40,8 @@ class UserMediaTimelineFragment : AbsMediaStatusesFragment() {
         val screenName = args.getString(EXTRA_SCREEN_NAME)
         val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-        return MediaTimelineLoader(context, accountKey, userKey, screenName, adapter.getData(), null,
-                tabPosition, fromUser, loadingMore).apply {
-            pagination = args.toPagination()
-        }
+        return MediaTimelineLoader(context, accountKey, userKey, screenName, adapter.getData(),
+                null, tabPosition, fromUser, loadingMore)
     }
 
 

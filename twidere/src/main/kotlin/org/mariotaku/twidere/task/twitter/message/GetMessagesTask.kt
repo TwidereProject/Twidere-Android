@@ -39,16 +39,17 @@ import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_SHOW_NOTIFICATION
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.toParcelable
-import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
 import org.mariotaku.twidere.model.event.GetMessagesTaskEvent
 import org.mariotaku.twidere.model.message.conversation.DefaultConversationExtras
 import org.mariotaku.twidere.model.message.conversation.TwitterOfficialConversationExtras
+import org.mariotaku.twidere.model.pagination.CursorPagination
+import org.mariotaku.twidere.model.pagination.Pagination
+import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.AccountUtils.getAccountDetails
 import org.mariotaku.twidere.model.util.ParcelableMessageUtils
-import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.BaseAbstractTask
@@ -130,9 +131,10 @@ class GetMessagesTask(
     private fun getDefaultMessages(microBlog: MicroBlog, details: AccountDetails,
             param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val accountKey = details.key
+        val accountsCount = param.accountKeys.size
 
-        val sinceIds = if (param.hasSinceIds) param.sinceIds else null
-        val maxIds = if (param.hasMaxIds) param.maxIds else null
+        val receivedPagination = param.pagination?.get(index) as? SinceMaxPagination
+        val sincePagination = param.pagination?.get(accountsCount + index) as? SinceMaxPagination
 
         val firstFetch by lazy {
             val firstFetchPref = preferences.getBoolean(KEY_FIRST_FETCH, true)
@@ -142,12 +144,14 @@ class GetMessagesTask(
             return@lazy noConversationsBefore && firstFetchPref
         }
 
-        val updateLastRead = maxIds != null || firstFetch
+        val updateLastRead = param.pagination?.all {
+            (it as? SinceMaxPagination)?.maxId != null
+        } ?: false || firstFetch
 
         val received = microBlog.getDirectMessages(Paging().apply {
             count(100)
-            val maxId = maxIds?.get(index)
-            val sinceId = sinceIds?.get(index)
+            val maxId = receivedPagination?.maxId
+            val sinceId = receivedPagination?.sinceId
             if (maxId != null) {
                 maxId(maxId)
             }
@@ -157,9 +161,8 @@ class GetMessagesTask(
         })
         val sent = microBlog.getSentDirectMessages(Paging().apply {
             count(100)
-            val accountsCount = param.accountKeys.size
-            val maxId = maxIds?.get(accountsCount + index)
-            val sinceId = sinceIds?.get(accountsCount + index)
+            val maxId = sincePagination?.maxId
+            val sinceId = sincePagination?.sinceId
             if (maxId != null) {
                 maxId(maxId)
             }
@@ -201,7 +204,8 @@ class GetMessagesTask(
 
     private fun getTwitterOfficialConversation(microBlog: MicroBlog, details: AccountDetails,
             conversationId: String, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
-        val maxId = param.maxIds?.get(index) ?: return DatabaseUpdateData(emptyList(), emptyList())
+        val maxId = (param.pagination?.get(index) as? SinceMaxPagination)?.maxId
+                ?: return DatabaseUpdateData(emptyList(), emptyList())
         val paging = Paging().apply {
             maxId(maxId)
         }
@@ -212,8 +216,8 @@ class GetMessagesTask(
 
     private fun getTwitterOfficialUserInbox(microBlog: MicroBlog, details: AccountDetails,
             param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
-        val maxId = if (param.hasMaxIds) param.maxIds?.get(index) else null
-        val cursor = if (param.hasCursors) param.cursors?.get(index) else null
+        val maxId = (param.pagination?.get(index) as? SinceMaxPagination)?.maxId
+        val cursor = (param.pagination?.get(index) as? CursorPagination)?.cursor
         val response = if (cursor != null) {
             microBlog.getUserUpdates(cursor).userEvents
         } else {
@@ -231,7 +235,7 @@ class GetMessagesTask(
             param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val accountKey = details.key
         val accountType = details.type
-        val cursor = param.cursors?.get(index)
+        val cursor = (param.pagination?.get(index) as? CursorPagination)?.cursor
         val page = cursor?.substringAfter("page:").toIntOr(-1)
         val result = microBlog.getConversationList(Paging().apply {
             count(60)
@@ -272,36 +276,33 @@ class GetMessagesTask(
 
         override val showNotification: Boolean = true
 
-        override val sinceIds: Array<String?>?
-            get() {
-                val incomingIds = DataStoreUtils.getNewestMessageIds(context, Messages.CONTENT_URI,
-                        defaultKeys, false)
-                val outgoingIds = DataStoreUtils.getNewestMessageIds(context, Messages.CONTENT_URI,
-                        defaultKeys, true)
-                return incomingIds + outgoingIds
-            }
-
-        override val cursors: Array<String?>?
-            get() {
-                val cursors = arrayOfNulls<String>(defaultKeys.size)
-                val newestConversations = DataStoreUtils.getNewestConversations(context,
-                        Conversations.CONTENT_URI, twitterOfficialKeys)
-                newestConversations.forEachIndexed { i, conversation ->
-                    cursors[i] = conversation?.request_cursor
+        override val pagination by lazy {
+            val result = arrayOfNulls<Pagination>(accounts.size * 2)
+            val incomingIds = DataStoreUtils.getNewestMessageIds(context, Messages.CONTENT_URI,
+                    defaultKeys, false)
+            val outgoingIds = DataStoreUtils.getNewestMessageIds(context, Messages.CONTENT_URI,
+                    defaultKeys, true)
+            val cursors = DataStoreUtils.getNewestConversations(context, Conversations.CONTENT_URI,
+                    twitterOfficialKeys).mapToArray { it?.request_cursor }
+            accounts.forEachIndexed { index, details ->
+                if (details == null) return@forEachIndexed
+                if (details.isOfficial(context)) {
+                    result[index] = CursorPagination.valueOf(cursors[index])
+                } else {
+                    result[index] = SinceMaxPagination.sinceId(incomingIds[index], -1)
+                    result[accounts.size + index] = SinceMaxPagination.sinceId(outgoingIds[index], -1)
                 }
-                return cursors
             }
+            return@lazy result
+        }
 
-        override val hasSinceIds: Boolean = true
-        override val hasMaxIds: Boolean = false
-        override val hasCursors: Boolean = true
     }
 
     abstract class LoadMoreEntriesTaskParam(
             context: Context
     ) : RefreshMessagesTaskParam(context) {
 
-        override val maxIds: Array<String?>? by lazy {
+        override val pagination: Array<out Pagination?>? by lazy {
             val incomingIds = DataStoreUtils.getOldestMessageIds(context, Messages.CONTENT_URI,
                     defaultKeys, false)
             val outgoingIds = DataStoreUtils.getOldestMessageIds(context, Messages.CONTENT_URI,
@@ -312,11 +313,10 @@ class GetMessagesTask(
                 val extras = conversation?.conversation_extras as? TwitterOfficialConversationExtras ?: return@forEachIndexed
                 incomingIds[i] = extras.maxEntryId
             }
-            return@lazy incomingIds + outgoingIds
+            return@lazy (incomingIds + outgoingIds).mapToArray { maxId ->
+                SinceMaxPagination.maxId(maxId, -1)
+            }
         }
-
-        override val hasSinceIds: Boolean = false
-        override val hasMaxIds: Boolean = true
     }
 
     class LoadMoreMessageTaskParam(
@@ -325,14 +325,13 @@ class GetMessagesTask(
             override val conversationId: String,
             maxId: String
     ) : RefreshMessagesTaskParam(context) {
-        override val accountKeys: Array<UserKey> = arrayOf(accountKey)
-        override val maxIds: Array<String?>? = arrayOf(maxId)
-        override val hasMaxIds: Boolean = true
+        override val accountKeys = arrayOf(accountKey)
+        override val pagination = arrayOf(SinceMaxPagination.maxId(maxId, -1))
     }
 
     abstract class RefreshMessagesTaskParam(
             val context: Context
-    ) : SimpleRefreshTaskParam() {
+    ) : RefreshTaskParam {
 
         /**
          * If `conversationId` has value, load messages in conversationId

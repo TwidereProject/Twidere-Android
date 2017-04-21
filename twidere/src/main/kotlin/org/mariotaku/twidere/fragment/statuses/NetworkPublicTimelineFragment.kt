@@ -58,8 +58,6 @@ class NetworkPublicTimelineFragment : ParcelableStatusesFragment() {
         val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
         return NetworkPublicTimelineLoader(context, accountKey, data, savedStatusesFileArgs,
-                tabPosition, fromUser, loadingMore).apply {
-            pagination = args.toPagination()
-        }
+                tabPosition, fromUser, loadingMore)
     }
 }

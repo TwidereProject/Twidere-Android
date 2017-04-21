@@ -62,6 +62,7 @@ import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.analyzer.Share
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
+import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils
 import org.mariotaku.twidere.model.util.getActivityStatus
@@ -305,10 +306,9 @@ abstract class AbsActivitiesFragment protected constructor() :
             }
         }
         val accountKeys = arrayOf(activity.account_key)
-        val maxIds = arrayOf(activity.min_position)
-        val maxSortIds = longArrayOf(activity.min_sort_position)
-        getActivities(BaseRefreshTaskParam(accountKeys = accountKeys, maxIds = maxIds,
-                sinceIds = null, maxSortIds = maxSortIds, sinceSortIds = null).also {
+        val pagination = arrayOf(SinceMaxPagination.maxId(activity.min_position,
+                activity.min_sort_position))
+        getActivities(BaseRefreshTaskParam(accountKeys, pagination).also {
             it.extraId = activity._id
         })
     }

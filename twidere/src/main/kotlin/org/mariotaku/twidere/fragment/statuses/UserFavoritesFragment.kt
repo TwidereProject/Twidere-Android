@@ -80,10 +80,8 @@ class UserFavoritesFragment : ParcelableStatusesFragment() {
         val screenName = args.getString(EXTRA_SCREEN_NAME)
         val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-        return UserFavoritesLoader(context, accountKey, userKey, screenName, adapterData, savedStatusesFileArgs,
-                tabPosition, fromUser, loadingMore).apply {
-            pagination = args.toPagination()
-        }
+        return UserFavoritesLoader(context, accountKey, userKey, screenName, adapterData,
+                savedStatusesFileArgs, tabPosition, fromUser, loadingMore)
     }
 
     override fun notifyFavoriteTask(event: FavoriteTaskEvent) {

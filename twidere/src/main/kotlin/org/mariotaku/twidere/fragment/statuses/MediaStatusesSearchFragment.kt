@@ -24,7 +24,6 @@ import android.os.Bundle
 import android.support.v4.content.Loader
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.fragment.AbsMediaStatusesFragment
-import org.mariotaku.twidere.fragment.ParcelableStatusesFragment.Companion.toPagination
 import org.mariotaku.twidere.loader.statuses.MediaStatusesSearchLoader
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.util.Utils
@@ -43,9 +42,7 @@ class MediaStatusesSearchFragment : AbsMediaStatusesFragment() {
         val makeGap = args.getBoolean(EXTRA_MAKE_GAP, true)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
         return MediaStatusesSearchLoader(activity, accountKey, query, adapter.getData(), null, tabPosition,
-                fromUser, makeGap, loadingMore).apply {
-            pagination = args.toPagination()
-        }
+                fromUser, makeGap, loadingMore)
     }
 
     override fun getStatuses(maxId: String?, sinceId: String?): Int {

@@ -160,12 +160,9 @@ public interface IntentConstants {
     String EXTRA_LOCATION = "location";
     String EXTRA_URL = "url";
     String EXTRA_PROFILE_URL = "profile_url";
-    String EXTRA_NEXT_PAGE = "next_page";
     String EXTRA_NEXT_PAGINATION = "next_pagination";
     String EXTRA_PREV_PAGINATION = "prev_pagination";
     String EXTRA_PAGINATION = "pagination";
-    String EXTRA_NEXT_CURSOR = "next_cursor";
-    String EXTRA_PREV_CURSOR = "prev_cursor";
     String EXTRA_EXTRA_INTENT = "extra_intent";
     String EXTRA_IS_MY_ACCOUNT = "is_my_account";
     String EXTRA_TAB_TYPE = "tab_type";
