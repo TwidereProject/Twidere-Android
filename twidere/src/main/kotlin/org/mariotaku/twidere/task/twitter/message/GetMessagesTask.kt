@@ -137,16 +137,13 @@ class GetMessagesTask(
         val sincePagination = param.pagination?.get(accountsCount + index) as? SinceMaxPagination
 
         val firstFetch by lazy {
-            val firstFetchPref = preferences.getBoolean(KEY_FIRST_FETCH, true)
             val noConversationsBefore = DataStoreUtils.queryCount(context.contentResolver,
                     Conversations.CONTENT_URI, Expression.equalsArgs(Conversations.ACCOUNT_KEY).sql,
                     arrayOf(accountKey.toString())) <= 0
-            return@lazy noConversationsBefore && firstFetchPref
+            return@lazy noConversationsBefore
         }
 
-        val updateLastRead = param.pagination?.all {
-            (it as? SinceMaxPagination)?.maxId != null
-        } ?: false || firstFetch
+        val updateLastRead = param.hasMaxIds || firstFetch
 
         val received = microBlog.getDirectMessages(Paging().apply {
             count(100)
@@ -192,10 +189,6 @@ class GetMessagesTask(
         sent.forEachIndexed { i, dm ->
             addConversationMessage(insertMessages, conversations, details, dm, i, sent.size,
                     true, profileImageSize, updateLastRead)
-        }
-
-        if (firstFetch) {
-            preferences.edit().putBoolean(KEY_FIRST_FETCH, false).apply()
         }
 
         return DatabaseUpdateData(conversations.values, insertMessages)
