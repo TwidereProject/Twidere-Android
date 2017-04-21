@@ -24,12 +24,12 @@ import android.widget.Toast
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.twitter.model.UserListUpdate
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.UserListUpdatedEvent
-import org.mariotaku.twidere.model.util.ParcelableUserListUtils
 
 /**
  * Created by mariotaku on 2017/2/10.
@@ -44,7 +44,7 @@ class UpdateUserListDetailsTask(
     override fun onExecute(account: AccountDetails, params: Any?): ParcelableUserList {
         val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
         val list = microBlog.updateUserList(listId, update)
-        return ParcelableUserListUtils.from(list, account.key)
+        return list.toParcelable(account.key)
     }
 
     override fun onSucceed(callback: Any?, result: ParcelableUserList) {

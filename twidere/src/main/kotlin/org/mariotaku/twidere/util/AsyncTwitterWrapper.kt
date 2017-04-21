@@ -42,12 +42,12 @@ import org.mariotaku.twidere.constant.homeRefreshDirectMessagesKey
 import org.mariotaku.twidere.constant.homeRefreshMentionsKey
 import org.mariotaku.twidere.constant.homeRefreshSavedSearchesKey
 import org.mariotaku.twidere.constant.nameFirstKey
+import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.event.*
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableRelationshipUtils
-import org.mariotaku.twidere.model.util.ParcelableUserListUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.task.*
 import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
@@ -432,7 +432,7 @@ class AsyncTwitterWrapper(
         override fun onExecute(account: AccountDetails, params: Any?): ParcelableUserList {
             val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
             val userList = microBlog.createUserListSubscription(listId)
-            return ParcelableUserListUtils.from(userList, account.key)
+            return userList.toParcelable(account.key)
         }
 
         override fun onSucceed(callback: Any?, result: ParcelableUserList) {
@@ -453,7 +453,7 @@ class AsyncTwitterWrapper(
             userListUpdate.setMode(if (isPublic) UserList.Mode.PUBLIC else UserList.Mode.PRIVATE)
             userListUpdate.setDescription(description)
             val list = microBlog.createUserList(userListUpdate)
-            return ParcelableUserListUtils.from(list, account.key)
+            return list.toParcelable(account.key)
         }
 
         override fun onSucceed(callback: Any?, result: ParcelableUserList) {
@@ -475,7 +475,7 @@ class AsyncTwitterWrapper(
             val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
             val userKeys = users.mapToArray(ParcelableUser::key)
             val userList = microBlog.deleteUserListMembers(userListId, UserKey.getIds(userKeys))
-            return ParcelableUserListUtils.from(userList, account.key)
+            return userList.toParcelable(account.key)
         }
 
         override fun onSucceed(callback: Any?, result: ParcelableUserList) {
@@ -526,7 +526,7 @@ class AsyncTwitterWrapper(
         override fun onExecute(account: AccountDetails, params: Any?): ParcelableUserList {
             val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
             val userList = microBlog.destroyUserListSubscription(listId)
-            return ParcelableUserListUtils.from(userList, account.key)
+            return userList.toParcelable(account.key)
         }
 
         override fun onSucceed(callback: Any?, result: ParcelableUserList) {

@@ -56,6 +56,7 @@ import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
 import org.mariotaku.twidere.fragment.users.UserListMembersFragment
@@ -66,7 +67,6 @@ import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.UserListSubscriptionEvent
 import org.mariotaku.twidere.model.event.UserListUpdatedEvent
-import org.mariotaku.twidere.model.util.ParcelableUserListUtils
 import org.mariotaku.twidere.text.validator.UserListNameValidator
 import org.mariotaku.twidere.util.*
 
@@ -419,7 +419,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
                         return SingleResponse(MicroBlogException("Invalid argument"))
                     }
                 }
-                return SingleResponse(ParcelableUserListUtils.from(list, accountKey))
+                return SingleResponse(list.toParcelable(accountKey))
             } catch (e: MicroBlogException) {
                 return SingleResponse(e)
             }

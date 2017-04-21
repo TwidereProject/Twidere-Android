@@ -68,7 +68,7 @@ abstract class AbsRequestUsersLoader(
             val am = AccountManager.get(context)
             details = accountKey?.let { AccountUtils.getAccountDetails(am, it, true) } ?:
                     throw ActivityNotFoundException()
-            users = getUsers(details)
+            users = getUsersInternal(details)
         } catch (e: MicroBlogException) {
             DebugLog.w(tr = e)
             return ListResponse.getListInstance(data, e)
@@ -92,17 +92,6 @@ abstract class AbsRequestUsersLoader(
 
     }
 
-    @Throws(MicroBlogException::class)
-    private fun getUsers(details: AccountDetails): List<ParcelableUser> {
-        val paging = Paging()
-        paging.applyItemLimit(details, loadItemLimit)
-        pagination?.applyTo(paging)
-        val users = getUsers(details, paging)
-        prevPagination = users.previousPage
-        nextPagination = users.nextPage
-        return users
-    }
-
     protected open fun processUsersData(details: AccountDetails, list: MutableList<ParcelableUser>) {
         Collections.sort(data)
     }
@@ -121,4 +110,15 @@ abstract class AbsRequestUsersLoader(
     @Throws(MicroBlogException::class)
     protected abstract fun getUsers(details: AccountDetails, paging: Paging):
             PaginatedList<ParcelableUser>
+
+    @Throws(MicroBlogException::class)
+    private fun getUsersInternal(details: AccountDetails): List<ParcelableUser> {
+        val paging = Paging()
+        paging.applyItemLimit(details, loadItemLimit)
+        pagination?.applyTo(paging)
+        val users = getUsers(details, paging)
+        prevPagination = users.previousPage
+        nextPagination = users.nextPage
+        return users
+    }
 }

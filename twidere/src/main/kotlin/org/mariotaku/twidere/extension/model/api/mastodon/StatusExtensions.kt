@@ -76,23 +76,23 @@ fun Status.toParcelable(accountKey: UserKey): ParcelableStatus {
     result.in_reply_to_status_id = status.inReplyToId
     result.in_reply_to_user_key = status.inReplyToAccountId?.let { UserKey(it, accountKey.host) }
 
-    val user = status.account
-    result.user_key = user.getKey(accountKey.host)
-    result.user_name = user.displayName
-    result.user_screen_name = user.username
-    result.user_profile_image_url = user.avatar
-    result.user_is_protected = user.isLocked
+    val account = status.account
+    result.user_key = account.getKey(accountKey.host)
+    result.user_name = account.displayName
+    result.user_screen_name = account.username
+    result.user_profile_image_url = account.avatar
+    result.user_is_protected = account.isLocked
     // Twitter will escape <> to &lt;&gt;, so if a status contains those symbols unescaped
     // We should treat this as an html
     val html = HtmlSpanBuilder.fromHtml(status.content, status.content)
     result.text_unescaped = html?.toString()
     result.text_plain = result.text_unescaped
     result.spans = html?.spanItems
-    result.media = mediaAttachments?.mapToArray { it.toParcelable() }
+    result.media = status.mediaAttachments?.mapToArray { it.toParcelable() }
     result.source = status.application?.sourceHtml
     result.is_favorite = status.isFavourited
     result.is_possibly_sensitive = status.isSensitive
-    result.mentions = mentions?.mapToArray { it.toParcelable(accountKey) }
+    result.mentions = status.mentions?.mapToArray { it.toParcelable(accountKey) }
 
     extras.display_text_range = calculateDisplayTextRange(result.spans, result.media)
 

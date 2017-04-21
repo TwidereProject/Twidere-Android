@@ -21,12 +21,12 @@ package org.mariotaku.twidere.extension.model
 
 import org.mariotaku.microblog.library.twitter.model.UserList
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.ParcelableUserListUtils
+import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 
 /**
  * Created by mariotaku on 2017/4/7.
  */
 
 fun Array<UserList>.toParcelables(accountKey: UserKey, profileImageSize: String = "normal") = Array(size) {
-    ParcelableUserListUtils.from(this[it], accountKey, profileImageSize = profileImageSize)
+    this[it].toParcelable(accountKey, profileImageSize = profileImageSize)
 }

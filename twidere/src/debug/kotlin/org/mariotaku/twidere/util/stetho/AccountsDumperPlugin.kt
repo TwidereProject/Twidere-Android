@@ -37,7 +37,7 @@ import org.apache.commons.cli.*
 import org.json.JSONArray
 import org.json.JSONObject
 import org.mariotaku.ktextension.subArray
-import org.mariotaku.twidere.extensions.model.updateDetails
+import org.mariotaku.twidere.extension.model.updateDetails
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils

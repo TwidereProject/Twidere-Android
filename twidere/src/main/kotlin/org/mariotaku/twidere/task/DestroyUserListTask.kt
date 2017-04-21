@@ -23,12 +23,12 @@ import android.content.Context
 import android.widget.Toast
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.UserListDestroyedEvent
-import org.mariotaku.twidere.model.util.ParcelableUserListUtils
 
 /**
  * Created by mariotaku on 2017/2/10.
@@ -42,7 +42,7 @@ class DestroyUserListTask(
     override fun onExecute(account: AccountDetails, params: Any?): ParcelableUserList {
         val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
             val userList = microBlog.destroyUserList(listId)
-        return ParcelableUserListUtils.from(userList, account.key)
+        return userList.toParcelable(account.key)
     }
 
     override fun onSucceed(callback: Any?, result: ParcelableUserList) {

@@ -108,6 +108,7 @@ import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.extension.*
+import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.model.applyTo
 import org.mariotaku.twidere.extension.model.getBestProfileBanner
 import org.mariotaku.twidere.extension.model.originalProfileImage
@@ -1563,7 +1564,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             do {
                 val resp = microBlog.getUserListOwnerships(paging)
                 resp.mapTo(ownedLists) { item ->
-                    val userList = ParcelableUserListUtils.from(item, user.account_key)
+                    val userList = item.toParcelable( user.account_key)
                     userList.is_user_inside = listMemberships.any { it.id == item.id }
                     return@mapTo userList
                 }

@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.extensions.model
+package org.mariotaku.twidere.extension.model
 
 import android.accounts.Account
 import android.accounts.AccountManager

@@ -33,6 +33,7 @@ import org.mariotaku.microblog.library.twitter.model.UserList
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.constant.loadItemLimitKey
+import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.loader.iface.IPaginationLoader
 import org.mariotaku.twidere.model.ParcelableUserList
@@ -40,7 +41,6 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.CursorPagination
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.model.util.ParcelableUserListUtils
 import org.mariotaku.twidere.util.collection.NoDuplicatesArrayList
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import java.util.*
@@ -99,13 +99,13 @@ abstract class BaseUserListsLoader(
                 val dataSize = data.size
                 for (i in 0..listSize - 1) {
                     val list = listLoaded[i]
-                    data.add(ParcelableUserListUtils.from(list, accountKey, (dataSize + i).toLong(),
+                    data.add(list.toParcelable(accountKey, (dataSize + i).toLong(),
                             isFollowing(list), profileImageSize))
                 }
             } else {
                 for (i in 0..listSize - 1) {
                     val list = listLoaded[i]
-                    data.add(ParcelableUserListUtils.from(listLoaded[i], accountKey, i.toLong(),
+                    data.add(listLoaded[i].toParcelable(accountKey, i.toLong(),
                             isFollowing(list), profileImageSize))
                 }
             }

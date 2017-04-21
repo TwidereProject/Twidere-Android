@@ -7,13 +7,13 @@ import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.nameFirstKey
+import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.UserListMembersChangedEvent
-import org.mariotaku.twidere.model.util.ParcelableUserListUtils
 
 /**
  * Created by mariotaku on 2016/12/9.
@@ -29,7 +29,7 @@ class AddUserListMembersTask(
         val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
         val userIds = users.mapToArray(ParcelableUser::key)
         val result = microBlog.addUserListMembers(listId, UserKey.getIds(userIds))
-        return ParcelableUserListUtils.from(result, account.key)
+        return result.toParcelable(account.key)
     }
 
     override fun onSucceed(callback: Any?, result: ParcelableUserList) {
