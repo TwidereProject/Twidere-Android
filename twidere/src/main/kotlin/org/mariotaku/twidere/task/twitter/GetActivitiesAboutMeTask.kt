@@ -23,12 +23,18 @@ import android.content.Context
 import android.net.Uri
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.twitter.model.*
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.ReadPositionTag
+import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
+import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.model.isOfficial
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.fragment.InteractionsTimelineFragment
 import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.util.ErrorInfoStore
@@ -45,24 +51,38 @@ class GetActivitiesAboutMeTask(context: Context) : GetActivitiesTask(context) {
     override val contentUri: Uri
         get() = Activities.AboutMe.CONTENT_URI
 
+
+    private val profileImageSize = context.getString(R.string.profile_image_size)
+
     @Throws(MicroBlogException::class)
-    override fun getActivities(twitter: MicroBlog, details: AccountDetails, paging: Paging):
-            ResponseList<Activity> {
-        if (details.isOfficial(context)) {
-            return twitter.getActivitiesAboutMe(paging)
-        }
-        val activities = ResponseList<Activity>()
-        val statuses: ResponseList<Status>
-        when (details.type) {
+    override fun getActivities(account: AccountDetails, paging: Paging): List<ParcelableActivity> {
+        when (account.type) {
+            AccountType.MASTODON -> {
+                val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
+                return mastodon.getNotifications(paging).map {
+                    it.toParcelable(account.key)
+                }
+            }
             AccountType.FANFOU -> {
-                statuses = twitter.getMentions(paging)
+                val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                if (account.isOfficial(context)) {
+                    return microBlog.getActivitiesAboutMe(paging).map {
+                        it.toParcelable(account.key, account.type, profileImageSize = profileImageSize)
+                    }
+                }
+                return microBlog.getMentions(paging).map {
+                    InternalActivityCreator.status(it, account.key.id).toParcelable(account.key,
+                            account.type, profileImageSize = profileImageSize)
+                }
             }
             else -> {
-                statuses = twitter.getMentionsTimeline(paging)
+                val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                return microBlog.getHomeTimeline(paging).map {
+                    InternalActivityCreator.status(it, account.key.id).toParcelable(account.key,
+                            account.type, profileImageSize = profileImageSize)
+                }
             }
         }
-        statuses.mapTo(activities) { InternalActivityCreator.status(it, details.key.id) }
-        return activities
     }
 
 

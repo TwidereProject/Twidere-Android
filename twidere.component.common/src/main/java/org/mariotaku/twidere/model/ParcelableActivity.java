@@ -97,7 +97,7 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
     @ParcelableThisPlease
     @JsonField(name = "source_ids", typeConverter = UserKeysConverter.class)
     @CursorField(value = Activities.SOURCE_IDS, converter = UserKeysCursorFieldConverter.class)
-    public UserKey[] source_ids;
+    public UserKey[] source_keys;
 
     @ParcelableThisPlease
     @JsonField(name = "sources")
@@ -215,7 +215,7 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
                 ", max_position='" + max_position + '\'' +
                 ", min_position='" + min_position + '\'' +
                 ", action='" + action + '\'' +
-                ", source_ids=" + Arrays.toString(source_ids) +
+                ", source_ids=" + Arrays.toString(source_keys) +
                 ", sources=" + Arrays.toString(sources) +
                 ", target_users=" + Arrays.toString(target_users) +
                 ", target_statuses=" + Arrays.toString(target_statuses) +

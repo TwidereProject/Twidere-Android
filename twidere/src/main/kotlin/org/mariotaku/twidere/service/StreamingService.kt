@@ -32,6 +32,7 @@ import org.mariotaku.twidere.constant.streamingEnabledKey
 import org.mariotaku.twidere.constant.streamingNonMeteredNetworkKey
 import org.mariotaku.twidere.constant.streamingPowerSavingKey
 import org.mariotaku.twidere.extension.model.*
+import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
@@ -315,8 +316,8 @@ class StreamingService : BaseService() {
                     } else {
                         insertGap = false
                     }
-                    val curActivity = ParcelableActivityUtils.fromActivity(activity, account.key,
-                            account.type, insertGap, profileImageSize)
+                    val curActivity = activity.toParcelable(account.key, account.type, insertGap,
+                            profileImageSize)
                     curActivity.account_color = account.color
                     curActivity.position_key = curActivity.timestamp
                     var updateId = -1L

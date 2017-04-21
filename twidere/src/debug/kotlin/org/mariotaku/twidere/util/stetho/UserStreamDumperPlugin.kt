@@ -34,12 +34,12 @@ import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.microblog.library.twitter.model.DirectMessage
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ActivityTitleSummaryMessage
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.model.util.ParcelableActivityUtils
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.dagger.DependencyHolder
 import org.mariotaku.twidere.util.streaming.FanfouTimelineStreamCallback
@@ -118,8 +118,7 @@ class UserStreamDumperPlugin(val context: Context) : DumperPlugin {
                 if (verboseMode) {
                     dumpContext.stdout.println("Activity: @${activity.toString().trim('\n')}")
                 } else {
-                    val pActivity = ParcelableActivityUtils.fromActivity(activity, account.key,
-                            account.type)
+                    val pActivity = activity.toParcelable(account.key, account.type)
                     val message = ActivityTitleSummaryMessage.get(context, manager, pActivity,
                             pActivity.sources, 0, true, true)
                     if (message != null) {
@@ -173,8 +172,7 @@ class UserStreamDumperPlugin(val context: Context) : DumperPlugin {
 
             override fun onActivityAboutMe(activity: Activity): Boolean {
                 if (!includeInteractions && includeTimeline) return true
-                val pActivity = ParcelableActivityUtils.fromActivity(activity, account.key,
-                        account.type)
+                val pActivity = activity.toParcelable(account.key, account.type)
                 val message = ActivityTitleSummaryMessage.get(context, manager, pActivity, pActivity.sources, 0,
                         true, true)
                 if (message != null) {
