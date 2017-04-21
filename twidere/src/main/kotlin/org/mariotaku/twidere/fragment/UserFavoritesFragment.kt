@@ -23,7 +23,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.content.Loader
 import org.mariotaku.twidere.TwidereConstants.*
-import org.mariotaku.twidere.loader.UserFavoritesLoader
+import org.mariotaku.twidere.loader.statuses.UserFavoritesLoader
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FavoriteTaskEvent

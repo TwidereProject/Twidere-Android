@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.content.Loader
 import org.mariotaku.twidere.constant.IntentConstants.*
-import org.mariotaku.twidere.loader.UserGroupsLoader
+import org.mariotaku.twidere.loader.group.UserGroupsLoader
 import org.mariotaku.twidere.model.ParcelableGroup
 import org.mariotaku.twidere.model.UserKey
 
@@ -16,7 +16,7 @@ class UserGroupsFragment : ParcelableGroupsFragment() {
         val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
         val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
         val screenName = args.getString(EXTRA_SCREEN_NAME)
-        return UserGroupsLoader(context, accountKey, userKey, screenName, data)
+        return UserGroupsLoader(context, accountKey, userKey, screenName, adapter.getData())
     }
 
 }

@@ -37,7 +37,7 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
 abstract class AbsContentListRecyclerViewFragment<A : LoadMoreSupportAdapter<RecyclerView.ViewHolder>>
     : AbsContentRecyclerViewFragment<A, LinearLayoutManager>() {
 
-    override fun createItemDecoration(context: Context, recyclerView: RecyclerView,
+    override fun onCreateItemDecoration(context: Context, recyclerView: RecyclerView,
             layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
         return ExtendedDividerItemDecoration(context, layoutManager.orientation)
     }

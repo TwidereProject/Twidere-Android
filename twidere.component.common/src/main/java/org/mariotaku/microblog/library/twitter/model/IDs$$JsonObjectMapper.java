@@ -23,6 +23,8 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 
+import org.mariotaku.microblog.library.annotation.NoObfuscate;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +34,7 @@ import java.util.List;
  * Created by mariotaku on 15/10/21.
  */
 @SuppressWarnings("unused")
+@NoObfuscate
 public class IDs$$JsonObjectMapper extends JsonMapper<IDs> {
 
     @SuppressWarnings("TryWithIdenticalCatches")

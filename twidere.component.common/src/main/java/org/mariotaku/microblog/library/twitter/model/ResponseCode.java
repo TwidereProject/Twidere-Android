@@ -18,9 +18,11 @@
 
 package org.mariotaku.microblog.library.twitter.model;
 
+import android.support.annotation.NonNull;
+
+import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.restfu.RestConverter;
 import org.mariotaku.restfu.http.HttpResponse;
-import org.mariotaku.microblog.library.MicroBlogException;
 
 /**
  * Created by mariotaku on 15/6/15.
@@ -43,8 +45,9 @@ public class ResponseCode {
 
     public static class ResponseConverter implements RestConverter<HttpResponse, ResponseCode, MicroBlogException> {
 
+        @NonNull
         @Override
-        public ResponseCode convert(HttpResponse response) {
+        public ResponseCode convert(@NonNull HttpResponse response) {
             return new ResponseCode(response);
         }
     }

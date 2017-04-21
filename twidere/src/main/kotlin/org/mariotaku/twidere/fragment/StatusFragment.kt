@@ -95,7 +95,7 @@ import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.view.calculateSpaceItemHeight
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.Companion.handleActionClick
-import org.mariotaku.twidere.loader.ConversationLoader
+import org.mariotaku.twidere.loader.statuses.ConversationLoader
 import org.mariotaku.twidere.loader.ParcelableStatusLoader
 import org.mariotaku.twidere.menu.FavoriteItemProvider
 import org.mariotaku.twidere.model.*

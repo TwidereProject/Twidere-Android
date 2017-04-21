@@ -3,11 +3,15 @@ package org.mariotaku.twidere.loader
 import android.annotation.SuppressLint
 import android.content.Context
 import org.mariotaku.library.objectcursor.ObjectCursor
+import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.sqliteqb.library.Columns
 import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.twidere.loader.users.UserSearchLoader
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.pagination.PaginatedArrayList
+import org.mariotaku.twidere.model.pagination.PaginatedList
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.Utils
@@ -23,7 +27,7 @@ class CacheUserSearchLoader(
         private val fromNetwork: Boolean,
         private val fromCache: Boolean,
         fromUser: Boolean
-) : UserSearchLoader(context, accountKey, query, 0, null, fromUser) {
+) : UserSearchLoader(context, accountKey, query, null, fromUser) {
     @Inject
     internal lateinit var userColorNameManager: UserColorNameManager
 
@@ -31,9 +35,9 @@ class CacheUserSearchLoader(
         GeneralComponent.get(context).inject(this)
     }
 
-    override fun getUsers(details: AccountDetails): List<ParcelableUser> {
-        if (query.isEmpty() || !fromNetwork) return emptyList()
-        return super.getUsers(details)
+    override fun getUsers(details: AccountDetails, paging: Paging): PaginatedList<ParcelableUser> {
+        if (query.isEmpty() || !fromNetwork) return PaginatedArrayList()
+        return super.getUsers(details, paging)
     }
 
     override fun processUsersData(details: AccountDetails, list: MutableList<ParcelableUser>) {

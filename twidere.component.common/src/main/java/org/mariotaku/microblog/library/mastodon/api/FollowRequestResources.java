@@ -19,16 +19,15 @@
 package org.mariotaku.microblog.library.mastodon.api;
 
 import org.mariotaku.microblog.library.mastodon.model.Account;
+import org.mariotaku.microblog.library.mastodon.model.LinkHeaderList;
 import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.param.Query;
-
-import java.util.List;
 
 /**
  * Created by mariotaku on 2017/4/17.
  */
 public interface FollowRequestResources {
     @GET("/v1/follow_requests")
-    List<Account> getFollowRequests(@Query Paging paging);
+    LinkHeaderList<Account> getFollowRequests(@Query Paging paging);
 }

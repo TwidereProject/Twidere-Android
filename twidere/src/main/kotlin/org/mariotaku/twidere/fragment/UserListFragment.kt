@@ -53,10 +53,13 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.AccountSelectorActivity
 import org.mariotaku.twidere.activity.UserSelectorActivity
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
+import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
+import org.mariotaku.twidere.fragment.users.UserListMembersFragment
+import org.mariotaku.twidere.fragment.users.UserListSubscribersFragment
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.SingleResponse
@@ -201,7 +204,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
                 followItem.setTitle(R.string.action_subscribe)
             }
             val extensionsIntent = Intent(INTENT_ACTION_EXTENSION_OPEN_USER_LIST)
-            extensionsIntent.setExtrasClassLoader(activity.classLoader)
+            extensionsIntent.setExtrasClassLoader(TwidereApplication::class.java.classLoader)
             extensionsIntent.putExtra(EXTRA_USER_LIST, userList)
             MenuUtils.addIntentToMenu(activity, menu, extensionsIntent, MENU_GROUP_USER_LIST_EXTENSION)
         } else {

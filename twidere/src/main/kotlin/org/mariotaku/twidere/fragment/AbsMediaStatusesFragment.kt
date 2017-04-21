@@ -31,7 +31,7 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_FROM_USER
 import org.mariotaku.twidere.extension.reachingEnd
 import org.mariotaku.twidere.extension.reachingStart
-import org.mariotaku.twidere.loader.AbsRequestStatusesLoader
+import org.mariotaku.twidere.loader.statuses.AbsRequestStatusesLoader
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.util.IntentUtils

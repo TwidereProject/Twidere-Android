@@ -31,7 +31,7 @@ import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.extension.getErrorMessage
-import org.mariotaku.twidere.loader.AbsRequestStatusesLoader
+import org.mariotaku.twidere.loader.statuses.AbsRequestStatusesLoader
 import org.mariotaku.twidere.model.BaseRefreshTaskParam
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.RefreshTaskParam

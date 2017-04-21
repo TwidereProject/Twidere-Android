@@ -29,7 +29,7 @@ import android.view.MenuItem
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.ComposeActivity
-import org.mariotaku.twidere.loader.GroupTimelineLoader
+import org.mariotaku.twidere.loader.statuses.GroupTimelineLoader
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.util.Utils
 import java.util.*

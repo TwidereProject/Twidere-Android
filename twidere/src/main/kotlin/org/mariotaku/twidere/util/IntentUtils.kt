@@ -22,6 +22,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.MediaViewerActivity
 import org.mariotaku.twidere.annotation.Referral
+import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.chromeCustomTabKey
 import org.mariotaku.twidere.fragment.SensitiveContentWarningDialogFragment
 import org.mariotaku.twidere.model.*
@@ -71,7 +72,7 @@ object IntentUtils {
     fun userProfile(user: ParcelableUser, @Referral referral: String? = null): Intent {
         val uri = LinkCreator.getTwidereUserLink(user.account_key, user.key, user.screen_name)
         val intent = Intent(Intent.ACTION_VIEW, uri)
-        intent.setExtrasClassLoader(ParcelableUser::class.java.classLoader)
+        intent.setExtrasClassLoader(TwidereApplication::class.java.classLoader)
         intent.putExtra(EXTRA_USER, user)
         if (user.extras != null) {
             intent.putExtra(EXTRA_PROFILE_URL, user.extras.statusnet_profile_url)
@@ -373,16 +374,14 @@ object IntentUtils {
     }
 
     fun openStatus(context: Context, status: ParcelableStatus, activityOptions: Bundle? = null) {
-        val extras = Bundle()
-        extras.putParcelable(EXTRA_STATUS, status)
         val builder = Uri.Builder()
         builder.scheme(SCHEME_TWIDERE)
         builder.authority(AUTHORITY_STATUS)
         builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, status.account_key.toString())
         builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, status.id)
         val intent = Intent(Intent.ACTION_VIEW, builder.build())
-        intent.setExtrasClassLoader(context.classLoader)
-        intent.putExtras(extras)
+        intent.setExtrasClassLoader(TwidereApplication::class.java.classLoader)
+        intent.putExtra(EXTRA_STATUS, status)
         ActivityCompat.startActivity(context, intent, activityOptions)
     }
 
@@ -494,14 +493,12 @@ object IntentUtils {
     }
 
     fun openUserListDetails(context: Context, userList: ParcelableUserList) {
-        context.startActivity(userListDetails(context, userList))
+        context.startActivity(userListDetails(userList))
     }
 
-    fun userListDetails(context: Context, userList: ParcelableUserList): Intent {
+    fun userListDetails(userList: ParcelableUserList): Intent {
         val userKey = userList.user_key
         val listId = userList.id
-        val extras = Bundle()
-        extras.putParcelable(EXTRA_USER_LIST, userList)
         val builder = Uri.Builder()
         builder.scheme(SCHEME_TWIDERE)
         builder.authority(AUTHORITY_USER_LIST)
@@ -509,14 +506,12 @@ object IntentUtils {
         builder.appendQueryParameter(QUERY_PARAM_USER_KEY, userKey.toString())
         builder.appendQueryParameter(QUERY_PARAM_LIST_ID, listId)
         val intent = Intent(Intent.ACTION_VIEW, builder.build())
-        intent.setExtrasClassLoader(context.classLoader)
-        intent.putExtras(extras)
+        intent.setExtrasClassLoader(TwidereApplication::class.java.classLoader)
+        intent.putExtra(EXTRA_USER_LIST, userList)
         return intent
     }
 
     fun openGroupDetails(context: Context, group: ParcelableGroup) {
-        val extras = Bundle()
-        extras.putParcelable(EXTRA_GROUP, group)
         val builder = Uri.Builder()
         builder.scheme(SCHEME_TWIDERE)
         builder.authority(AUTHORITY_GROUP)
@@ -524,8 +519,8 @@ object IntentUtils {
         builder.appendQueryParameter(QUERY_PARAM_GROUP_ID, group.id)
         builder.appendQueryParameter(QUERY_PARAM_GROUP_NAME, group.nickname)
         val intent = Intent(Intent.ACTION_VIEW, builder.build())
-        intent.setExtrasClassLoader(context.classLoader)
-        intent.putExtras(extras)
+        intent.setExtrasClassLoader(TwidereApplication::class.java.classLoader)
+        intent.putExtra(EXTRA_GROUP, group)
         context.startActivity(intent)
     }
 

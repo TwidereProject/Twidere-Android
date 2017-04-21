@@ -382,7 +382,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         return handleActionLongClick(this, status, adapter.getItemId(position), id)
     }
 
-    override fun createItemDecoration(context: Context, recyclerView: RecyclerView, layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
+    override fun onCreateItemDecoration(context: Context, recyclerView: RecyclerView, layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
         val itemDecoration = ExtendedDividerItemDecoration(context, (recyclerView.layoutManager as LinearLayoutManager).orientation)
         val res = context.resources
         if (adapter.profileImageEnabled) {

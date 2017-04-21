@@ -219,7 +219,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
     }
 
     protected open fun setupRecyclerView(context: Context, recyclerView: RecyclerView) {
-        itemDecoration = createItemDecoration(context, recyclerView, layoutManager)
+        itemDecoration = onCreateItemDecoration(context, recyclerView, layoutManager)
         if (itemDecoration != null) {
             recyclerView.addItemDecoration(itemDecoration)
         }
@@ -270,7 +270,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
     protected abstract fun onCreateAdapter(context: Context): A
 
 
-    protected open fun createItemDecoration(context: Context, recyclerView: RecyclerView,
+    protected open fun onCreateItemDecoration(context: Context, recyclerView: RecyclerView,
             layoutManager: L): ItemDecoration? {
         return null
     }

@@ -29,7 +29,7 @@ import com.squareup.otto.Subscribe
 import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
-import org.mariotaku.twidere.loader.UserListOwnershipsLoader
+import org.mariotaku.twidere.loader.userlists.UserListOwnershipsLoader
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.UserListDestroyedEvent
@@ -47,7 +47,9 @@ class UserListsOwnershipsFragment : ParcelableUserListsFragment() {
         val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
         val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
         val screenName = args.getString(EXTRA_SCREEN_NAME)
-        return UserListOwnershipsLoader(activity, accountKey, userKey, screenName, nextCursor, data)
+        return UserListOwnershipsLoader(activity, accountKey, userKey, screenName, data).apply {
+            pagination = args.getParcelable(EXTRA_PAGINATION)
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

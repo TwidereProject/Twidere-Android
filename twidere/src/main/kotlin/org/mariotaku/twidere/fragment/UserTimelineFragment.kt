@@ -30,7 +30,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.constant.userTimelineFilterKey
 import org.mariotaku.twidere.extension.applyTheme
-import org.mariotaku.twidere.loader.UserTimelineLoader
+import org.mariotaku.twidere.loader.statuses.UserTimelineLoader
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.timeline.TimelineFilter

@@ -62,6 +62,7 @@ import org.mariotaku.twidere.fragment.message.MessageConversationInfoFragment
 import org.mariotaku.twidere.fragment.message.MessageNewConversationFragment
 import org.mariotaku.twidere.fragment.message.MessagesConversationFragment
 import org.mariotaku.twidere.fragment.message.MessagesEntriesFragment
+import org.mariotaku.twidere.fragment.users.*
 import org.mariotaku.twidere.graphic.EmptyDrawable
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
@@ -521,7 +522,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
 
     @Throws(Utils.NoAccountException::class)
     private fun createFragmentForIntent(context: Context, linkId: Int, intent: Intent): Fragment? {
-        intent.setExtrasClassLoader(context.classLoader)
+        intent.setExtrasClassLoader(classLoader)
         val extras = intent.extras
         val uri = intent.data
         val fragment: Fragment

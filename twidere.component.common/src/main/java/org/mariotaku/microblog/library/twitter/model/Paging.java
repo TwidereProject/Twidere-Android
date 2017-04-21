@@ -45,10 +45,6 @@ public class Paging extends SimpleValueMap {
         put("count", count);
     }
 
-    public void setPage(int page) {
-        put("page", page);
-    }
-
     public void setCursor(long cursor) {
         put("cursor", cursor);
     }
@@ -59,10 +55,6 @@ public class Paging extends SimpleValueMap {
 
     public void setLatestResults(boolean latestResults) {
         put("latest_results", latestResults);
-    }
-
-    public void setRpp(int rpp) {
-        put("rpp", rpp);
     }
 
     public Paging sinceId(String sinceId) {
@@ -96,7 +88,7 @@ public class Paging extends SimpleValueMap {
     }
 
     public Paging page(int page) {
-        setPage(page);
+        put("page", page);
         return this;
     }
 
@@ -110,8 +102,13 @@ public class Paging extends SimpleValueMap {
         return this;
     }
 
+    public Paging limit(int limit) {
+        put("limit", limit);
+        return this;
+    }
+
     public Paging rpp(int rpp) {
-        setRpp(rpp);
+        put("rpp", rpp);
         return this;
     }
 }

@@ -37,6 +37,7 @@ import org.mariotaku.ktextension.isNotNullOrEmpty
 import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.SimpleParcelableUsersAdapter
+import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.loader.CacheUserSearchLoader
 import org.mariotaku.twidere.model.ParcelableUser
@@ -100,7 +101,7 @@ class UserSelectorActivity : BaseActivity(), OnItemClickListener, LoaderManager.
         val list = view as ListView
         val user = adapter.getItem(position - list.headerViewsCount) ?: return
         val data = Intent()
-        data.setExtrasClassLoader(classLoader)
+        data.setExtrasClassLoader(TwidereApplication::class.java.classLoader)
         data.putExtra(EXTRA_USER, user)
         data.putExtra(EXTRA_EXTRAS, intent.getBundleExtra(EXTRA_EXTRAS))
         setResult(Activity.RESULT_OK, data)

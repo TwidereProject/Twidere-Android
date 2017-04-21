@@ -39,11 +39,12 @@ import org.mariotaku.twidere.adapter.SimpleParcelableUserListsAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
 import org.mariotaku.twidere.constant.IntentConstants.*
-import org.mariotaku.twidere.loader.UserListOwnershipsLoader
-import org.mariotaku.twidere.loader.iface.ICursorSupportLoader
+import org.mariotaku.twidere.loader.iface.IPaginationLoader
+import org.mariotaku.twidere.loader.userlists.UserListOwnershipsLoader
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.util.ContentScrollHandler
 import org.mariotaku.twidere.util.ListViewScrollHandler
 
@@ -53,13 +54,26 @@ class UserListSelectorActivity : BaseActivity(),
 
     override lateinit var adapter: SimpleParcelableUserListsAdapter
 
+    override var refreshing: Boolean
+        get() {
+            return supportLoaderManager.hasRunningLoadersSafe()
+        }
+        set(value) {
+        }
+
+    override val reachingStart: Boolean
+        get() = listView.firstVisiblePosition <= 0
+
+    override val reachingEnd: Boolean
+        get() = listView.lastVisiblePosition >= listView.count - 1
+
     private val accountKey: UserKey?
         get() = intent.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
     private val showMyLists: Boolean
         get() = intent.getBooleanExtra(EXTRA_SHOW_MY_LISTS, false)
 
     private var userKey: UserKey? = null
-    private var nextCursor: Long = -1
+    private var nextPagination: Pagination? = null
 
     private var loaderInitialized: Boolean = false
 
@@ -135,7 +149,7 @@ class UserListSelectorActivity : BaseActivity(),
         val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
         val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
         val nextCursor = args.getLong(EXTRA_NEXT_CURSOR)
-        return UserListOwnershipsLoader(this, accountKey, userKey, null, nextCursor, adapter.all)
+        return UserListOwnershipsLoader(this, accountKey, userKey, null, adapter.all)
     }
 
     override fun onLoaderReset(loader: Loader<List<ParcelableUserList>>?) {
@@ -152,8 +166,8 @@ class UserListSelectorActivity : BaseActivity(),
         }
         adapter.setData(data)
         refreshing = false
-        if (loader is ICursorSupportLoader) {
-            nextCursor = loader.nextCursor
+        if (loader is IPaginationLoader) {
+            nextPagination = loader.nextPagination
         }
         showList()
     }
@@ -161,18 +175,6 @@ class UserListSelectorActivity : BaseActivity(),
     override fun setControlVisible(visible: Boolean) {
     }
 
-    override var refreshing: Boolean
-        get() {
-            return supportLoaderManager.hasRunningLoadersSafe()
-        }
-        set(value) {
-        }
-
-    override val reachingStart: Boolean
-        get() = listView.firstVisiblePosition <= 0
-
-    override val reachingEnd: Boolean
-        get() = listView.lastVisiblePosition >= listView.count - 1
 
     override fun onLoadMoreContents(@IndicatorPosition position: Long) {
         val accountKey = this.accountKey ?: return
@@ -181,10 +183,10 @@ class UserListSelectorActivity : BaseActivity(),
             return
         }
         adapter.loadMoreIndicatorPosition = position
-        loadUserLists(accountKey, userKey, nextCursor)
+        loadUserLists(accountKey, userKey, nextPagination)
     }
 
-    private fun loadUserLists(accountKey: UserKey, userKey: UserKey, nextCursor: Long = -1) {
+    private fun loadUserLists(accountKey: UserKey, userKey: UserKey, pagination: Pagination? = null) {
         if (userKey != this.userKey) {
             adapter.clear()
             showProgress()
@@ -193,7 +195,7 @@ class UserListSelectorActivity : BaseActivity(),
         val args = Bundle {
             this[EXTRA_ACCOUNT_KEY] = accountKey
             this[EXTRA_USER_KEY] = userKey
-            this[EXTRA_NEXT_CURSOR] = nextCursor
+            this[EXTRA_PAGINATION] = pagination
         }
         if (!loaderInitialized) {
             loaderInitialized = true

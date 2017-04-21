@@ -18,6 +18,8 @@
 
 package org.mariotaku.microblog.library.twitter.util;
 
+import android.support.annotation.NonNull;
+
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.restfu.RestConverter;
 import org.mariotaku.restfu.RestFuUtils;
@@ -35,8 +37,9 @@ import java.text.ParseException;
  * Created by mariotaku on 16/5/21.
  */
 public class OAuthTokenResponseConverter implements RestConverter<HttpResponse, OAuthToken, MicroBlogException> {
+    @NonNull
     @Override
-    public OAuthToken convert(HttpResponse response) throws IOException, ConvertException {
+    public OAuthToken convert(@NonNull HttpResponse response) throws IOException, ConvertException {
         final Body body = response.getBody();
         try {
             final ContentType contentType = body.contentType();

@@ -48,6 +48,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.AccountSelectorActivity
 import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity
+import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.favoriteConfirmationKey
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
 import org.mariotaku.twidere.constant.nameFirstKey
@@ -359,7 +360,7 @@ object MenuUtils {
         val density = res.displayMetrics.density
         val padding = Math.round(density * 4)
         val queryIntent = Intent(action)
-        queryIntent.setExtrasClassLoader(context.classLoader)
+        queryIntent.setExtrasClassLoader(TwidereApplication::class.java.classLoader)
         val activities = pm.queryIntentActivities(queryIntent, PackageManager.GET_META_DATA)
         val parcelableJson = try {
             JsonSerializer.serialize(obj)

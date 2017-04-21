@@ -26,14 +26,14 @@ import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.adapter.SelectableUsersAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
-import org.mariotaku.twidere.constant.IntentConstants
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_COUNT
+import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.fragment.*
-import org.mariotaku.twidere.loader.CursorSupportUsersLoader
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
+import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
+import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
@@ -46,18 +46,16 @@ import java.lang.ref.WeakReference
 abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<SelectableUsersAdapter>(),
         LoaderManager.LoaderCallbacks<List<ParcelableUser>?> {
 
-    protected var nextCursor: Long = -1
+    protected var nextPagination: Pagination? = null
         private set
-    protected var prevCursor: Long = -1
-        private set
-    protected var nextPage = 1
+    protected var prevPagination: Pagination? = null
         private set
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
         val loaderArgs = Bundle(arguments)
-        loaderArgs.putBoolean(IntentConstants.EXTRA_FROM_USER, true)
+        loaderArgs.putBoolean(EXTRA_FROM_USER, true)
         loaderManager.initLoader(0, loaderArgs, this)
     }
 
@@ -126,8 +124,8 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
     }
 
     override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableUser>?> {
-        val fromUser = args.getBoolean(IntentConstants.EXTRA_FROM_USER)
-        args.remove(IntentConstants.EXTRA_FROM_USER)
+        val fromUser = args.getBoolean(EXTRA_FROM_USER)
+        args.remove(EXTRA_FROM_USER)
         return onCreateUsersLoader(context, args, fromUser)
     }
 
@@ -166,10 +164,9 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
         refreshEnabled = data.isNullOrEmpty()
         refreshing = false
         setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.NONE)
-        val cursorLoader = loader as CursorSupportUsersLoader
-        nextCursor = cursorLoader.nextCursor
-        prevCursor = cursorLoader.prevCursor
-        nextPage = cursorLoader.nextPage
+        val cursorLoader = loader as AbsRequestUsersLoader
+        nextPagination = cursorLoader.nextPagination
+        prevPagination = cursorLoader.prevPagination
         activity.supportInvalidateOptionsMenu()
     }
 
@@ -179,9 +176,8 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
         super.onLoadMoreContents(position)
         if (position == 0L) return
         val loaderArgs = Bundle(arguments)
-        loaderArgs.putBoolean(IntentConstants.EXTRA_FROM_USER, true)
-        loaderArgs.putLong(IntentConstants.EXTRA_NEXT_CURSOR, nextCursor)
-        loaderArgs.putInt(IntentConstants.EXTRA_PAGE, nextPage)
+        loaderArgs.putBoolean(EXTRA_FROM_USER, true)
+        loaderArgs.putParcelable(EXTRA_NEXT_PAGINATION, nextPagination)
         loaderManager.restartLoader(0, loaderArgs, this)
     }
 

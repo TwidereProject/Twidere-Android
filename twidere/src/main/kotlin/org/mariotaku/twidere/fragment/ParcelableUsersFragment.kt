@@ -39,13 +39,15 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.UserClickListener
 import org.mariotaku.twidere.annotation.Referral
-import org.mariotaku.twidere.constant.IntentConstants
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_SIMPLE_LAYOUT
+import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
+import org.mariotaku.twidere.loader.iface.IPaginationLoader
+import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
+import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
@@ -56,8 +58,32 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         LoaderCallbacks<List<ParcelableUser>?>, UserClickListener, KeyboardShortcutCallback,
         IUsersAdapter.FriendshipClickListener {
 
-    private lateinit var navigationHelper: RecyclerViewNavigationHelper
+    override var refreshing: Boolean
+        get() {
+            if (context == null || isDetached) return false
+            return loaderManager.hasRunningLoadersSafe()
+        }
+        set(value) {
+            super.refreshing = value
+        }
 
+    protected open val userReferral: String?
+        @Referral
+        get() = null
+
+    protected open val simpleLayout: Boolean
+        get() = arguments.getBoolean(EXTRA_SIMPLE_LAYOUT)
+
+    protected open val showFollow: Boolean
+        get() = true
+
+    protected var nextPagination: Pagination? = null
+        private set
+
+    protected var prevPagination: Pagination? = null
+        private set
+
+    private lateinit var navigationHelper: RecyclerViewNavigationHelper
     private val usersBusCallback: Any
 
     init {
@@ -66,12 +92,16 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        if (savedInstanceState != null) {
+            nextPagination = savedInstanceState.getParcelable(EXTRA_NEXT_PAGINATION)
+            prevPagination = savedInstanceState.getParcelable(EXTRA_PREV_PAGINATION)
+        }
         adapter.userClickListener = this
 
         navigationHelper = RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter,
                 this)
         val loaderArgs = Bundle(arguments)
-        loaderArgs.putBoolean(IntentConstants.EXTRA_FROM_USER, true)
+        loaderArgs.putBoolean(EXTRA_FROM_USER, true)
         loaderManager.initLoader(0, loaderArgs, this)
     }
 
@@ -85,21 +115,20 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         super.onStop()
     }
 
-    override var refreshing: Boolean
-        get() {
-            if (context == null || isDetached) return false
-            return loaderManager.hasRunningLoadersSafe()
-        }
-        set(value) {
-            super.refreshing = value
-        }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelable(EXTRA_NEXT_PAGINATION, nextPagination)
+        outState.putParcelable(EXTRA_PREV_PAGINATION, prevPagination)
+    }
 
-    override fun onCreateAdapter(context: Context): ParcelableUsersAdapter {
-        val adapter = ParcelableUsersAdapter(context, Glide.with(this))
-        adapter.simpleLayout = simpleLayout
-        adapter.showFollow = showFollow
-        adapter.friendshipClickListener = this
-        return adapter
+    override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableUser>?> {
+        val fromUser = args.getBoolean(EXTRA_FROM_USER)
+        args.remove(EXTRA_FROM_USER)
+        return onCreateUsersLoader(activity, args, fromUser).apply {
+            if (this is AbsRequestUsersLoader) {
+                pagination = args.getParcelable(EXTRA_PAGINATION)
+            }
+        }
     }
 
     override fun onLoadFinished(loader: Loader<List<ParcelableUser>?>, data: List<ParcelableUser>?) {
@@ -111,10 +140,39 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         if (loader is IExtendedLoader) {
             loader.fromUser = false
         }
+        if (loader is IPaginationLoader) {
+            nextPagination = loader.nextPagination
+            prevPagination = loader.prevPagination
+        }
         showContent()
         refreshEnabled = true
         refreshing = false
         setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.NONE)
+    }
+
+    override fun onLoaderReset(loader: Loader<List<ParcelableUser>?>) {
+        if (loader is IExtendedLoader) {
+            loader.fromUser = false
+        }
+    }
+
+    override fun onLoadMoreContents(@ILoadMoreSupportAdapter.IndicatorPosition position: Long) {
+        // Only supports load from end, skip START flag
+        if (position and ILoadMoreSupportAdapter.START != 0L) return
+        super.onLoadMoreContents(position)
+        if (position == 0L) return
+        val loaderArgs = Bundle(arguments)
+        loaderArgs.putBoolean(EXTRA_FROM_USER, true)
+        loaderArgs.putParcelable(EXTRA_PAGINATION, nextPagination)
+        loaderManager.restartLoader(0, loaderArgs, this)
+    }
+
+    override fun onCreateAdapter(context: Context): ParcelableUsersAdapter {
+        val adapter = ParcelableUsersAdapter(context, Glide.with(this))
+        adapter.simpleLayout = simpleLayout
+        adapter.showFollow = showFollow
+        adapter.friendshipClickListener = this
+        return adapter
     }
 
     override fun handleKeyboardShortcutSingle(handler: KeyboardShortcutsHandler, keyCode: Int,
@@ -127,21 +185,10 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         return navigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
     }
 
+
     override fun isKeyboardShortcutHandled(handler: KeyboardShortcutsHandler, keyCode: Int,
             event: KeyEvent, metaState: Int): Boolean {
         return navigationHelper.isKeyboardShortcutHandled(handler, keyCode, event, metaState)
-    }
-
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableUser>?> {
-        val fromUser = args.getBoolean(IntentConstants.EXTRA_FROM_USER)
-        args.remove(IntentConstants.EXTRA_FROM_USER)
-        return onCreateUsersLoader(activity, args, fromUser)
-    }
-
-    override fun onLoaderReset(loader: Loader<List<ParcelableUser>?>) {
-        if (loader is IExtendedLoader) {
-            loader.fromUser = false
-        }
     }
 
     override fun onUserClick(holder: UserViewHolder, position: Int) {
@@ -171,25 +218,12 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         twitterWrapper.destroyMuteAsync(user.account_key, user.key)
     }
 
-    protected open val userReferral: String?
-        @Referral
-        get() = null
-
-    protected open val simpleLayout: Boolean
-        get() = arguments.getBoolean(EXTRA_SIMPLE_LAYOUT)
-
-    protected open val showFollow: Boolean
-        get() = true
 
     override fun onUserLongClick(holder: UserViewHolder, position: Int): Boolean {
         return true
     }
 
-    protected abstract fun onCreateUsersLoader(context: Context,
-            args: Bundle,
-            fromUser: Boolean): Loader<List<ParcelableUser>?>
-
-    override fun createItemDecoration(context: Context, recyclerView: RecyclerView,
+    override fun onCreateItemDecoration(context: Context, recyclerView: RecyclerView,
             layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
         val itemDecoration = ExtendedDividerItemDecoration(context,
                 (recyclerView.layoutManager as LinearLayoutManager).orientation)
@@ -214,9 +248,8 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         return itemDecoration
     }
 
-    private fun findPosition(accountKey: UserKey, userKey: UserKey): Int {
-        return adapter.findPosition(accountKey, userKey)
-    }
+    abstract fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean):
+            Loader<List<ParcelableUser>?>
 
     protected open fun shouldRemoveUser(position: Int, event: FriendshipTaskEvent): Boolean {
         return false
@@ -228,6 +261,10 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
 
     protected fun createMessageBusCallback(): Any {
         return UsersBusCallback()
+    }
+
+    private fun findPosition(accountKey: UserKey, userKey: UserKey): Int {
+        return adapter.findPosition(accountKey, userKey)
     }
 
     protected inner class UsersBusCallback {

@@ -3,8 +3,9 @@ package org.mariotaku.twidere.fragment.filter
 import android.content.Context
 import android.os.Bundle
 import org.mariotaku.twidere.constant.IntentConstants
-import org.mariotaku.twidere.loader.CursorSupportUsersLoader
-import org.mariotaku.twidere.loader.UserBlocksLoader
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_PAGINATION
+import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
+import org.mariotaku.twidere.loader.users.UserBlocksLoader
 import org.mariotaku.twidere.model.UserKey
 
 /**
@@ -14,11 +15,10 @@ import org.mariotaku.twidere.model.UserKey
 class FiltersImportBlocksFragment : BaseFiltersImportFragment() {
 
     override fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean):
-            CursorSupportUsersLoader {
+            AbsRequestUsersLoader {
         val accountKey = args.getParcelable<UserKey>(IntentConstants.EXTRA_ACCOUNT_KEY)
-        val loader = UserBlocksLoader(context, accountKey, adapter.data, fromUser)
-        loader.cursor = nextCursor
-        loader.page = nextPage
-        return loader
+        return UserBlocksLoader(context, accountKey, adapter.data, fromUser).apply {
+            pagination = args.getParcelable(EXTRA_PAGINATION)
+        }
     }
 }

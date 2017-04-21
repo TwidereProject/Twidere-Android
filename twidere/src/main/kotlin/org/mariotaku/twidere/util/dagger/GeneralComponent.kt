@@ -35,6 +35,8 @@ import org.mariotaku.twidere.fragment.ThemedPreferenceDialogFragmentCompat
 import org.mariotaku.twidere.fragment.filter.FilteredUsersFragment
 import org.mariotaku.twidere.fragment.media.ExoPlayerPageFragment
 import org.mariotaku.twidere.loader.*
+import org.mariotaku.twidere.loader.statuses.AbsRequestStatusesLoader
+import org.mariotaku.twidere.loader.userlists.BaseUserListsLoader
 import org.mariotaku.twidere.preference.AccountsListPreference
 import org.mariotaku.twidere.preference.KeyboardShortcutPreference
 import org.mariotaku.twidere.preference.PremiumEntryPreference

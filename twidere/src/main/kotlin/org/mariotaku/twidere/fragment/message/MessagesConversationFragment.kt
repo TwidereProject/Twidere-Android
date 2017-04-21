@@ -279,7 +279,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         return FixedLinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
     }
 
-    override fun createItemDecoration(context: Context, recyclerView: RecyclerView,
+    override fun onCreateItemDecoration(context: Context, recyclerView: RecyclerView,
             layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
         return null
     }

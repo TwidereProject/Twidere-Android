@@ -517,7 +517,7 @@ abstract class AbsActivitiesFragment protected constructor() :
     }
 
 
-    override fun createItemDecoration(context: Context, recyclerView: RecyclerView,
+    override fun onCreateItemDecoration(context: Context, recyclerView: RecyclerView,
             layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
         val itemDecoration = object : ExtendedDividerItemDecoration(context,
                 (recyclerView.layoutManager as LinearLayoutManager).orientation) {

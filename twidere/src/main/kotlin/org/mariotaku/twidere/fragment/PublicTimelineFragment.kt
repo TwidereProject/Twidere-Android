@@ -23,7 +23,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.content.Loader
 import org.mariotaku.twidere.TwidereConstants.*
-import org.mariotaku.twidere.loader.PublicTimelineLoader
+import org.mariotaku.twidere.loader.statuses.PublicTimelineLoader
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.util.Utils
 import java.util.*

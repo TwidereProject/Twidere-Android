@@ -28,8 +28,10 @@ import android.support.annotation.NonNull;
 
 public class IDsAccessor {
 
-    public static void setIds(@NonNull final IDs ids, @NonNull final String[] array) {
+    @NonNull
+    public static IDs setIds(@NonNull final IDs ids, @NonNull final String[] array) {
         ids.ids = array;
+        return ids;
     }
 
 }
