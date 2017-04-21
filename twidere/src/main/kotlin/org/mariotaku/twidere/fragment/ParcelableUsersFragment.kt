@@ -44,6 +44,7 @@ import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.loader.iface.IPaginationLoader
 import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
+import org.mariotaku.twidere.model.ListResponse
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
@@ -140,7 +141,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         if (loader is IExtendedLoader) {
             loader.fromUser = false
         }
-        if (loader is IPaginationLoader) {
+        if (loader is IPaginationLoader && data?.loadSuccess() ?: false) {
             nextPagination = loader.nextPagination
             prevPagination = loader.prevPagination
         }
@@ -265,6 +266,10 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
 
     private fun findPosition(accountKey: UserKey, userKey: UserKey): Int {
         return adapter.findPosition(accountKey, userKey)
+    }
+
+    private fun List<ParcelableUser>.loadSuccess(): Boolean {
+        return this !is ListResponse<*> || !this.hasException()
     }
 
     protected inner class UsersBusCallback {

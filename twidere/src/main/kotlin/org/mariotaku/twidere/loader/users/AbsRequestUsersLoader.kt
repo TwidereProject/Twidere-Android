@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.loader.users
 
 import android.accounts.AccountManager
+import android.content.ActivityNotFoundException
 import android.content.Context
 import org.mariotaku.kpreferences.get
 import org.mariotaku.microblog.library.MicroBlogException
@@ -60,19 +61,17 @@ abstract class AbsRequestUsersLoader(
     }
 
     override fun loadInBackground(): List<ParcelableUser> {
-        if (accountKey == null) {
-            return ListResponse.getListInstance(MicroBlogException("No Account"))
-        }
-        val am = AccountManager.get(context)
-        val details = AccountUtils.getAccountDetails(am, accountKey, true) ?:
-                return ListResponse.getListInstance(MicroBlogException("No Account"))
         val data = data
+        val details: AccountDetails
         val users: List<ParcelableUser>
         try {
+            val am = AccountManager.get(context)
+            details = accountKey?.let { AccountUtils.getAccountDetails(am, it, true) } ?:
+                    throw ActivityNotFoundException()
             users = getUsers(details)
         } catch (e: MicroBlogException) {
             DebugLog.w(tr = e)
-            return ListResponse.getListInstance(data)
+            return ListResponse.getListInstance(data, e)
         }
 
         var pos = data.size
@@ -94,7 +93,7 @@ abstract class AbsRequestUsersLoader(
     }
 
     @Throws(MicroBlogException::class)
-    final fun getUsers(details: AccountDetails): List<ParcelableUser> {
+    private fun getUsers(details: AccountDetails): List<ParcelableUser> {
         val paging = Paging()
         paging.applyItemLimit(details, loadItemLimit)
         pagination?.applyTo(paging)
