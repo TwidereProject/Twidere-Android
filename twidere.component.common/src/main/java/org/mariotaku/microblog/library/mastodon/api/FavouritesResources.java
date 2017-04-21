@@ -18,8 +18,9 @@
 
 package org.mariotaku.microblog.library.mastodon.api;
 
-import org.mariotaku.microblog.library.mastodon.model.Account;
+import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.mastodon.model.LinkHeaderList;
+import org.mariotaku.microblog.library.mastodon.model.Status;
 import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.param.Query;
@@ -28,7 +29,12 @@ import org.mariotaku.restfu.annotation.param.Query;
  * Created by mariotaku on 2017/4/17.
  */
 
-public interface MuteResources {
-    @GET("/v1/mutes")
-    LinkHeaderList<Account> getMutes(@Query Paging paging);
+public interface FavouritesResources {
+
+    /**
+     * @return An array of {@link Status} favourited by the authenticated user.
+     */
+    @GET("/v1/favourites")
+    LinkHeaderList<Status> getFavourites(@Query Paging paging) throws MicroBlogException;
+
 }

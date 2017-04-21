@@ -18,9 +18,21 @@
 
 package org.mariotaku.microblog.library.mastodon.api;
 
+import android.support.annotation.Nullable;
+
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.mastodon.model.RegisteredApplication;
+import org.mariotaku.restfu.annotation.method.POST;
+import org.mariotaku.restfu.annotation.param.Param;
+
 /**
  * Created by mariotaku on 2017/4/17.
  */
 
-public interface ReportResources {
+public interface AppsResources {
+    @POST("/v1/apps")
+    RegisteredApplication registerApplication(@Param("client_name") String clientName,
+            @Param("redirect_uris") String redirectUris,
+            @Param(value = "scopes", arrayDelimiter = ' ') String[] scopes,
+            @Nullable @Param("website") String website) throws MicroBlogException;
 }

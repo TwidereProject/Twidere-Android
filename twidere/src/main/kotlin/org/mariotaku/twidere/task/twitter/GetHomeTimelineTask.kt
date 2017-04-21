@@ -23,11 +23,16 @@ import android.content.Context
 import android.net.Uri
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.twitter.model.Paging
-import org.mariotaku.microblog.library.twitter.model.ResponseList
-import org.mariotaku.microblog.library.twitter.model.Status
+import org.mariotaku.twidere.R
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.ReadPositionTag
+import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
+import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.ErrorInfoStore
@@ -45,12 +50,27 @@ class GetHomeTimelineTask(context: Context) : GetStatusesTask(context) {
     override val errorInfoKey: String
         get() = ErrorInfoStore.KEY_HOME_TIMELINE
 
+    private val profileImageSize = context.getString(R.string.profile_image_size)
+
     @Throws(MicroBlogException::class)
-    override fun getStatuses(twitter: MicroBlog, paging: Paging): ResponseList<Status> {
-        return twitter.getHomeTimeline(paging)
+    override fun getStatuses(account: AccountDetails, paging: Paging): List<ParcelableStatus> {
+        when (account.type) {
+            AccountType.MASTODON -> {
+                val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
+                return mastodon.getHomeTimeline(paging).map {
+                    it.toParcelable(account.key)
+                }
+            }
+            else -> {
+                val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                return microBlog.getHomeTimeline(paging).map {
+                    it.toParcelable(account.key, account.type, profileImageSize)
+                }
+            }
+        }
     }
 
-    override fun setLocalReadPosition(accountKey: UserKey, details: AccountDetails, twitter: MicroBlog) {
+    override fun setLocalReadPosition(accountKey: UserKey, details: AccountDetails) {
         val syncManager = timelineSyncManagerFactory.get() ?: return
         try {
             val tag = Utils.getReadPositionTagWithAccount(ReadPositionTag.HOME_TIMELINE, accountKey)

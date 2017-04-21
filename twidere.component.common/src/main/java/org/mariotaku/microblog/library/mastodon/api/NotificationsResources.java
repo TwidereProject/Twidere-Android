@@ -22,5 +22,5 @@ package org.mariotaku.microblog.library.mastodon.api;
  * Created by mariotaku on 2017/4/17.
  */
 
-public interface FollowResources {
+public interface NotificationsResources {
 }

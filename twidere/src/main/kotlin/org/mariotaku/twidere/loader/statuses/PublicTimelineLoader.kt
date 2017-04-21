@@ -24,8 +24,11 @@ import android.database.sqlite.SQLiteDatabase
 import android.support.annotation.WorkerThread
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.model.api.mastodon.mapToPaginated
+import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
@@ -47,7 +50,12 @@ class PublicTimelineLoader(
     @Throws(MicroBlogException::class)
     override fun getStatuses(account: AccountDetails, paging: Paging): PaginatedList<ParcelableStatus> {
         when (account.type) {
-            AccountType.MASTODON -> throw MicroBlogException("STUB")
+            AccountType.MASTODON -> {
+                val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
+                return mastodon.getPublicTimeline(paging, true).mapToPaginated {
+                    it.toParcelable(account.key)
+                }
+            }
             else -> {
                 val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
                 return microBlog.getPublicTimeline(paging).mapMicroBlogToPaginated {

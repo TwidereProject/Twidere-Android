@@ -385,6 +385,9 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             AccountType.FANFOU -> {
                 hasPublicTimeline = !hasPublicTimelineTab
             }
+            AccountType.MASTODON -> {
+                hasPublicTimeline = !hasPublicTimelineTab
+            }
         }
         menu.setItemAvailability(R.id.groups, hasGroups)
         menu.setItemAvailability(R.id.lists, hasLists)

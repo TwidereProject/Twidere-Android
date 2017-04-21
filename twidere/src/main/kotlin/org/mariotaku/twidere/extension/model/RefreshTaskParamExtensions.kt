@@ -23,9 +23,7 @@ import org.mariotaku.twidere.model.RefreshTaskParam
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 
 val RefreshTaskParam.hasMaxIds: Boolean
-    get() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    get() = pagination?.any { (it as? SinceMaxPagination)?.maxId != null } ?: false
 
 fun RefreshTaskParam.getMaxId(index: Int): String? {
     return (pagination?.get(index) as? SinceMaxPagination)?.maxId

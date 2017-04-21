@@ -39,7 +39,7 @@ import org.mariotaku.restfu.annotation.param.Query;
  * Created by mariotaku on 2017/4/17.
  */
 
-public interface AccountResources {
+public interface AccountsResources {
 
     @GET("/v1/accounts/{id}")
     Account getAccount(@Path("id") String id) throws MicroBlogException;

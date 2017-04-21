@@ -18,27 +18,27 @@
 
 package org.mariotaku.microblog.library.mastodon;
 
-import org.mariotaku.microblog.library.mastodon.api.AccountResources;
-import org.mariotaku.microblog.library.mastodon.api.ApplicationResources;
-import org.mariotaku.microblog.library.mastodon.api.BlockResources;
-import org.mariotaku.microblog.library.mastodon.api.FavouriteResources;
-import org.mariotaku.microblog.library.mastodon.api.FollowRequestResources;
-import org.mariotaku.microblog.library.mastodon.api.FollowResources;
-import org.mariotaku.microblog.library.mastodon.api.InstanceResources;
+import org.mariotaku.microblog.library.mastodon.api.AccountsResources;
+import org.mariotaku.microblog.library.mastodon.api.AppsResources;
+import org.mariotaku.microblog.library.mastodon.api.BlocksResources;
+import org.mariotaku.microblog.library.mastodon.api.FavouritesResources;
+import org.mariotaku.microblog.library.mastodon.api.FollowRequestsResources;
+import org.mariotaku.microblog.library.mastodon.api.FollowsResources;
+import org.mariotaku.microblog.library.mastodon.api.InstancesResources;
 import org.mariotaku.microblog.library.mastodon.api.MediaResources;
-import org.mariotaku.microblog.library.mastodon.api.MuteResources;
-import org.mariotaku.microblog.library.mastodon.api.NotificationResources;
-import org.mariotaku.microblog.library.mastodon.api.ReportResources;
+import org.mariotaku.microblog.library.mastodon.api.MutesResources;
+import org.mariotaku.microblog.library.mastodon.api.NotificationsResources;
+import org.mariotaku.microblog.library.mastodon.api.ReportsResources;
 import org.mariotaku.microblog.library.mastodon.api.SearchResources;
-import org.mariotaku.microblog.library.mastodon.api.StatusResources;
-import org.mariotaku.microblog.library.mastodon.api.TimelineResources;
+import org.mariotaku.microblog.library.mastodon.api.StatusesResources;
+import org.mariotaku.microblog.library.mastodon.api.TimelinesResources;
 
 /**
  * Created by mariotaku on 2017/4/17.
  */
-public interface Mastodon extends AccountResources, ApplicationResources, BlockResources,
-        FavouriteResources, FollowRequestResources, FollowResources, InstanceResources,
-        MediaResources, MuteResources, NotificationResources, ReportResources, SearchResources,
-        StatusResources, TimelineResources {
+public interface Mastodon extends AccountsResources, AppsResources, BlocksResources,
+        FavouritesResources, FollowRequestsResources, FollowsResources, InstancesResources,
+        MediaResources, MutesResources, NotificationsResources, ReportsResources, SearchResources,
+        StatusesResources, TimelinesResources {
 
 }

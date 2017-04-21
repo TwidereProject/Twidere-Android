@@ -18,9 +18,17 @@
 
 package org.mariotaku.microblog.library.mastodon.api;
 
+import org.mariotaku.microblog.library.mastodon.model.Account;
+import org.mariotaku.microblog.library.mastodon.model.LinkHeaderList;
+import org.mariotaku.microblog.library.twitter.model.Paging;
+import org.mariotaku.restfu.annotation.method.GET;
+import org.mariotaku.restfu.annotation.param.Query;
+
 /**
  * Created by mariotaku on 2017/4/17.
  */
 
-public interface NotificationResources {
+public interface MutesResources {
+    @GET("/v1/mutes")
+    LinkHeaderList<Account> getMutes(@Query Paging paging);
 }
