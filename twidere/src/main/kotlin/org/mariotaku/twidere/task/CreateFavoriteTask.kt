@@ -6,9 +6,11 @@ import android.widget.Toast
 import org.apache.commons.collections.primitives.ArrayIntList
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.getErrorMessage
+import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
@@ -18,8 +20,7 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.draft.StatusObjectActionExtras
 import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
-import org.mariotaku.twidere.model.util.ParcelableStatusUtils
-import org.mariotaku.twidere.provider.TwidereDataStore
+import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.twitter.UpdateStatusTask
 import org.mariotaku.twidere.util.AsyncTwitterWrapper.Companion.calculateHashCode
 import org.mariotaku.twidere.util.DataStoreUtils
@@ -48,6 +49,10 @@ class CreateFavoriteTask(context: Context, accountKey: UserKey, private val stat
                     val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
                     microBlog.createFanfouFavorite(statusId).toParcelable(account)
                 }
+                AccountType.MASTODON -> {
+                    val mastodon = account.newMicroBlogInstance(context, cls = Mastodon::class.java)
+                    mastodon.favouriteStatus(statusId).toParcelable(account)
+                }
                 else -> {
                     val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
                     microBlog.createFavorite(statusId).toParcelable(account)
@@ -55,15 +60,15 @@ class CreateFavoriteTask(context: Context, accountKey: UserKey, private val stat
             }
             Utils.setLastSeen(context, result.mentions, System.currentTimeMillis())
             val values = ContentValues()
-            values.put(TwidereDataStore.Statuses.IS_FAVORITE, true)
-            values.put(TwidereDataStore.Statuses.REPLY_COUNT, result.reply_count)
-            values.put(TwidereDataStore.Statuses.RETWEET_COUNT, result.retweet_count)
-            values.put(TwidereDataStore.Statuses.FAVORITE_COUNT, result.favorite_count)
+            values.put(Statuses.IS_FAVORITE, true)
+            values.put(Statuses.REPLY_COUNT, result.reply_count)
+            values.put(Statuses.RETWEET_COUNT, result.retweet_count)
+            values.put(Statuses.FAVORITE_COUNT, result.favorite_count)
             val statusWhere = Expression.and(
-                    Expression.equalsArgs(TwidereDataStore.Statuses.ACCOUNT_KEY),
+                    Expression.equalsArgs(Statuses.ACCOUNT_KEY),
                     Expression.or(
-                            Expression.equalsArgs(TwidereDataStore.Statuses.STATUS_ID),
-                            Expression.equalsArgs(TwidereDataStore.Statuses.RETWEET_ID)
+                            Expression.equalsArgs(Statuses.STATUS_ID),
+                            Expression.equalsArgs(Statuses.RETWEET_ID)
                     )
             ).sql
             val statusWhereArgs = arrayOf(account.key.toString(), statusId, statusId)

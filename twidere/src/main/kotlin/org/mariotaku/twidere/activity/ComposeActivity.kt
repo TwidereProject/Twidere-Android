@@ -890,9 +890,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun resetButtonsStates() {
+        // Should be called first
+        updateAccountSelectionState()
         updateLocationState()
         updateVisibilityState()
-        updateAccountSelectionState()
         updateUpdateStatusIcon()
         updateMediaState()
         setMenu()
@@ -1007,6 +1008,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             val selectionEnd = editText.length()
             editText.setSelection(selectionStart, selectionEnd)
         }
+        statusVisibility = intent.getStringExtra(EXTRA_VISIBILITY) ?: status.extras?.visibility
         accountsAdapter.selectedAccountKeys = arrayOf(status.account_key)
         showReplyLabelAndHint(status)
         return true
@@ -1578,6 +1580,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun updateVisibilityState() {
+        visibilityLabel.visibility = if (hasStatusVisibility) View.VISIBLE else View.GONE
         when (statusVisibility) {
             StatusVisibility.UNLISTED -> {
                 visibilityLabel.setText(R.string.label_status_visibility_unlisted)
@@ -1600,6 +1603,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                         R.drawable.ic_action_web, 0, 0, 0)
             }
         }
+        visibilityLabel.refreshDrawableState()
     }
 
     private fun getTwitterReplyTextAndMentions(text: String = editText.text?.toString().orEmpty(),
@@ -1952,6 +1956,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             val account = accounts!![position]
             selection.put(account.key, true != selection[account.key])
             activity.updateAccountSelectionState()
+            activity.updateVisibilityState()
             activity.setMenu()
             notifyDataSetChanged()
         }
@@ -1962,6 +1967,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             selection.clear()
             selection.put(account.key, true != selection[account.key])
             activity.updateAccountSelectionState()
+            activity.updateVisibilityState()
             activity.setMenu()
             notifyDataSetChanged()
         }

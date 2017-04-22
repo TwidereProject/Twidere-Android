@@ -21,6 +21,7 @@ import org.mariotaku.ktextension.applyFontFamily
 import org.mariotaku.ktextension.empty
 import org.mariotaku.ktextension.hideIfEmpty
 import org.mariotaku.ktextension.isNotNullOrEmpty
+import org.mariotaku.microblog.library.mastodon.annotation.StatusVisibility
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
@@ -393,6 +394,24 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         } else {
             replyCountView.text = null
             replyCountView.visibility = View.GONE
+        }
+
+        when (status.extras?.visibility) {
+            StatusVisibility.PRIVATE -> {
+                retweetButton.isEnabled = false
+                retweetIcon.setImageResource(R.drawable.ic_action_lock)
+                retweetIcon.isEnabled = false
+            }
+            StatusVisibility.DIRECT -> {
+                retweetButton.isEnabled = false
+                retweetIcon.setImageResource(R.drawable.ic_action_message)
+                retweetIcon.isEnabled = false
+            }
+            else -> {
+                retweetButton.isEnabled = true
+                retweetIcon.setImageResource(R.drawable.ic_action_retweet)
+                retweetIcon.isEnabled = true
+            }
         }
 
         if (twitter.isDestroyingStatus(status.account_key, status.my_retweet_id)) {

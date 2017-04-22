@@ -6,8 +6,11 @@ import android.widget.Toast
 import org.apache.commons.collections.primitives.ArrayIntList
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.getErrorMessage
+import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
@@ -18,7 +21,7 @@ import org.mariotaku.twidere.model.draft.StatusObjectActionExtras
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.model.event.StatusRetweetedEvent
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
-import org.mariotaku.twidere.provider.TwidereDataStore
+import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.twitter.UpdateStatusTask
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.DataStoreUtils
@@ -47,19 +50,27 @@ class RetweetStatusTask(
         }
         microBlogWrapper.addSendingDraftId(draftId)
         val resolver = context.contentResolver
-        val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
         try {
-            val result = microBlog.retweetStatus(statusId).toParcelable(account)
+            val result = when (account.type) {
+                AccountType.MASTODON -> {
+                    val mastodon = account.newMicroBlogInstance(context, cls = Mastodon::class.java)
+                    mastodon.reblogStatus(statusId).toParcelable(account)
+                }
+                else -> {
+                    val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
+                    microBlog.retweetStatus(statusId).toParcelable(account)
+                }
+            }
             ParcelableStatusUtils.updateExtraInformation(result, account)
             Utils.setLastSeen(context, result.mentions, System.currentTimeMillis())
             val values = ContentValues()
-            values.put(TwidereDataStore.Statuses.MY_RETWEET_ID, result.id)
-            values.put(TwidereDataStore.Statuses.REPLY_COUNT, result.reply_count)
-            values.put(TwidereDataStore.Statuses.RETWEET_COUNT, result.retweet_count)
-            values.put(TwidereDataStore.Statuses.FAVORITE_COUNT, result.favorite_count)
+            values.put(Statuses.MY_RETWEET_ID, result.id)
+            values.put(Statuses.REPLY_COUNT, result.reply_count)
+            values.put(Statuses.RETWEET_COUNT, result.retweet_count)
+            values.put(Statuses.FAVORITE_COUNT, result.favorite_count)
             val where = Expression.or(
-                    Expression.equalsArgs(TwidereDataStore.Statuses.STATUS_ID),
-                    Expression.equalsArgs(TwidereDataStore.Statuses.RETWEET_ID)
+                    Expression.equalsArgs(Statuses.STATUS_ID),
+                    Expression.equalsArgs(Statuses.RETWEET_ID)
             )
             val whereArgs = arrayOf(statusId, statusId)
             for (uri in DataStoreUtils.STATUSES_URIS) {

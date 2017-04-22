@@ -1,6 +1,7 @@
 package org.mariotaku.twidere.view
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.support.annotation.ColorInt
 import android.support.v4.view.ViewCompat
@@ -10,6 +11,9 @@ import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonView
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.util.ThemeUtils
+import org.mariotaku.twidere.view.IconActionButton.Companion.activatedState
+import org.mariotaku.twidere.view.IconActionButton.Companion.disabledState
+import org.mariotaku.twidere.view.IconActionButton.Companion.updateColorFilter
 import org.mariotaku.twidere.view.iface.IIconActionButton
 
 /**
@@ -19,14 +23,15 @@ open class IconActionView(
         context: Context, attrs: AttributeSet? = null
 ) : AppCompatImageView(context, attrs), IIconActionButton {
 
-    override final var defaultColor: Int = 0
+    override var defaultColor: Int = 0
         @ColorInt
         get() {
-            if (field != 0) return field
-            val color = ViewCompat.getBackgroundTintList(this)
-            if (color != null) {
-                val currentColor = color.getColorForState(drawableState, 0)
-                return ThemeUtils.getContrastColor(currentColor, Color.BLACK, Color.WHITE)
+            if (field == 0) {
+                val color = ViewCompat.getBackgroundTintList(this)
+                if (color != null) {
+                    val currentColor = color.getColorForState(drawableState, 0)
+                    return ThemeUtils.getContrastColor(currentColor, Color.BLACK, Color.WHITE)
+                }
             }
             return field
         }
@@ -35,37 +40,38 @@ open class IconActionView(
             updateColorFilter()
         }
 
-    override final var activatedColor: Int = 0
+    override var activatedColor: Int = 0
         @ColorInt
         get() {
             if (field != 0) return field
-            return defaultColor
+            return defaultColorStateList?.getColorForState(activatedState, defaultColor) ?: defaultColor
         }
-        set(@ColorInt value) {
-            field = value
+        set(@ColorInt activatedColor) {
+            field = activatedColor
             updateColorFilter()
         }
 
-    override final var disabledColor: Int = 0
+    override var disabledColor: Int = 0
         @ColorInt
         get() {
             if (field != 0) return field
-            return defaultColor
+            return defaultColorStateList?.getColorForState(disabledState, defaultColor) ?: defaultColor
         }
-        set(@ColorInt value) {
-            field = value
+        set(@ColorInt disabledColor) {
+            field = disabledColor
             updateColorFilter()
         }
+
+    private val defaultColorStateList: ColorStateList?
 
     init {
-        if (!isInEditMode) {
-            val a = context.obtainStyledAttributes(attrs, R.styleable.IconActionButton,
-                    R.attr.cardActionButtonStyle, R.style.Widget_CardActionButton)
-            defaultColor = a.getColor(R.styleable.IconActionButton_iabColor, 0)
-            activatedColor = a.getColor(R.styleable.IconActionButton_iabActivatedColor, 0)
-            disabledColor = a.getColor(R.styleable.IconActionButton_iabDisabledColor, 0)
-            a.recycle()
-        }
+        val a = context.obtainStyledAttributes(attrs, R.styleable.IconActionButton,
+                R.attr.cardActionButtonStyle, R.style.Widget_CardActionButton)
+        defaultColorStateList = a.getColorStateList(R.styleable.IconActionButton_iabColor)
+        defaultColor = a.getColor(R.styleable.IconActionButton_iabColor, 0)
+        activatedColor = a.getColor(R.styleable.IconActionButton_iabActivatedColor, 0)
+        disabledColor = a.getColor(R.styleable.IconActionButton_iabDisabledColor, 0)
+        a.recycle()
         updateColorFilter()
     }
 
@@ -77,16 +83,6 @@ open class IconActionView(
     override fun setEnabled(enabled: Boolean) {
         super.setEnabled(enabled)
         updateColorFilter()
-    }
-
-    private fun updateColorFilter() {
-        if (isActivated) {
-            setColorFilter(activatedColor)
-        } else if (isEnabled) {
-            setColorFilter(defaultColor)
-        } else {
-            setColorFilter(disabledColor)
-        }
     }
 
     override fun isPostApplyTheme(): Boolean {

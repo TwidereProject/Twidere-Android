@@ -4,9 +4,12 @@ import android.content.Context
 import android.widget.Toast
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.twitter.model.ErrorInfo
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.getErrorMessage
+import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
@@ -28,8 +31,18 @@ class DestroyStatusTask(
 ) : AbsAccountRequestTask<Any?, ParcelableStatus, Any?>(context, accountKey) {
 
     override fun onExecute(account: AccountDetails, params: Any?): ParcelableStatus {
-        val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
-        return microBlog.destroyStatus(statusId).toParcelable(account)
+        when (account.type) {
+            AccountType.MASTODON -> {
+                val mastodon = account.newMicroBlogInstance(context, cls = Mastodon::class.java)
+                val result = mastodon.favouriteStatus(statusId)
+                mastodon.deleteStatus(statusId)
+                return result.toParcelable(account)
+            }
+            else -> {
+                val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
+                return microBlog.destroyStatus(statusId).toParcelable(account)
+            }
+        }
     }
 
     override fun onCleanup(account: AccountDetails, params: Any?, result: ParcelableStatus?, exception: MicroBlogException?) {
