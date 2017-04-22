@@ -218,7 +218,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         if (user.is_following) {
             DestroyFriendshipDialogFragment.show(fragmentManager, user)
         } else {
-            twitterWrapper.createFriendshipAsync(user.account_key, user.key)
+            twitterWrapper.createFriendshipAsync(user.account_key, user.key, user.screen_name)
         }
     }
 

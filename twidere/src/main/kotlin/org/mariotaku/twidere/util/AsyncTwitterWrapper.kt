@@ -143,9 +143,9 @@ class AsyncTwitterWrapper(
         TaskStarter.execute(task)
     }
 
-    fun createFriendshipAsync(accountKey: UserKey, userKey: UserKey) {
+    fun createFriendshipAsync(accountKey: UserKey, userKey: UserKey, screenName: String) {
         val task = CreateFriendshipTask(context)
-        task.setup(accountKey, userKey)
+        task.setup(accountKey, userKey, screenName)
         TaskStarter.execute(task)
     }
 
