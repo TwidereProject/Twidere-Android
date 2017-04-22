@@ -66,7 +66,6 @@ import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.restfu.http.Endpoint
 import org.mariotaku.restfu.oauth.OAuthToken
 import org.mariotaku.restfu.oauth2.OAuth2Authorization
-import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
@@ -78,9 +77,8 @@ import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.extension.getNonEmptyString
 import org.mariotaku.twidere.extension.model.*
-import org.mariotaku.twidere.extension.model.api.toParcelable
-import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
+import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.fragment.APIEditorDialogFragment
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
@@ -510,9 +508,10 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
 
     private fun handleBrowserLoginResult(intent: Intent?) {
         if (intent == null) return
-        val verifier = intent.getStringExtra(EXTRA_OAUTH_VERIFIER)
-        val requestToken = OAuthToken(intent.getStringExtra(EXTRA_REQUEST_TOKEN),
-                intent.getStringExtra(EXTRA_REQUEST_TOKEN_SECRET))
+        val extras = intent.getBundleExtra(EXTRA_EXTRAS) ?: return
+        val verifier = intent.getStringExtra(EXTRA_OAUTH_VERIFIER) ?: return
+        val requestToken = OAuthToken(extras.getString(EXTRA_REQUEST_TOKEN),
+                extras.getString(EXTRA_REQUEST_TOKEN_SECRET))
         signInTask = BrowserSignInTask(this, apiConfig, requestToken, verifier)
         AsyncTaskUtils.executeTask(signInTask)
     }
