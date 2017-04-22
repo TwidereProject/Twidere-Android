@@ -8,7 +8,6 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.extension.model.api.toParcelable
-import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableMedia
@@ -49,11 +48,11 @@ open class UpdateProfileImageTask<ResultHandler>(
             DebugLog.w(TwidereConstants.LOGTAG, tr = e)
         }
         val user = microBlog.verifyCredentials()
-        return user.toParcelable(account.key, account.type, profileImageSize = profileImageSize)
+        return user.toParcelable(account, profileImageSize = profileImageSize)
     }
 
     override fun onSucceed(callback: ResultHandler?, result: ParcelableUser) {
-        Toast.makeText(context, R.string.massage_toast_profile_image_updated, Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, R.string.message_toast_profile_image_updated, Toast.LENGTH_SHORT).show()
         bus.post(ProfileUpdatedEvent(result))
     }
 

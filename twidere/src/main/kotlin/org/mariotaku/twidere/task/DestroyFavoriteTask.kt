@@ -37,12 +37,10 @@ class DestroyFavoriteTask(
             val result: ParcelableStatus
         when (account.type) {
                 AccountType.FANFOU -> {
-                    result = microBlog.destroyFanfouFavorite(statusId).toParcelable(account.key,
-                            account.type)
+                    result = microBlog.destroyFanfouFavorite(statusId).toParcelable(account)
                 }
                 else -> {
-                    result = microBlog.destroyFavorite(statusId).toParcelable(account.key,
-                            account.type)
+                    result = microBlog.destroyFavorite(statusId).toParcelable(account)
                 }
             }
             val values = ContentValues()

@@ -118,7 +118,7 @@ class UserStreamDumperPlugin(val context: Context) : DumperPlugin {
                 if (verboseMode) {
                     dumpContext.stdout.println("Activity: @${activity.toString().trim('\n')}")
                 } else {
-                    val pActivity = activity.toParcelable(account.key, account.type)
+                    val pActivity = activity.toParcelable(account)
                     val message = ActivityTitleSummaryMessage.get(context, manager, pActivity,
                             pActivity.sources, 0, true, true)
                     if (message != null) {
@@ -172,7 +172,7 @@ class UserStreamDumperPlugin(val context: Context) : DumperPlugin {
 
             override fun onActivityAboutMe(activity: Activity): Boolean {
                 if (!includeInteractions && includeTimeline) return true
-                val pActivity = activity.toParcelable(account.key, account.type)
+                val pActivity = activity.toParcelable(account)
                 val message = ActivityTitleSummaryMessage.get(context, manager, pActivity, pActivity.sources, 0,
                         true, true)
                 if (message != null) {

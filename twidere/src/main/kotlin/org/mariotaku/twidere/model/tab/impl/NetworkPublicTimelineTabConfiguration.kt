@@ -22,7 +22,7 @@ package org.mariotaku.twidere.model.tab.impl
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.TabAccountFlags
-import org.mariotaku.twidere.fragment.statuses.PublicTimelineFragment
+import org.mariotaku.twidere.fragment.statuses.NetworkPublicTimelineFragment
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.model.tab.StringHolder
@@ -32,19 +32,19 @@ import org.mariotaku.twidere.model.tab.TabConfiguration
  * Created by mariotaku on 2016/11/27.
  */
 
-class PublicTimelineTabConfiguration : TabConfiguration() {
+class NetworkPublicTimelineTabConfiguration : TabConfiguration() {
 
-    override val name = StringHolder.resource(R.string.title_public_timeline)
+    override val name = StringHolder.resource(R.string.title_network_public_timeline)
 
-    override val icon = DrawableHolder.Builtin.QUOTE
+    override val icon = DrawableHolder.Builtin.WEB
 
     override val accountFlags = TabAccountFlags.FLAG_HAS_ACCOUNT or
             TabAccountFlags.FLAG_ACCOUNT_REQUIRED or TabAccountFlags.FLAG_ACCOUNT_MUTABLE
 
-    override val fragmentClass = PublicTimelineFragment::class.java
+    override val fragmentClass = NetworkPublicTimelineFragment::class.java
 
     override fun checkAccountAvailability(details: AccountDetails) = when (details.type) {
-        AccountType.MASTODON, AccountType.FANFOU, AccountType.STATUSNET -> true
+        AccountType.MASTODON, AccountType.STATUSNET -> true
         else -> false
     }
 }

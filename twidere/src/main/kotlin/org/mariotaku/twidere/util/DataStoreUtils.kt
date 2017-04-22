@@ -928,7 +928,7 @@ object DataStoreUtils {
                 Expression.equalsArgs(Statuses.STATUS_ID)).sql
         val whereArgs = arrayOf(accountKey.toString(), statusId)
         val resolver = context.contentResolver
-        val status = result.toParcelable(accountKey, details.type)
+        val status = result.toParcelable(details)
         resolver.delete(CachedStatuses.CONTENT_URI, where, whereArgs)
         resolver.insert(CachedStatuses.CONTENT_URI, ObjectCursor.valuesCreatorFrom(ParcelableStatus::class.java).create(status))
         return status

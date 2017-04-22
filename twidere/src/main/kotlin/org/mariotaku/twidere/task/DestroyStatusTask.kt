@@ -14,7 +14,6 @@ import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.StatusDestroyedEvent
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
-import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.deleteActivityStatus
@@ -30,9 +29,7 @@ class DestroyStatusTask(
 
     override fun onExecute(account: AccountDetails, params: Any?): ParcelableStatus {
         val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
-        val status = microBlog.destroyStatus(statusId).toParcelable(account.key, account.type)
-        ParcelableStatusUtils.updateExtraInformation(status, account)
-        return status
+        return microBlog.destroyStatus(statusId).toParcelable(account)
     }
 
     override fun onCleanup(account: AccountDetails, params: Any?, result: ParcelableStatus?, exception: MicroBlogException?) {

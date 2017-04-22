@@ -24,10 +24,7 @@ import android.text.style.URLSpan
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.extension.model.toParcelable
-import org.mariotaku.twidere.model.ParcelableLocation
-import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.SpanItem
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils.addFilterFlag
@@ -36,10 +33,11 @@ import org.mariotaku.twidere.model.util.UserKeyUtils
 import org.mariotaku.twidere.util.HtmlSpanBuilder
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
 
-/**
- * Created by mariotaku on 2017/4/19.
- */
-
+fun Status.toParcelable(details: AccountDetails, profileImageSize: String = "normal"): ParcelableStatus {
+    return toParcelable(details.key, details.type, profileImageSize).apply {
+        account_color = details.color
+    }
+}
 
 fun Status.toParcelable(accountKey: UserKey, accountType: String, profileImageSize: String = "normal"): ParcelableStatus {
     val result = ParcelableStatus()

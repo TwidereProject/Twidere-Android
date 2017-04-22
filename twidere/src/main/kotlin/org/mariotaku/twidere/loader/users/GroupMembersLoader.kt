@@ -45,7 +45,7 @@ class GroupMembersLoader(
     @Throws(MicroBlogException::class)
     override fun getUsers(details: AccountDetails, paging: Paging): PaginatedList<ParcelableUser> {
         return getMicroBlogUsers(details, paging).mapToPaginated(pagination) {
-            it.toParcelable(details.key, details.type, profileImageSize = profileImageSize)
+            it.toParcelable(details, profileImageSize = profileImageSize)
         }
     }
 

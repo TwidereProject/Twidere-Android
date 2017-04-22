@@ -23,6 +23,7 @@ import org.mariotaku.microblog.library.mastodon.model.Account
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.api.isHtml
 import org.mariotaku.twidere.extension.model.api.spanItems
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.HtmlEscapeHelper
@@ -31,6 +32,12 @@ import org.mariotaku.twidere.util.HtmlSpanBuilder
 /**
  * Created by mariotaku on 2017/4/18.
  */
+
+fun Account.toParcelable(details: AccountDetails, position: Long = 0): ParcelableUser {
+    return toParcelable(details.key, position).apply {
+        account_color = details.color
+    }
+}
 
 fun Account.toParcelable(accountKey: UserKey, position: Long = 0): ParcelableUser {
     val obj = ParcelableUser()

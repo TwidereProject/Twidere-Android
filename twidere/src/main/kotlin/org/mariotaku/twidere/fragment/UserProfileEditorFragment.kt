@@ -376,7 +376,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
             profileUpdate.backgroundColor(backgroundColor)
             val user = microBlog.updateProfile(profileUpdate)
             val profileImageSize = context.getString(R.string.profile_image_size)
-            return Pair(user.toParcelable(account.key, account.type, profileImageSize = profileImageSize), account)
+            return Pair(user.toParcelable(account, profileImageSize = profileImageSize), account)
 
         }
 

@@ -50,7 +50,7 @@ abstract class UserListRelatedUsersLoader(
     override final fun getUsers(details: AccountDetails, paging: Paging): PaginatedList<ParcelableUser> {
         when (details.type) {
             AccountType.TWITTER -> return getTwitterUsers(details, paging).mapToPaginated {
-                it.toParcelable(details.key, details.type, profileImageSize = profileImageSize)
+                it.toParcelable(details, profileImageSize = profileImageSize)
             }
             else -> {
                 throw APINotSupportedException(details.type)

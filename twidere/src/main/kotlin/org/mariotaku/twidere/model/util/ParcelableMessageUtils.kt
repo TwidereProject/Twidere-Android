@@ -7,7 +7,6 @@ import org.mariotaku.microblog.library.twitter.model.DMResponse.Entry.Message.Da
 import org.mariotaku.microblog.library.twitter.model.DirectMessage
 import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.twidere.extension.model.api.toParcelable
-import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableMessage
 import org.mariotaku.twidere.model.ParcelableMessage.MessageType
@@ -124,9 +123,8 @@ object ParcelableMessageUtils {
         this.extras = ConversationInfoUpdatedExtras().apply {
             this.name = message.conversationName
             this.avatar = message.conversationAvatarImageHttps
-            this.user = users[message.byUserId]?.let {
-                it.toParcelable(accountKey, accountType, profileImageSize = profileImageSize)
-            }
+            this.user = users[message.byUserId]?.toParcelable(accountKey, accountType,
+                    profileImageSize = profileImageSize)
         }
         this.is_outgoing = false
     }

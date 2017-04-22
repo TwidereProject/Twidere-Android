@@ -49,7 +49,7 @@ class RetweetStatusTask(
         val resolver = context.contentResolver
         val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
         try {
-            val result = microBlog.retweetStatus(statusId).toParcelable(account.key, account.type)
+            val result = microBlog.retweetStatus(statusId).toParcelable(account)
             ParcelableStatusUtils.updateExtraInformation(result, account)
             Utils.setLastSeen(context, result.mentions, System.currentTimeMillis())
             val values = ContentValues()

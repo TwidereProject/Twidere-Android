@@ -51,7 +51,7 @@ class StatusRetweetersLoader(
                 val response = mastodon.getStatusFavouritedBy(statusId)
                 return PaginatedArrayList<ParcelableUser>(response.size).apply {
                     response.mapTo(this) { account ->
-                        account.toParcelable(details.key)
+                        account.toParcelable(details)
                     }
                 }
             }
@@ -61,7 +61,7 @@ class StatusRetweetersLoader(
                 val response = microBlog.lookupUsers(ids)
                 return PaginatedArrayList<ParcelableUser>(response.size).apply {
                     response.mapTo(this) { user ->
-                        user.toParcelable(details.key, details.type, profileImageSize = profileImageSize)
+                        user.toParcelable(details, profileImageSize = profileImageSize)
                     }
                 }
             }

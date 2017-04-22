@@ -53,13 +53,13 @@ class PublicTimelineLoader(
             AccountType.MASTODON -> {
                 val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
                 return mastodon.getPublicTimeline(paging, true).mapToPaginated {
-                    it.toParcelable(account.key)
+                    it.toParcelable(account)
                 }
             }
             else -> {
                 val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
                 return microBlog.getPublicTimeline(paging).mapMicroBlogToPaginated {
-                    it.toParcelable(account.key, account.type, profileImageSize = profileImageSize)
+                    it.toParcelable(account, profileImageSize = profileImageSize)
                 }
             }
         }

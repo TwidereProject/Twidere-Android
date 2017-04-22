@@ -8,7 +8,6 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.extension.model.api.toParcelable
-import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableMedia
@@ -50,7 +49,7 @@ open class UpdateProfileBackgroundImageTask<ResultHandler>(
             DebugLog.w(LOGTAG, tr = e)
         }
         val user = microBlog.verifyCredentials()
-        return user.toParcelable(account.key, account.type, profileImageSize = profileImageSize)
+        return user.toParcelable(account, profileImageSize = profileImageSize)
     }
 
     override fun onSucceed(callback: ResultHandler?, result: ParcelableUser) {

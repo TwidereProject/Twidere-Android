@@ -1,8 +1,10 @@
 package org.mariotaku.twidere.model.tab.impl
 
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.TabAccountFlags
 import org.mariotaku.twidere.fragment.message.MessagesEntriesFragment
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.model.tab.StringHolder
 import org.mariotaku.twidere.model.tab.TabConfiguration
@@ -20,4 +22,9 @@ class MessagesTabConfiguration : TabConfiguration() {
             TabAccountFlags.FLAG_ACCOUNT_MULTIPLE or TabAccountFlags.FLAG_ACCOUNT_MUTABLE
 
     override val fragmentClass = MessagesEntriesFragment::class.java
+
+    override fun checkAccountAvailability(details: AccountDetails) = when (details.type) {
+        AccountType.TWITTER, AccountType.FANFOU, AccountType.STATUSNET -> true
+        else -> false
+    }
 }

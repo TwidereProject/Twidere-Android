@@ -46,14 +46,13 @@ class CreateFavoriteTask(context: Context, accountKey: UserKey, private val stat
             val result = when (account.type) {
                 AccountType.FANFOU -> {
                     val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
-                    microBlog.createFanfouFavorite(statusId).toParcelable(account.key, account.type)
+                    microBlog.createFanfouFavorite(statusId).toParcelable(account)
                 }
                 else -> {
                     val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
-                    microBlog.createFavorite(statusId).toParcelable(account.key, account.type)
+                    microBlog.createFavorite(statusId).toParcelable(account)
                 }
             }
-            ParcelableStatusUtils.updateExtraInformation(result, account)
             Utils.setLastSeen(context, result.mentions, System.currentTimeMillis())
             val values = ContentValues()
             values.put(TwidereDataStore.Statuses.IS_FAVORITE, true)

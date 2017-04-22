@@ -43,7 +43,6 @@ import org.mariotaku.twidere.model.pagination.PaginatedList
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.task.twitter.GetStatusesTask
 import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.UserColorNameManager
@@ -167,7 +166,6 @@ abstract class AbsRequestStatusesLoader(
                 status.is_gap = insertGap && isGapEnabled && minIdx == i
                 status.position_key = GetStatusesTask.getPositionKey(status.timestamp, status.sort_id,
                         lastSortId, sortDiff, i, statuses.size)
-                ParcelableStatusUtils.updateExtraInformation(status, details)
             }
             data.addAll(statuses)
         }

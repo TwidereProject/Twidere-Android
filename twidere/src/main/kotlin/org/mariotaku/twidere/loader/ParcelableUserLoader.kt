@@ -39,9 +39,8 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.extension.api.tryShowUser
-import org.mariotaku.twidere.extension.model.api.toParcelable
-import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
+import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.isMastodonPlaceholder
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
@@ -164,12 +163,12 @@ class ParcelableUserLoader(
         val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
         if (userKey == null) throw MicroBlogException("Invalid user id")
         if (!userKey.isMastodonPlaceholder) {
-            return mastodon.getAccount(userKey.id).toParcelable(details.key)
+            return mastodon.getAccount(userKey.id).toParcelable(details)
         }
         if (screenName == null) throw MicroBlogException("Screen name required")
         val resultItem = mastodon.searchAccounts("$screenName@${userKey.host}", Paging().count(1))
                 .firstOrNull() ?: throw MicroBlogException("User not found")
-        return resultItem.toParcelable(details.key)
+        return resultItem.toParcelable(details)
     }
 
     private fun showMicroBlogUser(details: AccountDetails): ParcelableUser {
@@ -183,7 +182,7 @@ class ParcelableUserLoader(
         } else {
             microBlog.tryShowUser(userKey?.id, screenName, details.type)
         }
-        return response.toParcelable(details.key, details.type, profileImageSize = profileImageSize)
+        return response.toParcelable(details, profileImageSize = profileImageSize)
     }
 
     override fun onStartLoading() {

@@ -59,7 +59,7 @@ class UserFavoritesLoader(
             }
         }
         return getMicroBlogStatuses(account, paging).mapMicroBlogToPaginated {
-            it.toParcelable(account.key, account.type, profileImageSize)
+            it.toParcelable(account, profileImageSize)
         }
     }
 
@@ -86,6 +86,6 @@ class UserFavoritesLoader(
             throw MicroBlogException("Only current account favorites is supported")
         }
         val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
-        return mastodon.getFavourites(paging).mapToPaginated { it.toParcelable(account.key) }
+        return mastodon.getFavourites(paging).mapToPaginated { it.toParcelable(account) }
     }
 }

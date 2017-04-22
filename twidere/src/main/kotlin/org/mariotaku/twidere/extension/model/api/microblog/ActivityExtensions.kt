@@ -21,13 +21,22 @@ package org.mariotaku.twidere.extension.model.api.microblog
 
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.microblog.library.twitter.model.Activity
+import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.toParcelables
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.UserKey
 
 /**
  * Created by mariotaku on 2017/4/22.
  */
+
+fun Activity.toParcelable(details: AccountDetails, isGap: Boolean = false,
+        profileImageSize: String = "normal"): ParcelableActivity {
+    return toParcelable(details.key, details.type, isGap, profileImageSize).apply {
+        account_color = details.color
+    }
+}
 
 fun Activity.toParcelable(accountKey: UserKey, accountType: String, isGap: Boolean = false,
         profileImageSize: String = "normal"): ParcelableActivity {
@@ -39,20 +48,25 @@ fun Activity.toParcelable(accountKey: UserKey, accountType: String, isGap: Boole
     result.min_sort_position = minSortPosition
     result.max_position = maxPosition
     result.min_position = minPosition
-    result.sources = sources?.toParcelables(accountKey, accountType,
-            profileImageSize)
-    result.target_users = targetUsers?.toParcelables(accountKey,
-            accountType, profileImageSize)
+    result.sources = sources?.mapToArray {
+        it.toParcelable(accountKey, accountType, profileImageSize = profileImageSize)
+    }
+    result.target_users = targetUsers?.mapToArray {
+        it.toParcelable(accountKey, accountType, profileImageSize = profileImageSize)
+    }
     result.target_user_lists = targetUserLists?.toParcelables(accountKey,
             profileImageSize)
-    result.target_statuses = targetStatuses?.toParcelables(accountKey,
-            accountType, profileImageSize)
-    result.target_object_statuses = targetObjectStatuses?.toParcelables(accountKey,
-            accountType, profileImageSize)
+    result.target_statuses = targetStatuses?.mapToArray {
+        it.toParcelable(accountKey, accountType, profileImageSize)
+    }
+    result.target_object_statuses = targetObjectStatuses?.mapToArray {
+        it.toParcelable(accountKey, accountType, profileImageSize)
+    }
     result.target_object_user_lists = targetObjectUserLists?.toParcelables(accountKey,
             profileImageSize)
-    result.target_object_users = targetObjectUsers?.toParcelables(accountKey, accountType,
-            profileImageSize)
+    result.target_object_users = targetObjectUsers?.mapToArray {
+        it.toParcelable(accountKey, accountType, profileImageSize = profileImageSize)
+    }
     result.has_following_source = sources?.fold(false) { folded, item ->
         if (item.isFollowing == true) {
             return@fold true

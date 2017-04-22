@@ -1,8 +1,6 @@
 package org.mariotaku.twidere.extension.model
 
 import org.mariotaku.ktextension.addAllTo
-import org.mariotaku.microblog.library.twitter.model.Status
-import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserMention
@@ -46,10 +44,6 @@ val ParcelableStatus.replyMentions: Array<ParcelableUserMention>
         mentions?.addAllTo(result)
         return result.toTypedArray()
     }
-
-fun Array<Status>.toParcelables(accountKey: UserKey, accountType: String, profileImageSize: String) = Array(size) { i ->
-    this[i].toParcelable(accountKey, accountType, profileImageSize)
-}
 
 private fun parcelableUserMention(key: UserKey, name: String, screenName: String) = ParcelableUserMention().also {
     it.key = key

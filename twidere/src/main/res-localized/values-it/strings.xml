@@ -496,7 +496,7 @@
   <string name="profile_banner">Banner Profilo</string>
   <string name="profile_image">Immagine del profilo</string>
   <string name="profile_image_style">Stile immagine profilo</string>
-  <string name="massage_toast_profile_image_updated">Immagine del profilo aggiornata.</string>
+  <string name="message_toast_profile_image_updated">Immagine del profilo aggiornata.</string>
   <string name="profile_images">Immagini del profilo</string>
   <string name="profile_link_color_main_color">Colore del link (colore principale)</string>
   <string name="profile_text_color">Colore testo</string>

@@ -137,10 +137,7 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
             }
             val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
             val profileImageSize = context.getString(R.string.profile_image_size)
-            return task {
-                microBlog.showStatus(statusId).toParcelable(details.key, details.type,
-                        profileImageSize).also { it.account_color = details.color }
-            }
+            return task { microBlog.showStatus(statusId).toParcelable(details, profileImageSize) }
         }
 
     }

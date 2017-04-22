@@ -24,7 +24,8 @@ import android.net.Uri
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.mastodon.Mastodon
-import org.mariotaku.microblog.library.twitter.model.*
+import org.mariotaku.microblog.library.twitter.model.InternalActivityCreator
+import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.ReadPositionTag
@@ -60,26 +61,26 @@ class GetActivitiesAboutMeTask(context: Context) : GetActivitiesTask(context) {
             AccountType.MASTODON -> {
                 val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
                 return mastodon.getNotifications(paging).map {
-                    it.toParcelable(account.key)
+                    it.toParcelable(account)
                 }
             }
             AccountType.FANFOU -> {
                 val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
                 if (account.isOfficial(context)) {
                     return microBlog.getActivitiesAboutMe(paging).map {
-                        it.toParcelable(account.key, account.type, profileImageSize = profileImageSize)
+                        it.toParcelable(account, profileImageSize = profileImageSize)
                     }
                 }
                 return microBlog.getMentions(paging).map {
-                    InternalActivityCreator.status(it, account.key.id).toParcelable(account.key,
-                            account.type, profileImageSize = profileImageSize)
+                    InternalActivityCreator.status(it, account.key.id).toParcelable(account,
+                            profileImageSize = profileImageSize)
                 }
             }
             else -> {
                 val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
                 return microBlog.getHomeTimeline(paging).map {
-                    InternalActivityCreator.status(it, account.key.id).toParcelable(account.key,
-                            account.type, profileImageSize = profileImageSize)
+                    InternalActivityCreator.status(it, account.key.id).toParcelable(account,
+                            profileImageSize = profileImageSize)
                 }
             }
         }

@@ -408,7 +408,7 @@ class GetMessagesTask(
                 val participants = respUsers.filterKeys { userId ->
                     v.participants.any { it.userId == userId }
                 }.values.map {
-                    it.toParcelable(accountKey, account.type, profileImageSize = profileImageSize)
+                    it.toParcelable(account, profileImageSize = profileImageSize)
                 }
                 val conversationType = when (v.type?.toUpperCase(Locale.US)) {
                     DMResponse.Conversation.Type.ONE_TO_ONE -> ConversationType.ONE_TO_ONE

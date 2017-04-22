@@ -72,7 +72,7 @@ class MediaTimelineLoader(
         when (account.type) {
             AccountType.MASTODON -> return getMastodonStatuses(account, paging)
             else -> return getMicroBlogStatuses(account, paging).mapMicroBlogToPaginated {
-                it.toParcelable(account.key, account.type, profileImageSize)
+                it.toParcelable(account, profileImageSize)
             }
         }
     }
@@ -136,6 +136,6 @@ class MediaTimelineLoader(
         val option = MastodonTimelineOption()
         option.onlyMedia(true)
         return UserTimelineLoader.getMastodonStatuses(mastodon, userKey, screenName, paging,
-                option).mapToPaginated { it.toParcelable(account.key) }
+                option).mapToPaginated { it.toParcelable(account) }
     }
 }

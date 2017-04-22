@@ -51,19 +51,19 @@ class UserBlocksLoader(
             AccountType.MASTODON -> {
                 val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
                 return mastodon.getBlocks(paging).mapToPaginated {
-                    it.toParcelable(details.key)
+                    it.toParcelable(details)
                 }
             }
             AccountType.FANFOU -> {
                 val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
                 return microBlog.getFanfouBlocking(paging).mapToPaginated(pagination) {
-                    it.toParcelable(details.key, details.type, profileImageSize = profileImageSize)
+                    it.toParcelable(details, profileImageSize = profileImageSize)
                 }
             }
             else -> {
                 val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
                 return microBlog.getBlocksList(paging).mapToPaginated {
-                    it.toParcelable(details.key, details.type, profileImageSize = profileImageSize)
+                    it.toParcelable(details, profileImageSize = profileImageSize)
                 }
             }
         }

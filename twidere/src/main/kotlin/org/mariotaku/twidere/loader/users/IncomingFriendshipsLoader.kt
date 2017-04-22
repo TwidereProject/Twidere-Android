@@ -49,19 +49,19 @@ class IncomingFriendshipsLoader(
             AccountType.MASTODON -> {
                 val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
                 return mastodon.getFollowRequests(paging).mapToPaginated {
-                    it.toParcelable(details.key)
+                    it.toParcelable(details)
                 }
             }
             AccountType.FANFOU -> {
                 val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
                 return microBlog.getFriendshipsRequests(paging).mapToPaginated(pagination) {
-                    it.toParcelable(details.key, details.type, profileImageSize = profileImageSize)
+                    it.toParcelable(details, profileImageSize = profileImageSize)
                 }
             }
             else -> {
                 val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
                 return microBlog.lookupUsersMapPaginated(microBlog.getIncomingFriendships(paging)) {
-                    it.toParcelable(details.key, details.type, profileImageSize = profileImageSize)
+                    it.toParcelable(details, profileImageSize = profileImageSize)
                 }
             }
         }

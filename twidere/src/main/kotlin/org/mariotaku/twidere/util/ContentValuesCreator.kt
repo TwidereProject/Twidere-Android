@@ -26,7 +26,6 @@ import org.mariotaku.microblog.library.twitter.model.SavedSearch
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.model.*
-import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.model.util.getActivityStatus
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches
@@ -84,8 +83,6 @@ object ContentValuesCreator {
         activity.account_color = details.color
 
         if (status != null) {
-            ParcelableStatusUtils.updateExtraInformation(status, details)
-
             activity.status_id = status.id
             activity.status_retweet_id = status.retweet_id
             activity.status_my_retweet_id = status.my_retweet_id

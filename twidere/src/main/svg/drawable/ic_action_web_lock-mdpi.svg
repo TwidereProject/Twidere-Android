@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 43.1 (39012) - http://www.bohemiancoding.com/sketch -->
+    <title>ic_action_web_lock-mdpi</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Action-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic_action_web_lock-mdpi">
+            <path d="M27,7 L27,6.5 C27,5.12 25.88,4 24.5,4 C23.12,4 22,5.12 22,6.5 L22,7 C21.45,7 21,7.45 21,8 L21,12 C21,12.55 21.45,13 22,13 L27,13 C27.55,13 28,12.55 28,12 L28,8 C28,7.45 27.55,7 27,7 Z M26.2,7 L22.8,7 L22.8,6.5 C22.8,5.56 23.56,4.8 24.5,4.8 C25.44,4.8 26.2,5.56 26.2,6.5 L26.2,7 Z M23.92,15 C23.96,15.33 24,15.66 24,16 C24,18.08 23.2,19.97 21.9,21.39 C21.64,20.58 20.9,20 20,20 L19,20 L19,17 C19,16.45 18.55,16 18,16 L12,16 L12,14 L14,14 C14.55,14 15,13.55 15,13 L15,11 L17,11 C18.1,11 19,10.1 19,9 L19,6.46 C18.05,6.16 17.05,6 16,6 C10.48,6 6,10.48 6,16 C6,21.52 10.48,26 16,26 C21.52,26 26,21.52 26,16 C26,15.66 25.98,15.33 25.95,15 L23.92,15 L23.92,15 Z M15,23.93 C11.05,23.44 8,20.08 8,16 C8,15.38 8.08,14.79 8.21,14.21 L13,19 L13,20 C13,21.1 13.9,22 15,22 L15,23.93 Z" id="Shape" fill="#FFFFFF" fill-rule="nonzero"></path>
+            <polygon id="Shape" points="4 4 28 4 28 28 4 28"></polygon>
+        </g>
+    </g>
+</svg>

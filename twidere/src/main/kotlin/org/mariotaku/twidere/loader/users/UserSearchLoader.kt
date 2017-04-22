@@ -47,19 +47,19 @@ open class UserSearchLoader(
             AccountType.MASTODON -> {
                 val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
                 return mastodon.searchAccounts(query, paging).mapToPaginated {
-                    it.toParcelable(details.key)
+                    it.toParcelable(details)
                 }
             }
             AccountType.FANFOU -> {
                 val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
                 return microBlog.searchFanfouUsers(query, paging).mapToPaginated(pagination) {
-                    it.toParcelable(details.key, details.type, profileImageSize = profileImageSize)
+                    it.toParcelable(details, profileImageSize = profileImageSize)
                 }
             }
             else -> {
                 val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
                 return microBlog.searchUsers(query, paging).mapToPaginated(pagination) {
-                    it.toParcelable(details.key, details.type, profileImageSize = profileImageSize)
+                    it.toParcelable(details, profileImageSize = profileImageSize)
                 }
             }
         }

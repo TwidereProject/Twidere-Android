@@ -121,6 +121,7 @@
     <string name="action_sending_direct_message">sending direct message</string>
     <string name="action_set_color">Set color</string>
     <string name="action_set_nickname">Set nickname</string>
+    <string name="action_set_status_visibility">Set visibility</string>
     <string name="action_share">Share</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_signing_in">signing in</string>
@@ -540,6 +541,7 @@
     <string name="label_content_rating_pg13">PG-13</string>
     <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
     <string name="label_content_rating_r">R</string>
+    <string name="label_content_warning">Content warning</string>
     <string name="label_data_provider">Twidere database provider</string>
     <string name="label_filters_subscription">Subscription</string>
     <string name="label_follow_request_sent">Follow request sent</string>
@@ -570,6 +572,14 @@
     <string name="label_status_not_available">Tweet not available</string>
     <string name="label_status_show_more">Show more</string>
     <string name="label_status_type_reply">Reply</string>
+    <!-- Mastodon feature, post to mentioned users only -->
+    <string name="label_status_visibility_direct">Direct</string>
+    <!-- Mastodon feature, post to followers only -->
+    <string name="label_status_visibility_private">Private</string>
+    <!-- Mastodon feature, post to public timelines -->
+    <string name="label_status_visibility_public">Public</string>
+    <!-- Mastodon feature, do not show in public timelines -->
+    <string name="label_status_visibility_unlisted">Unlisted</string>
     <string name="label_statuses">Tweets</string>
     <string name="label_statuses_replies">Tweets and replies</string>
     <string name="label_statuses_retweets">Tweets and retweets</string>
@@ -618,8 +628,6 @@
     <string name="long_click_to_open_menu">Long click to open menu</string>
 
     <string name="mark_as_sensitive">Mark as sensitive</string>
-
-    <string name="massage_toast_profile_image_updated">Profile image updated.</string>
 
     <string name="media">Media</string>
     <string name="media_preload">Media preload</string>
@@ -706,6 +714,7 @@
     <string name="message_toast_press_again_to_close">Press again to close</string>
     <string name="message_toast_profile_background_image_updated">Profile background image updated</string>
     <string name="message_toast_profile_banner_image_updated">Profile banner image updated</string>
+    <string name="message_toast_profile_image_updated">Profile image updated</string>
     <string name="message_toast_qr_scan_link_not_supported">Link not supported</string>
     <string name="message_toast_qr_scanner_not_supported">QR scanner not supported</string>
     <string name="message_toast_retweet_cancelled">Retweet cancelled</string>
@@ -1215,6 +1224,7 @@
     <string name="title_media_timeline">Media timeline</string>
     <string name="title_mentions">Mentions</string>
     <string name="title_message_conversation_info">Conversation info</string>
+    <string name="title_network_public_timeline">Network public timeline</string>
     <string name="title_nicknames">Nicknames</string>
     <string name="title_open_source_license">Open source license</string>
     <string name="title_premium_features_name">Twidere ∞</string>
@@ -1329,5 +1339,4 @@
     <string name="users_blocked">Blocked these users.</string>
     <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>\'s lists</string>
     <string name="users_statuses">User\'s tweets</string>
-    <string name="label_content_warning">Content warning</string>
 </resources>

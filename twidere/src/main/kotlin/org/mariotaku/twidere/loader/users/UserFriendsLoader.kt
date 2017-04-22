@@ -50,25 +50,25 @@ class UserFriendsLoader(
             AccountType.MASTODON -> {
                 val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
                 return mastodon.getFollowing(userKey.id, paging).mapToPaginated {
-                    it.toParcelable(details.key)
+                    it.toParcelable(details)
                 }
             }
             AccountType.STATUSNET -> {
                 val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
                 return microBlog.getStatusesFriendsList(userKey.id, paging).mapToPaginated {
-                    it.toParcelable(details.key, details.type, profileImageSize = profileImageSize)
+                    it.toParcelable(details, profileImageSize = profileImageSize)
                 }
             }
             AccountType.FANFOU -> {
                 val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
                 return microBlog.getUsersFriends(userKey.id, paging).mapToPaginated(pagination) {
-                    it.toParcelable(details.key, details.type, profileImageSize = profileImageSize)
+                    it.toParcelable(details, profileImageSize = profileImageSize)
                 }
             }
             else -> {
                 val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
                 return microBlog.getFriendsList(userKey.id, paging).mapToPaginated {
-                    it.toParcelable(details.key, details.type, profileImageSize = profileImageSize)
+                    it.toParcelable(details, profileImageSize = profileImageSize)
                 }
             }
         }
@@ -83,19 +83,19 @@ class UserFriendsLoader(
             AccountType.STATUSNET -> {
                 val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
                 return microBlog.getStatusesFriendsListByScreenName(screenName, paging).mapToPaginated {
-                    it.toParcelable(details.key, details.type, profileImageSize = profileImageSize)
+                    it.toParcelable(details, profileImageSize = profileImageSize)
                 }
             }
             AccountType.FANFOU -> {
                 val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
                 return microBlog.getUsersFriends(screenName, paging).mapToPaginated(pagination) {
-                    it.toParcelable(details.key, details.type, profileImageSize = profileImageSize)
+                    it.toParcelable(details, profileImageSize = profileImageSize)
                 }
             }
             else -> {
                 val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
                 return microBlog.getFriendsListByScreenName(screenName, paging).mapToPaginated {
-                    it.toParcelable(details.key, details.type, profileImageSize = profileImageSize)
+                    it.toParcelable(details, profileImageSize = profileImageSize)
                 }
             }
         }

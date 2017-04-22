@@ -54,13 +54,13 @@ class NetworkPublicTimelineLoader(
             AccountType.MASTODON -> {
                 val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
                 return mastodon.getPublicTimeline(paging, true).mapToPaginated {
-                    it.toParcelable(account.key)
+                    it.toParcelable(account)
                 }
             }
             AccountType.STATUSNET -> {
                 val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
                 return microBlog.getNetworkPublicTimeline(paging).mapMicroBlogToPaginated {
-                    it.toParcelable(account.key, account.type, profileImageSize = profileImageSize)
+                    it.toParcelable(account, profileImageSize = profileImageSize)
                 }
             }
             else -> throw APINotSupportedException(account.type)

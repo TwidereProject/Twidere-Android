@@ -53,7 +53,7 @@ class GroupTimelineLoader(
     override fun getStatuses(account: AccountDetails, paging: Paging): PaginatedList<ParcelableStatus> {
         if (account.type != AccountType.STATUSNET) throw APINotSupportedException()
         return getMicroBlogStatuses(account, paging).mapMicroBlogToPaginated {
-            it.toParcelable(account.key, account.type, profileImageSize)
+            it.toParcelable(account, profileImageSize)
         }
     }
     @WorkerThread

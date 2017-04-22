@@ -49,7 +49,7 @@ open class UpdateProfileBannerImageTask<ResultHandler>(
             DebugLog.w(LOGTAG, tr = e)
         }
         val user = microBlog.verifyCredentials()
-        return user.toParcelable(account.key, account.type, profileImageSize = profileImageSize)
+        return user.toParcelable(account, profileImageSize = profileImageSize)
     }
 
     override fun onSucceed(callback: ResultHandler?, result: ParcelableUser) {

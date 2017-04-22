@@ -34,6 +34,7 @@ import android.location.*
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
+import android.support.v4.widget.TextViewCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.view.SupportMenuInflater
 import android.support.v7.widget.ActionMenuView.OnMenuItemClickListener
@@ -65,6 +66,7 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
 import org.mariotaku.ktextension.*
 import org.mariotaku.library.objectcursor.ObjectCursor
+import org.mariotaku.microblog.library.mastodon.annotation.StatusVisibility
 import org.mariotaku.pickncrop.library.MediaPickerActivity
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
@@ -139,25 +141,30 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private lateinit var mediaPreviewAdapter: MediaPreviewAdapter
     private lateinit var accountsAdapter: AccountIconsAdapter
 
+    // State fields
+    private var shouldSkipDraft: Boolean = false
+    private var hasEditSummary: Boolean = false
+    private var hasStatusVisibility: Boolean = false
+    private var hasLocationOption: Boolean = false
+    private var ignoreMentions: Boolean = false
+    private var shouldSaveAccounts: Boolean = false
+    private var statusShortenerUsed: Boolean = false
+    private var navigateBackPressed: Boolean = false
+    private var replyToSelf: Boolean = false
+
     // Data fields
     private var recentLocation: ParcelableLocation? = null
     private var inReplyToStatus: ParcelableStatus? = null
     private var mentionUser: ParcelableUser? = null
     private var originalText: String? = null
     private var possiblySensitive: Boolean = false
-    private var shouldSaveAccounts: Boolean = false
     private var imageUploaderUsed: Boolean = false
-    private var statusShortenerUsed: Boolean = false
-    private var navigateBackPressed: Boolean = false
     private var textChanged: Boolean = false
     private var composeKeyMetaState: Int = 0
     private var draft: Draft? = null
     private var nameFirst: Boolean = false
     private var draftUniqueId: String? = null
-    private var shouldSkipDraft: Boolean = false
-    private var hasEditSummary: Boolean = false
-    private var ignoreMentions: Boolean = false
-    private var replyToSelf: Boolean = false
+    private var statusVisibility: String? = StatusVisibility.PUBLIC
     private var scheduleInfo: ScheduleInfo? = null
         set(value) {
             field = value
@@ -457,6 +464,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         outState.putParcelable(EXTRA_USER, mentionUser)
         outState.putParcelable(EXTRA_DRAFT, draft)
         outState.putParcelable(EXTRA_SCHEDULE_INFO, scheduleInfo)
+        outState.putString(EXTRA_VISIBILITY, statusVisibility)
         outState.putBoolean(EXTRA_SHOULD_SAVE_ACCOUNTS, shouldSaveAccounts)
         outState.putString(EXTRA_ORIGINAL_TEXT, originalText)
         outState.putString(EXTRA_DRAFT_UNIQUE_ID, draftUniqueId)
@@ -480,6 +488,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         originalText = savedInstanceState.getString(EXTRA_ORIGINAL_TEXT)
         draftUniqueId = savedInstanceState.getString(EXTRA_DRAFT_UNIQUE_ID)
         scheduleInfo = savedInstanceState.getParcelable(EXTRA_SCHEDULE_INFO)
+        statusVisibility = savedInstanceState.getString(EXTRA_VISIBILITY)
         showLabelAndHint(intent)
 
         resetButtonsStates()
@@ -567,6 +576,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 when (item.groupId) {
                     R.id.location_option -> {
                         locationMenuItemSelected(item)
+                    }
+                    R.id.visibility_option -> {
+                        visibilityMenuItemSelected(item)
                     }
                     else -> {
                         extensionIntentItemSelected(item)
@@ -772,6 +784,19 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         updateTextCount()
     }
 
+    private fun visibilityMenuItemSelected(item: MenuItem) {
+        statusVisibility = when (item.itemId) {
+            R.id.visibility_public -> StatusVisibility.PUBLIC
+            R.id.visibility_unlisted -> StatusVisibility.UNLISTED
+            R.id.visibility_private -> StatusVisibility.PRIVATE
+            R.id.visibility_direct -> StatusVisibility.DIRECT
+            else -> null
+        }
+        updateVisibilityState()
+        setMenu()
+        updateTextCount()
+    }
+
     private fun extensionIntentItemSelected(item: MenuItem) {
         val intent = item.intent ?: return
         try {
@@ -866,6 +891,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private fun resetButtonsStates() {
         updateLocationState()
+        updateVisibilityState()
         updateAccountSelectionState()
         updateUpdateStatusIcon()
         updateMediaState()
@@ -994,19 +1020,21 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         recentLocation = draft.location
         accountsAdapter.selectedAccountKeys = draft.account_keys ?: emptyArray()
 
-        editSummary.setText(extras?.summaryText)
-
-        editText.setText(extras?.editingText ?: draft.text)
-        editText.setSelection(editText.length())
-
         if (media != null) {
             addMedia(Arrays.asList(*media))
         }
 
         if (extras != null) {
+            editSummary.setText(extras.summaryText)
+            statusVisibility = extras.visibility
             possiblySensitive = extras.isPossiblySensitive
             inReplyToStatus = extras.inReplyToStatus
+
+            editText.setText(extras.editingText ?: draft.text)
+        } else {
+            editText.setText(draft.text)
         }
+        editText.setSelection(editText.length())
 
         val tag = Uri.withAppendedPath(Drafts.CONTENT_URI, draft._id.toString()).toString()
         notificationManager.cancel(tag, NOTIFICATION_ID_DRAFTS)
@@ -1160,7 +1188,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         editText.accountKey = accounts.firstOrNull()?.key ?: Utils.getDefaultAccountKey(this)
         statusTextCount.maxLength = accounts.textLimit
         val singleAccount = accounts.singleOrNull()
-        hasEditSummary = accounts.all { it.type == AccountType.MASTODON }
+        val allMastodon = accounts.all { it.type == AccountType.MASTODON }
+        hasEditSummary = allMastodon
+        hasStatusVisibility = allMastodon
+        hasLocationOption = !allMastodon
         ignoreMentions = singleAccount?.type == AccountType.TWITTER
         replyToSelf = singleAccount?.let { it.key == inReplyToStatus?.user_key } ?: false
     }
@@ -1249,6 +1280,28 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             menu.setItemChecked(R.id.location_coarse, true)
             menu.setMenuItemIcon(R.id.location_submenu, R.drawable.ic_action_location)
         }
+
+        when (statusVisibility) {
+            StatusVisibility.UNLISTED -> {
+                menu.setItemChecked(R.id.visibility_unlisted, true)
+                menu.setMenuItemIcon(R.id.visibility_submenu, R.drawable.ic_action_web_lock)
+            }
+            StatusVisibility.PRIVATE -> {
+                menu.setItemChecked(R.id.visibility_private, true)
+                menu.setMenuItemIcon(R.id.visibility_submenu, R.drawable.ic_action_lock)
+            }
+            StatusVisibility.DIRECT -> {
+                menu.setItemChecked(R.id.visibility_direct, true)
+                menu.setMenuItemIcon(R.id.visibility_submenu, R.drawable.ic_action_message)
+            }
+            else -> { // Default to public
+                menu.setItemChecked(R.id.visibility_public, true)
+                menu.setMenuItemIcon(R.id.visibility_submenu, R.drawable.ic_action_web)
+            }
+        }
+
+        menu.setItemAvailability(R.id.visibility_submenu, hasStatusVisibility)
+        menu.setItemAvailability(R.id.location_submenu, hasLocationOption)
 
         ThemeUtils.wrapMenuIcon(menuBar, excludeGroups = MENU_GROUP_IMAGE_EXTENSION)
         ThemeUtils.resetCheatSheet(menuBar)
@@ -1470,6 +1523,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         update.media = media
         update.in_reply_to_status = inReplyTo
         update.is_possibly_sensitive = possiblySensitive
+        update.visibility = statusVisibility
         update.draft_extras = update.updateStatusActionExtras().also {
             it.editingText = text
         }
@@ -1520,6 +1574,31 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
         } else {
             locationLabel.visibility = View.GONE
+        }
+    }
+
+    private fun updateVisibilityState() {
+        when (statusVisibility) {
+            StatusVisibility.UNLISTED -> {
+                visibilityLabel.setText(R.string.label_status_visibility_unlisted)
+                TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(visibilityLabel,
+                        R.drawable.ic_action_web_lock, 0, 0, 0)
+            }
+            StatusVisibility.PRIVATE -> {
+                visibilityLabel.setText(R.string.label_status_visibility_private)
+                TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(visibilityLabel,
+                        R.drawable.ic_action_lock, 0, 0, 0)
+            }
+            StatusVisibility.DIRECT -> {
+                visibilityLabel.setText(R.string.label_status_visibility_direct)
+                TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(visibilityLabel,
+                        R.drawable.ic_action_message, 0, 0, 0)
+            }
+            else -> { // Default to public
+                visibilityLabel.setText(R.string.label_status_visibility_public)
+                TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(visibilityLabel,
+                        R.drawable.ic_action_web, 0, 0, 0)
+            }
         }
     }
 
@@ -2084,6 +2163,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             it.excludedReplyUserIds = excluded_reply_user_ids
             it.isExtendedReplyMode = extended_reply_mode
             it.summaryText = summary
+            it.visibility = visibility
         }
 
     }

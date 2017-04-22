@@ -35,6 +35,7 @@ object ParcelableStatusUpdateUtils {
                 statusUpdate.excluded_reply_user_ids = actionExtras.excludedReplyUserIds
                 statusUpdate.extended_reply_mode = actionExtras.isExtendedReplyMode
                 statusUpdate.summary  = actionExtras.summaryText
+                statusUpdate.visibility  = actionExtras.visibility
             }
             is QuoteStatusActionExtras -> {
                 val onlyAccount = statusUpdate.accounts.singleOrNull()

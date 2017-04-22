@@ -58,7 +58,7 @@ class StatusFavoritersLoader(
             AccountType.MASTODON -> {
                 val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
                 return mastodon.getStatusFavouritedBy(statusId).mapToPaginated {
-                    it.toParcelable(details.key)
+                    it.toParcelable(details)
                 }
             }
             AccountType.TWITTER -> {
@@ -71,7 +71,7 @@ class StatusFavoritersLoader(
                     IDsAccessor.setIds(IDs(), parseUserIds(htmlUsers))
                 }
                 return microBlog.lookupUsersMapPaginated(ids) {
-                    it.toParcelable(details.key, details.type, profileImageSize = profileImageSize)
+                    it.toParcelable(details, profileImageSize = profileImageSize)
                 }
             }
             else -> {

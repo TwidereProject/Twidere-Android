@@ -22,16 +22,15 @@ package org.mariotaku.twidere.extension.model.api.mastodon
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.microblog.library.mastodon.model.Status
 import org.mariotaku.twidere.extension.model.api.spanItems
-import org.mariotaku.twidere.model.ParcelableMedia
-import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.SpanItem
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils.addFilterFlag
 import org.mariotaku.twidere.util.HtmlSpanBuilder
 
-/**
- * Created by mariotaku on 2017/4/19.
- */
+fun Status.toParcelable(details: AccountDetails): ParcelableStatus {
+    return toParcelable(details.key).apply {
+        account_color = details.color
+    }
+}
 
 fun Status.toParcelable(accountKey: UserKey): ParcelableStatus {
     val result = ParcelableStatus()
@@ -42,6 +41,7 @@ fun Status.toParcelable(accountKey: UserKey): ParcelableStatus {
     result.timestamp = createdAt?.time ?: 0
 
     extras.summary_text = spoilerText
+    extras.visibility = visibility
     extras.external_url = url
 
     val retweetedStatus = reblog

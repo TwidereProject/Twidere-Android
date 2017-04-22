@@ -293,7 +293,7 @@
   <string name="profile_background_color">צבע רקע</string>
   <string name="profile_image">תמונת פרופיל</string>
   <string name="profile_image_style">סגנון תמונת פרופיל</string>
-  <string name="massage_toast_profile_image_updated">תמונת הפרופיל עודכנה.</string>
+  <string name="message_toast_profile_image_updated">תמונת הפרופיל עודכנה.</string>
   <string name="profile_images">תמונות פרופיל</string>
   <string name="profile_text_color">צבע טקסט</string>
   <string name="profile_updated">הפרופיל עודכן.</string>

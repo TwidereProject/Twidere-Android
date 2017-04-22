@@ -65,6 +65,37 @@
         </menu>
     </item>
     <item
+        android:id="@+id/visibility_submenu"
+        android:enabled="false"
+        android:icon="@drawable/ic_action_web"
+        android:title="@string/action_set_status_visibility"
+        android:visible="false"
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction">
+        <menu>
+            <group
+                android:id="@+id/visibility_option"
+                android:checkableBehavior="single">
+                <item
+                    android:id="@+id/visibility_public"
+                    android:icon="@drawable/ic_action_web"
+                    android:title="@string/label_status_visibility_public"/>
+                <item
+                    android:id="@+id/visibility_unlisted"
+                    android:icon="@drawable/ic_action_web_lock"
+                    android:title="@string/label_status_visibility_unlisted"/>
+                <item
+                    android:id="@+id/visibility_private"
+                    android:icon="@drawable/ic_action_lock"
+                    android:title="@string/label_status_visibility_private"/>
+                <item
+                    android:id="@+id/visibility_direct"
+                    android:icon="@drawable/ic_action_message"
+                    android:title="@string/label_status_visibility_direct"/>
+            </group>
+        </menu>
+    </item>
+    <item
         android:id="@id/drafts"
         android:icon="@drawable/ic_action_draft"
         android:title="@string/title_drafts"

@@ -45,8 +45,3 @@ inline val ParcelableUser.originalProfileImage: String? get() {
 }
 
 inline val ParcelableUser.urlPreferred: String? get() = url_expanded?.takeIf(String::isNotEmpty) ?: url
-
-
-fun Array<User>.toParcelables(accountKey: UserKey, accountType: String, profileImageSize: String = "normal"): Array<ParcelableUser> {
-    return mapToArray { it.toParcelable(accountKey, accountType, profileImageSize = profileImageSize) }
-}

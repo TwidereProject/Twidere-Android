@@ -35,7 +35,8 @@
         <org.mariotaku.twidere.view.MaxHeightScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxHeight="240dp">
+            android:maxHeight="240dp"
+            tools:maxHeight="@null">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -84,6 +85,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="@dimen/element_spacing_normal"
+                        android:visibility="gone"
                         android:textAppearance="?android:textAppearanceSmall"/>
 
                     <org.mariotaku.twidere.view.ExtendedRecyclerView
@@ -99,7 +101,6 @@
                         android:id="@+id/locationLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/element_spacing_minus_normal"
                         android:drawableLeft="@drawable/ic_action_location"
                         android:drawableStart="@drawable/ic_action_location"
                         android:gravity="center_vertical"
@@ -109,6 +110,20 @@
                         app:iabIconHeight="20dp"
                         app:iabIconWidth="20dp"
                         tools:text="11.4, 51.4"/>
+
+                    <org.mariotaku.twidere.view.ActionIconThemedTextView
+                        android:id="@+id/visibilityLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_action_web"
+                        android:drawableStart="@drawable/ic_action_web"
+                        android:gravity="center_vertical"
+                        android:maxLines="1"
+                        android:textColor="?android:textColorSecondary"
+                        app:iabColor="?android:textColorSecondary"
+                        app:iabIconHeight="20dp"
+                        app:iabIconWidth="20dp"
+                        tools:text="@string/label_status_visibility_public"/>
 
                 </org.mariotaku.twidere.view.ExtendedLinearLayout>
             </LinearLayout>

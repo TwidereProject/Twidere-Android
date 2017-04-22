@@ -340,7 +340,7 @@ class UpdateStatusTask(
             }).use { (body) ->
                 val photoUpdate = PhotoStatusUpdate(body, pendingUpdate.overrideTexts[updateIndex])
                 return@use microBlog.uploadPhoto(photoUpdate)
-            }.toParcelable(details.key, details.type)
+            }.toParcelable(details)
         } catch (e: IOException) {
             throw UploadException(e)
         }
@@ -441,7 +441,7 @@ class UpdateStatusTask(
         if (statusUpdate.is_possibly_sensitive) {
             status.possiblySensitive(statusUpdate.is_possibly_sensitive)
         }
-        return microBlog.updateStatus(status).toParcelable(details.key, details.type)
+        return microBlog.updateStatus(status).toParcelable(details)
     }
 
     @Throws(MicroBlogException::class)
@@ -465,7 +465,10 @@ class UpdateStatusTask(
         if (statusUpdate.summary != null) {
             status.spoilerText(statusUpdate.summary)
         }
-        return mastodon.postStatus(status).toParcelable(details.key)
+        if (statusUpdate.visibility != null) {
+            status.visibility(statusUpdate.visibility)
+        }
+        return mastodon.postStatus(status).toParcelable(details)
     }
 
     private fun statusShortenCallback(shortener: StatusShortenerInterface?,

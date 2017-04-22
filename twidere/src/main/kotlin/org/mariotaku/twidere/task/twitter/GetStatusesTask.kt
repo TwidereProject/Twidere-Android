@@ -27,7 +27,6 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.GetStatusesTaskEvent
 import org.mariotaku.twidere.model.task.GetTimelineResult
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.BaseAbstractTask
@@ -143,7 +142,6 @@ abstract class GetStatusesTask(
 
             val creator = ObjectCursor.valuesCreatorFrom(ParcelableStatus::class.java)
             statuses.forEachIndexed { i, status ->
-                ParcelableStatusUtils.updateExtraInformation(status, account)
                 status.position_key = getPositionKey(status.timestamp, status.sort_id, lastSortId,
                         sortDiff, i, statuses.size)
                 status.inserted_date = System.currentTimeMillis()

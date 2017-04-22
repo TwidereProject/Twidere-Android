@@ -58,13 +58,13 @@ class GetHomeTimelineTask(context: Context) : GetStatusesTask(context) {
             AccountType.MASTODON -> {
                 val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
                 return mastodon.getHomeTimeline(paging).map {
-                    it.toParcelable(account.key)
+                    it.toParcelable(account)
                 }
             }
             else -> {
                 val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
                 return microBlog.getHomeTimeline(paging).map {
-                    it.toParcelable(account.key, account.type, profileImageSize)
+                    it.toParcelable(account, profileImageSize)
                 }
             }
         }

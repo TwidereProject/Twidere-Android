@@ -261,7 +261,7 @@
   <string name="profile">Profil</string>
   <string name="profile_background_color">Barva pozadí</string>
   <string name="profile_image">Profilový obrázek</string>
-  <string name="massage_toast_profile_image_updated">Profilový obrázek aktualizován.</string>
+  <string name="message_toast_profile_image_updated">Profilový obrázek aktualizován.</string>
   <string name="profile_images">Profilové obrázky</string>
   <string name="profile_link_color_main_color">Barva odkazu (hlavní barva)</string>
   <string name="profile_text_color">Barva textu</string>

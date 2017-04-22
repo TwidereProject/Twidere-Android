@@ -22,14 +22,14 @@ package org.mariotaku.twidere.extension.model.api.mastodon
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.microblog.library.mastodon.model.Notification
 import org.mariotaku.microblog.library.twitter.model.Activity
-import org.mariotaku.twidere.model.ParcelableActivity
-import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.ParcelableUser
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.*
 
-/**
- * Created by mariotaku on 2017/4/22.
- */
+fun Notification.toParcelable(details: AccountDetails): ParcelableActivity {
+    return toParcelable(details.key).apply {
+        account_color = details.color
+    }
+}
+
 fun Notification.toParcelable(accountKey: UserKey): ParcelableActivity {
     val result = ParcelableActivity()
     result.account_key = accountKey

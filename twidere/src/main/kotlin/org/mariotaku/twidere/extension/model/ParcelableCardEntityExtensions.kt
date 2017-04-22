@@ -19,21 +19,24 @@
 
 package org.mariotaku.twidere.extension.model
 
+import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.toIntOr
 import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.microblog.library.twitter.model.CardEntity
+import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.model.ParcelableCardEntity
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableCardEntityUtils
 import java.text.ParseException
 import java.util.*
 
-
 fun CardEntity.toParcelable(accountKey: UserKey, accountType: String): ParcelableCardEntity? {
     val obj = ParcelableCardEntity()
     obj.name = name
     obj.url = url
-    obj.users = users?.toParcelables(accountKey, accountType)
+    obj.users = users?.mapToArray {
+        it.toParcelable(accountKey, accountType)
+    }
     obj.account_key = accountKey
     obj.values = bindingValues?.mapValues { entry ->
         ParcelableCardEntity.ParcelableBindingValue(entry.value)

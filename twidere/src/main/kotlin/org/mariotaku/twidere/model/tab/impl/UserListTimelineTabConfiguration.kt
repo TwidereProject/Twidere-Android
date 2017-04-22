@@ -21,9 +21,11 @@ package org.mariotaku.twidere.model.tab.impl
 
 import android.content.Context
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.TabAccountFlags
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER_LIST
 import org.mariotaku.twidere.fragment.statuses.UserListTimelineFragment
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.model.tab.StringHolder
@@ -45,6 +47,11 @@ class UserListTimelineTabConfiguration : TabConfiguration() {
             TabAccountFlags.FLAG_ACCOUNT_REQUIRED
 
     override val fragmentClass = UserListTimelineFragment::class.java
+
+    override fun checkAccountAvailability(details: AccountDetails) = when (details.type) {
+        AccountType.TWITTER -> true
+        else -> false
+    }
 
     override fun getExtraConfigurations(context: Context) = arrayOf(
             UserListExtraConfiguration(EXTRA_USER_LIST).headerTitle(R.string.title_user_list)

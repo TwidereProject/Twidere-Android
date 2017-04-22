@@ -82,10 +82,10 @@ class UserTimelineLoader(
     @Throws(MicroBlogException::class)
     override fun getStatuses(account: AccountDetails, paging: Paging) = when (account.type) {
         AccountType.MASTODON -> getMastodonStatuses(account, paging).mapToPaginated {
-            it.toParcelable(account.key)
+            it.toParcelable(account)
         }
         else -> getMicroBlogStatuses(account, paging).mapMicroBlogToPaginated {
-            it.toParcelable(account.key, account.type, profileImageSize = profileImageSize)
+            it.toParcelable(account, profileImageSize = profileImageSize)
         }
     }
 
@@ -114,8 +114,7 @@ class UserTimelineLoader(
         if (pinnedStatusIds != null) {
             pinnedStatuses = try {
                 microBlog.lookupStatuses(pinnedStatusIds).mapIndexed { idx, status ->
-                    val created = status.toParcelable(account.key, account.type,
-                            profileImageSize = profileImageSize)
+                    val created = status.toParcelable(account, profileImageSize = profileImageSize)
                     created.sort_id = idx.toLong()
                     return@mapIndexed created
                 }

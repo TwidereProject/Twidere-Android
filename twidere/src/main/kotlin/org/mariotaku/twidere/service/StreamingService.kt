@@ -37,7 +37,6 @@ import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.model.util.ParcelableActivityUtils
 import org.mariotaku.twidere.model.util.UserKeyUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
@@ -272,10 +271,8 @@ class StreamingService : BaseService() {
                     homeInsertGap = true
                     return false
                 }
-                val parcelableStatus = status.toParcelable(account.key, account.type,
-                        profileImageSize = profileImageSize)
+                val parcelableStatus = status.toParcelable(account, profileImageSize = profileImageSize)
                 parcelableStatus.is_gap = homeInsertGap
-                parcelableStatus.account_color = account.color
 
                 val currentTimeMillis = System.currentTimeMillis()
                 if (lastStatusTimestamps[0] >= parcelableStatus.timestamp) {
@@ -316,8 +313,7 @@ class StreamingService : BaseService() {
                     } else {
                         insertGap = false
                     }
-                    val curActivity = activity.toParcelable(account.key, account.type, insertGap,
-                            profileImageSize)
+                    val curActivity = activity.toParcelable(account, insertGap, profileImageSize)
                     curActivity.account_color = account.color
                     curActivity.position_key = curActivity.timestamp
                     var updateId = -1L

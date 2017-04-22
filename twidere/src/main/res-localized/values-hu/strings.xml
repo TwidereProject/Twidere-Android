@@ -509,7 +509,7 @@
   <string name="profile_banner">Fejléckép</string>
   <string name="profile_image">Profilkép</string>
   <string name="profile_image_style">Profilkép stílusa</string>
-  <string name="massage_toast_profile_image_updated">Profilkép frissítve.</string>
+  <string name="message_toast_profile_image_updated">Profilkép frissítve.</string>
   <string name="profile_images">Profilképek</string>
   <string name="profile_link_color_main_color">Hivatkozás színe (fő szín)</string>
   <string name="profile_text_color">Szöveg színe</string>

@@ -159,7 +159,6 @@ class ContentNotificationManager(
         }
     }
 
-
     fun showInteractions(pref: AccountPreferences, position: Long) {
         val cr = context.contentResolver
         val accountKey = pref.accountKey

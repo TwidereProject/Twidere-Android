@@ -64,6 +64,8 @@ public abstract class DrawableHolder {
             // End of default built-in icons
             case "favorite":
                 return Builtin.FAVORITE;
+            case "web":
+                return Builtin.WEB;
         }
         return null;
     }
@@ -118,6 +120,7 @@ public abstract class DrawableHolder {
                 "user",
                 // End of default built-in icons
                 "favorite",
+                "web",
         };
         List<DrawableHolder> list = new ArrayList<>();
         for (String key : keys) {
@@ -205,6 +208,8 @@ public abstract class DrawableHolder {
                 return ContextCompat.getDrawable(context, R.drawable.ic_action_heart);
             }
         };
+        @NonNull
+        public static final DrawableHolder WEB = new Builtin("web", R.drawable.ic_action_web);
 
         private final String key;
         private final int resId;

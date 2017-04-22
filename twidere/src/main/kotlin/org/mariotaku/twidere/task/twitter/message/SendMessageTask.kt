@@ -180,8 +180,8 @@ class SendMessageTask(
         val conversations = hashMapOf<String, ParcelableMessageConversation>()
         conversations.addLocalConversations(context, accountKey, conversationIds)
         val message = ParcelableMessageUtils.fromMessage(accountKey, dm, true)
-        val sender = dm.sender.toParcelable(accountKey, details.type, profileImageSize = profileImageSize)
-        val recipient = dm.recipient.toParcelable(accountKey, details.type, profileImageSize = profileImageSize)
+        val sender = dm.sender.toParcelable(details, profileImageSize = profileImageSize)
+        val recipient = dm.recipient.toParcelable(details, profileImageSize = profileImageSize)
         conversations.addConversation(message.conversation_id, details, message, setOf(sender, recipient), appendUsers = true)
         return GetMessagesTask.DatabaseUpdateData(conversations.values, listOf(message))
     }

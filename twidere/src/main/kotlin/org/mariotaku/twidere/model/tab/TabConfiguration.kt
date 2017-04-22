@@ -154,7 +154,7 @@ abstract class TabConfiguration {
                     CustomTabType.TRENDS_SUGGESTIONS, CustomTabType.DIRECT_MESSAGES,
                     CustomTabType.FAVORITES, CustomTabType.USER_TIMELINE,
                     CustomTabType.SEARCH_STATUSES, CustomTabType.LIST_TIMELINE,
-                    CustomTabType.PUBLIC_TIMELINE)
+                    CustomTabType.PUBLIC_TIMELINE, CustomTabType.NETWORK_PUBLIC_TIMELINE)
         }
 
         fun ofType(@CustomTabType type: String): TabConfiguration? {
@@ -168,6 +168,7 @@ abstract class TabConfiguration {
                 CustomTabType.TRENDS_SUGGESTIONS -> return TrendsTabConfiguration()
                 CustomTabType.SEARCH_STATUSES -> return SearchTabConfiguration()
                 CustomTabType.PUBLIC_TIMELINE -> return PublicTimelineTabConfiguration()
+                CustomTabType.NETWORK_PUBLIC_TIMELINE -> return NetworkPublicTimelineTabConfiguration()
             }
             return null
         }
