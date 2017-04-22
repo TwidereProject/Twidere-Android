@@ -39,9 +39,6 @@ class CreateUserMuteTask(
             }
             AccountType.MASTODON -> {
                 val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
-                if (details.key.host != args.userKey.host) {
-                    throw MicroBlogException("Mute remote user is not supported yet")
-                }
                 mastodon.muteUser(args.userKey.id)
                 return mastodon.getAccount(args.userKey.id).toParcelable(details)
             }

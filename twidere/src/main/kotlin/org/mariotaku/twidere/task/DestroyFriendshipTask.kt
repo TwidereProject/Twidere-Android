@@ -33,9 +33,6 @@ class DestroyFriendshipTask(context: Context) : AbsFriendshipOperationTask(conte
             }
             AccountType.MASTODON -> {
                 val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
-                if (details.key.host != args.userKey.host) {
-                    throw MicroBlogException("Unfollow remote user is not supported yet")
-                }
                 mastodon.unfollowUser(args.userKey.id)
                 return mastodon.getAccount(args.userKey.id).toParcelable(details)
             }

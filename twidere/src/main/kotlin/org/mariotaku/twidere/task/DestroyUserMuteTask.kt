@@ -33,9 +33,6 @@ class DestroyUserMuteTask(context: Context) : AbsFriendshipOperationTask(context
             }
             AccountType.MASTODON -> {
                 val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
-                if (details.key.host != args.userKey.host) {
-                    throw MicroBlogException("Unmute remote user is not supported yet")
-                }
                 mastodon.unmuteUser(args.userKey.id)
                 return mastodon.getAccount(args.userKey.id).toParcelable(details)
             }

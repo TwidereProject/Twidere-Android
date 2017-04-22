@@ -34,9 +34,6 @@ open class CreateUserBlockTask(
         when (details.type) {
             AccountType.MASTODON -> {
                 val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
-                if (details.key.host != args.userKey.host) {
-                    throw MicroBlogException("Block remote user is not supported yet")
-                }
                 mastodon.blockUser(args.userKey.id)
                 return mastodon.getAccount(args.userKey.id).toParcelable(details)
             }

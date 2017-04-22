@@ -31,9 +31,6 @@ class AcceptFriendshipTask(context: Context) : AbsFriendshipOperationTask(contex
             }
             AccountType.MASTODON -> {
                 val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
-                if (details.key.host != args.userKey.host) {
-                    throw MicroBlogException("Authorize remote follow request is not supported yet")
-                }
                 mastodon.authorizeFollowRequest(args.userKey.id)
                 return mastodon.getAccount(args.userKey.id).toParcelable(details)
             }

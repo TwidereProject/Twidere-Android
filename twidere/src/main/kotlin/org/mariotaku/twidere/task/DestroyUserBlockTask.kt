@@ -27,9 +27,6 @@ class DestroyUserBlockTask(context: Context) : AbsFriendshipOperationTask(contex
         when (details.type) {
             AccountType.MASTODON -> {
                 val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
-                if (details.key.host != args.userKey.host) {
-                    throw MicroBlogException("Unblock remote user is not supported yet")
-                }
                 mastodon.unblockUser(args.userKey.id)
                 return mastodon.getAccount(args.userKey.id).toParcelable(details)
             }
