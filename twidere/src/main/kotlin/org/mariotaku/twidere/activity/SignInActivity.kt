@@ -664,11 +664,8 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val dialog = dialog ?: return
             val listView = dialog.findViewById(R.id.expandableList) as ExpandableListView
             val configGroup = data.groupBy { it.type ?: AccountType.TWITTER }
-            val supportedAccountTypes = if (BuildConfig.DEBUG) {
-                arrayOf(AccountType.TWITTER, AccountType.FANFOU, AccountType.MASTODON, AccountType.STATUSNET)
-            } else {
-                arrayOf(AccountType.TWITTER, AccountType.FANFOU, AccountType.STATUSNET)
-            }
+            val supportedAccountTypes = arrayOf(AccountType.TWITTER, AccountType.FANFOU,
+                    AccountType.MASTODON, AccountType.STATUSNET)
             (listView.expandableListAdapter as LoginTypeAdapter).data = supportedAccountTypes.mapNotNull { type ->
                 if (type == AccountType.MASTODON) return@mapNotNull LoginType(type,
                         listOf(CustomAPIConfig.mastodon(context)))
