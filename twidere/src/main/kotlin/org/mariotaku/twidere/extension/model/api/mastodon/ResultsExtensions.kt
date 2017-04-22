@@ -19,34 +19,18 @@
 
 package org.mariotaku.twidere.extension.model.api.mastodon
 
-import android.net.Uri
-import org.mariotaku.microblog.library.mastodon.model.LinkHeaderList
-import org.mariotaku.microblog.library.mastodon.model.LinkHeaderResponse
+import org.mariotaku.microblog.library.mastodon.model.Results
 import org.mariotaku.twidere.model.pagination.PaginatedArrayList
 import org.mariotaku.twidere.model.pagination.PaginatedList
-import org.mariotaku.twidere.model.pagination.Pagination
-import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 
 /**
- * Created by mariotaku on 2017/4/21.
+ * Created by mariotaku on 2017/4/23.
  */
 
-inline fun <T, R> LinkHeaderList<T>.mapToPaginated(transform: (T) -> R): PaginatedList<R> {
-    val result = mapTo(PaginatedArrayList(size), transform)
+inline fun <T, R> Results.mapToPaginated(listSelector: (Results) -> List<T>?, transform: (T) -> R): PaginatedList<R> {
+    val list = listSelector(this) ?: return PaginatedArrayList()
+    val result = list.mapTo(PaginatedArrayList(list.size), transform)
     result.previousPage = getLinkPagination("prev")
     result.nextPage = getLinkPagination("next")
     return result
-}
-
-fun LinkHeaderResponse.getLinkPagination(key: String): Pagination? {
-    val uri = getLinkPart(key)?.let(Uri::parse) ?: return null
-    val maxId = uri.getQueryParameter("max_id")
-    val sinceId = uri.getQueryParameter("since_id")
-    if (maxId != null || sinceId != null) {
-        return SinceMaxPagination().apply {
-            this.maxId = maxId
-            this.sinceId = sinceId
-        }
-    }
-    return null
 }

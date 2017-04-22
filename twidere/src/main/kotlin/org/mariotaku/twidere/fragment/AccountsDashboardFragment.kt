@@ -337,6 +337,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         var hasDmTab = false
         var hasInteractionsTab = false
         var hasPublicTimelineTab = false
+        var hasNetworkPublicTimelineTab = false
         for (tab in tabs) {
             when (tab.type) {
                 CustomTabType.DIRECT_MESSAGES -> {
@@ -352,6 +353,11 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
                 CustomTabType.PUBLIC_TIMELINE -> {
                     if (!hasPublicTimelineTab) {
                         hasPublicTimelineTab = hasAccountInTab(tab, account.key, true)
+                    }
+                }
+                CustomTabType.NETWORK_PUBLIC_TIMELINE -> {
+                    if (!hasNetworkPublicTimelineTab) {
+                        hasNetworkPublicTimelineTab = hasAccountInTab(tab, account.key, true)
                     }
                 }
             }
@@ -374,6 +380,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         var hasLists = false
         var hasGroups = false
         var hasPublicTimeline = false
+        var hasNetworkPublicTimeline = false
         when (account.type) {
             AccountType.TWITTER -> {
                 hasLists = true
@@ -381,17 +388,20 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             AccountType.STATUSNET -> {
                 hasGroups = true
                 hasPublicTimeline = !hasPublicTimelineTab
+                hasNetworkPublicTimeline = !hasNetworkPublicTimelineTab
             }
             AccountType.FANFOU -> {
                 hasPublicTimeline = !hasPublicTimelineTab
             }
             AccountType.MASTODON -> {
                 hasPublicTimeline = !hasPublicTimelineTab
+                hasNetworkPublicTimeline = !hasNetworkPublicTimelineTab
             }
         }
         menu.setItemAvailability(R.id.groups, hasGroups)
         menu.setItemAvailability(R.id.lists, hasLists)
         menu.setItemAvailability(R.id.public_timeline, hasPublicTimeline)
+        menu.setItemAvailability(R.id.network_public_timeline, hasNetworkPublicTimeline)
     }
 
     private fun hasAccountInTab(tab: SupportTabSpec, accountKey: UserKey, isActivated: Boolean): Boolean {
@@ -572,6 +582,9 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             }
             R.id.public_timeline -> {
                 IntentUtils.openPublicTimeline(activity, account.key)
+            }
+            R.id.network_public_timeline -> {
+                IntentUtils.openNetworkPublicTimeline(activity, account.key)
             }
             R.id.messages -> {
                 IntentUtils.openDirectMessages(activity, account.key)

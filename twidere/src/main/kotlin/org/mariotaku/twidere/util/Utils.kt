@@ -66,7 +66,6 @@ import org.mariotaku.sqliteqb.library.Selectable
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.TwidereConstants.METADATA_KEY_EXTENSION_USE_JSON
-import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_USER_KEY
 import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
 import org.mariotaku.twidere.TwidereConstants.TAB_CODE_DIRECT_MESSAGES
 import org.mariotaku.twidere.TwidereConstants.TAB_CODE_HOME_TIMELINE
@@ -74,7 +73,6 @@ import org.mariotaku.twidere.TwidereConstants.TAB_CODE_NOTIFICATIONS_TIMELINE
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.ProfileImageSize
 import org.mariotaku.twidere.constant.CompatibilityConstants.EXTRA_ACCOUNT_ID
-import org.mariotaku.twidere.constant.CompatibilityConstants.QUERY_PARAM_USER_ID
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEYS
 import org.mariotaku.twidere.constant.IntentConstants.INTENT_ACTION_PEBBLE_NOTIFICATION
@@ -154,11 +152,6 @@ object Utils {
             "image/jpg" -> return "image/jpeg"
         }
         return contentType
-    }
-
-    fun getUserKeyParam(uri: Uri): String {
-        val paramUserKey = uri.getQueryParameter(QUERY_PARAM_USER_KEY) ?: return uri.getQueryParameter(QUERY_PARAM_USER_ID)
-        return paramUserKey
     }
 
     fun createStatusShareIntent(context: Context, status: ParcelableStatus): Intent {

@@ -18,9 +18,20 @@
 
 package org.mariotaku.microblog.library.mastodon.api;
 
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.mastodon.model.Results;
+import org.mariotaku.microblog.library.twitter.model.Paging;
+import org.mariotaku.restfu.annotation.method.GET;
+import org.mariotaku.restfu.annotation.param.Query;
+
 /**
  * Created by mariotaku on 2017/4/17.
  */
 
 public interface SearchResources {
+
+    @GET("/v1/search")
+    Results search(@Query("q") String query, @Query("resolve") boolean resolve,
+            @Query Paging paging) throws MicroBlogException;
+
 }

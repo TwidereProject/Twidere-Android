@@ -93,6 +93,7 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String AUTHORITY_USER_BLOCKS = "user_blocks";
     String AUTHORITY_STATUS = "status";
     String AUTHORITY_PUBLIC_TIMELINE = "public_timeline";
+    String AUTHORITY_NETWORK_PUBLIC_TIMELINE = "network_public_timeline";
     String AUTHORITY_MESSAGES = "direct_messages";
     String AUTHORITY_SEARCH = "search";
     String AUTHORITY_MAP = "map";

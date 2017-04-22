@@ -18,6 +18,7 @@
 
 package org.mariotaku.microblog.library.mastodon.api;
 
+import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.mastodon.model.Account;
 import org.mariotaku.microblog.library.mastodon.model.LinkHeaderList;
 import org.mariotaku.microblog.library.twitter.model.Paging;
@@ -30,5 +31,5 @@ import org.mariotaku.restfu.annotation.param.Query;
 
 public interface MutesResources {
     @GET("/v1/mutes")
-    LinkHeaderList<Account> getMutes(@Query Paging paging);
+    LinkHeaderList<Account> getMutes(@Query Paging paging) throws MicroBlogException;
 }

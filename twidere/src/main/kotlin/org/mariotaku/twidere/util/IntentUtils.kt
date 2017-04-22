@@ -596,6 +596,17 @@ object IntentUtils {
         context.startActivity(intent)
     }
 
+    fun openNetworkPublicTimeline(context: Context, accountKey: UserKey?) {
+        val builder = Uri.Builder()
+        builder.scheme(SCHEME_TWIDERE)
+        builder.authority(AUTHORITY_NETWORK_PUBLIC_TIMELINE)
+        if (accountKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
+        }
+        val intent = Intent(Intent.ACTION_VIEW, builder.build())
+        context.startActivity(intent)
+    }
+
     fun openAccountsManager(context: Context) {
         val intent = Intent()
         val builder = Uri.Builder()

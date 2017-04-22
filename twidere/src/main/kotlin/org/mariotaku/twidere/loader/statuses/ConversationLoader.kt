@@ -25,15 +25,20 @@ import android.support.annotation.WorkerThread
 import org.mariotaku.commons.parcel.ParcelUtils
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.SearchQuery
 import org.mariotaku.microblog.library.twitter.model.Status
+import org.mariotaku.twidere.alias.MastodonStatus
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.exception.APINotSupportedException
+import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
+import org.mariotaku.twidere.model.pagination.PaginatedArrayList
 import org.mariotaku.twidere.model.pagination.PaginatedList
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
@@ -57,9 +62,21 @@ class ConversationLoader(
 
     @Throws(MicroBlogException::class)
     override fun getStatuses(account: AccountDetails, paging: Paging): PaginatedList<ParcelableStatus> {
-        return getMicroBlogStatuses(account, paging).mapMicroBlogToPaginated {
-            it.toParcelable(account, profileImageSize)
+        when (account.type) {
+            AccountType.MASTODON -> return getMastodonStatuses(account, paging).mapTo(PaginatedArrayList()) {
+                it.toParcelable(account)
+            }
+            else -> return getMicroBlogStatuses(account, paging).mapMicroBlogToPaginated {
+                it.toParcelable(account, profileImageSize)
+            }
         }
+    }
+
+    private fun getMastodonStatuses(account: AccountDetails, paging: Paging): List<MastodonStatus> {
+        val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
+        canLoadAllReplies = true
+        val statusContext = mastodon.getStatusContext(status.id)
+        return statusContext.ancestors + statusContext.descendants
     }
 
     @Throws(MicroBlogException::class)
@@ -85,10 +102,12 @@ class ConversationLoader(
                 canLoadAllReplies = true
                 return microBlog.getContextTimeline(status.id, paging)
             }
+            else -> {
+                throw APINotSupportedException(account.type)
+            }
         }
-        // Set to true because there's no conversation support on this platform
         canLoadAllReplies = true
-        return showConversationCompat(microBlog, account, status, false)
+        return showConversationCompat(microBlog, account, status, true)
     }
 
     @Throws(MicroBlogException::class)

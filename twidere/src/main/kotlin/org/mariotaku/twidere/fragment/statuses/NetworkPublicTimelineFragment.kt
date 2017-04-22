@@ -38,7 +38,7 @@ class NetworkPublicTimelineFragment : ParcelableStatusesFragment() {
         get() {
             val accountKey = Utils.getAccountKey(context, arguments)
             val result = ArrayList<String>()
-            result.add(AUTHORITY_PUBLIC_TIMELINE)
+            result.add(AUTHORITY_NETWORK_PUBLIC_TIMELINE)
             result.add("account=$accountKey")
             return result.toTypedArray()
         }

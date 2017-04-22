@@ -20,22 +20,20 @@ package org.mariotaku.microblog.library.mastodon.model;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 
 import org.mariotaku.restfu.http.HttpResponse;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by mariotaku on 2017/4/21.
  */
-public class LinkHeaderList<E> extends ArrayList<E> {
+public class LinkHeaderList<E> extends ArrayList<E> implements LinkHeaderResponse {
 
-    @NonNull
-    private Map<String, String> linkParts = new HashMap<>();
+    @Nullable
+    private Map<String, String> linkParts;
 
     public LinkHeaderList(int initialCapacity) {
         super(initialCapacity);
@@ -48,33 +46,15 @@ public class LinkHeaderList<E> extends ArrayList<E> {
         super(c);
     }
 
-    public final void processResponseHeader(HttpResponse resp) {
-        linkParts.clear();
-        String linkHeader = resp.getHeader("Link");
-        if (linkHeader == null) return;
-        for (String link : TextUtils.split(linkHeader, ",")) {
-            String[] segments = TextUtils.split(link, ";");
-            if (segments.length < 2) continue;
-            String linkPart = segments[0].trim();
-            if (!linkPart.startsWith("<") || !linkPart.endsWith(">"))
-                continue;
-            linkPart = linkPart.substring(1, linkPart.length() - 1);
-            for (int i = 1; i < segments.length; i++) {
-                String[] rel = TextUtils.split(segments[i].trim(), "=");
-                if (rel.length < 2 || !"rel".equals(rel[0]))
-                    continue;
-
-                String relValue = rel[1];
-                if (relValue.startsWith("\"") && relValue.endsWith("\""))
-                    relValue = relValue.substring(1, relValue.length() - 1);
-
-                linkParts.put(relValue, linkPart);
-            }
-        }
+    @Override
+    public final void processResponseHeader(@NonNull HttpResponse resp) {
+        linkParts = Parser.parse(resp);
     }
 
     @Nullable
+    @Override
     public String getLinkPart(String key) {
+        if (linkParts == null) return null;
         return linkParts.get(key);
     }
 }

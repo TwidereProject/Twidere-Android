@@ -18,10 +18,16 @@
 
 package org.mariotaku.microblog.library.mastodon.model;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import java.util.Arrays;
+import org.mariotaku.restfu.http.HttpResponse;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * {@see https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#results}
@@ -29,41 +35,56 @@ import java.util.Arrays;
  * Created by mariotaku on 2017/4/17.
  */
 @JsonObject
-public class Results {
+public class Results implements LinkHeaderResponse {
     /**
-     * An array of matched {@link Account}
+     * A list of matched {@link Account}
      */
     @JsonField(name = "accounts")
-    Account[] accounts;
+    List<Account> accounts;
     /**
-     * An array of matched {@link Status}
+     * A list of matched {@link Status}
      */
     @JsonField(name = "statuses")
-    Status[] statuses;
+    List<Status> statuses;
     /**
-     * An array of matched hashtags, as strings
+     * A list of matched hashtags, as strings
      */
     @JsonField(name = "hashtags")
-    String[] hashtags;
+    List<String> hashtags;
 
-    public Account[] getAccounts() {
+    @Nullable
+    private Map<String, String> linkParts;
+
+    public List<Account> getAccounts() {
         return accounts;
     }
 
-    public Status[] getStatuses() {
+    public List<Status> getStatuses() {
         return statuses;
     }
 
-    public String[] getHashtags() {
+    public List<String> getHashtags() {
         return hashtags;
+    }
+
+    @Override
+    public final void processResponseHeader(@NonNull HttpResponse resp) {
+        linkParts = Parser.parse(resp);
+    }
+
+    @Nullable
+    @Override
+    public String getLinkPart(String key) {
+        if (linkParts == null) return null;
+        return linkParts.get(key);
     }
 
     @Override
     public String toString() {
         return "Results{" +
-                "accounts=" + Arrays.toString(accounts) +
-                ", statuses=" + Arrays.toString(statuses) +
-                ", hashtags=" + Arrays.toString(hashtags) +
+                "accounts=" + accounts +
+                ", statuses=" + statuses +
+                ", hashtags=" + hashtags +
                 '}';
     }
 }

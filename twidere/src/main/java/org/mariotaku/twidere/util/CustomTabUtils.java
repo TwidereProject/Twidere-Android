@@ -125,7 +125,8 @@ public class CustomTabUtils implements Constants {
             case CustomTabType.NOTIFICATIONS_TIMELINE:
             case CustomTabType.DIRECT_MESSAGES:
             case CustomTabType.TRENDS_SUGGESTIONS:
-            case CustomTabType.PUBLIC_TIMELINE: {
+            case CustomTabType.PUBLIC_TIMELINE:
+            case CustomTabType.NETWORK_PUBLIC_TIMELINE: {
                 return new TabArguments();
             }
             case CustomTabType.USER_TIMELINE:

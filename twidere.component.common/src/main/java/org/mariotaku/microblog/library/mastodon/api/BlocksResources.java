@@ -18,6 +18,7 @@
 
 package org.mariotaku.microblog.library.mastodon.api;
 
+import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.mastodon.model.Account;
 import org.mariotaku.microblog.library.mastodon.model.LinkHeaderList;
 import org.mariotaku.microblog.library.twitter.model.Paging;
@@ -30,5 +31,5 @@ import org.mariotaku.restfu.annotation.param.Query;
 
 public interface BlocksResources {
     @GET("/v1/blocks")
-    LinkHeaderList<Account> getBlocks(@Query Paging paging);
+    LinkHeaderList<Account> getBlocks(@Query Paging paging) throws MicroBlogException;
 }
