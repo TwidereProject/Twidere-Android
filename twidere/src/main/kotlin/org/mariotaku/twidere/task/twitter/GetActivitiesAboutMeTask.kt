@@ -64,13 +64,20 @@ class GetActivitiesAboutMeTask(context: Context) : GetActivitiesTask(context) {
                     it.toParcelable(account)
                 }
             }
-            AccountType.FANFOU -> {
+            AccountType.TWITTER -> {
                 val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
                 if (account.isOfficial(context)) {
                     return microBlog.getActivitiesAboutMe(paging).map {
                         it.toParcelable(account, profileImageSize = profileImageSize)
                     }
                 }
+                return microBlog.getMentionsTimeline(paging).map {
+                    InternalActivityCreator.status(it, account.key.id).toParcelable(account,
+                            profileImageSize = profileImageSize)
+                }
+            }
+            AccountType.FANFOU -> {
+                val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
                 return microBlog.getMentions(paging).map {
                     InternalActivityCreator.status(it, account.key.id).toParcelable(account,
                             profileImageSize = profileImageSize)
@@ -78,7 +85,7 @@ class GetActivitiesAboutMeTask(context: Context) : GetActivitiesTask(context) {
             }
             else -> {
                 val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
-                return microBlog.getHomeTimeline(paging).map {
+                return microBlog.getMentionsTimeline(paging).map {
                     InternalActivityCreator.status(it, account.key.id).toParcelable(account,
                             profileImageSize = profileImageSize)
                 }
