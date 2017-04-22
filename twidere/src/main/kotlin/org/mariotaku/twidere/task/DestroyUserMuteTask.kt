@@ -28,7 +28,7 @@ class DestroyUserMuteTask(context: Context) : AbsFriendshipOperationTask(context
         when (details.type) {
             AccountType.TWITTER -> {
                 val twitter = details.newMicroBlogInstance(context, MicroBlog::class.java)
-                return twitter.destroyMute(args.accountKey.id).toParcelable(details,
+                return twitter.destroyMute(args.userKey.id).toParcelable(details,
                         profileImageSize = profileImageSize)
             }
             AccountType.MASTODON -> {

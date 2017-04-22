@@ -32,12 +32,12 @@ class DestroyUserBlockTask(context: Context) : AbsFriendshipOperationTask(contex
             }
             AccountType.FANFOU -> {
                 val fanfou = details.newMicroBlogInstance(context, MicroBlog::class.java)
-                return fanfou.destroyFanfouBlock(args.accountKey.id).toParcelable(details,
+                return fanfou.destroyFanfouBlock(args.userKey.id).toParcelable(details,
                         profileImageSize = profileImageSize)
             }
             else -> {
                 val twitter = details.newMicroBlogInstance(context, MicroBlog::class.java)
-                return twitter.destroyBlock(args.accountKey.id).toParcelable(details,
+                return twitter.destroyBlock(args.userKey.id).toParcelable(details,
                         profileImageSize = profileImageSize)
             }
         }

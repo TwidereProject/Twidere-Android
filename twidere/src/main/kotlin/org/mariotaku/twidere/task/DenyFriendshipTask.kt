@@ -36,7 +36,7 @@ class DenyFriendshipTask(context: Context) : AbsFriendshipOperationTask(context,
             }
             else -> {
                 val twitter = details.newMicroBlogInstance(context, MicroBlog::class.java)
-                return twitter.denyFriendship(args.accountKey.id).toParcelable(details,
+                return twitter.denyFriendship(args.userKey.id).toParcelable(details,
                         profileImageSize = profileImageSize)
             }
         }

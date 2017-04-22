@@ -39,12 +39,12 @@ open class CreateUserBlockTask(
             }
             AccountType.FANFOU -> {
                 val fanfou = details.newMicroBlogInstance(context, MicroBlog::class.java)
-                return fanfou.createFanfouBlock(args.accountKey.id).toParcelable(details,
+                return fanfou.createFanfouBlock(args.userKey.id).toParcelable(details,
                         profileImageSize = profileImageSize)
             }
             else -> {
                 val twitter = details.newMicroBlogInstance(context, MicroBlog::class.java)
-                return twitter.createBlock(args.accountKey.id).toParcelable(details,
+                return twitter.createBlock(args.userKey.id).toParcelable(details,
                         profileImageSize = profileImageSize)
             }
         }

@@ -23,7 +23,7 @@ class ReportSpamAndBlockTask(context: Context) : CreateUserBlockTask(context) {
             }
             else -> {
                 val twitter = details.newMicroBlogInstance(context, MicroBlog::class.java)
-                return twitter.reportSpam(args.accountKey.id).toParcelable(details,
+                return twitter.reportSpam(args.userKey.id).toParcelable(details,
                         profileImageSize = profileImageSize)
             }
         }

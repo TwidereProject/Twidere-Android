@@ -34,7 +34,7 @@ class CreateUserMuteTask(
         when (details.type) {
             AccountType.TWITTER -> {
                 val twitter = details.newMicroBlogInstance(context, MicroBlog::class.java)
-                return twitter.createMute(args.accountKey.id).toParcelable(details,
+                return twitter.createMute(args.userKey.id).toParcelable(details,
                         profileImageSize = profileImageSize)
             }
             AccountType.MASTODON -> {

@@ -9,7 +9,6 @@ import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.nameFirstKey
-import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
@@ -44,7 +43,7 @@ class CreateFriendshipTask(context: Context) : AbsFriendshipOperationTask(contex
             }
             else -> {
                 val twitter = details.newMicroBlogInstance(context, MicroBlog::class.java)
-                return twitter.createFriendship(args.accountKey.id).toParcelable(details,
+                return twitter.createFriendship(args.userKey.id).toParcelable(details,
                         profileImageSize = profileImageSize)
             }
         }
