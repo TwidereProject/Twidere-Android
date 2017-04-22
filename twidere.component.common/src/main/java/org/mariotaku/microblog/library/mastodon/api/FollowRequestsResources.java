@@ -18,10 +18,14 @@
 
 package org.mariotaku.microblog.library.mastodon.api;
 
+import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.mastodon.model.Account;
 import org.mariotaku.microblog.library.mastodon.model.LinkHeaderList;
 import org.mariotaku.microblog.library.twitter.model.Paging;
+import org.mariotaku.microblog.library.twitter.model.ResponseCode;
 import org.mariotaku.restfu.annotation.method.GET;
+import org.mariotaku.restfu.annotation.method.POST;
+import org.mariotaku.restfu.annotation.param.Path;
 import org.mariotaku.restfu.annotation.param.Query;
 
 /**
@@ -29,5 +33,12 @@ import org.mariotaku.restfu.annotation.param.Query;
  */
 public interface FollowRequestsResources {
     @GET("/v1/follow_requests")
-    LinkHeaderList<Account> getFollowRequests(@Query Paging paging);
+    LinkHeaderList<Account> getFollowRequests(@Query Paging paging) throws MicroBlogException;
+
+    @POST("/v1/follow_requests/{id}/authorize")
+    ResponseCode authorizeFollowRequest(@Path("id") String id) throws MicroBlogException;
+
+    @POST("/v1/follow_requests/{id}/reject")
+    ResponseCode rejectFollowRequest(@Path("id") String id) throws MicroBlogException;
+
 }

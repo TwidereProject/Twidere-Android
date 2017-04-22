@@ -91,6 +91,7 @@ import org.mariotaku.ktextension.*
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.twitter.model.FriendshipUpdate
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.UserList
@@ -108,13 +109,10 @@ import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.extension.*
+import org.mariotaku.twidere.extension.model.*
+import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
-import org.mariotaku.twidere.extension.model.applyTo
-import org.mariotaku.twidere.extension.model.getBestProfileBanner
-import org.mariotaku.twidere.extension.model.originalProfileImage
-import org.mariotaku.twidere.extension.model.urlPreferred
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.StatusesFragmentDelegate
-import org.mariotaku.twidere.fragment.statuses.UserTimelineFragment.UserTimelineFragmentDelegate
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback
 import org.mariotaku.twidere.fragment.iface.IToolBarSupportFragment
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
@@ -122,6 +120,7 @@ import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
 import org.mariotaku.twidere.fragment.statuses.UserFavoritesFragment
 import org.mariotaku.twidere.fragment.statuses.UserMediaTimelineFragment
 import org.mariotaku.twidere.fragment.statuses.UserTimelineFragment
+import org.mariotaku.twidere.fragment.statuses.UserTimelineFragment.UserTimelineFragmentDelegate
 import org.mariotaku.twidere.graphic.ActionBarColorDrawable
 import org.mariotaku.twidere.graphic.ActionIconDrawable
 import org.mariotaku.twidere.loader.ParcelableUserLoader
@@ -130,7 +129,10 @@ import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 import org.mariotaku.twidere.model.event.FriendshipUpdatedEvent
 import org.mariotaku.twidere.model.event.ProfileUpdatedEvent
 import org.mariotaku.twidere.model.event.TaskStateChangedEvent
-import org.mariotaku.twidere.model.util.*
+import org.mariotaku.twidere.model.util.AccountUtils
+import org.mariotaku.twidere.model.util.ParcelableMediaUtils
+import org.mariotaku.twidere.model.util.ParcelableRelationshipUtils
+import org.mariotaku.twidere.model.util.UserKeyUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
 import org.mariotaku.twidere.text.TwidereURLSpan
@@ -1671,37 +1673,47 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
         override fun loadInBackground(): SingleResponse<ParcelableRelationship> {
             if (accountKey == null || user == null) {
-                return SingleResponse.Companion.getInstance<ParcelableRelationship>(MicroBlogException("Null parameters"))
+                return SingleResponse(MicroBlogException("Null parameters"))
             }
             val userKey = user.key
             val isFiltering = DataStoreUtils.isFilteringUser(context, userKey)
             if (accountKey == user.key) {
-                return SingleResponse.getInstance(ParcelableRelationshipUtils.create(accountKey, userKey,
+                return SingleResponse(ParcelableRelationshipUtils.create(accountKey, userKey,
                         null, isFiltering))
             }
             val details = AccountUtils.getAccountDetails(AccountManager.get(context),
-                    accountKey, true) ?: return SingleResponse.getInstance<ParcelableRelationship>(MicroBlogException("No Account"))
+                    accountKey, true) ?: return SingleResponse(MicroBlogException("No Account"))
             if (details.type == AccountType.TWITTER) {
                 if (!UserKeyUtils.isSameHost(accountKey, user.key)) {
                     return SingleResponse.getInstance(ParcelableRelationshipUtils.create(user, isFiltering))
                 }
             }
-            val twitter = MicroBlogAPIFactory.getInstance(context, accountKey) ?: return SingleResponse.Companion.getInstance<ParcelableRelationship>(MicroBlogException("No Account"))
             try {
-                val relationship = twitter.showFriendship(user.key.id)
-                if (relationship.isSourceBlockingTarget || relationship.isSourceBlockedByTarget) {
+                val data = when (details.type) {
+                    AccountType.MASTODON -> {
+                        val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
+                        mastodon.getRelationships(arrayOf(userKey.id))?.firstOrNull()
+                                ?.toParcelable(accountKey, userKey, isFiltering)
+                                ?: throw MicroBlogException("No relationship")
+                    }
+                    else -> {
+                        val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
+                        microBlog.showFriendship(user.key.id).toParcelable(accountKey, userKey,
+                                isFiltering)
+                    }
+                }
+
+                if (data.blocking || data.blocked_by) {
                     Utils.setLastSeen(context, userKey, -1)
                 } else {
                     Utils.setLastSeen(context, userKey, System.currentTimeMillis())
                 }
-                val data = ParcelableRelationshipUtils.create(accountKey, userKey, relationship,
-                        isFiltering)
                 val resolver = context.contentResolver
                 val values = ObjectCursor.valuesCreatorFrom(ParcelableRelationship::class.java).create(data)
                 resolver.insert(CachedRelationships.CONTENT_URI, values)
-                return SingleResponse.getInstance(data)
+                return SingleResponse(data)
             } catch (e: MicroBlogException) {
-                return SingleResponse.Companion.getInstance<ParcelableRelationship>(e)
+                return SingleResponse(e)
             }
 
         }

@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.fragment
 
+import android.accounts.AccountManager
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.LoaderManager.LoaderCallbacks
@@ -38,9 +39,11 @@ import org.mariotaku.twidere.adapter.decorator.ExtendedDividerItemDecoration
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.UserClickListener
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.newDocumentApiKey
+import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.loader.iface.IPaginationLoader
 import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
@@ -49,6 +52,7 @@ import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 import org.mariotaku.twidere.model.pagination.Pagination
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
@@ -172,7 +176,18 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         val adapter = ParcelableUsersAdapter(context, Glide.with(this))
         adapter.simpleLayout = simpleLayout
         adapter.showFollow = showFollow
-        adapter.friendshipClickListener = this
+        val accountType = arguments.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)?.let { key ->
+            val am = AccountManager.get(context)
+            return@let AccountUtils.findByAccountKey(am, key)?.getAccountType(am)
+        }
+        when (accountType) {
+            AccountType.TWITTER, AccountType.FANFOU, AccountType.STATUSNET -> {
+                adapter.friendshipClickListener = this
+            }
+            else -> {
+                adapter.friendshipClickListener = null
+            }
+        }
         return adapter
     }
 

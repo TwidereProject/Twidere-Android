@@ -81,7 +81,8 @@ public interface AccountsResources {
     Relationship unmuteUser(@Path("id") String id) throws MicroBlogException;
 
     @GET("/v1/accounts/relationships")
-    LinkHeaderList<Relationship> getRelationships(@Path("id") String id) throws MicroBlogException;
+    LinkHeaderList<Relationship> getRelationships(@Query(value = "id", arrayDelimiter = ',')
+            String[] id) throws MicroBlogException;
 
     @GET("/v1/accounts/search")
     LinkHeaderList<Account> searchAccounts(@Query("q") String query, @Nullable @Query Paging paging) throws MicroBlogException;

@@ -4,10 +4,13 @@ import android.content.Context
 import android.widget.Toast
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.twitter.model.User
+import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.nameFirstKey
+import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
+import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
@@ -19,16 +22,30 @@ import org.mariotaku.twidere.util.Utils
 class AcceptFriendshipTask(context: Context) : AbsFriendshipOperationTask(context, FriendshipTaskEvent.Action.ACCEPT) {
 
     @Throws(MicroBlogException::class)
-    override fun perform(twitter: MicroBlog, details: AccountDetails, args: AbsFriendshipOperationTask.Arguments): User {
+    override fun perform(details: AccountDetails, args: Arguments): ParcelableUser {
         when (details.type) {
             AccountType.FANFOU -> {
-                return twitter.acceptFanfouFriendship(args.userKey.id)
+                val fanfou = details.newMicroBlogInstance(context, MicroBlog::class.java)
+                return fanfou.acceptFanfouFriendship(args.userKey.id).toParcelable(details,
+                        profileImageSize = profileImageSize)
+            }
+            AccountType.MASTODON -> {
+                val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
+                if (details.key.host != args.userKey.host) {
+                    throw MicroBlogException("Authorize remote follow request is not supported yet")
+                }
+                mastodon.authorizeFollowRequest(args.userKey.id)
+                return mastodon.getAccount(args.userKey.id).toParcelable(details)
+            }
+            else -> {
+                val twitter = details.newMicroBlogInstance(context, MicroBlog::class.java)
+                return twitter.acceptFriendship(args.accountKey.id).toParcelable(details,
+                        profileImageSize = profileImageSize)
             }
         }
-        return twitter.acceptFriendship(args.userKey.id)
     }
 
-    override fun succeededWorker(twitter: MicroBlog, details: AccountDetails, args: AbsFriendshipOperationTask.Arguments, user: ParcelableUser) {
+    override fun succeededWorker(details: AccountDetails, args: Arguments, user: ParcelableUser) {
         Utils.setLastSeen(context, user.key, System.currentTimeMillis())
     }
 

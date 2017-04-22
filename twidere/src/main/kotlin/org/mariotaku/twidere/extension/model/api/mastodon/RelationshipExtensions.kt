@@ -17,5 +17,22 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.extension.model
+package org.mariotaku.twidere.extension.model.api.mastodon
 
+import org.mariotaku.microblog.library.mastodon.model.Relationship
+import org.mariotaku.twidere.model.ParcelableRelationship
+import org.mariotaku.twidere.model.UserKey
+
+
+fun Relationship.toParcelable(accountKey: UserKey, userKey: UserKey, filtering: Boolean = false):
+        ParcelableRelationship {
+    val obj = ParcelableRelationship()
+    obj.account_key = accountKey
+    obj.user_key = userKey
+    obj.following = isFollowing
+    obj.followed_by = isFollowedBy
+    obj.blocking = isBlocking
+    obj.muting = isMuting
+    obj.filtering = filtering
+    return obj
+}

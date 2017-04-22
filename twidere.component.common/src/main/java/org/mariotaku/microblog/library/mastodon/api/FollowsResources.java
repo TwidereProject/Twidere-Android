@@ -18,9 +18,22 @@
 
 package org.mariotaku.microblog.library.mastodon.api;
 
+import org.mariotaku.microblog.library.mastodon.model.Account;
+import org.mariotaku.restfu.annotation.method.POST;
+import org.mariotaku.restfu.annotation.param.Param;
+
 /**
  * Created by mariotaku on 2017/4/17.
  */
 
 public interface FollowsResources {
+
+    /**
+     * Following a remote user
+     *
+     * @param uri {@code username@domain} of the person you want to follow
+     * @return The local representation of the followed account, as an {@link Account}.
+     */
+    @POST("/v1/follows")
+    Account followRemoteUser(@Param("uri") String uri);
 }

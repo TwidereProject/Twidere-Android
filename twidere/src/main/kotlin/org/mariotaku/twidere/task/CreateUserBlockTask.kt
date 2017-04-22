@@ -5,12 +5,15 @@ import android.content.Context
 import android.widget.Toast
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.twitter.model.User
+import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.nameFirstKey
+import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
+import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
@@ -27,18 +30,30 @@ open class CreateUserBlockTask(
 ) : AbsFriendshipOperationTask(context, FriendshipTaskEvent.Action.BLOCK), Constants {
 
     @Throws(MicroBlogException::class)
-    override fun perform(twitter: MicroBlog, details: AccountDetails,
-            args: Arguments): User {
+    override fun perform(details: AccountDetails, args: Arguments): ParcelableUser {
         when (details.type) {
+            AccountType.MASTODON -> {
+                val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
+                if (details.key.host != args.userKey.host) {
+                    throw MicroBlogException("Block remote user is not supported yet")
+                }
+                mastodon.blockUser(args.userKey.id)
+                return mastodon.getAccount(args.userKey.id).toParcelable(details)
+            }
             AccountType.FANFOU -> {
-                return twitter.createFanfouBlock(args.userKey.id)
+                val fanfou = details.newMicroBlogInstance(context, MicroBlog::class.java)
+                return fanfou.createFanfouBlock(args.accountKey.id).toParcelable(details,
+                        profileImageSize = profileImageSize)
+            }
+            else -> {
+                val twitter = details.newMicroBlogInstance(context, MicroBlog::class.java)
+                return twitter.createBlock(args.accountKey.id).toParcelable(details,
+                        profileImageSize = profileImageSize)
             }
         }
-        return twitter.createBlock(args.userKey.id)
     }
 
-    override fun succeededWorker(twitter: MicroBlog, details: AccountDetails, args: Arguments,
-            user: ParcelableUser) {
+    override fun succeededWorker(details: AccountDetails, args: Arguments, user: ParcelableUser) {
         val resolver = context.contentResolver
         Utils.setLastSeen(context, args.userKey, -1)
         for (uri in DataStoreUtils.STATUSES_URIS) {
