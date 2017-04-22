@@ -24,34 +24,36 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Parcelable
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.Loader
-import android.text.Editable
 import android.text.TextUtils
 import android.text.TextUtils.isEmpty
-import android.text.TextWatcher
 import android.view.*
 import android.view.View.OnClickListener
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.twitter.Validator
 import kotlinx.android.synthetic.main.fragment_user_profile_editor.*
+import nl.komponents.kovenant.combine.and
+import nl.komponents.kovenant.ui.promiseOnUi
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.ktextension.dismissDialogFragment
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.mastodon.Mastodon
+import org.mariotaku.microblog.library.mastodon.model.AccountUpdate
 import org.mariotaku.microblog.library.twitter.model.ProfileUpdate
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity
 import org.mariotaku.twidere.activity.ThemedMediaPickerActivity
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.loadProfileBanner
 import org.mariotaku.twidere.extension.loadProfileImage
-import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.loader.ParcelableUserLoader
@@ -64,26 +66,17 @@ import org.mariotaku.twidere.task.*
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener
 
-class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWatcher,
+class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
         OnClickListener, LoaderCallbacks<SingleResponse<ParcelableUser>>,
         KeyboardShortcutsHandler.TakeAllKeyboardShortcut {
 
     private var currentTask: AbstractTask<*, *, UserProfileEditorFragment>? = null
     private val accountKey: UserKey
-        get() = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+        get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)
     private var user: ParcelableUser? = null
+    private var account: AccountDetails? = null
     private var userInfoLoaderInitialized: Boolean = false
     private var getUserInfoCalled: Boolean = false
-
-    override fun beforeTextChanged(s: CharSequence, length: Int, start: Int, end: Int) {
-    }
-
-    override fun onTextChanged(s: CharSequence, length: Int, start: Int, end: Int) {
-        updateDoneButton()
-    }
-
-    override fun afterTextChanged(s: Editable) {
-    }
 
     override fun onClick(view: View) {
         val user = user
@@ -137,10 +130,11 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
 
     override fun onLoadFinished(loader: Loader<SingleResponse<ParcelableUser>>,
             data: SingleResponse<ParcelableUser>) {
-        if (data.data != null && data.data.key != null) {
-            displayUser(data.data)
-        } else if (user == null) {
+        val user = data.data ?: this.user ?: run {
+            activity?.finish()
+            return
         }
+        displayUser(user, data.extras.getParcelable(EXTRA_ACCOUNT))
     }
 
     override fun onLoaderReset(loader: Loader<SingleResponse<ParcelableUser>>) {
@@ -180,10 +174,6 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
         }
 
         val lengthChecker = TwitterValidatorMETLengthChecker(Validator())
-        editName.addTextChangedListener(this)
-        editDescription.addTextChangedListener(this)
-        editLocation.addTextChangedListener(this)
-        editUrl.addTextChangedListener(this)
 
         editDescription.setLengthChecker(lengthChecker)
 
@@ -198,13 +188,15 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
         setLinkColor.setOnClickListener(this)
         setBackgroundColor.setOnClickListener(this)
 
-        if (savedInstanceState != null && savedInstanceState.getParcelable<Parcelable>(EXTRA_USER) != null) {
-            val user = savedInstanceState.getParcelable<ParcelableUser>(EXTRA_USER)!!
-            displayUser(user)
-            editName.setText(savedInstanceState.getString(EXTRA_NAME, user.name))
-            editLocation.setText(savedInstanceState.getString(EXTRA_LOCATION, user.location))
-            editDescription.setText(savedInstanceState.getString(EXTRA_DESCRIPTION, ParcelableUserUtils.getExpandedDescription(user)))
-            editUrl.setText(savedInstanceState.getString(EXTRA_URL, user.url_expanded))
+        val savedUser = savedInstanceState?.getParcelable<ParcelableUser?>(EXTRA_USER)
+        val savedAccount = savedInstanceState?.getParcelable<AccountDetails?>(EXTRA_ACCOUNT)
+        if (savedInstanceState != null && savedUser != null && savedAccount != null) {
+            displayUser(savedUser, savedAccount)
+            editName.setText(savedInstanceState.getString(EXTRA_NAME, savedUser.name))
+            editLocation.setText(savedInstanceState.getString(EXTRA_LOCATION, savedUser.location))
+            editDescription.setText(savedInstanceState.getString(EXTRA_DESCRIPTION,
+                    ParcelableUserUtils.getExpandedDescription(savedUser)))
+            editUrl.setText(savedInstanceState.getString(EXTRA_URL, savedUser.url_expanded))
         } else {
             getUserInfo()
         }
@@ -213,6 +205,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelable(EXTRA_USER, user)
+        outState.putParcelable(EXTRA_ACCOUNT, account)
         outState.putString(EXTRA_NAME, ParseUtils.parseString(editName.text))
         outState.putString(EXTRA_DESCRIPTION, ParseUtils.parseString(editDescription.text))
         outState.putString(EXTRA_LOCATION, ParseUtils.parseString(editLocation.text))
@@ -254,13 +247,11 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
             REQUEST_PICK_LINK_COLOR -> {
                 if (resultCode == Activity.RESULT_OK) {
                     linkColor.color = data.getIntExtra(EXTRA_COLOR, 0)
-                    updateDoneButton()
                 }
             }
             REQUEST_PICK_BACKGROUND_COLOR -> {
                 if (resultCode == Activity.RESULT_OK) {
                     backgroundColor.color = data.getIntExtra(EXTRA_COLOR, 0)
-                    updateDoneButton()
                 }
             }
         }
@@ -272,11 +263,12 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
         }
     }
 
-    private fun displayUser(user: ParcelableUser?) {
+    private fun displayUser(user: ParcelableUser?, account: AccountDetails?) {
         if (!getUserInfoCalled) return
         getUserInfoCalled = false
         this.user = user
-        if (user != null) {
+        this.account = account
+        if (user != null && account != null) {
             progressContainer.visibility = View.GONE
             editProfileContent.visibility = View.VISIBLE
             editName.setText(user.name)
@@ -290,18 +282,44 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
 
             linkColor.color = user.link_color
             backgroundColor.color = user.background_color
-            if (USER_TYPE_TWITTER_COM == user.key.host) {
-                editProfileBanner.visibility = View.VISIBLE
-                editProfileBackground.visibility = View.GONE
-            } else {
-                editProfileBanner.visibility = View.GONE
-                editProfileBackground.visibility = View.VISIBLE
+
+            var canEditUrl = false
+            var canEditLocation = false
+            var canEditBanner = false
+            var canEditBackground = false
+            var canEditLinkColor = false
+            var canEditBackgroundColor = false
+
+            when (account.type) {
+                AccountType.TWITTER -> {
+                    canEditUrl = true
+                    canEditLocation = true
+                    canEditBanner = true
+                    canEditBackground = true
+                    canEditLinkColor = true
+                    canEditBackgroundColor = true
+                }
+                AccountType.MASTODON -> {
+                    canEditBanner = true
+                }
+                AccountType.FANFOU -> {
+                    canEditUrl = true
+                    canEditLocation = true
+                    canEditBackground = true
+                    canEditLinkColor = true
+                    canEditBackgroundColor = true
+                }
             }
+            editProfileBanner.visibility = if (canEditBanner) View.VISIBLE else View.GONE
+            editProfileBackground.visibility = if (canEditBackground) View.VISIBLE else View.GONE
+            editUrl.visibility = if (canEditUrl) View.VISIBLE else View.GONE
+            editLocation.visibility = if (canEditLocation) View.VISIBLE else View.GONE
+            setLinkColor.visibility = if (canEditLinkColor) View.VISIBLE else View.GONE
+            setBackgroundColor.visibility = if (canEditBackgroundColor) View.VISIBLE else View.GONE
         } else {
             progressContainer.visibility = View.GONE
             editProfileContent.visibility = View.GONE
         }
-        updateDoneButton()
     }
 
     private fun getUserInfo() {
@@ -340,10 +358,6 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
         }
     }
 
-    private fun updateDoneButton() {
-
-    }
-
     internal class UpdateProfileTaskInternal(
             fragment: UserProfileEditorFragment,
             accountKey: UserKey,
@@ -362,11 +376,42 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
         }
 
         override fun onExecute(account: AccountDetails, params: Any?): Pair<ParcelableUser, AccountDetails> {
-            val microBlog = account.newMicroBlogInstance(context = context, cls = MicroBlog::class.java)
             val orig = this.original
             if (orig != null && !orig.isProfileChanged()) {
                 return Pair(orig, account)
             }
+            return Pair(when (account.type) {
+                AccountType.MASTODON -> updateMastodonProfile(account)
+                else -> updateMicroBlogProfile(account)
+            }, account)
+        }
+
+
+        override fun onSucceed(callback: UserProfileEditorFragment?, result: Pair<ParcelableUser, AccountDetails>) {
+            if (callback == null) return
+            promiseOnUi {
+                val context = this.callback?.context ?: return@promiseOnUi
+                val (user, account) = result
+                val task = UpdateAccountInfoTask(context)
+                task.params = Pair(account, user)
+                TaskStarter.execute(task)
+            } and callback.executeAfterFragmentResumed { fragment ->
+                fragment.childFragmentManager.dismissDialogFragment(DIALOG_FRAGMENT_TAG)
+                fragment.activity.finish()
+            }
+
+        }
+
+        override fun beforeExecute() {
+            super.beforeExecute()
+            callback?.executeAfterFragmentResumed { fragment ->
+                val df = ProgressDialogFragment.show(fragment.childFragmentManager, DIALOG_FRAGMENT_TAG)
+                df.isCancelable = false
+            }
+        }
+
+        private fun updateMicroBlogProfile(account: AccountDetails): ParcelableUser {
+            val microBlog = account.newMicroBlogInstance(context = context, cls = MicroBlog::class.java)
             val profileUpdate = ProfileUpdate()
             profileUpdate.name(HtmlEscapeHelper.escapeBasic(name))
             profileUpdate.location(HtmlEscapeHelper.escapeBasic(location))
@@ -374,10 +419,17 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
             profileUpdate.url(url)
             profileUpdate.linkColor(linkColor)
             profileUpdate.backgroundColor(backgroundColor)
-            val user = microBlog.updateProfile(profileUpdate)
             val profileImageSize = context.getString(R.string.profile_image_size)
-            return Pair(user.toParcelable(account, profileImageSize = profileImageSize), account)
+            return microBlog.updateProfile(profileUpdate).toParcelable(account,
+                    profileImageSize = profileImageSize)
+        }
 
+        private fun updateMastodonProfile(account: AccountDetails): ParcelableUser {
+            val mastodon = account.newMicroBlogInstance(context = context, cls = Mastodon::class.java)
+            val accountUpdate = AccountUpdate()
+            accountUpdate.displayName(name)
+            accountUpdate.note(HtmlEscapeHelper.escapeBasic(description))
+            return mastodon.updateCredentials(accountUpdate).toParcelable(account)
         }
 
         private fun ParcelableUser.isProfileChanged(): Boolean {
@@ -390,33 +442,6 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
             if (!TextUtils.equals(this@UpdateProfileTaskInternal.url, if (isEmpty(url_expanded)) url else url_expanded))
                 return true
             return false
-        }
-
-        override fun afterExecute(callback: UserProfileEditorFragment?,
-                result: Pair<ParcelableUser, AccountDetails>?, exception: MicroBlogException?) {
-            super.afterExecute(callback, result, exception)
-
-            callback?.executeAfterFragmentResumed { fragment ->
-                fragment.childFragmentManager.dismissDialogFragment(DIALOG_FRAGMENT_TAG)
-                fragment.activity.finish()
-            }
-        }
-
-        override fun beforeExecute() {
-            super.beforeExecute()
-            callback?.executeAfterFragmentResumed { fragment ->
-                val df = ProgressDialogFragment.show(fragment.childFragmentManager, DIALOG_FRAGMENT_TAG)
-                df.isCancelable = false
-            }
-        }
-
-        override fun onSucceed(callback: UserProfileEditorFragment?, result: Pair<ParcelableUser, AccountDetails>) {
-            if (callback == null) return
-            val activity = callback.activity ?: return
-            val (user, account) = result
-            val task = UpdateAccountInfoTask(activity)
-            task.params = Pair(account, user)
-            TaskStarter.execute(task)
         }
 
         companion object {
@@ -511,10 +536,8 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
 
         override fun afterExecute(callback: UserProfileEditorFragment?, result: ParcelableUser?, exception: MicroBlogException?) {
             super.afterExecute(callback, result, exception)
-            if (result != null) {
-                callback?.displayUser(result)
-            }
             callback?.setUpdateState(false)
+            callback?.getUserInfo()
         }
 
         override fun beforeExecute() {

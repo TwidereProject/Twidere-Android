@@ -29,8 +29,7 @@ class UpdateAccountInfoTask(
 
     override fun doLongOperation(params: Pair<AccountDetails, ParcelableUser>) {
         val resolver = context.contentResolver
-        val details = params.first
-        val user = params.second
+        val (details, user) = params
         if (user.is_cache) {
             return
         }

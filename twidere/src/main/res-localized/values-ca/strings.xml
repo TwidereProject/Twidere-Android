@@ -169,7 +169,7 @@
   <string name="count_label_retweets">Repiulades</string>
   <string name="created_by">Creat per <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">Heu creat la llista «<xliff:g id="list">%s</xliff:g>».</string>
-  <string name="crop_image">Retallar imatge</string>
+  <string name="title_crop_image">Retallar imatge</string>
   <string name="current_status">Piulada actual</string>
   <string name="custom_host_mapping">Associacions de servidors personalitzades</string>
   <string name="custom_host_mapping_summary">Associa servidors com el fitxer /etc/hosts sense requerir permisos addicionals.</string>

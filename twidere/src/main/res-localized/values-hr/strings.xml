@@ -150,7 +150,7 @@
   <string name="count_label_retweets">Retweetovi</string>
   <string name="created_by">Stvorio <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">Stvorena lista \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="crop_image">Obreži sliku</string>
+  <string name="title_crop_image">Obreži sliku</string>
   <string name="custom_host_mapping">Mapiranje prilagođenog domaćina</string>
   <string name="custom_host_mapping_summary">Mapiranje domaćina poput /npr/domaćini, ali ne zahtijeva dodatna dopuštenja.</string>
   <string name="dark_theme">Tamna tema</string>

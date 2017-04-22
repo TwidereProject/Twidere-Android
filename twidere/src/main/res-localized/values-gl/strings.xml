@@ -255,7 +255,7 @@
   <string name="count_label_retweets">Rechouchíos</string>
   <string name="created_by">Creado por <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">Creada a lista \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="crop_image">Recortar imaxe</string>
+  <string name="title_crop_image">Recortar imaxe</string>
   <string name="current_status">Chío actual</string>
   <string name="custom_host_mapping">Personalizar host mapping</string>
   <string name="custom_host_mapping_summary">Host mapping coma /etc/hosts, pero non require ningún permiso adicional.</string>

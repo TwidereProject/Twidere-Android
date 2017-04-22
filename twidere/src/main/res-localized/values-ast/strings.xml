@@ -254,7 +254,7 @@
   <string name="count_label_retweets">Retuits</string>
   <string name="created_by">Creáu por <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">Creóse\'l llistáu «<xliff:g id="list">%s</xliff:g>».</string>
-  <string name="crop_image">Retayar imaxe</string>
+  <string name="title_crop_image">Retayar imaxe</string>
   <string name="current_status">Tuit actual</string>
   <string name="custom_host_mapping">Mapeáu d\'agospiu personalizáu</string>
   <string name="custom_host_mapping_summary">Mapeáu d\'agospiu como /etc/hosts, pero nun rique permisu adicional dalu.</string>

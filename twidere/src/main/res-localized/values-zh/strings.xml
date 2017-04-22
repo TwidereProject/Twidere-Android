@@ -255,7 +255,7 @@
   <string name="count_label_retweets">轉推</string>
   <string name="created_by">由<xliff:g id="created_by">%s</xliff:g>創建</string>
   <string name="created_list">建立了列表 \"<xliff:g id="list">%s</xliff:g>\"</string>
-  <string name="crop_image">裁剪圖片</string>
+  <string name="title_crop_image">裁剪圖片</string>
   <string name="current_status">當前推文</string>
   <string name="custom_host_mapping">自訂主機對應</string>
   <string name="custom_host_mapping_summary">如同/etc/hosts的主機對應，但不需要任何額外的權限</string>

@@ -255,7 +255,7 @@
   <string name="count_label_retweets">Retweets</string>
   <string name="created_by">Creado por <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">La lista \"<xliff:g id="list">%s</xliff:g>\" ha sido creada.</string>
-  <string name="crop_image">Cortar imagen</string>
+  <string name="title_crop_image">Cortar imagen</string>
   <string name="current_status">Tweet actual</string>
   <string name="custom_host_mapping">Asignación de host personalizado</string>
   <string name="custom_host_mapping_summary">Funciona como \"/etc/hosts\", pero no requiere permisos adicionales.</string>

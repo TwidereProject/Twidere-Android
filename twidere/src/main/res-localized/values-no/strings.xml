@@ -160,7 +160,7 @@
   <string name="count_label_retweets">Retweets</string>
   <string name="created_by">Opprettet av <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">Opprettet listen «<xliff:g id="list">%s</xliff:g>».</string>
-  <string name="crop_image">Beskjær bilde</string>
+  <string name="title_crop_image">Beskjær bilde</string>
   <string name="current_status">Gjeldende tweet</string>
   <string name="custom_host_mapping">Tilpasset vertskobling</string>
   <string name="custom_host_mapping_summary">Vertskobling som /etc/hosts, men krever ingen ekstra tillatelser.</string>

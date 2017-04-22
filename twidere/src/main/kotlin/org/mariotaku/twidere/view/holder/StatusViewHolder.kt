@@ -355,7 +355,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             mediaPreview.visibility = View.GONE
         }
 
-
         summaryView.text = status.extras?.summary_text
         summaryView.hideIfEmpty()
 

@@ -183,7 +183,7 @@
   <string name="count_label_retweets">Retweet</string>
   <string name="created_by">Létrehozta: <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">\"<xliff:g id="list">%s</xliff:g>\" lista létrehozva.</string>
-  <string name="crop_image">Kép vágása</string>
+  <string name="title_crop_image">Kép vágása</string>
   <string name="current_status">Jelenlegi tweet</string>
   <string name="custom_host_mapping">Egyedi host hozzárendelés</string>
   <string name="custom_host_mapping_summary">Host hozzárendelés, mint a /etc/hosts, de nem kell hozzá plusz jog.</string>

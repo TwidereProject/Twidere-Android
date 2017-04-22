@@ -255,7 +255,7 @@
   <string name="count_label_retweets">รีทวีต</string>
   <string name="created_by">สร้างโดย <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">สร้างลิสต์ \"<xliff:g id="list">%s</xliff:g>\" แล้ว</string>
-  <string name="crop_image">ตัดรูปภาพ</string>
+  <string name="title_crop_image">ตัดรูปภาพ</string>
   <string name="current_status">ทวีตปัจจุบัน</string>
   <string name="custom_host_mapping">กำหนดที่อยู่ host เอง</string>
   <string name="custom_host_mapping_summary">กำหนดที่อยู่ host เอง (เหมือนในไฟล์ /etc/hosts) ซึ่งการกระทำนี้ไม่ต้องการสิทธิ์ใดๆ เพิ่มเติม</string>

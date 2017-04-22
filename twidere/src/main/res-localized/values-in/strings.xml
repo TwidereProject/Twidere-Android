@@ -183,7 +183,7 @@
   <string name="count_label_retweets">Retweets</string>
   <string name="created_by">Dibuat oleh <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">Membuat daftar \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="crop_image">Potong gambar</string>
+  <string name="title_crop_image">Potong gambar</string>
   <string name="current_status">Twit sekarang</string>
   <string name="custom_host_mapping">Kustom host mapping</string>
   <string name="custom_host_mapping_summary">Host pemetaan sperti /etc/hosts, tanpa butuh permisi tambahan.</string>

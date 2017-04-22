@@ -171,7 +171,7 @@
   <string name="count_label_retweets">Retweetler</string>
   <string name="created_by"><xliff:g id="created_by">%s</xliff:g> tarafından oluşturuldu</string>
   <string name="created_list"><xliff:g id="list">%s</xliff:g> listesi oluşturuldu.</string>
-  <string name="crop_image">Görüntüyü kırp</string>
+  <string name="title_crop_image">Görüntüyü kırp</string>
   <string name="current_status">Güncel tweet</string>
   <string name="custom_host_mapping">Özel sunucu haritalama</string>
   <string name="custom_host_mapping_summary">/etc/hosts şeklinde sunucu haritalama, ancak ekstra izin gerektirmez.</string>

@@ -189,7 +189,7 @@
   <string name="count_label_retweets">Ретвиты</string>
   <string name="created_by">Создано пользователем <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">Созданный список \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="crop_image">Обрезать изображение</string>
+  <string name="title_crop_image">Обрезать изображение</string>
   <string name="current_status">Текущий твит</string>
   <string name="custom_host_mapping">Перенаправление узлов</string>
   <string name="custom_host_mapping_summary">Перенаправление узлов, как с помощью /etc/hosts, но не требующее дополнительных разрешений.</string>

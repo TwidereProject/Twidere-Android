@@ -528,8 +528,8 @@
             android:theme="@style/Theme.Twidere"/>
         <activity
             android:name=".activity.ImageCropperActivity"
-            android:label="@string/crop_image"
-            android:theme="@style/Theme.Twidere.NoActionBar"
+            android:label="@string/title_crop_image"
+            android:theme="@style/Theme.Twidere"
             android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activity.IncompatibleAlertActivity"

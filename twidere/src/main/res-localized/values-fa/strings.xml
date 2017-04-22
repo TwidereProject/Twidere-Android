@@ -203,7 +203,7 @@
   <string name="count_label_retweets">بازتوییت‌ها</string>
   <string name="created_by">ایجاد شده توسّط <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">فهرست «<xliff:g id="list">%s</xliff:g>» را ساخت.</string>
-  <string name="crop_image">بریدن تصویر</string>
+  <string name="title_crop_image">بریدن تصویر</string>
   <string name="current_status">توییت جاری</string>
   <string name="custom_host_mapping">مسیردهی میزبان سفارشی</string>
   <string name="custom_host_mapping_summary">مسیردهی میزبان مانند etc/hosts/، اما بدون نیاز به هرگونه دسترسی اضافی.</string>

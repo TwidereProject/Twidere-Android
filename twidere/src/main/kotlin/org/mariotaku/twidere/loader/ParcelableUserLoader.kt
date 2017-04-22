@@ -89,7 +89,7 @@ class ParcelableUserLoader(
             return@firstOrNull false
         } ?: return SingleResponse()
         if (!omitIntentExtra && extras != null) {
-            val user = extras.getParcelable<ParcelableUser>(EXTRA_USER)
+            val user = extras.getParcelable<ParcelableUser?>(EXTRA_USER)
             if (user != null) {
                 val values = ObjectCursor.valuesCreatorFrom(ParcelableUser::class.java).create(user)
                 resolver.insert(CachedUsers.CONTENT_URI, values)

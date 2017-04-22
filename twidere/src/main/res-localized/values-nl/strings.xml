@@ -168,7 +168,7 @@
   <string name="count_label_retweets">Retweets</string>
   <string name="created_by">Gemaakt door <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">\'\'<xliff:g id="list">%s</xliff:g>\'\' lijst aangemaakt.</string>
-  <string name="crop_image">Afbeelding bijsnijden</string>
+  <string name="title_crop_image">Afbeelding bijsnijden</string>
   <string name="current_status">Huidige tweet</string>
   <string name="custom_host_mapping">Aangepaste host toewijzingen</string>
   <string name="custom_host_mapping_summary">Host toewijzingen zoals /etc/hosts, maar heeft geen aanvullende rechten nodig.</string>

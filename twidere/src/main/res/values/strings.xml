@@ -297,8 +297,6 @@
     <string name="created_by">Created by <xliff:g id="created_by">%s</xliff:g></string>
     <string name="created_list">Created list \"<xliff:g id="list">%s</xliff:g>\".</string>
 
-    <string name="crop_image">Crop image</string>
-
     <string name="current_status">Current tweet</string>
 
     <string name="custom_host_mapping">Custom host mapping</string>
@@ -1197,6 +1195,7 @@
     <string name="title_buffer_settings">Buffer settings</string>
     <string name="title_compose">Compose</string>
     <string name="title_conversation">Conversation</string>
+    <string name="title_crop_image">Crop image</string>
     <string name="title_dialog_sync_connect_to">Connect to…</string>
     <string name="title_direct_messages">Messages</string>
     <string name="title_direct_messages_conversation_info">Conversation info</string>

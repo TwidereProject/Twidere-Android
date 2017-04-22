@@ -1,7 +1,7 @@
 /*
- *                 Twidere - Twitter client for Android
+ *             Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,55 +19,164 @@
 
 package org.mariotaku.twidere.activity
 
-import android.content.Context
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.support.v7.widget.Toolbar
-import com.soundcloud.android.crop.CropImageActivity
-import org.mariotaku.kpreferences.get
+import android.view.Menu
+import android.view.MenuItem
+import com.theartofdev.edmodo.cropper.CropImage
+import com.theartofdev.edmodo.cropper.CropImageOptions
+import com.theartofdev.edmodo.cropper.CropImageView
+import kotlinx.android.synthetic.main.activity_crop_image.*
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.TwidereConstants
-import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
-import org.mariotaku.twidere.activity.iface.IThemedActivity
-import org.mariotaku.twidere.constant.themeBackgroundAlphaKey
-import org.mariotaku.twidere.constant.themeBackgroundOptionKey
-import org.mariotaku.twidere.constant.themeKey
-import org.mariotaku.twidere.util.theme.getCurrentThemeResource
 
 /**
- * Created by mariotaku on 15/6/16.
+ * Built-in activity for image cropping.
+ * Use [CropImage.activity] to create a builder to start this activity.
  */
-class ImageCropperActivity : CropImageActivity(), IThemedActivity {
+class ImageCropperActivity : BaseActivity(), CropImageView.OnSetImageUriCompleteListener, CropImageView.OnCropImageCompleteListener {
 
-    // Data fields
-    override val currentThemeBackgroundAlpha by lazy { themeBackgroundAlpha }
-    override val currentThemeBackgroundOption by lazy { themeBackgroundOption }
+    /**
+     * Persist URI image to crop URI if specific permissions are required
+     */
+    private val cropImageUri: Uri get() = intent.getParcelableExtra(CropImage.CROP_IMAGE_EXTRA_SOURCE)
 
-    private val preferences by lazy { getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE) }
+    /**
+     * the options that were set for the crop image
+     */
+    private val options: CropImageOptions get() = intent.getParcelableExtra(CropImage.CROP_IMAGE_EXTRA_OPTIONS)
 
-    private var doneCancelBar: Toolbar? = null
+    /**
+     * Get Android uri to save the cropped image into.<br></br>
+     * Use the given in options or create a temp file.
+     */
+    private val outputUri: Uri get() = options.outputUri
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        val prefs = getSharedPreferences(TwidereConstants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-        val themeResource = getCurrentThemeResource(this, prefs[themeKey])
-        if (themeResource != 0) {
-            setTheme(themeResource)
-        }
+    @SuppressLint("NewApi")
+    public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_crop_image)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        if (savedInstanceState == null) {
+            // no permissions required or already grunted, can start crop image activity
+            cropImageView.setImageUriAsync(cropImageUri)
+        }
+
     }
 
-    override fun onContentChanged() {
-        super.onContentChanged()
-        doneCancelBar = findViewById(R.id.done_cancel_bar) as Toolbar
+    override fun onStart() {
+        super.onStart()
+        cropImageView.setOnSetImageUriCompleteListener(this)
+        cropImageView.setOnCropImageCompleteListener(this)
     }
 
-    override fun setContentView(layoutResID: Int) {
-        super.setContentView(R.layout.activity_image_cropper)
+    override fun onStop() {
+        super.onStop()
+        cropImageView.setOnSetImageUriCompleteListener(null)
+        cropImageView.setOnCropImageCompleteListener(null)
     }
 
-    override val themeBackgroundAlpha: Int
-        get() = preferences[themeBackgroundAlphaKey]
+    override fun onBackPressed() {
+        setResultCancel()
+    }
 
-    override val themeBackgroundOption: String
-        get() = preferences[themeBackgroundOptionKey]
+    override fun onSupportNavigateUp(): Boolean {
+        setResultCancel()
+        return true
+    }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.menu_crop_image, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.perform_crop -> {
+                cropImage()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onSetImageUriComplete(view: CropImageView, uri: Uri, error: Exception?) {
+        if (error == null) {
+            if (options.initialCropWindowRectangle != null) {
+                cropImageView.cropRect = options.initialCropWindowRectangle
+            }
+            if (options.initialRotation > -1) {
+                cropImageView.rotatedDegrees = options.initialRotation
+            }
+        } else {
+            setResult(null, error, 1)
+        }
+    }
+
+    override fun onCropImageComplete(view: CropImageView, result: CropImageView.CropResult) {
+        setResult(result.uri, result.error, result.sampleSize)
+    }
+
+    //region: Private methods
+
+    /**
+     * Execute crop image and save the result to output uri.
+     */
+    private fun cropImage() {
+        if (options.noOutputImage) {
+            setResult(null, null, 1)
+        } else {
+            val outputUri = outputUri
+            cropImageView.saveCroppedImageAsync(outputUri,
+                    options.outputCompressFormat,
+                    options.outputCompressQuality,
+                    options.outputRequestWidth,
+                    options.outputRequestHeight,
+                    options.outputRequestSizeOptions)
+        }
+    }
+
+    /**
+     * Rotate the image in the crop image view.
+     */
+    protected fun rotateImage(degrees: Int) {
+        cropImageView.rotateImage(degrees)
+    }
+
+    /**
+     * Result with cropped image data or error if failed.
+     */
+    private fun setResult(uri: Uri?, error: Exception?, sampleSize: Int) {
+        val resultCode = if (error == null) Activity.RESULT_OK else CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE
+        setResult(resultCode, getResultIntent(uri, error, sampleSize))
+        finish()
+    }
+
+    /**
+     * Cancel of cropping activity.
+     */
+    private fun setResultCancel() {
+        setResult(Activity.RESULT_CANCELED)
+        finish()
+    }
+
+    /**
+     * Get intent instance to be used for the result of this activity.
+     */
+    private fun getResultIntent(uri: Uri?, error: Exception?, sampleSize: Int): Intent {
+        val result = CropImage.ActivityResult(cropImageView.imageUri, uri, error,
+                cropImageView.cropPoints, cropImageView.cropRect, cropImageView.rotatedDegrees,
+                sampleSize)
+        val intent = Intent()
+        intent.putExtra(CropImage.CROP_IMAGE_EXTRA_RESULT, result)
+        return intent
+    }
+
+    //endregion
 }
+
