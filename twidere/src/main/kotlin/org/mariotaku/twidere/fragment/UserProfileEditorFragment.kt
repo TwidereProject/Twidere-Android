@@ -79,10 +79,10 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
     private var getUserInfoCalled: Boolean = false
 
     override fun onClick(view: View) {
-        val user = user
+        val user = user ?: return
+        val account = account ?: return
         val task = currentTask
-        if (user == null || task != null && !task.isFinished)
-            return
+        if (task != null && !task.isFinished) return
         when (view.id) {
             R.id.editProfileImage -> {
                 val intent = ThemedMediaPickerActivity.withThemed(activity)
@@ -93,13 +93,14 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
                 startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_IMAGE)
             }
             R.id.editProfileBanner -> {
-                val intent = ThemedMediaPickerActivity.withThemed(activity)
+                val builder = ThemedMediaPickerActivity.withThemed(activity)
                         .aspectRatio(3, 1)
                         .maximumSize(1500, 500)
                         .containsVideo(false)
-                        .addEntry(getString(R.string.remove), "remove_banner", RESULT_REMOVE_BANNER)
-                        .build()
-                startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_BANNER_IMAGE)
+                if (account.type == AccountType.TWITTER) {
+                    builder.addEntry(getString(R.string.remove), "remove_banner", RESULT_REMOVE_BANNER)
+                }
+                startActivityForResult(builder.build(), REQUEST_UPLOAD_PROFILE_BANNER_IMAGE)
             }
             R.id.editProfileBackground -> {
                 val intent = ThemedMediaPickerActivity.withThemed(activity)
