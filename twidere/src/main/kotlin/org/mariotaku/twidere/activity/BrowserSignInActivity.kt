@@ -1,5 +1,5 @@
 /*
- * 				Twidere - Twitter client for Android
+ * 				Twi()dere - Twitter client for Android
  * 
  *  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
  * 
@@ -21,32 +21,29 @@ package org.mariotaku.twidere.activity
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.os.Message
 import android.util.Log
-import android.view.MenuItem
-import android.view.View
-import android.webkit.CookieManager
-import android.webkit.JavascriptInterface
-import android.webkit.WebChromeClient
-import android.webkit.WebView
+import android.view.*
+import android.webkit.*
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_browser_sign_in.*
 import org.attoparser.ParseException
-import org.mariotaku.ktextension.removeAllCookiesSupport
-import org.mariotaku.restfu.oauth.OAuthToken
+import org.mariotaku.ktextension.dismissDialogFragment
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator
 import org.mariotaku.twidere.util.webkit.DefaultWebViewClient
 import java.io.IOException
 import java.io.StringReader
+import java.lang.ref.WeakReference
 
 class BrowserSignInActivity : BaseActivity() {
-
-    private var requestToken: OAuthToken? = null
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -58,20 +55,17 @@ class BrowserSignInActivity : BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    @SuppressLint("AddJavascriptInterface", "SetJavaScriptEnabled")
+    @SuppressLint("AddJavascriptInterface")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_browser_sign_in)
-        CookieManager.getInstance().removeAllCookiesSupport()
         webView.setWebChromeClient(AuthorizationWebChromeClient(this))
         webView.setWebViewClient(AuthorizationWebViewClient(this))
         webView.isVerticalScrollBarEnabled = false
         webView.addJavascriptInterface(InjectorJavaScriptInterface(this), "injector")
         val webSettings = webView.settings
-        webSettings.loadsImagesAutomatically = true
-        webSettings.javaScriptEnabled = true
-        webSettings.blockNetworkImage = false
-        webSettings.saveFormData = true
+        webSettings.applyDefault()
+        webSettings.setSupportMultipleWindows(true)
 
         webView.loadUrl(intent.dataString)
     }
@@ -117,6 +111,23 @@ class BrowserSignInActivity : BaseActivity() {
         override fun onProgressChanged(view: WebView, newProgress: Int) {
             super.onProgressChanged(view, newProgress)
             activity.setLoadProgress(newProgress)
+        }
+
+        override fun onCreateWindow(view: WebView, isDialog: Boolean, isUserGesture: Boolean, resultMsg: Message?): Boolean {
+            val msgRef = WeakReference(resultMsg)
+            activity.executeAfterFragmentResumed {
+                val msg = msgRef.get() ?: return@executeAfterFragmentResumed
+                val df = BrowserWindowDialogFragment()
+                df.msg = msg
+                df.show(it.supportFragmentManager, TAG_BROWSER_WINDOW)
+            }
+            return true
+        }
+
+        override fun onCloseWindow(window: WebView) {
+            activity.executeAfterFragmentResumed {
+                it.supportFragmentManager.dismissDialogFragment(TAG_BROWSER_WINDOW)
+            }
         }
     }
 
@@ -193,8 +204,84 @@ class BrowserSignInActivity : BaseActivity() {
         }
     }
 
+    class BrowserWindowDialogFragment : BaseDialogFragment() {
+
+        var msg: Message? = null
+
+        init {
+            setStyle(STYLE_NO_TITLE, 0)
+        }
+
+        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+            return inflater.inflate(R.layout.fragment_webview, container, false)
+        }
+
+        override fun onPause() {
+            val webView = view?.findViewById(R.id.webView) as? WebView
+            webView?.onPause()
+            super.onPause()
+        }
+
+        override fun onResume() {
+            super.onResume()
+            val webView = view?.findViewById(R.id.webView) as? WebView
+            webView?.onResume()
+        }
+
+        override fun onDestroy() {
+            val webView = view?.findViewById(R.id.webView) as? WebView
+            webView?.destroy()
+            super.onDestroy()
+        }
+
+        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+            val webView = view.findViewById(R.id.webView) as WebView
+            val webSettings = webView.settings
+            webSettings.applyDefault()
+            webView.setWebViewClient(object : WebViewClient() {
+                @Suppress("OverridingDeprecatedMember")
+                override fun shouldOverrideUrlLoading(view: WebView?, url: String?) = false
+
+                override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?) = false
+            })
+            webView.setWebChromeClient(object : WebChromeClient() {
+                override fun onCloseWindow(window: WebView) {
+                    dismiss()
+                }
+            })
+        }
+
+        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+            val dialog = super.onCreateDialog(savedInstanceState)
+            dialog.setOnShowListener {
+                it as Dialog
+                it.window.attributes = it.window.attributes?.apply {
+                    width = WindowManager.LayoutParams.MATCH_PARENT
+                }
+
+                val msg = this.msg
+                val transport = msg?.obj as? WebView.WebViewTransport ?: run {
+                    dismiss()
+                    return@setOnShowListener
+                }
+                transport.webView = it.findViewById(R.id.webView) as WebView
+                msg.sendToTarget()
+            }
+            return dialog
+        }
+    }
+
     companion object {
 
-        private val INJECT_CONTENT = "javascript:window.injector.processHTML('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');"
+        private const val INJECT_CONTENT = "javascript:window.injector.processHTML('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');"
+        private const val TAG_BROWSER_WINDOW = "browser_window"
+
+        @SuppressLint("SetJavaScriptEnabled")
+        private fun WebSettings.applyDefault() {
+            loadsImagesAutomatically = true
+            javaScriptEnabled = true
+            blockNetworkImage = false
+            saveFormData = true
+        }
     }
 }

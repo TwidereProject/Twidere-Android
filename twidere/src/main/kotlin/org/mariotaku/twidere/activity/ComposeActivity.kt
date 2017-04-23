@@ -1104,10 +1104,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
         val extraSubject = intent.getCharSequenceExtra(Intent.EXTRA_SUBJECT)
         val extraText = intent.getCharSequenceExtra(Intent.EXTRA_TEXT)
-        if (extraSubject != null && extraText != null) {
-            editText.setText("$extraSubject - $extraText")
-        } else if (extraText != null){
-            editText.setText(extraText)
+        editText.charSequence = when {
+            extraSubject != null && extraText != null -> "$extraSubject - $extraText"
+            extraSubject != null -> extraSubject
+            else -> extraText
         }
 
         val selectionEnd = editText.length()

@@ -20,6 +20,8 @@
 package org.mariotaku.twidere.util;
 
 import android.app.Application;
+import android.os.Build;
+import android.webkit.WebView;
 
 import com.facebook.stetho.DumperPluginsProvider;
 import com.facebook.stetho.Stetho;
@@ -77,6 +79,9 @@ public class DebugModeUtils {
                 .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(application))
                 .build());
         initLeakCanary(application);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            WebView.setWebContentsDebuggingEnabled(true);
+        }
     }
 
     static void initLeakCanary(Application application) {

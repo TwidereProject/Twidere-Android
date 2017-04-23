@@ -7,8 +7,17 @@ import android.widget.TextView
 val TextView.empty: Boolean
     get() = length() <= 0
 
-val TextView.string: String?
+var TextView.string: String?
     get() = text?.toString()
+    set(value) {
+        text = value
+    }
+
+var TextView.charSequence: CharSequence?
+    get() = text
+    set(value) {
+        text = value
+    }
 
 fun TextView.applyFontFamily(lightFont: Boolean) {
     if (lightFont) {
