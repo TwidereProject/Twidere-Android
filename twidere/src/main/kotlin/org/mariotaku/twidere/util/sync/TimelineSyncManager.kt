@@ -20,9 +20,12 @@
 package org.mariotaku.twidere.util.sync
 
 import android.content.Context
+import android.net.Uri
 import android.support.annotation.UiThread
 import android.support.annotation.WorkerThread
 import android.support.v4.util.ArrayMap
+import okio.ByteString
+import org.mariotaku.twidere.TwidereConstants.TIMELINE_SYNC_CACHE_PREFERENCES_NAME
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import java.io.IOException
 import java.util.*
@@ -34,7 +37,8 @@ import java.util.*
 abstract class TimelineSyncManager(val context: Context) {
 
     private val stagedCommits = ArrayMap<TimelineKey, Long>()
-    private val cachedPositions = ArrayMap<TimelineKey, Long>()
+    private val cachedPositions = context.getSharedPreferences(TIMELINE_SYNC_CACHE_PREFERENCES_NAME,
+            Context.MODE_PRIVATE)
 
     fun setPosition(@ReadPositionTag positionTag: String, currentTag: String?, positionKey: Long) {
         stagedCommits[TimelineKey(positionTag, currentTag)] = positionKey
@@ -45,22 +49,21 @@ abstract class TimelineSyncManager(val context: Context) {
             PositionData(key.positionTag, key.currentTag, value)
         }.toTypedArray()
         stagedCommits.clear()
+        if (data.isEmpty()) return
         performSync(data)
     }
 
-
     fun blockingGetPosition(@ReadPositionTag positionTag: String, currentTag: String?): Long {
         val position = fetchPosition(positionTag, currentTag)
-        synchronized(cachedPositions) {
-            cachedPositions[TimelineKey(positionTag, currentTag)] = position
-        }
+        cachedPositions.edit().putLong(cacheKey(positionTag, currentTag), position).apply()
         return position
     }
 
     fun peekPosition(@ReadPositionTag positionTag: String, currentTag: String?): Long {
-        synchronized(cachedPositions) {
-            return cachedPositions[TimelineKey(positionTag, currentTag)] ?: -1
-        }
+        val cacheKey = cacheKey(positionTag, currentTag)
+        val position = cachedPositions.getLong(cacheKey, -1)
+        cachedPositions.edit().remove(cacheKey).apply()
+        return position
     }
 
 
@@ -93,6 +96,11 @@ abstract class TimelineSyncManager(val context: Context) {
 
     companion object {
         fun newFactory(): Factory = ServiceLoader.load(Factory::class.java).firstOrNull() ?: DummyFactory
+
+        private fun cacheKey(@ReadPositionTag positionTag: String, currentTag: String?): String {
+            if (currentTag == null) return positionTag
+            return ByteString.encodeUtf8("$positionTag:${Uri.encode(currentTag)}").sha1().hex()
+        }
     }
 
 

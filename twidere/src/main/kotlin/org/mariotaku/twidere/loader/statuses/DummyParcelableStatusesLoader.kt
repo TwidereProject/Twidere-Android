@@ -20,8 +20,6 @@
 package org.mariotaku.twidere.loader.statuses
 
 import android.content.Context
-import org.mariotaku.twidere.loader.statuses.ParcelableStatusesLoader
-
 import org.mariotaku.twidere.model.ListResponse
 import org.mariotaku.twidere.model.ParcelableStatus
 

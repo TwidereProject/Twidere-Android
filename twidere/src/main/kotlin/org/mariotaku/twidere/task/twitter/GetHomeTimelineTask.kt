@@ -31,12 +31,12 @@ import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.fragment.HomeTimelineFragment
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.ErrorInfoStore
-import org.mariotaku.twidere.util.Utils
 import java.io.IOException
 
 /**
@@ -70,13 +70,13 @@ class GetHomeTimelineTask(context: Context) : GetStatusesTask(context) {
         }
     }
 
-    override fun setLocalReadPosition(accountKey: UserKey, details: AccountDetails) {
-        val syncManager = timelineSyncManagerFactory.get() ?: return
+    override fun syncFetchReadPosition(accountKeys: Array<UserKey>) {
+        val manager = timelineSyncManagerFactory.get() ?: return
+        val tag = HomeTimelineFragment.getTimelineSyncTag(accountKeys)
         try {
-            val tag = Utils.getReadPositionTagWithAccount(ReadPositionTag.HOME_TIMELINE, accountKey)
-            syncManager.blockingGetPosition(ReadPositionTag.HOME_TIMELINE, tag)
-        }catch (e: IOException) {
-
+            manager.blockingGetPosition(ReadPositionTag.ACTIVITIES_ABOUT_ME, tag)
+        } catch (e: IOException) {
+            return
         }
     }
 }

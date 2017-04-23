@@ -34,7 +34,10 @@ import org.mariotaku.twidere.fragment.BasePreferenceFragment
 import org.mariotaku.twidere.fragment.ThemedPreferenceDialogFragmentCompat
 import org.mariotaku.twidere.fragment.filter.FilteredUsersFragment
 import org.mariotaku.twidere.fragment.media.ExoPlayerPageFragment
-import org.mariotaku.twidere.loader.*
+import org.mariotaku.twidere.loader.CacheUserSearchLoader
+import org.mariotaku.twidere.loader.DefaultAPIConfigLoader
+import org.mariotaku.twidere.loader.ParcelableStatusLoader
+import org.mariotaku.twidere.loader.ParcelableUserLoader
 import org.mariotaku.twidere.loader.statuses.AbsRequestStatusesLoader
 import org.mariotaku.twidere.loader.userlists.BaseUserListsLoader
 import org.mariotaku.twidere.preference.AccountsListPreference

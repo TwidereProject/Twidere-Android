@@ -94,7 +94,7 @@ class GetActivitiesAboutMeTask(context: Context) : GetActivitiesTask(context) {
     }
 
 
-    override fun setLocalReadPosition(accountKeys: Array<UserKey>, saveReadPosition: BooleanArray) {
+    override fun syncFetchReadPosition(accountKeys: Array<UserKey>) {
         val manager = timelineSyncManagerFactory.get() ?: return
         val tag = InteractionsTimelineFragment.getTimelineSyncTag(accountKeys)
         try {

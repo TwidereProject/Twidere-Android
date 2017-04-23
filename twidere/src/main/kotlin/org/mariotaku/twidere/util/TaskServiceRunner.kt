@@ -80,6 +80,9 @@ class TaskServiceRunner(
             ACTION_REFRESH_DIRECT_MESSAGES -> {
                 val task = GetMessagesTask(context)
                 task.params = object : GetMessagesTask.RefreshNewTaskParam(context) {
+
+                    override val isBackground: Boolean = true
+
                     override val accountKeys: Array<UserKey> by lazy {
                         AccountPreferences.getAccountPreferences(context, preferences,
                                 DataStoreUtils.getAccountKeys(context)).filter {
@@ -121,6 +124,7 @@ class TaskServiceRunner(
                 SinceMaxPagination().also { it.sinceId = sinceId }
             }
 
+        override val isBackground: Boolean = true
     }
 
     companion object {

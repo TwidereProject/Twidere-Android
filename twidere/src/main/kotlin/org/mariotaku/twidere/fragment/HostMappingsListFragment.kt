@@ -35,13 +35,11 @@ import android.widget.*
 import android.widget.AbsListView.MultiChoiceModeListener
 import android.widget.CompoundButton.OnCheckedChangeListener
 import kotlinx.android.synthetic.main.fragment_content_listview.*
-import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.HOST_MAPPING_PREFERENCES_NAME
 import org.mariotaku.twidere.adapter.ArrayAdapter
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.util.ParseUtils
-import org.mariotaku.twidere.util.SharedPreferencesWrapper
 
 class HostMappingsListFragment : AbsContentListViewFragment<HostMappingsListFragment.HostMappingAdapter>(),
         AdapterView.OnItemClickListener, MultiChoiceModeListener, OnSharedPreferenceChangeListener {

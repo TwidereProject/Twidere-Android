@@ -263,7 +263,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
      */
     override fun onLoadFinished(loader: Loader<List<ParcelableStatus>?>, data: List<ParcelableStatus>?) {
         val rememberPosition = preferences[rememberPositionKey]
-        val readPositionTag = currentReadPositionTag
+        val currentReadPositionTag = currentReadPositionTag
         val readFromBottom = preferences[readFromBottomKey]
         val firstLoad = adapterData.isNullOrEmpty()
 
@@ -292,8 +292,19 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
             }
             lastReadViewTop = layoutManager.findViewByPosition(lastReadPosition)?.top ?: 0
             loadMore = statusRange.endInclusive in 0..lastVisibleItemPosition
-        } else if (rememberPosition && readPositionTag != null) {
-            lastReadId = readStateManager.getPosition(readPositionTag)
+        } else if (rememberPosition) {
+            val syncManager = timelineSyncManager
+            val positionTag = this.readPositionTag
+            val syncTag = this.timelineSyncTag
+            val currentTag = this.currentReadPositionTag
+
+            if (syncManager != null && positionTag != null && syncTag != null) {
+                lastReadId = syncManager.peekPosition(positionTag, syncTag)
+            }
+            if (lastReadId <= 0 && currentTag != null) {
+                lastReadId = readStateManager.getPosition(currentTag)
+            }
+
             lastReadViewTop = 0
         }
         // 2. Change adapter data

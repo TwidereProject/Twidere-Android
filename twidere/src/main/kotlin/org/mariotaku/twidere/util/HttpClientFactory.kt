@@ -3,7 +3,9 @@ package org.mariotaku.twidere.util
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
+import android.os.Build
 import android.util.Base64
+import android.util.Log
 import okhttp3.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.toIntOr
@@ -15,16 +17,10 @@ import org.mariotaku.twidere.util.dagger.DependencyHolder
 import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.Proxy
-import java.util.concurrent.TimeUnit
-import okhttp3.ConnectionSpec
-import java.util.ArrayList
-import android.util.Log
 import java.security.NoSuchAlgorithmException
+import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.net.ssl.SSLContext
-import android.os.Build
-
-
-
 
 /**
  * Created by mariotaku on 16/1/27.
@@ -45,102 +41,6 @@ object HttpClientFactory {
         DebugModeUtils.initForOkHttpClient(builder)
     }
 
-    internal fun nougatECCFix(specList: ArrayList<ConnectionSpec>) {
-        // Shamelessly stolen from Tusky
-        if (Build.VERSION.SDK_INT != Build.VERSION_CODES.N) {
-            return
-        }
-        val sslContext: SSLContext
-        try {
-            sslContext = SSLContext.getInstance("TLS")
-        } catch (e: NoSuchAlgorithmException) {
-            Log.e("HttpClientFactory", "Failed obtaining TLS Context.")
-            return
-        }
-
-        sslContext.init(null, null, null)
-        val cipherSuites = sslContext.socketFactory.defaultCipherSuites
-        val allowedList = cipherSuites.filterNotTo(ArrayList<String>()) { it.contains("ECDH") }
-        val spec = ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
-                .cipherSuites(*allowedList.toTypedArray())
-                .supportsTlsExtensions(true)
-                .build()
-        specList.add(spec)
-    }
-
-    internal fun updateHttpClientConfiguration(builder: OkHttpClient.Builder, conf: HttpClientConfiguration,
-            dns: Dns, connectionPool: ConnectionPool, cache: Cache) {
-        conf.applyTo(builder)
-        builder.dns(dns)
-        builder.connectionPool(connectionPool)
-        builder.cache(cache)
-    }
-
-    internal fun updateTLSConnectionSpecs(builder: OkHttpClient.Builder) {
-        //Default spec list from OkHttpClient.DEFAULT_CONNECTION_SPECS
-        var specList: ArrayList<ConnectionSpec> = ArrayList()
-        specList.add(ConnectionSpec.MODERN_TLS)
-        nougatECCFix(specList)
-        specList.add(ConnectionSpec.CLEARTEXT)
-        builder.connectionSpecs(specList)
-    }
-
-    class HttpClientConfiguration(val prefs: SharedPreferences) {
-
-        var readTimeoutSecs: Long = -1
-        var writeTimeoutSecs: Long = -1
-        var connectionTimeoutSecs: Long = prefs.getInt(KEY_CONNECTION_TIMEOUT, 10).toLong()
-        var cacheSize: Int = prefs[cacheSizeLimitKey]
-
-        internal fun applyTo(builder: OkHttpClient.Builder) {
-            if (connectionTimeoutSecs >= 0) {
-                builder.connectTimeout(connectionTimeoutSecs, TimeUnit.SECONDS)
-            }
-            if (writeTimeoutSecs >= 0) {
-                builder.writeTimeout(writeTimeoutSecs, TimeUnit.SECONDS)
-            }
-            if (readTimeoutSecs >= 0) {
-                builder.readTimeout(readTimeoutSecs, TimeUnit.SECONDS)
-            }
-            if (prefs.getBoolean(KEY_ENABLE_PROXY, false)) {
-                configProxy(builder)
-            }
-        }
-
-        private fun configProxy(builder: OkHttpClient.Builder) {
-            val proxyType = prefs.getString(KEY_PROXY_TYPE, null) ?: return
-            val proxyHost = prefs.getString(KEY_PROXY_HOST, null)?.takeIf(String::isNotEmpty) ?: return
-            val proxyPort = prefs.getString(KEY_PROXY_PORT, null).toIntOr(-1)
-            val username = prefs.getString(KEY_PROXY_USERNAME, null)?.takeIf(String::isNotEmpty)
-            val password = prefs.getString(KEY_PROXY_PASSWORD, null)?.takeIf(String::isNotEmpty)
-            when (proxyType) {
-                "http" -> {
-                    if (proxyPort !in (0..65535)) {
-                        return
-                    }
-                    val address = InetSocketAddress.createUnresolved(proxyHost, proxyPort)
-                    builder.proxy(Proxy(Proxy.Type.HTTP, address))
-
-                    builder.authenticator { _, response ->
-                        val b = response.request().newBuilder()
-                        if (response.code() == 407) {
-                            if (username != null && password != null) {
-                                val credential = Credentials.basic(username, password)
-                                b.header("Proxy-Authorization", credential)
-                            }
-                        }
-                        b.build()
-                    }
-                }
-                "reverse" -> {
-                    builder.addInterceptor(ReverseProxyInterceptor(proxyHost, username, password))
-                }
-            }
-
-        }
-
-    }
-
     fun reloadConnectivitySettings(context: Context) {
         val holder = DependencyHolder.get(context)
         val client = holder.restHttpClient as? OkHttpRestClient ?: return
@@ -148,30 +48,6 @@ object HttpClientFactory {
         initOkHttpClient(HttpClientConfiguration(holder.preferences), builder, holder.dns,
                 holder.connectionPool, holder.cache)
         client.client = builder.build()
-    }
-
-    /**
-     * Intercept and replace proxy patterns to real URL
-     */
-    class ReverseProxyInterceptor(val proxyFormat: String, val proxyUsername: String?,
-            val proxyPassword: String?) : Interceptor {
-
-        override fun intercept(chain: Interceptor.Chain): Response {
-            val request = chain.request()
-            val url = request.url()
-            val builder = request.newBuilder()
-            val replacedUrl = HttpUrl.parse(replaceUrl(url, proxyFormat)) ?: run {
-                throw IOException("Invalid reverse proxy format")
-            }
-            builder.url(replacedUrl)
-            if (proxyUsername != null && proxyPassword != null) {
-                val headerValue = Base64.encodeToString("$proxyUsername:$proxyPassword".toByteArray(Charsets.UTF_8),
-                        Base64.URL_SAFE)
-                builder.addHeader("Proxy-Authorization", headerValue)
-            }
-            return chain.proceed(builder.build())
-        }
-
     }
 
     /**
@@ -241,6 +117,45 @@ object HttpClientFactory {
         return sb.toString()
     }
 
+    private fun updateHttpClientConfiguration(builder: OkHttpClient.Builder, conf: HttpClientConfiguration,
+            dns: Dns, connectionPool: ConnectionPool, cache: Cache) {
+        conf.applyTo(builder)
+        builder.dns(dns)
+        builder.connectionPool(connectionPool)
+        builder.cache(cache)
+    }
+
+    private fun updateTLSConnectionSpecs(builder: OkHttpClient.Builder) {
+        //Default spec list from OkHttpClient.DEFAULT_CONNECTION_SPECS
+        val specList: ArrayList<ConnectionSpec> = ArrayList()
+        specList.add(ConnectionSpec.MODERN_TLS)
+        nougatECCFix(specList)
+        specList.add(ConnectionSpec.CLEARTEXT)
+        builder.connectionSpecs(specList)
+    }
+
+    private fun nougatECCFix(specList: ArrayList<ConnectionSpec>) {
+        // Shamelessly stolen from Tusky
+        if (Build.VERSION.SDK_INT != Build.VERSION_CODES.N) {
+            return
+        }
+        val sslContext = try {
+            SSLContext.getInstance("TLS")
+        } catch (e: NoSuchAlgorithmException) {
+            Log.e("HttpClientFactory", "Failed obtaining TLS Context.")
+            return
+        }
+
+        sslContext.init(null, null, null)
+        val cipherSuites = sslContext.socketFactory.defaultCipherSuites
+        val allowedList = cipherSuites.filterNotTo(ArrayList<String>()) { it.contains("ECDH") }
+        val spec = ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+                .cipherSuites(*allowedList.toTypedArray())
+                .supportsTlsExtensions(true)
+                .build()
+        specList.add(spec)
+    }
+
     private fun HttpUrl.authority(): String {
         val host = host()
         val port = port()
@@ -255,4 +170,84 @@ object HttpClientFactory {
     private val urlSupportedPatterns = listOf("[SCHEME]", "[HOST]", "[PORT]", "[AUTHORITY]",
             "[PATH]", "[/PATH]", "[PATH_ENCODED]", "[QUERY]", "[?QUERY]", "[QUERY_ENCODED]",
             "[FRAGMENT]", "[#FRAGMENT]", "[FRAGMENT_ENCODED]", "[URL_ENCODED]", "[URL_BASE64]")
+
+    class HttpClientConfiguration(val prefs: SharedPreferences) {
+
+        var readTimeoutSecs: Long = -1
+        var writeTimeoutSecs: Long = -1
+        var connectionTimeoutSecs: Long = prefs.getInt(KEY_CONNECTION_TIMEOUT, 10).toLong()
+        var cacheSize: Int = prefs[cacheSizeLimitKey]
+
+        internal fun applyTo(builder: OkHttpClient.Builder) {
+            if (connectionTimeoutSecs >= 0) {
+                builder.connectTimeout(connectionTimeoutSecs, TimeUnit.SECONDS)
+            }
+            if (writeTimeoutSecs >= 0) {
+                builder.writeTimeout(writeTimeoutSecs, TimeUnit.SECONDS)
+            }
+            if (readTimeoutSecs >= 0) {
+                builder.readTimeout(readTimeoutSecs, TimeUnit.SECONDS)
+            }
+            if (prefs.getBoolean(KEY_ENABLE_PROXY, false)) {
+                configProxy(builder)
+            }
+        }
+
+        private fun configProxy(builder: OkHttpClient.Builder) {
+            val proxyType = prefs.getString(KEY_PROXY_TYPE, null) ?: return
+            val proxyHost = prefs.getString(KEY_PROXY_HOST, null)?.takeIf(String::isNotEmpty) ?: return
+            val proxyPort = prefs.getString(KEY_PROXY_PORT, null).toIntOr(-1)
+            val username = prefs.getString(KEY_PROXY_USERNAME, null)?.takeIf(String::isNotEmpty)
+            val password = prefs.getString(KEY_PROXY_PASSWORD, null)?.takeIf(String::isNotEmpty)
+            when (proxyType) {
+                "http" -> {
+                    if (proxyPort !in (0..65535)) {
+                        return
+                    }
+                    val address = InetSocketAddress.createUnresolved(proxyHost, proxyPort)
+                    builder.proxy(Proxy(Proxy.Type.HTTP, address))
+
+                    builder.authenticator { _, response ->
+                        val b = response.request().newBuilder()
+                        if (response.code() == 407) {
+                            if (username != null && password != null) {
+                                val credential = Credentials.basic(username, password)
+                                b.header("Proxy-Authorization", credential)
+                            }
+                        }
+                        b.build()
+                    }
+                }
+                "reverse" -> {
+                    builder.addInterceptor(ReverseProxyInterceptor(proxyHost, username, password))
+                }
+            }
+
+        }
+
+    }
+
+    /**
+     * Intercept and replace proxy patterns to real URL
+     */
+    class ReverseProxyInterceptor(val proxyFormat: String, val proxyUsername: String?,
+            val proxyPassword: String?) : Interceptor {
+
+        override fun intercept(chain: Interceptor.Chain): Response {
+            val request = chain.request()
+            val url = request.url()
+            val builder = request.newBuilder()
+            val replacedUrl = HttpUrl.parse(replaceUrl(url, proxyFormat)) ?: run {
+                throw IOException("Invalid reverse proxy format")
+            }
+            builder.url(replacedUrl)
+            if (proxyUsername != null && proxyPassword != null) {
+                val headerValue = Base64.encodeToString("$proxyUsername:$proxyPassword".toByteArray(Charsets.UTF_8),
+                        Base64.URL_SAFE)
+                builder.addHeader("Proxy-Authorization", headerValue)
+            }
+            return chain.proceed(builder.build())
+        }
+
+    }
 }

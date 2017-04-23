@@ -26,7 +26,10 @@ import com.squareup.otto.Bus
 import com.twitter.Validator
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.restfu.http.RestHttpClient
-import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.AsyncTwitterWrapper
+import org.mariotaku.twidere.util.DebugModeUtils
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler
+import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import javax.inject.Inject

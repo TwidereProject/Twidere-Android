@@ -15,8 +15,6 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.account.AccountExtras
-import org.mariotaku.twidere.model.account.MastodonAccountExtras
-import org.mariotaku.twidere.model.account.StatusNetAccountExtras
 import org.mariotaku.twidere.model.account.TwitterAccountExtras
 import org.mariotaku.twidere.model.account.cred.*
 import org.mariotaku.twidere.model.util.AccountUtils

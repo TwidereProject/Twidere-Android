@@ -30,7 +30,6 @@ import org.mariotaku.twidere.extension.model.hasInvalidAccount
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.DeviceUtils
 import org.mariotaku.twidere.util.StrictModeUtils
-import org.mariotaku.twidere.util.Utils
 
 open class MainActivity : BaseActivity() {
 

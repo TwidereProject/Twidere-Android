@@ -240,8 +240,17 @@ abstract class AbsActivitiesFragment protected constructor() :
             lastReadViewTop = layoutManager.findViewByPosition(lastReadPosition)?.top ?: 0
             loadMore = activityRange.endInclusive in 0..lastVisibleItemPosition
         } else if (rememberPosition && readPositionTag != null) {
-            lastReadId = readStateManager.getPosition(readPositionTag)
-            lastReadViewTop = 0
+            val syncManager = timelineSyncManager
+            val positionTag = this.readPositionTag
+            val syncTag = this.timelineSyncTag
+            val currentTag = this.currentReadPositionTag
+
+            if (syncManager != null && positionTag != null && syncTag != null) {
+                lastReadId = syncManager.peekPosition(positionTag, syncTag)
+            }
+            if (lastReadId <= 0 && currentTag != null) {
+                lastReadId = readStateManager.getPosition(currentTag)
+            }
         }
 
         adapter.setData(data)

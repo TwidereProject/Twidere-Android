@@ -24,7 +24,6 @@ import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.UserList
-import org.mariotaku.twidere.loader.userlists.BaseUserListsLoader
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
 

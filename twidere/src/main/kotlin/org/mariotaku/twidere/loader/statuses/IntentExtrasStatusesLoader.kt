@@ -22,7 +22,6 @@ package org.mariotaku.twidere.loader.statuses
 import android.content.Context
 import android.os.Bundle
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_STATUSES
-import org.mariotaku.twidere.loader.statuses.ParcelableStatusesLoader
 import org.mariotaku.twidere.model.ListResponse
 import org.mariotaku.twidere.model.ParcelableStatus
 import java.util.*

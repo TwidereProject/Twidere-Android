@@ -10,12 +10,10 @@ import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.extension.model.api.toParcelable
-import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.model.ParcelableRelationship
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableRelationshipUtils
-import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.model.util.UserKeyUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers

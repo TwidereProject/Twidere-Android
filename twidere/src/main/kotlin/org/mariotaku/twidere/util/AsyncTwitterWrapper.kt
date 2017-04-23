@@ -42,7 +42,6 @@ import org.mariotaku.twidere.constant.homeRefreshDirectMessagesKey
 import org.mariotaku.twidere.constant.homeRefreshMentionsKey
 import org.mariotaku.twidere.constant.homeRefreshSavedSearchesKey
 import org.mariotaku.twidere.constant.nameFirstKey
-import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.*

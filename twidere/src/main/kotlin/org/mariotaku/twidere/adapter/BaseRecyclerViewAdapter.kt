@@ -32,7 +32,10 @@ import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.constant.showAbsoluteTimeKey
 import org.mariotaku.twidere.constant.textSizeKey
 import org.mariotaku.twidere.model.DefaultFeatures
-import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.AsyncTwitterWrapper
+import org.mariotaku.twidere.util.MultiSelectManager
+import org.mariotaku.twidere.util.ReadStateManager
+import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import javax.inject.Inject
 
