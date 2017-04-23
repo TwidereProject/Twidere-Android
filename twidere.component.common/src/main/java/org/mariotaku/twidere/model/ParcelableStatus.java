@@ -237,6 +237,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @ParcelableThisPlease
     @JsonField(name = "source")
     @CursorField(Statuses.SOURCE)
+    @Nullable
     public String source;
     @ParcelableThisPlease
     @JsonField(name = "user_profile_image_url")

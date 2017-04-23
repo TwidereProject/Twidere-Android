@@ -78,9 +78,7 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_SCREEN_NAME
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.getCachedLocation
 import org.mariotaku.twidere.extension.loadProfileImage
-import org.mariotaku.twidere.extension.model.applyUpdateStatus
-import org.mariotaku.twidere.extension.model.textLimit
-import org.mariotaku.twidere.extension.model.unique_id_non_null
+import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.text.twitter.ReplyTextAndMentions
 import org.mariotaku.twidere.extension.text.twitter.extractReplyTextAndMentions
 import org.mariotaku.twidere.extension.withAppendedPath
@@ -964,20 +962,21 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val details = AccountUtils.getAccountDetails(am, status.account_key, false) ?: return false
         val accountUser = details.user
         val mentions = ArrayList<String>()
+        val userAcct = status.user_acct
         if (accountUser.key != status.user_key) {
-            editText.append("@${status.user_screen_name} ")
+            editText.append("@$userAcct ")
         }
         var selectionStart = editText.length()
         if (status.is_retweet && !TextUtils.isEmpty(status.retweeted_by_user_screen_name)) {
-            mentions.add(status.retweeted_by_user_screen_name)
+            status.retweeted_by_user_acct?.addTo(mentions)
         }
         if (status.is_quote && !TextUtils.isEmpty(status.quoted_user_screen_name)) {
-            mentions.add(status.quoted_user_screen_name)
+            status.quoted_user_acct?.addTo(mentions)
         }
         if (status.mentions.isNotNullOrEmpty()) {
             status.mentions.filterNot {
                 it.key == status.account_key || it.screen_name.isNullOrEmpty()
-            }.mapTo(mentions) { it.screen_name }
+            }.mapTo(mentions) { it.getAcct(details.key) }
             mentions.addAll(extractor.extractMentionedScreennames(status.quoted_text_plain))
         } else if (USER_TYPE_FANFOU_COM == status.account_key.host) {
             addFanfouHtmlToMentions(status.text_unescaped, status.spans, mentions)
@@ -992,13 +991,13 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
 
         mentions.distinctBy { it.toLowerCase(Locale.US) }.filterNot {
-            return@filterNot it.equals(status.user_screen_name, ignoreCase = true)
+            return@filterNot it.equals(userAcct, ignoreCase = true)
         }.forEach { editText.append("@$it ") }
 
         // For non-Twitter instances, put current user mention at last
         if (details.type != AccountType.TWITTER && accountUser.key == status.user_key) {
             selectionStart = editText.length()
-            editText.append("@${status.user_screen_name} ")
+            editText.append("@$userAcct ")
         }
 
         val text = intent.getStringExtra(EXTRA_TEXT)

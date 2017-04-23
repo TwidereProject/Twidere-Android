@@ -113,32 +113,39 @@
                 android:textColor="?android:textColorPrimary"
                 tools:text="Name"/>
 
-            <org.mariotaku.twidere.view.FixedTextView
-                android:id="@+id/screenName"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/name"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="?android:textColorPrimary"
-                tools:text="\@screenname"/>
+                android:baselineAligned="true"
+                android:orientation="horizontal">
 
-            <org.mariotaku.twidere.view.FixedTextView
-                android:id="@+id/followingYouIndicator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/screenName"
-                android:layout_marginLeft="@dimen/element_spacing_small"
-                android:layout_marginStart="@dimen/element_spacing_small"
-                android:layout_toEndOf="@+id/screenName"
-                android:layout_toRightOf="@+id/screenName"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="@string/following_you"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="?android:textColorSecondary"
-                android:visibility="gone"/>
+                <org.mariotaku.twidere.view.FixedTextView
+                    android:id="@+id/screenName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:textColor="?android:textColorPrimary"
+                    tools:text="\@screenname"/>
+
+                <org.mariotaku.twidere.view.FixedTextView
+                    android:id="@+id/followingYouIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/element_spacing_small"
+                    android:layout_marginStart="@dimen/element_spacing_small"
+                    android:layout_weight="0"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/following_you"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:textColor="?android:textColorSecondary"
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
+            </LinearLayout>
         </RelativeLayout>
 
     </org.mariotaku.twidere.view.ColorLabelRelativeLayout>

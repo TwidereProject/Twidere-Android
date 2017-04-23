@@ -450,7 +450,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             profileType.visibility = View.GONE
         }
         @SuppressLint("SetTextI18n")
-        profileNameContainer.screenName.text = "@${user.screen_name}"
+        profileNameContainer.screenName.text = "@${user.acct}"
         val linkHighlightOption = preferences[linkHighlightOptionKey]
         val linkify = TwidereLinkify(this, linkHighlightOption)
         if (user.description_unescaped != null) {
