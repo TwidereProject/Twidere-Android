@@ -27,6 +27,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.content.Loader
+import android.support.v7.widget.RecyclerView
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.squareup.otto.Subscribe
@@ -62,22 +63,62 @@ import org.mariotaku.twidere.util.buildStatusFilterWhereClause
  */
 abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
-    private var contentObserver: ContentObserver? = null
-    private val accountListener: OnAccountsUpdateListener = OnAccountsUpdateListener {
-        reloadStatuses()
-    }
-
-    abstract val errorInfoKey: String
-    abstract val isFilterEnabled: Boolean
-    abstract val notificationType: Int
-    abstract val contentUri: Uri
     override var refreshing: Boolean
         get() = swipeLayout.isRefreshing
         set(value) {
             super.refreshing = value
         }
+
     override val useSortIdAsReadPosition: Boolean
         get() = false
+
+    override val accountKeys: Array<UserKey>
+        get() = Utils.getAccountKeys(context, arguments) ?: DataStoreUtils.getActivatedAccountKeys(context)
+
+    abstract val errorInfoKey: String
+    abstract val isFilterEnabled: Boolean
+    abstract val notificationType: Int
+    abstract val contentUri: Uri
+
+    private var contentObserver: ContentObserver? = null
+    private val accountListener: OnAccountsUpdateListener = OnAccountsUpdateListener {
+        reloadStatuses()
+    }
+
+    private val onScrollListener = object : RecyclerView.OnScrollListener() {
+        override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                clearNotifications()
+            }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (contentObserver == null) {
+            contentObserver = object : ContentObserver(Handler()) {
+                override fun onChange(selfChange: Boolean) {
+                    reloadStatuses()
+                }
+            }
+            context.contentResolver.registerContentObserver(Filters.CONTENT_URI, true, contentObserver)
+        }
+        AccountManager.get(context).addOnAccountsUpdatedListenerSafe(accountListener, updateImmediately = false)
+        recyclerView.addOnScrollListener(onScrollListener)
+        updateRefreshState()
+        reloadStatuses()
+    }
+
+    override fun onStop() {
+        recyclerView.removeOnScrollListener(onScrollListener)
+        if (contentObserver != null) {
+            context.contentResolver.unregisterContentObserver(contentObserver)
+            contentObserver = null
+        }
+        AccountManager.get(context).removeOnAccountsUpdatedListenerSafe(accountListener)
+        super.onStop()
+    }
+
 
     override fun onStatusesLoaded(loader: Loader<List<ParcelableStatus>?>, data: List<ParcelableStatus>?) {
         showContentOrError()
@@ -108,61 +149,6 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
     override fun createMessageBusCallback(): Any {
         return CursorStatusesBusCallback()
-    }
-
-    private fun showContentOrError() {
-        val accountKeys = this.accountKeys
-        if (adapter.itemCount > 0) {
-            showContent()
-        } else if (accountKeys.isNotEmpty()) {
-            val errorInfo = ErrorInfoStore.getErrorInfo(context,
-                    errorInfoStore[errorInfoKey, accountKeys[0]])
-            if (errorInfo != null) {
-                showEmpty(errorInfo.icon, errorInfo.message)
-            } else {
-                showEmpty(R.drawable.ic_info_refresh, getString(R.string.swipe_down_to_refresh))
-            }
-        } else {
-            showError(R.drawable.ic_info_accounts, getString(R.string.message_toast_no_account_selected))
-        }
-    }
-
-    override val accountKeys: Array<UserKey>
-        get() = Utils.getAccountKeys(context, arguments) ?: DataStoreUtils.getActivatedAccountKeys(context)
-
-    override fun onStart() {
-        super.onStart()
-        if (contentObserver == null) {
-            contentObserver = object : ContentObserver(Handler()) {
-                override fun onChange(selfChange: Boolean) {
-                    reloadStatuses()
-                }
-            }
-            context.contentResolver.registerContentObserver(Filters.CONTENT_URI, true, contentObserver)
-        }
-        AccountManager.get(context).addOnAccountsUpdatedListenerSafe(accountListener, updateImmediately = false)
-        updateRefreshState()
-        reloadStatuses()
-    }
-
-    override fun onStop() {
-        if (contentObserver != null) {
-            context.contentResolver.unregisterContentObserver(contentObserver)
-            contentObserver = null
-        }
-        AccountManager.get(context).removeOnAccountsUpdatedListenerSafe(accountListener)
-        super.onStop()
-    }
-
-    protected fun reloadStatuses() {
-        if (context == null || isDetached) return
-        val args = Bundle()
-        val fragmentArgs = arguments
-        if (fragmentArgs != null) {
-            args.putAll(fragmentArgs)
-            args.putBoolean(EXTRA_FROM_USER, true)
-        }
-        loaderManager.restartLoader(loaderId, args, this)
     }
 
     override fun hasMoreData(data: List<ParcelableStatus>?): Boolean {
@@ -221,19 +207,16 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
         return true
     }
 
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if (isVisibleToUser) {
+            clearNotifications()
+        }
+    }
+
     protected fun getFiltersWhere(table: String): Expression? {
         if (!isFilterEnabled) return null
         return buildStatusFilterWhereClause(preferences, table, null)
-    }
-
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        val context = context
-        if (context != null && isVisibleToUser) {
-            for (accountKey in accountKeys) {
-                twitterWrapper.clearNotificationAsync(notificationType, accountKey)
-            }
-        }
     }
 
     protected open fun processWhere(where: Expression, whereArgs: Array<String>): ParameterizedExpression {
@@ -241,6 +224,42 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
     }
 
     protected abstract fun updateRefreshState()
+
+    protected fun reloadStatuses() {
+        if (context == null || isDetached) return
+        val args = Bundle()
+        val fragmentArgs = arguments
+        if (fragmentArgs != null) {
+            args.putAll(fragmentArgs)
+            args.putBoolean(EXTRA_FROM_USER, true)
+        }
+        loaderManager.restartLoader(loaderId, args, this)
+    }
+
+    private fun showContentOrError() {
+        val accountKeys = this.accountKeys
+        if (adapter.itemCount > 0) {
+            showContent()
+        } else if (accountKeys.isNotEmpty()) {
+            val errorInfo = ErrorInfoStore.getErrorInfo(context,
+                    errorInfoStore[errorInfoKey, accountKeys[0]])
+            if (errorInfo != null) {
+                showEmpty(errorInfo.icon, errorInfo.message)
+            } else {
+                showEmpty(R.drawable.ic_info_refresh, getString(R.string.swipe_down_to_refresh))
+            }
+        } else {
+            showError(R.drawable.ic_info_accounts, getString(R.string.message_toast_no_account_selected))
+        }
+    }
+
+    private fun clearNotifications() {
+        if (context != null && userVisibleHint) {
+            for (accountKey in accountKeys) {
+                twitterWrapper.clearNotificationAsync(notificationType, accountKey)
+            }
+        }
+    }
 
     protected inner class CursorStatusesBusCallback {
 

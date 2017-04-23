@@ -81,7 +81,9 @@ class ContentNotificationManager(
         val accountKey = pref.accountKey
         val resources = context.resources
         val selection = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
-                Expression.greaterThan(Statuses.POSITION_KEY, minPositionKey))
+                Expression.greaterThan(Statuses.POSITION_KEY, minPositionKey),
+                Expression.notEquals(Statuses.IS_GAP, 1)
+        )
         val selectionArgs = arrayOf(accountKey.toString())
         val filteredSelection = buildStatusFilterWhereClause(preferences, Statuses.TABLE_NAME,
                 selection)
@@ -164,7 +166,8 @@ class ContentNotificationManager(
         val accountKey = pref.accountKey
         val where = Expression.and(
                 Expression.equalsArgs(Activities.ACCOUNT_KEY),
-                Expression.greaterThan(Activities.POSITION_KEY, position)
+                Expression.greaterThan(Activities.POSITION_KEY, position),
+                Expression.notEquals(Activities.IS_GAP, 1)
         ).sql
         val whereArgs = arrayOf(accountKey.toString())
         @SuppressLint("Recycle")

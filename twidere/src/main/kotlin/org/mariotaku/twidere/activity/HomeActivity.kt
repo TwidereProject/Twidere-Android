@@ -922,8 +922,8 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                         }.fold(0L, Math::max)
                         val count = DataStoreUtils.getInteractionsCount(context, spec.args,
                                 accountKeys, position, Activities.TIMESTAMP)
-                        publishProgress(TabBadge(i, count))
                         result.put(i, count)
+                        publishProgress(TabBadge(i, count))
                     }
                     CustomTabType.DIRECT_MESSAGES -> {
                         val accountKeys = Utils.getAccountKeys(context, spec.args) ?: activatedKeys
@@ -935,8 +935,8 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                                 accountKeys, extraHaving = unreadHaving)?.useCursor { cur ->
                             return@useCursor cur.count
                         } ?: -1
-                        publishProgress(TabBadge(i, count))
                         result.put(i, count)
+                        publishProgress(TabBadge(i, count))
                     }
                     else -> {
                         publishProgress(TabBadge(i, -1))
