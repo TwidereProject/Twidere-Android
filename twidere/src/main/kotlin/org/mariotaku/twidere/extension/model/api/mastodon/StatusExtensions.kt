@@ -54,7 +54,7 @@ fun Status.toParcelable(accountKey: UserKey): ParcelableStatus {
         result.retweet_id = retweetedStatus.id
         result.retweet_timestamp = retweetedStatus.createdAt?.time ?: 0
         result.retweeted_by_user_key = retweetAccount.getKey(accountKey.host)
-        result.retweeted_by_user_name = retweetAccount.displayName
+        result.retweeted_by_user_name = retweetAccount.name
         result.retweeted_by_user_screen_name = retweetAccount.username
         result.retweeted_by_user_profile_image = retweetAccount.avatar
 
@@ -79,7 +79,7 @@ fun Status.toParcelable(accountKey: UserKey): ParcelableStatus {
 
     val account = status.account
     result.user_key = account.getKey(accountKey.host)
-    result.user_name = account.displayName
+    result.user_name = account.name
     result.user_screen_name = account.username
     result.user_profile_image_url = account.avatar
     result.user_is_protected = account.isLocked

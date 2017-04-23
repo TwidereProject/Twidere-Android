@@ -76,9 +76,9 @@ open class MediaStatusesSearchLoader(
     protected open fun processQuery(details: AccountDetails, query: String): String {
         if (details.type == AccountType.TWITTER) {
             if (details.extras?.official ?: false) {
-                return TweetSearchLoader.smQuery(query, pagination)
+                return TweetSearchLoader.smQuery("$query filter:media", pagination)
             }
-            return "$query exclude:retweets filter:media"
+            return "$query filter:media exclude:retweets"
         }
         return query
     }

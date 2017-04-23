@@ -53,7 +53,7 @@ class NetworkPublicTimelineLoader(
         when (account.type) {
             AccountType.MASTODON -> {
                 val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
-                return mastodon.getPublicTimeline(paging, true).mapToPaginated {
+                return mastodon.getPublicTimeline(paging, false).mapToPaginated {
                     it.toParcelable(account)
                 }
             }

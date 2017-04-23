@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.fragment.statuses
 
 import android.content.Context
-import android.graphics.Rect
 import android.os.Bundle
 import android.support.v4.content.Loader
 import org.mariotaku.twidere.TwidereConstants.*
@@ -73,12 +72,8 @@ open class StatusesSearchFragment : ParcelableStatusesFragment() {
         val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
         val makeGap = args.getBoolean(EXTRA_MAKE_GAP, true)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-        return TweetSearchLoader(activity, accountKey, query, adapterData, savedStatusesFileArgs, tabPosition, fromUser,
-                makeGap, loadingMore)
-    }
-
-    override fun fitSystemWindows(insets: Rect) {
-        super.fitSystemWindows(insets)
+        return TweetSearchLoader(activity, accountKey, query, adapterData, savedStatusesFileArgs,
+                tabPosition, fromUser, makeGap, loadingMore)
     }
 
 }

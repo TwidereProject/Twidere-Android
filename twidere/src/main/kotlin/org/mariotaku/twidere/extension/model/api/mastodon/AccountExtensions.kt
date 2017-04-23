@@ -46,7 +46,7 @@ fun Account.toParcelable(accountKey: UserKey, position: Long = 0): ParcelableUse
     obj.key = getKey(accountKey.host)
     obj.created_at = createdAt?.time ?: -1
     obj.is_protected = isLocked
-    obj.name = displayName?.takeIf(String::isNotEmpty) ?: username
+    obj.name = name
     obj.screen_name = username
     if (note?.isHtml ?: false) {
         val descriptionHtml = HtmlSpanBuilder.fromHtml(note, note)
@@ -70,6 +70,8 @@ fun Account.toParcelable(accountKey: UserKey, position: Long = 0): ParcelableUse
     return obj
 }
 
-val Account.host: String? get() = acct?.let(UserKey::valueOf)?.host
+inline val Account.host: String? get() = acct?.let(UserKey::valueOf)?.host
+
+inline val Account.name: String? get() = displayName?.takeIf(String::isNotEmpty) ?: username
 
 fun Account.getKey(host: String?) = UserKey(id, acct?.let(UserKey::valueOf)?.host ?: host)

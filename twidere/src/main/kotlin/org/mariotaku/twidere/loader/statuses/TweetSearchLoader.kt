@@ -130,7 +130,7 @@ open class TweetSearchLoader(
     companion object {
 
         fun smQuery(query: String, pagination: Pagination?): String {
-            var universalQueryText = "$query filter:media"
+            var universalQueryText = query
 
             if (pagination !is SinceMaxPagination) return universalQueryText
             pagination.maxId?.let { maxId ->
