@@ -53,9 +53,9 @@ class ExtensionsAdapter(
         val info = getItem(position)
         val permissions = info.permissions ?: emptyArray()
         val permissionValid = PermissionsManager.isPermissionValid(*permissions)
-        holder.checkbox.visibility = if (permissionValid) View.VISIBLE else View.GONE
+        holder.checkbox?.visibility = if (permissionValid) View.VISIBLE else View.GONE
         if (permissionValid) {
-            holder.checkbox.isChecked = permissionsManager.checkPermission(info.packageName, *permissions)
+            holder.checkbox?.isChecked = permissionsManager.checkPermission(info.packageName, *permissions)
         }
         holder.text1.text = info.label
         holder.text2.visibility = if (TextUtils.isEmpty(info.description)) View.GONE else View.VISIBLE
