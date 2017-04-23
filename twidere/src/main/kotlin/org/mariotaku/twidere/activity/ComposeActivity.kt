@@ -551,7 +551,18 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 IntentUtils.openDrafts(this)
             }
             R.id.delete -> {
-                TaskStarter.execute(DeleteMediaTask(this, media))
+                val media = this.media
+                val task = DeleteMediaTask(this, media)
+                task.callback = { result ->
+                    setProgressVisible(false)
+                    removeMedia(media.filterIndexed { i, _ -> result[i] })
+                    setMenu()
+                    if (result.contains(false)) {
+                        Toast.makeText(this, R.string.message_toast_error_occurred,
+                                Toast.LENGTH_SHORT).show()
+                    }
+                }
+                TaskStarter.execute(task)
             }
             R.id.toggle_sensitive -> {
                 if (!hasMedia) return true
@@ -1974,14 +1985,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private class AddMediaTask(activity: ComposeActivity, sources: Array<Uri>, copySrc: Boolean,
             deleteSrc: Boolean) : AbsAddMediaTask<((List<ParcelableMediaUpdate>?) -> Unit)?>(
-            activity,
-            sources, copySrc, deleteSrc) {
-
-        private val activityRef = WeakReference(activity)
+            activity, sources, copySrc, deleteSrc) {
 
         override fun afterExecute(callback: ((List<ParcelableMediaUpdate>?) -> Unit)?,
                 result: List<ParcelableMediaUpdate>?) {
-            val activity = activityRef.get() ?: return
+            callback?.invoke(result)
+            val activity = context as? ComposeActivity ?: return
             activity.setProgressVisible(false)
             if (result != null) {
                 activity.addMedia(result)
@@ -1991,31 +2000,24 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
 
         override fun beforeExecute() {
-            val activity = activityRef.get() ?: return
+            val activity = context as? ComposeActivity ?: return
             activity.setProgressVisible(true)
         }
 
     }
 
-    private class DeleteMediaTask(activity: ComposeActivity, val media: Array<ParcelableMediaUpdate>) :
-            AbsDeleteMediaTask<ComposeActivity>(activity, media.mapToArray { Uri.parse(it.uri) }) {
-
-        init {
-            this.callback = activity
-        }
+    private class DeleteMediaTask(
+            activity: ComposeActivity,
+            val media: Array<ParcelableMediaUpdate>
+    ) : AbsDeleteMediaTask<((BooleanArray) -> Unit)?>(activity, media.mapToArray { Uri.parse(it.uri) }) {
 
         override fun beforeExecute() {
-            callback?.setProgressVisible(true)
+            val activity = context as? ComposeActivity ?: return
+            activity.setProgressVisible(true)
         }
 
-        override fun afterExecute(callback: ComposeActivity?, result: BooleanArray?) {
-            if (callback == null || result == null) return
-            callback.setProgressVisible(false)
-            callback.removeMedia(media.filterIndexed { i, _ -> result[i] })
-            callback.setMenu()
-            if (result.any { false }) {
-                Toast.makeText(callback, R.string.message_toast_error_occurred, Toast.LENGTH_SHORT).show()
-            }
+        override fun afterExecute(callback: ((BooleanArray) -> Unit)?, result: BooleanArray) {
+            callback?.invoke(result)
         }
     }
 

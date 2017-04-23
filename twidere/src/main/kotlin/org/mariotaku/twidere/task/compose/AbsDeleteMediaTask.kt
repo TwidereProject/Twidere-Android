@@ -28,13 +28,13 @@ import java.lang.ref.WeakReference
 open class AbsDeleteMediaTask<Callback>(
         context: Context,
         val sources: Array<Uri>
-) : AbstractTask<Unit, BooleanArray?, Callback>() {
+) : AbstractTask<Unit, BooleanArray, Callback>() {
 
     private val contextRef = WeakReference(context)
     val context: Context? get() = contextRef.get()
 
-    override fun doLongOperation(params: Unit?): BooleanArray? {
-        val context = contextRef.get() ?: return null
+    override fun doLongOperation(params: Unit?): BooleanArray {
+        val context = contextRef.get() ?: return kotlin.BooleanArray(sources.size) { false }
         return BooleanArray(sources.size) { Utils.deleteMedia(context, sources[it]) }
     }
 
