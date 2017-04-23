@@ -16,6 +16,14 @@ import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.Proxy
 import java.util.concurrent.TimeUnit
+import okhttp3.ConnectionSpec
+import java.util.ArrayList
+import android.util.Log
+import java.security.NoSuchAlgorithmException
+import javax.net.ssl.SSLContext
+import android.os.Build
+
+
 
 
 /**
@@ -33,7 +41,31 @@ object HttpClientFactory {
     fun initOkHttpClient(conf: HttpClientConfiguration, builder: OkHttpClient.Builder, dns: Dns,
             connectionPool: ConnectionPool, cache: Cache) {
         updateHttpClientConfiguration(builder, conf, dns, connectionPool, cache)
+        updateTLSConnectionSpecs(builder)
         DebugModeUtils.initForOkHttpClient(builder)
+    }
+
+    internal fun nougatECCFix(specList: ArrayList<ConnectionSpec>) {
+        // Shamelessly stolen from Tusky
+        if (Build.VERSION.SDK_INT != Build.VERSION_CODES.N) {
+            return
+        }
+        val sslContext: SSLContext
+        try {
+            sslContext = SSLContext.getInstance("TLS")
+        } catch (e: NoSuchAlgorithmException) {
+            Log.e("HttpClientFactory", "Failed obtaining TLS Context.")
+            return
+        }
+
+        sslContext.init(null, null, null)
+        val cipherSuites = sslContext.socketFactory.defaultCipherSuites
+        val allowedList = cipherSuites.filterNotTo(ArrayList<String>()) { it.contains("ECDH") }
+        val spec = ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+                .cipherSuites(*allowedList.toTypedArray())
+                .supportsTlsExtensions(true)
+                .build()
+        specList.add(spec)
     }
 
     internal fun updateHttpClientConfiguration(builder: OkHttpClient.Builder, conf: HttpClientConfiguration,
@@ -42,6 +74,15 @@ object HttpClientFactory {
         builder.dns(dns)
         builder.connectionPool(connectionPool)
         builder.cache(cache)
+    }
+
+    internal fun updateTLSConnectionSpecs(builder: OkHttpClient.Builder) {
+        //Default spec list from OkHttpClient.DEFAULT_CONNECTION_SPECS
+        var specList: ArrayList<ConnectionSpec> = ArrayList()
+        specList.add(ConnectionSpec.MODERN_TLS)
+        nougatECCFix(specList)
+        specList.add(ConnectionSpec.CLEARTEXT)
+        builder.connectionSpecs(specList)
     }
 
     class HttpClientConfiguration(val prefs: SharedPreferences) {
