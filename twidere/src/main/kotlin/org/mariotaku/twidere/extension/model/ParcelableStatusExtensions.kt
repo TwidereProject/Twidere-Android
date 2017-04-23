@@ -45,6 +45,24 @@ val ParcelableStatus.replyMentions: Array<ParcelableUserMention>
         return result.toTypedArray()
     }
 
+inline val ParcelableStatus.user_acct: String get() = if (account_key.host == user_key.host) {
+    user_screen_name
+} else {
+    "$user_screen_name@${user_key.host}"
+}
+
+inline val ParcelableStatus.retweeted_by_user_acct: String? get() = if (account_key.host == retweeted_by_user_key?.host) {
+    retweeted_by_user_screen_name
+} else {
+    "$retweeted_by_user_screen_name@${retweeted_by_user_key?.host}"
+}
+
+inline val ParcelableStatus.quoted_user_acct: String? get() = if (account_key.host == quoted_user_key?.host) {
+    quoted_user_screen_name
+} else {
+    "$quoted_user_screen_name@${quoted_user_key?.host}"
+}
+
 private fun parcelableUserMention(key: UserKey, name: String, screenName: String) = ParcelableUserMention().also {
     it.key = key
     it.name = name
