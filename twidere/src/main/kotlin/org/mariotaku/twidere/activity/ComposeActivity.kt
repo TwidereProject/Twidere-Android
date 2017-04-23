@@ -141,7 +141,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     // State fields
     private var shouldSkipDraft: Boolean = false
+    private var editSummaryEnabled: Boolean = false
     private var hasEditSummary: Boolean = false
+    private var hasAttachmentStatusVisibility: Boolean = false
     private var hasStatusVisibility: Boolean = false
     private var hasLocationOption: Boolean = false
     private var ignoreMentions: Boolean = false
@@ -579,14 +581,15 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 startActivityForResult(provider.createGifSelectorIntent(), REQUEST_ADD_GIF)
             }
             R.id.edit_summary -> {
-                editSummary.visibility = View.VISIBLE
+                editSummaryEnabled = true
+                updateSummaryTextState()
             }
             else -> {
                 when (item.groupId) {
                     R.id.location_option -> {
                         locationMenuItemSelected(item)
                     }
-                    R.id.visibility_option -> {
+                    R.id.visibility_option, R.id.attachment_visibility_option -> {
                         visibilityMenuItemSelected(item)
                     }
                     else -> {
@@ -795,13 +798,14 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private fun visibilityMenuItemSelected(item: MenuItem) {
         statusVisibility = when (item.itemId) {
-            R.id.visibility_public -> StatusVisibility.PUBLIC
-            R.id.visibility_unlisted -> StatusVisibility.UNLISTED
-            R.id.visibility_private -> StatusVisibility.PRIVATE
-            R.id.visibility_direct -> StatusVisibility.DIRECT
+            R.id.visibility_public, R.id.attachment_visibility_public -> StatusVisibility.PUBLIC
+            R.id.visibility_unlisted, R.id.attachment_visibility_unlisted -> StatusVisibility.UNLISTED
+            R.id.visibility_private, R.id.attachment_visibility_private -> StatusVisibility.PRIVATE
+            R.id.visibility_direct, R.id.attachment_visibility_direct -> StatusVisibility.DIRECT
             else -> null
         }
         updateVisibilityState()
+        updateSummaryTextState()
         setMenu()
         updateTextCount()
     }
@@ -852,11 +856,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private fun displaySelectedAccountsIcon() {
         val accounts = accountsAdapter.selectedAccounts
-        val account = accounts.singleOrNull()
+        val single = accounts.singleOrNull()
 
         val displayDoneIcon = isAccountSelectorVisible
 
-        if (account != null) {
+        if (single != null) {
             accountsCount.setText(null)
 
             if (displayDoneIcon) {
@@ -868,19 +872,23 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             } else {
                 accountProfileImage.clearColorFilter()
                 accountProfileImage.scaleType = ImageView.ScaleType.CENTER_CROP
-                Glide.with(this).loadProfileImage(this, account, accountProfileImage.style)
+                Glide.with(this).loadProfileImage(this, single, accountProfileImage.style)
                         .into(accountProfileImage)
             }
 
-            accountProfileImage.setBorderColor(account.color)
+            accountProfileImage.setBorderColor(single.color)
         } else {
             accountsCount.setText(accounts.size.toString())
 
             Glide.clear(accountProfileImage)
             if (displayDoneIcon) {
+                accountProfileImage.setColorFilter(ThemeUtils.getColorFromAttribute(this,
+                        android.R.attr.colorForeground))
                 accountProfileImage.setImageResource(R.drawable.ic_action_confirm)
                 accountProfileImage.scaleType = ImageView.ScaleType.CENTER_INSIDE
             } else {
+                accountProfileImage.clearColorFilter()
+                accountProfileImage.scaleType = ImageView.ScaleType.CENTER_CROP
                 accountProfileImage.setImageDrawable(null)
             }
 
@@ -903,6 +911,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         updateAccountSelectionState()
         updateLocationState()
         updateVisibilityState()
+        updateSummaryTextState()
         updateUpdateStatusIcon()
         updateMediaState()
         setMenu()
@@ -1037,6 +1046,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
 
         if (extras != null) {
+            if (extras.summaryText?.isNotEmpty() ?: false) {
+                editSummaryEnabled = true
+            }
             editSummary.setText(extras.summaryText)
             statusVisibility = extras.visibility
             possiblySensitive = extras.isPossiblySensitive
@@ -1200,9 +1212,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         editText.accountKey = accounts.firstOrNull()?.key ?: Utils.getDefaultAccountKey(this)
         statusTextCount.maxLength = accounts.textLimit
         val singleAccount = accounts.singleOrNull()
-        val allMastodon = accounts.all { it.type == AccountType.MASTODON }
-        hasEditSummary = allMastodon
+        val allMastodon = accounts.isNotEmpty() && accounts.all { it.type == AccountType.MASTODON }
+        val anyMastodon = accounts.any { it.type == AccountType.MASTODON }
+        hasEditSummary = anyMastodon
         hasStatusVisibility = allMastodon
+        hasAttachmentStatusVisibility = anyMastodon && !allMastodon
         hasLocationOption = !allMastodon
         ignoreMentions = singleAccount?.type == AccountType.TWITTER
         replyToSelf = singleAccount?.let { it.key == inReplyToStatus?.user_key } ?: false
@@ -1297,22 +1311,31 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             StatusVisibility.UNLISTED -> {
                 menu.setItemChecked(R.id.visibility_unlisted, true)
                 menu.setMenuItemIcon(R.id.visibility_submenu, R.drawable.ic_action_web_lock)
+                menu.setItemChecked(R.id.attachment_visibility_unlisted, true)
+                menu.setMenuItemIcon(R.id.attachment_visibility_submenu, R.drawable.ic_action_web_lock)
             }
             StatusVisibility.PRIVATE -> {
                 menu.setItemChecked(R.id.visibility_private, true)
                 menu.setMenuItemIcon(R.id.visibility_submenu, R.drawable.ic_action_lock)
+                menu.setItemChecked(R.id.attachment_visibility_private, true)
+                menu.setMenuItemIcon(R.id.attachment_visibility_submenu, R.drawable.ic_action_lock)
             }
             StatusVisibility.DIRECT -> {
                 menu.setItemChecked(R.id.visibility_direct, true)
                 menu.setMenuItemIcon(R.id.visibility_submenu, R.drawable.ic_action_message)
+                menu.setItemChecked(R.id.attachment_visibility_direct, true)
+                menu.setMenuItemIcon(R.id.attachment_visibility_submenu, R.drawable.ic_action_message)
             }
             else -> { // Default to public
                 menu.setItemChecked(R.id.visibility_public, true)
                 menu.setMenuItemIcon(R.id.visibility_submenu, R.drawable.ic_action_web)
+                menu.setItemChecked(R.id.attachment_visibility_public, true)
+                menu.setMenuItemIcon(R.id.attachment_visibility_submenu, R.drawable.ic_action_web)
             }
         }
 
         menu.setItemAvailability(R.id.visibility_submenu, hasStatusVisibility)
+        menu.setItemAvailability(R.id.attachment_visibility_submenu, hasAttachmentStatusVisibility)
         menu.setItemAvailability(R.id.location_submenu, hasLocationOption)
 
         ThemeUtils.wrapMenuIcon(menuBar, excludeGroups = MENU_GROUP_IMAGE_EXTENSION)
@@ -1590,7 +1613,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun updateVisibilityState() {
-        visibilityLabel.visibility = if (hasStatusVisibility) View.VISIBLE else View.GONE
+        val hasVisibility = hasStatusVisibility || hasAttachmentStatusVisibility
+        visibilityLabel.visibility = if (hasVisibility) View.VISIBLE else View.GONE
         when (statusVisibility) {
             StatusVisibility.UNLISTED -> {
                 visibilityLabel.setText(R.string.label_status_visibility_unlisted)
@@ -1614,6 +1638,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
         }
         visibilityLabel.refreshDrawableState()
+    }
+
+    private fun updateSummaryTextState() {
+        editSummary.visibility = if (editSummaryEnabled && hasEditSummary) View.VISIBLE else View.GONE
     }
 
     private fun getTwitterReplyTextAndMentions(text: String = editText.text?.toString().orEmpty(),
@@ -1967,6 +1995,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             selection.put(account.key, true != selection[account.key])
             activity.updateAccountSelectionState()
             activity.updateVisibilityState()
+            activity.updateSummaryTextState()
             activity.setMenu()
             notifyDataSetChanged()
         }
@@ -1978,6 +2007,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             selection.put(account.key, true != selection[account.key])
             activity.updateAccountSelectionState()
             activity.updateVisibilityState()
+            activity.updateSummaryTextState()
             activity.setMenu()
             notifyDataSetChanged()
         }

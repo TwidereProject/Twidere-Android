@@ -25,7 +25,6 @@ import android.support.annotation.WorkerThread
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.mastodon.Mastodon
-import org.mariotaku.microblog.library.mastodon.model.Results
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.SearchQuery
 import org.mariotaku.microblog.library.twitter.model.Status
@@ -59,9 +58,7 @@ open class TweetSearchLoader(
     @Throws(MicroBlogException::class)
     override fun getStatuses(account: AccountDetails, paging: Paging): PaginatedList<ParcelableStatus> {
         when (account.type) {
-            AccountType.MASTODON -> return getMastodonStatuses(account, paging).mapToPaginated(Results::getStatuses) {
-                it.toParcelable(account)
-            }
+            AccountType.MASTODON -> return getMastodonStatuses(account, paging)
             else -> return getMicroBlogStatuses(account, paging).mapMicroBlogToPaginated {
                 it.toParcelable(account, profileImageSize)
             }
@@ -92,10 +89,13 @@ open class TweetSearchLoader(
         }
     }
 
-    private fun getMastodonStatuses(account: AccountDetails, paging: Paging): Results {
+    private fun getMastodonStatuses(account: AccountDetails, paging: Paging): PaginatedList<ParcelableStatus> {
         val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
         if (query == null) throw MicroBlogException("Empty query")
-        return mastodon.search(query, true, paging)
+        val tagQuery = if (query.startsWith("#")) query.substringAfter("#") else query
+        return mastodon.getHashtagTimeline(tagQuery, paging).mapToPaginated {
+            it.toParcelable(account)
+        }
     }
 
     private fun getMicroBlogStatuses(account: AccountDetails, paging: Paging): List<Status> {

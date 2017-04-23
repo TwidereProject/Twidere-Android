@@ -35,7 +35,7 @@ import org.mariotaku.twidere.view.holder.TimelineFilterHeaderViewHolder
  */
 interface IStatusViewHolder : CardMediaContainer.OnMediaClickListener {
 
-    fun displayStatus(status: ParcelableStatus, displayInReplyTo: Boolean = true,
+    fun display(status: ParcelableStatus, displayInReplyTo: Boolean = true,
             displayPinned: Boolean = false)
 
     val profileImageView: ImageView?

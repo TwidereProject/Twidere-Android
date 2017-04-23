@@ -62,6 +62,8 @@ import org.mariotaku.twidere.fragment.message.MessageConversationInfoFragment
 import org.mariotaku.twidere.fragment.message.MessageNewConversationFragment
 import org.mariotaku.twidere.fragment.message.MessagesConversationFragment
 import org.mariotaku.twidere.fragment.message.MessagesEntriesFragment
+import org.mariotaku.twidere.fragment.search.MastodonSearchFragment
+import org.mariotaku.twidere.fragment.search.SearchFragment
 import org.mariotaku.twidere.fragment.statuses.*
 import org.mariotaku.twidere.fragment.users.*
 import org.mariotaku.twidere.graphic.EmptyDrawable
@@ -424,7 +426,11 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
                 }
             }
             LINK_ID_SEARCH -> {
-                setTitle(android.R.string.search_go)
+                setTitle(R.string.title_search)
+                setSubtitle(uri.getQueryParameter(QUERY_PARAM_QUERY))
+            }
+            LINK_ID_MASTODON_SEARCH -> {
+                setTitle(R.string.title_search)
                 setSubtitle(uri.getQueryParameter(QUERY_PARAM_QUERY))
             }
             LINK_ID_ACCOUNTS -> {
@@ -837,6 +843,16 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
                     return null
                 }
                 fragment = SearchFragment()
+            }
+            LINK_ID_MASTODON_SEARCH -> {
+                val paramQuery = uri.getQueryParameter(QUERY_PARAM_QUERY)
+                if (!args.containsKey(EXTRA_QUERY) && !TextUtils.isEmpty(paramQuery)) {
+                    args.putString(EXTRA_QUERY, paramQuery)
+                }
+                if (!args.containsKey(EXTRA_QUERY)) {
+                    return null
+                }
+                fragment = MastodonSearchFragment()
             }
             LINK_ID_FILTERS_IMPORT_BLOCKS -> {
                 fragment = FiltersImportBlocksFragment()

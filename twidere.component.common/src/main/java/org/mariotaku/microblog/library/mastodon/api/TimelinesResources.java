@@ -39,6 +39,6 @@ public interface TimelinesResources {
             throws MicroBlogException;
 
     @GET("/v1/timelines/tag/{tag}")
-    LinkHeaderList<Status> getHashtagTimeline(@Path("tag") String hashtag, @Query Paging paging,
-            @Query("local") boolean local) throws MicroBlogException;
+    LinkHeaderList<Status> getHashtagTimeline(@Path("tag") String hashtag, @Query Paging paging)
+            throws MicroBlogException;
 }

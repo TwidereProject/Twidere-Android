@@ -104,7 +104,7 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
                 currentDialog.itemContent.visibility = View.VISIBLE
                 currentDialog.loadProgress.visibility = View.GONE
                 currentDialog.itemContent.isFocusable = false
-                holder.displayStatus(status = status, displayInReplyTo = false)
+                holder.display(status = status, displayInReplyTo = false)
                 currentDialog.onStatusLoaded(details, status, savedInstanceState)
             }.failUi {
                 val fragment = weakThis.get()?.takeIf { it.dialog != null } ?: return@failUi

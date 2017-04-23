@@ -17,25 +17,19 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.view.holder;
+package org.mariotaku.twidere.view.holder
 
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.CheckBox;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.support.v7.widget.RecyclerView
+import android.view.View
+import android.widget.CheckBox
+import android.widget.ImageView
+import android.widget.TextView
 
-public class TwoLineWithIconViewHolder extends RecyclerView.ViewHolder {
+open class TwoLineWithIconViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    public final ImageView icon;
-    public final TextView text1, text2;
-    public final CheckBox checkbox;
+    val icon = itemView.findViewById(android.R.id.icon) as ImageView
+    val text1 = itemView.findViewById(android.R.id.text1) as TextView
+    val text2 = itemView.findViewById(android.R.id.text2) as TextView
+    val checkbox = itemView.findViewById(android.R.id.checkbox) as CheckBox
 
-    public TwoLineWithIconViewHolder(final View itemView) {
-        super(itemView);
-        icon = (ImageView) itemView.findViewById(android.R.id.icon);
-        text1 = (TextView) itemView.findViewById(android.R.id.text1);
-        text2 = (TextView) itemView.findViewById(android.R.id.text2);
-        checkbox = (CheckBox) itemView.findViewById(android.R.id.checkbox);
-    }
 }

@@ -40,6 +40,35 @@
                 android:id="@+id/edit_summary"
                 android:icon="@drawable/ic_action_content_warning"
                 android:title="@string/action_add_content_warning"/>
+            <item
+                android:id="@+id/attachment_visibility_submenu"
+                android:enabled="false"
+                android:icon="@drawable/ic_action_web"
+                android:title="@string/action_set_status_visibility"
+                android:visible="false">
+                <menu>
+                    <group
+                        android:id="@+id/attachment_visibility_option"
+                        android:checkableBehavior="single">
+                        <item
+                            android:id="@+id/attachment_visibility_public"
+                            android:icon="@drawable/ic_action_web"
+                            android:title="@string/label_status_visibility_public"/>
+                        <item
+                            android:id="@+id/attachment_visibility_unlisted"
+                            android:icon="@drawable/ic_action_web_lock"
+                            android:title="@string/label_status_visibility_unlisted"/>
+                        <item
+                            android:id="@+id/attachment_visibility_private"
+                            android:icon="@drawable/ic_action_lock"
+                            android:title="@string/label_status_visibility_private"/>
+                        <item
+                            android:id="@+id/attachment_visibility_direct"
+                            android:icon="@drawable/ic_action_message"
+                            android:title="@string/label_status_visibility_direct"/>
+                    </group>
+                </menu>
+            </item>
         </menu>
     </item>
     <item

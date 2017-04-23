@@ -93,7 +93,7 @@ class UserViewHolder(
         }
     }
 
-    fun displayUser(user: ParcelableUser) {
+    fun display(user: ParcelableUser) {
         val context = itemView.context
         val manager = adapter.userColorNameManager
         val twitter = adapter.twitterWrapper

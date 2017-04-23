@@ -58,7 +58,7 @@ class ParcelableUserListsAdapter(
     }
 
     private fun bindUserList(holder: UserListViewHolder, position: Int) {
-        holder.displayUserList(getUserList(position)!!)
+        holder.display(getUserList(position)!!)
     }
 
     override fun getItemCount(): Int {

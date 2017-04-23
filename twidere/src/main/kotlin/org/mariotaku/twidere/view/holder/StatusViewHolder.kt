@@ -140,7 +140,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         mediaPreview.displayMedia(R.drawable.featured_graphics)
     }
 
-    override fun displayStatus(status: ParcelableStatus, displayInReplyTo: Boolean,
+    override fun display(status: ParcelableStatus, displayInReplyTo: Boolean,
             displayPinned: Boolean) {
 
         val context = itemView.context

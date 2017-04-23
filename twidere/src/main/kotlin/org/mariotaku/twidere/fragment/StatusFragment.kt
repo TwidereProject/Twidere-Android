@@ -1701,7 +1701,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     // We only display that indicator for first conversation item
                     val itemType = getItemType(position)
                     val displayInReplyTo = itemType == ITEM_IDX_CONVERSATION && position - getItemTypeStart(position) == 0
-                    statusHolder.displayStatus(status = status, displayInReplyTo = displayInReplyTo)
+                    statusHolder.display(status = status, displayInReplyTo = displayInReplyTo)
                 }
                 VIEW_TYPE_REPLY_ERROR -> {
                     val errorHolder = holder as StatusErrorItemViewHolder

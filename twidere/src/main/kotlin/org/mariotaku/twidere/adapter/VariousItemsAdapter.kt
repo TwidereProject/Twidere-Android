@@ -5,13 +5,16 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.RequestManager
-
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
+import org.mariotaku.twidere.alias.ItemClickListener
+import org.mariotaku.twidere.model.ParcelableHashtag
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler
 import org.mariotaku.twidere.util.TwidereLinkify
+import org.mariotaku.twidere.view.holder.HashtagViewHolder
 import org.mariotaku.twidere.view.holder.StatusViewHolder
 import org.mariotaku.twidere.view.holder.UserListViewHolder
 import org.mariotaku.twidere.view.holder.UserViewHolder
@@ -26,6 +29,7 @@ class VariousItemsAdapter(
 
     private val inflater = LayoutInflater.from(context)
     val dummyAdapter: DummyItemAdapter
+    var hashtagClickListener: ItemClickListener? = null
 
     private var data: List<*>? = null
 
@@ -51,6 +55,11 @@ class VariousItemsAdapter(
                 return ParcelableUserListsAdapter.createUserListViewHolder(dummyAdapter, inflater,
                         parent)
             }
+            VIEW_TYPE_HASHTAG -> {
+                val view = inflater.inflate(R.layout.list_item_two_line_small, parent, false)
+                val holder = HashtagViewHolder(view, hashtagClickListener)
+                return holder
+            }
         }
         throw UnsupportedOperationException()
     }
@@ -59,14 +68,17 @@ class VariousItemsAdapter(
         val obj = getItem(position)
         when (holder.itemViewType) {
             VIEW_TYPE_STATUS -> {
-                (holder as StatusViewHolder).displayStatus(obj as ParcelableStatus,
+                (holder as StatusViewHolder).display(obj as ParcelableStatus,
                         displayInReplyTo = true)
             }
             VIEW_TYPE_USER -> {
-                (holder as UserViewHolder).displayUser(obj as ParcelableUser)
+                (holder as UserViewHolder).display(obj as ParcelableUser)
             }
             VIEW_TYPE_USER_LIST -> {
-                (holder as UserListViewHolder).displayUserList(obj as ParcelableUserList)
+                (holder as UserListViewHolder).display(obj as ParcelableUserList)
+            }
+            VIEW_TYPE_HASHTAG -> {
+                (holder as HashtagViewHolder).display(obj as ParcelableHashtag)
             }
         }
     }
@@ -76,14 +88,13 @@ class VariousItemsAdapter(
     }
 
     private fun getItemViewType(obj: Any): Int {
-        if (obj is ParcelableStatus) {
-            return VIEW_TYPE_STATUS
-        } else if (obj is ParcelableUser) {
-            return VIEW_TYPE_USER
-        } else if (obj is ParcelableUserList) {
-            return VIEW_TYPE_USER_LIST
+        when (obj) {
+            is ParcelableStatus -> return VIEW_TYPE_STATUS
+            is ParcelableUser -> return VIEW_TYPE_USER
+            is ParcelableUserList -> return VIEW_TYPE_USER_LIST
+            is ParcelableHashtag -> return VIEW_TYPE_HASHTAG
+            else -> throw UnsupportedOperationException("Unsupported object " + obj)
         }
-        throw UnsupportedOperationException("Unsupported object " + obj)
     }
 
     fun setData(data: List<*>?) {
@@ -105,5 +116,6 @@ class VariousItemsAdapter(
         val VIEW_TYPE_STATUS = 1
         val VIEW_TYPE_USER = 2
         val VIEW_TYPE_USER_LIST = 3
+        val VIEW_TYPE_HASHTAG = 4
     }
 }

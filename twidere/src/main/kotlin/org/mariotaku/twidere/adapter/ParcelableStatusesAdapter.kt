@@ -320,7 +320,7 @@ abstract class ParcelableStatusesAdapter(
             VIEW_TYPE_STATUS -> {
                 val countIdx = getItemCountIndex(position)
                 val status = getStatus(position, countIdx)
-                (holder as IStatusViewHolder).displayStatus(status, displayInReplyTo = isShowInReplyTo,
+                (holder as IStatusViewHolder).display(status, displayInReplyTo = isShowInReplyTo,
                         displayPinned = countIdx == ITEM_INDEX_PINNED_STATUS)
             }
             VIEW_TYPE_FILTER_HEADER -> {

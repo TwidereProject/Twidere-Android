@@ -96,6 +96,7 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String AUTHORITY_NETWORK_PUBLIC_TIMELINE = "network_public_timeline";
     String AUTHORITY_MESSAGES = "direct_messages";
     String AUTHORITY_SEARCH = "search";
+    String AUTHORITY_MASTODON_SEARCH = "mastodon_search";
     String AUTHORITY_MAP = "map";
     String AUTHORITY_USER_LIST = "user_list";
     String AUTHORITY_USER_LIST_TIMELINE = "user_list_timeline";

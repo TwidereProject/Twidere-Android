@@ -55,7 +55,7 @@ class MediaStatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: 
         mediaImageContainer.setAspectRatioSource(aspectRatioSource)
     }
 
-    override fun displayStatus(status: ParcelableStatus, displayInReplyTo: Boolean,
+    override fun display(status: ParcelableStatus, displayInReplyTo: Boolean,
             displayPinned: Boolean) {
         val context = itemView.context
 

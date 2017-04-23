@@ -59,7 +59,7 @@ class ParcelableUsersAdapter(
     }
 
     private fun bindUser(holder: UserViewHolder, position: Int) {
-        holder.displayUser(getUser(position)!!)
+        holder.display(getUser(position)!!)
     }
 
     override fun getItemCount(): Int {

@@ -63,7 +63,7 @@ class UserListViewHolder(
         profileImageView.style = adapter.profileImageStyle
     }
 
-    fun displayUserList(userList: ParcelableUserList) {
+    fun display(userList: ParcelableUserList) {
         val context = itemView.context
         val manager = adapter.userColorNameManager
 

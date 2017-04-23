@@ -244,7 +244,7 @@ class ParcelableActivitiesAdapter(
             ITEM_VIEW_TYPE_STATUS -> {
                 val status = getActivity(position).getActivityStatus() ?: return
                 val statusViewHolder = holder as IStatusViewHolder
-                statusViewHolder.displayStatus(status = status, displayInReplyTo = true)
+                statusViewHolder.display(status = status, displayInReplyTo = true)
             }
             ITEM_VIEW_TYPE_TITLE_SUMMARY -> {
                 bindTitleSummaryViewHolder(holder as ActivityTitleSummaryViewHolder, position)

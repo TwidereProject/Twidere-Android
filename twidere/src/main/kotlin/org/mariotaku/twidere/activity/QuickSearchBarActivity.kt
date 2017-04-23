@@ -259,22 +259,24 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
     }
 
     override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-        val adapter = (suggestionsList.adapter ?: return) as SuggestionsAdapter
-        val item = adapter.getSuggestionItem(position)!!
+        val adapter = suggestionsList.adapter as SuggestionsAdapter
+        val item = adapter.getSuggestionItem(position) ?: return
+        val details = selectedAccountDetails ?: return
         when (adapter.getItemViewType(position)) {
             SuggestionsAdapter.VIEW_TYPE_USER_SUGGESTION_ITEM -> {
-                IntentUtils.openUserProfile(this, selectedAccountDetails?.key,
+                IntentUtils.openUserProfile(this, details.key,
                         UserKey.valueOf(item.extra_id!!), item.summary, null,
                         preferences[newDocumentApiKey], Referral.DIRECT, null)
                 finish()
             }
             SuggestionsAdapter.VIEW_TYPE_USER_SCREEN_NAME -> {
-                IntentUtils.openUserProfile(this, selectedAccountDetails?.key, null, item.title,
+                IntentUtils.openUserProfile(this, details.key, null, item.title,
                         null, preferences[newDocumentApiKey], Referral.DIRECT, null)
                 finish()
             }
             SuggestionsAdapter.VIEW_TYPE_SAVED_SEARCH, SuggestionsAdapter.VIEW_TYPE_SEARCH_HISTORY -> {
-                IntentUtils.openSearch(this, selectedAccountDetails?.key, item.title!!)
+                val query = item.title ?: return
+                IntentUtils.openSearch(this, details.key, query)
                 setResult(RESULT_SEARCH_PERFORMED)
                 finish()
             }

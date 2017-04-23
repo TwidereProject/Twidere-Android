@@ -364,6 +364,26 @@ object IntentUtils {
         context.startActivity(intent)
     }
 
+    fun openMastodonSearch(context: Context, accountKey: UserKey?, query: String) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        // Some devices cannot process query parameter with hashes well, so add this intent extra
+        intent.putExtra(EXTRA_QUERY, query)
+        if (accountKey != null) {
+            intent.putExtra(EXTRA_ACCOUNT_KEY, accountKey)
+        }
+
+        val builder = Uri.Builder()
+        builder.scheme(SCHEME_TWIDERE)
+        builder.authority(AUTHORITY_MASTODON_SEARCH)
+        if (accountKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
+        }
+        builder.appendQueryParameter(QUERY_PARAM_QUERY, query)
+        intent.data = builder.build()
+
+        context.startActivity(intent)
+    }
+
     fun status(accountKey: UserKey?, statusId: String): Intent {
         val uri = LinkCreator.getTwidereStatusLink(accountKey, statusId)
         return Intent(Intent.ACTION_VIEW, uri)
