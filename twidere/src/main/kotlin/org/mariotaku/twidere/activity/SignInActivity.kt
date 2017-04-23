@@ -380,8 +380,10 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         }.failUi {
             val activity = weakThis.get() ?: return@failUi
             // TODO show error message
+            activity.onSignInError(it)
         }.alwaysUi {
-            executeAfterFragmentResumed {
+            val activity = weakThis.get() ?: return@alwaysUi
+            activity.executeAfterFragmentResumed {
                 it.supportFragmentManager.dismissDialogFragment("open_browser_auth")
             }
         }

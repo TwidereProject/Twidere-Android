@@ -31,6 +31,7 @@ import org.mariotaku.microblog.library.mastodon.api.NotificationsResources;
 import org.mariotaku.microblog.library.mastodon.api.ReportsResources;
 import org.mariotaku.microblog.library.mastodon.api.SearchResources;
 import org.mariotaku.microblog.library.mastodon.api.StatusesResources;
+import org.mariotaku.microblog.library.mastodon.api.StreamingResources;
 import org.mariotaku.microblog.library.mastodon.api.TimelinesResources;
 
 /**
@@ -39,6 +40,6 @@ import org.mariotaku.microblog.library.mastodon.api.TimelinesResources;
 public interface Mastodon extends AccountsResources, AppsResources, BlocksResources,
         FavouritesResources, FollowRequestsResources, FollowsResources, InstancesResources,
         MediaResources, MutesResources, NotificationsResources, ReportsResources, SearchResources,
-        StatusesResources, TimelinesResources {
+        StatusesResources, TimelinesResources, StreamingResources {
 
 }
