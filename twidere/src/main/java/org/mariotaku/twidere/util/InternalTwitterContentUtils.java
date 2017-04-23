@@ -25,7 +25,6 @@ import org.mariotaku.twidere.util.database.FilterQueryBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import kotlin.Pair;
 
@@ -34,10 +33,7 @@ import kotlin.Pair;
  */
 public class InternalTwitterContentUtils {
 
-    public static final int TWITTER_BULK_QUERY_COUNT = 100;
-    private static final Pattern PATTERN_TWITTER_STATUS_LINK = Pattern.compile("https?://twitter\\.com/(?:#!/)?(\\w+)/status(es)?/(\\d+)");
     private static final CharSequenceTranslator UNESCAPE_TWITTER_RAW_TEXT = new LookupTranslator(EntityArrays.BASIC_UNESCAPE());
-    private static final CharSequenceTranslator ESCAPE_TWITTER_RAW_TEXT = new LookupTranslator(EntityArrays.BASIC_ESCAPE());
 
     private InternalTwitterContentUtils() {
     }
@@ -73,9 +69,8 @@ public class InternalTwitterContentUtils {
         }
     }
 
-    public static boolean isFiltered(final SQLiteDatabase database, final ParcelableStatus status,
-            final boolean filterRTs) {
-        if (database == null || status == null) return false;
+    public static boolean isFiltered(@NonNull final SQLiteDatabase database,
+            @NonNull final ParcelableStatus status, final boolean filterRTs) {
         return isFiltered(database, status.user_key, status.text_plain, status.quoted_text_plain,
                 status.spans, status.quoted_spans, status.source, status.quoted_source,
                 status.retweeted_by_user_key, status.quoted_user_key, filterRTs);
@@ -93,6 +88,7 @@ public class InternalTwitterContentUtils {
         return authority != null && authority.endsWith(".twimg.com") ? baseUrl + "/" + type : baseUrl;
     }
 
+    @NonNull
     public static String getBestBannerType(final int width, int height) {
         if (height > 0 && width / height >= 3) {
             if (width <= 300) return "300x100";
@@ -115,9 +111,10 @@ public class InternalTwitterContentUtils {
         final UrlEntity[] urls = user.getDescriptionEntities();
         if (urls != null) {
             for (final UrlEntity url : urls) {
-                final String expanded_url = url.getExpandedUrl();
-                if (expanded_url != null) {
-                    builder.addLink(expanded_url, url.getDisplayUrl(), url.getStart(), url.getEnd());
+                final String expandedUrl = url.getExpandedUrl();
+                if (expandedUrl != null) {
+                    builder.addLink(expandedUrl, url.getDisplayUrl(), url.getStart(), url.getEnd(),
+                            false);
                 }
             }
         }
@@ -228,7 +225,7 @@ public class InternalTwitterContentUtils {
                 final String mediaUrl = getMediaUrl(mediaEntity);
                 if (mediaUrl != null && getStartEndForEntity(mediaEntity, startEnd)) {
                     builder.addLink(mediaEntity.getExpandedUrl(), mediaEntity.getDisplayUrl(),
-                            startEnd[0], startEnd[1]);
+                            startEnd[0], startEnd[1], false);
                 }
             }
         }
@@ -238,7 +235,7 @@ public class InternalTwitterContentUtils {
                 final String expandedUrl = urlEntity.getExpandedUrl();
                 if (expandedUrl != null && getStartEndForEntity(urlEntity, startEnd)) {
                     builder.addLink(expandedUrl, urlEntity.getDisplayUrl(), startEnd[0],
-                            startEnd[1]);
+                            startEnd[1], false);
                 }
             }
         }

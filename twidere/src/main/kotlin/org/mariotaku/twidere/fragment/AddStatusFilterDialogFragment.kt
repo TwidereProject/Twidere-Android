@@ -158,7 +158,9 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
                 list.add(FilterItemInfo(FilterItemInfo.FILTER_TYPE_KEYWORD, hashtag))
             }
             val source = HtmlEscapeHelper.toPlainText(status.source)
-            list.add(FilterItemInfo(FilterItemInfo.FILTER_TYPE_SOURCE, source))
+            if (source != null) {
+                list.add(FilterItemInfo(FilterItemInfo.FILTER_TYPE_SOURCE, source))
+            }
             return list.toTypedArray()
         }
 

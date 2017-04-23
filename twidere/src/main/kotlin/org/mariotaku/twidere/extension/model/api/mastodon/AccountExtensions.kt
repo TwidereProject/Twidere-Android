@@ -54,7 +54,7 @@ fun Account.toParcelable(accountKey: UserKey, position: Long = 0): ParcelableUse
         obj.description_plain = obj.description_unescaped
         obj.description_spans = descriptionHtml?.spanItems
     } else {
-        obj.description_unescaped = HtmlEscapeHelper.unescape(note)
+        obj.description_unescaped = note?.let(HtmlEscapeHelper::unescape)
         obj.description_plain = obj.description_unescaped
     }
     obj.url = url
