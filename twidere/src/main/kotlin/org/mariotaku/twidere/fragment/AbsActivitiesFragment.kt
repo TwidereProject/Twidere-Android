@@ -369,7 +369,7 @@ abstract class AbsActivitiesFragment protected constructor() :
     }
 
     override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
-        val status = getActivityStatus(position) ?: return
+        val status = getActivityStatus(position)?.takeIf { it.quoted_id != null } ?: return
         IntentUtils.openStatus(context, status.account_key, status.quoted_id)
     }
 

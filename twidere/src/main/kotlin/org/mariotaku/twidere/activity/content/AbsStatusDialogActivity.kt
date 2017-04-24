@@ -30,7 +30,7 @@ import org.mariotaku.twidere.model.UserKey
 
 abstract class AbsStatusDialogActivity : BaseActivity() {
 
-    private val statusId: String
+    private val statusId: String?
         get() = intent.getStringExtra(EXTRA_STATUS_ID)
 
     private val accountKey: UserKey?
@@ -45,6 +45,11 @@ abstract class AbsStatusDialogActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
+            val statusId = this.statusId ?: run {
+                setResult(RESULT_CANCELED)
+                finish()
+                return
+            }
             val accountKey = this.accountKey
             if (accountKey != null) {
                 showDialogFragment(accountKey, statusId, status)
@@ -62,6 +67,11 @@ abstract class AbsStatusDialogActivity : BaseActivity() {
         when (requestCode) {
             REQUEST_SELECT_ACCOUNT -> {
                 if (resultCode == RESULT_OK && data != null) {
+                    val statusId = this.statusId ?: run {
+                        setResult(RESULT_CANCELED)
+                        finish()
+                        return
+                    }
                     val accountKey = data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
                     showDialogFragment(accountKey, statusId, status)
                     return
