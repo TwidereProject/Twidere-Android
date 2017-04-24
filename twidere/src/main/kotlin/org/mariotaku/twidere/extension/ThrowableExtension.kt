@@ -24,14 +24,16 @@ import android.text.format.DateUtils
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.util.StatusCodeMessageUtils
+import java.security.cert.CertPathValidatorException
 
 /**
  * Created by mariotaku on 2017/4/20.
  */
 
-fun Throwable.getErrorMessage(context: Context): CharSequence {
-    if (this is MicroBlogException) return getMicroBlogErrorMessage(context)
-    return message ?: toString()
+fun Throwable.getErrorMessage(context: Context): CharSequence = when (this) {
+    is MicroBlogException -> getMicroBlogErrorMessage(context)
+    is CertPathValidatorException -> context.getString(R.string.message_toast_ssl_tls_error)
+    else -> message ?: toString()
 }
 
 
