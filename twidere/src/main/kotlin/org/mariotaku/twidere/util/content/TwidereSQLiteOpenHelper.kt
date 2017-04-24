@@ -112,10 +112,10 @@ class TwidereSQLiteOpenHelper(
         for (i in 0 until tabTypes.size) {
             @CustomTabType
             val tabType = tabTypes[i]
-            val conf = TabConfiguration.ofType(tabType)
+            val conf = TabConfiguration.ofType(tabType) ?: continue
             val tab = Tab().apply {
                 this.type = tabType
-                this.icon = conf!!.icon.persistentKey
+                this.icon = conf.icon.persistentKey
                 this.position = i
             }
             db.insert(Tabs.TABLE_NAME, null, creator.create(tab))

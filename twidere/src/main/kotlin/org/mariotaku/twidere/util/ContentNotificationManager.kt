@@ -191,7 +191,6 @@ class ContentNotificationManager(
             style.setSummaryText(accountName)
             val ci = ObjectCursor.indicesFrom(c, ParcelableActivity::class.java)
 
-            var timestamp = -1L
             var newMaxPositionKey = -1L
             val filteredUserKeys = DataStoreUtils.getFilteredUserKeys(context)
             var consumed = 0
@@ -213,11 +212,6 @@ class ContentNotificationManager(
                 val sources = ParcelableActivityUtils.getAfterFilteredSources(activity)
 
                 if (sources.isEmpty()) return@forEachRow false
-
-
-                if (timestamp == -1L) {
-                    timestamp = activity.timestamp
-                }
 
                 val message = ActivityTitleSummaryMessage.get(context, userColorNameManager,
                         activity, sources, 0, useStarForLikes, nameFirst) ?: return@forEachRow false
@@ -250,13 +244,9 @@ class ContentNotificationManager(
             style.setBigContentTitle(title)
             builder.setNumber(displayCount)
             builder.setContentIntent(getContentIntent(context, CustomTabType.NOTIFICATIONS_TIMELINE,
-                    NotificationType.INTERACTIONS, accountKey, timestamp))
+                    NotificationType.INTERACTIONS, accountKey, newMaxPositionKey))
             builder.setDeleteIntent(getMarkReadDeleteIntent(context, NotificationType.INTERACTIONS,
                     accountKey, newMaxPositionKey, false))
-            if (timestamp != -1L) {
-                builder.setDeleteIntent(getMarkReadDeleteIntent(context,
-                        NotificationType.INTERACTIONS, accountKey, timestamp, false))
-            }
         } catch (e: IOException) {
             return
         } finally {

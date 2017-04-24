@@ -21,9 +21,11 @@ package org.mariotaku.twidere.model.tab.impl
 
 import android.content.Context
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.TabAccountFlags
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_PLACE
 import org.mariotaku.twidere.fragment.TrendsSuggestionsFragment
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.model.tab.StringHolder
@@ -84,4 +86,10 @@ class TrendsTabConfiguration : TabConfiguration() {
         }
         return true
     }
+
+    override fun checkAccountAvailability(details: AccountDetails) = when (details.type) {
+        AccountType.FANFOU, AccountType.TWITTER -> true
+        else -> false
+    }
+
 }
