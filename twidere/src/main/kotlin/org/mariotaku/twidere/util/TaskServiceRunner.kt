@@ -33,6 +33,7 @@ import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
 class TaskServiceRunner(
         val context: Context,
         val preferences: SharedPreferences,
+        val activityTracker: ActivityTracker,
         val bus: Bus
 ) {
 
@@ -62,15 +63,16 @@ class TaskServiceRunner(
         when (action) {
             ACTION_REFRESH_HOME_TIMELINE -> {
                 val task = GetHomeTimelineTask(context)
-                task.params = AutoRefreshTaskParam(context, preferences,
+                task.params = AutoRefreshTaskParam(context, preferences, activityTracker.isEmpty,
                         AccountPreferences::isAutoRefreshHomeTimelineEnabled) { accountKeys ->
-                    DataStoreUtils.getNewestStatusIds(context, Statuses.CONTENT_URI, accountKeys.toNulls())
+                    DataStoreUtils.getNewestStatusIds(context, Statuses.CONTENT_URI,
+                            accountKeys.toNulls())
                 }
                 return task
             }
             ACTION_REFRESH_NOTIFICATIONS -> {
                 val task = GetActivitiesAboutMeTask(context)
-                task.params = AutoRefreshTaskParam(context, preferences,
+                task.params = AutoRefreshTaskParam(context, preferences, activityTracker.isEmpty,
                         AccountPreferences::isAutoRefreshMentionsEnabled) { accountKeys ->
                     DataStoreUtils.getRefreshNewestActivityMaxPositions(context,
                             Activities.AboutMe.CONTENT_URI, accountKeys.toNulls())
@@ -81,7 +83,7 @@ class TaskServiceRunner(
                 val task = GetMessagesTask(context)
                 task.params = object : GetMessagesTask.RefreshNewTaskParam(context) {
 
-                    override val isBackground: Boolean = true
+                    override val isBackground: Boolean = activityTracker.isEmpty
 
                     override val accountKeys: Array<UserKey> by lazy {
                         AccountPreferences.getAccountPreferences(context, preferences,
@@ -108,6 +110,7 @@ class TaskServiceRunner(
     class AutoRefreshTaskParam(
             val context: Context,
             val preferences: SharedPreferences,
+            override val isBackground: Boolean,
             val refreshable: (AccountPreferences) -> Boolean,
             val getSinceIds: (Array<UserKey>) -> Array<String?>?
     ) : RefreshTaskParam {
@@ -124,7 +127,6 @@ class TaskServiceRunner(
                 SinceMaxPagination().also { it.sinceId = sinceId }
             }
 
-        override val isBackground: Boolean = true
     }
 
     companion object {
