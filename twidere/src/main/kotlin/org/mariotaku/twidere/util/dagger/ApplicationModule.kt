@@ -254,8 +254,9 @@ class ApplicationModule(private val context: Context) {
 
     @Provides
     @Singleton
-    fun taskCreator(preferences: SharedPreferences, bus: Bus): TaskServiceRunner {
-        return TaskServiceRunner(context, preferences, bus)
+    fun taskCreator(preferences: SharedPreferences, activityTracker: ActivityTracker,
+            bus: Bus): TaskServiceRunner {
+        return TaskServiceRunner(context, preferences, activityTracker, bus)
     }
 
     @Provides
