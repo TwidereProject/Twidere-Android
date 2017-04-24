@@ -1393,10 +1393,20 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
             override fun onLinkClick(link: String, orig: String?, accountKey: UserKey?,
                     extraId: Long, type: Int, sensitive: Boolean, start: Int, end: Int): Boolean {
-                val current = getCurrentMedia(link, extraId.toInt())
+                val position = extraId.toInt()
+                val current = getCurrentMedia(link, position)
                 if (current != null && !current.open_browser) {
                     expandOrOpenMedia(current)
                     return true
+                }
+                when (type) {
+                    TwidereLinkify.LINK_TYPE_MENTION -> {
+                        val status = adapter.getStatus(position)
+                        val userKey = MastodonPlaceholderUserKey(status.user_key.host ?: accountKey?.host)
+                        IntentUtils.openUserProfile(context, accountKey, userKey, link, null,
+                                preferences[newDocumentApiKey], Referral.USER_MENTION, null)
+                        return true
+                    }
                 }
                 return super.onLinkClick(link, orig, accountKey, extraId, type, sensitive, start, end)
             }

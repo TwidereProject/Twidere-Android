@@ -28,3 +28,7 @@ import org.mariotaku.twidere.model.UserKey
 private const val mastodonPlaceholderId = "#mastodon*placeholder#"
 
 val UserKey.isMastodonPlaceholder get() = mastodonPlaceholderId == id && host != null
+
+fun MastodonPlaceholderUserKey(host: String?): UserKey {
+    return UserKey(mastodonPlaceholderId, host)
+}
