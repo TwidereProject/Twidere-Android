@@ -924,6 +924,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 intent.putExtra(EXTRA_ACCOUNT, AccountUtils.getAccountDetails(am, user.account_key,
                         true))
                 intent.putExtra(EXTRA_USERS, arrayOf(user))
+                intent.putExtra(EXTRA_OPEN_CONVERSATION, true)
                 startActivity(intent)
             }
             R.id.set_color -> {

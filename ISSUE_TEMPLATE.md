@@ -29,6 +29,7 @@ Micro-blogging service:
 - [ ] Twitter
 - [ ] Fanfou
 - [ ] GNU Social / StatusNet
+- [ ] Mastodon
 
 App settings:
 

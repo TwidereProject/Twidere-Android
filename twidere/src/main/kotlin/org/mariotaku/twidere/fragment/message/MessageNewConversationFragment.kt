@@ -189,9 +189,12 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
 
         if (savedInstanceState == null) {
             val users = arguments.getNullableTypedArray<ParcelableUser>(EXTRA_USERS)
-            if (users != null) {
+            if (users != null && users.isNotEmpty()) {
                 selectedRecipients = users.toList()
                 editParticipants.setSelection(editParticipants.length())
+                if (arguments.getBoolean(EXTRA_OPEN_CONVERSATION)) {
+                    createOrOpenConversation()
+                }
             }
         }
     }
@@ -227,14 +230,14 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.create_conversation -> {
-                createConversation()
+                createOrOpenConversation()
                 return true
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    private fun createConversation() {
+    private fun createOrOpenConversation() {
         val account = this.account ?: return
         val selected = this.selectedRecipients
         if (selected.isEmpty()) return
