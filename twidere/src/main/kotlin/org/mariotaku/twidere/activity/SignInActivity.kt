@@ -354,15 +354,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         } and task {
             val activity = weakThis.get() ?: throw InterruptedException()
             val registry = activity.mastodonApplicationRegistry
-            return@task Pair(host, registry[host] ?: run {
-                val endpoint = Endpoint("https://$host/api/")
-                val mastodon = newMicroBlogInstance(activity, endpoint, EmptyAuthorization(),
-                        AccountType.MASTODON, Mastodon::class.java)
-                val registered = mastodon.registerApplication("Twidere for Android",
-                        MASTODON_CALLBACK_URL, scopes, TWIDERE_PROJECT_URL)
-                registry[host] = registered
-                return@run registered
-            })
+            return@task Pair(host, registry[host] ?: registry.fetch(host, scopes))
         }.successUi { (host, app) ->
             val activity = weakThis.get() ?: return@successUi
             val endpoint = Endpoint("https://$host/")
@@ -417,12 +409,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
 
     private fun dismissDialogFragment(tag: String) {
         executeAfterFragmentResumed {
-            val fm = supportFragmentManager
-            val f = fm.findFragmentByTag(tag)
-            if (f is DialogFragment) {
-                f.dismiss()
-            }
-            Unit
+            it.supportFragmentManager.dismissDialogFragment(tag)
         }
     }
 

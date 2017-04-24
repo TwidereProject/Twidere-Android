@@ -20,15 +20,21 @@
 package org.mariotaku.twidere.util
 
 import android.content.Context
+import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.mastodon.model.RegisteredApplication
-import org.mariotaku.twidere.TwidereConstants.ETAG_MASTODON_APPS_PREFERENCES_NAME
+import org.mariotaku.microblog.library.twitter.auth.EmptyAuthorization
+import org.mariotaku.restfu.http.Endpoint
+import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import java.io.IOException
 
 /**
  * Created by mariotaku on 2017/4/17.
  */
 
-class MastodonApplicationRegistry(context: Context) {
+class MastodonApplicationRegistry(private val context: Context) {
     private val preferences = context.getSharedPreferences(ETAG_MASTODON_APPS_PREFERENCES_NAME,
             Context.MODE_PRIVATE)
 
@@ -50,5 +56,16 @@ class MastodonApplicationRegistry(context: Context) {
         }
         editor.apply()
         return true
+    }
+
+    @Throws(MicroBlogException::class)
+    fun fetch(host: String, scopes: Array<String>): RegisteredApplication {
+        val endpoint = Endpoint("https://$host/api/")
+        val mastodon = newMicroBlogInstance(context, endpoint, EmptyAuthorization(),
+                AccountType.MASTODON, Mastodon::class.java)
+        val registered = mastodon.registerApplication("Twidere for Android", MASTODON_CALLBACK_URL,
+                scopes, TWIDERE_PROJECT_URL)
+        this[host] = registered
+        return registered
     }
 }
