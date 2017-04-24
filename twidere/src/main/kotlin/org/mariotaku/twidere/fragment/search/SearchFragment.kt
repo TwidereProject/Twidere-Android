@@ -159,13 +159,20 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface,
     }
 
     override fun addTabs(adapter: SupportTabsAdapter) {
-        adapter.add(cls = StatusesSearchFragment::class.java, args = arguments,
-                name = getString(R.string.search_type_statuses),
-                icon = DrawableHolder.resource(R.drawable.ic_action_twitter))
-        if (accountType == AccountType.TWITTER) {
-            adapter.add(cls = MediaStatusesSearchFragment::class.java, args = arguments,
-                    name = getString(R.string.search_type_media),
-                    icon = DrawableHolder.resource(R.drawable.ic_action_gallery))
+        when (accountType) {
+            AccountType.TWITTER -> {
+                adapter.add(cls = StatusesSearchFragment::class.java, args = arguments,
+                        name = getString(R.string.search_type_statuses),
+                        icon = DrawableHolder.resource(R.drawable.ic_action_twitter))
+                adapter.add(cls = MediaStatusesSearchFragment::class.java, args = arguments,
+                        name = getString(R.string.search_type_media),
+                        icon = DrawableHolder.resource(R.drawable.ic_action_gallery))
+            }
+            else -> {
+                adapter.add(cls = StatusesSearchFragment::class.java, args = arguments,
+                        name = getString(R.string.search_type_statuses),
+                        icon = DrawableHolder.resource(R.drawable.ic_action_twitter))
+            }
         }
         adapter.add(cls = SearchUsersFragment::class.java, args = arguments,
                 name = getString(R.string.search_type_users),

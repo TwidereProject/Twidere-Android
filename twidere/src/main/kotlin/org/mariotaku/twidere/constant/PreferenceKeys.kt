@@ -200,7 +200,9 @@ object defaultAPIConfigKey : KPreferenceKey<CustomAPIConfig> {
         val consumerKey = preferences.getNonEmptyString(KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY).trim()
         val consumerSecret = preferences.getNonEmptyString(KEY_CONSUMER_SECRET, TWITTER_CONSUMER_SECRET).trim()
         return CustomAPIConfig("Default", customApiType, apiUrlFormat, authType, sameOAuthSigningUrl,
-                noVersionSuffix, consumerKey, consumerSecret)
+                noVersionSuffix, consumerKey, consumerSecret).apply {
+            isDefault = true
+        }
     }
 
     override fun write(editor: SharedPreferences.Editor, value: CustomAPIConfig): Boolean {

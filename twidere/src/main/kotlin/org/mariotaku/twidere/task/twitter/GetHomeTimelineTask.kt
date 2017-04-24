@@ -37,7 +37,7 @@ import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.ErrorInfoStore
-import java.io.IOException
+import org.mariotaku.twidere.util.sync.TimelineSyncManager
 
 /**
  * Created by mariotaku on 16/2/11.
@@ -70,13 +70,8 @@ class GetHomeTimelineTask(context: Context) : GetStatusesTask(context) {
         }
     }
 
-    override fun syncFetchReadPosition(accountKeys: Array<UserKey>) {
-        val manager = timelineSyncManagerFactory.get() ?: return
+    override fun syncFetchReadPosition(manager: TimelineSyncManager, accountKeys: Array<UserKey>) {
         val tag = HomeTimelineFragment.getTimelineSyncTag(accountKeys)
-        try {
-            manager.blockingGetPosition(ReadPositionTag.ACTIVITIES_ABOUT_ME, tag)
-        } catch (e: IOException) {
-            return
-        }
+        manager.fetchSingle(ReadPositionTag.HOME_TIMELINE, tag)
     }
 }

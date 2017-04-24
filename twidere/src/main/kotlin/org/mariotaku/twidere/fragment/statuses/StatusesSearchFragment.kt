@@ -40,10 +40,14 @@ open class StatusesSearchFragment : ParcelableStatusesFragment() {
         get() {
             val accountKey = Utils.getAccountKey(context, arguments)
             val query = arguments.getString(EXTRA_QUERY)
+            val local = arguments.getBoolean(EXTRA_LOCAL)
             val result = ArrayList<String>()
             result.add(AUTHORITY_SEARCH_TWEETS)
             result.add("account=$accountKey")
             result.add("query=$query")
+            if (local) {
+                result.add("local")
+            }
             return result.toTypedArray()
         }
 
@@ -68,12 +72,13 @@ open class StatusesSearchFragment : ParcelableStatusesFragment() {
             Loader<List<ParcelableStatus>?> {
         refreshing = true
         val accountKey = Utils.getAccountKey(context, args)
-        val query = args.getString(EXTRA_QUERY)
-        val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
+        val query = arguments.getString(EXTRA_QUERY)
+        val local = arguments.getBoolean(EXTRA_LOCAL, false)
+        val tabPosition = arguments.getInt(EXTRA_TAB_POSITION, -1)
         val makeGap = args.getBoolean(EXTRA_MAKE_GAP, true)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
         return TweetSearchLoader(activity, accountKey, query, adapterData, savedStatusesFileArgs,
-                tabPosition, fromUser, makeGap, loadingMore)
+                tabPosition, fromUser, makeGap, local, loadingMore)
     }
 
 }

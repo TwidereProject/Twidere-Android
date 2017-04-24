@@ -23,6 +23,7 @@ import org.mariotaku.microblog.library.mastodon.model.LinkHeaderList;
 import org.mariotaku.microblog.library.mastodon.model.Status;
 import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.restfu.annotation.method.GET;
+import org.mariotaku.restfu.annotation.param.BooleanEncoding;
 import org.mariotaku.restfu.annotation.param.Path;
 import org.mariotaku.restfu.annotation.param.Query;
 
@@ -35,10 +36,12 @@ public interface TimelinesResources {
     LinkHeaderList<Status> getHomeTimeline(@Query Paging paging) throws MicroBlogException;
 
     @GET("/v1/timelines/public")
-    LinkHeaderList<Status> getPublicTimeline(@Query Paging paging, @Query("local") boolean local)
+    LinkHeaderList<Status> getPublicTimeline(@Query Paging paging, @Query(value = "local",
+            booleanEncoding = BooleanEncoding.KEY_IF_TRUE) boolean local)
             throws MicroBlogException;
 
     @GET("/v1/timelines/tag/{tag}")
-    LinkHeaderList<Status> getHashtagTimeline(@Path("tag") String hashtag, @Query Paging paging)
+    LinkHeaderList<Status> getHashtagTimeline(@Path("tag") String hashtag, @Query Paging paging,
+            @Query(value = "local", booleanEncoding = BooleanEncoding.KEY_IF_TRUE) boolean local)
             throws MicroBlogException;
 }

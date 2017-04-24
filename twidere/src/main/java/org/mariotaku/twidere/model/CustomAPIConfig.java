@@ -62,6 +62,8 @@ public final class CustomAPIConfig implements Parcelable {
     @JsonField(name = "sign_up_url")
     String signUpUrl;
 
+    boolean isDefault;
+
     public CustomAPIConfig() {
     }
 
@@ -169,6 +171,14 @@ public final class CustomAPIConfig implements Parcelable {
         this.signUpUrl = signUpUrl;
     }
 
+    public boolean isDefault() {
+        return isDefault;
+    }
+
+    public void setDefault(boolean isDefault) {
+        this.isDefault = isDefault;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -177,6 +187,38 @@ public final class CustomAPIConfig implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         CustomAPIConfigParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CustomAPIConfig that = (CustomAPIConfig) o;
+
+        if (sameOAuthUrl != that.sameOAuthUrl) return false;
+        if (noVersionSuffix != that.noVersionSuffix) return false;
+        if (type != null ? !type.equals(that.type) : that.type != null) return false;
+        if (apiUrlFormat != null ? !apiUrlFormat.equals(that.apiUrlFormat) : that.apiUrlFormat != null)
+            return false;
+        if (credentialsType != null ? !credentialsType.equals(that.credentialsType) : that.credentialsType != null)
+            return false;
+        if (consumerKey != null ? !consumerKey.equals(that.consumerKey) : that.consumerKey != null)
+            return false;
+        return consumerSecret != null ? consumerSecret.equals(that.consumerSecret) : that.consumerSecret == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = type != null ? type.hashCode() : 0;
+        result = 31 * result + (apiUrlFormat != null ? apiUrlFormat.hashCode() : 0);
+        result = 31 * result + (credentialsType != null ? credentialsType.hashCode() : 0);
+        result = 31 * result + (sameOAuthUrl ? 1 : 0);
+        result = 31 * result + (noVersionSuffix ? 1 : 0);
+        result = 31 * result + (consumerKey != null ? consumerKey.hashCode() : 0);
+        result = 31 * result + (consumerSecret != null ? consumerSecret.hashCode() : 0);
+        return result;
     }
 
     public static final Creator<CustomAPIConfig> CREATOR = new Creator<CustomAPIConfig>() {

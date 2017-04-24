@@ -3,8 +3,11 @@ package org.mariotaku.ktextension
 import android.os.Bundle
 import android.os.Parcelable
 
-inline fun Bundle(action: Bundle.() -> Unit): Bundle {
+inline fun Bundle(copyFrom: Bundle? = null, action: Bundle.() -> Unit): Bundle {
     val bundle = Bundle()
+    if (copyFrom != null) {
+        bundle.putAll(copyFrom)
+    }
     action(bundle)
     return bundle
 }

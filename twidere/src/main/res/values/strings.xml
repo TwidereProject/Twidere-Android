@@ -619,6 +619,7 @@
 
     <string name="login_challenge_retype_email_hint">Retype the email address associated with your Twitter account.</string>
     <string name="login_challenge_retype_phone_hint">Retype the phone number associated with your Twitter account.</string>
+    <string name="login_type_default">Default</string>
     <string name="login_verification">Login verification</string>
     <string name="login_verification_pin_hint">Check your phone for a PIN code and enter it to log in.</string>
     <string name="login_verification_push_hint">Accept login verification request from Twitter app, once you approved the request, click OK.</string>
@@ -905,6 +906,7 @@
     <string name="preference_title_streaming_power_saving">Power saving mode</string>
     <string name="preference_title_tablet_mode">Tablet mode</string>
     <string name="preference_title_text_size">Text size</string>
+    <string name="preference_title_timeline_positions">Timeline positions</string>
     <string name="preference_title_translate">Translate</string>
     <string name="preference_title_trends_location">Trends location</string>
 
@@ -1038,6 +1040,8 @@
     <string name="search_hint">Search tweets or users</string>
     <string name="search_hint_users">Search users</string>
     <string name="search_statuses">Search Tweets</string>
+    <string name="search_type_federated">Federated</string>
+    <string name="search_type_local">Local</string>
     <string name="search_type_media">Media</string>
     <string name="search_type_statuses">Tweets</string>
     <string name="search_type_users">Users</string>

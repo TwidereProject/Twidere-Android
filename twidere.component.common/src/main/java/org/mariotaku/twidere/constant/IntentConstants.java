@@ -226,4 +226,5 @@ public interface IntentConstants {
     String EXTRA_VISIBILITY = "visibility";
     String EXTRA_SAVE_DRAFT = "save_draft";
     String EXTRA_HOST = "host";
+    String EXTRA_LOCAL = "local";
 }

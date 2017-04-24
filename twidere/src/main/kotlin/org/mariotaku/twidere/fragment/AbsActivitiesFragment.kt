@@ -70,6 +70,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.util.glide.PauseRecyclerViewOnScrollListener
+import org.mariotaku.twidere.util.sync.SyncTaskRunner
 import org.mariotaku.twidere.view.ExtendedRecyclerView
 import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder
 import org.mariotaku.twidere.view.holder.GapViewHolder
@@ -245,7 +246,8 @@ abstract class AbsActivitiesFragment protected constructor() :
             val syncTag = this.timelineSyncTag
             val currentTag = this.currentReadPositionTag
 
-            if (syncManager != null && positionTag != null && syncTag != null) {
+            if (syncManager != null && positionTag != null && syncTag != null &&
+                    syncPreferences.isSyncEnabled(SyncTaskRunner.SYNC_TYPE_TIMELINE_POSITIONS)) {
                 lastReadId = syncManager.peekPosition(positionTag, syncTag)
             }
             if (lastReadId <= 0 && currentTag != null) {

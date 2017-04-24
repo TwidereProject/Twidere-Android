@@ -49,7 +49,8 @@ open class MediaStatusesSearchLoader(
         fromUser: Boolean,
         override val isGapEnabled: Boolean,
         loadingMore: Boolean
-) : AbsRequestStatusesLoader(context, accountKey, adapterData, savedStatusesArgs, tabPosition, fromUser, loadingMore) {
+) : AbsRequestStatusesLoader(context, accountKey, adapterData, savedStatusesArgs, tabPosition,
+        fromUser, loadingMore) {
 
     @Throws(MicroBlogException::class)
     override fun getStatuses(account: AccountDetails, paging: Paging): PaginatedList<ParcelableStatus> {

@@ -35,6 +35,7 @@ import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
+import org.mariotaku.twidere.util.sync.SyncPreferences
 import org.mariotaku.twidere.util.sync.TimelineSyncManager
 import javax.inject.Inject
 
@@ -75,6 +76,8 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     lateinit var restHttpClient: RestHttpClient
     @Inject
     lateinit var dns: Dns
+    @Inject
+    lateinit var syncPreferences: SyncPreferences
 
     protected val statusScheduleProvider: StatusScheduleProvider?
         get() = statusScheduleProviderFactory.newInstance(context)

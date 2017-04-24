@@ -52,8 +52,10 @@ open class TweetSearchLoader(
         tabPosition: Int,
         fromUser: Boolean,
         override val isGapEnabled: Boolean,
+        val local: Boolean,
         loadingMore: Boolean
-) : AbsRequestStatusesLoader(context, accountKey, adapterData, savedStatusesArgs, tabPosition, fromUser, loadingMore) {
+) : AbsRequestStatusesLoader(context, accountKey, adapterData, savedStatusesArgs, tabPosition,
+        fromUser, loadingMore) {
 
     @Throws(MicroBlogException::class)
     override fun getStatuses(account: AccountDetails, paging: Paging): PaginatedList<ParcelableStatus> {
@@ -93,7 +95,7 @@ open class TweetSearchLoader(
         val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
         if (query == null) throw MicroBlogException("Empty query")
         val tagQuery = if (query.startsWith("#")) query.substringAfter("#") else query
-        return mastodon.getHashtagTimeline(tagQuery, paging).mapToPaginated {
+        return mastodon.getHashtagTimeline(tagQuery, paging, local).mapToPaginated {
             it.toParcelable(account)
         }
     }

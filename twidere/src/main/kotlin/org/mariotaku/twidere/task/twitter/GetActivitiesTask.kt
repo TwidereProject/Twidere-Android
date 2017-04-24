@@ -26,6 +26,8 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.content.ContentResolverUtils
+import org.mariotaku.twidere.util.sync.SyncTaskRunner
+import org.mariotaku.twidere.util.sync.TimelineSyncManager
 import java.util.*
 
 /**
@@ -83,8 +85,11 @@ abstract class GetActivitiesTask(
             }
             return@mapIndexed GetTimelineResult(null)
         }
-        if (param.isBackground) {
-            syncFetchReadPosition(accountKeys)
+        val manager = timelineSyncManagerFactory.get()
+        if (manager != null && syncPreferences.isSyncEnabled(SyncTaskRunner.SYNC_TYPE_TIMELINE_POSITIONS)) {
+            if (param.isBackground) {
+                syncFetchReadPosition(manager, accountKeys)
+            }
         }
         return result
     }
@@ -104,7 +109,7 @@ abstract class GetActivitiesTask(
     @Throws(MicroBlogException::class)
     protected abstract fun getActivities(account: AccountDetails, paging: Paging): List<ParcelableActivity>
 
-    protected abstract fun syncFetchReadPosition(accountKeys: Array<UserKey>)
+    protected abstract fun syncFetchReadPosition(manager: TimelineSyncManager, accountKeys: Array<UserKey>)
 
     private fun storeActivities(details: AccountDetails, activities: List<ParcelableActivity>,
             sinceId: String?, maxId: String?, loadItemLimit: Int, noItemsBefore: Boolean,

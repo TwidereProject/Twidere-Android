@@ -21,11 +21,13 @@ package org.mariotaku.twidere.extension.model
 
 import org.mariotaku.restfu.oauth.OAuthAuthorization
 import org.mariotaku.restfu.oauth.OAuthToken
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.model.CustomAPIConfig
 
 /**
  * Created by mariotaku on 2017/4/18.
  */
+inline val CustomAPIConfig.safeType: String get() = type ?: AccountType.TWITTER
 
 fun CustomAPIConfig.getOAuthAuthorization(accessToken: OAuthToken? = null): OAuthAuthorization? {
     val consumerKey = this.consumerKey ?: return null

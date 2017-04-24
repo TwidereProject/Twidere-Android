@@ -39,7 +39,7 @@ import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.util.ErrorInfoStore
-import java.io.IOException
+import org.mariotaku.twidere.util.sync.TimelineSyncManager
 
 /**
  * Created by mariotaku on 16/2/11.
@@ -93,14 +93,8 @@ class GetActivitiesAboutMeTask(context: Context) : GetActivitiesTask(context) {
         }
     }
 
-
-    override fun syncFetchReadPosition(accountKeys: Array<UserKey>) {
-        val manager = timelineSyncManagerFactory.get() ?: return
+    override fun syncFetchReadPosition(manager: TimelineSyncManager, accountKeys: Array<UserKey>) {
         val tag = InteractionsTimelineFragment.getTimelineSyncTag(accountKeys)
-        try {
-            manager.blockingGetPosition(ReadPositionTag.ACTIVITIES_ABOUT_ME, tag)
-        } catch (e: IOException) {
-            return
-        }
+        manager.fetchSingle(ReadPositionTag.ACTIVITIES_ABOUT_ME, tag)
     }
 }

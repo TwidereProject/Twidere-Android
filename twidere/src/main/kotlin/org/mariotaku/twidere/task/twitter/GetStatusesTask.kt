@@ -35,6 +35,8 @@ import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.ErrorInfoStore
 import org.mariotaku.twidere.util.UriUtils
 import org.mariotaku.twidere.util.content.ContentResolverUtils
+import org.mariotaku.twidere.util.sync.SyncTaskRunner
+import org.mariotaku.twidere.util.sync.TimelineSyncManager
 
 /**
  * Created by mariotaku on 16/1/2.
@@ -98,8 +100,11 @@ abstract class GetStatusesTask(
                 return@mapIndexed GetTimelineResult(e)
             }
         }
-        if (param.isBackground) {
-            syncFetchReadPosition(accountKeys)
+        val manager = timelineSyncManagerFactory.get()
+        if (manager != null && syncPreferences.isSyncEnabled(SyncTaskRunner.SYNC_TYPE_TIMELINE_POSITIONS)) {
+            if (param.isBackground) {
+                syncFetchReadPosition(manager, accountKeys)
+            }
         }
         return result
     }
@@ -118,7 +123,7 @@ abstract class GetStatusesTask(
     @Throws(MicroBlogException::class)
     protected abstract fun getStatuses(account: AccountDetails, paging: Paging): List<ParcelableStatus>
 
-    protected abstract fun syncFetchReadPosition(accountKeys: Array<UserKey>)
+    protected abstract fun syncFetchReadPosition(manager: TimelineSyncManager, accountKeys: Array<UserKey>)
 
     private fun storeStatus(account: AccountDetails, statuses: List<ParcelableStatus>,
             sinceId: String?, maxId: String?, sinceSortId: Long, maxSortId: Long,
