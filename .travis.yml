@@ -54,7 +54,7 @@ install:
 
 before_script:
   # Validate if patches work
-  - patch --dry-run -d twidere < twidere/patches/remove_closed_source_dependencies.patch
+  - ./travis/scripts/patch_sources.sh
   # Validate if Google components fetched successfully
   - ./travis/scripts/test_private_files.sh
 
