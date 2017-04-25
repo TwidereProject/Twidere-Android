@@ -3,9 +3,9 @@ IDEA additional info:
 Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
---- twidere/build.gradle        (date 1493141300000)
+--- twidere/build.gradle        (date 1493143158000)
 +++ twidere/build.gradle        (revision )
-@@ -7,22 +7,22 @@ apply plugin: 'kotlin-android-extensions'
+@@ -7,23 +7,23 @@ apply plugin: 'kotlin-android-extensions'
  apply plugin: 'androidsvgdrawable'
  
  // START Non-FOSS component
@@ -28,12 +28,14 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
          // START Non-FOSS component
 -        classpath "io.fabric.tools:gradle:${libVersions['FabricPlugin']}"
 -        classpath "com.github.triplet.gradle:play-publisher:${libVersions['PlayPublisher']}"
+-        classpath 'com.google.gms:google-services:3.0.0'
 +//        classpath "io.fabric.tools:gradle:${libVersions['FabricPlugin']}"
 +//        classpath "com.github.triplet.gradle:play-publisher:${libVersions['PlayPublisher']}"
++//        classpath 'com.google.gms:google-services:3.0.0'
          // END Non-FOSS component
  
          classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${libVersions['Kotlin']}"
-@@ -51,7 +51,7 @@ android {
+@@ -56,7 +56,7 @@ android {
  
      productFlavors {
          // START Non-FOSS component
@@ -42,7 +44,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
          // END Non-FOSS component
          fdroid {}
      }
-@@ -83,7 +83,7 @@ repositories {
+@@ -88,7 +88,7 @@ repositories {
      mavenLocal()
      maven { url 'https://s3.amazonaws.com/repo.commonsware.com' }
      // START Non-FOSS component
@@ -51,7 +53,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
      // END Non-FOSS component
      flatDir { dirs "$projectDir/lib" }
  }
-@@ -99,17 +99,17 @@ dependencies {
+@@ -104,17 +104,17 @@ dependencies {
      compile project(':twidere.component.nyan')
  
      // START Non-FOSS component
@@ -80,7 +82,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
      // END Non-FOSS component
  
      fdroidCompile "org.osmdroid:osmdroid-android:${libVersions['OSMDroid']}"
-@@ -234,12 +234,12 @@ task svgToMipmap(type: SvgDrawableTask) {
+@@ -239,12 +239,12 @@ task svgToMipmap(type: SvgDrawableTask) {
  }
  
  // START Non-FOSS component
