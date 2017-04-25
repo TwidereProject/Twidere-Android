@@ -77,6 +77,7 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEYS
 import org.mariotaku.twidere.constant.IntentConstants.INTENT_ACTION_PEBBLE_NOTIFICATION
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.*
+import org.mariotaku.twidere.constant.bandwidthSavingModeKey
 import org.mariotaku.twidere.constant.defaultAccountKey
 import org.mariotaku.twidere.constant.mediaPreviewKey
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -567,7 +568,7 @@ object Utils {
         if (!preferences[mediaPreviewKey])
             return false
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        return !ConnectivityManagerCompat.isActiveNetworkMetered(cm) || !preferences.getBoolean(KEY_BANDWIDTH_SAVING_MODE, false)
+        return !ConnectivityManagerCompat.isActiveNetworkMetered(cm) || !preferences[bandwidthSavingModeKey]
     }
 
     /**

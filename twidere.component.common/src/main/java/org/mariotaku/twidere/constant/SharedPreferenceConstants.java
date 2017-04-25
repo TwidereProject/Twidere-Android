@@ -18,16 +18,11 @@
 
 package org.mariotaku.twidere.constant;
 
-import org.mariotaku.twidere.annotation.Preference;
-import org.mariotaku.twidere.model.account.cred.Credentials;
+import org.mariotaku.library.exportablepreferences.annotation.ExportablePreference;
 
-import static org.mariotaku.twidere.TwidereConstants.DEFAULT_TWITTER_API_URL_FORMAT;
-import static org.mariotaku.twidere.TwidereConstants.TWITTER_CONSUMER_KEY;
-import static org.mariotaku.twidere.TwidereConstants.TWITTER_CONSUMER_SECRET;
-import static org.mariotaku.twidere.annotation.PreferenceType.BOOLEAN;
-import static org.mariotaku.twidere.annotation.PreferenceType.INT;
-import static org.mariotaku.twidere.annotation.PreferenceType.LONG;
-import static org.mariotaku.twidere.annotation.PreferenceType.STRING;
+import static org.mariotaku.library.exportablepreferences.annotation.PreferenceType.BOOLEAN;
+import static org.mariotaku.library.exportablepreferences.annotation.PreferenceType.INT;
+import static org.mariotaku.library.exportablepreferences.annotation.PreferenceType.STRING;
 
 public interface SharedPreferenceConstants {
 
@@ -103,197 +98,213 @@ public interface SharedPreferenceConstants {
     int DEFAULT_DATABASE_ITEM_LIMIT = 100;
     int DEFAULT_LOAD_ITEM_LIMIT = 20;
 
-    @Preference(type = INT, hasDefault = true, defaultInt = DEFAULT_DATABASE_ITEM_LIMIT)
+    // Exportable preferences
+
+    @ExportablePreference(INT)
     String KEY_DATABASE_ITEM_LIMIT = "database_item_limit";
-    @Preference(type = INT, hasDefault = true, defaultInt = DEFAULT_LOAD_ITEM_LIMIT)
+    @ExportablePreference(INT)
     String KEY_LOAD_ITEM_LIMIT = "load_item_limit";
-    @Preference(type = INT, hasDefault = true, defaultInt = 15)
+    @ExportablePreference(INT)
     String KEY_TEXT_SIZE = "text_size_int";
-    @Preference(type = STRING, hasDefault = true, defaultString = DEFAULT_THEME)
+    @ExportablePreference(STRING)
     String KEY_THEME = "theme";
-    @Preference(type = STRING, hasDefault = true, defaultString = DEFAULT_THEME_BACKGROUND)
+    @ExportablePreference(STRING)
     String KEY_THEME_BACKGROUND = "theme_background";
-    @Preference(type = INT, hasDefault = true, defaultInt = DEFAULT_THEME_BACKGROUND_ALPHA)
+    @ExportablePreference(INT)
     String KEY_THEME_BACKGROUND_ALPHA = "theme_background_alpha";
-    @Preference(type = INT)
+    @ExportablePreference(INT)
     String KEY_THEME_COLOR = "theme_color";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
+    @ExportablePreference(BOOLEAN)
     String KEY_DISPLAY_PROFILE_IMAGE = "display_profile_image";
-    @Preference(type = BOOLEAN, exportable = false, hasDefault = true, defaultBoolean = false)
-    String KEY_ATTACH_LOCATION = "attach_location";
-    @Preference(type = BOOLEAN, exportable = false, hasDefault = true, defaultBoolean = true)
-    String KEY_ATTACH_PRECISE_LOCATION = "attach_precise_location";
-    @Preference(type = STRING)
+    @ExportablePreference(STRING)
     String KEY_QUOTE_FORMAT = "quote_format";
-    @Preference(type = BOOLEAN)
+    @ExportablePreference(BOOLEAN)
     String KEY_REMEMBER_POSITION = "remember_position";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
+    @ExportablePreference(BOOLEAN)
     String KEY_READ_FROM_BOTTOM = "read_from_bottom";
-    @Preference(type = INT, exportable = false)
-    String KEY_SAVED_TAB_POSITION = "saved_tab_position";
-    @Preference(type = BOOLEAN)
+    @ExportablePreference(BOOLEAN)
     String KEY_ENABLE_PROXY = "enable_proxy";
-    @Preference(type = STRING)
+    @ExportablePreference(STRING)
     String KEY_PROXY_HOST = "proxy_host";
-    @Preference(type = STRING)
+    @ExportablePreference(STRING)
     String KEY_PROXY_TYPE = "proxy_type";
-    @Preference(type = STRING)
+    @ExportablePreference(STRING)
     String KEY_PROXY_PORT = "proxy_port";
-    @Preference(type = STRING)
+    @ExportablePreference(STRING)
     String KEY_PROXY_USERNAME = "proxy_username";
-    @Preference(type = STRING)
+    @ExportablePreference(STRING)
     String KEY_PROXY_PASSWORD = "proxy_password";
-    @Preference(type = BOOLEAN)
+    @ExportablePreference(BOOLEAN)
     String KEY_REFRESH_ON_START = "refresh_on_start";
-    @Preference(type = BOOLEAN)
+    @ExportablePreference(BOOLEAN)
     String KEY_REFRESH_AFTER_TWEET = "refresh_after_tweet";
-    @Preference(type = BOOLEAN)
+    @ExportablePreference(BOOLEAN)
     String KEY_AUTO_REFRESH = "auto_refresh";
-    @Preference(type = STRING)
+    @ExportablePreference(STRING)
     String KEY_REFRESH_INTERVAL = "refresh_interval";
-    @Preference(type = BOOLEAN)
+    @ExportablePreference(BOOLEAN)
     String KEY_AUTO_REFRESH_HOME_TIMELINE = "auto_refresh_home_timeline";
-    @Preference(type = BOOLEAN)
+    @ExportablePreference(BOOLEAN)
     String KEY_AUTO_REFRESH_MENTIONS = "auto_refresh_mentions";
-    @Preference(type = BOOLEAN)
+    @ExportablePreference(BOOLEAN)
     String KEY_AUTO_REFRESH_DIRECT_MESSAGES = "auto_refresh_direct_messages";
-    @Preference(type = BOOLEAN)
+    @ExportablePreference(BOOLEAN)
     String KEY_AUTO_REFRESH_TRENDS = "auto_refresh_trends";
-    @Preference(type = BOOLEAN)
+    @ExportablePreference(BOOLEAN)
     String KEY_HOME_TIMELINE_NOTIFICATION = "home_timeline_notification";
-    @Preference(type = BOOLEAN)
+    @ExportablePreference(BOOLEAN)
     String KEY_MENTIONS_NOTIFICATION = "mentions_notification";
-    @Preference(type = BOOLEAN)
+    @ExportablePreference(BOOLEAN)
     String KEY_DIRECT_MESSAGES_NOTIFICATION = "direct_messages_notification";
-    @Preference(type = BOOLEAN)
+    @ExportablePreference(BOOLEAN)
     String KEY_ENABLE_STREAMING = "enable_streaming";
-    @Preference(type = INT)
-    String KEY_LOCAL_TRENDS_WOEID = "local_trends_woeid";
+    @ExportablePreference(STRING)
     String KEY_NOTIFICATION_RINGTONE = "notification_ringtone";
+    @ExportablePreference(INT)
     String KEY_NOTIFICATION_LIGHT_COLOR = "notification_light_color";
-    String KEY_SHARE_FORMAT = "share_format";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
+    @ExportablePreference(BOOLEAN)
     String KEY_HOME_REFRESH_MENTIONS = "home_refresh_mentions";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
+    @ExportablePreference(BOOLEAN)
     String KEY_HOME_REFRESH_DIRECT_MESSAGES = "home_refresh_direct_messages";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
+    @ExportablePreference(BOOLEAN)
     String KEY_HOME_REFRESH_TRENDS = "home_refresh_trends";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
+    @ExportablePreference(BOOLEAN)
     String KEY_HOME_REFRESH_SAVED_SEARCHES = "home_refresh_saved_searches";
-    String KEY_IMAGE_UPLOAD_FORMAT = "image_upload_format";
+    @ExportablePreference(BOOLEAN)
+    String KEY_SHOW_ABSOLUTE_TIME = "show_absolute_time";
+    @ExportablePreference(BOOLEAN)
+    String KEY_QUICK_SEND = "quick_send";
+    @ExportablePreference(STRING)
+    String KEY_COMPOSE_ACCOUNTS = "compose_accounts";
+    @ExportablePreference(BOOLEAN)
+    String KEY_BUILTIN_DNS_RESOLVER = "builtin_dns_resolver";
+    @ExportablePreference(BOOLEAN)
+    String KEY_TCP_DNS_QUERY = "tcp_dns_query";
+    @ExportablePreference(STRING)
+    String KEY_DNS_SERVER = "dns_server";
+    @ExportablePreference(INT)
+    String KEY_CONNECTION_TIMEOUT = "connection_timeout";
+    @ExportablePreference(BOOLEAN)
+    String KEY_NAME_FIRST = "name_first";
+    @ExportablePreference(BOOLEAN)
+    String KEY_STOP_AUTO_REFRESH_WHEN_BATTERY_LOW = "stop_auto_refresh_when_battery_low";
+    @ExportablePreference(BOOLEAN)
+    String KEY_DISPLAY_SENSITIVE_CONTENTS = "display_sensitive_contents";
+    @ExportablePreference(BOOLEAN)
+    String KEY_PHISHING_LINK_WARNING = "phishing_link_warning";
+    @ExportablePreference(STRING)
+    String KEY_LINK_HIGHLIGHT_OPTION = "link_highlight_option";
+    @ExportablePreference(BOOLEAN)
+    String KEY_MEDIA_PRELOAD = "media_preload";
+    @ExportablePreference(BOOLEAN)
+    String KEY_PRELOAD_WIFI_ONLY = "preload_wifi_only";
+    @ExportablePreference(BOOLEAN)
+    String KEY_NO_CLOSE_AFTER_TWEET_SENT = "no_close_after_tweet_sent";
+    @ExportablePreference(STRING)
+    String KEY_API_URL_FORMAT = "api_url_format";
+    @ExportablePreference(BOOLEAN)
+    String KEY_SAME_OAUTH_SIGNING_URL = "same_oauth_signing_url";
+    @ExportablePreference(BOOLEAN)
+    String KEY_NO_VERSION_SUFFIX = "no_version_suffix";
+    @ExportablePreference(STRING)
+    String KEY_CREDENTIALS_TYPE = "credentials_type";
+    @ExportablePreference(STRING)
+    String KEY_CUSTOM_API_TYPE = "api_config_type";
+    @ExportablePreference(STRING)
+    String KEY_CONSUMER_KEY = "consumer_key";
+    @ExportablePreference(STRING)
+    String KEY_CONSUMER_SECRET = "consumer_secret";
+    @ExportablePreference(BOOLEAN)
+    String KEY_UNREAD_COUNT = "unread_count";
+    @ExportablePreference(BOOLEAN)
+    String KEY_PEBBLE_NOTIFICATIONS = "pebble_notifications";
+    @ExportablePreference(BOOLEAN)
+    String KEY_FAB_VISIBLE = "fab_visible";
+    @ExportablePreference(STRING)
+    String KEY_COMPOSE_NOW_ACTION = "compose_now_action";
+    @ExportablePreference(STRING)
+    String KEY_MEDIA_PREVIEW_STYLE = "media_preview_style";
+    @ExportablePreference(BOOLEAN)
+    String KEY_MEDIA_PREVIEW = "media_preview";
+    @ExportablePreference(STRING)
+    String KEY_PROFILE_IMAGE_STYLE = "profile_image_style";
+    @ExportablePreference(BOOLEAN)
+    String KEY_BANDWIDTH_SAVING_MODE = "bandwidth_saving_mode";
+    @ExportablePreference(STRING)
+    String KEY_TRANSLATION_DESTINATION = "translation_destination";
+    @ExportablePreference(STRING)
+    String KEY_TAB_DISPLAY_OPTION = "tab_display_option";
+    @ExportablePreference(INT)
+    String KEY_LIVE_WALLPAPER_SCALE = "live_wallpaper_scale";
+    @ExportablePreference(BOOLEAN)
+    String KEY_RETRY_ON_NETWORK_ISSUE = "retry_on_network_issue";
+    @ExportablePreference(BOOLEAN)
+    String KEY_THUMBOR_ENABLED = "thumbor_enabled";
+    @ExportablePreference(STRING)
+    String KEY_THUMBOR_ADDRESS = "thumbor_address";
+    @ExportablePreference(STRING)
+    String KEY_THUMBOR_SECURITY_KEY = "thumbor_security_key";
+    @ExportablePreference(BOOLEAN)
+    String KEY_HIDE_CARD_ACTIONS = "hide_card_actions";
+    @ExportablePreference(INT)
+    String KEY_CACHE_SIZE_LIMIT = "cache_size_limit";
+    @ExportablePreference(BOOLEAN)
+    String KEY_COMBINED_NOTIFICATIONS = "combined_notifications";
+    @ExportablePreference(BOOLEAN)
+    String KEY_I_WANT_MY_STARS_BACK = "i_want_my_stars_back";
+    @ExportablePreference(BOOLEAN)
+    String KEY_NEW_DOCUMENT_API = "new_document_api";
+    @ExportablePreference(BOOLEAN)
+    String KEY_DRAWER_TOGGLE = "drawer_toggle";
+    @ExportablePreference(BOOLEAN)
+    String KEY_RANDOMIZE_ACCOUNT_NAME = "randomize_account_name";
+    @ExportablePreference(BOOLEAN)
+    String KEY_DEFAULT_AUTO_REFRESH = "default_auto_refresh";
+    @ExportablePreference(BOOLEAN)
+    String KEY_FAVORITE_CONFIRMATION = "favorite_confirmation";
+    @ExportablePreference(BOOLEAN)
+    String KEY_FILTER_UNAVAILABLE_QUOTE_STATUSES = "filter_unavailable_quote_statuses";
+    @ExportablePreference(BOOLEAN)
+    String KEY_FILTER_POSSIBILITY_SENSITIVE_STATUSES = "filter_possibility_sensitive_statuses";
+    @ExportablePreference(BOOLEAN)
+    String KEY_CHROME_CUSTOM_TAB = "chrome_custom_tab";
+    @ExportablePreference(BOOLEAN)
+    String KEY_LIGHT_FONT = "light_font";
+    @ExportablePreference(BOOLEAN)
+    String KEY_AUTO_REFRESH_COMPATIBILITY_MODE = "auto_refresh_compatibility_mode";
+    @ExportablePreference(BOOLEAN)
+    String KEY_FLOATING_DETAILED_CONTENTS = "floating_detailed_contents";
+    @ExportablePreference(STRING)
+    String KEY_MULTI_COLUMN_TAB_WIDTH = "multi_column_tab_width";
+    @ExportablePreference(BOOLEAN)
+    String KEY_STREAMING_ENABLED = "streaming_enabled";
+    @ExportablePreference(BOOLEAN)
+    String KEY_STREAMING_NON_METERED_NETWORK = "streaming_non_metered_network";
+    @ExportablePreference(BOOLEAN)
+    String KEY_STREAMING_POWER_SAVING = "streaming_power_saving";
+
+    // Internal preferences
+
+    String KEY_DROPBOX_ACCESS_TOKEN = "dropbox_access_token";
+    String KEY_ATTACH_LOCATION = "attach_location";
+    String KEY_ATTACH_PRECISE_LOCATION = "attach_precise_location";
+    String KEY_SAVED_TAB_POSITION = "saved_tab_position";
+    String KEY_LOCAL_TRENDS_WOEID = "local_trends_woeid";
+    String KEY_SETTINGS_WIZARD_COMPLETED = "settings_wizard_completed";
+    String KEY_API_LAST_CHANGE = "api_last_change";
+    String KEY_BUG_REPORTS = "bug_reports";
+    String KEY_EMOJI_SUPPORT = "emoji_support";
+    String KEY_SYNC_PROVIDER_TYPE = "sync_provider_type";
+    String KEY_DEFAULT_ACCOUNT_KEY = "default_account_key";
     String KEY_STATUS_SHORTENER = "status_shortener";
     String KEY_MEDIA_UPLOADER = "media_uploader";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
-    String KEY_SHOW_ABSOLUTE_TIME = "show_absolute_time";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
-    String KEY_QUICK_SEND = "quick_send";
-    @Preference(type = STRING, exportable = false)
-    String KEY_COMPOSE_ACCOUNTS = "compose_accounts";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
-    String KEY_BUILTIN_DNS_RESOLVER = "builtin_dns_resolver";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
-    String KEY_TCP_DNS_QUERY = "tcp_dns_query";
-    @Preference(type = STRING, hasDefault = true, defaultString = "")
-    String KEY_DNS_SERVER = "dns_server";
-    @Preference(type = INT, hasDefault = true, defaultInt = 10)
-    String KEY_CONNECTION_TIMEOUT = "connection_timeout";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
-    String KEY_NAME_FIRST = "name_first";
-    String KEY_STOP_AUTO_REFRESH_WHEN_BATTERY_LOW = "stop_auto_refresh_when_battery_low";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
-    String KEY_DISPLAY_SENSITIVE_CONTENTS = "display_sensitive_contents";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
-    String KEY_PHISHING_LINK_WARNING = "phishing_link_warning";
-    @Preference(type = STRING, hasDefault = true, defaultString = VALUE_LINK_HIGHLIGHT_OPTION_NONE)
-    String KEY_LINK_HIGHLIGHT_OPTION = "link_highlight_option";
-    String KEY_MEDIA_PRELOAD = "media_preload";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
-    String KEY_PRELOAD_WIFI_ONLY = "preload_wifi_only";
-    @Preference(type = BOOLEAN)
-    String KEY_NO_CLOSE_AFTER_TWEET_SENT = "no_close_after_tweet_sent";
-    @Preference(type = STRING, hasDefault = true, defaultString = DEFAULT_TWITTER_API_URL_FORMAT)
-    String KEY_API_URL_FORMAT = "api_url_format";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
-    String KEY_SAME_OAUTH_SIGNING_URL = "same_oauth_signing_url";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
-    String KEY_NO_VERSION_SUFFIX = "no_version_suffix";
-    @Preference(type = STRING, hasDefault = true, defaultString = Credentials.Type.OAUTH)
-    String KEY_CREDENTIALS_TYPE = "credentials_type";
-    String KEY_CUSTOM_API_TYPE = "api_config_type";
-    @Preference(type = STRING, hasDefault = true, defaultString = TWITTER_CONSUMER_KEY)
-    String KEY_CONSUMER_KEY = "consumer_key";
-    @Preference(type = STRING, hasDefault = true, defaultString = TWITTER_CONSUMER_SECRET)
-    String KEY_CONSUMER_SECRET = "consumer_secret";
-    String KEY_SETTINGS_WIZARD_COMPLETED = "settings_wizard_completed";
-    String KEY_CONSUMER_KEY_SECRET_SET = "consumer_key_secret_set";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
-    String KEY_UNREAD_COUNT = "unread_count";
+
+    // Per-account preferences
     String KEY_NOTIFICATION = "notification";
     String KEY_NOTIFICATION_TYPE_HOME = "notification_type_home";
     String KEY_NOTIFICATION_TYPE_MENTIONS = "notification_type_mentions";
     String KEY_NOTIFICATION_TYPE_DIRECT_MESSAGES = "notification_type_direct_messages";
     String KEY_NOTIFICATION_FOLLOWING_ONLY = "notification_following_only";
     String KEY_NOTIFICATION_MENTIONS_ONLY = "notification_mentions_only";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
-    String KEY_PEBBLE_NOTIFICATIONS = "pebble_notifications";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
-    String KEY_FAB_VISIBLE = "fab_visible";
-
-    @Preference(type = STRING, hasDefault = true, defaultString = VALUE_COMPOSE_NOW_ACTION_COMPOSE)
-    String KEY_COMPOSE_NOW_ACTION = "compose_now_action";
-
-    @Preference(type = STRING, hasDefault = true, defaultString = VALUE_MEDIA_PREVIEW_STYLE_CROP)
-    String KEY_MEDIA_PREVIEW_STYLE = "media_preview_style";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
-    String KEY_MEDIA_PREVIEW = "media_preview";
-    @Preference(type = STRING, hasDefault = true)
-    String KEY_PROFILE_IMAGE_STYLE = "profile_image_style";
-
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
-    String KEY_BANDWIDTH_SAVING_MODE = "bandwidth_saving_mode";
-
-    @Preference(type = STRING)
-    String KEY_TRANSLATION_DESTINATION = "translation_destination";
-    @Preference(type = STRING)
-    String KEY_TAB_DISPLAY_OPTION = "tab_display_option";
-    @Preference(type = INT, exportable = false)
-    String KEY_LIVE_WALLPAPER_SCALE = "live_wallpaper_scale";
-    @Preference(type = LONG, exportable = false)
-    String KEY_API_LAST_CHANGE = "api_last_change";
-    @Preference(type = STRING, exportable = false)
-    String KEY_DEFAULT_ACCOUNT_KEY = "default_account_key";
-    @Preference(type = BOOLEAN, exportable = true, defaultBoolean = true)
-    String KEY_RETRY_ON_NETWORK_ISSUE = "retry_on_network_issue";
-
-
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
-    String KEY_THUMBOR_ENABLED = "thumbor_enabled";
-    @Preference(type = STRING, hasDefault = false)
-    String KEY_THUMBOR_ADDRESS = "thumbor_address";
-    @Preference(type = STRING, hasDefault = false)
-    String KEY_THUMBOR_SECURITY_KEY = "thumbor_security_key";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
-    String KEY_HIDE_CARD_ACTIONS = "hide_card_actions";
-    @Preference(type = INT, hasDefault = true, defaultInt = 300)
-    String KEY_CACHE_SIZE_LIMIT = "cache_size_limit";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
-    String KEY_BUG_REPORTS = "bug_reports";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
-    String KEY_COMBINED_NOTIFICATIONS = "combined_notifications";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
-    String KEY_I_WANT_MY_STARS_BACK = "i_want_my_stars_back";
-    @Preference(type = STRING, hasDefault = false)
-    String KEY_EMOJI_SUPPORT = "emoji_support";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
-    String KEY_NEW_DOCUMENT_API = "new_document_api";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
-    String KEY_DRAWER_TOGGLE = "drawer_toggle";
-
-    String KEY_RANDOMIZE_ACCOUNT_NAME = "randomize_account_name";
-    String KEY_DEFAULT_AUTO_REFRESH = "default_auto_refresh";
-    String KEY_SYNC_PROVIDER_TYPE = "sync_provider_type";
-
-    String KEY_MEDIA_LINK_COUNTS_IN_STATUS = "media_link_counts_in_status";
-    String KEY_DROPBOX_ACCESS_TOKEN = "dropbox_access_token";
 
 }

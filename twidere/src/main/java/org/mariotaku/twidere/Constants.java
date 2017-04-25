@@ -19,11 +19,7 @@
 
 package org.mariotaku.twidere;
 
-import org.mariotaku.twidere.annotation.Preference;
 import org.mariotaku.twidere.model.UserKey;
-
-import static org.mariotaku.twidere.annotation.PreferenceType.BOOLEAN;
-import static org.mariotaku.twidere.annotation.PreferenceType.STRING;
 
 /**
  * Constants requires full application to build or useless for other
@@ -113,9 +109,7 @@ public interface Constants extends TwidereConstants {
             R.color.material_orange, R.color.material_deep_orange};
 
     // SharedPreferences constants
-    @Preference(type = BOOLEAN, exportable = false)
     String KEY_USAGE_STATISTICS = "usage_statistics";
-    @Preference(type = STRING, exportable = false)
     String KEY_DEVICE_SERIAL = "device_serial";
 
     // Intent constants
