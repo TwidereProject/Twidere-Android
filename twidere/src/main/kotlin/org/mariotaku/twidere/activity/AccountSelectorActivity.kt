@@ -59,19 +59,16 @@ class AccountSelectorActivity : BaseActivity(), OnItemClickListener {
      * If not null, account selector will only show accounts matched this host.
      */
     private val accountHost: String?
-        get() {
-            return intent.getStringExtra(EXTRA_ACCOUNT_HOST)
-        }
+        get() = intent.getStringExtra(EXTRA_ACCOUNT_HOST)
+
+    private val accountType: String?
+        get() = intent.getStringExtra(EXTRA_ACCOUNT_TYPE)
 
     private val isSelectNoneAllowed: Boolean
-        get() {
-            return intent.getBooleanExtra(EXTRA_ALLOW_SELECT_NONE, false)
-        }
+        get() = intent.getBooleanExtra(EXTRA_ALLOW_SELECT_NONE, false)
 
     private val isSingleSelection: Boolean
-        get() {
-            return intent.getBooleanExtra(EXTRA_SINGLE_SELECTION, true)
-        }
+        get() = intent.getBooleanExtra(EXTRA_SINGLE_SELECTION, true)
 
     /**
      * True if you want account picked automatically if there are only one match.
@@ -98,6 +95,7 @@ class AccountSelectorActivity : BaseActivity(), OnItemClickListener {
             val extraKeys = onlyIncludeKeys
             val oauthOnly = isOAuthOnly
             val accountHost = accountHost
+            val accountType = accountType
             addAll(allAccountDetails.filter {
                 if (extraKeys != null) {
                     return@filter extraKeys.contains(it.key)
@@ -109,6 +107,9 @@ class AccountSelectorActivity : BaseActivity(), OnItemClickListener {
                     if (it.key.host != null && it.type != AccountType.TWITTER) return@filter false
                 } else if (accountHost != null) {
                     if (accountHost != it.key.host) return@filter false
+                }
+                if (accountType != null) {
+                    if (accountType != it.type) return@filter false
                 }
                 return@filter true
             })

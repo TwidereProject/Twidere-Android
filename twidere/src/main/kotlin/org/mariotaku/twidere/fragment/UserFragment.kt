@@ -63,7 +63,6 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.text.SpannableStringBuilder
 import android.text.Spanned
-import android.text.TextUtils
 import android.text.util.Linkify
 import android.util.SparseBooleanArray
 import android.view.*
@@ -488,13 +487,12 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val locale = Locale.getDefault()
 
         listedContainer.listedCount.text = Utils.getLocalizedNumber(locale, user.listed_count)
-        val groupsCount = if (user.extras != null) user.extras.groups_count else -1
-        groupsContainer.groupsCount.text = Utils.getLocalizedNumber(locale, groupsCount)
+        groupsContainer.groupsCount.text = Utils.getLocalizedNumber(locale, user.groups_count)
         followersContainer.followersCount.text = Utils.getLocalizedNumber(locale, user.followers_count)
         friendsContainer.friendsCount.text = Utils.getLocalizedNumber(locale, user.friends_count)
 
         listedContainer.visibility = if (user.listed_count < 0) View.GONE else View.VISIBLE
-        groupsContainer.visibility = if (groupsCount < 0) View.GONE else View.VISIBLE
+        groupsContainer.visibility = if (user.groups_count < 0) View.GONE else View.VISIBLE
 
         if (user.color != 0) {
             setUiColor(user.color)
@@ -639,10 +637,14 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 if (resultCode == Activity.RESULT_OK) {
                     if (data == null || !data.hasExtra(EXTRA_ID)) return
                     val accountKey = data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
+                    var userKey = user.key
+                    if (account?.type == AccountType.MASTODON && account?.key?.host != accountKey.host) {
+                        userKey = MastodonPlaceholderUserKey(user.key.host)
+                    }
                     @Referral
                     val referral = arguments.getString(EXTRA_REFERRAL)
-                    IntentUtils.openUserProfile(activity, accountKey, user.key, user.screen_name,
-                            user.extras.statusnet_profile_url, preferences[newDocumentApiKey],
+                    IntentUtils.openUserProfile(activity, accountKey, userKey, user.screen_name,
+                            user.extras?.statusnet_profile_url, preferences[newDocumentApiKey],
                             referral, null)
                 }
             }
@@ -948,7 +950,10 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 val intent = Intent(INTENT_ACTION_SELECT_ACCOUNT)
                 intent.setClass(activity, AccountSelectorActivity::class.java)
                 intent.putExtra(EXTRA_SINGLE_SELECTION, true)
-                intent.putExtra(EXTRA_ACCOUNT_HOST, user.key.host)
+                when (account?.type) {
+                    AccountType.MASTODON -> intent.putExtra(EXTRA_ACCOUNT_TYPE, AccountType.MASTODON)
+                    else -> intent.putExtra(EXTRA_ACCOUNT_HOST, user.key.host)
+                }
                 startActivityForResult(intent, REQUEST_SELECT_ACCOUNT)
             }
             R.id.follow -> {
@@ -1539,7 +1544,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         if (account_key != user.account_key) {
             return false
         }
-        return user.extras != null && TextUtils.equals(user_key.id, user.extras.unique_id) || TextUtils.equals(user_key.id, user.key.id)
+        return user_key.id == user.extras?.unique_id || user_key.id == user.key.id
     }
 
     private fun setFollowEditButton(@DrawableRes icon: Int, @ColorRes color: Int, @StringRes label: Int) {

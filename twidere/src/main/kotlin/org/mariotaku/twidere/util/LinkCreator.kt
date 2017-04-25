@@ -131,8 +131,8 @@ object LinkCreator {
     }
 
     fun getUserWebLink(user: ParcelableUser): Uri {
-        if (user.extras != null && user.extras.statusnet_profile_url != null) {
-            return Uri.parse(user.extras.statusnet_profile_url)
+        if (user.extras != null && user.extras?.statusnet_profile_url != null) {
+            return Uri.parse(user.extras?.statusnet_profile_url)
         }
         when (user.user_type) {
             AccountType.FANFOU -> return getFanfouUserLink(user.key.id)

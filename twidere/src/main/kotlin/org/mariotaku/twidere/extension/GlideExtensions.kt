@@ -57,7 +57,7 @@ fun RequestManager.loadProfileImage(context: Context, account: AccountDetails, @
 
 fun RequestManager.loadProfileImage(context: Context, user: ParcelableUser, @ImageShapeStyle shapeStyle: Int,
         cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f, size: String? = null): DrawableRequestBuilder<String?> {
-    if (user.extras != null && user.extras.profile_image_url_fallback == null) {
+    if (user.extras != null && user.extras?.profile_image_url_fallback == null) {
         // No fallback image, use compatible logic
         return loadProfileImage(context, user.profile_image_url, shapeStyle, cornerRadius,
                 cornerRadiusRatio, size)

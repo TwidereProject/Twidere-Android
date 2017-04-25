@@ -59,11 +59,11 @@ object ParcelableRelationshipUtils {
         obj.filtering = filtering
         if (user.extras != null) {
             obj.following = user.is_following
-            obj.followed_by = user.extras.followed_by
-            obj.blocking = user.extras.blocking
-            obj.blocked_by = user.extras.blocked_by
-            obj.can_dm = user.extras.followed_by
-            obj.notifications_enabled = user.extras.notifications_enabled
+            obj.followed_by = user.extras?.followed_by ?: false
+            obj.blocking = user.extras?.blocking ?: false
+            obj.blocked_by = user.extras?.blocked_by ?: false
+            obj.can_dm = user.extras?.followed_by ?: false
+            obj.notifications_enabled = user.extras?.notifications_enabled ?: false
         }
         return obj
     }

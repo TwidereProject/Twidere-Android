@@ -75,7 +75,7 @@ object IntentUtils {
         intent.setExtrasClassLoader(TwidereApplication::class.java.classLoader)
         intent.putExtra(EXTRA_USER, user)
         if (user.extras != null) {
-            intent.putExtra(EXTRA_PROFILE_URL, user.extras.statusnet_profile_url)
+            intent.putExtra(EXTRA_PROFILE_URL, user.extras?.statusnet_profile_url)
         }
         if (referral != null) {
             intent.putExtra(EXTRA_REFERRAL, referral)

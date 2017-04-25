@@ -180,6 +180,7 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
     @ParcelableThisPlease
     @JsonField(name = "extras")
     @CursorField(value = CachedUsers.EXTRAS, converter = LoganSquareCursorFieldConverter.class)
+    @Nullable
     public Extras extras;
 
     @ParcelableNoThanks
