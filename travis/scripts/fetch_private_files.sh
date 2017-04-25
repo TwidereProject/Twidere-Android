@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
-      return 0
+      exit 0
 fi
 
 # Extracts build configs into source tree

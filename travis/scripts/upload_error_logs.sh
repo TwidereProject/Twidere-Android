@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
-      return 0
+      exit 0
 fi
 
 curl 'https://raw.githubusercontent.com/andreafabrizi/Dropbox-Uploader/master/dropbox_uploader.sh' -o travis/scripts/dropbox_uploader.sh
