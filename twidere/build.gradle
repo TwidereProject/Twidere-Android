@@ -23,10 +23,15 @@ buildscript {
         // START Non-FOSS component
         classpath "io.fabric.tools:gradle:${libVersions['FabricPlugin']}"
         classpath "com.github.triplet.gradle:play-publisher:${libVersions['PlayPublisher']}"
+        classpath 'com.google.gms:google-services:3.0.0'
         // END Non-FOSS component
 
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${libVersions['Kotlin']}"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:${libVersions['Kotlin']}"
+        classpath('fr.avianey.androidsvgdrawable:gradle-plugin:3.0.0') {
+            // should be excluded to avoid conflict
+            exclude group: 'xerces'
+        }
     }
 }
 
