@@ -47,14 +47,14 @@ cache:
     - $HOME/.m2/
 
 before_install:
-  - openssl aes-256-cbc -K $encrypted_9b8203f9524d_key -iv $encrypted_9b8203f9524d_iv -in travis/configs/twidere_private_config.tar.gz.enc -out travis/configs/twidere_private_config.tar.gz -d
+  - ./travis/scripts/decode_private_configs.sh
 
 install:
   - ./travis/scripts/fetch_private_files.sh
 
 before_script:
   # Validate if patches work
-  - patch --dry-run -d twidere < twidere/patches/remove_closed_source_dependencies.patch
+  - ./travis/scripts/patch_sources.sh
   # Validate if Google components fetched successfully
   - ./travis/scripts/test_private_files.sh
 
