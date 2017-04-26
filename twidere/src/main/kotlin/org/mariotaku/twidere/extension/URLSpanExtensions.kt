@@ -17,32 +17,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.extension.model
+package org.mariotaku.twidere.extension
 
-import android.text.Spannable
 import android.text.Spanned
 import android.text.style.URLSpan
 import org.mariotaku.twidere.model.SpanItem
-import org.mariotaku.twidere.text.AcctMentionSpan
-import org.mariotaku.twidere.text.ZeroWidthSpan
 
-val SpanItem.length: Int get() = end - start
+/**
+ * Created by mariotaku on 2017/4/26.
+ */
 
-fun Array<SpanItem>.applyTo(spannable: Spannable) {
-    forEach { span ->
-        when (span.type) {
-            SpanItem.SpanType.HIDE -> {
-                spannable.setSpan(ZeroWidthSpan(), span.start, span.end,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            }
-            SpanItem.SpanType.ACCT_MENTION -> {
-                spannable.setSpan(AcctMentionSpan(span.link), span.start, span.end,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            }
-            else -> {
-                spannable.setSpan(URLSpan(span.link), span.start, span.end,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            }
-        }
-    }
+fun URLSpan.toSpanItem(spanned: Spanned): SpanItem {
+    val spanItem = SpanItem()
+    spanItem.link = url
+    spanItem.type = SpanItem.SpanType.LINK
+    spanItem.start = spanned.getSpanStart(this)
+    spanItem.end = spanned.getSpanEnd(this)
+    return spanItem
 }

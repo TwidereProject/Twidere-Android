@@ -33,3 +33,11 @@ inline fun <T, reified R> Array<T>.mapIndexedToArray(transform: (Int, T) -> R): 
 inline fun <reified R> LongArray.mapToArray(transform: (Long) -> R): Array<R> {
     return Array(size) { transform(this[it]) }
 }
+
+fun CharArray.indexOf(element: Char, start: Int, len: Int): Int {
+    @Suppress("LoopToCallChain")
+    for (i in rangeOfSize(start, len)) {
+        if (this[i] == element) return i
+    }
+    return -1
+}

@@ -21,8 +21,6 @@ package org.mariotaku.twidere.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.IntDef;
-import android.text.Spanned;
-import android.text.style.URLSpan;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
@@ -63,14 +61,15 @@ public class SpanItem implements Parcelable {
     @ParcelableThisPlease
     public String link;
 
+    @ParcelableThisPlease
+    @JsonField(name = "type")
+    @SpanType
+    public int type = SpanType.LINK;
+
     @ParcelableNoThanks
     public int orig_start = -1;
     @ParcelableNoThanks
     public int orig_end = -1;
-
-    @ParcelableNoThanks
-    @SpanType
-    public int type = SpanType.LINK;
 
     @Override
     public String toString() {
@@ -78,6 +77,7 @@ public class SpanItem implements Parcelable {
                 "start=" + start +
                 ", end=" + end +
                 ", link='" + link + '\'' +
+                ", type=" + type +
                 ", orig_start=" + orig_start +
                 ", orig_end=" + orig_end +
                 '}';
@@ -93,18 +93,11 @@ public class SpanItem implements Parcelable {
         SpanItemParcelablePlease.writeToParcel(this, dest, flags);
     }
 
-    public static SpanItem from(Spanned spanned, URLSpan span) {
-        SpanItem spanItem = new SpanItem();
-        spanItem.link = span.getURL();
-        spanItem.start = spanned.getSpanStart(span);
-        spanItem.end = spanned.getSpanEnd(span);
-        return spanItem;
-    }
-
-    @IntDef({SpanType.HIDE, SpanType.LINK})
+    @IntDef({SpanType.HIDE, SpanType.LINK, SpanType.ACCT_MENTION})
     @Retention(RetentionPolicy.SOURCE)
     public @interface SpanType {
         int HIDE = -1;
         int LINK = 0;
+        int ACCT_MENTION = 1;
     }
 }

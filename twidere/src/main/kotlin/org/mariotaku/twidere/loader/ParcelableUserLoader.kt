@@ -41,7 +41,7 @@ import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.extension.api.tryShowUser
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
-import org.mariotaku.twidere.extension.model.isMastodonPlaceholder
+import org.mariotaku.twidere.extension.model.isAcctPlaceholder
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
@@ -162,7 +162,7 @@ class ParcelableUserLoader(
     private fun showMastodonUser(details: AccountDetails): ParcelableUser {
         val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
         if (userKey == null) throw MicroBlogException("Invalid user id")
-        if (!userKey.isMastodonPlaceholder) {
+        if (!userKey.isAcctPlaceholder) {
             return mastodon.getAccount(userKey.id).toParcelable(details)
         }
         if (screenName == null) throw MicroBlogException("Screen name required")

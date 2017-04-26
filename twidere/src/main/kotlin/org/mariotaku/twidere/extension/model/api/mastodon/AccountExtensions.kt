@@ -28,6 +28,7 @@ import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.HtmlEscapeHelper
 import org.mariotaku.twidere.util.HtmlSpanBuilder
+import org.mariotaku.twidere.util.emoji.EmojioneTranslator
 
 /**
  * Created by mariotaku on 2017/4/18.
@@ -49,7 +50,7 @@ fun Account.toParcelable(accountKey: UserKey, position: Long = 0): ParcelableUse
     obj.name = name
     obj.screen_name = username
     if (note?.isHtml ?: false) {
-        val descriptionHtml = HtmlSpanBuilder.fromHtml(note, note)
+        val descriptionHtml = HtmlSpanBuilder.fromHtml(note, note, MastodonSpanProcessor)
         obj.description_unescaped = descriptionHtml?.toString()
         obj.description_plain = obj.description_unescaped
         obj.description_spans = descriptionHtml?.spanItems
@@ -72,6 +73,7 @@ fun Account.toParcelable(accountKey: UserKey, position: Long = 0): ParcelableUse
 
 inline val Account.host: String? get() = acct?.let(UserKey::valueOf)?.host
 
-inline val Account.name: String? get() = displayName?.takeIf(String::isNotEmpty) ?: username
+inline val Account.name: String? get() = displayName?.takeIf(String::isNotEmpty)
+        ?.let(EmojioneTranslator::translate) ?: username
 
 fun Account.getKey(host: String?) = UserKey(id, acct?.let(UserKey::valueOf)?.host ?: host)

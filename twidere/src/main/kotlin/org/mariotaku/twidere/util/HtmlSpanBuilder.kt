@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.util
 
 import android.graphics.Typeface
+import android.text.Editable
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.Spanned
@@ -39,8 +40,8 @@ object HtmlSpanBuilder {
     private val PARSER = SimpleMarkupParser(ParseConfiguration.htmlConfiguration())
 
     @Throws(HtmlParseException::class)
-    fun fromHtml(html: String): Spannable {
-        val handler = HtmlSpanHandler()
+    fun fromHtml(html: String, processor: SpanProcessor? = null): Spannable {
+        val handler = HtmlSpanHandler(processor)
         try {
             PARSER.parse(html, handler)
         } catch (e: ParseException) {
@@ -50,17 +51,19 @@ object HtmlSpanBuilder {
         return handler.text
     }
 
-    fun fromHtml(html: String?, fallback: CharSequence?): CharSequence? {
+    fun fromHtml(html: String?, fallback: CharSequence?, processor: SpanProcessor? = null): CharSequence? {
         if (html == null) return fallback
         try {
-            return fromHtml(html)
+            return fromHtml(html, processor)
         } catch (e: HtmlParseException) {
             return fallback
         }
 
     }
 
-    private fun applyTag(sb: SpannableStringBuilder, start: Int, end: Int, info: TagInfo) {
+    private fun applyTag(sb: SpannableStringBuilder, start: Int, end: Int, info: TagInfo,
+            processor: SpanProcessor?) {
+        if (processor?.applySpan(sb, start, end, info) ?: false) return
         if (info.nameLower == "br") {
             sb.append('\n')
         } else {
@@ -88,26 +91,50 @@ object HtmlSpanBuilder {
         return info.indexOfLast { it.name.equals(name, ignoreCase = true) }
     }
 
-    private class HtmlParseException : RuntimeException {
-        internal constructor() : super() {}
+    interface SpanProcessor {
 
-        internal constructor(detailMessage: String) : super(detailMessage) {}
+        /**
+         * @param text Text before content in [buffer] appended
+         * @param buffer Raw html buffer
+         * @param start Start index of text to append in [buffer]
+         * @param len Length of text to append in [buffer]
+         */
+        fun appendText(text: Editable, buffer: CharArray, start: Int, len: Int): Boolean = false
 
-        internal constructor(detailMessage: String, throwable: Throwable) : super(detailMessage, throwable) {}
+        /**
+         * @param text Text to apply span from [info]
+         * @param start Start index for applying span
+         * @param end End index for applying span
+         * @param info Tag info
+         */
+        fun applySpan(text: Editable, start: Int, end: Int, info: TagInfo): Boolean = false
 
-        internal constructor(throwable: Throwable) : super(throwable) {}
     }
 
-    private data class TagInfo(val start: Int, val name: String, val attributes: Map<String, String>?) {
+    data class TagInfo(val start: Int, val name: String, val attributes: Map<String, String>?) {
 
         val nameLower = name.toLowerCase(Locale.US)
 
-        internal fun getAttribute(attr: String): String? {
+        fun getAttribute(attr: String): String? {
             return attributes?.get(attr)
         }
     }
 
-    private class HtmlSpanHandler internal constructor() : AbstractSimpleMarkupHandler() {
+    private class HtmlParseException : RuntimeException {
+
+        internal constructor() : super()
+
+        internal constructor(detailMessage: String) : super(detailMessage)
+        internal constructor(detailMessage: String, throwable: Throwable) : super(detailMessage, throwable)
+
+
+        internal constructor(throwable: Throwable) : super(throwable)
+
+    }
+
+    private class HtmlSpanHandler(
+            val processor: SpanProcessor?
+    ) : AbstractSimpleMarkupHandler() {
 
         private val sb = SpannableStringBuilder()
         private var tagInfo = ArrayList<TagInfo>()
@@ -122,7 +149,9 @@ object HtmlSpanBuilder {
                     if (buffer[lineBreakIndex] == '\n') break
                     lineBreakIndex++
                 }
-                sb.append(HtmlEscapeHelper.unescape(String(buffer, cur, lineBreakIndex - cur)))
+                if (!(processor?.appendText(sb, buffer, cur, lineBreakIndex - cur) ?: false)) {
+                    sb.append(HtmlEscapeHelper.unescape(String(buffer, cur, lineBreakIndex - cur)))
+                }
                 cur = lineBreakIndex + 1
             }
             lastTag = null
@@ -132,7 +161,7 @@ object HtmlSpanBuilder {
             val lastIndex = lastIndexOfTag(tagInfo, elementName)
             if (lastIndex == -1) return
             val info = tagInfo[lastIndex]
-            applyTag(sb, info.start, sb.length, info)
+            applyTag(sb, info.start, sb.length, info, processor)
             tagInfo.removeAt(lastIndex)
             lastTag = info
         }
@@ -153,11 +182,12 @@ object HtmlSpanBuilder {
                 minimized: Boolean, line: Int, col: Int) {
             if (minimized) {
                 val info = TagInfo(sb.length, elementName, attributes)
-                applyTag(sb, info.start, sb.length, info)
+                applyTag(sb, info.start, sb.length, info, processor)
             }
         }
 
         val text: Spannable
             get() = sb
     }
+
 }

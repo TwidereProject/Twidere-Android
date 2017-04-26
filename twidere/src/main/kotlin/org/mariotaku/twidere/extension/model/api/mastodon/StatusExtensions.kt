@@ -19,12 +19,18 @@
 
 package org.mariotaku.twidere.extension.model.api.mastodon
 
+import android.net.Uri
+import android.text.Editable
+import android.text.Spanned
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.microblog.library.mastodon.model.Status
 import org.mariotaku.twidere.extension.model.api.spanItems
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils.addFilterFlag
+import org.mariotaku.twidere.text.AcctMentionSpan
+import org.mariotaku.twidere.util.HtmlEscapeHelper
 import org.mariotaku.twidere.util.HtmlSpanBuilder
+import org.mariotaku.twidere.util.emoji.EmojioneTranslator
 
 fun Status.toParcelable(details: AccountDetails): ParcelableStatus {
     return toParcelable(details.key).apply {
@@ -40,7 +46,7 @@ fun Status.toParcelable(accountKey: UserKey): ParcelableStatus {
     result.sort_id = sortId
     result.timestamp = createdAt?.time ?: 0
 
-    extras.summary_text = spoilerText
+    extras.summary_text = spoilerText?.let(EmojioneTranslator::translate)
     extras.visibility = visibility
     extras.external_url = url
 
@@ -83,9 +89,8 @@ fun Status.toParcelable(accountKey: UserKey): ParcelableStatus {
     result.user_screen_name = account.username
     result.user_profile_image_url = account.avatar
     result.user_is_protected = account.isLocked
-    // Twitter will escape <> to &lt;&gt;, so if a status contains those symbols unescaped
-    // We should treat this as an html
-    val html = HtmlSpanBuilder.fromHtml(status.content, status.content)
+    // Mastodon has HTML formatted content text
+    val html = HtmlSpanBuilder.fromHtml(status.content, status.content, MastodonSpanProcessor)
     result.text_unescaped = html?.toString()
     result.text_plain = result.text_unescaped
     result.spans = html?.spanItems
@@ -105,4 +110,25 @@ private fun calculateDisplayTextRange(spans: Array<SpanItem>?, media: Array<Parc
     if (spans == null || media == null) return null
     val lastMatch = spans.lastOrNull { span -> media.any { span.link == it.page_url } } ?: return null
     return intArrayOf(0, lastMatch.start)
+}
+
+object MastodonSpanProcessor : HtmlSpanBuilder.SpanProcessor {
+
+    override fun appendText(text: Editable, buffer: CharArray, start: Int, len: Int): Boolean {
+        val unescaped = HtmlEscapeHelper.unescape(String(buffer, start, len))
+        text.append(EmojioneTranslator.translate(unescaped))
+        return true
+    }
+
+    override fun applySpan(text: Editable, start: Int, end: Int, info: HtmlSpanBuilder.TagInfo): Boolean {
+        val clsAttr = info.getAttribute("class") ?: return false
+        val hrefAttr = info.getAttribute("href") ?: return false
+        // Is mention or hashtag
+        if ("mention" !in clsAttr.split(" ")) return false
+        if (text[start] != '@') return false
+        text.setSpan(AcctMentionSpan(text.substring(start + 1, end), Uri.parse(hrefAttr).host),
+                start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        return true
+    }
+
 }

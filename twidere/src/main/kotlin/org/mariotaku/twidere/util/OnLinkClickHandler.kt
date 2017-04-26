@@ -33,6 +33,7 @@ import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
+import org.mariotaku.twidere.extension.model.AcctPlaceholderUserKey
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener
@@ -106,6 +107,12 @@ open class OnLinkClickHandler(
             TwidereLinkify.LINK_TYPE_USER_ID -> {
                 IntentUtils.openUserProfile(context, accountKey, UserKey.valueOf(link), null, null,
                         preferences[newDocumentApiKey], Referral.USER_MENTION, null)
+                return true
+            }
+            TwidereLinkify.LINK_TYPE_USER_ACCT -> {
+                val acctKey = UserKey.valueOf(link)
+                IntentUtils.openUserProfile(context, accountKey, AcctPlaceholderUserKey(acctKey.host),
+                        acctKey.id, null, preferences[newDocumentApiKey], Referral.USER_MENTION, null)
                 return true
             }
         }

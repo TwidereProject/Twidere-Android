@@ -639,7 +639,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     val accountKey = data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
                     var userKey = user.key
                     if (account?.type == AccountType.MASTODON && account?.key?.host != accountKey.host) {
-                        userKey = MastodonPlaceholderUserKey(user.key.host)
+                        userKey = AcctPlaceholderUserKey(user.key.host)
                     }
                     @Referral
                     val referral = arguments.getString(EXTRA_REFERRAL)

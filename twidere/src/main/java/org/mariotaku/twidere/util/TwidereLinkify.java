@@ -23,7 +23,6 @@ import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.URLSpan;
 
@@ -33,6 +32,7 @@ import com.twitter.Regex;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.text.AcctMentionSpan;
 import org.mariotaku.twidere.text.TwidereURLSpan;
 
 import java.lang.annotation.Retention;
@@ -69,6 +69,7 @@ public final class TwidereLinkify implements Constants {
     public static final int LINK_TYPE_LIST = 6;
     public static final int LINK_TYPE_CASHTAG = 7;
     public static final int LINK_TYPE_USER_ID = 8;
+    public static final int LINK_TYPE_USER_ACCT = 9;
 
     public static final int[] ALL_LINK_TYPES = new int[]{LINK_TYPE_ENTITY_URL, LINK_TYPE_LINK_IN_TEXT,
             LINK_TYPE_MENTION, LINK_TYPE_HASHTAG, LINK_TYPE_CASHTAG};
@@ -133,36 +134,6 @@ public final class TwidereLinkify implements Constants {
         }
     }
 
-    public SpannableString applyUserProfileLink(@Nullable final CharSequence text,
-            @Nullable final UserKey accountKey, final long extraId, final long userId,
-            final String screenName) {
-        return applyUserProfileLink(text, accountKey, extraId, userId, screenName, mHighlightOption);
-    }
-
-    public SpannableString applyUserProfileLink(@Nullable final CharSequence text,
-            @Nullable final UserKey accountKey, final long extraId, final long userId,
-            final String screenName, final int highlightOption) {
-        return applyUserProfileLink(text, accountKey, extraId, userId, screenName, highlightOption, mOnLinkClickListener);
-    }
-
-    public final SpannableString applyUserProfileLink(final CharSequence text,
-            @Nullable final UserKey accountKey, final long extraId, final long userId,
-            final String screenName, final int highlightOption, final OnLinkClickListener listener) {
-        final SpannableString string = SpannableString.valueOf(text);
-        final URLSpan[] spans = string.getSpans(0, string.length(), URLSpan.class);
-        for (final URLSpan span : spans) {
-            string.removeSpan(span);
-        }
-        if (userId > 0) {
-            applyLink(String.valueOf(userId), null, 0, string.length(), string, accountKey, extraId,
-                    LINK_TYPE_USER_ID, false, highlightOption, listener);
-        } else if (screenName != null) {
-            applyLink(screenName, null, 0, string.length(), string, accountKey, extraId,
-                    LINK_TYPE_MENTION, false, highlightOption, listener);
-        }
-        return string;
-    }
-
     public void setHighlightOption(@HighlightStyle final int style) {
         mHighlightOption = style;
     }
@@ -218,7 +189,10 @@ public final class TwidereLinkify implements Constants {
                     }
                     string.removeSpan(span);
                     String url = span.getURL();
-                    if (accountKey != null && USER_TYPE_FANFOU_COM.equals(accountKey.getHost())) {
+                    int linkType = type;
+                    if (span instanceof AcctMentionSpan) {
+                        linkType = LINK_TYPE_USER_ACCT;
+                    } else if (accountKey != null && USER_TYPE_FANFOU_COM.equals(accountKey.getHost())) {
                         // Fix search path
                         if (url.startsWith("/")) {
                             url = "http://fanfou.com" + url;
@@ -236,8 +210,8 @@ public final class TwidereLinkify implements Constants {
                         }
                     }
                     applyLink(url, String.valueOf(string.subSequence(start, end)), start, end,
-                            string, accountKey, extraId, LINK_TYPE_ENTITY_URL, sensitive,
-                            highlightOption, listener);
+                            string, accountKey, extraId, linkType, sensitive, highlightOption,
+                            listener);
                 }
                 break;
             }

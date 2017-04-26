@@ -24,12 +24,14 @@ import android.text.style.URLSpan
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.extension.model.toParcelable
+import org.mariotaku.twidere.extension.toSpanItem
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils.addFilterFlag
 import org.mariotaku.twidere.model.util.ParcelableUserMentionUtils
 import org.mariotaku.twidere.model.util.UserKeyUtils
+import org.mariotaku.twidere.text.AcctMentionSpan
 import org.mariotaku.twidere.util.HtmlSpanBuilder
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
 
@@ -183,7 +185,13 @@ fun Status.toParcelable(accountKey: UserKey, accountType: String, profileImageSi
 }
 
 internal inline val CharSequence.spanItems get() = (this as? Spanned)?.let { text ->
-    text.getSpans(0, length, URLSpan::class.java).mapToArray { SpanItem.from(text, it) }
+    text.getSpans(0, length, URLSpan::class.java).mapToArray {
+        val item = it.toSpanItem(text)
+        if (it is AcctMentionSpan) {
+            item.type = SpanItem.SpanType.ACCT_MENTION
+        }
+        return@mapToArray item
+    }
 }
 
 internal inline val String.isHtml get() = contains('<') && contains('>')

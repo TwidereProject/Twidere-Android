@@ -17,18 +17,15 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.extension.model
+package org.mariotaku.twidere.text
 
+import android.text.style.URLSpan
 import org.mariotaku.twidere.model.UserKey
 
 /**
- * Created by mariotaku on 2017/4/19.
+ * Created by mariotaku on 2017/4/26.
  */
 
-private const val acctPlaceholderId = "#acct*placeholder#"
-
-val UserKey.isAcctPlaceholder get() = acctPlaceholderId == id && host != null
-
-fun AcctPlaceholderUserKey(host: String?): UserKey {
-    return UserKey(acctPlaceholderId, host)
+class AcctMentionSpan(acct: String) : URLSpan(acct) {
+    constructor(screenName: String, host: String?) : this(UserKey(screenName, host).toString())
 }
