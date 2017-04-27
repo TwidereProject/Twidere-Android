@@ -76,15 +76,15 @@ private fun MicroBlog.showUserAlternative(id: String?, screenName: String?): Use
     }
     val paging = Paging().count(1)
     val users = searchUsers(searchScreenName, paging)
-    val match = users.first { it.id == id || searchScreenName.equals(it.screenName, ignoreCase = true) }
+    val match = users.firstOrNull { it.id == id || searchScreenName.equals(it.screenName, ignoreCase = true) }
     if (match != null) return match
     if (id != null) {
         val timeline = getUserTimeline(id, paging, null)
-        val status = timeline.first { it.user?.id == id }
+        val status = timeline.firstOrNull { it.user?.id == id }
         if (status != null) return status.user
     } else {
         val timeline = getUserTimelineByScreenName(searchScreenName, paging, null)
-        val status = timeline.first { searchScreenName.equals(it.user?.screenName, ignoreCase = true) }
+        val status = timeline.firstOrNull { searchScreenName.equals(it.user?.screenName, ignoreCase = true) }
         if (status != null) return status.user
     }
     throw MicroBlogException("Can't find user")

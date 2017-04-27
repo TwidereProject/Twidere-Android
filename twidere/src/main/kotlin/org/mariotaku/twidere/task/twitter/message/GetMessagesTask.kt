@@ -422,7 +422,7 @@ class GetMessagesTask(
                 conversation.conversation_avatar = v.avatarImageHttps
                 conversation.request_cursor = response.cursor
                 conversation.conversation_extras_type = ParcelableMessageConversation.ExtrasType.TWITTER_OFFICIAL
-                val myLastReadEventId = v.participants.first { it.userId == accountKey.id }?.lastReadEventId
+                val myLastReadEventId = v.participants.firstOrNull { it.userId == accountKey.id }?.lastReadEventId
                 // Find recent message timestamp
                 val myLastReadTimestamp = messagesMap.findLastReadTimestamp(k, myLastReadEventId)
 
