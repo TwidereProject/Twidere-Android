@@ -173,6 +173,7 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String OAUTH_CALLBACK_OOB = "oob";
     String OAUTH_CALLBACK_URL = PROTOCOL_TWIDERE + "com.twitter.oauth/";
     String MASTODON_CALLBACK_URL = "https://org.mariotaku.twidere/auth/callback/mastodon";
+    String GITHUB_CALLBACK_URL = "https://org.mariotaku.twidere/auth/callback/github";
 
     int REQUEST_TAKE_PHOTO = 1;
     int REQUEST_PICK_MEDIA = 2;

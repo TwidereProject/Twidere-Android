@@ -169,17 +169,25 @@ class BrowserSignInActivity : BaseActivity() {
 
         @Suppress("Deprecation", "OverridingDeprecatedMember")
         override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-            val uri = Uri.parse(url)
             val data = Intent()
             data.putExtra(EXTRA_EXTRAS, activity.intent.getBundleExtra(EXTRA_EXTRAS))
-            if (url.startsWith(OAUTH_CALLBACK_URL)) {
-                val oauthVerifier = uri.getQueryParameter("oauth_verifier") ?: return false
-                data.putExtra(EXTRA_OAUTH_VERIFIER, oauthVerifier)
-            } else if (url.startsWith(MASTODON_CALLBACK_URL)) {
-                val code = uri.getQueryParameter("code") ?: return false
-                data.putExtra(EXTRA_CODE, code)
-            } else {
-                return false
+            when {
+                url.startsWith(OAUTH_CALLBACK_URL) -> {
+                    val uri = Uri.parse(url)
+                    val oauthVerifier = uri.getQueryParameter("oauth_verifier") ?: return false
+                    data.putExtra(EXTRA_OAUTH_VERIFIER, oauthVerifier)
+                }
+                url.startsWith(MASTODON_CALLBACK_URL) -> {
+                    val uri = Uri.parse(url)
+                    val code = uri.getQueryParameter("code") ?: return false
+                    data.putExtra(EXTRA_CODE, code)
+                }
+                url.startsWith(GITHUB_CALLBACK_URL) -> {
+                    val uri = Uri.parse(url)
+                    val code = uri.getQueryParameter("code") ?: return false
+                    data.putExtra(EXTRA_CODE, code)
+                }
+                else -> return false
             }
             activity.setResult(Activity.RESULT_OK, data)
             activity.finish()

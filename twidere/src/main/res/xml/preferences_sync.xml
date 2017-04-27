@@ -21,6 +21,7 @@
         app:syncType="user_colors"/>
     <org.mariotaku.twidere.preference.sync.SyncItemPreference
         android:defaultValue="true"
+        android:summary="@string/preference_summary_sync_timeline_positions"
         android:title="@string/preference_title_timeline_positions"
         app:syncType="timeline_positions"/>
 </PreferenceScreen>
