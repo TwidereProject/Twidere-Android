@@ -26,6 +26,7 @@ import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.os.Parcelable
+import android.support.annotation.CallSuper
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.Loader
 import android.support.v7.widget.LinearLayoutManager
@@ -445,7 +446,8 @@ abstract class AbsActivitiesFragment protected constructor() :
 
     protected abstract fun onContentLoaded(loader: Loader<List<ParcelableActivity>>, data: List<ParcelableActivity>?)
 
-    protected fun saveReadPosition(position: Int) {
+    @CallSuper
+    protected open fun saveReadPosition(position: Int) {
         if (host == null) return
         if (position == RecyclerView.NO_POSITION || adapter.getActivityCount(false) <= 0) return
         val item = adapter.getActivity(position)

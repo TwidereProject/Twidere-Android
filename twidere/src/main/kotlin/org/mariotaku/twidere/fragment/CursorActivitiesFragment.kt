@@ -28,10 +28,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.content.Loader
-import android.support.v7.widget.RecyclerView
 import android.widget.Toast
 import com.squareup.otto.Subscribe
-import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
 import org.mariotaku.ktextension.contains
 import org.mariotaku.ktextension.removeOnAccountsUpdatedListenerSafe
@@ -74,14 +72,6 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
 
     private var contentObserver: ContentObserver? = null
 
-    private val onScrollListener = object : RecyclerView.OnScrollListener() {
-        override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
-            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                clearNotifications()
-            }
-        }
-    }
-
     private val accountListener: OnAccountsUpdateListener = OnAccountsUpdateListener {
         reloadActivities()
     }
@@ -100,26 +90,17 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
             context.contentResolver.registerContentObserver(Filters.CONTENT_URI, true, contentObserver)
         }
         AccountManager.get(context).addOnAccountsUpdatedListenerSafe(accountListener, updateImmediately = false)
-        recyclerView.addOnScrollListener(onScrollListener)
         updateRefreshState()
         reloadActivities()
     }
 
     override fun onStop() {
-        recyclerView.removeOnScrollListener(onScrollListener)
         if (contentObserver != null) {
             context.contentResolver.unregisterContentObserver(contentObserver)
             contentObserver = null
         }
         AccountManager.get(context).removeOnAccountsUpdatedListenerSafe(accountListener)
         super.onStop()
-    }
-
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        if (isVisibleToUser) {
-            clearNotifications()
-        }
     }
 
     override fun onCreateActivitiesLoader(context: Context, args: Bundle, fromUser: Boolean): Loader<List<ParcelableActivity>> {
@@ -215,6 +196,12 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
         return true
     }
 
+    override fun saveReadPosition(position: Int) {
+        super.saveReadPosition(position)
+        if (position == 0) {
+            clearNotifications()
+        }
+    }
     protected fun getFiltersWhere(table: String): Expression? {
         if (!isFilterEnabled) return null
         return DataStoreUtils.buildActivityFilterWhereClause(table, null)

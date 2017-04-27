@@ -26,6 +26,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
+import android.support.annotation.CallSuper
 import android.support.v4.app.Fragment
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.Loader
@@ -475,8 +476,8 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         return StatusesBusCallback()
     }
 
-
-    protected fun saveReadPosition(position: Int) {
+    @CallSuper
+    protected open fun saveReadPosition(position: Int) {
         if (host == null) return
         if (position == RecyclerView.NO_POSITION || adapter.getStatusCount(false) <= 0) return
         val status = adapter.getStatus(position.coerceIn(rangeOfSize(adapter.statusStartIndex,

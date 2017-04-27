@@ -27,7 +27,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.content.Loader
-import android.support.v7.widget.RecyclerView
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.squareup.otto.Subscribe
@@ -85,14 +84,6 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
         reloadStatuses()
     }
 
-    private val onScrollListener = object : RecyclerView.OnScrollListener() {
-        override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
-            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                clearNotifications()
-            }
-        }
-    }
-
     override fun onStart() {
         super.onStart()
         if (contentObserver == null) {
@@ -104,13 +95,11 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
             context.contentResolver.registerContentObserver(Filters.CONTENT_URI, true, contentObserver)
         }
         AccountManager.get(context).addOnAccountsUpdatedListenerSafe(accountListener, updateImmediately = false)
-        recyclerView.addOnScrollListener(onScrollListener)
         updateRefreshState()
         reloadStatuses()
     }
 
     override fun onStop() {
-        recyclerView.removeOnScrollListener(onScrollListener)
         if (contentObserver != null) {
             context.contentResolver.unregisterContentObserver(contentObserver)
             contentObserver = null
@@ -207,9 +196,9 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
         return true
     }
 
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        if (isVisibleToUser) {
+    override fun saveReadPosition(position: Int) {
+        super.saveReadPosition(position)
+        if (position == 0) {
             clearNotifications()
         }
     }
