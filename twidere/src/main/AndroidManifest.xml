@@ -560,10 +560,6 @@
         <activity
             android:name=".activity.content.FavoriteConfirmDialogActivity"
             android:theme="@style/Theme.Twidere.NoDisplay"/>
-        <activity
-            android:name=".activity.UserFeedbackActivity"
-            android:label="@string/title_user_feedback"
-            android:theme="@style/Theme.Twidere"/>
 
         <service
             android:name=".service.LegacyTaskService"
