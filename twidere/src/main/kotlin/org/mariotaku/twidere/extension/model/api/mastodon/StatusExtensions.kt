@@ -81,7 +81,7 @@ fun Status.toParcelable(accountKey: UserKey): ParcelableStatus {
     result.favorite_count = status.favouritesCount
 
     result.in_reply_to_status_id = status.inReplyToId
-    result.in_reply_to_user_key = status.inReplyToAccountId?.let { UserKey(it, accountKey.host) }
+    result.in_reply_to_user_key = status.inReplyToAccountId?.let { UserKey(it, null) }
 
     val account = status.account
     result.user_key = account.getKey(accountKey.host)
@@ -101,6 +101,15 @@ fun Status.toParcelable(accountKey: UserKey): ParcelableStatus {
     result.mentions = status.mentions?.mapToArray { it.toParcelable(accountKey) }
 
     extras.display_text_range = calculateDisplayTextRange(result.spans, result.media)
+
+    // Try to complete mastodon `in_reply_to` info
+    val inReplyToMention = result.mentions?.firstOrNull {
+        it.key.id == result.in_reply_to_user_key?.id
+    }
+    if (inReplyToMention != null) {
+        result.in_reply_to_name = inReplyToMention.name
+        result.in_reply_to_screen_name = inReplyToMention.screen_name
+    }
 
     result.extras = extras
     return result
