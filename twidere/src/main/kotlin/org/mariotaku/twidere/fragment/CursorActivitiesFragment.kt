@@ -38,6 +38,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_FROM_USER
+import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.loader.ExtendedObjectCursorLoader
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.event.*
@@ -201,6 +202,14 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
             clearNotifications()
         }
     }
+
+    override fun getFullActivity(position: Int): ParcelableActivity? {
+        val _id = adapter.getRowId(position)
+        val where = Expression.equals(Activities._ID, _id).sql
+        return context.contentResolver.queryOne(contentUri, Activities.COLUMNS, where, null, null,
+                ParcelableActivity::class.java)
+    }
+
     protected fun getFiltersWhere(table: String): Expression? {
         if (!isFilterEnabled) return null
         return DataStoreUtils.buildActivityFilterWhereClause(table, null)

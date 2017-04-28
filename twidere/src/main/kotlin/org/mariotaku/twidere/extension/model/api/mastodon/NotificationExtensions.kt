@@ -46,6 +46,7 @@ fun Notification.toParcelable(accountKey: UserKey): ParcelableActivity {
     result.max_sort_position = result.timestamp
 
     result.sources = toSources(accountKey)
+    result.user_key = result.sources?.firstOrNull()?.key ?: UserKey("multiple", null)
 
     when (type) {
         Notification.Type.MENTION -> {

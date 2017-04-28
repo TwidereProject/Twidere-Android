@@ -339,6 +339,14 @@ class ParcelableActivitiesAdapter(
         }, defValue = null, raw = raw)
     }
 
+    fun getRowId(adapterPosition: Int, raw: Boolean = false): Long {
+        return getFieldValue(adapterPosition, readCursorValueAction = { cursor, indices ->
+            cursor.safeGetLong(indices[Activities._ID])
+        }, readStatusValueAction = { activity ->
+            activity._id
+        }, defValue = -1L, raw = raw)
+    }
+
     fun getData(): List<ParcelableActivity>? {
         return data
     }

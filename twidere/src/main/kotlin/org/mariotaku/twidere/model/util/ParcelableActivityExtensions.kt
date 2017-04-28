@@ -11,9 +11,6 @@ val ParcelableActivity.activityStatus: ParcelableActivity?
         else -> null
     }
 
-val ParcelableActivity.id2: String
-    get() = "$min_position-$max_position"
-
 val ParcelableActivity.reachedCountLimit: Boolean get() {
     return sources.reachedCountLimit() || targets.reachedCountLimit() ||
             target_objects.reachedCountLimit()
@@ -41,22 +38,14 @@ fun ParcelableActivity.prependSources(another: ParcelableActivity) {
     sources = uniqCombine(another.sources, sources)
 }
 
-fun ParcelableActivity.prependTargets(another: ParcelableActivity) {
+fun ParcelableActivity.prependTargets(from: ParcelableActivity) {
+    this.targets = (this.targets ?: ParcelableActivity.RelatedObject()).prepend(from.targets)
 }
 
-fun ParcelableActivity.prependTargetObjects(another: ParcelableActivity) {
+fun ParcelableActivity.prependTargetObjects(from: ParcelableActivity) {
+    this.target_objects = (this.target_objects ?: ParcelableActivity.RelatedObject())
+            .prepend(from.target_objects)
 }
-
-private inline fun <reified T> uniqCombine(vararg arrays: Array<T>?): Array<T> {
-    val set = mutableSetOf<T>()
-    arrays.forEach { array -> array?.addAllTo(set) }
-    return set.toTypedArray()
-}
-
-
-private fun Array<*>?.reachedCountLimit() = if (this == null) false else size > 10
-private fun List<*>?.reachedCountLimit() = if (this == null) false else size > 10
-private fun ParcelableActivity.RelatedObject?.reachedCountLimit() = if (this == null) false else size > 10
 
 inline val ParcelableActivity.RelatedObject.size get() = when {
     statuses != null -> statuses.size
@@ -68,4 +57,21 @@ inline val ParcelableActivity.RelatedObject.size get() = when {
 fun ParcelableActivity.RelatedObject?.isNullOrEmpty(): Boolean {
     if (this == null) return true
     return size == 0
+}
+
+private inline fun <reified T> uniqCombine(vararg arrays: Array<T>?): Array<T> {
+    val set = mutableSetOf<T>()
+    arrays.forEach { array -> array?.addAllTo(set) }
+    return set.toTypedArray()
+}
+
+private fun Array<*>?.reachedCountLimit() = if (this == null) false else size > 10
+
+private fun ParcelableActivity.RelatedObject?.reachedCountLimit() = if (this == null) false else size > 10
+
+private fun ParcelableActivity.RelatedObject.prepend(from: ParcelableActivity.RelatedObject?): ParcelableActivity.RelatedObject {
+    this.statuses = uniqCombine(this.statuses, from?.statuses)
+    this.users = uniqCombine(this.users, from?.users)
+    this.user_lists = uniqCombine(this.user_lists, from?.user_lists)
+    return this
 }

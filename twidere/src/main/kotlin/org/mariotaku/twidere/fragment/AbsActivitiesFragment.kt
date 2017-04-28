@@ -37,10 +37,7 @@ import com.bumptech.glide.Glide
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.kpreferences.get
-import org.mariotaku.ktextension.addAllTo
-import org.mariotaku.ktextension.coerceInOr
-import org.mariotaku.ktextension.isNullOrEmpty
-import org.mariotaku.ktextension.rangeOfSize
+import org.mariotaku.ktextension.*
 import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
@@ -65,7 +62,6 @@ import org.mariotaku.twidere.model.analyzer.Share
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.model.util.ParcelableActivityUtils
 import org.mariotaku.twidere.model.util.activityStatus
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.util.*
@@ -77,8 +73,6 @@ import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder
 import org.mariotaku.twidere.view.holder.GapViewHolder
 import org.mariotaku.twidere.view.holder.StatusViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
-import java.util.*
-import kotlin.collections.ArrayList
 
 abstract class AbsActivitiesFragment protected constructor() :
         AbsContentListRecyclerViewFragment<ParcelableActivitiesAdapter>(),
@@ -344,14 +338,14 @@ abstract class AbsActivitiesFragment protected constructor() :
     }
 
     override fun onActivityClick(holder: ActivityTitleSummaryViewHolder, position: Int) {
-        val activity = adapter.getActivity(position)
-        val list: ArrayList<ParcelableStatus> = ArrayList()
-//        if (activity.target_objects?.statuses != null) {
-//            activity.target_objects?.statuses?.addAllTo(list)
-//        } else if (activity.targets?.statuses != null) {
-//            activity.targets?.statuses?.addAllTo(list)
-//        }
-//        list.addAll(ParcelableActivityUtils.getAfterFilteredSources(activity))
+        val activity = getFullActivity(position) ?: return
+        val list = ArrayList<Parcelable>()
+        if (activity.target_objects?.statuses.isNotNullOrEmpty()) {
+            activity.target_objects?.statuses?.addAllTo(list)
+        } else if (activity.targets?.statuses.isNotNullOrEmpty()) {
+            activity.targets?.statuses?.addAllTo(list)
+        }
+        activity.sources?.addAllTo(list)
         IntentUtils.openItems(getActivity(), list)
     }
 
@@ -375,7 +369,11 @@ abstract class AbsActivitiesFragment protected constructor() :
         IntentUtils.openStatus(context, status.account_key, status.quoted_id)
     }
 
-    private fun getActivityStatus(position: Int): ParcelableStatus? {
+    protected open fun getFullActivity(position: Int): ParcelableActivity? {
+        return adapter.getActivity(position)
+    }
+
+    protected open fun getActivityStatus(position: Int): ParcelableStatus? {
         return adapter.getActivity(position).activityStatus
     }
 
@@ -456,7 +454,7 @@ abstract class AbsActivitiesFragment protected constructor() :
         readPositionTag?.let { positionTag ->
             accountKeys.forEach { accountKey ->
                 val tag = Utils.getReadPositionTagWithAccount(positionTag, accountKey)
-                if (readStateManager.setPosition(tag, item.timestamp)) {
+                if (readStateManager.setPosition(tag, item.position_key)) {
                     positionUpdated = true
                 }
             }
@@ -464,7 +462,7 @@ abstract class AbsActivitiesFragment protected constructor() :
                 timelineSyncManager?.setPosition(positionTag, syncTag, item.position_key)
             }
             currentReadPositionTag?.let { currentTag ->
-                readStateManager.setPosition(currentTag, item.timestamp, true)
+                readStateManager.setPosition(currentTag, item.position_key, true)
             }
         }
 
