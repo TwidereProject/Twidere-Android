@@ -21,6 +21,8 @@ package org.mariotaku.twidere.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.database.Cursor
+import android.database.CursorIndexOutOfBoundsException
 import android.support.v4.util.LongSparseArray
 import android.support.v4.widget.Space
 import android.support.v7.widget.RecyclerView
@@ -159,36 +161,22 @@ class ParcelableActivitiesAdapter(
         val countIndex = itemCounts.getItemCountIndex(position)
         when (countIndex) {
             ITEM_INDEX_ACTIVITY -> {
-                val dataPosition = position - activityStartIndex
-                if (data is ObjectCursor) {
-                    val cursor = (data as ObjectCursor).cursor
-                    if (!cursor.moveToPosition(dataPosition)) return -1
-                    val indices = (data as ObjectCursor).indices
+                return getFieldValue(position, readCursorValueAction = { cursor, indices ->
                     val accountKey = UserKey.valueOf(cursor.getString(indices[Activities.ACCOUNT_KEY]))
                     val timestamp = cursor.getLong(indices[Activities.TIMESTAMP])
                     val maxPosition = cursor.getLong(indices[Activities.MAX_SORT_POSITION])
                     val minPosition = cursor.getLong(indices[Activities.MIN_SORT_POSITION])
-                    return ParcelableActivity.calculateHashCode(accountKey, timestamp, maxPosition,
-                            minPosition).toLong()
-                }
-                return (countIndex.toLong() shl 32) or getActivity(position, false).hashCode().toLong()
+                    ParcelableActivity.calculateHashCode(accountKey, timestamp, maxPosition,
+                            minPosition)
+                }, readStatusValueAction = { activity ->
+                    ParcelableActivity.calculateHashCode(activity.account_key, activity.timestamp,
+                            activity.max_sort_position, activity.min_sort_position)
+                }, defValue = -1, raw = false).toLong()
             }
             else -> {
                 return (countIndex.toLong() shl 32) or getItemViewType(position).toLong()
             }
         }
-    }
-
-    fun getTimestamp(adapterPosition: Int, raw: Boolean = false): Long {
-        val dataPosition = adapterPosition - activityStartIndex
-        if (dataPosition < 0 || dataPosition >= getActivityCount(raw)) return RecyclerView.NO_ID
-        if (data is ObjectCursor) {
-            val cursor = (data as ObjectCursor).cursor
-            if (!cursor.safeMoveToPosition(dataPosition)) return -1
-            val indices = (data as ObjectCursor).indices
-            return cursor.safeGetLong(indices[Activities.TIMESTAMP])
-        }
-        return getActivity(adapterPosition, raw).timestamp
     }
 
     override fun getActivity(position: Int, raw: Boolean): ParcelableActivity {
@@ -198,10 +186,6 @@ class ParcelableActivitiesAdapter(
     override fun getActivityCount(raw: Boolean): Int {
         if (data == null) return 0
         return data!!.size
-    }
-
-    fun getData(): List<ParcelableActivity>? {
-        return data
     }
 
     override fun setData(data: List<ParcelableActivity>?) {
@@ -277,8 +261,8 @@ class ParcelableActivitiesAdapter(
                 if (isGapItem(position)) {
                     return ITEM_VIEW_TYPE_GAP
                 }
-                val activity = getActivityInternal(position, raw = false, reuse = true)
-                when (activity.action) {
+                val action = getAction(position)
+                when (action) {
                     Activity.Action.MENTION, Activity.Action.QUOTE, Activity.Action.REPLY -> {
                         return ITEM_VIEW_TYPE_STATUS
                     }
@@ -290,12 +274,12 @@ class ParcelableActivitiesAdapter(
                     Activity.Action.FAVORITED_MEDIA_TAGGED, Activity.Action.JOINED_TWITTER -> {
                         if (mentionsOnly) return ITEM_VIEW_TYPE_EMPTY
                         filteredUserKeys?.let {
-                            //                            ParcelableActivityUtils.initAfterFilteredSourceIds(activity, it, followingOnly)
-//                            filterIdCache[activity._id] = activity.after_filtered_source_ids
-                            val sourceIds = activity.after_filtered_source_keys
-                            if (sourceIds != null && sourceIds.isEmpty()) {
-                                return ITEM_VIEW_TYPE_EMPTY
-                            }
+                            // ParcelableActivityUtils.initAfterFilteredSourceIds(activity, it, followingOnly)
+                            // filterIdCache[activity._id] = activity.after_filtered_source_ids
+                            // val sourceIds = activity.after_filtered_source_keys
+                            // if (sourceIds != null && sourceIds.isEmpty()) {
+                            //     return ITEM_VIEW_TYPE_EMPTY
+                            // }
                         }
                         return ITEM_VIEW_TYPE_TITLE_SUMMARY
                     }
@@ -339,6 +323,26 @@ class ParcelableActivitiesAdapter(
         return range.indexOfFirst { timestamp >= getTimestamp(it, raw) }
     }
 
+    fun getTimestamp(adapterPosition: Int, raw: Boolean = false): Long {
+        return getFieldValue(adapterPosition, readCursorValueAction = { cursor, indices ->
+            cursor.safeGetLong(indices[Activities.TIMESTAMP])
+        }, readStatusValueAction = { activity ->
+            activity.timestamp
+        }, defValue = -1, raw = raw)
+    }
+
+    fun getAction(adapterPosition: Int, raw: Boolean = false): String? {
+        return getFieldValue(adapterPosition, readCursorValueAction = { cursor, indices ->
+            cursor.getString(indices[Activities.ACTION])
+        }, readStatusValueAction = { activity ->
+            activity.action
+        }, defValue = null, raw = raw)
+    }
+
+    fun getData(): List<ParcelableActivity>? {
+        return data
+    }
+
     private fun updateItemCount() {
         itemCounts[0] = getActivityCount(false)
         itemCounts[1] = if (ILoadMoreSupportAdapter.END in loadMoreIndicatorPosition) 1 else 0
@@ -361,6 +365,24 @@ class ParcelableActivitiesAdapter(
         } else {
             return data[dataPosition]
         }
+    }
+
+
+    private inline fun <T> getFieldValue(position: Int,
+            readCursorValueAction: (cursor: Cursor, indices: ObjectCursor.CursorIndices<ParcelableActivity>) -> T,
+            readStatusValueAction: (status: ParcelableActivity) -> T,
+            defValue: T, raw: Boolean = false): T {
+        if (data is ObjectCursor) {
+            val dataPosition = position - activityStartIndex
+            if (dataPosition < 0 || dataPosition >= getActivityCount(true)) {
+                throw CursorIndexOutOfBoundsException("index: $position, valid range is $0..${getActivityCount(true)}")
+            }
+            val cursor = (data as ObjectCursor).cursor
+            if (!cursor.safeMoveToPosition(dataPosition)) return defValue
+            val indices = (data as ObjectCursor).indices
+            return readCursorValueAction(cursor, indices)
+        }
+        return readStatusValueAction(getActivityInternal(position, raw, false))
     }
 
     interface ActivityAdapterListener {
