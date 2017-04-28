@@ -32,6 +32,7 @@ import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.extension.model.getMaxId
+import org.mariotaku.twidere.loader.iface.IPaginationLoader
 import org.mariotaku.twidere.loader.statuses.AbsRequestStatusesLoader
 import org.mariotaku.twidere.model.BaseRefreshTaskParam
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -114,11 +115,13 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         return true
     }
 
-    override fun hasMoreData(data: List<ParcelableStatus>?): Boolean {
+    override fun hasMoreData(loader: Loader<List<ParcelableStatus>?>,
+            data: List<ParcelableStatus>?): Boolean {
         if (data == null || data.isEmpty()) return false
-        val tmpLastId = lastId
-        lastId = data[data.size - 1].id
-        return lastId != tmpLastId
+        if (loader is IPaginationLoader) {
+            return loader.pagination != null
+        }
+        return true
     }
 
     override fun createMessageBusCallback(): Any {

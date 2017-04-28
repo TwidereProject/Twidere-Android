@@ -36,6 +36,16 @@
         android:title="@string/action_delete"
         android:visible="false"/>
     <item
+        android:id="@+id/pin"
+        android:icon="@drawable/ic_action_pin"
+        android:title="@string/action_status_pin"
+        android:visible="false"/>
+    <item
+        android:id="@+id/unpin"
+        android:icon="@drawable/ic_action_unpin"
+        android:title="@string/action_status_unpin"
+        android:visible="false"/>
+    <item
         android:id="@+id/make_gap"
         android:enabled="@bool/debug"
         android:title="Make gap"

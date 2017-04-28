@@ -61,7 +61,7 @@ abstract class AbsRequestStatusesLoader(
         private val savedStatusesArgs: Array<String>?,
         tabPosition: Int,
         fromUser: Boolean,
-        private val loadingMore: Boolean
+        protected val loadingMore: Boolean
 ) : ParcelableStatusesLoader(context, adapterData, tabPosition, fromUser), IPaginationLoader {
     // Statuses sorted descending by default
     var comparator: Comparator<ParcelableStatus>? = ParcelableStatus.REVERSE_COMPARATOR

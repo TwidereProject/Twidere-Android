@@ -51,8 +51,8 @@ import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.extension.model.getAccountType
-import org.mariotaku.twidere.fragment.content.FavoriteConfirmDialogFragment
-import org.mariotaku.twidere.fragment.content.RetweetQuoteDialogFragment
+import org.mariotaku.twidere.fragment.status.FavoriteConfirmDialogFragment
+import org.mariotaku.twidere.fragment.status.RetweetQuoteDialogFragment
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.*
@@ -319,7 +319,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         var restorePosition = -1
 
         if (loader !is IExtendedLoader || loader.fromUser) {
-            if (hasMoreData(data)) {
+            if (hasMoreData(loader, data)) {
                 adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.END
                 onHasMoreDataChanged(true)
             } else {
@@ -503,7 +503,8 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         }
     }
 
-    protected abstract fun hasMoreData(data: List<ParcelableStatus>?): Boolean
+    protected abstract fun hasMoreData(loader: Loader<List<ParcelableStatus>?>,
+            data: List<ParcelableStatus>?): Boolean
 
     protected abstract fun onCreateStatusesLoader(context: Context, args: Bundle,
             fromUser: Boolean): Loader<List<ParcelableStatus>?>

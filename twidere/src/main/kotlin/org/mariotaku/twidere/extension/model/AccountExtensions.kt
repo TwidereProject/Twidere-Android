@@ -114,7 +114,9 @@ fun Account.isOfficial(am: AccountManager, context: Context): Boolean {
 }
 
 fun AccountManager.hasInvalidAccount(): Boolean {
-    return AccountUtils.getAccounts(this).none { isAccountValid(it) }
+    val accounts = AccountUtils.getAccounts(this)
+    if (accounts.isEmpty()) return false
+    return accounts.none { isAccountValid(it) }
 }
 
 fun AccountManager.isAccountValid(account: Account): Boolean {

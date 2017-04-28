@@ -24,6 +24,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.content.Loader
 import android.support.v7.app.AlertDialog
+import com.squareup.otto.Subscribe
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
 import org.mariotaku.twidere.R
@@ -35,6 +36,7 @@ import org.mariotaku.twidere.fragment.ParcelableStatusesFragment
 import org.mariotaku.twidere.loader.statuses.UserTimelineLoader
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.event.StatusPinEvent
 import org.mariotaku.twidere.model.timeline.TimelineFilter
 import org.mariotaku.twidere.model.timeline.UserTimelineFilter
 import org.mariotaku.twidere.util.Utils
@@ -47,9 +49,6 @@ import java.util.*
  * Created by mariotaku on 14/12/2.
  */
 class UserTimelineFragment : ParcelableStatusesFragment() {
-
-    val pinnedStatusIds: Array<String>?
-        get() = (parentFragment as? UserTimelineFragmentDelegate)?.pinnedStatusIds
 
     override val savedStatusesFileArgs: Array<String>?
         get() {
@@ -105,21 +104,21 @@ class UserTimelineFragment : ParcelableStatusesFragment() {
         refreshing = true
         val data = adapterData
         val accountKey = Utils.getAccountKey(context, args)
-        val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
+        val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
         val screenName = args.getString(EXTRA_SCREEN_NAME)
         val profileUrl = args.getString(EXTRA_PROFILE_URL)
         val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-        val pinnedIds = if (adapter.hasPinnedStatuses) null else pinnedStatusIds
+        val loadPinnedStatus = args.getBoolean(EXTRA_LOAD_PINNED_STATUS, false)
         return UserTimelineLoader(context, accountKey, userKey, screenName, profileUrl, data,
-                savedStatusesFileArgs, tabPosition, fromUser, loadingMore, pinnedIds,
+                savedStatusesFileArgs, tabPosition, fromUser, loadingMore, loadPinnedStatus,
                 timelineFilter as? UserTimelineFilter)
     }
 
     override fun onStatusesLoaded(loader: Loader<List<ParcelableStatus>?>, data: List<ParcelableStatus>?) {
-        val timelineLoader = loader as? UserTimelineLoader
-        if (!adapter.hasPinnedStatuses) {
-            adapter.pinnedStatuses = timelineLoader?.pinnedStatuses
+        loader as UserTimelineLoader
+        if (loader.loadPinnedStatus) {
+            adapter.pinnedStatuses = loader.pinnedStatuses
         }
         super.onStatusesLoaded(loader, data)
     }
@@ -130,15 +129,17 @@ class UserTimelineFragment : ParcelableStatusesFragment() {
         df.show(childFragmentManager, "set_timeline_filter")
     }
 
+    @Subscribe
+    fun onStatusPinEvent(event: StatusPinEvent) {
+        val userKey = arguments.getParcelable<UserKey?>(EXTRA_USER_KEY) ?: return
+        if (event.userKey != userKey) return
+        triggerRefresh()
+    }
+
     private fun reloadAllStatuses() {
         adapterData = null
         triggerRefresh()
         showProgress()
-    }
-
-    interface UserTimelineFragmentDelegate {
-        val pinnedStatusIds: Array<String>?
-
     }
 
     class UserTimelineFilterDialogFragment : BaseDialogFragment() {
@@ -181,6 +182,7 @@ class UserTimelineFragment : ParcelableStatusesFragment() {
 
     companion object {
         const val EXTRA_ENABLE_TIMELINE_FILTER = "enable_timeline_filter"
+        const val EXTRA_LOAD_PINNED_STATUS = "load_pinned_status"
         const val REQUEST_SET_TIMELINE_FILTER = 101
     }
 }

@@ -31,10 +31,7 @@ import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
-import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
-import org.mariotaku.ktextension.contains
-import org.mariotaku.ktextension.removeOnAccountsUpdatedListenerSafe
-import org.mariotaku.ktextension.toNulls
+import org.mariotaku.ktextension.*
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
@@ -140,8 +137,9 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
         return CursorStatusesBusCallback()
     }
 
-    override fun hasMoreData(data: List<ParcelableStatus>?): Boolean {
-        return data?.size != 0
+    override fun hasMoreData(loader: Loader<List<ParcelableStatus>?>,
+            data: List<ParcelableStatus>?): Boolean {
+        return data.isNotNullOrEmpty()
     }
 
     override fun onCreateAdapter(context: Context): ListParcelableStatusesAdapter {

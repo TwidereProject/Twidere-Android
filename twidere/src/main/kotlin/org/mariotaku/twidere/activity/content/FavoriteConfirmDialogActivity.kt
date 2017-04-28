@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.activity.content
 
-import org.mariotaku.twidere.fragment.content.FavoriteConfirmDialogFragment
+import org.mariotaku.twidere.fragment.status.FavoriteConfirmDialogFragment
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 

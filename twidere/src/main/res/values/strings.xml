@@ -131,7 +131,9 @@
     <string name="action_status_attachment">Tweet attachment</string>
     <string name="action_status_block_users">Block users…</string>
     <string name="action_status_mute_users">Mute users…</string>
+    <string name="action_status_pin">Pin tweet</string>
     <string name="action_status_schedule">Tweet schedule</string>
+    <string name="action_status_unpin">Unpin tweet</string>
     <string name="action_subscribe">Subscribe</string>
     <string name="action_subscribing_to_list">subscribing to list</string>
     <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
@@ -675,6 +677,7 @@
     <string name="message_permission_request_compose_location">Twidere needs location permission for adding location to tweets.</string>
     <string name="message_permission_request_save_media">Twidere needs storage permission for saving media.</string>
     <string name="message_permission_request_share_media">Twidere needs storage permission for sharing media to some apps.</string>
+    <string name="message_pin_status_confirm">Pin this tweet? This will replace previously pinned tweet.</string>
     <string name="message_please_wait">Please wait.</string>
     <string name="message_status_reply_to_user_removed_explanation">Twitter makes tweet user always be mentioned in a reply. If tweet user was removed, Twidere will send this reply as a quote to preserve context.</string>
     <string name="message_status_scheduling_connect_buffer_hint">Connect to buffer to schedule tweets even in offline</string>
@@ -733,16 +736,19 @@
     <string name="message_toast_status_favorited">Tweet favorited</string>
     <string name="message_toast_status_like_removed">Like removed</string>
     <string name="message_toast_status_liked">Tweet liked</string>
+    <string name="message_toast_status_pinned">Tweet pinned</string>
     <string name="message_toast_status_retweeted">Retweeted</string>
     <string name="message_toast_status_saved_to_draft">Tweet saved to draft</string>
     <string name="message_toast_status_scheduled">Tweet scheduled</string>
     <string name="message_toast_status_unfavorited">Tweet unfavorited</string>
+    <string name="message_toast_status_unpinned">Tweet unpinned</string>
     <string name="message_toast_status_updated">Tweet sent</string>
     <string name="message_toast_unable_to_load_more_statuses">Unable to load earlier tweets</string>
     <string name="message_toast_user_filters_removed">Removed from filters</string>
     <string name="message_toast_users_filters_added">Added to filters</string>
     <string name="message_toast_wrong_api_key">Incorrect API settings</string>
     <string name="message_toast_wrong_username_password">Wrong username/password</string>
+    <string name="message_unpin_status_confirm">Unpin this tweet?</string>
     <string name="message_video_too_long">Video too long</string>
     <string name="message_video_too_short">Video too short</string>
 
@@ -1234,6 +1240,7 @@
     <string name="title_network_public_timeline">Federated timeline</string>
     <string name="title_nicknames">Nicknames</string>
     <string name="title_open_source_license">Open source license</string>
+    <string name="title_pin_status_confirm">Pin tweet</string>
     <string name="title_premium_features_name">Twidere ∞</string>
     <string name="title_public_timeline">Public timeline</string>
     <string name="title_quick_action">Quick action</string>
@@ -1254,6 +1261,7 @@
     <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
     <string name="title_sync">Data sync</string>
     <string name="title_sync_settings">Sync settings</string>
+    <string name="title_unpin_status_confirm">Unpin tweet</string>
     <string name="title_user">User</string>
     <string name="title_user_colors">User colors</string>
     <string name="title_user_feedback">Feedback</string>

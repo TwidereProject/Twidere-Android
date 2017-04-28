@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.fragment.content
+package org.mariotaku.twidere.fragment.status
 
 import android.app.Dialog
 import android.content.DialogInterface

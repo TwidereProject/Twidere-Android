@@ -53,11 +53,11 @@ import org.mariotaku.twidere.constant.favoriteConfirmationKey
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.model.isOfficial
-import org.mariotaku.twidere.fragment.*
-import org.mariotaku.twidere.fragment.content.FavoriteConfirmDialogFragment
-import org.mariotaku.twidere.fragment.content.RetweetQuoteDialogFragment
-import org.mariotaku.twidere.fragment.status.BlockStatusUsersDialogFragment
-import org.mariotaku.twidere.fragment.status.MuteStatusUsersDialogFragment
+import org.mariotaku.twidere.fragment.AbsStatusesFragment
+import org.mariotaku.twidere.fragment.AddStatusFilterDialogFragment
+import org.mariotaku.twidere.fragment.BaseFragment
+import org.mariotaku.twidere.fragment.SetUserNicknameDialogFragment
+import org.mariotaku.twidere.fragment.status.*
 import org.mariotaku.twidere.graphic.ActionIconDrawable
 import org.mariotaku.twidere.graphic.PaddingDrawable
 import org.mariotaku.twidere.menu.FavoriteItemProvider
@@ -129,9 +129,15 @@ object MenuUtils {
         } else {
             isMyRetweet = status.retweeted || Utils.isMyRetweet(status)
         }
-        val delete = menu.findItem(R.id.delete)
-        if (delete != null) {
-            delete.isVisible = Utils.isMyStatus(status)
+        val isMyStatus = Utils.isMyStatus(status)
+        menu.setItemAvailability(R.id.delete, isMyStatus)
+        if (isMyStatus) {
+            val isPinned = status.is_pinned_status
+            menu.setItemAvailability(R.id.pin, !isPinned)
+            menu.setItemAvailability(R.id.unpin, isPinned)
+        } else {
+            menu.setItemAvailability(R.id.pin, false)
+            menu.setItemAvailability(R.id.unpin, false)
         }
         val retweet = menu.findItem(R.id.retweet)
         if (retweet != null) {
@@ -265,6 +271,12 @@ object MenuUtils {
             }
             R.id.delete -> {
                 DestroyStatusDialogFragment.show(fm, status)
+            }
+            R.id.pin -> {
+                PinStatusDialogFragment.show(fm, status)
+            }
+            R.id.unpin -> {
+                UnpinStatusDialogFragment.show(fm, status)
             }
             R.id.add_to_filter -> {
                 AddStatusFilterDialogFragment.show(fm, status)

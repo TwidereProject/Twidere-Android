@@ -119,7 +119,6 @@ import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
 import org.mariotaku.twidere.fragment.statuses.UserFavoritesFragment
 import org.mariotaku.twidere.fragment.statuses.UserMediaTimelineFragment
 import org.mariotaku.twidere.fragment.statuses.UserTimelineFragment
-import org.mariotaku.twidere.fragment.statuses.UserTimelineFragment.UserTimelineFragmentDelegate
 import org.mariotaku.twidere.graphic.ActionBarColorDrawable
 import org.mariotaku.twidere.graphic.ActionIconDrawable
 import org.mariotaku.twidere.loader.ParcelableUserLoader
@@ -155,14 +154,11 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         OnSizeChangedListener, OnTouchListener, DrawerCallback, SupportFragmentCallback,
         SystemWindowsInsetsCallback, RefreshScrollTopInterface, OnPageChangeListener,
         KeyboardShortcutCallback, UserColorChangedListener, UserNicknameChangedListener,
-        IToolBarSupportFragment, StatusesFragmentDelegate, UserTimelineFragmentDelegate,
+        IToolBarSupportFragment, StatusesFragmentDelegate,
         AbsContentRecyclerViewFragment.RefreshCompleteListener {
 
     override val toolbar: Toolbar
         get() = profileContentContainer.toolbar
-
-    override val pinnedStatusIds: Array<String>?
-        get() = user?.extras?.pinned_status_ids
 
     private lateinit var profileBirthdayBanner: View
     private lateinit var actionBarBackground: ActionBarDrawable
@@ -1428,6 +1424,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         }
         pagerAdapter.add(cls = UserTimelineFragment::class.java, args = Bundle(tabArgs).apply {
             this[UserTimelineFragment.EXTRA_ENABLE_TIMELINE_FILTER] = true
+            this[UserTimelineFragment.EXTRA_LOAD_PINNED_STATUS] = true
         }, name = getString(R.string.title_statuses), type = TAB_TYPE_STATUSES,
                 position = TAB_POSITION_STATUSES)
         pagerAdapter.add(cls = UserMediaTimelineFragment::class.java, args = tabArgs,

@@ -42,6 +42,7 @@ import org.mariotaku.restfu.http.mime.SimpleBody
 import org.mariotaku.twidere.alias.MastodonStatus
 import org.mariotaku.twidere.alias.MastodonTimelineOption
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.api.tryShowUser
 import org.mariotaku.twidere.extension.model.api.mastodon.mapToPaginated
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
@@ -67,7 +68,7 @@ class UserTimelineLoader(
         tabPosition: Int,
         fromUser: Boolean,
         loadingMore: Boolean,
-        val pinnedStatusIds: Array<String>?,
+        val loadPinnedStatus: Boolean,
         val timelineFilter: UserTimelineFilter? = null
 ) : AbsRequestStatusesLoader(context, accountKey, data, savedStatusesArgs, tabPosition, fromUser, loadingMore) {
 
@@ -111,12 +112,18 @@ class UserTimelineLoader(
 
     private fun getMicroBlogStatuses(account: AccountDetails, paging: Paging): List<Status> {
         val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
-        if (pinnedStatusIds != null) {
+        if (loadPinnedStatus && account.type == AccountType.TWITTER && !loadingMore) {
             pinnedStatuses = try {
-                microBlog.lookupStatuses(pinnedStatusIds).mapIndexed { idx, status ->
-                    val created = status.toParcelable(account, profileImageSize = profileImageSize)
-                    created.sort_id = idx.toLong()
-                    return@mapIndexed created
+                val pinnedIds = microBlog.tryShowUser(userKey?.id, screenName, AccountType.TWITTER).pinnedTweetIds
+                if (pinnedIds != null && pinnedIds.isNotEmpty()) {
+                    microBlog.lookupStatuses(pinnedIds).mapIndexed { idx, status ->
+                        val created = status.toParcelable(account, profileImageSize = profileImageSize)
+                        created.sort_id = idx.toLong()
+                        created.is_pinned_status = true
+                        return@mapIndexed created
+                    }
+                } else {
+                    null
                 }
             } catch (e: MicroBlogException) {
                 null

@@ -17,29 +17,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.activity.content
+package org.mariotaku.twidere.model.event
 
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_TEXT
-import org.mariotaku.twidere.fragment.status.RetweetQuoteDialogFragment
-import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 
 /**
- * Opens [RetweetQuoteDialogFragment] to retweet/quote a status
- *
- * Created by mariotaku on 2017/4/8.
+ * Created by mariotaku on 2017/4/28.
  */
-class RetweetQuoteDialogActivity : AbsStatusDialogActivity() {
 
-    private val text: String?
-        get() = intent.getStringExtra(EXTRA_TEXT)
-
-    override fun showDialogFragment(accountKey: UserKey, statusId: String, status: ParcelableStatus?) {
-        val text = this.text
-        executeAfterFragmentResumed {
-            RetweetQuoteDialogFragment.show(it.supportFragmentManager, accountKey, statusId,
-                    status, text)
-        }
-    }
-
-}
+data class StatusPinEvent(val userKey: UserKey, val pinned: Boolean)
