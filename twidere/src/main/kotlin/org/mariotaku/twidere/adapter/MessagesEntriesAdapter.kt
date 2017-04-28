@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
+import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.constant.nameFirstKey
@@ -43,6 +44,8 @@ class MessagesEntriesAdapter(
 
     var listener: MessageConversationClickListener? = null
 
+    private val reuseEntry = ParcelableMessageConversation()
+
     override fun getItemCount(): Int {
         return itemCounts.itemCount
     }
@@ -50,7 +53,7 @@ class MessagesEntriesAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
             ITEM_TYPE_MESSAGE_ENTRY -> {
-                val conversation = getConversation(position)!!
+                val conversation = getConversation(position, reuse = true)
                 (holder as MessageEntryViewHolder).display(conversation)
             }
         }
@@ -85,8 +88,13 @@ class MessagesEntriesAdapter(
         itemCounts[1] = if (loadMoreIndicatorPosition and ILoadMoreSupportAdapter.END != 0L) 1 else 0
     }
 
-    fun getConversation(position: Int): ParcelableMessageConversation? {
-        return conversations?.get(position - itemCounts.getItemStartPosition(0))
+    fun getConversation(position: Int, reuse: Boolean = false): ParcelableMessageConversation {
+        val conversations = this.conversations!!
+        val dataPosition = position - itemCounts.getItemStartPosition(0)
+        if (reuse && conversations is ObjectCursor) {
+            return conversations.setInto(dataPosition, reuseEntry)
+        }
+        return conversations[dataPosition]
     }
 
     interface MessageConversationClickListener {

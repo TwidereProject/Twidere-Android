@@ -22,7 +22,12 @@ package org.mariotaku.twidere.extension.model.api.mastodon
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.microblog.library.mastodon.model.Notification
 import org.mariotaku.microblog.library.twitter.model.Activity
-import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.extension.model.toLite
+import org.mariotaku.twidere.extension.model.toSummaryLine
+import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.ParcelableActivity
+import org.mariotaku.twidere.model.ParcelableUser
+import org.mariotaku.twidere.model.UserKey
 
 fun Notification.toParcelable(details: AccountDetails): ParcelableActivity {
     return toParcelable(details.key).apply {
@@ -33,24 +38,31 @@ fun Notification.toParcelable(details: AccountDetails): ParcelableActivity {
 fun Notification.toParcelable(accountKey: UserKey): ParcelableActivity {
     val result = ParcelableActivity()
     result.account_key = accountKey
+    result.id = "$id-$id"
     result.timestamp = createdAt.time
     result.min_position = id
     result.max_position = id
     result.min_sort_position = result.timestamp
     result.max_sort_position = result.timestamp
+
     result.sources = toSources(accountKey)
+
     when (type) {
         Notification.Type.MENTION -> {
             result.action = Activity.Action.MENTION
-            result.target_object_statuses = toStatuses(accountKey)
+            status.applyTo(accountKey, result)
         }
         Notification.Type.REBLOG -> {
             result.action = Activity.Action.RETWEET
-            result.target_object_statuses = toStatuses(accountKey)
+            val status = status.toParcelable(accountKey)
+            result.target_objects = ParcelableActivity.RelatedObject.statuses(status)
+            result.summary_line = arrayOf(status.toSummaryLine())
         }
         Notification.Type.FAVOURITE -> {
             result.action = Activity.Action.FAVORITE
-            result.target_statuses = toStatuses(accountKey)
+            val status = status.toParcelable(accountKey)
+            result.targets = ParcelableActivity.RelatedObject.statuses(status)
+            result.summary_line = arrayOf(status.toSummaryLine())
         }
         Notification.Type.FOLLOW -> {
             result.action = Activity.Action.FOLLOW
@@ -59,7 +71,10 @@ fun Notification.toParcelable(accountKey: UserKey): ParcelableActivity {
             result.action = type
         }
     }
-    result.source_keys = result.sources?.mapToArray { it.key }
+
+    result.sources_lite = result.sources?.mapToArray { it.toLite() }
+    result.source_keys = result.sources_lite?.mapToArray { it.key }
+
     return result
 }
 
@@ -68,7 +83,3 @@ private fun Notification.toSources(accountKey: UserKey): Array<ParcelableUser>? 
     return arrayOf(account.toParcelable(accountKey))
 }
 
-private fun Notification.toStatuses(accountKey: UserKey): Array<ParcelableStatus>? {
-    val status = this.status ?: return null
-    return arrayOf(status.toParcelable(accountKey))
-}

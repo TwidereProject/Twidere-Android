@@ -28,10 +28,7 @@ import android.support.v4.util.LruCache
 import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.twidere.TwidereConstants.USER_COLOR_PREFERENCES_NAME
 import org.mariotaku.twidere.TwidereConstants.USER_NICKNAME_PREFERENCES_NAME
-import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.ParcelableUser
-import org.mariotaku.twidere.model.ParcelableUserList
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.UserKeyUtils
 
 class UserColorNameManager(context: Context) {
@@ -81,6 +78,10 @@ class UserColorNameManager(context: Context) {
     }
 
     fun getDisplayName(user: ParcelableUser, nameFirst: Boolean): String {
+        return getDisplayName(user.key, user.name, user.screen_name, nameFirst)
+    }
+
+    fun getDisplayName(user: ParcelableLiteUser, nameFirst: Boolean): String {
         return getDisplayName(user.key, user.name, user.screen_name, nameFirst)
     }
 

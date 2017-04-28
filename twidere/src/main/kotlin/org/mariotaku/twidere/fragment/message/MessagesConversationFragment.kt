@@ -235,10 +235,6 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         return false
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableMessage>?> {
-        return ConversationLoader(context, accountKey, conversationId)
-    }
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_messages_conversation, menu)
     }
@@ -249,8 +245,8 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         return false
     }
 
-    override fun onLoaderReset(loader: Loader<List<ParcelableMessage>?>) {
-        adapter.setData(null, null)
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableMessage>?> {
+        return ConversationLoader(context, accountKey, conversationId)
     }
 
     override fun onLoadFinished(loader: Loader<List<ParcelableMessage>?>, data: List<ParcelableMessage>?) {
@@ -269,6 +265,10 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             markRead()
         }
         updateConversationStatus()
+    }
+
+    override fun onLoaderReset(loader: Loader<List<ParcelableMessage>?>) {
+        adapter.setData(null, null)
     }
 
     override fun onCreateAdapter(context: Context): MessagesConversationAdapter {
@@ -549,6 +549,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
                     Expression.equalsArgs(Messages.CONVERSATION_ID)).sql
             selectionArgs = arrayOf(accountKey.toString(), conversationId)
             sortOrder = OrderBy(Messages.SORT_ID, false).sql
+            isUseCache = false
         }
 
         override fun onLoadInBackground(): MutableList<ParcelableMessage> {

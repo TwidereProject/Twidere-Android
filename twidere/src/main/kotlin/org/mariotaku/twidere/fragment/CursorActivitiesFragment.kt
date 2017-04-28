@@ -30,10 +30,7 @@ import android.os.Handler
 import android.support.v4.content.Loader
 import android.widget.Toast
 import com.squareup.otto.Subscribe
-import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
-import org.mariotaku.ktextension.contains
-import org.mariotaku.ktextension.removeOnAccountsUpdatedListenerSafe
-import org.mariotaku.ktextension.toNulls
+import org.mariotaku.ktextension.*
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.Expression
@@ -123,9 +120,11 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
         val expression = processWhere(where, accountSelectionArgs)
         val selection = expression.sql
         adapter.showAccountsColor = accountKeys.size > 1
-        val projection = Activities.COLUMNS
+        val projection = activityColumnsLite
         return CursorActivitiesLoader(context, uri, projection, selection, expression.parameters,
-                sortOrder, fromUser)
+                sortOrder, fromUser).apply {
+            isUseCache = false
+        }
     }
 
     override fun onContentLoaded(loader: Loader<List<ParcelableActivity>>, data: List<ParcelableActivity>?) {
@@ -231,21 +230,16 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
         val rangeEnd = Math.min(lm.findLastVisibleItemPosition(), adapter.activityStartIndex + adapter.getActivityCount(false) - 1)
         loop@ for (i in rangeStart..rangeEnd) {
             val activity = adapter.getActivity(i, false)
-            if (result.account_key == activity.account_key && result.id == activity.status_id) {
-                if (result.id != activity.status_id) {
+            if (result.account_key == activity.account_key && result.id == activity.id) {
+                if (result.id != activity.id) {
                     continue@loop
                 }
-                val statusesMatrix = arrayOf(activity.target_statuses, activity.target_object_statuses)
-                statusesMatrix.filterNotNull().forEach { statuses ->
-                    for (status in statuses) {
-                        if (result.id == status.id || result.id == status.retweet_id
-                                || result.id == status.my_retweet_id) {
-                            status.is_favorite = result.is_favorite
-                            status.reply_count = result.reply_count
-                            status.retweet_count = result.retweet_count
-                            status.favorite_count = result.favorite_count
-                        }
-                    }
+                if (result.id == activity.id || result.id == activity.retweet_id
+                        || result.id == activity.my_retweet_id) {
+                    activity.is_favorite = result.is_favorite
+                    activity.reply_count = result.reply_count
+                    activity.retweet_count = result.retweet_count
+                    activity.favorite_count = result.favorite_count
                 }
             }
         }
@@ -343,6 +337,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
     }
 
     companion object {
-
+        val activityColumnsLite = Activities.COLUMNS - arrayOf(Activities.SOURCES,Activities.TARGETS,
+                Activities.TARGET_OBJECTS)
     }
 }

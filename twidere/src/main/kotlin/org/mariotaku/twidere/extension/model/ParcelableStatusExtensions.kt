@@ -1,10 +1,7 @@
 package org.mariotaku.twidere.extension.model
 
 import org.mariotaku.ktextension.addAllTo
-import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.ParcelableUser
-import org.mariotaku.twidere.model.ParcelableUserMention
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.*
 
 /**
  * Created by mariotaku on 2017/1/7.
@@ -61,6 +58,15 @@ inline val ParcelableStatus.quoted_user_acct: String? get() = if (account_key.ho
     quoted_user_screen_name
 } else {
     "$quoted_user_screen_name@${quoted_user_key?.host}"
+}
+
+fun ParcelableStatus.toSummaryLine(): ParcelableActivity.SummaryLine {
+    val result = ParcelableActivity.SummaryLine()
+    result.key = user_key
+    result.name = user_name
+    result.screen_name = user_screen_name
+    result.content = text_unescaped
+    return result
 }
 
 private fun parcelableUserMention(key: UserKey, name: String, screenName: String) = ParcelableUserMention().also {

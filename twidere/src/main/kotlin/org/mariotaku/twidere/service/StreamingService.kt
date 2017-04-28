@@ -36,8 +36,7 @@ import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
-import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.model.util.UserKeyUtils
+import org.mariotaku.twidere.model.util.*
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
@@ -396,7 +395,7 @@ class StreamingService : BaseService() {
 
             override fun onStatusDeleted(event: DeletionEvent): Boolean {
                 val deleteWhere = Expression.and(Expression.likeRaw(Columns.Column(Statuses.ACCOUNT_KEY), "'%@'||?"),
-                        Expression.equalsArgs(Columns.Column(Statuses.STATUS_ID))).sql
+                        Expression.equalsArgs(Columns.Column(Statuses.ID))).sql
                 val deleteWhereArgs = arrayOf(account.key.host, event.id)
                 context.contentResolver.delete(Statuses.CONTENT_URI, deleteWhere, deleteWhereArgs)
                 return true

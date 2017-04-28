@@ -909,7 +909,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                             readStateManager.getPosition(tag)
                         }.fold(0L, Math::max)
                         val count = DataStoreUtils.getStatusesCount(context, preferences,
-                                Statuses.CONTENT_URI, spec.args, Statuses.STATUS_TIMESTAMP, position,
+                                Statuses.CONTENT_URI, spec.args, Statuses.TIMESTAMP, position,
                                 true, accountKeys)
                         result.put(i, count)
                         publishProgress(TabBadge(i, count))

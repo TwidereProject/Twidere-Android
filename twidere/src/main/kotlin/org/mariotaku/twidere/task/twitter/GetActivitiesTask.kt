@@ -6,6 +6,7 @@ import android.content.Context
 import android.net.Uri
 import android.support.annotation.UiThread
 import org.mariotaku.kpreferences.get
+import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.sqliteqb.library.Expression
@@ -24,7 +25,10 @@ import org.mariotaku.twidere.model.task.GetTimelineResult
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.task.BaseAbstractTask
-import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.DataStoreUtils
+import org.mariotaku.twidere.util.DebugLog
+import org.mariotaku.twidere.util.ErrorInfoStore
+import org.mariotaku.twidere.util.UriUtils
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.mariotaku.twidere.util.sync.SyncTaskRunner
 import org.mariotaku.twidere.util.sync.TimelineSyncManager
@@ -144,8 +148,8 @@ abstract class GetActivitiesTask(
                 }
 
                 activity.inserted_date = System.currentTimeMillis()
-                val values = ContentValuesCreator.createActivity(activity, details)
-                valuesList.add(values)
+                valuesList.add(ObjectCursor.valuesCreatorFrom(ParcelableActivity::class.java)
+                        .create(activity))
             }
         }
         var olderCount = -1

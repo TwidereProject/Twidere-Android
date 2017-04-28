@@ -69,7 +69,7 @@ class RetweetStatusTask(
             values.put(Statuses.RETWEET_COUNT, result.retweet_count)
             values.put(Statuses.FAVORITE_COUNT, result.favorite_count)
             val where = Expression.or(
-                    Expression.equalsArgs(Statuses.STATUS_ID),
+                    Expression.equalsArgs(Statuses.ID),
                     Expression.equalsArgs(Statuses.RETWEET_ID)
             )
             val whereArgs = arrayOf(statusId, statusId)
@@ -77,20 +77,14 @@ class RetweetStatusTask(
                 resolver.update(uri, values, where.sql, whereArgs)
             }
             resolver.updateActivityStatus(account.key, statusId) { activity ->
-                val statusesMatrix = arrayOf(activity.target_statuses, activity.target_object_statuses)
-                activity.status_my_retweet_id = result.my_retweet_id
-                for (statusesArray in statusesMatrix) {
-                    if (statusesArray == null) continue
-                    for (status in statusesArray) {
-                        if (statusId == status.id || statusId == status.retweet_id
-                                || statusId == status.my_retweet_id) {
-                            status.my_retweet_id = result.id
-                            status.reply_count = result.reply_count
-                            status.retweet_count = result.retweet_count
-                            status.favorite_count = result.favorite_count
-                        }
-                    }
+                if (statusId != activity.id && statusId != activity.retweet_id &&
+                        statusId != activity.my_retweet_id) {
+                    return@updateActivityStatus
                 }
+                activity.my_retweet_id = result.id
+                activity.reply_count = result.reply_count
+                activity.retweet_count = result.retweet_count
+                activity.favorite_count = result.favorite_count
             }
             UpdateStatusTask.deleteDraft(context, draftId)
             return result

@@ -23,6 +23,8 @@ import android.support.annotation.StringDef;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Date;
 
 /**
@@ -91,6 +93,7 @@ public class Notification {
     }
 
     @StringDef({Type.MENTION, Type.REBLOG, Type.FAVOURITE, Type.FOLLOW})
+    @Retention(RetentionPolicy.SOURCE)
     public @interface Type {
         String MENTION = "mention", REBLOG = "reblog", FAVOURITE = "favourite", FOLLOW = "follow";
     }

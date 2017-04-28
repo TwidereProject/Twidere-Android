@@ -27,6 +27,7 @@ import android.view.ViewGroup
 import com.bumptech.glide.RequestManager
 import org.apache.commons.lang3.time.DateUtils
 import org.mariotaku.kpreferences.get
+import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.PreviewStyle
@@ -36,6 +37,7 @@ import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.model.timestamp
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableMessage.MessageType
+import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.util.DirectMessageOnLinkClickHandler
 import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener
@@ -51,7 +53,6 @@ class MessagesConversationAdapter(
         requestManager: RequestManager
 ) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context, requestManager),
         IItemCountsAdapter {
-    private val calendars = Pair(Calendar.getInstance(), Calendar.getInstance())
     override val itemCounts: ItemCounts = ItemCounts(2)
 
     @PreviewStyle
@@ -82,6 +83,9 @@ class MessagesConversationAdapter(
             super.loadMoreIndicatorPosition = value
             updateItemCounts()
         }
+
+    private val calendars = Pair(Calendar.getInstance(), Calendar.getInstance())
+    private val reuseMessage = ParcelableMessage()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -116,13 +120,13 @@ class MessagesConversationAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
             ITEM_TYPE_TEXT_MESSAGE, ITEM_TYPE_STICKER_MESSAGE, ITEM_TYPE_NOTICE_MESSAGE -> {
-                val message = getMessage(position)!!
+                val message = getMessage(position, true)
                 // Display date for oldest item
                 var showDate = true
                 // ... or if current message is > 1 day newer than previous one
                 if (position < itemCounts.getItemStartPosition(ITEM_START_MESSAGE)
                         + itemCounts[ITEM_START_MESSAGE] - 1) {
-                    calendars.first.timeInMillis = getMessage(position + 1)!!.timestamp
+                    calendars.first.timeInMillis = getMessageTimestamp(position + 1)
                     calendars.second.timeInMillis = message.timestamp
                     showDate = !DateUtils.isSameDay(calendars.first, calendars.second)
                 }
@@ -139,7 +143,7 @@ class MessagesConversationAdapter(
     override fun getItemViewType(position: Int): Int {
         when (itemCounts.getItemCountIndex(position)) {
             ITEM_START_MESSAGE -> {
-                when (getMessage(position)!!.message_type) {
+                when (getMessage(position, reuse = true).message_type) {
                     MessageType.STICKER -> {
                         return ITEM_TYPE_STICKER_MESSAGE
                     }
@@ -156,8 +160,25 @@ class MessagesConversationAdapter(
         throw UnsupportedOperationException()
     }
 
-    fun getMessage(position: Int): ParcelableMessage? {
-        return messages?.get(position - itemCounts.getItemStartPosition(ITEM_START_MESSAGE))
+    fun getMessage(position: Int, reuse: Boolean = false): ParcelableMessage {
+        val messages = this.messages!!
+        val dataPosition = position - itemCounts.getItemStartPosition(ITEM_START_MESSAGE)
+        if (reuse && messages is ObjectCursor) {
+            return messages.setInto(dataPosition, reuseMessage)
+        }
+        return messages[dataPosition]
+    }
+
+    private fun getMessageTimestamp(position: Int): Long {
+        val messages = this.messages!!
+        if (messages is ObjectCursor) {
+            val cursor = messages.cursor
+            val indices = messages.indices
+            val timestamp = cursor.getLong(indices[Messages.MESSAGE_TIMESTAMP])
+            if (timestamp > 0) return timestamp
+            return cursor.getLong(indices[Messages.LOCAL_TIMESTAMP])
+        }
+        return getMessage(position, false).timestamp
     }
 
     fun findUser(key: UserKey): ParcelableUser? {

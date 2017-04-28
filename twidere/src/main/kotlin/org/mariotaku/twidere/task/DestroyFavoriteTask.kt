@@ -57,7 +57,7 @@ class DestroyFavoriteTask(
         values.put(Statuses.REPLY_COUNT, result.reply_count)
 
         val where = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
-                Expression.or(Expression.equalsArgs(Statuses.STATUS_ID),
+                Expression.or(Expression.equalsArgs(Statuses.ID),
                         Expression.equalsArgs(Statuses.RETWEET_ID)))
         val whereArgs = arrayOf(accountKey.toString(), statusId, statusId)
         for (uri in DataStoreUtils.STATUSES_URIS) {
@@ -65,17 +65,11 @@ class DestroyFavoriteTask(
         }
 
         resolver.updateActivityStatus(account.key, statusId) { activity ->
-            val statusesMatrix = arrayOf(activity.target_statuses, activity.target_object_statuses)
-            for (statusesArray in statusesMatrix) {
-                if (statusesArray == null) continue
-                for (status in statusesArray) {
-                    if (result.id != status.id) continue
-                    status.is_favorite = false
-                    status.reply_count = result.reply_count
-                    status.retweet_count = result.retweet_count
-                    status.favorite_count = result.favorite_count - 1
-                }
-            }
+            if (result.id != activity.id) return@updateActivityStatus
+            activity.is_favorite = false
+            activity.reply_count = result.reply_count
+            activity.retweet_count = result.retweet_count
+            activity.favorite_count = result.favorite_count - 1
         }
         return result
 

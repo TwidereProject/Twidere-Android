@@ -20,11 +20,15 @@ package org.mariotaku.microblog.library.mastodon.annotation;
 
 import android.support.annotation.StringDef;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * Created by mariotaku on 2017/4/19.
  */
 @StringDef({StatusVisibility.DIRECT, StatusVisibility.PRIVATE, StatusVisibility.UNLISTED,
         StatusVisibility.PUBLIC})
+@Retention(RetentionPolicy.SOURCE)
 public @interface StatusVisibility {
     String DIRECT = "direct";
     String PRIVATE = "private";

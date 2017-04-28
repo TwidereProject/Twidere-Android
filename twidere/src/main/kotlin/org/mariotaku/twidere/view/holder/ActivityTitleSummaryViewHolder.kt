@@ -32,7 +32,7 @@ import org.mariotaku.twidere.adapter.iface.IActivitiesAdapter
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.ActivityTitleSummaryMessage
 import org.mariotaku.twidere.model.ParcelableActivity
-import org.mariotaku.twidere.model.ParcelableUser
+import org.mariotaku.twidere.model.ParcelableLiteUser
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils
 import org.mariotaku.twidere.view.BadgeView
 import org.mariotaku.twidere.view.IconActionView
@@ -81,9 +81,9 @@ class ActivityTitleSummaryViewHolder(
     fun displayActivity(activity: ParcelableActivity) {
         val context = adapter.context
         val sources = ParcelableActivityUtils.getAfterFilteredSources(activity)
-        val message = ActivityTitleSummaryMessage.get(context,
-                adapter.userColorNameManager, activity, sources, activityTypeView.defaultColor,
-                adapter.useStarsForLikes, adapter.isNameFirst)
+        val message = ActivityTitleSummaryMessage.get(context, adapter.userColorNameManager,
+                activity, sources, activityTypeView.defaultColor, adapter.useStarsForLikes,
+                adapter.isNameFirst)
         if (message == null) {
             showNotSupported()
             return
@@ -117,7 +117,7 @@ class ActivityTitleSummaryViewHolder(
         }
     }
 
-    private fun displayUserProfileImages(users: Array<ParcelableUser>?) {
+    private fun displayUserProfileImages(users: Array<ParcelableLiteUser>?) {
         val shouldDisplayImages = adapter.profileImageEnabled
         profileImagesContainer.visibility = if (shouldDisplayImages) View.VISIBLE else View.GONE
         profileImageSpace.visibility = if (shouldDisplayImages) View.VISIBLE else View.GONE

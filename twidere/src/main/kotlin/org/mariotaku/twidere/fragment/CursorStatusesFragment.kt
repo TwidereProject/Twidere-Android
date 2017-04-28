@@ -130,7 +130,9 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
         }
         val expression = processWhere(where, selectionArgs)
         return ExtendedObjectCursorLoader(context, ParcelableStatus::class.java, uri, projection,
-                expression.sql, expression.parameters, sortOrder, fromUser)
+                expression.sql, expression.parameters, sortOrder, fromUser).apply {
+            isUseCache = false
+        }
     }
 
     override fun createMessageBusCallback(): Any {

@@ -64,7 +64,7 @@ open class CreateUserBlockTask(
         for (uri in DataStoreUtils.ACTIVITIES_URIS) {
             val where = Expression.and(
                     Expression.equalsArgs(Activities.ACCOUNT_KEY),
-                    Expression.equalsArgs(Activities.STATUS_USER_KEY)
+                    Expression.equalsArgs(Activities.USER_KEY)
             )
             val whereArgs = arrayOf(args.accountKey.toString(), args.userKey.toString())
             resolver.delete(uri, where.sql, whereArgs)

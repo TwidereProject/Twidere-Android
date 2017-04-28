@@ -43,6 +43,11 @@ fun Status.toParcelable(details: AccountDetails, profileImageSize: String = "nor
 
 fun Status.toParcelable(accountKey: UserKey, accountType: String, profileImageSize: String = "normal"): ParcelableStatus {
     val result = ParcelableStatus()
+    applyTo(accountKey, accountType, profileImageSize, result)
+    return result
+}
+
+fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: String = "normal", result: ParcelableStatus) {
     val extras = ParcelableStatus.Extras()
     result.account_key = accountKey
     result.id = id
@@ -181,7 +186,6 @@ fun Status.toParcelable(accountKey: UserKey, accountType: String, profileImageSi
     result.place_full_name = status.placeFullName
     result.lang = status.lang
     result.extras = extras
-    return result
 }
 
 internal inline val CharSequence.spanItems get() = (this as? Spanned)?.let { text ->

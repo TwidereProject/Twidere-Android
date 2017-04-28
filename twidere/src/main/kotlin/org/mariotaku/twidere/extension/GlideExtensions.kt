@@ -71,6 +71,17 @@ fun RequestManager.loadProfileImage(context: Context, user: ParcelableUser, @Ima
     }
 }
 
+fun RequestManager.loadProfileImage(context: Context, user: ParcelableLiteUser, @ImageShapeStyle shapeStyle: Int,
+        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f, size: String? = null): DrawableRequestBuilder<String?> {
+    return configureLoadProfileImage(context, shapeStyle, cornerRadius, cornerRadiusRatio) {
+        if (size != null) {
+            return@configureLoadProfileImage load(Utils.getTwitterProfileImageOfSize(user.profile_image_url, size))
+        } else {
+            return@configureLoadProfileImage load(user.profile_image_url)
+        }
+    }
+}
+
 fun RequestManager.loadProfileImage(context: Context, userList: ParcelableUserList,
         @ImageShapeStyle shapeStyle: Int,
         cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f): DrawableRequestBuilder<String?> {

@@ -104,8 +104,12 @@ import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
-import org.mariotaku.twidere.model.util.*
-import org.mariotaku.twidere.provider.TwidereDataStore.*
+import org.mariotaku.twidere.model.util.AccountUtils
+import org.mariotaku.twidere.model.util.ParcelableLocationUtils
+import org.mariotaku.twidere.model.util.ParcelableMediaUtils
+import org.mariotaku.twidere.model.util.UserKeyUtils
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedStatuses
+import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.AbsAccountRequestTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.ContentScrollHandler.ContentListSupport
@@ -2094,40 +2098,19 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 val statusWhere = Expression.and(
                         Expression.equalsArgs(Statuses.ACCOUNT_KEY),
                         Expression.or(
-                                Expression.equalsArgs(Statuses.STATUS_ID),
+                                Expression.equalsArgs(Statuses.ID),
                                 Expression.equalsArgs(Statuses.RETWEET_ID)))
                 val statusWhereArgs = arrayOf(accountKey.toString(), statusId, statusId)
                 cr.update(Statuses.CONTENT_URI, countValues, statusWhere.sql, statusWhereArgs)
-                val activityWhere = Expression.and(
-                        Expression.equalsArgs(Activities.ACCOUNT_KEY),
-                        Expression.or(
-                                Expression.equalsArgs(Activities.STATUS_ID),
-                                Expression.equalsArgs(Activities.STATUS_RETWEET_ID)))
-
-                val pStatus = status.toParcelable(details)
-                cr.insert(CachedStatuses.CONTENT_URI, ObjectCursor.valuesCreatorFrom(ParcelableStatus::class.java).create(pStatus))
-
-                val activityCursor = cr.query(Activities.AboutMe.CONTENT_URI,
-                        Activities.COLUMNS, activityWhere.sql, statusWhereArgs, null)!!
-                try {
-                    activityCursor.moveToFirst()
-                    val ci = ObjectCursor.indicesFrom(activityCursor, ParcelableActivity::class.java)
-                    val vc = ObjectCursor.valuesCreatorFrom(ParcelableActivity::class.java)
-                    while (!activityCursor.isAfterLast) {
-                        val activity = ci.newObject(activityCursor)
-                        val activityStatus = activity.getActivityStatus()
-                        if (activityStatus != null) {
-                            activityStatus.favorite_count = activitySummary.favoriteCount
-                            activityStatus.reply_count = activitySummary.replyCount
-                            activityStatus.retweet_count = activitySummary.retweetCount
-                        }
-                        cr.update(Activities.AboutMe.CONTENT_URI, vc.create(activity),
-                                Expression.equals(Activities._ID, activity._id).sql, null)
-                        activityCursor.moveToNext()
-                    }
-                } finally {
-                    activityCursor.close()
+                cr.updateActivityStatus(accountKey, statusId) { activity ->
+                    activity.favorite_count = activitySummary.favoriteCount
+                    activity.reply_count = activitySummary.replyCount
+                    activity.retweet_count = activitySummary.retweetCount
                 }
+                val pStatus = status.toParcelable(details)
+                cr.insert(CachedStatuses.CONTENT_URI, ObjectCursor
+                        .valuesCreatorFrom(ParcelableStatus::class.java).create(pStatus))
+
                 return activitySummary
             } catch (e: MicroBlogException) {
                 return null

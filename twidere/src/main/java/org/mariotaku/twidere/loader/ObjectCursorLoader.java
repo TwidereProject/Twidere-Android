@@ -46,6 +46,7 @@ public class ObjectCursorLoader<T> extends FixedAsyncTaskLoader<List<T>> {
     String mSelection;
     String[] mSelectionArgs;
     String mSortOrder;
+    boolean mUseCache;
 
     ObjectCursor<T> mObjects;
 
@@ -64,7 +65,7 @@ public class ObjectCursorLoader<T> extends FixedAsyncTaskLoader<List<T>> {
     }
 
     protected ObjectCursor<T> createObjectCursor(Cursor cursor, ObjectCursor.CursorIndices<T> indices) {
-        return new ObjectCursor<>(cursor, indices);
+        return new ObjectCursor<>(cursor, indices, mUseCache);
     }
 
     @SuppressWarnings("TryWithIdenticalCatches")
@@ -210,6 +211,14 @@ public class ObjectCursorLoader<T> extends FixedAsyncTaskLoader<List<T>> {
 
     public void setSortOrder(String sortOrder) {
         mSortOrder = sortOrder;
+    }
+
+    public boolean isUseCache() {
+        return mUseCache;
+    }
+
+    public void setUseCache(boolean mUseCache) {
+        this.mUseCache = mUseCache;
     }
 
     @Override

@@ -13,7 +13,7 @@ import org.mariotaku.twidere.adapter.iface.IUserListsAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.model.*
-import org.mariotaku.twidere.model.util.getActivityStatus
+import org.mariotaku.twidere.model.util.activityStatus
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.util.UserColorNameManager
@@ -79,7 +79,7 @@ class DummyItemAdapter(
         } else if (adapter is VariousItemsAdapter) {
             return adapter.getItem(position) as ParcelableStatus
         } else if (adapter is ParcelableActivitiesAdapter) {
-            return adapter.getActivity(position).getActivityStatus()!!
+            return adapter.getActivity(position).activityStatus!!
         }
         throw IndexOutOfBoundsException()
     }

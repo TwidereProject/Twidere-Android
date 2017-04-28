@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.extension.model
 
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
+import org.mariotaku.twidere.model.ParcelableLiteUser
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
 import org.mariotaku.twidere.util.Utils
@@ -32,6 +33,16 @@ fun ParcelableUser.getBestProfileBanner(width: Int, height: Int = 0): String? {
     } else {
         null
     }
+}
+
+fun ParcelableUser.toLite(): ParcelableLiteUser {
+    val result = ParcelableLiteUser()
+    result.account_key = account_key
+    result.key = key
+    result.screen_name = screen_name
+    result.name = name
+    result.profile_image_url = profile_image_url
+    return result
 }
 
 inline val ParcelableUser.originalProfileImage: String? get() {

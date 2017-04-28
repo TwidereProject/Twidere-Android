@@ -140,38 +140,35 @@ fun ContentResolver.deleteActivityStatus(accountKey: UserKey, statusId: String,
         deleteWhere = Expression.and(
                 Expression.likeRaw(Column(Activities.ACCOUNT_KEY), "'%@'||?"),
                 Expression.or(
-                        Expression.equalsArgs(Activities.STATUS_ID),
-                        Expression.equalsArgs(Activities.STATUS_RETWEET_ID)
+                        Expression.equalsArgs(Activities.ID),
+                        Expression.equalsArgs(Activities.RETWEET_ID)
                 )).sql
         deleteWhereArgs = arrayOf(host, statusId, statusId)
         updateWhere = Expression.and(
                 Expression.likeRaw(Column(Activities.ACCOUNT_KEY), "'%@'||?"),
-                Expression.equalsArgs(Activities.STATUS_MY_RETWEET_ID)
+                Expression.equalsArgs(Activities.MY_RETWEET_ID)
         ).sql
         updateWhereArgs = arrayOf(host, statusId)
     } else {
         deleteWhere = Expression.or(
-                Expression.equalsArgs(Activities.STATUS_ID),
-                Expression.equalsArgs(Activities.STATUS_RETWEET_ID)
+                Expression.equalsArgs(Activities.ID),
+                Expression.equalsArgs(Activities.RETWEET_ID)
         ).sql
         deleteWhereArgs = arrayOf(statusId, statusId)
-        updateWhere = Expression.equalsArgs(Activities.STATUS_MY_RETWEET_ID).sql
+        updateWhere = Expression.equalsArgs(Activities.MY_RETWEET_ID).sql
         updateWhereArgs = arrayOf(statusId)
     }
     for (uri in ACTIVITIES_URIS) {
         delete(uri, deleteWhere, deleteWhereArgs)
         updateActivity(uri, updateWhere, updateWhereArgs) { activity ->
-            activity.status_my_retweet_id = null
-            arrayOf(activity.target_statuses, activity.target_object_statuses).filterNotNull().forEach {
-                for (status in it) {
-                    if (statusId == status.id || statusId == status.retweet_id || statusId == status.my_retweet_id) {
-                        status.my_retweet_id = null
-                        if (result != null) {
-                            status.reply_count = result.reply_count
-                            status.retweet_count = result.retweet_count - 1
-                            status.favorite_count = result.favorite_count
-                        }
-                    }
+            activity.my_retweet_id = null
+            if (statusId == activity.id || statusId == activity.retweet_id ||
+                    statusId == activity.my_retweet_id) {
+                activity.my_retweet_id = null
+                if (result != null) {
+                    activity.reply_count = result.reply_count
+                    activity.retweet_count = result.retweet_count - 1
+                    activity.favorite_count = result.favorite_count
                 }
             }
         }
@@ -183,8 +180,8 @@ fun ContentResolver.updateActivityStatus(accountKey: UserKey, statusId: String,
     val activityWhere = Expression.and(
             Expression.equalsArgs(Activities.ACCOUNT_KEY),
             Expression.or(
-                    Expression.equalsArgs(Activities.STATUS_ID),
-                    Expression.equalsArgs(Activities.STATUS_RETWEET_ID)
+                    Expression.equalsArgs(Activities.ID),
+                    Expression.equalsArgs(Activities.RETWEET_ID)
             )
     ).sql
     val activityWhereArgs = arrayOf(accountKey.toString(), statusId, statusId)

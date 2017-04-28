@@ -590,41 +590,42 @@ public interface TwidereDataStore {
         Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
 
         /**
-         *
-         */
-        String TEXT_PLAIN = "text_plain";
-
-        String LANG = "lang";
-
-        String TEXT_UNESCAPED = "text_unescaped";
-
-        /**
-         * User name of the status.<br>
-         * Type: TEXT
-         */
-        String USER_NAME = "name";
-
-        /**
-         * User's screen name of the status.<br>
-         * Type: TEXT
-         */
-        String USER_SCREEN_NAME = "screen_name";
-
-        /**
-         * User's profile image URL of the status.<br>
-         * Type: TEXT NOT NULL
-         */
-        String USER_PROFILE_IMAGE_URL = "profile_image_url";
-
-        /**
          * Id of the status.<br>
          */
-        String STATUS_ID = "status_id";
+        String ID = "id";
 
         /**
          * Sort ID of the status.<br>
          */
         String SORT_ID = "sort_id";
+
+        /**
+         * User's ID of the status.<br>
+         * Type: INTEGER (long)
+         */
+        String USER_KEY = "user_key";
+
+        /**
+         * User name of the status.<br>
+         * Type: TEXT
+         */
+        String USER_NAME = "user_name";
+
+        /**
+         * User's screen name of the status.<br>
+         * Type: TEXT
+         */
+        String USER_SCREEN_NAME = "user_screen_name";
+
+        /**
+         * User's profile image URL of the status.<br>
+         * Type: TEXT NOT NULL
+         */
+        String USER_PROFILE_IMAGE = "user_profile_image";
+
+        String TEXT_PLAIN = "text_plain";
+
+        String TEXT_UNESCAPED = "text_unescaped";
 
         /**
          * Retweet count of the status.<br>
@@ -661,15 +662,11 @@ public interface TwidereDataStore {
 
         String PLACE_FULL_NAME = "place_full_name";
 
-        /**
-         * User's ID of the status.<br>
-         * Type: INTEGER (long)
-         */
-        String USER_KEY = "user_id";
+        String LANG = "lang";
 
         String IN_REPLY_TO_STATUS_ID = "in_reply_to_status_id";
 
-        String IN_REPLY_TO_USER_KEY = "in_reply_to_user_id";
+        String IN_REPLY_TO_USER_KEY = "in_reply_to_user_key";
 
         String IN_REPLY_TO_USER_NAME = "in_reply_to_user_name";
 
@@ -687,7 +684,7 @@ public interface TwidereDataStore {
 
         String RETWEET_TIMESTAMP = "retweet_timestamp";
 
-        String RETWEETED_BY_USER_KEY = "retweeted_by_user_id";
+        String RETWEETED_BY_USER_KEY = "retweeted_by_user_key";
 
         String RETWEETED_BY_USER_NAME = "retweeted_by_user_name";
 
@@ -699,7 +696,7 @@ public interface TwidereDataStore {
          * Timestamp of the status.<br>
          * Type: INTEGER (long)
          */
-        String STATUS_TIMESTAMP = "status_timestamp";
+        String TIMESTAMP = "timestamp";
 
         String MY_RETWEET_ID = "my_retweet_id";
 
@@ -718,7 +715,7 @@ public interface TwidereDataStore {
         String QUOTED_MEDIA_JSON = "quoted_media_json";
         String QUOTED_TIMESTAMP = "quoted_timestamp";
         String QUOTED_SOURCE = "quoted_source";
-        String QUOTED_USER_KEY = "quoted_user_id";
+        String QUOTED_USER_KEY = "quoted_user_key";
         String QUOTED_USER_NAME = "quoted_user_name";
         String QUOTED_USER_SCREEN_NAME = "quoted_user_screen_name";
         String QUOTED_USER_PROFILE_IMAGE = "quoted_user_profile_image";
@@ -744,7 +741,7 @@ public interface TwidereDataStore {
 
         String FILTER_FLAGS = "filter_flags";
 
-        String DEFAULT_SORT_ORDER = STATUS_TIMESTAMP + " DESC, " + SORT_ID + " DESC, " + STATUS_ID
+        String DEFAULT_SORT_ORDER = TIMESTAMP + " DESC, " + SORT_ID + " DESC, " + ID
                 + " DESC";
 
         String[] COLUMNS = ParcelableStatusTableInfo.COLUMNS;
@@ -753,26 +750,11 @@ public interface TwidereDataStore {
 
     }
 
-    interface Activities extends BaseColumns, InsertedDateColumns, AccountSupportColumns {
+    interface Activities extends Statuses, BaseColumns, InsertedDateColumns, AccountSupportColumns {
+
+        String ACTIVITY_ID = "activity_id";
 
         String ACTION = "action";
-        String TIMESTAMP = "timestamp";
-        String STATUS_ID = "status_id";
-        String STATUS_RETWEET_ID = "status_retweet_id";
-        String STATUS_MY_RETWEET_ID = "status_my_retweet_id";
-        String STATUS_USER_KEY = "status_user_id";
-        String STATUS_RETWEETED_BY_USER_KEY = "status_retweeted_by_user_id";
-        String STATUS_QUOTED_USER_KEY = "status_quoted_user_id";
-        String STATUS_SOURCE = "status_source";
-        String STATUS_QUOTE_SOURCE = "status_quote_source";
-        String STATUS_TEXT_PLAIN = "status_text_plain";
-        String STATUS_QUOTE_TEXT_PLAIN = "status_quote_text_plain";
-        String STATUS_SPANS = "status_spans";
-        String STATUS_QUOTE_SPANS = "status_quote_spans";
-        String STATUS_USER_FOLLOWING = "status_user_following";
-        String IS_GAP = "status_is_gap";
-
-        String ACCOUNT_COLOR = "account_color";
 
         String MIN_SORT_POSITION = "min_position";
         String MAX_SORT_POSITION = "max_position";
@@ -780,16 +762,15 @@ public interface TwidereDataStore {
         String MIN_REQUEST_POSITION = "min_request_position";
         String MAX_REQUEST_POSITION = "max_request_position";
         String SOURCES = "sources";
-        String SOURCE_IDS = "source_ids";
-        String TARGET_STATUSES = "target_statuses";
-        String TARGET_USERS = "target_users";
-        String TARGET_USER_LISTS = "target_user_lists";
-        String TARGET_OBJECT_STATUSES = "target_object_statuses";
-        String TARGET_OBJECT_USER_LISTS = "target_object_user_lists";
-        String TARGET_OBJECT_USERS = "target_object_users";
-        String HAS_FOLLOWING_SOURCE = "has_following_source";
+        String TARGETS = "targets";
 
-        String POSITION_KEY = "position_key";
+        String TARGET_OBJECTS = "target_objects";
+
+        String SOURCES_LITE = "sources_lite";
+        String SOURCE_KEYS = "source_keys";
+
+        String SUMMARY_LINE = "summary_line";
+        String HAS_FOLLOWING_SOURCE = "has_following_source";
 
         String[] COLUMNS = ParcelableActivityTableInfo.COLUMNS;
         String[] TYPES = ParcelableActivityTableInfo.TYPES;

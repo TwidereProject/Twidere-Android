@@ -119,6 +119,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
         qb.orderBy(OrderBy(arrayOf(Conversations.LOCAL_TIMESTAMP, Conversations.SORT_ID), booleanArrayOf(false, false)))
         loader.uri = TwidereQueryBuilder.rawQuery(qb.buildSQL(), Conversations.CONTENT_URI)
         loader.selectionArgs = accountKeys.toStringArray()
+        loader.isUseCache = false
         return loader
     }
 
@@ -156,7 +157,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
     }
 
     override fun onConversationClick(position: Int) {
-        val conversation = adapter.getConversation(position) ?: return
+        val conversation = adapter.getConversation(position)
         IntentUtils.openMessageConversation(context, conversation.account_key, conversation.id)
     }
 
@@ -167,7 +168,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
     }
 
     override fun onProfileImageClick(position: Int) {
-        val conversation = adapter.getConversation(position) ?: return
+        val conversation = adapter.getConversation(position)
         val user = conversation.user ?: return
         IntentUtils.openUserProfile(context, user, preferences[newDocumentApiKey])
     }
@@ -190,7 +191,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
         if (!userVisibleHint || menuInfo == null) return
         val info = menuInfo as? ExtendedRecyclerView.ContextMenuInfo ?: return
-        val conversation = adapter.getConversation(info.position) ?: return
+        val conversation = adapter.getConversation(info.position)
         val inflater = MenuInflater(context)
         inflater.inflate(R.menu.context_message_entry, menu)
         menu.setHeaderTitle(conversation.getTitle(context, userColorNameManager,
@@ -202,7 +203,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
         val menuInfo = item.menuInfo as? ExtendedRecyclerView.ContextMenuInfo ?: return false
         when (item.itemId) {
             R.id.mark_read -> {
-                val conversation = adapter.getConversation(menuInfo.position) ?: return true
+                val conversation = adapter.getConversation(menuInfo.position)
                 TaskStarter.execute(MarkMessageReadTask(context, conversation.account_key,
                         conversation.id))
                 return true

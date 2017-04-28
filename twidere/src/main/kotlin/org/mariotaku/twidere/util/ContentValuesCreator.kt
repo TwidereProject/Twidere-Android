@@ -25,8 +25,10 @@ import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.twitter.model.SavedSearch
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.extension.model.api.toParcelable
-import org.mariotaku.twidere.model.*
-import org.mariotaku.twidere.model.util.getActivityStatus
+import org.mariotaku.twidere.model.ParcelableStatus
+import org.mariotaku.twidere.model.ParcelableUser
+import org.mariotaku.twidere.model.ParcelableUserMention
+import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches
 
@@ -75,35 +77,5 @@ object ContentValuesCreator {
         return ObjectCursor.valuesCreatorFrom(ParcelableStatus::class.java)
                 .create(orig.toParcelable(accountKey, accountType, profileImageSize))
     }
-
-    fun createActivity(activity: ParcelableActivity, details: AccountDetails): ContentValues {
-        val values = ContentValues()
-        val status = activity.getActivityStatus()
-
-        activity.account_color = details.color
-
-        if (status != null) {
-            activity.status_id = status.id
-            activity.status_retweet_id = status.retweet_id
-            activity.status_my_retweet_id = status.my_retweet_id
-
-            if (status.is_retweet) {
-                activity.status_retweeted_by_user_key = status.retweeted_by_user_key
-            } else if (status.is_quote) {
-                activity.status_quote_spans = status.quoted_spans
-                activity.status_quote_text_plain = status.quoted_text_plain
-                activity.status_quote_source = status.quoted_source
-                activity.status_quoted_user_key = status.quoted_user_key
-            }
-            activity.status_user_key = status.user_key
-            activity.status_user_following = status.user_is_following
-            activity.status_spans = status.spans
-            activity.status_text_plain = status.text_plain
-            activity.status_source = status.source
-        }
-        ObjectCursor.valuesCreatorFrom(ParcelableActivity::class.java).writeTo(activity, values)
-        return values
-    }
-
 
 }

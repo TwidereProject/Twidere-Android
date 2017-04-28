@@ -204,7 +204,7 @@ class ContentNotificationManager(
                 if (pref.isNotificationMentionsOnly && activity.action !in Activity.Action.MENTION_ACTIONS) {
                     return@forEachRow false
                 }
-                if (activity.status_id != null && FilterQueryBuilder.isFiltered(cr, activity)) {
+                if (FilterQueryBuilder.isFiltered(cr, activity)) {
                     return@forEachRow false
                 }
                 ParcelableActivityUtils.initAfterFilteredSourceIds(activity, filteredUserKeys,

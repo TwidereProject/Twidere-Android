@@ -67,7 +67,7 @@ class CreateFavoriteTask(context: Context, accountKey: UserKey, private val stat
             val statusWhere = Expression.and(
                     Expression.equalsArgs(Statuses.ACCOUNT_KEY),
                     Expression.or(
-                            Expression.equalsArgs(Statuses.STATUS_ID),
+                            Expression.equalsArgs(Statuses.ID),
                             Expression.equalsArgs(Statuses.RETWEET_ID)
                     )
             ).sql
@@ -76,17 +76,11 @@ class CreateFavoriteTask(context: Context, accountKey: UserKey, private val stat
                 resolver.update(uri, values, statusWhere, statusWhereArgs)
             }
             resolver.updateActivityStatus(account.key, statusId) { activity ->
-                val statusesMatrix = arrayOf(activity.target_statuses, activity.target_object_statuses)
-                for (statusesArray in statusesMatrix) {
-                    if (statusesArray == null) continue
-                    for (status in statusesArray) {
-                        if (result.id != status.id) continue
-                        status.is_favorite = true
-                        status.reply_count = result.reply_count
-                        status.retweet_count = result.retweet_count
-                        status.favorite_count = result.favorite_count
-                    }
-                }
+                if (result.id != activity.id) return@updateActivityStatus
+                activity.is_favorite = true
+                activity.reply_count = result.reply_count
+                activity.retweet_count = result.retweet_count
+                activity.favorite_count = result.favorite_count
             }
             UpdateStatusTask.deleteDraft(context, draftId)
             return result

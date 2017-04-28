@@ -86,9 +86,6 @@ abstract class ParcelableStatusesAdapter(
     override val gapClickListener: IGapSupportedAdapter.GapClickListener?
         get() = statusClickListener
 
-    val hasPinnedStatuses: Boolean
-        get() = pinnedStatuses != null
-
     override var showAccountsColor: Boolean = false
         set(value) {
             if (field == value) return
@@ -120,9 +117,8 @@ abstract class ParcelableStatusesAdapter(
     private var data: List<ParcelableStatus>? = null
     private var displayPositions: IntArray? = null
     private var displayDataCount: Int = 0
-
-
     private var showingActionCardId = RecyclerView.NO_ID
+    private val reuseStatus = ParcelableStatus()
 
     override val itemCounts = ItemCounts(5)
 
@@ -167,7 +163,7 @@ abstract class ParcelableStatusesAdapter(
     }
 
     override fun getStatus(position: Int, raw: Boolean): ParcelableStatus {
-        return getStatus(position, getItemCountIndex(position, raw), raw)
+        return getStatusInternal(position, getItemCountIndex(position, raw), raw)
     }
 
     override fun getStatusCount(raw: Boolean): Int {
@@ -217,7 +213,7 @@ abstract class ParcelableStatusesAdapter(
             }
             ITEM_INDEX_STATUS -> return (countIndex.toLong() shl 32) or getFieldValue(position, { cursor, indices ->
                 val accountKey = UserKey.valueOf(cursor.getString(indices[Statuses.ACCOUNT_KEY]))
-                val id = cursor.getString(indices[Statuses.STATUS_ID])
+                val id = cursor.getString(indices[Statuses.ID])
                 return@getFieldValue ParcelableStatus.calculateHashCode(accountKey, id)
             }, { status ->
                 return@getFieldValue status.hashCode()
@@ -228,7 +224,7 @@ abstract class ParcelableStatusesAdapter(
 
     override fun getStatusId(position: Int, raw: Boolean): String {
         return getFieldValue(position, { cursor, indices ->
-            return@getFieldValue cursor.getString(indices[Statuses.STATUS_ID])
+            return@getFieldValue cursor.getString(indices[Statuses.ID])
         }, { status ->
             return@getFieldValue status.id
         }, "")
@@ -244,7 +240,7 @@ abstract class ParcelableStatusesAdapter(
 
     override fun getStatusTimestamp(position: Int, raw: Boolean): Long {
         return getFieldValue(position, { cursor, indices ->
-            return@getFieldValue cursor.safeGetLong(indices[Statuses.STATUS_TIMESTAMP])
+            return@getFieldValue cursor.safeGetLong(indices[Statuses.TIMESTAMP])
         }, { status ->
             return@getFieldValue status.timestamp
         }, -1L)
@@ -254,7 +250,7 @@ abstract class ParcelableStatusesAdapter(
         return getFieldValue(position, { cursor, indices ->
             val positionKey = cursor.safeGetLong(indices[Statuses.POSITION_KEY])
             if (positionKey > 0) return@getFieldValue positionKey
-            return@getFieldValue cursor.safeGetLong(indices[Statuses.STATUS_TIMESTAMP])
+            return@getFieldValue cursor.safeGetLong(indices[Statuses.TIMESTAMP])
         }, { status ->
             val positionKey = status.position_key
             if (positionKey > 0) return@getFieldValue positionKey
@@ -318,16 +314,16 @@ abstract class ParcelableStatusesAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
             VIEW_TYPE_STATUS -> {
-                val countIdx = getItemCountIndex(position)
-                val status = getStatus(position, countIdx)
+                val countIndex: Int = getItemCountIndex(position)
+                val status = getStatusInternal(position, countIndex = countIndex, reuse = true)
                 (holder as IStatusViewHolder).display(status, displayInReplyTo = isShowInReplyTo,
-                        displayPinned = countIdx == ITEM_INDEX_PINNED_STATUS)
+                        displayPinned = countIndex == ITEM_INDEX_PINNED_STATUS)
             }
             VIEW_TYPE_FILTER_HEADER -> {
                 (holder as TimelineFilterHeaderViewHolder).display(timelineFilter!!)
             }
             ITEM_VIEW_TYPE_GAP -> {
-                val status = getStatus(position)
+                val status = getStatusInternal(position, reuse = true)
                 val loading = gapLoadingIds.any { it.accountKey == status.account_key && it.id == status.id }
                 (holder as GapViewHolder).display(loading)
             }
@@ -442,7 +438,8 @@ abstract class ParcelableStatusesAdapter(
         return readStatusValueAction(getStatus(position, raw))
     }
 
-    private fun getStatus(position: Int, countIndex: Int, raw: Boolean = false): ParcelableStatus {
+    private fun getStatusInternal(position: Int, countIndex: Int = getItemCountIndex(position),
+            raw: Boolean = false, reuse: Boolean = true): ParcelableStatus {
         when (countIndex) {
             ITEM_INDEX_PINNED_STATUS -> {
                 return pinnedStatuses!![position - getItemStartPosition(ITEM_INDEX_PINNED_STATUS)]
@@ -451,10 +448,16 @@ abstract class ParcelableStatusesAdapter(
                 val data = this.data!!
                 val dataPosition = position - statusStartIndex
                 val positions = displayPositions
-                if (positions != null && !raw) {
-                    return data[positions[dataPosition]]
+                val listPosition = if (positions != null && !raw) {
+                    positions[dataPosition]
                 } else {
-                    return data[dataPosition]
+                    dataPosition
+                }
+                if (reuse && data is ObjectCursor) {
+                    reuseStatus.is_filtered = false
+                    return data.setInto(listPosition, reuseStatus)
+                } else {
+                    return data[listPosition]
                 }
             }
         }

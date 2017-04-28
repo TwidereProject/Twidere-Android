@@ -30,7 +30,7 @@ import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.util.getActivityStatus
+import org.mariotaku.twidere.model.util.activityStatus
 
 class MediaPreloader(val context: Context) {
 
@@ -51,7 +51,7 @@ class MediaPreloader(val context: Context) {
 
     fun preloadActivity(activity: ParcelableActivity) {
         if (!shouldPreload) return
-        activity.getActivityStatus()?.let { preloadStatus(it) }
+        activity.activityStatus?.let { preloadStatus(it) }
     }
 
     fun reloadOptions(preferences: SharedPreferences) {

@@ -175,7 +175,7 @@ class TwidereSQLiteOpenHelper(
         val table = Table(tableName)
         val deleteOld = SQLQueryBuilder.deleteFrom(table).where(Expression.and(
                 Expression.equals(Column(Statuses.ACCOUNT_KEY), Column(Table.NEW, Statuses.ACCOUNT_KEY)),
-                Expression.equals(Column(Statuses.STATUS_ID), Column(Table.NEW, Statuses.STATUS_ID))
+                Expression.equals(Column(Statuses.ID), Column(Table.NEW, Statuses.ID))
         )).build()
         return SQLQueryBuilder.createTrigger(false, true, triggerName)
                 .type(Type.BEFORE).event(Event.INSERT).on(table).forEachRow(true)

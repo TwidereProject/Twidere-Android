@@ -163,7 +163,7 @@ abstract class GetStatusesTask(
         }
         // Delete all rows conflicting before new data inserted.
         val accountWhere = Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY)
-        val statusWhere = Expression.inArgs(Columns.Column(Statuses.STATUS_ID),
+        val statusWhere = Expression.inArgs(Columns.Column(Statuses.ID),
                 statusIds.size)
         val deleteWhere = Expression.and(accountWhere, statusWhere).sql
         val deleteWhereArgs = arrayOf(accountKey.toString(), *statusIds)
@@ -193,7 +193,7 @@ abstract class GetStatusesTask(
                 val noGapValues = ContentValues()
                 noGapValues.put(Statuses.IS_GAP, false)
                 val noGapWhere = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
-                        Expression.equalsArgs(Statuses.STATUS_ID)).sql
+                        Expression.equalsArgs(Statuses.ID)).sql
                 val noGapWhereArgs = arrayOf(accountKey.toString(), maxId)
                 resolver.update(writeUri, noGapValues, noGapWhere, noGapWhereArgs)
             } else {

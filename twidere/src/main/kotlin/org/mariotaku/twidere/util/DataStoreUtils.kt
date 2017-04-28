@@ -134,8 +134,8 @@ object DataStoreUtils {
     }
 
     fun getNewestStatusIds(context: Context, uri: Uri, accountKeys: Array<UserKey?>): Array<String?> {
-        return getStringFieldArray(context, uri, accountKeys, Statuses.ACCOUNT_KEY, Statuses.STATUS_ID,
-                OrderBy(SQLFunctions.MAX(Statuses.STATUS_TIMESTAMP)), null, null)
+        return getStringFieldArray(context, uri, accountKeys, Statuses.ACCOUNT_KEY, Statuses.ID,
+                OrderBy(SQLFunctions.MAX(Statuses.TIMESTAMP)), null, null)
     }
 
     fun getNewestMessageIds(context: Context, uri: Uri, accountKeys: Array<UserKey?>, outgoing: Boolean): Array<String?> {
@@ -170,19 +170,19 @@ object DataStoreUtils {
 
     fun getNewestStatusSortIds(context: Context, uri: Uri, accountKeys: Array<UserKey?>): LongArray {
         return getLongFieldArray(context, uri, accountKeys, Statuses.ACCOUNT_KEY, Statuses.SORT_ID,
-                OrderBy(SQLFunctions.MAX(Statuses.STATUS_TIMESTAMP)), null, null)
+                OrderBy(SQLFunctions.MAX(Statuses.TIMESTAMP)), null, null)
     }
 
 
     fun getOldestStatusIds(context: Context, uri: Uri, accountKeys: Array<UserKey?>): Array<String?> {
-        return getStringFieldArray(context, uri, accountKeys, Statuses.ACCOUNT_KEY, Statuses.STATUS_ID,
-                OrderBy(SQLFunctions.MIN(Statuses.STATUS_TIMESTAMP)), null, null)
+        return getStringFieldArray(context, uri, accountKeys, Statuses.ACCOUNT_KEY, Statuses.ID,
+                OrderBy(SQLFunctions.MIN(Statuses.TIMESTAMP)), null, null)
     }
 
 
     fun getOldestStatusSortIds(context: Context, uri: Uri, accountKeys: Array<UserKey?>): LongArray {
         return getLongFieldArray(context, uri, accountKeys, Statuses.ACCOUNT_KEY, Statuses.SORT_ID,
-                OrderBy(SQLFunctions.MIN(Statuses.STATUS_TIMESTAMP)), null, null)
+                OrderBy(SQLFunctions.MIN(Statuses.TIMESTAMP)), null, null)
     }
 
     fun getNewestActivityMaxPositions(context: Context, uri: Uri, accountKeys: Array<UserKey?>,
@@ -457,9 +457,9 @@ object DataStoreUtils {
                 .from(Tables(Filters.Users.TABLE_NAME))
                 .build()
         val filteredUsersWhere = Expression.or(
-                Expression.`in`(Column(Table(table), Activities.STATUS_USER_KEY), filteredUsersQuery),
-                Expression.`in`(Column(Table(table), Activities.STATUS_RETWEETED_BY_USER_KEY), filteredUsersQuery),
-                Expression.`in`(Column(Table(table), Activities.STATUS_QUOTED_USER_KEY), filteredUsersQuery)
+                Expression.`in`(Column(Table(table), Activities.USER_KEY), filteredUsersQuery),
+                Expression.`in`(Column(Table(table), Activities.RETWEETED_BY_USER_KEY), filteredUsersQuery),
+                Expression.`in`(Column(Table(table), Activities.QUOTED_USER_KEY), filteredUsersQuery)
         )
         val filteredIdsQueryBuilder = SQLQueryBuilder
                 .select(Column(Table(table), Activities._ID))
@@ -469,27 +469,27 @@ object DataStoreUtils {
                 .select(Columns(Column(Table(table), Activities._ID)))
                 .from(Tables(table, Filters.Sources.TABLE_NAME))
                 .where(Expression.or(
-                        Expression.likeRaw(Column(Table(table), Activities.STATUS_SOURCE),
+                        Expression.likeRaw(Column(Table(table), Activities.SOURCE),
                                 "'%>'||${Filters.Sources.TABLE_NAME}.${Filters.Sources.VALUE}||'</a>%'"),
-                        Expression.likeRaw(Column(Table(table), Activities.STATUS_QUOTE_SOURCE),
+                        Expression.likeRaw(Column(Table(table), Activities.QUOTED_SOURCE),
                                 "'%>'||${Filters.Sources.TABLE_NAME}.${Filters.Sources.VALUE}||'</a>%'")
                 ))
                 .union()
                 .select(Columns(Column(Table(table), Activities._ID)))
                 .from(Tables(table, Filters.Keywords.TABLE_NAME))
                 .where(Expression.or(
-                        Expression.likeRaw(Column(Table(table), Activities.STATUS_TEXT_PLAIN),
+                        Expression.likeRaw(Column(Table(table), Activities.TEXT_PLAIN),
                                 "'%'||${Filters.Keywords.TABLE_NAME}.${Filters.Keywords.VALUE}||'%'"),
-                        Expression.likeRaw(Column(Table(table), Activities.STATUS_QUOTE_TEXT_PLAIN),
+                        Expression.likeRaw(Column(Table(table), Activities.QUOTED_TEXT_PLAIN),
                                 "'%'||${Filters.Keywords.TABLE_NAME}.${Filters.Keywords.VALUE}||'%'")
                 ))
                 .union()
                 .select(Columns(Column(Table(table), Activities._ID)))
                 .from(Tables(table, Filters.Links.TABLE_NAME))
                 .where(Expression.or(
-                        Expression.likeRaw(Column(Table(table), Activities.STATUS_SPANS),
+                        Expression.likeRaw(Column(Table(table), Activities.SPANS),
                                 "'%'||${Filters.Links.TABLE_NAME}.${Filters.Links.VALUE}||'%'"),
-                        Expression.likeRaw(Column(Table(table), Activities.STATUS_QUOTE_SPANS),
+                        Expression.likeRaw(Column(Table(table), Activities.QUOTED_SPANS),
                                 "'%'||${Filters.Links.TABLE_NAME}.${Filters.Links.VALUE}||'%'")
                 ))
         val filterExpression = Expression.or(
@@ -743,7 +743,7 @@ object DataStoreUtils {
             deleteWhere = Expression.and(
                     Expression.likeRaw(Column(Statuses.ACCOUNT_KEY), "'%@'||?"),
                     Expression.or(
-                            Expression.equalsArgs(Statuses.STATUS_ID),
+                            Expression.equalsArgs(Statuses.ID),
                             Expression.equalsArgs(Statuses.RETWEET_ID)
                     )).sql
             deleteWhereArgs = arrayOf(host, statusId, statusId)
@@ -754,7 +754,7 @@ object DataStoreUtils {
             updateWhereArgs = arrayOf(host, statusId)
         } else {
             deleteWhere = Expression.or(
-                    Expression.equalsArgs(Statuses.STATUS_ID),
+                    Expression.equalsArgs(Statuses.ID),
                     Expression.equalsArgs(Statuses.RETWEET_ID)
             ).sql
             deleteWhereArgs = arrayOf(statusId, statusId)
@@ -898,7 +898,7 @@ object DataStoreUtils {
         val resolver = context.contentResolver
         var status: ParcelableStatus? = null
         val where = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
-                Expression.equalsArgs(Statuses.STATUS_ID)).sql
+                Expression.equalsArgs(Statuses.ID)).sql
         val whereArgs = arrayOf(accountKey.toString(), statusId)
         for (uri in DataStoreUtils.STATUSES_URIS) {
             val cur = resolver.query(uri, Statuses.COLUMNS, where, whereArgs, null) ?: continue
@@ -925,7 +925,7 @@ object DataStoreUtils {
         val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
         val result = microBlog.showStatus(statusId)
         val where = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
-                Expression.equalsArgs(Statuses.STATUS_ID)).sql
+                Expression.equalsArgs(Statuses.ID)).sql
         val whereArgs = arrayOf(accountKey.toString(), statusId)
         val resolver = context.contentResolver
         val status = result.toParcelable(details)
