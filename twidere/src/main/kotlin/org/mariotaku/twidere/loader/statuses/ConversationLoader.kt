@@ -93,11 +93,11 @@ class ConversationLoader(
             AccountType.TWITTER -> {
                 val isOfficial = account.isOfficial(context)
                 canLoadAllReplies = isOfficial
-//                if (isOfficial) {
-//                    return microBlog.showConversation(status.id, paging).mapMicroBlogToPaginated {
-//                        it.toParcelable(account, profileImageSize)
-//                    }
-//                }
+                if (isOfficial) {
+                    return microBlog.showConversation(status.id, paging).mapMicroBlogToPaginated {
+                        it.toParcelable(account, profileImageSize)
+                    }
+                }
                 return showConversationCompat(microBlog, account, status, true)
             }
             AccountType.STATUSNET -> {

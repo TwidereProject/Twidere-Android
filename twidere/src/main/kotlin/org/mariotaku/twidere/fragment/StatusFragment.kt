@@ -48,9 +48,7 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.TextUtils
 import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
-import android.text.style.URLSpan
 import android.view.*
 import android.view.View.OnClickListener
 import android.widget.Space
@@ -188,31 +186,6 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             }
             adapter.loadMoreSupportedPosition = supportedPositions
             setConversation(data)
-            val canLoadAllReplies = loader.canLoadAllReplies
-            if (canLoadAllReplies) {
-                adapter.setReplyError(null)
-            } else {
-                val error = HtmlSpanBuilder.fromHtml(getString(R.string.cant_load_all_replies_message)).apply {
-                    val dialogSpan = getSpans(0, length, URLSpan::class.java).firstOrNull {
-                        "#dialog" == it.url
-                    }
-                    if (dialogSpan != null) {
-                        val spanStart = getSpanStart(dialogSpan)
-                        val spanEnd = getSpanEnd(dialogSpan)
-                        removeSpan(dialogSpan)
-                        setSpan(object : ClickableSpan() {
-                            override fun onClick(widget: View) {
-                                executeAfterFragmentResumed {
-                                    MessageDialogFragment.show(it.childFragmentManager,
-                                            message = getString(R.string.cant_load_all_replies_explanation),
-                                            tag = "cant_load_all_replies_explanation")
-                                }
-                            }
-                        }, spanStart, spanEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
-                    }
-                }
-                adapter.setReplyError(error)
-            }
             adapter.isConversationsLoading = false
             adapter.isRepliesLoading = false
         }
