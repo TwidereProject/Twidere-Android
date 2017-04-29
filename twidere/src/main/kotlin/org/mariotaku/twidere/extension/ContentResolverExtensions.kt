@@ -42,3 +42,7 @@ fun <T> ContentResolver.queryOne(uri: Uri, projection: Array<String>?, selection
         return@useCursor indices.newObject(cursor)
     }
 }
+
+fun <T : Any> ContentResolver.insertOne(uri: Uri, obj: T, cls: Class<T> = obj.javaClass): Uri? {
+    return this.insert(uri, ObjectCursor.valuesCreatorFrom(cls).create(obj))
+}

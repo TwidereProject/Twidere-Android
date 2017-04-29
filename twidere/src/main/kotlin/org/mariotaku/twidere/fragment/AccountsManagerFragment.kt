@@ -42,7 +42,6 @@ import org.mariotaku.twidere.loader.AccountDetailsLoader
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.AccountPreferences
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.IntentUtils
@@ -194,19 +193,11 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
         val statusValues = ContentValues().apply {
             put(Statuses.ACCOUNT_COLOR, details.color)
         }
-        val activityValues = ContentValues().apply {
-            put(Activities.ACCOUNT_COLOR, details.color)
-        }
         val statusesWhere = Expression.equalsArgs(Statuses.ACCOUNT_KEY)
         val statusesWhereArgs = arrayOf(details.key.toString())
-        val activitiesWhere = Expression.equalsArgs(Activities.ACCOUNT_KEY)
-        val activitiesWhereArgs = arrayOf(details.key.toString())
 
-        DataStoreUtils.STATUSES_URIS.forEach { uri ->
+        DataStoreUtils.STATUSES_ACTIVITIES_URIS.forEach { uri ->
             resolver.update(uri, statusValues, statusesWhere.sql, statusesWhereArgs)
-        }
-        DataStoreUtils.ACTIVITIES_URIS.forEach { uri ->
-            resolver.update(uri, activityValues, activitiesWhere.sql, activitiesWhereArgs)
         }
     }
 

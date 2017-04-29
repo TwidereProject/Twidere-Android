@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.database.Cursor
 import android.net.Uri
+import android.provider.BaseColumns
 import android.support.annotation.WorkerThread
 import android.support.v4.util.LongSparseArray
 import org.mariotaku.kpreferences.get
@@ -160,7 +161,8 @@ fun ContentResolver.deleteActivityStatus(accountKey: UserKey, statusId: String,
     }
     for (uri in ACTIVITIES_URIS) {
         delete(uri, deleteWhere, deleteWhereArgs)
-        updateActivity(uri, updateWhere, updateWhereArgs) { activity ->
+        updateItems(uri, Activities.COLUMNS, updateWhere, updateWhereArgs,
+                ParcelableActivity::class.java) { activity ->
             activity.my_retweet_id = null
             if (statusId == activity.id || statusId == activity.retweet_id ||
                     statusId == activity.my_retweet_id) {
@@ -175,8 +177,8 @@ fun ContentResolver.deleteActivityStatus(accountKey: UserKey, statusId: String,
     }
 }
 
-fun ContentResolver.updateActivityStatus(accountKey: UserKey, statusId: String,
-        action: (ParcelableActivity) -> Unit) {
+fun <T : ParcelableStatus> ContentResolver.updateStatusInfo(uris: Array<Uri>, columns: Array<String>?,
+        accountKey: UserKey, statusId: String, cls: Class<T>, action: (T) -> Unit) {
     val activityWhere = Expression.and(
             Expression.equalsArgs(Activities.ACCOUNT_KEY),
             Expression.or(
@@ -185,25 +187,24 @@ fun ContentResolver.updateActivityStatus(accountKey: UserKey, statusId: String,
             )
     ).sql
     val activityWhereArgs = arrayOf(accountKey.toString(), statusId, statusId)
-    for (uri in ACTIVITIES_URIS) {
-        updateActivity(uri, activityWhere, activityWhereArgs, action)
+    for (uri in uris) {
+        updateItems(uri, columns, activityWhere, activityWhereArgs, cls, action)
     }
 }
 
-
 @WorkerThread
-fun ContentResolver.updateActivity(uri: Uri, where: String?,
-        whereArgs: Array<String>?, action: (ParcelableActivity) -> Unit) {
-    val c = query(uri, Activities.COLUMNS, where, whereArgs, null) ?: return
+fun <T> ContentResolver.updateItems(uri: Uri, columns: Array<String>?, where: String?,
+        whereArgs: Array<String>?, cls: Class<T>, action: (T) -> Unit) {
+    val c = query(uri, columns, where, whereArgs, null) ?: return
     val values = LongSparseArray<ContentValues>()
     try {
-        val ci = ObjectCursor.indicesFrom(c, ParcelableActivity::class.java)
-        val vc = ObjectCursor.valuesCreatorFrom(ParcelableActivity::class.java)
+        val ci = ObjectCursor.indicesFrom(c, cls)
+        val vc = ObjectCursor.valuesCreatorFrom(cls)
         c.moveToFirst()
         while (!c.isAfterLast) {
-            val activity = ci.newObject(c)
-            action(activity)
-            values.put(activity._id, vc.create(activity))
+            val item = ci.newObject(c)
+            action(item)
+            values.put(c.getLong(ci[BaseColumns._ID]), vc.create(item))
             c.moveToNext()
         }
     } catch (e: IOException) {
@@ -212,7 +213,7 @@ fun ContentResolver.updateActivity(uri: Uri, where: String?,
         c.close()
     }
     for (i in 0 until values.size()) {
-        val updateWhere = Expression.equals(Activities._ID, values.keyAt(i)).sql
+        val updateWhere = Expression.equals(BaseColumns._ID, values.keyAt(i)).sql
         update(uri, values.valueAt(i), updateWhere, null)
     }
 }

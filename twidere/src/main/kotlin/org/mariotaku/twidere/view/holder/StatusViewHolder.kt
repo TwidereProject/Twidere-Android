@@ -419,14 +419,13 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
         if (twitter.isDestroyingStatus(status.account_key, status.my_retweet_id)) {
             retweetIcon.isActivated = false
-            retweetCount = Math.max(0, status.retweet_count - 1)
         } else {
             val creatingRetweet = RetweetStatusTask.isCreatingRetweet(status.account_key, status.id)
             retweetIcon.isActivated = creatingRetweet || status.retweeted ||
                     Utils.isMyRetweet(status.account_key, status.retweeted_by_user_key,
                             status.my_retweet_id)
-            retweetCount = status.retweet_count + if (creatingRetweet) 1 else 0
         }
+        retweetCount = status.retweet_count
 
         if (retweetCount > 0) {
             retweetCountView.text = UnitConvertUtils.calculateProperCount(retweetCount)
@@ -437,12 +436,11 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         }
         if (DestroyFavoriteTask.isDestroyingFavorite(status.account_key, status.id)) {
             favoriteIcon.isActivated = false
-            favoriteCount = Math.max(0, status.favorite_count - 1)
         } else {
             val creatingFavorite = CreateFavoriteTask.isCreatingFavorite(status.account_key, status.id)
             favoriteIcon.isActivated = creatingFavorite || status.is_favorite
-            favoriteCount = status.favorite_count + if (creatingFavorite) 1 else 0
         }
+        favoriteCount = status.favorite_count
         if (favoriteCount > 0) {
             favoriteCountView.text = UnitConvertUtils.calculateProperCount(favoriteCount)
             favoriteCountView.visibility = View.VISIBLE

@@ -17,7 +17,8 @@ import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
-import org.mariotaku.twidere.provider.TwidereDataStore.*
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships
+import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.Utils
 
@@ -53,18 +54,10 @@ open class CreateUserBlockTask(
     override fun succeededWorker(details: AccountDetails, args: Arguments, user: ParcelableUser) {
         val resolver = context.contentResolver
         Utils.setLastSeen(context, args.userKey, -1)
-        for (uri in DataStoreUtils.STATUSES_URIS) {
+        for (uri in DataStoreUtils.STATUSES_ACTIVITIES_URIS) {
             val where = Expression.and(
                     Expression.equalsArgs(Statuses.ACCOUNT_KEY),
                     Expression.equalsArgs(Statuses.USER_KEY)
-            )
-            val whereArgs = arrayOf(args.accountKey.toString(), args.userKey.toString())
-            resolver.delete(uri, where.sql, whereArgs)
-        }
-        for (uri in DataStoreUtils.ACTIVITIES_URIS) {
-            val where = Expression.and(
-                    Expression.equalsArgs(Activities.ACCOUNT_KEY),
-                    Expression.equalsArgs(Activities.USER_KEY)
             )
             val whereArgs = arrayOf(args.accountKey.toString(), args.userKey.toString())
             resolver.delete(uri, where.sql, whereArgs)

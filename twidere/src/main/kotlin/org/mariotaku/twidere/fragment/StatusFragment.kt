@@ -2103,10 +2103,11 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                                 Expression.equalsArgs(Statuses.RETWEET_ID)))
                 val statusWhereArgs = arrayOf(accountKey.toString(), statusId, statusId)
                 cr.update(Statuses.CONTENT_URI, countValues, statusWhere.sql, statusWhereArgs)
-                cr.updateActivityStatus(accountKey, statusId) { activity ->
-                    activity.favorite_count = activitySummary.favoriteCount
-                    activity.reply_count = activitySummary.replyCount
-                    activity.retweet_count = activitySummary.retweetCount
+                cr.updateStatusInfo(DataStoreUtils.STATUSES_ACTIVITIES_URIS, Statuses.COLUMNS,
+                        accountKey, statusId, ParcelableStatus::class.java) { item ->
+                    item.favorite_count = activitySummary.favoriteCount
+                    item.reply_count = activitySummary.replyCount
+                    item.retweet_count = activitySummary.retweetCount
                 }
                 val pStatus = status.toParcelable(details)
                 cr.insert(CachedStatuses.CONTENT_URI, ObjectCursor

@@ -1,13 +1,11 @@
 package org.mariotaku.twidere.task
 
-import android.content.ContentValues
 import android.content.Context
 import android.widget.Toast
 import org.apache.commons.collections.primitives.ArrayIntList
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.mastodon.Mastodon
-import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.getErrorMessage
@@ -23,7 +21,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.AsyncTwitterWrapper.Companion.calculateHashCode
 import org.mariotaku.twidere.util.DataStoreUtils
-import org.mariotaku.twidere.util.updateActivityStatus
+import org.mariotaku.twidere.util.updateStatusInfo
 
 /**
  * Created by mariotaku on 2017/2/7.
@@ -50,26 +48,12 @@ class DestroyFavoriteTask(
             }
         }
 
-        val values = ContentValues()
-        values.put(Statuses.IS_FAVORITE, false)
-        values.put(Statuses.FAVORITE_COUNT, result.favorite_count - 1)
-        values.put(Statuses.RETWEET_COUNT, result.retweet_count)
-        values.put(Statuses.REPLY_COUNT, result.reply_count)
-
-        val where = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
-                Expression.or(Expression.equalsArgs(Statuses.ID),
-                        Expression.equalsArgs(Statuses.RETWEET_ID)))
-        val whereArgs = arrayOf(accountKey.toString(), statusId, statusId)
-        for (uri in DataStoreUtils.STATUSES_URIS) {
-            resolver.update(uri, values, where.sql, whereArgs)
-        }
-
-        resolver.updateActivityStatus(account.key, statusId) { activity ->
-            if (result.id != activity.id) return@updateActivityStatus
-            activity.is_favorite = false
-            activity.reply_count = result.reply_count
-            activity.retweet_count = result.retweet_count
-            activity.favorite_count = result.favorite_count - 1
+        resolver.updateStatusInfo(DataStoreUtils.STATUSES_ACTIVITIES_URIS, Statuses.COLUMNS,
+                account.key, statusId, ParcelableStatus::class.java) { item ->
+            item.is_favorite = false
+            item.reply_count = result.reply_count
+            item.retweet_count = result.retweet_count
+            item.favorite_count = result.favorite_count - 1
         }
         return result
 

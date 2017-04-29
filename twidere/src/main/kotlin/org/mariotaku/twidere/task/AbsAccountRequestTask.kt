@@ -22,12 +22,17 @@ package org.mariotaku.twidere.task
 import android.accounts.AccountManager
 import android.content.Context
 import android.widget.Toast
+import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.extension.getErrorMessage
+import org.mariotaku.twidere.extension.insertOne
 import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
+import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
+import org.mariotaku.twidere.task.twitter.UpdateStatusTask
 
 /**
  * Created by mariotaku on 2017/4/20.
@@ -41,13 +46,32 @@ abstract class AbsAccountRequestTask<Params, Result, Callback>(context: Context,
         val am = AccountManager.get(context)
         val account = accountKey?.let { AccountUtils.getAccountDetails(am, it, true) } ?:
                 throw AccountNotFoundException()
+        val draft = createDraft()
+        var draftId = -1L
+        if (draft != null) {
+            val uri = context.contentResolver.insertOne(Drafts.CONTENT_URI, draft)
+            draftId = uri?.lastPathSegment.toLongOr(-1)
+        }
+        if (draftId != -1L) {
+            microBlogWrapper.addSendingDraftId(draftId)
+        }
         try {
             val result = onExecute(account, params)
             onCleanup(account, params, result, null)
+            if (draftId != -1L) {
+                UpdateStatusTask.deleteDraft(context, draftId)
+            }
             return result
         } catch (e: MicroBlogException) {
             onCleanup(account, params, null, e)
+            if (draftId != 1L && deleteDraftOnException(account, params, e)) {
+                UpdateStatusTask.deleteDraft(context, draftId)
+            }
             throw e
+        } finally {
+            if (draftId != -1L) {
+                microBlogWrapper.removeSendingDraftId(draftId)
+            }
         }
     }
 
@@ -63,6 +87,10 @@ abstract class AbsAccountRequestTask<Params, Result, Callback>(context: Context,
 
     protected open fun onCleanup(account: AccountDetails, params: Params, result: Result) {}
     protected open fun onCleanup(account: AccountDetails, params: Params, exception: MicroBlogException) {}
+
+    protected open fun createDraft(): Draft? = null
+
+    protected open fun deleteDraftOnException(account: AccountDetails, params: Params, exception: MicroBlogException): Boolean = false
 
     override fun onException(callback: Callback?, exception: MicroBlogException) {
         Toast.makeText(context, exception.getErrorMessage(context), Toast.LENGTH_SHORT).show()
