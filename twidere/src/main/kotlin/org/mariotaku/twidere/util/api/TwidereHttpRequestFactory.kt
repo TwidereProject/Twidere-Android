@@ -49,8 +49,8 @@ class TwidereHttpRequestFactory(
             headers.add("Authorization", RestFuUtils.sanitizeHeader(authorization.getHeader(endpoint, info)))
         }
         if (extraHeaders != null) {
-            for (pair in extraHeaders.get()) {
-                headers.add(pair.first, RestFuUtils.sanitizeHeader(pair.second))
+            for ((first, second) in extraHeaders.get(info.headers)) {
+                headers.add(first, RestFuUtils.sanitizeHeader(second))
             }
         }
         return HttpRequest(restMethod, url, headers, info.getBody(converterFactory), null)

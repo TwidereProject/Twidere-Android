@@ -17,19 +17,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util.api
+package org.mariotaku.twidere.extension.restfu
 
 import org.mariotaku.restfu.http.MultiValueMap
-import org.mariotaku.twidere.extension.restfu.contains
-import org.mariotaku.twidere.util.MicroBlogAPIFactory
 
 /**
- * Created by mariotaku on 2017/2/25.
+ * Created by mariotaku on 2017/4/29.
  */
-class UserAgentExtraHeaders(val userAgent: String?) : MicroBlogAPIFactory.ExtraHeaders {
 
-    override fun get(headers: MultiValueMap<String>): List<Pair<String, String>> {
-        if (userAgent == null || "User-Agent" in headers) return emptyList()
-        return listOf(Pair("User-Agent", userAgent))
-    }
+operator fun <T> MultiValueMap<T>.contains(key: String): Boolean {
+    return getFirst(key) != null
 }

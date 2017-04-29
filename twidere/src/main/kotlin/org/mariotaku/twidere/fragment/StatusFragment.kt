@@ -84,6 +84,7 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.annotation.ProfileImageSize
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
@@ -187,7 +188,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             }
             adapter.loadMoreSupportedPosition = supportedPositions
             setConversation(data)
-            val canLoadAllReplies = loader.canLoadAllReplies()
+            val canLoadAllReplies = loader.canLoadAllReplies
             if (canLoadAllReplies) {
                 adapter.setReplyError(null)
             } else {
@@ -884,8 +885,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             nameView.updateText(formatter)
 
             adapter.requestManager.loadProfileImage(context, status, adapter.profileImageStyle,
-                    itemView.profileImage.cornerRadius, itemView.profileImage.cornerRadiusRatio)
-                    .into(itemView.profileImage)
+                    itemView.profileImage.cornerRadius, itemView.profileImage.cornerRadiusRatio,
+                    size = ProfileImageSize.ORIGINAL).into(itemView.profileImage)
 
             val typeIconRes = Utils.getUserTypeIconRes(status.user_is_verified, status.user_is_protected)
             val typeDescriptionRes = Utils.getUserTypeDescriptionRes(status.user_is_verified, status.user_is_protected)

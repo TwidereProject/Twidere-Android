@@ -35,14 +35,18 @@ import org.mariotaku.ktextension.useCursor
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.sqliteqb.library.*
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.query.SQLSelectQuery
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.databaseItemLimitKey
 import org.mariotaku.twidere.extension.model.*
+import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.rawQuery
 import org.mariotaku.twidere.model.*
@@ -919,16 +923,24 @@ object DataStoreUtils {
     @Throws(MicroBlogException::class)
     fun findStatus(context: Context, accountKey: UserKey, statusId: String): ParcelableStatus {
         val cached = findStatusInDatabases(context, accountKey, statusId)
+        val profileImageSize = context.getString(R.string.profile_image_size)
         if (cached != null) return cached
         val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey,
                 true) ?: throw MicroBlogException("No account")
-        val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
-        val result = microBlog.showStatus(statusId)
+        val status = when (details.type) {
+            AccountType.MASTODON -> {
+                val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
+                mastodon.fetchStatus(statusId).toParcelable(details)
+            }
+            else -> {
+                val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
+                microBlog.showStatus(statusId).toParcelable(details, profileImageSize)
+            }
+        }
         val where = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
                 Expression.equalsArgs(Statuses.ID)).sql
         val whereArgs = arrayOf(accountKey.toString(), statusId)
         val resolver = context.contentResolver
-        val status = result.toParcelable(details)
         resolver.delete(CachedStatuses.CONTENT_URI, where, whereArgs)
         resolver.insert(CachedStatuses.CONTENT_URI, ObjectCursor.valuesCreatorFrom(ParcelableStatus::class.java).create(status))
         return status

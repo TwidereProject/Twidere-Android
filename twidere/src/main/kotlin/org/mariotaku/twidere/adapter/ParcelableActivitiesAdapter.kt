@@ -23,9 +23,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.database.Cursor
 import android.database.CursorIndexOutOfBoundsException
-import android.support.v4.util.LongSparseArray
 import android.support.v4.widget.Space
 import android.support.v7.widget.RecyclerView
+import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -133,7 +133,7 @@ class ParcelableActivitiesAdapter(
     private var filteredUserKeys: Array<UserKey>? = null
     private val gapLoadingIds: MutableSet<ObjectId> = HashSet()
     private val reuseActivity = ParcelableActivity()
-    private val filterIdCache = LongSparseArray<Array<UserKey>?>()
+    private val filterIdCache = SparseArray<Array<UserKey>?>()
 
     init {
         eventListener = EventListener(this)
@@ -241,6 +241,8 @@ class ParcelableActivitiesAdapter(
             }
             ITEM_VIEW_TYPE_TITLE_SUMMARY -> {
                 val activity = getActivityInternal(position, raw = false, reuse = true)
+                activity.after_filtered_source_keys = getAfterFilteredSourceKeys(position, false,
+                        activity.source_keys)
                 (holder as ActivityTitleSummaryViewHolder).displayActivity(activity)
             }
             ITEM_VIEW_TYPE_STUB -> {
@@ -274,12 +276,10 @@ class ParcelableActivitiesAdapter(
                     Activity.Action.FAVORITED_MEDIA_TAGGED, Activity.Action.JOINED_TWITTER -> {
                         if (mentionsOnly) return ITEM_VIEW_TYPE_EMPTY
                         filteredUserKeys?.let {
-                            // ParcelableActivityUtils.initAfterFilteredSourceIds(activity, it, followingOnly)
-                            // filterIdCache[activity._id] = activity.after_filtered_source_ids
-                            // val sourceIds = activity.after_filtered_source_keys
-                            // if (sourceIds != null && sourceIds.isEmpty()) {
-                            //     return ITEM_VIEW_TYPE_EMPTY
-                            // }
+                            val afterFiltered = getAfterFilteredSourceKeys(position, false)
+                            if (afterFiltered != null && afterFiltered.isEmpty()) {
+                                return ITEM_VIEW_TYPE_EMPTY
+                            }
                         }
                         return ITEM_VIEW_TYPE_TITLE_SUMMARY
                     }
@@ -347,6 +347,15 @@ class ParcelableActivitiesAdapter(
         }, defValue = -1L, raw = raw)
     }
 
+
+    fun getSourceKeys(adapterPosition: Int, raw: Boolean = false): Array<UserKey>? {
+        return getFieldValue(adapterPosition, readCursorValueAction = { cursor, indices ->
+            cursor.getString(indices[Activities.SOURCE_KEYS])?.let(UserKey::arrayOf)
+        }, readStatusValueAction = { activity ->
+            activity.source_keys
+        }, defValue = null, raw = raw)
+    }
+
     fun getData(): List<ParcelableActivity>? {
         return data
     }
@@ -355,7 +364,6 @@ class ParcelableActivitiesAdapter(
         itemCounts[0] = getActivityCount(false)
         itemCounts[1] = if (ILoadMoreSupportAdapter.END in loadMoreIndicatorPosition) 1 else 0
     }
-
 
     private fun getActivityInternal(position: Int, raw: Boolean, reuse: Boolean): ParcelableActivity {
         val dataPosition = position - activityStartIndex
@@ -375,6 +383,19 @@ class ParcelableActivitiesAdapter(
         }
     }
 
+    private fun getAfterFilteredSourceKeys(position: Int, raw: Boolean,
+            sourceKeys: Array<UserKey>? = getSourceKeys(position, raw)): Array<UserKey>? {
+        return filterIdCache[position] ?: run {
+            val allFiltered = filteredUserKeys
+            val keys = if (allFiltered != null) {
+                sourceKeys?.filterNot { it in allFiltered }?.toTypedArray()
+            } else {
+                sourceKeys
+            }
+            filterIdCache.put(position, keys)
+            return@run keys
+        }
+    }
 
     private inline fun <T> getFieldValue(position: Int,
             readCursorValueAction: (cursor: Cursor, indices: ObjectCursor.CursorIndices<ParcelableActivity>) -> T,

@@ -45,15 +45,12 @@ object ParcelableActivityUtils {
     }
 
     fun getAfterFilteredSources(activity: ParcelableActivity): Array<ParcelableLiteUser> {
-        if (activity.after_filtered_sources != null) return activity.after_filtered_sources
-        if (activity.after_filtered_source_keys == null || activity.sources.size == activity.after_filtered_source_keys.size) {
-            return activity.sources_lite
-        }
-        val result = Array(activity.after_filtered_source_keys.size) { idx ->
-            return@Array activity.sources_lite.find { it.key == activity.after_filtered_source_keys[idx] }!!
-        }
-        activity.after_filtered_sources = result
-        return result
+        val sources = activity.sources_lite ?: return emptyArray()
+        val afterFilteredKeys = activity.after_filtered_source_keys?.takeIf {
+            it.size != sources.size
+        } ?: return sources
+        return sources.filter { it.key in afterFilteredKeys }.toTypedArray()
+
     }
 
 
