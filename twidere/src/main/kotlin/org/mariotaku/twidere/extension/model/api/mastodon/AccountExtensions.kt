@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.extension.model.api.mastodon
 
 import org.mariotaku.microblog.library.mastodon.model.Account
+import org.mariotaku.microblog.library.mastodon.model.Relationship
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.api.isHtml
 import org.mariotaku.twidere.extension.model.api.spanItems
@@ -34,13 +35,15 @@ import org.mariotaku.twidere.util.emoji.EmojioneTranslator
  * Created by mariotaku on 2017/4/18.
  */
 
-fun Account.toParcelable(details: AccountDetails, position: Long = 0): ParcelableUser {
-    return toParcelable(details.key, position).apply {
+fun Account.toParcelable(details: AccountDetails, position: Long = 0,
+        relationship: Relationship? = null): ParcelableUser {
+    return toParcelable(details.key, position, relationship).apply {
         account_color = details.color
     }
 }
 
-fun Account.toParcelable(accountKey: UserKey, position: Long = 0): ParcelableUser {
+fun Account.toParcelable(accountKey: UserKey, position: Long = 0,
+        relationship: Relationship? = null): ParcelableUser {
     val obj = ParcelableUser()
     obj.position = position
     obj.account_key = accountKey
@@ -68,6 +71,17 @@ fun Account.toParcelable(accountKey: UserKey, position: Long = 0): ParcelableUse
     obj.listed_count = -1
     obj.media_count = -1
     obj.user_type = AccountType.MASTODON
+
+    val extras = ParcelableUser.Extras()
+
+    if (relationship != null && relationship.id == id) {
+        obj.is_following = relationship.isFollowing
+        obj.is_follow_request_sent = relationship.isRequested
+        extras.followed_by = relationship.isFollowedBy
+        extras.muting = relationship.isMuting
+        extras.blocking = relationship.isBlocking
+    }
+
     return obj
 }
 

@@ -101,7 +101,7 @@ public class ParcelableActivity extends ParcelableStatus implements Parcelable {
     @JsonField(name = "has_following_source")
     public boolean has_following_source = true;
 
-    public transient UserKey[] after_filtered_source_keys;
+    public transient ParcelableLiteUser[] after_filtered_sources;
 
     public ParcelableActivity() {
     }

@@ -21,11 +21,9 @@ package org.mariotaku.twidere.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.database.Cursor
 import android.database.CursorIndexOutOfBoundsException
 import android.support.v4.widget.Space
 import android.support.v7.widget.RecyclerView
-import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,9 +45,11 @@ import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.fragment.CursorActivitiesFragment
 import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.model.util.ParcelableActivityUtils
 import org.mariotaku.twidere.model.util.activityStatus
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.util.IntentUtils
+import org.mariotaku.twidere.util.JsonSerializer
 import org.mariotaku.twidere.util.OnLinkClickHandler
 import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.view.holder.*
@@ -133,45 +133,27 @@ class ParcelableActivitiesAdapter(
     private var filteredUserKeys: Array<UserKey>? = null
     private val gapLoadingIds: MutableSet<ObjectId> = HashSet()
     private val reuseActivity = ParcelableActivity()
-    private val filterIdCache = SparseArray<Array<UserKey>?>()
+    private var infoCache: Array<ActivityInfo?>? = null
 
     init {
         eventListener = EventListener(this)
         statusAdapterDelegate.updateOptions()
+        setHasStableIds(true)
     }
 
     override fun isGapItem(position: Int): Boolean {
-        val dataPosition = position - activityStartIndex
-        val activityCount = getActivityCount(false)
-        if (dataPosition < 0 || dataPosition >= activityCount) return false
-        // Don't show gap if it's last item
-        if (dataPosition == activityCount - 1) {
-            return false
-        }
-        if (data is ObjectCursor) {
-            val cursor = (data as ObjectCursor).cursor
-            if (!cursor.moveToPosition(dataPosition)) return false
-            val indices = (data as ObjectCursor).indices
-            return cursor.getInt(indices[Activities.IS_GAP]) == 1
-        }
-        return data!![dataPosition].is_gap
+        return getFieldValue(position, readInfoValueAction = {
+            it.gap
+        }, readStatusValueAction = { activity ->
+            activity.is_gap
+        }, defValue = false, raw = false)
     }
 
     override fun getItemId(position: Int): Long {
         val countIndex = itemCounts.getItemCountIndex(position)
         when (countIndex) {
             ITEM_INDEX_ACTIVITY -> {
-                return getFieldValue(position, readCursorValueAction = { cursor, indices ->
-                    val accountKey = UserKey.valueOf(cursor.getString(indices[Activities.ACCOUNT_KEY]))
-                    val timestamp = cursor.getLong(indices[Activities.TIMESTAMP])
-                    val maxPosition = cursor.getLong(indices[Activities.MAX_SORT_POSITION])
-                    val minPosition = cursor.getLong(indices[Activities.MIN_SORT_POSITION])
-                    ParcelableActivity.calculateHashCode(accountKey, timestamp, maxPosition,
-                            minPosition)
-                }, readStatusValueAction = { activity ->
-                    ParcelableActivity.calculateHashCode(activity.account_key, activity.timestamp,
-                            activity.max_sort_position, activity.min_sort_position)
-                }, defValue = -1, raw = false).toLong()
+                return getRowId(position, false)
             }
             else -> {
                 return (countIndex.toLong() shl 32) or getItemViewType(position).toLong()
@@ -193,6 +175,7 @@ class ParcelableActivitiesAdapter(
             filteredUserKeys = data.filteredUserIds
         }
         this.data = data
+        infoCache = if (data != null) arrayOfNulls(data.size) else null
         gapLoadingIds.clear()
         updateItemCount()
         notifyDataSetChanged()
@@ -241,8 +224,8 @@ class ParcelableActivitiesAdapter(
             }
             ITEM_VIEW_TYPE_TITLE_SUMMARY -> {
                 val activity = getActivityInternal(position, raw = false, reuse = true)
-                activity.after_filtered_source_keys = getAfterFilteredSourceKeys(position, false,
-                        activity.source_keys)
+                val sources = getAfterFilteredSources(position, false)
+                activity.after_filtered_sources = sources
                 (holder as ActivityTitleSummaryViewHolder).displayActivity(activity)
             }
             ITEM_VIEW_TYPE_STUB -> {
@@ -275,11 +258,9 @@ class ParcelableActivitiesAdapter(
                     Activity.Action.MEDIA_TAGGED, Activity.Action.RETWEETED_MEDIA_TAGGED,
                     Activity.Action.FAVORITED_MEDIA_TAGGED, Activity.Action.JOINED_TWITTER -> {
                         if (mentionsOnly) return ITEM_VIEW_TYPE_EMPTY
-                        filteredUserKeys?.let {
-                            val afterFiltered = getAfterFilteredSourceKeys(position, false)
-                            if (afterFiltered != null && afterFiltered.isEmpty()) {
-                                return ITEM_VIEW_TYPE_EMPTY
-                            }
+                        val afterFiltered = getAfterFilteredSources(position, false)
+                        if (afterFiltered != null && afterFiltered.isEmpty()) {
+                            return ITEM_VIEW_TYPE_EMPTY
                         }
                         return ITEM_VIEW_TYPE_TITLE_SUMMARY
                     }
@@ -324,36 +305,27 @@ class ParcelableActivitiesAdapter(
     }
 
     fun getTimestamp(adapterPosition: Int, raw: Boolean = false): Long {
-        return getFieldValue(adapterPosition, readCursorValueAction = { cursor, indices ->
-            cursor.safeGetLong(indices[Activities.TIMESTAMP])
+        return getFieldValue(adapterPosition, readInfoValueAction = {
+            it.timestamp
         }, readStatusValueAction = { activity ->
             activity.timestamp
         }, defValue = -1, raw = raw)
     }
 
     fun getAction(adapterPosition: Int, raw: Boolean = false): String? {
-        return getFieldValue(adapterPosition, readCursorValueAction = { cursor, indices ->
-            cursor.getString(indices[Activities.ACTION])
+        return getFieldValue(adapterPosition, readInfoValueAction = {
+            it.action
         }, readStatusValueAction = { activity ->
             activity.action
         }, defValue = null, raw = raw)
     }
 
     fun getRowId(adapterPosition: Int, raw: Boolean = false): Long {
-        return getFieldValue(adapterPosition, readCursorValueAction = { cursor, indices ->
-            cursor.safeGetLong(indices[Activities._ID])
+        return getFieldValue(adapterPosition, readInfoValueAction = {
+            it._id
         }, readStatusValueAction = { activity ->
-            activity._id
+            activity.hashCode().toLong()
         }, defValue = -1L, raw = raw)
-    }
-
-
-    fun getSourceKeys(adapterPosition: Int, raw: Boolean = false): Array<UserKey>? {
-        return getFieldValue(adapterPosition, readCursorValueAction = { cursor, indices ->
-            cursor.getString(indices[Activities.SOURCE_KEYS])?.let(UserKey::arrayOf)
-        }, readStatusValueAction = { activity ->
-            activity.source_keys
-        }, defValue = null, raw = raw)
     }
 
     fun getData(): List<ParcelableActivity>? {
@@ -375,41 +347,53 @@ class ParcelableActivitiesAdapter(
         val data = this.data!!
         if (reuse && data is ObjectCursor) {
             val activity = data.setInto(dataPosition, reuseActivity)
-//            activity.after_filtered_source_ids = filterIdCache[activity._id]
-//            activity.after_filtered_sources = null
+            activity.after_filtered_sources = null
             return activity
         } else {
             return data[dataPosition]
         }
     }
 
-    private fun getAfterFilteredSourceKeys(position: Int, raw: Boolean,
-            sourceKeys: Array<UserKey>? = getSourceKeys(position, raw)): Array<UserKey>? {
-        return filterIdCache[position] ?: run {
-            val allFiltered = filteredUserKeys
-            val keys = if (allFiltered != null) {
-                sourceKeys?.filterNot { it in allFiltered }?.toTypedArray()
-            } else {
-                sourceKeys
-            }
-            filterIdCache.put(position, keys)
-            return@run keys
-        }
+    private fun getAfterFilteredSources(position: Int, raw: Boolean): Array<ParcelableLiteUser>? {
+        return getFieldValue(position, readInfoValueAction = {
+            it.filteredSources
+        }, readStatusValueAction = lambda2@ { activity ->
+            if (activity.after_filtered_sources != null) return@lambda2 activity.after_filtered_sources
+            val sources = ParcelableActivityUtils.filterSources(activity.sources_lite,
+                    filteredUserKeys, followingOnly)
+            activity.after_filtered_sources = sources
+            return@lambda2 sources
+        }, defValue = null, raw = raw)
     }
 
     private inline fun <T> getFieldValue(position: Int,
-            readCursorValueAction: (cursor: Cursor, indices: ObjectCursor.CursorIndices<ParcelableActivity>) -> T,
+            readInfoValueAction: (ActivityInfo) -> T,
             readStatusValueAction: (status: ParcelableActivity) -> T,
             defValue: T, raw: Boolean = false): T {
+        val data = data
         if (data is ObjectCursor) {
             val dataPosition = position - activityStartIndex
             if (dataPosition < 0 || dataPosition >= getActivityCount(true)) {
                 throw CursorIndexOutOfBoundsException("index: $position, valid range is $0..${getActivityCount(true)}")
             }
-            val cursor = (data as ObjectCursor).cursor
+            val cursor = data.cursor
             if (!cursor.safeMoveToPosition(dataPosition)) return defValue
-            val indices = (data as ObjectCursor).indices
-            return readCursorValueAction(cursor, indices)
+            val indices = data.indices
+            val info = infoCache?.get(dataPosition) ?: run {
+                val _id = cursor.safeGetLong(indices[Activities._ID])
+                val timestamp = cursor.safeGetLong(indices[Activities.TIMESTAMP])
+                val action = cursor.getString(indices[Activities.ACTION])
+                val gap = cursor.getInt(indices[Activities.IS_GAP]) == 1
+                val sources = cursor.getString(indices[Activities.SOURCES_LITE])?.let {
+                    JsonSerializer.parseArray(it, ParcelableLiteUser::class.java)
+                }
+                val filteredSources = ParcelableActivityUtils.filterSources(sources, filteredUserKeys,
+                        followingOnly)
+                val newInfo = ActivityInfo(_id, timestamp, gap, action, filteredSources)
+                infoCache?.set(dataPosition, newInfo)
+                return@run newInfo
+            }
+            return readInfoValueAction(info)
         }
         return readStatusValueAction(getActivityInternal(position, raw, false))
     }
@@ -513,6 +497,14 @@ class ParcelableActivitiesAdapter(
             adapter.activityAdapterListener?.onStatusMenuClick(holder as StatusViewHolder, menuView, position)
         }
     }
+
+    data class ActivityInfo(
+            val _id: Long,
+            val timestamp: Long,
+            val gap: Boolean,
+            val action: String,
+            val filteredSources: Array<ParcelableLiteUser>?
+    )
 
     companion object {
         const val ITEM_VIEW_TYPE_STUB = 0

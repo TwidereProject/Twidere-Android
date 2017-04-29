@@ -207,9 +207,9 @@ class ContentNotificationManager(
                 if (FilterQueryBuilder.isFiltered(cr, activity)) {
                     return@forEachRow false
                 }
-                ParcelableActivityUtils.initAfterFilteredSourceIds(activity, filteredUserKeys,
-                        pref.isNotificationFollowingOnly)
-                val sources = ParcelableActivityUtils.getAfterFilteredSources(activity)
+                val sources = ParcelableActivityUtils.filterSources(activity.sources_lite,
+                        filteredUserKeys, pref.isNotificationFollowingOnly) ?: activity.sources_lite
+                        ?: return@forEachRow false
 
                 if (sources.isEmpty()) return@forEachRow false
 

@@ -33,7 +33,6 @@ import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.ActivityTitleSummaryMessage
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.ParcelableLiteUser
-import org.mariotaku.twidere.model.util.ParcelableActivityUtils
 import org.mariotaku.twidere.view.BadgeView
 import org.mariotaku.twidere.view.IconActionView
 import org.mariotaku.twidere.view.ProfileImageView
@@ -80,7 +79,12 @@ class ActivityTitleSummaryViewHolder(
 
     fun displayActivity(activity: ParcelableActivity) {
         val context = adapter.context
-        val sources = ParcelableActivityUtils.getAfterFilteredSources(activity)
+        val sources = (activity.after_filtered_sources ?: activity.sources_lite).takeIf {
+            it.isNotEmpty()
+        } ?: run {
+            showNotSupported()
+            return
+        }
         val message = ActivityTitleSummaryMessage.get(context, adapter.userColorNameManager,
                 activity, sources, activityTypeView.defaultColor, adapter.useStarsForLikes,
                 adapter.isNameFirst)
