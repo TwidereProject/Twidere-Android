@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.task.twitter.message
 
+import android.accounts.AccountManager
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
@@ -336,7 +337,7 @@ class GetMessagesTask(
         var taskTag: String? = null
 
         protected val accounts: Array<AccountDetails?> by lazy {
-            AccountUtils.getAllAccountDetails(android.accounts.AccountManager.get(context), accountKeys, false)
+            AccountUtils.getAllAccountDetails(AccountManager.get(context), accountKeys, false)
         }
 
         protected val defaultKeys: Array<UserKey?> by lazy {

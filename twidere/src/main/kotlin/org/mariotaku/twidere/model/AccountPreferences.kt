@@ -152,5 +152,10 @@ class AccountPreferences(
         fun isNotificationHasVibration(flags: Int): Boolean {
             return VALUE_NOTIFICATION_FLAG_VIBRATION in flags
         }
+
+        fun getSharedPreferencesForAccount(context: Context, accountKey: UserKey): SharedPreferences {
+            return context.getSharedPreferences("$ACCOUNT_PREFERENCES_NAME_PREFIX$accountKey",
+                    Context.MODE_PRIVATE)
+        }
     }
 }

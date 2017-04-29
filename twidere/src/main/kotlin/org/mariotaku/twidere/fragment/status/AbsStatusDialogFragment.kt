@@ -19,107 +19,139 @@
 
 package org.mariotaku.twidere.fragment.status
 
+import android.accounts.AccountManager
+import android.app.Dialog
+import android.content.Context
+import android.content.DialogInterface.BUTTON_NEUTRAL
+import android.content.DialogInterface.BUTTON_POSITIVE
+import android.os.Bundle
 import android.support.v7.app.AlertDialog
+import android.support.v7.app.AlertDialog.Builder
 import android.view.View
+import android.widget.Toast
 import com.bumptech.glide.Glide
+import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.combine.and
+import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.failUi
+import nl.komponents.kovenant.ui.promiseOnUi
 import nl.komponents.kovenant.ui.successUi
+import org.mariotaku.microblog.library.MicroBlog
+import org.mariotaku.twidere.R
+import org.mariotaku.twidere.adapter.DummyItemAdapter
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.fragment.BaseDialogFragment
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
+import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.util.AccountUtils
+import org.mariotaku.twidere.view.holder.StatusViewHolder
+import java.lang.ref.WeakReference
 
-abstract class AbsStatusDialogFragment : org.mariotaku.twidere.fragment.BaseDialogFragment() {
+abstract class AbsStatusDialogFragment : BaseDialogFragment() {
 
-    protected abstract val android.app.Dialog.loadProgress: android.view.View
-    protected abstract val android.app.Dialog.itemContent: android.view.View
+    protected abstract val Dialog.loadProgress: View
+    protected abstract val Dialog.itemContent: View
 
-    protected val status: org.mariotaku.twidere.model.ParcelableStatus?
-        get() = arguments.getParcelable<org.mariotaku.twidere.model.ParcelableStatus>(EXTRA_STATUS)
+    protected val status: ParcelableStatus?
+        get() = arguments.getParcelable<ParcelableStatus>(EXTRA_STATUS)
 
     protected val statusId: String
         get() = arguments.getString(EXTRA_STATUS_ID)
 
-    protected val accountKey: org.mariotaku.twidere.model.UserKey
+    protected val accountKey: UserKey
         get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)
 
-    private lateinit var adapter: org.mariotaku.twidere.adapter.DummyItemAdapter
+    private lateinit var adapter: DummyItemAdapter
 
-    override final fun onCreateDialog(savedInstanceState: android.os.Bundle?): android.app.Dialog {
-        val builder = android.support.v7.app.AlertDialog.Builder(context)
+    override final fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val builder = Builder(context)
         val accountKey = this.accountKey
 
         builder.setupAlertDialog()
 
-        adapter = org.mariotaku.twidere.adapter.DummyItemAdapter(context, requestManager = Glide.with(this))
+        adapter = DummyItemAdapter(context, requestManager = Glide.with(this))
         adapter.showCardActions = false
         adapter.showAccountsColor = true
 
         val dialog = builder.create()
         dialog.setOnShowListener { dialog ->
-            dialog as android.support.v7.app.AlertDialog
+            dialog as AlertDialog
             dialog.applyTheme()
 
-            val am = android.accounts.AccountManager.get(context)
-            val details = org.mariotaku.twidere.model.util.AccountUtils.getAccountDetails(am, accountKey, true) ?: run {
+            val am = AccountManager.get(context)
+            val details = AccountUtils.getAccountDetails(am, accountKey, true) ?: run {
                 dismiss()
                 return@setOnShowListener
             }
-            val weakThis = java.lang.ref.WeakReference(this)
-            val weakHolder = java.lang.ref.WeakReference(org.mariotaku.twidere.view.holder.StatusViewHolder(adapter, dialog.itemContent).apply {
+            val weakThis = WeakReference(this)
+            val weakHolder = WeakReference(StatusViewHolder(adapter = adapter, itemView = dialog.itemContent).apply {
                 setupViewOptions()
             })
-            nl.komponents.kovenant.ui.promiseOnUi {
-                val currentDialog = weakThis.get()?.dialog as? AlertDialog ?: return@promiseOnUi
-                currentDialog.loadProgress.visibility = View.VISIBLE
-                currentDialog.itemContent.visibility = View.GONE
-                currentDialog.getButton(android.content.DialogInterface.BUTTON_POSITIVE)?.isEnabled = false
-                currentDialog.getButton(android.content.DialogInterface.BUTTON_NEUTRAL)?.isEnabled = false
-            } and org.mariotaku.twidere.fragment.status.AbsStatusDialogFragment.Companion.showStatus(context, details, statusId, status).successUi { status ->
-                val fragment = weakThis.get() ?: return@successUi
-                val currentDialog = fragment.dialog as? android.support.v7.app.AlertDialog ?: return@successUi
+            val extraStatus = status
+            if (extraStatus != null) {
+                showStatus(weakHolder.get()!!, extraStatus, details, savedInstanceState)
+            } else promiseOnUi {
+                weakThis.get()?.showProgress()
+            } and AbsStatusDialogFragment.showStatus(context, details, statusId, extraStatus).successUi { status ->
                 val holder = weakHolder.get() ?: return@successUi
-                currentDialog.getButton(android.content.DialogInterface.BUTTON_POSITIVE)?.isEnabled = true
-                currentDialog.getButton(android.content.DialogInterface.BUTTON_NEUTRAL)?.isEnabled = true
-                currentDialog.itemContent.visibility = android.view.View.VISIBLE
-                currentDialog.loadProgress.visibility = android.view.View.GONE
-                currentDialog.itemContent.isFocusable = false
-                holder.display(status = status, displayInReplyTo = false)
-                currentDialog.onStatusLoaded(details, status, savedInstanceState)
+                weakThis.get()?.showStatus(holder, status, details, savedInstanceState)
             }.failUi {
                 val fragment = weakThis.get()?.takeIf { it.dialog != null } ?: return@failUi
-                android.widget.Toast.makeText(fragment.context, org.mariotaku.twidere.R.string.message_toast_error_occurred, android.widget.Toast.LENGTH_SHORT).show()
+                Toast.makeText(fragment.context, R.string.message_toast_error_occurred,
+                        Toast.LENGTH_SHORT).show()
                 fragment.dismiss()
             }
         }
         return dialog
     }
 
-    protected abstract fun android.support.v7.app.AlertDialog.Builder.setupAlertDialog()
+    private fun showProgress() {
+        val currentDialog = this.dialog as? AlertDialog ?: return
+        currentDialog.loadProgress.visibility = View.VISIBLE
+        currentDialog.itemContent.visibility = View.GONE
+        currentDialog.getButton(BUTTON_POSITIVE)?.isEnabled = false
+        currentDialog.getButton(BUTTON_NEUTRAL)?.isEnabled = false
+    }
 
-    protected abstract fun android.support.v7.app.AlertDialog.onStatusLoaded(details: org.mariotaku.twidere.model.AccountDetails, status: org.mariotaku.twidere.model.ParcelableStatus,
-            savedInstanceState: android.os.Bundle?)
+    private fun showStatus(holder: StatusViewHolder, status: ParcelableStatus,
+            details: AccountDetails, savedInstanceState: Bundle?) {
+        status.apply {
+            if (account_key != details.key) {
+                my_retweet_id = null
+                is_favorite = false
+            }
+            account_key = details.key
+            account_color = details.color
+        }
+        val currentDialog = this.dialog as? AlertDialog ?: return
+        currentDialog.getButton(BUTTON_POSITIVE)?.isEnabled = true
+        currentDialog.getButton(BUTTON_NEUTRAL)?.isEnabled = true
+        currentDialog.itemContent.visibility = View.VISIBLE
+        currentDialog.loadProgress.visibility = View.GONE
+        currentDialog.itemContent.isFocusable = false
+        holder.display(status = status, displayInReplyTo = false)
+        currentDialog.onStatusLoaded(details, status, savedInstanceState)
+    }
+
+    protected abstract fun Builder.setupAlertDialog()
+
+    protected abstract fun AlertDialog.onStatusLoaded(details: AccountDetails, status: ParcelableStatus,
+            savedInstanceState: Bundle?)
 
     companion object {
 
-        fun showStatus(context: android.content.Context, details: org.mariotaku.twidere.model.AccountDetails, statusId: String,
-                status: org.mariotaku.twidere.model.ParcelableStatus?): nl.komponents.kovenant.Promise<ParcelableStatus, Exception> {
+        fun showStatus(context: Context, details: AccountDetails, statusId: String,
+                status: ParcelableStatus?): Promise<ParcelableStatus, Exception> {
             if (status != null) {
-                status.apply {
-                    if (account_key != details.key) {
-                        my_retweet_id = null
-                        is_favorite = false
-                    }
-                    account_key = details.key
-                    account_color = details.color
-                }
-                return nl.komponents.kovenant.Promise.Companion.ofSuccess(status)
+                return Promise.ofSuccess(status)
             }
-            val microBlog = details.newMicroBlogInstance(context, org.mariotaku.microblog.library.MicroBlog::class.java)
-            val profileImageSize = context.getString(org.mariotaku.twidere.R.string.profile_image_size)
-            return nl.komponents.kovenant.task { microBlog.showStatus(statusId).toParcelable(details, profileImageSize) }
+            val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
+            val profileImageSize = context.getString(R.string.profile_image_size)
+            return task { microBlog.showStatus(statusId).toParcelable(details, profileImageSize) }
         }
 
     }

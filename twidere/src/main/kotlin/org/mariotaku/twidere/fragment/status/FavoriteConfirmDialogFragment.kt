@@ -19,9 +19,21 @@
 
 package org.mariotaku.twidere.fragment.status
 
+import android.app.Dialog
+import android.content.DialogInterface
+import android.content.DialogInterface.BUTTON_POSITIVE
+import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
+import org.mariotaku.twidere.R
+import org.mariotaku.twidere.activity.content.FavoriteConfirmDialogActivity
 import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.constant.iWantMyStarsBackKey
+import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.ParcelableStatus
+import org.mariotaku.twidere.model.UserKey
 
 /**
  * Asks user to favorite a status.
@@ -30,35 +42,35 @@ import org.mariotaku.twidere.constant.IntentConstants.*
  */
 class FavoriteConfirmDialogFragment : AbsStatusDialogFragment() {
 
-    override val android.app.Dialog.loadProgress: android.view.View get() = findViewById(org.mariotaku.twidere.R.id.loadProgress)
+    override val Dialog.loadProgress: android.view.View get() = findViewById(R.id.loadProgress)
 
-    override val android.app.Dialog.itemContent: android.view.View get() = findViewById(org.mariotaku.twidere.R.id.itemContent)
+    override val Dialog.itemContent: android.view.View get() = findViewById(R.id.itemContent)
 
-    override fun android.support.v7.app.AlertDialog.Builder.setupAlertDialog() {
-        if (preferences[org.mariotaku.twidere.constant.iWantMyStarsBackKey]) {
-            setTitle(org.mariotaku.twidere.R.string.title_favorite_confirm)
+    override fun AlertDialog.Builder.setupAlertDialog() {
+        if (preferences[iWantMyStarsBackKey]) {
+            setTitle(R.string.title_favorite_confirm)
         } else {
-            setTitle(org.mariotaku.twidere.R.string.title_like_confirm)
+            setTitle(R.string.title_like_confirm)
         }
-        setView(org.mariotaku.twidere.R.layout.dialog_status_favorite_confirm)
-        setPositiveButton(org.mariotaku.twidere.R.string.action_favorite, null)
+        setView(R.layout.dialog_status_favorite_confirm)
+        setPositiveButton(R.string.action_favorite, null)
         setNegativeButton(android.R.string.cancel, null)
     }
 
-    override fun android.support.v7.app.AlertDialog.onStatusLoaded(details: org.mariotaku.twidere.model.AccountDetails, status: org.mariotaku.twidere.model.ParcelableStatus,
-            savedInstanceState: android.os.Bundle?) {
-        val positiveButton = getButton(android.content.DialogInterface.BUTTON_POSITIVE)
-        if (preferences[org.mariotaku.twidere.constant.iWantMyStarsBackKey]) {
+    override fun AlertDialog.onStatusLoaded(details: AccountDetails, status: ParcelableStatus,
+            savedInstanceState: Bundle?) {
+        val positiveButton = getButton(BUTTON_POSITIVE)
+        if (preferences[iWantMyStarsBackKey]) {
             if (status.is_favorite) {
-                positiveButton.setText(org.mariotaku.twidere.R.string.action_unfavorite)
+                positiveButton.setText(R.string.action_unfavorite)
             } else {
-                positiveButton.setText(org.mariotaku.twidere.R.string.action_favorite)
+                positiveButton.setText(R.string.action_favorite)
             }
         } else {
             if (status.is_favorite) {
-                positiveButton.setText(org.mariotaku.twidere.R.string.action_undo_like)
+                positiveButton.setText(R.string.action_undo_like)
             } else {
-                positiveButton.setText(org.mariotaku.twidere.R.string.action_like)
+                positiveButton.setText(R.string.action_like)
             }
         }
         positiveButton.setOnClickListener {
@@ -72,18 +84,18 @@ class FavoriteConfirmDialogFragment : AbsStatusDialogFragment() {
 
     }
 
-    override fun onCancel(dialog: android.content.DialogInterface) {
+    override fun onCancel(dialog: DialogInterface) {
         finishFavoriteConfirmActivity()
     }
 
-    override fun onDismiss(dialog: android.content.DialogInterface) {
+    override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         finishFavoriteConfirmActivity()
     }
 
     private fun finishFavoriteConfirmActivity() {
         val activity = this.activity
-        if (activity is org.mariotaku.twidere.activity.content.FavoriteConfirmDialogActivity && !activity.isFinishing) {
+        if (activity is FavoriteConfirmDialogActivity && !activity.isFinishing) {
             activity.finish()
         }
     }
@@ -92,15 +104,15 @@ class FavoriteConfirmDialogFragment : AbsStatusDialogFragment() {
 
         val FRAGMENT_TAG = "favorite_confirm"
 
-        fun show(fm: android.support.v4.app.FragmentManager, accountKey: org.mariotaku.twidere.model.UserKey, statusId: String,
-                status: org.mariotaku.twidere.model.ParcelableStatus? = null): org.mariotaku.twidere.fragment.status.FavoriteConfirmDialogFragment {
-            val f = org.mariotaku.twidere.fragment.status.FavoriteConfirmDialogFragment()
-            f.arguments = org.mariotaku.ktextension.Bundle {
+        fun show(fm: android.support.v4.app.FragmentManager, accountKey: UserKey, statusId: String,
+                status: ParcelableStatus? = null): FavoriteConfirmDialogFragment {
+            val f = FavoriteConfirmDialogFragment()
+            f.arguments = Bundle {
                 this[EXTRA_ACCOUNT_KEY] = accountKey
                 this[EXTRA_STATUS_ID] = statusId
                 this[EXTRA_STATUS] = status
             }
-            f.show(fm, org.mariotaku.twidere.fragment.status.FavoriteConfirmDialogFragment.Companion.FRAGMENT_TAG)
+            f.show(fm, FavoriteConfirmDialogFragment.FRAGMENT_TAG)
             return f
         }
     }

@@ -59,30 +59,28 @@
                 android:id="@+id/commentTextCount"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/element_size_normal"
-                android:layout_alignBottom="@+id/commentMenu"
                 android:layout_alignLeft="@+id/editComment"
                 android:layout_alignStart="@+id/editComment"
-                android:layout_alignTop="@+id/commentMenu"
                 android:layout_below="@+id/editComment"
-                android:layout_toLeftOf="@+id/commentMenu"
-                android:layout_toStartOf="@+id/commentMenu"
+                android:layout_toLeftOf="@+id/quoteOriginal"
+                android:layout_toStartOf="@+id/quoteOriginal"
                 android:gravity="center_vertical|start"
                 android:paddingLeft="@dimen/element_spacing_normal"
                 android:paddingRight="@dimen/element_spacing_normal"
                 android:textColor="?android:textColorSecondary"
                 tools:text="140"/>
 
-            <org.mariotaku.twidere.view.IconActionButton
-                android:id="@+id/commentMenu"
-                style="?cardActionButtonStyle"
-                android:layout_width="@dimen/element_size_normal"
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/quoteOriginal"
+                android:layout_width="wrap_content"
                 android:layout_height="@dimen/element_size_normal"
                 android:layout_alignEnd="@+id/editComment"
-                android:layout_alignRight="@+id/editComment"
                 android:layout_below="@+id/editComment"
-                android:color="?android:textColorTertiary"
+                android:layout_alignRight="@+id/editComment"
                 android:focusable="false"
-                android:src="@drawable/ic_action_more_vertical"/>
+                android:gravity="center_vertical"
+                android:text="@string/quote_original_status"
+                android:visibility="gone"/>
         </RelativeLayout>
 
         <FrameLayout
@@ -94,6 +92,7 @@
             <FrameLayout
                 android:id="@+id/loadProgress"
                 android:layout_width="match_parent"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:minHeight="@dimen/element_size_mlarge">
 

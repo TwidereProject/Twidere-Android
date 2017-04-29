@@ -33,7 +33,7 @@ subprojects {
                     MariotakuCommons     : '0.9.15',
                     RestFu               : '0.9.54',
                     ObjectCursor         : '0.9.20',
-                    PlayServices         : '10.2.1',
+                    PlayServices         : '10.2.4',
                     MapsUtils            : '0.4.4',
                     Crashlyrics          : '2.6.7',
                     FabricPlugin         : '1.22.1',
@@ -73,7 +73,7 @@ subprojects {
         if (project.hasProperty('android')) {
             android {
                 compileSdkVersion 25
-                buildToolsVersion '25.0.2'
+                buildToolsVersion '25.0.3'
 
                 lintOptions {
                     abortOnError false

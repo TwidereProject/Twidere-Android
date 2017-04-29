@@ -40,6 +40,7 @@ import org.mariotaku.twidere.extension.model.setColor
 import org.mariotaku.twidere.extension.model.setPosition
 import org.mariotaku.twidere.loader.AccountDetailsLoader
 import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.AccountPreferences
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
@@ -222,6 +223,8 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
                 DialogInterface.BUTTON_POSITIVE -> {
                     val accountKey = account.getAccountKey(am)
                     resolver.deleteAccountData(accountKey)
+                    AccountPreferences.getSharedPreferencesForAccount(context, accountKey).edit()
+                            .clear().apply()
                     am.removeAccountSupport(account)
                 }
             }

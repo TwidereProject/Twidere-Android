@@ -114,6 +114,6 @@ class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapte
 
     companion object {
 
-        private val POSITION_COMPARATOR = Comparator<org.mariotaku.microblog.library.twitter.model.SavedSearch> { object1, object2 -> object1.position - object2.position }
+        private val POSITION_COMPARATOR = Comparator<SavedSearch> { object1, object2 -> object1.position - object2.position }
     }
 }

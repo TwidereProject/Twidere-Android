@@ -374,7 +374,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         val offsetFactor = 1 - (Math.abs(offset).toFloat() / swipeContainer.height)
         swipeContainer.backgroundAlpha = offsetFactor
         val colorToolbar = overrideTheme.colorToolbar
-        val alpha = Math.round(Color.alpha(colorToolbar) * offsetFactor)
+        val alpha = Math.round(Color.alpha(colorToolbar) * offsetFactor).coerceIn(0..255)
         activityLayout.setStatusBarColor(ColorUtils.setAlphaComponent(colorToolbar, alpha))
     }
 

@@ -179,7 +179,8 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
                 this@CursorActivitiesFragment.accountKeys
             }
 
-            override val pagination by lazy {
+            override val pagination: Array<SinceMaxPagination?>? by lazy {
+                val context = context ?: return@lazy null
                 val keys = accountKeys.toNulls()
                 val sinceIds = DataStoreUtils.getRefreshNewestActivityMaxPositions(context,
                         contentUri, keys)

@@ -20,10 +20,7 @@
 package org.mariotaku.twidere.util
 
 import org.apache.commons.lang3.StringEscapeUtils
-import org.apache.commons.lang3.text.translate.AggregateTranslator
-import org.apache.commons.lang3.text.translate.CodePointTranslator
-import org.apache.commons.lang3.text.translate.EntityArrays
-import org.apache.commons.lang3.text.translate.LookupTranslator
+import org.apache.commons.lang3.text.translate.*
 import java.io.IOException
 import java.io.Writer
 
@@ -36,8 +33,11 @@ object HtmlEscapeHelper {
     val ESCAPE_BASIC = LookupTranslator(*EntityArrays.BASIC_ESCAPE())
 
     val UNESCAPE_HTML = AggregateTranslator(
-            StringEscapeUtils.UNESCAPE_HTML4,
-            LookupTranslator(*EntityArrays.APOS_UNESCAPE())
+            LookupTranslator(*EntityArrays.BASIC_UNESCAPE()),
+            LookupTranslator(*EntityArrays.ISO8859_1_UNESCAPE()),
+            LookupTranslator(*EntityArrays.HTML40_EXTENDED_UNESCAPE()),
+            LookupTranslator(*EntityArrays.APOS_UNESCAPE()),
+            IgnoreErrorNumericEntityUnescaper()
     )
 
     fun escape(text: CharSequence): String {
@@ -70,6 +70,17 @@ object HtmlEscapeHelper {
                 return true
             }
             return false
+        }
+    }
+
+    private class IgnoreErrorNumericEntityUnescaper : NumericEntityUnescaper() {
+        override fun translate(input: CharSequence?, index: Int, out: Writer?): Int {
+            try {
+                return super.translate(input, index, out)
+            } catch (e: IllegalArgumentException) {
+                // Ignore unsupported code points
+                return 0
+            }
         }
     }
 }
