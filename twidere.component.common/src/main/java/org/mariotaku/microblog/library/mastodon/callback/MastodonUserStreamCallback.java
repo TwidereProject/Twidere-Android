@@ -27,6 +27,7 @@ import org.mariotaku.microblog.library.twitter.model.Status;
 import org.mariotaku.microblog.library.util.CRLFLineReader;
 import org.mariotaku.restfu.callback.RawCallback;
 import org.mariotaku.restfu.http.HttpResponse;
+import org.mariotaku.twidere.util.JsonSerializer;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -51,6 +52,7 @@ public abstract class MastodonUserStreamCallback implements RawCallback<MicroBlo
         }
         final CRLFLineReader reader = new CRLFLineReader(new InputStreamReader(response.getBody().stream(), "UTF-8"));
         try {
+            String event = null;
             for (String line; (line = reader.readLine()) != null && !disconnected; ) {
                 if (Thread.currentThread().isInterrupted()) {
                     break;
@@ -59,7 +61,36 @@ public abstract class MastodonUserStreamCallback implements RawCallback<MicroBlo
                     onConnected();
                     connected = true;
                 }
-                if (TextUtils.isEmpty(line)) continue;
+                int valueIndex = line.indexOf(":");
+                if (TextUtils.isEmpty(line) || valueIndex <= 0) {
+                    event = null;
+                    continue;
+                }
+                String name = line.substring(0, valueIndex);
+                valueIndex++;
+                while (line.charAt(valueIndex) == ' ') {
+                    valueIndex++;
+                }
+                String value = line.substring(valueIndex);
+                switch (name) {
+                    case "event": {
+                        event = value;
+                        break;
+                    }
+                    case "data": {
+                        if (event != null) {
+                            if (!handleEvent(event, value)) {
+                                onUnhandledEvent(event, value);
+                            }
+                        }
+                        event = null;
+                        break;
+                    }
+                    default: {
+                        event = null;
+                        break;
+                    }
+                }
             }
         } catch (IOException e) {
             onException(e);
@@ -77,13 +108,22 @@ public abstract class MastodonUserStreamCallback implements RawCallback<MicroBlo
         disconnected = true;
     }
 
-    private boolean handleEvent(final String event, final String json) throws IOException {
+    private boolean handleEvent(final String event, final String payload) throws IOException {
+        switch (event) {
+            case "update": {
+                return onUpdate(JsonSerializer.parse(payload, Status.class));
+            }
+            case "notification": {
+                return onNotification(JsonSerializer.parse(payload, Notification.class));
+            }
+            case "delete": {
+                return onDelete(payload);
+            }
+        }
         return false;
     }
 
     protected abstract boolean onConnected();
-
-    protected abstract boolean onDisconnect(int code, String reason);
 
     protected abstract boolean onException(@NonNull Throwable ex);
 
@@ -93,6 +133,6 @@ public abstract class MastodonUserStreamCallback implements RawCallback<MicroBlo
 
     protected abstract boolean onDelete(@NonNull String id);
 
-    protected abstract void onUnhandledEvent(@NonNull String event, @NonNull String json)
+    protected abstract void onUnhandledEvent(@NonNull String event, @NonNull String payload)
             throws IOException;
 }

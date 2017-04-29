@@ -28,6 +28,9 @@ import org.apache.commons.cli.HelpFormatter
 import org.apache.commons.cli.Options
 import org.mariotaku.ktextension.subArray
 import org.mariotaku.microblog.library.fanfou.FanfouStream
+import org.mariotaku.microblog.library.mastodon.MastodonStreaming
+import org.mariotaku.microblog.library.mastodon.callback.MastodonUserStreamCallback
+import org.mariotaku.microblog.library.mastodon.model.Notification
 import org.mariotaku.microblog.library.twitter.TwitterUserStream
 import org.mariotaku.microblog.library.twitter.annotation.StreamWith
 import org.mariotaku.microblog.library.twitter.model.Activity
@@ -81,12 +84,54 @@ class UserStreamDumperPlugin(val context: Context) : DumperPlugin {
                 beginFanfouStream(account, dumpContext, includeInteractions, includeTimeline,
                         verboseMode, manager)
             }
+            AccountType.MASTODON -> {
+                beginMastodonStream(account, dumpContext, includeInteractions, includeTimeline,
+                        verboseMode, manager)
+            }
             else -> {
                 dumpContext.stderr.println("Unsupported account type ${account.type}")
                 dumpContext.stderr.flush()
             }
         }
 
+    }
+
+    private fun beginMastodonStream(account: AccountDetails, dumpContext: DumperContext,
+            includeInteractions: Boolean, includeTimeline: Boolean, verboseMode: Boolean,
+            manager: UserColorNameManager) {
+        val streaming = account.newMicroBlogInstance(context, cls = MastodonStreaming::class.java)
+        dumpContext.stdout.println("Beginning user stream...")
+        dumpContext.stdout.flush()
+        val callback = object : MastodonUserStreamCallback() {
+            override fun onConnected(): Boolean {
+                return false
+            }
+
+            override fun onException(ex: Throwable): Boolean {
+                ex.printStackTrace(dumpContext.stderr)
+                dumpContext.stderr.flush()
+                return true
+            }
+
+            override fun onUpdate(status: Status): Boolean {
+                return false
+            }
+
+            override fun onNotification(notification: Notification): Boolean {
+                return false
+            }
+
+            override fun onDelete(id: String): Boolean {
+                return false
+            }
+
+            override fun onUnhandledEvent(event: String, payload: String) {
+                dumpContext.stdout.println(payload)
+                dumpContext.stdout.flush()
+            }
+
+        }
+        streaming.getUserStream(callback)
     }
 
     private fun beginTwitterStream(account: AccountDetails, dumpContext: DumperContext,

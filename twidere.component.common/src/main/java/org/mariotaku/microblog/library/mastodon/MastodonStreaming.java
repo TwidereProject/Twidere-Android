@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.mariotaku.microblog.library.mastodon.api;
+package org.mariotaku.microblog.library.mastodon;
 
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.mastodon.callback.MastodonUserStreamCallback;
@@ -26,7 +26,7 @@ import org.mariotaku.restfu.annotation.method.GET;
  * Created by mariotaku on 2017/4/17.
  */
 
-public interface StreamingResources {
-    @GET("/v1/streaming/user")
+public interface MastodonStreaming {
+    @GET("/v1/streaming/public")
     void getUserStream(MastodonUserStreamCallback callback) throws MicroBlogException;
 }
