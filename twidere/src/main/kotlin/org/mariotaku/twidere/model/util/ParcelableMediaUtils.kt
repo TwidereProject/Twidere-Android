@@ -1,10 +1,10 @@
 package org.mariotaku.twidere.model.util
 
-import android.text.TextUtils
 import org.mariotaku.ktextension.addAllTo
 import org.mariotaku.ktextension.isNullOrEmpty
 import org.mariotaku.ktextension.toIntOr
 import org.mariotaku.microblog.library.twitter.model.*
+import org.mariotaku.twidere.extension.model.api.gnusocial.toParcelable
 import org.mariotaku.twidere.extension.model.toParcelable
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -88,27 +88,7 @@ object ParcelableMediaUtils {
     private fun fromAttachments(status: Status): Array<ParcelableMedia> {
         val attachments = status.attachments ?: return emptyArray()
         val externalUrl = status.externalUrl
-        return attachments.mapNotNull { attachment ->
-            val mimeType = attachment.mimetype ?: return@mapNotNull null
-            val media = ParcelableMedia()
-
-            if (mimeType.startsWith("image/")) {
-                media.type = ParcelableMedia.Type.IMAGE
-            } else if (mimeType.startsWith("video/")) {
-                media.type = ParcelableMedia.Type.VIDEO
-            } else {
-                // https://github.com/TwidereProject/Twidere-Android/issues/729
-                // Skip unsupported attachment
-                return@mapNotNull null
-            }
-            media.width = attachment.width
-            media.height = attachment.height
-            media.url = if (TextUtils.isEmpty(externalUrl)) attachment.url else externalUrl
-            media.page_url = if (TextUtils.isEmpty(externalUrl)) attachment.url else externalUrl
-            media.media_url = attachment.url
-            media.preview_url = attachment.largeThumbUrl
-            return@mapNotNull null
-        }.toTypedArray()
+        return attachments.mapNotNull { it.toParcelable(externalUrl) }.toTypedArray()
     }
 
     private fun fromCard(card: CardEntity?, urlEntities: Array<UrlEntity>?,
@@ -190,7 +170,7 @@ object ParcelableMediaUtils {
     @JvmStatic
     private fun CardEntity.StringValue.checkUrl(): Boolean {
         val value = this.value ?: return false
-        return value != null && (value.startsWith("http://") || value.startsWith("https://"))
+        return value.startsWith("http://") || value.startsWith("https://")
     }
 
     fun getTypeInt(type: String): Int {
