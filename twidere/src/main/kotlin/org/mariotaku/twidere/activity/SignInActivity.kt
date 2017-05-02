@@ -44,6 +44,7 @@ import android.text.TextWatcher
 import android.view.*
 import android.view.View.OnClickListener
 import android.webkit.CookieManager
+import android.webkit.CookieSyncManager
 import android.widget.*
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import nl.komponents.kovenant.combine.and
@@ -146,6 +147,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         if (savedInstanceState == null) {
             // Only start at the first time
             updateDefaultFeatures()
+            // Must call this before cookie manager
+            @Suppress("DEPRECATION")
+            CookieSyncManager.createInstance(this)
             CookieManager.getInstance().removeAllCookiesSupport()
         }
     }
