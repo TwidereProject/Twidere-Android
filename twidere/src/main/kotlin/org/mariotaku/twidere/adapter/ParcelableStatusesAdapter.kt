@@ -163,7 +163,7 @@ abstract class ParcelableStatusesAdapter(
     }
 
     override fun getStatus(position: Int, raw: Boolean): ParcelableStatus {
-        return getStatusInternal(position, getItemCountIndex(position, raw), raw)
+        return getStatusInternal(position, getItemCountIndex(position, raw), raw, reuse = false)
     }
 
     override fun getStatusCount(raw: Boolean): Int {
@@ -439,7 +439,7 @@ abstract class ParcelableStatusesAdapter(
     }
 
     private fun getStatusInternal(position: Int, countIndex: Int = getItemCountIndex(position),
-            raw: Boolean = false, reuse: Boolean = true): ParcelableStatus {
+            raw: Boolean = false, reuse: Boolean): ParcelableStatus {
         when (countIndex) {
             ITEM_INDEX_PINNED_STATUS -> {
                 return pinnedStatuses!![position - getItemStartPosition(ITEM_INDEX_PINNED_STATUS)]
