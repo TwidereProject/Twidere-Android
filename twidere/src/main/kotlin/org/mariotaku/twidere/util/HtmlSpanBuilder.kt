@@ -180,10 +180,8 @@ object HtmlSpanBuilder {
         @Throws(ParseException::class)
         override fun handleStandaloneElement(elementName: String, attributes: Map<String, String>?,
                 minimized: Boolean, line: Int, col: Int) {
-            if (minimized) {
-                val info = TagInfo(sb.length, elementName, attributes)
-                applyTag(sb, info.start, sb.length, info, processor)
-            }
+            val info = TagInfo(sb.length, elementName, attributes)
+            applyTag(sb, info.start, sb.length, info, processor)
         }
 
         val text: Spannable
