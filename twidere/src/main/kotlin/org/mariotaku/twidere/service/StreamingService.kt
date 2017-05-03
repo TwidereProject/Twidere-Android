@@ -32,6 +32,7 @@ import org.mariotaku.twidere.constant.streamingEnabledKey
 import org.mariotaku.twidere.constant.streamingNonMeteredNetworkKey
 import org.mariotaku.twidere.constant.streamingPowerSavingKey
 import org.mariotaku.twidere.extension.model.*
+import org.mariotaku.twidere.extension.model.api.key
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.model.*
@@ -382,7 +383,7 @@ class StreamingService : BaseService() {
                     return
                 }
                 val user = status.user ?: return
-                val userKey = UserKeyUtils.fromUser(user)
+                val userKey = user.key
                 val where = Expression.and(Expression.equalsArgs(CachedRelationships.ACCOUNT_KEY),
                         Expression.equalsArgs(CachedRelationships.USER_KEY),
                         Expression.equals(CachedRelationships.NOTIFICATIONS_ENABLED, 1)).sql

@@ -21,9 +21,9 @@ package org.mariotaku.twidere.extension.model.api.microblog
 
 import org.mariotaku.microblog.library.twitter.model.UserList
 import org.mariotaku.twidere.extension.model.api.getProfileImageOfSize
+import org.mariotaku.twidere.extension.model.api.key
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.UserKeyUtils
 
 fun UserList.toParcelable(accountKey: UserKey, position: Long = 0, isFollowing: Boolean = false,
         profileImageSize: String = "normal"): ParcelableUserList {
@@ -36,7 +36,7 @@ fun UserList.toParcelable(accountKey: UserKey, position: Long = 0, isFollowing: 
     obj.is_following = isFollowing
     obj.name = name
     obj.description = description
-    obj.user_key = UserKeyUtils.fromUser(user)
+    obj.user_key = user.key
     obj.user_name = user.name
     obj.user_screen_name = user.screenName
     obj.user_profile_image_url = user.getProfileImageOfSize(profileImageSize)

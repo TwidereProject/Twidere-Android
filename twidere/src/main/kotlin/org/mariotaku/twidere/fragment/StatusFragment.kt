@@ -90,6 +90,7 @@ import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.*
+import org.mariotaku.twidere.extension.model.api.key
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.view.calculateSpaceItemHeight
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.Companion.handleActionClick
@@ -106,7 +107,6 @@ import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
-import org.mariotaku.twidere.model.util.UserKeyUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedStatuses
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.AbsAccountRequestTask
@@ -2069,7 +2069,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             val activitySummary = StatusActivity(statusId, emptyList())
             try {
                 activitySummary.retweeters = twitter.getRetweets(statusId, paging)
-                        .filterNot { DataStoreUtils.isFilteringUser(context, UserKeyUtils.fromUser(it.user)) }
+                        .filterNot { DataStoreUtils.isFilteringUser(context, it.user.key) }
                         .map { it.user.toParcelable(details) }
                 val countValues = ContentValues()
                 val status = twitter.showStatus(statusId)

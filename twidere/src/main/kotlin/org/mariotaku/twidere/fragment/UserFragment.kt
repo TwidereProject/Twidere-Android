@@ -130,7 +130,6 @@ import org.mariotaku.twidere.model.event.TaskStateChangedEvent
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.model.util.ParcelableRelationshipUtils
-import org.mariotaku.twidere.model.util.UserKeyUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
 import org.mariotaku.twidere.text.TwidereURLSpan
@@ -1697,7 +1696,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             val details = AccountUtils.getAccountDetails(AccountManager.get(context),
                     accountKey, true) ?: return SingleResponse(MicroBlogException("No Account"))
             if (details.type == AccountType.TWITTER) {
-                if (!UserKeyUtils.isSameHost(accountKey, user.key)) {
+                if (!accountKey.hasSameHost(user.key)) {
                     return SingleResponse.getInstance(ParcelableRelationshipUtils.create(user, isFiltering))
                 }
             }

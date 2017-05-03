@@ -30,8 +30,8 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.*
 import org.mariotaku.twidere.extension.loadProfileImage
+import org.mariotaku.twidere.extension.model.hasSameHost
 import org.mariotaku.twidere.model.ParcelableUser
-import org.mariotaku.twidere.model.util.UserKeyUtils
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.Utils.getUserTypeIconRes
 import java.util.*
@@ -126,7 +126,7 @@ class UserViewHolder(
             processingRequestProgress.visibility = View.GONE
             actionsContainer.visibility = View.VISIBLE
         }
-        if (UserKeyUtils.isSameHost(user.account_key, user.key)) {
+        if (user.account_key != null && user.key.hasSameHost(user.account_key)) {
             externalIndicator.visibility = View.GONE
         } else {
             externalIndicator.visibility = View.VISIBLE

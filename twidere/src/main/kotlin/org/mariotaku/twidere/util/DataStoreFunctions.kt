@@ -81,7 +81,7 @@ fun buildStatusFilterWhereClause(preferences: SharedPreferences, table: String,
         filterFlags = filterFlags or FilterFlags.QUOTE_NOT_AVAILABLE
     }
     if (preferences[filterPossibilitySensitiveStatusesKey]) {
-        filterFlags = filterFlags or FilterFlags.POSSIBILITY_SENSITIVE
+        filterFlags = filterFlags or FilterFlags.POSSIBLY_SENSITIVE
     }
 
     val filterExpression = Expression.or(

@@ -27,8 +27,8 @@ import org.mariotaku.ktextension.toLocalizedString
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IGroupsAdapter
 import org.mariotaku.twidere.extension.loadProfileImage
+import org.mariotaku.twidere.extension.model.api.getUserHost
 import org.mariotaku.twidere.model.ParcelableGroup
-import org.mariotaku.twidere.model.util.UserKeyUtils
 
 /**
  * Created by mariotaku on 15/4/29.
@@ -58,8 +58,8 @@ class GroupViewHolder(private val adapter: IGroupsAdapter<*>, itemView: View) : 
         nameView.screenName = "!${group.nickname}"
 
         nameView.updateText(formatter)
-        val groupHost = UserKeyUtils.getUserHost(group.url, group.account_key.host)
-        if (UserKeyUtils.isSameHost(group.account_key.host, groupHost)) {
+        val groupHost = getUserHost(group.url, group.account_key.host)
+        if (group.account_key.host == groupHost) {
             externalIndicator.visibility = View.GONE
         } else {
             externalIndicator.visibility = View.VISIBLE

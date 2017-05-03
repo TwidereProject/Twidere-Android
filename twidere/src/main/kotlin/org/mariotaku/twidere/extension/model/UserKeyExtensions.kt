@@ -32,3 +32,7 @@ val UserKey.isAcctPlaceholder get() = acctPlaceholderId == id && host != null
 fun AcctPlaceholderUserKey(host: String?): UserKey {
     return UserKey(acctPlaceholderId, host)
 }
+
+fun UserKey.hasSameHost(other: UserKey): Boolean {
+    return host == other.host
+}

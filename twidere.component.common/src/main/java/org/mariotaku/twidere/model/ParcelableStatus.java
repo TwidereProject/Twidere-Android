@@ -553,7 +553,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
             FilterFlags.QUOTE_NOT_AVAILABLE,
             FilterFlags.BLOCKING_USER,
             FilterFlags.BLOCKED_BY_USER,
-            FilterFlags.POSSIBILITY_SENSITIVE
+            FilterFlags.POSSIBLY_SENSITIVE
     }, flag = true)
     @Retention(RetentionPolicy.SOURCE)
     public @interface FilterFlags {
@@ -577,8 +577,8 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
          */
         long BLOCKED_BY_USER = 0x4;
         /**
-         * Status possibility sensitive (NSFW etc)
+         * Status possibly sensitive (NSFW etc)
          */
-        long POSSIBILITY_SENSITIVE = 0x8;
+        long POSSIBLY_SENSITIVE = 0x8;
     }
 }

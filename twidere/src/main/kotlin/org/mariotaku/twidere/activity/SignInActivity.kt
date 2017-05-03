@@ -77,6 +77,8 @@ import org.mariotaku.twidere.constant.randomizeAccountNameKey
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.extension.model.*
+import org.mariotaku.twidere.extension.model.api.isFanfouUser
+import org.mariotaku.twidere.extension.model.api.key
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.fragment.APIEditorDialogFragment
@@ -95,7 +97,6 @@ import org.mariotaku.twidere.model.account.cred.*
 import org.mariotaku.twidere.model.analyzer.SignIn
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
-import org.mariotaku.twidere.model.util.UserKeyUtils
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.*
 import java.io.IOException
@@ -634,17 +635,18 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val dialog = dialog ?: return
             val listView = dialog.findViewById(R.id.expandableList) as ExpandableListView
             val defaultConfig = preferences[defaultAPIConfigKey]
-            val addDefault = !data.contains(defaultConfig)
-            val configGroup = data.groupBy { it.safeType }
+            defaultConfig.name = getString(R.string.login_type_default)
+            val allConfig = ArraySet(data)
+            allConfig.add(defaultConfig)
+            val configGroup = allConfig.groupBy { it.safeType }
             val supportedAccountTypes = arrayOf(AccountType.TWITTER, AccountType.FANFOU,
                     AccountType.MASTODON, AccountType.STATUSNET)
             val result = supportedAccountTypes.mapNotNullTo(ArrayList()) { type ->
                 if (type == AccountType.MASTODON) return@mapNotNullTo LoginType(type,
                         listOf(CustomAPIConfig.mastodon(context)))
-                return@mapNotNullTo configGroup[type]?.let { list -> LoginType(type, list) }
-            }
-            if (addDefault) {
-                result.add(0, LoginType(defaultConfig.safeType, listOf(defaultConfig)))
+                return@mapNotNullTo configGroup[type]?.let { list ->
+                    LoginType(type, list.sortedBy { !it.isDefault })
+                }
             }
             (listView.expandableListAdapter as LoginTypeAdapter).data = result
         }
@@ -690,12 +692,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                 val view = convertView ?: inflater.inflate(android.R.layout.simple_expandable_list_item_1, parent, false)
                 val text1 = view.findViewById(android.R.id.text1) as TextView
                 val group = getGroup(groupPosition)
-                val singleChild = group.configs.singleOrNull()
-                if (singleChild != null && singleChild.isDefault) {
-                    text1.setText(R.string.login_type_default)
-                } else {
-                    text1.text = APIEditorDialogFragment.getTypeTitle(context, group.type)
-                }
+                text1.text = APIEditorDialogFragment.getTypeTitle(context, group.type)
                 return view
             }
 
@@ -860,7 +857,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             var color = analyseUserProfileColor(apiUser)
             val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
             val userId = apiUser.id
-            val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
+            val accountKey = apiUser.key
             val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
             val am = AccountManager.get(context)
             val account = AccountUtils.findByAccountKey(am, accountKey)
@@ -1000,7 +997,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val userId = apiUser.id!!
             var color = analyseUserProfileColor(apiUser)
             val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
-            val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
+            val accountKey = apiUser.key
             val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
             val am = AccountManager.get(activity)
             val account = AccountUtils.findByAccountKey(am, accountKey)
@@ -1030,7 +1027,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val userId = apiUser.id!!
             var color = analyseUserProfileColor(apiUser)
             val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
-            val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
+            val accountKey = apiUser.key
             val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
             val am = AccountManager.get(activity)
             val account = AccountUtils.findByAccountKey(am, accountKey)
@@ -1057,7 +1054,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val apiUser = twitter.verifyCredentials()
             var color = analyseUserProfileColor(apiUser)
             val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
-            val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
+            val accountKey = apiUser.key
             val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
             val am = AccountManager.get(activity)
             val account = AccountUtils.findByAccountKey(am, accountKey)
@@ -1256,7 +1253,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                     return Pair(AccountType.FANFOU, null)
                 }
                 else -> {
-                    if (UserKeyUtils.isFanfouUser(user)) {
+                    if (user.isFanfouUser) {
                         return Pair(AccountType.FANFOU, null)
                     }
                 }

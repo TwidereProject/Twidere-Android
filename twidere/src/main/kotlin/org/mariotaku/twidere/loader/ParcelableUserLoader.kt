@@ -41,6 +41,7 @@ import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.extension.api.tryShowUser
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.model.host
 import org.mariotaku.twidere.extension.model.isAcctPlaceholder
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
@@ -49,7 +50,6 @@ import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
-import org.mariotaku.twidere.model.util.UserKeyUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
 import org.mariotaku.twidere.task.UpdateAccountInfoTask
 import org.mariotaku.twidere.util.UserColorNameManager
@@ -126,7 +126,7 @@ class ParcelableUserLoader(
                     val indices = ObjectCursor.indicesFrom(cur, ParcelableUser::class.java)
                     while (!cur.isAfterLast) {
                         val user = indices.newObject(cur)
-                        if (TextUtils.equals(UserKeyUtils.getUserHost(user), user.key.host)) {
+                        if (TextUtils.equals(user.host, user.key.host)) {
                             user.account_key = accountKey
                             user.account_color = details.color
                             return SingleResponse(user).apply {

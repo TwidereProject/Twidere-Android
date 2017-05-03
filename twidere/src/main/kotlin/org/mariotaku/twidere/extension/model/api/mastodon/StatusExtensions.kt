@@ -71,12 +71,12 @@ fun Status.applyTo(accountKey: UserKey, result: ParcelableStatus) {
         extras.retweeted_external_url = retweetedStatus.url
 
         if (retweetedStatus.isSensitive) {
-            result.addFilterFlag(ParcelableStatus.FilterFlags.POSSIBILITY_SENSITIVE)
+            result.addFilterFlag(ParcelableStatus.FilterFlags.POSSIBLY_SENSITIVE)
         }
     } else {
         status = this
         if (status.isSensitive) {
-            result.addFilterFlag(ParcelableStatus.FilterFlags.POSSIBILITY_SENSITIVE)
+            result.addFilterFlag(ParcelableStatus.FilterFlags.POSSIBLY_SENSITIVE)
         }
     }
 

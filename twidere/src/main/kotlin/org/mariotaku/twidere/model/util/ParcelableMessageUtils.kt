@@ -6,6 +6,7 @@ import org.mariotaku.microblog.library.twitter.model.DMResponse.Entry.Message
 import org.mariotaku.microblog.library.twitter.model.DMResponse.Entry.Message.Data
 import org.mariotaku.microblog.library.twitter.model.DirectMessage
 import org.mariotaku.microblog.library.twitter.model.User
+import org.mariotaku.twidere.extension.model.api.key
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableMessage
@@ -156,8 +157,8 @@ object ParcelableMessageUtils {
     ) {
         this.account_key = accountKey
         this.id = message.id
-        this.sender_key = UserKeyUtils.fromUser(message.sender)
-        this.recipient_key = UserKeyUtils.fromUser(message.recipient)
+        this.sender_key = message.sender.key
+        this.recipient_key = message.recipient.key
         this.message_timestamp = message.createdAt.time
         this.local_timestamp = this.message_timestamp
         this.sort_id = this.message_timestamp + (499 * sortIdAdj).toLong()
