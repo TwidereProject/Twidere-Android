@@ -30,7 +30,7 @@ import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.util.activityStatus
+import org.mariotaku.twidere.extension.model.activityStatus
 
 class MediaPreloader(val context: Context) {
 

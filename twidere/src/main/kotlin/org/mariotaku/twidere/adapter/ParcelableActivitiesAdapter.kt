@@ -46,7 +46,7 @@ import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.fragment.CursorActivitiesFragment
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils
-import org.mariotaku.twidere.model.util.activityStatus
+import org.mariotaku.twidere.extension.model.activityStatus
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.JsonSerializer

@@ -10,7 +10,7 @@ import android.text.Spanned
 import android.text.style.StyleSpan
 import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.model.util.activityStatus
+import org.mariotaku.twidere.extension.model.activityStatus
 import org.mariotaku.twidere.text.style.NonBreakEllipseSpan
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.oshkimaadziig.george.androidutils.SpanFormatter

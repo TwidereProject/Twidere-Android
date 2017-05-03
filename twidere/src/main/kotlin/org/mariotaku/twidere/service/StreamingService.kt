@@ -32,9 +32,8 @@ import org.mariotaku.twidere.constant.streamingEnabledKey
 import org.mariotaku.twidere.constant.streamingNonMeteredNetworkKey
 import org.mariotaku.twidere.constant.streamingPowerSavingKey
 import org.mariotaku.twidere.extension.model.*
-import org.mariotaku.twidere.extension.model.api.key
+import org.mariotaku.twidere.extension.model.api.*
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
-import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.util.*

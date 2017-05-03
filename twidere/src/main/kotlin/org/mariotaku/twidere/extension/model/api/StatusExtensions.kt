@@ -29,7 +29,6 @@ import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils.addFilterFlag
-import org.mariotaku.twidere.model.util.toParcelable
 import org.mariotaku.twidere.text.AcctMentionSpan
 import org.mariotaku.twidere.util.HtmlSpanBuilder
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
