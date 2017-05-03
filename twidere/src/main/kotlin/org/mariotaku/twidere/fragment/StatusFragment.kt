@@ -1419,24 +1419,26 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             val fragment: StatusFragment
     ) : LoadMoreSupportAdapter<ViewHolder>(fragment.context, Glide.with(fragment)),
             IStatusesAdapter<List<ParcelableStatus>>, IItemCountsAdapter {
-        private val inflater: LayoutInflater
+
         override val twidereLinkify: TwidereLinkify
 
         override var statusClickListener: StatusClickListener? = null
-        private var recyclerView: RecyclerView? = null
-        private var detachedStatusViewHolder: DetailStatusViewHolder? = null
 
         override val itemCounts = ItemCounts(ITEM_TYPES_SUM)
 
-        private val cardBackgroundColor: Int
         override val nameFirst = preferences[nameFirstKey]
         override val mediaPreviewStyle = preferences[mediaPreviewStyleKey]
         override val linkHighlightingStyle = preferences[linkHighlightOptionKey]
         override val lightFont = preferences[lightFontKey]
         override val mediaPreviewEnabled = preferences[mediaPreviewKey]
         override val sensitiveContentEnabled = preferences[displaySensitiveContentsKey]
-        private val showCardActions = !preferences[hideCardActionsKey]
         override val useStarsForLikes = preferences[iWantMyStarsBackKey]
+
+        private val inflater: LayoutInflater
+        private val cardBackgroundColor: Int
+        private val showCardActions = !preferences[hideCardActionsKey]
+        private var recyclerView: RecyclerView? = null
+        private var detachedStatusViewHolder: DetailStatusViewHolder? = null
         private var mDetailMediaExpanded: Boolean = false
 
         var status: ParcelableStatus? = null
@@ -1488,10 +1490,16 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         override fun getStatus(position: Int, raw: Boolean): ParcelableStatus {
             when (getItemCountIndex(position, raw)) {
                 ITEM_IDX_CONVERSATION -> {
-                    return data!![position - getIndexStart(ITEM_IDX_CONVERSATION)]
+                    var idx = position - getIndexStart(ITEM_IDX_CONVERSATION)
+                    if (data!![idx].is_filtered) idx++
+                    return data!![idx]
                 }
                 ITEM_IDX_REPLY -> {
-                    return data!![position - getIndexStart(ITEM_IDX_CONVERSATION) - getTypeCount(ITEM_IDX_CONVERSATION) - getTypeCount(ITEM_IDX_STATUS) + replyStart]
+                    var idx = position - getIndexStart(ITEM_IDX_CONVERSATION) -
+                            getTypeCount(ITEM_IDX_CONVERSATION) - getTypeCount(ITEM_IDX_STATUS) +
+                            replyStart
+                    if (data!![idx].is_filtered) idx++
+                    return data!![idx]
                 }
                 ITEM_IDX_STATUS -> {
                     return status!!
@@ -1567,14 +1575,18 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 var replyStart = -1
                 data.forEachIndexed { i, item ->
                     if (item.sort_id < sortId) {
-                        conversationCount++
+                        if (!item.is_filtered) {
+                            conversationCount++
+                        }
                     } else if (status.id == item.id) {
                         this.status = item
                     } else if (item.sort_id > sortId) {
                         if (replyStart < 0) {
                             replyStart = i
                         }
-                        replyCount++
+                        if (!item.is_filtered) {
+                            replyCount++
+                        }
                     }
                 }
                 setTypeCount(ITEM_IDX_CONVERSATION, conversationCount)
@@ -1890,6 +1902,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             const val VIEW_TYPE_REPLY_ERROR = 4
             const val VIEW_TYPE_CONVERSATION_ERROR = 5
             const val VIEW_TYPE_SPACE = 6
+            const val VIEW_TYPE_EMPTY = 7
 
             const val ITEM_IDX_CONVERSATION_LOAD_MORE = 0
             const val ITEM_IDX_CONVERSATION_ERROR = 1

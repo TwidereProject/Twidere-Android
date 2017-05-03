@@ -41,7 +41,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -74,13 +73,12 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     public long _id;
 
     @SuppressWarnings("NullableProblems")
-
     @JsonField(name = "id")
     @CursorField(Statuses.ID)
     @NonNull
     public String id;
-    @SuppressWarnings("NullableProblems")
 
+    @SuppressWarnings("NullableProblems")
     @JsonField(name = "account_id", typeConverter = UserKeyConverter.class)
     @CursorField(value = Statuses.ACCOUNT_KEY, converter = UserKeyCursorFieldConverter.class)
     @NonNull
@@ -387,7 +385,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                 ", favorite_count=" + favorite_count +
                 ", reply_count=" + reply_count +
                 ", in_reply_to_status_id='" + in_reply_to_status_id + '\'' +
-                ", in_reply_to_user_id=" + in_reply_to_user_key +
+                ", in_reply_to_user_key=" + in_reply_to_user_key +
                 ", my_retweet_id='" + my_retweet_id + '\'' +
                 ", quoted_id='" + quoted_id + '\'' +
                 ", quoted_timestamp=" + quoted_timestamp +
@@ -435,6 +433,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                 ", account_color=" + account_color +
                 ", inserted_date=" + inserted_date +
                 ", is_pinned_status=" + is_pinned_status +
+                ", filter_flags=" + filter_flags +
                 '}';
     }
 
