@@ -119,7 +119,7 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
             data: List<ParcelableStatus>?): Boolean {
         if (data == null || data.isEmpty()) return false
         if (loader is IPaginationLoader) {
-            return loader.pagination != null
+            return loader.nextPagination != null
         }
         return true
     }
