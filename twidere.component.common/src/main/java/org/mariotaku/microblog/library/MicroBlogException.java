@@ -258,7 +258,9 @@ public class MicroBlogException extends Exception implements TwitterResponse, Ht
 
     @Override
     public String toString() {
-        return getMessage();
+        final String message = getMessage();
+        if (message == null) return getClass().getSimpleName();
+        return message;
     }
 
     public String getErrorMessage() {

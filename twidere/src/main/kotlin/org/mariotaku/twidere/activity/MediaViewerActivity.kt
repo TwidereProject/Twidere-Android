@@ -350,8 +350,10 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
             ParcelableMedia.Type.EXTERNAL_PLAYER -> {
                 return Fragment.instantiate(this, ExternalBrowserPageFragment::class.java.name, args) as MediaViewerFragment
             }
+            else -> {
+                return Fragment.instantiate(this, ExternalBrowserPageFragment::class.java.name, args) as MediaViewerFragment
+            }
         }
-        throw UnsupportedOperationException(media.toString())
     }
 
     override fun getMediaCount(): Int {

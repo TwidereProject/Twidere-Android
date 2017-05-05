@@ -53,5 +53,5 @@ private fun MicroBlogException.getMicroBlogErrorMessage(context: Context): Strin
     } else {
         errorMessage
     }
-    return msg ?: message ?: toString()
+    return msg ?: message ?: javaClass.simpleName
 }

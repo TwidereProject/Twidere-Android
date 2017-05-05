@@ -271,10 +271,12 @@ object Utils {
         return File(context.cacheDir, cacheDirName)
     }
 
-    fun getExternalCacheDir(context: Context?, cacheDirName: String,
-            sizeInBytes: Long): File? {
-        if (context == null) throw NullPointerException()
-        val externalCacheDir = context.externalCacheDir ?: return null
+    fun getExternalCacheDir(context: Context, cacheDirName: String, sizeInBytes: Long): File? {
+        val externalCacheDir = try {
+            context.externalCacheDir
+        } catch (e: SecurityException) {
+            null
+        } ?: return null
         val cacheDir = File(externalCacheDir, cacheDirName)
         if (sizeInBytes > 0 && externalCacheDir.freeSpace < sizeInBytes / 10) {
             // Less then 10% space available
