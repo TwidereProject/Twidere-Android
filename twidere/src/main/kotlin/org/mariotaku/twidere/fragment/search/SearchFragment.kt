@@ -67,6 +67,13 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface,
     val query: String
         get() = arguments.getString(EXTRA_QUERY)
 
+    val composePrefix: String
+        get() = when {
+            query.startsWith("@") || query.startsWith("\uff20") -> query
+            query.startsWith("#") || query.startsWith("\uff03") -> query
+            else -> "#$query"
+        }
+
     private val accountType: String?
         get() {
             val am = AccountManager.get(context)
@@ -126,7 +133,7 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface,
     override fun onPrepareOptionsMenu(menu: Menu) {
         if (isDetached || activity == null) return
         val item = menu.findItem(R.id.compose)
-        item.title = getString(R.string.tweet_hashtag, query)
+        item.title = getString(R.string.action_format_search_update_status, composePrefix)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -142,11 +149,7 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface,
             R.id.compose -> {
                 val intent = Intent(activity, ComposeActivity::class.java)
                 intent.action = INTENT_ACTION_COMPOSE
-                if (query.startsWith("@") || query.startsWith("\uff20")) {
-                    intent.putExtra(Intent.EXTRA_TEXT, query)
-                } else {
-                    intent.putExtra(Intent.EXTRA_TEXT, String.format("#%s ", query))
-                }
+                intent.putExtra(Intent.EXTRA_TEXT, "$composePrefix ")
                 intent.putExtra(EXTRA_ACCOUNT_KEY, accountKey)
                 startActivity(intent)
             }

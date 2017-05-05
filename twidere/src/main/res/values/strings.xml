@@ -65,6 +65,7 @@
     <string name="action_finish">Finish</string>
     <string name="action_follow">Follow</string>
     <string name="action_following">following</string>
+    <string name="action_format_search_update_status">Tweet <xliff:g id="text">%1$s</xliff:g></string>
     <string name="action_getting_status">getting tweet</string>
     <string name="action_getting_user_lists">getting user lists</string>
     <!-- [verb] Perform import action -->
