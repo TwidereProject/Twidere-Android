@@ -21,7 +21,13 @@ package org.mariotaku.twidere.extension.model.api
 
 import android.text.Spanned
 import android.text.style.URLSpan
+import org.apache.commons.lang3.text.translate.EntityArrays
+import org.apache.commons.lang3.text.translate.LookupTranslator
+import org.mariotaku.commons.text.CodePointArray
 import org.mariotaku.ktextension.mapToArray
+import org.mariotaku.microblog.library.twitter.model.EntitySupport
+import org.mariotaku.microblog.library.twitter.model.ExtendedEntitySupport
+import org.mariotaku.microblog.library.twitter.model.MediaEntity
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.extension.model.toParcelable
 import org.mariotaku.twidere.extension.toSpanItem
@@ -30,8 +36,10 @@ import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils.addFilterFlag
 import org.mariotaku.twidere.text.AcctMentionSpan
+import org.mariotaku.twidere.util.HtmlBuilder
 import org.mariotaku.twidere.util.HtmlSpanBuilder
-import org.mariotaku.twidere.util.InternalTwitterContentUtils
+import org.mariotaku.twidere.util.InternalTwitterContentUtils.getMediaUrl
+import org.mariotaku.twidere.util.InternalTwitterContentUtils.getStartEndForEntity
 
 fun Status.toParcelable(details: AccountDetails, profileImageSize: String = "normal"): ParcelableStatus {
     return toParcelable(details.key, details.type, profileImageSize).apply {
@@ -107,8 +115,8 @@ fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: S
             result.quoted_text_plain = result.quoted_text_unescaped
             result.quoted_spans = html?.spanItems
         } else {
-            val textWithIndices = InternalTwitterContentUtils.formatStatusTextWithIndices(quoted)
-            result.quoted_text_plain = InternalTwitterContentUtils.unescapeTwitterStatusText(quotedText)
+            val textWithIndices = quoted.formattedTextWithIndices()
+            result.quoted_text_plain = quotedText.twitterUnescaped()
             result.quoted_text_unescaped = textWithIndices.text
             result.quoted_spans = textWithIndices.spans
             extras.quoted_display_text_range = textWithIndices.range
@@ -160,9 +168,9 @@ fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: S
         result.text_plain = result.text_unescaped
         result.spans = html?.spanItems
     } else {
-        val textWithIndices = InternalTwitterContentUtils.formatStatusTextWithIndices(status)
+        val textWithIndices = status.formattedTextWithIndices()
         result.text_unescaped = textWithIndices.text
-        result.text_plain = InternalTwitterContentUtils.unescapeTwitterStatusText(text)
+        result.text_plain = text.twitterUnescaped()
         result.spans = textWithIndices.spans
         extras.display_text_range = textWithIndices.range
     }
@@ -183,6 +191,82 @@ fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: S
     result.place_full_name = status.placeFullName
     result.lang = status.lang
     result.extras = extras
+}
+
+
+fun Status.formattedTextWithIndices(): StatusTextWithIndices {
+    val source = CodePointArray(this.fullText ?: this.text!!)
+    val builder = HtmlBuilder(source, false, true, false)
+    builder.addEntities(this)
+    val textWithIndices = StatusTextWithIndices()
+    val (text, spans) = builder.buildWithIndices()
+    textWithIndices.text = text
+    textWithIndices.spans = spans
+
+    // Display text range
+    val range = displayTextRange?.takeIf { it.size == 2 }
+    if (range != null) {
+        textWithIndices.range = intArrayOf(
+                source.findResultRangeLength(spans, 0, range[0]),
+                text.length - source.findResultRangeLength(spans, range[1], source.length())
+        )
+    }
+    return textWithIndices
+}
+
+
+fun CodePointArray.findResultRangeLength(spans: Array<SpanItem>, origStart: Int, origEnd: Int): Int {
+    val findResult = findByOrigRange(spans, origStart, origEnd)
+    if (findResult.isEmpty()) {
+        return charCount(origStart, origEnd)
+    }
+    val first = findResult.first()
+    val last = findResult.last()
+    if (first.orig_start == -1 || last.orig_end == -1)
+        return charCount(origStart, origEnd)
+    return charCount(origStart, first.orig_start) + (last.end - first.start) + charCount(first.orig_end, origEnd)
+}
+
+
+fun HtmlBuilder.addEntities(entities: EntitySupport) {
+    // Format media.
+    var mediaEntities: Array<MediaEntity>? = null
+    if (entities is ExtendedEntitySupport) {
+        mediaEntities = entities.extendedMediaEntities
+    }
+    if (mediaEntities == null) {
+        mediaEntities = entities.mediaEntities
+    }
+    val startEnd = IntArray(2)
+    mediaEntities?.forEach { mediaEntity ->
+        val mediaUrl = getMediaUrl(mediaEntity)
+        if (mediaUrl != null && getStartEndForEntity(mediaEntity, startEnd)) {
+            addLink(mediaEntity.expandedUrl, mediaEntity.displayUrl,
+                    startEnd[0], startEnd[1], false)
+        }
+    }
+    entities.urlEntities?.forEach { urlEntity ->
+        val expandedUrl = urlEntity.expandedUrl
+        if (expandedUrl != null && getStartEndForEntity(urlEntity, startEnd)) {
+            addLink(expandedUrl, urlEntity.displayUrl, startEnd[0],
+                    startEnd[1], false)
+        }
+    }
+}
+
+private fun String.twitterUnescaped(): String {
+    return twitterRawTextTranslator.translate(this)
+}
+
+/**
+ * @param spans Ordered spans
+ * *
+ * @param start orig_start
+ * *
+ * @param end   orig_end
+ */
+internal fun findByOrigRange(spans: Array<SpanItem>, start: Int, end: Int): List<SpanItem> {
+    return spans.filter { it.orig_start >= start && it.orig_end <= end }
 }
 
 internal inline val CharSequence.spanItems get() = (this as? Spanned)?.let { text ->
@@ -247,3 +331,11 @@ private fun Status.getInReplyToUserKey(accountKey: UserKey): UserKey? {
 }
 
 private val noticeUriRegex = Regex("tag:([\\w\\d.]+),(\\d{4}-\\d{2}-\\d{2}):noticeId=(\\d+):objectType=(\\w+)")
+
+private object twitterRawTextTranslator : LookupTranslator(*EntityArrays.BASIC_UNESCAPE())
+
+class StatusTextWithIndices {
+    var text: String? = null
+    var spans: Array<SpanItem>? = null
+    var range: IntArray? = null
+}

@@ -25,7 +25,7 @@ import org.mariotaku.twidere.model.ParcelableMedia
 /**
  * Created by mariotaku on 2017/4/30.
  */
-fun Attachment.toParcelable(externalUrl: String) : ParcelableMedia? {
+fun Attachment.toParcelable(externalUrl: String?) : ParcelableMedia? {
     val mimeType = mimetype ?: return null
     val result = ParcelableMedia()
 

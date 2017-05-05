@@ -35,7 +35,7 @@ subprojects {
                     ObjectCursor         : '0.9.20',
                     PlayServices         : '10.2.4',
                     MapsUtils            : '0.4.4',
-                    Crashlyrics          : '2.6.7',
+                    Crashlyrics          : '2.6.8',
                     FabricPlugin         : '1.22.1',
                     PlayPublisher        : '1.1.5',
                     DropboxCoreSdk       : '2.1.2',

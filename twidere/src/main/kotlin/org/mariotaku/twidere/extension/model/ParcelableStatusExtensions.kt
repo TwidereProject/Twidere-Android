@@ -3,9 +3,10 @@ package org.mariotaku.twidere.extension.model
 import org.mariotaku.ktextension.addAllTo
 import org.mariotaku.twidere.model.*
 
-/**
- * Created by mariotaku on 2017/1/7.
- */
+
+val ParcelableStatus.originalId: String
+    get() = if (is_retweet) retweet_id else id
+
 val ParcelableStatus.media_type: Int
     get() = media?.firstOrNull()?.type ?: 0
 

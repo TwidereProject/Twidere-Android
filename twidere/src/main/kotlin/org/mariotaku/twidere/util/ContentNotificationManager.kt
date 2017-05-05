@@ -45,6 +45,7 @@ import org.mariotaku.twidere.annotation.NotificationType
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
 import org.mariotaku.twidere.constant.nameFirstKey
+import org.mariotaku.twidere.extension.model.api.formattedTextWithIndices
 import org.mariotaku.twidere.extension.model.getSummaryText
 import org.mariotaku.twidere.extension.model.getTitle
 import org.mariotaku.twidere.extension.model.notificationDisabled
@@ -340,10 +341,10 @@ class ContentNotificationManager(
         builder.setCategory(NotificationCompat.CATEGORY_SOCIAL)
         if (status.isRetweetedByMe) {
             builder.setContentTitle(context.getString(R.string.notification_title_new_retweet_by_user, userDisplayName))
-            builder.setContentText(InternalTwitterContentUtils.formatStatusTextWithIndices(status.retweetedStatus).text)
+            builder.setContentText(status.retweetedStatus.formattedTextWithIndices().text)
         } else {
             builder.setContentTitle(context.getString(R.string.notification_title_new_status_by_user, userDisplayName))
-            builder.setContentText(InternalTwitterContentUtils.formatStatusTextWithIndices(status).text)
+            builder.setContentText(status.formattedTextWithIndices().text)
         }
         builder.setContentIntent(PendingIntent.getActivity(context, 0, Intent(Intent.ACTION_VIEW, statusUri).apply {
             setClass(context, LinkHandlerActivity::class.java)

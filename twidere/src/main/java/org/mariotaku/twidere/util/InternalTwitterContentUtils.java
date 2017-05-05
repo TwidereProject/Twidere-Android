@@ -9,22 +9,16 @@ import android.text.TextUtils;
 import org.apache.commons.lang3.text.translate.CharSequenceTranslator;
 import org.apache.commons.lang3.text.translate.EntityArrays;
 import org.apache.commons.lang3.text.translate.LookupTranslator;
-import org.mariotaku.commons.text.CodePointArray;
 import org.mariotaku.microblog.library.twitter.model.DMResponse;
 import org.mariotaku.microblog.library.twitter.model.DirectMessage;
-import org.mariotaku.microblog.library.twitter.model.EntitySupport;
-import org.mariotaku.microblog.library.twitter.model.ExtendedEntitySupport;
 import org.mariotaku.microblog.library.twitter.model.MediaEntity;
-import org.mariotaku.microblog.library.twitter.model.Status;
 import org.mariotaku.microblog.library.twitter.model.UrlEntity;
 import org.mariotaku.microblog.library.twitter.model.User;
+import org.mariotaku.twidere.extension.model.api.StatusExtensionsKt;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.SpanItem;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.database.FilterQueryBuilder;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import kotlin.Pair;
 
@@ -130,124 +124,26 @@ public class InternalTwitterContentUtils {
     @NonNull
     public static Pair<String, SpanItem[]> formatDirectMessageText(@NonNull final DirectMessage message) {
         final HtmlBuilder builder = new HtmlBuilder(message.getText(), false, true, false);
-        parseEntities(builder, message);
+        StatusExtensionsKt.addEntities(builder, message);
         return builder.buildWithIndices();
     }
 
     @NonNull
     public static Pair<String, SpanItem[]> formatDirectMessageText(@NonNull final DMResponse.Entry.Message.Data message) {
         final HtmlBuilder builder = new HtmlBuilder(message.getText(), false, true, false);
-        parseEntities(builder, message);
+        StatusExtensionsKt.addEntities(builder, message);
         return builder.buildWithIndices();
-    }
-
-    @NonNull
-    public static StatusTextWithIndices formatStatusTextWithIndices(@NonNull final Status status) {
-        //TODO handle twitter video url
-
-        String text = status.getFullText();
-        CodePointArray source;
-        // Display text range
-        int[] range = null;
-        if (text == null) {
-            text = status.getText();
-            source = new CodePointArray(text);
-        } else {
-            range = status.getDisplayTextRange();
-            source = new CodePointArray(text);
-        }
-        final HtmlBuilder builder = new HtmlBuilder(source, false, true, false);
-        parseEntities(builder, status);
-        StatusTextWithIndices textWithIndices = new StatusTextWithIndices();
-        final Pair<String, SpanItem[]> pair = builder.buildWithIndices();
-        textWithIndices.text = pair.getFirst();
-        textWithIndices.spans = pair.getSecond();
-        if (range != null && range.length == 2) {
-            textWithIndices.range = new int[2];
-            textWithIndices.range[0] = getResultRangeLength(source, pair.getSecond(), 0, range[0]);
-            textWithIndices.range[1] = pair.getFirst().length() - getResultRangeLength(source,
-                    pair.getSecond(), range[1], source.length());
-        }
-        return textWithIndices;
-    }
-
-    /**
-     * @param spans Ordered spans
-     * @param start orig_start
-     * @param end   orig_end
-     */
-    @NonNull
-    static List<SpanItem> findByOrigRange(SpanItem[] spans, int start, int end) {
-        List<SpanItem> result = new ArrayList<>();
-        for (SpanItem span : spans) {
-            if (span.orig_start >= start && span.orig_end <= end) {
-                result.add(span);
-            }
-        }
-        return result;
-    }
-
-    static int getResultRangeLength(CodePointArray source, SpanItem[] spans, int origStart, int origEnd) {
-        List<SpanItem> findResult = findByOrigRange(spans, origStart, origEnd);
-        if (findResult.isEmpty()) {
-            return source.charCount(origStart, origEnd);
-        }
-        SpanItem first = findResult.get(0), last = findResult.get(findResult.size() - 1);
-        if (first.orig_start == -1 || last.orig_end == -1)
-            return source.charCount(origStart, origEnd);
-        return source.charCount(origStart, first.orig_start) + (last.end - first.start)
-                + source.charCount(first.orig_end, origEnd);
-    }
-
-    public static class StatusTextWithIndices {
-        public String text;
-        public SpanItem[] spans;
-        @Nullable
-        public int[] range;
     }
 
     public static String getMediaUrl(MediaEntity entity) {
         return TextUtils.isEmpty(entity.getMediaUrlHttps()) ? entity.getMediaUrl() : entity.getMediaUrlHttps();
     }
 
-    private static void parseEntities(final HtmlBuilder builder, final EntitySupport entities) {
-        // Format media.
-        MediaEntity[] mediaEntities = null;
-        if (entities instanceof ExtendedEntitySupport) {
-            mediaEntities = ((ExtendedEntitySupport) entities).getExtendedMediaEntities();
-        }
-        if (mediaEntities == null) {
-            mediaEntities = entities.getMediaEntities();
-        }
-        int[] startEnd = new int[2];
-        if (mediaEntities != null) {
-            for (final MediaEntity mediaEntity : mediaEntities) {
-                final String mediaUrl = getMediaUrl(mediaEntity);
-                if (mediaUrl != null && getStartEndForEntity(mediaEntity, startEnd)) {
-                    builder.addLink(mediaEntity.getExpandedUrl(), mediaEntity.getDisplayUrl(),
-                            startEnd[0], startEnd[1], false);
-                }
-            }
-        }
-        final UrlEntity[] urlEntities = entities.getUrlEntities();
-        if (urlEntities != null) {
-            for (final UrlEntity urlEntity : urlEntities) {
-                final String expandedUrl = urlEntity.getExpandedUrl();
-                if (expandedUrl != null && getStartEndForEntity(urlEntity, startEnd)) {
-                    builder.addLink(expandedUrl, urlEntity.getDisplayUrl(), startEnd[0],
-                            startEnd[1], false);
-                }
-            }
-        }
-    }
-
-    private static boolean getStartEndForEntity(UrlEntity entity, @NonNull int[] out) {
+    public static boolean getStartEndForEntity(UrlEntity entity, @NonNull int[] out) {
         out[0] = entity.getStart();
         out[1] = entity.getEnd();
         return true;
     }
 
-    public static String getOriginalId(@NonNull ParcelableStatus status) {
-        return status.is_retweet ? status.retweet_id : status.id;
-    }
+
 }

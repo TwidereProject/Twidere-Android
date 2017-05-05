@@ -189,6 +189,7 @@ public final class TwidereLinkify implements Constants {
                     }
                     string.removeSpan(span);
                     String url = span.getURL();
+                    if (url == null) break;
                     int linkType = type;
                     if (span instanceof AcctMentionSpan) {
                         linkType = LINK_TYPE_USER_ACCT;

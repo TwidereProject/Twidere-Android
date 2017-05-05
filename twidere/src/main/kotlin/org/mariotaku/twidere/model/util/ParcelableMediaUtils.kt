@@ -3,73 +3,25 @@ package org.mariotaku.twidere.model.util
 import org.mariotaku.ktextension.addAllTo
 import org.mariotaku.ktextension.isNullOrEmpty
 import org.mariotaku.ktextension.toIntOr
-import org.mariotaku.microblog.library.twitter.model.*
+import org.mariotaku.microblog.library.twitter.model.CardEntity
+import org.mariotaku.microblog.library.twitter.model.MediaEntity
+import org.mariotaku.microblog.library.twitter.model.Status
+import org.mariotaku.microblog.library.twitter.model.UrlEntity
+import org.mariotaku.twidere.extension.model.api.getEntityMedia
 import org.mariotaku.twidere.extension.model.api.gnusocial.toParcelable
 import org.mariotaku.twidere.extension.model.toParcelable
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.util.InternalTwitterContentUtils
-import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor
 
 /**
  * Created by mariotaku on 16/2/13.
  */
 object ParcelableMediaUtils {
 
-    fun fromEntities(entities: EntitySupport): Array<ParcelableMedia> {
-        val list = ArrayList<ParcelableMedia>()
-        val mediaEntities: Array<MediaEntity>?
-        if (entities is ExtendedEntitySupport) {
-            val extendedMediaEntities = entities.extendedMediaEntities
-            mediaEntities = extendedMediaEntities ?: entities.mediaEntities
-        } else {
-            mediaEntities = entities.mediaEntities
-        }
-        if (mediaEntities != null) {
-            for (media in mediaEntities) {
-                val mediaURL = InternalTwitterContentUtils.getMediaUrl(media)
-                if (mediaURL != null) {
-                    list.add(ParcelableMediaUtils.fromMediaEntity(media))
-                }
-            }
-        }
-        val urlEntities = entities.urlEntities
-        if (urlEntities != null) {
-            for (url in urlEntities) {
-                val expanded = url.expandedUrl
-                val media = PreviewMediaExtractor.fromLink(expanded)
-                if (media != null) {
-                    list.add(media)
-                }
-            }
-        }
-        return list.toTypedArray()
-    }
-
-    fun fromMediaEntity(entity: MediaEntity): ParcelableMedia {
-        val media = ParcelableMedia()
-        val mediaUrl = InternalTwitterContentUtils.getMediaUrl(entity)
-        media.url = mediaUrl
-        media.media_url = mediaUrl
-        media.preview_url = mediaUrl
-        media.page_url = entity.expandedUrl
-        media.type = ParcelableMediaUtils.getTypeInt(entity.type)
-        media.alt_text = entity.altText
-        val size = entity.sizes[MediaEntity.ScaleType.LARGE]
-        if (size != null) {
-            media.width = size.width
-            media.height = size.height
-        } else {
-            media.width = 0
-            media.height = 0
-        }
-        media.video_info = ParcelableMedia.VideoInfo.fromMediaEntityInfo(entity.videoInfo)
-        return media
-    }
 
     fun fromStatus(status: Status, accountKey: UserKey, accountType: String): Array<ParcelableMedia>? {
-        return fromEntities(status) + fromAttachments(status) + fromCard(status.card,
+        return status.getEntityMedia() + status.getAttachmentMedia() + fromCard(status.card,
                 status.urlEntities, status.mediaEntities, status.extendedMediaEntities, accountKey,
                 accountType) + fromPhoto(status)
     }
@@ -85,10 +37,10 @@ object ParcelableMediaUtils {
         return arrayOf(media)
     }
 
-    private fun fromAttachments(status: Status): Array<ParcelableMedia> {
-        val attachments = status.attachments ?: return emptyArray()
-        val externalUrl = status.externalUrl
-        return attachments.mapNotNull { it.toParcelable(externalUrl) }.toTypedArray()
+    private fun Status.getAttachmentMedia(): Array<ParcelableMedia> {
+        return attachments?.mapNotNull {
+            it.toParcelable(externalUrl)
+        }?.toTypedArray() ?: emptyArray()
     }
 
     private fun fromCard(card: CardEntity?, urlEntities: Array<UrlEntity>?,

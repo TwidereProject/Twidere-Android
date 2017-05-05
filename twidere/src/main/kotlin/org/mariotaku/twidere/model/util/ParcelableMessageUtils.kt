@@ -6,6 +6,7 @@ import org.mariotaku.microblog.library.twitter.model.DMResponse.Entry.Message
 import org.mariotaku.microblog.library.twitter.model.DMResponse.Entry.Message.Data
 import org.mariotaku.microblog.library.twitter.model.DirectMessage
 import org.mariotaku.microblog.library.twitter.model.User
+import org.mariotaku.twidere.extension.model.api.getEntityMedia
 import org.mariotaku.twidere.extension.model.api.key
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.model.ParcelableMedia
@@ -169,7 +170,7 @@ object ParcelableMessageUtils {
         this.extras = extras
         this.text_unescaped = text
         this.spans = spans
-        this.media = ParcelableMediaUtils.fromEntities(message)
+        this.media = message.getEntityMedia()
     }
 
     private fun typeAndExtras(message: DirectMessage): Pair<String, MessageExtras?> {
@@ -187,17 +188,17 @@ object ParcelableMessageUtils {
         when {
             attachment.photo != null -> {
                 val photo = attachment.photo
-                val media = arrayOf(ParcelableMediaUtils.fromMediaEntity(photo))
+                val media = arrayOf(photo.toParcelable())
                 return Triple(MessageType.TEXT, null, media)
             }
             attachment.video != null -> {
                 val video = attachment.video
-                val media = arrayOf(ParcelableMediaUtils.fromMediaEntity(video))
+                val media = arrayOf(video.toParcelable())
                 return Triple(MessageType.TEXT, null, media)
             }
             attachment.animatedGif != null -> {
                 val video = attachment.animatedGif
-                val media = arrayOf(ParcelableMediaUtils.fromMediaEntity(video))
+                val media = arrayOf(video.toParcelable())
                 return Triple(MessageType.TEXT, null, media)
             }
             attachment.sticker != null -> {
