@@ -1153,7 +1153,8 @@
 
     <string name="subscribers">Subscriber</string>
 
-    <string name="summary_interactions_not_available">Only available with official keys</string>
+    <string name="summary_interactions_account_not_supported">Account not supported</string>
+    <string name="summary_interactions_official_required">Only available with official keys</string>
 
     <string name="swipe_down_to_refresh">Swipe down to refresh</string>
 

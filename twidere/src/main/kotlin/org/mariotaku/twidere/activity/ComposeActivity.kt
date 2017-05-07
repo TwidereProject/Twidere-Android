@@ -967,9 +967,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         if (user == null || user.key == null) return false
         val accountScreenName = DataStoreUtils.getAccountScreenName(this, user.account_key)
         if (TextUtils.isEmpty(accountScreenName)) return false
-        editText.setText(String.format("@%s ", user.screen_name))
-        val selection_end = editText.length()
-        editText.setSelection(selection_end)
+        editText.setText("@${user.acct} ")
+        val selectionEnd = editText.length()
+        editText.setSelection(selectionEnd)
         accountsAdapter.selectedAccountKeys = arrayOf(user.account_key)
         return true
     }

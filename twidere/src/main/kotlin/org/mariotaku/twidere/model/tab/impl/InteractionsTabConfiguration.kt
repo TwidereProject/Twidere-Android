@@ -24,6 +24,7 @@ import android.view.View
 import android.widget.CheckBox
 import android.widget.TextView
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.TabAccountFlags
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_MENTIONS_ONLY
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_MY_FOLLOWING_ONLY
@@ -87,39 +88,52 @@ class InteractionsTabConfiguration : TabConfiguration() {
 
     private class MentionsOnlyExtraConfiguration(key: String) : BooleanExtraConfiguration(key,
             StringHolder.resource(R.string.mentions_only),
-            MentionsOnlyExtraConfiguration.HasOfficialBooleanHolder()) {
+            MentionsOnlyExtraConfiguration.InteractionsAvailableBooleanHolder()) {
 
         private var valueBackup: Boolean = false
 
         override fun onAccountSelectionChanged(account: AccountDetails?) {
-            val hasOfficial: Boolean
-            if (account == null || account.dummy) {
-                hasOfficial = AccountUtils.hasOfficialKeyAccount(context)
-            } else {
-                hasOfficial = account.isOfficial(context)
-            }
-            (defaultValue as HasOfficialBooleanHolder).hasOfficial = hasOfficial
             val checkBox = view.findViewById(android.R.id.checkbox) as CheckBox
             val titleView = view.findViewById(android.R.id.title) as TextView
             val summaryView = view.findViewById(android.R.id.summary) as TextView
-            view.isEnabled = hasOfficial
-            titleView.isEnabled = hasOfficial
-            summaryView.isEnabled = hasOfficial
-            checkBox.isEnabled = hasOfficial
-            if (hasOfficial) {
+
+            var requiresOfficial = false
+            var interactionsAvailable = false
+            if (account == null || account.dummy) {
+                requiresOfficial = AccountUtils.hasOfficialKeyAccount(context)
+            } else when (account.type) {
+                AccountType.TWITTER -> {
+                    requiresOfficial = true
+                    interactionsAvailable = account.isOfficial(context)
+                }
+                AccountType.MASTODON -> {
+                    interactionsAvailable = true
+                }
+            }
+            (defaultValue as InteractionsAvailableBooleanHolder).available = interactionsAvailable
+            view.isEnabled = interactionsAvailable
+            titleView.isEnabled = interactionsAvailable
+            summaryView.isEnabled = interactionsAvailable
+            checkBox.isEnabled = interactionsAvailable
+            if (interactionsAvailable) {
                 checkBox.isChecked = valueBackup
                 summaryView.visibility = View.GONE
+            } else if (requiresOfficial) {
+                valueBackup = checkBox.isChecked
+                checkBox.isChecked = true
+                summaryView.setText(R.string.summary_interactions_official_required)
+                summaryView.visibility = View.VISIBLE
             } else {
                 valueBackup = checkBox.isChecked
                 checkBox.isChecked = true
-                summaryView.setText(R.string.summary_interactions_not_available)
+                summaryView.setText(R.string.summary_interactions_account_not_supported)
                 summaryView.visibility = View.VISIBLE
             }
         }
 
         override var value: Boolean
             get() {
-                if ((defaultValue as HasOfficialBooleanHolder).hasOfficial) {
+                if ((defaultValue as InteractionsAvailableBooleanHolder).available) {
                     return super.value
                 }
                 return valueBackup
@@ -128,12 +142,12 @@ class InteractionsTabConfiguration : TabConfiguration() {
                 super.value = value
             }
 
-        private class HasOfficialBooleanHolder : BooleanHolder() {
+        private class InteractionsAvailableBooleanHolder : BooleanHolder() {
 
-            var hasOfficial: Boolean = false
+            var available: Boolean = false
 
             override fun createBoolean(context: Context): Boolean {
-                return hasOfficial
+                return available
             }
 
         }
