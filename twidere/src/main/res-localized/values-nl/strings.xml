@@ -8,7 +8,6 @@
   <string name="action_accept_friend_request">Accepteer</string>
   <!-- [verb] Accept a permission request like allow to use camera etc. -->
   <string name="action_accept_permission_request">Accepteer</string>
-  <string name="action_accepting_follow_request">accepteer volg verzoek</string>
   <!-- [verb] Add an item to a list/collection -->
   <string name="action_add">Toevoegen</string>
   <!-- [verb] Add a member to a message conversation -->
@@ -19,70 +18,48 @@
   <string name="action_add_tab">Voeg een tabblad toe</string>
   <string name="action_add_to_filter">Voeg toe aan filter</string>
   <string name="action_add_to_list">Toevoegen aan lijst</string>
-  <string name="action_adding_member">Lid aan het toevoegen</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Blokkeren</string>
-  <string name="action_blocking">Bezig met blokkeren</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">Annuleer retweet</string>
   <string name="action_center">Centrum</string>
   <string name="action_clear">Wis</string>
   <string name="action_compose">Opstellen</string>
-  <string name="action_creating_list">Lijst aan het maken</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">Verwijderen</string>
-  <string name="action_deleting">Aan het verwijderen</string>
-  <string name="action_deleting_search">zoekopdracht aan het verwijderen</string>
-  <string name="action_denying_follow_request">weiger volg verzoek</string>
   <string name="action_dont_restart">Niet herstarten</string>
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">Bewerk</string>
   <string name="action_favorite">Favoriet</string>
-  <string name="action_favoriting">Favoriet aan het toevoegen</string>
   <string name="action_finish">Voltooi</string>
   <string name="action_follow">Volgen</string>
-  <string name="action_following">Aan het volgen</string>
-  <string name="action_getting_status">tweet aan het verkrijgen</string>
-  <string name="action_getting_user_lists">gebruikerslijsten ophalen</string>
   <!-- [verb] Perform import action -->
   <string name="action_import_from">Importeren uit&#8230;</string>
   <!-- Used for decide something later, like permission request -->
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">Like</string>
-  <string name="action_modifying_lists">lijsten bewerken</string>
   <string name="action_mute">Dempen</string>
-  <string name="action_muting">dempen</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g> opgeslagen op <xliff:g id="time">%2$s</xliff:g></string>
   <string name="action_pick_color">Kleur kiezen</string>
   <string name="action_quote">Citeer</string>
   <string name="action_refresh">Vernieuwen</string>
-  <string name="action_refreshing_direct_messages">Berichten aan het vernieuwen</string>
-  <string name="action_refreshing_home_timeline">Thuis tijdlijn aan het vernieuwen</string>
-  <string name="action_refreshing_mentions">Vermeldingen vernieuwen</string>
-  <string name="action_removing_profile_banner_image">profiel headerfoto aan het verwijderen</string>
   <string name="action_reply">Antwoord</string>
   <string name="action_report_spam">Rapporteer spam</string>
-  <string name="action_reporting_for_spam">Aan het rapporteren als spam</string>
   <!-- [verb] Restore purchase -->
   <string name="action_retry">Opnieuw proberen</string>
   <!-- [verb] Action for performing retweet -->
-  <string name="action_retweeting">Bezig met retweeten</string>
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Bewaar</string>
-  <string name="action_saving_search">Bezig met opslaan van zoekopdracht</string>
   <string name="action_search">Zoeken</string>
   <string name="action_select_user">Selecteer gebruiker</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Verzenden</string>
-  <string name="action_sending_direct_message">Bericht aan het verzenden</string>
   <string name="action_set_color">Stel kleur in</string>
   <string name="action_set_nickname">Stel bijnaam in</string>
   <string name="action_share">Delen</string>
-  <string name="action_signing_in">Bezig met inloggen</string>
   <!-- [verb] Used for skip some settings -->
   <string name="action_start">Start</string>
   <string name="action_subscribe">Abboneer</string>
-  <string name="action_subscribing_to_list">Abonneren op lijst</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
   <!-- [verb] Disconnect from network storage -->
   <string name="action_sync_settings">Instellingen</string>
@@ -93,22 +70,11 @@
   <string name="action_twitter_muted_users">Gedempte gebruikers</string>
   <!-- [verb] Action for unblocking user -->
   <string name="action_unblock">Blokkering opheffen</string>
-  <string name="action_unblocking">Aan het deblokkeren</string>
   <string name="action_undo_like">Like ongedaan maken</string>
   <string name="action_unfavorite">Defavoriet</string>
-  <string name="action_unfavoriting">Favoriet aan het verwijderen</string>
   <string name="action_unfollow">Ontvolgen</string>
-  <string name="action_unfollowing">Bezig met ontvolgen</string>
   <string name="action_unmute">Niet meer dempen</string>
-  <string name="action_unmuting">niet meer dempen</string>
   <string name="action_unsubscribe">Uitschrijven</string>
-  <string name="action_unsubscribing_from_list">Afmelden van lijst</string>
-  <string name="action_updating_details">Details aan het vernieuwen</string>
-  <string name="action_updating_profile">Profiel aan het updaten</string>
-  <string name="action_updating_profile_background_image">achtergrondfoto van profiel aan het bijwerken</string>
-  <string name="action_updating_profile_banner_image">profiel headerfoto aan het updaten</string>
-  <string name="action_updating_profile_image">Profielfoto aan het updaten</string>
-  <string name="action_updating_status">tweet aan het verzenden</string>
   <string name="action_view_map">Kaart</string>
   <string name="activated_accounts">Geactiveerde accounts</string>
   <string name="activities_about_me">Activiteiten over mij</string>
@@ -168,7 +134,6 @@
   <string name="count_label_retweets">Retweets</string>
   <string name="created_by">Gemaakt door <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">\'\'<xliff:g id="list">%s</xliff:g>\'\' lijst aangemaakt.</string>
-  <string name="title_crop_image">Afbeelding bijsnijden</string>
   <string name="current_status">Huidige tweet</string>
   <string name="custom_host_mapping">Aangepaste host toewijzingen</string>
   <string name="custom_host_mapping_summary">Host toewijzingen zoals /etc/hosts, maar heeft geen aanvullende rechten nodig.</string>
@@ -324,6 +289,10 @@
   <string name="label_refresh_and_sync_service">Vernieuwen &amp; Sync-dienst</string>
   <string name="label_refresh_service">Vernieuw dienst</string>
   <string name="label_status_not_available">Tweet niet beschikbaar</string>
+  <!-- Mastodon feature, post to mentioned users only -->
+  <!-- Mastodon feature, post to followers only -->
+  <!-- Mastodon feature, post to public timelines -->
+  <!-- Mastodon feature, do not show in public timelines -->
   <string name="label_streaming_service">Streaming-dienst</string>
   <string name="label_translate_from_language">Vertaal vanuit <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">Vertaling</string>
@@ -509,7 +478,6 @@
   <string name="profile_banner">Profielbanner</string>
   <string name="profile_image">Profielfoto</string>
   <string name="profile_image_style">Profielfoto stijl</string>
-  <string name="message_toast_profile_image_updated">Profielfoto bijgewerkt.</string>
   <string name="profile_images">Profielfoto\'s</string>
   <string name="profile_link_color_main_color">Linkkleur (hoofdkleur)</string>
   <string name="profile_text_color">Tekstkleur</string>
@@ -553,7 +521,6 @@
   <string name="refresh_type_home">Thuis</string>
   <string name="refresh_type_interactions">Interacties</string>
   <string name="refresh_type_messages">Berichten</string>
-  <string name="action_register">Registreer</string>
   <string name="remember_position">Onthoud positie</string>
   <string name="remember_position_summary">Onthoud lijst of tab positie voor afsluiten Twidere</string>
   <string name="remove">Verwijder</string>
@@ -617,7 +584,6 @@
   <string name="show_absolute_time">Laat absolute tijd zien</string>
   <string name="show_absolute_time_summary">Laat absolute tijd in tweets zien</string>
   <string name="show_in_timeline">Toon in tijdlijn</string>
-  <string name="action_sign_in">Inloggen</string>
   <string name="sign_in_service_email">E-mail</string>
   <string name="sign_in_service_google_id">Google ID</string>
   <string name="sign_in_service_twitter">Twitter</string>
@@ -754,7 +720,6 @@
   <string name="usage_statistics_notification_summary">Help ons om Twidere te verbeteren!</string>
   <string name="user_blocked">Deze gebruiker is geblokkeerd.</string>
   <string name="user_filter_name">Gebruiker:<xliff:g id="name">%s</xliff:g></string>
-  <string name="title_user_list">Lijst</string>
   <string name="user_list_details">Lijstdetails</string>
   <!-- User list description -->
   <string name="user_list_details_description">Beschrijving</string>

@@ -31,6 +31,10 @@
   <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
   <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
   <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
+  <!-- Mastodon feature, post to mentioned users only -->
+  <!-- Mastodon feature, post to followers only -->
+  <!-- Mastodon feature, post to public timelines -->
+  <!-- Mastodon feature, do not show in public timelines -->
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted

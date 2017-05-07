@@ -8,7 +8,6 @@
   <string name="action_accept_friend_request">Akceptuj</string>
   <!-- [verb] Accept a permission request like allow to use camera etc. -->
   <string name="action_accept_permission_request">Akceptuj</string>
-  <string name="action_accepting_follow_request">akceptowanie żądania obserwacji</string>
   <!-- [verb] Add an item to a list/collection -->
   <string name="action_add">Dodaj</string>
   <!-- [verb] Add a member to a message conversation -->
@@ -20,10 +19,8 @@
   <string name="action_add_tab">Dodaj zakładkę</string>
   <string name="action_add_to_filter">Dodaj do filtra</string>
   <string name="action_add_to_list">Dodaj do listy</string>
-  <string name="action_adding_member">dodawanie członka</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Zablokuj</string>
-  <string name="action_blocking">blokowanie</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">Cofnij prześlij dalej</string>
   <string name="action_center">Wyśrodkuj</string>
@@ -32,13 +29,9 @@
   <string name="action_compose_message_convert_to_status">Konwertuj do tweeta</string>
   <string name="action_conversation_info">Informacja o konwersacji</string>
   <string name="action_create_conversation">Utwórz konwersację</string>
-  <string name="action_creating_list">tworzenie listy</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">Usuń</string>
   <string name="action_delete_messages">Usuń wiadomości</string>
-  <string name="action_deleting">usuwanie</string>
-  <string name="action_deleting_search">usuwanie wyszukiwania</string>
-  <string name="action_denying_follow_request">odmawianie żądania obserwacji</string>
   <string name="action_dont_restart">Nie uruchamiaj ponownie</string>
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">Edytuj</string>
@@ -46,15 +39,11 @@
   <string name="action_edit_conversation_name">Edytuj nazwę</string>
   <string name="action_edit_filter_rule">Edytuj regułę</string>
   <string name="action_favorite">Dodaj do ulubionych</string>
-  <string name="action_favoriting">dodawanie do ulubionych</string>
   <string name="action_filter_import_from_blocked_users">Importuj z zablokowanych użytkowników</string>
   <string name="action_filter_import_from_muted_users">Importuj z wyciszonych użytkowników</string>
   <string name="action_filter_subscriptions_card_manage">Zarządzaj subskrypcjami</string>
   <string name="action_finish">Zakończ</string>
   <string name="action_follow">Obserwuj</string>
-  <string name="action_following">obserwowanie</string>
-  <string name="action_getting_status">pobieranie tweeta</string>
-  <string name="action_getting_user_lists">pobieranie list użytkowników</string>
   <!-- [verb] Perform import action -->
   <string name="action_import">Import</string>
   <string name="action_import_from">Importuj z&#8230;</string>
@@ -64,49 +53,37 @@
   <string name="action_leave_conversation">Opuść konwersację</string>
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">Lubię to</string>
-  <string name="action_modifying_lists">modyfikowanie list</string>
   <string name="action_mute">Wycisz</string>
   <string name="action_mute_notifications">Wycisz powiadomienia</string>
-  <string name="action_muting">wyciszanie</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, zapisono o <xliff:g id="time">%2$s</xliff:g></string>
   <string name="action_open_in_browser">Otwórz w przeglądarce</string>
   <string name="action_pick_color">Wybierz kolor</string>
   <string name="action_quote">Cytuj</string>
   <string name="action_record_video">Nagraj wideo</string>
   <string name="action_refresh">Odśwież</string>
-  <string name="action_refreshing_direct_messages">odświeżanie wiadomości</string>
-  <string name="action_refreshing_home_timeline">odświeżanie strumienia głównego</string>
-  <string name="action_refreshing_mentions">odświeżanie wzmianek</string>
   <string name="action_remove_conversation_avatar">Usuń ikonę</string>
-  <string name="action_removing_profile_banner_image">usuwanie obrazu nagłówka profilu</string>
   <string name="action_reply">Odpowiedz</string>
   <string name="action_report_spam">Zgłoś spam</string>
-  <string name="action_reporting_for_spam">zgłaszanie spamu</string>
   <!-- [verb] Restore purchase -->
   <string name="action_restore_purchase">Przywróć</string>
   <string name="action_retry">Ponów</string>
   <!-- [verb] Action for performing retweet -->
   <string name="action_retweet">Prześlij dalej</string>
-  <string name="action_retweeting">przesyłanie dalej</string>
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Zapisz</string>
-  <string name="action_saving_search">zapisywanie wyszukiwania</string>
   <string name="action_search">Szukaj</string>
   <string name="action_select_all">Zaznacz wszystko</string>
   <string name="action_select_user">Wybierz użytkownika</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Wyślij</string>
-  <string name="action_sending_direct_message">wysyłanie wiadomości</string>
   <string name="action_set_color">Ustaw kolor</string>
   <string name="action_set_nickname">Ustaw pseudonim</string>
   <string name="action_share">Udostępnij</string>
-  <string name="action_signing_in">logowanie</string>
   <!-- [verb] Used for skip some settings -->
   <string name="action_skip">Pomiń</string>
   <string name="action_status_block_users">Zablokuj użytkowników&#8230;</string>
   <string name="action_status_mute_users">Wycisz użytkowników&#8230;</string>
   <string name="action_subscribe">Zapisz</string>
-  <string name="action_subscribing_to_list">zapisywanie na listę</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
   <string name="action_sync_connect_to_storage">Połącz</string>
   <!-- [verb] Disconnect from network storage -->
@@ -120,20 +97,10 @@
   <string name="action_twitter_muted_users">Użytkownicy wyciszeni</string>
   <!-- [verb] Action for unblocking user -->
   <string name="action_unblock">Odblokuj</string>
-  <string name="action_unblocking">odblokowywanie</string>
   <string name="action_unfavorite">Usuń z ulubionych</string>
-  <string name="action_unfavoriting">usuwanie z ulubionych</string>
   <string name="action_unfollow">Przestań obserwować</string>
-  <string name="action_unfollowing">anulowanie obserwowania</string>
   <string name="action_unmute">Wyłącz wyciszenie</string>
-  <string name="action_unmuting">wyłączanie wyciszenia</string>
   <string name="action_unsubscribe">Wypisz</string>
-  <string name="action_unsubscribing_from_list">wypisywanie z listy</string>
-  <string name="action_updating_details">aktualizowanie szczegółów</string>
-  <string name="action_updating_profile">aktualizowanie profilu</string>
-  <string name="action_updating_profile_banner_image">aktualizowanie obrazu nagłówka profilu</string>
-  <string name="action_updating_profile_image">aktualizowanie obrazu profilowego</string>
-  <string name="action_updating_status">wysyłanie tweeta</string>
   <string name="action_view_map">Mapa</string>
   <string name="activated_accounts">Aktywowane konta</string>
   <string name="activities_about_me">Moja aktywność</string>
@@ -324,6 +291,10 @@
   <string name="label_photo">Zdjęcie</string>
   <string name="label_photos">Zdjęcia</string>
   <string name="label_refresh_service">Odświeżanie</string>
+  <!-- Mastodon feature, post to mentioned users only -->
+  <!-- Mastodon feature, post to followers only -->
+  <!-- Mastodon feature, post to public timelines -->
+  <!-- Mastodon feature, do not show in public timelines -->
   <string name="label_translation">Tłumaczenie</string>
   <string name="label_video">Wideo</string>
   <string name="label_your_profile_image">Twoje zdjęcie profilowe</string>
@@ -507,7 +478,6 @@
   <string name="profile_background_color">Kolor tła</string>
   <string name="profile_banner">Nagłówek profilu</string>
   <string name="profile_image">Zdjęcie profilowe</string>
-  <string name="message_toast_profile_image_updated">Zdjęcie profilowe zaktualizowane.</string>
   <string name="profile_images">Zdjęcia profilowe</string>
   <string name="profile_text_color">Kolor tekstu</string>
   <string name="profile_updated">Profil zaktualizowany.</string>
@@ -547,7 +517,6 @@
   <string name="refresh_type_interactions">Interakcje</string>
   <string name="refresh_type_messages">Wiadomości</string>
   <string name="refresh_type_trends">Trendy</string>
-  <string name="action_register">Zarejestruj się</string>
   <string name="remember_position">Zapamiętaj pozycję</string>
   <string name="remember_position_summary">Zapamiętaj pozycję listy/zakładki przed zamknięciem Twidere</string>
   <string name="remove">Usuń</string>
@@ -599,7 +568,6 @@
   <string name="show_absolute_time">Pokazuj czas bezwględny</string>
   <string name="show_absolute_time_summary">Pokazuj czas bezwzględny w tweetach</string>
   <string name="show_in_timeline">Pokazuj w strumieniu</string>
-  <string name="action_sign_in">Zaloguj się</string>
   <string name="sign_in_service_google_id">Identyfikator Google</string>
   <string name="sign_in_service_twitter">Twitter</string>
   <string name="sign_in_with_ellip">Zaloguj się z&#8230;</string>
@@ -730,7 +698,6 @@
   <string name="usage_statistics_notification_summary">Pomóż nam ulepszyć Twidere!</string>
   <string name="user_blocked">Zablokowano tego użytkownika.</string>
   <string name="user_filter_name">Użytkownik: <xliff:g id="name">%s</xliff:g></string>
-  <string name="title_user_list">Lista</string>
   <!-- User list description -->
   <string name="user_list_details_description">Opis</string>
   <!-- User list is public -->

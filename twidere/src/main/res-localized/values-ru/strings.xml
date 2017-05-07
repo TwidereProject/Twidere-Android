@@ -8,7 +8,6 @@
   <string name="action_accept_friend_request">Принять</string>
   <!-- [verb] Accept a permission request like allow to use camera etc. -->
   <string name="action_accept_permission_request">Принять</string>
-  <string name="action_accepting_follow_request">принять запрос на подписку</string>
   <!-- [verb] Add an item to a list/collection -->
   <string name="action_add">Добавить</string>
   <!-- [verb] Add a member to a message conversation -->
@@ -19,34 +18,23 @@
   <string name="action_add_member">Добавить пользователя</string>
   <string name="action_add_to_filter">Добавить в фильтр</string>
   <string name="action_add_to_list">Добавить в список</string>
-  <string name="action_adding_member">добавление пользователя</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Заблокировать</string>
-  <string name="action_blocking">блокирование</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">Отменить ретвит</string>
-  <string name="action_cancelling_like">отменить лайк</string>
   <string name="action_center">Центр</string>
   <string name="action_clear">Очистить</string>
   <string name="action_compose">Написать</string>
-  <string name="action_creating_list">создание списка</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">Удалить</string>
-  <string name="action_deleting">удаляем</string>
-  <string name="action_deleting_search">удаление поиска</string>
-  <string name="action_denying_follow_request">отклонить запрос на подписку</string>
   <string name="action_dont_restart">Не перезапускать</string>
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">Редактировать</string>
   <string name="action_favorite">В избранное</string>
-  <string name="action_favoriting">добавляем в избранное</string>
   <string name="action_filter_import_from_blocked_users">Импортировать список заблокированных пользователей</string>
   <string name="action_filter_import_from_muted_users">Импортировать список приглушенных пользователей</string>
   <string name="action_finish">Завершено</string>
   <string name="action_follow">Читать</string>
-  <string name="action_following">подписываемся</string>
-  <string name="action_getting_status">получаем твит</string>
-  <string name="action_getting_user_lists">получение списков пользователей</string>
   <!-- [verb] Perform import action -->
   <string name="action_import">Импорт</string>
   <string name="action_import_from">Импортировать из&#8230;</string>
@@ -55,10 +43,7 @@
   <string name="action_later">Позже</string>
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">Мне нравится</string>
-  <string name="action_liking">нравится</string>
-  <string name="action_modifying_lists">изменение списков</string>
   <string name="action_mute">Игнорировать</string>
-  <string name="action_muting">игнорирование</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, сохранено в <xliff:g id="time">%2$s</xliff:g></string>
   <string name="action_open_in_browser">Открыть в браузере</string>
   <string name="action_pick_color">Выбрать цвет</string>
@@ -67,38 +52,28 @@
   <string name="action_quote">Цитировать</string>
   <string name="action_record_video">Записать видео</string>
   <string name="action_refresh">Обновления</string>
-  <string name="action_refreshing_direct_messages">обновляем личные сообщения</string>
-  <string name="action_refreshing_home_timeline">обновление ленты</string>
-  <string name="action_refreshing_mentions">обновление упоминаний</string>
-  <string name="action_removing_profile_banner_image">Удаление изображения в заголовке профиля</string>
   <string name="action_reply">Ответить</string>
   <string name="action_report_spam">Сообщить о спаме</string>
-  <string name="action_reporting_for_spam">сообщение о спаме</string>
   <!-- [verb] Restore purchase -->
   <string name="action_restore_purchase">Восстановить</string>
   <string name="action_retry">Повторить</string>
   <!-- [verb] Action for performing retweet -->
   <string name="action_retweet">Ретвит</string>
-  <string name="action_retweeting">ретвит</string>
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Сохранить</string>
-  <string name="action_saving_search">сохранение поиска</string>
   <string name="action_search">Поиск</string>
   <string name="action_select_all">Выбрать все</string>
   <string name="action_select_none">Ничего не выбирать</string>
   <string name="action_select_user">Выбрать пользователя</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Отправить</string>
-  <string name="action_sending_direct_message">отправляем личное сообщение</string>
   <string name="action_set_color">Выбрать цвет</string>
   <string name="action_set_nickname">Задать никнейм</string>
   <string name="action_share">Поделиться</string>
-  <string name="action_signing_in">вход</string>
   <!-- [verb] Used for skip some settings -->
   <string name="action_skip">Пропустить</string>
   <string name="action_start">Начнем</string>
   <string name="action_subscribe">Подписаться</string>
-  <string name="action_subscribing_to_list">подписаться</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
   <string name="action_sync_connect_to_storage">Подключиться</string>
   <!-- [verb] Disconnect from network storage -->
@@ -112,22 +87,11 @@
   <string name="action_twitter_muted_users">Игнорируемые пользователи</string>
   <!-- [verb] Action for unblocking user -->
   <string name="action_unblock">Разблокировать</string>
-  <string name="action_unblocking">разблокирование</string>
   <string name="action_undo_like">Отменить Мне нравится</string>
   <string name="action_unfavorite">Удалить из избранного</string>
-  <string name="action_unfavoriting">удаляем из избранного</string>
   <string name="action_unfollow">Не читать</string>
-  <string name="action_unfollowing">отписаться</string>
   <string name="action_unmute">Разыгнорировать</string>
-  <string name="action_unmuting">разыгнорирование</string>
   <string name="action_unsubscribe">Отписаться</string>
-  <string name="action_unsubscribing_from_list">отписаться</string>
-  <string name="action_updating_details">обновляем детали</string>
-  <string name="action_updating_profile">обновляем профиль</string>
-  <string name="action_updating_profile_background_image">обновление фонового изображения профиля</string>
-  <string name="action_updating_profile_banner_image">Обновление изображения в заголовке профиля</string>
-  <string name="action_updating_profile_image">обновляем изображение профиля</string>
-  <string name="action_updating_status">отправляем твит</string>
   <string name="action_view_map">Карта</string>
   <string name="activated_accounts">Активированные аккаунты</string>
   <string name="activities_about_me">Моя деятельность</string>
@@ -189,7 +153,6 @@
   <string name="count_label_retweets">Ретвиты</string>
   <string name="created_by">Создано пользователем <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">Созданный список \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="title_crop_image">Обрезать изображение</string>
   <string name="current_status">Текущий твит</string>
   <string name="custom_host_mapping">Перенаправление узлов</string>
   <string name="custom_host_mapping_summary">Перенаправление узлов, как с помощью /etc/hosts, но не требующее дополнительных разрешений.</string>
@@ -356,6 +319,10 @@
   <string name="label_refresh_and_sync_service">Сервис обновления и синхронизации</string>
   <string name="label_refresh_service">Сервис обновления</string>
   <string name="label_status_not_available">Твит недоступен</string>
+  <!-- Mastodon feature, post to mentioned users only -->
+  <!-- Mastodon feature, post to followers only -->
+  <!-- Mastodon feature, post to public timelines -->
+  <!-- Mastodon feature, do not show in public timelines -->
   <string name="label_streaming_service">Сервис стриминга</string>
   <string name="label_translate_from_language">Переведено с <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">Перевод</string>
@@ -579,7 +546,6 @@
   <string name="profile_banner">Обложка профиля</string>
   <string name="profile_image">Изображение пользователя</string>
   <string name="profile_image_style">Стиль аватара</string>
-  <string name="message_toast_profile_image_updated">Изображение профиля обновлено</string>
   <string name="profile_images">Изображения профиля</string>
   <string name="profile_link_color_main_color">Цвет ссылок (основной цвет)</string>
   <string name="profile_text_color">Цвет текста</string>
@@ -624,7 +590,6 @@
   <string name="refresh_type_interactions">Взаимодействия</string>
   <string name="refresh_type_messages">Сообщения</string>
   <string name="refresh_type_trends">Тренды</string>
-  <string name="action_register">Регистрация</string>
   <string name="remember_position">Запомнить положение</string>
   <string name="remember_position_summary">Запомнить позицию списка/вкладки перед выходом из Twidere</string>
   <string name="remove">Удалить</string>
@@ -688,7 +653,6 @@
   <string name="show_absolute_time">Показывать абсолютное время</string>
   <string name="show_absolute_time_summary">Показывать абсолютное время в твитах</string>
   <string name="show_in_timeline">Показывать в ленте</string>
-  <string name="action_sign_in">Войти</string>
   <string name="sign_in_service_email">Email</string>
   <string name="sign_in_service_google_id">Google ID</string>
   <string name="sign_in_service_twitter">Twitter</string>
@@ -838,7 +802,6 @@
   <string name="usage_statistics_notification_summary">Помогите нам улучшить Twidere!</string>
   <string name="user_blocked">Заблокировать этого пользователя.</string>
   <string name="user_filter_name">Пользователь:<xliff:g id="name">%s</xliff:g></string>
-  <string name="title_user_list">Список</string>
   <string name="user_list_details">Детали списка</string>
   <!-- User list description -->
   <string name="user_list_details_description">Описание</string>

@@ -3,96 +3,112 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="account_options">Pilihan akun</string>
   <string name="account_type_fanfou">Fanfou</string>
+  <string name="account_type_mastodon">Mastodon</string>
+  <string name="account_type_statusnet">StatusNet</string>
   <string name="account_type_twitter">Twitter</string>
   <!-- [verb] Accept a friend request (follow request) -->
   <string name="action_accept_friend_request">Setuju</string>
   <!-- [verb] Accept a permission request like allow to use camera etc. -->
   <string name="action_accept_permission_request">Setuju</string>
-  <string name="action_accepting_follow_request">menyetujui permintaa mengikuti</string>
   <!-- [verb] Add an item to a list/collection -->
   <string name="action_add">Tambahkan</string>
+  <string name="action_add_content_warning">Tambahkan konten peringatan</string>
   <!-- [verb] Add a member to a message conversation -->
   <string name="action_add_conversation_participant">Tambah Anggota</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">Tambah aturan</string>
+  <string name="action_add_filters_subscription">Tambah langganan</string>
+  <string name="action_add_gif">Tambah GIF</string>
+  <string name="action_add_media">Tambah media</string>
   <string name="action_add_member">Tambah Anggota</string>
   <string name="action_add_tab">Tambah tab</string>
-  <string name="action_adding_member">menambahkan anggota</string>
+  <string name="action_add_to_filter">Tambah filter</string>
+  <string name="action_add_to_list">Tambahkan ke daftar</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Blok</string>
-  <string name="action_blocking">memblokir</string>
+  <string name="action_buffer_disconnect">Terputus dari Buffer</string>
+  <string name="action_buffer_settings">Pengaturan</string>
+  <string name="action_buffer_update_now">Terbitkan sekarang</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">Batalkan retweet</string>
-  <string name="action_cancelling_like">Batalkan tanda suka</string>
   <string name="action_center">Pusat</string>
   <string name="action_clear">Bersihkan</string>
+  <string name="action_clear_messages">Bersihkan pesan</string>
   <string name="action_compose">Susun</string>
-  <string name="action_creating_list">membuat daftar</string>
+  <string name="action_compose_message_convert_to_status">Konversi ke tweet</string>
+  <string name="action_connect_to_buffer">Terhubung</string>
+  <string name="action_conversation_info">Info percakapan</string>
+  <string name="action_create_conversation">Buat percakapan</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">Hapus</string>
-  <string name="action_deleting">menghapus</string>
-  <string name="action_deleting_search">menghapus pencarian</string>
-  <string name="action_denying_follow_request">tolak permintaan mengikuti</string>
+  <string name="action_delete_messages">Hapus pesan</string>
+  <string name="action_dont_restart">Tidak mulai ulang</string>
+  <string name="action_dont_terminate">Tidak keluar</string>
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">Sunting</string>
+  <string name="action_edit_conversation_avatar">Edit ikon</string>
+  <string name="action_edit_conversation_name">Edit nama</string>
+  <string name="action_edit_filter_rule">Edit pengaturan</string>
   <string name="action_favorite">Favorit</string>
-  <string name="action_favoriting">memfavoritkan</string>
   <string name="action_filter_import_from_blocked_users">Mengimpor dari pengguna yang diblokir</string>
   <string name="action_filter_import_from_muted_users">Mengimpor dari pengguna yang didiamkan</string>
+  <string name="action_filter_subscriptions_card_manage">Kelola langganan</string>
   <string name="action_finish">Selesai</string>
   <string name="action_follow">Ikuti</string>
-  <string name="action_following">mengikuti</string>
-  <string name="action_getting_status">mendapatkan twit</string>
-  <string name="action_getting_user_lists">mendapatkan daftar pengguna</string>
   <!-- [verb] Perform import action -->
   <string name="action_import">Impor</string>
   <string name="action_import_from">Impor dari&#8230;</string>
   <string name="action_invert_selection">Membalikkan pilihan</string>
   <!-- Used for decide something later, like permission request -->
   <string name="action_later">Nanti</string>
+  <string name="action_leave_conversation">Tinggalkan percakapan</string>
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">Suka</string>
-  <string name="action_liking">Suka</string>
-  <string name="action_modifying_lists">mengubah daftar</string>
+  <string name="action_location">Lokasi</string>
+  <string name="action_manage_in_buffer">Kelola di Buffer</string>
+  <string name="action_mark_as_read">Tandai telah dibaca</string>
   <string name="action_mute">Senyapkan</string>
-  <string name="action_muting">menyenyapkan</string>
+  <string name="action_mute_notifications">Bisukan pemberitahuan</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, tersimpan pada <xliff:g id="time">%2$s</xliff:g></string>
+  <string name="action_next_step">Berikutnya</string>
   <string name="action_open_in_browser">Buka melalui browser</string>
   <string name="action_pick_color">Pilih warna</string>
   <string name="action_purchase">Beli</string>
   <string name="action_purchase_features_pack">Beli paket fitur</string>
+  <string name="action_qr_code">Kode QR</string>
   <string name="action_quote">Kutip</string>
+  <string name="action_record_video">Rekam video</string>
   <string name="action_refresh">Perbaharui</string>
-  <string name="action_refreshing_direct_messages">menyegarkan pesan langsung</string>
-  <string name="action_refreshing_home_timeline">Menyegarkan beranda timeline</string>
-  <string name="action_refreshing_mentions">Menyegarkan menyebutkan</string>
-  <string name="action_removing_profile_banner_image">menghapus gambar latar profil</string>
+  <string name="action_register">Daftar</string>
+  <string name="action_remove_conversation_avatar">Hapus ikon</string>
   <string name="action_reply">Balas</string>
   <string name="action_report_spam">Laporkan sebagai spam</string>
-  <string name="action_reporting_for_spam">laporkan sebagai spam</string>
   <!-- [verb] Restore purchase -->
   <string name="action_restore_purchase">Memulihkan</string>
   <string name="action_retry">Coba lagi</string>
   <!-- [verb] Action for performing retweet -->
   <string name="action_retweet">Retweet</string>
-  <string name="action_retweeting">me-retweet</string>
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Simpan</string>
-  <string name="action_saving_search">menyimpan pencarian</string>
+  <string name="action_search">Cari</string>
   <string name="action_select_all">Pilih semua</string>
   <string name="action_select_none">Tidak memilih</string>
+  <string name="action_select_user">Pilih pengguna</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Kirim</string>
-  <string name="action_sending_direct_message">Mengirim pesan langsung</string>
   <string name="action_set_color">Tetapkan warna</string>
   <string name="action_set_nickname">Tentukan nama panggilan</string>
+  <string name="action_set_status_visibility">Atur visibilitas</string>
   <string name="action_share">Bagikan</string>
-  <string name="action_signing_in">mencoba masuk</string>
+  <string name="action_sign_in">Masuk</string>
   <!-- [verb] Used for skip some settings -->
   <string name="action_skip">Lewati</string>
   <string name="action_start">Mulai</string>
+  <string name="action_status_attachment">Lampiran tweet</string>
+  <string name="action_status_block_users">Blokir pengguna&#8230;</string>
+  <string name="action_status_mute_users">Bisukan pengguna&#8230;</string>
+  <string name="action_status_schedule">Jadwal tweet</string>
   <string name="action_subscribe">Ikuti</string>
-  <string name="action_subscribing_to_list">berlangganan daftar</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
   <string name="action_sync_connect_to_storage">Menghubungkan</string>
   <!-- [verb] Disconnect from network storage -->
@@ -106,25 +122,26 @@
   <string name="action_twitter_muted_users">Pengguna yang dibungkam</string>
   <!-- [verb] Action for unblocking user -->
   <string name="action_unblock">Hilangkan Blokir</string>
-  <string name="action_unblocking">membatalkan blokir</string>
   <string name="action_undo_like">Batalkan suka</string>
   <string name="action_unfavorite">Batalkan favorit</string>
-  <string name="action_unfavoriting">batalkan favorit</string>
   <string name="action_unfollow">Setop ikuti</string>
-  <string name="action_unfollowing">membatalkan mengikuti</string>
   <string name="action_unmute">Bunyikan</string>
-  <string name="action_unmuting">membunyikan</string>
   <string name="action_unsubscribe">Batal ikuti</string>
-  <string name="action_unsubscribing_from_list">berhenti berlangganan dari daftar</string>
-  <string name="action_updating_details">memperbarui detil</string>
-  <string name="action_updating_profile">memperbarui profil</string>
-  <string name="action_updating_profile_background_image">memperbarui gambar latar profil</string>
-  <string name="action_updating_profile_banner_image">Memperbaharui gambar latar profil</string>
-  <string name="action_updating_profile_image">Memperbaharui gambar profil</string>
-  <string name="action_updating_status">mengirim tweet</string>
   <string name="action_view_map">Peta</string>
   <string name="activated_accounts">Akun diaktifkan</string>
   <string name="activities_about_me">Kegiatan tentang saya</string>
+  <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> difavoritkan</string>
+  <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> dan <xliff:g id="other">%2$s</xliff:g> memfavoritkan</string>
+  <string name="activity_about_me_favorited_media_tagged"><xliff:g id="user">%s</xliff:g> memfavoritkan tweet yang menandai Anda</string>
+  <string name="activity_about_me_favorited_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> dan <xliff:g id="other">%2$s</xliff:g> memfavoritkan tweet yang menandai Anda</string>
+  <string name="activity_about_me_favorited_mention"><xliff:g id="user">%s</xliff:g> memfavoritkan tweet yang menyebut Anda</string>
+  <string name="activity_about_me_favorited_mention_multi"><xliff:g id="user">%1$s</xliff:g> dan <xliff:g id="other">%2$s</xliff:g> memfavoritkan tweet yang menyebut Anda</string>
+  <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g> memfavoritkan tweet Anda</string>
+  <string name="activity_about_me_favorited_retweet_multi"><xliff:g id="user">%1$s</xliff:g> dan <xliff:g id="other">%2$s</xliff:g> memfavoritkan tweet Anda</string>
+  <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> mengikuti Anda</string>
+  <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g> dan <xliff:g id="other">%2$s</xliff:g> mengikuti Anda</string>
+  <string name="activity_about_me_like"><xliff:g id="user">%s</xliff:g> Telah menyukai</string>
+  <string name="activity_about_me_like_multi"><xliff:g id="user">%1$s</xliff:g> dan <xliff:g id="other">%2$s</xliff:g> telah menyukai</string>
   <string name="add_account">Tambah akun</string>
   <string name="add_host_mapping">Tambah pemetaan host</string>
   <string name="add_image">Tambahkan gambar</string>
@@ -183,7 +200,6 @@
   <string name="count_label_retweets">Retweets</string>
   <string name="created_by">Dibuat oleh <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">Membuat daftar \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="title_crop_image">Potong gambar</string>
   <string name="current_status">Twit sekarang</string>
   <string name="custom_host_mapping">Kustom host mapping</string>
   <string name="custom_host_mapping_summary">Host pemetaan sperti /etc/hosts, tanpa butuh permisi tambahan.</string>
@@ -340,13 +356,22 @@
   <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
   <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
   <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_r">R</string>
+  <string name="label_content_warning">Peringatan konten</string>
   <string name="label_data_provider">Penyedia database Twidere</string>
+  <string name="label_filters_subscription">Langganan</string>
+  <string name="label_follow_request_sent">Permintaan mengikuti terkirim</string>
+  <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> via <xliff:g example="api" id="source">%2$s</xliff:g></string>
   <string name="label_location_your_coarse_location">Lokasi anda secara kasar</string>
   <string name="label_original_status">Cuit asli</string>
   <string name="label_poll">Pemungutan suara</string>
   <string name="label_refresh_and_sync_service">Muat ulang &amp; Menyinkronisasikan layanan</string>
   <string name="label_refresh_service">Segarkan layanan</string>
   <string name="label_status_not_available">Tweet tidak tersedia</string>
+  <!-- Mastodon feature, post to mentioned users only -->
+  <!-- Mastodon feature, post to followers only -->
+  <!-- Mastodon feature, post to public timelines -->
+  <!-- Mastodon feature, do not show in public timelines -->
   <string name="label_streaming_service">Layanan streaming</string>
   <string name="label_translate_from_language">Terjemahkan dari <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">Terjemahan</string>
@@ -545,6 +570,10 @@
   <string name="preference_title_landscape">Lanskap</string>
   <string name="preference_title_portrait">Layar Tegak</string>
   <string name="preference_title_storage">Penyimpanan</string>
+  <string name="preference_title_streaming_enabled">Mengaktifkan streaming</string>
+  <string name="preference_title_streaming_non_metered_network">Streaming pada jaringan gratis</string>
+  <string name="preference_title_streaming_power_saving">Mode hemat daya</string>
+  <string name="preference_title_tablet_mode">Mode tablet</string>
   <string name="preference_title_text_size">Ukuran teks</string>
   <string name="preference_title_translate">Terjemahkan</string>
   <string name="preference_title_trends_location">Lokasi tren</string>
@@ -554,6 +583,7 @@
   <!-- Media will be cropped to fit preview -->
   <string name="preview_style_crop">Potong</string>
   <!-- Actual size, media preview will be scaled respectively -->
+  <string name="preview_style_real_size">Ukuran sebenarnya</string>
   <!-- Media will be scaled to fit preview -->
   <string name="preview_style_scale">Skala</string>
   <!-- Previous item (tweet, user etc.) -->
@@ -565,7 +595,6 @@
   <string name="profile_banner">Profil banner</string>
   <string name="profile_image">Gambar Profil</string>
   <string name="profile_image_style">Tampilan gaya profil</string>
-  <string name="message_toast_profile_image_updated">Gambar profil diperbarui.</string>
   <string name="profile_images">Gambar Profil </string>
   <string name="profile_link_color_main_color">Warna link (warna utama)</string>
   <string name="profile_text_color">Warna Teks</string>
@@ -580,6 +609,7 @@
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>
   <string name="provider_loadaverage_org">LoadAverage.org</string>
+  <string name="provider_mastodon">Mastodon</string>
   <string name="provider_quitter_se">Quitter.se</string>
   <string name="proxy">Proxy</string>
   <string name="proxy_host">Host Proxy</string>
@@ -606,9 +636,10 @@
   <string name="refresh_interval">Interval refresh</string>
   <string name="refresh_on_start">Muat ulang di awal</string>
   <string name="refresh_on_start_summary">Muat ulang timeline dan mention saat memulai.</string>
+  <string name="refresh_type_home">Beranda</string>
+  <string name="refresh_type_interactions">Interaksi</string>
   <string name="refresh_type_messages">Pesan</string>
   <string name="refresh_type_trends">Tren</string>
-  <string name="action_register">Registrasi</string>
   <string name="remember_position">Ingat posisi</string>
   <string name="remember_position_summary">Ingat posisi daftar/tab sebelum menutup Twidere</string>
   <string name="remove">Hapus</string>
@@ -640,7 +671,9 @@
   <string name="scheduled_statuses">Tweet terjadwal</string>
   <string name="scrapyard">Scrapyard</string>
   <string name="search_hint">Pencarian tweets atau pengguna</string>
+  <string name="search_hint_users">Cari pengguna</string>
   <string name="search_statuses">Cari Kicauan</string>
+  <string name="search_type_media">Media</string>
   <string name="search_type_statuses">Kicauan</string>
   <string name="search_type_users">Pengguna</string>
   <string name="security_key">Kunci keamanan</string>
@@ -663,6 +696,7 @@
   <string name="settings_interface">Antarmuka</string>
   <string name="settings_notifications">Notifikasi</string>
   <string name="settings_refresh">Segarkan</string>
+  <string name="settings_streaming">Streaming</string>
   <string name="share_format">Bagikan format</string>
   <string name="share_format_summary">\"[TITLE]\" = Konten title\n\"[TEXT]\" = Teks konten</string>
   <string name="share_link">Bagikan tautan</string>
@@ -671,7 +705,6 @@
   <string name="show_absolute_time">Tampilkan waktu absolut</string>
   <string name="show_absolute_time_summary">Tampilkan waktu absulut di tweet</string>
   <string name="show_in_timeline">Tunjukkan di linimasa</string>
-  <string name="action_sign_in">Masuk</string>
   <string name="sign_in_service_email">Surel</string>
   <string name="sign_in_service_google_id">ID Google</string>
   <string name="sign_in_service_twitter">Twitter</string>
@@ -816,7 +849,6 @@
   <string name="usage_statistics_notification_summary">Bantu kami memperbaiki Twidere!</string>
   <string name="user_blocked">Unlock pengguna ini.</string>
   <string name="user_filter_name">Pengguna: <xliff:g id="name">%s</xliff:g></string>
-  <string name="title_user_list">Daftar</string>
   <string name="user_list_details">Daftar rincian</string>
   <!-- User list description -->
   <string name="user_list_details_description">Deskripsi</string>

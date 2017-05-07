@@ -6,7 +6,6 @@
   <string name="action_accept_friend_request">Prihvati</string>
   <!-- [verb] Accept a permission request like allow to use camera etc. -->
   <string name="action_accept_permission_request">Prihvati</string>
-  <string name="action_accepting_follow_request">prihvaćama zahtjev za slijeđenjem</string>
   <!-- [verb] Add an item to a list/collection -->
   <string name="action_add">Dodaj</string>
   <!-- [verb] Add a member to a message conversation -->
@@ -17,68 +16,48 @@
   <string name="action_add_tab">Dodaj tab</string>
   <string name="action_add_to_filter">Dodaj u filter</string>
   <string name="action_add_to_list">Dodaj na listu</string>
-  <string name="action_adding_member">dodajem člana</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Blokiraj</string>
-  <string name="action_blocking">blokiram</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">Poništi retweet</string>
   <string name="action_center">Centar</string>
   <string name="action_clear">Očisti</string>
   <string name="action_compose">Sastavi</string>
-  <string name="action_creating_list">stvaram listu</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">Obriši</string>
-  <string name="action_deleting">brišem</string>
-  <string name="action_deleting_search">brišem pretplatu</string>
-  <string name="action_denying_follow_request">odbacujem zahtjev za slijeđenjem</string>
   <string name="action_dont_restart">Nemoj ponovno pokrenuti</string>
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">Uredi</string>
   <string name="action_favorite">Spremi u favorite</string>
-  <string name="action_favoriting">stavljam u favorite</string>
   <string name="action_finish">Završi</string>
   <string name="action_follow">Slijedi</string>
-  <string name="action_following">slijedim</string>
-  <string name="action_getting_status">dobivam tweet</string>
   <!-- [verb] Perform import action -->
   <string name="action_import_from">Uvezi iz&#8230;</string>
   <!-- Used for decide something later, like permission request -->
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_mute">Utišaj</string>
-  <string name="action_muting">utišavam</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, spremljeno u <xliff:g id="time">%2$s</xliff:g></string>
   <string name="action_open_in_browser">Otvori u pregledniku</string>
   <string name="action_pick_color">Odaberi boju</string>
   <string name="action_quote">Citat</string>
   <string name="action_refresh">Osvježi</string>
-  <string name="action_refreshing_direct_messages">osvježavam izravne poruke</string>
-  <string name="action_refreshing_home_timeline">osvježavam polazni timeline</string>
-  <string name="action_refreshing_mentions">osvježavam spominjanja</string>
-  <string name="action_removing_profile_banner_image">uklanjam naslovnicu profila</string>
   <string name="action_reply">Odgovori</string>
   <string name="action_report_spam">Prijavi spam</string>
-  <string name="action_reporting_for_spam">prijavljujem za spam</string>
   <!-- [verb] Restore purchase -->
   <string name="action_retry">Pokušaj ponovno</string>
   <!-- [verb] Action for performing retweet -->
   <string name="action_retweet">Retweet</string>
-  <string name="action_retweeting">retweetam</string>
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Spremi</string>
-  <string name="action_saving_search">spremam pretragu</string>
   <string name="action_search">Pretraži</string>
   <string name="action_select_user">Odaberite korisnika</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Pošalji</string>
-  <string name="action_sending_direct_message">šaljem izravnu poruku</string>
   <string name="action_set_color">Postavi boju</string>
   <string name="action_set_nickname">Postavi nadimak</string>
   <string name="action_share">Podijeli</string>
-  <string name="action_signing_in">prijavljujem se</string>
   <!-- [verb] Used for skip some settings -->
   <string name="action_subscribe">Pretplati se</string>
-  <string name="action_subscribing_to_list">pretplaćujem se na listu</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
   <!-- [verb] Disconnect from network storage -->
   <string name="action_sync_settings">Postavke</string>
@@ -89,20 +68,10 @@
   <string name="action_twitter_muted_users">Ušutjeli korisnici</string>
   <!-- [verb] Action for unblocking user -->
   <string name="action_unblock">Odblokiraj</string>
-  <string name="action_unblocking">odblokiravam</string>
   <string name="action_unfavorite">Ukloni iz favorita</string>
-  <string name="action_unfavoriting">mičem iz favorita</string>
   <string name="action_unfollow">Prestani slijediti</string>
-  <string name="action_unfollowing">prestajem slijediti</string>
   <string name="action_unmute">Ozvuči</string>
-  <string name="action_unmuting">poništavama ušućivanje</string>
   <string name="action_unsubscribe">Otkaži pretplatu</string>
-  <string name="action_unsubscribing_from_list">otkazujem pretplatu na listu</string>
-  <string name="action_updating_details">ažuriram detalje</string>
-  <string name="action_updating_profile">ažuriram profil</string>
-  <string name="action_updating_profile_banner_image">ažuriram naslovnicu profila</string>
-  <string name="action_updating_profile_image">ažuriram sliku profila</string>
-  <string name="action_updating_status">šaljem tweet</string>
   <string name="action_view_map">Mapa</string>
   <string name="activated_accounts">Aktivirani računi</string>
   <string name="activities_about_me">Aktivnosti o meni</string>
@@ -150,7 +119,6 @@
   <string name="count_label_retweets">Retweetovi</string>
   <string name="created_by">Stvorio <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">Stvorena lista \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="title_crop_image">Obreži sliku</string>
   <string name="custom_host_mapping">Mapiranje prilagođenog domaćina</string>
   <string name="custom_host_mapping_summary">Mapiranje domaćina poput /npr/domaćini, ali ne zahtijeva dodatna dopuštenja.</string>
   <string name="dark_theme">Tamna tema</string>
@@ -274,6 +242,10 @@
   <string name="label_original_status">Originalni tweet</string>
   <string name="label_photo">Fotografija</string>
   <string name="label_refresh_service">Osvježi uslugu</string>
+  <!-- Mastodon feature, post to mentioned users only -->
+  <!-- Mastodon feature, post to followers only -->
+  <!-- Mastodon feature, post to public timelines -->
+  <!-- Mastodon feature, do not show in public timelines -->
   <string name="label_streaming_service">Streaming servis</string>
   <string name="label_your_profile_image">Vaša slika profila</string>
   <string name="large">Veliko</string>
@@ -432,7 +404,6 @@
   <string name="profile_banner">Banner profila</string>
   <string name="profile_image">Slika profila</string>
   <string name="profile_image_style">Stil slike profila</string>
-  <string name="message_toast_profile_image_updated">Slika profila ažurirana.</string>
   <string name="profile_images">Slike profila</string>
   <string name="profile_link_color_main_color">Boja linka (glavna boja)</string>
   <string name="profile_text_color">Boja teksta</string>
@@ -465,7 +436,6 @@
   <string name="refresh_type_home">Polazno</string>
   <string name="refresh_type_messages">Poruke</string>
   <string name="refresh_type_trends">Trendovi</string>
-  <string name="action_register">Registriraj se</string>
   <string name="remember_position">Zapamti poziciju</string>
   <string name="remember_position_summary">Zapamti poziciju lista/tabova prije zatvaranja aplikacije Twidere</string>
   <string name="remove">Ukloni</string>
@@ -523,7 +493,6 @@
   <string name="show_absolute_time">Pokaži absolutno vrijeme</string>
   <string name="show_absolute_time_summary">Pokaži absolutno vrijeme u tweetovima</string>
   <string name="show_in_timeline">Pokaži u timelineu</string>
-  <string name="action_sign_in">Prijava</string>
   <string name="sign_up">Registracija</string>
   <string name="signing_in_error_browser_sign_in_hint">Greška kod prijave, možda ćete se morati ponovno prijaviti u pregledniku. (Ovo će ignorirati prilagođene API postavke tijekom prijave)</string>
   <string name="size">Veličina</string>
@@ -645,7 +614,6 @@
   <string name="usage_statistics_notification_summary">Pomozite nam poboljšati Twidere!</string>
   <string name="user_blocked">Ovaj korisnik je blokiran.</string>
   <string name="user_filter_name">Korisnik: <xliff:g id="name">%s</xliff:g></string>
-  <string name="title_user_list">Lista</string>
   <string name="user_list_details">Detalji o listi</string>
   <!-- User list description -->
   <string name="user_list_details_description">Opis</string>

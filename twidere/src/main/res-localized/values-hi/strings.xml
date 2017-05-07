@@ -90,6 +90,10 @@
   <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
   <string name="label_data_provider">ट्विदेर डेटाबेस प्रदाता</string>
   <string name="label_refresh_service">रिफ्रेश सर्विस</string>
+  <!-- Mastodon feature, post to mentioned users only -->
+  <!-- Mastodon feature, post to followers only -->
+  <!-- Mastodon feature, post to public timelines -->
+  <!-- Mastodon feature, do not show in public timelines -->
   <string name="label_streaming_service">स्ट्रीमिंग सर्विस</string>
   <string name="leftside_compose_button">रचना बटन बायीं ओर</string>
   <string name="list_members">सदस्यों सूचीबद्ध करें</string>
@@ -150,7 +154,6 @@
   <string name="settings">सेटिंग्स</string>
   <string name="settings_notifications">सूचनाएँ</string>
   <string name="settings_refresh">ताज़ा</string>
-  <string name="action_sign_in">साइन इन करें</string>
   <string name="sign_up">साइन अप करें</string>
   <string name="sound">आवाज़</string>
   <!-- [noun] Accessibility label for retweet icon -->

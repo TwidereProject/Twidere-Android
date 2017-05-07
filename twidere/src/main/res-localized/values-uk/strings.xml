@@ -8,7 +8,6 @@
   <string name="action_accept_friend_request">Прийняти</string>
   <!-- [verb] Accept a permission request like allow to use camera etc. -->
   <string name="action_accept_permission_request">Прийняти</string>
-  <string name="action_accepting_follow_request">прийняття запиту на читання</string>
   <!-- [verb] Add an item to a list/collection -->
   <string name="action_add">Додати</string>
   <!-- [verb] Add a member to a message conversation -->
@@ -19,72 +18,50 @@
   <string name="action_add_tab">Додати вкладку</string>
   <string name="action_add_to_filter">Додати до фільтру</string>
   <string name="action_add_to_list">Додати до списку</string>
-  <string name="action_adding_member">додавання користувача</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Блокувати</string>
-  <string name="action_blocking">блокування</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">Скасувати ретвіт</string>
   <string name="action_center">Центр</string>
   <string name="action_clear">Очистити</string>
   <string name="action_compose">Написати</string>
-  <string name="action_creating_list">створення списку</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">Видалити</string>
-  <string name="action_deleting">видалення</string>
-  <string name="action_deleting_search">вилучення пошуку</string>
-  <string name="action_denying_follow_request">відхилення запиту на читання</string>
   <string name="action_dont_restart">Не перезаванатажувати</string>
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">Редагувати</string>
   <string name="action_favorite">До обраного</string>
-  <string name="action_favoriting">додання до обраного</string>
   <string name="action_finish">Завершити</string>
   <string name="action_follow">Читати</string>
-  <string name="action_following">читання</string>
-  <string name="action_getting_status">отримання твіту</string>
-  <string name="action_getting_user_lists">отримання списків користувача</string>
   <!-- [verb] Perform import action -->
   <string name="action_import_from">Імпортувати з&#8230;</string>
   <!-- Used for decide something later, like permission request -->
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">Вподобати</string>
-  <string name="action_modifying_lists">зміни списків</string>
   <string name="action_mute">Ігнорувати</string>
-  <string name="action_muting">ігнорування</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, збережено о <xliff:g id="time">%2$s</xliff:g></string>
   <string name="action_open_in_browser">Відкрити у переглядачі</string>
   <string name="action_pick_color">Вибрати колір</string>
   <string name="action_quote">Цитата</string>
   <string name="action_refresh">Оновлення</string>
-  <string name="action_refreshing_direct_messages">оновлення приватних повідомлень</string>
-  <string name="action_refreshing_home_timeline">оновлення домашньої стрічки</string>
-  <string name="action_refreshing_mentions">оновлення згадок</string>
-  <string name="action_removing_profile_banner_image">вилучення обкладинки профілю</string>
   <string name="action_reply">Відповісти</string>
   <string name="action_report_spam">Повідомити про спам</string>
-  <string name="action_reporting_for_spam">звіту про спам</string>
   <!-- [verb] Restore purchase -->
   <string name="action_retry">Повторити спробу</string>
   <!-- [verb] Action for performing retweet -->
   <string name="action_retweet">Ретвіт</string>
-  <string name="action_retweeting">ретвіту</string>
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Зберегти</string>
-  <string name="action_saving_search">збереження пошуку</string>
   <string name="action_search">Пошук</string>
   <string name="action_select_user">Вибрати користувача</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Надіслати</string>
-  <string name="action_sending_direct_message">Надсилаємо приватне повідомлення</string>
   <string name="action_set_color">Задати колір</string>
   <string name="action_set_nickname">Задати псевдо</string>
   <string name="action_share">Поділитися</string>
-  <string name="action_signing_in">входу</string>
   <!-- [verb] Used for skip some settings -->
   <string name="action_start">Старт</string>
   <string name="action_subscribe">Підписатися</string>
-  <string name="action_subscribing_to_list">підписки на список</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
   <!-- [verb] Disconnect from network storage -->
   <string name="action_sync_settings">Параметри</string>
@@ -95,22 +72,11 @@
   <string name="action_twitter_muted_users">Ігноровані користувачі</string>
   <!-- [verb] Action for unblocking user -->
   <string name="action_unblock">Розблокувати</string>
-  <string name="action_unblocking">розблокування</string>
   <string name="action_undo_like">Відмінити вподобання</string>
   <string name="action_unfavorite">Видалити з обраного</string>
-  <string name="action_unfavoriting">видалення з обраного</string>
   <string name="action_unfollow">Не читати</string>
-  <string name="action_unfollowing">припинення читання</string>
   <string name="action_unmute">Вимкнути ігнор</string>
-  <string name="action_unmuting">зняття ігнорування</string>
   <string name="action_unsubscribe">Відписатися</string>
-  <string name="action_unsubscribing_from_list">відписки від списку</string>
-  <string name="action_updating_details">оновлення даних</string>
-  <string name="action_updating_profile">оновлення профілю</string>
-  <string name="action_updating_profile_background_image">оновлення тла профілю</string>
-  <string name="action_updating_profile_banner_image">оновлення обкладинки профілю</string>
-  <string name="action_updating_profile_image">оновлення зображення профілю</string>
-  <string name="action_updating_status">надсилання твіту</string>
   <string name="action_view_map">Карта</string>
   <string name="activated_accounts">Активовані профілі</string>
   <string name="activities_about_me">Моя діяльність</string>
@@ -172,7 +138,6 @@
   <string name="count_label_retweets">Ретвіти</string>
   <string name="created_by">Створено <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">Створено список \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="title_crop_image">Обрізати зображення</string>
   <string name="current_status">Поточний твіт</string>
   <string name="custom_host_mapping">Перенаправлення вузлів</string>
   <string name="custom_host_mapping_summary">Перенаправлення вузлів, як за допомогою /etc/hosts, але не потребує додаткових дозволів.</string>
@@ -324,6 +289,10 @@
   <string name="label_poll">Опитування</string>
   <string name="label_refresh_service">Сервіс оновлення</string>
   <string name="label_status_not_available">Твіт недоступний</string>
+  <!-- Mastodon feature, post to mentioned users only -->
+  <!-- Mastodon feature, post to followers only -->
+  <!-- Mastodon feature, post to public timelines -->
+  <!-- Mastodon feature, do not show in public timelines -->
   <string name="label_streaming_service">Сервіс стримінгу</string>
   <string name="label_translate_from_language">Переклад з <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">Переклад</string>
@@ -511,7 +480,6 @@
   <string name="profile_banner">Обкладинка профілю</string>
   <string name="profile_image">Зображення профілю</string>
   <string name="profile_image_style">Стиль зображення профілю</string>
-  <string name="message_toast_profile_image_updated">Оновлено зображення профілю.</string>
   <string name="profile_images">Зображення профілю</string>
   <string name="profile_link_color_main_color">Колір посилань (головний колір)</string>
   <string name="profile_text_color">Колір тексту</string>
@@ -556,7 +524,6 @@
   <string name="refresh_type_interactions">Сповіщення</string>
   <string name="refresh_type_messages">Повідомлення</string>
   <string name="refresh_type_trends">Тенденції</string>
-  <string name="action_register">Реєстрація</string>
   <string name="remember_position">Запам\'ятати розташування</string>
   <string name="remember_position_summary">Запам\'ятати розташування списку/вкладки перед виходом із Twidere</string>
   <string name="remove">Видалити</string>
@@ -620,7 +587,6 @@
   <string name="show_absolute_time">Показувати безвідносний час</string>
   <string name="show_absolute_time_summary">Показувати безвідносний (реальний) час у твітах</string>
   <string name="show_in_timeline">Показати у стрічці</string>
-  <string name="action_sign_in">Увійти</string>
   <string name="sign_in_service_email">Email</string>
   <string name="sign_in_service_google_id">Google ID</string>
   <string name="sign_in_service_twitter">Twitter</string>
@@ -761,7 +727,6 @@
   <string name="usage_statistics_notification_summary">Допоможіть нам покращити Twidere!</string>
   <string name="user_blocked">Заблокував цього користувача.</string>
   <string name="user_filter_name">Користувач: <xliff:g id="name">%s</xliff:g></string>
-  <string name="title_user_list">Список</string>
   <string name="user_list_details">Дані списку</string>
   <!-- User list description -->
   <string name="user_list_details_description">Опис</string>

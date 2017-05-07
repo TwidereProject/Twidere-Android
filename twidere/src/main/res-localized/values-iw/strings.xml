@@ -15,26 +15,19 @@
   <string name="action_add_member">הוסף משתמש</string>
   <string name="action_add_tab">הוסף כרטיסייה</string>
   <string name="action_add_to_list">הוסף לרשימה</string>
-  <string name="action_adding_member">הוספת חבר</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">חסום</string>
-  <string name="action_blocking">חוסם</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">בטל ציוץ מחדש</string>
   <string name="action_center">מרכז</string>
   <string name="action_clear">נקה</string>
   <string name="action_compose">צור</string>
-  <string name="action_creating_list">יוצר רשימה</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">מחק</string>
-  <string name="action_deleting">מוחק</string>
-  <string name="action_deleting_search">מחיקת חיפוש</string>
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">שמור</string>
   <string name="action_favorite">סמן כמועדף</string>
   <string name="action_follow">עקוב אחרי</string>
-  <string name="action_following">עוקב</string>
-  <string name="action_getting_status">מקבל ציוץ</string>
   <!-- [verb] Perform import action -->
   <string name="action_import_from">ייבא מ&#8230;</string>
   <!-- Used for decide something later, like permission request -->
@@ -44,26 +37,19 @@
   <string name="action_pick_color">בחר צבע</string>
   <string name="action_quote">צטט</string>
   <string name="action_refresh">רענן</string>
-  <string name="action_refreshing_direct_messages">ריענון הודעות ישירות</string>
-  <string name="action_refreshing_mentions">ריענון אזכורים</string>
-  <string name="action_removing_profile_banner_image">הסרת תמונת הכותרת של הפרופיל</string>
   <string name="action_reply">השב</string>
   <!-- [verb] Restore purchase -->
   <string name="action_retry">נסה שנית</string>
   <!-- [verb] Action for performing retweet -->
   <string name="action_retweet">ציוץ מחדש</string>
-  <string name="action_retweeting">מצייץ מחדש</string>
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">שמור</string>
-  <string name="action_saving_search">שמירת חיפוש</string>
   <string name="action_select_user">בחר משתמש</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">שלח</string>
-  <string name="action_sending_direct_message">שליחת הודעה ישירה</string>
   <string name="action_set_color">הגדר צבע</string>
   <string name="action_set_nickname">הגדר שם משתמש</string>
   <string name="action_share">שתף</string>
-  <string name="action_signing_in">כניסה למערכת</string>
   <!-- [verb] Used for skip some settings -->
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
   <!-- [verb] Disconnect from network storage -->
@@ -74,17 +60,9 @@
   <string name="action_twitter_muted_users">משתמשים מושתקים</string>
   <!-- [verb] Action for unblocking user -->
   <string name="action_unblock">בטל חסימה</string>
-  <string name="action_unblocking">מבטל חסימה</string>
   <string name="action_undo_like">בטל אהבתי</string>
   <string name="action_unfavorite">בטל סימון כמועדף</string>
   <string name="action_unfollow">הפסק לעקוב אחרי</string>
-  <string name="action_unfollowing">ביטול עקיבה</string>
-  <string name="action_updating_details">עדכון פרטים</string>
-  <string name="action_updating_profile">מעדכן פרופיל</string>
-  <string name="action_updating_profile_background_image">עדכון תמונת הרקע של הפרופיל</string>
-  <string name="action_updating_profile_banner_image">עדכון תמונת הכותרת של הפרופיל</string>
-  <string name="action_updating_profile_image">עדכון תמונת פרופיל</string>
-  <string name="action_updating_status">שולח ציוץ</string>
   <string name="action_view_map">מפה</string>
   <string name="add_account">הוסף חשבון</string>
   <string name="add_image">הוסף תמונה</string>
@@ -199,6 +177,10 @@
   <string name="label_original_status">ציוץ מקורי</string>
   <string name="label_poll">סקר</string>
   <string name="label_refresh_service">רענן שירות</string>
+  <!-- Mastodon feature, post to mentioned users only -->
+  <!-- Mastodon feature, post to followers only -->
+  <!-- Mastodon feature, post to public timelines -->
+  <!-- Mastodon feature, do not show in public timelines -->
   <string name="label_streaming_service">שירות הזרמה</string>
   <string name="label_translation">תרגום</string>
   <string name="label_your_profile_image">תמונת הפרופיל שלך</string>
@@ -293,7 +275,6 @@
   <string name="profile_background_color">צבע רקע</string>
   <string name="profile_image">תמונת פרופיל</string>
   <string name="profile_image_style">סגנון תמונת פרופיל</string>
-  <string name="message_toast_profile_image_updated">תמונת הפרופיל עודכנה.</string>
   <string name="profile_images">תמונות פרופיל</string>
   <string name="profile_text_color">צבע טקסט</string>
   <string name="profile_updated">הפרופיל עודכן.</string>
@@ -324,7 +305,6 @@
   <string name="refresh_on_start_summary">רענן את ציר הזמן והאזכורים בפתיחת האפליקציה.</string>
   <string name="refresh_type_home">בית</string>
   <string name="refresh_type_messages">הודעות</string>
-  <string name="action_register">הירשם</string>
   <string name="remember_position">זכור מיקום</string>
   <string name="remember_position_summary">זכור מיקום ברשימה/כרטיסיות לפני סגירת Twidere</string>
   <string name="remove">הסר</string>
@@ -359,7 +339,6 @@
   <string name="show_absolute_time">הצג זמן מוחלט</string>
   <string name="show_absolute_time_summary">הצג זמן מוחלט בציוצים</string>
   <string name="show_in_timeline">הצג בציר הזמן</string>
-  <string name="action_sign_in">היכנס</string>
   <string name="sign_up">הרשם</string>
   <string name="signing_in_error_browser_sign_in_hint">שגיאה בעת כניסה למערכת, ייתכן שצריך להשתמש בכניסה דרך הדפדפן. (זה יתעלם מהגדרות API מותאמות אישית בעת הכניסה)</string>
   <string name="size">גודל</string>
@@ -443,7 +422,6 @@
   <string name="usage_statistics">סטטיסטיקות שימוש</string>
   <string name="user_blocked">משתמש זה נחסם.</string>
   <string name="user_filter_name">משתמש: <xliff:g id="name">%s</xliff:g></string>
-  <string name="title_user_list">רשימה</string>
   <!-- User list description -->
   <string name="user_list_details_description">תיאור</string>
   <!-- User list is public -->

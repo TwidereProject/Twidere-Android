@@ -8,7 +8,6 @@
   <string name="action_accept_friend_request">Accepta</string>
   <!-- [verb] Accept a permission request like allow to use camera etc. -->
   <string name="action_accept_permission_request">Accepta</string>
-  <string name="action_accepting_follow_request">s\'està acceptant la soŀlicitud de seguiment</string>
   <!-- [verb] Add an item to a list/collection -->
   <string name="action_add">Afegeix</string>
   <!-- [verb] Add a member to a message conversation -->
@@ -19,69 +18,49 @@
   <string name="action_add_tab">Afegeix una pestanya</string>
   <string name="action_add_to_filter">Afegeix al filtre</string>
   <string name="action_add_to_list">Afegeix a la llista</string>
-  <string name="action_adding_member">S\'està afegint el membre</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Bloqueja</string>
-  <string name="action_blocking">s\'està bloquejant</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">Cancel·la la repiulada</string>
   <string name="action_center">Centre</string>
   <string name="action_clear">Esborra</string>
   <string name="action_compose">Redacta</string>
-  <string name="action_creating_list">S\'està creant la llista</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">Esborra</string>
-  <string name="action_deleting">S\'està esborrant</string>
-  <string name="action_deleting_search">s\'està esborrant la cerca</string>
-  <string name="action_denying_follow_request">s\'està rebutjant la soŀlicitud de seguiment</string>
   <string name="action_dont_restart">No reiniciïs</string>
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">Edita</string>
   <string name="action_favorite">Marca com a preferit</string>
-  <string name="action_favoriting">S\'està afegint a preferits</string>
   <string name="action_finish">Acabar</string>
   <string name="action_follow">Segueix</string>
-  <string name="action_following">s\'està seguint</string>
-  <string name="action_getting_status">S\'està rebent la piulada</string>
   <!-- [verb] Perform import action -->
   <string name="action_import_from">Importa des de&#8230;</string>
   <!-- Used for decide something later, like permission request -->
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">M\'agrada</string>
   <string name="action_mute">Silencia</string>
-  <string name="action_muting">silenciant</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, desat a les <xliff:g id="time">%2$s</xliff:g></string>
   <string name="action_pick_color">Tria un color</string>
   <string name="action_quote">Citar</string>
   <string name="action_refresh">Actualitza</string>
-  <string name="action_refreshing_direct_messages">S\'estan actualitzant els missatges directes</string>
-  <string name="action_refreshing_home_timeline">S\'està actualitzant la cronologia</string>
-  <string name="action_refreshing_mentions">S\'estan actualitzant les mencions</string>
-  <string name="action_removing_profile_banner_image">S\'està eliminat la imatge de capçalera del perfil</string>
   <string name="action_reply">Respon</string>
   <string name="action_report_spam">Informa d\'abús</string>
-  <string name="action_reporting_for_spam">s\'està informant de l\'abús</string>
   <!-- [verb] Restore purchase -->
   <string name="action_retry">Torna-ho a intentar</string>
   <!-- [verb] Action for performing retweet -->
   <string name="action_retweet">Retweet</string>
-  <string name="action_retweeting">s\'està repiulant</string>
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Desa</string>
-  <string name="action_saving_search">s\'està desant la cerca</string>
   <string name="action_search">Cerca</string>
   <string name="action_select_user">Escull usuari</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Envia</string>
-  <string name="action_sending_direct_message">S\'està enviant el missatge directe</string>
   <string name="action_set_color">Estableix un color</string>
   <string name="action_set_nickname">Establiu sobrenom</string>
   <string name="action_share">Comparteix</string>
-  <string name="action_signing_in">S\'està accedint</string>
   <!-- [verb] Used for skip some settings -->
   <string name="action_start">Comença</string>
   <string name="action_subscribe">Subscriu-me</string>
-  <string name="action_subscribing_to_list">esteu sent subscrits a la llista</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
   <!-- [verb] Disconnect from network storage -->
   <string name="action_sync_settings">Paràmetres</string>
@@ -92,22 +71,11 @@
   <string name="action_twitter_muted_users">Usuaris silenciats</string>
   <!-- [verb] Action for unblocking user -->
   <string name="action_unblock">Desbloqueja</string>
-  <string name="action_unblocking">s\'està desbloquejant</string>
   <string name="action_undo_like">No m\'agrada</string>
   <string name="action_unfavorite">Desmarca com a preferit</string>
-  <string name="action_unfavoriting">S\'està traient de preferits</string>
   <string name="action_unfollow">Deixa de seguir</string>
-  <string name="action_unfollowing">s\'està deixant de seguir</string>
   <string name="action_unmute">Desimmuta</string>
-  <string name="action_unmuting">immuta</string>
   <string name="action_unsubscribe">Canceŀla la subscripció</string>
-  <string name="action_unsubscribing_from_list">s\'està eliminant la subscripció a la llista</string>
-  <string name="action_updating_details">S\'estan actualitzant els detalls</string>
-  <string name="action_updating_profile">S\'està actualitzant perfil</string>
-  <string name="action_updating_profile_background_image">s\'està actualitzant la imatge de fons del perfil</string>
-  <string name="action_updating_profile_banner_image">S\'està actualitzant la imatge de capçalera</string>
-  <string name="action_updating_profile_image">S\'està actualitzant la imatge de perfil</string>
-  <string name="action_updating_status">S\'està enviant la piulada</string>
   <string name="action_view_map">Mapa</string>
   <string name="activated_accounts">Comptes activades</string>
   <string name="activities_about_me">Activitats sobre mi</string>
@@ -169,7 +137,6 @@
   <string name="count_label_retweets">Repiulades</string>
   <string name="created_by">Creat per <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">Heu creat la llista «<xliff:g id="list">%s</xliff:g>».</string>
-  <string name="title_crop_image">Retallar imatge</string>
   <string name="current_status">Piulada actual</string>
   <string name="custom_host_mapping">Associacions de servidors personalitzades</string>
   <string name="custom_host_mapping_summary">Associa servidors com el fitxer /etc/hosts sense requerir permisos addicionals.</string>
@@ -317,6 +284,10 @@
   <string name="label_photo">Foto</string>
   <string name="label_poll">Enquesta</string>
   <string name="label_refresh_service">Actualitza el servei</string>
+  <!-- Mastodon feature, post to mentioned users only -->
+  <!-- Mastodon feature, post to followers only -->
+  <!-- Mastodon feature, post to public timelines -->
+  <!-- Mastodon feature, do not show in public timelines -->
   <string name="label_streaming_service">Servei de piulades en temps real</string>
   <string name="label_translate_from_language">Tradueix des del <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">Traducció</string>
@@ -502,7 +473,6 @@
   <string name="profile_banner">Bàner de perfil</string>
   <string name="profile_image">Imatge de perfil</string>
   <string name="profile_image_style">Estil de la imatge de perfil</string>
-  <string name="message_toast_profile_image_updated">S\'ha actualitzat la imatge de perfil.</string>
   <string name="profile_images">Imatges de perfil</string>
   <string name="profile_link_color_main_color">Color dels enllaços (el principal)</string>
   <string name="profile_text_color">Color de la lletra</string>
@@ -547,7 +517,6 @@
   <string name="refresh_type_interactions">Interaccions</string>
   <string name="refresh_type_messages">Missatges</string>
   <string name="refresh_type_trends">Tendències</string>
-  <string name="action_register">Registrar-se</string>
   <string name="remember_position">Recorda la posició</string>
   <string name="remember_position_summary">Recorda la posició a la llista/pestanya abans de tancar Twidere</string>
   <string name="remove">Suprimeix</string>
@@ -610,7 +579,6 @@
   <string name="show_absolute_time">Mostra l\'hora absoluta</string>
   <string name="show_absolute_time_summary">Mostra data i hora absolutes a les piulades</string>
   <string name="show_in_timeline">Mostra a la cronologia</string>
-  <string name="action_sign_in">Inicia la sessió</string>
   <string name="sign_in_service_email">Correu electrònic</string>
   <string name="sign_in_service_google_id">Compte de Google</string>
   <string name="sign_in_service_twitter">Twitter</string>
@@ -750,7 +718,6 @@
   <string name="usage_statistics_notification_summary">Ajuda\'ns a millorar Twidere!</string>
   <string name="user_blocked">S\'ha bloquejat aquest usuari.</string>
   <string name="user_filter_name">Usuari: <xliff:g id="name">%s</xliff:g></string>
-  <string name="title_user_list">Llista</string>
   <string name="user_list_details">Detalls de la llista</string>
   <!-- User list description -->
   <string name="user_list_details_description">Descripció</string>

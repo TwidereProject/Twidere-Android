@@ -9,30 +9,26 @@
   <string name="action_accept_friend_request">Acceptera</string>
   <!-- [verb] Accept a permission request like allow to use camera etc. -->
   <string name="action_accept_permission_request">Acceptera</string>
-  <string name="action_accepting_follow_request">Accepterar följarförfrågan</string>
   <!-- [verb] Add an item to a list/collection -->
   <string name="action_add">Lägg till</string>
   <!-- [verb] Add a member to a message conversation -->
   <string name="action_add_conversation_participant">Lägg till medlem</string>
   <!-- [verb] Add mute filter rule -->
-  <string name="action_add_filter_rule">Lägg till regel</string>
+  <string name="action_add_filter_rule">Skapa regel</string>
   <string name="action_add_filters_subscription">Lägg till prenumeration</string>
   <string name="action_add_gif">Lägg till GIF</string>
   <string name="action_add_media">Lägg till media</string>
   <string name="action_add_member">Lägg till medlem</string>
   <string name="action_add_tab">Lägg till flik</string>
-  <string name="action_add_to_filter">Lägg till i filter</string>
+  <string name="action_add_to_filter">Skapa filter</string>
   <string name="action_add_to_list">Lägg till i listan</string>
-  <string name="action_adding_member">Lägger till medlem</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Blockera</string>
-  <string name="action_blocking">Blockerar</string>
   <string name="action_buffer_disconnect">Koppla ifrån Buffer</string>
   <string name="action_buffer_settings">Inställningar</string>
   <string name="action_buffer_update_now">Publicera nu</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">Avbryt retweet</string>
-  <string name="action_cancelling_like">Avbryter gillning</string>
   <string name="action_center">Mitten</string>
   <string name="action_clear">Rensa</string>
   <string name="action_clear_messages">Töm meddelanden</string>
@@ -41,13 +37,9 @@
   <string name="action_connect_to_buffer">Anslut</string>
   <string name="action_conversation_info">Konversationsinformation</string>
   <string name="action_create_conversation">Skapa konversation</string>
-  <string name="action_creating_list">Skapar lista</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">Ta bort</string>
   <string name="action_delete_messages">Ta bort meddelanden</string>
-  <string name="action_deleting">Tar bort</string>
-  <string name="action_deleting_search">Tar bort sök</string>
-  <string name="action_denying_follow_request">Nekar följarförfrågan</string>
   <string name="action_dont_restart">Starta inte om</string>
   <string name="action_dont_terminate">Avsluta inte</string>
   <!-- [verb] Edit image/settings etc. -->
@@ -56,15 +48,11 @@
   <string name="action_edit_conversation_name">Redigera namn</string>
   <string name="action_edit_filter_rule">Redigera regel</string>
   <string name="action_favorite">Favorit</string>
-  <string name="action_favoriting">Favoriserar</string>
   <string name="action_filter_import_from_blocked_users">Importera från blockerade användare</string>
   <string name="action_filter_import_from_muted_users">Importera från tystade användare</string>
   <string name="action_filter_subscriptions_card_manage">Hantera prenumerationer</string>
   <string name="action_finish">Avsluta</string>
   <string name="action_follow">Följ</string>
-  <string name="action_following">Följer</string>
-  <string name="action_getting_status">Hämtar tweet</string>
-  <string name="action_getting_user_lists">Hämtar användarlista</string>
   <!-- [verb] Perform import action -->
   <string name="action_import">Importera</string>
   <string name="action_import_from">Importera från...</string>
@@ -74,14 +62,11 @@
   <string name="action_leave_conversation">Lämna konversation</string>
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">Gilla</string>
-  <string name="action_liking">Gillar</string>
   <string name="action_location">Plats</string>
   <string name="action_manage_in_buffer">Hantera i Buffer</string>
   <string name="action_mark_as_read">Markera som läst</string>
-  <string name="action_modifying_lists">Ändrar lista</string>
   <string name="action_mute">Tysta</string>
   <string name="action_mute_notifications">Tysta notifieringar</string>
-  <string name="action_muting">Tystar</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, sparad som <xliff:g id="time">%2$s</xliff:g></string>
   <string name="action_next_step">Nästa</string>
   <string name="action_open_in_browser">Öppna i webbläsaren</string>
@@ -92,34 +77,25 @@
   <string name="action_quote">Citera</string>
   <string name="action_record_video">Spela in video</string>
   <string name="action_refresh">Uppdatera</string>
-  <string name="action_refreshing_direct_messages">Uppdaterar direktmeddelanden</string>
-  <string name="action_refreshing_home_timeline">Uppdaterar hemtidslinjen</string>
-  <string name="action_refreshing_mentions">Uppdaterar omnämningar</string>
   <string name="action_remove_conversation_avatar">Ta bort ikon</string>
-  <string name="action_removing_profile_banner_image">Tar bort sidhuvudsfotot</string>
   <string name="action_reply">Svara</string>
   <string name="action_report_spam">Rapportera spam</string>
-  <string name="action_reporting_for_spam">Rapporterar för skräppost</string>
   <!-- [verb] Restore purchase -->
   <string name="action_restore_purchase">Återställ</string>
   <string name="action_retry">Försök igen</string>
   <!-- [verb] Action for performing retweet -->
   <string name="action_retweet">Retweeta</string>
-  <string name="action_retweeting">Retweetar</string>
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Spara</string>
-  <string name="action_saving_search">Sparar sök</string>
   <string name="action_search">Sök</string>
   <string name="action_select_all">Markera allt</string>
   <string name="action_select_none">Avmarkera allt</string>
   <string name="action_select_user">Välj användare</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Skicka</string>
-  <string name="action_sending_direct_message">Skickar direktmeddelande</string>
   <string name="action_set_color">Ange färg</string>
   <string name="action_set_nickname">Ange smeknamn</string>
   <string name="action_share">Dela</string>
-  <string name="action_signing_in">Loggar in</string>
   <!-- [verb] Used for skip some settings -->
   <string name="action_skip">Hoppa över</string>
   <string name="action_start">Starta</string>
@@ -128,7 +104,6 @@
   <string name="action_status_mute_users">Tysta användare...</string>
   <string name="action_status_schedule">Schemalägg tweet</string>
   <string name="action_subscribe">Prenumerera</string>
-  <string name="action_subscribing_to_list">Prenumererar på lista</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
   <string name="action_sync_connect_to_storage">Anslut</string>
   <!-- [verb] Disconnect from network storage -->
@@ -142,22 +117,11 @@
   <string name="action_twitter_muted_users">Tystade användare</string>
   <!-- [verb] Action for unblocking user -->
   <string name="action_unblock">Avblockera</string>
-  <string name="action_unblocking">Avblockerar</string>
   <string name="action_undo_like">Ångra gillning</string>
   <string name="action_unfavorite">Avfavorisera</string>
-  <string name="action_unfavoriting">Avfavoriserar</string>
   <string name="action_unfollow">Sluta följa</string>
-  <string name="action_unfollowing">Slutar följa</string>
   <string name="action_unmute">Avtysta</string>
-  <string name="action_unmuting">Avtystar</string>
   <string name="action_unsubscribe">Avprenumererar</string>
-  <string name="action_unsubscribing_from_list">Avbryter prenumeration från lista</string>
-  <string name="action_updating_details">Uppdaterar detaljer</string>
-  <string name="action_updating_profile">Uppdaterar profil</string>
-  <string name="action_updating_profile_background_image">Uppdaterar profilens bakgrundsbild</string>
-  <string name="action_updating_profile_banner_image">Uppdaterar profilens sidhuvudsfoto</string>
-  <string name="action_updating_profile_image">Uppdaterar profilbild</string>
-  <string name="action_updating_status">Skickar tweet</string>
   <string name="action_view_map">Karta</string>
   <string name="activated_accounts">Aktiverade konton</string>
   <string name="activities_about_me">Aktiviteter om mig</string>
@@ -255,7 +219,6 @@
   <string name="count_label_retweets">Retweets</string>
   <string name="created_by">Skapad av <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">Skapade listan \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="title_crop_image">Beskär bild</string>
   <string name="current_status">Nuvarande tweet</string>
   <string name="custom_host_mapping">Anpassad värdmappning</string>
   <string name="custom_host_mapping_summary">Värdmappning som exempelvis /etc/hosts, men som inte kräver ytterligare rättigheter.</string>
@@ -457,6 +420,10 @@
   <string name="label_send_at">Skicka via</string>
   <string name="label_sensitive_content">Känsligt innehåll</string>
   <string name="label_status_not_available">Tweet ej tillgängligt</string>
+  <!-- Mastodon feature, post to mentioned users only -->
+  <!-- Mastodon feature, post to followers only -->
+  <!-- Mastodon feature, post to public timelines -->
+  <!-- Mastodon feature, do not show in public timelines -->
   <string name="label_statuses">Tweets</string>
   <string name="label_statuses_replies">Tweets och svar</string>
   <string name="label_statuses_retweets">Tweets och retweets</string>
@@ -752,7 +719,6 @@
   <string name="profile_banner">Profilbanderoll</string>
   <string name="profile_image">Profilbild</string>
   <string name="profile_image_style">Profilbildsstil</string>
-  <string name="message_toast_profile_image_updated">Profilbild uppdaterad.</string>
   <string name="profile_images">Profilbilder</string>
   <string name="profile_link_color_main_color">Länkfärg (huvudfärg)</string>
   <string name="profile_text_color">Textfärg</string>
@@ -797,7 +763,6 @@
   <string name="refresh_type_interactions">Interaktioner</string>
   <string name="refresh_type_messages">Meddelanden</string>
   <string name="refresh_type_trends">Trender</string>
-  <string name="action_register">Registrera</string>
   <string name="remember_position">Kom ihåg position</string>
   <string name="remember_position_summary">Kom ihåg listan och flikens position före nedstängning av Twidere</string>
   <string name="remove">Ta bort</string>
@@ -860,7 +825,6 @@
   <string name="show_absolute_time">Visa absoluta tiden</string>
   <string name="show_absolute_time_summary">Visa absoluta tiden i tweets</string>
   <string name="show_in_timeline">Visa på tidslinje</string>
-  <string name="action_sign_in">Logga in</string>
   <string name="sign_in_service_email">E-post</string>
   <string name="sign_in_service_google_id">Google-ID</string>
   <string name="sign_in_service_twitter">Twitter</string>
@@ -893,7 +857,6 @@
   <string name="streaming">Strömmande</string>
   <string name="style">Stil</string>
   <string name="subscribers">Prenumerant</string>
-  <string name="summary_interactions_not_available">Endast tillgänglig med officiella nycklar</string>
   <string name="swipe_down_to_refresh">Dra ner för att uppdatera</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="sync_provider_name_google_drive">Google Drive</string>
@@ -1027,7 +990,6 @@
   <string name="usage_statistics_notification_summary">Hjälp oss förbättra Twidere!</string>
   <string name="user_blocked">Användaren är blockerad.</string>
   <string name="user_filter_name">Användare: <xliff:g id="name">%s</xliff:g></string>
-  <string name="title_user_list">Lista</string>
   <string name="user_list_details">Lista deajer</string>
   <!-- User list description -->
   <string name="user_list_details_description">Beskrivning</string>

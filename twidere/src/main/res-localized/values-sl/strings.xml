@@ -22,15 +22,12 @@
   <string name="action_add_tab">Dodaj zavihek</string>
   <string name="action_add_to_filter">Dodaj filter</string>
   <string name="action_add_to_list">Dodaj na seznam</string>
-  <string name="action_adding_member">dodajanje člana</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Blokiraj</string>
-  <string name="action_blocking">blokiranje</string>
   <string name="action_buffer_disconnect">Prekini povezavo</string>
   <string name="action_buffer_settings">Nastavitve</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">Prekliči retweet</string>
-  <string name="action_cancelling_like">preklic všečka</string>
   <string name="action_center">Center</string>
   <string name="action_clear">Sprazni</string>
   <string name="action_clear_messages">Sprazni sporočila</string>
@@ -60,6 +57,10 @@
   <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
   <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
   <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
+  <!-- Mastodon feature, post to mentioned users only -->
+  <!-- Mastodon feature, post to followers only -->
+  <!-- Mastodon feature, post to public timelines -->
+  <!-- Mastodon feature, do not show in public timelines -->
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted

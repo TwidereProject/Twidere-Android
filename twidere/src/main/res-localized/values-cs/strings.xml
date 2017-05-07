@@ -14,19 +14,18 @@
   <string name="action_add_conversation_participant">Přidat člena</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">Přidat pravidlo</string>
+  <string name="action_add_media">Přidat média</string>
   <string name="action_add_member">Přidat člena</string>
   <string name="action_add_tab">Přidat záložku</string>
   <string name="action_add_to_filter">Přidat do filtru</string>
   <string name="action_add_to_list">Přidat do seznamu</string>
-  <string name="action_adding_member">přidávání člena</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Blokovat</string>
-  <string name="action_blocking">blokování</string>
+  <string name="action_buffer_settings">Nastavení</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">Zrušit retweet</string>
   <string name="action_clear">Vymazat</string>
   <string name="action_compose">Napsat</string>
-  <string name="action_creating_list">vytváření seznamu</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">Smazat</string>
   <!-- [verb] Edit image/settings etc. -->
@@ -34,14 +33,15 @@
   <string name="action_favorite">Přidat do oblíbených</string>
   <string name="action_finish">Dokončit</string>
   <string name="action_follow">Sledovat</string>
-  <string name="action_following">sledování</string>
-  <string name="action_getting_status">získávání tweetu</string>
   <!-- [verb] Perform import action -->
   <!-- Used for decide something later, like permission request -->
+  <string name="action_later">Později</string>
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">To se mi líbí</string>
+  <string name="action_next_step">Další</string>
   <string name="action_open_in_browser">Otevřít v prohlížeči</string>
   <string name="action_pick_color">Vybrat barvu</string>
+  <string name="action_qr_code">QR kód</string>
   <string name="action_quote">Poznámka</string>
   <string name="action_refresh">Aktualizovat</string>
   <string name="action_reply">Odpovědět</string>
@@ -69,14 +69,9 @@
   <string name="action_twitter_muted_users">Ztlumit uživatele</string>
   <!-- [verb] Action for unblocking user -->
   <string name="action_unblock">Odblokovat</string>
-  <string name="action_unblocking">odblokování</string>
   <string name="action_undo_like">To se mi nelíbí</string>
   <string name="action_unfavorite">Odstranit z oblíbených</string>
   <string name="action_unfollow">Přestat sledovat</string>
-  <string name="action_unfollowing">zrušení sledování</string>
-  <string name="action_updating_profile">aktualizování profilu</string>
-  <string name="action_updating_profile_image">aktualizování profilového obrázku</string>
-  <string name="action_updating_status">odesílání tweetu</string>
   <string name="action_view_map">Mapa</string>
   <string name="add_account">Přidat účet</string>
   <string name="add_image">Přidat obrázek</string>
@@ -107,7 +102,6 @@
   <!-- [noun] Count label for retweets, e.g. (N retweets)-->
   <string name="count_label_retweets">Retweety</string>
   <string name="created_by">Vytvořil(a) <xliff:g id="created_by">%s </xliff:g></string>
-  <string name="title_crop_image">Oříznout obrázek</string>
   <string name="current_status">Aktuální tweet</string>
   <string name="dark_theme">Tmavý motiv</string>
   <string name="default_account">Výchozí účet</string>
@@ -182,6 +176,10 @@
   <string name="label_data_provider">Poskytovatel databáze pro Twidere</string>
   <string name="label_refresh_service">Obnovit službu</string>
   <string name="label_status_not_available">Tweet není k dispozici</string>
+  <!-- Mastodon feature, post to mentioned users only -->
+  <!-- Mastodon feature, post to followers only -->
+  <!-- Mastodon feature, post to public timelines -->
+  <!-- Mastodon feature, do not show in public timelines -->
   <string name="label_streaming_service">Služby datových proudů</string>
   <string name="label_translation">Překlad</string>
   <string name="label_your_profile_image">Váš profilový obrázek</string>
@@ -261,7 +259,6 @@
   <string name="profile">Profil</string>
   <string name="profile_background_color">Barva pozadí</string>
   <string name="profile_image">Profilový obrázek</string>
-  <string name="message_toast_profile_image_updated">Profilový obrázek aktualizován.</string>
   <string name="profile_images">Profilové obrázky</string>
   <string name="profile_link_color_main_color">Barva odkazu (hlavní barva)</string>
   <string name="profile_text_color">Barva textu</string>
@@ -327,7 +324,6 @@
   <string name="show_absolute_time">Zobrazit absolutní čas</string>
   <string name="show_absolute_time_summary">Zobrazit absolutní čas ve tweetech</string>
   <string name="show_in_timeline">Zobrazit na časové ose</string>
-  <string name="action_sign_in">Přihlásit se</string>
   <string name="sign_in_service_email">E-mail</string>
   <string name="sign_in_service_google_id">Google ID</string>
   <string name="sign_in_service_twitter">Twitter</string>
@@ -410,7 +406,6 @@
   <string name="usage_statistics">Statistiky využití</string>
   <string name="user_blocked">Blokovat tohoto uživatele.</string>
   <string name="user_filter_name">Uživatel: <xliff:g id="name">%s </xliff:g></string>
-  <string name="title_user_list">Seznam</string>
   <!-- User list description -->
   <string name="user_list_details_description">Popis</string>
   <!-- User list is public -->

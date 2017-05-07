@@ -3,15 +3,16 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="account_options">Opcións da conta</string>
   <string name="account_type_fanfou">Fanfou</string>
+  <string name="account_type_mastodon">Mastodon</string>
   <string name="account_type_statusnet">StatusNet</string>
   <string name="account_type_twitter">Twitter</string>
   <!-- [verb] Accept a friend request (follow request) -->
   <string name="action_accept_friend_request">Aceptar</string>
   <!-- [verb] Accept a permission request like allow to use camera etc. -->
   <string name="action_accept_permission_request">Aceptar</string>
-  <string name="action_accepting_follow_request">aceptando petición de seguimento</string>
   <!-- [verb] Add an item to a list/collection -->
   <string name="action_add">Engadir</string>
+  <string name="action_add_content_warning">Engadir aviso de contido</string>
   <!-- [verb] Add a member to a message conversation -->
   <string name="action_add_conversation_participant">Engadir membro</string>
   <!-- [verb] Add mute filter rule -->
@@ -23,16 +24,13 @@
   <string name="action_add_tab">Engadir lapela</string>
   <string name="action_add_to_filter">Engadir a filtro</string>
   <string name="action_add_to_list">Engadir á lista</string>
-  <string name="action_adding_member">engadindo membro</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Bloquear</string>
-  <string name="action_blocking">bloqueando</string>
   <string name="action_buffer_disconnect">Desconectar do Buffer</string>
   <string name="action_buffer_settings">Axustes</string>
   <string name="action_buffer_update_now">Publicar agora</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">Cancelar rechouchío</string>
-  <string name="action_cancelling_like">cancelando favorito</string>
   <string name="action_center">Centro</string>
   <string name="action_clear">Limpar</string>
   <string name="action_clear_messages">Limpar mensaxes</string>
@@ -41,13 +39,9 @@
   <string name="action_connect_to_buffer">Conectar</string>
   <string name="action_conversation_info">Información da conversa</string>
   <string name="action_create_conversation">Iniciar conversa</string>
-  <string name="action_creating_list">creando lista</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">Borrar</string>
   <string name="action_delete_messages">Borrar mensaxes</string>
-  <string name="action_deleting">borrando</string>
-  <string name="action_deleting_search">borrando busca</string>
-  <string name="action_denying_follow_request">denegando petición de seguimento</string>
   <string name="action_dont_restart">Non reiniciar</string>
   <string name="action_dont_terminate">Non saír</string>
   <!-- [verb] Edit image/settings etc. -->
@@ -56,15 +50,12 @@
   <string name="action_edit_conversation_name">Editar nome</string>
   <string name="action_edit_filter_rule">Editar filtro</string>
   <string name="action_favorite">Favorito</string>
-  <string name="action_favoriting">marcando favorito</string>
   <string name="action_filter_import_from_blocked_users">Importar de usuarios bloqueados</string>
   <string name="action_filter_import_from_muted_users">Importar de usuarios silenciados</string>
   <string name="action_filter_subscriptions_card_manage">Xestionar subscricións</string>
   <string name="action_finish">Rematar</string>
   <string name="action_follow">Seguir</string>
-  <string name="action_following">seguindo</string>
-  <string name="action_getting_status">cargando chío</string>
-  <string name="action_getting_user_lists">adquirindo listas de usuario</string>
+  <string name="action_format_search_update_status">Chío <xliff:g id="text">%1$s</xliff:g></string>
   <!-- [verb] Perform import action -->
   <string name="action_import">Importar</string>
   <string name="action_import_from">Importar de&#8230;</string>
@@ -74,14 +65,11 @@
   <string name="action_leave_conversation">Deixar conversa</string>
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">Gústame</string>
-  <string name="action_liking">gustando</string>
   <string name="action_location">Localización</string>
   <string name="action_manage_in_buffer">Xestionar no Buffer</string>
   <string name="action_mark_as_read">Marcar como lido</string>
-  <string name="action_modifying_lists">modificando listas</string>
   <string name="action_mute">Silenciar</string>
   <string name="action_mute_notifications">Silenciar notificacións</string>
-  <string name="action_muting">silenciando</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, gardouse ás <xliff:g id="time">%2$s</xliff:g></string>
   <string name="action_next_step">Seguinte</string>
   <string name="action_open_in_browser">Abrir en navegador</string>
@@ -92,43 +80,38 @@
   <string name="action_quote">Citar</string>
   <string name="action_record_video">Gravar vídeo</string>
   <string name="action_refresh">Recargar</string>
-  <string name="action_refreshing_direct_messages">recargando mensaxes directas</string>
-  <string name="action_refreshing_home_timeline">recargando liña de tempo</string>
-  <string name="action_refreshing_mentions">recargando mencións</string>
+  <string name="action_register">Rexistrar</string>
   <string name="action_remove_conversation_avatar">Eliminar icona</string>
-  <string name="action_removing_profile_banner_image">borrando imaxe de cabeceira do perfil</string>
   <string name="action_reply">Responder</string>
   <string name="action_report_spam">Denunciar spam</string>
-  <string name="action_reporting_for_spam">denunciando por spam</string>
   <!-- [verb] Restore purchase -->
   <string name="action_restore_purchase">Restaurar</string>
   <string name="action_retry">Tentar de novo</string>
   <!-- [verb] Action for performing retweet -->
   <string name="action_retweet">Rechouchiar</string>
-  <string name="action_retweeting">rechouchiando</string>
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Gardar</string>
-  <string name="action_saving_search">gardando busca</string>
   <string name="action_search">Buscar</string>
   <string name="action_select_all">Seleccionar todo</string>
   <string name="action_select_none">Seleccionar nada</string>
   <string name="action_select_user">Escoller usuario</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Chiar</string>
-  <string name="action_sending_direct_message">enviando mensaxe directa</string>
   <string name="action_set_color">Escoller cor</string>
   <string name="action_set_nickname">Escoller alcume</string>
+  <string name="action_set_status_visibility">Escoller visibilidade</string>
   <string name="action_share">Compartir</string>
-  <string name="action_signing_in">entrando</string>
+  <string name="action_sign_in">Entrar</string>
   <!-- [verb] Used for skip some settings -->
   <string name="action_skip">Saltar</string>
   <string name="action_start">Empezar</string>
   <string name="action_status_attachment">Adxunto</string>
   <string name="action_status_block_users">Bloquear usuarios&#8230;</string>
   <string name="action_status_mute_users">Silenciar usuarios&#8230;</string>
+  <string name="action_status_pin">Salientar chío</string>
   <string name="action_status_schedule">Programar chío</string>
+  <string name="action_status_unpin">Desfacer salientar</string>
   <string name="action_subscribe">Subscribir</string>
-  <string name="action_subscribing_to_list">subscribindo á lista</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
   <string name="action_sync_connect_to_storage">Conectar</string>
   <!-- [verb] Disconnect from network storage -->
@@ -142,22 +125,11 @@
   <string name="action_twitter_muted_users">Usuarios silenciados</string>
   <!-- [verb] Action for unblocking user -->
   <string name="action_unblock">Desbloquear</string>
-  <string name="action_unblocking">desbloqueando</string>
   <string name="action_undo_like">Desfacer gústame</string>
   <string name="action_unfavorite">Desfacer favorito</string>
-  <string name="action_unfavoriting">desmarcando favorito</string>
   <string name="action_unfollow">Deixar de seguir</string>
-  <string name="action_unfollowing">deixando de seguir</string>
   <string name="action_unmute">Non silenciar</string>
-  <string name="action_unmuting">desfacendo silenciar</string>
   <string name="action_unsubscribe">Anular subscrición</string>
-  <string name="action_unsubscribing_from_list">anulando subscrición da lista</string>
-  <string name="action_updating_details">actualizando detalles</string>
-  <string name="action_updating_profile">actualizando perfil</string>
-  <string name="action_updating_profile_background_image">actualizando imaxe de fondo do perfil</string>
-  <string name="action_updating_profile_banner_image">actualizando imaxe de cabeceira do perfil</string>
-  <string name="action_updating_profile_image">actualizando imaxe do perfil</string>
-  <string name="action_updating_status">enviando chío</string>
   <string name="action_view_map">Mapa</string>
   <string name="activated_accounts">Contas activadas</string>
   <string name="activities_about_me">Actividade sobre min</string>
@@ -207,6 +179,7 @@
   <string name="appearance">Aparencia</string>
   <string name="auth_type_basic">Básico</string>
   <string name="auth_type_oauth">OAuth</string>
+  <string name="auth_type_oauth2">OAuth 2</string>
   <string name="auth_type_twip_o">Modo twip O</string>
   <string name="auth_type_xauth">xAuth</string>
   <string name="auto_refresh">Auto recarga</string>
@@ -255,7 +228,6 @@
   <string name="count_label_retweets">Rechouchíos</string>
   <string name="created_by">Creado por <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">Creada a lista \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="title_crop_image">Recortar imaxe</string>
   <string name="current_status">Chío actual</string>
   <string name="custom_host_mapping">Personalizar host mapping</string>
   <string name="custom_host_mapping_summary">Host mapping coma /etc/hosts, pero non require ningún permiso adicional.</string>
@@ -435,7 +407,10 @@
   <string name="label_content_rating_pg13">+12</string>
   <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
   <string name="label_content_rating_r">+16</string>
+  <string name="label_content_warning">Aviso de contido</string>
   <string name="label_data_provider">Provedor de base de datos Twidere</string>
+  <string name="label_feedback_content">Contido</string>
+  <string name="label_feedback_title">Título</string>
   <string name="label_filters_subscription">Subscrición</string>
   <string name="label_follow_request_sent">Petición de seguimento enviada</string>
   <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> vía <xliff:g example="api" id="source">%2$s</xliff:g></string>
@@ -443,6 +418,7 @@
   <string name="label_location_no_location">Ningunha</string>
   <string name="label_location_precise">Precisa (Coordenadas)</string>
   <string name="label_location_your_coarse_location">Localización menos exacta</string>
+  <string name="label_mastodon_host">Sitio Mastodon</string>
   <string name="label_media">Multimedia</string>
   <string name="label_original_status">Chío orixinal</string>
   <string name="label_password">Contrasinal</string>
@@ -462,6 +438,16 @@
   <string name="label_sensitive_content">Contido sensible</string>
   <string name="label_status_hint">O que acontece?</string>
   <string name="label_status_not_available">Chío non dispoñible</string>
+  <string name="label_status_show_more">Amosar máis</string>
+  <string name="label_status_type_reply">Responder</string>
+  <!-- Mastodon feature, post to mentioned users only -->
+  <string name="label_status_visibility_direct">Directo</string>
+  <!-- Mastodon feature, post to followers only -->
+  <string name="label_status_visibility_private">Privado</string>
+  <!-- Mastodon feature, post to public timelines -->
+  <string name="label_status_visibility_public">Público</string>
+  <!-- Mastodon feature, do not show in public timelines -->
+  <string name="label_status_visibility_unlisted">Non listado</string>
   <string name="label_statuses">Chíos</string>
   <string name="label_statuses_replies">Chíos e respostas</string>
   <string name="label_statuses_retweets">Chíos e rechouchíos</string>
@@ -494,6 +480,7 @@
   <string name="location_countrywide">Todo o país</string>
   <string name="login_challenge_retype_email_hint">Introduce de novo o correo-e asociado á túa conta de Twitter.</string>
   <string name="login_challenge_retype_phone_hint">Introduce de novo o número de teléfono asociado á túa conta de Twitter.</string>
+  <string name="login_type_default">Por defecto</string>
   <string name="login_verification">Verificación de entrada</string>
   <string name="login_verification_pin_hint">Para entrar, introduce o PIN recibido no teu teléfono.</string>
   <string name="login_verification_push_hint">Aceptar a petición de verificación de entrada da aplicación Twitter. Cando aceptes preme OK.</string>
@@ -540,6 +527,7 @@
   <string name="message_permission_request_compose_location">Twidere precisa permiso de localización para engadir esta aos chíos.</string>
   <string name="message_permission_request_save_media">Twidere precisa permiso de almacenamento para gardar multimedia.</string>
   <string name="message_permission_request_share_media">Twidere precisa permiso de almacenamento para compartir multimedia.</string>
+  <string name="message_pin_status_confirm">Salientar este chío? Mudará calquera outro salientado previamente.</string>
   <string name="message_please_wait">Agarda, por favor.</string>
   <string name="message_status_reply_to_user_removed_explanation">Twitter sempre fai mención do chío nunha resposta. Se o chío foi eliminado, Twidere enviará esta resposta como cita para conservar o contexto.</string>
   <string name="message_status_scheduling_connect_buffer_hint">Conectar ao buffer para programar chíos mesmo en offline</string>
@@ -565,6 +553,7 @@
   <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_extra_features_not_purchased">Características avanzadas non adquiridas</string>
   <string name="message_toast_filters_import_hint">Preme \"+\" para importar</string>
+  <string name="message_toast_invalid_mastodon_host">Host Mastodon non válido</string>
   <string name="message_toast_link_copied_to_clipboard">Ligazón copiada no portapapeis</string>
   <string name="message_toast_livewp_daydream_enabled_message">Aquí hai un pequeno agasallo para ti, atópao nos axustes do sistema :)</string>
   <string name="message_toast_login_verification_failed">Fallou a verificación de entrada.</string>
@@ -576,7 +565,9 @@
   <string name="message_toast_no_user_selected">Usuario non seleccionado</string>
   <string name="message_toast_notification_enabled_hint">Só dispoñible cando o streaming está aceso, e non 100% fiable.</string>
   <string name="message_toast_press_again_to_close">Preme outra vez para pechar</string>
+  <string name="message_toast_profile_background_image_updated">Actualizada a imaxe de fondo do perfil</string>
   <string name="message_toast_profile_banner_image_updated">Actualizada a imaxe banner do perfil.</string>
+  <string name="message_toast_profile_image_updated">Imaxe do perfil actualizada</string>
   <string name="message_toast_qr_scan_link_not_supported">Ligazón non soportada</string>
   <string name="message_toast_qr_scanner_not_supported">Escáner QR non soportado</string>
   <string name="message_toast_retweet_cancelled">Rechouchío cancelado</string>
@@ -589,20 +580,24 @@
   <string name="message_toast_search_saved">Busca gardada</string>
   <string name="message_toast_select_file_no_storage_permission">Precísanse permisos de almacenamento para seleccionar ficheiro.</string>
   <string name="message_toast_share_media_no_storage_permission">Algunhas aplicacións precisan permiso de almacenamento para compartir multimedia</string>
+  <string name="message_toast_ssl_tls_error">Erro TLS, por favor, comproba o reloxo ou os axustes proxy</string>
   <string name="message_toast_status_deleted">Chío borrado</string>
   <string name="message_toast_status_favorited">Chío marcado como favorito</string>
   <string name="message_toast_status_like_removed">Gústame eliminado</string>
   <string name="message_toast_status_liked">Chío gustado</string>
+  <string name="message_toast_status_pinned">Chío salientado</string>
   <string name="message_toast_status_retweeted">Rechouchiado</string>
   <string name="message_toast_status_saved_to_draft">Chío gardado en borradores.</string>
   <string name="message_toast_status_scheduled">Chío programado</string>
   <string name="message_toast_status_unfavorited">Chío desmarcado como favorito</string>
+  <string name="message_toast_status_unpinned">Desfeito salientar chío</string>
   <string name="message_toast_status_updated">Chío enviado</string>
   <string name="message_toast_unable_to_load_more_statuses">Incapaz de cargar chíos máis recentes</string>
   <string name="message_toast_user_filters_removed">Eliminado dos filtros</string>
   <string name="message_toast_users_filters_added">Engadido aos filtros</string>
   <string name="message_toast_wrong_api_key">Axustes API incorrectos</string>
   <string name="message_toast_wrong_username_password">Erro no nome de usuario ou contrasinal</string>
+  <string name="message_unpin_status_confirm">Desfacer salientar este chío?</string>
   <string name="message_video_too_long">Vídeo longo de máis</string>
   <string name="message_video_too_short">Vídeo curto de máis</string>
   <string name="multi_select">Selección múltiple</string>
@@ -713,6 +708,7 @@
   <string name="preference_summary_media_preload_non_metered_network">Pre-carga multimedia só en redes sen custo, como wifi</string>
   <string name="preference_summary_streaming_non_metered_network">Streaming só en redes sen custo, como wifi</string>
   <string name="preference_summary_streaming_power_saving">Streaming só durante a carga</string>
+  <string name="preference_summary_sync_timeline_positions">Cando está activo \"Lembrar posición\"</string>
   <string name="preference_summary_trends_location">Agora podes seleccionar a localización de xeito independente na lapela de axustes.</string>
   <string name="preference_title_accounts">Contas</string>
   <string name="preference_title_advanced">Avanzado</string>
@@ -741,6 +737,7 @@
   <string name="preference_title_streaming_power_saving">Modo de aforro de batería</string>
   <string name="preference_title_tablet_mode">Modo tablet</string>
   <string name="preference_title_text_size">Tamaño do texto</string>
+  <string name="preference_title_timeline_positions">Posicións da liña de tempo</string>
   <string name="preference_title_translate">Traducir</string>
   <string name="preference_title_trends_location">Localización das tendencias</string>
   <string name="preload_wifi_only">Pre-carga só con wifi</string>
@@ -761,7 +758,6 @@
   <string name="profile_banner">Banner do perfil</string>
   <string name="profile_image">Imaxe do perfil</string>
   <string name="profile_image_style">Estilo da imaxe dos perfís</string>
-  <string name="message_toast_profile_image_updated">Imaxe do perfil actualizada.</string>
   <string name="profile_images">Imaxes de perfil</string>
   <string name="profile_link_color_main_color">Cor da ligazón (cor principal)</string>
   <string name="profile_text_color">Cor do texto</string>
@@ -776,6 +772,7 @@
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>
   <string name="provider_loadaverage_org">LoadAverage.org</string>
+  <string name="provider_mastodon">Mastodon</string>
   <string name="provider_quitter_se">Quitter.se</string>
   <string name="proxy">Proxy</string>
   <string name="proxy_host">Host do proxy</string>
@@ -806,7 +803,6 @@
   <string name="refresh_type_interactions">Interaccións</string>
   <string name="refresh_type_messages">Mensaxes</string>
   <string name="refresh_type_trends">Tendencias</string>
-  <string name="action_register">Rexistrar</string>
   <string name="remember_position">Lembrar posición</string>
   <string name="remember_position_summary">Lembrar posición das listas/lapelas antes de pechar Twidere</string>
   <string name="remove">Eliminar</string>
@@ -840,6 +836,8 @@
   <string name="search_hint">Buscar chíos ou usuarios</string>
   <string name="search_hint_users">Buscar usuarios</string>
   <string name="search_statuses">Buscar chíos</string>
+  <string name="search_type_federated">Federada</string>
+  <string name="search_type_local">Local</string>
   <string name="search_type_media">Multimedia</string>
   <string name="search_type_statuses">Chíos</string>
   <string name="search_type_users">Usuarios</string>
@@ -872,7 +870,6 @@
   <string name="show_absolute_time">Amosar hora absoluta</string>
   <string name="show_absolute_time_summary">Amosar a hora absoluta nos chíos</string>
   <string name="show_in_timeline">Amosar na liña de tempo</string>
-  <string name="action_sign_in">Entrar</string>
   <string name="sign_in_service_email">Email</string>
   <string name="sign_in_service_google_id">Google ID</string>
   <string name="sign_in_service_twitter">Twitter</string>
@@ -912,7 +909,6 @@
   <string name="style">Estilo</string>
   <string name="subscribed_to_list">Subscribiches á lista \"<xliff:g id="list">%s</xliff:g>\".</string>
   <string name="subscribers">Subscritor</string>
-  <string name="summary_interactions_not_available">Só dispoñible con chaves oficiais</string>
   <string name="swipe_down_to_refresh">Arrastra cara abaixo para recargar</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="sync_provider_name_google_drive">Google Drive</string>
@@ -957,6 +953,7 @@
   <string name="title_buffer_settings">Axustes do buffer</string>
   <string name="title_compose">Escribir chío</string>
   <string name="title_conversation">Conversa</string>
+  <string name="title_crop_image">Recortar imaxe</string>
   <string name="title_dialog_sync_connect_to">Conectar a&#8230;</string>
   <string name="title_direct_messages">Mensaxes</string>
   <string name="title_direct_messages_conversation_info">Información da conversa</string>
@@ -984,8 +981,10 @@
   <string name="title_media_timeline">Liña de tempo multimedia</string>
   <string name="title_mentions">Mencións</string>
   <string name="title_message_conversation_info">Información da conversa</string>
+  <string name="title_network_public_timeline">Liña de tempo federada</string>
   <string name="title_nicknames">Alcumes</string>
   <string name="title_open_source_license">Licenza de código aberto</string>
+  <string name="title_pin_status_confirm">Salientar chío</string>
   <string name="title_premium_features_name">Twidere ∞</string>
   <string name="title_public_timeline">Liña de tempo pública</string>
   <string name="title_quick_action">Acción rápida</string>
@@ -1006,8 +1005,11 @@
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
   <string name="title_sync">Sincronizar datos</string>
   <string name="title_sync_settings">Axustes de sincronización</string>
+  <string name="title_unpin_status_confirm">Desfacer salientar</string>
   <string name="title_user">Usuario</string>
   <string name="title_user_colors">Cores do usuario</string>
+  <string name="title_user_feedback">Feedback</string>
+  <string name="title_user_list">Lista</string>
   <string name="title_user_list_memberships">Pertence a</string>
   <string name="title_user_list_ownerships">Creado</string>
   <string name="title_user_list_subscriptions">Subscricións</string>
@@ -1051,7 +1053,6 @@
   <string name="usage_statistics_notification_summary">Axúdanos a mellorar Twidere!</string>
   <string name="user_blocked">Este usuario foi bloqueado.</string>
   <string name="user_filter_name">Usuario: <xliff:g id="name">%s</xliff:g></string>
-  <string name="title_user_list">Lista</string>
   <string name="user_list_details">Detalles da lista</string>
   <!-- User list description -->
   <string name="user_list_details_description">Descrición</string>

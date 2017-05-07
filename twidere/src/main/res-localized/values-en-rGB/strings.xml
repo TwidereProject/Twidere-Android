@@ -16,7 +16,6 @@
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">Edit</string>
   <string name="action_favorite">Favourite</string>
-  <string name="action_favoriting">favouriting</string>
   <!-- [verb] Perform import action -->
   <!-- Used for decide something later, like permission request -->
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
@@ -44,7 +43,6 @@
   <!-- [verb] Action for unblocking user -->
   <string name="action_undo_like">Undo like</string>
   <string name="action_unfavorite">Unfavourite</string>
-  <string name="action_unfavoriting">unfavouriting</string>
   <string name="action_view_map">Map</string>
   <string name="add_account">Add account</string>
   <string name="add_image">Add image</string>
@@ -86,6 +84,10 @@
   <string name="label_data_provider">Twidere database provider</string>
   <string name="label_refresh_and_sync_service">Refresh &amp; Sync service</string>
   <string name="label_refresh_service">Refresh service</string>
+  <!-- Mastodon feature, post to mentioned users only -->
+  <!-- Mastodon feature, post to followers only -->
+  <!-- Mastodon feature, post to public timelines -->
+  <!-- Mastodon feature, do not show in public timelines -->
   <string name="label_streaming_service">Streaming service</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
@@ -124,7 +126,6 @@
   <string name="select_account">Select account</string>
   <string name="settings">Settings</string>
   <string name="settings_refresh">Refresh</string>
-  <string name="action_sign_in">Sign in</string>
   <string name="sign_up">Sign up</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Retweet</string>

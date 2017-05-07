@@ -3,15 +3,16 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="account_options">帳號選項</string>
   <string name="account_type_fanfou">飯否</string>
+  <string name="account_type_mastodon">Mastodon</string>
   <string name="account_type_statusnet">StatusNet</string>
   <string name="account_type_twitter">Twitter</string>
   <!-- [verb] Accept a friend request (follow request) -->
   <string name="action_accept_friend_request">同意並授權</string>
   <!-- [verb] Accept a permission request like allow to use camera etc. -->
   <string name="action_accept_permission_request">接受</string>
-  <string name="action_accepting_follow_request">同意關注請求</string>
   <!-- [verb] Add an item to a list/collection -->
   <string name="action_add">新增</string>
+  <string name="action_add_content_warning">增加內容警告</string>
   <!-- [verb] Add a member to a message conversation -->
   <string name="action_add_conversation_participant">新增成員</string>
   <!-- [verb] Add mute filter rule -->
@@ -23,16 +24,13 @@
   <string name="action_add_tab">新增標籤頁</string>
   <string name="action_add_to_filter">新增到過濾器</string>
   <string name="action_add_to_list">新增到列表</string>
-  <string name="action_adding_member">新增成員</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">封鎖</string>
-  <string name="action_blocking">封鎖</string>
   <string name="action_buffer_disconnect">從 Buffer 斷開連接</string>
   <string name="action_buffer_settings">設定</string>
   <string name="action_buffer_update_now">立即發佈</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">取消轉推</string>
-  <string name="action_cancelling_like">取消喜歡</string>
   <string name="action_center">置中</string>
   <string name="action_clear">清除</string>
   <string name="action_clear_messages">清空訊息</string>
@@ -41,13 +39,9 @@
   <string name="action_connect_to_buffer">連接</string>
   <string name="action_conversation_info">對話資訊</string>
   <string name="action_create_conversation">創建對話</string>
-  <string name="action_creating_list">建立列表</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">刪除</string>
   <string name="action_delete_messages">刪除訊息</string>
-  <string name="action_deleting">刪除</string>
-  <string name="action_deleting_search">刪除搜尋</string>
-  <string name="action_denying_follow_request">拒絕關注請求</string>
   <string name="action_dont_restart">不重啟</string>
   <string name="action_dont_terminate">不退出</string>
   <!-- [verb] Edit image/settings etc. -->
@@ -56,15 +50,12 @@
   <string name="action_edit_conversation_name">編輯名稱</string>
   <string name="action_edit_filter_rule">編輯規則</string>
   <string name="action_favorite">收藏</string>
-  <string name="action_favoriting">收藏</string>
   <string name="action_filter_import_from_blocked_users">從被封鎖的使用者匯入</string>
   <string name="action_filter_import_from_muted_users">從被靜音的使用者匯入</string>
   <string name="action_filter_subscriptions_card_manage">管理訂閱</string>
   <string name="action_finish">完成</string>
   <string name="action_follow">關注</string>
-  <string name="action_following">關注</string>
-  <string name="action_getting_status">取得推文</string>
-  <string name="action_getting_user_lists">正在取得使用者列表</string>
+  <string name="action_format_search_update_status">發推 <xliff:g id="text">%1$s</xliff:g></string>
   <!-- [verb] Perform import action -->
   <string name="action_import">匯入</string>
   <string name="action_import_from">匯入從&#8230;</string>
@@ -74,14 +65,11 @@
   <string name="action_leave_conversation">離開了對話</string>
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">喜歡</string>
-  <string name="action_liking">喜歡</string>
   <string name="action_location">位置</string>
   <string name="action_manage_in_buffer">在 Buffer 中管理</string>
   <string name="action_mark_as_read">標記為已讀</string>
-  <string name="action_modifying_lists">修改列表</string>
   <string name="action_mute">靜音</string>
   <string name="action_mute_notifications">靜音通知</string>
-  <string name="action_muting">靜音</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>，儲存於<xliff:g id="time">%2$s</xliff:g></string>
   <string name="action_next_step">下一步</string>
   <string name="action_open_in_browser">在瀏覽器中打開</string>
@@ -92,43 +80,38 @@
   <string name="action_quote">引用</string>
   <string name="action_record_video">錄影</string>
   <string name="action_refresh">更新</string>
-  <string name="action_refreshing_direct_messages">更新私訊</string>
-  <string name="action_refreshing_home_timeline">更新首頁</string>
-  <string name="action_refreshing_mentions">更新提及</string>
+  <string name="action_register">註冊</string>
   <string name="action_remove_conversation_avatar">刪除圖示</string>
-  <string name="action_removing_profile_banner_image">移除橫幅</string>
   <string name="action_reply">回覆</string>
   <string name="action_report_spam">報告垃圾訊息</string>
-  <string name="action_reporting_for_spam">報告垃圾訊息</string>
   <!-- [verb] Restore purchase -->
   <string name="action_restore_purchase">修復</string>
   <string name="action_retry">重試</string>
   <!-- [verb] Action for performing retweet -->
   <string name="action_retweet">轉推</string>
-  <string name="action_retweeting">轉推</string>
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">保存</string>
-  <string name="action_saving_search">保存搜尋</string>
   <string name="action_search">搜尋</string>
   <string name="action_select_all">全選</string>
   <string name="action_select_none">全不選擇</string>
   <string name="action_select_user">選擇使用者</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">發送</string>
-  <string name="action_sending_direct_message">傳送私訊</string>
   <string name="action_set_color">設定顏色</string>
   <string name="action_set_nickname">設定暱稱</string>
+  <string name="action_set_status_visibility">設置可見性</string>
   <string name="action_share">分享</string>
-  <string name="action_signing_in">登入</string>
+  <string name="action_sign_in">登入</string>
   <!-- [verb] Used for skip some settings -->
   <string name="action_skip">跳過</string>
   <string name="action_start">開始</string>
   <string name="action_status_attachment">推文附件</string>
   <string name="action_status_block_users">封鎖使用者&#8230;</string>
   <string name="action_status_mute_users">靜音使用者&#8230;</string>
+  <string name="action_status_pin">置頂推文</string>
   <string name="action_status_schedule">推文排期</string>
+  <string name="action_status_unpin">取消置頂推文</string>
   <string name="action_subscribe">訂閲</string>
-  <string name="action_subscribing_to_list">訂閲列表</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
   <string name="action_sync_connect_to_storage">連接</string>
   <!-- [verb] Disconnect from network storage -->
@@ -142,22 +125,11 @@
   <string name="action_twitter_muted_users">已靜音的使用者</string>
   <!-- [verb] Action for unblocking user -->
   <string name="action_unblock">取消封鎖</string>
-  <string name="action_unblocking">解除封鎖</string>
   <string name="action_undo_like">取消喜歡</string>
   <string name="action_unfavorite">取消收藏</string>
-  <string name="action_unfavoriting">取消收藏</string>
   <string name="action_unfollow">取消關注</string>
-  <string name="action_unfollowing">取消關注</string>
   <string name="action_unmute">取消靜音</string>
-  <string name="action_unmuting">取消靜音</string>
   <string name="action_unsubscribe">退訂</string>
-  <string name="action_unsubscribing_from_list">退訂列表</string>
-  <string name="action_updating_details">更新詳細資料</string>
-  <string name="action_updating_profile">更新資料</string>
-  <string name="action_updating_profile_background_image">更新個人資料背景圖像</string>
-  <string name="action_updating_profile_banner_image">更新橫幅</string>
-  <string name="action_updating_profile_image">更新頭像</string>
-  <string name="action_updating_status">發送推文</string>
   <string name="action_view_map">地圖</string>
   <string name="activated_accounts">已啟用的帳號</string>
   <string name="activities_about_me">關於我的活動</string>
@@ -207,6 +179,7 @@
   <string name="appearance">外觀</string>
   <string name="auth_type_basic">Basic</string>
   <string name="auth_type_oauth">OAuth</string>
+  <string name="auth_type_oauth2">OAuth 2</string>
   <string name="auth_type_twip_o">twip O 模式</string>
   <string name="auth_type_xauth">xAuth</string>
   <string name="auto_refresh">自動更新</string>
@@ -255,7 +228,6 @@
   <string name="count_label_retweets">轉推</string>
   <string name="created_by">由<xliff:g id="created_by">%s</xliff:g>創建</string>
   <string name="created_list">建立了列表 \"<xliff:g id="list">%s</xliff:g>\"</string>
-  <string name="title_crop_image">裁剪圖片</string>
   <string name="current_status">當前推文</string>
   <string name="custom_host_mapping">自訂主機對應</string>
   <string name="custom_host_mapping_summary">如同/etc/hosts的主機對應，但不需要任何額外的權限</string>
@@ -436,7 +408,10 @@
   <string name="label_content_rating_pg13">PG-13</string>
   <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
   <string name="label_content_rating_r">R</string>
+  <string name="label_content_warning">內容警告</string>
   <string name="label_data_provider">Twidere 資料庫存儲</string>
+  <string name="label_feedback_content">內容</string>
+  <string name="label_feedback_title">標題</string>
   <string name="label_filters_subscription">訂閱</string>
   <string name="label_follow_request_sent">已發送關注請求</string>
   <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> 通過 <xliff:g example="api" id="source">%2$s</xliff:g></string>
@@ -444,6 +419,7 @@
   <string name="label_location_no_location">無</string>
   <string name="label_location_precise">精確（座標）</string>
   <string name="label_location_your_coarse_location">您的大致位置</string>
+  <string name="label_mastodon_host">Mastodon 站點</string>
   <string name="label_media">多媒體</string>
   <string name="label_original_status">原推文</string>
   <string name="label_password">密碼</string>
@@ -463,6 +439,16 @@
   <string name="label_sensitive_content">敏感內容</string>
   <string name="label_status_hint">有什麼新鮮事？</string>
   <string name="label_status_not_available">推文不可用</string>
+  <string name="label_status_show_more">顯示更多</string>
+  <string name="label_status_type_reply">回覆</string>
+  <!-- Mastodon feature, post to mentioned users only -->
+  <string name="label_status_visibility_direct">僅向提及的使用者顯示</string>
+  <!-- Mastodon feature, post to followers only -->
+  <string name="label_status_visibility_private">僅向關注者顯示</string>
+  <!-- Mastodon feature, post to public timelines -->
+  <string name="label_status_visibility_public">公開</string>
+  <!-- Mastodon feature, do not show in public timelines -->
+  <string name="label_status_visibility_unlisted">不在公共時間軸顯示</string>
   <string name="label_statuses">推文</string>
   <string name="label_statuses_replies">推文與回覆</string>
   <string name="label_statuses_retweets">推文與轉推</string>
@@ -495,6 +481,7 @@
   <string name="location_countrywide">全國</string>
   <string name="login_challenge_retype_email_hint">請重新輸入您綁定在Twitter的信箱地址</string>
   <string name="login_challenge_retype_phone_hint">重新輸入綁定您帳號的電話號碼</string>
+  <string name="login_type_default">預設</string>
   <string name="login_verification">登入驗證</string>
   <string name="login_verification_pin_hint">輸入您手機收到的驗證碼後登入</string>
   <string name="login_verification_push_hint">從 Twitter 應用程式同意登入請求。在您同意了請求後，請點選確定。</string>
@@ -541,6 +528,7 @@
   <string name="message_permission_request_compose_location">Twidere 需要 location 權限來發打卡推。</string>
   <string name="message_permission_request_save_media">Twidere 需要 storage 權限來存多媒體。</string>
   <string name="message_permission_request_share_media">Twidere 需要 storage 權限來分享多媒體給其他應用程式。</string>
+  <string name="message_pin_status_confirm">要置頂這條推文嗎？原先置頂的推文會被替代。</string>
   <string name="message_please_wait">請稍等</string>
   <string name="message_status_reply_to_user_removed_explanation">Twitter 使推文作者總在回覆中被提及，如果推文作者的提及被移除，Twidere 將會把這條回覆以引用的形式發送，以保留上下文訊息。</string>
   <string name="message_status_scheduling_connect_buffer_hint">連接到 Buffer ，即使您沒有在線也可以定時發送推文</string>
@@ -568,6 +556,7 @@
   <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_extra_features_not_purchased">未曾購買過強化功能</string>
   <string name="message_toast_filters_import_hint">按 「+」 來匯入</string>
+  <string name="message_toast_invalid_mastodon_host">無效的 Mastodon 主機</string>
   <string name="message_toast_link_copied_to_clipboard">連結已複製到剪貼簿</string>
   <string name="message_toast_livewp_daydream_enabled_message">我有一份小禮物給您，去系統設定裡看看吧 :)</string>
   <string name="message_toast_login_verification_failed">登入驗證失敗</string>
@@ -579,7 +568,9 @@
   <string name="message_toast_no_user_selected">沒有選擇使用者</string>
   <string name="message_toast_notification_enabled_hint">只在實時流開啓時可用，且不是 100% 可靠</string>
   <string name="message_toast_press_again_to_close">再次按下以關閉</string>
+  <string name="message_toast_profile_background_image_updated">個人資料背景已更新</string>
   <string name="message_toast_profile_banner_image_updated">個人資料橫幅圖片已更新</string>
+  <string name="message_toast_profile_image_updated">個人資料圖片已更新</string>
   <string name="message_toast_qr_scan_link_not_supported">不支援此連結</string>
   <string name="message_toast_qr_scanner_not_supported">不支援此 QR 掃描器</string>
   <string name="message_toast_retweet_cancelled">轉推已取消</string>
@@ -592,20 +583,24 @@
   <string name="message_toast_search_saved">搜尋已保存</string>
   <string name="message_toast_select_file_no_storage_permission">選擇文件需要存儲許可</string>
   <string name="message_toast_share_media_no_storage_permission">一些應用程式需要儲存權限來分享多媒體</string>
+  <string name="message_toast_ssl_tls_error">TLS 錯誤，請檢查您的時鐘或代理設定</string>
   <string name="message_toast_status_deleted">推文已刪除</string>
   <string name="message_toast_status_favorited">推文已收藏</string>
   <string name="message_toast_status_like_removed">已取消喜歡了推文。</string>
   <string name="message_toast_status_liked">已喜歡了推文</string>
+  <string name="message_toast_status_pinned">推文已置頂</string>
   <string name="message_toast_status_retweeted">已轉推</string>
   <string name="message_toast_status_saved_to_draft">推文已經儲存到草稿箱</string>
   <string name="message_toast_status_scheduled">推文已排期</string>
   <string name="message_toast_status_unfavorited">推文已取消收藏</string>
+  <string name="message_toast_status_unpinned">推文已取消置頂</string>
   <string name="message_toast_status_updated">推文已發送</string>
   <string name="message_toast_unable_to_load_more_statuses">無法加載更早的推文</string>
   <string name="message_toast_user_filters_removed">從過濾器列表中刪除了這位使用者</string>
   <string name="message_toast_users_filters_added">您過濾了這些用戶，你將不會在主頁/提及中看到這些用戶的推文</string>
   <string name="message_toast_wrong_api_key">API地址或者consumer key/secret不正確，請檢查</string>
   <string name="message_toast_wrong_username_password">帳號或密碼錯誤</string>
+  <string name="message_unpin_status_confirm">取消置頂這條推文嗎？</string>
   <string name="message_video_too_long">影片太長</string>
   <string name="message_video_too_short">影片太短</string>
   <string name="multi_select">多選</string>
@@ -716,6 +711,7 @@
   <string name="preference_summary_media_preload_non_metered_network">只在使用免費網路（比如 Wi-Fi ）時啟用預載入</string>
   <string name="preference_summary_streaming_non_metered_network">只在使用免費網路（比如 Wi-Fi ）時啟用實時流</string>
   <string name="preference_summary_streaming_power_saving">只在充電的時候啟用實時流</string>
+  <string name="preference_summary_sync_timeline_positions">當「記住位置」啓用時</string>
   <string name="preference_summary_trends_location">現在您可以在標籤頁設置中分別設置位置了。</string>
   <string name="preference_title_accounts">帳號</string>
   <string name="preference_title_advanced">高級</string>
@@ -744,6 +740,7 @@
   <string name="preference_title_streaming_power_saving">省電模式</string>
   <string name="preference_title_tablet_mode">平板模式</string>
   <string name="preference_title_text_size">文字尺寸</string>
+  <string name="preference_title_timeline_positions">時間線位置</string>
   <string name="preference_title_translate">翻譯</string>
   <string name="preference_title_trends_location">本地趨勢的位置</string>
   <string name="preload_wifi_only">僅使用 Wi-Fi 預載入</string>
@@ -764,7 +761,6 @@
   <string name="profile_banner">橫幅</string>
   <string name="profile_image">個人資料圖片</string>
   <string name="profile_image_style">個人資料圖片樣式</string>
-  <string name="message_toast_profile_image_updated">個人資料圖片已更新</string>
   <string name="profile_images">個人資料圖片</string>
   <string name="profile_link_color_main_color">連結顏色（主色調）</string>
   <string name="profile_text_color">文字顏色</string>
@@ -779,6 +775,7 @@
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>
   <string name="provider_loadaverage_org">LoadAverage.org</string>
+  <string name="provider_mastodon">Mastodon</string>
   <string name="provider_quitter_se">Quitter.se</string>
   <string name="proxy">代理伺服器</string>
   <string name="proxy_host">代理伺服器主機名</string>
@@ -809,7 +806,6 @@
   <string name="refresh_type_interactions">互動</string>
   <string name="refresh_type_messages">私訊</string>
   <string name="refresh_type_trends">話題</string>
-  <string name="action_register">註冊</string>
   <string name="remember_position">記住位置</string>
   <string name="remember_position_summary">打開Twidere時，恢復到退出前列表/頁面的位置</string>
   <string name="remove">移除</string>
@@ -843,6 +839,8 @@
   <string name="search_hint">搜尋推文或使用者</string>
   <string name="search_hint_users">搜尋使用者</string>
   <string name="search_statuses">搜尋推文</string>
+  <string name="search_type_federated">聯合</string>
+  <string name="search_type_local">本地</string>
   <string name="search_type_media">多媒體</string>
   <string name="search_type_statuses">推文</string>
   <string name="search_type_users">使用者</string>
@@ -875,7 +873,6 @@
   <string name="show_absolute_time">顯示絶對時間</string>
   <string name="show_absolute_time_summary">在推文等列表裡顯示絶對時間</string>
   <string name="show_in_timeline">在時間軸中顯示</string>
-  <string name="action_sign_in">登入</string>
   <string name="sign_in_service_email">Email</string>
   <string name="sign_in_service_google_id">Google ID</string>
   <string name="sign_in_service_twitter">Twitter</string>
@@ -915,7 +912,8 @@
   <string name="style">風格</string>
   <string name="subscribed_to_list">訂閲了列表\"<xliff:g id="list">%s</xliff:g>\"</string>
   <string name="subscribers">訂閱者</string>
-  <string name="summary_interactions_not_available">透過官方 key 才能使用</string>
+  <string name="summary_interactions_account_not_supported">不支援此帳號</string>
+  <string name="summary_interactions_official_required">僅對官方令牌有效</string>
   <string name="swipe_down_to_refresh">下拉以更新</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="sync_provider_name_google_drive">Google Drive</string>
@@ -960,6 +958,7 @@
   <string name="title_buffer_settings">Buffer 設定</string>
   <string name="title_compose">撰寫</string>
   <string name="title_conversation">對話</string>
+  <string name="title_crop_image">裁剪圖片</string>
   <string name="title_dialog_sync_connect_to">連接到...</string>
   <string name="title_direct_messages">私訊</string>
   <string name="title_direct_messages_conversation_info">對話資訊</string>
@@ -987,8 +986,10 @@
   <string name="title_media_timeline">多媒體時間軸</string>
   <string name="title_mentions">提及</string>
   <string name="title_message_conversation_info">對話資訊</string>
+  <string name="title_network_public_timeline">聯合時間軸</string>
   <string name="title_nicknames">暱稱</string>
   <string name="title_open_source_license">開放原始碼許可</string>
+  <string name="title_pin_status_confirm">置頂推文</string>
   <string name="title_premium_features_name">Twidere ∞</string>
   <string name="title_public_timeline">公共時間軸</string>
   <string name="title_quick_action">快速操作</string>
@@ -1009,8 +1010,11 @@
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
   <string name="title_sync">資料同步</string>
   <string name="title_sync_settings">同步設定</string>
+  <string name="title_unpin_status_confirm">取消置頂推文</string>
   <string name="title_user">用戶</string>
   <string name="title_user_colors">顏色標籤</string>
+  <string name="title_user_feedback">反饋</string>
+  <string name="title_user_list">列表</string>
   <string name="title_user_list_memberships">屬於</string>
   <string name="title_user_list_ownerships">新增</string>
   <string name="title_user_list_subscriptions">訂閱</string>
@@ -1054,7 +1058,6 @@
   <string name="usage_statistics_notification_summary">幫助我們改進Twidere！</string>
   <string name="user_blocked">您封鎖了這個使用者</string>
   <string name="user_filter_name">使用者：<xliff:g id="name">%s</xliff:g></string>
-  <string name="title_user_list">列表</string>
   <string name="user_list_details">列表詳情</string>
   <!-- User list description -->
   <string name="user_list_details_description">簡介</string>

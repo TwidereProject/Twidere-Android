@@ -9,7 +9,6 @@
   <string name="action_accept_friend_request">Elfogadás</string>
   <!-- [verb] Accept a permission request like allow to use camera etc. -->
   <string name="action_accept_permission_request">Elfogadás</string>
-  <string name="action_accepting_follow_request">követési kérés elfogadása</string>
   <!-- [verb] Add an item to a list/collection -->
   <string name="action_add">Jozzáadás</string>
   <!-- [verb] Add a member to a message conversation -->
@@ -21,35 +20,25 @@
   <string name="action_add_tab">Fül hozzáadása</string>
   <string name="action_add_to_filter">Hozzáadás a szűrőhöz</string>
   <string name="action_add_to_list">Hozzáadás a listához</string>
-  <string name="action_adding_member">Tag hozzáadás</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Blokkol</string>
-  <string name="action_blocking">blokkolás</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">Retweet visszavonása</string>
   <string name="action_center">Középre</string>
   <string name="action_clear">Törlés</string>
   <string name="action_compose">Létrehoz</string>
-  <string name="action_creating_list">Lista létrehozása</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">Törlés</string>
-  <string name="action_deleting">törlés</string>
-  <string name="action_deleting_search">keresés törlése</string>
-  <string name="action_denying_follow_request">követési kérés visszautasítása</string>
   <string name="action_dont_restart">Ne induljon újra</string>
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">Szerkesztés</string>
   <string name="action_edit_filter_rule">Szabály szerkesztése</string>
   <string name="action_favorite">Kedvencnek jelöl</string>
-  <string name="action_favoriting">kedvencként való megjelölés</string>
   <string name="action_filter_import_from_blocked_users">Importálás a letiltott felhasználóktól</string>
   <string name="action_filter_import_from_muted_users">Importálás a lenémított felhasználóktól</string>
   <string name="action_filter_subscriptions_card_manage">Feliratkozások kezelése</string>
   <string name="action_finish">Befejezés</string>
   <string name="action_follow">Követés</string>
-  <string name="action_following">Követve</string>
-  <string name="action_getting_status">tweet fogadása</string>
-  <string name="action_getting_user_lists">felhasználó lista betöltése</string>
   <!-- [verb] Perform import action -->
   <string name="action_import">Import</string>
   <string name="action_import_from">Importálás&#8230;</string>
@@ -58,45 +47,32 @@
   <string name="action_later">Később</string>
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">Tetszik</string>
-  <string name="action_liking">kedveli</string>
-  <string name="action_modifying_lists">listák módosítása</string>
   <string name="action_mute">Elnémít</string>
-  <string name="action_muting">némítás</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, elmentve: <xliff:g id="time">%2$s</xliff:g></string>
   <string name="action_open_in_browser">Megnyitás böngészőben</string>
   <string name="action_pick_color">Szín kiválasztása</string>
   <string name="action_purchase">Vásárlás</string>
   <string name="action_quote">Idézet</string>
   <string name="action_refresh">Frissítés</string>
-  <string name="action_refreshing_direct_messages">privát üzenetek frissítése</string>
-  <string name="action_refreshing_home_timeline">kezdőlapi idővonal frissítése</string>
-  <string name="action_refreshing_mentions">említések frissítése</string>
-  <string name="action_removing_profile_banner_image">fejléckép eltávolítása</string>
   <string name="action_reply">Válasz</string>
   <string name="action_report_spam">Spam jelentése</string>
-  <string name="action_reporting_for_spam">spam bejelentése</string>
   <!-- [verb] Restore purchase -->
   <string name="action_restore_purchase">Visszaállítás</string>
   <string name="action_retry">Újrapróbál</string>
   <!-- [verb] Action for performing retweet -->
   <string name="action_retweet">Retweet</string>
-  <string name="action_retweeting">retweetelés</string>
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Ment</string>
-  <string name="action_saving_search">keresés mentése</string>
   <string name="action_search">Keresés</string>
   <string name="action_select_user">Felhasználó kiválasztása</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Elküld</string>
-  <string name="action_sending_direct_message">privát üzenet elküldése</string>
   <string name="action_set_color">Szín beállítása</string>
   <string name="action_set_nickname">Becenév beállítása</string>
   <string name="action_share">Megosztás</string>
-  <string name="action_signing_in">Bejelentkezés</string>
   <!-- [verb] Used for skip some settings -->
   <string name="action_skip">Kihagyás</string>
   <string name="action_subscribe">Feliratkozás</string>
-  <string name="action_subscribing_to_list">feliratkozás listára</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
   <!-- [verb] Disconnect from network storage -->
   <string name="action_sync_disconnect">Kapcsolat bontása</string>
@@ -108,21 +84,11 @@
   <string name="action_twitter_muted_users">Elnémított felhasználók</string>
   <!-- [verb] Action for unblocking user -->
   <string name="action_unblock">Engedélyez</string>
-  <string name="action_unblocking">blokkolás megszűntetése</string>
   <string name="action_undo_like">Mégsem tetszik</string>
   <string name="action_unfavorite">Mégsem kedvenc</string>
-  <string name="action_unfavoriting">kedvencként való megjelölés eltávolítása</string>
   <string name="action_unfollow">Követés megszüntetése</string>
-  <string name="action_unfollowing">Követés megszüntetése</string>
   <string name="action_unmute">Némítás megszüntetése</string>
-  <string name="action_unmuting">némítás megszüntetése</string>
   <string name="action_unsubscribe">Leiratkozás</string>
-  <string name="action_unsubscribing_from_list">leiratkozás listáról</string>
-  <string name="action_updating_details">részletek frissítése</string>
-  <string name="action_updating_profile">profil frissítése</string>
-  <string name="action_updating_profile_banner_image">fejléckép frissítése</string>
-  <string name="action_updating_profile_image">profilkép frissítése</string>
-  <string name="action_updating_status">tweet elküldése</string>
   <string name="action_view_map">Térkép</string>
   <string name="activated_accounts">Aktivált fiókok</string>
   <string name="activities_about_me">Tevékenységeim</string>
@@ -183,7 +149,6 @@
   <string name="count_label_retweets">Retweet</string>
   <string name="created_by">Létrehozta: <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">\"<xliff:g id="list">%s</xliff:g>\" lista létrehozva.</string>
-  <string name="title_crop_image">Kép vágása</string>
   <string name="current_status">Jelenlegi tweet</string>
   <string name="custom_host_mapping">Egyedi host hozzárendelés</string>
   <string name="custom_host_mapping_summary">Host hozzárendelés, mint a /etc/hosts, de nem kell hozzá plusz jog.</string>
@@ -327,6 +292,10 @@
   <string name="label_photo">Fotó</string>
   <string name="label_poll">Szavazás</string>
   <string name="label_refresh_service">Frissítő szolgáltatás</string>
+  <!-- Mastodon feature, post to mentioned users only -->
+  <!-- Mastodon feature, post to followers only -->
+  <!-- Mastodon feature, post to public timelines -->
+  <!-- Mastodon feature, do not show in public timelines -->
   <string name="label_streaming_service">Közvetítő szolgáltatás</string>
   <string name="label_translation">Fordítás</string>
   <string name="label_your_profile_image">Profilképed</string>
@@ -509,7 +478,6 @@
   <string name="profile_banner">Fejléckép</string>
   <string name="profile_image">Profilkép</string>
   <string name="profile_image_style">Profilkép stílusa</string>
-  <string name="message_toast_profile_image_updated">Profilkép frissítve.</string>
   <string name="profile_images">Profilképek</string>
   <string name="profile_link_color_main_color">Hivatkozás színe (fő szín)</string>
   <string name="profile_text_color">Szöveg színe</string>
@@ -554,7 +522,6 @@
   <string name="refresh_type_interactions">Interakciók</string>
   <string name="refresh_type_messages">Üzenetek</string>
   <string name="refresh_type_trends">Trendek</string>
-  <string name="action_register">Regisztrál</string>
   <string name="remember_position">Pozíció megjegyzése</string>
   <string name="remember_position_summary">Lista/fül pozíció megjegyzése a Twidere bezárása előtt</string>
   <string name="remove">Eltávolít</string>
@@ -617,7 +584,6 @@
   <string name="show_absolute_time">Abszolút idő megjelenítése</string>
   <string name="show_absolute_time_summary">Abszolút idő megjelenítése tweetekben</string>
   <string name="show_in_timeline">Mutasd az idővonalon</string>
-  <string name="action_sign_in">Bejelentkezés</string>
   <string name="sign_in_service_email">E-mail</string>
   <string name="sign_in_service_google_id">Google ID</string>
   <string name="sign_in_service_twitter">Twitter</string>
@@ -756,7 +722,6 @@
   <string name="usage_statistics_notification_summary">Segíts fejleszteni a Twidere-t!</string>
   <string name="user_blocked">Felhasználó blokkolva.</string>
   <string name="user_filter_name">Felhasználó: <xliff:g id="name">%s</xliff:g></string>
-  <string name="title_user_list">Lista</string>
   <string name="user_list_details">Részletek listázása</string>
   <!-- User list description -->
   <string name="user_list_details_description">Leírás</string>

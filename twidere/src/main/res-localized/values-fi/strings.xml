@@ -8,7 +8,6 @@
   <string name="action_accept_friend_request">Hyväksy</string>
   <!-- [verb] Accept a permission request like allow to use camera etc. -->
   <string name="action_accept_permission_request">Hyväksy</string>
-  <string name="action_accepting_follow_request">hyväksytään seurauspyyntöä</string>
   <!-- [verb] Add an item to a list/collection -->
   <string name="action_add">Lisää</string>
   <!-- [verb] Add a member to a message conversation -->
@@ -19,74 +18,50 @@
   <string name="action_add_tab">Lisää välilehti</string>
   <string name="action_add_to_filter">Lisää suodattimeen</string>
   <string name="action_add_to_list">Lisää listaan</string>
-  <string name="action_adding_member">lisätään jäsentä</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Estä</string>
-  <string name="action_blocking">estetään</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">Peru uudelleentwiittaus</string>
-  <string name="action_cancelling_like">perutaan tykkäystä</string>
   <string name="action_center">Keskus</string>
   <string name="action_clear">Tyhjennä</string>
   <string name="action_compose">Kirjoita</string>
-  <string name="action_creating_list">luodaan listaa</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">Poista</string>
-  <string name="action_deleting">poistetaan</string>
-  <string name="action_deleting_search">poistetaan hakua</string>
-  <string name="action_denying_follow_request">hylätään seurauspyyntöä</string>
   <string name="action_dont_restart">Älä käynnistä uudelleen</string>
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">Muokkaa</string>
   <string name="action_favorite">Suosikki</string>
-  <string name="action_favoriting">lisätään suosikkeihin</string>
   <string name="action_finish">Valmis</string>
   <string name="action_follow">Seuraa</string>
-  <string name="action_following">seurataan</string>
-  <string name="action_getting_status">haetaan twiittiä</string>
-  <string name="action_getting_user_lists">hakee käyttäjälistoja</string>
   <!-- [verb] Perform import action -->
   <string name="action_import_from">Tuo kohteesta&#8230;</string>
   <!-- Used for decide something later, like permission request -->
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">Tykkää</string>
-  <string name="action_liking">tykätään</string>
-  <string name="action_modifying_lists">muokataan listoja</string>
   <string name="action_mute">Hiljennä</string>
-  <string name="action_muting">hiljennetään</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, tallennettu <xliff:g id="time">%2$s</xliff:g></string>
   <string name="action_open_in_browser">Avaa selaimessa</string>
   <string name="action_pick_color">Valitse väri</string>
   <string name="action_quote">Lainaus</string>
   <string name="action_refresh">Päivitä</string>
-  <string name="action_refreshing_direct_messages">päivitetään yksityisviestejä</string>
-  <string name="action_refreshing_home_timeline">aikajanaasi päivitetään</string>
-  <string name="action_refreshing_mentions">päivitetään mainintoja</string>
-  <string name="action_removing_profile_banner_image">poistetaan profiilin otsakekuvaa</string>
   <string name="action_reply">Vastaa</string>
   <string name="action_report_spam">Ilmoita roskapostista</string>
-  <string name="action_reporting_for_spam">ilmoitetaan roskapostista</string>
   <!-- [verb] Restore purchase -->
   <string name="action_retry">Yritä uudelleen</string>
   <!-- [verb] Action for performing retweet -->
   <string name="action_retweet">Uudelleentwiittaa</string>
-  <string name="action_retweeting">uudelleentwiitataan</string>
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Tallenna</string>
-  <string name="action_saving_search">tallennetaan haku</string>
   <string name="action_search">Hae</string>
   <string name="action_select_user">Valitse käyttäjä</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Lähetä</string>
-  <string name="action_sending_direct_message">Lähetetään yksityisviestiä</string>
   <string name="action_set_color">Aseta väri</string>
   <string name="action_set_nickname">Aseta kutsumanimi</string>
   <string name="action_share">Jaa</string>
-  <string name="action_signing_in">kirjaudutaan</string>
   <!-- [verb] Used for skip some settings -->
   <string name="action_start">Käynnistä</string>
   <string name="action_subscribe">Tilaa</string>
-  <string name="action_subscribing_to_list">tilataan listaa</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
   <!-- [verb] Disconnect from network storage -->
   <string name="action_sync_settings">Asetukset</string>
@@ -97,22 +72,11 @@
   <string name="action_twitter_muted_users">Vaiennetut käyttäjät</string>
   <!-- [verb] Action for unblocking user -->
   <string name="action_unblock">Älä estä</string>
-  <string name="action_unblocking">poistetaan esto</string>
   <string name="action_undo_like">Älä tykkää</string>
   <string name="action_unfavorite">Poista suosikeista</string>
-  <string name="action_unfavoriting">poistetaan suosikeista</string>
   <string name="action_unfollow">Älä seuraa</string>
-  <string name="action_unfollowing">lopetetaan seuraus</string>
   <string name="action_unmute">Poista hiljennys</string>
-  <string name="action_unmuting">poistetaan hiljennystä</string>
   <string name="action_unsubscribe">Poista tilaus</string>
-  <string name="action_unsubscribing_from_list">poistetaan listan tilausta</string>
-  <string name="action_updating_details">päivitetään lisätietoja</string>
-  <string name="action_updating_profile">päivitetään profiilia</string>
-  <string name="action_updating_profile_background_image">päivitetään profiilin taustakuvaa</string>
-  <string name="action_updating_profile_banner_image">päivitetään profiilin otsakekuvaa</string>
-  <string name="action_updating_profile_image">päivitetään profiilikuvaa</string>
-  <string name="action_updating_status">lähetetään twiittiä</string>
   <string name="action_view_map">Kartta</string>
   <string name="activated_accounts">Aktiiviset tilit</string>
   <string name="activities_about_me">Aktiviteettini</string>
@@ -173,7 +137,6 @@
   <string name="count_label_retweets">Uudelleentwiittaukset</string>
   <string name="created_by">Luoja <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">Luotiin lista \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="title_crop_image">Rajaa kuva</string>
   <string name="current_status">Nykyinen twiitti</string>
   <string name="custom_host_mapping">Mukautettu Host Mapping -määrittely</string>
   <string name="custom_host_mapping_summary">Verkkonimet määritellään kuten /etc/hosts -tiedostossa, mutta ylimääräisiä oikeuksia ei tarvita.</string>
@@ -316,6 +279,10 @@
   <string name="label_photo">Valokuva</string>
   <string name="label_poll">Äänestys</string>
   <string name="label_refresh_service">Päivitä palvelu</string>
+  <!-- Mastodon feature, post to mentioned users only -->
+  <!-- Mastodon feature, post to followers only -->
+  <!-- Mastodon feature, post to public timelines -->
+  <!-- Mastodon feature, do not show in public timelines -->
   <string name="label_streaming_service">Streamaus palvelu</string>
   <string name="label_translation">Käännös</string>
   <string name="label_your_profile_image">Profiilikuvasi</string>
@@ -497,7 +464,6 @@
   <string name="profile_banner">Profiilin banneri</string>
   <string name="profile_image">Profiilikuva</string>
   <string name="profile_image_style">Profiilin kuvan tyyli</string>
-  <string name="message_toast_profile_image_updated">Profiilikuva päivitetty.</string>
   <string name="profile_images">Profiilin kuvat</string>
   <string name="profile_link_color_main_color">Linkkitekstin väri (pääväri)</string>
   <string name="profile_text_color">Tekstin väri</string>
@@ -539,7 +505,6 @@
   <string name="refresh_type_interactions">Vuorovaikutukset</string>
   <string name="refresh_type_messages">Viestit</string>
   <string name="refresh_type_trends">Trendit</string>
-  <string name="action_register">Rekistöröidy</string>
   <string name="remember_position">Muista sijainti</string>
   <string name="remember_position_summary">Muista listan/välilehden sijainti, kun Twidere sulkeutuu</string>
   <string name="remove">Poista</string>
@@ -600,7 +565,6 @@
   <string name="show_absolute_time">Näytä absoluuttinen aika</string>
   <string name="show_absolute_time_summary">Näytä twiiteissä absoluuttinen aika</string>
   <string name="show_in_timeline">Näytä aikajanalla</string>
-  <string name="action_sign_in">Kirjaudu</string>
   <string name="sign_in_service_email">Sähköposti</string>
   <string name="sign_in_service_google_id">Google tunnus</string>
   <string name="sign_in_service_twitter">Twitter</string>
@@ -736,7 +700,6 @@
   <string name="usage_statistics_notification_summary">Auta meitä kehittämään Twidereä!</string>
   <string name="user_blocked">Käyttäjä on estetty.</string>
   <string name="user_filter_name">Käyttäjä: <xliff:g id="name">%s</xliff:g></string>
-  <string name="title_user_list">Lista</string>
   <string name="user_list_details">Listaa lisätiedot</string>
   <!-- User list description -->
   <string name="user_list_details_description">Kuvaus</string>

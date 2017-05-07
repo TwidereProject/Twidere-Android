@@ -6,7 +6,6 @@
   <string name="action_accept_friend_request">Godta</string>
   <!-- [verb] Accept a permission request like allow to use camera etc. -->
   <string name="action_accept_permission_request">Godta</string>
-  <string name="action_accepting_follow_request">godtar følgeforespørsel</string>
   <!-- [verb] Add an item to a list/collection -->
   <string name="action_add">Legg til</string>
   <!-- [verb] Add a member to a message conversation -->
@@ -17,69 +16,49 @@
   <string name="action_add_tab">Legg til fane</string>
   <string name="action_add_to_filter">Legg til filter</string>
   <string name="action_add_to_list">Legg til listen</string>
-  <string name="action_adding_member">legger til medlem</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Blokker</string>
-  <string name="action_blocking">blokkerer</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">Avbryt retweet</string>
   <string name="action_center">Senter</string>
   <string name="action_clear">Tøm</string>
   <string name="action_compose">Skriv</string>
-  <string name="action_creating_list">oppretter liste</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">Slett</string>
-  <string name="action_deleting">sletter</string>
-  <string name="action_deleting_search">sletter søk</string>
-  <string name="action_denying_follow_request">avslår følgeforespørsel</string>
   <string name="action_dont_restart">Ikke start på nytt</string>
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">Rediger</string>
   <string name="action_favorite">Favorittmarker</string>
-  <string name="action_favoriting">favorittmarkerer</string>
   <string name="action_finish">Ferdig</string>
   <string name="action_follow">Følg</string>
-  <string name="action_following">følger</string>
-  <string name="action_getting_status">henter tweet</string>
   <!-- [verb] Perform import action -->
   <string name="action_import_from">Importer fra&#8230;</string>
   <!-- Used for decide something later, like permission request -->
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">Liker</string>
   <string name="action_mute">Skjul</string>
-  <string name="action_muting">skjuler</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, lagret <xliff:g id="time">%2$s</xliff:g></string>
   <string name="action_open_in_browser">Åpne i nettleser</string>
   <string name="action_pick_color">Velg farge</string>
   <string name="action_quote">Siter</string>
   <string name="action_refresh">Oppdater</string>
-  <string name="action_refreshing_direct_messages">oppdaterer direktemeldinger</string>
-  <string name="action_refreshing_home_timeline">oppdaterer tidslinjen</string>
-  <string name="action_refreshing_mentions">oppdaterer omtalelser</string>
-  <string name="action_removing_profile_banner_image">fjerner toppbildet</string>
   <string name="action_reply">Svar</string>
   <string name="action_report_spam">Rapporter spam</string>
-  <string name="action_reporting_for_spam">rapporterer for spam</string>
   <!-- [verb] Restore purchase -->
   <string name="action_retry">Prøv igjen</string>
   <!-- [verb] Action for performing retweet -->
   <string name="action_retweet">Retweet</string>
-  <string name="action_retweeting">retweeter</string>
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Lagre</string>
-  <string name="action_saving_search">lagrer søk</string>
   <string name="action_search">Søk</string>
   <string name="action_select_user">Velg bruker</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Send</string>
-  <string name="action_sending_direct_message">sender direktemelding</string>
   <string name="action_set_color">Velg farge</string>
   <string name="action_set_nickname">Velg kallenavn</string>
   <string name="action_share">Del</string>
-  <string name="action_signing_in">logger inn</string>
   <!-- [verb] Used for skip some settings -->
   <string name="action_subscribe">Abonner</string>
-  <string name="action_subscribing_to_list">abonnerer på liste</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
   <!-- [verb] Disconnect from network storage -->
   <string name="action_sync_settings">Innstillinger</string>
@@ -90,21 +69,11 @@
   <string name="action_twitter_muted_users">Skjulte brukere</string>
   <!-- [verb] Action for unblocking user -->
   <string name="action_unblock">Opphev blokkering</string>
-  <string name="action_unblocking">opphever blokkering</string>
   <string name="action_undo_like">Liker ikke</string>
   <string name="action_unfavorite">Fjern favorittmarkering</string>
-  <string name="action_unfavoriting">fjerner favorittmarkering</string>
   <string name="action_unfollow">Avfølg</string>
-  <string name="action_unfollowing">avfølger</string>
   <string name="action_unmute">Vis</string>
-  <string name="action_unmuting">viser</string>
   <string name="action_unsubscribe">Avslutt abonnement</string>
-  <string name="action_unsubscribing_from_list">avsluttet abonnement på liste</string>
-  <string name="action_updating_details">oppdaterer detaljer</string>
-  <string name="action_updating_profile">oppdaterer profil</string>
-  <string name="action_updating_profile_banner_image">oppdaterer toppbildet</string>
-  <string name="action_updating_profile_image">oppdaterer profilbildet</string>
-  <string name="action_updating_status">sender tweet</string>
   <string name="action_view_map">Kart</string>
   <string name="activated_accounts">Aktiverte kontoer</string>
   <string name="activities_about_me">Aktivitet om meg</string>
@@ -160,7 +129,6 @@
   <string name="count_label_retweets">Retweets</string>
   <string name="created_by">Opprettet av <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">Opprettet listen «<xliff:g id="list">%s</xliff:g>».</string>
-  <string name="title_crop_image">Beskjær bilde</string>
   <string name="current_status">Gjeldende tweet</string>
   <string name="custom_host_mapping">Tilpasset vertskobling</string>
   <string name="custom_host_mapping_summary">Vertskobling som /etc/hosts, men krever ingen ekstra tillatelser.</string>
@@ -287,6 +255,10 @@
   <string name="label_original_status">Opprinnelig tweet</string>
   <string name="label_photo">Bilde</string>
   <string name="label_refresh_service">Oppdateringstjeneste</string>
+  <!-- Mastodon feature, post to mentioned users only -->
+  <!-- Mastodon feature, post to followers only -->
+  <!-- Mastodon feature, post to public timelines -->
+  <!-- Mastodon feature, do not show in public timelines -->
   <string name="label_streaming_service">Strømmetjeneste</string>
   <string name="label_your_profile_image">Ditt profilbilde</string>
   <string name="large">Stor</string>
@@ -451,7 +423,6 @@
   <string name="profile_banner">Toppbilde</string>
   <string name="profile_image">Profilbilde</string>
   <string name="profile_image_style">Profilbildestil</string>
-  <string name="message_toast_profile_image_updated">Profilbilde oppdatert.</string>
   <string name="profile_images">Profilbilder</string>
   <string name="profile_link_color_main_color">Lenkefarge (hovedfarge)</string>
   <string name="profile_text_color">Tekstfarge</string>
@@ -485,7 +456,6 @@
   <string name="refresh_type_home">Hjem</string>
   <string name="refresh_type_messages">Meldinger</string>
   <string name="refresh_type_trends">Trender</string>
-  <string name="action_register">Registrer</string>
   <string name="remember_position">Husk posisjon</string>
   <string name="remember_position_summary">Husk liste- og faneplasseringen før Twidere lukkes</string>
   <string name="remove">Fjern</string>
@@ -543,7 +513,6 @@
   <string name="show_absolute_time">Vis absolutt tid</string>
   <string name="show_absolute_time_summary">Vis absolutt tid i tweets</string>
   <string name="show_in_timeline">Vis på tidslinjen</string>
-  <string name="action_sign_in">Logg inn</string>
   <string name="sign_up">Registrer deg</string>
   <string name="signing_in_error_browser_sign_in_hint">Feil ved innlogging. Du må kanskje bruke nettleseren. (Dette tar ikke hensyn til tilpassede API-innstillinger under innlogging)</string>
   <string name="size">Størrelse</string>
@@ -667,7 +636,6 @@
   <string name="usage_statistics_notification_summary">Hjelp oss å forbedre Twidere!</string>
   <string name="user_blocked">Blokkerte denne brukeren.</string>
   <string name="user_filter_name">Bruker: <xliff:g id="name">%s</xliff:g></string>
-  <string name="title_user_list">Liste</string>
   <string name="user_list_details">Listedetaljer</string>
   <!-- User list description -->
   <string name="user_list_details_description">Beskrivelse</string>

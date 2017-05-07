@@ -30,7 +30,7 @@
     <item quantity="other"><xliff:g id="count">%d</xliff:g>件のメディア</item>
   </plurals>
   <plurals name="created_at_with_N_tweets_per_day">
-    <item quantity="other"><xliff:g id="created_at">%1$s</xliff:g> (一日平均<xliff:g id="daily_tweet">%2$d</xliff:g>回ツイートする)</item>
+    <item quantity="other"><xliff:g id="created_at">%1$s</xliff:g> (一日平均<xliff:g id="daily_tweet">%2$d</xliff:g>回のツイート)</item>
   </plurals>
   <plurals name="N_others">
     <item quantity="other">他 <xliff:g id="count">%d</xliff:g> 人</item>

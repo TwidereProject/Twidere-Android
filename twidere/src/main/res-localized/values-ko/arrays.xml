@@ -42,7 +42,7 @@
   </string-array>
   <string-array name="entries_proxy_type">
     <item>HTTP</item>
-    <item>Reverse proxy</item>
+    <item>역방향 프록시</item>
     <!--<item>SOCKS</item>-->
   </string-array>
   <string-array name="entries_refresh_interval">
@@ -81,5 +81,9 @@
     <item>사용자 즐겨찾기</item>
     <item>리스트</item>
     <item>타임라인</item>
+  </string-array>
+  <string-array name="entries_user_timeline_filter">
+    <item>답글</item>
+    <item>리트윗</item>
   </string-array>
 </resources>

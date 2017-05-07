@@ -11,7 +11,6 @@
   <!-- [verb] Add mute filter rule -->
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Sekat</string>
-  <string name="action_blocking">menyekat</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_clear">Bersih</string>
   <string name="action_compose">Tulis</string>
@@ -19,7 +18,6 @@
   <string name="action_delete">Hapus</string>
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_follow">Ikut</string>
-  <string name="action_following">mengikuti</string>
   <!-- [verb] Perform import action -->
   <!-- Used for decide something later, like permission request -->
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
@@ -35,7 +33,6 @@
   <string name="action_select_user">Pilih pengguna</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Hantar</string>
-  <string name="action_sending_direct_message">menghantar mesej langsung</string>
   <string name="action_share">Kongsi</string>
   <!-- [verb] Used for skip some settings -->
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
@@ -47,7 +44,6 @@
   <!-- [verb] Action for unblocking user -->
   <string name="action_unblock">Nyahsekat</string>
   <string name="action_unfollow">Nyahikut</string>
-  <string name="action_updating_status">menghantar tweet</string>
   <string name="action_view_map">Peta</string>
   <string name="add_account">Tambah akaun</string>
   <string name="add_host_mapping">Tambah pemetaan hos</string>
@@ -87,6 +83,10 @@
   <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
   <string name="label_data_provider">Pembekal pangkalan data Twidere</string>
   <string name="label_original_status">Tweet asal</string>
+  <!-- Mastodon feature, post to mentioned users only -->
+  <!-- Mastodon feature, post to followers only -->
+  <!-- Mastodon feature, post to public timelines -->
+  <!-- Mastodon feature, do not show in public timelines -->
   <string name="label_streaming_service">Perkhidmatan penstriman</string>
   <string name="large">Besar</string>
   <string name="leftside_compose_button_summary">Letakkan butang karang ke kiri.</string>
@@ -188,7 +188,6 @@
   <string name="title_user">Pengguna</string>
   <string name="trends">Trend</string>
   <!-- 'Tweet' here is a verb -->
-  <string name="title_user_list">Senarai</string>
   <!-- User list description -->
   <string name="user_list_details_description">Uraian</string>
   <!-- User list is public -->

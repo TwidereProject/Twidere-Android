@@ -3,7 +3,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <!-- [verb] Accept a friend request (follow request) -->
   <!-- [verb] Accept a permission request like allow to use camera etc. -->
-  <string name="action_accepting_follow_request">accepterer følgeanmodning</string>
   <!-- [verb] Add an item to a list/collection -->
   <!-- [verb] Add a member to a message conversation -->
   <string name="action_add_conversation_participant">Tilføj medlem</string>
@@ -11,26 +10,18 @@
   <string name="action_add_filter_rule">Tilføj regel</string>
   <string name="action_add_member">Tilføj medlem</string>
   <string name="action_add_tab">Tilføj fane</string>
-  <string name="action_adding_member">tilføjer medlem</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Bloker</string>
-  <string name="action_blocking">blokerer</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">Annuller retweet</string>
   <string name="action_clear">Ryd</string>
   <string name="action_compose">Komponer</string>
-  <string name="action_creating_list">opretter liste</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">Slet</string>
-  <string name="action_deleting">sletter</string>
-  <string name="action_deleting_search">sletter søgning</string>
-  <string name="action_denying_follow_request">afviser følgeanmodning</string>
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">Redigere</string>
   <string name="action_favorite">Favoriser</string>
-  <string name="action_favoriting">favoriserer</string>
   <string name="action_follow">Følg</string>
-  <string name="action_following">følger</string>
   <!-- [verb] Perform import action -->
   <!-- Used for decide something later, like permission request -->
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
@@ -38,31 +29,21 @@
   <string name="action_pick_color">Vælg farve</string>
   <string name="action_quote">Citat</string>
   <string name="action_refresh">Genopfrisk</string>
-  <string name="action_refreshing_direct_messages">opdaterer direkte beskeder</string>
-  <string name="action_refreshing_home_timeline">opdaterer hjemmetidslinje</string>
-  <string name="action_refreshing_mentions">opdaterer nævnelser</string>
-  <string name="action_removing_profile_banner_image">sletter profilheaderbillede</string>
   <string name="action_reply">Svar</string>
   <string name="action_report_spam">Rapporter spam</string>
-  <string name="action_reporting_for_spam">rapporterer for spam</string>
   <!-- [verb] Restore purchase -->
   <string name="action_retry">Prøv igen</string>
   <!-- [verb] Action for performing retweet -->
   <string name="action_retweet">Retweet</string>
-  <string name="action_retweeting">retweeter</string>
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Gem</string>
-  <string name="action_saving_search">gemmer søgning</string>
   <string name="action_search">Søg</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Send</string>
-  <string name="action_sending_direct_message">send direkte besked</string>
   <string name="action_set_color">Bestem farve</string>
   <string name="action_set_nickname">Giv kælenavn</string>
   <string name="action_share">Del</string>
-  <string name="action_signing_in">logger ind</string>
   <!-- [verb] Used for skip some settings -->
-  <string name="action_subscribing_to_list">abonnerer på liste</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
   <!-- [verb] Disconnect from network storage -->
   <string name="action_sync_settings">Indstillinger</string>
@@ -71,16 +52,8 @@
   <string name="action_twitter_muted_users">Dæmpede brugere</string>
   <!-- [verb] Action for unblocking user -->
   <string name="action_unblock">Fjern blokering</string>
-  <string name="action_unblocking">ublokerer</string>
   <string name="action_unfavorite">Slet favorisering</string>
-  <string name="action_unfavoriting">sletter favorisering</string>
   <string name="action_unfollow">Følg ikke mere</string>
-  <string name="action_unfollowing">følger ikke mere</string>
-  <string name="action_unsubscribing_from_list">afmelder liste</string>
-  <string name="action_updating_details">opdaterer detaljer</string>
-  <string name="action_updating_profile">opdaterer profil</string>
-  <string name="action_updating_profile_banner_image">opdaterer profilheaderbillede</string>
-  <string name="action_updating_profile_image">opdaterer profilbillede</string>
   <string name="action_view_map">Kort</string>
   <string name="add_account">Tilføj konto</string>
   <string name="add_image">Tilføj billede</string>
@@ -138,6 +111,10 @@
   <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
   <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
   <string name="label_refresh_service">Genopfrisk service</string>
+  <!-- Mastodon feature, post to mentioned users only -->
+  <!-- Mastodon feature, post to followers only -->
+  <!-- Mastodon feature, post to public timelines -->
+  <!-- Mastodon feature, do not show in public timelines -->
   <string name="leftside_compose_button">Komponerknap til venstre</string>
   <string name="leftside_compose_button_summary">Sæt komponerknappen til venstre side.</string>
   <string name="list_members">Listemedlemmer</string>
@@ -240,7 +217,6 @@
   <string name="share_format_summary">\"[TITLE] = Indholdstitel\n\"[TEXT]\" = Indholdstekst</string>
   <string name="show_absolute_time">Vis absolut tid</string>
   <string name="show_absolute_time_summary">Vis absolut tid i tweets</string>
-  <string name="action_sign_in">Log ind</string>
   <string name="sign_up">Tilmeld</string>
   <string name="sound">Lyd</string>
   <string name="source"><xliff:g id="source">%s</xliff:g></string>
@@ -297,7 +273,6 @@
   <string name="type_to_compose">Tryk for at komponere</string>
   <string name="uninstall">Afinstallér</string>
   <string name="user_blocked">Bloker denne bruger.</string>
-  <string name="title_user_list">Liste</string>
   <!-- User list description -->
   <string name="user_list_details_description">Beskrivelse</string>
   <!-- User list is public -->

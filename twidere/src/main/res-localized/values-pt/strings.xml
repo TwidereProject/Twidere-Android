@@ -3,44 +3,45 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="account_options">Opções de conta</string>
   <string name="account_type_fanfou">Fanfou</string>
+  <string name="account_type_mastodon">Mastodon</string>
   <string name="account_type_statusnet">StatusNet</string>
   <string name="account_type_twitter">Twitter</string>
   <!-- [verb] Accept a friend request (follow request) -->
   <string name="action_accept_friend_request">Aceitar</string>
   <!-- [verb] Accept a permission request like allow to use camera etc. -->
   <string name="action_accept_permission_request">Aceitar</string>
-  <string name="action_accepting_follow_request">aceitando solicitação de seguidor</string>
   <!-- [verb] Add an item to a list/collection -->
   <string name="action_add">Adicionar</string>
+  <string name="action_add_content_warning">Adicionar alerta de conteúdo</string>
   <!-- [verb] Add a member to a message conversation -->
   <string name="action_add_conversation_participant">Adicionar membro</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">Adicionar regra</string>
   <string name="action_add_filters_subscription">Adicionar assinatura</string>
+  <string name="action_add_gif">Adicionar GIF</string>
+  <string name="action_add_media">Adicionar mídia</string>
   <string name="action_add_member">Adicionar membro</string>
   <string name="action_add_tab">Adicionar aba</string>
   <string name="action_add_to_filter">Adicionar filtro</string>
   <string name="action_add_to_list">Adicionar à lista</string>
-  <string name="action_adding_member">adicionando membro</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Bloquear</string>
-  <string name="action_blocking">bloqueando</string>
+  <string name="action_buffer_disconnect">Desconectar do Buffer</string>
+  <string name="action_buffer_settings">Configurações</string>
+  <string name="action_buffer_update_now">Publicar agora</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">Cancelar retweet</string>
-  <string name="action_cancelling_like">cancelando curtida</string>
   <string name="action_center">Centro</string>
   <string name="action_clear">Limpar</string>
+  <string name="action_clear_messages">Limpar mensagens</string>
   <string name="action_compose">Escrever</string>
   <string name="action_compose_message_convert_to_status">Converter para Tweet</string>
+  <string name="action_connect_to_buffer">Conectar</string>
   <string name="action_conversation_info">Informação de conversa</string>
   <string name="action_create_conversation">Criar conversa</string>
-  <string name="action_creating_list">criando lista</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">Excluir</string>
   <string name="action_delete_messages">Excluir mensagens</string>
-  <string name="action_deleting">excluindo</string>
-  <string name="action_deleting_search">descartando pesquisa</string>
-  <string name="action_denying_follow_request">recusando solicitação de seguidor</string>
   <string name="action_dont_restart">Não reiniciar</string>
   <string name="action_dont_terminate">Não saia</string>
   <!-- [verb] Edit image/settings etc. -->
@@ -49,15 +50,12 @@
   <string name="action_edit_conversation_name">Editar o nome</string>
   <string name="action_edit_filter_rule">Editar regra</string>
   <string name="action_favorite">Favoritar</string>
-  <string name="action_favoriting">ao favoritar</string>
   <string name="action_filter_import_from_blocked_users">Importar de usuários bloqueados</string>
   <string name="action_filter_import_from_muted_users">Importar de usuários silenciados</string>
   <string name="action_filter_subscriptions_card_manage">Gerenciar assinaturas</string>
   <string name="action_finish">Terminar</string>
   <string name="action_follow">Seguir</string>
-  <string name="action_following">ao seguir</string>
-  <string name="action_getting_status">obtendo tweet</string>
-  <string name="action_getting_user_lists">obtendo listas de usuários</string>
+  <string name="action_format_search_update_status">Tweet <xliff:g id="text">%1$s</xliff:g></string>
   <!-- [verb] Perform import action -->
   <string name="action_import">Importar</string>
   <string name="action_import_from">Importar de...</string>
@@ -67,51 +65,59 @@
   <string name="action_leave_conversation">Sair da conversa</string>
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">Curtir</string>
-  <string name="action_liking">curtindo</string>
-  <string name="action_modifying_lists">modificando listas</string>
+  <string name="action_location">Localização</string>
+  <string name="action_manage_in_buffer">Gerenciar no Buffer</string>
+  <string name="action_mark_as_read">Marcar como lido</string>
   <string name="action_mute">Silenciar</string>
   <string name="action_mute_notifications">Silenciar notificações</string>
-  <string name="action_muting">silenciando</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, salvo em <xliff:g id="time">%2$s</xliff:g></string>
+  <string name="action_next_step">Próximo</string>
   <string name="action_open_in_browser">Abrir no navegador</string>
   <string name="action_pick_color">Escolher cor</string>
   <string name="action_purchase">Comprar</string>
   <string name="action_purchase_features_pack">Comprar pacotes de recursos</string>
+  <string name="action_qr_code">QR code</string>
   <string name="action_quote">Citar</string>
+  <string name="action_record_video">Gravar vídeo</string>
   <string name="action_refresh">Atualizar</string>
-  <string name="action_refreshing_direct_messages">atualizando mensagens diretas</string>
-  <string name="action_refreshing_home_timeline">atualizando a timeline</string>
-  <string name="action_refreshing_mentions">atualizando citações</string>
-  <string name="action_removing_profile_banner_image">ao remover imagem de capa</string>
+  <string name="action_register">Registrar</string>
+  <string name="action_remove_conversation_avatar">Remover ícone</string>
   <string name="action_reply">Responder</string>
   <string name="action_report_spam">Denunciar como spam</string>
-  <string name="action_reporting_for_spam">denunciando como spam</string>
   <!-- [verb] Restore purchase -->
   <string name="action_restore_purchase">Reembolsar</string>
   <string name="action_retry">Tentar novamente</string>
   <!-- [verb] Action for performing retweet -->
   <string name="action_retweet">Retweetar</string>
-  <string name="action_retweeting">retweetando</string>
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Salvar</string>
-  <string name="action_saving_search">salvando pesquisa</string>
   <string name="action_search">Procurar</string>
+  <string name="action_select_all">Selecionar tudo</string>
+  <string name="action_select_none">Selecionar nenhum</string>
   <string name="action_select_user">Selecionar usuário</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Enviar</string>
-  <string name="action_sending_direct_message">enviando mensagem direta</string>
   <string name="action_set_color">Definir cor</string>
   <string name="action_set_nickname">Definir apelido</string>
+  <string name="action_set_status_visibility">Definir visibilidade</string>
   <string name="action_share">Compartilhar</string>
-  <string name="action_signing_in">fazendo login</string>
+  <string name="action_sign_in">Entrar</string>
   <!-- [verb] Used for skip some settings -->
   <string name="action_skip">Pular</string>
   <string name="action_start">Iniciar</string>
+  <string name="action_status_attachment">Anexo do tweet</string>
+  <string name="action_status_block_users">Bloquear usuários&#8230;</string>
+  <string name="action_status_mute_users">Silenciar usuários&#8230;</string>
+  <string name="action_status_pin">Fixar tweet</string>
+  <string name="action_status_schedule">Agendar tweet</string>
+  <string name="action_status_unpin">Desfixar tweet</string>
   <string name="action_subscribe">Inscrever-se</string>
-  <string name="action_subscribing_to_list">ao se inscrever na lista</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_connect_to_storage">Conectar</string>
   <!-- [verb] Disconnect from network storage -->
+  <string name="action_sync_disconnect">Desconectar</string>
   <string name="action_sync_settings">Configurações</string>
+  <string name="action_sync_sync_now">Sincronizar agora</string>
   <string name="action_take_photo">Tirar uma foto</string>
   <string name="action_toggle">Alternar</string>
   <string name="action_translate">Traduzir</string>
@@ -119,25 +125,23 @@
   <string name="action_twitter_muted_users">Usuários silenciados</string>
   <!-- [verb] Action for unblocking user -->
   <string name="action_unblock">Desbloquear</string>
-  <string name="action_unblocking">desbloqueando</string>
   <string name="action_undo_like">Não curtir</string>
   <string name="action_unfavorite">Desfavoritar</string>
-  <string name="action_unfavoriting">ao remover dos favoritos</string>
   <string name="action_unfollow">Deixar de seguir</string>
-  <string name="action_unfollowing">ao deixar de seguir</string>
   <string name="action_unmute">Desfazer silenciar</string>
-  <string name="action_unmuting">desfazendo silenciar</string>
   <string name="action_unsubscribe">Sair</string>
-  <string name="action_unsubscribing_from_list">ao remover inscrição</string>
-  <string name="action_updating_details">atualizando detalhes</string>
-  <string name="action_updating_profile">atualizando perfil</string>
-  <string name="action_updating_profile_background_image">atualizando a imagem de fundo do perfil</string>
-  <string name="action_updating_profile_banner_image">ao atualizar imagem de capa</string>
-  <string name="action_updating_profile_image">atualizando imagem do perfil</string>
-  <string name="action_updating_status">enviando tweet</string>
   <string name="action_view_map">Mapa</string>
   <string name="activated_accounts">Contas ativadas</string>
   <string name="activities_about_me">Atividades sobre mim</string>
+  <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> favoritou</string>
+  <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> favoritaram</string>
+  <string name="activity_about_me_favorited_media_tagged"><xliff:g id="user">%s</xliff:g> favoritou um tweet em que você está marcado</string>
+  <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> está te seguindo</string>
+  <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> estão te seguindo</string>
+  <string name="activity_about_me_like"><xliff:g id="user">%s</xliff:g> curtiu</string>
+  <string name="activity_about_me_like_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> curtiram</string>
+  <string name="activity_about_me_liked_media_tagged"><xliff:g id="user">%s</xliff:g> curtiu um tweet que você foi mencionado</string>
+  <string name="activity_about_me_liked_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> curtiram um tweet que você foi mencionado</string>
   <string name="add_account">Adicionar uma conta</string>
   <string name="add_host_mapping">Adicionar mapeamento de hosts</string>
   <string name="add_image">Adicionar imagem</string>
@@ -196,7 +200,6 @@
   <string name="count_label_retweets">Retweets</string>
   <string name="created_by">Criada por <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">A lista \"<xliff:g id="list">%s</xliff:g>\" foi criada.</string>
-  <string name="title_crop_image">Cortar imagem</string>
   <string name="current_status">Tweet atual</string>
   <string name="custom_host_mapping">Mapeamento de hosts personalizado</string>
   <string name="custom_host_mapping_summary">Mapear hosts tais como /etc/hosts, mas não requer outras permissões adicionais.</string>
@@ -360,6 +363,10 @@
   <string name="label_poll">Enquete</string>
   <string name="label_refresh_service">Atualizar serviço</string>
   <string name="label_status_not_available">Tweet não disponível</string>
+  <!-- Mastodon feature, post to mentioned users only -->
+  <!-- Mastodon feature, post to followers only -->
+  <!-- Mastodon feature, post to public timelines -->
+  <!-- Mastodon feature, do not show in public timelines -->
   <string name="label_streaming_service">Serviço de streaming</string>
   <string name="label_translate_from_language">Traduzir do <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">Tradução</string>
@@ -548,7 +555,6 @@
   <string name="profile_banner">Banner de perfil</string>
   <string name="profile_image">Imagem do perfil</string>
   <string name="profile_image_style">Estilo da imagem de perfil</string>
-  <string name="message_toast_profile_image_updated">Imagem do perfil atualizada.</string>
   <string name="profile_images">Imagens de perfil</string>
   <string name="profile_link_color_main_color">Cor do link (cor principal)</string>
   <string name="profile_text_color">Cor de texto</string>
@@ -593,7 +599,6 @@
   <string name="refresh_type_interactions">Interações</string>
   <string name="refresh_type_messages">Mensagens</string>
   <string name="refresh_type_trends">Tópicos</string>
-  <string name="action_register">Registrar</string>
   <string name="remember_position">Lembrar posição</string>
   <string name="remember_position_summary">Lembrar da posição dos tweets na lista/aba antes de fechar o Twidere</string>
   <string name="remove">Apagar</string>
@@ -643,7 +648,7 @@
   <string name="sensitive_content_warning">Este tweet pode ter conteúdo sensível, continuar?</string>
   <string name="sent_follow_request_to_user">Solicitação de seguidor enviada para <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Endereço do servidor</string>
-  <string name="set_consumer_key_secret_message">Os tokens de autorização gerados pelo Twidere estão se esgotando, pode ser necessário que vocẽ crie um aplicativo em https://apps.twitter.com/ e cole seu \"consumer key\" e senha abaixo.\nSe, ao invés disso, você usar a \"key default\" do Twidere, você pode não conseguir entrar.</string>
+  <string name="set_consumer_key_secret_message">Os tokens de autorização gerados pelo Twidere estão se esgotando, pode ser necessário que você crie um aplicativo em https://apps.twitter.com/ e cole seu \"consumer key\" e senha abaixo.\nSe, ao invés disso, você usar a \"key default\" do Twidere, você pode não conseguir entrar.</string>
   <string name="settings">Configurações</string>
   <string name="settings_interface">Interface</string>
   <string name="settings_notifications">Notificações</string>
@@ -657,7 +662,6 @@
   <string name="show_absolute_time">Mostrar hora absoluta</string>
   <string name="show_absolute_time_summary">Mostrar hora real nos tweets</string>
   <string name="show_in_timeline">Exibir na timeline</string>
-  <string name="action_sign_in">Fazer Login</string>
   <string name="sign_in_service_email">E-mail</string>
   <string name="sign_in_service_google_id">Google ID</string>
   <string name="sign_in_service_twitter">Twitter</string>
@@ -739,7 +743,7 @@
   <string name="title_filters">Filtros</string>
   <string name="title_filters_subscription_url">URL</string>
   <string name="title_followers">Seguidores</string>
-  <string name="title_following">ao seguir</string>
+  <string name="title_following">Seguindo</string>
   <string name="title_home">Início</string>
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">Curtidas</string>
@@ -798,7 +802,6 @@
   <string name="usage_statistics_notification_summary">Ajude-nos a melhorar o Twidere!</string>
   <string name="user_blocked">Usuário bloqueado.</string>
   <string name="user_filter_name">Usuário: <xliff:g id="name">%s</xliff:g></string>
-  <string name="title_user_list">Lista</string>
   <string name="user_list_details">Lista de detalhes</string>
   <!-- User list description -->
   <string name="user_list_details_description">Descrição</string>

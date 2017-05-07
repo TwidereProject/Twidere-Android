@@ -6,7 +6,6 @@
   <string name="action_accept_friend_request">Accetta</string>
   <!-- [verb] Accept a permission request like allow to use camera etc. -->
   <string name="action_accept_permission_request">Accetta</string>
-  <string name="action_accepting_follow_request">accetta richiesta di follow</string>
   <!-- [verb] Add an item to a list/collection -->
   <string name="action_add">Aggiungi</string>
   <!-- [verb] Add a member to a message conversation -->
@@ -17,71 +16,49 @@
   <string name="action_add_tab">Aggiungi tab</string>
   <string name="action_add_to_filter">Aggiungi a filtro</string>
   <string name="action_add_to_list">Aggiungi alla lista</string>
-  <string name="action_adding_member">aggiunta membro</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Blocca</string>
-  <string name="action_blocking">blocco</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">Annulla retweet</string>
   <string name="action_center">Centro</string>
   <string name="action_clear">Elimina</string>
   <string name="action_compose">Componi</string>
-  <string name="action_creating_list">creazione lista</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">Elimina</string>
-  <string name="action_deleting">cancellazione</string>
-  <string name="action_deleting_search">elimina ricerca</string>
-  <string name="action_denying_follow_request">declina richiesta di follow</string>
   <string name="action_dont_restart">Non riavviare</string>
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">Edita</string>
   <string name="action_favorite">Aggiungi ai preferiti</string>
-  <string name="action_favoriting">inserimento tra i preferiti</string>
   <string name="action_finish">Finish</string>
   <string name="action_follow">Segui</string>
-  <string name="action_following">Stai seguendo</string>
-  <string name="action_getting_status">recupero tweet</string>
-  <string name="action_getting_user_lists">sto ottenendo le liste dell\'utente</string>
   <!-- [verb] Perform import action -->
   <string name="action_import_from">Importa da&#8230;</string>
   <!-- Used for decide something later, like permission request -->
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">Like</string>
-  <string name="action_modifying_lists">modificando le liste</string>
   <string name="action_mute">Muto</string>
-  <string name="action_muting">Silenziato</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, salvato alle <xliff:g id="time">%2$s</xliff:g></string>
   <string name="action_open_in_browser">Apri nel browser</string>
   <string name="action_pick_color">Scegli colore</string>
   <string name="action_quote">Cita</string>
   <string name="action_refresh">Aggiorna</string>
-  <string name="action_refreshing_direct_messages">aggiornamento messaggi diretti</string>
-  <string name="action_refreshing_home_timeline">Aggiornamento della timeline</string>
-  <string name="action_refreshing_mentions">Aggiornamento menzioni</string>
-  <string name="action_removing_profile_banner_image">Rimozione immagine dell\'intestazione profilo</string>
   <string name="action_reply">Rispondi</string>
   <string name="action_report_spam">Segnala spam</string>
-  <string name="action_reporting_for_spam">segnala per spam</string>
   <!-- [verb] Restore purchase -->
   <string name="action_retry">Riprova</string>
   <!-- [verb] Action for performing retweet -->
   <string name="action_retweet">Retweet</string>
-  <string name="action_retweeting">retweet in corso</string>
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Salva</string>
-  <string name="action_saving_search">salva ricerca</string>
   <string name="action_search">Cerca</string>
   <string name="action_select_user">Seleziona utente</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Invia</string>
-  <string name="action_sending_direct_message">invio messaggio diretto in corso</string>
   <string name="action_set_color">Imposta colore</string>
   <string name="action_set_nickname">Imposta nickname</string>
   <string name="action_share">Condividi</string>
-  <string name="action_signing_in">Accesso in corso</string>
   <!-- [verb] Used for skip some settings -->
   <string name="action_subscribe">Iscriviti</string>
-  <string name="action_subscribing_to_list">sottoscrizione alla lista</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
   <!-- [verb] Disconnect from network storage -->
   <string name="action_sync_settings">Impostazioni</string>
@@ -92,22 +69,11 @@
   <string name="action_twitter_muted_users">Utenti filtrati</string>
   <!-- [verb] Action for unblocking user -->
   <string name="action_unblock">Sblocca</string>
-  <string name="action_unblocking">sblocco</string>
   <string name="action_undo_like">Annulla like</string>
   <string name="action_unfavorite">Togli dai preferiti</string>
-  <string name="action_unfavoriting">rimozione dai preferiti</string>
   <string name="action_unfollow">Smetti di seguire</string>
-  <string name="action_unfollowing">Smetti di seguire</string>
   <string name="action_unmute">Muto off</string>
-  <string name="action_unmuting">Non silenziato</string>
   <string name="action_unsubscribe">Cancellati</string>
-  <string name="action_unsubscribing_from_list">Cancellazione dalla lista</string>
-  <string name="action_updating_details">aggiornamento dettagli</string>
-  <string name="action_updating_profile">aggiornamento profilo</string>
-  <string name="action_updating_profile_background_image">aggiornando sfondo profilo</string>
-  <string name="action_updating_profile_banner_image">Aggiornamento dell\'immagine intestazione del profilo</string>
-  <string name="action_updating_profile_image">Aggiornamento immagine del profilo</string>
-  <string name="action_updating_status">invio tweet in corso</string>
   <string name="action_view_map">Mappa</string>
   <string name="activated_accounts">Account attivati</string>
   <string name="activities_about_me">Mie Attività</string>
@@ -168,7 +134,6 @@
   <string name="count_label_retweets">Retweet</string>
   <string name="created_by">Creato da <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">Lista creata \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="title_crop_image">Ritaglia immagine</string>
   <string name="current_status">Tweet corrente</string>
   <string name="custom_host_mapping">Mappatura host personalizzata</string>
   <string name="custom_host_mapping_summary">Mappa gli host come in /etc/hosts, ma non richiede permessi aggiuntivi.</string>
@@ -314,6 +279,10 @@
   <string name="label_poll">Sondaggio</string>
   <string name="label_refresh_service">Aggiorna servizio</string>
   <string name="label_status_not_available">Tweet non disponibile</string>
+  <!-- Mastodon feature, post to mentioned users only -->
+  <!-- Mastodon feature, post to followers only -->
+  <!-- Mastodon feature, post to public timelines -->
+  <!-- Mastodon feature, do not show in public timelines -->
   <string name="label_streaming_service">Servizio di streaming</string>
   <string name="label_translate_from_language">Traduci da <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">Traduzione</string>
@@ -496,7 +465,6 @@
   <string name="profile_banner">Banner Profilo</string>
   <string name="profile_image">Immagine del profilo</string>
   <string name="profile_image_style">Stile immagine profilo</string>
-  <string name="message_toast_profile_image_updated">Immagine del profilo aggiornata.</string>
   <string name="profile_images">Immagini del profilo</string>
   <string name="profile_link_color_main_color">Colore del link (colore principale)</string>
   <string name="profile_text_color">Colore testo</string>
@@ -536,7 +504,6 @@
   <string name="refresh_type_interactions">Interazioni</string>
   <string name="refresh_type_messages">Messaggi</string>
   <string name="refresh_type_trends">Trends</string>
-  <string name="action_register">Registrati</string>
   <string name="remember_position">Ricorda posizione</string>
   <string name="remember_position_summary">Ricorda la posizione elenco/tab prima di chiudere Twidere</string>
   <string name="remove">Rimuovi</string>
@@ -598,7 +565,6 @@
   <string name="show_absolute_time">Visualizza il tempo assoluto</string>
   <string name="show_absolute_time_summary">Visualizza il tempo assoluto nei tweets</string>
   <string name="show_in_timeline">Mostra nella timeline</string>
-  <string name="action_sign_in">Accedi</string>
   <string name="sign_in_with_ellip">Collegati con&#8230;</string>
   <string name="sign_up">Registrati</string>
   <string name="signing_in_error_browser_sign_in_hint">Errore durante il login, potresti aver bisogno di usare il login da browser. (ignorando eventuali impostazioni API personalizzate)</string>
@@ -733,7 +699,6 @@
   <string name="usage_statistics_notification_summary">Aiutaci a migliorare Twidere!</string>
   <string name="user_blocked">Blocca questo utente.</string>
   <string name="user_filter_name">Utente: <xliff:g id="name">%s</xliff:g></string>
-  <string name="title_user_list">Lista</string>
   <string name="user_list_details">Dettagli della lista</string>
   <!-- User list description -->
   <string name="user_list_details_description">Descrizione</string>

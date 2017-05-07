@@ -8,7 +8,6 @@
   <string name="action_accept_friend_request">Kabul et</string>
   <!-- [verb] Accept a permission request like allow to use camera etc. -->
   <string name="action_accept_permission_request">Kabul et</string>
-  <string name="action_accepting_follow_request">takip isteği kabul ediliyor</string>
   <!-- [verb] Add an item to a list/collection -->
   <string name="action_add">Ekle</string>
   <!-- [verb] Add a member to a message conversation -->
@@ -19,71 +18,49 @@
   <string name="action_add_tab">Sekme ekle</string>
   <string name="action_add_to_filter">Filtre ekle</string>
   <string name="action_add_to_list">Listeye ekle</string>
-  <string name="action_adding_member">üye eklenirken</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Engelle</string>
-  <string name="action_blocking">engellenirken</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">Retweeti iptal et</string>
   <string name="action_center">Merkez</string>
   <string name="action_clear">Temizle</string>
   <string name="action_compose">Tweet yaz</string>
-  <string name="action_creating_list">liste oluşturulurken</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">Sil</string>
-  <string name="action_deleting">silinirken</string>
-  <string name="action_deleting_search">arama siliniyor</string>
-  <string name="action_denying_follow_request">takip isteği reddediliyor</string>
   <string name="action_dont_restart">Yeniden başlatma</string>
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">Düzenle</string>
   <string name="action_favorite">Favorilerine ekle</string>
-  <string name="action_favoriting">favorilere eklerken</string>
   <string name="action_finish">Bitir</string>
   <string name="action_follow">Takip et</string>
-  <string name="action_following">takip edilenlere eklenirken</string>
-  <string name="action_getting_status">tweet alınırken</string>
-  <string name="action_getting_user_lists">kullanıcı listelerini al</string>
   <!-- [verb] Perform import action -->
   <string name="action_import_from">Şuradan import&#8230;</string>
   <!-- Used for decide something later, like permission request -->
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">Beğen</string>
-  <string name="action_modifying_lists">listeler düzenleniyor</string>
   <string name="action_mute">Sessize al</string>
-  <string name="action_muting">sessize alınıyor</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, <xliff:g id="time">%2$s</xliff:g> itibari ile kaydedildi</string>
   <string name="action_pick_color">Renk seç</string>
   <string name="action_quote">Alıntı yap</string>
   <string name="action_refresh">Yenile</string>
-  <string name="action_refreshing_direct_messages">direkt mesajları güncellerken</string>
-  <string name="action_refreshing_home_timeline">zaman akışı yenilenirken</string>
-  <string name="action_refreshing_mentions">bahsedilenler yenilenirken</string>
-  <string name="action_removing_profile_banner_image">profil başlık resmi silinirken</string>
   <string name="action_reply">Cevapla</string>
   <string name="action_report_spam">Spam bildir</string>
-  <string name="action_reporting_for_spam">spam bildirilirken</string>
   <!-- [verb] Restore purchase -->
   <string name="action_retry">Tekrar Dene</string>
   <!-- [verb] Action for performing retweet -->
   <string name="action_retweet">Retweet et</string>
-  <string name="action_retweeting">retweet edilirken</string>
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Kaydet</string>
-  <string name="action_saving_search">arama kaydediliyor</string>
   <string name="action_search">Ara</string>
   <string name="action_select_user">Kullanıcı seç</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Gönder</string>
-  <string name="action_sending_direct_message">Direkt mesaj gönderirken</string>
   <string name="action_set_color">Rengi ayarla</string>
   <string name="action_set_nickname">Lakap ayarla</string>
   <string name="action_share">Paylaş</string>
-  <string name="action_signing_in">giriş yapılırken</string>
   <!-- [verb] Used for skip some settings -->
   <string name="action_start">Başlat</string>
   <string name="action_subscribe">Abone ol</string>
-  <string name="action_subscribing_to_list">listeye abone olunuyor</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
   <!-- [verb] Disconnect from network storage -->
   <string name="action_sync_settings">Ayarlar</string>
@@ -94,22 +71,11 @@
   <string name="action_twitter_muted_users">Tweetleri gösterilmeyen kullanıcılar</string>
   <!-- [verb] Action for unblocking user -->
   <string name="action_unblock">Engeli kaldır</string>
-  <string name="action_unblocking">engel kaldırılırken</string>
   <string name="action_undo_like">Beğenmekten Vazgeç</string>
   <string name="action_unfavorite">Favorilerinden çıkar</string>
-  <string name="action_unfavoriting">favorilerden çıkarılırken</string>
   <string name="action_unfollow">Takibi bırak</string>
-  <string name="action_unfollowing">takip edilenlerden çıkarılırken</string>
   <string name="action_unmute">Sesini aç</string>
-  <string name="action_unmuting">sesi açılıyor</string>
   <string name="action_unsubscribe">Abonelikten çık</string>
-  <string name="action_unsubscribing_from_list">listeye abonelik iptal ediliyor</string>
-  <string name="action_updating_details">ayrıntılar güncellenirken</string>
-  <string name="action_updating_profile">profil güncellenirken</string>
-  <string name="action_updating_profile_background_image">profil arkaplan resmi güncelleniyor</string>
-  <string name="action_updating_profile_banner_image">profil başlık resmi güncellenirken</string>
-  <string name="action_updating_profile_image">profil resmi güncellenirken</string>
-  <string name="action_updating_status">tweet gönderilirken</string>
   <string name="action_view_map">Harita</string>
   <string name="activated_accounts">Etkinleştirilmiş hesaplar</string>
   <string name="activities_about_me">Etkileşimler</string>
@@ -171,7 +137,6 @@
   <string name="count_label_retweets">Retweetler</string>
   <string name="created_by"><xliff:g id="created_by">%s</xliff:g> tarafından oluşturuldu</string>
   <string name="created_list"><xliff:g id="list">%s</xliff:g> listesi oluşturuldu.</string>
-  <string name="title_crop_image">Görüntüyü kırp</string>
   <string name="current_status">Güncel tweet</string>
   <string name="custom_host_mapping">Özel sunucu haritalama</string>
   <string name="custom_host_mapping_summary">/etc/hosts şeklinde sunucu haritalama, ancak ekstra izin gerektirmez.</string>
@@ -323,6 +288,10 @@
   <string name="label_poll">Anket</string>
   <string name="label_refresh_service">Servisi yenile</string>
   <string name="label_status_not_available">Tweet mevcut değil</string>
+  <!-- Mastodon feature, post to mentioned users only -->
+  <!-- Mastodon feature, post to followers only -->
+  <!-- Mastodon feature, post to public timelines -->
+  <!-- Mastodon feature, do not show in public timelines -->
   <string name="label_streaming_service">Akış servisi</string>
   <string name="label_translate_from_language">Şunu çevir <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">Çevir</string>
@@ -510,7 +479,6 @@
   <string name="profile_banner">Profil afişi</string>
   <string name="profile_image">Profil resmi</string>
   <string name="profile_image_style">Profil resmi biçimi</string>
-  <string name="message_toast_profile_image_updated">Profil resmi güncellendi.</string>
   <string name="profile_images">Profil resimleri</string>
   <string name="profile_link_color_main_color">Bağlantı rengi (ana renk)</string>
   <string name="profile_text_color">Metin rengi</string>
@@ -555,7 +523,6 @@
   <string name="refresh_type_interactions">Etkileşimler</string>
   <string name="refresh_type_messages">Mesajlar</string>
   <string name="refresh_type_trends">Gündem</string>
-  <string name="action_register">Üye ol</string>
   <string name="remember_position">Konumu hatırla</string>
   <string name="remember_position_summary">Liste/Sekme konumunu Twidere kapanmadan kaydet</string>
   <string name="remove">Kaldır</string>
@@ -619,7 +586,6 @@
   <string name="show_absolute_time">Tam saati göster</string>
   <string name="show_absolute_time_summary">Tweetlerdeki tam zamanı gösterir</string>
   <string name="show_in_timeline">Timeline\'da göster</string>
-  <string name="action_sign_in">Giriş yap</string>
   <string name="sign_in_service_email">E-posta</string>
   <string name="sign_in_service_google_id">Google Kimliği</string>
   <string name="sign_in_service_twitter">Twitter</string>
@@ -759,7 +725,6 @@
   <string name="usage_statistics_notification_summary">Twidere\'yi geliştirmemize yardımcı ol!</string>
   <string name="user_blocked">Bu kullanıcıyı engellediniz.</string>
   <string name="user_filter_name">Kullanıcı: <xliff:g id="name">%s</xliff:g></string>
-  <string name="title_user_list">Liste</string>
   <string name="user_list_details">Liste ayrıntıları</string>
   <!-- User list description -->
   <string name="user_list_details_description">Açıklama</string>

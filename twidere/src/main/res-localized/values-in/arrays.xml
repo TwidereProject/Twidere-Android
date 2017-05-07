@@ -82,4 +82,8 @@
     <item>Daftar</item>
     <item>Daftarkan timeline</item>
   </string-array>
+  <string-array name="entries_user_timeline_filter">
+    <item>Balasan</item>
+    <item>Retweet</item>
+  </string-array>
 </resources>

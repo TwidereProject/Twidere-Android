@@ -3,13 +3,13 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="account_options">Opciones de cuenta</string>
   <string name="account_type_fanfou">Fanfou</string>
+  <string name="account_type_mastodon">Mastodon</string>
   <string name="account_type_statusnet">StatusNet</string>
   <string name="account_type_twitter">Twitter</string>
   <!-- [verb] Accept a friend request (follow request) -->
   <string name="action_accept_friend_request">Aceutar</string>
   <!-- [verb] Accept a permission request like allow to use camera etc. -->
   <string name="action_accept_permission_request">Aceutar</string>
-  <string name="action_accepting_follow_request">aceutando solicitú de siguimientu</string>
   <!-- [verb] Add an item to a list/collection -->
   <string name="action_add">Amestar</string>
   <!-- [verb] Add a member to a message conversation -->
@@ -23,16 +23,13 @@
   <string name="action_add_tab">Amestar llingüeta</string>
   <string name="action_add_to_filter">Amestar a Peñeres</string>
   <string name="action_add_to_list">Amestar al llistáu</string>
-  <string name="action_adding_member">amestando miembru</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Bloquiar</string>
-  <string name="action_blocking">bloquiando</string>
   <string name="action_buffer_disconnect">Desconeutase de Buffer</string>
   <string name="action_buffer_settings">Axustes</string>
   <string name="action_buffer_update_now">Espublizar agora</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">Encaboxar retuit</string>
-  <string name="action_cancelling_like">encaboxando préstame</string>
   <string name="action_center">Centrar</string>
   <string name="action_clear">Llimpiar</string>
   <string name="action_clear_messages">Llimpiar mensaxes</string>
@@ -41,13 +38,9 @@
   <string name="action_connect_to_buffer">Coneutar</string>
   <string name="action_conversation_info">Información de conversación</string>
   <string name="action_create_conversation">Crear conversación</string>
-  <string name="action_creating_list">creando\'l llistáu</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">Desaniciar</string>
   <string name="action_delete_messages">Desaniciar mensaxes</string>
-  <string name="action_deleting">desaniciando</string>
-  <string name="action_deleting_search">desaniciando gueta</string>
-  <string name="action_denying_follow_request">ñegando solicitú de siguimientu</string>
   <string name="action_dont_restart">Nun reaniciar</string>
   <string name="action_dont_terminate">Nun colar</string>
   <!-- [verb] Edit image/settings etc. -->
@@ -56,15 +49,11 @@
   <string name="action_edit_conversation_name">Editar nome</string>
   <string name="action_edit_filter_rule">Editar regla</string>
   <string name="action_favorite">Favoritu</string>
-  <string name="action_favoriting">marcando como favoritu</string>
   <string name="action_filter_import_from_blocked_users">Importar d\'usuarios bloquiaos</string>
   <string name="action_filter_import_from_muted_users">Importar d\'usuarios silenciaos</string>
   <string name="action_filter_subscriptions_card_manage">Xestionar soscripciones</string>
   <string name="action_finish">Finar</string>
   <string name="action_follow">Siguir</string>
-  <string name="action_following">siguiendo</string>
-  <string name="action_getting_status">consiguiendo\'l tuit</string>
-  <string name="action_getting_user_lists">consiguiendo llistáu d\'usuarios</string>
   <!-- [verb] Perform import action -->
   <string name="action_import">Importar</string>
   <string name="action_import_from">Importar dende&#8230;</string>
@@ -74,14 +63,11 @@
   <string name="action_leave_conversation">Dexar conversación</string>
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">Préstame</string>
-  <string name="action_liking">prestando</string>
   <string name="action_location">Allugamientu</string>
   <string name="action_manage_in_buffer">Xestionar en Buffer</string>
   <string name="action_mark_as_read">Marcóse como lleíu</string>
-  <string name="action_modifying_lists">modificando llistaos</string>
   <string name="action_mute">Silenciar</string>
   <string name="action_mute_notifications">Silenciar avisos</string>
-  <string name="action_muting">silenciando</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, guardóse a les <xliff:g id="time">%2$s</xliff:g></string>
   <string name="action_next_step">Siguiente</string>
   <string name="action_open_in_browser">Abrir nel restolador</string>
@@ -92,42 +78,36 @@
   <string name="action_quote">Citar</string>
   <string name="action_record_video">Grabar videu</string>
   <string name="action_refresh">Refrescar</string>
-  <string name="action_refreshing_direct_messages">refrescando mensaxes direutos</string>
-  <string name="action_refreshing_home_timeline">refrescando llinia temporal d\'aniciu</string>
-  <string name="action_refreshing_mentions">refrescando menciones</string>
   <string name="action_remove_conversation_avatar">Desaniciar iconu</string>
-  <string name="action_removing_profile_banner_image">desaniciando imaxe de testera del perfil</string>
   <string name="action_reply">Responder</string>
   <string name="action_report_spam">Informar de spam</string>
-  <string name="action_reporting_for_spam">informando de spam</string>
   <!-- [verb] Restore purchase -->
   <string name="action_restore_purchase">Restaurar</string>
   <string name="action_retry">Retentar</string>
   <!-- [verb] Action for performing retweet -->
   <string name="action_retweet">Retuitiar</string>
-  <string name="action_retweeting">retuitiando</string>
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Guardar</string>
-  <string name="action_saving_search">guardando gueta</string>
   <string name="action_search">Guetar</string>
   <string name="action_select_all">Esbillar too</string>
   <string name="action_select_none">Nun esbillar dengún</string>
   <string name="action_select_user">Esbillar usuariu</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Unviar</string>
-  <string name="action_sending_direct_message">unviando\'l mensaxe direutu</string>
   <string name="action_set_color">Afitar color</string>
   <string name="action_set_nickname">Afitar nomatu</string>
+  <string name="action_set_status_visibility">Afitar visibilidá</string>
   <string name="action_share">Compartir</string>
-  <string name="action_signing_in">aniciando sesión</string>
+  <string name="action_sign_in">Aniciar sesión</string>
   <!-- [verb] Used for skip some settings -->
   <string name="action_skip">Saltar</string>
   <string name="action_start">Aniciar</string>
   <string name="action_status_attachment">Tuitiar axuntu</string>
   <string name="action_status_block_users">Bloquiar usuarios&#8230;</string>
   <string name="action_status_mute_users">Silenciar usuarios&#8230;</string>
+  <string name="action_status_pin">Fixar tuit</string>
+  <string name="action_status_unpin">Desfixar tuit</string>
   <string name="action_subscribe">Soscribise</string>
-  <string name="action_subscribing_to_list">soscribiéndose al llistáu</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
   <string name="action_sync_connect_to_storage">Coneutar</string>
   <!-- [verb] Disconnect from network storage -->
@@ -141,22 +121,11 @@
   <string name="action_twitter_muted_users">Usuarios silenciaos</string>
   <!-- [verb] Action for unblocking user -->
   <string name="action_unblock">Desbloquiar</string>
-  <string name="action_unblocking">desbloquiando</string>
   <string name="action_undo_like">Desfacer préstame</string>
   <string name="action_unfavorite">Desmarcar como favoritu</string>
-  <string name="action_unfavoriting">desmarcando como favoritu</string>
   <string name="action_unfollow">Nun siguir</string>
-  <string name="action_unfollowing">dexando de siguir</string>
   <string name="action_unmute">Desilenciar</string>
-  <string name="action_unmuting">desilenciando</string>
   <string name="action_unsubscribe">Desoscribise</string>
-  <string name="action_unsubscribing_from_list">desoscribiéndose del llistáu</string>
-  <string name="action_updating_details">anovando detalles</string>
-  <string name="action_updating_profile">anovando\'l perfil</string>
-  <string name="action_updating_profile_background_image">anovando imaxe de fondu del perfil</string>
-  <string name="action_updating_profile_banner_image">anovando imaxe de testera del perfil</string>
-  <string name="action_updating_profile_image">anovando imaxe de perfil</string>
-  <string name="action_updating_status">unviando\'l tuit</string>
   <string name="action_view_map">Mapa</string>
   <string name="activated_accounts">Cuentes activaes</string>
   <string name="activities_about_me">Actividaes tocante a min</string>
@@ -206,6 +175,7 @@
   <string name="appearance">Aspeutu</string>
   <string name="auth_type_basic">Básica</string>
   <string name="auth_type_oauth">OAuth</string>
+  <string name="auth_type_oauth2">OAuth 2</string>
   <string name="auth_type_twip_o">Mou twip O</string>
   <string name="auth_type_xauth">xAuth</string>
   <string name="auto_refresh">Auto-refrescu</string>
@@ -254,7 +224,6 @@
   <string name="count_label_retweets">Retuits</string>
   <string name="created_by">Creáu por <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">Creóse\'l llistáu «<xliff:g id="list">%s</xliff:g>».</string>
-  <string name="title_crop_image">Retayar imaxe</string>
   <string name="current_status">Tuit actual</string>
   <string name="custom_host_mapping">Mapeáu d\'agospiu personalizáu</string>
   <string name="custom_host_mapping_summary">Mapeáu d\'agospiu como /etc/hosts, pero nun rique permisu adicional dalu.</string>
@@ -431,7 +400,10 @@
   <string name="label_content_rating_pg13">12</string>
   <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
   <string name="label_content_rating_r">16</string>
+  <string name="label_content_warning">Alvertencia de conteníu</string>
   <string name="label_data_provider">Fornidor de base de datos Twidere</string>
+  <string name="label_feedback_content">Conteníu</string>
+  <string name="label_feedback_title">Títulu</string>
   <string name="label_filters_subscription">Soscripción</string>
   <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> per <xliff:g example="api" id="source">%2$s</xliff:g></string>
   <string name="label_location_your_coarse_location">El to allugamientu aproximáu</string>
@@ -451,6 +423,10 @@
   <string name="label_sensitive_content">Conteníu sensible</string>
   <string name="label_status_hint">¿Qué ta asocediendo?</string>
   <string name="label_status_not_available">Tuit non disponible</string>
+  <!-- Mastodon feature, post to mentioned users only -->
+  <!-- Mastodon feature, post to followers only -->
+  <!-- Mastodon feature, post to public timelines -->
+  <!-- Mastodon feature, do not show in public timelines -->
   <string name="label_statuses">Tuits</string>
   <string name="label_statuses_replies">Tuits y rempuestes</string>
   <string name="label_statuses_retweets">Tuits y reuits</string>
@@ -695,6 +671,8 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="preference_summary_background_streaming">Primi ANICIU en cuentes d\'ATRÁS pa caltener abiertu\'l fluxu de tuits</string>
   <string name="preference_summary_chrome_custom_tab">Abre enllaces nel restolador integráu (cola potencia de WebView)</string>
   <string name="preference_summary_database_item_limit">Llende cimera d\'elementos atroxaos nes bases de datos pa cada cuenta. Afitar a un valor más pequeñu p\'aforrar espaciu y aumentar la velocidá de carga.</string>
+  <string name="preference_summary_favorite_confirmation">Amuesa la confirmación enantes de marcar como favoritu un tuit</string>
+  <string name="preference_summary_like_confirmation">Amuesa la confirmación enantes de prestar un tuit</string>
   <string name="preference_summary_media_preload_non_metered_network">Precarga medios namái en redes llibres como Wi-Fi</string>
   <string name="preference_summary_streaming_non_metered_network">El fluxu de tuits namái en redes llibres como Wi-Fi</string>
   <string name="preference_summary_streaming_power_saving">Fluxu de tuits namái al cargar</string>
@@ -706,11 +684,13 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="preference_title_background_streaming">Fluxu de tuits en segundu planu</string>
   <string name="preference_title_chrome_custom_tab">Restolador integráu</string>
   <string name="preference_title_database_item_limit">Llende de tamañu de base de datos</string>
+  <string name="preference_title_favorite_confirmation">Confirmación de favoritu</string>
   <string name="preference_title_filter_manage_subscriptions">Xestionar</string>
   <string name="preference_title_filter_subscriptions">Peñerar soscripciones</string>
   <string name="preference_title_floating_detailed_view">Vista detallada flotante</string>
   <string name="preference_title_landscape">Horizontal</string>
   <string name="preference_title_light_font">Fonte delgada</string>
+  <string name="preference_title_like_confirmation">Confirmación de préstame</string>
   <string name="preference_title_media_preload_non_metered_network">Precargar en rede llibre</string>
   <string name="preference_title_multi_column_tab_width">Anchor de llingüeta multi-columna</string>
   <string name="preference_title_multi_column_tabs">Llingüetes de multi-columna</string>
@@ -744,7 +724,6 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="profile_banner">Pancarta de perfil</string>
   <string name="profile_image">Imaxe de perfil</string>
   <string name="profile_image_style">Estilu d\'imaxe de perfil</string>
-  <string name="message_toast_profile_image_updated">Anovóse la imaxe de perfil.</string>
   <string name="profile_images">Imáxenes de perfil</string>
   <string name="profile_link_color_main_color">Color d\'enllaz (color principal)</string>
   <string name="profile_text_color">Color de testu</string>
@@ -759,6 +738,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>
   <string name="provider_loadaverage_org">LoadAverage.org</string>
+  <string name="provider_mastodon">Mastodon</string>
   <string name="provider_quitter_se">Quitter.se</string>
   <string name="proxy">Proxy</string>
   <string name="proxy_host">Agospiu de proxy</string>
@@ -789,7 +769,6 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="refresh_type_interactions">Interaiciones</string>
   <string name="refresh_type_messages">Mensaxes</string>
   <string name="refresh_type_trends">Tendencies</string>
-  <string name="action_register">Rexistrase</string>
   <string name="remember_position">Recordar posición</string>
   <string name="remember_position_summary">Recuerda la posición de llistes/llingüetes enantes de zarrar Twidere</string>
   <string name="remove">Desaniciar</string>
@@ -854,7 +833,6 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="show_absolute_time">Amosar hora absoluta</string>
   <string name="show_absolute_time_summary">Amuesa la hora absoluta nos tuits</string>
   <string name="show_in_timeline">Amosar na llinia temporal</string>
-  <string name="action_sign_in">Aniciar sesión</string>
   <string name="sign_in_service_email">Corréu</string>
   <string name="sign_in_service_google_id">ID de Google</string>
   <string name="sign_in_service_twitter">Twitter</string>
@@ -894,7 +872,6 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="style">Estilu</string>
   <string name="subscribed_to_list">Soscribiéstite al llistáu «<xliff:g id="list">%s</xliff:g>».</string>
   <string name="subscribers">Soscriptores</string>
-  <string name="summary_interactions_not_available">Namái disponible coles claves oficiales</string>
   <string name="swipe_down_to_refresh">Esliza haza abaxo p\'anovar</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="sync_provider_name_google_drive">Google Drive</string>
@@ -1029,7 +1006,6 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="usage_statistics_notification_summary">¡Ayúdamos a ameyorar Twidere!</string>
   <string name="user_blocked">Bloquióse a esti usuariu.</string>
   <string name="user_filter_name">Usuariu: <xliff:g id="name">%s</xliff:g></string>
-  <string name="title_user_list">Llistáu</string>
   <string name="user_list_details">Detalles del llistáu</string>
   <!-- User list description -->
   <string name="user_list_details_description">Descripción</string>

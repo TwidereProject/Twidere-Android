@@ -3,58 +3,58 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="account_options">گزینه‌های حساب</string>
   <string name="account_type_fanfou">فن‌فو</string>
+  <string name="account_type_mastodon">ماستودون</string>
   <string name="account_type_statusnet">استتوس‌نت</string>
   <string name="account_type_twitter">توییتر</string>
   <!-- [verb] Accept a friend request (follow request) -->
   <string name="action_accept_friend_request">قبول</string>
   <!-- [verb] Accept a permission request like allow to use camera etc. -->
   <string name="action_accept_permission_request">قبول</string>
-  <string name="action_accepting_follow_request">قبول کردن درخواست دنبال کردن</string>
   <!-- [verb] Add an item to a list/collection -->
   <string name="action_add">افزودن</string>
+  <string name="action_add_content_warning">افزودن هشدار محتوا</string>
   <!-- [verb] Add a member to a message conversation -->
   <string name="action_add_conversation_participant">افزودن عضو</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">افزودن شرط</string>
   <string name="action_add_filters_subscription">افزودن اشتراک</string>
+  <string name="action_add_gif">افزودن جیف</string>
+  <string name="action_add_media">افزودن رسانه</string>
   <string name="action_add_member">افزودن عضو</string>
   <string name="action_add_tab">افزودن برگه</string>
   <string name="action_add_to_filter">افزودن به پالایه</string>
   <string name="action_add_to_list">افزودن به فهرست</string>
-  <string name="action_adding_member">افزودن عضو</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">مسدود کردن</string>
-  <string name="action_blocking">مسدود کردن</string>
+  <string name="action_buffer_disconnect">قطع ارتباط با بافر</string>
+  <string name="action_buffer_settings">تنظیمات</string>
+  <string name="action_buffer_update_now">انتشار اکنون</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">لغو بازتوییت</string>
-  <string name="action_cancelling_like">لغو پسند</string>
   <string name="action_center">مرکز</string>
   <string name="action_clear">پاک‌سازی</string>
+  <string name="action_clear_messages">پاک سازی پیام‌ها</string>
   <string name="action_compose">ایجاد</string>
+  <string name="action_compose_message_convert_to_status">تبدیل به توییت</string>
+  <string name="action_connect_to_buffer">اتّصال</string>
   <string name="action_conversation_info">اطّلاعات گفت‌وگو</string>
   <string name="action_create_conversation">ایجاد گفت‌وگو</string>
-  <string name="action_creating_list">ایجاد فهرست</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">حذف</string>
   <string name="action_delete_messages">حذف پیام‌ها</string>
-  <string name="action_deleting">حذف کردن</string>
-  <string name="action_deleting_search">حذف جست‌وجو</string>
-  <string name="action_denying_follow_request">رد درخواست دنبال کردن</string>
   <string name="action_dont_restart">عدم شروع مجدّد</string>
   <string name="action_dont_terminate">خارج نشدن</string>
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">ویرایش</string>
+  <string name="action_edit_conversation_avatar">ویرایش نقشک</string>
+  <string name="action_edit_conversation_name">ویرایش نام</string>
   <string name="action_edit_filter_rule">ویرایش قانون</string>
   <string name="action_favorite">برگزیدن</string>
-  <string name="action_favoriting">برگزیدن</string>
   <string name="action_filter_import_from_blocked_users">درون‌ریزی ار کاربران مسدود</string>
   <string name="action_filter_import_from_muted_users">درون‌ریزی از کاربران خموش</string>
   <string name="action_filter_subscriptions_card_manage">مدیریت اشتراک‌ها</string>
   <string name="action_finish">پایان</string>
   <string name="action_follow">دنبال کردن</string>
-  <string name="action_following">دنبال کردن</string>
-  <string name="action_getting_status">گرفتن توییت</string>
-  <string name="action_getting_user_lists">در حال گرفتن فهرست‌های اعضا</string>
   <!-- [verb] Perform import action -->
   <string name="action_import">درون‌ریزی</string>
   <string name="action_import_from">وارد کردن از&#8230;</string>
@@ -64,52 +64,51 @@
   <string name="action_leave_conversation">برون رفت از گفت‌وگو</string>
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">پسندیدن</string>
-  <string name="action_liking">پسندیدن</string>
-  <string name="action_modifying_lists">در حال اصلاح فهرست</string>
+  <string name="action_location">موقعیت</string>
+  <string name="action_manage_in_buffer">مدیریت در بافر</string>
+  <string name="action_mark_as_read">نشان به عنوان خوانده شده</string>
   <string name="action_mute">بی‌صدا</string>
-  <string name="action_muting">بی‌صدا کردن</string>
+  <string name="action_mute_notifications">خموش کردن آگاهی‌ها</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, ذخیره شده در <xliff:g id="time">%2$s</xliff:g></string>
+  <string name="action_next_step">بعدی</string>
   <string name="action_open_in_browser">گشودن در مرورگر</string>
   <string name="action_pick_color">انتخاب رنگ</string>
   <string name="action_purchase">خرید</string>
   <string name="action_purchase_features_pack">خرید بستهٔ ویژگی‌ها</string>
+  <string name="action_qr_code">رمز QR</string>
   <string name="action_quote">نقل قول</string>
   <string name="action_record_video">ضبط ویدیو</string>
   <string name="action_refresh">تازه‌سازی</string>
-  <string name="action_refreshing_direct_messages">تازه‌سازی پیام‌های مستقیم</string>
-  <string name="action_refreshing_home_timeline">تازه‌سازی خط زمان خانگی</string>
-  <string name="action_refreshing_mentions">تازه سازی اشاره‌ها</string>
-  <string name="action_removing_profile_banner_image">برداشتن تصویر سرایند نمایه</string>
+  <string name="action_register">ثبت‌نام</string>
+  <string name="action_remove_conversation_avatar">برداشتن نقشک</string>
   <string name="action_reply">پاسخ</string>
   <string name="action_report_spam">گزارش هرزنامه</string>
-  <string name="action_reporting_for_spam">گزارش کردن برای هرزنامه</string>
   <!-- [verb] Restore purchase -->
   <string name="action_restore_purchase">بازگردانی</string>
   <string name="action_retry">سعی دوباره</string>
   <!-- [verb] Action for performing retweet -->
   <string name="action_retweet">بازتوییت</string>
-  <string name="action_retweeting">بازتوییت کردن</string>
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">ذخیره</string>
-  <string name="action_saving_search">ذخیرهٔ جست‌وجو</string>
   <string name="action_search">جست‌وجو</string>
   <string name="action_select_all">گزینش همه</string>
   <string name="action_select_none">گزینش هیچ</string>
   <string name="action_select_user">گزینش کاربر</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">ارسال</string>
-  <string name="action_sending_direct_message">ارسال پیام مستقیم</string>
   <string name="action_set_color">تنظیم رنگ</string>
   <string name="action_set_nickname">تنظیم نام مستعار</string>
+  <string name="action_set_status_visibility">تنظیم نمایانی</string>
   <string name="action_share">هم‌رسانی</string>
-  <string name="action_signing_in">ورود</string>
+  <string name="action_sign_in">ورود</string>
   <!-- [verb] Used for skip some settings -->
   <string name="action_skip">پرش</string>
   <string name="action_start">آغاز</string>
+  <string name="action_status_attachment">پیوست توییت</string>
   <string name="action_status_block_users">کاربران مسدود&#8230;</string>
   <string name="action_status_mute_users">کاربران خموش&#8230;</string>
+  <string name="action_status_schedule">زمان‌بندی توییت</string>
   <string name="action_subscribe">مشترک شدن</string>
-  <string name="action_subscribing_to_list">اشتراک در فهرست</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
   <string name="action_sync_connect_to_storage">اتّصال</string>
   <!-- [verb] Disconnect from network storage -->
@@ -123,25 +122,47 @@
   <string name="action_twitter_muted_users">کاربران بی‌صدا</string>
   <!-- [verb] Action for unblocking user -->
   <string name="action_unblock">مسدود نکردن</string>
-  <string name="action_unblocking">مسدود نکردن</string>
   <string name="action_undo_like">بازگردانی پسندیدن</string>
   <string name="action_unfavorite">برنگزیدن</string>
-  <string name="action_unfavoriting">برنگزیدن</string>
   <string name="action_unfollow">دنبال نکردن</string>
-  <string name="action_unfollowing">دنبال نکردن</string>
   <string name="action_unmute">باصدا</string>
-  <string name="action_unmuting">باصدا کردن</string>
   <string name="action_unsubscribe">مشترک نشدن</string>
-  <string name="action_unsubscribing_from_list">عدم اشترام در فهرست</string>
-  <string name="action_updating_details">به‌روز رسانی جزییات</string>
-  <string name="action_updating_profile">به‌روز رسانی نمایه</string>
-  <string name="action_updating_profile_background_image">به‌روز رسانی تصویر پس‌زمینهٔ نمایه</string>
-  <string name="action_updating_profile_banner_image">به‌روز رسانی تصویر سرایند نمایه</string>
-  <string name="action_updating_profile_image">به‌روز رسانی تصویر نمایه</string>
-  <string name="action_updating_status">ارسال توییت</string>
   <string name="action_view_map">نقشه</string>
   <string name="activated_accounts">حساب‌های فعّال شده</string>
   <string name="activities_about_me">فعالیت‌های پیرامون من</string>
+  <string name="activity_about_me_favorite"><xliff:g id="user">%s </xliff:g> برگزید</string>
+  <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s </xliff:g> و <xliff:g id="other">%2$s </xliff:g> برگزیدند</string>
+  <string name="activity_about_me_favorited_media_tagged"><xliff:g id="user">%s</xliff:g> توییتی در آن برچسب خورده بودید را برگزید</string>
+  <string name="activity_about_me_favorited_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> و <xliff:g id="other">%2$s</xliff:g> توییتی که در آن برچسب خورده بودید را برگزیدند</string>
+  <string name="activity_about_me_favorited_mention"><xliff:g id="user">%s</xliff:g> توییتی در آن اشاره شده بودید را برگزید</string>
+  <string name="activity_about_me_favorited_mention_multi"><xliff:g id="user">%1$s</xliff:g> و <xliff:g id="other">%2$s</xliff:g> توییتی که در آن اشاره شده بودید را برگزیدند</string>
+  <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s </xliff:g> بازتوییتتان را برگزید</string>
+  <string name="activity_about_me_favorited_retweet_multi"><xliff:g id="user">%1$s </xliff:g> و <xliff:g id="other">%2$s </xliff:g> بازتوییتتان را برگزیدند</string>
+  <string name="activity_about_me_follow"><xliff:g id="user">%s </xliff:g> دنبالتان می‌کند</string>
+  <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s </xliff:g> و <xliff:g id="other">%2$s </xliff:g> دنبالتان می‌کنند</string>
+  <string name="activity_about_me_like"><xliff:g id="user">%s </xliff:g> پسندید</string>
+  <string name="activity_about_me_like_multi"><xliff:g id="user">%1$s </xliff:g> و <xliff:g id="other">%2$s </xliff:g> پسندیدند</string>
+  <string name="activity_about_me_liked_media_tagged"><xliff:g id="user">%s</xliff:g> توییتی در آن برچسب خورده بودید را پسندید</string>
+  <string name="activity_about_me_liked_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> و <xliff:g id="other">%2$s</xliff:g> توییتی که در آن برچسب خورده بودید را پسندیدند</string>
+  <string name="activity_about_me_liked_mention"><xliff:g id="user">%s</xliff:g> توییتی در آن اشاره شده بودید را پسندید</string>
+  <string name="activity_about_me_liked_mention_multi"><xliff:g id="user">%1$s</xliff:g> و <xliff:g id="other">%2$s</xliff:g> توییتی که در آن اشاره شده بودید را پسندیدند</string>
+  <string name="activity_about_me_liked_retweet"><xliff:g id="user">%s </xliff:g> بازتوییتتان را پسندید</string>
+  <string name="activity_about_me_liked_retweet_multi"><xliff:g id="user">%1$s </xliff:g> و <xliff:g id="other">%2$s </xliff:g> بازتوییتتان را پسندیدند</string>
+  <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> شما را به فهرست افزود</string>
+  <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> و <xliff:g id="other">%2$s</xliff:g> شما را به فهرست‌هایشان افزودند</string>
+  <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s </xliff:g> شما را به فهرست «<xliff:g id="list">%2$s </xliff:g>» افزود</string>
+  <string name="activity_about_me_media_tagged"><xliff:g id="user">%s </xliff:g> برچسبتان زد</string>
+  <string name="activity_about_me_media_tagged_multi"><xliff:g id="user">%1$s </xliff:g> و <xliff:g id="other">%2$s </xliff:g> برچسبتان زدند</string>
+  <string name="activity_about_me_retweet"><xliff:g id="user">%s </xliff:g> بازتوییت کرد</string>
+  <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s </xliff:g> و <xliff:g id="other">%2$s </xliff:g> بازتوییت کردند</string>
+  <string name="activity_about_me_retweeted_media_tagged"><xliff:g id="user">%s</xliff:g> توییتی در آن برچسب خورده بودید را بازتوییت کرد</string>
+  <string name="activity_about_me_retweeted_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> و <xliff:g id="other">%2$s</xliff:g> توییتی که در آن برچسب خورده بودید را بازتوییت کردند</string>
+  <string name="activity_about_me_retweeted_mention"><xliff:g id="user">%s</xliff:g> توییتی در آن شاره شده بودید را بازتوییت کرد</string>
+  <string name="activity_about_me_retweeted_mention_multi"><xliff:g id="user">%1$s</xliff:g> و <xliff:g id="other">%2$s</xliff:g> توییتی که در آن اشاره شده بودید را بازتوییت کردند</string>
+  <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s </xliff:g> بازتوییتتان را بازتوییت کرد</string>
+  <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s </xliff:g> و <xliff:g id="other">%2$s </xliff:g> بازتوییتتان را بازتوییت کردند</string>
+  <string name="activity_joined_twitter"><xliff:g id="user">%s </xliff:g> به توییتر پیوست</string>
+  <string name="activity_joined_twitter_multi"><xliff:g id="user">%1$s </xliff:g> و <xliff:g id="other">%2$s </xliff:g> به توییتر پیوستند</string>
   <string name="add_account">افزودن حساب</string>
   <string name="add_host_mapping">افزودن مسیردهی میزبان</string>
   <string name="add_image">افزودن تصویر</string>
@@ -155,6 +176,7 @@
   <string name="appearance">ظاهر</string>
   <string name="auth_type_basic">پایه</string>
   <string name="auth_type_oauth">OAuth</string>
+  <string name="auth_type_oauth2">OAuth 2</string>
   <string name="auth_type_twip_o">حالت twip O</string>
   <string name="auth_type_xauth">xAuth</string>
   <string name="auto_refresh">تازه‌سازی خودکار</string>
@@ -203,7 +225,6 @@
   <string name="count_label_retweets">بازتوییت‌ها</string>
   <string name="created_by">ایجاد شده توسّط <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">فهرست «<xliff:g id="list">%s</xliff:g>» را ساخت.</string>
-  <string name="title_crop_image">بریدن تصویر</string>
   <string name="current_status">توییت جاری</string>
   <string name="custom_host_mapping">مسیردهی میزبان سفارشی</string>
   <string name="custom_host_mapping_summary">مسیردهی میزبان مانند etc/hosts/، اما بدون نیاز به هرگونه دسترسی اضافی.</string>
@@ -248,6 +269,7 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">پشتیبانی اموجی</string>
   <string name="empty_content">محتوای خالی</string>
+  <string name="enable_notifications">فعّال کردن آگاهی‌ها</string>
   <string name="enable_retweets">فعّال کردن بازتوییت‌ها</string>
   <string name="enable_streaming">فعّال کردن جریان</string>
   <string name="error_info_oauth_timestamp_error">لطفاً تنظیمات تاریخ و زمان سامانه‌تان را بررسی کنید.</string>
@@ -262,6 +284,7 @@
   <string name="error_message_no_content">بدون محتوا</string>
   <string name="error_message_rate_limit">از کرانهٔ نرخ توییتر تجاوز شد. لطفاً <xliff:g id="time">%s</xliff:g> دیگر دوباره تلاش کنید</string>
   <string name="error_message_rate_limit_with_action">هنگام <xliff:g id="action">%1$s</xliff:g> از کرانهٔ نرخ توییتر تجاوز شد. لطفاً <xliff:g id="time">%2$s</xliff:g> دیگر دوباره تلاش کنید</string>
+  <string name="error_message_scheduler_not_available">زمان‌بند توییت در دسترس نیست</string>
   <string name="error_message_status_too_long">توییت خیلی بلند است.</string>
   <string name="error_message_tweet_shorten_failed">خلاصه‌سازی توییت شکست خورد.</string>
   <string name="error_message_tweet_shortener_not_found">کوتاه‌ساز توییت پیدا نشد، شاید حذف شده باشد.</string>
@@ -282,6 +305,7 @@
   <string name="extra_feature_description_filters_import">درون‌ریزی فهرست‌های پالایه از انسداد/خموشی‌ها</string>
   <string name="extra_feature_description_filters_subscription">اشتراک در پالایه‌های خموشی و هم‌گام سازی خودکار</string>
   <string name="extra_feature_description_schedule_status">زمان‌بندی توییت (ارسال بعداً)</string>
+  <string name="extra_feature_description_share_gif">هم رسانی جیف در توییت</string>
   <string name="extra_feature_description_sync_data">هم‌گام سازی داده با دراپ‌باکس، گوگل‌درایو و…</string>
   <string name="extra_feature_title_filters_import">درون‌ریزی پالایه‌ها</string>
   <string name="extra_feature_title_filters_subscription">اشتراک پالایه‌ها</string>
@@ -333,10 +357,13 @@
   <string name="highlight_and_underline">پررنگ و زیرخط</string>
   <string name="hint_accounts_dashboard_message">کشیدن از گوشهٔ صفحه برای گشودن داشبورد حساب‌ها.</string>
   <string name="hint_accounts_dashboard_title">داشبورد حساب‌ها</string>
+  <string name="hint_conversation_name">نام گفت‌وگو</string>
   <string name="hint_empty_filters_subscriptions">هیچ اشتراکی وجود ندارد</string>
   <string name="hint_error_message_no_content">بدون محتوا</string>
   <string name="hint_message_select_user">جست‌وجوی کاربران</string>
   <string name="hint_no_account">بدون حساب</string>
+  <string name="hint_search_gif">جست‌وجوی جیف</string>
+  <string name="hint_status_reply_to_user_removed">به عنوان نقل‌قول فرستاده می‌شود، زیرا کاربر توییت برداشته شده است. &lt;a href=\"#dialog\";&gt;چرا؟&lt;/a&gt;</string>
   <string name="hints">راهنمایی‌ها</string>
   <string name="home_refresh">بازآوری در خط‌زمان خانه</string>
   <string name="host_mapping_address">نشانی (می‌تواند نشانی میزبان دیگری باشد)</string>
@@ -363,27 +390,68 @@
   <string name="keyboard_shortcut_hint">فشردن کلیدها</string>
   <string name="keyboard_shortcuts">میان‌برهای صفحه‌کلید</string>
   <string name="keyword_filter_name">کلیدواژه: <xliff:g id="name">%s</xliff:g></string>
+  <string name="label_account">حساب</string>
   <string name="label_account_type">گونهٔ حساب</string>
   <string name="label_auth_type">نوع احراز هویت</string>
   <string name="label_background_operation_service">خدمت عملیات پس‌زمینه</string>
+  <string name="label_buffer_accounts">حساب‌های بافر</string>
+  <string name="label_buffer_due_at_no_time">بدون زمان</string>
   <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_g">G</string>
   <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_pg">PG</string>
   <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_pg13">PG-13</string>
   <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_r">R</string>
+  <string name="label_content_warning">هشدار محتوا</string>
   <string name="label_data_provider">فراهم‌کنندهٔ پایگاه‌دادهٔ تویدر</string>
   <string name="label_filters_subscription">اشتراک</string>
+  <string name="label_follow_request_sent">درخواست دنیال کردن ارسال شد</string>
+  <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> با <xliff:g example="api" id="source">%2$s</xliff:g></string>
+  <string name="label_location_coarse">کلّی (شهر)</string>
+  <string name="label_location_no_location">هیچ</string>
+  <string name="label_location_precise">دقیق (مختصات)</string>
   <string name="label_location_your_coarse_location">مکان نادقیقتان</string>
+  <string name="label_mastodon_host">پایگاه ماستادون</string>
   <string name="label_media">رسانه</string>
   <string name="label_original_status">توییت اصلی</string>
+  <string name="label_password">گذرواژه</string>
   <string name="label_password_sign_in">ورود با گذرواژه</string>
   <string name="label_photo">عکس</string>
+  <string name="label_photos">عکس‌ها</string>
   <string name="label_poll">نظرسنجی</string>
+  <string name="label_powered_by_giphy">قدرت گرفته از جیفی</string>
+  <string name="label_quote_name">نقل قول از <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="label_quote_name_text">نقل قول از <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="label_refresh_and_sync_service">تازه‌سازی و هم‌گام سازی خدمت</string>
   <string name="label_refresh_service">تازه‌سازی خدمت</string>
+  <string name="label_reply_name">پاسخ به <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="label_reply_name_text">پاسخ به <xliff:g id="name">%1$s</xliff:g>:‌<xliff:g id="text">%2$s</xliff:g></string>
+  <string name="label_schedule_time_buffer_default">پیش‌گزیدهٔ بافر</string>
+  <string name="label_send_at">ارسال شده در</string>
+  <string name="label_sensitive_content">محتوای حسّاس</string>
+  <string name="label_status_hint">چه خبر؟</string>
   <string name="label_status_not_available">توییت موجود نیست</string>
+  <string name="label_status_show_more">نمایش بیش‌تر</string>
+  <string name="label_status_type_reply">پاسخ</string>
+  <!-- Mastodon feature, post to mentioned users only -->
+  <string name="label_status_visibility_direct">پیام مستقیم</string>
+  <!-- Mastodon feature, post to followers only -->
+  <string name="label_status_visibility_private">خصوصی</string>
+  <!-- Mastodon feature, post to public timelines -->
+  <string name="label_status_visibility_public">عمومی</string>
+  <!-- Mastodon feature, do not show in public timelines -->
+  <string name="label_status_visibility_unlisted">فهرست نشده</string>
+  <string name="label_statuses">توییت‌ها</string>
+  <string name="label_statuses_replies">توییت‌ها و پاسخ‌ها</string>
+  <string name="label_statuses_retweets">توییت‌ها و بازتوییت‌ها</string>
+  <string name="label_statuses_retweets_replies">توییت‌ها، بازتوییت‌ها و پاسخ‌ها</string>
   <string name="label_streaming_service">خدمت جریان</string>
   <string name="label_translate_from_language">ترجمه از <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">ترجمه</string>
+  <string name="label_username">نام کاربری</string>
+  <string name="label_video">ویدیو</string>
   <string name="label_your_profile_image">تصویر نمایه‌تان</string>
   <string name="large">بزرگ</string>
   <string name="leftside_compose_button">دکمهٔ ایجاد سمت چپ</string>
@@ -423,14 +491,22 @@
   <string name="mention_user">اشاره به <xliff:g id="user">%s</xliff:g></string>
   <string name="mention_user_name">اشاره به <xliff:g id="name">%1$s</xliff:g></string>
   <string name="mentions_only">فقط اشاره‌ها</string>
+  <string name="message_account_delete_confirm">این حساب از توییتدر حذف خواهد شد.</string>
   <string name="message_api_data_corrupted">داده‌های API خراب شده است.</string>
   <string name="message_api_url_format_help">[DOMAIN]: دامنهٔ API توییتر.\nمثال: https://[DOMAIN].twitter.com با https://api.twitter.com جایگزین می‌شود.</string>
   <string name="message_auto_refresh_confirm">برای گرفتن توییت‌های جدی به صورت خودکار، تازه‌سازی خودکار فعّال شود؟</string>
   <string name="message_blocked_user"><xliff:g id="user">%s</xliff:g> مسدود شد.</string>
+  <string name="message_buffer_delete_schedule_confirm">حذف این زمان‌بندی؟</string>
+  <string name="message_buffer_disconnect_confirm">قطع ارتباط با بافر؟</string>
+  <string name="message_clear_messages_confirm">پاک سازی تمام پیام‌ها؟</string>
   <string name="message_conversation_created">گفت‌وگو ایجاد شد.</string>
+  <string name="message_destroy_conversation_confirm">ترک این گفت‌وگو؟</string>
   <string name="message_direct_message_deleted">پیام مستقیم حذف شد.</string>
   <string name="message_direct_message_sent">پیام مستقیم ارسال شد.</string>
+  <string name="message_error_buffer_connection_failed">ناتوان در اتٌصال به بافر</string>
+  <string name="message_error_buffer_media_not_supported">هنوز زمان‌بندی رسانه با بافر پشتیبانی نمی‌شود</string>
   <string name="message_error_invalid_account">برخی داده‌ّای جساب خراب شده‌آند، توییدر برای جلوگیری از خرابی، آن حساب‌ها را برمی‌دارد.</string>
+  <string name="message_format_compose_message_convert_to_status">این توییت به عنوان پیامی به <xliff:g id="name">%1$s</xliff:g> ارسال خواهد شد، ادامه؟ تبدیل به یک توییت عادی، نویسه‌ای اضافی مصرف می‌کند.</string>
   <string name="message_format_conversation_avatar_update">آواتار گفت‌وگو عوض شد</string>
   <string name="message_format_conversation_avatar_update_by_user">‫<xliff:g example="User" id="by_user">%1$s</xliff:g> آواتار گفت‌وگو را عوض کرد</string>
   <string name="message_format_conversation_name_update">نام گفت‌وگو به <xliff:g example="User" id="name">%1$s</xliff:g> تغییر کرد</string>
@@ -439,11 +515,16 @@
   <string name="message_format_participants_join_added">‫<xliff:g example="Sender" id="sender">%1$s</xliff:g>، <xliff:g example="Recipient" id="recipient">%2$s</xliff:g> را افزود</string>
   <string name="message_format_participants_leave">‫<xliff:g example="User" id="name">%1$s</xliff:g> رفت</string>
   <string name="message_format_sender_time">‫<xliff:g example="User" id="sender">%1$s</xliff:g> . <xliff:g example="12:00" id="time">%2$s</xliff:g></string>
+  <string name="message_gif_sharing_introduction">جست‌وجو و هم‌رسانی جیف با جیفی</string>
+  <string name="message_info_buffer_queue_empty">صف بافر خالی است</string>
   <string name="message_join_conversation">به گفت‌وگو پیوست.</string>
   <string name="message_permission_request_compose_location">توییدر برای افزودن موقعیّت به توییت‌ها، نیاز به دسترسی موقعیّت دارد.</string>
   <string name="message_permission_request_save_media">توییدر برای ذخیرهٔ رسانه، نیاز به دسترسی ذخیره دارد.</string>
   <string name="message_permission_request_share_media">توییدر برای هم‌رسانی رسانه با برخی کاره‌ها، نیاز به دسترسی ذخیره دارد.</string>
   <string name="message_please_wait">لطفاً صبر کنید.</string>
+  <string name="message_status_reply_to_user_removed_explanation">توییتر همواره در پاسخ، به کاربر توییت اشاره می‌کند. اگر کاربر توییت برداشته شود، توییدر برای حفظ مفهوم، این پاسخ را به عنوان نقل‌قول می‌فرستد.</string>
+  <string name="message_status_scheduling_connect_buffer_hint">برای زمان‌بندی توییت‌ها حتا هنگام برون‌خط بودن، به بافر وصل شوید</string>
+  <string name="message_status_scheduling_connected_to_buffer">اکنون توییدر به بافر وصل است</string>
   <string name="message_summary_type_sticker">[Sticker]</string>
   <string name="message_sync_data_connect_hint">برای هم‌گام سازی داده، توییدر را به ذخیره‌ساز شبکه وصل کنید</string>
   <string name="message_sync_data_synced_with_name">اکنون توییدر با <xliff:g example="ownCloud" id="name">%s</xliff:g> هم‌گام شد</string>
@@ -454,7 +535,9 @@
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
     -->
+  <string name="message_toast_accepted_users_follow_request">درخواست دنبال کردن <xliff:g id="user">%s</xliff:g> پذیرفته شد</string>
   <string name="message_toast_added_to_filter">به پالایه افزوده شد.</string>
+  <string name="message_toast_added_user_to_list"><xliff:g id="user">%1$s</xliff:g> به فهرست «<xliff:g id="list">%2$s</xliff:g>» افزوده شد</string>
   <string name="message_toast_already_logged_in">هم‌اکنون وارد شده‌اید.</string>
   <string name="message_toast_cannot_get_location">نمی‌توان موقعیّتتان را گرفت.</string>
   <string name="message_toast_compose_write_storage_no_permission">برای حذف تصویر/ویدیوی گرفته شده، نیاز به دسترسی است</string>
@@ -463,20 +546,27 @@
   <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_extra_features_not_purchased">ویژگی‌های بهبودیافته خریداری نشده است</string>
   <string name="message_toast_filters_import_hint">برای درون‌ریزی «+» را بزنید</string>
+  <string name="message_toast_invalid_mastodon_host">میزبان ماستودون نامعتبر</string>
   <string name="message_toast_link_copied_to_clipboard">پیوند در حافظه رونوشت شد</string>
   <string name="message_toast_livewp_daydream_enabled_message">هدیهٔ کوچکی برای شما وجود دارد. آن را در تنظیمات سامانه پیدا کنید (:</string>
   <string name="message_toast_login_verification_failed">تأیید هویت ورود شکست خورد.</string>
   <!-- Toast message for network errors -->
-  <string name="message_toast_network_error">حطای شبکه</string>
+  <string name="message_toast_network_error">خطای شبکه</string>
   <string name="message_toast_no_account">بدون حساب</string>
   <string name="message_toast_no_account_permission">نیاز به اجازهٔ حساب است</string>
   <string name="message_toast_no_account_selected">هیچ حسابی گزینش نشده است.</string>
   <string name="message_toast_no_user_selected">هیچ کاربری گزیده نشده</string>
+  <string name="message_toast_notification_enabled_hint">فقط وقتی جریان روشن است موحود بوده و ۱۰۰٪ قابل اعتماد نیست.</string>
   <string name="message_toast_press_again_to_close">برای بستن، دوباره فشار دهید</string>
+  <string name="message_toast_profile_background_image_updated">تصویر پس‌زمینهٔ نمایه به‌روز شد</string>
   <string name="message_toast_profile_banner_image_updated">تصویر پرچم نمایه به‌روز شد.</string>
+  <string name="message_toast_profile_image_updated">تصویر نمایه به‌روز شد</string>
+  <string name="message_toast_qr_scan_link_not_supported">پیوند پشتیبانی نمی‌شود</string>
+  <string name="message_toast_qr_scanner_not_supported">پویشگر QR پشتیبانی نمی‌شود</string>
   <string name="message_toast_retweet_cancelled">بازتوییت لغو شد</string>
   <string name="message_toast_save_media_no_storage_permission">برای ذخیرهٔ داده، نیاز به اجازهٔ ذخیره است.</string>
   <string name="message_toast_saved_to_gallery">در گالری ذخیره شد.</string>
+  <string name="message_toast_schedule_future_time_required">تاریخ/زمان باید در آینده باشد</string>
   <string name="message_toast_search_deleted">جست‌وجو حذف شد</string>
   <string name="message_toast_search_name_deleted">جست‌وجوی «<xliff:g example="SearchQuery" id="name">%1$s</xliff:g>» حذف شد</string>
   <string name="message_toast_search_name_saved">جست‌وجوی «<xliff:g example="SearchQuery" id="name">%1$s</xliff:g>» ذخیره شد</string>
@@ -489,6 +579,7 @@
   <string name="message_toast_status_liked">توییت پسندیده شد</string>
   <string name="message_toast_status_retweeted">بازتوییت شد</string>
   <string name="message_toast_status_saved_to_draft">توییت در چرک‌نویس‌ها ذخیره شد.</string>
+  <string name="message_toast_status_scheduled">توییت زمان‌بندی شد</string>
   <string name="message_toast_status_unfavorited">توییت برگزیده نشد</string>
   <string name="message_toast_status_updated">توییت فرستاده شد.</string>
   <string name="message_toast_unable_to_load_more_statuses">ناتوانی در بار کردن توییت‌های قدیمی‌تر</string>
@@ -540,10 +631,15 @@
   <string name="notification_mention"><xliff:g id="user">%s</xliff:g> به شما اشاره کرد.</string>
   <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> و <xliff:g id="count">%2$d</xliff:g> نفر دیگر به شما اشاره کردند.</string>
   <!-- Notification method, flashing LED light -->
+  <string name="notification_method_light">نور</string>
   <!-- Notification method, ringtone -->
+  <string name="notification_method_ringtone">صدای زنگ</string>
   <!-- Notification method, device vibration -->
+  <string name="notification_method_vibration">لرزش</string>
   <string name="notification_status">توییت جدید از <xliff:g id="user">%s</xliff:g></string>
   <string name="notification_status_multiple">توییت جدید از <xliff:g id="user">%1$s</xliff:g> و <xliff:g id="count">%2$d</xliff:g> نفر دیگر</string>
+  <string name="notification_title_new_retweet_by_user"><xliff:g id="user">%1$s</xliff:g> بازتوییت کرد</string>
+  <string name="notification_title_new_status_by_user">توییت جدید از <xliff:g id="user">%1$s</xliff:g></string>
   <string name="notification_type_home">خانه</string>
   <string name="notification_type_interactions">برهم‌کنش‌ها</string>
   <string name="notification_type_messages">پیام‌ها</string>
@@ -593,27 +689,39 @@
   <string name="preference_randomize_account_rename_accounts_confirm">تغییر نام حساب موجود؟</string>
   <string name="preference_summary_auto_refresh_compatibility_mode">فعّال کردن بازهٔ تازه‌سازی سریع‌تر. روی اندروید ۵ به بالا، مصرف نیرو را افزایش می‌دهد</string>
   <string name="preference_summary_auto_refresh_power_saving">وقتی باتری کم است تازه‌سازی را متوقف کن</string>
+  <string name="preference_summary_background_streaming">برای باز نگه داشتن جریان، به‌جای بازگشت، خانه را بزنید</string>
   <string name="preference_summary_chrome_custom_tab">گشودن پیوندها با مرورگر درون‌کاره (قدرت گرفته از کروم)</string>
   <string name="preference_summary_database_item_limit">کران بالای موارد ذخیره شده در پایگاه‌های داده برای هر حساب. برای ذخیرهٔ فضا و افزایش سرعت بار کردن، مقدار کم‌تری تنظیم کنید.</string>
+  <string name="preference_summary_favorite_confirmation">پیش از برگزیدن توییت، تأییده نشان داده شود</string>
+  <string name="preference_summary_like_confirmation">پیش از پسندیدن توییت، تأییده نشان داده شود</string>
   <string name="preference_summary_media_preload_non_metered_network">پیش‌بار کردن رسانه فقط روی شبکه‌های آزاد مثل وای‌فای</string>
+  <string name="preference_summary_streaming_non_metered_network">جریان فقط روی شبکه‌های آزاد مثل وای‌فای</string>
+  <string name="preference_summary_streaming_power_saving">جریان فقط هنگام شارژ</string>
   <string name="preference_summary_trends_location">اکنون می‌توان در تنظیمات زیانه، موقعیت را به صورت جداگانه تنظیم کرد.</string>
   <string name="preference_title_accounts">حساب‌ها</string>
   <string name="preference_title_advanced">پیش‌رفته</string>
   <string name="preference_title_auto_refresh_compatibility_mode">حالت سازگاری</string>
   <string name="preference_title_auto_refresh_power_saving">حالت ذخیرهٔ انرژی</string>
+  <string name="preference_title_background_streaming">جریان در پس‌زمینه</string>
   <string name="preference_title_chrome_custom_tab">مرورگر درون‌کاره</string>
   <string name="preference_title_database_item_limit">کران اندازهٔ پایگاه داده</string>
+  <string name="preference_title_favorite_confirmation">تأیید برگزیدن</string>
   <string name="preference_title_filter_manage_subscriptions">مدیریت</string>
   <string name="preference_title_filter_subscriptions">اشتراک‌های پالایه</string>
   <string name="preference_title_floating_detailed_view">نمای جزئیات شناور</string>
   <string name="preference_title_landscape">افقی</string>
   <string name="preference_title_light_font">قلم سبک</string>
+  <string name="preference_title_like_confirmation">تأیید پسندیدن</string>
   <string name="preference_title_media_preload_non_metered_network">پیش‌بار کردن روی شبکهٔ آزاد</string>
   <string name="preference_title_multi_column_tab_width">پهنای زبانهٔ چندستونه</string>
   <string name="preference_title_multi_column_tabs">زبانه‌های چندستونه</string>
+  <string name="preference_title_notification_ringtone">صدای زنگ</string>
+  <string name="preference_title_override_language">زبان کاره</string>
   <string name="preference_title_portrait">عمودی</string>
   <string name="preference_title_storage">ذخیره‌سازی</string>
+  <string name="preference_title_streaming_content">محتوای جریان</string>
   <string name="preference_title_streaming_enabled">فعّال کردن جریان</string>
+  <string name="preference_title_streaming_non_metered_network">جریان روی شبکهٔ آزاد</string>
   <string name="preference_title_streaming_power_saving">حالت ذخیرهٔ انرژی</string>
   <string name="preference_title_tablet_mode">حالت رایانک</string>
   <string name="preference_title_text_size">اندازهٔ متن</string>
@@ -637,7 +745,6 @@
   <string name="profile_banner">بیرق نمایه</string>
   <string name="profile_image">تصویر نمایه</string>
   <string name="profile_image_style">نوع تصویر نمایه</string>
-  <string name="message_toast_profile_image_updated">تصویر نمایه به‌روز شد.</string>
   <string name="profile_images">تصاویر نمایه</string>
   <string name="profile_link_color_main_color">رنگ پیوند (رنگ اصلی)</string>
   <string name="profile_text_color">رنگ متن</string>
@@ -652,6 +759,7 @@
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>
   <string name="provider_loadaverage_org">LoadAverage.org</string>
+  <string name="provider_mastodon">ماستودون</string>
   <string name="provider_quitter_se">Quitter.se</string>
   <string name="proxy">پیشکار</string>
   <string name="proxy_host">میزبان پیشکار</string>
@@ -682,7 +790,6 @@
   <string name="refresh_type_interactions">برهم‌کنش‌ها</string>
   <string name="refresh_type_messages">پیام‌ها</string>
   <string name="refresh_type_trends">رویدادها</string>
-  <string name="action_register">ثبت‌نام</string>
   <string name="remember_position">به خاطر سپردن موقعیّت</string>
   <string name="remember_position_summary">به یاد داشتن موقعیت فهرست/برگه پیش از بستن Twidere</string>
   <string name="remove">برداشتن</string>
@@ -716,6 +823,7 @@
   <string name="search_hint">جست‌وجوی توییت‌ها یا کاربران</string>
   <string name="search_hint_users">جست‌وجوی کاربران</string>
   <string name="search_statuses">جست‌وجوی توییت‌ها</string>
+  <string name="search_type_media">رسانه</string>
   <string name="search_type_statuses">توییت‌ها</string>
   <string name="search_type_users">کاربران</string>
   <string name="security_key">کلید امنیتی</string>
@@ -747,7 +855,6 @@
   <string name="show_absolute_time">نمایش زمان خالص</string>
   <string name="show_absolute_time_summary">نمایش زمان خالص در توییت‌ها</string>
   <string name="show_in_timeline">نمایش در خط زمانی</string>
-  <string name="action_sign_in">ورود</string>
   <string name="sign_in_service_email">رایانامه</string>
   <string name="sign_in_service_google_id">شناسهٔ گوگل</string>
   <string name="sign_in_service_twitter">توییتر</string>
@@ -778,14 +885,15 @@
   <string name="status_shortener_default">هیچ (انصراف از فرستادن)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">بازتوییت</string>
+  <string name="stream_summary_notification_users">کاربران «آکاهی‌ها» را روشن کردند. ۱۰۰٪ قابل اعتماد نیست.</string>
   <string name="stream_type_home">خانه</string>
   <string name="stream_type_interactions">برهم‌کنش‌ها</string>
   <string name="stream_type_messages">پیام‌ها</string>
+  <string name="stream_type_notification_users">کاربران با آگاهی فعّال</string>
   <string name="streaming">در حال جریان</string>
   <string name="style">سبک</string>
   <string name="subscribed_to_list">مشترک فهرست «<xliff:g id="list">%s</xliff:g>» شد.</string>
   <string name="subscribers">مشترکان</string>
-  <string name="summary_interactions_not_available">موجود فقظ با کلیدهای رسمی</string>
   <string name="swipe_down_to_refresh">برای تازه‌سازی به پایین بکشید</string>
   <string name="sync_provider_name_dropbox">دراپ‌باکس</string>
   <string name="sync_provider_name_google_drive">گوگل‌درایو</string>
@@ -818,12 +926,19 @@
   <string name="timeline_streaming_running">جریان خط زمانی در حال اجراست</string>
   <string name="timeline_sync_service">خدمت هم‌گام‌سازی خط زمانی</string>
   <string name="title_about">درباره</string>
+  <string name="title_account_delete_confirm">حذف حساب</string>
   <string name="title_accounts">حساب‌ها</string>
   <string name="title_add_or_remove_from_list">افزودن یا برداشتن از فهرست</string>
   <string name="title_block_user">مسدود کردن <xliff:g id="name">%s</xliff:g></string>
   <string name="title_blocked_users">کاربران مسدود شده</string>
   <string name="title_browser_sign_in">وارد شدن با مرورگر</string>
+  <string name="title_buffer_queue_manager">صف بافر</string>
+  <string name="title_buffer_schedule">زمان‌بند بافر</string>
+  <string name="title_buffer_set_schedule">زمان‌بندی با بافر</string>
+  <string name="title_buffer_settings">تنظیمات بافر</string>
   <string name="title_compose">ایجاد</string>
+  <string name="title_conversation">گفت‌وگو</string>
+  <string name="title_crop_image">برش تصویر</string>
   <string name="title_dialog_sync_connect_to">اتّصال به&#8230;</string>
   <string name="title_direct_messages">پیام‌ها</string>
   <string name="title_direct_messages_conversation_info">اطّلاعات گفت‌وگو</string>
@@ -834,6 +949,7 @@
   <string name="title_error_invalid_account">حساب نامعتبر</string>
   <!-- Enhanced (paid) features title -->
   <string name="title_extra_features">ویژگی‌های بهبودیافته</string>
+  <string name="title_favorite_confirm">برگزیدن این توییت؟</string>
   <!-- [noun] Twitter's favorite, in the plural -->
   <string name="title_favorites">برگزیده‌ها</string>
   <string name="title_filters">پالایه‌ها</string>
@@ -841,20 +957,32 @@
   <string name="title_filters_subscription_url">پیوند</string>
   <string name="title_followers">دنبال‌کنندگان</string>
   <string name="title_following">دنبال می‌کنید</string>
+  <string name="title_gif_sharing">هم‌رسانی جیف</string>
   <string name="title_home">خانه</string>
+  <string name="title_like_confirm">پسندیدن این توییت؟</string>
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">پسندها</string>
   <string name="title_manage_filter_subscriptions">اشتراک‌های پالایه</string>
+  <string name="title_media_timeline">خط زمانی رسانه</string>
   <string name="title_mentions">اشاره‌ها</string>
   <string name="title_message_conversation_info">اطّلاعات گفت‌وگو</string>
+  <string name="title_network_public_timeline">خط زمانی مشترک</string>
   <string name="title_nicknames">نام‌های مستعار</string>
   <string name="title_open_source_license">مجوز متن‌باز</string>
   <string name="title_premium_features_name">توییدر ∞</string>
+  <string name="title_public_timeline">خط زمانی عمومی</string>
+  <string name="title_quick_action">اقدام سریع</string>
+  <string name="title_retweet_quote_confirm">بازتوییت به دنیال‌کنندگانتان؟</string>
+  <string name="title_scheduled_statuses">زمان‌بندی توییت‌ها</string>
   <string name="title_search">جست‌وجو</string>
+  <string name="title_search_gif">جست‌وجوی جیف</string>
   <string name="title_select_users">گزینش کاربران</string>
   <string name="title_set_nickname">تنظیم نام مستعار</string>
+  <string name="title_sign_in_to_buffer">ورود به بافر</string>
   <string name="title_status">توییت</string>
   <string name="title_statuses">توییت‌ها</string>
+  <string name="title_statuses_and_replies">توییت‌ها و پاسخ‌ها</string>
+  <string name="title_statuses_scheduling">زمان‌بندی توییت‌ها</string>
   <string name="title_streaming">در حال جریان</string>
   <string name="title_subscription_name">نام</string>
   <string name="title_subscription_url">پیوند</string>
@@ -863,9 +991,11 @@
   <string name="title_sync_settings">تنظیمات هم‌گام سازی</string>
   <string name="title_user">کاربر</string>
   <string name="title_user_colors">رنگ‌های کاربر</string>
+  <string name="title_user_list">فهرست</string>
   <string name="title_user_list_memberships">متعلّق است به</string>
   <string name="title_user_list_ownerships">ایجاد شده</string>
   <string name="title_user_list_subscriptions">اشتراک‌ها</string>
+  <string name="title_user_timeline_filter">پالایش خط زمانی</string>
   <string name="title_users_favorited_this">کاربرانی که این را برگزیدند</string>
   <string name="title_users_liked_this">کاربرانی که این را پسندیدند</string>
   <string name="title_users_retweeted_this">کاربرانی که این را بازتوییت کردند</string>
@@ -905,7 +1035,6 @@
   <string name="usage_statistics_notification_summary">کمک کنید تویدر را بهتر کنیم!</string>
   <string name="user_blocked">این کاربر مسدود شده است.</string>
   <string name="user_filter_name">کاربر: <xliff:g id="name">%s</xliff:g></string>
-  <string name="title_user_list">فهرست</string>
   <string name="user_list_details">فهرست کردن جزییات</string>
   <!-- User list description -->
   <string name="user_list_details_description">توصیف</string>
