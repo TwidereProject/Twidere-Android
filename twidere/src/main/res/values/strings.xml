@@ -669,6 +669,7 @@
     <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
     <string name="message_toast_extra_features_not_purchased">Enhanced features not purchased</string>
     <string name="message_toast_filters_import_hint">Press \"+\" to import</string>
+    <string name="message_toast_internal_storage_install_required">Installation on SD card is not supported, accounts may lost after reboot.</string>
     <string name="message_toast_invalid_mastodon_host">Invalid Mastodon host</string>
     <string name="message_toast_link_copied_to_clipboard">Link copied to clipboard</string>
     <string name="message_toast_livewp_daydream_enabled_message">Here\'s a little present for you, find it in your system settings :)</string>

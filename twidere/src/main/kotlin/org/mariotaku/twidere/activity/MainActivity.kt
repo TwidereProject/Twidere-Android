@@ -21,8 +21,10 @@ package org.mariotaku.twidere.activity
 
 import android.accounts.AccountManager
 import android.content.Intent
+import android.content.pm.ApplicationInfo
 import android.os.Bundle
 import android.widget.Toast
+import org.mariotaku.ktextension.contains
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_INTENT
@@ -49,6 +51,9 @@ open class MainActivity : BaseActivity() {
             intent.putExtra(EXTRA_INTENT, Intent(this, HomeActivity::class.java))
             startActivity(intent)
         } else {
+            if (ApplicationInfo.FLAG_EXTERNAL_STORAGE in packageManager.getApplicationInfo(packageName, 0).flags) {
+                Toast.makeText(this, R.string.message_toast_internal_storage_install_required, Toast.LENGTH_LONG).show()
+            }
             startActivity(Intent(this, HomeActivity::class.java))
         }
         finish()
