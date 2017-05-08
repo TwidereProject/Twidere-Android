@@ -615,6 +615,7 @@
     <string name="message_account_delete_confirm">This account will be deleted from Twidere.</string>
     <string name="message_api_data_corrupted">API data corrupted.</string>
     <string name="message_api_url_format_help">[DOMAIN]: Twitter API domain.\nExample: https://[DOMAIN].twitter.com/ will be replaced to https://api.twitter.com/.</string>
+    <string name="message_app_crashed">Twidere has crashed. Send a bug report to help me solve this issue.</string>
     <string name="message_auto_refresh_confirm">Enable auto refresh to get new tweets automatically?</string>
     <string name="message_blocked_user">Blocked <xliff:g id="user">%s</xliff:g>.</string>
     <string name="message_buffer_delete_schedule_confirm">Delete this schedule?</string>

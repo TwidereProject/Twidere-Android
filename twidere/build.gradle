@@ -118,6 +118,7 @@ dependencies {
     // END Non-FOSS component
 
     fdroidCompile "org.osmdroid:osmdroid-android:${libVersions['OSMDroid']}"
+    fdroidCompile "ch.acra:acra:${libVersions['ACRA']}"
 
     debugCompile "com.facebook.stetho:stetho:${libVersions['Stetho']}"
     debugCompile "com.facebook.stetho:stetho-okhttp3:${libVersions['Stetho']}"

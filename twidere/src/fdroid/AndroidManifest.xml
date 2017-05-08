@@ -17,6 +17,15 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<manifest>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          package="org.mariotaku.twidere">
 
+    <application
+        android:fullBackupContent="true"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity
+            android:name=".activity.CrashReportDialogActivity"
+            android:theme="@style/Theme.Twidere.NoDisplay.DayNight"/>
+    </application>
 </manifest>

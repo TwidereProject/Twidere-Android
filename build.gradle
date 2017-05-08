@@ -28,7 +28,7 @@ subprojects {
     buildscript {
         ext {
             libVersions = [
-                    Kotlin               : '1.1.2-2',
+                    Kotlin               : '1.1.2-3',
                     SupportLib           : '25.3.1',
                     MariotakuCommons     : '0.9.15',
                     RestFu               : '0.9.54',
@@ -64,6 +64,7 @@ subprojects {
                     GlideTransformations : '2.0.1',
                     AndroidImageCropper  : '2.4.0',
                     ExportablePreferences: '0.9.6',
+                    ACRA                 : '4.9.2',
             ]
         }
 
