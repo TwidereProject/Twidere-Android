@@ -25,6 +25,7 @@ import android.support.v4.util.ArraySet
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.mastodon.Mastodon
+import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.microblog.library.twitter.model.InternalActivityCreator
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.twidere.R
@@ -75,8 +76,10 @@ class GetActivitiesAboutMeTask(context: Context) : GetActivitiesTask(context) {
                 }
                 val userIds = allUsers.mapTo(ArraySet<String>()) { it.id }
                 val relationships = mastodon.batchGetRelationships(userIds)
-                val activities = notifications.map {
-                    it.toParcelable(account, relationships)
+                val activities = notifications.mapNotNull {
+                    val activity = it.toParcelable(account, relationships)
+                    if (activity.action == Activity.Action.INVALID) return@mapNotNull null
+                    return@mapNotNull activity
                 }
                 return activities
             }

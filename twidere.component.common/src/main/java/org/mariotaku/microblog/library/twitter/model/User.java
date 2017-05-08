@@ -567,7 +567,12 @@ public class User extends TwitterResponseObject implements Comparable<User>, Par
 
     @OnJsonParseComplete
     void onJsonParseComplete() throws IOException {
-        if (id == null || screenName == null) throw new IOException("Malformed User object");
+        if (id == null) {
+            throw new IOException("Malformed User object (no id)");
+        }
+        if (screenName == null) {
+            throw new IOException("Malformed User object (no screen_name)");
+        }
     }
 
     @Override

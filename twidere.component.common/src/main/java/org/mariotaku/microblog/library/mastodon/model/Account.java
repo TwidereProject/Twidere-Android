@@ -20,7 +20,9 @@ package org.mariotaku.microblog.library.mastodon.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -164,6 +166,16 @@ public class Account {
 
     public String getHeaderStatic() {
         return headerStatic;
+    }
+
+    @OnJsonParseComplete
+    void onJsonParseComplete() throws IOException {
+        if (id == null) {
+            throw new IOException("Malformed Account object (no id)");
+        }
+        if (username == null) {
+            throw new IOException("Malformed Account object (no username)");
+        }
     }
 
     @Override

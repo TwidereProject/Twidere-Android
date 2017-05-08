@@ -248,7 +248,7 @@ public class Activity extends TwitterResponseObject implements TwitterResponse, 
             Action.LIST_MEMBER_ADDED, Action.LIST_CREATED, Action.FAVORITED_RETWEET,
             Action.RETWEETED_RETWEET, Action.QUOTE, Action.RETWEETED_MENTION,
             Action.FAVORITED_MENTION, Action.JOINED_TWITTER, Action.MEDIA_TAGGED,
-            Action.FAVORITED_MEDIA_TAGGED, Action.RETWEETED_MEDIA_TAGGED})
+            Action.FAVORITED_MEDIA_TAGGED, Action.RETWEETED_MEDIA_TAGGED, Action.INVALID})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Action {
         String FAVORITE = "favorite";
@@ -283,6 +283,7 @@ public class Activity extends TwitterResponseObject implements TwitterResponse, 
         String MEDIA_TAGGED = "media_tagged";
         String FAVORITED_MEDIA_TAGGED = "favorited_media_tagged";
         String RETWEETED_MEDIA_TAGGED = "retweeted_media_tagged";
+        String INVALID = "invalid";
 
         String[] MENTION_ACTIONS = {MENTION, REPLY, QUOTE};
     }

@@ -51,22 +51,35 @@ fun Notification.toParcelable(accountKey: UserKey, relationships: Map<String, Re
     result.sources = toSources(accountKey, relationships)
     result.user_key = result.sources?.firstOrNull()?.key ?: UserKey("multiple", null)
 
+    val status = this.status
     when (type) {
         Notification.Type.MENTION -> {
+            if (status == null) {
+                result.action = Activity.Action.INVALID
+                return result
+            }
             result.action = Activity.Action.MENTION
             status.applyTo(accountKey, result)
         }
         Notification.Type.REBLOG -> {
+            if (status == null) {
+                result.action = Activity.Action.INVALID
+                return result
+            }
             result.action = Activity.Action.RETWEET
-            val status = status.toParcelable(accountKey)
-            result.target_objects = ParcelableActivity.RelatedObject.statuses(status)
-            result.summary_line = arrayOf(status.toSummaryLine())
+            val parcelableStatus = status.toParcelable(accountKey)
+            result.target_objects = ParcelableActivity.RelatedObject.statuses(parcelableStatus)
+            result.summary_line = arrayOf(parcelableStatus.toSummaryLine())
         }
         Notification.Type.FAVOURITE -> {
+            if (status == null) {
+                result.action = Activity.Action.INVALID
+                return result
+            }
             result.action = Activity.Action.FAVORITE
-            val status = status.toParcelable(accountKey)
-            result.targets = ParcelableActivity.RelatedObject.statuses(status)
-            result.summary_line = arrayOf(status.toSummaryLine())
+            val parcelableStatus = status.toParcelable(accountKey)
+            result.targets = ParcelableActivity.RelatedObject.statuses(parcelableStatus)
+            result.summary_line = arrayOf(parcelableStatus.toSummaryLine())
         }
         Notification.Type.FOLLOW -> {
             result.action = Activity.Action.FOLLOW
