@@ -28,15 +28,19 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.net.ConnectivityManager
 import android.os.AsyncTask
+import android.os.Looper
 import android.support.multidex.MultiDex
 import com.bumptech.glide.Glide
 import nl.komponents.kovenant.android.startKovenant
 import nl.komponents.kovenant.android.stopKovenant
 import nl.komponents.kovenant.task
 import okhttp3.Dns
+import org.apache.commons.lang3.concurrent.ConcurrentUtils
+import org.mariotaku.commons.logansquare.LoganSquareMapperFinder
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
+import org.mariotaku.ktextension.isCurrentThreadCompat
 import org.mariotaku.ktextension.setLayoutDirectionCompat
 import org.mariotaku.mediaviewer.library.MediaDownloader
 import org.mariotaku.restfu.http.RestHttpClient
@@ -64,6 +68,9 @@ import org.mariotaku.twidere.util.refresh.AutoRefreshController
 import org.mariotaku.twidere.util.sync.DataSyncProvider
 import org.mariotaku.twidere.util.sync.SyncController
 import java.util.*
+import java.util.concurrent.Callable
+import java.util.concurrent.Executors
+import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -311,7 +318,15 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
             Class.forName(AsyncTask::class.java.name)
         } catch (ignore: ClassNotFoundException) {
         }
-
+        val executor = Executors.newSingleThreadExecutor()
+        LoganSquareMapperFinder.setDefaultExecutor(object : LoganSquareMapperFinder.FutureExecutor {
+            override fun <T> submit(callable: Callable<T>): Future<T> {
+                if (Looper.getMainLooper().isCurrentThreadCompat) {
+                    return ConcurrentUtils.constantFuture(callable.call())
+                }
+                return executor.submit(callable)
+            }
+        })
     }
 
     companion object {
