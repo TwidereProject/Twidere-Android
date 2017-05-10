@@ -31,8 +31,6 @@ import android.os.AsyncTask
 import android.os.Looper
 import android.support.multidex.MultiDex
 import com.bumptech.glide.Glide
-import nl.komponents.kovenant.android.startKovenant
-import nl.komponents.kovenant.android.stopKovenant
 import nl.komponents.kovenant.task
 import okhttp3.Dns
 import org.apache.commons.lang3.concurrent.ConcurrentUtils
@@ -60,6 +58,8 @@ import org.mariotaku.twidere.service.StreamingService
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
 import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.util.kovenant.startKovenant
+import org.mariotaku.twidere.util.kovenant.stopKovenant
 import org.mariotaku.twidere.util.media.MediaPreloader
 import org.mariotaku.twidere.util.media.ThumborWrapper
 import org.mariotaku.twidere.util.net.TwidereDns
