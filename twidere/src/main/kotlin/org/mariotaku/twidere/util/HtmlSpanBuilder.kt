@@ -20,13 +20,13 @@
 package org.mariotaku.twidere.util
 
 import android.graphics.Typeface
-import android.net.Uri
 import android.text.Editable
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.StyleSpan
 import android.text.style.URLSpan
+import okhttp3.HttpUrl
 import org.attoparser.ParseException
 import org.attoparser.config.ParseConfiguration
 import org.attoparser.simple.AbstractSimpleMarkupHandler
@@ -76,7 +76,11 @@ object HtmlSpanBuilder {
     private fun createSpan(info: TagInfo): Any? {
         when (info.nameLower) {
             "a" -> {
-                return URLSpan(info.getAttribute("href"))
+                var href = info.getAttribute("href") ?: return null
+                if (HttpUrl.parse(href)?.scheme() == null) {
+                    href = "https://" + href
+                }
+                return URLSpan(href)
             }
             "b", "strong" -> {
                 return StyleSpan(Typeface.BOLD)

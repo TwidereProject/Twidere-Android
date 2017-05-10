@@ -62,7 +62,10 @@ import kotlinx.android.synthetic.main.header_status.view.*
 import kotlinx.android.synthetic.main.layout_content_fragment_common.*
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
-import org.mariotaku.ktextension.*
+import org.mariotaku.ktextension.applyFontFamily
+import org.mariotaku.ktextension.contains
+import org.mariotaku.ktextension.findPositionByItemId
+import org.mariotaku.ktextension.hideIfEmpty
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
@@ -430,35 +433,6 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     override fun onLoaderReset(loader: Loader<SingleResponse<ParcelableStatus>>) {
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_status, menu)
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        menu.setItemAvailability(R.id.current_status, adapter.status != null)
-        super.onPrepareOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.current_status -> {
-                if (adapter.status != null) {
-                    val position = adapter.getFirstPositionOfItem(StatusAdapter.ITEM_IDX_STATUS)
-                    recyclerView.smoothScrollToPosition(position)
-                }
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    private fun setConversation(data: List<ParcelableStatus>?) {
-        val readPosition = saveReadPosition()
-        val changed = adapter.setData(data)
-        hasMoreConversation = data != null && changed
-        restoreReadPosition(readPosition)
-    }
-
     override val refreshing: Boolean
         get() = loaderManager.hasRunningLoadersSafe()
 
@@ -546,6 +520,19 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         }
     }
 
+    private fun setConversation(data: List<ParcelableStatus>?) {
+        val readPosition = saveReadPosition()
+        val changed = adapter.setData(data)
+        hasMoreConversation = data != null && changed
+        restoreReadPosition(readPosition)
+    }
+
+    private fun scrollToCurrent() {
+        if (adapter.status != null) {
+            val position = adapter.getFirstPositionOfItem(StatusAdapter.ITEM_IDX_STATUS)
+            recyclerView.smoothScrollToPosition(position)
+        }
+    }
 
     private fun displayTranslation(translation: TranslationResult) {
         adapter.translationResult = translation
@@ -1782,10 +1769,13 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             val countIndex = getItemCountIndex(position)
             when (countIndex) {
                 ITEM_IDX_CONVERSATION, ITEM_IDX_STATUS, ITEM_IDX_REPLY -> {
-                    return (countIndex.toLong() shl 32) or getStatus(position).hashCode().toLong()
+                    val status = getStatus(position)
+                    val hashCode = ParcelableStatus.calculateHashCode(status.account_key, status.id)
+                    return (countIndex.toLong() shl 32) or hashCode.toLong()
                 }
             }
-            return (countIndex.toLong() shl 32) or getItemType(position).toLong()
+            val countPos = (position - getItemStartPosition(countIndex)).toLong()
+            return (countIndex.toLong() shl 32) or countPos
         }
 
         override fun getItemCount(): Int {
