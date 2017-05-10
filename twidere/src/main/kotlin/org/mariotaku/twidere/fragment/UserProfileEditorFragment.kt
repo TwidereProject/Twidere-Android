@@ -266,6 +266,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
 
     private fun displayUser(user: ParcelableUser?, account: AccountDetails?) {
         if (!getUserInfoCalled) return
+        if (context == null || isDetached || (activity?.isFinishing ?: true)) return
         getUserInfoCalled = false
         this.user = user
         this.account = account
@@ -277,9 +278,11 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
             editLocation.setText(user.location)
             editUrl.setText(if (isEmpty(user.url_expanded)) user.url else user.url_expanded)
 
-            Glide.with(this).loadProfileImage(context, user, 0).into(profileImage)
-            Glide.with(this).loadProfileBanner(context, user, resources.displayMetrics.widthPixels).into(profileBanner)
-            Glide.with(this).load(user.profile_background_url).into(profileBackground)
+            val requestManager = Glide.with(this)
+            requestManager.loadProfileImage(context, user, 0).into(profileImage)
+            requestManager.loadProfileBanner(context, user, resources.displayMetrics.widthPixels)
+                    .into(profileBanner)
+            requestManager.load(user.profile_background_url).into(profileBackground)
 
             linkColor.color = user.link_color
             backgroundColor.color = user.background_color

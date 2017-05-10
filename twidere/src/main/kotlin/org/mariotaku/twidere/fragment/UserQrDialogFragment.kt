@@ -114,6 +114,9 @@ class UserQrDialogFragment : BaseDialogFragment() {
     }
 
     private fun loadProfileImage(): Promise<GlideDrawable, Exception> {
+        if (context == null || isDetached || dialog == null || (activity.isFinishing ?: true)) {
+            return Promise.ofFail(InterruptedException())
+        }
         val profileImageSize = getString(R.string.profile_image_size)
         val context = context.applicationContext
         val requestManager = Glide.with(context)

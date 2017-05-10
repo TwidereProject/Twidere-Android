@@ -451,6 +451,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
     }
 
     private fun updateConversationStatus() {
+        if (context == null || isDetached || (activity?.isFinishing ?: true)) return
         val conversation = adapter.conversation ?: return
         val title = conversation.getTitle(context, userColorNameManager,
                 preferences[nameFirstKey]).first

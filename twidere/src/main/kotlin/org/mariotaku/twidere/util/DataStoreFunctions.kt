@@ -86,7 +86,7 @@ fun buildStatusFilterWhereClause(preferences: SharedPreferences, table: String,
 
     val filterExpression = Expression.or(
             Expression.and(
-                    Expression("(" + Statuses.FILTER_FLAGS + " & " + filterFlags + ") == 0"),
+                    Expression("(${Statuses.FILTER_FLAGS} & $filterFlags) == 0"),
                     Expression.notIn(Column(Table(table), Statuses._ID), filteredIdsQueryBuilder.build())
             ),
             Expression.equals(Column(Table(table), Statuses.IS_GAP), 1)

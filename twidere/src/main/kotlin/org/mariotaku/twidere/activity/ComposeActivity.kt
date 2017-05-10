@@ -861,6 +861,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun displaySelectedAccountsIcon() {
+        if (isFinishing) return
         val accounts = accountsAdapter.selectedAccounts
         val single = accounts.singleOrNull()
 

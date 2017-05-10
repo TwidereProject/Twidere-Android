@@ -24,6 +24,7 @@ import android.text.style.URLSpan
 import org.apache.commons.lang3.text.translate.EntityArrays
 import org.apache.commons.lang3.text.translate.LookupTranslator
 import org.mariotaku.commons.text.CodePointArray
+import org.mariotaku.ktextension.isNotNullOrEmpty
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.microblog.library.twitter.model.EntitySupport
 import org.mariotaku.microblog.library.twitter.model.ExtendedEntitySupport
@@ -191,6 +192,10 @@ fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: S
     result.place_full_name = status.placeFullName
     result.lang = status.lang
     result.extras = extras
+
+    if (result.media.isNotNullOrEmpty() || result.quoted_media.isNotNullOrEmpty()) {
+        result.addFilterFlag(ParcelableStatus.FilterFlags.HAS_MEDIA)
+    }
 }
 
 

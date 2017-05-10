@@ -267,7 +267,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
 
 
     override fun onLoadFinished(loader: Loader<AccountsInfo>, data: AccountsInfo) {
-        if (isDetached || host == null) return
+        if (context == null || isDetached || (activity?.isFinishing ?: true)) return
         updateAccountProviderData(data)
     }
 
@@ -468,6 +468,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             private var clickedColors: IntArray? = null
 
             override fun onAnimationStart(animation: Animator) {
+                if (context == null || isDetached || (activity?.isFinishing ?: true)) return
                 snapshotView.visibility = View.VISIBLE
                 snapshotView.setImageBitmap(snapshotBitmap)
                 val profileDrawable = profileImageView.drawable
@@ -523,6 +524,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     }
 
     private fun displayAccountBanner(account: AccountDetails) {
+        if (context == null || isDetached || (activity?.isFinishing ?: true)) return
         val bannerWidth = accountProfileBanner.width
         val res = resources
         val defWidth = res.displayMetrics.widthPixels
@@ -542,6 +544,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     }
 
     private fun displayCurrentAccount(profileImageSnapshot: Drawable?) {
+        if (context == null || isDetached || (activity?.isFinishing ?: true)) return
         val account = accountsAdapter.selectedAccount ?: return
         accountProfileNameView.text = account.user.name
         accountProfileScreenNameView.text = "@${account.user.screen_name}"

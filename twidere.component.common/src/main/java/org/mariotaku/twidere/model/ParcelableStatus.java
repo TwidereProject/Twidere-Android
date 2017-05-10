@@ -545,7 +545,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
 
     /**
      * Flags for filtering some kind of tweet.
-     * We use bitwise operations against string comparisons because it's much faster.
+     * We use bitwise instead of string comparisons because it's much faster.
      * <p>
      * DO NOT CHANGE ONCE DEFINED!
      */
@@ -580,5 +580,9 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
          * Status possibly sensitive (NSFW etc)
          */
         long POSSIBLY_SENSITIVE = 0x8;
+        /**
+         * Status (or quote) has media
+         */
+        long HAS_MEDIA = 0x10;
     }
 }
