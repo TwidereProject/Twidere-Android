@@ -62,8 +62,7 @@ import org.mariotaku.twidere.activity.ThemedMediaPickerActivity
 import org.mariotaku.twidere.adapter.MediaPreviewAdapter
 import org.mariotaku.twidere.adapter.MessagesConversationAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_CONVERSATION_ID
+import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
@@ -195,6 +194,13 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             addMedia.visibility = View.GONE
         }
 
+        if (savedInstanceState != null) {
+            val list = savedInstanceState.getParcelableArrayList<ParcelableMediaUpdate>(EXTRA_MEDIA)
+            if (list != null) {
+                mediaPreviewAdapter.addAll(list)
+            }
+        }
+
         updateMediaPreview()
 
         loaderManager.initLoader(0, null, this)
@@ -209,6 +215,11 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
     override fun onStop() {
         bus.unregister(this)
         super.onStop()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelableArrayList(EXTRA_MEDIA, ArrayList(mediaPreviewAdapter.asList()))
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
