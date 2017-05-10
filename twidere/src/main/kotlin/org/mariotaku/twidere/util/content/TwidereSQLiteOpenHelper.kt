@@ -210,7 +210,11 @@ class TwidereSQLiteOpenHelper(
             }
         }
         if (oldVersion <= 164) {
-            db.execSQL(SQLQueryBuilder.dropView(true, "messages").sql)
+            try {
+                db.execSQL(SQLQueryBuilder.dropView(true, "messages").sql)
+            } catch (e: IllegalArgumentException) {
+                // Ignore http://crashes.to/s/5f46822a382
+            }
             db.execSQL(SQLQueryBuilder.dropView(true, "messages_conversation_entries").sql)
             db.execSQL(SQLQueryBuilder.dropTrigger(true, "delete_old_received_messages").sql)
             db.execSQL(SQLQueryBuilder.dropTrigger(true, "delete_old_sent_messages").sql)
