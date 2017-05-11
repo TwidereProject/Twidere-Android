@@ -28,6 +28,10 @@ operator fun Bundle.set(key: String, value: String?) {
     return putString(key, value)
 }
 
+operator fun Bundle.set(key: String, value: IntArray?) {
+    return putIntArray(key, value)
+}
+
 operator fun Bundle.set(key: String, value: Parcelable?) {
     return putParcelable(key, value)
 }

@@ -369,7 +369,7 @@ class UpdateStatusTask(
                         mediaIds = pendingUpdate.sharedMediaIds
                     } else {
                         val (ids, deleteOnSuccess, deleteAlways) = uploadMicroBlogMediaShared(context,
-                                upload, account, update.media, ownerIds, true, stateCallback)
+                                upload, account, update.media, null, ownerIds, true, stateCallback)
                         mediaIds = ids
                         deleteOnSuccess.addAllTo(pendingUpdate.deleteOnSuccess)
                         deleteAlways.addAllTo(pendingUpdate.deleteAlways)
@@ -384,7 +384,7 @@ class UpdateStatusTask(
                     // TODO use their native API
                     val upload = account.newMicroBlogInstance(context, cls = TwitterUpload::class.java)
                     val (ids, deleteOnSuccess, deleteAlways) = uploadMicroBlogMediaShared(context,
-                            upload, account, update.media, ownerIds, false, stateCallback)
+                            upload, account, update.media, null, ownerIds, false, stateCallback)
                     mediaIds = ids
                     deleteOnSuccess.addAllTo(pendingUpdate.deleteOnSuccess)
                     deleteAlways.addAllTo(pendingUpdate.deleteAlways)
@@ -697,13 +697,13 @@ class UpdateStatusTask(
 
     companion object {
 
-        private val BULK_SIZE = 256 * 1024// 128 Kib
+        private val BULK_SIZE = 512 * 1024// 512 Kib
 
         @Throws(UploadException::class)
         fun uploadMicroBlogMediaShared(context: Context, upload: TwitterUpload,
                 account: AccountDetails, media: Array<ParcelableMediaUpdate>,
-                ownerIds: Array<String>?, chucked: Boolean, callback: UploadCallback?):
-                SharedMediaUploadResult {
+                mediaCategory: String? = null, ownerIds: Array<String>?, chucked: Boolean,
+                callback: UploadCallback?): SharedMediaUploadResult {
             val deleteOnSuccess = ArrayList<MediaDeletionItem>()
             val deleteAlways = ArrayList<MediaDeletionItem>()
             val mediaIds = media.mapIndexedToArray { index, media ->
@@ -717,7 +717,7 @@ class UpdateStatusTask(
                                 callback?.onUploadingProgressChanged(index, position, length)
                             })
                     if (chucked) {
-                        resp = uploadMediaChucked(upload, body.body, ownerIds)
+                        resp = uploadMediaChucked(upload, body.body, mediaCategory, ownerIds)
                     } else {
                         resp = upload.uploadMedia(body.body, ownerIds)
                     }
@@ -841,11 +841,11 @@ class UpdateStatusTask(
 
         @Throws(IOException::class, MicroBlogException::class)
         private fun uploadMediaChucked(upload: TwitterUpload, body: Body,
-                ownerIds: Array<String>?): MediaUploadResponse {
+                mediaCategory: String? = null, ownerIds: Array<String>?): MediaUploadResponse {
             val mediaType = body.contentType().contentType
             val length = body.length()
             val stream = body.stream()
-            var response = upload.initUploadMedia(mediaType, length, ownerIds)
+            var response = upload.initUploadMedia(mediaType, length, mediaCategory, ownerIds)
             val segments = if (length == 0L) 0 else (length / BULK_SIZE + 1).toInt()
             for (segmentIndex in 0..segments - 1) {
                 val currentBulkSize = Math.min(BULK_SIZE.toLong(), length - segmentIndex * BULK_SIZE).toInt()

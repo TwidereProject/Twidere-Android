@@ -35,6 +35,7 @@ import java.lang.ref.WeakReference
 open class AbsAddMediaTask<Callback>(
         context: Context,
         val sources: Array<Uri>,
+        val types: IntArray?,
         val copySrc: Boolean = false,
         val deleteSrc: Boolean = false
 ) : AbstractTask<Unit, List<ParcelableMediaUpdate>?, Callback>() {
@@ -50,8 +51,9 @@ open class AbsAddMediaTask<Callback>(
             var os: OutputStream? = null
             try {
                 val sourceMimeType = resolver.getType(source)
-                val mediaType = sourceMimeType?.let {
+                val mediaType = types?.get(index) ?: sourceMimeType?.let {
                     return@let when {
+                        it == "image/gif" -> ParcelableMedia.Type.ANIMATED_GIF
                         it.startsWith("video/") -> ParcelableMedia.Type.VIDEO
                         it.startsWith("image/") -> ParcelableMedia.Type.IMAGE
                         else -> ParcelableMedia.Type.IMAGE

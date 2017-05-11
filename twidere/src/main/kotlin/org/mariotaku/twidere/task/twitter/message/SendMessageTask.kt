@@ -29,10 +29,11 @@ import org.mariotaku.microblog.library.twitter.model.NewDm
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.model.api.*
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.ParcelableNewMessage
 import org.mariotaku.twidere.model.event.SendMessageTaskEvent
@@ -86,6 +87,8 @@ class SendMessageTask(
             AccountType.TWITTER -> {
                 if (account.isOfficial(context)) {
                     return sendTwitterOfficialDM(microBlog, account, message)
+                } else {
+                    return sendTwitterMessageEvent(microBlog, account, message)
                 }
             }
             AccountType.FANFOU -> {
@@ -114,7 +117,7 @@ class SendMessageTask(
             if (message.media.isNotNullOrEmpty()) {
                 val upload = account.newMicroBlogInstance(context, cls = TwitterUpload::class.java)
                 val uploadResult = UpdateStatusTask.uploadMicroBlogMediaShared(context,
-                        upload, account, message.media, null, true, null)
+                        upload, account, message.media, null, null, true, null)
                 newDm.setMediaId(uploadResult.ids[0])
                 deleteAlways = uploadResult.deleteAlways
                 deleteOnSuccess = uploadResult.deleteOnSuccess
@@ -136,6 +139,38 @@ class SendMessageTask(
         return GetMessagesTask.createDatabaseUpdateData(context, account, response, profileImageSize)
     }
 
+    private fun sendTwitterMessageEvent(microBlog: MicroBlog, account: AccountDetails,
+            message: ParcelableNewMessage): GetMessagesTask.DatabaseUpdateData {
+        val recipientId = message.recipient_ids.singleOrNull() ?: throw MicroBlogException("No recipient")
+        val category = when (message.media?.firstOrNull()?.type) {
+            ParcelableMedia.Type.IMAGE -> "dm_image"
+            ParcelableMedia.Type.VIDEO -> "dm_video"
+            ParcelableMedia.Type.ANIMATED_GIF -> "dm_gif"
+            else -> null
+        }
+        val response = uploadMediaThen(account, message, category) { mediaId ->
+            val obj = DirectMessageEventObject {
+                type = "message_create"
+                messageCreate {
+                    target { this.recipientId = recipientId }
+                    messageData {
+                        text = message.text
+                        if (mediaId != null) {
+                            attachment {
+                                type = "media"
+                                media {
+                                    id = mediaId
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return@uploadMediaThen microBlog.newDirectMessageEvent(obj)
+        }
+        return createDatabaseUpdateData(account, microBlog.showDirectMessage(response.event.id))
+    }
+
     private fun sendFanfouDM(microBlog: MicroBlog, account: AccountDetails, message: ParcelableNewMessage): GetMessagesTask.DatabaseUpdateData {
         val recipientId = message.recipient_ids.singleOrNull() ?: throw MicroBlogException("No recipient")
         val response = microBlog.sendFanfouDirectMessage(recipientId, message.text)
@@ -143,24 +178,34 @@ class SendMessageTask(
     }
 
     private fun sendDefaultDM(microBlog: MicroBlog, account: AccountDetails, message: ParcelableNewMessage): GetMessagesTask.DatabaseUpdateData {
-        var deleteOnSuccess: List<UpdateStatusTask.MediaDeletionItem>? = null
-        var deleteAlways: List<UpdateStatusTask.MediaDeletionItem>? = null
         val recipientId = message.recipient_ids.singleOrNull() ?: throw MicroBlogException("No recipient")
-        val response = try {
-            var mediaId: String? = null
-            if (message.media.isNotNullOrEmpty()) {
-                val upload = account.newMicroBlogInstance(context, cls = TwitterUpload::class.java)
-                val uploadResult = UpdateStatusTask.uploadMicroBlogMediaShared(context,
-                        upload, account, message.media, null, true, null)
-                mediaId = uploadResult.ids[0]
-                deleteAlways = uploadResult.deleteAlways
-                deleteOnSuccess = uploadResult.deleteOnSuccess
-            }
+        val response = uploadMediaThen(account, message) { mediaId ->
             if (mediaId != null) {
                 microBlog.sendDirectMessage(recipientId, message.text, mediaId)
             } else {
                 microBlog.sendDirectMessage(recipientId, message.text)
             }
+        }
+        return createDatabaseUpdateData(account, response)
+    }
+
+    private fun <T> uploadMediaThen(account: AccountDetails, message: ParcelableNewMessage,
+            category: String? = null, action: (mediaId: String?) -> T): T {
+        var deleteOnSuccess: List<UpdateStatusTask.MediaDeletionItem>? = null
+        var deleteAlways: List<UpdateStatusTask.MediaDeletionItem>? = null
+        try {
+            var mediaId: String? = null
+            if (message.media.isNotNullOrEmpty()) {
+                val upload = account.newMicroBlogInstance(context, cls = TwitterUpload::class.java)
+                val uploadResult = UpdateStatusTask.uploadMicroBlogMediaShared(context,
+                        upload, account, message.media, category, null, true, null)
+                mediaId = uploadResult.ids[0]
+                deleteAlways = uploadResult.deleteAlways
+                deleteOnSuccess = uploadResult.deleteOnSuccess
+            }
+            val result = action(mediaId)
+            deleteOnSuccess?.forEach { it.delete(context) }
+            return result
         } catch (e: UpdateStatusTask.UploadException) {
             e.deleteAlways?.forEach {
                 it.delete(context)
@@ -169,8 +214,6 @@ class SendMessageTask(
         } finally {
             deleteAlways?.forEach { it.delete(context) }
         }
-        deleteOnSuccess?.forEach { it.delete(context) }
-        return createDatabaseUpdateData(account, response)
     }
 
     private fun createDatabaseUpdateData(details: AccountDetails, dm: DirectMessage): GetMessagesTask.DatabaseUpdateData {

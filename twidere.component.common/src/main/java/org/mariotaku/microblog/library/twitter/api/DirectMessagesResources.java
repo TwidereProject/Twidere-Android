@@ -22,19 +22,16 @@ import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.DirectMessage;
 import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.microblog.library.twitter.model.ResponseList;
+import org.mariotaku.microblog.library.twitter.template.DirectMessageAnnotationTemplate;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
-import org.mariotaku.restfu.annotation.param.KeyValue;
 import org.mariotaku.restfu.annotation.param.Param;
 import org.mariotaku.restfu.annotation.param.Params;
 import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.restfu.http.BodyType;
 
 @SuppressWarnings("RedundantThrows")
-@Params({@KeyValue(key = "full_text", valueKey = "full_text"),
-        @KeyValue(key = "include_entities", valueKey = "include_entities"),
-        @KeyValue(key = "include_cards", valueKey = "include_cards"),
-        @KeyValue(key = "cards_platform", valueKey = "cards_platform")})
+@Params(template = DirectMessageAnnotationTemplate.class)
 public interface DirectMessagesResources {
 
     @POST("/direct_messages/destroy.json")

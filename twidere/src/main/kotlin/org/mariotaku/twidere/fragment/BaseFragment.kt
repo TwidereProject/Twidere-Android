@@ -33,6 +33,7 @@ import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.util.gifshare.GifShareProvider
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
 import org.mariotaku.twidere.util.sync.SyncPreferences
@@ -73,6 +74,8 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     @Inject
     lateinit var timelineSyncManagerFactory: TimelineSyncManager.Factory
     @Inject
+    lateinit var gifShareProviderFactory: GifShareProvider.Factory
+    @Inject
     lateinit var restHttpClient: RestHttpClient
     @Inject
     lateinit var dns: Dns
@@ -84,6 +87,9 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
 
     protected val timelineSyncManager: TimelineSyncManager?
         get() = timelineSyncManagerFactory.get()
+
+    protected val gifShareProvider: GifShareProvider?
+        get() = gifShareProviderFactory.newInstance(context)
 
     private val actionHelper = IBaseFragment.ActionHelper(this)
 

@@ -18,6 +18,7 @@
 
 package org.mariotaku.microblog.library.twitter;
 
+import org.mariotaku.microblog.library.twitter.api.DirectMessagesEventResources;
 import org.mariotaku.microblog.library.twitter.api.DirectMessagesResources;
 import org.mariotaku.microblog.library.twitter.api.FavoritesResources;
 import org.mariotaku.microblog.library.twitter.api.FriendsFollowersResources;
@@ -37,7 +38,8 @@ import org.mariotaku.microblog.library.twitter.api.UsersResources;
  * Created by mariotaku on 16/5/13.
  */
 public interface Twitter extends SearchResources, TimelineResources, TweetResources, UsersResources,
-        ListResources, DirectMessagesResources, FriendsFollowersResources, FavoritesResources,
-        SpamReportingResources, SavedSearchesResources, TrendsResources, PlacesGeoResources,
+        ListResources, DirectMessagesResources, DirectMessagesEventResources,
+        FriendsFollowersResources, FavoritesResources, SpamReportingResources,
+        SavedSearchesResources, TrendsResources, PlacesGeoResources,
         HelpResources, MutesResources, TwitterPrivate {
 }

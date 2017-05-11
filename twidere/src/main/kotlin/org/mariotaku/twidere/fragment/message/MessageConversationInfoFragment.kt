@@ -405,7 +405,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
                                 this.delete_always = true
                             })
                             val uploadResult = UpdateStatusTask.uploadMicroBlogMediaShared(context,
-                                    upload, account, media, null, true, null)
+                                    upload, account, media, null, null, true, null)
                             deleteAlways = uploadResult.deleteAlways
                             val avatarId = uploadResult.ids.first()
                             val result = microBlog.updateDmConversationAvatar(conversationId, avatarId)
