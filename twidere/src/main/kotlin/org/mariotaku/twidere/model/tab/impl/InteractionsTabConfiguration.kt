@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.model.tab.impl
 
+import android.accounts.AccountManager
 import android.content.Context
 import android.view.View
 import android.widget.CheckBox
@@ -97,14 +98,18 @@ class InteractionsTabConfiguration : TabConfiguration() {
             val titleView = view.findViewById(android.R.id.title) as TextView
             val summaryView = view.findViewById(android.R.id.summary) as TextView
 
-            var requiresOfficial = false
+            var requiresStreaming = false
             var interactionsAvailable = false
+
             if (account == null || account.dummy) {
-                requiresOfficial = AccountUtils.hasOfficialKeyAccount(context)
+                val am = AccountManager.get(context)
+                val accounts = AccountUtils.getAllAccountDetails(am, false)
+                interactionsAvailable = accounts.any { it.supportsInteractions }
+                requiresStreaming = accounts.all { it.requiresStreaming }
             } else when (account.type) {
                 AccountType.TWITTER -> {
-                    requiresOfficial = true
-                    interactionsAvailable = account.isOfficial(context)
+                    interactionsAvailable = true
+                    requiresStreaming = !account.isOfficial(context)
                 }
                 AccountType.MASTODON -> {
                     interactionsAvailable = true
@@ -117,12 +122,12 @@ class InteractionsTabConfiguration : TabConfiguration() {
             checkBox.isEnabled = interactionsAvailable
             if (interactionsAvailable) {
                 checkBox.isChecked = valueBackup
-                summaryView.visibility = View.GONE
-            } else if (requiresOfficial) {
-                valueBackup = checkBox.isChecked
-                checkBox.isChecked = true
-                summaryView.setText(R.string.summary_interactions_official_required)
-                summaryView.visibility = View.VISIBLE
+                if (requiresStreaming) {
+                    summaryView.setText(R.string.summary_interactions_streaming_required)
+                    summaryView.visibility = View.VISIBLE
+                } else {
+                    summaryView.visibility = View.GONE
+                }
             } else {
                 valueBackup = checkBox.isChecked
                 checkBox.isChecked = true
@@ -151,6 +156,12 @@ class InteractionsTabConfiguration : TabConfiguration() {
             }
 
         }
+
+        private val AccountDetails.supportsInteractions: Boolean
+            get() = type == AccountType.TWITTER || type == AccountType.MASTODON
+
+        private val AccountDetails.requiresStreaming: Boolean
+            get() = !isOfficial(context)
     }
 
 }
