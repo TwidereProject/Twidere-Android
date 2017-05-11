@@ -101,7 +101,7 @@ public class InternalTwitterContentUtils {
     public static Pair<String, SpanItem[]> formatUserDescription(@NonNull final User user) {
         final String text = user.getDescription();
         if (text == null) return null;
-        final HtmlBuilder builder = new HtmlBuilder(text, false, true, true);
+        final HtmlBuilder builder = new HtmlBuilder(text, false, true, false);
         final UrlEntity[] urls = user.getDescriptionEntities();
         if (urls != null) {
             for (final UrlEntity url : urls) {
