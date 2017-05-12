@@ -1073,6 +1073,7 @@ class UpdateStatusTask(
             return (width <= this.maxWidth && height <= this.maxHeight) || (height <= this.maxWidth
                     && width <= this.maxHeight)
         }
+
     }
 
 }

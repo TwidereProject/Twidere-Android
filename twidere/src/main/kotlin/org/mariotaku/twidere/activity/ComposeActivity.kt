@@ -1782,10 +1782,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         editText.customSelectionActionModeCallback = this
         editText.imageInputListener = { contentInfo ->
             val task = AddMediaTask(this, arrayOf(contentInfo.contentUri), null, true, false)
-            TaskStarter.execute(task)
             task.callback = {
                 contentInfo.releasePermission()
             }
+            TaskStarter.execute(task)
         }
         editTextContainer.touchDelegate = ComposeEditTextTouchDelegate(editTextContainer, editText)
     }

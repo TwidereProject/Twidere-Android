@@ -37,7 +37,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.*
-import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.activity_premium_dashboard.*
@@ -88,6 +87,7 @@ import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.PreviewGridItemDecoration
 import org.mariotaku.twidere.view.ExtendedRecyclerView
 import org.mariotaku.twidere.view.holder.compose.MediaPreviewViewHolder
+import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicReference
 
 class MessagesConversationFragment : AbsContentListRecyclerViewFragment<MessagesConversationAdapter>(),
@@ -182,6 +182,8 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
 
         conversationAvatar.style = preferences[profileImageStyleKey]
 
+        setupEditText()
+
         // No refresh for this fragment
         refreshEnabled = false
         adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.NONE
@@ -227,7 +229,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
                     Activity.RESULT_OK -> if (data != null) {
                         val mediaUris = MediaPickerActivity.getMediaUris(data)
                         val types = data.getBundleExtra(MediaPickerActivity.EXTRA_EXTRAS)?.getIntArray(EXTRA_TYPES)
-                        TaskStarter.execute(AddMediaTask(this, mediaUris, types))
+                        TaskStarter.execute(AddMediaTask(this, mediaUris, types, false, false))
                     }
                     RESULT_SEARCH_GIF -> {
                         val provider = gifShareProvider ?: return
@@ -515,24 +517,43 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
                 .into(conversationAvatar)
     }
 
+    private fun setupEditText() {
+        editText.imageInputListener = { contentInfo ->
+            val type = if (contentInfo.description.mimeTypeCount > 0) {
+                AbsAddMediaTask.inferMediaType(contentInfo.description.getMimeType(0))
+            } else {
+                ParcelableMedia.Type.IMAGE
+            }
+            val task = AddMediaTask(this, arrayOf(contentInfo.contentUri), intArrayOf(type), true,
+                    false)
+            task.callback = {
+                contentInfo.releasePermission()
+            }
+            TaskStarter.execute(task)
+        }
+    }
+
     internal class AddMediaTask(
             fragment: MessagesConversationFragment,
             sources: Array<Uri>,
-            types: IntArray?
-    ) : AbsAddMediaTask<MessagesConversationFragment>(fragment.context, sources, types) {
+            types: IntArray?,
+            copySrc: Boolean,
+            deleteSrc: Boolean
+    ) : AbsAddMediaTask<((List<ParcelableMediaUpdate>?) -> Unit)?>(fragment.context, sources, types, copySrc, deleteSrc) {
 
-        init {
-            callback = fragment
-        }
+        private val fragmentRef = WeakReference(fragment)
 
-        override fun afterExecute(callback: MessagesConversationFragment?, result: List<ParcelableMediaUpdate>?) {
-            if (callback == null || result == null) return
-            callback.setProgressVisible(false)
-            callback.attachMedia(result)
+        override fun afterExecute(callback: ((List<ParcelableMediaUpdate>?) -> Unit)?, result: List<ParcelableMediaUpdate>?) {
+            callback?.invoke(result)
+            val fragment = fragmentRef.get()
+            if (fragment != null && result != null) {
+                fragment.setProgressVisible(false)
+                fragment.attachMedia(result)
+            }
         }
 
         override fun beforeExecute() {
-            val fragment = callback ?: return
+            val fragment = fragmentRef.get() ?: return
             fragment.setProgressVisible(true)
         }
 
@@ -551,10 +572,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         override fun afterExecute(callback: MessagesConversationFragment?, result: BooleanArray) {
             if (callback == null) return
             callback.setProgressVisible(false)
-            callback.removeMedia(media.filterIndexed { i, _ -> result[i] })
-            if (result.contains(false)) {
-                Toast.makeText(callback.context, R.string.message_toast_error_occurred, Toast.LENGTH_SHORT).show()
-            }
+            callback.removeMedia(media.toList())
         }
 
         override fun beforeExecute() {
