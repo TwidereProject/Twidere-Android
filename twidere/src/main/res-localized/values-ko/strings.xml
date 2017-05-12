@@ -107,7 +107,9 @@
   <string name="action_status_attachment">첨부 파일 트윗</string>
   <string name="action_status_block_users">사용자 차단...</string>
   <string name="action_status_mute_users">사용자 뮤트...</string>
+  <string name="action_status_pin">트윗 고정하기</string>
   <string name="action_status_schedule">트윗 예약</string>
+  <string name="action_status_unpin">트윗 고정 해제하기</string>
   <string name="action_subscribe">구독</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
   <string name="action_sync_connect_to_storage">연결</string>
@@ -136,10 +138,33 @@
   <string name="activity_about_me_favorited_media_tagged_multi"><xliff:g id="user">%1$s </xliff:g>님과 <xliff:g id="other">%2$s</xliff:g>님이 당신이 태그된 트윗을 관심글로 지정했습니다</string>
   <string name="activity_about_me_favorited_mention"><xliff:g id="user">%s</xliff:g>님이 당신에게 멘션한 트윗을 관심글로 지정했습니다</string>
   <string name="activity_about_me_favorited_mention_multi"><xliff:g id="user">%1$s </xliff:g>님과 <xliff:g id="other">%2$s</xliff:g>님이 당신을 멘션한 트윗을 관심글로 지정했습니다</string>
+  <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g>님이 당신의 리트윗을 관심글로 지정했습니다</string>
+  <string name="activity_about_me_favorited_retweet_multi"><xliff:g id="user">%1$s </xliff:g>님과 <xliff:g id="other">%2$s</xliff:g>님이 당신의 리트윗을 관심글로 지정했습니다</string>
+  <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g>님이 당신을 팔로우했습니다</string>
+  <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s </xliff:g>님과 <xliff:g id="other">%2$s</xliff:g>님이 당신을 팔로우했습니다</string>
   <string name="activity_about_me_like"><xliff:g id="user">%s </xliff:g>님이 좋아합니다</string>
   <string name="activity_about_me_like_multi"><xliff:g id="user">%1$s</xliff:g>님과 <xliff:g id="other">%2$s</xliff:g>님이 좋아합니다</string>
   <string name="activity_about_me_liked_media_tagged"><xliff:g id="user">%s</xliff:g>님이 당신이 태그된 글을 마음에 들어합니다</string>
   <string name="activity_about_me_liked_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g>님과 <xliff:g id="other">%2$s</xliff:g>님이 당신이 태그된 트윗을 마음에 들어합니다</string>
+  <string name="activity_about_me_liked_mention"><xliff:g id="user">%s</xliff:g>님이 당신에게 멘션한 트윗을 마음에 들어합니다</string>
+  <string name="activity_about_me_liked_mention_multi"><xliff:g id="user">%1$s</xliff:g>님과 <xliff:g id="other">%2$s</xliff:g>님이 당신이 멘션된 트윗을 마음에 들어합니다</string>
+  <string name="activity_about_me_liked_retweet"><xliff:g id="user">%s</xliff:g>님이 당신의 리트윗을 마음에 들어합니다</string>
+  <string name="activity_about_me_liked_retweet_multi"><xliff:g id="user">%1$s </xliff:g>님과 <xliff:g id="other">%2$s</xliff:g>님이 당신의 리트윗을 마음에 들어합니다</string>
+  <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g>님이 당신을 리스트에 추가했습니다</string>
+  <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s </xliff:g>님과 <xliff:g id="other">%2$s</xliff:g>님이 당신을 리스트에 추가했습니다</string>
+  <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g>님이 당신을 리스트 "<xliff:g id="list">%2$s</xliff:g>\"에 추가했습니다</string>
+  <string name="activity_about_me_media_tagged"><xliff:g id="user">%s</xliff:g>님이 당신을 태그했습니다</string>
+  <string name="activity_about_me_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g>님과 <xliff:g id="other">%2$s</xliff:g>님이 당신을 태그했습니다</string>
+  <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g>님이 리트윗했습니다</string>
+  <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s </xliff:g>님과 <xliff:g id="other">%2$s</xliff:g>님이 리트윗했습니다</string>
+  <string name="activity_about_me_retweeted_media_tagged"><xliff:g id="user">%s</xliff:g>님이 당신이 태그된 트윗을 리트윗했습니다</string>
+  <string name="activity_about_me_retweeted_media_tagged_multi"><xliff:g id="user">%1$s </xliff:g>님과 <xliff:g id="other">%2$s</xliff:g>님이 당신이 태그된 트윗을 리트윗했습니다</string>
+  <string name="activity_about_me_retweeted_mention"><xliff:g id="user">%s</xliff:g>님이 당신에게 멘션한 트윗을 리트윗했습니다</string>
+  <string name="activity_about_me_retweeted_mention_multi"><xliff:g id="user">%1$s </xliff:g>님과 <xliff:g id="other">%2$s</xliff:g>님이 당신을 멘션한 트윗을 리트윗했습니다</string>
+  <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g>님이 당신의 리트윗을 리트윗했습니다</string>
+  <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s </xliff:g>님과 <xliff:g id="other">%2$s</xliff:g>님이 당신의 리트윗을 리트윗했습니다</string>
+  <string name="activity_joined_twitter"><xliff:g id="user">%s</xliff:g>님이 트위터에 가입했습니다</string>
+  <string name="activity_joined_twitter_multi"><xliff:g id="user">%1$s </xliff:g>님과 <xliff:g id="other">%2$s</xliff:g>님이 트위터에 가입했습니다</string>
   <string name="add_account">계정 추가</string>
   <string name="add_host_mapping">호스트 매핑 추가</string>
   <string name="add_image">이미지 추가</string>
@@ -380,9 +405,13 @@
   <string name="label_background_operation_service">백그라운드 동작 서비스</string>
   <string name="label_buffer_accounts">Buffer 계정</string>
   <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_g">G</string>
   <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_pg">PG</string>
   <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_pg13">PG-13</string>
   <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_r">R</string>
   <string name="label_content_warning">콘텐츠 경고</string>
   <string name="label_data_provider">Twidere 데이터베이스 제공자</string>
   <string name="label_filters_subscription">구독</string>
@@ -491,6 +520,7 @@
   <string name="message_permission_request_save_media">Twidere가 미디어를 저장하기 위해 저장소 권한이 필요합니다.</string>
   <string name="message_permission_request_share_media">Twidere는 다른 앱과 미디어를 공유하기 위해 저장소 권한이 필요합니다.</string>
   <string name="message_please_wait">기다려 주세요.</string>
+  <string name="message_status_scheduling_connected_to_buffer">Twidere가 buffer에 연결되었습니다.</string>
   <string name="message_summary_type_sticker">[스티커]</string>
   <string name="message_sync_data_connect_hint">데이터 동기화를 위해 Twidere를 네트워크 저장소와 연결</string>
   <string name="message_sync_data_synced_with_name">지금부터 Twidere를 <xliff:g example="ownCloud" id="name">%s</xliff:g>와 동기합니다.</string>
@@ -912,25 +942,34 @@
   <string name="title_message_conversation_info">대화 정보</string>
   <string name="title_nicknames">별명</string>
   <string name="title_open_source_license">오픈 소스 라이센스</string>
+  <string name="title_pin_status_confirm">트윗 고정하기</string>
   <string name="title_premium_features_name">Twidere ∞</string>
   <string name="title_public_timeline">공개 타임라인</string>
+  <string name="title_quick_action">빠른 동작</string>
   <string name="title_retweet_quote_confirm">팔로워들에게 리트윗할까요?</string>
+  <string name="title_scheduled_statuses">예약된 트윗</string>
   <string name="title_search">검색</string>
+  <string name="title_search_gif">GIF 검색</string>
   <string name="title_select_users">사용자 선택</string>
   <string name="title_set_nickname">별명 설정</string>
   <string name="title_status">트윗</string>
   <string name="title_statuses">트윗</string>
+  <string name="title_statuses_and_replies">트윗 &amp; 답글</string>
   <string name="title_streaming">스트리밍</string>
   <string name="title_subscription_name">이름</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
   <string name="title_sync">데이터 동기화</string>
   <string name="title_sync_settings">동기화 설정</string>
+  <string name="title_unpin_status_confirm">트윗 고정 해제하기</string>
   <string name="title_user">사용자</string>
   <string name="title_user_colors">사용자 색상</string>
+  <string name="title_user_feedback">피드백</string>
+  <string name="title_user_list">리스트</string>
   <string name="title_user_list_memberships">다음에 속함:</string>
   <string name="title_user_list_ownerships">작성자</string>
   <string name="title_user_list_subscriptions">구독</string>
+  <string name="title_user_timeline_filter">타임라인 필터</string>
   <string name="title_users_favorited_this">이 트윗을 마음에 들어하는 사용자</string>
   <string name="title_users_liked_this">이 트윗을 마음에 들어하는 사용자들</string>
   <string name="title_users_retweeted_this">리트윗한 사용자</string>

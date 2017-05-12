@@ -107,7 +107,9 @@
   <string name="action_status_attachment">Tweet-Anhang</string>
   <string name="action_status_block_users">Blockiere Benutzer&#8230;</string>
   <string name="action_status_mute_users">Benutzer stummschalten&#8230;</string>
+  <string name="action_status_pin">Tweet anheften</string>
   <string name="action_status_schedule">Tweet-Zeitplan</string>
+  <string name="action_status_unpin">Tweet lösen</string>
   <string name="action_subscribe">Abonnieren</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
   <string name="action_sync_connect_to_storage">Verbinden</string>
@@ -406,6 +408,8 @@
   <string name="label_content_rating_r">FSK 16</string>
   <string name="label_content_warning">Inhaltswarnung</string>
   <string name="label_data_provider">Twidere Datenbank-Anbieter</string>
+  <string name="label_feedback_content">Inhalt</string>
+  <string name="label_feedback_title">Betreff</string>
   <string name="label_filters_subscription">Abonnement</string>
   <string name="label_follow_request_sent">Folgeanfrage gesendet</string>
   <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> via <xliff:g example="api" id="source">%2$s</xliff:g></string>
@@ -475,6 +479,7 @@
   <string name="location_countrywide">Landesweit</string>
   <string name="login_challenge_retype_email_hint">Mit deinem Twitter-Konto verbundene E-Mail-Adresse neu tippen.</string>
   <string name="login_challenge_retype_phone_hint">Mit deinem Twitter-Konto verbundene Telefonnummer neu tippen.</string>
+  <string name="login_type_default">Standard</string>
   <string name="login_verification">Login-Verifizierung</string>
   <string name="login_verification_pin_hint">Schau in deinem Telefon nach einer PIN und gebe sie ein, um dich einzuloggen.</string>
   <string name="login_verification_push_hint">Akzeptiere die Login-Verifizierungsanfrage der Twitter-App und tippe auf OK, wenn du die Anfrage bestätigt hast.</string>
@@ -521,6 +526,7 @@
   <string name="message_permission_request_compose_location">Twidere benötigt die Standortberechtigung um in Tweets den Standort hinzuzufügen.</string>
   <string name="message_permission_request_save_media">Twidere benötigt die Speicherberechtigung um Medien zu speichern.</string>
   <string name="message_permission_request_share_media">Twidere benötigt die Speicherberechtigung um Medien mit anderen Apps zu teilen.</string>
+  <string name="message_pin_status_confirm">Diesen Tweet anheften? Dies wird den vorher angehefteten Tweet ersetzen.</string>
   <string name="message_please_wait">Bitte warten.</string>
   <string name="message_status_reply_to_user_removed_explanation">Twitter erwähnt immer den Benutzer in einer Antwort. Wenn dieser Benutzer entfernt wurde, wird Twidere diese Antwort als Zitat senden, um den Kontext zu erhalten.</string>
   <string name="message_status_scheduling_connect_buffer_hint">Mit Buffer verbinden, um Tweets offline zu planen</string>
@@ -573,20 +579,24 @@
   <string name="message_toast_search_saved">Suche gespeichert.</string>
   <string name="message_toast_select_file_no_storage_permission">Speicherberechtigung notwendig um Dateien auszuwählen.</string>
   <string name="message_toast_share_media_no_storage_permission">Die Anwendung erfordert die Speicherberechtigung, um Medien zu teilen.</string>
+  <string name="message_toast_ssl_tls_error">TLS Fehler, bitte überprüfe die Systemzeit und deine Proxy Einstellungen</string>
   <string name="message_toast_status_deleted">Tweet gelöscht.</string>
   <string name="message_toast_status_favorited">Tweet favorisiert.</string>
   <string name="message_toast_status_like_removed">Like entfernt.</string>
   <string name="message_toast_status_liked">Tweet gefällt</string>
+  <string name="message_toast_status_pinned">Tweet angeheftet</string>
   <string name="message_toast_status_retweeted">Retweeted</string>
   <string name="message_toast_status_saved_to_draft">Tweet als Entwurf gespeichert.</string>
   <string name="message_toast_status_scheduled">Tweet geplant</string>
   <string name="message_toast_status_unfavorited">Tweet nicht favorisiert.</string>
+  <string name="message_toast_status_unpinned">Tweet gelöst</string>
   <string name="message_toast_status_updated">Tweet gesendet.</string>
   <string name="message_toast_unable_to_load_more_statuses">Frühere Tweets konnten nicht geladen werden</string>
   <string name="message_toast_user_filters_removed">Der Benutzer wurde von der Filterliste entfernt.</string>
   <string name="message_toast_users_filters_added">Benutzer wurden zur Filterliste hinzugefügt. Du wirst keine Tweets von diesen Benutzern in Deiner Timeline-/Erwähnungsliste sehen.</string>
   <string name="message_toast_wrong_api_key">Inkorrekte API URL oder Consumer Key/Secret. Bitte nochmals prüfen.</string>
   <string name="message_toast_wrong_username_password">Falscher Benutzername/Passwort</string>
+  <string name="message_unpin_status_confirm">Diesen Tweet lösen?</string>
   <string name="message_video_too_long">Das Video ist zu lang</string>
   <string name="message_video_too_short">Das Video ist zu kurz</string>
   <string name="multi_select">Mehrfachauswahl</string>
@@ -697,6 +707,7 @@
   <string name="preference_summary_media_preload_non_metered_network">Medien nur in freien Netzwerken wie Wi-Fi vorladen</string>
   <string name="preference_summary_streaming_non_metered_network">Streamen nur in unbeschränkten Netzen, wie z.B. WLANs</string>
   <string name="preference_summary_streaming_power_saving">Nur beim Laden streamen</string>
+  <string name="preference_summary_sync_timeline_positions">Wenn \"Position merken\" aktiviert ist</string>
   <string name="preference_summary_trends_location">Du kannst jetzt den Standort in den Tab-Einstellungen separat festlegen.</string>
   <string name="preference_title_accounts">Konten</string>
   <string name="preference_title_advanced">Erweiterte</string>
@@ -823,6 +834,7 @@
   <string name="search_hint">Tweets oder Benutzer suchen</string>
   <string name="search_hint_users">Benutzer suchen</string>
   <string name="search_statuses">Tweets suchen</string>
+  <string name="search_type_local">Lokal</string>
   <string name="search_type_media">Medien</string>
   <string name="search_type_statuses">Tweets</string>
   <string name="search_type_users">Benutzer</string>
@@ -894,6 +906,7 @@
   <string name="style">Stil</string>
   <string name="subscribed_to_list">Liste \"<xliff:g id="list">%s</xliff:g>\" abonniert.</string>
   <string name="subscribers">Abonnent</string>
+  <string name="summary_interactions_account_not_supported">Account wird nicht unterstützt</string>
   <string name="swipe_down_to_refresh">Ziehen zum Aktualisieren</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="sync_provider_name_google_drive">Google Drive</string>
@@ -969,6 +982,7 @@
   <string name="title_network_public_timeline">Föderierte Zeitleiste</string>
   <string name="title_nicknames">Spitznamen</string>
   <string name="title_open_source_license">Open-Source-Lizenz</string>
+  <string name="title_pin_status_confirm">Tweet anheften</string>
   <string name="title_premium_features_name">Twidere ∞</string>
   <string name="title_public_timeline">Öffentliche Zeitleiste</string>
   <string name="title_quick_action">Schnellaktion</string>
@@ -989,8 +1003,10 @@
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
   <string name="title_sync">Datensynchronisierung</string>
   <string name="title_sync_settings">Synchronisierungseinstellungen</string>
+  <string name="title_unpin_status_confirm">Tweet lösen</string>
   <string name="title_user">Benutzer</string>
   <string name="title_user_colors">benutzerdefinierte Farben</string>
+  <string name="title_user_feedback">Feedback</string>
   <string name="title_user_list">Liste</string>
   <string name="title_user_list_memberships">Gehört zu</string>
   <string name="title_user_list_ownerships">Erstellt</string>

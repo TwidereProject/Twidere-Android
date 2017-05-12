@@ -145,12 +145,12 @@
   <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g> y <xliff:g id="other">%2$s</xliff:g> te han empezado a seguir</string>
   <string name="activity_about_me_like">A <xliff:g id="user">%s</xliff:g> le gustó</string>
   <string name="activity_about_me_like_multi">A <xliff:g id="user">%1$s</xliff:g> y <xliff:g id="other">%2$s</xliff:g> les gustó</string>
-  <string name="activity_about_me_liked_media_tagged">A <xliff:g id="user">%s</xliff:g> le gustó un tweet en el que fuiste etiquetado</string>
-  <string name="activity_about_me_liked_media_tagged_multi">A <xliff:g id="user">%1$s</xliff:g> y <xliff:g id="other">%2$s</xliff:g> les gustó un tweet en el que fuiste etiquetado</string>
-  <string name="activity_about_me_liked_mention">A <xliff:g id="user">%s</xliff:g> le gustó un tweet en el que fuiste mencionado</string>
-  <string name="activity_about_me_liked_mention_multi">A <xliff:g id="user">%1$s</xliff:g> y <xliff:g id="other">%2$s</xliff:g> les gustó un tweet en el que fuiste mencionado</string>
-  <string name="activity_about_me_liked_retweet">A <xliff:g id="user">%s</xliff:g> le gustó tu retweet</string>
-  <string name="activity_about_me_liked_retweet_multi">A <xliff:g id="user">%1$s</xliff:g> y <xliff:g id="other">%2$s</xliff:g> les gustó tu reweet</string>
+  <string name="activity_about_me_liked_media_tagged">A <xliff:g id="user">%s</xliff:g> le gustó un tuit en el que fuiste etiquetado</string>
+  <string name="activity_about_me_liked_media_tagged_multi">A <xliff:g id="user">%1$s</xliff:g> y <xliff:g id="other">%2$s</xliff:g> les gustó un tuit en el que fuiste etiquetado</string>
+  <string name="activity_about_me_liked_mention">A <xliff:g id="user">%s</xliff:g> le gustó un tuit en el que fuiste mencionado</string>
+  <string name="activity_about_me_liked_mention_multi">A <xliff:g id="user">%1$s</xliff:g> y <xliff:g id="other">%2$s</xliff:g> les gustó un tuit en el que fuiste mencionado</string>
+  <string name="activity_about_me_liked_retweet">A <xliff:g id="user">%s</xliff:g> le gustó tu retuit</string>
+  <string name="activity_about_me_liked_retweet_multi">A <xliff:g id="user">%1$s</xliff:g> y <xliff:g id="other">%2$s</xliff:g> les gustó tu retuit</string>
   <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> te añadió a la lista</string>
   <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> y <xliff:g id="other">%2$s</xliff:g> te añadieron a sus listas</string>
   <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> te añadió a la lista <xliff:g id="list">%2$s</xliff:g></string>
@@ -372,7 +372,7 @@
   <string name="host_mapping_address">Dirección (puede ser otra dirección de host)</string>
   <string name="host_mapping_host">Host</string>
   <string name="i_want_my_stars_back">Quiero las estrellas de vuelta!</string>
-  <string name="i_want_my_stars_back_summary">Usar favorito (★) en vez de me gusta (♥︎)</string>
+  <string name="i_want_my_stars_back_summary">Usar favorito (★) en vez de Me gusta (♥︎)</string>
   <string name="icon">Icono</string>
   <string name="icon_restored_message">Icono restaurado</string>
   <string name="import_export_settings">Importar/Exportar ajustes</string>
@@ -583,8 +583,8 @@
   <string name="message_toast_ssl_tls_error">Error TLS. Por favor, comprueba tu reloj o la configuración del proxy</string>
   <string name="message_toast_status_deleted">Tweet eliminado</string>
   <string name="message_toast_status_favorited">Tweet marcado como favorito</string>
-  <string name="message_toast_status_like_removed">\"Me gusta\" borrado</string>
-  <string name="message_toast_status_liked">El twit ha gustado</string>
+  <string name="message_toast_status_like_removed">Ya no te gusta el tuit</string>
+  <string name="message_toast_status_liked">Te gusta el tuit</string>
   <string name="message_toast_status_pinned">Tweet fijado</string>
   <string name="message_toast_status_retweeted">Retwitteado</string>
   <string name="message_toast_status_saved_to_draft">Tweet guardado en borradores.</string>
@@ -705,8 +705,8 @@
   <string name="preference_summary_database_item_limit">Límite de elementos almacenados en la base de datos para cada cuenta, establece un valor más pequeño para liberar espacio e incrementar la velocidad de carga.</string>
   <string name="preference_summary_favorite_confirmation">Mostrar confirmación antes de tweet un favorito</string>
   <string name="preference_summary_like_confirmation">Mostrar confirmación antes de marcar un tweet como te gusta</string>
-  <string name="preference_summary_media_preload_non_metered_network">Precargar multimedia solo en redes sin coste como wifis</string>
-  <string name="preference_summary_streaming_non_metered_network">Streaming solo en redes libres como Wi-Fi</string>
+  <string name="preference_summary_media_preload_non_metered_network">Precargar multimedia solo en redes sin coste, como wifis</string>
+  <string name="preference_summary_streaming_non_metered_network">Streaming solo en redes sin coste, como wifis</string>
   <string name="preference_summary_streaming_power_saving">Streaming sólo durante la carga</string>
   <string name="preference_summary_sync_timeline_positions">Cuando está activado \"Recordar posición\"</string>
   <string name="preference_summary_trends_location">Ahora puede establecer la ubicación por separado en la ventana de configuración.</string>
@@ -723,7 +723,7 @@
   <string name="preference_title_floating_detailed_view">Vista detallada flotante</string>
   <string name="preference_title_landscape">Horizontal</string>
   <string name="preference_title_light_font">Fuente suave</string>
-  <string name="preference_title_like_confirmation">Me gusta confirmación</string>
+  <string name="preference_title_like_confirmation">Confirmar los Me gusta</string>
   <string name="preference_title_media_preload_non_metered_network">Precargar en redes sin coste</string>
   <string name="preference_title_multi_column_tab_width">Ancho de pestaña multicolumna</string>
   <string name="preference_title_multi_column_tabs">Pestañas multicolumna</string>
@@ -974,7 +974,7 @@
   <string name="title_following">Siguiendo</string>
   <string name="title_gif_sharing">Compartir GIF</string>
   <string name="title_home">Inicio</string>
-  <string name="title_like_confirm">¿Te gusta este tweet?</string>
+  <string name="title_like_confirm">¿Te gusta este tuit?</string>
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">Me gusta</string>
   <string name="title_manage_filter_subscriptions">Filtrar suscripciones</string>
