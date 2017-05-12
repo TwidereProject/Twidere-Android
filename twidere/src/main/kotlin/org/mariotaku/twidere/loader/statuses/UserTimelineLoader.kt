@@ -92,6 +92,11 @@ class UserTimelineLoader(
 
     @WorkerThread
     override fun shouldFilterStatus(database: SQLiteDatabase, status: ParcelableStatus): Boolean {
+        if (timelineFilter != null) {
+            if (status.is_retweet && !timelineFilter.isIncludeRetweets) {
+                return true
+            }
+        }
         if (accountKey != null && userKey != null && TextUtils.equals(accountKey.id, userKey.id))
             return false
         val retweetUserKey = status.user_key.takeIf { status.is_retweet }
@@ -107,6 +112,7 @@ class UserTimelineLoader(
         if (timelineFilter != null) {
             option.excludeReplies(!timelineFilter.isIncludeReplies)
         }
+
         return mastodon.getStatuses(id, paging, option)
     }
 

@@ -26,7 +26,11 @@ import org.mariotaku.restfu.http.SimpleValueMap;
 
 public class TimelineOption extends SimpleValueMap {
     public TimelineOption excludeReplies(boolean excludeReplies) {
-        put("exclude_replies", excludeReplies);
+        if (excludeReplies) {
+            put("exclude_replies", true);
+        } else {
+            remove("exclude_replies");
+        }
         return this;
     }
 
