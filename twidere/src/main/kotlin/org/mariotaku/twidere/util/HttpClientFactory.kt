@@ -7,6 +7,7 @@ import android.os.Build
 import android.util.Base64
 import android.util.Log
 import okhttp3.*
+import okhttp3.internal.platform.Platform
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.toIntOr
 import org.mariotaku.restfu.http.RestHttpClient
@@ -14,13 +15,17 @@ import org.mariotaku.restfu.okhttp3.OkHttpRestClient
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.*
 import org.mariotaku.twidere.constant.cacheSizeLimitKey
 import org.mariotaku.twidere.util.dagger.DependencyHolder
+import org.mariotaku.twidere.util.net.TLSSocketFactory
 import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.Proxy
+import java.security.KeyStore
 import java.security.NoSuchAlgorithmException
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManagerFactory
+import javax.net.ssl.X509TrustManager
 
 /**
  * Created by mariotaku on 16/1/27.
@@ -37,6 +42,12 @@ object HttpClientFactory {
     fun initOkHttpClient(conf: HttpClientConfiguration, builder: OkHttpClient.Builder, dns: Dns,
             connectionPool: ConnectionPool, cache: Cache) {
         updateHttpClientConfiguration(builder, conf, dns, connectionPool, cache)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            val tlsSocketFactory = TLSSocketFactory()
+            val trustManager = Platform.get().trustManager(tlsSocketFactory) ?:
+                    systemDefaultTrustManager()
+            builder.sslSocketFactory(tlsSocketFactory, trustManager)
+        }
         updateTLSConnectionSpecs(builder)
         DebugModeUtils.initForOkHttpClient(builder)
     }
@@ -166,6 +177,17 @@ object HttpClientFactory {
     private fun String.urlEncoded() = Uri.encode(this)
 
     private fun String.prefix(prefix: String) = prefix + this
+
+    private fun systemDefaultTrustManager(): X509TrustManager {
+        val trustManagerFactory = TrustManagerFactory.getInstance(
+                TrustManagerFactory.getDefaultAlgorithm())
+        trustManagerFactory.init(null as KeyStore?)
+        val trustManagers = trustManagerFactory.trustManagers
+        if (trustManagers.size != 1 || trustManagers[0] !is X509TrustManager) {
+            throw IllegalStateException("Unexpected default trust managers:" + Arrays.toString(trustManagers))
+        }
+        return trustManagers[0] as X509TrustManager
+    }
 
     private val urlSupportedPatterns = listOf("[SCHEME]", "[HOST]", "[PORT]", "[AUTHORITY]",
             "[PATH]", "[/PATH]", "[PATH_ENCODED]", "[QUERY]", "[?QUERY]", "[QUERY_ENCODED]",
