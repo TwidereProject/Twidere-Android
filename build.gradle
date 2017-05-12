@@ -56,7 +56,7 @@ subprojects {
                     KPreferences         : '0.9.7',
                     Kovenant             : '3.3.0',
                     ParcelablePlease     : '1.0.2',
-                    Chameleon            : '0.9.17',
+                    Chameleon            : '0.9.18',
                     UniqR                : '0.9.1',
                     SQLiteQB             : '0.9.15',
                     Glide                : '3.7.0',

@@ -192,6 +192,9 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
             override val shouldAbort: Boolean
                 get() = context == null
+
+            override val hasMaxIds: Boolean
+                get() = false
         })
         return true
     }
