@@ -299,14 +299,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/element_spacing_normal"
-            android:ellipsize="end"
-            android:maxLines="4"
             android:textAppearance="?android:textAppearanceMedium"
             android:textColor="?android:textColorPrimary"
             android:visibility="gone"
             tools:text="@string/sample_status_text"
             tools:visibility="visible"/>
-
 
         <LinearLayout
             android:id="@+id/quotedMediaLabel"
