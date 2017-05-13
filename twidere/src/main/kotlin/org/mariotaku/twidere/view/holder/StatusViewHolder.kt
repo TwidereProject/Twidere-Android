@@ -17,10 +17,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.list_item_status.view.*
-import org.mariotaku.ktextension.applyFontFamily
-import org.mariotaku.ktextension.empty
-import org.mariotaku.ktextension.hideIfEmpty
-import org.mariotaku.ktextension.isNotNullOrEmpty
+import org.mariotaku.ktextension.*
 import org.mariotaku.microblog.library.mastodon.annotation.StatusVisibility
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
@@ -116,12 +113,12 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         nameView.updateText(adapter.bidiFormatter)
         summaryView.hideIfEmpty()
         if (adapter.linkHighlightingStyle == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
-            textView.text = toPlainText(TWIDERE_PREVIEW_TEXT_HTML)
+            textView.spannable = toPlainText(TWIDERE_PREVIEW_TEXT_HTML)
         } else {
             val linkify = adapter.twidereLinkify
             val text = HtmlSpanBuilder.fromHtml(TWIDERE_PREVIEW_TEXT_HTML)
             linkify.applyAllLinks(text, null, -1, false, adapter.linkHighlightingStyle, true)
-            textView.text = text
+            textView.spannable = text
         }
         timeView.time = System.currentTimeMillis()
         val showCardActions = isCardActionsShown
@@ -177,7 +174,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         } else if (status.retweet_id != null) {
             val retweetedBy = colorNameManager.getDisplayName(status.retweeted_by_user_key!!,
                     status.retweeted_by_user_name, status.retweeted_by_user_acct!!, nameFirst)
-            statusInfoLabel.text = context.getString(R.string.name_retweeted, formatter.unicodeWrap(retweetedBy))
+            statusInfoLabel.spannable = context.getString(R.string.name_retweeted, formatter.unicodeWrap(retweetedBy))
             statusInfoIcon.setImageResource(R.drawable.ic_activity_action_retweet)
             statusInfoLabel.visibility = View.VISIBLE
             statusInfoIcon.visibility = View.VISIBLE
@@ -187,9 +184,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             if (status.in_reply_to_name != null && status.in_reply_to_screen_name != null) {
                 val inReplyTo = colorNameManager.getDisplayName(status.in_reply_to_user_key!!,
                         status.in_reply_to_name, status.in_reply_to_screen_name, nameFirst)
-                statusInfoLabel.text = context.getString(R.string.in_reply_to_name, formatter.unicodeWrap(inReplyTo))
+                statusInfoLabel.spannable = context.getString(R.string.in_reply_to_name, formatter.unicodeWrap(inReplyTo))
             } else {
-                statusInfoLabel.text = context.getString(R.string.label_status_type_reply)
+                statusInfoLabel.spannable = context.getString(R.string.label_status_type_reply)
             }
             statusInfoIcon.setImageResource(R.drawable.ic_activity_action_reply)
             statusInfoLabel.visibility = View.VISIBLE
@@ -231,9 +228,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                     quotedText = status.quoted_text_unescaped
                 }
                 if (quotedDisplayEnd != -1 && quotedDisplayEnd <= quotedText.length) {
-                    quotedTextView.text = quotedText.subSequence(0, quotedDisplayEnd)
+                    quotedTextView.spannable = quotedText.subSequence(0, quotedDisplayEnd)
                 } else {
-                    quotedTextView.text = quotedText
+                    quotedTextView.spannable = quotedText
                 }
 
                 if (quotedTextView.length() == 0) {
@@ -263,7 +260,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                     quotedMediaLabel.visibility = View.GONE
                 }
 
-                quotedTextView.text = if (!quoteContentAvailable) {
+                quotedTextView.spannable = if (!quoteContentAvailable) {
                     // Display 'not available' label
                     SpannableString.valueOf(context.getString(R.string.label_status_not_available)).apply {
                         setSpan(ForegroundColorSpan(ThemeUtils.getColorFromAttribute(context,
@@ -359,7 +356,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             mediaPreview.visibility = View.GONE
         }
 
-        summaryView.text = status.extras?.summary_text
+        summaryView.spannable = status.extras?.summary_text
         summaryView.hideIfEmpty()
 
         val text: CharSequence
@@ -385,19 +382,18 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         }
 
         if (displayEnd != -1 && displayEnd <= text.length) {
-            textView.text = text.subSequence(0, displayEnd)
+            textView.spannable = text.subSequence(0, displayEnd)
         } else {
-            textView.text = text
+            textView.spannable = text
         }
         textView.hideIfEmpty()
 
         if (replyCount > 0) {
-            replyCountView.text = UnitConvertUtils.calculateProperCount(replyCount)
-            replyCountView.visibility = View.VISIBLE
+            replyCountView.spannable = UnitConvertUtils.calculateProperCount(replyCount)
         } else {
-            replyCountView.text = null
-            replyCountView.visibility = View.GONE
+            replyCountView.spannable = null
         }
+        replyCountView.hideIfEmpty()
 
         when (status.extras?.visibility) {
             StatusVisibility.PRIVATE -> {
@@ -428,12 +424,12 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         retweetCount = status.retweet_count
 
         if (retweetCount > 0) {
-            retweetCountView.text = UnitConvertUtils.calculateProperCount(retweetCount)
-            retweetCountView.visibility = View.VISIBLE
+            retweetCountView.spannable = UnitConvertUtils.calculateProperCount(retweetCount)
         } else {
-            retweetCountView.text = null
-            retweetCountView.visibility = View.GONE
+            retweetCountView.spannable = null
         }
+        retweetCountView.hideIfEmpty()
+
         if (DestroyFavoriteTask.isDestroyingFavorite(status.account_key, status.id)) {
             favoriteIcon.isActivated = false
         } else {
@@ -441,13 +437,13 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             favoriteIcon.isActivated = creatingFavorite || status.is_favorite
         }
         favoriteCount = status.favorite_count
+
         if (favoriteCount > 0) {
-            favoriteCountView.text = UnitConvertUtils.calculateProperCount(favoriteCount)
-            favoriteCountView.visibility = View.VISIBLE
+            favoriteCountView.spannable = UnitConvertUtils.calculateProperCount(favoriteCount)
         } else {
-            favoriteCountView.text = null
-            favoriteCountView.visibility = View.GONE
+            favoriteCountView.spannable = null
         }
+        favoriteCountView.hideIfEmpty()
 
         nameView.updateText(formatter)
         quotedNameView.updateText(formatter)

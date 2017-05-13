@@ -17,32 +17,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.preference;
+package org.mariotaku.twidere.preference
 
-import android.content.Context;
-import android.util.AttributeSet;
+import android.content.Context
+import android.util.AttributeSet
+import org.mariotaku.twidere.Constants
+import org.mariotaku.twidere.R
+import org.mariotaku.twidere.constant.IntentConstants.INTENT_ACTION_EXTENSION_SHORTEN_STATUS
 
-import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.R;
+class StatusShortenerPreference(context: Context, attrs: AttributeSet?) :
+        ServicePickerPreference(context, attrs), Constants {
 
-public class StatusShortenerPreference extends ServicePickerPreference implements Constants {
+    override val intentAction: String
+        get() = INTENT_ACTION_EXTENSION_SHORTEN_STATUS
 
-    public StatusShortenerPreference(final Context context) {
-        this(context, null);
-    }
-
-    public StatusShortenerPreference(final Context context, final AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    @Override
-    protected String getIntentAction() {
-        return INTENT_ACTION_EXTENSION_SHORTEN_STATUS;
-    }
-
-    @Override
-    protected String getNoneEntry() {
-        return getContext().getString(R.string.status_shortener_default);
-    }
+    override val noneEntry: String
+        get() = context.getString(R.string.status_shortener_default)
 
 }

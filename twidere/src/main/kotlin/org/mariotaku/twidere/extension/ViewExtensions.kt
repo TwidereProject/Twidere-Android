@@ -23,6 +23,8 @@ import android.graphics.Rect
 import android.graphics.RectF
 import android.support.annotation.UiThread
 import android.view.View
+import android.widget.TextView
+import org.mariotaku.ktextension.empty
 
 private val tempLocation = IntArray(2)
 private val tempRect = Rect()
@@ -68,6 +70,14 @@ fun View.addSystemUiVisibility(systemUiVisibility: Int) {
 
 fun View.removeSystemUiVisibility(systemUiVisibility: Int) {
     this.systemUiVisibility = this.systemUiVisibility and systemUiVisibility.inv()
+}
+
+fun View.hideIfEmpty(dependency: TextView, hideVisibility: Int = View.GONE) {
+    visibility = if (dependency.empty) {
+        hideVisibility
+    } else {
+        View.VISIBLE
+    }
 }
 
 private fun offsetToRoot(view: View, rect: Rect) {

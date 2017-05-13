@@ -22,6 +22,7 @@ package org.mariotaku.twidere.view.holder.message
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import kotlinx.android.synthetic.main.list_item_message_entry.view.*
+import org.mariotaku.ktextension.spannable
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.MessagesEntriesAdapter
 import org.mariotaku.twidere.extension.loadProfileImage
@@ -80,8 +81,8 @@ class MessageEntryViewHolder(itemView: View, val adapter: MessagesEntriesAdapter
         this.name.name = name
         this.name.screenName = secondaryName
         this.name.updateText(adapter.bidiFormatter)
-        this.text.text = conversation.getSummaryText(itemView.context, adapter.userColorNameManager,
-                adapter.nameFirst)
+        this.text.spannable = conversation.getSummaryText(itemView.context,
+                adapter.userColorNameManager, adapter.nameFirst)
         if (conversation.is_outgoing) {
             readIndicator.visibility = View.VISIBLE
             readIndicator.setImageResource(R.drawable.ic_message_type_outgoing)

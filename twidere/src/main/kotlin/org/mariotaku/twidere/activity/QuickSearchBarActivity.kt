@@ -47,6 +47,7 @@ import jopt.csp.util.SortableIntList
 import kotlinx.android.synthetic.main.activity_quick_search_bar.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.empty
+import org.mariotaku.ktextension.spannable
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_ACCOUNT_KEY
@@ -392,23 +393,23 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
                     val holder = view.tag as SearchViewHolder
                     val title = cursor.getString(indices.title)
                     holder.edit_query.tag = title
-                    holder.text1.text = title
+                    holder.text1.spannable = title
                     holder.icon.setImageResource(R.drawable.ic_action_history)
                 }
                 VIEW_TYPE_SAVED_SEARCH -> {
                     val holder = view.tag as SearchViewHolder
                     val title = cursor.getString(indices.title)
                     holder.edit_query.tag = title
-                    holder.text1.text = title
+                    holder.text1.spannable = title
                     holder.icon.setImageResource(R.drawable.ic_action_save)
                 }
                 VIEW_TYPE_USER_SUGGESTION_ITEM -> {
                     val holder = view.tag as UserViewHolder
                     val userKey = UserKey.valueOf(cursor.getString(indices.extra_id))
-                    holder.text1.text = userColorNameManager.getUserNickname(userKey,
+                    holder.text1.spannable = userColorNameManager.getUserNickname(userKey,
                             cursor.getString(indices.title))
                     holder.text2.visibility = View.VISIBLE
-                    holder.text2.text = "@${cursor.getString(indices.summary)}"
+                    holder.text2.spannable = "@${cursor.getString(indices.summary)}"
                     holder.icon.clearColorFilter()
                     requestManager.loadProfileImage(context, cursor.getString(indices.icon),
                             profileImageStyle, cornerRadius = holder.icon.cornerRadius,
@@ -417,7 +418,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
                 }
                 VIEW_TYPE_USER_SCREEN_NAME -> {
                     val holder = view.tag as UserViewHolder
-                    holder.text1.text = "@${cursor.getString(indices.title)}"
+                    holder.text1.spannable = "@${cursor.getString(indices.title)}"
                     holder.text2.visibility = View.GONE
                     holder.icon.setColorFilter(holder.text1.currentTextColor, Mode.SRC_ATOP)
                     //TODO cancel image load

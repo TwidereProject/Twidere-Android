@@ -25,6 +25,7 @@ import android.view.View
 import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.list_item_draft.view.*
 import org.mariotaku.ktextension.mapToArray
+import org.mariotaku.ktextension.spannable
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.extension.model.getActionName
 import org.mariotaku.twidere.model.Draft
@@ -76,11 +77,11 @@ class DraftViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             contentView.drawEnd()
         }
         if (summaryText != null) {
-            textView.text = summaryText
+            textView.spannable = summaryText
         } else if (draft.text.isNullOrEmpty()) {
             textView.setText(R.string.empty_content)
         } else {
-            textView.text = draft.text
+            textView.spannable = draft.text
         }
 
         if (draft.timestamp > 0) {

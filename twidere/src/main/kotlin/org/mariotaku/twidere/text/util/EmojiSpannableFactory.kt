@@ -21,12 +21,10 @@ package org.mariotaku.twidere.text.util
 
 import android.text.Spannable
 import android.widget.TextView
+import org.mariotaku.twidere.extension.applyTo
 import org.mariotaku.twidere.text.SafeSpannableString
-
-import org.mariotaku.twidere.util.EmojiSupportUtils
 import org.mariotaku.twidere.util.ExternalThemeManager
 import org.mariotaku.twidere.util.dagger.GeneralComponent
-
 import javax.inject.Inject
 
 /**
@@ -43,7 +41,7 @@ class EmojiSpannableFactory(textView: TextView) : Spannable.Factory() {
 
     override fun newSpannable(source: CharSequence): Spannable {
         val spannable = SafeSpannableString(source)
-        EmojiSupportUtils.applyEmoji(externalThemeManager, spannable)
+        externalThemeManager.emoji?.applyTo(spannable)
         return spannable
     }
 }

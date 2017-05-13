@@ -24,6 +24,7 @@ import android.view.View
 import kotlinx.android.synthetic.main.list_item_message_conversation_text.view.*
 import org.mariotaku.ktextension.empty
 import org.mariotaku.ktextension.isNullOrEmpty
+import org.mariotaku.ktextension.spannable
 import org.mariotaku.messagebubbleview.library.MessageBubbleView
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.MessagesConversationAdapter
@@ -92,7 +93,7 @@ class MessageViewHolder(itemView: View, adapter: MessagesConversationAdapter) : 
         }
 
 
-        text.text = SpannableStringBuilder.valueOf(message.text_unescaped).apply {
+        text.spannable = SpannableStringBuilder.valueOf(message.text_unescaped).apply {
             message.spans?.applyTo(this)
             adapter.linkify.applyAllLinks(this, message.account_key, layoutPosition.toLong(),
                     false, adapter.linkHighlightingStyle, true)

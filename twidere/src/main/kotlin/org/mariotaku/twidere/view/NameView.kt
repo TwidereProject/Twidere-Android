@@ -31,7 +31,6 @@ import android.text.style.StyleSpan
 import android.util.AttributeSet
 import android.util.TypedValue
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.util.EmojiSupportUtils
 
 /**
  * Created by mariotaku on 15/5/28.
@@ -60,7 +59,6 @@ class NameView(context: Context, attrs: AttributeSet? = null) : FixedTextView(co
     private var secondaryTextSize: AbsoluteSizeSpan? = null
 
     init {
-        EmojiSupportUtils.initForTextView(this)
         ellipsize = TextUtils.TruncateAt.END
         val a = context.obtainStyledAttributes(attrs, R.styleable.NameView, 0, 0)
         setPrimaryTextColor(a.getColor(R.styleable.NameView_nv_primaryTextColor, 0))
@@ -123,7 +121,7 @@ class NameView(context: Context, attrs: AttributeSet? = null) : FixedTextView(co
             sb.setSpan(secondaryTextStyle, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             sb.setSpan(secondaryTextSize, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
-        text = sb
+        setText(sb, BufferType.SPANNABLE)
     }
 
     fun setPrimaryTextSize(textSize: Float) {

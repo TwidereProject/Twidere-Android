@@ -19,12 +19,12 @@
 
 package org.mariotaku.twidere.adapter
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.list_item_simple_user.view.*
+import org.mariotaku.ktextension.spannable
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.AccountDetails
@@ -61,10 +61,9 @@ class AccountsSpinnerAdapter(
         val icon = view.profileImage
         if (!item.dummy) {
             text1?.visibility = View.VISIBLE
-            text1?.text = item.user.name
+            text1?.spannable = item.user.name
             text2?.visibility = View.VISIBLE
-            @SuppressLint("SetTextI18n")
-            text2?.text = "@${item.user.screen_name}"
+            text2?.spannable = "@${item.user.screen_name}"
             if (icon != null) {
                 if (profileImageEnabled) {
                     icon.visibility = View.VISIBLE
@@ -76,7 +75,7 @@ class AccountsSpinnerAdapter(
             }
         } else {
             text1?.visibility = View.VISIBLE
-            text1?.text = dummyItemText
+            text1?.spannable = dummyItemText
             text2?.visibility = View.GONE
             icon?.visibility = View.GONE
         }

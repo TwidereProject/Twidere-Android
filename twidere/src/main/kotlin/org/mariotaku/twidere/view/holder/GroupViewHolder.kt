@@ -20,9 +20,10 @@
 package org.mariotaku.twidere.view.holder
 
 import android.support.v7.widget.RecyclerView.ViewHolder
-import android.text.TextUtils
 import android.view.View
 import kotlinx.android.synthetic.main.card_item_group_compact.view.*
+import org.mariotaku.ktextension.hideIfEmpty
+import org.mariotaku.ktextension.spannable
 import org.mariotaku.ktextension.toLocalizedString
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IGroupsAdapter
@@ -63,7 +64,7 @@ class GroupViewHolder(private val adapter: IGroupsAdapter<*>, itemView: View) : 
             externalIndicator.visibility = View.GONE
         } else {
             externalIndicator.visibility = View.VISIBLE
-            externalIndicator.text = context.getString(R.string.external_group_host_format,
+            externalIndicator.spannable = context.getString(R.string.external_group_host_format,
                     groupHost)
         }
         if (adapter.profileImageEnabled) {
@@ -74,8 +75,8 @@ class GroupViewHolder(private val adapter: IGroupsAdapter<*>, itemView: View) : 
         } else {
             profileImageView.visibility = View.GONE
         }
-        descriptionView.visibility = if (TextUtils.isEmpty(group.description)) View.GONE else View.VISIBLE
-        descriptionView.text = formatter.unicodeWrap(group.description)
+        descriptionView.spannable = formatter.unicodeWrap(group.description)
+        descriptionView.hideIfEmpty()
         membersCountView.text = group.member_count.toLocalizedString()
         adminsCountView.text = group.admin_count.toLocalizedString()
     }

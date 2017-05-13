@@ -20,10 +20,11 @@
 package org.mariotaku.twidere.view.holder
 
 import android.support.v7.widget.RecyclerView.ViewHolder
-import android.text.TextUtils
 import android.view.View
 import android.widget.TextView
 import kotlinx.android.synthetic.main.list_item_user_list.view.*
+import org.mariotaku.ktextension.hideIfEmpty
+import org.mariotaku.ktextension.spannable
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IUserListsAdapter
 import org.mariotaku.twidere.extension.loadProfileImage
@@ -68,10 +69,10 @@ class UserListViewHolder(
         val manager = adapter.userColorNameManager
 
         itemContent.drawStart(manager.getUserColor(userList.user_key))
-        nameView.text = userList.name
+        nameView.spannable = userList.name
         val nameFirst = adapter.nameFirst
         val createdByDisplayName = manager.getDisplayName(userList, nameFirst)
-        createdByView.text = context.getString(R.string.created_by, createdByDisplayName)
+        createdByView.spannable = context.getString(R.string.created_by, createdByDisplayName)
 
         if (adapter.profileImageEnabled) {
             profileImageView.visibility = View.VISIBLE
@@ -80,8 +81,8 @@ class UserListViewHolder(
         } else {
             profileImageView.visibility = View.GONE
         }
-        descriptionView.visibility = if (TextUtils.isEmpty(userList.description)) View.GONE else View.VISIBLE
-        descriptionView.text = userList.description
+        descriptionView.spannable = userList.description
+        descriptionView.hideIfEmpty()
         membersCountView.text = Utils.getLocalizedNumber(Locale.getDefault(), userList.members_count)
         subscribersCountView.text = Utils.getLocalizedNumber(Locale.getDefault(), userList.subscribers_count)
     }

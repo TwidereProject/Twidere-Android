@@ -81,6 +81,8 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     lateinit var dns: Dns
     @Inject
     lateinit var syncPreferences: SyncPreferences
+    @Inject
+    lateinit var externalThemeManager: ExternalThemeManager
 
     protected val statusScheduleProvider: StatusScheduleProvider?
         get() = statusScheduleProviderFactory.newInstance(context)

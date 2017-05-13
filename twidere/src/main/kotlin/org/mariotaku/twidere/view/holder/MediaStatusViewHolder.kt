@@ -24,6 +24,7 @@ import android.view.View
 import android.widget.ImageView
 import com.commonsware.cwac.layouts.AspectLockedFrameLayout
 import kotlinx.android.synthetic.main.adapter_item_media_status.view.*
+import org.mariotaku.ktextension.spannable
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.extension.loadProfileImage
@@ -62,9 +63,9 @@ class MediaStatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: 
         val displayEnd = status.extras?.display_text_range?.getOrNull(1) ?: -1
 
         if (displayEnd >= 0) {
-            mediaTextView.text = status.text_unescaped.subSequence(0, displayEnd)
+            mediaTextView.spannable = status.text_unescaped.subSequence(0, displayEnd)
         } else {
-            mediaTextView.text = status.text_unescaped
+            mediaTextView.spannable = status.text_unescaped
         }
         adapter.requestManager.loadProfileImage(context, status,
                 adapter.profileImageStyle, profileImageView.cornerRadius,

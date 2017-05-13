@@ -28,6 +28,7 @@ import android.view.View
 import android.widget.TextView
 import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.spannable
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.constant.displayProfileImageKey
@@ -71,9 +72,9 @@ class ComposeAutoCompleteAdapter(context: Context, val requestManager: RequestMa
         icon.style = profileImageStyle
 
         if (Suggestions.AutoComplete.TYPE_USERS == cursor.getString(indices.type)) {
-            text1.text = userColorNameManager.getUserNickname(cursor.getString(indices.extra_id),
+            text1.spannable = userColorNameManager.getUserNickname(cursor.getString(indices.extra_id),
                     cursor.getString(indices.title))
-            text2.text = String.format("@%s", cursor.getString(indices.summary))
+            text2.spannable = String.format("@%s", cursor.getString(indices.summary))
             if (displayProfileImage) {
                 val profileImageUrl = cursor.getString(indices.icon)
                 requestManager.loadProfileImage(context, profileImageUrl, profileImageStyle).into(icon)
@@ -83,7 +84,7 @@ class ComposeAutoCompleteAdapter(context: Context, val requestManager: RequestMa
 
             icon.clearColorFilter()
         } else {
-            text1.text = String.format("#%s", cursor.getString(indices.title))
+            text1.spannable = String.format("#%s", cursor.getString(indices.title))
             text2.setText(R.string.hashtag)
 
             icon.setImageResource(R.drawable.ic_action_hashtag)

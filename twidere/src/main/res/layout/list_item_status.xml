@@ -50,7 +50,7 @@
         tools:tint="?android:textColorSecondary"
         tools:visibility="visible"/>
 
-    <org.mariotaku.twidere.view.ActionIconThemedTextView
+    <org.mariotaku.twidere.view.FixedTextView
         android:id="@+id/statusInfoLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

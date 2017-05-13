@@ -34,7 +34,6 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.CursorLoader
 import android.support.v4.content.Loader
 import android.support.v7.app.AlertDialog
-import android.text.TextUtils
 import android.util.SparseArray
 import android.view.*
 import android.widget.*
@@ -48,6 +47,7 @@ import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.contains
 import org.mariotaku.ktextension.set
+import org.mariotaku.ktextension.spannable
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.Expression
@@ -439,7 +439,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
             view.findViewById(android.R.id.text2).visibility = View.GONE
             val text1 = view.findViewById(android.R.id.text1) as TextView
             val item = getItem(position)
-            text1.text = item.name
+            text1.spannable = item.name
             bindIconView(item, view)
             return view
         }
@@ -484,12 +484,12 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
             val iconKey = tempTab.icon
             if (type != null && CustomTabUtils.isTabTypeValid(type)) {
                 val typeName = CustomTabUtils.getTabTypeName(context, type)
-                holder.text1.text = if (TextUtils.isEmpty(name)) typeName else name
+                holder.text1.spannable = name?.takeIf(String::isNotEmpty) ?: typeName
                 holder.text1.paintFlags = holder.text1.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                 holder.text2.visibility = View.VISIBLE
                 holder.text2.text = typeName
             } else {
-                holder.text1.text = name
+                holder.text1.spannable = name
                 holder.text1.paintFlags = holder.text1.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 holder.text2.setText(R.string.invalid_tab)
             }

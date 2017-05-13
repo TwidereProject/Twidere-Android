@@ -51,7 +51,7 @@ import org.mariotaku.twidere.model.account.AccountExtras
 import org.mariotaku.twidere.model.analyzer.UpdateStatus
 import org.mariotaku.twidere.model.schedule.ScheduleInfo
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
-import org.mariotaku.twidere.preference.ServicePickerPreference
+import org.mariotaku.twidere.preference.ComponentPickerPreference
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.util.*
@@ -496,7 +496,7 @@ class UpdateStatusTask(
     @Throws(UploaderNotFoundException::class, UploadException::class, ShortenerNotFoundException::class, ShortenException::class)
     private fun getStatusShortener(app: TwidereApplication): StatusShortenerInterface? {
         val shortenerComponent = preferences.getString(KEY_STATUS_SHORTENER, null)
-        if (ServicePickerPreference.isNoneValue(shortenerComponent)) return null
+        if (ComponentPickerPreference.isNoneValue(shortenerComponent)) return null
 
         val shortener = StatusShortenerInterface.getInstance(app, shortenerComponent) ?: throw ShortenerNotFoundException()
         try {
@@ -518,7 +518,7 @@ class UpdateStatusTask(
     @Throws(UploaderNotFoundException::class, UploadException::class)
     private fun getMediaUploader(app: TwidereApplication): MediaUploaderInterface? {
         val uploaderComponent = preferences.getString(KEY_MEDIA_UPLOADER, null)
-        if (ServicePickerPreference.isNoneValue(uploaderComponent)) return null
+        if (ComponentPickerPreference.isNoneValue(uploaderComponent)) return null
         val uploader = MediaUploaderInterface.getInstance(app, uploaderComponent) ?:
                 throw UploaderNotFoundException(context.getString(R.string.error_message_media_uploader_not_found))
         try {

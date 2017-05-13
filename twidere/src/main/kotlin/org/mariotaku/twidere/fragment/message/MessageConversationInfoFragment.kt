@@ -57,6 +57,7 @@ import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.setItemAvailability
+import org.mariotaku.ktextension.spannable
 import org.mariotaku.ktextension.useCursor
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
@@ -260,14 +261,14 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         val profileImageStyle = preferences[profileImageStyleKey]
         requestManager.loadProfileImage(context, data, profileImageStyle).into(conversationAvatar)
         requestManager.loadProfileImage(context, data, profileImageStyle, size = ProfileImageSize.REASONABLY_SMALL).into(appBarIcon)
-        appBarTitle.text = name
-        conversationTitle.text = name
+        appBarTitle.spannable = name
+        conversationTitle.spannable = name
         if (summary != null) {
             appBarSubtitle.visibility = View.VISIBLE
             conversationSubtitle.visibility = View.VISIBLE
 
-            appBarSubtitle.text = summary
-            conversationSubtitle.text = summary
+            appBarSubtitle.spannable = summary
+            conversationSubtitle.spannable = summary
         } else {
             appBarSubtitle.visibility = View.GONE
             conversationSubtitle.visibility = View.GONE

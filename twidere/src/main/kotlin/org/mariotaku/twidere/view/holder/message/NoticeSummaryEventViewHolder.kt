@@ -21,6 +21,7 @@ package org.mariotaku.twidere.view.holder.message
 
 import android.view.View
 import kotlinx.android.synthetic.main.list_item_message_conversation_notice.view.*
+import org.mariotaku.ktextension.spannable
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.MessagesConversationAdapter
 import org.mariotaku.twidere.extension.model.getSummaryText
@@ -35,7 +36,7 @@ class NoticeSummaryEventViewHolder(itemView: View, adapter: MessagesConversation
 
     override fun display(message: ParcelableMessage, showDate: Boolean) {
         super.display(message, showDate)
-        text.text = message.getSummaryText(adapter.context, adapter.userColorNameManager,
+        text.spannable = message.getSummaryText(adapter.context, adapter.userColorNameManager,
                 adapter.conversation, adapter.nameFirst)
     }
 

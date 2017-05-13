@@ -28,7 +28,6 @@ import android.graphics.drawable.Drawable
 import android.support.v4.content.res.ResourcesCompat
 import android.util.LruCache
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_EMOJI_SUPPORT
-import java.util.*
 
 /**
  * Created by mariotaku on 15/12/20.
@@ -105,7 +104,11 @@ class ExternalThemeManager(private val context: Context, private val preferences
                     if (i != 0) {
                         sb.append("_")
                     }
-                    sb.append(String.format(Locale.US, "%04x", codePoints[i]))
+                    val hex = Integer.toHexString(codePoints[i])
+                    for (j in 0 until 4 - hex.length) {
+                        sb.append("0")
+                    }
+                    sb.append(hex)
                 }
                 val identifier = resources.getIdentifier(sb.toString(),
                         if (useMipmap) "mipmap" else "drawable", packageName)

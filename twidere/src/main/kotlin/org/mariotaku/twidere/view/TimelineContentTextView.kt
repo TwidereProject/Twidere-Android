@@ -28,7 +28,7 @@ import android.view.KeyEvent
 import android.view.MotionEvent
 import android.widget.TextView
 import org.mariotaku.chameleon.view.ChameleonTextView
-import org.mariotaku.twidere.util.EmojiSupportUtils
+import org.mariotaku.twidere.extension.setupEmojiFactory
 
 /**
  * Returns true when not clicking links
@@ -41,7 +41,7 @@ class TimelineContentTextView @JvmOverloads constructor(
 ) : ChameleonTextView(context, attrs, defStyle) {
 
     init {
-        EmojiSupportUtils.initForTextView(this)
+        setupEmojiFactory()
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {

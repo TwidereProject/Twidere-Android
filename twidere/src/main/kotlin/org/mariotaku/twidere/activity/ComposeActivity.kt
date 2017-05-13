@@ -89,7 +89,7 @@ import org.mariotaku.twidere.model.draft.UpdateStatusActionExtras
 import org.mariotaku.twidere.model.schedule.ScheduleInfo
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
-import org.mariotaku.twidere.preference.ServicePickerPreference
+import org.mariotaku.twidere.preference.ComponentPickerPreference
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.service.LengthyOperationsService
 import org.mariotaku.twidere.task.compose.AbsAddMediaTask
@@ -250,7 +250,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         accountSelectorButton.setOnClickListener(this)
         replyLabel.setOnClickListener(this)
 
-        hintLabel.text = HtmlSpanBuilder.fromHtml(getString(R.string.hint_status_reply_to_user_removed)).apply {
+        hintLabel.spannable = HtmlSpanBuilder.fromHtml(getString(R.string.hint_status_reply_to_user_removed)).apply {
             val dialogSpan = getSpans(0, length, URLSpan::class.java).firstOrNull {
                 "#dialog" == it.url
             }
@@ -357,8 +357,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     override fun onStart() {
         super.onStart()
 
-        imageUploaderUsed = !ServicePickerPreference.isNoneValue(kPreferences[mediaUploaderKey])
-        statusShortenerUsed = !ServicePickerPreference.isNoneValue(kPreferences[statusShortenerKey])
+        imageUploaderUsed = !ComponentPickerPreference.isNoneValue(kPreferences[mediaUploaderKey])
+        statusShortenerUsed = !ComponentPickerPreference.isNoneValue(kPreferences[statusShortenerKey])
         if (kPreferences[attachLocationKey]) {
             if (checkAnySelfPermissionsGranted(AndroidPermission.ACCESS_COARSE_LOCATION,
                     AndroidPermission.ACCESS_FINE_LOCATION)) {
@@ -1162,7 +1162,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             return false
         }
         val replyToName = userColorNameManager.getDisplayName(status, nameFirst)
-        replyLabel.text = getString(R.string.label_quote_name_text, replyToName, status.text_unescaped)
+        replyLabel.spannable = getString(R.string.label_quote_name_text, replyToName, status.text_unescaped)
         replyLabel.visibility = View.VISIBLE
         editText.hint = getString(R.string.label_quote_name, replyToName)
         return true
@@ -1174,7 +1174,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             return false
         }
         val replyToName = userColorNameManager.getDisplayName(status, nameFirst)
-        replyLabel.text = getString(R.string.label_reply_name_text, replyToName, status.text_unescaped)
+        replyLabel.spannable = getString(R.string.label_reply_name_text, replyToName, status.text_unescaped)
         replyLabel.visibility = View.VISIBLE
         editText.hint = getString(R.string.label_reply_name, replyToName)
         return true
@@ -1362,7 +1362,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         if (location != null) {
             val attachPreciseLocation = kPreferences[attachPreciseLocationKey]
             if (attachPreciseLocation) {
-                locationLabel.text = ParcelableLocationUtils.getHumanReadableString(location, 3)
+                locationLabel.spannable = ParcelableLocationUtils.getHumanReadableString(location, 3)
             } else {
                 if (locationLabel.tag == null || location != recentLocation) {
                     val task = DisplayPlaceNameTask()
@@ -2086,12 +2086,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             val attachPreciseLocation = preferences[attachPreciseLocationKey]
             if (attachLocation) {
                 if (attachPreciseLocation) {
-                    textView.text = ParcelableLocationUtils.getHumanReadableString(location, 3)
+                    textView.spannable = ParcelableLocationUtils.getHumanReadableString(location, 3)
                     textView.tag = location
                 } else {
                     val tag = textView.tag
                     if (tag is Address) {
-                        textView.text = tag.locality
+                        textView.spannable = tag.locality
                     } else if (tag is NoAddress) {
                         textView.setText(R.string.label_location_your_coarse_location)
                     } else {
@@ -2112,20 +2112,20 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             if (attachLocation) {
                 if (attachPreciseLocation) {
                     val location = params
-                    textView.text = ParcelableLocationUtils.getHumanReadableString(location, 3)
+                    textView.spannable = ParcelableLocationUtils.getHumanReadableString(location, 3)
                     textView.tag = location
                 } else if (addresses == null || addresses.isEmpty()) {
                     val tag = textView.tag
                     if (tag is Address) {
-                        textView.text = tag.locality
+                        textView.spannable = tag.locality
                     } else {
                         textView.setText(R.string.label_location_your_coarse_location)
                         textView.tag = NoAddress()
                     }
                 } else {
                     val address = addresses[0]
+                    textView.spannable = address.locality
                     textView.tag = address
-                    textView.text = address.locality
                 }
             } else {
                 textView.setText(R.string.no_location)

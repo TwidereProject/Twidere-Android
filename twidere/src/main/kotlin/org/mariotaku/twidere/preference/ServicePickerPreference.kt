@@ -17,33 +17,22 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.preference;
+package org.mariotaku.twidere.preference
 
-import android.content.Context;
-import android.util.AttributeSet;
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.pm.ResolveInfo
+import android.util.AttributeSet
 
-import org.mariotaku.twidere.R;
+abstract class ServicePickerPreference(context: Context, attrs: AttributeSet?) :
+        ComponentPickerPreference(context, attrs) {
 
-import static org.mariotaku.twidere.constant.IntentConstants.INTENT_ACTION_EXTENSION_UPLOAD_MEDIA;
-
-public class MediaUploaderPreference extends ServicePickerPreference {
-
-    public MediaUploaderPreference(final Context context) {
-        super(context);
+    override fun getComponentName(info: ResolveInfo): ComponentName {
+        return ComponentName(info.serviceInfo.packageName, info.serviceInfo.name)
     }
 
-    public MediaUploaderPreference(final Context context, final AttributeSet attrs) {
-        super(context, attrs);
+    override fun resolve(queryIntent: Intent): List<ResolveInfo> {
+        return packageManager.queryIntentServices(queryIntent, 0)
     }
-
-    @Override
-    protected String getIntentAction() {
-        return INTENT_ACTION_EXTENSION_UPLOAD_MEDIA;
-    }
-
-    @Override
-    protected String getNoneEntry() {
-        return getContext().getString(R.string.media_uploader_default);
-    }
-
 }

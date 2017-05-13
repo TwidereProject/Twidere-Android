@@ -4,16 +4,22 @@ import android.graphics.Typeface
 import android.view.View
 import android.widget.TextView
 
-val TextView.empty: Boolean
+inline val TextView.empty: Boolean
     get() = length() <= 0
 
-var TextView.string: String?
+inline var TextView.string: String?
     get() = text?.toString()
     set(value) {
         text = value
     }
 
-var TextView.charSequence: CharSequence?
+inline var TextView.spannable: CharSequence?
+    get() = text
+    set(value) {
+        setText(value, TextView.BufferType.SPANNABLE)
+    }
+
+inline var TextView.charSequence: CharSequence?
     get() = text
     set(value) {
         text = value
@@ -25,9 +31,9 @@ fun TextView.applyFontFamily(lightFont: Boolean) {
     }
 }
 
-fun TextView.hideIfEmpty() {
+fun TextView.hideIfEmpty(hideVisibility: Int = View.GONE) {
     visibility = if (empty) {
-        View.GONE
+        hideVisibility
     } else {
         View.VISIBLE
     }

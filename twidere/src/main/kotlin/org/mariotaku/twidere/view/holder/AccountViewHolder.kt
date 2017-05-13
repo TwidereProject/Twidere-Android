@@ -19,13 +19,12 @@
 
 package org.mariotaku.twidere.view.holder
 
-import android.annotation.SuppressLint
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.TextView
-
+import org.mariotaku.ktextension.spannable
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.AccountDetailsAdapter
 import org.mariotaku.twidere.extension.loadProfileImage
@@ -60,10 +59,9 @@ class AccountViewHolder(
         dragHandle.visibility = if (enabled) View.VISIBLE else View.GONE
     }
 
-    @SuppressLint("SetTextI18n")
     fun display(details: AccountDetails) {
-        name.text = details.user.name
-        screenName.text = "@${details.user.screen_name}"
+        name.spannable = details.user.name
+        screenName.spannable = "@${details.user.screen_name}"
         setAccountColor(details.color)
         profileImage.visibility = View.VISIBLE
         adapter.requestManager.loadProfileImage(adapter.context, details, adapter.profileImageStyle,

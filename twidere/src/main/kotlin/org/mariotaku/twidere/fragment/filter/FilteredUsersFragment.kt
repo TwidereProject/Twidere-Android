@@ -20,6 +20,7 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.fragment_content_listview.*
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.ktextension.setItemAvailability
+import org.mariotaku.ktextension.spannable
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
@@ -177,7 +178,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
             val screenName = cursor.getString(indices[Filters.Users.SCREEN_NAME])
             val displayName = userColorNameManager.getDisplayName(userKey, name, screenName,
                     nameFirst)
-            text1.text = displayName
+            text1.spannable = displayName
 
             val ssb = SpannableStringBuilder(displayName)
             if (cursor.getLong(indices[Filters.Users.SOURCE]) >= 0) {
@@ -188,8 +189,8 @@ class FilteredUsersFragment : BaseFiltersFragment() {
                 drawable.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_ATOP)
                 ssb.setSpan(EmojiSpan(drawable), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
-            text1.text = ssb
-            text2.text = userKey.host
+            text1.spannable = ssb
+            text2.spannable = userKey.host
         }
 
         override fun swapCursor(c: Cursor?): Cursor? {

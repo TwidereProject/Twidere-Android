@@ -493,10 +493,10 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         sendMessage.isEnabled = !readOnly
         editText.isEnabled = !readOnly
 
-        conversationTitle.text = title
+        conversationTitle.spannable = title
         if (subtitle != null) {
             conversationSubtitle.visibility = View.VISIBLE
-            conversationSubtitle.text = subtitle
+            conversationSubtitle.spannable = subtitle
         } else {
             conversationSubtitle.visibility = View.GONE
         }

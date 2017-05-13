@@ -17,33 +17,22 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.preference;
+package org.mariotaku.twidere.preference
 
-import android.content.Context;
-import android.util.AttributeSet;
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.pm.ResolveInfo
+import android.util.AttributeSet
 
-import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.constant.IntentConstants;
+abstract class ActivityPickerPreference(context: Context, attrs: AttributeSet? = null) :
+        ComponentPickerPreference(context, attrs) {
 
-/**
- * Created by mariotaku on 15/12/22.
- */
-public class EmojiSupportPreference extends ActivityPickerPreference {
-    public EmojiSupportPreference(Context context) {
-        super(context);
+    override fun getComponentName(info: ResolveInfo): ComponentName {
+        return ComponentName(info.activityInfo.packageName, info.activityInfo.name)
     }
 
-    public EmojiSupportPreference(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    @Override
-    protected String getIntentAction() {
-        return IntentConstants.INTENT_ACTION_EMOJI_SUPPORT_ABOUT;
-    }
-
-    @Override
-    protected String getNoneEntry() {
-        return getContext().getString(R.string.system_default);
+    override fun resolve(queryIntent: Intent): List<ResolveInfo> {
+        return packageManager.queryIntentActivities(queryIntent, 0)
     }
 }

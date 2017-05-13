@@ -432,7 +432,7 @@
   <string name="label_refresh_and_sync_service">刷新和同步服务</string>
   <string name="label_refresh_service">刷新服务</string>
   <string name="label_reply_name">回复 <xliff:g id="user_name">%s</xliff:g></string>
-  <string name="label_reply_name_text">引用 <xliff:g id="name">%1$s</xliff:g>：<xliff:g id="text">%2$s</xliff:g></string>
+  <string name="label_reply_name_text">回复 <xliff:g id="name">%1$s</xliff:g>：<xliff:g id="text">%2$s</xliff:g></string>
   <string name="label_schedule_time_buffer_default">Buffer 默认</string>
   <string name="label_send_at">发送于</string>
   <string name="label_sensitive_content">敏感内容</string>

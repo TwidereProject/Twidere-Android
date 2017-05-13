@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
 import kotlinx.android.synthetic.main.list_item_simple_user_list.view.*
+import org.mariotaku.ktextension.spannable
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IUserListsAdapter
 import org.mariotaku.twidere.extension.loadProfileImage
@@ -28,8 +29,8 @@ class SimpleUserListViewHolder(
     }
 
     fun display(userList: ParcelableUserList) {
-        nameView.text = userList.name
-        createdByView.text = createdByView.context.getString(R.string.created_by,
+        nameView.spannable = userList.name
+        createdByView.spannable = createdByView.context.getString(R.string.created_by,
                 adapter.userColorNameManager.getDisplayName(userList, false))
         if (adapter.profileImageEnabled) {
             profileImageView.visibility = View.VISIBLE

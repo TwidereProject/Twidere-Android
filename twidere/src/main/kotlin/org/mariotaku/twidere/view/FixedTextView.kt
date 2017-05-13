@@ -3,8 +3,7 @@ package org.mariotaku.twidere.view
 import android.content.Context
 import android.util.AttributeSet
 import org.mariotaku.chameleon.view.ChameleonTextView
-import org.mariotaku.twidere.text.util.SafeEditableFactory
-import org.mariotaku.twidere.text.util.SafeSpannableFactory
+import org.mariotaku.twidere.extension.setupEmojiFactory
 
 /**
  * Created by mariotaku on 2017/2/3.
@@ -13,8 +12,7 @@ import org.mariotaku.twidere.text.util.SafeSpannableFactory
 open class FixedTextView(context: Context, attrs: AttributeSet? = null) : ChameleonTextView(context, attrs) {
 
     init {
-        setSpannableFactory(SafeSpannableFactory)
-        setEditableFactory(SafeEditableFactory)
+        setupEmojiFactory()
     }
 
     override fun onTextContextMenuItem(id: Int): Boolean {
@@ -25,4 +23,5 @@ open class FixedTextView(context: Context, attrs: AttributeSet? = null) : Chamel
             return true
         }
     }
+
 }

@@ -34,6 +34,7 @@ import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.abstask.library.TaskStarter
+import org.mariotaku.ktextension.spannable
 import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.TwitterCaps
@@ -189,7 +190,7 @@ class CardPollViewController : ContainerView.ViewController() {
             val value = card.getAsInteger("choice${choiceIndex}_count", 0)
             if (label == null) throw NullPointerException()
             val choicePercent = if (votesSum == 0) 0f else value / votesSum.toFloat()
-            choiceLabelView.text = label
+            choiceLabelView.spannable = label
             choicePercentView.text = String.format(Locale.US, "%d%%", Math.round(choicePercent * 100))
 
             pollItem.setOnClickListener(clickListener)
@@ -214,7 +215,7 @@ class CardPollViewController : ContainerView.ViewController() {
         val nVotes = context.resources.getQuantityString(R.plurals.N_votes, votesSum, votesSum)
 
         val timeLeft = DateUtils.getRelativeTimeSpanString(context, endDatetimeUtc.time, true)
-        view.pollSummary.text = context.getString(R.string.poll_summary_format, nVotes, timeLeft)
+        view.pollSummary.spannable = context.getString(R.string.poll_summary_format, nVotes, timeLeft)
     }
 
     private class PercentDrawable internal constructor(

@@ -151,8 +151,8 @@ interface GeneralComponent {
     fun inject(service: BaseService)
 
     companion object {
-        private var instance: GeneralComponent? = null
 
+        private var instance: GeneralComponent? = null
         fun get(context: Context): GeneralComponent {
             return instance ?: run {
                 val helper = DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build()
@@ -160,5 +160,6 @@ interface GeneralComponent {
                 return@run helper
             }
         }
+
     }
 }
