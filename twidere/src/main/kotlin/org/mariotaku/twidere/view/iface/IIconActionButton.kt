@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonView
 import org.mariotaku.chameleon.internal.ChameleonTypedArray
+import org.mariotaku.chameleon.view.ChameleonTextView
 import org.mariotaku.twidere.R
 
 /**
@@ -21,7 +22,7 @@ interface IIconActionButton : ChameleonView {
     var disabledColor: Int
         @ColorInt get @ColorInt set
 
-    class Appearance : ChameleonView.Appearance {
+    class Appearance : ChameleonTextView.Appearance() {
         var defaultColor: Int = 0
             @ColorInt get @ColorInt set
         var activatedColor: Int = 0

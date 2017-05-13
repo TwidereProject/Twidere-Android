@@ -23,7 +23,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PorterDuff.Mode
 import android.support.annotation.ColorInt
-import android.support.v7.widget.AppCompatTextView
 import android.util.AttributeSet
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonView
@@ -36,7 +35,7 @@ import org.mariotaku.twidere.view.iface.IIconActionButton
  */
 class ActionIconThemedTextView(
         context: Context, attrs: AttributeSet? = null
-) : AppCompatTextView(context, attrs, android.R.attr.textViewStyle), IIconActionButton {
+) : FixedTextView(context, attrs), IIconActionButton {
 
     private var iconWidth: Int = 0
     private var iconHeight: Int = 0
@@ -121,7 +120,7 @@ class ActionIconThemedTextView(
         return false
     }
 
-    override fun createAppearance(context: Context, attributeSet: AttributeSet, theme: Chameleon.Theme): IIconActionButton.Appearance? {
+    override fun createAppearance(context: Context, attributeSet: AttributeSet, theme: Chameleon.Theme): Appearance? {
         return IIconActionButton.Appearance.create(context, attributeSet, theme)
     }
 
