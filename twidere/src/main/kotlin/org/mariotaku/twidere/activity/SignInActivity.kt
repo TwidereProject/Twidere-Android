@@ -504,9 +504,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
     private fun handleBrowserLoginResult(intent: Intent?) {
         if (intent == null) return
         val extras = intent.getBundleExtra(EXTRA_EXTRAS) ?: return
-        val verifier = intent.getStringExtra(EXTRA_OAUTH_VERIFIER) ?: return
         val requestToken = OAuthToken(extras.getString(EXTRA_REQUEST_TOKEN),
                 extras.getString(EXTRA_REQUEST_TOKEN_SECRET))
+        val verifier = intent.getStringExtra(EXTRA_OAUTH_VERIFIER)
         signInTask = BrowserSignInTask(this, apiConfig, requestToken, verifier)
         AsyncTaskUtils.executeTask(signInTask)
     }
