@@ -1417,8 +1417,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         private val cardBackgroundColor: Int
         private val showCardActions = !preferences[hideCardActionsKey]
         private var recyclerView: RecyclerView? = null
-        private var detachedStatusViewHolder: DetailStatusViewHolder? = null
-        private var mDetailMediaExpanded: Boolean = false
+        private var detailMediaExpanded: Boolean = false
 
         var status: ParcelableStatus? = null
             internal set
@@ -1582,7 +1581,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
         var isDetailMediaExpanded: Boolean
             get() {
-                if (mDetailMediaExpanded) return true
+                if (detailMediaExpanded) return true
                 if (mediaPreviewEnabled) {
                     val status = this.status
                     return status != null && (sensitiveContentEnabled || !status.is_possibly_sensitive)
@@ -1590,7 +1589,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 return false
             }
             set(expanded) {
-                mDetailMediaExpanded = expanded
+                detailMediaExpanded = expanded
                 notifyDataSetChanged()
                 updateItemDecoration()
             }
@@ -1606,9 +1605,6 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder? {
             when (viewType) {
                 VIEW_TYPE_DETAIL_STATUS -> {
-                    if (detachedStatusViewHolder != null) {
-                        return detachedStatusViewHolder
-                    }
                     val view = inflater.inflate(R.layout.header_status, parent, false)
                     view.setBackgroundColor(cardBackgroundColor)
                     return DetailStatusViewHolder(this, view)
@@ -1690,20 +1686,6 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     indicatorHolder.setLoadProgressVisible(isRepliesLoading)
                 }
             }
-        }
-
-        override fun onViewDetachedFromWindow(holder: ViewHolder?) {
-            if (holder is DetailStatusViewHolder) {
-                detachedStatusViewHolder = holder as DetailStatusViewHolder?
-            }
-            super.onViewDetachedFromWindow(holder)
-        }
-
-        override fun onViewAttachedToWindow(holder: ViewHolder?) {
-            if (holder === detachedStatusViewHolder) {
-                detachedStatusViewHolder = null
-            }
-            super.onViewAttachedToWindow(holder)
         }
 
         override fun getItemViewType(position: Int): Int {
