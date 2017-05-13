@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.util.net;
 
 import android.os.Build;
-import android.support.annotation.RequiresApi;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -35,7 +34,6 @@ import javax.net.ssl.SSLSocketFactory;
 /**
  * @author fkrauthan
  */
-@RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
 public class TLSSocketFactory extends SSLSocketFactory {
 
     private SSLSocketFactory internalSSLSocketFactory;
@@ -87,9 +85,11 @@ public class TLSSocketFactory extends SSLSocketFactory {
     }
 
     private Socket enableTLSOnSocket(Socket socket) {
-        if(socket != null && (socket instanceof SSLSocket)) {
-            ((SSLSocket)socket).setEnabledProtocols(new String[] {"TLSv1.1", "TLSv1.2"});
+        if (socket == null || (!(socket instanceof SSLSocket))) {
+            return socket;
         }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) return socket;
+        ((SSLSocket) socket).setEnabledProtocols(new String[]{"TLSv1.1", "TLSv1.2"});
         return socket;
     }
 }
