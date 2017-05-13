@@ -569,7 +569,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             callback = fragment
         }
 
-        override fun afterExecute(callback: MessagesConversationFragment?, result: BooleanArray) {
+        override fun afterExecute(callback: MessagesConversationFragment?, results: BooleanArray) {
             if (callback == null) return
             callback.setProgressVisible(false)
             callback.removeMedia(media.toList())

@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.fragment.filter
 
+import android.accounts.AccountManager
 import android.app.Dialog
 import android.content.ContentValues
 import android.content.Context
@@ -57,12 +58,12 @@ import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.fragment.AbsContentListViewFragment
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.FiltersData
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.text.style.EmojiSpan
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.ParseUtils
 import org.mariotaku.twidere.util.ThemeUtils
-import org.mariotaku.twidere.util.Utils
 
 
 abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdapter>(),
@@ -301,7 +302,8 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
                         userAutoCompleteAdapter = SourceAutoCompleteAdapter(activity)
                     } else {
                         val adapter = ComposeAutoCompleteAdapter(activity, Glide.with(this))
-                        adapter.accountKey = Utils.getDefaultAccountKey(activity)
+                        val am = AccountManager.get(activity)
+                        adapter.account = AccountUtils.getDefaultAccountDetails(activity, am, false)
                         userAutoCompleteAdapter = adapter
                     }
                     editText.setAdapter(userAutoCompleteAdapter)

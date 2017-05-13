@@ -23,6 +23,7 @@ import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_TWITTER_COM
 import org.mariotaku.twidere.extension.model.api.getUserHost
 import org.mariotaku.twidere.model.ParcelableLiteUser
+import org.mariotaku.twidere.model.ParcelableRelationship
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
 import org.mariotaku.twidere.util.Utils
@@ -46,6 +47,23 @@ fun ParcelableUser.toLite(): ParcelableLiteUser {
     result.profile_image_url = profile_image_url
     result.is_following = is_following
     return result
+}
+
+fun ParcelableUser.applyTo(relationship: ParcelableRelationship) {
+    relationship.following = is_following
+    extras?.let { extras ->
+        relationship.followed_by = extras.followed_by
+        relationship.blocking = extras.blocking
+        relationship.blocked_by = extras.blocked_by
+        relationship.muting = extras.muting
+        relationship.notifications_enabled = extras.notifications_enabled
+    }
+}
+
+val ParcelableUser.relationship: ParcelableRelationship get() = ParcelableRelationship().also {
+    it.account_key = this.account_key
+    it.user_key = this.key
+    this.applyTo(it)
 }
 
 val ParcelableUser.host: String

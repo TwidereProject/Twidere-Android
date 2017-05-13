@@ -26,7 +26,7 @@ import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.extension.getErrorMessage
-import org.mariotaku.twidere.extension.insertOne
+import org.mariotaku.twidere.extension.insert
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.UserKey
@@ -49,7 +49,7 @@ abstract class AbsAccountRequestTask<Params, Result, Callback>(context: Context,
         val draft = createDraft()
         var draftId = -1L
         if (draft != null) {
-            val uri = context.contentResolver.insertOne(Drafts.CONTENT_URI, draft)
+            val uri = context.contentResolver.insert(Drafts.CONTENT_URI, draft)
             draftId = uri?.lastPathSegment.toLongOr(-1)
         }
         if (draftId != -1L) {

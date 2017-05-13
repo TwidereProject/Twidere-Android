@@ -21,6 +21,7 @@ package org.mariotaku.twidere.task.twitter
 
 import android.content.Context
 import android.net.Uri
+import org.mariotaku.ktextension.addTo
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.mastodon.Mastodon
@@ -35,6 +36,7 @@ import org.mariotaku.twidere.fragment.HomeTimelineFragment
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.task.GetTimelineResult
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.ErrorInfoStore
 import org.mariotaku.twidere.util.sync.TimelineSyncManager
@@ -53,19 +55,33 @@ class GetHomeTimelineTask(context: Context) : GetStatusesTask(context) {
     private val profileImageSize = context.getString(R.string.profile_image_size)
 
     @Throws(MicroBlogException::class)
-    override fun getStatuses(account: AccountDetails, paging: Paging): List<ParcelableStatus> {
+    override fun getStatuses(account: AccountDetails, paging: Paging): GetTimelineResult<ParcelableStatus> {
         when (account.type) {
             AccountType.MASTODON -> {
                 val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
-                return mastodon.getHomeTimeline(paging).map {
+                val timeline = mastodon.getHomeTimeline(paging)
+                return GetTimelineResult(account, timeline.map {
                     it.toParcelable(account)
-                }
+                }, timeline.flatMap { status ->
+                    val mapResult = mutableListOf(status.account.toParcelable(account))
+                    status.reblog?.account?.toParcelable(account)?.addTo(mapResult)
+                    return@flatMap mapResult
+                })
             }
             else -> {
                 val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
-                return microBlog.getHomeTimeline(paging).map {
+                val timeline = microBlog.getHomeTimeline(paging)
+                return GetTimelineResult(account, timeline.map {
                     it.toParcelable(account, profileImageSize)
-                }
+                }, timeline.flatMap { status ->
+                    val mapResult = mutableListOf(status.user.toParcelable(account,
+                            profileImageSize = profileImageSize))
+                    status.retweetedStatus?.user?.toParcelable(account,
+                            profileImageSize = profileImageSize)?.addTo(mapResult)
+                    status.quotedStatus?.user?.toParcelable(account,
+                            profileImageSize = profileImageSize)?.addTo(mapResult)
+                    return@flatMap mapResult
+                })
             }
         }
     }

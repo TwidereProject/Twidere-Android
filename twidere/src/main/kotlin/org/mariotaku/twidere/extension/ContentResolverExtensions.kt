@@ -23,9 +23,11 @@ import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.database.Cursor
 import android.net.Uri
+import org.mariotaku.ktextension.map
 import org.mariotaku.ktextension.useCursor
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.twidere.util.TwidereQueryBuilder
+import org.mariotaku.twidere.util.content.ContentResolverUtils
 
 @SuppressLint("Recycle")
 fun ContentResolver.rawQuery(sql: String, selectionArgs: Array<String>?, notifyUri: Uri? = null): Cursor? {
@@ -36,13 +38,27 @@ fun ContentResolver.rawQuery(sql: String, selectionArgs: Array<String>?, notifyU
 fun <T> ContentResolver.queryOne(uri: Uri, projection: Array<String>?, selection: String?,
         selectionArgs: Array<String>?, sortOrder: String? = null, cls: Class<T>): T? {
     val cursor = this.query(uri, projection, selection, selectionArgs, sortOrder)
-    if (!cursor.moveToFirst()) return null
-    return cursor.useCursor {
-        val indices = ObjectCursor.indicesFrom(cursor, cls)
-        return@useCursor indices.newObject(cursor)
+    return cursor.useCursor { cur ->
+        if (!cur.moveToFirst()) return@useCursor null
+        val indices = ObjectCursor.indicesFrom(cur, cls)
+        return@useCursor indices.newObject(cur)
     }
 }
 
-fun <T : Any> ContentResolver.insertOne(uri: Uri, obj: T, cls: Class<T> = obj.javaClass): Uri? {
+
+fun <T> ContentResolver.queryAll(uri: Uri, projection: Array<String>?, selection: String?,
+        selectionArgs: Array<String>?, sortOrder: String? = null, cls: Class<T>): List<T> {
+    val cursor = this.query(uri, projection, selection, selectionArgs, sortOrder)
+    return cursor.useCursor { cur ->
+        return@useCursor cur.map(ObjectCursor.indicesFrom(cur, cls))
+    }
+}
+
+fun <T : Any> ContentResolver.insert(uri: Uri, obj: T, cls: Class<T> = obj.javaClass): Uri? {
     return this.insert(uri, ObjectCursor.valuesCreatorFrom(cls).create(obj))
+}
+
+fun <T : Any> ContentResolver.bulkInsert(uri: Uri, collection: Collection<T>, cls: Class<T>): Int {
+    val creator = ObjectCursor.valuesCreatorFrom(cls)
+    return ContentResolverUtils.bulkInsert(this, uri, collection.map(creator::create))
 }

@@ -173,12 +173,13 @@ fun ContentResolver.deleteActivityStatus(accountKey: UserKey, statusId: String,
                     activity.favorite_count = result.favorite_count
                 }
             }
+            return@updateItems activity
         }
     }
 }
 
 fun <T : ParcelableStatus> ContentResolver.updateStatusInfo(uris: Array<Uri>, columns: Array<String>?,
-        accountKey: UserKey, statusId: String, cls: Class<T>, action: (T) -> Unit) {
+        accountKey: UserKey, statusId: String, cls: Class<T>, action: (T) -> T) {
     val activityWhere = Expression.and(
             Expression.equalsArgs(Activities.ACCOUNT_KEY),
             Expression.or(
@@ -194,7 +195,7 @@ fun <T : ParcelableStatus> ContentResolver.updateStatusInfo(uris: Array<Uri>, co
 
 @WorkerThread
 fun <T> ContentResolver.updateItems(uri: Uri, columns: Array<String>?, where: String?,
-        whereArgs: Array<String>?, cls: Class<T>, action: (T) -> Unit) {
+        whereArgs: Array<String>?, cls: Class<T>, action: (T) -> T) {
     val c = query(uri, columns, where, whereArgs, null) ?: return
     val values = LongSparseArray<ContentValues>()
     try {
@@ -202,8 +203,7 @@ fun <T> ContentResolver.updateItems(uri: Uri, columns: Array<String>?, where: St
         val vc = ObjectCursor.valuesCreatorFrom(cls)
         c.moveToFirst()
         while (!c.isAfterLast) {
-            val item = ci.newObject(c)
-            action(item)
+            val item = action(ci.newObject(c))
             values.put(c.getLong(ci[BaseColumns._ID]), vc.create(item))
             c.moveToNext()
         }

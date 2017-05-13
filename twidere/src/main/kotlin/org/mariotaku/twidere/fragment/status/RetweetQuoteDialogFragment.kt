@@ -89,7 +89,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
         val useQuote = useQuote(!status.user_is_protected, details)
 
         commentContainer.visibility = if (useQuote) View.VISIBLE else View.GONE
-        editComment.accountKey = details.key
+        editComment.account = details
 
         val enterHandler = EditTextEnterHandler.attach(editComment, object : EditTextEnterHandler.EnterListener {
             override fun shouldCallListener(): Boolean {

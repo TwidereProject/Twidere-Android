@@ -13,6 +13,7 @@ import org.mariotaku.twidere.extension.model.AccountExtensionsKt;
 import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.account.cred.Credentials;
+import org.mariotaku.twidere.util.Utils;
 
 import java.util.Arrays;
 
@@ -84,6 +85,15 @@ public class AccountUtils {
 
     @Nullable
     public static AccountDetails getAccountDetails(@NonNull AccountManager am, @NonNull UserKey accountKey, boolean getCredentials) {
+        final Account account = findByAccountKey(am, accountKey);
+        if (account == null) return null;
+        return getAccountDetails(am, account, getCredentials);
+    }
+
+    @Nullable
+    public static AccountDetails getDefaultAccountDetails(@NonNull Context context, @NonNull AccountManager am, boolean getCredentials) {
+        final UserKey accountKey = Utils.INSTANCE.getDefaultAccountKey(context);
+        if (accountKey == null) return null;
         final Account account = findByAccountKey(am, accountKey);
         if (account == null) return null;
         return getAccountDetails(am, account, getCredentials);

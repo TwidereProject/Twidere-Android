@@ -19,6 +19,8 @@
 
 package org.mariotaku.twidere.util.database
 
+import org.mariotaku.ktextension.addAllTo
+import org.mariotaku.ktextension.addTo
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.sqliteqb.library.*
 import org.mariotaku.sqliteqb.library.query.SQLSelectQuery
@@ -39,20 +41,16 @@ object CachedUsersQueryBuilder {
             "${valueOrZero(CachedRelationships.BLOCKED_BY)} * 100 - " +
             "${valueOrZero(CachedRelationships.MUTING)} * 100"
 
-    fun withRelationship(projection: Array<String>?,
-            selection: String?,
-            selectionArgs: Array<String>?,
-            sortOrder: String?,
-            accountKey: UserKey): Pair<SQLSelectQuery, Array<String>> {
+    fun withRelationship(projection: Array<String>?, selection: Expression?,
+            selectionArgs: Array<String>?, sortOrder: String?, accountKey: UserKey,
+            filterHost: String?, filterType: String?): Pair<SQLSelectQuery, Array<String>> {
         return withRelationship(Utils.getColumnsFromProjection(projection), selection,
-                selectionArgs, sortOrder, accountKey)
+                selectionArgs, sortOrder, accountKey, filterHost, filterType)
     }
 
-    fun withRelationship(select: Selectable,
-            selection: String?,
-            selectionArgs: Array<String>?,
-            sortOrder: String?,
-            accountKey: UserKey): Pair<SQLSelectQuery, Array<String>> {
+    fun withRelationship(select: Selectable, selection: Expression?, selectionArgs: Array<String>?,
+            sortOrder: String?, accountKey: UserKey, filterHost: String?, filterType: String?):
+            Pair<SQLSelectQuery, Array<String>> {
         val qb = SQLSelectQuery.Builder()
         qb.select(select).from(Tables(CachedUsers.TABLE_NAME))
         val relationshipsUserKey = Columns.Column(Table(CachedRelationships.TABLE_NAME),
@@ -61,44 +59,38 @@ object CachedUsersQueryBuilder {
                 CachedRelationships.USER_KEY)
         val relationshipsAccountKey = Columns.Column(Table(CachedRelationships.TABLE_NAME),
                 CachedRelationships.ACCOUNT_KEY)
-        val on = Expression.and(
-                Expression.equals(relationshipsUserKey, usersUserKey),
-                Expression.equalsArgs(relationshipsAccountKey.sql)
-        )
+        val on = Expression.and(Expression.equals(relationshipsUserKey, usersUserKey),
+                Expression.equalsArgs(relationshipsAccountKey.sql))
         qb.join(Join(false, Join.Operation.LEFT, Table(CachedRelationships.TABLE_NAME), on))
-        val userTypeExpression: Expression
-        val host = accountKey.host
-        val accountKeyArgs: Array<String>
-        if (host == null) {
-            userTypeExpression = Expression.notLikeRaw(Columns.Column(Table(CachedUsers.TABLE_NAME),
-                    CachedUsers.USER_KEY), "'%@%'")
-            accountKeyArgs = arrayOf(accountKey.toString())
-        } else {
-            userTypeExpression = Expression.likeRaw(Columns.Column(Table(CachedUsers.TABLE_NAME),
-                    CachedUsers.USER_KEY), "'%@'||?")
-            accountKeyArgs = arrayOf(accountKey.toString(), host)
+
+        val expressions = mutableListOf<Expression>()
+        val mergedArgs = mutableListOf<String>(accountKey.toString())
+
+        selection?.addTo(expressions)
+        selectionArgs?.addAllTo(mergedArgs)
+
+        if (filterType != null) {
+            expressions.add(Expression.equalsArgs(Columns.Column(Table(CachedUsers.TABLE_NAME),
+                    CachedUsers.USER_TYPE)))
+            mergedArgs.add(filterType)
         }
-        if (selection != null) {
-            qb.where(Expression.and(userTypeExpression, Expression(selection)))
-        } else {
-            qb.where(userTypeExpression)
+
+        if (filterHost != null) {
+            expressions.add(Expression.likeRaw(Columns.Column(Table(CachedUsers.TABLE_NAME),
+                    CachedUsers.USER_KEY), "'%@'||?"))
+            mergedArgs.add(filterHost)
+        }
+        if (expressions.isNotEmpty()) {
+            qb.where(Expression.and(*expressions.toTypedArray()))
         }
         if (sortOrder != null) {
             qb.orderBy(OrderBy(sortOrder))
         }
-        val mergedArgs = if (selectionArgs != null) {
-            accountKeyArgs + selectionArgs
-        } else {
-            accountKeyArgs
-        }
-        return Pair<SQLSelectQuery, Array<String>>(qb.build(), mergedArgs)
+        return Pair<SQLSelectQuery, Array<String>>(qb.build(), mergedArgs.toTypedArray())
     }
 
-    fun withScore(projection: Array<String>?,
-            selection: String?,
-            selectionArgs: Array<String>?,
-            sortOrder: String?,
-            accountKey: UserKey,
+    fun withScore(projection: Array<String>?, selection: Expression?, selectionArgs: Array<String>?,
+            sortOrder: String?, accountKey: UserKey, filterHost: String?, filterType: String?,
             limit: Int): Pair<SQLSelectQuery, Array<String>> {
         val qb = SQLSelectQuery.Builder()
         val select = Utils.getColumnsFromProjection(projection)
@@ -110,7 +102,8 @@ object CachedUsersQueryBuilder {
             }
         } + Columns.Column(scoreExpr, "score")
         qb.select(select)
-        val pair = withRelationship(Columns(*columns), null, null, null, accountKey)
+        val pair = withRelationship(Columns(*columns), null, null, null, accountKey, filterHost,
+                filterType)
         qb.from(pair.first)
         val mergedArgs = if (selectionArgs != null) {
             pair.second + selectionArgs

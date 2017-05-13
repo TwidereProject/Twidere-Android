@@ -92,12 +92,14 @@ object SuggestionsCursorCreator {
             Suggestions.VALUE to Columns.Column(CachedHashtags.NAME, Suggestions.VALUE).sql
     )
 
-
     fun forSearch(db: SQLiteDatabaseWrapper, manager: UserColorNameManager,
             uri: Uri, projection: Array<String>?): Cursor? {
         val nonNullProjection = projection ?: Suggestions.COLUMNS
         val query = uri.getQueryParameter(QUERY_PARAM_QUERY) ?: return null
-        val accountKey = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY)?.let(UserKey::valueOf) ?: return null
+        val accountKey = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY)?.let(UserKey::valueOf) ?:
+                return null
+        val filterHost = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_HOST)
+        val filterType = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_TYPE)
         val emptyQuery = TextUtils.isEmpty(query)
         val cursors = mutableListOf(getHistoryCursor(db, nonNullProjection, query))
         if (emptyQuery) {
@@ -112,7 +114,8 @@ object SuggestionsCursorCreator {
                     cursors.add(getScreenNameCursor(nonNullProjection, screenName))
                 }
             }
-            cursors.add(getUsersCursor(db, manager, accountKey, nonNullProjection, query, queryTrimmed))
+            cursors.add(getUsersCursor(db, manager, nonNullProjection, accountKey, filterHost,
+                    filterType, query, queryTrimmed))
         }
         return MergeCursor(cursors.toTypedArray())
     }
@@ -123,7 +126,10 @@ object SuggestionsCursorCreator {
         val nonNullProjection = projection ?: Suggestions.COLUMNS
         val query = uri.getQueryParameter(QUERY_PARAM_QUERY) ?: return null
         val type = uri.getQueryParameter(QUERY_PARAM_TYPE) ?: return null
-        val accountKey = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY)?.let(UserKey::valueOf) ?: return null
+        val accountKey = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY)?.let(UserKey::valueOf) ?:
+                return null
+        val accountHost = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_HOST)
+        val accountType = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_TYPE)
         val queryEscaped = query.replace("_", "^_")
         when (type) {
             Suggestions.AutoComplete.TYPE_USERS -> {
@@ -136,7 +142,8 @@ object SuggestionsCursorCreator {
                 val ascending = booleanArrayOf(false, false, true, true)
                 val mappedProjection = nonNullProjection.mapToArray { autoCompleteUsersProjectionMap[it]!! }
                 val (sql, bindingArgs) = CachedUsersQueryBuilder.withScore(mappedProjection,
-                        where.sql, whereArgs, OrderBy(orderBy, ascending).sql, accountKey, 0)
+                        where, whereArgs, OrderBy(orderBy, ascending).sql, accountKey, accountHost,
+                        accountType, 0)
                 return db.rawQuery(sql.sql, bindingArgs)
             }
             Suggestions.AutoComplete.TYPE_HASHTAGS -> {
@@ -150,8 +157,9 @@ object SuggestionsCursorCreator {
         }
     }
 
-    private fun getUsersCursor(db: SQLiteDatabaseWrapper, manager: UserColorNameManager, accountKey: UserKey,
-            selection: Array<String>, query: String, queryTrimmed: String): Cursor {
+    private fun getUsersCursor(db: SQLiteDatabaseWrapper, manager: UserColorNameManager,
+            projection: Array<String>, accountKey: UserKey, filterHost: String?, filterType: String?,
+            query: String, queryTrimmed: String): Cursor {
         val nicknameKeys = Utils.getMatchedNicknameKeys(query, manager)
         val usersSelection = Expression.or(
                 Expression.inArgs(Columns.Column(CachedUsers.USER_KEY), nicknameKeys.size),
@@ -162,9 +170,9 @@ object SuggestionsCursorCreator {
         val order = arrayOf(CachedUsers.LAST_SEEN, CachedUsers.SCORE, CachedUsers.SCREEN_NAME, CachedUsers.NAME)
         val ascending = booleanArrayOf(false, false, true, true)
         val orderBy = OrderBy(order, ascending)
-        val usersProjection = selection.mapToArray { suggestionUsersProjectionMap[it]!! }
+        val usersProjection = projection.mapToArray { suggestionUsersProjectionMap[it]!! }
         val usersQuery = CachedUsersQueryBuilder.withScore(usersProjection,
-                usersSelection.sql, selectionArgs, orderBy.sql, accountKey, 0)
+                usersSelection, selectionArgs, orderBy.sql, accountKey, filterHost, filterType, 0)
         return db.rawQuery(usersQuery.first.sql, usersQuery.second)
     }
 

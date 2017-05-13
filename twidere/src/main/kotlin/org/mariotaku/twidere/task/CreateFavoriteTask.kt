@@ -57,11 +57,12 @@ class CreateFavoriteTask(context: Context, accountKey: UserKey, private val stat
 
         resolver.updateStatusInfo(DataStoreUtils.STATUSES_ACTIVITIES_URIS, Statuses.COLUMNS,
                 account.key, statusId, ParcelableStatus::class.java) { status ->
-            if (result.id != status.id) return@updateStatusInfo
+            if (result.id != status.id) return@updateStatusInfo status
             status.is_favorite = true
             status.reply_count = result.reply_count
             status.retweet_count = result.retweet_count
             status.favorite_count = result.favorite_count
+            return@updateStatusInfo status
         }
         return result
     }
@@ -102,8 +103,9 @@ class CreateFavoriteTask(context: Context, accountKey: UserKey, private val stat
 
             resolver.updateStatusInfo(DataStoreUtils.STATUSES_ACTIVITIES_URIS, Statuses.COLUMNS,
                     account.key, statusId, ParcelableStatus::class.java) { status ->
-                if (statusId != status.id) return@updateStatusInfo
+                if (statusId != status.id) return@updateStatusInfo status
                 status.is_favorite = true
+                return@updateStatusInfo status
             }
         }
     }

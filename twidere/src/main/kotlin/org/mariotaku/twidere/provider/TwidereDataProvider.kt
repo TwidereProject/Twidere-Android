@@ -169,16 +169,21 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                 }
                 VIRTUAL_TABLE_ID_CACHED_USERS_WITH_RELATIONSHIP -> {
                     val accountKey = UserKey.valueOf(uri.lastPathSegment)
+                    val accountHost = uri.getQueryParameter(EXTRA_ACCOUNT_HOST)
+                    val accountType = uri.getQueryParameter(EXTRA_ACCOUNT_TYPE)
                     val query = CachedUsersQueryBuilder.withRelationship(projection,
-                            selection, selectionArgs, sortOrder, accountKey)
+                            Expression(selection), selectionArgs, sortOrder, accountKey,
+                            accountHost, accountType)
                     val c = databaseWrapper.rawQuery(query.first.sql, query.second)
                     c?.setNotificationUri(context.contentResolver, CachedUsers.CONTENT_URI)
                     return c
                 }
                 VIRTUAL_TABLE_ID_CACHED_USERS_WITH_SCORE -> {
                     val accountKey = UserKey.valueOf(uri.lastPathSegment)
-                    val query = CachedUsersQueryBuilder.withScore(projection,
-                            selection, selectionArgs, sortOrder, accountKey, 0)
+                    val accountHost = uri.getQueryParameter(EXTRA_ACCOUNT_HOST)
+                    val accountType = uri.getQueryParameter(EXTRA_ACCOUNT_TYPE)
+                    val query = CachedUsersQueryBuilder.withScore(projection, Expression(selection),
+                            selectionArgs, sortOrder, accountKey, accountHost, accountType, 0)
                     val c = databaseWrapper.rawQuery(query.first.sql, query.second)
                     c?.setNotificationUri(context.contentResolver, CachedUsers.CONTENT_URI)
                     return c

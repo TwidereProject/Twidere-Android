@@ -40,6 +40,7 @@ import org.mariotaku.twidere.fragment.InteractionsTimelineFragment
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.task.GetTimelineResult
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.util.ErrorInfoStore
 import org.mariotaku.twidere.util.sync.TimelineSyncManager
@@ -59,7 +60,7 @@ class GetActivitiesAboutMeTask(context: Context) : GetActivitiesTask(context) {
     private val profileImageSize = context.getString(R.string.profile_image_size)
 
     @Throws(MicroBlogException::class)
-    override fun getActivities(account: AccountDetails, paging: Paging): List<ParcelableActivity> {
+    override fun getActivities(account: AccountDetails, paging: Paging): GetTimelineResult<ParcelableActivity> {
         when (account.type) {
             AccountType.MASTODON -> {
                 val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
@@ -81,35 +82,41 @@ class GetActivitiesAboutMeTask(context: Context) : GetActivitiesTask(context) {
                     if (activity.action == Activity.Action.INVALID) return@mapNotNull null
                     return@mapNotNull activity
                 }
-                return activities
+                return GetTimelineResult(account, activities, activities.flatMap {
+                    it.sources?.toList().orEmpty()
+                })
             }
             AccountType.TWITTER -> {
                 val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
                 if (account.isOfficial(context)) {
-                    return microBlog.getActivitiesAboutMe(paging).map {
+                    val activities = microBlog.getActivitiesAboutMe(paging).map {
                         it.toParcelable(account, profileImageSize = profileImageSize)
                     }
-                }
-                return microBlog.getMentionsTimeline(paging).map {
-                    InternalActivityCreator.status(it, account.key.id).toParcelable(account,
-                            profileImageSize = profileImageSize)
+
+                    return GetTimelineResult(account, activities, activities.flatMap {
+                        it.sources?.toList().orEmpty()
+                    })
                 }
             }
             AccountType.FANFOU -> {
                 val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
-                return microBlog.getMentions(paging).map {
+                val activities = microBlog.getMentions(paging).map {
                     InternalActivityCreator.status(it, account.key.id).toParcelable(account,
                             profileImageSize = profileImageSize)
                 }
-            }
-            else -> {
-                val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
-                return microBlog.getMentionsTimeline(paging).map {
-                    InternalActivityCreator.status(it, account.key.id).toParcelable(account,
-                            profileImageSize = profileImageSize)
-                }
+                return GetTimelineResult(account, activities, activities.flatMap {
+                    it.sources?.toList().orEmpty()
+                })
             }
         }
+        val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
+        val activities = microBlog.getMentionsTimeline(paging).map {
+            InternalActivityCreator.status(it, account.key.id).toParcelable(account,
+                    profileImageSize = profileImageSize)
+        }
+        return GetTimelineResult(account, activities, activities.flatMap {
+            it.sources?.toList().orEmpty()
+        })
     }
 
     override fun syncFetchReadPosition(manager: TimelineSyncManager, accountKeys: Array<UserKey>) {

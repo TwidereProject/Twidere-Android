@@ -1216,7 +1216,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private fun updateAccountSelectionState() {
         displaySelectedAccountsIcon()
         val accounts = accountsAdapter.selectedAccounts
-        editText.accountKey = accounts.firstOrNull()?.key ?: Utils.getDefaultAccountKey(this)
+        editText.account = accounts.firstOrNull()
         statusTextCount.maxLength = accounts.textLimit
         val singleAccount = accounts.singleOrNull()
         val allMastodon = accounts.isNotEmpty() && accounts.all { it.type == AccountType.MASTODON }

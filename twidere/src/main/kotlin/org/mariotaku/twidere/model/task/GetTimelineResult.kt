@@ -19,4 +19,8 @@
 
 package org.mariotaku.twidere.model.task
 
-data class GetTimelineResult(val exception: Exception?)
+import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.ParcelableUser
+
+data class GetTimelineResult<out T>(val account: AccountDetails, val data: List<T>,
+        val users: Collection<ParcelableUser>)

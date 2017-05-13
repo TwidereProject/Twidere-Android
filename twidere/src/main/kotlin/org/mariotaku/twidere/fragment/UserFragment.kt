@@ -332,8 +332,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
         val resolver = context.applicationContext.contentResolver
         task {
-            resolver.insert(CachedUsers.CONTENT_URI, ObjectCursor.valuesCreatorFrom(ParcelableUser::class.java).create(user))
-            resolver.insert(CachedRelationships.CONTENT_URI, ObjectCursor.valuesCreatorFrom(ParcelableRelationship::class.java).create(relationship))
+            resolver.insert(CachedUsers.CONTENT_URI, user, ParcelableUser::class.java)
+            resolver.insert(CachedRelationships.CONTENT_URI, relationship, ParcelableRelationship::class.java)
         }
         followContainer.follow.visibility = View.VISIBLE
     }

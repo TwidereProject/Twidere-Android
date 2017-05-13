@@ -22,3 +22,8 @@ package org.mariotaku.twidere.extension
 import android.net.Uri
 
 fun Uri.withAppendedPath(path: String) = Uri.withAppendedPath(this, path)
+
+fun Uri.Builder.appendQueryParameterIgnoreNull(key: String, value: String?) {
+    if (value == null) return
+    appendQueryParameter(key, value)
+}

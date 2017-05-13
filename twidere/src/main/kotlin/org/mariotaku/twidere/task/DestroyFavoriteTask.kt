@@ -54,6 +54,7 @@ class DestroyFavoriteTask(
             item.reply_count = result.reply_count
             item.retweet_count = result.retweet_count
             item.favorite_count = result.favorite_count - 1
+            return@updateStatusInfo item
         }
         return result
 

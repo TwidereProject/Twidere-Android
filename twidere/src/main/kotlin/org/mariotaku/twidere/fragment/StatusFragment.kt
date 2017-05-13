@@ -2059,6 +2059,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     item.favorite_count = activitySummary.favoriteCount
                     item.reply_count = activitySummary.replyCount
                     item.retweet_count = activitySummary.retweetCount
+                    return@updateStatusInfo item
                 }
                 val pStatus = status.toParcelable(details)
                 cr.insert(CachedStatuses.CONTENT_URI, ObjectCursor

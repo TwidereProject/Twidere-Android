@@ -21,15 +21,15 @@ package org.mariotaku.twidere.model.util
 
 import android.content.ContentResolver
 import android.support.v4.util.ArraySet
-import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.twitter.model.Relationship
 import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.twidere.extension.bulkInsert
 import org.mariotaku.twidere.model.ParcelableRelationship
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships
-import org.mariotaku.twidere.util.content.ContentResolverUtils
+import org.mariotaku.twidere.util.updateItems
 
 object ParcelableRelationshipUtils {
 
@@ -89,17 +89,17 @@ object ParcelableRelationshipUtils {
      */
     fun insert(cr: ContentResolver, relationships: Collection<ParcelableRelationship>) {
         val insertItems = ArraySet<ParcelableRelationship>()
-        val valuesCreator = ObjectCursor.valuesCreatorFrom(ParcelableRelationship::class.java)
         relationships.forEach {
             if (it._id > 0) {
-                val values = valuesCreator.create(it)
                 val where = Expression.equals(CachedRelationships._ID, it._id).sql
-                cr.update(CachedRelationships.CONTENT_URI, values, where, null)
+                cr.updateItems(CachedRelationships.CONTENT_URI, CachedRelationships.COLUMNS, where, null,
+                        ParcelableRelationship::class.java) {
+                    return@updateItems it
+                }
             } else {
                 insertItems.add(it)
             }
         }
-        ContentResolverUtils.bulkInsert(cr, CachedRelationships.CONTENT_URI,
-                insertItems.map(valuesCreator::create))
+        cr.bulkInsert(CachedRelationships.CONTENT_URI, insertItems, ParcelableRelationship::class.java)
     }
 }
