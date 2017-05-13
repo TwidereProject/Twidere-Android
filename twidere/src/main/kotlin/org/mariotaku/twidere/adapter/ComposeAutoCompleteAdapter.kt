@@ -90,7 +90,11 @@ class ComposeAutoCompleteAdapter(context: Context, val requestManager: RequestMa
 
             icon.clearColorFilter()
         } else {
-            text1.spannable = "#${cursor.getString(indices.title)}"
+            text1.spannable = if (account?.type == AccountType.FANFOU) {
+                "#${cursor.getString(indices.title)}#"
+            } else {
+                "#${cursor.getString(indices.title)}"
+            }
             text2.setText(R.string.hashtag)
 
             icon.setImageResource(R.drawable.ic_action_hashtag)
@@ -111,6 +115,9 @@ class ComposeAutoCompleteAdapter(context: Context, val requestManager: RequestMa
         val indices = this.indices!!
         when (cursor.getString(indices.type)) {
             Suggestions.AutoComplete.TYPE_HASHTAGS -> {
+                if (account?.type == AccountType.FANFOU) {
+                    return "#${cursor.getString(indices.value)}#"
+                }
                 return "#${cursor.getString(indices.value)}"
             }
             Suggestions.AutoComplete.TYPE_USERS -> {

@@ -31,6 +31,7 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.model.extractFanfouHashtags
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.fragment.HomeTimelineFragment
 import org.mariotaku.twidere.model.AccountDetails
@@ -66,14 +67,22 @@ class GetHomeTimelineTask(context: Context) : GetStatusesTask(context) {
                     val mapResult = mutableListOf(status.account.toParcelable(account))
                     status.reblog?.account?.toParcelable(account)?.addTo(mapResult)
                     return@flatMap mapResult
+                }, timeline.flatMap { status ->
+                    status.tags?.map { it.name }.orEmpty()
                 })
             }
             else -> {
                 val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
                 val timeline = microBlog.getHomeTimeline(paging)
-                return GetTimelineResult(account, timeline.map {
+                val statuses = timeline.map {
                     it.toParcelable(account, profileImageSize)
-                }, timeline.flatMap { status ->
+                }
+                val hashtags = if (account.type == AccountType.FANFOU) statuses.flatMap { status ->
+                    return@flatMap status.extractFanfouHashtags()
+                } else timeline.flatMap { status ->
+                    status.entities?.hashtags?.map { it.text }.orEmpty()
+                }
+                return GetTimelineResult(account, statuses, timeline.flatMap { status ->
                     val mapResult = mutableListOf(status.user.toParcelable(account,
                             profileImageSize = profileImageSize))
                     status.retweetedStatus?.user?.toParcelable(account,
@@ -81,7 +90,7 @@ class GetHomeTimelineTask(context: Context) : GetStatusesTask(context) {
                     status.quotedStatus?.user?.toParcelable(account,
                             profileImageSize = profileImageSize)?.addTo(mapResult)
                     return@flatMap mapResult
-                })
+                }, hashtags)
             }
         }
     }

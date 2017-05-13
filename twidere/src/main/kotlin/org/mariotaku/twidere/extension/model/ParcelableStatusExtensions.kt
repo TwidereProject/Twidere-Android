@@ -2,6 +2,7 @@ package org.mariotaku.twidere.extension.model
 
 import org.mariotaku.ktextension.addAllTo
 import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.util.UriUtils
 
 
 val ParcelableStatus.originalId: String
@@ -68,6 +69,23 @@ fun ParcelableStatus.toSummaryLine(): ParcelableActivity.SummaryLine {
     result.screen_name = user_screen_name
     result.content = text_unescaped
     return result
+}
+
+fun ParcelableStatus.extractFanfouHashtags(): List<String> {
+    return spans?.filter { span ->
+        var link = span.link
+        if (link.startsWith("/")) {
+            link = "http://fanfou.com$link"
+        }
+        if (UriUtils.getAuthority(link) != "fanfou.com") {
+            return@filter false
+        }
+        if (span.start <= 0 || span.end > text_unescaped.lastIndex) return@filter false
+        if (text_unescaped[span.start - 1] == '#' && text_unescaped[span.end] == '#') {
+            return@filter true
+        }
+        return@filter false
+    }?.map { text_unescaped.substring(it.start, it.end) }.orEmpty()
 }
 
 private fun parcelableUserMention(key: UserKey, name: String, screenName: String) = ParcelableUserMention().also {

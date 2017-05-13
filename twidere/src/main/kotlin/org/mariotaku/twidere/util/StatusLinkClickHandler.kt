@@ -45,7 +45,7 @@ open class StatusLinkClickHandler(
         val status = status
         val current = findByLink(status!!.media, link)
         if (current == null || current.open_browser) {
-            openLink(link)
+            openLink(accountKey, link)
         } else {
             IntentUtils.openMedia(context, status, current, preferences[newDocumentApiKey],
                     preferences[displaySensitiveContentsKey])

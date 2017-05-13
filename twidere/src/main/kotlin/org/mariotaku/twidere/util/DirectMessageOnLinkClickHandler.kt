@@ -28,6 +28,7 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_URI
 import org.mariotaku.twidere.constant.phishingLinksWaringKey
 import org.mariotaku.twidere.fragment.PhishingLinkWarningDialogFragment
+import org.mariotaku.twidere.model.UserKey
 
 class DirectMessageOnLinkClickHandler(
         context: Context,
@@ -38,10 +39,10 @@ class DirectMessageOnLinkClickHandler(
     override val isPrivateData: Boolean
         get() = true
 
-    override fun openLink(link: String) {
+    override fun openLink(accountKey: UserKey?, link: String) {
         if (manager != null && manager.isActive) return
         if (!hasShortenedLinks(link)) {
-            super.openLink(link)
+            super.openLink(accountKey, link)
             return
         }
         if (context is FragmentActivity && preferences[phishingLinksWaringKey]) {
@@ -52,7 +53,7 @@ class DirectMessageOnLinkClickHandler(
             fragment.arguments = args
             fragment.show(fm, "phishing_link_warning")
         } else {
-            super.openLink(link)
+            super.openLink(accountKey, link)
         }
 
     }

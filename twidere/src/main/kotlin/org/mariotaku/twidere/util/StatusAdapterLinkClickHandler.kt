@@ -45,7 +45,7 @@ class StatusAdapterLinkClickHandler<D>(context: Context, preferences: SharedPref
         val media = ParcelableMediaUtils.getAllMedia(status)
         val current = StatusLinkClickHandler.findByLink(media, link)
         if (current != null && current.open_browser) {
-            openLink(link)
+            openLink(accountKey, link)
         } else {
             IntentUtils.openMedia(context, status, current, preferences[newDocumentApiKey],
                     preferences[displaySensitiveContentsKey])

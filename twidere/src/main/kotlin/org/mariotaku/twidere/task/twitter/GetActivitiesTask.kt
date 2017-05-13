@@ -104,7 +104,7 @@ abstract class GetActivitiesTask(
         context.contentResolver.notifyChange(contentUri, null)
         val exception = results.firstOrNull { it.second != null }?.second
         bus.post(GetActivitiesTaskEvent(contentUri, false, exception))
-        GetStatusesTask.cacheUserRelationship(context, results)
+        GetStatusesTask.cacheItems(context, results)
         handler?.invoke(true)
     }
 

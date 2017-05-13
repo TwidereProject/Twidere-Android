@@ -17,10 +17,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.model.task
+package org.mariotaku.twidere.extension
 
-import org.mariotaku.twidere.model.AccountDetails
-import org.mariotaku.twidere.model.ParcelableUser
+import android.net.Uri
+import okhttp3.HttpUrl
 
-data class GetTimelineResult<out T>(val account: AccountDetails, val data: List<T>,
-        val users: Collection<ParcelableUser>, val hashtags: Collection<String>)
+fun HttpUrl.toUri() : Uri {
+    return Uri.parse(toString())
+}

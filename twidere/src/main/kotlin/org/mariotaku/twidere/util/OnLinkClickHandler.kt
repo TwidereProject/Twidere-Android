@@ -26,14 +26,18 @@ import android.content.SharedPreferences
 import android.net.Uri
 import android.os.BadParcelableException
 import android.support.v4.content.ContextCompat
+import okhttp3.HttpUrl
 import org.mariotaku.kpreferences.get
+import org.mariotaku.twidere.TwidereConstants.USER_TYPE_TWITTER_COM
 import org.mariotaku.twidere.activity.WebLinkHandlerActivity
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.app.TwidereApplication
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_HOST
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.model.AcctPlaceholderUserKey
+import org.mariotaku.twidere.extension.toUri
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener
@@ -65,7 +69,7 @@ open class OnLinkClickHandler(
                 if (accountKey != null && isMedia(link, extraId)) {
                     openMedia(accountKey, extraId, sensitive, link, start, end)
                 } else {
-                    openLink(link)
+                    openLink(accountKey, link)
                 }
                 return true
             }
@@ -74,20 +78,15 @@ open class OnLinkClickHandler(
                     openMedia(accountKey, extraId, sensitive, link, start, end)
                 } else {
                     val authority = UriUtils.getAuthority(link)
-                    if (authority == null) {
-                        openLink(link)
+                    if (authority == "fanfou.com") {
+                        if (accountKey != null && handleFanfouLink(link, orig, accountKey)) {
+                            return true
+                        }
+                    } else if (IntentUtils.isWebLinkHandled(context, Uri.parse(link))) {
+                        openTwitterLink(accountKey, link)
                         return true
                     }
-                    when (authority) {
-                        "fanfou.com" -> if (accountKey != null && handleFanfouLink(link, orig, accountKey)) {
-                            return true
-                        }
-                        else -> if (IntentUtils.isWebLinkHandled(context, Uri.parse(link))) {
-                            openTwitterLink(link, accountKey!!)
-                            return true
-                        }
-                    }
-                    openLink(link)
+                    openLink(accountKey, link)
                 }
                 return true
             }
@@ -132,17 +131,27 @@ open class OnLinkClickHandler(
                 preferences[displaySensitiveContentsKey])
     }
 
-    protected open fun openLink(link: String) {
+    protected open fun openLink(accountKey: UserKey?, link: String) {
         if (manager != null && manager.isActive) return
-        openLink(context, preferences, Uri.parse(link))
+        val uri = Uri.parse(link)
+        if (uri.isRelative && accountKey != null && accountKey.host != null) {
+            val absUri = HttpUrl.parse("http://${accountKey.host}/").resolve(link).toUri()
+            openLink(context, preferences, absUri)
+            return
+        }
+        openLink(context, preferences, uri)
     }
 
-    protected fun openTwitterLink(link: String, accountKey: UserKey) {
+    protected fun openTwitterLink(accountKey: UserKey?, link: String) {
         if (manager != null && manager.isActive) return
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         intent.setClass(context, WebLinkHandlerActivity::class.java)
-        intent.putExtra(EXTRA_ACCOUNT_KEY, accountKey)
+        if (accountKey != null) {
+            intent.putExtra(EXTRA_ACCOUNT_KEY, accountKey)
+        } else {
+            intent.putExtra(EXTRA_ACCOUNT_HOST, USER_TYPE_TWITTER_COM)
+        }
         intent.setExtrasClassLoader(TwidereApplication::class.java.classLoader)
         if (intent.resolveActivity(context.packageManager) != null) {
             try {
@@ -199,3 +208,4 @@ open class OnLinkClickHandler(
         }
     }
 }
+
