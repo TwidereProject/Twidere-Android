@@ -42,7 +42,7 @@ object HttpClientFactory {
     fun initOkHttpClient(conf: HttpClientConfiguration, builder: OkHttpClient.Builder, dns: Dns,
             connectionPool: ConnectionPool, cache: Cache) {
         updateHttpClientConfiguration(builder, conf, dns, connectionPool, cache)
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT in Build.VERSION_CODES.JELLY_BEAN until Build.VERSION_CODES.LOLLIPOP) {
             val tlsSocketFactory = TLSSocketFactory()
             val trustManager = Platform.get().trustManager(tlsSocketFactory) ?:
                     systemDefaultTrustManager()
