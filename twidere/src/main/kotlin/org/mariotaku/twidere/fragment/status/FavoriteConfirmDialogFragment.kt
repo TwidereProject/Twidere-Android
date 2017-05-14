@@ -84,11 +84,11 @@ class FavoriteConfirmDialogFragment : AbsStatusDialogFragment() {
 
     }
 
-    override fun onCancel(dialog: DialogInterface) {
+    override fun onCancel(dialog: DialogInterface?) {
         finishFavoriteConfirmActivity()
     }
 
-    override fun onDismiss(dialog: DialogInterface) {
+    override fun onDismiss(dialog: DialogInterface?) {
         super.onDismiss(dialog)
         finishFavoriteConfirmActivity()
     }
