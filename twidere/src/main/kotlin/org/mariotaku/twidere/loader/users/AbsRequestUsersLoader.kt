@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.loader.users
 
 import android.accounts.AccountManager
-import android.content.ActivityNotFoundException
 import android.content.Context
 import org.mariotaku.kpreferences.get
 import org.mariotaku.microblog.library.MicroBlogException
