@@ -65,6 +65,7 @@ subprojects {
                     AndroidImageCropper  : '2.4.0',
                     ExportablePreferences: '0.9.6',
                     ACRA                 : '4.9.2',
+                    AbstractTask         : '0.9.5',
             ]
         }
 
