@@ -27,6 +27,7 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.loadItemLimitKey
+import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.extension.model.api.applyLoadLimit
 import org.mariotaku.twidere.loader.iface.IPaginationLoader
 import org.mariotaku.twidere.model.AccountDetails
@@ -67,7 +68,7 @@ abstract class AbsRequestUsersLoader(
         try {
             val am = AccountManager.get(context)
             details = accountKey?.let { AccountUtils.getAccountDetails(am, it, true) } ?:
-                    throw ActivityNotFoundException()
+                    throw AccountNotFoundException()
             users = getUsersInternal(details)
         } catch (e: MicroBlogException) {
             DebugLog.w(tr = e)
