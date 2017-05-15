@@ -26,6 +26,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import org.mariotaku.ktextension.applyFontFamily
+import org.mariotaku.ktextension.spannable
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter
 import org.mariotaku.twidere.adapter.iface.IActivitiesAdapter
@@ -94,8 +95,8 @@ class ActivityTitleSummaryViewHolder(
         }
         activityTypeView.setColorFilter(message.color, PorterDuff.Mode.SRC_ATOP)
         activityTypeView.setImageResource(message.icon)
-        titleView.text = message.title
-        summaryView.text = message.summary
+        titleView.spannable = message.title
+        summaryView.spannable = message.summary
         summaryView.visibility = if (summaryView.length() > 0) View.VISIBLE else View.GONE
         timeView.time = activity.timestamp
         if (adapter.showAccountsColor) {
