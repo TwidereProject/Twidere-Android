@@ -21,13 +21,9 @@ package org.mariotaku.twidere.preference
 
 import android.content.Context
 import android.util.AttributeSet
-import org.mariotaku.twidere.R
 
-class ClearCachePreference @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyle: Int = R.attr.preferenceStyle
-) : AsyncTaskPreference(context, attrs, defStyle) {
+class ClearCachePreference(context: Context, attrs: AttributeSet? = null) :
+        AsyncTaskPreference(context, attrs) {
 
     override fun doInBackground() {
         val context = context ?: return

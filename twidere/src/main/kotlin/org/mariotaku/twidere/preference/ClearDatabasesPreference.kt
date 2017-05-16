@@ -21,15 +21,12 @@ package org.mariotaku.twidere.preference
 
 import android.content.Context
 import android.util.AttributeSet
-import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.TIMELINE_POSITIONS_PREFERENCES_NAME
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.util.DataStoreUtils
 
-class ClearDatabasesPreference(
-        context: Context,
-        attrs: AttributeSet? = null
-) : AsyncTaskPreference(context, attrs, R.attr.preferenceStyle) {
+class ClearDatabasesPreference(context: Context, attrs: AttributeSet? = null) :
+        AsyncTaskPreference(context, attrs) {
 
     override fun doInBackground() {
         val context = context ?: return
