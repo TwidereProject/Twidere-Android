@@ -5,7 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:title="@string/hidden_settings">
 
-    <Preference android:layout="@layout/header_hidden_settings"/>
+    <Preference
+        android:layout="@layout/header_hidden_settings"/>
 
     <org.mariotaku.twidere.preference.SeekBarDialogPreference
         android:defaultValue="10"
@@ -15,8 +16,7 @@
         app:min="5"
         app:progressTextSuffix="s"/>
 
-    <edu.tsinghua.hotmobi.UploadLogsPreferences android:title="@string/report_usage_statistics_now"/>
-
-    <org.mariotaku.twidere.preference.HiddenSettingEntryPreference android:title="@string/hidden_settings"/>
+    <org.mariotaku.twidere.preference.HiddenSettingEntryPreference
+        android:title="@string/hidden_settings"/>
 
 </PreferenceScreen>
