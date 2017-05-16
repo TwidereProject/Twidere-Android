@@ -258,13 +258,17 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
 
     private fun notifyUnsavedChange(): Boolean {
         if (isTopSettings && (shouldRecreate || shouldRestart || shouldTerminate)) {
-            val df = RestartConfirmDialogFragment()
-            df.arguments = Bundle {
-                this[EXTRA_SHOULD_RECREATE] = shouldRecreate
-                this[EXTRA_SHOULD_RESTART] = shouldRestart
-                this[EXTRA_SHOULD_TERMINATE] = shouldTerminate
+            executeAfterFragmentResumed {
+                if (it.isFinishing) return@executeAfterFragmentResumed
+                it as SettingsActivity
+                val df = RestartConfirmDialogFragment()
+                df.arguments = Bundle {
+                    this[EXTRA_SHOULD_RECREATE] = it.shouldRecreate
+                    this[EXTRA_SHOULD_RESTART] = it.shouldRestart
+                    this[EXTRA_SHOULD_TERMINATE] = it.shouldTerminate
+                }
+                df.show(it.supportFragmentManager, "restart_confirm")
             }
-            df.show(supportFragmentManager, "restart_confirm")
             return true
         }
         return false
