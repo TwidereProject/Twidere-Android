@@ -10,6 +10,7 @@ import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.constant.nameFirstKey
+import org.mariotaku.twidere.exception.UnsupportedCountIndexException
 import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
@@ -76,11 +77,12 @@ class MessagesEntriesAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        when (itemCounts.getItemCountIndex(position)) {
+        val countIndex = itemCounts.getItemCountIndex(position)
+        when (countIndex) {
             0 -> return ITEM_TYPE_MESSAGE_ENTRY
             1 -> return ITEM_VIEW_TYPE_LOAD_INDICATOR
+            else -> throw UnsupportedCountIndexException(countIndex, position)
         }
-        throw UnsupportedOperationException()
     }
 
     private fun updateItemCounts() {

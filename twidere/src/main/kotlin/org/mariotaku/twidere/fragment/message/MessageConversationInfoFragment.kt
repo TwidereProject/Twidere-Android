@@ -76,6 +76,7 @@ import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
+import org.mariotaku.twidere.exception.UnsupportedCountIndexException
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.getDirectMessageMaxParticipants
 import org.mariotaku.twidere.extension.loadProfileImage
@@ -572,14 +573,15 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         }
 
         override fun getItemViewType(position: Int): Int {
-            when (itemCounts.getItemCountIndex(position)) {
+            val countIndex = itemCounts.getItemCountIndex(position)
+            when (countIndex) {
                 ITEM_INDEX_TOP_SPACE -> return VIEW_TYPE_TOP_SPACE
                 ITEM_INDEX_HEADER -> return VIEW_TYPE_HEADER
                 ITEM_INDEX_ITEM -> return VIEW_TYPE_USER
                 ITEM_INDEX_ADD_USER -> return VIEW_TYPE_ADD_USER
                 ITEM_INDEX_SPACE -> return VIEW_TYPE_BOTTOM_SPACE
+                else -> throw UnsupportedCountIndexException(countIndex, position)
             }
-            throw UnsupportedOperationException()
         }
 
         override fun getItemId(position: Int): Long {

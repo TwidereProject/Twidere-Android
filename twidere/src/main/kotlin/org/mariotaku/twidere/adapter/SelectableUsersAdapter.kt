@@ -28,6 +28,8 @@ import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
+import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.Companion.ITEM_VIEW_TYPE_LOAD_INDICATOR
+import org.mariotaku.twidere.exception.UnsupportedCountIndexException
 import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
@@ -71,7 +73,7 @@ class SelectableUsersAdapter(
                 val holder = SelectableUserViewHolder(view, this)
                 return holder
             }
-            ILoadMoreSupportAdapter.ITEM_VIEW_TYPE_LOAD_INDICATOR -> {
+            ITEM_VIEW_TYPE_LOAD_INDICATOR -> {
                 val view = inflater.inflate(R.layout.list_item_load_indicator, parent, false)
                 return LoadIndicatorViewHolder(view)
             }
@@ -90,19 +92,20 @@ class SelectableUsersAdapter(
     override fun getItemViewType(position: Int): Int {
         val countIndex = itemCounts.getItemCountIndex(position)
         when (countIndex) {
-            ITEM_TYPE_START_INDICATOR, ITEM_TYPE_END_INDICATOR -> ILoadMoreSupportAdapter.ITEM_VIEW_TYPE_LOAD_INDICATOR
+            ITEM_TYPE_START_INDICATOR, ITEM_TYPE_END_INDICATOR -> return ITEM_VIEW_TYPE_LOAD_INDICATOR
             ITEM_TYPE_USER -> return ITEM_VIEW_TYPE_USER
+            else -> throw UnsupportedCountIndexException(countIndex, position)
         }
-        throw UnsupportedOperationException("Unsupported countIndex $countIndex, position $position")
+
     }
 
     override fun getItemId(position: Int): Long {
         val countIndex = itemCounts.getItemCountIndex(position)
-        when (countIndex) {
-            ITEM_TYPE_START_INDICATOR, ITEM_TYPE_END_INDICATOR -> return (countIndex.toLong() shl 32)
-            ITEM_TYPE_USER -> return (countIndex.toLong() shl 32) or getUser(position).hashCode().toLong()
+        return when (countIndex) {
+            ITEM_TYPE_START_INDICATOR, ITEM_TYPE_END_INDICATOR -> (countIndex.toLong() shl 32)
+            ITEM_TYPE_USER -> (countIndex.toLong() shl 32) or getUser(position).hashCode().toLong()
+            else -> throw UnsupportedCountIndexException(countIndex, position)
         }
-        throw UnsupportedOperationException("Unsupported countIndex $countIndex, position $position")
     }
 
     private fun bindUser(holder: SelectableUserViewHolder, position: Int) {

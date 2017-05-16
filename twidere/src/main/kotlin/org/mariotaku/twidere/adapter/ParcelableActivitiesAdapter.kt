@@ -43,10 +43,11 @@ import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.newDocumentApiKey
+import org.mariotaku.twidere.exception.UnsupportedCountIndexException
+import org.mariotaku.twidere.extension.model.activityStatus
 import org.mariotaku.twidere.fragment.CursorActivitiesFragment
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils
-import org.mariotaku.twidere.extension.model.activityStatus
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.JsonSerializer
@@ -241,7 +242,8 @@ class ParcelableActivitiesAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        when (getItemCountIndex(position)) {
+        val countIndex = getItemCountIndex(position)
+        when (countIndex) {
             ITEM_INDEX_ACTIVITY -> {
                 if (isGapItem(position)) {
                     return ITEM_VIEW_TYPE_GAP
@@ -270,8 +272,8 @@ class ParcelableActivitiesAdapter(
             ITEM_INDEX_LOAD_MORE_INDICATOR -> {
                 return ITEM_VIEW_TYPE_LOAD_INDICATOR
             }
+            else -> throw UnsupportedCountIndexException(countIndex, position)
         }
-        throw UnsupportedOperationException()
     }
 
     override fun addGapLoadingId(id: ObjectId) {
