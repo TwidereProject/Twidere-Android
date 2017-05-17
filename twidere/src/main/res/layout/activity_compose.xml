@@ -26,116 +26,109 @@
     android:minWidth="@dimen/compose_min_width"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <org.mariotaku.twidere.view.MaxHeightScrollView
         android:id="@+id/composeContent"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:maxHeight="240dp"
+        tools:maxHeight="@null">
 
-        <org.mariotaku.twidere.view.MaxHeightScrollView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxHeight="240dp"
-            tools:maxHeight="@null">
+            android:orientation="vertical">
 
-            <LinearLayout
+            <org.mariotaku.twidere.view.FixedTextView
+                android:id="@+id/replyLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:background="?android:panelColorBackground"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:padding="@dimen/element_spacing_normal"
+                tools:text="In reply to name: A quick brown fox jumps over the lazy dog"/>
+
+            <org.mariotaku.twidere.view.ExtendedLinearLayout
+                android:id="@+id/editTextContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="160dp"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/element_spacing_normal">
+
+                <org.mariotaku.twidere.view.ComposeEditText
+                    android:id="@+id/editSummary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="@string/label_content_warning"
+                    android:padding="@dimen/element_spacing_normal"
+                    android:visibility="gone"/>
+
+                <org.mariotaku.twidere.view.ComposeEditText
+                    android:id="@+id/editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="@string/label_status_hint"
+                    android:inputType="textMultiLine|textLongMessage|textCapSentences"
+                    android:padding="@dimen/element_spacing_normal"/>
 
                 <org.mariotaku.twidere.view.FixedTextView
-                    android:id="@+id/replyLabel"
+                    android:id="@+id/hintLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="?android:panelColorBackground"
-                    android:ellipsize="end"
-                    android:maxLines="1"
                     android:padding="@dimen/element_spacing_normal"
-                    tools:text="In reply to name: A quick brown fox jumps over the lazy dog"/>
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:visibility="gone"/>
 
-                <org.mariotaku.twidere.view.ExtendedLinearLayout
-                    android:id="@+id/editTextContainer"
+                <org.mariotaku.twidere.view.ExtendedRecyclerView
+                    android:id="@+id/attachedMediaPreview"
                     android:layout_width="match_parent"
+                    android:layout_height="128dp"
+                    android:clipChildren="false"
+                    android:paddingLeft="@dimen/element_spacing_small"
+                    android:paddingRight="@dimen/element_spacing_small"
+                    tools:listitem="@layout/grid_item_media_editor"/>
+
+                <org.mariotaku.twidere.view.ActionIconThemedTextView
+                    android:id="@+id/locationLabel"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minHeight="160dp"
-                    android:orientation="vertical"
-                    android:paddingBottom="@dimen/element_spacing_normal">
+                    android:drawableLeft="@drawable/ic_action_location"
+                    android:drawableStart="@drawable/ic_action_location"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:textColor="?android:textColorSecondary"
+                    app:iabColor="?android:textColorSecondary"
+                    app:iabIconHeight="20dp"
+                    app:iabIconWidth="20dp"
+                    tools:text="11.4, 51.4"/>
 
-                    <org.mariotaku.twidere.view.ComposeEditText
-                        android:id="@+id/editSummary"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/label_content_warning"
-                        android:background="@null"
-                        android:visibility="gone"
-                        android:inputType="textMultiLine|textLongMessage|textCapSentences"
-                        android:padding="@dimen/element_spacing_normal"/>
+                <org.mariotaku.twidere.view.ActionIconThemedTextView
+                    android:id="@+id/visibilityLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_action_web"
+                    android:drawableStart="@drawable/ic_action_web"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:textColor="?android:textColorSecondary"
+                    app:iabColor="?android:textColorSecondary"
+                    app:iabIconHeight="20dp"
+                    app:iabIconWidth="20dp"
+                    tools:text="@string/label_status_visibility_public"/>
 
-                    <org.mariotaku.twidere.view.ComposeEditText
-                        android:id="@+id/editText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:hint="@string/label_status_hint"
-                        android:inputType="textMultiLine|textLongMessage|textCapSentences"
-                        android:padding="@dimen/element_spacing_normal"/>
-
-                    <org.mariotaku.twidere.view.FixedTextView
-                        android:id="@+id/hintLabel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/element_spacing_normal"
-                        android:visibility="gone"
-                        android:textAppearance="?android:textAppearanceSmall"/>
-
-                    <org.mariotaku.twidere.view.ExtendedRecyclerView
-                        android:id="@+id/attachedMediaPreview"
-                        android:layout_width="match_parent"
-                        android:layout_height="128dp"
-                        android:clipChildren="false"
-                        android:paddingLeft="@dimen/element_spacing_small"
-                        android:paddingRight="@dimen/element_spacing_small"
-                        tools:listitem="@layout/grid_item_media_editor"/>
-
-                    <org.mariotaku.twidere.view.ActionIconThemedTextView
-                        android:id="@+id/locationLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_action_location"
-                        android:drawableStart="@drawable/ic_action_location"
-                        android:gravity="center_vertical"
-                        android:maxLines="1"
-                        android:textColor="?android:textColorSecondary"
-                        app:iabColor="?android:textColorSecondary"
-                        app:iabIconHeight="20dp"
-                        app:iabIconWidth="20dp"
-                        tools:text="11.4, 51.4"/>
-
-                    <org.mariotaku.twidere.view.ActionIconThemedTextView
-                        android:id="@+id/visibilityLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_action_web"
-                        android:drawableStart="@drawable/ic_action_web"
-                        android:gravity="center_vertical"
-                        android:maxLines="1"
-                        android:textColor="?android:textColorSecondary"
-                        app:iabColor="?android:textColorSecondary"
-                        app:iabIconHeight="20dp"
-                        app:iabIconWidth="20dp"
-                        tools:text="@string/label_status_visibility_public"/>
-
-                </org.mariotaku.twidere.view.ExtendedLinearLayout>
-            </LinearLayout>
-        </org.mariotaku.twidere.view.MaxHeightScrollView>
-
-    </RelativeLayout>
+            </org.mariotaku.twidere.view.ExtendedLinearLayout>
+        </LinearLayout>
+    </org.mariotaku.twidere.view.MaxHeightScrollView>
 
     <ProgressBar
         android:id="@+id/composeProgress"
         style="?android:progressBarStyleHorizontal"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:indeterminate="true"
         android:padding="0dp"
         android:visibility="gone"

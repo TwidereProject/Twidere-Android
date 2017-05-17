@@ -20,18 +20,17 @@
   -->
 
 <ScrollView
-    android:id="@+id/status_container"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/element_spacing_normal"
-    android:paddingLeft="@dimen/element_spacing_large"
-    android:paddingRight="@dimen/element_spacing_large"
-    android:paddingTop="@dimen/element_spacing_normal">
+    android:layout_height="match_parent">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/element_spacing_normal"
+        android:paddingLeft="@dimen/element_spacing_large"
+        android:paddingRight="@dimen/element_spacing_large"
+        android:paddingTop="@dimen/element_spacing_normal">
 
         <include layout="@layout/list_item_status"/>
 

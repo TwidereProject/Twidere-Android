@@ -20,21 +20,20 @@
   -->
 
 <ScrollView
-    android:id="@+id/status_container"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/element_spacing_normal"
-    android:paddingLeft="@dimen/element_spacing_large"
-    android:paddingRight="@dimen/element_spacing_large"
-    android:paddingTop="@dimen/element_spacing_normal">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/element_spacing_normal"
+        android:paddingLeft="@dimen/element_spacing_large"
+        android:paddingRight="@dimen/element_spacing_large"
+        android:paddingTop="@dimen/element_spacing_normal">
 
         <RelativeLayout
             android:id="@+id/commentContainer"
@@ -45,8 +44,13 @@
                 android:id="@+id/editComment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentStart="true"
                 android:completionThreshold="1"
                 android:focusable="true"
+                android:gravity="start|center_vertical"
                 android:hint="@string/comment_hint"
                 android:inputType="textMultiLine|textLongMessage|textCapSentences"
                 android:visibility="visible"
@@ -75,8 +79,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/element_size_normal"
                 android:layout_alignEnd="@+id/editComment"
-                android:layout_below="@+id/editComment"
                 android:layout_alignRight="@+id/editComment"
+                android:layout_below="@+id/editComment"
                 android:focusable="false"
                 android:gravity="center_vertical"
                 android:text="@string/quote_original_status"
@@ -92,9 +96,9 @@
             <FrameLayout
                 android:id="@+id/loadProgress"
                 android:layout_width="match_parent"
-                android:visibility="gone"
                 android:layout_height="wrap_content"
-                android:minHeight="@dimen/element_size_mlarge">
+                android:minHeight="@dimen/element_size_mlarge"
+                android:visibility="gone">
 
                 <ProgressBar
                     android:layout_width="wrap_content"
