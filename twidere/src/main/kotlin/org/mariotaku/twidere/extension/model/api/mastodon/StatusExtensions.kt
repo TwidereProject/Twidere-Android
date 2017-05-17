@@ -105,7 +105,8 @@ fun Status.applyTo(accountKey: UserKey, result: ParcelableStatus) {
     result.is_possibly_sensitive = status.isSensitive
     result.mentions = status.mentions?.mapToArray { it.toParcelable(accountKey) }
 
-    extras.display_text_range = calculateDisplayTextRange(result.spans, result.media)
+    extras.display_text_range = calculateDisplayTextRange(result.text_unescaped, result.spans,
+            result.media)
 
     // Try to complete mastodon `in_reply_to` info
     val inReplyToMention = result.mentions?.firstOrNull {
@@ -122,9 +123,10 @@ fun Status.applyTo(accountKey: UserKey, result: ParcelableStatus) {
     result.extras = extras
 }
 
-private fun calculateDisplayTextRange(spans: Array<SpanItem>?, media: Array<ParcelableMedia>?): IntArray? {
+private fun calculateDisplayTextRange(text: String, spans: Array<SpanItem>?, media: Array<ParcelableMedia>?): IntArray? {
     if (spans == null || media == null) return null
     val lastMatch = spans.lastOrNull { span -> media.any { span.link == it.page_url } } ?: return null
+    if (lastMatch.end < text.length) return null
     return intArrayOf(0, lastMatch.start)
 }
 
