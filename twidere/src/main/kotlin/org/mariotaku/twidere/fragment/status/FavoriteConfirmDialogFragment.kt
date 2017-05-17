@@ -57,7 +57,7 @@ class FavoriteConfirmDialogFragment : AbsStatusDialogFragment() {
         setNegativeButton(android.R.string.cancel, null)
     }
 
-    override fun AlertDialog.onStatusLoaded(details: AccountDetails, status: ParcelableStatus,
+    override fun AlertDialog.onStatusLoaded(account: AccountDetails, status: ParcelableStatus,
             savedInstanceState: Bundle?) {
         val positiveButton = getButton(BUTTON_POSITIVE)
         if (preferences[iWantMyStarsBackKey]) {

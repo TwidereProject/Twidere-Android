@@ -203,7 +203,7 @@
   <string name="combined_notifications">آگهی‌های ترکیبی</string>
   <string name="combined_notifications_summary_off">آگهی‌ها به صورت تکی نمایش داده خواهند شد</string>
   <string name="combined_notifications_summary_on">آگهی‌ها دسته‌بندی خواهند شد</string>
-  <string name="comment">نظر</string>
+  <string name="action_comment">نظر</string>
   <string name="comment_hint">نظر&#8230;</string>
   <string name="compact_cards">کارت‌های فشرده</string>
   <string name="compact_cards_summary">نمایش کارت‌های بیش‌تر روی صفحه</string>

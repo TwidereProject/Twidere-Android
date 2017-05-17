@@ -139,7 +139,7 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
 
     protected abstract fun Builder.setupAlertDialog()
 
-    protected abstract fun AlertDialog.onStatusLoaded(details: AccountDetails, status: ParcelableStatus,
+    protected abstract fun AlertDialog.onStatusLoaded(account: AccountDetails, status: ParcelableStatus,
             savedInstanceState: Bundle?)
 
     companion object {

@@ -128,7 +128,7 @@
   <string name="combined_notifications">Egyesített értesítések</string>
   <string name="combined_notifications_summary_off">Elkülönítve jelennek meg az értesítések</string>
   <string name="combined_notifications_summary_on">Csoportosítva jelennek meg az értesítések</string>
-  <string name="comment">Megjegyzés</string>
+  <string name="action_comment">Megjegyzés</string>
   <string name="comment_hint">Megjegyzés&#8230;</string>
   <string name="compact_cards">Kompakt kártyák</string>
   <string name="compact_cards_summary">Több kártya megjelenítése a képernyőn</string>

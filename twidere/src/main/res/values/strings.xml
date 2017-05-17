@@ -231,7 +231,7 @@
     <string name="combined_notifications_summary_off">Notifications will be displayed separately</string>
     <string name="combined_notifications_summary_on">Notifications will be grouped</string>
 
-    <string name="comment">Comment</string>
+    <string name="action_comment">Comment</string>
     <string name="comment_hint">Comment…</string>
 
     <string name="compact_cards">Compact cards</string>

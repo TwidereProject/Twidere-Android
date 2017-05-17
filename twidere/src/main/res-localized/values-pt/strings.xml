@@ -179,7 +179,7 @@
   <string name="combined_notifications">Notificações agrupadas</string>
   <string name="combined_notifications_summary_off">Notificações serão mostradas separadamente</string>
   <string name="combined_notifications_summary_on">Notificações serão agrupadas</string>
-  <string name="comment">Comentar</string>
+  <string name="action_comment">Comentar</string>
   <string name="comment_hint">Comentar&#8230;</string>
   <string name="compact_cards">Compactar cartões</string>
   <string name="compact_cards_summary">Exibir mais cartões na tela</string>

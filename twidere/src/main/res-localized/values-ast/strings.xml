@@ -202,7 +202,7 @@
   <string name="combined_notifications">Avisos combinaos</string>
   <string name="combined_notifications_summary_off">Los avisos amosaránse de mou separtáu</string>
   <string name="combined_notifications_summary_on">Agruparánse los avisos</string>
-  <string name="comment">Comentar</string>
+  <string name="action_comment">Comentar</string>
   <string name="comment_hint">Comentariu&#8230;</string>
   <string name="compact_cards">Tarxetes compautes</string>
   <string name="compact_cards_summary">Amuesa más tarxetes na pantalla</string>

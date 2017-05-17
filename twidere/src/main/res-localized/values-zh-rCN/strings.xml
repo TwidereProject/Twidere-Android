@@ -206,7 +206,7 @@
   <string name="combined_notifications">合并通知</string>
   <string name="combined_notifications_summary_off">通知将会分开显示</string>
   <string name="combined_notifications_summary_on">通知将会被分组</string>
-  <string name="comment">评论</string>
+  <string name="action_comment">评论</string>
   <string name="comment_hint">评论&#8230;</string>
   <string name="compact_cards">紧凑卡片视图</string>
   <string name="compact_cards_summary">在屏幕中显示更多卡片</string>

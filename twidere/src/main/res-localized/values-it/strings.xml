@@ -113,7 +113,7 @@
   <string name="combined_notifications">Notifiche raggruppate</string>
   <string name="combined_notifications_summary_off">Le notifiche saranno mostrate separatamente</string>
   <string name="combined_notifications_summary_on">Le notifiche saranno raggruppate</string>
-  <string name="comment">Commenta</string>
+  <string name="action_comment">Commenta</string>
   <string name="comment_hint">Commento&#8230;</string>
   <string name="compact_cards">Schede compatte</string>
   <string name="compact_cards_summary">Visualizza più schede sullo schermo</string>

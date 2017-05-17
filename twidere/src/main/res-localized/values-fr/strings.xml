@@ -205,7 +205,7 @@
   <string name="combined_notifications">Notifications combinées</string>
   <string name="combined_notifications_summary_off">Les notifications seront affichées séparément</string>
   <string name="combined_notifications_summary_on">Les notifications seront groupées</string>
-  <string name="comment">Commenter</string>
+  <string name="action_comment">Commenter</string>
   <string name="comment_hint">Commenter&#8230;</string>
   <string name="compact_cards">Cartes compactes</string>
   <string name="compact_cards_summary">Afficher plus de cartes à l\'écran</string>

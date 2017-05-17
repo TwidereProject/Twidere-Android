@@ -203,7 +203,7 @@
   <string name="combined_notifications">การแจ้งเตือนที่ถูกจัดกลุ่ม</string>
   <string name="combined_notifications_summary_off">แยกการแจ้งเตือนออกจากกันเป็นอันๆ</string>
   <string name="combined_notifications_summary_on">รวมการแจ้งเตือนเป็นกลุ่มเดียวกัน</string>
-  <string name="comment">แสดงความเห็น</string>
+  <string name="action_comment">แสดงความเห็น</string>
   <string name="comment_hint">ความคิดเห็น...</string>
   <string name="compact_cards">ขนาดกะทัดรัด</string>
   <string name="compact_cards_summary">แสดงการ์ดเยอะๆ บนหน้าจอ</string>

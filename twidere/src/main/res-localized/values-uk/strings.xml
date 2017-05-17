@@ -117,7 +117,7 @@
   <string name="combined_notifications">Груповані сповіщення</string>
   <string name="combined_notifications_summary_off">Сповіщення відображаються окремо</string>
   <string name="combined_notifications_summary_on">Сповіщення групуються</string>
-  <string name="comment">Коментувати</string>
+  <string name="action_comment">Коментувати</string>
   <string name="comment_hint">Коментувати&#8230;</string>
   <string name="compact_cards">Компактні картки</string>
   <string name="compact_cards_summary">Відображати більше карток на екрані</string>

@@ -132,7 +132,7 @@
   <string name="combined_notifications">Объединенные уведомления</string>
   <string name="combined_notifications_summary_off">Уведомления будут показаны раздельно</string>
   <string name="combined_notifications_summary_on">Уведомления будут сгруппированы</string>
-  <string name="comment">Комментировать</string>
+  <string name="action_comment">Комментировать</string>
   <string name="comment_hint">Комментарий&#8230;</string>
   <string name="compact_cards">Компактный вид карточек</string>
   <string name="compact_cards_summary">Отображать на экране больше карточек</string>

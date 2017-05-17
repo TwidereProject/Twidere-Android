@@ -116,7 +116,7 @@
   <string name="combined_notifications">Kombine bildirimleri</string>
   <string name="combined_notifications_summary_off">Bildirimler ayrı ayrı görüntülenir</string>
   <string name="combined_notifications_summary_on">Bildirimler gruplandırılarak görüntülenir</string>
-  <string name="comment">Yorum</string>
+  <string name="action_comment">Yorum</string>
   <string name="comment_hint">Yorum&#8230;</string>
   <string name="compact_cards">Kompak kartlar</string>
   <string name="compact_cards_summary">Ekranda daha fazla kart görüntüle</string>

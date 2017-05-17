@@ -206,7 +206,7 @@
   <string name="combined_notifications">Notificacións combinadas</string>
   <string name="combined_notifications_summary_off">As notificacións amosaranse separadamente</string>
   <string name="combined_notifications_summary_on">Agruparanse as notificacións</string>
-  <string name="comment">Comentar</string>
+  <string name="action_comment">Comentar</string>
   <string name="comment_hint">Comentar&#8230;</string>
   <string name="compact_cards">Compactar cartóns</string>
   <string name="compact_cards_summary">Amosa máis cartóns na pantalla</string>

@@ -116,7 +116,7 @@
   <string name="combined_notifications">Yhdistetyt ilmoitukset</string>
   <string name="combined_notifications_summary_off">Ilmoitukset esitetään erillään</string>
   <string name="combined_notifications_summary_on">Ilmoitukset ryhmitellään</string>
-  <string name="comment">Kommentti</string>
+  <string name="action_comment">Kommentti</string>
   <string name="comment_hint">Kommentti&#8230;</string>
   <string name="compact_cards">Tiiviit kortit</string>
   <string name="compact_cards_summary">Näytä ruudulla enemmän kortteja</string>

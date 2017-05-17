@@ -179,7 +179,7 @@
   <string name="combined_notifications">Notifikasi digabungkan</string>
   <string name="combined_notifications_summary_off">Notifikasi akan ditampilkan terpisah</string>
   <string name="combined_notifications_summary_on">Notifikasi akan digrupkan</string>
-  <string name="comment">Komentar</string>
+  <string name="action_comment">Komentar</string>
   <string name="comment_hint">Komentar...</string>
   <string name="compact_cards">Kartu compact</string>
   <string name="compact_cards_summary">Tampilkan kartu lebih banyak</string>

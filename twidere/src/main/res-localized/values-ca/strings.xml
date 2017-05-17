@@ -116,7 +116,7 @@
   <string name="combined_notifications">Notificacions combinades</string>
   <string name="combined_notifications_summary_off">Les notificacions es mostraran per separat</string>
   <string name="combined_notifications_summary_on">Els notificacions es mostraran agrupades</string>
-  <string name="comment">Comentari</string>
+  <string name="action_comment">Comentari</string>
   <string name="comment_hint">Comentari&#8230;</string>
   <string name="compact_cards">Targetes més compactes</string>
   <string name="compact_cards_summary">Fa que es vegin més piulades per pàgina</string>

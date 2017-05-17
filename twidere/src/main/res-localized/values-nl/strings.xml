@@ -113,7 +113,7 @@
   <string name="combined_notifications">Gecombineerde meldingen</string>
   <string name="combined_notifications_summary_off">Meldingen zullen los van elkaar worden weergegeven</string>
   <string name="combined_notifications_summary_on">Meldingen zullen gegroepeerd worden</string>
-  <string name="comment">Opmerking</string>
+  <string name="action_comment">Opmerking</string>
   <string name="comment_hint">Opmerking maken&#8230;</string>
   <string name="compact_cards">Compacte kaarten</string>
   <string name="compact_cards_summary">Toon meer kaarten op het scherm</string>

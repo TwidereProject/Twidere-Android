@@ -197,7 +197,7 @@
   <string name="combined_notifications">Kombinerade notifieringar</string>
   <string name="combined_notifications_summary_off">Notifieringar kommer att visas separat</string>
   <string name="combined_notifications_summary_on">Notifieringar kommer att grupperas</string>
-  <string name="comment">Kommentar</string>
+  <string name="action_comment">Kommentar</string>
   <string name="comment_hint">Kommentar...</string>
   <string name="compact_cards">Kompakta kort</string>
   <string name="compact_cards_summary">Visa fler kort på skärmen</string>

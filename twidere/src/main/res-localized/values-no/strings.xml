@@ -108,7 +108,7 @@
   <string name="combined_notifications">Kombinerte varsler</string>
   <string name="combined_notifications_summary_off">Varsler vises separat</string>
   <string name="combined_notifications_summary_on">Varsler grupperes</string>
-  <string name="comment">Kommenter</string>
+  <string name="action_comment">Kommenter</string>
   <string name="comment_hint">Kommenter&#8230;</string>
   <string name="compact_cards">Kompakte kort</string>
   <string name="compact_cards_summary">Vis flere kort på skjermen</string>

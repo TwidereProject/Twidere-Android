@@ -206,7 +206,7 @@
   <string name="combined_notifications">合併された通知</string>
   <string name="combined_notifications_summary_off">通知を個別表示</string>
   <string name="combined_notifications_summary_on">通知をグループ化</string>
-  <string name="comment">コメント</string>
+  <string name="action_comment">コメント</string>
   <string name="comment_hint">コメント&#8230;</string>
   <string name="compact_cards">カードのコンパクト化</string>
   <string name="compact_cards_summary">画面あたりのカード表示数を増やせます。</string>

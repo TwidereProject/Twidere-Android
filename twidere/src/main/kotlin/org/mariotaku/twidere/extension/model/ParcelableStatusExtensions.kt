@@ -1,8 +1,10 @@
 package org.mariotaku.twidere.extension.model
 
 import org.mariotaku.ktextension.addAllTo
+import org.mariotaku.microblog.library.mastodon.annotation.StatusVisibility
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.util.UriUtils
+import org.mariotaku.twidere.util.Utils
 
 
 val ParcelableStatus.originalId: String
@@ -61,6 +63,19 @@ inline val ParcelableStatus.quoted_user_acct: String? get() = if (account_key.ho
 } else {
     "$quoted_user_screen_name@${quoted_user_key?.host}"
 }
+
+inline val ParcelableStatus.is_my_retweet: Boolean
+    get() = Utils.isMyRetweet(account_key, retweeted_by_user_key, my_retweet_id)
+
+inline val ParcelableStatus.can_retweet: Boolean
+    get() {
+        if (user_is_protected) return false
+        return when (extras?.visibility) {
+            StatusVisibility.PRIVATE -> false
+            StatusVisibility.DIRECT -> false
+            else -> true
+        }
+    }
 
 fun ParcelableStatus.toSummaryLine(): ParcelableActivity.SummaryLine {
     val result = ParcelableActivity.SummaryLine()

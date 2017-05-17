@@ -146,16 +146,13 @@ object MenuUtils {
 
             when (status.extras?.visibility) {
                 StatusVisibility.PRIVATE -> {
-                    retweet.isEnabled = false
                     retweet.setActionIcon(context, R.drawable.ic_action_lock)
                 }
                 StatusVisibility.DIRECT -> {
-                    retweet.isEnabled = false
                     retweet.setActionIcon(context, R.drawable.ic_action_message)
                     retweet.setIcon(R.drawable.ic_action_message)
                 }
                 else -> {
-                    retweet.isEnabled = true
                     retweet.setActionIcon(context, R.drawable.ic_action_retweet)
                 }
             }

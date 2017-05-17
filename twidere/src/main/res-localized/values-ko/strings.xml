@@ -205,7 +205,7 @@
   <string name="combined_notifications">알림 합치기</string>
   <string name="combined_notifications_summary_off">알림들이 따로따로 표시됩니다.</string>
   <string name="combined_notifications_summary_on">알림들이 합쳐서 표시됩니다.</string>
-  <string name="comment">코멘트</string>
+  <string name="action_comment">코멘트</string>
   <string name="comment_hint">코멘트&#8230;</string>
   <string name="compact_cards">작은 카드</string>
   <string name="compact_cards_summary">화면에 더 많은 카드를 표시합니다.</string>

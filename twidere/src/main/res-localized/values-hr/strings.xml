@@ -99,7 +99,7 @@
   <string name="clear_databases_summary">Očisti sve tweetove, profile, poruke. Podaci o vašem računu neće biti izgubljeni.</string>
   <string name="clear_search_history">Očisti povijest pretraživanja</string>
   <string name="color">Boja</string>
-  <string name="comment">Komentirat</string>
+  <string name="action_comment">Komentirat</string>
   <string name="comment_hint">Komentiraj&#8230;</string>
   <string name="compact_cards">Kompaktne kartice</string>
   <string name="compact_cards_summary">Prikaži više kartice na zaslonu</string>

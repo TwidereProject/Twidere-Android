@@ -137,7 +137,7 @@
   <string name="click_item_to_configure">اضغط على المحتوى للتكوين</string>
   <string name="close_accounts_dashboard">إغلاق لوحة الحسابات</string>
   <string name="color">اللون</string>
-  <string name="comment">تعليق</string>
+  <string name="action_comment">تعليق</string>
   <string name="compact_cards">بطاقات مختصرة</string>
   <string name="compact_cards_summary">عرض بطاقات أكثر على الشاشة</string>
   <string name="compose_now">اكتب الان</string>

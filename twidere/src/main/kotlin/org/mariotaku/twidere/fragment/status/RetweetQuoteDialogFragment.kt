@@ -42,16 +42,16 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.quickSendKey
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.model.can_retweet
+import org.mariotaku.twidere.extension.model.is_my_retweet
 import org.mariotaku.twidere.extension.model.textLimit
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.draft.QuoteStatusActionExtras
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.service.LengthyOperationsService
-import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.EditTextEnterHandler
 import org.mariotaku.twidere.util.LinkCreator
-import org.mariotaku.twidere.util.Utils.isMyRetweet
 import org.mariotaku.twidere.util.view.SimpleTextWatcher
 import org.mariotaku.twidere.view.ComposeEditText
 import org.mariotaku.twidere.view.StatusTextCountView
@@ -82,14 +82,14 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
         setNeutralButton(R.string.action_quote, null)
     }
 
-    override fun AlertDialog.onStatusLoaded(details: AccountDetails, status: ParcelableStatus,
+    override fun AlertDialog.onStatusLoaded(account: AccountDetails, status: ParcelableStatus,
             savedInstanceState: Bundle?) {
-        textCountView.maxLength = details.textLimit
+        textCountView.maxLength = account.textLimit
 
-        val useQuote = useQuote(!status.user_is_protected, details)
+        val canQuoteRetweet = canQuoteRetweet(account)
 
-        commentContainer.visibility = if (useQuote) View.VISIBLE else View.GONE
-        editComment.account = details
+        commentContainer.visibility = if (canQuoteRetweet) View.VISIBLE else View.GONE
+        editComment.account = account
 
         val enterHandler = EditTextEnterHandler.attach(editComment, object : EditTextEnterHandler.EnterListener {
             override fun shouldCallListener(): Boolean {
@@ -97,7 +97,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
             }
 
             override fun onHitEnter(): Boolean {
-                if (retweetOrQuote(details, status, showProtectedConfirm)) {
+                if (retweetOrQuote(account, status, showProtectedConfirm)) {
                     dismiss()
                     return true
                 }
@@ -107,7 +107,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
         enterHandler.addTextChangedListener(object : SimpleTextWatcher {
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                updateTextCount(dialog, s, status, details)
+                dialog.updateTextCount(s, status, account)
             }
         })
 
@@ -118,18 +118,10 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
         }
 
         getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
-            var dismissDialog = false
-            if (editComment.length() > 0) {
-                dismissDialog = retweetOrQuote(details, status, showProtectedConfirm)
-            } else if (isMyRetweet(status)) {
-                twitterWrapper.cancelRetweetAsync(details.key, status.id, status.my_retweet_id)
-                dismissDialog = true
-            } else if (useQuote(!status.user_is_protected, details)) {
-                dismissDialog = retweetOrQuote(details, status, showProtectedConfirm)
-            } else {
-                Analyzer.logException(IllegalStateException(status.toString()))
-            }
-            if (dismissDialog) {
+            if (status.is_my_retweet) {
+                twitterWrapper.cancelRetweetAsync(account.key, status.id, status.my_retweet_id)
+                dismiss()
+            } else if (retweetOrQuote(account, status, showProtectedConfirm)) {
                 dismiss()
             }
         }
@@ -146,7 +138,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
         }
         editComment.setSelection(editComment.length())
 
-        updateTextCount(dialog, editComment.text, status, details)
+        dialog.updateTextCount(editComment.text, status, account)
     }
 
     override fun onCancel(dialog: DialogInterface?) {
@@ -169,24 +161,24 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
         }
     }
 
-    private fun updateTextCount(dialog: DialogInterface, s: CharSequence, status: ParcelableStatus,
-            credentials: AccountDetails) {
-        if (dialog !is AlertDialog) return
-        val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE) ?: return
-        if (s.isNotEmpty()) {
-            positiveButton.setText(R.string.comment)
-            positiveButton.isEnabled = true
-        } else if (isMyRetweet(status)) {
+    private fun DialogInterface.updateTextCount(s: CharSequence, status: ParcelableStatus, account: AccountDetails) {
+        if (this !is AlertDialog) return
+        val positiveButton = getButton(AlertDialog.BUTTON_POSITIVE) ?: return
+
+        if (status.is_my_retweet) {
             positiveButton.setText(R.string.action_cancel_retweet)
             positiveButton.isEnabled = true
-        } else if (useQuote(false, credentials)) {
-            positiveButton.setText(R.string.action_retweet)
+        } else if (canQuoteRetweet(account)) {
+            if (editComment.empty) {
+                positiveButton.setText(R.string.action_retweet)
+            } else {
+                positiveButton.setText(R.string.action_comment)
+            }
             positiveButton.isEnabled = true
         } else {
             positiveButton.setText(R.string.action_retweet)
-            positiveButton.isEnabled = !status.user_is_protected
+            positiveButton.isEnabled = status.can_retweet
         }
-        val textCountView = dialog.findViewById(R.id.commentTextCount) as StatusTextCountView
         textCountView.textCount = validator.getTweetLength(s.toString())
     }
 
@@ -196,7 +188,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
         val twitter = twitterWrapper
         val dialog = dialog ?: return false
         val editComment = dialog.findViewById(R.id.editComment) as EditText
-        if (useQuote(editComment.length() > 0, account)) {
+        if (canQuoteRetweet(account) && !editComment.empty) {
             val quoteOriginalStatus = dialog.quoteOriginal.isChecked
 
             var commentText: String
@@ -250,8 +242,11 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
         return true
     }
 
-    private fun useQuote(preCondition: Boolean, account: AccountDetails): Boolean {
-        return preCondition || AccountType.FANFOU == account.type
+    private fun canQuoteRetweet(account: AccountDetails): Boolean {
+        return when (account.type) {
+            AccountType.FANFOU, AccountType.TWITTER -> true
+            else -> false
+        }
     }
 
     private fun Dialog.saveToDrafts() {
