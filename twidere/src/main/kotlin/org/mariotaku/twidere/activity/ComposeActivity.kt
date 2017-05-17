@@ -1117,8 +1117,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             else -> extraText
         }
 
-        val selectionEnd = editText.length()
-        editText.setSelection(selectionEnd)
+        val selection = intent.getIntExtra(EXTRA_SELECTION, -1)
+        if (selection < 0) {
+            editText.setSelection(editText.length())
+        } else {
+            editText.setSelection(selection.coerceIn(0..editText.length()))
+        }
         return true
     }
 

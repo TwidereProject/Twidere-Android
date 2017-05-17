@@ -225,6 +225,7 @@ public interface IntentConstants {
     String EXTRA_PLACE_NAME = "place_name";
     String EXTRA_SCHEDULE_INFO = "schedule_info";
     String EXTRA_VISIBILITY = "visibility";
+    String EXTRA_SELECTION = "selection";
     String EXTRA_SAVE_DRAFT = "save_draft";
     String EXTRA_HOST = "host";
     String EXTRA_LOCAL = "local";
