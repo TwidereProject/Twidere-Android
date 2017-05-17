@@ -171,10 +171,11 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
         } else if (canQuoteRetweet(account)) {
             if (editComment.empty) {
                 positiveButton.setText(R.string.action_retweet)
+                positiveButton.isEnabled = status.can_retweet
             } else {
                 positiveButton.setText(R.string.action_comment)
+                positiveButton.isEnabled = true
             }
-            positiveButton.isEnabled = true
         } else {
             positiveButton.setText(R.string.action_retweet)
             positiveButton.isEnabled = status.can_retweet
