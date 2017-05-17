@@ -30,6 +30,7 @@ import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 /**
  * Created by mariotaku on 15/1/16.
  */
+@SuppressWarnings("RestrictedApi")
 public class ActionIconDrawable extends DrawableWrapper implements TwidereActionMenuItemView.IgnoreTinting {
 
     private int mDefaultColor;

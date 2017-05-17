@@ -19,10 +19,15 @@
 
 package org.mariotaku.ktextension
 
+import android.content.Context
 import android.graphics.drawable.Drawable
+import android.support.annotation.DrawableRes
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.MenuItemCompat
 import android.view.Menu
+import android.view.MenuItem
 import android.view.SubMenu
+import org.mariotaku.twidere.graphic.ActionIconDrawable
 
 fun Menu.setItemAvailability(id: Int, available: Boolean) {
     val item = findItem(id) ?: return
@@ -63,4 +68,15 @@ fun Menu.setMenuItemShowAsActionFlags(id: Int, flags: Int) {
 
 fun Menu.findSubmenu(id: Int): SubMenu? {
     return findItem(id)?.subMenu
+}
+
+
+fun MenuItem.setActionIcon(context: Context, @DrawableRes iconRes: Int) {
+    val oldIcon = this.icon
+    if (oldIcon is ActionIconDrawable) {
+        val starIcon = ContextCompat.getDrawable(context, iconRes)
+        this.icon = ActionIconDrawable(starIcon, oldIcon.defaultColor)
+    } else {
+        setIcon(iconRes)
+    }
 }

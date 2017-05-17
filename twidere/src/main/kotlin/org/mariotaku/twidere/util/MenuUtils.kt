@@ -42,7 +42,9 @@ import android.widget.Toast
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
+import org.mariotaku.ktextension.setActionIcon
 import org.mariotaku.ktextension.setItemAvailability
+import org.mariotaku.microblog.library.mastodon.annotation.StatusVisibility
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.AccountSelectorActivity
@@ -141,8 +143,26 @@ object MenuUtils {
         }
         val retweet = menu.findItem(R.id.retweet)
         if (retweet != null) {
-            ActionIconDrawable.setMenuHighlight(retweet, TwidereMenuInfo(isMyRetweet, retweetHighlight))
+
+            when (status.extras?.visibility) {
+                StatusVisibility.PRIVATE -> {
+                    retweet.isEnabled = false
+                    retweet.setActionIcon(context, R.drawable.ic_action_lock)
+                }
+                StatusVisibility.DIRECT -> {
+                    retweet.isEnabled = false
+                    retweet.setActionIcon(context, R.drawable.ic_action_message)
+                    retweet.setIcon(R.drawable.ic_action_message)
+                }
+                else -> {
+                    retweet.isEnabled = true
+                    retweet.setActionIcon(context, R.drawable.ic_action_retweet)
+                }
+            }
+
             retweet.setTitle(if (isMyRetweet) R.string.action_cancel_retweet else R.string.action_retweet)
+
+            ActionIconDrawable.setMenuHighlight(retweet, TwidereMenuInfo(isMyRetweet, retweetHighlight))
         }
         val favorite = menu.findItem(R.id.favorite)
         if (favorite != null) {
@@ -160,13 +180,7 @@ object MenuUtils {
                 provider.setIsFavorite(favorite, isFavorite)
             } else {
                 if (useStar) {
-                    val oldIcon = favorite.icon
-                    if (oldIcon is ActionIconDrawable) {
-                        val starIcon = ContextCompat.getDrawable(context, R.drawable.ic_action_star)
-                        favorite.icon = ActionIconDrawable(starIcon, oldIcon.defaultColor)
-                    } else {
-                        favorite.setIcon(R.drawable.ic_action_star)
-                    }
+                    favorite.setActionIcon(context, R.drawable.ic_action_star)
                     ActionIconDrawable.setMenuHighlight(favorite, TwidereMenuInfo(isFavorite, favoriteHighlight))
                 } else {
                     ActionIconDrawable.setMenuHighlight(favorite, TwidereMenuInfo(isFavorite, likeHighlight))
@@ -411,3 +425,4 @@ object MenuUtils {
         }
     }
 }
+
