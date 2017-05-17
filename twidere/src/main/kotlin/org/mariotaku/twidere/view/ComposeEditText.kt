@@ -26,7 +26,7 @@ import android.support.v13.view.inputmethod.InputContentInfoCompat
 import android.support.v4.os.BuildCompat
 import android.text.InputType
 import android.text.Selection
-import android.text.method.ArrowKeyMovementMethod
+import android.text.method.BaseMovementMethod
 import android.text.method.MovementMethod
 import android.util.AttributeSet
 import android.view.inputmethod.EditorInfo
@@ -65,7 +65,7 @@ class ComposeEditText(
     }
 
     override fun getDefaultMovementMethod(): MovementMethod {
-        return ArrowKeyMovementMethod.getInstance()
+        return BaseMovementMethod()
     }
 
     override fun onAttachedToWindow() {

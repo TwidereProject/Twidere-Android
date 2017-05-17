@@ -21,10 +21,10 @@ package org.mariotaku.twidere.view
 
 import android.content.Context
 import android.text.Spannable
+import android.text.method.BaseMovementMethod
 import android.text.method.MovementMethod
 import android.text.style.ClickableSpan
 import android.util.AttributeSet
-import android.view.KeyEvent
 import android.view.MotionEvent
 import android.widget.TextView
 import org.mariotaku.chameleon.view.ChameleonTextView
@@ -34,11 +34,10 @@ import org.mariotaku.twidere.extension.setupEmojiFactory
  * Returns true when not clicking links
  * Created by mariotaku on 15/11/20.
  */
-class TimelineContentTextView @JvmOverloads constructor(
+class TimelineContentTextView(
         context: Context,
-        attrs: AttributeSet? = null,
-        defStyle: Int = 0
-) : ChameleonTextView(context, attrs, defStyle) {
+        attrs: AttributeSet? = null
+) : ChameleonTextView(context, attrs) {
 
     init {
         setupEmojiFactory()
@@ -85,31 +84,11 @@ class TimelineContentTextView @JvmOverloads constructor(
         }
     }
 
-    internal class InternalMovementMethod : MovementMethod {
+    internal class InternalMovementMethod : BaseMovementMethod() {
         private var targetSpan: ClickableSpan? = null
 
         override fun initialize(widget: TextView, text: Spannable) {
 
-        }
-
-        override fun onKeyDown(widget: TextView, text: Spannable, keyCode: Int, keyEvent: KeyEvent): Boolean {
-            return false
-        }
-
-        override fun onKeyUp(widget: TextView, text: Spannable, keyCode: Int, keyEvent: KeyEvent): Boolean {
-            return false
-        }
-
-        override fun onKeyOther(widget: TextView, text: Spannable, keyEvent: KeyEvent): Boolean {
-            return false
-        }
-
-        override fun onTakeFocus(widget: TextView, text: Spannable, direction: Int) {
-
-        }
-
-        override fun onTrackballEvent(widget: TextView, text: Spannable, event: MotionEvent): Boolean {
-            return false
         }
 
         override fun onTouchEvent(widget: TextView, text: Spannable, event: MotionEvent): Boolean {
@@ -139,12 +118,5 @@ class TimelineContentTextView @JvmOverloads constructor(
             return targetSpan != null
         }
 
-        override fun onGenericMotionEvent(widget: TextView, text: Spannable, event: MotionEvent): Boolean {
-            return false
-        }
-
-        override fun canSelectArbitrarily(): Boolean {
-            return false
-        }
     }
 }
