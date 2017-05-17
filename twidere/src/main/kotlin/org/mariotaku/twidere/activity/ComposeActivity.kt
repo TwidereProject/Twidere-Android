@@ -203,7 +203,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         get() {
             val status = inReplyToStatus
             if (!isQuote || status == null) return false
-            return status.user_is_protected && status.account_key != status.user_key
+            return !status.can_retweet && status.account_key != status.user_key
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
