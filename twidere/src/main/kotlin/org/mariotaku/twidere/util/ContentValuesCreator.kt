@@ -21,10 +21,7 @@ package org.mariotaku.twidere.util
 
 import android.content.ContentValues
 import org.mariotaku.ktextension.mapToArray
-import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.twitter.model.SavedSearch
-import org.mariotaku.microblog.library.twitter.model.Status
-import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserMention
@@ -70,12 +67,6 @@ object ContentValuesCreator {
 
     fun createSavedSearches(savedSearches: List<SavedSearch>, accountKey: UserKey): Array<ContentValues> {
         return savedSearches.mapToArray { createSavedSearch(it, accountKey) }
-    }
-
-    fun createStatus(orig: Status, accountKey: UserKey, accountType: String,
-            profileImageSize: String): ContentValues {
-        return ObjectCursor.valuesCreatorFrom(ParcelableStatus::class.java)
-                .create(orig.toParcelable(accountKey, accountType, profileImageSize))
     }
 
 }
