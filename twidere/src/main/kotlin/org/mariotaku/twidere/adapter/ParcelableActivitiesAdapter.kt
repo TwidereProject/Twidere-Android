@@ -372,7 +372,7 @@ class ParcelableActivitiesAdapter(
             readInfoValueAction: (ActivityInfo) -> T,
             readStatusValueAction: (status: ParcelableActivity) -> T,
             defValue: T, raw: Boolean = false): T {
-        val data = data
+        val data = this.data
         if (data is ObjectCursor) {
             val dataPosition = position - activityStartIndex
             if (dataPosition < 0 || dataPosition >= getActivityCount(true)) {

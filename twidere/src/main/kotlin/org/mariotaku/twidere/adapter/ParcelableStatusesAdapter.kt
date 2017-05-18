@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.adapter
 
 import android.content.Context
-import android.database.Cursor
 import android.database.CursorIndexOutOfBoundsException
 import android.support.v4.widget.Space
 import android.support.v7.widget.RecyclerView
@@ -120,6 +119,7 @@ abstract class ParcelableStatusesAdapter(
     private var displayDataCount: Int = 0
     private var showingActionCardId = RecyclerView.NO_ID
     private val reuseStatus = ParcelableStatus()
+    private var infoCache: Array<StatusInfo?>? = null
 
     override val itemCounts = ItemCounts(5)
 
@@ -207,51 +207,48 @@ abstract class ParcelableStatusesAdapter(
 
     override fun getItemId(position: Int): Long {
         val countIndex = getItemCountIndex(position)
-        when (countIndex) {
+        return (countIndex.toLong() shl 32) or when (countIndex) {
             ITEM_INDEX_PINNED_STATUS -> {
                 val status = pinnedStatuses!![position - getItemStartPosition(ITEM_INDEX_PINNED_STATUS)]
-                return (countIndex.toLong() shl 32) or status.hashCode().toLong()
+                return status.hashCode().toLong()
             }
-            ITEM_INDEX_STATUS -> return (countIndex.toLong() shl 32) or getFieldValue(position, { cursor, indices ->
-                val accountKey = UserKey.valueOf(cursor.getString(indices[Statuses.ACCOUNT_KEY]))
-                val id = cursor.getString(indices[Statuses.ID])
+            ITEM_INDEX_STATUS -> getFieldValue(position, { (_, accountKey, id) ->
                 return@getFieldValue ParcelableStatus.calculateHashCode(accountKey, id)
             }, { status ->
                 return@getFieldValue status.hashCode()
             }, -1).toLong()
-            else -> return (countIndex.toLong() shl 32) or position.toLong()
+            else -> position.toLong()
         }
     }
 
     override fun getStatusId(position: Int, raw: Boolean): String {
-        return getFieldValue(position, { cursor, indices ->
-            return@getFieldValue cursor.getString(indices[Statuses.ID])
+        return getFieldValue(position, { info ->
+            return@getFieldValue info.id
         }, { status ->
             return@getFieldValue status.id
         }, "")
     }
 
     fun getStatusSortId(position: Int, raw: Boolean): Long {
-        return getFieldValue(position, { cursor, indices ->
-            return@getFieldValue cursor.safeGetLong(indices[Statuses.SORT_ID])
+        return getFieldValue(position, { info ->
+            return@getFieldValue info.sortId
         }, { status ->
             return@getFieldValue status.sort_id
         }, -1L, raw)
     }
 
     override fun getStatusTimestamp(position: Int, raw: Boolean): Long {
-        return getFieldValue(position, { cursor, indices ->
-            return@getFieldValue cursor.safeGetLong(indices[Statuses.TIMESTAMP])
+        return getFieldValue(position, { info ->
+            return@getFieldValue info.timestamp
         }, { status ->
             return@getFieldValue status.timestamp
         }, -1L)
     }
 
     override fun getStatusPositionKey(position: Int, raw: Boolean): Long {
-        return getFieldValue(position, { cursor, indices ->
-            val positionKey = cursor.safeGetLong(indices[Statuses.POSITION_KEY])
-            if (positionKey > 0) return@getFieldValue positionKey
-            return@getFieldValue cursor.safeGetLong(indices[Statuses.TIMESTAMP])
+        return getFieldValue(position, { info ->
+            if (info.positionKey > 0) return@getFieldValue info.positionKey
+            return@getFieldValue info.timestamp
         }, { status ->
             val positionKey = status.position_key
             if (positionKey > 0) return@getFieldValue positionKey
@@ -261,8 +258,8 @@ abstract class ParcelableStatusesAdapter(
 
     override fun getAccountKey(position: Int, raw: Boolean): UserKey {
         val def: UserKey? = null
-        return getFieldValue(position, { cursor, indices ->
-            return@getFieldValue UserKey.valueOf(cursor.getString(indices[Statuses.ACCOUNT_KEY]))
+        return getFieldValue(position, { info ->
+            return@getFieldValue info.accountKey
         }, { status ->
             return@getFieldValue status.account_key
         }, def, raw)!!
@@ -422,18 +419,31 @@ abstract class ParcelableStatusesAdapter(
     }
 
     private inline fun <T> getFieldValue(position: Int,
-            readCursorValueAction: (cursor: Cursor, indices: ObjectCursor.CursorIndices<ParcelableStatus>) -> T,
+            readInfoValueAction: (StatusInfo) -> T,
             readStatusValueAction: (status: ParcelableStatus) -> T,
             defValue: T, raw: Boolean = false): T {
+        val data = this.data
         if (data is ObjectCursor) {
             val dataPosition = position - statusStartIndex
             if (dataPosition < 0 || dataPosition >= getStatusCount(true)) {
                 throw CursorIndexOutOfBoundsException("index: $position, valid range is $0..${getStatusCount(true)}")
             }
-            val cursor = (data as ObjectCursor).cursor
+            val cursor = data.cursor
             if (!cursor.safeMoveToPosition(dataPosition)) return defValue
-            val indices = (data as ObjectCursor).indices
-            return readCursorValueAction(cursor, indices)
+            val indices = data.indices
+            val info = infoCache?.get(dataPosition) ?: run {
+                val _id = cursor.safeGetLong(indices[Statuses._ID])
+                val accountKey = UserKey.valueOf(cursor.getString(indices[Statuses.ACCOUNT_KEY]))
+                val id = cursor.getString(indices[Statuses.ID])
+                val timestamp = cursor.safeGetLong(indices[Statuses.TIMESTAMP])
+                val sortId = cursor.safeGetLong(indices[Statuses.SORT_ID])
+                val positionKey = cursor.safeGetLong(indices[Statuses.POSITION_KEY])
+                val gap = cursor.getInt(indices[Statuses.IS_GAP]) == 1
+                val newInfo = StatusInfo(_id, accountKey, id, timestamp, sortId, positionKey, gap)
+                infoCache?.set(dataPosition, newInfo)
+                return@run newInfo
+            }
+            return readInfoValueAction(info)
         }
         return readStatusValueAction(getStatus(position, raw))
     }
@@ -473,6 +483,18 @@ abstract class ParcelableStatusesAdapter(
         itemCounts[ITEM_INDEX_STATUS] = getStatusCount(false)
         itemCounts[ITEM_INDEX_LOAD_END_INDICATOR] = if (ILoadMoreSupportAdapter.END in loadMoreIndicatorPosition) 1 else 0
     }
+
+
+    data class StatusInfo(
+            val _id: Long,
+            val accountKey: UserKey,
+            val id: String,
+            val timestamp: Long,
+            val sortId: Long,
+            val positionKey: Long,
+            val gap: Boolean
+    )
+
 
     companion object {
         const val VIEW_TYPE_STATUS = 2
