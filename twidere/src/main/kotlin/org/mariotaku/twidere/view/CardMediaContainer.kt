@@ -102,7 +102,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
     private fun ImageView.displayImage(displayChildIndex: Int, media: Array<ParcelableMedia>,
             requestManager: RequestManager, accountKey: UserKey?, withCredentials: Boolean) {
         when (style) {
-            PreviewStyle.REAL_SIZE, PreviewStyle.CROP -> {
+            PreviewStyle.ACTUAL_SIZE, PreviewStyle.CROP -> {
                 this.scaleType = ScaleType.CENTER_CROP
             }
             PreviewStyle.SCALE -> {
@@ -117,12 +117,23 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
                 if (video) return@run null
                 item.media_url
             }
-            if (withCredentials) {
-                val uri = Uri.parse(url)
-                requestManager.load(AuthenticatedUri(uri, accountKey)).asBitmap().into(this)
+            val request = if (withCredentials) {
+                requestManager.load(AuthenticatedUri(Uri.parse(url), accountKey)).asBitmap()
             } else {
-                requestManager.load(url).asBitmap().into(this)
+                requestManager.load(url).asBitmap()
             }
+            when (style) {
+                PreviewStyle.ACTUAL_SIZE -> {
+                    request.fitCenter()
+                }
+                PreviewStyle.CROP -> {
+                    request.centerCrop()
+                }
+                PreviewStyle.SCALE -> {
+                    request.fitCenter()
+                }
+            }
+            request.into(this)
             if (this is MediaPreviewImageView) {
                 setHasPlayIcon(ParcelableMediaUtils.hasPlayIcon(item.type))
             }
@@ -207,7 +218,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
     private fun measure1Media(contentWidth: Int, childIndices: IntArray, ratioMultiplier: Float): Int {
         val child = getChildAt(childIndices[0])
         var childHeight = Math.round(contentWidth.toFloat() * WIDTH_HEIGHT_RATIO * ratioMultiplier)
-        if (style == PreviewStyle.REAL_SIZE) {
+        if (style == PreviewStyle.ACTUAL_SIZE) {
             val media = (child.layoutParams as MediaLayoutParams).media
             if (media != null) {
                 val aspectRatio = media.aspect_ratio

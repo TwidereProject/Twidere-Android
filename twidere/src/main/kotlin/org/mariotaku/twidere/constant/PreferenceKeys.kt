@@ -138,7 +138,7 @@ object mediaPreviewStyleKey : KSimpleKey<Int>(KEY_MEDIA_PREVIEW_STYLE, PreviewSt
     override fun read(preferences: SharedPreferences): Int {
         when (preferences.getString(key, null)) {
             VALUE_MEDIA_PREVIEW_STYLE_SCALE -> return PreviewStyle.SCALE
-            VALUE_MEDIA_PREVIEW_STYLE_REAL_SIZE -> return PreviewStyle.REAL_SIZE
+            VALUE_MEDIA_PREVIEW_STYLE_REAL_SIZE -> return PreviewStyle.ACTUAL_SIZE
             else -> return PreviewStyle.CROP
         }
     }
@@ -146,7 +146,7 @@ object mediaPreviewStyleKey : KSimpleKey<Int>(KEY_MEDIA_PREVIEW_STYLE, PreviewSt
     override fun write(editor: SharedPreferences.Editor, value: Int): Boolean {
         editor.putString(key, when (value) {
             PreviewStyle.SCALE -> VALUE_MEDIA_PREVIEW_STYLE_SCALE
-            PreviewStyle.REAL_SIZE -> VALUE_MEDIA_PREVIEW_STYLE_REAL_SIZE
+            PreviewStyle.ACTUAL_SIZE -> VALUE_MEDIA_PREVIEW_STYLE_REAL_SIZE
             else -> VALUE_MEDIA_PREVIEW_STYLE_CROP
         })
         return true
