@@ -626,9 +626,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (event.action == MotionEvent.ACTION_DOWN) {
-            val window = window
-            if (!TwidereViewUtils.hitView(event, window.decorView)
-                    && window.peekDecorView() != null && !hasComposingStatus()) {
+            val decorView = window.peekDecorView()
+            if (decorView != null && !TwidereViewUtils.hitView(event, decorView) && !hasComposingStatus()) {
                 onBackPressed()
                 return true
             }

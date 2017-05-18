@@ -1781,7 +1781,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                                 }
                             }
                         } catch (e: MicroBlogException) {
-                            throw UpdateListsException(successfulStates)
+                            throw UpdateListsException(e, successfulStates)
                         }
                     }.alwaysUi {
                         val activity = weakActivity.get() as? IBaseActivity<*> ?: return@alwaysUi
@@ -1816,7 +1816,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             return dialog
         }
 
-        class UpdateListsException(val successfulStates: SparseBooleanArray) : MicroBlogException()
+        class UpdateListsException(cause: Throwable, val successfulStates: SparseBooleanArray) : MicroBlogException(cause)
     }
 
     companion object {
