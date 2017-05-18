@@ -21,59 +21,16 @@ package org.mariotaku.twidere.extension.model
 
 import android.content.SharedPreferences
 import android.support.annotation.WorkerThread
-import com.bluelinelabs.logansquare.LoganSquare
-import com.fasterxml.jackson.core.JsonToken
-import org.mariotaku.commons.logansquare.LoganSquareMapperFinder
-import org.mariotaku.restfu.RestFuUtils
-import org.mariotaku.restfu.annotation.method.GET
-import org.mariotaku.restfu.http.HttpRequest
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.model.DefaultFeatures
 import java.io.IOException
 
-/**
- * Created by mariotaku on 2017/4/20.
- */
-
-private const val REMOTE_SETTINGS_URL = "https://twidere.mariotaku.org/assets/data/default_features.json"
-private const val KEY_DEFAULT_TWITTER_CONSUMER_KEY = "default_twitter_consumer_key"
-private const val KEY_DEFAULT_TWITTER_CONSUMER_SECRET = "default_twitter_consumer_secret"
-
 @WorkerThread
 @Throws(IOException::class)
-fun DefaultFeatures.loadRemoteSettings(client: RestHttpClient): Boolean {
-    val request = HttpRequest.Builder().method(GET.METHOD).url(REMOTE_SETTINGS_URL).build()
-    val response = client.newCall(request).execute()
-    try {
-        val mapper = LoganSquareMapperFinder.mapperFor(DefaultFeatures::class.java)
-        val jsonParser = LoganSquare.JSON_FACTORY.createParser(response.body.stream())
-        if (jsonParser.currentToken == null) {
-            jsonParser.nextToken()
-        }
-        if (jsonParser.currentToken != JsonToken.START_OBJECT) {
-            jsonParser.skipChildren()
-            return false
-        }
-        while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
-            val fieldName = jsonParser.currentName
-            jsonParser.nextToken()
-            mapper.parseField(this, fieldName, jsonParser)
-            jsonParser.skipChildren()
-        }
-    } finally {
-        RestFuUtils.closeSilently(response)
-    }
-    return true
-}
+fun DefaultFeatures.loadRemoteSettings(client: RestHttpClient): Boolean = true
 
 fun DefaultFeatures.load(preferences: SharedPreferences) {
-    defaultTwitterConsumerKey = preferences.getString(KEY_DEFAULT_TWITTER_CONSUMER_KEY, null)
-    defaultTwitterConsumerSecret = preferences.getString(KEY_DEFAULT_TWITTER_CONSUMER_SECRET, null)
 }
 
 fun DefaultFeatures.save(preferences: SharedPreferences) {
-    val editor = preferences.edit()
-    editor.putString(KEY_DEFAULT_TWITTER_CONSUMER_KEY, defaultTwitterConsumerKey)
-    editor.putString(KEY_DEFAULT_TWITTER_CONSUMER_SECRET, defaultTwitterConsumerSecret)
-    editor.apply()
 }

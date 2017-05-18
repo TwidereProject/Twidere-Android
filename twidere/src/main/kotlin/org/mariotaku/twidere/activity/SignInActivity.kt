@@ -31,7 +31,6 @@ import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.Loader
@@ -147,7 +146,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
 
         if (savedInstanceState == null) {
             // Only start at the first time
-            updateDefaultFeatures()
+            showLoginTypeChooser()
             // Must call this before cookie manager
             @Suppress("DEPRECATION")
             CookieSyncManager.createInstance(this)
@@ -459,39 +458,11 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         }
     }
 
-    private fun updateDefaultFeatures() {
-        val weakThis = WeakReference(this)
+    private fun showLoginTypeChooser() {
         executeAfterFragmentResumed {
-            ProgressDialogFragment.show(it.supportFragmentManager, FRAGMENT_TAG_LOADING_DEFAULT_FEATURES)
-        } and task {
-            val activity = weakThis.get() ?: return@task
-            if (activity.isFinishing) return@task
-            activity.defaultFeatures.loadRemoteSettings(activity.restHttpClient)
-        }.successUi {
-            val activity = weakThis.get() ?: return@successUi
-            if (activity.isFinishing) return@successUi
-            val apiConfig = activity.apiConfig
-            val defaultFeatures = activity.defaultFeatures
-            val preferences = activity.preferences
-            if (apiConfig.consumerKey == TWITTER_CONSUMER_KEY && apiConfig.consumerSecret == TWITTER_CONSUMER_SECRET) {
-                apiConfig.consumerKey = defaultFeatures.defaultTwitterConsumerKey ?: TWITTER_CONSUMER_KEY
-                apiConfig.consumerSecret = defaultFeatures.defaultTwitterConsumerSecret ?: TWITTER_CONSUMER_SECRET
-            }
-            defaultFeatures.save(preferences)
-        }.fail {
-            DebugLog.w(LOGTAG, "Unable to update default features", it)
-        }.alwaysUi {
-            val activity = weakThis.get() ?: return@alwaysUi
-            if (activity.isFinishing) return@alwaysUi
-            activity.executeAfterFragmentResumed { activity ->
-                val fm = activity.supportFragmentManager
-                val df = fm.findFragmentByTag(FRAGMENT_TAG_LOADING_DEFAULT_FEATURES) as? DialogFragment
-                df?.dismiss()
-            } and activity.executeAfterFragmentResumed { activity ->
-                val fm = activity.supportFragmentManager
-                val df = LoginTypeChooserDialogFragment()
-                df.show(fm, "login_type_chooser")
-            }
+            val fm = it.supportFragmentManager
+            val df = LoginTypeChooserDialogFragment()
+            df.show(fm, "login_type_chooser")
         }
     }
 
@@ -1236,7 +1207,6 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         const val REQUEST_BROWSER_MASTODON_SIGN_IN = 102
 
         private val FRAGMENT_TAG_SIGN_IN_PROGRESS = "sign_in_progress"
-        private val FRAGMENT_TAG_LOADING_DEFAULT_FEATURES = "loading_default_features"
         private val EXTRA_API_LAST_CHANGE = "api_last_change"
         private val DEFAULT_TWITTER_API_URL_FORMAT = "https://[DOMAIN.]twitter.com/"
 
