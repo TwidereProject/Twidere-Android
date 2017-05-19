@@ -34,6 +34,7 @@
     <string name="action_center">Center</string>
     <string name="action_clear">Clear</string>
     <string name="action_clear_messages">Clear messages</string>
+    <string name="action_comment">Comment</string>
     <string name="action_compose">Compose</string>
     <string name="action_compose_message_convert_to_status">Convert to tweet</string>
     <string name="action_connect_to_buffer">Connect</string>
@@ -231,7 +232,6 @@
     <string name="combined_notifications_summary_off">Notifications will be displayed separately</string>
     <string name="combined_notifications_summary_on">Notifications will be grouped</string>
 
-    <string name="action_comment">Comment</string>
     <string name="comment_hint">Comment…</string>
 
     <string name="compact_cards">Compact cards</string>
@@ -343,12 +343,10 @@
     <string name="error_message_message_too_many_participants">Too many participants</string>
     <string name="error_message_no_content">No content</string>
     <string name="error_message_rate_limit">Twitter\'s rate limit exceeded, please retry <xliff:g id="time">%s</xliff:g></string>
-    <string name="error_message_rate_limit_with_action">Twitter\'s rate limit exceeded while <xliff:g id="action">%1$s</xliff:g>, please retry <xliff:g id="time">%2$s</xliff:g></string>
     <string name="error_message_scheduler_not_available">Tweet schedule not available</string>
     <string name="error_message_status_too_long">Tweet too long.</string>
     <string name="error_message_tweet_shorten_failed">Tweet shorten failed.</string>
     <string name="error_message_tweet_shortener_not_found">Tweet shortener not found, maybe it was uninstalled.</string>
-    <string name="error_message_with_action">Error while <xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
     <string name="error_no_access_for_credentials">Your application can\'t access this resource.</string>
     <string name="error_no_dm_permission">No direct message permission, check your Twitter application permission setting.</string>
     <string name="error_title_device_incompatible">Incompatible device</string>
