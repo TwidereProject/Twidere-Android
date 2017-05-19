@@ -298,6 +298,10 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
                         if (scheduleInfo != null) {
                             Toast.makeText(context, R.string.message_toast_status_scheduled,
                                     Toast.LENGTH_SHORT).show()
+                        } else if (item.repost_status_id != null ||
+                                item.draft_action == Draft.Action.QUOTE) {
+                            Toast.makeText(context, R.string.message_toast_status_retweeted,
+                                    Toast.LENGTH_SHORT).show()
                         } else {
                             Toast.makeText(context, R.string.message_toast_status_updated,
                                     Toast.LENGTH_SHORT).show()
