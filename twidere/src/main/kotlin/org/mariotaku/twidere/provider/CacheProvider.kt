@@ -5,6 +5,7 @@ import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.ParcelFileDescriptor
 import okio.ByteString
@@ -14,7 +15,6 @@ import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_TYPE
 import org.mariotaku.twidere.annotation.CacheFileType
 import org.mariotaku.twidere.model.CacheMetadata
 import org.mariotaku.twidere.task.SaveFileTask
-import org.mariotaku.twidere.util.BitmapUtils
 import org.mariotaku.twidere.util.JsonSerializer
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import java.io.ByteArrayInputStream
@@ -49,7 +49,10 @@ class CacheProvider : ContentProvider() {
         when (type) {
             CacheFileType.IMAGE -> {
                 val file = fileCache.get(getCacheKey(uri)) ?: return null
-                return BitmapUtils.getImageMimeType(file)
+                return BitmapFactory.Options().apply {
+                    inJustDecodeBounds = true
+                    BitmapFactory.decodeFile(file.absolutePath, this)
+                }.outMimeType
             }
             CacheFileType.VIDEO -> {
                 return "video/mp4"

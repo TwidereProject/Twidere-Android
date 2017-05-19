@@ -61,7 +61,6 @@ import org.mariotaku.twidere.model.draft.QuoteStatusActionExtras
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.service.LengthyOperationsService
 import org.mariotaku.twidere.util.Analyzer
-import org.mariotaku.twidere.util.AsyncTaskUtils
 import org.mariotaku.twidere.util.deleteDrafts
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import java.lang.ref.WeakReference
@@ -270,7 +269,7 @@ class DraftsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, OnItemClickList
             when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {
                     val args = arguments ?: return
-                    AsyncTaskUtils.executeTask(DeleteDraftsTask(activity, args.getLongArray(EXTRA_IDS)))
+                    DeleteDraftsTask(activity, args.getLongArray(EXTRA_IDS)).execute()
                 }
             }
         }

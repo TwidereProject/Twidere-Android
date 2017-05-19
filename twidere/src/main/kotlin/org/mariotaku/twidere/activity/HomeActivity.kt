@@ -539,8 +539,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         if (mainTabs == null || updateUnreadCountTask != null && updateUnreadCountTask!!.status == AsyncTask.Status.RUNNING)
             return
         updateUnreadCountTask = UpdateUnreadCountTask(this, preferences, readStateManager, mainTabs,
-                pagerAdapter.tabs.toTypedArray())
-        AsyncTaskUtils.executeTask<UpdateUnreadCountTask, Any>(updateUnreadCountTask)
+                pagerAdapter.tabs.toTypedArray()).apply { execute() }
         mainTabs.setDisplayBadge(preferences.getBoolean(SharedPreferenceConstants.KEY_UNREAD_COUNT, true))
     }
 

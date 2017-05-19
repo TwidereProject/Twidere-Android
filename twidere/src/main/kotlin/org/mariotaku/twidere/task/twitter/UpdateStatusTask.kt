@@ -39,6 +39,7 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.alias.MastodonStatusUpdate
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.app.TwidereApplication
+import org.mariotaku.twidere.extension.calculateInSampleSize
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.applyUpdateStatus
@@ -908,8 +909,7 @@ class UpdateStatusTask(
             }
 
             if (imageLimit == null || imageLimit.checkGeomentry(o.outWidth, o.outHeight)) return null
-                o.inSampleSize = BitmapUtils.calculateInSampleSize(o.outWidth, o.outHeight,
-                        imageLimit.maxWidth, imageLimit.maxHeight)
+            o.inSampleSize = o.calculateInSampleSize(imageLimit.maxWidth, imageLimit.maxHeight)
             o.inJustDecodeBounds = false
             // Do actual image decoding
             val bitmap = context.contentResolver.openInputStream(mediaUri).use {

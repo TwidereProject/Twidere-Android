@@ -65,7 +65,6 @@ import org.mariotaku.twidere.provider.CacheProvider
 import org.mariotaku.twidere.provider.ShareProvider
 import org.mariotaku.twidere.task.SaveFileTask
 import org.mariotaku.twidere.task.SaveMediaToGalleryTask
-import org.mariotaku.twidere.util.AsyncTaskUtils
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.PermissionUtils
 import org.mariotaku.twidere.util.ThemeUtils
@@ -502,7 +501,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
                 Toast.makeText(activity, R.string.message_toast_error_occurred, Toast.LENGTH_SHORT).show()
             }
         }
-        AsyncTaskUtils.executeTask(task)
+        task.execute()
     }
 
     private fun saveToStorage() {
@@ -525,7 +524,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         }
         val saveDir = File(pubDir, "Twidere")
         val task = SaveMediaToGalleryTask(this, fileInfo, saveDir)
-        AsyncTaskUtils.executeTask(task)
+        task.execute()
     }
 
     private fun MediaViewerFragment.cacheFileInfo(): SaveFileTask.FileInfo? {
