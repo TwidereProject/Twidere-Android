@@ -210,7 +210,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
         val selectedUsers = rangeOfSize(adapter.userStartIndex, adapter.userCount)
                 .filter { adapter.isItemChecked(it) }
                 .mapNotNull {
-                    val user = adapter.getUser(it) ?: return@mapNotNull null
+                    val user = adapter.getUser(it)
                     // Skip if already filtered
                     if (user.is_filtered) return@mapNotNull null
                     return@mapNotNull user
