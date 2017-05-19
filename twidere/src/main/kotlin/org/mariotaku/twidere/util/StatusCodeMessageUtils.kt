@@ -56,6 +56,7 @@ object StatusCodeMessageUtils {
         TWITTER_ERROR_CODE_MESSAGES.put(193, R.string.error_twitter_193)
         TWITTER_ERROR_CODE_MESSAGES.put(215, R.string.error_twitter_215)
         TWITTER_ERROR_CODE_MESSAGES.put(326, R.string.error_twitter_326)
+        TWITTER_ERROR_CODE_MESSAGES.put(327, R.string.error_twitter_327)
 
         TWITTER_ERROR_CODE_ICONS.put(136, R.drawable.ic_info_error_blocked)
 

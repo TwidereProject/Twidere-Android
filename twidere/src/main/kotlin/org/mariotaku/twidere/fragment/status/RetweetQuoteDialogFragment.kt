@@ -189,7 +189,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
         val twitter = twitterWrapper
         val dialog = dialog ?: return false
         val editComment = dialog.editComment
-        if (canQuoteRetweet(account) && !editComment.empty) {
+        if (dialog.isQuoteRetweet(account)) {
             val quoteOriginalStatus = dialog.quoteOriginal.isChecked
 
             var commentText: String
@@ -246,6 +246,14 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
     private fun canQuoteRetweet(account: AccountDetails): Boolean {
         return when (account.type) {
             AccountType.FANFOU, AccountType.TWITTER -> true
+            else -> false
+        }
+    }
+
+    private fun Dialog.isQuoteRetweet(account: AccountDetails): Boolean {
+        return when (account.type) {
+            AccountType.FANFOU -> true
+            AccountType.TWITTER -> !editComment.empty
             else -> false
         }
     }
