@@ -435,15 +435,15 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     override fun onLoadMoreContents(@IndicatorPosition position: Long) {
         if (!hasMoreConversation) return
-        if (position and ILoadMoreSupportAdapter.START != 0L) {
+        if (ILoadMoreSupportAdapter.START in position) {
             val start = adapter.getIndexStart(StatusAdapter.ITEM_IDX_CONVERSATION)
-            val status = adapter.getStatus(start)
-            if (status.in_reply_to_status_id == null) return
-            loadConversation(status, null, status.id)
-        } else if (position and ILoadMoreSupportAdapter.END != 0L) {
+            val first = adapter.getStatus(start, true)
+            if (first.in_reply_to_status_id == null) return
+            loadConversation(status, null, first.id)
+        } else if (ILoadMoreSupportAdapter.END in position) {
             val start = adapter.getIndexStart(StatusAdapter.ITEM_IDX_CONVERSATION)
-            val status = adapter.getStatus(start + adapter.getStatusCount(true) - 1)
-            loadConversation(status, status.id, null)
+            val last = adapter.getStatus(start + adapter.getStatusCount(true) - 1, true)
+            loadConversation(status, last.id, null)
         }
         adapter.loadMoreIndicatorPosition = position
     }
