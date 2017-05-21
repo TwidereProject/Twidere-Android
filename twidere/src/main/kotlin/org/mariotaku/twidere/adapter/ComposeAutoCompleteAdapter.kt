@@ -170,7 +170,10 @@ class ComposeAutoCompleteAdapter(context: Context, val requestManager: RequestMa
     }
 
     private fun getScreenNameOrAcct(screenName: String, userKey: UserKey): String {
-        if (account?.key?.host == userKey.host) return screenName
+        if (account?.type != AccountType.MASTODON || account?.key?.host == userKey.host) {
+            return screenName
+        }
+        if (userKey.host == null) return screenName
         return "$screenName@${userKey.host}"
     }
 
