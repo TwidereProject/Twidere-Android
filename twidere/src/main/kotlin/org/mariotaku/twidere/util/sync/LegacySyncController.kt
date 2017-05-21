@@ -34,7 +34,7 @@ class LegacySyncController(context: Context) : SyncController(context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             LegacyAutoRefreshController.removeAllJobs(context, JobTaskService.JOB_IDS_REFRESH)
         }
-        for ((action, pendingIntent) in pendingIntents) {
+        for ((_, pendingIntent) in pendingIntents) {
             alarmManager.cancel(pendingIntent)
             val interval = TimeUnit.HOURS.toMillis(4)
             val triggerAt = SystemClock.elapsedRealtime() + interval

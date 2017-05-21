@@ -51,11 +51,6 @@ object TwitterMacExtraHeaders : ExtraHeaders {
     }
 
     val userAgent: String get() {
-        val model = Build.MODEL
-        val manufacturer = Build.MANUFACTURER
-        val sdkRelease = Build.VERSION.RELEASE
-        val brand = Build.BRAND
-        val product = Build.PRODUCT
         return "$clientName/($internalVersionName) $platformName/$platformVersion (;$platformArchitecture)"
     }
 

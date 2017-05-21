@@ -80,6 +80,7 @@ open class ExtendedRelativeLayout(context: Context, attrs: AttributeSet? = null)
     @Deprecated("Deprecated in Android")
     override fun fitSystemWindows(insets: Rect): Boolean {
         onFitSystemWindowsListener?.onFitSystemWindows(insets)
+        @Suppress("DEPRECATION")
         return super.fitSystemWindows(insets)
     }
 
@@ -113,6 +114,7 @@ open class ExtendedRelativeLayout(context: Context, attrs: AttributeSet? = null)
     @Deprecated("Deprecated in Android")
     override fun setBackgroundDrawable(background: Drawable) {
         backupPadding()
+        @Suppress("DEPRECATION")
         super.setBackgroundDrawable(background)
         restorePadding()
     }
