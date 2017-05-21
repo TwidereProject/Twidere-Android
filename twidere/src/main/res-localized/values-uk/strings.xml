@@ -621,7 +621,7 @@
   <string name="streaming">Стримінг</string>
   <string name="style">Стиль</string>
   <string name="subscribed_to_list">Підписано на список \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="subscribers">Підписані</string>
+  <string name="title_userlist_subscribers">Підписані</string>
   <string name="swipe_down_to_refresh">Потягни вниз для оновлення</string>
   <string name="system_default">Системна</string>
   <string name="tab_display_option">Параметр відображення вкладки</string>

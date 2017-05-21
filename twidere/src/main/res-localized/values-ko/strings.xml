@@ -877,7 +877,7 @@
   <string name="streaming">스트리밍</string>
   <string name="style">스타일</string>
   <string name="subscribed_to_list">\"<xliff:g id="list">%s</xliff:g>\" 리스트를 구독했습니다.</string>
-  <string name="subscribers">구독자</string>
+  <string name="title_userlist_subscribers">구독자</string>
   <string name="swipe_down_to_refresh">아래로 밀어서 새로고침</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="sync_provider_name_google_drive">Google Drive</string>

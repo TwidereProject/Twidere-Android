@@ -521,7 +521,7 @@
   <string name="streaming">Streaming</string>
   <string name="style">Stil</string>
   <string name="subscribed_to_list">Pretplaćeni ste na listu \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="subscribers">Pretplatnik</string>
+  <string name="title_userlist_subscribers">Pretplatnik</string>
   <string name="swipe_down_to_refresh">Prijeđite prstom prema dolje za osvježavanje</string>
   <string name="tab_display_option">Opcije prikaza tabova</string>
   <string name="tab_display_option_icon">Ikona</string>

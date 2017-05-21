@@ -546,7 +546,7 @@
   <string name="stream_type_home">الرئيسية</string>
   <string name="stream_type_messages">الرسائل</string>
   <string name="subscribed_to_list">تم الإنخراط في القائمة \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="subscribers">المشتركون</string>
+  <string name="title_userlist_subscribers">المشتركون</string>
   <string name="system_default">الوضع الافتراضي للنظام</string>
   <string name="tab_display_option">خيار عرض علامة التبويب</string>
   <string name="tab_display_option_icon">أيقونة</string>

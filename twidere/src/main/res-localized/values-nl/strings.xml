@@ -617,7 +617,7 @@
   <string name="streaming">Streaming</string>
   <string name="style">Stijl</string>
   <string name="subscribed_to_list">Geabonneerd op lijst \'\'<xliff:g id="list">%s</xliff:g>\'\'.</string>
-  <string name="subscribers">Abonnee</string>
+  <string name="title_userlist_subscribers">Abonnee</string>
   <string name="swipe_down_to_refresh">Naar beneden slepen om te verversen</string>
   <string name="system_default">Systeemstandaard</string>
   <string name="tab_display_option">Tab weergave optie</string>

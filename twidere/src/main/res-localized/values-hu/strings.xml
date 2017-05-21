@@ -616,7 +616,7 @@
   <string name="streaming">Közvetítés</string>
   <string name="style">Stílus</string>
   <string name="subscribed_to_list">\"<xliff:g id="list">%s</xliff:g>\" listára feliratkozva.</string>
-  <string name="subscribers">Feliratkozó</string>
+  <string name="title_userlist_subscribers">Feliratkozó</string>
   <string name="swipe_down_to_refresh">Húzd le a frissítéshez</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="system_default">Rendszer alapértelmezés</string>

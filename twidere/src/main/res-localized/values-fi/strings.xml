@@ -598,7 +598,7 @@
   <string name="streaming">Striimaus</string>
   <string name="style">Tyyli</string>
   <string name="subscribed_to_list">Tilattiin lista \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="subscribers">Tilaaja</string>
+  <string name="title_userlist_subscribers">Tilaaja</string>
   <string name="swipe_down_to_refresh">Pyyhkäise alas ja päivitä</string>
   <string name="system_default">Järjestelmän oletusasetus</string>
   <string name="tab_display_option">Välilehden näyttöasetus</string>

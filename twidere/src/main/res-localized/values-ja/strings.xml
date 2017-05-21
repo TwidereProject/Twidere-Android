@@ -917,7 +917,7 @@
   <string name="streaming">ストリーミング</string>
   <string name="style">スタイル</string>
   <string name="subscribed_to_list">リスト\"<xliff:g id="list">%s</xliff:g>\"を保存しました。</string>
-  <string name="subscribers">購読ユーザー</string>
+  <string name="title_userlist_subscribers">購読ユーザー</string>
   <string name="summary_interactions_account_not_supported">アカウントはサポートされていません</string>
   <string name="swipe_down_to_refresh">下にスワイプすると更新されます</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>

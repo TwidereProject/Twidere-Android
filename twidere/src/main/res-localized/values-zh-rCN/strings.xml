@@ -910,7 +910,7 @@
   <string name="streaming">实时流</string>
   <string name="style">风格</string>
   <string name="subscribed_to_list">订阅了列表 “<xliff:g id="list">%s</xliff:g>”</string>
-  <string name="subscribers">订阅者</string>
+  <string name="title_userlist_subscribers">订阅者</string>
   <string name="summary_interactions_account_not_supported">不支持这个帐号</string>
   <string name="summary_interactions_streaming_required">完整的互动时间线只在实时流启用时可用</string>
   <string name="swipe_down_to_refresh">下拉以刷新</string>

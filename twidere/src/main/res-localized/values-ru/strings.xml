@@ -689,7 +689,7 @@
   <string name="streaming">Стриминг</string>
   <string name="style">Стиль</string>
   <string name="subscribed_to_list">Подписанные на \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="subscribers">Читатели</string>
+  <string name="title_userlist_subscribers">Читатели</string>
   <string name="swipe_down_to_refresh">Потяните вниз для обновления</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="system_default">По умолчанию</string>

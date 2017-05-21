@@ -908,7 +908,7 @@
   <string name="streaming">Streaming</string>
   <string name="style">Estilo</string>
   <string name="subscribed_to_list">Subscribiches á lista \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="subscribers">Subscritor</string>
+  <string name="title_userlist_subscribers">Subscritor</string>
   <string name="swipe_down_to_refresh">Arrastra cara abaixo para recargar</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="sync_provider_name_google_drive">Google Drive</string>

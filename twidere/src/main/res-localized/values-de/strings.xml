@@ -905,7 +905,7 @@
   <string name="streaming">Streaming</string>
   <string name="style">Stil</string>
   <string name="subscribed_to_list">Liste \"<xliff:g id="list">%s</xliff:g>\" abonniert.</string>
-  <string name="subscribers">Abonnent</string>
+  <string name="title_userlist_subscribers">Abonnent</string>
   <string name="summary_interactions_account_not_supported">Account wird nicht unterstützt</string>
   <string name="swipe_down_to_refresh">Ziehen zum Aktualisieren</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>

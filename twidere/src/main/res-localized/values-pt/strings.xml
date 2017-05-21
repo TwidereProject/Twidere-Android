@@ -696,7 +696,7 @@
   <string name="streaming">Streaming</string>
   <string name="style">Estilo</string>
   <string name="subscribed_to_list">Inscrito na lista \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="subscribers">Inscrito</string>
+  <string name="title_userlist_subscribers">Inscrito</string>
   <string name="swipe_down_to_refresh">Deslize para baixo para atualizar</string>
   <string name="system_default">Padrão do sistema</string>
   <string name="tab_display_option">Opções de exibições de abas</string>

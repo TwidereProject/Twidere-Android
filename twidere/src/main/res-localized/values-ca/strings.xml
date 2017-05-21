@@ -614,7 +614,7 @@
   <string name="streaming">Streaming</string>
   <string name="style">Estil</string>
   <string name="subscribed_to_list">Us heu subscrit a la llista «<xliff:g id="list">%s</xliff:g>».</string>
-  <string name="subscribers">Subscriptor</string>
+  <string name="title_userlist_subscribers">Subscriptor</string>
   <string name="swipe_down_to_refresh">Arrossega cap abaix per a actualitzar</string>
   <string name="system_default">Per defecte del sistema</string>
   <string name="tab_display_option">Capçalera de les pestanyes</string>

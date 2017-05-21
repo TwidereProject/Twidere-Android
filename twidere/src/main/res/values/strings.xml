@@ -645,8 +645,8 @@
     <string name="message_pin_status_confirm">Pin this tweet? This will replace previously pinned tweet.</string>
     <string name="message_please_wait">Please wait.</string>
     <string name="message_status_reply_to_user_removed_explanation">Twitter makes tweet user always be mentioned in a reply. If tweet user was removed, Twidere will send this reply as a quote to preserve context.</string>
-    <string name="message_status_scheduling_connect_buffer_hint">Connect to buffer to schedule tweets even in offline</string>
-    <string name="message_status_scheduling_connected_to_buffer">Twidere is now connected to buffer</string>
+    <string name="message_status_scheduling_connect_buffer_hint">Connect to Buffer to schedule tweets even in offline</string>
+    <string name="message_status_scheduling_connected_to_buffer">Twidere is now connected to Buffer</string>
     <string name="message_summary_type_sticker">[Sticker]</string>
     <string name="message_sync_data_connect_hint">Connect Twidere with network storage to sync data</string>
     <string name="message_sync_data_synced_with_name">Twidere is now synced with <xliff:g example="ownCloud" id="name">%s</xliff:g></string>
@@ -669,7 +669,7 @@
     <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
     <string name="message_toast_extra_features_not_purchased">Enhanced features not purchased</string>
     <string name="message_toast_filters_import_hint">Press \"+\" to import</string>
-    <string name="message_toast_internal_storage_install_required">Installation on SD card is not supported, accounts may lost after reboot.</string>
+    <string name="message_toast_internal_storage_install_required">Installation on SD card is not supported, accounts may get lost after reboot.</string>
     <string name="message_toast_invalid_mastodon_host">Invalid Mastodon host</string>
     <string name="message_toast_link_copied_to_clipboard">Link copied to clipboard</string>
     <string name="message_toast_livewp_daydream_enabled_message">Here\'s a little present for you, find it in your system settings :)</string>
@@ -1116,8 +1116,6 @@
 
     <string name="subscribed_to_list">Subscribed to list \"<xliff:g id="list">%s</xliff:g>\".</string>
 
-    <string name="subscribers">Subscriber</string>
-
     <string name="summary_interactions_account_not_supported">Account not supported</string>
     <string name="summary_interactions_streaming_required">Full interactions available only when streaming enabled</string>
 
@@ -1237,6 +1235,7 @@
     <string name="title_user_list_ownerships">Created</string>
     <string name="title_user_list_subscriptions">Subscriptions</string>
     <string name="title_user_timeline_filter">Timeline filter</string>
+    <string name="title_userlist_subscribers">Subscribers</string>
     <string name="title_users_favorited_this">Users favorited this</string>
     <string name="title_users_liked_this">Users liked this</string>
     <string name="title_users_retweeted_this">Users retweeted this</string>

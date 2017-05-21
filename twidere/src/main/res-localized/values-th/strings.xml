@@ -893,7 +893,7 @@
   <string name="streaming">สตรีมมิ่ง</string>
   <string name="style">รูปแบบ</string>
   <string name="subscribed_to_list">ติดตามลิสต์ \"<xliff:g id="list">%s</xliff:g>\" แล้ว</string>
-  <string name="subscribers">ผู้ติดตาม</string>
+  <string name="title_userlist_subscribers">ผู้ติดตาม</string>
   <string name="swipe_down_to_refresh">ลากลงเพื่อรีเฟรช</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="sync_provider_name_google_drive">Google Drive</string>

@@ -344,7 +344,7 @@
   <string name="stream_type_home">Domů</string>
   <string name="stream_type_interactions">Interakce</string>
   <string name="stream_type_messages">Zprávy</string>
-  <string name="subscribers">Odběratel</string>
+  <string name="title_userlist_subscribers">Odběratel</string>
   <string name="system_default">Výchozí systémové nastavení</string>
   <string name="tab_display_option_icon">Ikona</string>
   <string name="tab_display_option_icon_and_label">Ikona a popisek</string>

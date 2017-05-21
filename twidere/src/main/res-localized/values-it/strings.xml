@@ -595,7 +595,7 @@
   <string name="streaming">Streaming</string>
   <string name="style">Stile</string>
   <string name="subscribed_to_list">Iscritto alla lista \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="subscribers">Iscritto</string>
+  <string name="title_userlist_subscribers">Iscritto</string>
   <string name="swipe_down_to_refresh">Tira in giù per aggiornare</string>
   <string name="system_default">Sistema predefinito</string>
   <string name="tab_display_option">Opzioni display</string>

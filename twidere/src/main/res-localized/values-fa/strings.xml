@@ -893,7 +893,7 @@
   <string name="streaming">در حال جریان</string>
   <string name="style">سبک</string>
   <string name="subscribed_to_list">مشترک فهرست «<xliff:g id="list">%s</xliff:g>» شد.</string>
-  <string name="subscribers">مشترکان</string>
+  <string name="title_userlist_subscribers">مشترکان</string>
   <string name="swipe_down_to_refresh">برای تازه‌سازی به پایین بکشید</string>
   <string name="sync_provider_name_dropbox">دراپ‌باکس</string>
   <string name="sync_provider_name_google_drive">گوگل‌درایو</string>

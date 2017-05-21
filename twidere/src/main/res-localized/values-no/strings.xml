@@ -541,7 +541,7 @@
   <string name="streaming">Strømming</string>
   <string name="style">Stil</string>
   <string name="subscribed_to_list">Abonnerer på listen «<xliff:g id="list">%s</xliff:g>».</string>
-  <string name="subscribers">Abonnenter</string>
+  <string name="title_userlist_subscribers">Abonnenter</string>
   <string name="swipe_down_to_refresh">Sveip ned for å oppdatere</string>
   <string name="tab_display_option">Fanevisningsvalg</string>
   <string name="tab_display_option_icon">Ikon</string>

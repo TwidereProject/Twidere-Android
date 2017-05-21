@@ -739,7 +739,7 @@
   <string name="streaming">Streaming</string>
   <string name="style">Gaya</string>
   <string name="subscribed_to_list">Berlangganan ke daftar \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="subscribers">Langganan</string>
+  <string name="title_userlist_subscribers">Langganan</string>
   <string name="swipe_down_to_refresh">Gesek ke bawah untuk menyegarkan</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="system_default">Sistem standar</string>

@@ -620,7 +620,7 @@
   <string name="streaming">Akış</string>
   <string name="style">Stil</string>
   <string name="subscribed_to_list">\"<xliff:g id="list">%s</xliff:g>\" listesine abone olundu.</string>
-  <string name="subscribers">Abone</string>
+  <string name="title_userlist_subscribers">Abone</string>
   <string name="swipe_down_to_refresh">Yenileme için aşağı doğru sürükleyin</string>
   <string name="system_default">Sistem varsayılanı</string>
   <string name="tab_display_option">Sekme gösterme seçeneği</string>

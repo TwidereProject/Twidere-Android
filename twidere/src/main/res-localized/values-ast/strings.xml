@@ -871,7 +871,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="streaming">Tuits en tiempu real</string>
   <string name="style">Estilu</string>
   <string name="subscribed_to_list">Soscribiéstite al llistáu «<xliff:g id="list">%s</xliff:g>».</string>
-  <string name="subscribers">Soscriptores</string>
+  <string name="title_userlist_subscribers">Soscriptores</string>
   <string name="swipe_down_to_refresh">Esliza haza abaxo p\'anovar</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="sync_provider_name_google_drive">Google Drive</string>

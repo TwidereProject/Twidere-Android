@@ -856,7 +856,7 @@
   <string name="stream_type_messages">Meddelanden</string>
   <string name="streaming">Strömmande</string>
   <string name="style">Stil</string>
-  <string name="subscribers">Prenumerant</string>
+  <string name="title_userlist_subscribers">Prenumerant</string>
   <string name="swipe_down_to_refresh">Dra ner för att uppdatera</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="sync_provider_name_google_drive">Google Drive</string>

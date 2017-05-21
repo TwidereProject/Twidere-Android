@@ -162,7 +162,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
         }
         adapter.add(cls = UserListTimelineFragment::class.java, args = tabArgs, name = getString(R.string.title_statuses))
         adapter.add(cls = UserListMembersFragment::class.java, args = tabArgs, name = getString(R.string.members))
-        adapter.add(cls = UserListSubscribersFragment::class.java, args = tabArgs, name = getString(R.string.subscribers))
+        adapter.add(cls = UserListSubscribersFragment::class.java, args = tabArgs, name = getString(R.string.title_userlist_subscribers))
     }
 
     override fun onStart() {
