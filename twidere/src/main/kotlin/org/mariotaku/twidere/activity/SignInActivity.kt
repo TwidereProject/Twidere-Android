@@ -603,7 +603,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val dialog = dialog ?: return
             val listView = dialog.findViewById(R.id.expandableList) as ExpandableListView
             val defaultConfig = preferences[defaultAPIConfigKey]
-            defaultConfig.name = getString(R.string.login_type_default)
+            defaultConfig.name = getString(R.string.login_type_user_settings)
             val allConfig = ArraySet(data)
             allConfig.add(defaultConfig)
             val configGroup = allConfig.groupBy { it.safeType }
