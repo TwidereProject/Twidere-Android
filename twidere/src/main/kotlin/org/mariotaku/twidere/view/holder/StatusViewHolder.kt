@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView.ViewHolder
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.Spanned
+import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.view.View
@@ -37,6 +38,7 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.task.CreateFavoriteTask
 import org.mariotaku.twidere.task.DestroyFavoriteTask
 import org.mariotaku.twidere.task.RetweetStatusTask
+import org.mariotaku.twidere.text.TwidereClickableSpan
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText
 import org.mariotaku.twidere.util.Utils.getUserTypeIconRes
@@ -109,7 +111,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                 adapter.profileImageStyle, profileImageView.cornerRadius,
                 profileImageView.cornerRadiusRatio).into(profileImageView)
         nameView.name = TWIDERE_PREVIEW_NAME
-        nameView.screenName = "@" + TWIDERE_PREVIEW_SCREEN_NAME
+        nameView.screenName = "@$TWIDERE_PREVIEW_SCREEN_NAME"
         nameView.updateText(adapter.bidiFormatter)
         summaryView.hideIfEmpty()
         if (adapter.linkHighlightingStyle == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
@@ -154,8 +156,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         statusContentLowerSpace.visibility = if (showCardActions) View.GONE else View.VISIBLE
 
         val replyCount = status.reply_count
-        val retweetCount: Long
-        val favoriteCount: Long
+        val retweetCount = status.retweet_count
+        val favoriteCount = status.favorite_count
 
         if (displayPinned && status.is_pinned_status) {
             statusInfoLabel.setText(R.string.pinned_status)
@@ -232,13 +234,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                 } else {
                     quotedTextView.spannable = quotedText
                 }
-
-                if (quotedTextView.length() == 0) {
-                    // No text
-                    quotedTextView.visibility = View.GONE
-                } else {
-                    quotedTextView.visibility = View.VISIBLE
-                }
+                quotedTextView.hideIfEmpty()
 
                 val quoted_user_color = colorNameManager.getUserColor(quoted_user_key)
                 if (quoted_user_color != 0) {
@@ -361,11 +357,13 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
         val text: CharSequence
         val displayEnd: Int
-        if (!summaryView.empty) {
+        if (!summaryView.empty && !isFullTextVisible) {
             text = SpannableStringBuilder.valueOf(context.getString(R.string.label_status_show_more)).apply {
-                val colorSecondary = ThemeUtils.getTextColorSecondary(context)
-                setSpan(ForegroundColorSpan(colorSecondary), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                setSpan(StyleSpan(Typeface.ITALIC), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                setSpan(object : TwidereClickableSpan(adapter.linkHighlightingStyle) {
+                    override fun onClick(widget: View?) {
+                        showFullText()
+                    }
+                }, 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             displayEnd = -1
         } else if (adapter.linkHighlightingStyle != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
@@ -415,7 +413,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                     Utils.isMyRetweet(status.account_key, status.retweeted_by_user_key,
                             status.my_retweet_id)
         }
-        retweetCount = status.retweet_count
 
         if (retweetCount > 0) {
             retweetCountView.spannable = UnitConvertUtils.calculateProperCount(retweetCount)
@@ -430,7 +427,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             val creatingFavorite = CreateFavoriteTask.isCreatingFavorite(status.account_key, status.id)
             favoriteIcon.isActivated = creatingFavorite || status.is_favorite
         }
-        favoriteCount = status.favorite_count
 
         if (favoriteCount > 0) {
             favoriteCountView.spannable = UnitConvertUtils.calculateProperCount(favoriteCount)
@@ -590,6 +586,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
     private val isCardActionsShown: Boolean
         get() = adapter.isCardActionsShown(layoutPosition)
 
+    private val isFullTextVisible: Boolean
+        get() = adapter.isFullTextVisible(layoutPosition)
+
     private fun showCardActions() {
         adapter.showCardActions(layoutPosition)
     }
@@ -597,6 +596,15 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
     private fun hideTempCardActions(): Boolean {
         adapter.showCardActions(RecyclerView.NO_POSITION)
         return !adapter.isCardActionsShown(RecyclerView.NO_POSITION)
+    }
+
+    private fun showFullText() {
+        adapter.setFullTextVisible(layoutPosition, true)
+    }
+
+    private fun hideFullText(): Boolean {
+        adapter.setFullTextVisible(layoutPosition, false)
+        return !adapter.isFullTextVisible(RecyclerView.NO_POSITION)
     }
 
     private fun TextView.displayMediaLabel(cardName: String?, media: Array<ParcelableMedia?>?,

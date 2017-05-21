@@ -37,6 +37,10 @@ interface IStatusesAdapter<in Data> : IContentAdapter, IGapSupportedAdapter {
 
     fun showCardActions(position: Int)
 
+    fun isFullTextVisible(position: Int): Boolean
+
+    fun setFullTextVisible(position: Int, visible: Boolean)
+
     fun setData(data: Data?): Boolean
 
     /**

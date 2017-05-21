@@ -23,9 +23,11 @@ import android.content.Context
 import android.database.CursorIndexOutOfBoundsException
 import android.support.v4.widget.Space
 import android.support.v7.widget.RecyclerView
+import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.RequestManager
+import org.apache.commons.collections.primitives.ArrayLongList
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
 import org.mariotaku.library.objectcursor.ObjectCursor
@@ -118,6 +120,7 @@ abstract class ParcelableStatusesAdapter(
     private var displayPositions: IntArray? = null
     private var displayDataCount: Int = 0
     private var showingActionCardId = RecyclerView.NO_ID
+    private val showingFullTextStates = SparseBooleanArray()
     private val reuseStatus = ParcelableStatus()
     private var infoCache: Array<StatusInfo?>? = null
 
@@ -279,6 +282,17 @@ abstract class ParcelableStatusesAdapter(
 
         }
         showingActionCardId = getItemId(position)
+        if (position != RecyclerView.NO_POSITION) {
+            notifyItemChanged(position)
+        }
+    }
+
+    override fun isFullTextVisible(position: Int): Boolean {
+        return showingFullTextStates.get(position)
+    }
+
+    override fun setFullTextVisible(position: Int, visible: Boolean) {
+        showingFullTextStates.put(position, visible)
         if (position != RecyclerView.NO_POSITION) {
             notifyItemChanged(position)
         }

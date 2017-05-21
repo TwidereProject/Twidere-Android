@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.support.v4.text.BidiFormatter
 import android.support.v7.widget.RecyclerView
+import android.util.SparseBooleanArray
 import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
@@ -63,6 +64,7 @@ class DummyItemAdapter(
     var showCardActions: Boolean = false
 
     private var showingActionCardPosition = RecyclerView.NO_POSITION
+    private val showingFullTextStates = SparseBooleanArray()
 
     init {
         GeneralComponent.get(context).inject(this)
@@ -106,6 +108,17 @@ class DummyItemAdapter(
             adapter.notifyItemChanged(showingActionCardPosition)
         }
         showingActionCardPosition = position
+        if (position != RecyclerView.NO_POSITION && adapter != null) {
+            adapter.notifyItemChanged(position)
+        }
+    }
+
+    override fun isFullTextVisible(position: Int): Boolean {
+        return showingFullTextStates.get(position)
+    }
+
+    override fun setFullTextVisible(position: Int, visible: Boolean) {
+        showingFullTextStates.put(position, visible)
         if (position != RecyclerView.NO_POSITION && adapter != null) {
             adapter.notifyItemChanged(position)
         }

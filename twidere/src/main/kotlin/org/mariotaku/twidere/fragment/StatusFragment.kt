@@ -49,6 +49,7 @@ import android.text.Spanned
 import android.text.TextUtils
 import android.text.method.LinkMovementMethod
 import android.text.style.ForegroundColorSpan
+import android.util.SparseBooleanArray
 import android.view.*
 import android.view.View.OnClickListener
 import android.widget.Space
@@ -1447,7 +1448,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         private var replyError: CharSequence? = null
         private var conversationError: CharSequence? = null
         private var replyStart: Int = 0
-        private var showingActionCardPosition: Int = 0
+        private var showingActionCardPosition = RecyclerView.NO_POSITION
+        private val showingFullTextStates = SparseBooleanArray()
 
         init {
             setHasStableIds(true)
@@ -1532,6 +1534,16 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             }
         }
 
+        override fun isFullTextVisible(position: Int): Boolean {
+            return showingFullTextStates.get(position)
+        }
+
+        override fun setFullTextVisible(position: Int, visible: Boolean) {
+            showingFullTextStates.put(position, visible)
+            if (position != RecyclerView.NO_POSITION) {
+                notifyItemChanged(position)
+            }
+        }
         override fun setData(data: List<ParcelableStatus>?): Boolean {
             val status = this.status ?: return false
             val changed = this.data != data
