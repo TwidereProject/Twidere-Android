@@ -1738,7 +1738,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     class AddRemoveUserListDialogFragment : BaseDialogFragment() {
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val lists = arguments.getParcelableArray(EXTRA_USER_LISTS).toTypedArray(ParcelableUserList.CREATOR)
+            val lists = arguments.getTypedArray<ParcelableUserList>(EXTRA_USER_LISTS)
             val userKey = arguments.getParcelable<UserKey>(EXTRA_USER_KEY)
             val accountKey = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
             val builder = AlertDialog.Builder(context)

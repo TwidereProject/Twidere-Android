@@ -44,8 +44,8 @@ import kotlinx.android.synthetic.main.activity_media_viewer.*
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.ktextension.checkAllSelfPermissionsGranted
 import org.mariotaku.ktextension.contains
+import org.mariotaku.ktextension.getNullableTypedArrayExtra
 import org.mariotaku.ktextension.setItemAvailability
-import org.mariotaku.ktextension.toTypedArray
 import org.mariotaku.mediaviewer.library.*
 import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewerFragment.EXTRA_MEDIA_URI
 import org.mariotaku.twidere.R
@@ -95,8 +95,8 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
     private val initialMedia: ParcelableMedia?
         get() = intent.getParcelableExtra<ParcelableMedia>(EXTRA_CURRENT_MEDIA)
 
-    private val media: Array<out ParcelableMedia> by lazy {
-        intent.getParcelableArrayExtra(EXTRA_MEDIA)?.toTypedArray(ParcelableMedia.CREATOR).orEmpty()
+    private val media: Array<ParcelableMedia> by lazy {
+        return@lazy intent.getNullableTypedArrayExtra<ParcelableMedia>(EXTRA_MEDIA) ?: emptyArray()
     }
 
     private val currentFragment: MediaViewerFragment? get() {

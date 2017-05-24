@@ -37,6 +37,11 @@ public interface AccountExtras extends Parcelable {
         @JsonField(name = "max_height")
         int maxHeight;
 
+        @JsonField(name = "max_size_sync")
+        long maxSizeSync;
+        @JsonField(name = "max_size_async")
+        long maxSizeAsync;
+
         public int getMaxWidth() {
             return maxWidth;
         }
@@ -53,6 +58,22 @@ public interface AccountExtras extends Parcelable {
             this.maxHeight = maxHeight;
         }
 
+        public long getMaxSizeSync() {
+            return maxSizeSync;
+        }
+
+        public void setMaxSizeSync(long maxSizeSync) {
+            this.maxSizeSync = maxSizeSync;
+        }
+
+        public long getMaxSizeAsync() {
+            return maxSizeAsync;
+        }
+
+        public void setMaxSizeAsync(long maxSizeAsync) {
+            this.maxSizeAsync = maxSizeAsync;
+        }
+
         @NonNull
         public static ImageLimit ofSize(int width, int height) {
             final ImageLimit limit = new ImageLimit();
@@ -60,6 +81,13 @@ public interface AccountExtras extends Parcelable {
             limit.setMaxHeight(height);
             return limit;
         }
+
+        public boolean checkSize(long size, boolean async) {
+            final long limit = async ? getMaxSizeAsync() : getMaxSizeSync();
+            if (limit <= 0 || size <= 0) return true;
+            return size < limit;
+        }
+
     }
 
     @JsonObject
@@ -274,7 +302,7 @@ public interface AccountExtras extends Parcelable {
 
         public boolean checkSize(long size, boolean async) {
             final long limit = async ? getMaxSizeAsync() : getMaxSizeSync();
-            if (limit <= 0) return true;
+            if (limit <= 0 || size <= 0) return true;
             return size < limit;
         }
 

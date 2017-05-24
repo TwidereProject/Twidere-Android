@@ -22,6 +22,12 @@ package org.mariotaku.ktextension
 import android.content.Intent
 import android.os.Parcelable
 
-fun <T> Intent.getTypedArrayExtra(key: String, creator: Parcelable.Creator<T>): Array<T> {
-    return getParcelableArrayExtra(key).toTypedArray(creator)
+inline fun <reified T : Parcelable> Intent.getTypedArrayExtra(key: String): Array<T> {
+    val extra = getParcelableArrayExtra(key)
+    return Array(extra.size) { extra[it] as T }
+}
+
+inline fun <reified T : Parcelable> Intent.getNullableTypedArrayExtra(key: String): Array<T>? {
+    val extra = getParcelableArrayExtra(key) ?: return null
+    return Array(extra.size) { extra[it] as T }
 }

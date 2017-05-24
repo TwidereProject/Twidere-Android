@@ -50,6 +50,9 @@ public class StatusNetAccountExtras implements Parcelable, AccountExtras {
     @ParcelableThisPlease
     @JsonField(name = "text_limit")
     int textLimit;
+    @ParcelableThisPlease
+    @JsonField(name = "upload_limit")
+    long uploadLimit;
 
     public int getTextLimit() {
         return textLimit;
@@ -57,6 +60,14 @@ public class StatusNetAccountExtras implements Parcelable, AccountExtras {
 
     public void setTextLimit(int textLimit) {
         this.textLimit = textLimit;
+    }
+
+    public long getUploadLimit() {
+        return uploadLimit;
+    }
+
+    public void setUploadLimit(long uploadLimit) {
+        this.uploadLimit = uploadLimit;
     }
 
     @Override
@@ -73,6 +84,7 @@ public class StatusNetAccountExtras implements Parcelable, AccountExtras {
     public String toString() {
         return "StatusNetAccountExtras{" +
                 "textLimit=" + textLimit +
+                ", uploadLimit=" + uploadLimit +
                 '}';
     }
 }

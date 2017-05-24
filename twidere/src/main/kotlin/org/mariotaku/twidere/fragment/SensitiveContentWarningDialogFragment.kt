@@ -23,7 +23,7 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
-import org.mariotaku.ktextension.toTypedArray
+import org.mariotaku.ktextension.getNullableTypedArray
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.extension.applyTheme
@@ -37,15 +37,14 @@ class SensitiveContentWarningDialogFragment : BaseDialogFragment(), DialogInterf
     override fun onClick(dialog: DialogInterface, which: Int) {
         when (which) {
             DialogInterface.BUTTON_POSITIVE -> {
-                val context = activity
-                val args = arguments
-                if (args == null || context == null) return
+                val context = activity ?: return
+                val args = arguments ?: return
                 val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
                 val current = args.getParcelable<ParcelableMedia>(EXTRA_CURRENT_MEDIA)
                 val status = args.getParcelable<ParcelableStatus>(EXTRA_STATUS)
                 val option = args.getBundle(EXTRA_ACTIVITY_OPTIONS)
                 val newDocument = args.getBoolean(EXTRA_NEW_DOCUMENT)
-                val media = args.getParcelableArray(EXTRA_MEDIA).toTypedArray(ParcelableMedia.CREATOR)
+                val media: Array<ParcelableMedia> = args.getNullableTypedArray(EXTRA_MEDIA) ?: emptyArray()
                 IntentUtils.openMediaDirectly(context, accountKey, media, current, option, newDocument,
                         status)
             }

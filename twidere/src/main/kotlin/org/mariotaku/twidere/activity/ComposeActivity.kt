@@ -1073,7 +1073,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val hasVisibility = intent.hasExtra(EXTRA_VISIBILITY)
         val hasAccountKeys: Boolean
         if (intent.hasExtra(EXTRA_ACCOUNT_KEYS)) {
-            val accountKeys = intent.getParcelableArrayExtra(EXTRA_ACCOUNT_KEYS).toTypedArray(UserKey.CREATOR)
+            val accountKeys = intent.getTypedArrayExtra<UserKey>(EXTRA_ACCOUNT_KEYS)
             accountsAdapter.selectedAccountKeys = accountKeys
             hasAccountKeys = true
         } else if (intent.hasExtra(EXTRA_ACCOUNT_KEY)) {

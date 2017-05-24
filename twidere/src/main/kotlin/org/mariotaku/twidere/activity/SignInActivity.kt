@@ -1231,12 +1231,10 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         private fun getStatusNetAccountExtras(twitter: MicroBlog): StatusNetAccountExtras {
             // Get StatusNet specific resource
             val config = twitter.statusNetConfig
-            val extras = StatusNetAccountExtras()
-            val site = config.site
-            if (site != null) {
-                extras.textLimit = site.textLimit
+            return StatusNetAccountExtras().apply {
+                textLimit = config.site?.textLimit ?: -1
+                uploadLimit = config.attachments?.fileQuota ?: -1L
             }
-            return extras
         }
 
         private fun getTwitterAccountExtras(twitter: MicroBlog): TwitterAccountExtras {

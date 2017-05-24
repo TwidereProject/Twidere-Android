@@ -42,19 +42,34 @@ val AccountDetails.isOAuth: Boolean
     get() = credentials_type == Credentials.Type.OAUTH || credentials_type == Credentials.Type.XAUTH
 
 val AccountDetails.mediaSizeLimit: UpdateStatusTask.SizeLimit?
-    get() = when (type) {
-        AccountType.TWITTER -> {
-            val imageLimit = AccountExtras.ImageLimit.ofSize(2048, 1536)
-            val videoLimit = AccountExtras.VideoLimit.twitterDefault()
-            UpdateStatusTask.SizeLimit(imageLimit, videoLimit)
+    get() {
+        when (type) {
+            AccountType.TWITTER -> {
+                val imageLimit = AccountExtras.ImageLimit.ofSize(2048, 1536)
+                val videoLimit = AccountExtras.VideoLimit.twitterDefault()
+                return UpdateStatusTask.SizeLimit(imageLimit, videoLimit)
+            }
+            AccountType.FANFOU -> {
+                val imageLimit = AccountExtras.ImageLimit.ofSize(2048, 1536)
+                val videoLimit = AccountExtras.VideoLimit.unsupported()
+                return UpdateStatusTask.SizeLimit(imageLimit, videoLimit)
+            }
+            AccountType.STATUSNET -> {
+                val extras = extras as? StatusNetAccountExtras ?: return null
+                val imageLimit = AccountExtras.ImageLimit().apply {
+                    maxSizeSync = extras.uploadLimit
+                    maxSizeAsync = extras.uploadLimit
+                }
+                val videoLimit = AccountExtras.VideoLimit().apply {
+                    maxSizeSync = extras.uploadLimit
+                    maxSizeAsync = extras.uploadLimit
+                }
+                return UpdateStatusTask.SizeLimit(imageLimit, videoLimit)
+            }
+            else -> return null
         }
-        AccountType.FANFOU -> {
-            val imageLimit = AccountExtras.ImageLimit.ofSize(2048, 1536)
-            val videoLimit = AccountExtras.VideoLimit.unsupported()
-            UpdateStatusTask.SizeLimit(imageLimit, videoLimit)
-        }
-        else -> null
     }
+
 /**
  * Text limit when composing a status, 0 for no limit
  */

@@ -812,7 +812,7 @@ class UpdateStatusTask(
 
                 val data = when (type) {
                     ParcelableMedia.Type.IMAGE -> imageStream(context, resolver, mediaUri, mediaType,
-                            sizeLimit?.image)
+                            sizeLimit?.image, chucked)
                     ParcelableMedia.Type.VIDEO -> videoStream(context, resolver, mediaUri, mediaType,
                             sizeLimit?.video, chucked)
                     else -> null
@@ -893,11 +893,18 @@ class UpdateStatusTask(
                 resolver: ContentResolver,
                 mediaUri: Uri,
                 defaultType: String?,
-                imageLimit: AccountExtras.ImageLimit?
+                imageLimit: AccountExtras.ImageLimit?,
+                chucked: Boolean
         ): MediaStreamData? {
             var mediaType = defaultType
-            val o = BitmapFactory.Options()
-            o.inJustDecodeBounds = true
+            val o = BitmapFactory.Options().apply {
+                inJustDecodeBounds = true
+            }
+            var imageSize = -1L
+            resolver.openInputStream(mediaUri).use {
+                imageSize = it.available().toLong()
+                BitmapFactory.decodeStream(it, null, o)
+            }
             BitmapFactoryUtils.decodeUri(resolver, mediaUri, opts = o)
             // Try to use decoded media type
             if (o.outMimeType != null) {
@@ -908,7 +915,8 @@ class UpdateStatusTask(
                 return null
             }
 
-            if (imageLimit == null || imageLimit.checkGeomentry(o.outWidth, o.outHeight)) return null
+            if (imageLimit == null || imageLimit.checkGeomentry(o.outWidth, o.outHeight)
+                    || imageLimit.checkSize(imageSize, chucked)) return null
             o.inSampleSize = o.calculateInSampleSize(imageLimit.maxWidth, imageLimit.maxHeight)
             o.inJustDecodeBounds = false
             // Do actual image decoding

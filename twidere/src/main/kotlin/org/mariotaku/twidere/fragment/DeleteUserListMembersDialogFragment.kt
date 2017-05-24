@@ -25,7 +25,7 @@ import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AlertDialog
 import org.mariotaku.kpreferences.get
-import org.mariotaku.ktextension.toTypedArray
+import org.mariotaku.ktextension.getNullableTypedArray
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USERS
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER_LIST
@@ -87,7 +87,7 @@ class DeleteUserListMembersDialogFragment : BaseDialogFragment(), DialogInterfac
         get() {
             val args = arguments
             if (!args.containsKey(EXTRA_USERS)) return null
-            return args.getParcelableArray(EXTRA_USERS)?.toTypedArray(ParcelableUser.CREATOR)
+            return args.getNullableTypedArray(EXTRA_USERS)
         }
 
     companion object {
