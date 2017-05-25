@@ -19,9 +19,9 @@ import org.mariotaku.twidere.model.account.TwitterAccountExtras
 import org.mariotaku.twidere.model.account.cred.*
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.AccountUtils.ACCOUNT_USER_DATA_KEYS
+import org.mariotaku.twidere.util.InternalTwitterContentUtils
 import org.mariotaku.twidere.util.JsonSerializer
 import org.mariotaku.twidere.util.ParseUtils
-import org.mariotaku.twidere.util.TwitterContentUtils
 import org.mariotaku.twidere.util.model.AccountDetailsUtils
 import java.io.IOException
 import java.util.concurrent.Callable
@@ -107,7 +107,7 @@ fun Account.isOfficial(am: AccountManager, context: Context): Boolean {
     }
     val credentials = getCredentials(am)
     if (credentials is OAuthCredentials) {
-        return TwitterContentUtils.isOfficialKey(context, credentials.consumer_key,
+        return InternalTwitterContentUtils.isOfficialKey(context, credentials.consumer_key,
                 credentials.consumer_secret)
     }
     return false

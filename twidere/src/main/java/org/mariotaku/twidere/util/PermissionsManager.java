@@ -41,10 +41,10 @@ public class PermissionsManager implements Constants {
 
     private final SharedPreferences preferences;
     private final PackageManager packageManager;
-    private final Context mContext;
+    private final Context context;
 
     public PermissionsManager(final Context context) {
-        mContext = context;
+        this.context = context;
         preferences = context.getSharedPreferences(PERMISSION_PREFERENCES_NAME, Context.MODE_PRIVATE);
         packageManager = context.getPackageManager();
     }
@@ -71,7 +71,7 @@ public class PermissionsManager implements Constants {
 
     public boolean checkPermission(final String packageName, final String... requiredPermissions) {
         if (requiredPermissions == null || requiredPermissions.length == 0) return true;
-        if (mContext.getPackageName().equals(packageName)) return true;
+        if (context.getPackageName().equals(packageName)) return true;
         if (checkSignature(packageName)) return true;
         final String[] permissions = getPermissions(packageName);
         return TwidereArrayUtils.contains(permissions, requiredPermissions);
@@ -82,9 +82,9 @@ public class PermissionsManager implements Constants {
     }
 
     public boolean checkSignature(final String pname) {
-        if (mContext.getPackageName().equals(pname)) return true;
+        if (context.getPackageName().equals(pname)) return true;
         if (BuildConfig.DEBUG) return false;
-        return packageManager.checkSignatures(pname, mContext.getPackageName()) == PackageManager.SIGNATURE_MATCH;
+        return packageManager.checkSignatures(pname, context.getPackageName()) == PackageManager.SIGNATURE_MATCH;
     }
 
     public boolean deny(final String packageName) {

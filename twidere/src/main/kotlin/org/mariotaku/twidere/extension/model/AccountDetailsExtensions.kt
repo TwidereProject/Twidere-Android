@@ -11,7 +11,7 @@ import org.mariotaku.twidere.model.account.TwitterAccountExtras
 import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.model.account.cred.OAuthCredentials
 import org.mariotaku.twidere.task.twitter.UpdateStatusTask
-import org.mariotaku.twidere.util.TwitterContentUtils
+import org.mariotaku.twidere.util.InternalTwitterContentUtils
 
 fun AccountDetails.isOfficial(context: Context): Boolean {
     val extra = this.extras
@@ -20,7 +20,7 @@ fun AccountDetails.isOfficial(context: Context): Boolean {
     }
     val credentials = this.credentials
     if (credentials is OAuthCredentials) {
-        return TwitterContentUtils.isOfficialKey(context,
+        return InternalTwitterContentUtils.isOfficialKey(context,
                 credentials.consumer_key, credentials.consumer_secret)
     }
     return false

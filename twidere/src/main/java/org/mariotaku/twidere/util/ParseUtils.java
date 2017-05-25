@@ -20,11 +20,9 @@ package org.mariotaku.twidere.util;
 
 import android.graphics.Color;
 
-import org.mariotaku.twidere.TwidereConstants;
-
 import static android.text.TextUtils.isEmpty;
 
-public final class ParseUtils implements TwidereConstants {
+public final class ParseUtils {
     private ParseUtils() {
     }
 
