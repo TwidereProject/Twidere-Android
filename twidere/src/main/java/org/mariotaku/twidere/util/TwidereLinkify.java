@@ -33,6 +33,7 @@ import com.twitter.Regex;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.text.AcctMentionSpan;
+import org.mariotaku.twidere.text.HashtagSpan;
 import org.mariotaku.twidere.text.TwidereURLSpan;
 
 import java.lang.annotation.Retention;
@@ -193,6 +194,8 @@ public final class TwidereLinkify implements Constants {
                     int linkType = type;
                     if (span instanceof AcctMentionSpan) {
                         linkType = LINK_TYPE_USER_ACCT;
+                    } else if (span instanceof HashtagSpan) {
+                        linkType = LINK_TYPE_HASHTAG;
                     } else if (accountKey != null && USER_TYPE_FANFOU_COM.equals(accountKey.getHost())) {
                         // Fix search path
                         if (url.startsWith("/")) {

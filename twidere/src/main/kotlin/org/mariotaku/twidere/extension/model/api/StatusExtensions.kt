@@ -38,6 +38,7 @@ import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils.addFilterFlag
 import org.mariotaku.twidere.text.AcctMentionSpan
+import org.mariotaku.twidere.text.HashtagSpan
 import org.mariotaku.twidere.util.HtmlBuilder
 import org.mariotaku.twidere.util.HtmlSpanBuilder
 import org.mariotaku.twidere.util.InternalTwitterContentUtils.getMediaUrl
@@ -278,8 +279,9 @@ internal fun findByOrigRange(spans: Array<SpanItem>, start: Int, end: Int): List
 internal inline val CharSequence.spanItems get() = (this as? Spanned)?.let { text ->
     text.getSpans(0, length, URLSpan::class.java).mapToArray {
         val item = it.toSpanItem(text)
-        if (it is AcctMentionSpan) {
-            item.type = SpanItem.SpanType.ACCT_MENTION
+        when (it) {
+            is AcctMentionSpan -> item.type = SpanItem.SpanType.ACCT_MENTION
+            is HashtagSpan -> item.type = SpanItem.SpanType.HASHTAG
         }
         return@mapToArray item
     }

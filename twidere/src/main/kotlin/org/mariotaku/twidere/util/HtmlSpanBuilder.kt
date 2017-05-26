@@ -100,7 +100,7 @@ object HtmlSpanBuilder {
          * @param start Start index of text to append in [buffer]
          * @param len Length of text to append in [buffer]
          */
-        fun appendText(text: Editable, buffer: CharArray, start: Int, len: Int): Boolean = false
+        fun appendText(text: Editable, buffer: CharArray, start: Int, len: Int, info: TagInfo?): Boolean = false
 
         /**
          * @param text Text to apply span from [info]
@@ -112,7 +112,8 @@ object HtmlSpanBuilder {
 
     }
 
-    data class TagInfo(val start: Int, val name: String, val attributes: Map<String, String>?) {
+    data class TagInfo(val start: Int, val name: String, val attributes: Map<String, String>?,
+            val parent: TagInfo? = null) {
 
         val nameLower = name.toLowerCase(Locale.US)
 
@@ -138,11 +139,12 @@ object HtmlSpanBuilder {
     ) : AbstractSimpleMarkupHandler() {
 
         private val sb = SpannableStringBuilder()
-        private var tagInfo = ArrayList<TagInfo>()
+        private val tagStack = ArrayList<TagInfo>()
         private var lastTag: TagInfo? = null
 
         override fun handleText(buffer: CharArray, offset: Int, len: Int, line: Int, col: Int) {
             var cur = offset
+            val lastTag = this.lastTag
             while (cur < offset + len) {
                 // Find first line break
                 var lineBreakIndex = cur
@@ -150,27 +152,27 @@ object HtmlSpanBuilder {
                     if (buffer[lineBreakIndex] == '\n') break
                     lineBreakIndex++
                 }
-                if (!(processor?.appendText(sb, buffer, cur, lineBreakIndex - cur) ?: false)) {
+                if (!(processor?.appendText(sb, buffer, cur, lineBreakIndex - cur, lastTag) ?: false)) {
                     sb.append(HtmlEscapeHelper.unescape(String(buffer, cur, lineBreakIndex - cur)))
                 }
                 cur = lineBreakIndex + 1
             }
-            lastTag = null
+            this.lastTag = null
         }
 
         override fun handleCloseElement(elementName: String, line: Int, col: Int) {
-            val lastIndex = lastIndexOfTag(tagInfo, elementName)
+            val lastIndex = lastIndexOfTag(tagStack, elementName)
             if (lastIndex == -1) return
-            val info = tagInfo[lastIndex]
+            val info = tagStack[lastIndex]
             applyTag(sb, info.start, sb.length, info, processor)
-            tagInfo.removeAt(lastIndex)
+            tagStack.removeAt(lastIndex)
             lastTag = info
         }
 
         override fun handleOpenElement(elementName: String, attributes: Map<String, String>?,
                 line: Int, col: Int) {
-            val info = TagInfo(sb.length, elementName, attributes)
-            tagInfo.add(info)
+            val info = TagInfo(sb.length, elementName, attributes, tagStack.lastOrNull())
+            tagStack.add(info)
 
             // Mastodon case, insert 2 breaks between two <p> tag
             if ("p" == info.nameLower && "p" == lastTag?.nameLower) {
@@ -181,7 +183,7 @@ object HtmlSpanBuilder {
         @Throws(ParseException::class)
         override fun handleStandaloneElement(elementName: String, attributes: Map<String, String>?,
                 minimized: Boolean, line: Int, col: Int) {
-            val info = TagInfo(sb.length, elementName, attributes)
+            val info = TagInfo(sb.length, elementName, attributes, tagStack.lastOrNull())
             applyTag(sb, info.start, sb.length, info, processor)
         }
 

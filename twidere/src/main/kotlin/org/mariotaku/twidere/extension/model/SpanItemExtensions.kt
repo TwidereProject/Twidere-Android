@@ -24,6 +24,7 @@ import android.text.Spanned
 import android.text.style.URLSpan
 import org.mariotaku.twidere.model.SpanItem
 import org.mariotaku.twidere.text.AcctMentionSpan
+import org.mariotaku.twidere.text.HashtagSpan
 import org.mariotaku.twidere.text.ZeroWidthSpan
 
 val SpanItem.length: Int get() = end - start
@@ -37,6 +38,10 @@ fun Array<SpanItem>.applyTo(spannable: Spannable) {
             }
             SpanItem.SpanType.ACCT_MENTION -> {
                 spannable.setSpan(AcctMentionSpan(span.link), span.start, span.end,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+            SpanItem.SpanType.HASHTAG -> {
+                spannable.setSpan(HashtagSpan(span.link), span.start, span.end,
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             else -> {

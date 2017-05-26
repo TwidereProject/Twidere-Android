@@ -93,11 +93,12 @@ public class SpanItem implements Parcelable {
         SpanItemParcelablePlease.writeToParcel(this, dest, flags);
     }
 
-    @IntDef({SpanType.HIDE, SpanType.LINK, SpanType.ACCT_MENTION})
+    @IntDef({SpanType.HIDE, SpanType.LINK, SpanType.ACCT_MENTION, SpanType.HASHTAG})
     @Retention(RetentionPolicy.SOURCE)
     public @interface SpanType {
         int HIDE = -1;
         int LINK = 0;
         int ACCT_MENTION = 1;
+        int HASHTAG = 2;
     }
 }

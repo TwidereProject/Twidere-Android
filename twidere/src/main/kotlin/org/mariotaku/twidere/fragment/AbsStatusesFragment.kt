@@ -653,7 +653,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
                     val status = extras.getParcelable<ParcelableStatus>(EXTRA_STATUS)
                     if (status.account_key.host != accountKey.host) {
                         val composeIntent = Intent(fragment.context, ComposeActivity::class.java)
-                        composeIntent.putExtra(Intent.EXTRA_TEXT, " ${LinkCreator.getStatusWebLink(status)}")
+                        composeIntent.putExtra(Intent.EXTRA_TEXT, "${status.text_plain } ${LinkCreator.getStatusWebLink(status)}")
                         composeIntent.putExtra(EXTRA_ACCOUNT_KEY, accountKey)
                         composeIntent.putExtra(EXTRA_SELECTION, 0)
                         fragment.startActivity(composeIntent)

@@ -29,6 +29,7 @@ import org.mariotaku.twidere.extension.model.api.spanItems
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils.addFilterFlag
 import org.mariotaku.twidere.text.AcctMentionSpan
+import org.mariotaku.twidere.text.HashtagSpan
 import org.mariotaku.twidere.util.HtmlEscapeHelper
 import org.mariotaku.twidere.util.HtmlSpanBuilder
 import org.mariotaku.twidere.util.emoji.EmojioneTranslator
@@ -132,21 +133,33 @@ private fun calculateDisplayTextRange(text: String, spans: Array<SpanItem>?, med
 
 object MastodonSpanProcessor : HtmlSpanBuilder.SpanProcessor {
 
-    override fun appendText(text: Editable, buffer: CharArray, start: Int, len: Int): Boolean {
+    override fun appendText(text: Editable, buffer: CharArray, start: Int, len: Int,
+            info: HtmlSpanBuilder.TagInfo?): Boolean {
         val unescaped = HtmlEscapeHelper.unescape(String(buffer, start, len))
         text.append(EmojioneTranslator.translate(unescaped))
         return true
     }
 
     override fun applySpan(text: Editable, start: Int, end: Int, info: HtmlSpanBuilder.TagInfo): Boolean {
-        val clsAttr = info.getAttribute("class") ?: return false
-        val hrefAttr = info.getAttribute("href") ?: return false
-        // Is mention or hashtag
-        if ("mention" !in clsAttr.split(" ")) return false
-        if (text[start] != '@') return false
-        text.setSpan(AcctMentionSpan(text.substring(start + 1, end), Uri.parse(hrefAttr).host),
-                start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        return true
+        val clsAttr = info.getAttribute("class")?.split(" ") ?: emptyList()
+        when {
+            "tag" in clsAttr || info.isTag(text) -> {
+                text.setSpan(HashtagSpan(text.substring(start, end)), start, end,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                return true
+            }
+            "mention" in clsAttr -> {
+                val hrefAttr = info.getAttribute("href") ?: return false
+                if (text[start] != '@') return false
+                text.setSpan(AcctMentionSpan(text.substring(start + 1, end), Uri.parse(hrefAttr).host),
+                        start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                return true
+            }
+        }
+        return false
     }
 
+    fun HtmlSpanBuilder.TagInfo.isTag(text: CharSequence): Boolean {
+        return start > 0 && text[start - 1] == '#'
+    }
 }
