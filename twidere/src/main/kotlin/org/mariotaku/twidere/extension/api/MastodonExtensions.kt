@@ -31,6 +31,7 @@ fun Mastodon.batchGetRelationships(ids: Collection<String>): Map<String, Relatio
     @Suppress("LoopToCallChain")
     for (i in indices step 100) {
         val batch = list.subArray(i until (i + 100).coerceAtMost(indices.last))
+        if (batch.isEmpty()) continue
         getRelationships(batch).forEach {
             result[it.id] = it
         }
