@@ -151,18 +151,11 @@ abstract class ParcelableStatusesAdapter(
     }
 
     override fun isGapItem(position: Int): Boolean {
-        val dataPosition = position - statusStartIndex
-        val statusCount = getStatusCount(false)
-        if (dataPosition < 0 || dataPosition >= statusCount) return false
-        // Don't show gap if it's last item
-        if (dataPosition == statusCount - 1) return false
-        if (data is ObjectCursor) {
-            val cursor = (data as ObjectCursor).cursor
-            if (!cursor.moveToPosition(dataPosition)) return false
-            val indices = (data as ObjectCursor).indices
-            return cursor.safeGetInt(indices[Statuses.IS_GAP]) == 1
-        }
-        return getStatus(position).is_gap
+        return getFieldValue(position, { info ->
+            return@getFieldValue info.gap
+        }, { status ->
+            return@getFieldValue status.is_gap
+        }, false)
     }
 
     override fun getStatus(position: Int, raw: Boolean): ParcelableStatus {
