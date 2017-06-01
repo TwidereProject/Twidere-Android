@@ -27,7 +27,6 @@ import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.RequestManager
-import org.apache.commons.collections.primitives.ArrayLongList
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
 import org.mariotaku.library.objectcursor.ObjectCursor
@@ -442,10 +441,10 @@ abstract class ParcelableStatusesAdapter(
             if (dataPosition < 0 || dataPosition >= getStatusCount(true)) {
                 throw CursorIndexOutOfBoundsException("index: $position, valid range is $0..${getStatusCount(true)}")
             }
-            val cursor = data.cursor
-            if (!cursor.safeMoveToPosition(dataPosition)) return defValue
-            val indices = data.indices
             val info = infoCache?.get(dataPosition) ?: run {
+                val cursor = data.cursor
+                if (!cursor.safeMoveToPosition(dataPosition)) return defValue
+                val indices = data.indices
                 val _id = cursor.safeGetLong(indices[Statuses._ID])
                 val accountKey = UserKey.valueOf(cursor.getString(indices[Statuses.ACCOUNT_KEY]))
                 val id = cursor.getString(indices[Statuses.ID])

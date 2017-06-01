@@ -378,10 +378,10 @@ class ParcelableActivitiesAdapter(
             if (dataPosition < 0 || dataPosition >= getActivityCount(true)) {
                 throw CursorIndexOutOfBoundsException("index: $position, valid range is $0..${getActivityCount(true)}")
             }
-            val cursor = data.cursor
-            if (!cursor.safeMoveToPosition(dataPosition)) return defValue
-            val indices = data.indices
             val info = infoCache?.get(dataPosition) ?: run {
+                val cursor = data.cursor
+                if (!cursor.safeMoveToPosition(dataPosition)) return defValue
+                val indices = data.indices
                 val _id = cursor.safeGetLong(indices[Activities._ID])
                 val timestamp = cursor.safeGetLong(indices[Activities.TIMESTAMP])
                 val action = cursor.getString(indices[Activities.ACTION])
