@@ -116,7 +116,6 @@
   <string name="combined_notifications">Yhdistetyt ilmoitukset</string>
   <string name="combined_notifications_summary_off">Ilmoitukset esitetään erillään</string>
   <string name="combined_notifications_summary_on">Ilmoitukset ryhmitellään</string>
-  <string name="action_comment">Kommentti</string>
   <string name="comment_hint">Kommentti&#8230;</string>
   <string name="compact_cards">Tiiviit kortit</string>
   <string name="compact_cards_summary">Näytä ruudulla enemmän kortteja</string>
@@ -188,11 +187,9 @@
   <string name="error_message_message_too_long">Viesti liian pitkä.</string>
   <string name="error_message_no_content">Ei sisältöä</string>
   <string name="error_message_rate_limit">Twitterin määrärajoitus on ylitetty. Yritä uudelleen, kun on kulunut <xliff:g id="time">%s</xliff:g></string>
-  <string name="error_message_rate_limit_with_action">Twitterin määrärajoitus ylitettiin toiminnon <xliff:g id="action">%1$s</xliff:g> aikana. Yritä uudelleen, kun on kulunut <xliff:g id="time">%2$s</xliff:g></string>
   <string name="error_message_status_too_long">Twiitti on liian pitkä.</string>
   <string name="error_message_tweet_shorten_failed">Twiitin lyhennys epäonnistui.</string>
   <string name="error_message_tweet_shortener_not_found">Twiitinlyhentäjää ei ole. Se on mahdollisesti poistettu.</string>
-  <string name="error_message_with_action">Virhe toiminnossa <xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
   <string name="error_no_access_for_credentials">Sovelluksesi ei voi käyttää tätä tiedostoa, oletko laittanut päälle \'Pakota yksityisten API:en käyttö\' -asetuksen?</string>
   <string name="error_no_dm_permission">Ei ole oikeutta yksityisille viesteille, tarkista Twitter-sovelluksen asetukset.</string>
   <string name="error_title_device_incompatible">Yhteensopimaton laite</string>
@@ -598,7 +595,6 @@
   <string name="streaming">Striimaus</string>
   <string name="style">Tyyli</string>
   <string name="subscribed_to_list">Tilattiin lista \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="title_userlist_subscribers">Tilaaja</string>
   <string name="swipe_down_to_refresh">Pyyhkäise alas ja päivitä</string>
   <string name="system_default">Järjestelmän oletusasetus</string>
   <string name="tab_display_option">Välilehden näyttöasetus</string>

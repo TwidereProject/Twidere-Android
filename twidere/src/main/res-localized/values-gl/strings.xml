@@ -206,7 +206,6 @@
   <string name="combined_notifications">Notificacións combinadas</string>
   <string name="combined_notifications_summary_off">As notificacións amosaranse separadamente</string>
   <string name="combined_notifications_summary_on">Agruparanse as notificacións</string>
-  <string name="action_comment">Comentar</string>
   <string name="comment_hint">Comentar&#8230;</string>
   <string name="compact_cards">Compactar cartóns</string>
   <string name="compact_cards_summary">Amosa máis cartóns na pantalla</string>
@@ -286,12 +285,10 @@
   <string name="error_message_message_too_many_participants">Demasiados participantes</string>
   <string name="error_message_no_content">Sen contido</string>
   <string name="error_message_rate_limit">Excedido o límite do Twitter, téntao de novo en <xliff:g id="time">%s</xliff:g></string>
-  <string name="error_message_rate_limit_with_action">Excedido o límite do Twitter mentres <xliff:g id="action">%1$s</xliff:g>, téntao de novo en <xliff:g id="time">%2$s</xliff:g></string>
   <string name="error_message_scheduler_not_available">Programador de chíos non dispoñible</string>
   <string name="error_message_status_too_long">Chío longo de máis.</string>
   <string name="error_message_tweet_shorten_failed">Fallou o acurte do chío.</string>
   <string name="error_message_tweet_shortener_not_found">Non se atopou xestor para acurtar chíos, se cadra eliminouse.</string>
-  <string name="error_message_with_action">Erro mentres <xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
   <string name="error_no_access_for_credentials">A túa aplicación non pode acceder a este recurso.</string>
   <string name="error_no_dm_permission">Sen permiso de mensaxes directas, compróbao nos axustes da túa aplicación Twitter.</string>
   <string name="error_title_device_incompatible">Dispositivo non compatible</string>
@@ -500,6 +497,7 @@
   <string name="message_account_delete_confirm">Esta conta eliminarase do Twidere.</string>
   <string name="message_api_data_corrupted">Datos API corruptos.</string>
   <string name="message_api_url_format_help">[DOMAIN]: Dominio API do Twitter.\nExemplo: https://[DOMAIN].twitter.com/ vai substituír a https://api.twitter.com/.</string>
+  <string name="message_app_crashed">Twidere tivo un erro. Envía un informe disto para axudarme a resolver a incidencia.</string>
   <string name="message_auto_refresh_confirm">Activar auto recarga para acadar novos chíos de xeito automático?</string>
   <string name="message_blocked_user"><xliff:g id="user">%s</xliff:g> bloqueado.</string>
   <string name="message_buffer_delete_schedule_confirm">Borrar este programado?</string>
@@ -553,6 +551,7 @@
   <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_extra_features_not_purchased">Características avanzadas non adquiridas</string>
   <string name="message_toast_filters_import_hint">Preme \"+\" para importar</string>
+  <string name="message_toast_internal_storage_install_required">Non está soportada a instalación en tarxeta SD. As contas poden perderse despois de reiniciar.</string>
   <string name="message_toast_invalid_mastodon_host">Host Mastodon non válido</string>
   <string name="message_toast_link_copied_to_clipboard">Ligazón copiada no portapapeis</string>
   <string name="message_toast_livewp_daydream_enabled_message">Aquí hai un pequeno agasallo para ti, atópao nos axustes do sistema :)</string>
@@ -908,7 +907,8 @@
   <string name="streaming">Streaming</string>
   <string name="style">Estilo</string>
   <string name="subscribed_to_list">Subscribiches á lista \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="title_userlist_subscribers">Subscritor</string>
+  <string name="summary_interactions_account_not_supported">Conta non soportada</string>
+  <string name="summary_interactions_streaming_required">As interaccións completas só están dispoñibles cando está activado o streaming</string>
   <string name="swipe_down_to_refresh">Arrastra cara abaixo para recargar</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="sync_provider_name_google_drive">Google Drive</string>

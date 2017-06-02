@@ -179,7 +179,6 @@
   <string name="combined_notifications">Notificações agrupadas</string>
   <string name="combined_notifications_summary_off">Notificações serão mostradas separadamente</string>
   <string name="combined_notifications_summary_on">Notificações serão agrupadas</string>
-  <string name="action_comment">Comentar</string>
   <string name="comment_hint">Comentar&#8230;</string>
   <string name="compact_cards">Compactar cartões</string>
   <string name="compact_cards_summary">Exibir mais cartões na tela</string>
@@ -253,11 +252,9 @@
   <string name="error_message_message_too_long">Mensagem muito longa.</string>
   <string name="error_message_no_content">Nenhum conteúdo</string>
   <string name="error_message_rate_limit">Limite do Twitter alcançado, tente de novo em <xliff:g id="time">%s</xliff:g></string>
-  <string name="error_message_rate_limit_with_action">Limite de acessos ao Twitter atingido <xliff:g id="action">%1$s</xliff:g>, tente após <xliff:g id="time">%2$s</xliff:g></string>
   <string name="error_message_status_too_long">Tweet muito longo.</string>
   <string name="error_message_tweet_shorten_failed">Falha ao encurtar URL.</string>
   <string name="error_message_tweet_shortener_not_found">Encurtador de URL não encontrado, talvez tenha sido desinstalado.</string>
-  <string name="error_message_with_action">Erro <xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
   <string name="error_no_access_for_credentials">Seu aplicativo não consegue acessar esse recurso, você habilitou \'Forçar o uso de APIs privadas\'?</string>
   <string name="error_no_dm_permission">Sem permissão para mensagem direta, verifique sua permissão nas configurações do aplicativo do Twitter.</string>
   <string name="error_title_device_incompatible">Dispositivo incompatível</string>
@@ -689,14 +686,13 @@
   <string name="status_shortener">Encurtador de Tweet</string>
   <string name="status_shortener_default">Nada (cancelar envio)</string>
   <!-- [noun] Accessibility label for retweet icon -->
-  <string name="status_type_retweet">Retweetar</string>
+  <string name="status_type_retweet">Retweet</string>
   <string name="stream_type_home">Início</string>
   <string name="stream_type_interactions">Interações</string>
   <string name="stream_type_messages">Mensagens</string>
   <string name="streaming">Streaming</string>
   <string name="style">Estilo</string>
   <string name="subscribed_to_list">Inscrito na lista \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="title_userlist_subscribers">Inscrito</string>
   <string name="swipe_down_to_refresh">Deslize para baixo para atualizar</string>
   <string name="system_default">Padrão do sistema</string>
   <string name="tab_display_option">Opções de exibições de abas</string>
@@ -754,7 +750,7 @@
   <string name="title_premium_features_name">Twidere ∞</string>
   <string name="title_search">Procurar</string>
   <string name="title_set_nickname">Definir apelido</string>
-  <string name="title_status">Tweetar</string>
+  <string name="title_status">Tweet</string>
   <string name="title_statuses">Tweets</string>
   <string name="title_streaming">Streaming</string>
   <string name="title_subscription_name">Nome</string>

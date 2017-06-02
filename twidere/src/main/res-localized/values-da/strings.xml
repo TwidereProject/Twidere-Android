@@ -84,7 +84,6 @@
   <string name="error_message_status_too_long">Tweet for lang.</string>
   <string name="error_message_tweet_shorten_failed">Tweetforkortelse mislykkedes.</string>
   <string name="error_message_tweet_shortener_not_found">Tweetforkorter ikke fundet, måske er den blevet afinstalleret.</string>
-  <string name="error_message_with_action">Fejl imens <xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
   <string name="error_unknown_error">Fejl: Ukendt fejl, dette er nok en fejl.</string>
   <string name="extensions">Udvidelser</string>
   <!-- Enhanced (paid) features description -->

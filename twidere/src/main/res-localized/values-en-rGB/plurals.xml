@@ -51,7 +51,7 @@
     <item quantity="other"><xliff:g id="count">%d</xliff:g> tweets</item>
   </plurals>
   <plurals name="N_favorites">
-    <item quantity="one"><xliff:g id="count">%d</xliff:g> favorite</item>
+    <item quantity="one"><xliff:g id="count">%d</xliff:g> favourites</item>
     <item quantity="other"><xliff:g id="count">%d</xliff:g> favorites</item>
   </plurals>
   <plurals name="N_likes">

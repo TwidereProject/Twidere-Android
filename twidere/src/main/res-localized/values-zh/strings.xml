@@ -34,6 +34,7 @@
   <string name="action_center">置中</string>
   <string name="action_clear">清除</string>
   <string name="action_clear_messages">清空訊息</string>
+  <string name="action_comment">評論</string>
   <string name="action_compose">撰寫</string>
   <string name="action_compose_message_convert_to_status">轉換為推文</string>
   <string name="action_connect_to_buffer">連接</string>
@@ -206,7 +207,6 @@
   <string name="combined_notifications">已合併的通知</string>
   <string name="combined_notifications_summary_off">通知將分開顯示</string>
   <string name="combined_notifications_summary_on">通知將被分組</string>
-  <string name="action_comment">評論</string>
   <string name="comment_hint">評論&#8230;</string>
   <string name="compact_cards">緊湊卡片視圖</string>
   <string name="compact_cards_summary">在螢幕上顯示更多卡片</string>
@@ -287,12 +287,10 @@
   <string name="error_message_message_too_many_participants">添加的參與者太多</string>
   <string name="error_message_no_content">沒有內容</string>
   <string name="error_message_rate_limit">超過了Twitter的取用次數限制，請在<xliff:g id="time">%s</xliff:g>重試</string>
-  <string name="error_message_rate_limit_with_action">在<xliff:g id="action">%1$s</xliff:g>時超過了Twitter的取用次數限制，請在<xliff:g id="time">%2$s</xliff:g>重試</string>
   <string name="error_message_scheduler_not_available">推文排期不可用</string>
   <string name="error_message_status_too_long">推文太長</string>
   <string name="error_message_tweet_shorten_failed">推文縮短失敗</string>
   <string name="error_message_tweet_shortener_not_found">未找到推文縮短擴展，它可能已經被移除</string>
-  <string name="error_message_with_action">在<xliff:g id="action">%1$s</xliff:g>時發生問題：<xliff:g id="message">%2$s</xliff:g></string>
   <string name="error_no_access_for_credentials">您的應用程式無法使用這個資源。</string>
   <string name="error_no_dm_permission">沒有私訊權限，請檢查您 Twitter 應用程式權限設定。</string>
   <string name="error_title_device_incompatible">不相容的裝置</string>
@@ -482,6 +480,7 @@
   <string name="login_challenge_retype_email_hint">請重新輸入您綁定在Twitter的信箱地址</string>
   <string name="login_challenge_retype_phone_hint">重新輸入綁定您帳號的電話號碼</string>
   <string name="login_type_default">預設</string>
+  <string name="login_type_user_settings">使用者設定</string>
   <string name="login_verification">登入驗證</string>
   <string name="login_verification_pin_hint">輸入您手機收到的驗證碼後登入</string>
   <string name="login_verification_push_hint">從 Twitter 應用程式同意登入請求。在您同意了請求後，請點選確定。</string>
@@ -913,7 +912,6 @@
   <string name="streaming">實時流</string>
   <string name="style">風格</string>
   <string name="subscribed_to_list">訂閲了列表\"<xliff:g id="list">%s</xliff:g>\"</string>
-  <string name="title_userlist_subscribers">訂閱者</string>
   <string name="summary_interactions_account_not_supported">不支援此帳號</string>
   <string name="summary_interactions_streaming_required">完整的互動時間軸只在實時流啓用時可用</string>
   <string name="swipe_down_to_refresh">下拉以更新</string>
@@ -1021,6 +1019,7 @@
   <string name="title_user_list_ownerships">新增</string>
   <string name="title_user_list_subscriptions">訂閱</string>
   <string name="title_user_timeline_filter">時間軸過濾</string>
+  <string name="title_userlist_subscribers">訂閱者</string>
   <string name="title_users_favorited_this">收藏這條推文的用戶</string>
   <string name="title_users_liked_this">喜歡它的使用者</string>
   <string name="title_users_retweeted_this">轉推了這條推文的用戶</string>

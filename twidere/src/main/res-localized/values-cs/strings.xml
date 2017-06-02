@@ -128,9 +128,7 @@
   <string name="error_message_message_too_long">Zpráva je příliš dlouhá.</string>
   <string name="error_message_no_content">Žádný obsah</string>
   <string name="error_message_rate_limit">Limit Twitteru byl překročen, zkuste to znovu <xliff:g id="time">%s</xliff:g></string>
-  <string name="error_message_rate_limit_with_action">Limit Twitteru překročen při <xliff:g id="action">%1$s</xliff:g>, prosím, zkuste znovu <xliff:g id="time">%2$s</xliff:g></string>
   <string name="error_message_status_too_long">Příliš dlouhý tweet.</string>
-  <string name="error_message_with_action">Chyba při <xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
   <string name="error_title_device_incompatible">Nekompatibilní zařízení</string>
   <string name="error_too_many_photos_fanfou">Příliš mnoho fotografií</string>
   <string name="error_unknown_error">Neznámá chyba, pravděpodobně bug.</string>
@@ -344,7 +342,6 @@
   <string name="stream_type_home">Domů</string>
   <string name="stream_type_interactions">Interakce</string>
   <string name="stream_type_messages">Zprávy</string>
-  <string name="title_userlist_subscribers">Odběratel</string>
   <string name="system_default">Výchozí systémové nastavení</string>
   <string name="tab_display_option_icon">Ikona</string>
   <string name="tab_display_option_icon_and_label">Ikona a popisek</string>

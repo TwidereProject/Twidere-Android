@@ -68,9 +68,7 @@
   <string name="edit_api">Επεξεργασία API</string>
   <string name="error_message">Σφάλμα: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_rate_limit">Το όριο χρήσης του Twitter ξεπεράστηκε, προσπαθήστε ξανά <xliff:g id="time">%s</xliff:g></string>
-  <string name="error_message_rate_limit_with_action">Το όριο χρήσης του Twitter ξεπεράστηκε ενώ <xliff:g id="action">%1$s</xliff:g>, παρακαλώ προσπαθήστε ξανά <xliff:g id="time">%2$s</xliff:g></string>
   <string name="error_message_tweet_shortener_not_found">Δεν βρέθηκε ο συντομευτής tweet, ίσως να έχει απεγκατασταθεί.</string>
-  <string name="error_message_with_action">Σφάλμα ενώ <xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
   <string name="error_unknown_error">Σφάλμα: Άγνωστο σφάλμα, μάλλον bug.</string>
   <!-- Enhanced (paid) features description -->
   <!-- Enhanced (paid) features title -->

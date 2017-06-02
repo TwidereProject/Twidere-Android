@@ -34,6 +34,7 @@
   <string name="action_center">Pusat</string>
   <string name="action_clear">Bersihkan</string>
   <string name="action_clear_messages">Bersihkan pesan</string>
+  <string name="action_comment">Komentar</string>
   <string name="action_compose">Susun</string>
   <string name="action_compose_message_convert_to_status">Konversi ke tweet</string>
   <string name="action_connect_to_buffer">Terhubung</string>
@@ -179,7 +180,6 @@
   <string name="combined_notifications">Notifikasi digabungkan</string>
   <string name="combined_notifications_summary_off">Notifikasi akan ditampilkan terpisah</string>
   <string name="combined_notifications_summary_on">Notifikasi akan digrupkan</string>
-  <string name="action_comment">Komentar</string>
   <string name="comment_hint">Komentar...</string>
   <string name="compact_cards">Kartu compact</string>
   <string name="compact_cards_summary">Tampilkan kartu lebih banyak</string>
@@ -254,11 +254,9 @@
   <string name="error_message_message_too_long">Pesan terlalu panjang.</string>
   <string name="error_message_no_content">Tidak ada konten</string>
   <string name="error_message_rate_limit">Telah mencapai batasan twitter, mohon diulangi <xliff:g id="time">%s</xliff:g></string>
-  <string name="error_message_rate_limit_with_action">Laju kicauan melebihi batas saat <xliff:g id="action">%1$s</xliff:g>, silakan coba lagi setelah <xliff:g id="time">%2$s</xliff:g></string>
   <string name="error_message_status_too_long">Kicauan terlalu panjang.</string>
   <string name="error_message_tweet_shorten_failed">Penyingkat kicauan gagal.</string>
   <string name="error_message_tweet_shortener_not_found">Pemendek kicauan tidak ditemukan, mungkin tidak dipasang.</string>
-  <string name="error_message_with_action">Kesalahan saat <xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
   <string name="error_no_access_for_credentials">Aplikasi anda tidak dapat mengakses sumber ini, sudahkah anda mengaktifkan \'Gunakan paksa API privat\'?</string>
   <string name="error_no_dm_permission">Pesan langsung tidak diijinkan, periksa pengaturan ijin aplikasi Twitter anda.</string>
   <string name="error_title_device_incompatible">Perangkat tidak kompatibel</string>
@@ -739,7 +737,6 @@
   <string name="streaming">Streaming</string>
   <string name="style">Gaya</string>
   <string name="subscribed_to_list">Berlangganan ke daftar \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="title_userlist_subscribers">Langganan</string>
   <string name="swipe_down_to_refresh">Gesek ke bawah untuk menyegarkan</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="system_default">Sistem standar</string>

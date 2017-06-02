@@ -34,4 +34,6 @@
   <string name="error_twitter_193">您上传的图片太大</string>
   <!-- 215 Bad authentication data: Typically sent with 1.1 responses with HTTP code 400. The method requires authentication but it was not presented or was wholly invalid -->
   <string name="error_twitter_215">您可能需要重新登录</string>
+  <string name="error_twitter_326">您的帐号被冻结，请访问 https://twitter.com/ 查看详情</string>
+  <string name="error_twitter_327">您已经转推过这条推文</string>
 </resources>

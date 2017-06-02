@@ -34,4 +34,6 @@
   <string name="error_twitter_193">アップロードする画像が大きすぎます。</string>
   <!-- 215 Bad authentication data: Typically sent with 1.1 responses with HTTP code 400. The method requires authentication but it was not presented or was wholly invalid -->
   <string name="error_twitter_215">ログインし直してください。</string>
+  <string name="error_twitter_326">あなたのアカウントは凍結されました。詳細については https://twitter.com/ を参照してください。</string>
+  <string name="error_twitter_327">このツイートはすでにリツイートされています。</string>
 </resources>

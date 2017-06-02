@@ -4,34 +4,36 @@
   <!-- 32 Could not authenticate you: Your call could not be completed as dialed. -->
   <string name="error_twitter_32">Tidak dapat mengautentikasi anda, coba masuk lagi.</string>
   <!-- 34 Sorry, that page does not exist: Corresponds with HTTP 404 - the specified resource was not found. -->
-  <string name="error_twitter_34">Tweet, pengguna, atau laman ini tidak ada.</string>
+  <string name="error_twitter_34">Cuitan, pengguna, atau laman ini tidak ada.</string>
   <!-- 88 Rate limit exceeded: The request limit for this resource has been reached for the current rate limit window. -->
-  <string name="error_twitter_88">Telah melewati batas penyegaran twitter, silahkan coba beberapa saat lagi.</string>
+  <string name="error_twitter_88">Batas nilai terlampaui, silahkan dicoba nanti.</string>
   <!-- 89 Invalid or expired token: The access token used in the request is incorrect or has expired. Used in API v1.1 -->
-  <string name="error_twitter_89">Akun yang anda masukkan salah atau telah kadaluwarsa, harap coba lagi. </string>
+  <string name="error_twitter_89">Informasi masuk Anda salah atau telah kedaluwarsa, silakan masuk lagi.</string>
   <!-- 64 Your account is suspended and is not permitted to access this feature: Corresponds with an HTTP 403 - the access token being used belongs to a suspended user and they can't complete the action you're trying to take -->
   <string name="error_twitter_64">Akun Anda ditangguhkan dan tidak diizinkan untuk mengakses fitur ini.</string>
   <!-- 130 Over capacity: Corresponds with HTTP 503 - Twitter is temporarily over capacity. -->
   <string name="error_twitter_130">Twitter untuk sementara sedang kelebihan kapasitas.</string>
   <!-- 131 Internal error: Corresponds with HTTP 500 - An unknown internal error occurred. -->
-  <string name="error_twitter_131">Server Twitter mungkin sedang down, coba lagi nanti.</string>
+  <string name="error_twitter_131">Server Twitter mungkin sedang macet, coba lagi nanti.</string>
   <!-- 135 Could not authenticate you: Corresponds with HTTP 401 - it means that your oauth_timestamp is either ahead or behind our acceptable range -->
-  <string name="error_twitter_135">Silahkan periksa kembali jam pada perangkat anda. </string>
+  <string name="error_twitter_135">Silakan periksa jam sistem anda.</string>
   <!-- 136 Blocked by user while retweeting: You have been blocked from retweeting this user's tweets at their request. -->
-  <string name="error_twitter_136">Anda diblokir oleh pengguna ini.</string>
-  <string name="error_twitter_139">Anda sudah memfavoritkan tweet ini.</string>
+  <string name="error_twitter_136">Anda telah diblokir oleh pengguna ini.</string>
+  <string name="error_twitter_139">Anda sudah memfavoritkan cuitan ini.</string>
   <!-- 144 No status found with that ID. -->
-  <string name="error_twitter_144">Tweet tidak ditemukan, mungkin telah dihapus.</string>
-  <string name="error_twitter_161">Anda sudah meminta untuk mengikuti pengguna ini.</string>
+  <string name="error_twitter_144">Cuitan tidak ditemukan, mungkin telah dihapus.</string>
+  <string name="error_twitter_161">Anda telah diminta untuk mengikuti pengguna ini.</string>
   <!-- 172 You have been blocked from following this account at the request of the user. -->
   <string name="error_twitter_162">Anda telah diblokir oleh pengguna ini.</string>
   <!-- 172 There was an error creating your search: Corresponds with HTTP 403 - The saved search already exists. -->
   <string name="error_twitter_172">Anda sudah menyimpan pencarian ini.</string>
   <!-- 179 Sorry, you are not authorized to see this status: Corresponds with HTTP 403 - thrown when a Tweet cannot be viewed by the authenticating user, usually due to the tweet's author having protected their tweets. -->
-  <string name="error_twitter_179">Anda tidak bisa melihat tweet pengguna terproteksi ini.</string>
+  <string name="error_twitter_179">Anda tidak dapat melihat cuitan pengguna yang diproteksi ini.</string>
   <!-- 187 Status is a duplicate: The status text has been Tweeted already by the authenticated account. -->
-  <string name="error_twitter_187">Anda sudah mengirim tweet ini.</string>
-  <string name="error_twitter_193">Foto yang akan anda unggah terlalu besar.</string>
+  <string name="error_twitter_187">Anda sudah mengirim cuitan ini.</string>
+  <string name="error_twitter_193">Foto yang akan Anda unggah terlalu besar.</string>
   <!-- 215 Bad authentication data: Typically sent with 1.1 responses with HTTP code 400. The method requires authentication but it was not presented or was wholly invalid -->
   <string name="error_twitter_215">Anda mungkin perlu masuk lagi.</string>
+  <string name="error_twitter_326">Account Anda telah ditangguhkan, silakan kunjungi https://twitter.com/ untuk rincian.</string>
+  <string name="error_twitter_327">Anda sudah pernah retweet cuitan ini.</string>
 </resources>

@@ -34,6 +34,7 @@
   <string name="action_center">Centre</string>
   <string name="action_clear">Effacer</string>
   <string name="action_clear_messages">Enlever les messages</string>
+  <string name="action_comment">Commentaire</string>
   <string name="action_compose">Écrire</string>
   <string name="action_compose_message_convert_to_status">Convertir en tweet</string>
   <string name="action_connect_to_buffer">Se connecter</string>
@@ -55,6 +56,7 @@
   <string name="action_filter_subscriptions_card_manage">Gérer les abonnements</string>
   <string name="action_finish">Terminer</string>
   <string name="action_follow">Suivre</string>
+  <string name="action_format_search_update_status">Tweet <xliff:g id="text">%1$s</xliff:g></string>
   <!-- [verb] Perform import action -->
   <string name="action_import">Importer</string>
   <string name="action_import_from">Importer depuis&#8230;</string>
@@ -205,7 +207,6 @@
   <string name="combined_notifications">Notifications combinées</string>
   <string name="combined_notifications_summary_off">Les notifications seront affichées séparément</string>
   <string name="combined_notifications_summary_on">Les notifications seront groupées</string>
-  <string name="action_comment">Commenter</string>
   <string name="comment_hint">Commenter&#8230;</string>
   <string name="compact_cards">Cartes compactes</string>
   <string name="compact_cards_summary">Afficher plus de cartes à l\'écran</string>
@@ -285,12 +286,10 @@
   <string name="error_message_message_too_many_participants">Trop de participants</string>
   <string name="error_message_no_content">Aucun contenu</string>
   <string name="error_message_rate_limit">Limite de rafraîchissement de Twitter dépassée, veuillez réessayer de <xliff:g id="time">%s</xliff:g></string>
-  <string name="error_message_rate_limit_with_action">Limite de rafraîchissement de Twitter dépassée lors de <xliff:g id="action">%1$s</xliff:g>, veuillez réessayer dans <xliff:g id="time">%2$s</xliff:g></string>
   <string name="error_message_scheduler_not_available">Programmation du tweet non disponible</string>
   <string name="error_message_status_too_long">Tweet trop long.</string>
   <string name="error_message_tweet_shorten_failed">Le raccourcissement du tweet a échoué.</string>
   <string name="error_message_tweet_shortener_not_found">Le raccourcisseur de tweet est introuvable, il a peut-être été désinstallé.</string>
-  <string name="error_message_with_action">Erreur lors de <xliff:g id="action">%1$s</xliff:g> : <xliff:g id="message">%2$s</xliff:g></string>
   <string name="error_no_access_for_credentials">Votre application ne peut accéder à cette ressource, avez-vous activé la fonctionnalité \'Forcer l\'utilisation de l\'API privée\' ?</string>
   <string name="error_no_dm_permission">Pas de permissions pour les messages directs, vérifiez vos permissions pour les applications sur Twitter.</string>
   <string name="error_title_device_incompatible">Appareil incompatible</string>
@@ -480,6 +479,7 @@
   <string name="login_challenge_retype_email_hint">Saisissez à nouveau l\'adresse email associée à votre compte Twitter.</string>
   <string name="login_challenge_retype_phone_hint">Saisissez à nouveau le numéro de téléphone associé à votre compte Twitter.</string>
   <string name="login_type_default">Par défaut</string>
+  <string name="login_type_user_settings">Paramètres utilisateur</string>
   <string name="login_verification">Vérification de l\'identifiant</string>
   <string name="login_verification_pin_hint">Surveillez sur votre téléphone l\'arrivé d\'un code PIN et saisissez-le pour vous connecter.</string>
   <string name="login_verification_push_hint">Acceptez la demande d\'authentification par l\'application Twitter, une fois la demande acceptée, cliquez sur OK.</string>
@@ -499,6 +499,7 @@
   <string name="message_account_delete_confirm">Ce compte sera supprimé de Twidere.</string>
   <string name="message_api_data_corrupted">Données API corrompues.</string>
   <string name="message_api_url_format_help">[DOMAIN] : Domaine de l\'API Twitter.\nExemple : https://[DOMAIN].twitter.com/ doit être remplacé par https://api.twitter.com/.</string>
+  <string name="message_app_crashed">Twidere a planté. Veuillez envoyer un rapport de bug pour m\'aider à corriger ce problème.</string>
   <string name="message_auto_refresh_confirm">Activer le rafraîchissement automatique pour récupérer les nouveaux tweets ?</string>
   <string name="message_blocked_user"><xliff:g id="user">%s</xliff:g> bloqué.</string>
   <string name="message_buffer_delete_schedule_confirm">Supprimer cette programmation ?</string>
@@ -552,6 +553,7 @@
   <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_extra_features_not_purchased">Fonctionnalité avancée, non disponible sans achat</string>
   <string name="message_toast_filters_import_hint">Appuyez sur « + » pour importer</string>
+  <string name="message_toast_internal_storage_install_required">L\'installation sur carte SD n\'est pas pris en charge, les comptes risquent d\'être perdus après un redémarrage.</string>
   <string name="message_toast_invalid_mastodon_host">Hôte Mastodon non valide</string>
   <string name="message_toast_link_copied_to_clipboard">Lien copié dans le presse-papier</string>
   <string name="message_toast_livewp_daydream_enabled_message">Voici un petit cadeau pour vous, trouvez le dans vos paramètres du système :)</string>
@@ -907,7 +909,8 @@
   <string name="streaming">Streaming</string>
   <string name="style">Style</string>
   <string name="subscribed_to_list">Abonné à la liste \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="title_userlist_subscribers">Abonné</string>
+  <string name="summary_interactions_account_not_supported">Compte non supporté</string>
+  <string name="summary_interactions_streaming_required">L\'affichage de toutes les interactions n\'est disponible que quand le streaming est activé</string>
   <string name="swipe_down_to_refresh">Tirer vers le bas pour rafraîchir</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="sync_provider_name_google_drive">Google Drive</string>
@@ -1013,6 +1016,7 @@
   <string name="title_user_list_ownerships">Créé</string>
   <string name="title_user_list_subscriptions">Abonnements</string>
   <string name="title_user_timeline_filter">Filtre de timeline</string>
+  <string name="title_userlist_subscribers">Abonnés</string>
   <string name="title_users_favorited_this">Utilisateurs ayant ajouté ceci à leur favoris</string>
   <string name="title_users_liked_this">Des utilisateurs ont aimé ça</string>
   <string name="title_users_retweeted_this">Utilisateurs ont retweeté ceci</string>

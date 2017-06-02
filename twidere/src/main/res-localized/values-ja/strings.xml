@@ -34,6 +34,7 @@
   <string name="action_center">中央</string>
   <string name="action_clear">クリア</string>
   <string name="action_clear_messages">メッセージをクリア</string>
+  <string name="action_comment">コメント</string>
   <string name="action_compose">ツイートする</string>
   <string name="action_compose_message_convert_to_status">ツイートに変換</string>
   <string name="action_connect_to_buffer">接続</string>
@@ -206,7 +207,6 @@
   <string name="combined_notifications">合併された通知</string>
   <string name="combined_notifications_summary_off">通知を個別表示</string>
   <string name="combined_notifications_summary_on">通知をグループ化</string>
-  <string name="action_comment">コメント</string>
   <string name="comment_hint">コメント&#8230;</string>
   <string name="compact_cards">カードのコンパクト化</string>
   <string name="compact_cards_summary">画面あたりのカード表示数を増やせます。</string>
@@ -286,12 +286,10 @@
   <string name="error_message_message_too_many_participants">参加者が多すぎます。</string>
   <string name="error_message_no_content">コンテンツなし</string>
   <string name="error_message_rate_limit">Twitter APIの制限に引っかかりました。<xliff:g id="time">%s</xliff:g>後にもう一度試してください。</string>
-  <string name="error_message_rate_limit_with_action">TwitterのAPI制限を<xliff:g id="action">%1$s</xliff:g>中に超過しました。<xliff:g id="time">%2$s</xliff:g>分後にもう一度試してください。</string>
   <string name="error_message_scheduler_not_available">ツイートの予約が利用できません。</string>
   <string name="error_message_status_too_long">ツイートのテキストが長過ぎます。</string>
   <string name="error_message_tweet_shorten_failed">ツイートを短縮できません。</string>
   <string name="error_message_tweet_shortener_not_found">ツイート短縮サービスが見つかりません。</string>
-  <string name="error_message_with_action"><xliff:g id="action">%1$s</xliff:g>中のエラー: <xliff:g id="message">%2$s</xliff:g></string>
   <string name="error_no_access_for_credentials">アプリケーションが該当リソースにアクセスできません。</string>
   <string name="error_no_dm_permission">ダイレクトメッセージへのアクセス許可がありません。Twitter 設定のアプリ連携を確認してください。</string>
   <string name="error_title_device_incompatible">デバイスには互換性がありません。</string>
@@ -500,6 +498,7 @@
   <string name="message_account_delete_confirm">Twidereからアカウントを削除します。</string>
   <string name="message_api_data_corrupted">APIデータが破損しています。</string>
   <string name="message_api_url_format_help">[DOMAIN]: Twitter APIのドメイン\n例: https://[DOMAIN].twitter.com/ は https://api.twitter.com/ のように置き換えられます。</string>
+  <string name="message_app_crashed">Twidere がクラッシュしてしまいました。この問題が修正できるよう、バグレポートの送信をお願いします。</string>
   <string name="message_auto_refresh_confirm">自動更新を有効にして、新しいツイートを自動的に取得しますか？</string>
   <string name="message_blocked_user"><xliff:g id="user">%s</xliff:g>をブロック済み</string>
   <string name="message_buffer_delete_schedule_confirm">このスケジュールを削除しますか？</string>
@@ -562,6 +561,7 @@
   <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_extra_features_not_purchased">追加機能パックは未購入です。</string>
   <string name="message_toast_filters_import_hint">インポートするには \"+\" をタップしてください</string>
+  <string name="message_toast_internal_storage_install_required">SD カードへのインストールはサポートされていないため、再起動後にアカウントが失われることがあります。</string>
   <string name="message_toast_invalid_mastodon_host">不正なMastodonインスタンス</string>
   <string name="message_toast_link_copied_to_clipboard">リンクがクリップボードにコピーされました</string>
   <string name="message_toast_livewp_daydream_enabled_message">システム設定のどこかにプレゼントを隠したぜ！</string>
@@ -917,8 +917,8 @@
   <string name="streaming">ストリーミング</string>
   <string name="style">スタイル</string>
   <string name="subscribed_to_list">リスト\"<xliff:g id="list">%s</xliff:g>\"を保存しました。</string>
-  <string name="title_userlist_subscribers">購読ユーザー</string>
   <string name="summary_interactions_account_not_supported">アカウントはサポートされていません</string>
+  <string name="summary_interactions_streaming_required">完全なインタラクションは、ストリーミングの有効時のみ利用できます。</string>
   <string name="swipe_down_to_refresh">下にスワイプすると更新されます</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="sync_provider_name_google_drive">Google ドライブ</string>

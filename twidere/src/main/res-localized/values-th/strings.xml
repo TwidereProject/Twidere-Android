@@ -203,7 +203,6 @@
   <string name="combined_notifications">การแจ้งเตือนที่ถูกจัดกลุ่ม</string>
   <string name="combined_notifications_summary_off">แยกการแจ้งเตือนออกจากกันเป็นอันๆ</string>
   <string name="combined_notifications_summary_on">รวมการแจ้งเตือนเป็นกลุ่มเดียวกัน</string>
-  <string name="action_comment">แสดงความเห็น</string>
   <string name="comment_hint">ความคิดเห็น...</string>
   <string name="compact_cards">ขนาดกะทัดรัด</string>
   <string name="compact_cards_summary">แสดงการ์ดเยอะๆ บนหน้าจอ</string>
@@ -283,12 +282,10 @@
   <string name="error_message_message_too_many_participants">ผู้รับมากเกินไป</string>
   <string name="error_message_no_content">ไม่มีเนื้อหา</string>
   <string name="error_message_rate_limit">เกินขีดจำกัดการเรียกใช้ข้อมูล กรุณาลองใหม่อีกครั้ง หลังจาก <xliff:g id="time">%s</xliff:g></string>
-  <string name="error_message_rate_limit_with_action">คุณติดจำกัดจำนวนทวีตของทวิตเตอร์เมื่อ <xliff:g id="action">%1$s</xliff:g> กรุณาลองอีกครั้งหลังจาก <xliff:g id="time">%2$s</xliff:g></string>
   <string name="error_message_scheduler_not_available">ตั้งเวลาทวีตใช้งานไม่ได้</string>
   <string name="error_message_status_too_long">ทวีตยาวเกินไป</string>
   <string name="error_message_tweet_shorten_failed">การย่อทวีตล้มเหลว</string>
   <string name="error_message_tweet_shortener_not_found">ไม่พบตัวย่อทวีต อาจจะถูกถอนการติดตั้งออกไปแล้ว</string>
-  <string name="error_message_with_action">ข้อผิดพลาดเมื่อ <xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
   <string name="error_no_access_for_credentials">แอพพลิเคชั่นของคุณไม่สามารถเข้าถึงทรัพยากรนี้ คุณต้องเปิดใช้งาน \'บังคับใช้ API ส่วนตัว\'</string>
   <string name="error_no_dm_permission">ไม่สามารถเข้าถึงข้อความส่วนตัวได้ กรุณาตรวจสอบการตั้งค่าคำขอใช้ข้อความส่วนตัวจากทวิตเตอร์ของคุณ</string>
   <string name="error_title_device_incompatible">อุปกรณ์ไม่รองรับ</string>
@@ -893,7 +890,6 @@
   <string name="streaming">สตรีมมิ่ง</string>
   <string name="style">รูปแบบ</string>
   <string name="subscribed_to_list">ติดตามลิสต์ \"<xliff:g id="list">%s</xliff:g>\" แล้ว</string>
-  <string name="title_userlist_subscribers">ผู้ติดตาม</string>
   <string name="swipe_down_to_refresh">ลากลงเพื่อรีเฟรช</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="sync_provider_name_google_drive">Google Drive</string>

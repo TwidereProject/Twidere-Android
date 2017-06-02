@@ -117,7 +117,6 @@
   <string name="combined_notifications">Груповані сповіщення</string>
   <string name="combined_notifications_summary_off">Сповіщення відображаються окремо</string>
   <string name="combined_notifications_summary_on">Сповіщення групуються</string>
-  <string name="action_comment">Коментувати</string>
   <string name="comment_hint">Коментувати&#8230;</string>
   <string name="compact_cards">Компактні картки</string>
   <string name="compact_cards_summary">Відображати більше карток на екрані</string>
@@ -191,11 +190,9 @@
   <string name="error_message_message_too_long">Повідомлення надто довге.</string>
   <string name="error_message_no_content">Немає вмісту</string>
   <string name="error_message_rate_limit">Досягнуто обмеження кількості запитів до Twitter\'у, спробуйте ще раз за <xliff:g id="time">%s</xliff:g></string>
-  <string name="error_message_rate_limit_with_action">Кількість допустимих запитів до Твіттер\'у вичерпана <xliff:g id="action">%1$s</xliff:g>, будь ласка, спробуйте за <xliff:g id="time">%2$s</xliff:g></string>
   <string name="error_message_status_too_long">Твіт надто довгий.</string>
   <string name="error_message_tweet_shorten_failed">Не вдалося скоротити твіт.</string>
   <string name="error_message_tweet_shortener_not_found">Скорочувач посилань не знайдено, можливо, він вилучений.</string>
-  <string name="error_message_with_action">Помилка <xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
   <string name="error_no_access_for_credentials">Ваш додаток не може отримати доступ до цього ресурсу, ви увімкнули \'Примусово використовувати приватні API\'?</string>
   <string name="error_no_dm_permission">Немає доступу до приватних повідомлень, перевірте налаштування доступу вашого додатка Twitter.</string>
   <string name="error_title_device_incompatible">Несумісний пристрій</string>
@@ -621,7 +618,6 @@
   <string name="streaming">Стримінг</string>
   <string name="style">Стиль</string>
   <string name="subscribed_to_list">Підписано на список \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="title_userlist_subscribers">Підписані</string>
   <string name="swipe_down_to_refresh">Потягни вниз для оновлення</string>
   <string name="system_default">Системна</string>
   <string name="tab_display_option">Параметр відображення вкладки</string>

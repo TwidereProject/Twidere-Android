@@ -108,7 +108,6 @@
   <string name="combined_notifications">Kombinerte varsler</string>
   <string name="combined_notifications_summary_off">Varsler vises separat</string>
   <string name="combined_notifications_summary_on">Varsler grupperes</string>
-  <string name="action_comment">Kommenter</string>
   <string name="comment_hint">Kommenter&#8230;</string>
   <string name="compact_cards">Kompakte kort</string>
   <string name="compact_cards_summary">Vis flere kort på skjermen</string>
@@ -174,11 +173,9 @@
   <string name="error_message_message_too_long">Melding for lang.</string>
   <string name="error_message_no_content">Ingen innhold</string>
   <string name="error_message_rate_limit">Twitters oppdateringsrate overskredet, prøv igjen <xliff:g id="time">%s</xliff:g></string>
-  <string name="error_message_rate_limit_with_action">Twitters oppdateringsrate overskredet mens <xliff:g id="action">%1$s</xliff:g>, prøv igjen <xliff:g id="time">%2$s</xliff:g></string>
   <string name="error_message_status_too_long">Tweet for lang.</string>
   <string name="error_message_tweet_shorten_failed">Tweetforkortelse feilet.</string>
   <string name="error_message_tweet_shortener_not_found">Tweetforkorter ikke funnet, sjekk at den er installert.</string>
-  <string name="error_message_with_action">Feil mens <xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
   <string name="error_unknown_error">Feil: Ukjent feil, dette er sannsynligvis en bug.</string>
   <string name="exclude_this_host">Ekskluder denne verten</string>
   <string name="excluded">Ekskludert</string>
@@ -541,7 +538,6 @@
   <string name="streaming">Strømming</string>
   <string name="style">Stil</string>
   <string name="subscribed_to_list">Abonnerer på listen «<xliff:g id="list">%s</xliff:g>».</string>
-  <string name="title_userlist_subscribers">Abonnenter</string>
   <string name="swipe_down_to_refresh">Sveip ned for å oppdatere</string>
   <string name="tab_display_option">Fanevisningsvalg</string>
   <string name="tab_display_option_icon">Ikon</string>

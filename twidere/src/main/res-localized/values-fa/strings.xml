@@ -203,7 +203,6 @@
   <string name="combined_notifications">آگهی‌های ترکیبی</string>
   <string name="combined_notifications_summary_off">آگهی‌ها به صورت تکی نمایش داده خواهند شد</string>
   <string name="combined_notifications_summary_on">آگهی‌ها دسته‌بندی خواهند شد</string>
-  <string name="action_comment">نظر</string>
   <string name="comment_hint">نظر&#8230;</string>
   <string name="compact_cards">کارت‌های فشرده</string>
   <string name="compact_cards_summary">نمایش کارت‌های بیش‌تر روی صفحه</string>
@@ -283,12 +282,10 @@
   <string name="error_message_message_too_many_participants">گیرندگان بیش از حد</string>
   <string name="error_message_no_content">بدون محتوا</string>
   <string name="error_message_rate_limit">از کرانهٔ نرخ توییتر تجاوز شد. لطفاً <xliff:g id="time">%s</xliff:g> دیگر دوباره تلاش کنید</string>
-  <string name="error_message_rate_limit_with_action">هنگام <xliff:g id="action">%1$s</xliff:g> از کرانهٔ نرخ توییتر تجاوز شد. لطفاً <xliff:g id="time">%2$s</xliff:g> دیگر دوباره تلاش کنید</string>
   <string name="error_message_scheduler_not_available">زمان‌بند توییت در دسترس نیست</string>
   <string name="error_message_status_too_long">توییت خیلی بلند است.</string>
   <string name="error_message_tweet_shorten_failed">خلاصه‌سازی توییت شکست خورد.</string>
   <string name="error_message_tweet_shortener_not_found">کوتاه‌ساز توییت پیدا نشد، شاید حذف شده باشد.</string>
-  <string name="error_message_with_action">خطا‌ هنگام <xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
   <string name="error_no_access_for_credentials">کاره‌تان نمی‌تواتند به این منبع دسترسی داشته باشد. آیا «اجبار به استفاده از API شخصی» را فعّال کرده‌اید؟</string>
   <string name="error_no_dm_permission">اجازهٔ پیام مستقیم وجود ندارد. تنظیمات اجازهٔ کارهٔ توییترتان را بررسی کنید.</string>
   <string name="error_title_device_incompatible">افزارهٔ ناسازگار</string>
@@ -893,7 +890,6 @@
   <string name="streaming">در حال جریان</string>
   <string name="style">سبک</string>
   <string name="subscribed_to_list">مشترک فهرست «<xliff:g id="list">%s</xliff:g>» شد.</string>
-  <string name="title_userlist_subscribers">مشترکان</string>
   <string name="swipe_down_to_refresh">برای تازه‌سازی به پایین بکشید</string>
   <string name="sync_provider_name_dropbox">دراپ‌باکس</string>
   <string name="sync_provider_name_google_drive">گوگل‌درایو</string>

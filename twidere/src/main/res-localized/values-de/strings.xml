@@ -205,7 +205,6 @@
   <string name="combined_notifications">Kombinierte Benachrichtigungen</string>
   <string name="combined_notifications_summary_off">Benachrichtigungen werden getrennt angezeigt</string>
   <string name="combined_notifications_summary_on">Benachrichtigungen werden zusammengefasst</string>
-  <string name="action_comment">Kommentar</string>
   <string name="comment_hint">Kommentar&#8230;</string>
   <string name="compact_cards">Kompakte Karten</string>
   <string name="compact_cards_summary">Mehr Karten anzeigen</string>
@@ -285,12 +284,10 @@
   <string name="error_message_message_too_many_participants">Zu viele Teilnehmer</string>
   <string name="error_message_no_content">Kein Inhalt</string>
   <string name="error_message_rate_limit">Twitter-Limit überschritten, probiere es in <xliff:g id="time">%s</xliff:g> noch einmal</string>
-  <string name="error_message_rate_limit_with_action"><xliff:g id="action">%1$s</xliff:g> ist fehlgeschlagen, da das Twitter-Limit erreicht wurde. Bitte versuche es in <xliff:g id="time">%2$s</xliff:g> erneut</string>
   <string name="error_message_scheduler_not_available">Tweet-Zeitplan nicht verfügbar</string>
   <string name="error_message_status_too_long">Der Tweet ist zu lang.</string>
   <string name="error_message_tweet_shorten_failed">Tweet-Verkürzung schlug fehl.</string>
   <string name="error_message_tweet_shortener_not_found">Tweet-Verkürzungsdienst nicht gefunden. Vielleicht wurde er deinstalliert.</string>
-  <string name="error_message_with_action">Fehler während <xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
   <string name="error_no_access_for_credentials">Deine Anwendung kann auf diese Ressource nicht zugreifen.</string>
   <string name="error_no_dm_permission">Keine Berechtigung für Direktnachrichten, überprüfe die Berechtigungseinstellungen deiner Twitter App.</string>
   <string name="error_title_device_incompatible">Inkompatibles Gerät</string>
@@ -905,7 +902,6 @@
   <string name="streaming">Streaming</string>
   <string name="style">Stil</string>
   <string name="subscribed_to_list">Liste \"<xliff:g id="list">%s</xliff:g>\" abonniert.</string>
-  <string name="title_userlist_subscribers">Abonnent</string>
   <string name="summary_interactions_account_not_supported">Account wird nicht unterstützt</string>
   <string name="swipe_down_to_refresh">Ziehen zum Aktualisieren</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>

@@ -132,7 +132,6 @@
   <string name="combined_notifications">Объединенные уведомления</string>
   <string name="combined_notifications_summary_off">Уведомления будут показаны раздельно</string>
   <string name="combined_notifications_summary_on">Уведомления будут сгруппированы</string>
-  <string name="action_comment">Комментировать</string>
   <string name="comment_hint">Комментарий&#8230;</string>
   <string name="compact_cards">Компактный вид карточек</string>
   <string name="compact_cards_summary">Отображать на экране больше карточек</string>
@@ -207,11 +206,9 @@
   <string name="error_message_message_too_long">Слишком длинное сообщение.</string>
   <string name="error_message_no_content">Нет содержимого</string>
   <string name="error_message_rate_limit">Достигнут лимит подключений к Твиттеру, пожалуйста попробуйте ещё раз через <xliff:g id="time">%s</xliff:g></string>
-  <string name="error_message_rate_limit_with_action">Количество допустимых запросов к Twitter исчерпано <xliff:g id="action">%1$s</xliff:g>, пожалуйста, попробуйте через <xliff:g id="time">%2$s</xliff:g></string>
   <string name="error_message_status_too_long">Твит слишком длинный.</string>
   <string name="error_message_tweet_shorten_failed">Не удалось сократить твит.</string>
   <string name="error_message_tweet_shortener_not_found">Сокращатель ссылок не найден, возможно он был удален.</string>
-  <string name="error_message_with_action">Ошибка <xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
   <string name="error_no_access_for_credentials">Ваше приложение не может получить доступ к этому ресурсу. У вас включена «Принудительное использование частного API»?</string>
   <string name="error_no_dm_permission">Личные сообщения запрещены настройками приложения.</string>
   <string name="error_title_device_incompatible">Несовместимое устройство</string>
@@ -689,7 +686,6 @@
   <string name="streaming">Стриминг</string>
   <string name="style">Стиль</string>
   <string name="subscribed_to_list">Подписанные на \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="title_userlist_subscribers">Читатели</string>
   <string name="swipe_down_to_refresh">Потяните вниз для обновления</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="system_default">По умолчанию</string>

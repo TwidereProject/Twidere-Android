@@ -203,11 +203,9 @@
   <string name="error_message_message_too_many_participants">Zbyt wielu uczestników</string>
   <string name="error_message_no_content">Brak zawartości</string>
   <string name="error_message_rate_limit">Osiągnięto (rzadki) limit dostępu do API Twittera, spróbuj ponownie za <xliff:g id="time">%s</xliff:g></string>
-  <string name="error_message_rate_limit_with_action">Limit zapytań Twittera przekroczony podczas <xliff:g id="action">%1$s</xliff:g>, spróbuj ponownie za <xliff:g id="time">%2$s</xliff:g></string>
   <string name="error_message_status_too_long">Za długi tweet.</string>
   <string name="error_message_tweet_shorten_failed">Skracanie tweeta nie powiodło się.</string>
   <string name="error_message_tweet_shortener_not_found">Brak skracacza tweetów, może został odinstalowany.</string>
-  <string name="error_message_with_action">Błąd podczas <xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
   <string name="error_no_access_for_credentials">Twoja aplikacja nie może uzyskać dostępu tego zasobu.</string>
   <string name="error_title_device_incompatible">Niekompatybilne urz ądzenie</string>
   <string name="error_too_many_photos_fanfou">Zbyt wiele zdjęć</string>

@@ -137,7 +137,6 @@
   <string name="click_item_to_configure">اضغط على المحتوى للتكوين</string>
   <string name="close_accounts_dashboard">إغلاق لوحة الحسابات</string>
   <string name="color">اللون</string>
-  <string name="action_comment">تعليق</string>
   <string name="compact_cards">بطاقات مختصرة</string>
   <string name="compact_cards_summary">عرض بطاقات أكثر على الشاشة</string>
   <string name="compose_now">اكتب الان</string>
@@ -208,11 +207,9 @@
   <string name="error_message_message_too_long">الرسالة طويلة.</string>
   <string name="error_message_no_content">لا محتوى</string>
   <string name="error_message_rate_limit">تجاوزت حدّ تويتر للتغريد، يرجى الإعادة في <xliff:g id="time">%s</xliff:g></string>
-  <string name="error_message_rate_limit_with_action">تم تجاوز الحد المخصص من طرف تويتر للتغريد عند <xliff:g id="action">%1$s</xliff:g>المرجو إعادة المحاولة. <xliff:g id="time">%2$s</xliff:g></string>
   <string name="error_message_status_too_long">تغريدتك طويلة جدا.</string>
   <string name="error_message_tweet_shorten_failed">فشل في تقصير التغريدة.</string>
   <string name="error_message_tweet_shortener_not_found">لم يتم العثور على مختصِر التغريدات ، ربما تم إلغاء تثبيته.</string>
-  <string name="error_message_with_action">خطأ عند <xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
   <string name="error_title_device_incompatible">جهاز غير متوافق</string>
   <string name="error_too_many_photos_fanfou">الكثير من الصور</string>
   <string name="error_unknown_error">خطأ: خطأ غير معروف, ربما أنه خلل.</string>
@@ -546,7 +543,6 @@
   <string name="stream_type_home">الرئيسية</string>
   <string name="stream_type_messages">الرسائل</string>
   <string name="subscribed_to_list">تم الإنخراط في القائمة \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="title_userlist_subscribers">المشتركون</string>
   <string name="system_default">الوضع الافتراضي للنظام</string>
   <string name="tab_display_option">خيار عرض علامة التبويب</string>
   <string name="tab_display_option_icon">أيقونة</string>

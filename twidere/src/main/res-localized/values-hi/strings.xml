@@ -69,8 +69,6 @@
   <string name="edit_api">API एडिट करे</string>
   <string name="error_message">एरर: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_rate_limit">ट्विटर की दर सीमा पार है, पुन: प्रयास करें <xliff:g id="time">%s</xliff:g></string>
-  <string name="error_message_rate_limit_with_action"><xliff:g id="action">%1$s</xliff:g> पर ट्विटर की दर सीमा पार हुई, पुन: प्रयास करें <xliff:g id="time">%2$s</xliff:g></string>
-  <string name="error_message_with_action"><xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g> पर एरर</string>
   <string name="error_unknown_error">एरर: अनजान एर्रोर, यह शायद एक बग है.</string>
   <string name="extensions">एक्सटेंशन</string>
   <!-- Enhanced (paid) features description -->

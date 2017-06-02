@@ -34,4 +34,6 @@
   <string name="error_twitter_193">La foto que quieres subir es demasiado grande.</string>
   <!-- 215 Bad authentication data: Typically sent with 1.1 responses with HTTP code 400. The method requires authentication but it was not presented or was wholly invalid -->
   <string name="error_twitter_215">Es posible que necesites iniciar sesión otra vez.</string>
+  <string name="error_twitter_326">Su cuenta fue suspendida, por favor visite https://twitter.com/ para más detalles.</string>
+  <string name="error_twitter_327">Ya has retweeted este tweet.</string>
 </resources>

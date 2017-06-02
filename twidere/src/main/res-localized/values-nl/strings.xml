@@ -113,7 +113,6 @@
   <string name="combined_notifications">Gecombineerde meldingen</string>
   <string name="combined_notifications_summary_off">Meldingen zullen los van elkaar worden weergegeven</string>
   <string name="combined_notifications_summary_on">Meldingen zullen gegroepeerd worden</string>
-  <string name="action_comment">Opmerking</string>
   <string name="comment_hint">Opmerking maken&#8230;</string>
   <string name="compact_cards">Compacte kaarten</string>
   <string name="compact_cards_summary">Toon meer kaarten op het scherm</string>
@@ -187,11 +186,9 @@
   <string name="error_message_message_too_long">Bericht te lang.</string>
   <string name="error_message_no_content">Geen inhoud</string>
   <string name="error_message_rate_limit">Twitters vernieuwlimiet overschreden, probeer opnieuw na <xliff:g id="time">%s</xliff:g></string>
-  <string name="error_message_rate_limit_with_action">Twitters vernieuwingslimiet overschreden, terwijl <xliff:g id="action">%1$s</xliff:g>, probeer opnieuw na <xliff:g id="time">%2$s</xliff:g></string>
   <string name="error_message_status_too_long">Tweet te lang.</string>
   <string name="error_message_tweet_shorten_failed">Tweet inkorten mislukt.</string>
   <string name="error_message_tweet_shortener_not_found">Tweet verkorter niet gevonden, misschien was het verwijderd.</string>
-  <string name="error_message_with_action">Fout bij actie <xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
   <string name="error_no_access_for_credentials">Je applicatie heeft geen toegang tot deze bron, heb je de optie \'Forceer gebruik privé API\'s\' ingeschakeld?</string>
   <string name="error_no_dm_permission">Geen toestemming voor directe berichten, controleer je Twitter app permissies.</string>
   <string name="error_title_device_incompatible">Niet-compatibel apparaat</string>
@@ -617,7 +614,6 @@
   <string name="streaming">Streaming</string>
   <string name="style">Stijl</string>
   <string name="subscribed_to_list">Geabonneerd op lijst \'\'<xliff:g id="list">%s</xliff:g>\'\'.</string>
-  <string name="title_userlist_subscribers">Abonnee</string>
   <string name="swipe_down_to_refresh">Naar beneden slepen om te verversen</string>
   <string name="system_default">Systeemstandaard</string>
   <string name="tab_display_option">Tab weergave optie</string>

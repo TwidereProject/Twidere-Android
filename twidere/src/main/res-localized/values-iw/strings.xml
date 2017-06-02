@@ -125,11 +125,9 @@
   <string name="error_message_message_too_long">ההודעה ארוכה מדי.</string>
   <string name="error_message_no_content">אין תוכן</string>
   <string name="error_message_rate_limit">חריגה ממגבלת קצב של טוויטר, אנא נסה שוב <xliff:g id="time">%s </xliff:g></string>
-  <string name="error_message_rate_limit_with_action">חריגה ממגבלת קצב של טוויטר בעת <xliff:g id="action">%1$s </xliff:g>, אנא נסה שוב <xliff:g id="time">%2$s </xliff:g></string>
   <string name="error_message_status_too_long">הציוץ ארוך מדי.</string>
   <string name="error_message_tweet_shorten_failed">קיצור הציוץ נכשל.</string>
   <string name="error_message_tweet_shortener_not_found">מקצר הציוצים לא נמצא, ייתכן שהתקנתו הוסרה.</string>
-  <string name="error_message_with_action">אירעה שגיאה בעת <xliff:g id="action">%1$s </xliff:g>: <xliff:g id="message">%2$s </xliff:g></string>
   <string name="error_unknown_error">שגיאה: שגיאה לא ידועה, זה כנראה באג.</string>
   <string name="export_settings">ייצא הגדרות</string>
   <string name="export_settings_type_dialog_title">ייצוא הגדרות&#8230;</string>

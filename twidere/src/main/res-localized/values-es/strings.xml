@@ -34,6 +34,7 @@
   <string name="action_center">Centro</string>
   <string name="action_clear">Borrar</string>
   <string name="action_clear_messages">Limpiar mensajes</string>
+  <string name="action_comment">Comentario</string>
   <string name="action_compose">Componer</string>
   <string name="action_compose_message_convert_to_status">Convertir en tweet</string>
   <string name="action_connect_to_buffer">Conectar</string>
@@ -206,7 +207,6 @@
   <string name="combined_notifications">Notificaciones combinadas</string>
   <string name="combined_notifications_summary_off">Las notificaciones serán mostradas por separado</string>
   <string name="combined_notifications_summary_on">Las notificaciones estarán agrupadas</string>
-  <string name="action_comment">Comentario</string>
   <string name="comment_hint">Comentario&#8230;</string>
   <string name="compact_cards">Compactar tarjetas</string>
   <string name="compact_cards_summary">Visualizar más tarjetas en pantalla</string>
@@ -286,12 +286,10 @@
   <string name="error_message_message_too_many_participants">Demasiados participantes</string>
   <string name="error_message_no_content">Sin contenido</string>
   <string name="error_message_rate_limit">El límite de Twitter se ha excedido, por favor reinténtalo en <xliff:g id="time">%s</xliff:g></string>
-  <string name="error_message_rate_limit_with_action">Superado límite de Twitter durante <xliff:g id="action">%1$s</xliff:g>, reintentar en <xliff:g id="time">%2$s</xliff:g></string>
   <string name="error_message_scheduler_not_available">Horario para tweet no disponible</string>
   <string name="error_message_status_too_long">Tweet demasiado largo.</string>
   <string name="error_message_tweet_shorten_failed">Error al acortar el tweet.</string>
   <string name="error_message_tweet_shortener_not_found">El acortador de tweets no se ha encontrado, quizás se ha desinstalado.</string>
-  <string name="error_message_with_action">Error durante <xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
   <string name="error_no_access_for_credentials">Tu aplicación no puede acceder a este recurso, ¿has activado la opción \"Forzar el uso de las APIs privadas\"?</string>
   <string name="error_no_dm_permission">Sin permiso para mensajes directos, chequee la configuración de permisos en Twitter.</string>
   <string name="error_title_device_incompatible">Dispositivo incompatible</string>
@@ -481,6 +479,7 @@
   <string name="login_challenge_retype_email_hint">Vuelva a escribir la dirección de correo asociada a su cuenta de Twitter.</string>
   <string name="login_challenge_retype_phone_hint">Vuelva a introducir el número de teléfono asociado a su cuenta de Twitter.</string>
   <string name="login_type_default">Predeterminado</string>
+  <string name="login_type_user_settings">Configuración de usuario</string>
   <string name="login_verification">Verificación de inicio de sesión</string>
   <string name="login_verification_pin_hint">Compruebe su teléfono y busque el código PIN, ingreselo para iniciar sesión.</string>
   <string name="login_verification_push_hint">Acepta la verificación de inicio de sesión requerido por la app de Twitter, una vez apruebes la petición, pulsa Aceptar.</string>
@@ -500,6 +499,7 @@
   <string name="message_account_delete_confirm">Esta cuenta se eliminará de Twidere.</string>
   <string name="message_api_data_corrupted">datos de la API dañados.</string>
   <string name="message_api_url_format_help">[DOMAIN]: Dominio de la API de Twitter.\nEjemplo: https://[DOMAIN].twitter.com/ será reemplazado por https://api.twitter.com/.</string>
+  <string name="message_app_crashed">Twidere se ha estrellado. Enviar un informe de error que me ayude a solucionar este problema.</string>
   <string name="message_auto_refresh_confirm">¿Activar la autoactualización para obtener nuevos tweets automáticamente?</string>
   <string name="message_blocked_user"><xliff:g id="user">%s</xliff:g> bloqueado.</string>
   <string name="message_buffer_delete_schedule_confirm">¿Eliminar esta programación?</string>
@@ -553,6 +553,7 @@
   <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_extra_features_not_purchased">Características extra no compradas</string>
   <string name="message_toast_filters_import_hint">Pulsa el icono + para importar</string>
+  <string name="message_toast_internal_storage_install_required">No se admite la instalación en tarjeta SD, las cuentas pueden perderse después de reiniciar.</string>
   <string name="message_toast_invalid_mastodon_host">Host de Mastodon inválido</string>
   <string name="message_toast_link_copied_to_clipboard">Enlace copiado al portapapeles</string>
   <string name="message_toast_livewp_daydream_enabled_message">Aquí hay un pequeño regalo para ti, encuéntralo en los ajustes del sistema :)</string>
@@ -908,7 +909,8 @@
   <string name="streaming">Streaming</string>
   <string name="style">Estilo</string>
   <string name="subscribed_to_list">Suscrito a la lista \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="title_userlist_subscribers">Suscriptor</string>
+  <string name="summary_interactions_account_not_supported">Cuenta no admitida</string>
+  <string name="summary_interactions_streaming_required">Completas interacciones disponibles sólo cuando la transmisión esta habilitada</string>
   <string name="swipe_down_to_refresh">Desliza hacia abajo para actualizar</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="sync_provider_name_google_drive">Google Drive</string>
@@ -1014,6 +1016,7 @@
   <string name="title_user_list_ownerships">Creado</string>
   <string name="title_user_list_subscriptions">Suscripciones</string>
   <string name="title_user_timeline_filter">Filtro de la línea de tiempo</string>
+  <string name="title_userlist_subscribers">Suscriptores</string>
   <string name="title_users_favorited_this">Favoritos de los usuarios</string>
   <string name="title_users_liked_this">Usuarios a los que les gustó esto</string>
   <string name="title_users_retweeted_this">Usuarios retweeted esto</string>

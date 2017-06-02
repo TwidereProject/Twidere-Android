@@ -197,7 +197,6 @@
   <string name="combined_notifications">Kombinerade notifieringar</string>
   <string name="combined_notifications_summary_off">Notifieringar kommer att visas separat</string>
   <string name="combined_notifications_summary_on">Notifieringar kommer att grupperas</string>
-  <string name="action_comment">Kommentar</string>
   <string name="comment_hint">Kommentar...</string>
   <string name="compact_cards">Kompakta kort</string>
   <string name="compact_cards_summary">Visa fler kort på skärmen</string>
@@ -277,12 +276,10 @@
   <string name="error_message_message_too_many_participants">För många deltagare</string>
   <string name="error_message_no_content">Inget innehåll</string>
   <string name="error_message_rate_limit">Twitters flödeshastighet har överskridits, var god prova <xliff:g id="time">%s</xliff:g></string>
-  <string name="error_message_rate_limit_with_action">Twitters flödeshastighet har överskridits medan <xliff:g id="action">%1$s</xliff:g>, var god prova <xliff:g id="time">%2$s</xliff:g></string>
   <string name="error_message_scheduler_not_available">Schemaläggning av tweet är inte tillgängligt</string>
   <string name="error_message_status_too_long">Tweetet är för långt.</string>
   <string name="error_message_tweet_shorten_failed">Förkortningen av tweetet misslyckades.</string>
   <string name="error_message_tweet_shortener_not_found">Tweetförkortaren hittades inte, kanske är den avinstallerad?</string>
-  <string name="error_message_with_action">Fel medan <xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
   <string name="error_no_access_for_credentials">Din applikation kan inte komma åt den här resursen.</string>
   <string name="error_no_dm_permission">Inga rättigheter för direktmeddelanden, var god kontrollera rättigheterna för ditt Twitter-program.</string>
   <string name="error_title_device_incompatible">Inkompatibel enhet</string>
@@ -856,7 +853,6 @@
   <string name="stream_type_messages">Meddelanden</string>
   <string name="streaming">Strömmande</string>
   <string name="style">Stil</string>
-  <string name="title_userlist_subscribers">Prenumerant</string>
   <string name="swipe_down_to_refresh">Dra ner för att uppdatera</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="sync_provider_name_google_drive">Google Drive</string>

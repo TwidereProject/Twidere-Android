@@ -34,4 +34,6 @@
   <string name="error_twitter_193">Yüklemeye çalıştığınız fotoğrafın boyutu çok büyük.</string>
   <!-- 215 Bad authentication data: Typically sent with 1.1 responses with HTTP code 400. The method requires authentication but it was not presented or was wholly invalid -->
   <string name="error_twitter_215">Tekrar oturum açmanız gerekebilir.</string>
+  <string name="error_twitter_326">Sizin hesap askıya alındı, ayrıntılı bilgi için https://twitter.com/ ziyaret ediniz.</string>
+  <string name="error_twitter_327">Sen zaten bu retweet ettik tweet.</string>
 </resources>

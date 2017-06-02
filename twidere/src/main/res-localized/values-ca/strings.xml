@@ -116,7 +116,6 @@
   <string name="combined_notifications">Notificacions combinades</string>
   <string name="combined_notifications_summary_off">Les notificacions es mostraran per separat</string>
   <string name="combined_notifications_summary_on">Els notificacions es mostraran agrupades</string>
-  <string name="action_comment">Comentari</string>
   <string name="comment_hint">Comentari&#8230;</string>
   <string name="compact_cards">Targetes més compactes</string>
   <string name="compact_cards_summary">Fa que es vegin més piulades per pàgina</string>
@@ -190,11 +189,9 @@
   <string name="error_message_message_too_long">El missatge és massa llarg.</string>
   <string name="error_message_no_content">Sense contingut</string>
   <string name="error_message_rate_limit">Límit de velocitat de Twitter superat, si us plau torni-ho a  intentar <xliff:g id="time">%s</xliff:g></string>
-  <string name="error_message_rate_limit_with_action">S\'ha excedit el límit de peticions de Twitter en: <xliff:g id="action">%1$s</xliff:g>, si us plau torneu-ho a intentar <xliff:g id="time">%2$s</xliff:g></string>
   <string name="error_message_status_too_long">Piulada massa llarga.</string>
   <string name="error_message_tweet_shorten_failed">Ha fallat l\'escurçador de piulades.</string>
   <string name="error_message_tweet_shortener_not_found">No s\'ha trobat l\'escurçador de piulades; potser s\'ha desinstal·lat.</string>
-  <string name="error_message_with_action">Error en <xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
   <string name="error_no_access_for_credentials">La vostra aplicació no pot accedir a aquest recurs. Que heu activat \"Força les API privades\"?</string>
   <string name="error_no_dm_permission">No teniu permís per enviar missatges directes. Comproveu la configuració de permisos en l\'aplicació de Twitter.</string>
   <string name="error_title_device_incompatible">El dispositiu és incompatible</string>
@@ -614,7 +611,6 @@
   <string name="streaming">Streaming</string>
   <string name="style">Estil</string>
   <string name="subscribed_to_list">Us heu subscrit a la llista «<xliff:g id="list">%s</xliff:g>».</string>
-  <string name="title_userlist_subscribers">Subscriptor</string>
   <string name="swipe_down_to_refresh">Arrossega cap abaix per a actualitzar</string>
   <string name="system_default">Per defecte del sistema</string>
   <string name="tab_display_option">Capçalera de les pestanyes</string>

@@ -113,7 +113,6 @@
   <string name="combined_notifications">Notifiche raggruppate</string>
   <string name="combined_notifications_summary_off">Le notifiche saranno mostrate separatamente</string>
   <string name="combined_notifications_summary_on">Le notifiche saranno raggruppate</string>
-  <string name="action_comment">Commenta</string>
   <string name="comment_hint">Commento&#8230;</string>
   <string name="compact_cards">Schede compatte</string>
   <string name="compact_cards_summary">Visualizza più schede sullo schermo</string>
@@ -186,11 +185,9 @@
   <string name="error_message_message_too_long">Messaggio troppo lungo.</string>
   <string name="error_message_no_content">Nessun contenuto</string>
   <string name="error_message_rate_limit">È stato raggiunto il limite imposto da Twitter, riprova tra <xliff:g id="time">%s</xliff:g></string>
-  <string name="error_message_rate_limit_with_action">Superato limite di Twitter durante <xliff:g id="action">%1$s</xliff:g>, riprova tra <xliff:g id="time">%2$s</xliff:g></string>
   <string name="error_message_status_too_long">Tweet troppo lungo.</string>
   <string name="error_message_tweet_shorten_failed">Abbreviazione del tweet non riuscita.</string>
   <string name="error_message_tweet_shortener_not_found">Tweet shortener non trovato, forse è stato disinstallato.</string>
-  <string name="error_message_with_action">Errore durante <xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
   <string name="error_no_access_for_credentials">La tua applicazione non può accedere a questa risorsa, hai abilitato \'Forza l\'uso di API private\'?</string>
   <string name="error_title_device_incompatible">Dispositivo incompatibile</string>
   <string name="error_unknown_error">Errore: Errore sconosciuto, questo è probabilmente un bug.</string>
@@ -595,7 +592,6 @@
   <string name="streaming">Streaming</string>
   <string name="style">Stile</string>
   <string name="subscribed_to_list">Iscritto alla lista \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="title_userlist_subscribers">Iscritto</string>
   <string name="swipe_down_to_refresh">Tira in giù per aggiornare</string>
   <string name="system_default">Sistema predefinito</string>
   <string name="tab_display_option">Opzioni display</string>

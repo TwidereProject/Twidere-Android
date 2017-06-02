@@ -99,7 +99,6 @@
   <string name="clear_databases_summary">Očisti sve tweetove, profile, poruke. Podaci o vašem računu neće biti izgubljeni.</string>
   <string name="clear_search_history">Očisti povijest pretraživanja</string>
   <string name="color">Boja</string>
-  <string name="action_comment">Komentirat</string>
   <string name="comment_hint">Komentiraj&#8230;</string>
   <string name="compact_cards">Kompaktne kartice</string>
   <string name="compact_cards_summary">Prikaži više kartice na zaslonu</string>
@@ -163,11 +162,9 @@
   <string name="error_message_message_too_long">Poruka preduga.</string>
   <string name="error_message_no_content">Nema sadržaja</string>
   <string name="error_message_rate_limit">Rate limit Twittera je prekoračen, molimo pokušajte ponovno <xliff:g id="time">%s</xliff:g></string>
-  <string name="error_message_rate_limit_with_action">Rate limit Twittera je prekoračen tijekom <xliff:g id="action">%1$s</xliff:g>, pokušajte ponovno <xliff:g id="time">%2$s</xliff:g></string>
   <string name="error_message_status_too_long">Tweet predug.</string>
   <string name="error_message_tweet_shorten_failed">Skraćivanje tweeta neuspjelo.</string>
   <string name="error_message_tweet_shortener_not_found">Skratitelj tweeta nije pronađen, možda je deinstaliran.</string>
-  <string name="error_message_with_action">Greška tijekom <xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
   <string name="error_unknown_error">Greška: Nepoznata greška, vjerojatno se radi o bugu.</string>
   <string name="exclude_this_host">Isključi ovog domaćina</string>
   <string name="excluded">Isključeno</string>
@@ -521,7 +518,6 @@
   <string name="streaming">Streaming</string>
   <string name="style">Stil</string>
   <string name="subscribed_to_list">Pretplaćeni ste na listu \"<xliff:g id="list">%s</xliff:g>\".</string>
-  <string name="title_userlist_subscribers">Pretplatnik</string>
   <string name="swipe_down_to_refresh">Prijeđite prstom prema dolje za osvježavanje</string>
   <string name="tab_display_option">Opcije prikaza tabova</string>
   <string name="tab_display_option_icon">Ikona</string>

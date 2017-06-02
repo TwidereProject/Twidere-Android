@@ -34,4 +34,6 @@
   <string name="error_twitter_193">La semeya que xubiesti ye pergrande.</string>
   <!-- 215 Bad authentication data: Typically sent with 1.1 responses with HTTP code 400. The method requires authentication but it was not presented or was wholly invalid -->
   <string name="error_twitter_215">Quiciabes precises aniciar sesión de nueves.</string>
+  <string name="error_twitter_326">Suspendióse la to cuenta, por favor visita https://twitter.com/ pa más detalles.</string>
+  <string name="error_twitter_327">Yá retuitiesti esti tuit.</string>
 </resources>

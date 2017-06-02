@@ -3,6 +3,8 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="account_options">Hesap ayarları</string>
   <string name="account_type_fanfou">Fanfou</string>
+  <string name="account_type_mastodon">Mastodon</string>
+  <string name="account_type_statusnet">StatusNet</string>
   <string name="account_type_twitter">Twitter</string>
   <!-- [verb] Accept a friend request (follow request) -->
   <string name="action_accept_friend_request">Kabul et</string>
@@ -10,60 +12,109 @@
   <string name="action_accept_permission_request">Kabul et</string>
   <!-- [verb] Add an item to a list/collection -->
   <string name="action_add">Ekle</string>
+  <string name="action_add_content_warning">Içerik uyarısı ekleyin</string>
   <!-- [verb] Add a member to a message conversation -->
   <string name="action_add_conversation_participant">Üye ekle</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">Kural ekle</string>
+  <string name="action_add_filters_subscription">Abonelik ekle</string>
+  <string name="action_add_gif">GIF ekle</string>
+  <string name="action_add_media">Medya ekle</string>
   <string name="action_add_member">Üye ekle</string>
   <string name="action_add_tab">Sekme ekle</string>
   <string name="action_add_to_filter">Filtre ekle</string>
   <string name="action_add_to_list">Listeye ekle</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Engelle</string>
+  <string name="action_buffer_disconnect">Bağlantısını kesme Tampon</string>
+  <string name="action_buffer_settings">Ayarlar</string>
+  <string name="action_buffer_update_now">Şimdi yayınla</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">Retweeti iptal et</string>
   <string name="action_center">Merkez</string>
   <string name="action_clear">Temizle</string>
+  <string name="action_clear_messages">İletileri temizle</string>
+  <string name="action_comment">Yorum Yap</string>
   <string name="action_compose">Tweet yaz</string>
+  <string name="action_compose_message_convert_to_status">Dönüştür tweet</string>
+  <string name="action_connect_to_buffer">Bağlamak</string>
+  <string name="action_conversation_info">Sohbet info</string>
+  <string name="action_create_conversation">Sohbet oluştur</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">Sil</string>
+  <string name="action_delete_messages">İletileri sil</string>
   <string name="action_dont_restart">Yeniden başlatma</string>
+  <string name="action_dont_terminate">Çıkma</string>
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">Düzenle</string>
+  <string name="action_edit_conversation_avatar">Düzenle simgesi</string>
+  <string name="action_edit_conversation_name">Adı düzenle</string>
+  <string name="action_edit_filter_rule">Kuralı düzenle</string>
   <string name="action_favorite">Favorilerine ekle</string>
+  <string name="action_filter_import_from_blocked_users">Bloke içe kullanıcıları</string>
+  <string name="action_filter_import_from_muted_users">İçe sessiz  kullanıcılar</string>
+  <string name="action_filter_subscriptions_card_manage">Abonelikleri Yönet</string>
   <string name="action_finish">Bitir</string>
   <string name="action_follow">Takip et</string>
+  <string name="action_format_search_update_status">Tweet <xliff:g id="text">%1$s</xliff:g></string>
   <!-- [verb] Perform import action -->
+  <string name="action_import">İthalat</string>
   <string name="action_import_from">Şuradan import&#8230;</string>
+  <string name="action_invert_selection">Zıt seçim</string>
   <!-- Used for decide something later, like permission request -->
+  <string name="action_later">Sonra</string>
+  <string name="action_leave_conversation">Sohbetten ayrıl</string>
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">Beğen</string>
+  <string name="action_location">Yer</string>
+  <string name="action_manage_in_buffer">Tamponda Yönet</string>
+  <string name="action_mark_as_read">Okundu olarak işaretle</string>
   <string name="action_mute">Sessize al</string>
+  <string name="action_mute_notifications">Sessiz bildirimleri</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, <xliff:g id="time">%2$s</xliff:g> itibari ile kaydedildi</string>
+  <string name="action_next_step">Sonraki</string>
+  <string name="action_open_in_browser">Tarayıcıda aç</string>
   <string name="action_pick_color">Renk seç</string>
+  <string name="action_purchase">Satın alma</string>
+  <string name="action_purchase_features_pack">Özellik paketi satın al</string>
+  <string name="action_qr_code">QR kod</string>
   <string name="action_quote">Alıntı yap</string>
+  <string name="action_record_video">Video kaydetmek</string>
   <string name="action_refresh">Yenile</string>
+  <string name="action_register">Kayıt olmak</string>
+  <string name="action_remove_conversation_avatar">Simgesini kaldır</string>
   <string name="action_reply">Cevapla</string>
   <string name="action_report_spam">Spam bildir</string>
   <!-- [verb] Restore purchase -->
+  <string name="action_restore_purchase">Geri</string>
   <string name="action_retry">Tekrar Dene</string>
   <!-- [verb] Action for performing retweet -->
   <string name="action_retweet">Retweet et</string>
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Kaydet</string>
   <string name="action_search">Ara</string>
+  <string name="action_select_all">Hepsini seç</string>
+  <string name="action_select_none">Hiçbir şey seçilmedi</string>
   <string name="action_select_user">Kullanıcı seç</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Gönder</string>
   <string name="action_set_color">Rengi ayarla</string>
   <string name="action_set_nickname">Lakap ayarla</string>
+  <string name="action_set_status_visibility">Görünürlüğü ayarla</string>
   <string name="action_share">Paylaş</string>
+  <string name="action_sign_in">Oturum aç</string>
   <!-- [verb] Used for skip some settings -->
+  <string name="action_skip">Atlamak</string>
   <string name="action_start">Başlat</string>
+  <string name="action_status_attachment">Tweet eki</string>
+  <string name="action_status_pin">Pin tweet</string>
+  <string name="action_status_schedule">Tweet programı</string>
+  <string name="action_status_unpin">Tweet\'ini unpin</string>
   <string name="action_subscribe">Abone ol</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
   <!-- [verb] Disconnect from network storage -->
   <string name="action_sync_settings">Ayarlar</string>
+  <string name="action_sync_sync_now">Şimdi senkronize et</string>
   <string name="action_take_photo">Fotoğraf çek</string>
   <string name="action_toggle">Değiştir</string>
   <string name="action_translate">Çevir</string>
@@ -79,6 +130,20 @@
   <string name="action_view_map">Harita</string>
   <string name="activated_accounts">Etkinleştirilmiş hesaplar</string>
   <string name="activities_about_me">Etkileşimler</string>
+  <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> favorited</string>
+  <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> favorited</string>
+  <string name="activity_about_me_favorited_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> bir favorilere tweet Eğer etiketlendi</string>
+  <string name="activity_about_me_favorited_mention"><xliff:g id="user">%s</xliff:g> bir favorilere tweet Eğer bahsedildi</string>
+  <string name="activity_about_me_favorited_mention_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> bir favorilere tweet Eğer bahsedildi</string>
+  <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g> favorilere senin retweet</string>
+  <string name="activity_about_me_favorited_retweet_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> favorilere senin retweet</string>
+  <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> sizi takip ediyor</string>
+  <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> sizi takip ediyor</string>
+  <string name="activity_about_me_like"><xliff:g id="user">%s</xliff:g> beğendi</string>
+  <string name="activity_about_me_like_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> beğendi</string>
+  <string name="activity_about_me_liked_media_tagged"><xliff:g id="user">%s</xliff:g> bir sevdim tweet Eğer etiketlendi</string>
+  <string name="activity_about_me_liked_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> bir sevdim tweet Eğer etiketlendi</string>
+  <string name="activity_about_me_liked_mention"><xliff:g id="user">%s</xliff:g> sizden bahsettiğiniz bir tweet\'i  beğendi</string>
   <string name="add_account">Hesap ekle</string>
   <string name="add_host_mapping">Sunucu haritalama ekle</string>
   <string name="add_image">Resim ekle</string>
@@ -116,7 +181,6 @@
   <string name="combined_notifications">Kombine bildirimleri</string>
   <string name="combined_notifications_summary_off">Bildirimler ayrı ayrı görüntülenir</string>
   <string name="combined_notifications_summary_on">Bildirimler gruplandırılarak görüntülenir</string>
-  <string name="action_comment">Yorum</string>
   <string name="comment_hint">Yorum&#8230;</string>
   <string name="compact_cards">Kompak kartlar</string>
   <string name="compact_cards_summary">Ekranda daha fazla kart görüntüle</string>
@@ -190,11 +254,9 @@
   <string name="error_message_message_too_long">Mesaj çok uzun.</string>
   <string name="error_message_no_content">İçerik yok</string>
   <string name="error_message_rate_limit">Twitter\'ın sorgulama limiti aşıldı, lütfen <xliff:g id="time">%s</xliff:g> süre sonra tekrar deneyin</string>
-  <string name="error_message_rate_limit_with_action"><xliff:g id="action">%1$s</xliff:g> esnasına twitter sorgulama limiti aşıldı, lütfen tekrar deneyin <xliff:g id="time">%2$s</xliff:g></string>
   <string name="error_message_status_too_long">Tweet çok uzun.</string>
   <string name="error_message_tweet_shorten_failed">Tweet kısaltılamadı.</string>
   <string name="error_message_tweet_shortener_not_found">Tweet kısaltıcı bulunamadı, belki kaldırılmıştır.</string>
-  <string name="error_message_with_action"><xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g> hata</string>
   <string name="error_no_access_for_credentials">Uygulamanız kaynağına ulaşılamıyor, \'Force using private APIs\' açık hale getirdiniz mi?</string>
   <string name="error_no_dm_permission">Direkt mesaj yetkisi yok, Twitter uygulamanızın ayarlarını kontrol ediniz.</string>
   <string name="error_title_device_incompatible">Uyumsuz Cihaz</string>
@@ -620,7 +682,6 @@
   <string name="streaming">Akış</string>
   <string name="style">Stil</string>
   <string name="subscribed_to_list">\"<xliff:g id="list">%s</xliff:g>\" listesine abone olundu.</string>
-  <string name="title_userlist_subscribers">Abone</string>
   <string name="swipe_down_to_refresh">Yenileme için aşağı doğru sürükleyin</string>
   <string name="system_default">Sistem varsayılanı</string>
   <string name="tab_display_option">Sekme gösterme seçeneği</string>

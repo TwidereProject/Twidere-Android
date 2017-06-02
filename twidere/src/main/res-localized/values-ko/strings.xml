@@ -205,7 +205,6 @@
   <string name="combined_notifications">알림 합치기</string>
   <string name="combined_notifications_summary_off">알림들이 따로따로 표시됩니다.</string>
   <string name="combined_notifications_summary_on">알림들이 합쳐서 표시됩니다.</string>
-  <string name="action_comment">코멘트</string>
   <string name="comment_hint">코멘트&#8230;</string>
   <string name="compact_cards">작은 카드</string>
   <string name="compact_cards_summary">화면에 더 많은 카드를 표시합니다.</string>
@@ -286,12 +285,10 @@
   <string name="error_message_message_too_many_participants">참가자가 너무 많습니다</string>
   <string name="error_message_no_content">내용 없음</string>
   <string name="error_message_rate_limit">트위터 API 제한을 초과하였습니다. <xliff:g id="time">%s</xliff:g>분 뒤 다시 시도해 주십시오.</string>
-  <string name="error_message_rate_limit_with_action">트위터 API 제한을 <xliff:g id="action">%1$s</xliff:g>에 초과하였습니다. <xliff:g id="time">%2$s</xliff:g>분 뒤 다시 한번 시도해 주십시오.</string>
   <string name="error_message_scheduler_not_available">트윗을 예약할 수 없습니다.</string>
   <string name="error_message_status_too_long">트윗이 너무 깁니다. </string>
   <string name="error_message_tweet_shorten_failed">트윗 축약 실패.</string>
   <string name="error_message_tweet_shortener_not_found">트윗 축약 서비스를 찾을 수 없습니다. 아마도 삭제 되었을겁니다.</string>
-  <string name="error_message_with_action">오류: <xliff:g id="action">%1$s</xliff:g>에 <xliff:g id="message">%2$s</xliff:g> 오류가 발생했습니다.</string>
   <string name="error_no_access_for_credentials">애플리케이션이 내용에 접근할 수 없습니다. \'강제로 사유 API 사용\' 설정이 켜져 있나요?</string>
   <string name="error_no_dm_permission">쪽지 송수신 권한이 없습니다. 트위터 애플리케이션 권한 설정을 확인하세요.</string>
   <string name="error_title_device_incompatible">호환되지 않는 기기</string>
@@ -877,7 +874,6 @@
   <string name="streaming">스트리밍</string>
   <string name="style">스타일</string>
   <string name="subscribed_to_list">\"<xliff:g id="list">%s</xliff:g>\" 리스트를 구독했습니다.</string>
-  <string name="title_userlist_subscribers">구독자</string>
   <string name="swipe_down_to_refresh">아래로 밀어서 새로고침</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="sync_provider_name_google_drive">Google Drive</string>
