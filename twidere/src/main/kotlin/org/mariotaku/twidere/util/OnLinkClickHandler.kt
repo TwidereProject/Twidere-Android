@@ -147,7 +147,7 @@ open class OnLinkClickHandler(
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         intent.setClass(context, WebLinkHandlerActivity::class.java)
-        if (accountKey != null) {
+        if (accountKey != null && accountKey.host == USER_TYPE_TWITTER_COM) {
             intent.putExtra(EXTRA_ACCOUNT_KEY, accountKey)
         } else {
             intent.putExtra(EXTRA_ACCOUNT_HOST, USER_TYPE_TWITTER_COM)
