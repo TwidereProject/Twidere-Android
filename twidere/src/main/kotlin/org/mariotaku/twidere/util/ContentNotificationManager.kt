@@ -147,6 +147,7 @@ class ContentNotificationManager(
                     accountKey, positionKey, false))
             builder.setNumber(statusesCount)
             builder.setCategory(NotificationCompat.CATEGORY_SOCIAL)
+            builder.setGroup("timeline")
             applyNotificationPreferences(builder, pref, pref.homeTimelineNotificationType)
             try {
                 val notificationId = Utils.getNotificationId(NOTIFICATION_ID_HOME_TIMELINE, accountKey)
@@ -244,6 +245,7 @@ class ContentNotificationManager(
             builder.setContentTitle(title)
             style.setBigContentTitle(title)
             builder.setNumber(displayCount)
+            builder.setGroup("interactions")
             builder.setContentIntent(getContentIntent(context, CustomTabType.NOTIFICATIONS_TIMELINE,
                     NotificationType.INTERACTIONS, accountKey, newMaxPositionKey))
             builder.setDeleteIntent(getMarkReadDeleteIntent(context, NotificationType.INTERACTIONS,
@@ -321,6 +323,7 @@ class ContentNotificationManager(
                 style.addLine(context.getString(R.string.and_N_more, remaining))
             }
             val notificationId = Utils.getNotificationId(NOTIFICATION_ID_DIRECT_MESSAGES, accountKey)
+            builder.setGroup("direct_messages")
             notificationManager.notify("direct_messages", notificationId, builder.build())
         } finally {
             cur.close()
@@ -351,6 +354,7 @@ class ContentNotificationManager(
         }, PendingIntent.FLAG_UPDATE_CURRENT))
 
         val tag = "$accountKey:$userKey:${status.id}"
+        builder.setGroup("user_notif_$accountKey:$userKey")
         notificationManager.notify(tag, NOTIFICATION_ID_USER_NOTIFICATION, builder.build())
     }
 
@@ -397,6 +401,7 @@ class ContentNotificationManager(
                 PendingIntent.getService(context, 0, sendIntent, PendingIntent.FLAG_ONE_SHOT))
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
         nb.setContentIntent(PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT))
+        nb.setGroup("drafts")
         notificationManager.notify(draftUri.toString(), NOTIFICATION_ID_DRAFTS, nb.build())
         return draftId
     }
