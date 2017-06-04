@@ -117,11 +117,13 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
             when (playbackState) {
                 ExoPlayer.STATE_BUFFERING -> {
+                    playerView.keepScreenOn = true
                     showProgress(true, 0f)
                 }
                 ExoPlayer.STATE_ENDED -> {
                     playbackCompleted = true
                     positionBackup = -1L
+                    playerView.keepScreenOn = false
 
                     // Reset position
                     playerView.player?.let { player ->
@@ -136,9 +138,11 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
                 ExoPlayer.STATE_READY -> {
                     playbackCompleted = playWhenReady
                     playerHasError = false
+                    playerView.keepScreenOn = playWhenReady
                     hideProgress()
                 }
                 ExoPlayer.STATE_IDLE -> {
+                    playerView.keepScreenOn = false
                     hideProgress()
                 }
             }
