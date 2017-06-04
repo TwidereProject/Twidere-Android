@@ -39,6 +39,11 @@ public interface TimelinesResources {
     LinkHeaderList<Status> getPublicTimeline(@Query Paging paging, @Query(value = "local",
             booleanEncoding = BooleanEncoding.IGNORE_IF_FALSE) boolean local)
             throws MicroBlogException;
+    
+    @GET("/v1/timelines/public")
+    LinkHeaderList<Status> getPublicTimeline(@Query Paging paging,
+            booleanEncoding = BooleanEncoding.IGNORE_IF_FALSE) boolean local)
+            throws MicroBlogException;
 
     @GET("/v1/timelines/tag/{tag}")
     LinkHeaderList<Status> getHashtagTimeline(@Path("tag") String hashtag, @Query Paging paging,
