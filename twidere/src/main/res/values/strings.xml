@@ -1321,4 +1321,5 @@
     <string name="users_blocked">Blocked these users.</string>
     <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>\'s lists</string>
     <string name="users_statuses">User\'s tweets</string>
+    <string name="error_message_video_upload_not_supported">Video upload not supported</string>
 </resources>

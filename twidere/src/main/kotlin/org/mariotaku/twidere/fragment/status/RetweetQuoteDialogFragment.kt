@@ -165,17 +165,20 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
         if (this !is AlertDialog) return
         val positiveButton = getButton(AlertDialog.BUTTON_POSITIVE) ?: return
 
-        if (status.is_my_retweet) {
-            positiveButton.setText(R.string.action_cancel_retweet)
-            positiveButton.isEnabled = true
-        } else if (canQuoteRetweet(account)) {
-            if (editComment.empty) {
-                positiveButton.setText(R.string.action_retweet)
-                positiveButton.isEnabled = status.can_retweet
-            } else {
+        if (canQuoteRetweet(account)) {
+            if (!editComment.empty) {
                 positiveButton.setText(R.string.action_comment)
                 positiveButton.isEnabled = true
+            } else if (status.is_my_retweet) {
+                positiveButton.setText(R.string.action_cancel_retweet)
+                positiveButton.isEnabled = true
+            } else {
+                positiveButton.setText(R.string.action_retweet)
+                positiveButton.isEnabled = status.can_retweet
             }
+        } else if (status.is_my_retweet) {
+            positiveButton.setText(R.string.action_cancel_retweet)
+            positiveButton.isEnabled = true
         } else {
             positiveButton.setText(R.string.action_retweet)
             positiveButton.isEnabled = status.can_retweet

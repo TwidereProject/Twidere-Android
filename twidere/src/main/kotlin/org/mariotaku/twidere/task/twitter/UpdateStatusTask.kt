@@ -915,8 +915,8 @@ class UpdateStatusTask(
                 return null
             }
 
-            if (imageLimit == null || imageLimit.checkGeomentry(o.outWidth, o.outHeight)
-                    || imageLimit.checkSize(imageSize, chucked)) return null
+            if (imageLimit == null || (imageLimit.checkGeomentry(o.outWidth, o.outHeight)
+                    && imageLimit.checkSize(imageSize, chucked))) return null
             o.inSampleSize = o.calculateInSampleSize(imageLimit.maxWidth, imageLimit.maxHeight)
             o.inJustDecodeBounds = false
             // Do actual image decoding
@@ -966,6 +966,16 @@ class UpdateStatusTask(
                 videoLimit: AccountExtras.VideoLimit?,
                 chucked: Boolean
         ): MediaStreamData? {
+
+            // No limit, upload original
+            if (videoLimit == null) {
+                return null
+            }
+
+            if (!videoLimit.isSupported) {
+                throw IOException(context.getString(R.string.error_message_video_upload_not_supported))
+            }
+
             var mediaType = defaultType
             val geometry = Point()
             var duration = -1L
@@ -991,22 +1001,20 @@ class UpdateStatusTask(
                 retriever.releaseSafe()
             }
 
-            if (videoLimit != null) {
-                if (geometry.x > 0 && geometry.y > 0 && videoLimit.checkGeometry(geometry.x, geometry.y)
-                        && framerate > 0 && videoLimit.checkFrameRate(framerate)
-                        && size > 0 && videoLimit.checkSize(size, chucked)) {
-                    // Size valid, upload directly
-                    DebugLog.d(LOGTAG, "Upload video directly")
-                    return null
-                }
+            if (geometry.x > 0 && geometry.y > 0 && videoLimit.checkGeometry(geometry.x, geometry.y)
+                    && framerate > 0 && videoLimit.checkFrameRate(framerate)
+                    && size > 0 && videoLimit.checkSize(size, chucked)) {
+                // Size valid, upload directly
+                DebugLog.d(LOGTAG, "Upload video directly")
+                return null
+            }
 
-                if (!videoLimit.checkMinDuration(duration, chucked)) {
-                    throw UploadException(context.getString(R.string.message_video_too_short))
-                }
+            if (!videoLimit.checkMinDuration(duration, chucked)) {
+                throw UploadException(context.getString(R.string.message_video_too_short))
+            }
 
-                if (!videoLimit.checkMaxDuration(duration, chucked)) {
-                    throw UploadException(context.getString(R.string.message_video_too_long))
-                }
+            if (!videoLimit.checkMaxDuration(duration, chucked)) {
+                throw UploadException(context.getString(R.string.message_video_too_long))
             }
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {

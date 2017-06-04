@@ -85,7 +85,7 @@ public interface AccountExtras extends Parcelable {
         public boolean checkSize(long size, boolean async) {
             final long limit = async ? getMaxSizeAsync() : getMaxSizeSync();
             if (limit <= 0 || size <= 0) return true;
-            return size < limit;
+            return size <= limit;
         }
 
     }
@@ -303,7 +303,7 @@ public interface AccountExtras extends Parcelable {
         public boolean checkSize(long size, boolean async) {
             final long limit = async ? getMaxSizeAsync() : getMaxSizeSync();
             if (limit <= 0 || size <= 0) return true;
-            return size < limit;
+            return size <= limit;
         }
 
         @SuppressWarnings("RedundantIfStatement")
