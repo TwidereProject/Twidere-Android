@@ -2,6 +2,7 @@ package org.mariotaku.twidere.extension.model
 
 import android.content.Context
 import com.twitter.Validator
+import org.mariotaku.microblog.library.twitter.annotation.MediaCategory
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.account.AccountExtras
@@ -41,34 +42,33 @@ fun <T> AccountDetails.newMicroBlogInstance(context: Context, cls: Class<T>): T 
 val AccountDetails.isOAuth: Boolean
     get() = credentials_type == Credentials.Type.OAUTH || credentials_type == Credentials.Type.XAUTH
 
-val AccountDetails.mediaSizeLimit: UpdateStatusTask.SizeLimit?
-    get() {
-        when (type) {
-            AccountType.TWITTER -> {
-                val imageLimit = AccountExtras.ImageLimit.ofSize(2048, 1536)
-                val videoLimit = AccountExtras.VideoLimit.twitterDefault()
-                return UpdateStatusTask.SizeLimit(imageLimit, videoLimit)
-            }
-            AccountType.FANFOU -> {
-                val imageLimit = AccountExtras.ImageLimit.ofSize(2048, 1536)
-                val videoLimit = AccountExtras.VideoLimit.unsupported()
-                return UpdateStatusTask.SizeLimit(imageLimit, videoLimit)
-            }
-            AccountType.STATUSNET -> {
-                val extras = extras as? StatusNetAccountExtras ?: return null
-                val imageLimit = AccountExtras.ImageLimit().apply {
-                    maxSizeSync = extras.uploadLimit
-                    maxSizeAsync = extras.uploadLimit
-                }
-                val videoLimit = AccountExtras.VideoLimit().apply {
-                    maxSizeSync = extras.uploadLimit
-                    maxSizeAsync = extras.uploadLimit
-                }
-                return UpdateStatusTask.SizeLimit(imageLimit, videoLimit)
-            }
-            else -> return null
+fun AccountDetails.getMediaSizeLimit(@MediaCategory mediaCategory: String? = null): UpdateStatusTask.SizeLimit? {
+    when (type) {
+        AccountType.TWITTER -> {
+            val imageLimit = AccountExtras.ImageLimit.twitterDefault(mediaCategory)
+            val videoLimit = AccountExtras.VideoLimit.twitterDefault()
+            return UpdateStatusTask.SizeLimit(imageLimit, videoLimit)
         }
+        AccountType.FANFOU -> {
+            val imageLimit = AccountExtras.ImageLimit.ofSize(2048, 1536)
+            val videoLimit = AccountExtras.VideoLimit.unsupported()
+            return UpdateStatusTask.SizeLimit(imageLimit, videoLimit)
+        }
+        AccountType.STATUSNET -> {
+            val extras = extras as? StatusNetAccountExtras ?: return null
+            val imageLimit = AccountExtras.ImageLimit().apply {
+                maxSizeSync = extras.uploadLimit
+                maxSizeAsync = extras.uploadLimit
+            }
+            val videoLimit = AccountExtras.VideoLimit().apply {
+                maxSizeSync = extras.uploadLimit
+                maxSizeAsync = extras.uploadLimit
+            }
+            return UpdateStatusTask.SizeLimit(imageLimit, videoLimit)
+        }
+        else -> return null
     }
+}
 
 /**
  * Text limit when composing a status, 0 for no limit

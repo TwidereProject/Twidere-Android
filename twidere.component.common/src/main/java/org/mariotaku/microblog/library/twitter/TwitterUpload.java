@@ -19,6 +19,7 @@
 package org.mariotaku.microblog.library.twitter;
 
 import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.annotation.MediaCategory;
 import org.mariotaku.microblog.library.twitter.model.MediaUploadResponse;
 import org.mariotaku.microblog.library.twitter.model.NewMediaMetadata;
 import org.mariotaku.microblog.library.twitter.model.ResponseCode;
@@ -46,7 +47,7 @@ public interface TwitterUpload {
     @Params(@KeyValue(key = "command", value = "INIT"))
     MediaUploadResponse initUploadMedia(@Param("media_type") String mediaType,
                                         @Param("total_bytes") long totalBytes,
-                                        @Param("media_category") String mediaCategory,
+                                        @MediaCategory @Param("media_category") String mediaCategory,
                                         @Param(value = "additional_owners", arrayDelimiter = ',')
                                         String[] additionalOwners) throws MicroBlogException;
 

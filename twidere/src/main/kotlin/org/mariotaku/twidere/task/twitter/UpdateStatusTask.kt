@@ -43,7 +43,7 @@ import org.mariotaku.twidere.extension.calculateInSampleSize
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.applyUpdateStatus
-import org.mariotaku.twidere.extension.model.mediaSizeLimit
+import org.mariotaku.twidere.extension.model.getMediaSizeLimit
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.model.textLimit
 import org.mariotaku.twidere.extension.text.twitter.getTweetLength
@@ -305,7 +305,7 @@ class UpdateStatusTask(
                         if (statusUpdate.media.isNotNullOrEmpty()) {
                             // Fanfou only allow one photo
                             fanfouUpdateStatusWithPhoto(microBlog, statusUpdate, pendingUpdate,
-                                    account.mediaSizeLimit, i)
+                                    account.getMediaSizeLimit(), i)
                         } else {
                             twitterUpdateStatus(microBlog, statusUpdate, pendingUpdate, i)
                         }
@@ -712,7 +712,7 @@ class UpdateStatusTask(
                 //noinspection TryWithIdenticalCatches
                 var body: MediaStreamBody? = null
                 try {
-                    val sizeLimit = account.mediaSizeLimit
+                    val sizeLimit = account.getMediaSizeLimit(mediaCategory)
                     body = getBodyFromMedia(context, media, sizeLimit, chucked,
                             ContentLengthInputStream.ReadListener { length, position ->
                                 callback?.onUploadingProgressChanged(index, position, length)
@@ -758,7 +758,7 @@ class UpdateStatusTask(
                 //noinspection TryWithIdenticalCatches
                 var body: MediaStreamBody? = null
                 try {
-                    val sizeLimit = account.mediaSizeLimit
+                    val sizeLimit = account.getMediaSizeLimit()
                     body = getBodyFromMedia(context, media, sizeLimit, chucked,
                             ContentLengthInputStream.ReadListener { length, position ->
                                 callback?.onUploadingProgressChanged(index, position, length)
@@ -931,7 +931,7 @@ class UpdateStatusTask(
             when (mediaType) {
                 "image/png", "image/x-png", "image/webp", "image-x-webp" -> {
                     tempFile.outputStream().use { os ->
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 0, os)
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, os)
                     }
                 }
                 "image/jpeg" -> {
@@ -939,6 +939,7 @@ class UpdateStatusTask(
                             .use(::ExifInterface)
                     tempFile.outputStream().use { os ->
                         bitmap.compress(Bitmap.CompressFormat.JPEG, 85, os)
+                        os.flush()
                     }
                     val orientation = origExif.getAttribute(ExifInterface.TAG_ORIENTATION)
                     if (orientation != null) {
