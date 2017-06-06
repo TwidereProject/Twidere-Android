@@ -29,11 +29,11 @@ import org.mariotaku.microblog.library.twitter.model.ErrorInfo
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT
+import org.mariotaku.twidere.extension.model.updateExtraInformation
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.dagger.GeneralComponent
@@ -76,7 +76,7 @@ class ParcelableStatusLoader(
         if (details == null) return SingleResponse(MicroBlogException("No account"))
         try {
             val status = DataStoreUtils.findStatus(context, accountKey, statusId)
-            ParcelableStatusUtils.updateExtraInformation(status, details)
+            status.updateExtraInformation(details)
             val response = SingleResponse(status)
             response.extras[EXTRA_ACCOUNT] = details
             return response

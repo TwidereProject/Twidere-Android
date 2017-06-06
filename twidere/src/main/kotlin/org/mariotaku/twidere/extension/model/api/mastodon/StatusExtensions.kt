@@ -25,9 +25,9 @@ import android.text.Spanned
 import org.mariotaku.ktextension.isNotNullOrEmpty
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.microblog.library.mastodon.model.Status
+import org.mariotaku.twidere.extension.model.addFilterFlag
 import org.mariotaku.twidere.extension.model.api.spanItems
 import org.mariotaku.twidere.model.*
-import org.mariotaku.twidere.model.util.ParcelableStatusUtils.addFilterFlag
 import org.mariotaku.twidere.text.AcctMentionSpan
 import org.mariotaku.twidere.text.HashtagSpan
 import org.mariotaku.twidere.util.HtmlEscapeHelper

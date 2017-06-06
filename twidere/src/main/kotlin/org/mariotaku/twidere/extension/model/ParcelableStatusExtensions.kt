@@ -105,6 +105,46 @@ fun ParcelableStatus.extractFanfouHashtags(): List<String> {
     }?.map { text_unescaped.substring(it.start, it.end) }.orEmpty()
 }
 
+
+fun ParcelableStatus.makeOriginal() {
+    if (!is_retweet) return
+    id = retweet_id
+    retweeted_by_user_key = null
+    retweeted_by_user_name = null
+    retweeted_by_user_screen_name = null
+    retweeted_by_user_profile_image = null
+    retweet_timestamp = -1
+    retweet_id = null
+}
+
+fun ParcelableStatus.addFilterFlag(@ParcelableStatus.FilterFlags flags: Long) {
+    filter_flags = filter_flags or flags
+}
+
+fun ParcelableStatus.updateExtraInformation(details: AccountDetails) {
+    account_color = details.color
+}
+
+val ParcelableStatus.quoted: ParcelableStatus?
+    get() {
+        val obj = ParcelableStatus()
+        obj.account_key = account_key
+        obj.id = quoted_id ?: return null
+        obj.timestamp = quoted_timestamp
+        obj.user_key = quoted_user_key ?: return null
+        obj.user_name = quoted_user_name ?: return null
+        obj.user_screen_name = quoted_user_screen_name ?: return null
+        obj.user_profile_image_url = quoted_user_profile_image ?: return null
+        obj.user_is_protected = quoted_user_is_protected
+        obj.user_is_verified = quoted_user_is_verified
+        obj.text_plain = quoted_text_plain
+        obj.text_unescaped = quoted_text_unescaped
+        obj.source = quoted_source
+        obj.spans = quoted_spans
+        obj.media = quoted_media
+        return obj
+    }
+
 private fun parcelableUserMention(key: UserKey, name: String, screenName: String) = ParcelableUserMention().also {
     it.key = key
     it.name = name

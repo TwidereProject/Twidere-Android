@@ -40,6 +40,7 @@ import org.mariotaku.twidere.extension.atto.firstElementOrNull
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.isOfficial
+import org.mariotaku.twidere.extension.model.makeOriginal
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -47,7 +48,6 @@ import org.mariotaku.twidere.model.pagination.PaginatedArrayList
 import org.mariotaku.twidere.model.pagination.PaginatedList
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
-import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
 import java.text.ParseException
 import java.util.*
@@ -65,7 +65,7 @@ class ConversationLoader(
         private set
 
     init {
-        ParcelableStatusUtils.makeOriginalStatus(this.status)
+        status.makeOriginal()
     }
 
     @Throws(MicroBlogException::class)

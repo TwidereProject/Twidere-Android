@@ -31,12 +31,12 @@ import org.mariotaku.microblog.library.twitter.model.ExtendedEntitySupport
 import org.mariotaku.microblog.library.twitter.model.MediaEntity
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.exception.MalformedResponseException
+import org.mariotaku.twidere.extension.model.addFilterFlag
 import org.mariotaku.twidere.extension.model.toParcelable
 import org.mariotaku.twidere.extension.toSpanItem
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
-import org.mariotaku.twidere.model.util.ParcelableStatusUtils.addFilterFlag
 import org.mariotaku.twidere.text.AcctMentionSpan
 import org.mariotaku.twidere.text.HashtagSpan
 import org.mariotaku.twidere.util.HtmlBuilder

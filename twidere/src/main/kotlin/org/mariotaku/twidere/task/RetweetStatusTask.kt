@@ -14,6 +14,7 @@ import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.extension.model.updateExtraInformation
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -21,7 +22,6 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.draft.StatusObjectActionExtras
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.model.event.StatusRetweetedEvent
-import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.twitter.UpdateStatusTask
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
@@ -54,7 +54,7 @@ class RetweetStatusTask(
                 microBlog.retweetStatus(statusId).toParcelable(account)
             }
         }
-        ParcelableStatusUtils.updateExtraInformation(result, account)
+        result.updateExtraInformation(account)
         Utils.setLastSeen(context, result.mentions, System.currentTimeMillis())
 
         resolver.updateStatusInfo(DataStoreUtils.STATUSES_ACTIVITIES_URIS, Statuses.COLUMNS,
