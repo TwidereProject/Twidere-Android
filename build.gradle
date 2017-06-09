@@ -16,6 +16,14 @@ buildscript {
 }
 
 allprojects {
+
+    ext{
+        projectGroupId = 'org.mariotaku.twidere'
+        projectVersionCode = 379
+        projectVersionName = '3.6.19'
+    }
+
+
     repositories {
         mavenLocal()
         jcenter()

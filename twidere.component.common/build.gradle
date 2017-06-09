@@ -21,13 +21,35 @@
 
 apply plugin: 'com.android.library'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
+
+group = projectGroupId
+version = projectVersionName
+archivesBaseName = 'common-component'
+
+ext {
+    projectDescription = 'Common commonent library for Twidere app'
+    projectUrl = 'https://github.com/TwidereProject/Twidere-Android'
+    projectVcsUrl = 'https://github.com/TwidereProject/Twidere-Android.git'
+}
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+    }
+}
 
 android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 1
-        versionName "3.0"
+        versionCode projectVersionCode
+        versionName projectVersionName
     }
     buildTypes {
         release {
@@ -35,6 +57,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+}
+
+repositories {
+    mavenLocal()
+    jcenter()
 }
 
 dependencies {
@@ -52,4 +79,67 @@ dependencies {
     compile "com.github.mariotaku.ExportablePreferences:core:${libVersions['ExportablePreferences']}"
     compile "com.github.mariotaku.CommonsLibrary:objectcursor:${libVersions['MariotakuCommons']}"
     compile "com.github.mariotaku.CommonsLibrary:logansquare:${libVersions['MariotakuCommons']}"
+}
+
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            name archivesBaseName
+            description projectDescription
+            url projectUrl
+            inceptionYear '2012'
+
+            packaging 'aar'
+            groupId projectGroupId
+            artifactId archivesBaseName
+            version projectVersionName
+
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+            scm {
+                connection projectVcsUrl
+                url projectUrl
+
+            }
+            developers {
+                developer {
+                    name 'Mariotaku Lee'
+                }
+            }
+        }
+    }
+}
+
+bintray {
+    def properties = new Properties()
+    properties.load(rootProject.file('private/bintray.properties').newDataInputStream())
+    user = properties.getProperty('user')
+    key = properties.getProperty('key')
+
+    pkg {
+        name = archivesBaseName
+        description = projectDescription
+        repo = 'android'
+        userOrg = 'twidere'
+        vcsUrl = projectVcsUrl
+        licenses = ['Apache-2.0']
+        publish = true
+
+        version {
+            name = projectVersionName
+            vcsTag = projectVersionName
+        }
+    }
+
+    configurations = ['archives']
+}
+
+// https://github.com/JFrogDev/build-info/issues/92
+afterEvaluate {
+    bintrayUpload.dependsOn 'install'
 }
