@@ -89,7 +89,6 @@ public class ParcelableStatusUpdate implements Parcelable {
     @ParcelableThisPlease
     @Draft.Action
     public String draft_action;
-    @JsonField(name = "draft_extras")
     @ParcelableThisPlease
     @Nullable
     public ActionExtras draft_extras;
@@ -111,6 +110,14 @@ public class ParcelableStatusUpdate implements Parcelable {
                 ", in_reply_to_status=" + in_reply_to_status +
                 ", is_possibly_sensitive=" + is_possibly_sensitive +
                 ", repost_status_id='" + repost_status_id + '\'' +
+                ", attachment_url='" + attachment_url + '\'' +
+                ", excluded_reply_user_ids=" + Arrays.toString(excluded_reply_user_ids) +
+                ", extended_reply_mode=" + extended_reply_mode +
+                ", summary='" + summary + '\'' +
+                ", visibility='" + visibility + '\'' +
+                ", draft_unique_id='" + draft_unique_id + '\'' +
+                ", draft_action='" + draft_action + '\'' +
+                ", draft_extras=" + draft_extras +
                 '}';
     }
 

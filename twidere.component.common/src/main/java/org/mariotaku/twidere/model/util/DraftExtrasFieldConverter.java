@@ -80,6 +80,7 @@ public class DraftExtrasFieldConverter implements CursorFieldConverter<ActionExt
     }
 
     public static String serializeExtras(final ActionExtras object) throws IOException {
+        if (object == null) return null;
         return LoganSquare.serialize(object);
     }
 }
