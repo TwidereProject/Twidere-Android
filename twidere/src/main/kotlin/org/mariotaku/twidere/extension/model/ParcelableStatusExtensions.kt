@@ -8,8 +8,8 @@ import org.mariotaku.twidere.util.UriUtils
 import org.mariotaku.twidere.util.Utils
 
 
-val ParcelableStatus.originalId: String
-    get() = if (is_retweet) retweet_id else id
+inline val ParcelableStatus.originalId: String
+    get() = if (is_retweet) (retweet_id ?: id) else id
 
 val ParcelableStatus.media_type: Int
     get() = media?.firstOrNull()?.type ?: 0

@@ -22,6 +22,7 @@ package org.mariotaku.twidere.util
 import android.net.Uri
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.model.originalId
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
@@ -107,11 +108,7 @@ object LinkCreator {
         if (USER_TYPE_FANFOU_COM == status.account_key.host) {
             return getFanfouStatusLink(status.id)
         }
-        if (status.is_retweet) {
-            return getTwitterStatusLink(status.user_screen_name, status.retweet_id)
-        } else {
-            return getTwitterStatusLink(status.user_screen_name, status.id)
-        }
+        return getTwitterStatusLink(status.user_screen_name, status.originalId)
     }
 
     fun getQuotedStatusWebLink(status: ParcelableStatus): Uri {
