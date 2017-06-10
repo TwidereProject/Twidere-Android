@@ -146,7 +146,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     // Data fields
     private var conversationLoaderInitialized: Boolean = false
 
-    private var mActivityLoaderInitialized: Boolean = false
+    private var activityLoaderInitialized: Boolean = false
     private var hasMoreConversation = true
 
     // Listeners
@@ -480,12 +480,13 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     private fun loadConversation(status: ParcelableStatus?, sinceId: String?, maxId: String?) {
         if (status == null || activity == null) return
-        val args = Bundle()
-        args.putParcelable(EXTRA_ACCOUNT_KEY, status.account_key)
-        args.putString(EXTRA_STATUS_ID, if (status.is_retweet) status.retweet_id else status.id)
-        args.putString(EXTRA_SINCE_ID, sinceId)
-        args.putString(EXTRA_MAX_ID, maxId)
-        args.putParcelable(EXTRA_STATUS, status)
+        val args = Bundle {
+            this[EXTRA_ACCOUNT_KEY] = status.account_key
+            this[EXTRA_STATUS_ID] = status.load_info_id
+            this[EXTRA_SINCE_ID] = sinceId
+            this[EXTRA_MAX_ID] = maxId
+            this[EXTRA_STATUS] = status
+        }
         if (conversationLoaderInitialized) {
             loaderManager.restartLoader(LOADER_ID_STATUS_CONVERSATIONS, args, conversationsLoaderCallback)
             return
@@ -497,15 +498,16 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     private fun loadActivity(status: ParcelableStatus?) {
         if (status == null || host == null || isDetached) return
-        val args = Bundle()
-        args.putParcelable(EXTRA_ACCOUNT_KEY, status.account_key)
-        args.putString(EXTRA_STATUS_ID, if (status.is_retweet) status.retweet_id else status.id)
-        if (mActivityLoaderInitialized) {
+        val args = Bundle {
+            this[EXTRA_ACCOUNT_KEY] = status.account_key
+            this[EXTRA_STATUS_ID] = status.load_info_id
+        }
+        if (activityLoaderInitialized) {
             loaderManager.restartLoader(LOADER_ID_STATUS_ACTIVITY, args, statusActivityLoaderCallback)
             return
         }
         loaderManager.initLoader(LOADER_ID_STATUS_ACTIVITY, args, statusActivityLoaderCallback)
-        mActivityLoaderInitialized = true
+        activityLoaderInitialized = true
     }
 
     private fun loadTranslation(status: ParcelableStatus?) {
@@ -2144,5 +2146,9 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 this.sinceSortId = sinceSortId
             }
         }
+
+        private inline val ParcelableStatus.load_info_id: String
+            get() = if (is_retweet) (retweet_id ?: id) else id
+
     }
 }
