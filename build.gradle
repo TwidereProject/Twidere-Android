@@ -19,8 +19,8 @@ allprojects {
 
     ext{
         projectGroupId = 'org.mariotaku.twidere'
-        projectVersionCode = 380
-        projectVersionName = '3.6.20'
+        projectVersionCode = 381
+        projectVersionName = '3.6.21'
     }
 
 
