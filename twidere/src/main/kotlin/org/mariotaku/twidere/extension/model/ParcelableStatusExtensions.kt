@@ -109,6 +109,7 @@ fun ParcelableStatus.extractFanfouHashtags(): List<String> {
 fun ParcelableStatus.makeOriginal() {
     if (!is_retweet) return
     id = retweet_id
+    is_retweet = false
     retweeted_by_user_key = null
     retweeted_by_user_name = null
     retweeted_by_user_screen_name = null
