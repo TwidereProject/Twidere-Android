@@ -17,35 +17,33 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.view.iface;
+package org.mariotaku.twidere.view.iface
 
-import android.graphics.Rect;
-import android.view.MotionEvent;
-import android.view.View;
+import android.graphics.Rect
+import android.view.MotionEvent
+import android.view.View
 
-public interface IExtendedView {
+interface IExtendedView {
 
-    void setOnFitSystemWindowsListener(final OnFitSystemWindowsListener listener);
-
-    void setOnSizeChangedListener(final OnSizeChangedListener listener);
-
-    void setTouchInterceptor(final TouchInterceptor listener);
+    var touchInterceptor: IExtendedView.TouchInterceptor?
+    var onSizeChangedListener: IExtendedView.OnSizeChangedListener?
+    var onFitSystemWindowsListener: IExtendedView.OnFitSystemWindowsListener?
 
     interface OnFitSystemWindowsListener {
-        void onFitSystemWindows(Rect insets);
+        fun onFitSystemWindows(insets: Rect)
     }
 
     interface OnSizeChangedListener {
-        void onSizeChanged(View view, int w, int h, int oldw, int oldh);
+        fun onSizeChanged(view: View, w: Int, h: Int, oldw: Int, oldh: Int)
     }
 
     interface TouchInterceptor {
 
-        boolean dispatchTouchEvent(View view, MotionEvent event);
+        fun dispatchTouchEvent(view: View, event: MotionEvent): Boolean
 
-        boolean onInterceptTouchEvent(View view, MotionEvent event);
+        fun onInterceptTouchEvent(view: View, event: MotionEvent): Boolean
 
-        boolean onTouchEvent(View view, MotionEvent event);
+        fun onTouchEvent(view: View, event: MotionEvent): Boolean
 
     }
 }

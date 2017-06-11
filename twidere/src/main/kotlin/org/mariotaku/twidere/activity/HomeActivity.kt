@@ -210,7 +210,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         val refreshOnStart = preferences.getBoolean(SharedPreferenceConstants.KEY_REFRESH_ON_START, false)
         var tabDisplayOptionInt = Utils.getTabDisplayOptionInt(this)
 
-        homeContent.setOnFitSystemWindowsListener(this)
+        homeContent.onFitSystemWindowsListener = this
         mainPager.adapter = pagerAdapter
         mainTabs.setViewPager(mainPager)
         mainTabs.setOnPageChangeListener(this)

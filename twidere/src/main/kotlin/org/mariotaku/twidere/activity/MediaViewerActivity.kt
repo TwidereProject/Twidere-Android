@@ -70,6 +70,7 @@ import org.mariotaku.twidere.util.PermissionUtils
 import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.support.WindowSupport
+import org.mariotaku.twidere.view.TintedStatusFrameLayout
 import org.mariotaku.twidere.view.viewer.MediaSwipeCloseContainer
 import java.io.File
 import javax.inject.Inject
@@ -154,10 +155,12 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         swipeContainer.backgroundAlpha = 1f
         WindowSupport.setStatusBarColor(window, Color.TRANSPARENT)
         activityLayout.setStatusBarColor(overrideTheme.colorToolbar)
-        activityLayout.setWindowInsetsListener { l, t, r, b ->
-            val statusBarHeight = t - ThemeUtils.getActionBarHeight(this)
-            activityLayout.setStatusBarHeight(statusBarHeight)
-            onFitSystemWindows(Rect(l, t, r, b))
+        activityLayout.windowInsetsListener = object : TintedStatusFrameLayout.WindowInsetsListener {
+            override fun onApplyWindowInsets(left: Int, top: Int, right: Int, bottom: Int) {
+                val statusBarHeight = top - ThemeUtils.getActionBarHeight(this@MediaViewerActivity)
+                activityLayout.setStatusBarHeight(statusBarHeight)
+                onFitSystemWindows(Rect(left, top, right, bottom))
+            }
         }
     }
 

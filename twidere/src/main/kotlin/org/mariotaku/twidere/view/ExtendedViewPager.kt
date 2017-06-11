@@ -17,43 +17,34 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.view;
+package org.mariotaku.twidere.view
 
-import android.content.Context;
-import android.support.v4.view.ViewPager;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
+import android.content.Context
+import android.support.v4.view.ViewPager
+import android.util.AttributeSet
+import android.view.MotionEvent
 
-public class ExtendedViewPager extends ViewPager {
+open class ExtendedViewPager(context: Context, attrs: AttributeSet? = null) : ViewPager(context, attrs) {
 
-    public ExtendedViewPager(final Context context) {
-        this(context, null);
-    }
-
-    public ExtendedViewPager(final Context context, final AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-
-    @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-        if (!isEnabled()) return false;
+    override fun onTouchEvent(ev: MotionEvent): Boolean {
+        if (!isEnabled) return false
         try {
-            return super.onTouchEvent(ev);
-        } catch (IllegalArgumentException ex) {
+            return super.onTouchEvent(ev)
+        } catch (ex: IllegalArgumentException) {
             // Ignore
         }
-        return false;
+
+        return false
     }
 
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (!isEnabled()) return false;
+    override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
+        if (!isEnabled) return false
         try {
-            return super.onInterceptTouchEvent(ev);
-        } catch (IllegalArgumentException ex) {
+            return super.onInterceptTouchEvent(ev)
+        } catch (ex: IllegalArgumentException) {
             // Ignore
         }
-        return false;
+
+        return false
     }
 }

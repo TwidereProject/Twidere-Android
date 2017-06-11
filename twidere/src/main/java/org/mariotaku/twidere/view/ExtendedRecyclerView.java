@@ -36,10 +36,10 @@ import org.mariotaku.twidere.util.MouseScrollDirectionDecider;
  */
 public class ExtendedRecyclerView extends RecyclerView {
 
-    private final MouseScrollDirectionDecider mMouseScrollDirectionDecider;
+    private final MouseScrollDirectionDecider mouseScrollDirectionDecider;
     // This value is used when handling generic motion events.
-    private float mScrollFactor = Float.MIN_VALUE;
-    private ContextMenuInfo mContextMenuInfo;
+    private float scrollFactor = Float.MIN_VALUE;
+    private ContextMenuInfo contextMenuInfo;
 
     public ExtendedRecyclerView(Context context) {
         this(context, null);
@@ -51,18 +51,18 @@ public class ExtendedRecyclerView extends RecyclerView {
 
     public ExtendedRecyclerView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        mMouseScrollDirectionDecider = new MouseScrollDirectionDecider(getScrollFactorBackport());
+        mouseScrollDirectionDecider = new MouseScrollDirectionDecider(getScrollFactorBackport());
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        mMouseScrollDirectionDecider.attach(this);
+        mouseScrollDirectionDecider.attach(this);
     }
 
     @Override
     protected void onDetachedFromWindow() {
-        mMouseScrollDirectionDecider.detach();
+        mouseScrollDirectionDecider.detach();
         super.onDetachedFromWindow();
     }
 
@@ -77,24 +77,24 @@ public class ExtendedRecyclerView extends RecyclerView {
                 final float vScroll, hScroll;
                 if (lm.canScrollVertically()) {
                     vScroll = event.getAxisValue(MotionEvent.AXIS_VSCROLL);
-                    if (!mMouseScrollDirectionDecider.isVerticalAvailable()) {
-                        mMouseScrollDirectionDecider.guessDirection(event);
+                    if (!mouseScrollDirectionDecider.isVerticalAvailable()) {
+                        mouseScrollDirectionDecider.guessDirection(event);
                     }
                 } else {
                     vScroll = 0f;
                 }
                 if (lm.canScrollHorizontally()) {
                     hScroll = event.getAxisValue(MotionEvent.AXIS_HSCROLL);
-                    if (!mMouseScrollDirectionDecider.isHorizontalAvailable()) {
-                        mMouseScrollDirectionDecider.guessDirection(event);
+                    if (!mouseScrollDirectionDecider.isHorizontalAvailable()) {
+                        mouseScrollDirectionDecider.guessDirection(event);
                     }
                 } else {
                     hScroll = 0f;
                 }
                 if (vScroll != 0 || hScroll != 0) {
                     final float scrollFactor = getScrollFactorBackport();
-                    float horizontalDirection = mMouseScrollDirectionDecider.getHorizontalDirection();
-                    float verticalDirection = mMouseScrollDirectionDecider.getVerticalDirection();
+                    float horizontalDirection = mouseScrollDirectionDecider.getHorizontalDirection();
+                    float verticalDirection = mouseScrollDirectionDecider.getVerticalDirection();
                     final float hFactor = scrollFactor * (horizontalDirection != 0 ? horizontalDirection : -1);
                     final float vFactor = scrollFactor * (verticalDirection != 0 ? verticalDirection : -1);
                     scrollBy((int) (hScroll * hFactor), (int) (vScroll * vFactor));
@@ -142,7 +142,7 @@ public class ExtendedRecyclerView extends RecyclerView {
 
     @Override
     protected ContextMenu.ContextMenuInfo getContextMenuInfo() {
-        return mContextMenuInfo;
+        return contextMenuInfo;
     }
 
     @Override
@@ -152,7 +152,7 @@ public class ExtendedRecyclerView extends RecyclerView {
         }
         final int position = getChildLayoutPosition(originalView);
         if (position == RecyclerView.NO_POSITION) return false;
-        mContextMenuInfo = new ContextMenuInfo(getId(), position);
+        contextMenuInfo = new ContextMenuInfo(getId(), position);
         return super.showContextMenuForChild(originalView);
     }
 
@@ -160,18 +160,18 @@ public class ExtendedRecyclerView extends RecyclerView {
      * Ported from View.getVerticalScrollFactor.
      */
     private float getScrollFactorBackport() {
-        if (mScrollFactor == Float.MIN_VALUE) {
+        if (scrollFactor == Float.MIN_VALUE) {
             TypedValue outValue = new TypedValue();
             if (getContext().getTheme().resolveAttribute(
                     android.R.attr.listPreferredItemHeight, outValue, true)) {
-                mScrollFactor = outValue.getDimension(
+                scrollFactor = outValue.getDimension(
                         getContext().getResources().getDisplayMetrics());
             } else {
                 return 0; //listPreferredItemHeight is not defined, no generic scrolling
             }
 
         }
-        return mScrollFactor;
+        return scrollFactor;
     }
 
     public static class ContextMenuInfo implements ContextMenu.ContextMenuInfo {

@@ -190,7 +190,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
         recyclerView.setHasFixedSize(true)
         val swipeLayout = swipeLayout
         if (swipeLayout is ExtendedSwipeRefreshLayout) {
-            swipeLayout.setTouchInterceptor(object : IExtendedView.TouchInterceptor {
+            swipeLayout.touchInterceptor = object : IExtendedView.TouchInterceptor {
                 override fun dispatchTouchEvent(view: View, event: MotionEvent): Boolean {
                     scrollListener.touchListener.onTouch(view, event)
                     return false
@@ -207,7 +207,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
                     return false
                 }
 
-            })
+            }
         } else {
             recyclerView.setOnTouchListener(scrollListener.touchListener)
         }

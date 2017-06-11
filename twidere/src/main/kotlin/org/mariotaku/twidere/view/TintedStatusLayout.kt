@@ -1,7 +1,7 @@
 /*
- * Twidere - Twitter client for Android
+ *             Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,14 +17,16 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.view.iface;
+package org.mariotaku.twidere.view
+
+import org.mariotaku.twidere.view.iface.IExtendedView
 
 /**
  * Created by mariotaku on 15/4/27.
  */
-public interface TintedStatusLayout extends IExtendedView {
-    void setStatusBarColor(int color);
+interface TintedStatusLayout : IExtendedView {
+    fun setStatusBarColor(color: Int)
 
-    void setSetPaddingEnabled(boolean enabled);
+    var setPaddingEnabled: Boolean
 
 }

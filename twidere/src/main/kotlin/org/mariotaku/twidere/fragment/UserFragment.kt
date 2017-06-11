@@ -145,6 +145,7 @@ import org.mariotaku.twidere.util.support.ViewSupport
 import org.mariotaku.twidere.util.support.WindowSupport
 import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback
 import org.mariotaku.twidere.view.TabPagerIndicator
+import org.mariotaku.twidere.view.TintedStatusFrameLayout
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener
 import java.lang.ref.WeakReference
 import java.util.*
@@ -673,22 +674,28 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         })
 
 
-        userFragmentView.setWindowInsetsListener { _, top, _, _ ->
-            profileContentContainer.setPadding(0, top, 0, 0)
-            profileBannerSpace.statusBarHeight = top
+        userFragmentView.windowInsetsListener = object : TintedStatusFrameLayout.WindowInsetsListener {
+            override fun onApplyWindowInsets(left: Int, top: Int, right: Int, bottom: Int) {
+                profileContentContainer.setPadding(0, top, 0, 0)
+                profileBannerSpace.statusBarHeight = top
 
-            if (profileBannerSpace.toolbarHeight == 0) {
-                var toolbarHeight = toolbar.measuredHeight
-                if (toolbarHeight == 0) {
-                    toolbarHeight = ThemeUtils.getActionBarHeight(context)
+                if (profileBannerSpace.toolbarHeight == 0) {
+                    var toolbarHeight = toolbar.measuredHeight
+                    if (toolbarHeight == 0) {
+                        toolbarHeight = ThemeUtils.getActionBarHeight(context)
+                    }
+                    profileBannerSpace.toolbarHeight = toolbarHeight
                 }
-                profileBannerSpace.toolbarHeight = toolbarHeight
             }
         }
-        profileContentContainer.setOnSizeChangedListener { _, _, _, _, _ ->
-            val toolbarHeight = toolbar.measuredHeight
-            userProfileDrawer.setPadding(0, toolbarHeight, 0, 0)
-            profileBannerSpace.toolbarHeight = toolbarHeight
+
+        profileContentContainer.onSizeChangedListener = object : OnSizeChangedListener {
+            override fun onSizeChanged(view: View, w: Int, h: Int, oldw: Int, oldh: Int) {
+                val toolbarHeight = toolbar.measuredHeight
+                userProfileDrawer.setPadding(0, toolbarHeight, 0, 0)
+                profileBannerSpace.toolbarHeight = toolbarHeight
+            }
+
         }
 
         userProfileDrawer.setDrawerCallback(this)
@@ -710,7 +717,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         friendsContainer.setOnClickListener(this)
         errorIcon.setOnClickListener(this)
         urlContainer.setOnClickListener(this)
-        profileBanner.setOnSizeChangedListener(this)
+        profileBanner.onSizeChangedListener = this
         profileBannerSpace.setOnTouchListener(this)
 
         userProfileSwipeLayout.setOnRefreshListener {

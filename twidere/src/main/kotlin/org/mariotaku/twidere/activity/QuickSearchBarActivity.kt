@@ -113,7 +113,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
                 accountSpinner.setSelection(index)
             }
         }
-        mainContent.setOnFitSystemWindowsListener(this)
+        mainContent.onFitSystemWindowsListener = this
         suggestionsList.adapter = SuggestionsAdapter(this)
         suggestionsList.onItemClickListener = this
 
