@@ -241,7 +241,11 @@ public class ObjectCursorLoader<T> extends FixedAsyncTaskLoader<List<T>> {
         writer.println(mSortOrder);
         writer.print(prefix);
         writer.print("mObjects=");
-        writer.println(mObjects.getCursor());
+        if (mObjects != null) {
+            writer.println(mObjects.getCursor());
+        } else {
+            writer.println("null");
+        }
         writer.print(prefix);
         writer.print("mContentChanged=");
         writer.println(LoaderAccessor.isContentChanged(this));
