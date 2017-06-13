@@ -136,7 +136,11 @@ public class InternalTwitterContentUtils {
 
     @NonNull
     public static Pair<String, SpanItem[]> formatDirectMessageText(@NonNull final DMResponse.Entry.Message.Data message) {
-        final HtmlBuilder builder = new HtmlBuilder(message.getText(), false, true, false);
+        String text = message.getText();
+        if (text == null) {
+            text = "";
+        }
+        final HtmlBuilder builder = new HtmlBuilder(text, false, true, false);
         StatusExtensionsKt.addEntities(builder, message);
         return builder.buildWithIndices();
     }

@@ -460,7 +460,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
     private fun showLoginTypeChooser() {
         executeAfterFragmentResumed {
             val fm = it.supportFragmentManager
-            val df = LoginTypeChooserDialogFragment()
+            val df = SignInTypeChooserDialogFragment()
             df.show(fm, "login_type_chooser")
         }
     }
@@ -557,7 +557,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         finish()
     }
 
-    class LoginTypeChooserDialogFragment : BaseDialogFragment(),
+    class SignInTypeChooserDialogFragment : BaseDialogFragment(),
             LoaderManager.LoaderCallbacks<List<CustomAPIConfig>> {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val builder = AlertDialog.Builder(context)
