@@ -137,7 +137,10 @@ dependencies {
     androidTestCompile 'com.android.support.test:rules:0.5'
 
     compile 'com.android.support:multidex:1.0.1'
-    compile "com.android.support:support-v4:${libVersions['SupportLib']}"
+    compile "com.android.support:support-annotations:${libVersions['SupportLib']}"
+    compile "com.android.support:support-compat:${libVersions['SupportLib']}"
+    compile "com.android.support:support-core-utils:${libVersions['SupportLib']}"
+    compile "com.android.support:support-core-ui:${libVersions['SupportLib']}"
     compile "com.android.support:support-v13:${libVersions['SupportLib']}"
     compile "com.android.support:appcompat-v7:${libVersions['SupportLib']}"
     compile "com.android.support:cardview-v7:${libVersions['SupportLib']}"

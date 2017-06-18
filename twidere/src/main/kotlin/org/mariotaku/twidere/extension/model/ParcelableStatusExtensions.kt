@@ -71,8 +71,8 @@ inline val ParcelableStatus.is_my_retweet: Boolean
 inline val ParcelableStatus.can_retweet: Boolean
     get() {
         if (user_key.host == USER_TYPE_FANFOU_COM) return true
-        if (user_is_protected) return false
-        return when (extras?.visibility) {
+        val visibility = extras?.visibility ?: return !user_is_protected
+        return when (visibility) {
             StatusVisibility.PRIVATE -> false
             StatusVisibility.DIRECT -> false
             else -> true
