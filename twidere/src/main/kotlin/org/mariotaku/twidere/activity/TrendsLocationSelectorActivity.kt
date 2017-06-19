@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
 import android.widget.ExpandableListView
 import android.widget.TextView
+import kotlinx.android.synthetic.main.dialog_expandable_list.*
 import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.alwaysUi
@@ -30,6 +31,7 @@ import org.mariotaku.microblog.library.twitter.model.Location
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.model.UserKey
@@ -96,10 +98,9 @@ class TrendsLocationSelectorActivity : BaseActivity() {
             selectorBuilder.setView(R.layout.dialog_expandable_list)
             selectorBuilder.setNegativeButton(android.R.string.cancel, null)
             val dialog = selectorBuilder.create()
-            dialog.setOnShowListener {
-                it as AlertDialog
-                it.applyTheme()
-                val listView = it.findViewById(R.id.expandableList) as ExpandableListView
+            dialog.onShow { dialog ->
+                dialog.applyTheme()
+                val listView = dialog.expandableList
                 val adapter = ExpandableTrendLocationsListAdapter(context)
                 adapter.data = list
                 listView.setAdapter(adapter)

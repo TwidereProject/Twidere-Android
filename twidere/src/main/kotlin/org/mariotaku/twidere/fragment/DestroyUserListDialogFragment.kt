@@ -26,6 +26,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v7.app.AlertDialog
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER_LIST
+import org.mariotaku.twidere.extension.applyOnShow
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.model.ParcelableUserList
 
@@ -52,10 +53,7 @@ class DestroyUserListDialogFragment : BaseDialogFragment(), DialogInterface.OnCl
         builder.setPositiveButton(android.R.string.ok, this)
         builder.setNegativeButton(android.R.string.cancel, null)
         val dialog = builder.create()
-        dialog.setOnShowListener {
-            it as AlertDialog
-            it.applyTheme()
-        }
+        dialog.applyOnShow { applyTheme() }
         return dialog
     }
 

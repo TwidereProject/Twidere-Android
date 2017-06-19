@@ -42,6 +42,7 @@ import org.mariotaku.twidere.activity.UserListSelectorActivity
 import org.mariotaku.twidere.activity.UserSelectorActivity
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
+import org.mariotaku.twidere.extension.applyOnShow
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.fragment.BaseDialogFragment
@@ -234,10 +235,7 @@ class CreateQuickAccessShortcutActivity : BaseActivity() {
                 (activity as CreateQuickAccessShortcutActivity).onItemSelected(which)
             }
             return builder.create().apply {
-                setOnShowListener { it ->
-                    it as AlertDialog
-                    it.applyTheme()
-                }
+                applyOnShow { applyTheme() }
             }
         }
 

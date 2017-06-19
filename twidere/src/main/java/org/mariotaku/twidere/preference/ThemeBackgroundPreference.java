@@ -23,7 +23,7 @@ import android.widget.SeekBar;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.extension.AlertDialogExtensionsKt;
+import org.mariotaku.twidere.extension.DialogExtensionsKt;
 import org.mariotaku.twidere.preference.iface.IDialogPreference;
 
 /**
@@ -174,7 +174,7 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
                 @Override
                 public void onShow(DialogInterface dialog) {
                     final AlertDialog alertDialog = (AlertDialog) dialog;
-                    AlertDialogExtensionsKt.applyTheme(alertDialog);
+                    DialogExtensionsKt.applyTheme(alertDialog);
                     if (preferences != null) {
                         final LayoutInflater inflater = alertDialog.getLayoutInflater();
                         final ListView listView = alertDialog.getListView();

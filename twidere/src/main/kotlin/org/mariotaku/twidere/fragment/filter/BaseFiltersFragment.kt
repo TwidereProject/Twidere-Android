@@ -40,9 +40,13 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.TextUtils
 import android.view.*
-import android.widget.*
+import android.widget.AbsListView
 import android.widget.AbsListView.MultiChoiceModeListener
+import android.widget.ListView
+import android.widget.TextView
+import android.widget.Toast
 import com.bumptech.glide.Glide
+import kotlinx.android.synthetic.main.dialog_auto_complete_textview.*
 import kotlinx.android.synthetic.main.fragment_content_listview.*
 import org.mariotaku.ktextension.setGroupAvailability
 import org.mariotaku.library.objectcursor.ObjectCursor
@@ -288,10 +292,9 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
             builder.setPositiveButton(android.R.string.ok, this)
             builder.setNegativeButton(android.R.string.cancel, this)
             val dialog = builder.create()
-            dialog.setOnShowListener {
-                val alertDialog = it as AlertDialog
+            dialog.onShow {
                 it.applyTheme()
-                val editText = (alertDialog.findViewById(R.id.edit_text) as AutoCompleteTextView?)!!
+                val editText = it.editText
                 if (savedInstanceState == null) {
                     editText.setText(arguments.getString(EXTRA_VALUE))
                 }
@@ -316,8 +319,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
         private val text: String
             get() {
                 val alertDialog = dialog as AlertDialog
-                val editText = (alertDialog.findViewById(R.id.edit_text) as AutoCompleteTextView?)!!
-                return ParseUtils.parseString(editText.text)
+                return ParseUtils.parseString(alertDialog.editText.text)
             }
 
     }

@@ -285,8 +285,8 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
             builder.setView(R.layout.dialog_add_filters_subscription)
             builder.setPositiveButton(R.string.action_add_filters_subscription) { dialog, _ ->
                 dialog as AlertDialog
-                val editName = dialog.findViewById(R.id.name) as MaterialEditText
-                val editUrl = dialog.findViewById(R.id.url) as MaterialEditText
+                val editName = dialog.findViewById<MaterialEditText>(R.id.name)!!
+                val editUrl = dialog.findViewById<MaterialEditText>(R.id.url)!!
                 val subscription = FiltersSubscription()
                 subscription.name = editName.text.toString()
                 subscription.setupUrl(editUrl.text.toString())
@@ -297,11 +297,10 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
             }
             builder.setNegativeButton(android.R.string.cancel, null)
             val dialog = builder.create()
-            dialog.setOnShowListener {
-                it as AlertDialog
+            dialog.onShow {
                 it.applyTheme()
-                val editName = it.findViewById(R.id.name) as MaterialEditText
-                val editUrl = it.findViewById(R.id.url) as MaterialEditText
+                val editName = it.findViewById<MaterialEditText>(R.id.name)!!
+                val editUrl = it.findViewById<MaterialEditText>(R.id.url)!!
                 val positiveButton = it.getButton(DialogInterface.BUTTON_POSITIVE)
 
                 fun updateEnableState() {

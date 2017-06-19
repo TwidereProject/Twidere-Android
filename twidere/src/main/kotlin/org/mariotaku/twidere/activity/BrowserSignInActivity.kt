@@ -36,6 +36,7 @@ import org.attoparser.ParseException
 import org.mariotaku.ktextension.dismissDialogFragment
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator
 import org.mariotaku.twidere.util.webkit.DefaultWebViewClient
@@ -261,8 +262,7 @@ class BrowserSignInActivity : BaseActivity() {
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val dialog = super.onCreateDialog(savedInstanceState)
-            dialog.setOnShowListener {
-                it as Dialog
+            dialog.onShow {
                 it.window.attributes = it.window.attributes?.apply {
                     width = WindowManager.LayoutParams.MATCH_PARENT
                 }
@@ -270,7 +270,7 @@ class BrowserSignInActivity : BaseActivity() {
                 val msg = this.msg
                 val transport = msg?.obj as? WebView.WebViewTransport ?: run {
                     dismiss()
-                    return@setOnShowListener
+                    return@onShow
                 }
                 transport.webView = it.findViewById<WebView>(R.id.webView)
                 msg.sendToTarget()

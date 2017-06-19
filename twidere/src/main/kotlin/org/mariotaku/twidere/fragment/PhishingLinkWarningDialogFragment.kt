@@ -29,6 +29,7 @@ import android.support.v7.app.AlertDialog
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_URI
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.onShow
 
 class PhishingLinkWarningDialogFragment : BaseDialogFragment(), OnClickListener {
 
@@ -52,10 +53,7 @@ class PhishingLinkWarningDialogFragment : BaseDialogFragment(), OnClickListener 
         builder.setPositiveButton(android.R.string.ok, this)
         builder.setNegativeButton(android.R.string.cancel, null)
         val dialog = builder.create()
-        dialog.setOnShowListener {
-            it as AlertDialog
-            it.applyTheme()
-        }
+        dialog.onShow { it.applyTheme() }
         return dialog
     }
 

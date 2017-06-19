@@ -42,7 +42,7 @@ import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.Language;
 import org.mariotaku.microblog.library.twitter.model.ResponseList;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.extension.AlertDialogExtensionsKt;
+import org.mariotaku.twidere.extension.DialogExtensionsKt;
 import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 
 import java.text.Collator;
@@ -194,7 +194,7 @@ public class TranslationDestinationPreference extends Preference implements OnCl
                 @Override
                 public void onShow(final DialogInterface dialog) {
                     final AlertDialog alertDialog = (AlertDialog) dialog;
-                    AlertDialogExtensionsKt.applyTheme(alertDialog);
+                    DialogExtensionsKt.applyTheme(alertDialog);
                     final ListView lv = alertDialog.getListView();
                     if (lv != null) {
                         lv.setFastScrollEnabled(true);

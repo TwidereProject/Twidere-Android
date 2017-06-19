@@ -34,7 +34,7 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.util.AttributeSet;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.extension.AlertDialogExtensionsKt;
+import org.mariotaku.twidere.extension.DialogExtensionsKt;
 import org.mariotaku.twidere.preference.iface.IDialogPreference;
 
 abstract class MultiSelectListPreference extends DialogPreference implements IDialogPreference {
@@ -103,7 +103,7 @@ abstract class MultiSelectListPreference extends DialogPreference implements IDi
             dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                 @Override
                 public void onShow(final DialogInterface dialog) {
-                    AlertDialogExtensionsKt.applyTheme((AlertDialog) dialog);
+                    DialogExtensionsKt.applyTheme((AlertDialog) dialog);
                 }
             });
             return dialog;

@@ -22,24 +22,31 @@ package org.mariotaku.twidere.fragment
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
-import android.content.DialogInterface.OnClickListener
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.text.Editable
-import android.text.TextUtils.isEmpty
 import android.text.TextWatcher
 import android.view.*
-import android.widget.*
 import android.widget.AbsListView.MultiChoiceModeListener
+import android.widget.AdapterView
+import android.widget.CompoundButton
 import android.widget.CompoundButton.OnCheckedChangeListener
+import android.widget.ListView
+import android.widget.TextView
+import kotlinx.android.synthetic.main.dialog_add_host_mapping.*
+import kotlinx.android.synthetic.main.dialog_user_list_detail_editor.*
 import kotlinx.android.synthetic.main.fragment_content_listview.*
+import org.mariotaku.ktextension.empty
+import org.mariotaku.ktextension.string
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.HOST_MAPPING_PREFERENCES_NAME
 import org.mariotaku.twidere.adapter.ArrayAdapter
+import org.mariotaku.twidere.extension.applyOnShow
 import org.mariotaku.twidere.extension.applyTheme
-import org.mariotaku.twidere.util.ParseUtils
+import org.mariotaku.twidere.extension.positive
+import org.mariotaku.twidere.util.net.TwidereDns
 
 class HostMappingsListFragment : AbsContentListViewFragment<HostMappingsListFragment.HostMappingAdapter>(),
         AdapterView.OnItemClickListener, MultiChoiceModeListener, OnSharedPreferenceChangeListener {
@@ -73,14 +80,14 @@ class HostMappingsListFragment : AbsContentListViewFragment<HostMappingsListFrag
     override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.delete -> {
-                val editor = hostMapping.edit()
-                val array = listView!!.checkedItemPositions ?: return false
-                for (i in 0 until array.size()) {
-                    if (array.valueAt(i)) {
-                        editor.remove(adapter.getItem(i).first)
+                val array = listView.checkedItemPositions ?: return false
+                (dns as? TwidereDns)?.beginMappingTransaction {
+                    (0 until array.size()).filter {
+                        array.valueAt(it)
+                    }.forEach {
+                        remove(adapter.getItem(it).first)
                     }
                 }
-                editor.apply()
                 reloadHostMappings()
             }
             else -> {
@@ -145,16 +152,12 @@ class HostMappingsListFragment : AbsContentListViewFragment<HostMappingsListFrag
 
     private fun updateTitle(mode: ActionMode?) {
         if (listView == null || mode == null || activity == null) return
-        val count = listView!!.checkedItemCount
+        val count = listView.checkedItemCount
         mode.title = resources.getQuantityString(R.plurals.Nitems_selected, count, count)
     }
 
-    class AddMappingDialogFragment : BaseDialogFragment(), OnClickListener, TextWatcher, OnCheckedChangeListener {
+    class AddMappingDialogFragment : BaseDialogFragment(), TextWatcher, OnCheckedChangeListener {
 
-
-        private var mEditHost: EditText? = null
-        private var mEditAddress: EditText? = null
-        private var mCheckExclude: CheckBox? = null
 
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
 
@@ -173,46 +176,26 @@ class HostMappingsListFragment : AbsContentListViewFragment<HostMappingsListFrag
             updateButton()
         }
 
-        override fun onClick(dialog: DialogInterface, which: Int) {
-            when (which) {
-                DialogInterface.BUTTON_POSITIVE -> {
-                    val host = ParseUtils.parseString(mEditHost!!.text)
-                    val address = if (mCheckExclude!!.isChecked) host else ParseUtils.parseString(mEditAddress!!.text)
-                    if (isEmpty(host) || isEmpty(address)) return
-                    val prefs = context.getSharedPreferences(HOST_MAPPING_PREFERENCES_NAME,
-                            Context.MODE_PRIVATE)
-                    val editor = prefs.edit()
-                    editor.putString(host, address)
-                    editor.apply()
-                }
-            }
-
-        }
-
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val context = activity
             val builder = AlertDialog.Builder(context)
             builder.setView(R.layout.dialog_add_host_mapping)
             builder.setTitle(R.string.add_host_mapping)
-            builder.setPositiveButton(android.R.string.ok, this)
+            builder.positive(android.R.string.ok, this::onPositiveClick)
             builder.setNegativeButton(android.R.string.cancel, null)
             val dialog = builder.create()
-            dialog.setOnShowListener {
-                it as AlertDialog
-                it.applyTheme()
-                mEditHost = it.findViewById(R.id.host) as EditText?
-                mEditAddress = it.findViewById(R.id.address) as EditText?
-                mCheckExclude = it.findViewById(R.id.exclude) as CheckBox?
-                mEditHost!!.addTextChangedListener(this@AddMappingDialogFragment)
-                mEditAddress!!.addTextChangedListener(this@AddMappingDialogFragment)
-                mCheckExclude!!.setOnCheckedChangeListener(this@AddMappingDialogFragment)
+            dialog.applyOnShow {
+                applyTheme()
+                editHost.addTextChangedListener(this@AddMappingDialogFragment)
+                editAddress.addTextChangedListener(this@AddMappingDialogFragment)
+                isExcluded.setOnCheckedChangeListener(this@AddMappingDialogFragment)
                 val args = arguments
                 if (args != null) {
-                    mEditHost!!.isEnabled = !args.getBoolean(EXTRA_EDIT_MODE, false)
+                    editHost.isEnabled = !args.getBoolean(EXTRA_EDIT_MODE, false)
                     if (savedInstanceState == null) {
-                        mEditHost!!.setText(args.getCharSequence(EXTRA_HOST))
-                        mEditAddress!!.setText(args.getCharSequence(EXTRA_ADDRESS))
-                        mCheckExclude!!.isChecked = args.getBoolean(EXTRA_EXCLUDED)
+                        editHost.setText(args.getCharSequence(EXTRA_HOST))
+                        editAddress.setText(args.getCharSequence(EXTRA_ADDRESS))
+                        isExcluded.isChecked = args.getBoolean(EXTRA_EXCLUDED)
                     }
                 }
                 updateButton()
@@ -220,21 +203,34 @@ class HostMappingsListFragment : AbsContentListViewFragment<HostMappingsListFrag
             return dialog
         }
 
+        private fun onPositiveClick(dialog: Dialog) {
+            val host = dialog.editHost.string.takeUnless(String?::isNullOrEmpty) ?: return
+            val address = (if (dialog.isExcluded.isChecked) {
+                host
+            } else {
+                dialog.editAddress.string
+            }).takeUnless(String?::isNullOrEmpty) ?: return
+            (dns as? TwidereDns)?.putMapping(host, address)
+        }
+
         override fun onSaveInstanceState(outState: Bundle) {
-            outState.putCharSequence(EXTRA_HOST, mEditHost!!.text)
-            outState.putCharSequence(EXTRA_ADDRESS, mEditAddress!!.text)
-            outState.putCharSequence(EXTRA_EXCLUDED, mEditAddress!!.text)
+            (dialog as? AlertDialog)?.let {
+                outState.putCharSequence(EXTRA_HOST, it.editHost.text)
+                outState.putCharSequence(EXTRA_ADDRESS, it.editAddress.text)
+                outState.putCharSequence(EXTRA_EXCLUDED, it.isPublic.text)
+            }
             super.onSaveInstanceState(outState)
         }
 
         private fun updateAddressField() {
-            mEditAddress!!.visibility = if (mCheckExclude!!.isChecked) View.GONE else View.VISIBLE
+            val dialog = dialog as AlertDialog
+            dialog.editAddress.visibility = if (dialog.isExcluded.isChecked) View.GONE else View.VISIBLE
         }
 
         private fun updateButton() {
             val dialog = dialog as AlertDialog
-            val hostValid = !isEmpty(mEditHost!!.text)
-            val addressValid = !isEmpty(mEditAddress!!.text) || mCheckExclude!!.isChecked
+            val hostValid = !dialog.editHost.empty
+            val addressValid = !dialog.editAddress.empty || dialog.isExcluded.isChecked
             val positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
             positiveButton.isEnabled = hostValid && addressValid
         }

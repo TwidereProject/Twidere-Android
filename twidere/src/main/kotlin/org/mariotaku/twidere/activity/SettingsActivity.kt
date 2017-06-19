@@ -47,6 +47,7 @@ import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.ACTION_NAVIGATION_BACK
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.CONTEXT_TAG_NAVIGATION
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.util.DeviceUtils
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
@@ -396,10 +397,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
             }
             builder.setPositiveButton(android.R.string.ok, this)
             val dialog = builder.create()
-            dialog.setOnShowListener {
-                it as AlertDialog
-                it.applyTheme()
-            }
+            dialog.onShow { it.applyTheme() }
             return dialog
         }
 

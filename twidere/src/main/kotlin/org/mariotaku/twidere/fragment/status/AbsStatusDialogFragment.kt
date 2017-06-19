@@ -43,6 +43,7 @@ import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -78,14 +79,13 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
         adapter.showAccountsColor = true
 
         val dialog = builder.create()
-        dialog.setOnShowListener { dialog ->
-            dialog as AlertDialog
+        dialog.onShow { dialog ->
             dialog.applyTheme()
 
             val am = AccountManager.get(context)
             val details = AccountUtils.getAccountDetails(am, accountKey, true) ?: run {
                 dismiss()
-                return@setOnShowListener
+                return@onShow
             }
             val weakThis = WeakReference(this)
             val weakHolder = WeakReference(StatusViewHolder(adapter = adapter, itemView = dialog.itemContent).apply {

@@ -80,6 +80,16 @@ class TwidereDns(context: Context, private val preferences: SharedPreferences) :
         useResolver = preferences.getBoolean(KEY_BUILTIN_DNS_RESOLVER, false)
     }
 
+    fun putMapping(host: String, address: String) {
+        beginMappingTransaction {
+            this[host] = address
+        }
+    }
+
+    fun beginMappingTransaction(action: MappingTransaction.() -> Unit) {
+        hostMapping.edit().apply { action(MappingTransaction(this)) }.apply()
+    }
+
     @Throws(IOException::class, SecurityException::class)
     private fun resolveInternal(originalHost: String, host: String, depth: Int,
             useResolver: Boolean): List<InetAddress> {
@@ -130,7 +140,6 @@ class TwidereDns(context: Context, private val preferences: SharedPreferences) :
         Log.v(RESOLVER_LOGTAG, "Resolved " + addresses)
         logger.dumpToLog()
     }
-
 
     private fun addLogSplit(logger: TimingLogger, host: String, message: String, depth: Int) {
         if (BuildConfig.DEBUG) return
@@ -299,6 +308,16 @@ class TwidereDns(context: Context, private val preferences: SharedPreferences) :
                 addr = (r as AAAARecord).address
             }
             return InetAddress.getByAddress(name, addr.address)
+        }
+    }
+
+    class MappingTransaction(private val editor: SharedPreferences.Editor) {
+        operator fun set(host: String, address: String) {
+            editor.putString(host, address)
+        }
+
+        fun remove(host: String) {
+            editor.remove(host)
         }
     }
 

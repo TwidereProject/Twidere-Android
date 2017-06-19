@@ -16,6 +16,7 @@ import org.mariotaku.twidere.activity.PremiumDashboardActivity
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_POSITION
 import org.mariotaku.twidere.constant.dataSyncProviderInfoKey
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
 import org.mariotaku.twidere.fragment.sync.SyncSettingsFragment
@@ -101,10 +102,7 @@ class SyncStatusViewController : PremiumDashboardActivity.ExtraFeatureViewContro
                         arguments.getInt(EXTRA_POSITION), REQUEST_CONNECT_NETWORK_STORAGE)
             }
             val dialog = builder.create()
-            dialog.setOnShowListener {
-                it as AlertDialog
-                it.applyTheme()
-            }
+            dialog.onShow { it.applyTheme() }
             return dialog
         }
     }

@@ -74,13 +74,10 @@ import org.mariotaku.twidere.adapter.MediaPreviewAdapter
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_SCREEN_NAME
-import org.mariotaku.twidere.extension.applyTheme
-import org.mariotaku.twidere.extension.getCachedLocation
-import org.mariotaku.twidere.extension.loadProfileImage
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.text.twitter.ReplyTextAndMentions
 import org.mariotaku.twidere.extension.text.twitter.extractReplyTextAndMentions
-import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.fragment.PermissionRequestDialog.PermissionRequestCancelCallback
 import org.mariotaku.twidere.model.*
@@ -1813,10 +1810,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             builder.setPositiveButton(R.string.send_anyway, this)
             builder.setNegativeButton(android.R.string.cancel, null)
             val dialog = builder.create()
-            dialog.setOnShowListener {
-                it as AlertDialog
-                it.applyTheme()
-            }
+            dialog.applyOnShow { applyTheme() }
             return dialog
         }
     }
@@ -1852,10 +1846,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             builder.setNeutralButton(R.string.action_compose_message_convert_to_status, this)
             builder.setNegativeButton(android.R.string.cancel, null)
             val dialog = builder.create()
-            dialog.setOnShowListener {
-                it as AlertDialog
-                it.applyTheme()
-            }
+            dialog.applyOnShow { applyTheme() }
             return dialog
         }
     }

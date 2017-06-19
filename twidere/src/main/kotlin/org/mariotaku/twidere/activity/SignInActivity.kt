@@ -44,8 +44,13 @@ import android.view.*
 import android.view.View.OnClickListener
 import android.webkit.CookieManager
 import android.webkit.CookieSyncManager
-import android.widget.*
+import android.widget.BaseExpandableListAdapter
+import android.widget.ExpandableListView
+import android.widget.TextView
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_sign_in.*
+import kotlinx.android.synthetic.main.dialog_expandable_list.*
+import kotlinx.android.synthetic.main.dialog_login_verification_code.*
 import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.alwaysUi
@@ -73,8 +78,7 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_API_CONFIG
 import org.mariotaku.twidere.constant.apiLastChangeKey
 import org.mariotaku.twidere.constant.defaultAPIConfigKey
 import org.mariotaku.twidere.constant.randomizeAccountNameKey
-import org.mariotaku.twidere.extension.applyTheme
-import org.mariotaku.twidere.extension.getErrorMessage
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.isFanfouUser
 import org.mariotaku.twidere.extension.model.api.key
@@ -563,10 +567,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val builder = AlertDialog.Builder(context)
             builder.setView(R.layout.dialog_expandable_list)
             val dialog = builder.create()
-            dialog.setOnShowListener {
-                it as AlertDialog
-                it.applyTheme()
-                val listView = it.findViewById(R.id.expandableList) as ExpandableListView
+            dialog.onShow { dialog ->
+                dialog.applyTheme()
+                val listView = dialog.expandableList
                 val adapter = LoginTypeAdapter(context)
                 listView.setAdapter(adapter)
                 listView.setOnGroupClickListener { _, _, groupPosition, _ ->
@@ -676,48 +679,38 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         }
     }
 
-    class InputLoginVerificationDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener, DialogInterface.OnShowListener {
+    internal class InputLoginVerificationDialogFragment : BaseDialogFragment() {
 
-        private var callback: SignInTask.InputLoginVerificationCallback? = null
+        var callback: SignInTask.InputLoginVerificationCallback? = null
         var challengeType: String? = null
-
-        internal fun setCallback(callback: SignInTask.InputLoginVerificationCallback) {
-            this.callback = callback
-        }
-
-
-        override fun onCancel(dialog: DialogInterface?) {
-            callback!!.challengeResponse = null
-        }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val builder = AlertDialog.Builder(context)
             builder.setTitle(R.string.login_verification)
             builder.setView(R.layout.dialog_login_verification_code)
-            builder.setPositiveButton(android.R.string.ok, this)
-            builder.setNegativeButton(android.R.string.cancel, this)
+            builder.positive(android.R.string.ok, this::performVerification)
+            builder.negative(android.R.string.cancel, this::cancelVerification)
             val dialog = builder.create()
-            dialog.setOnShowListener(this)
+            dialog.onShow(this::onDialogShow)
             return dialog
         }
 
-        override fun onClick(dialog: DialogInterface, which: Int) {
-            when (which) {
-                DialogInterface.BUTTON_POSITIVE -> {
-                    val alertDialog = dialog as AlertDialog
-                    val editVerification = (alertDialog.findViewById(R.id.edit_verification_code) as EditText?)!!
-                    callback!!.challengeResponse = ParseUtils.parseString(editVerification.text)
-                }
-                DialogInterface.BUTTON_NEGATIVE -> {
-                    callback!!.challengeResponse = null
-                }
-            }
+        override fun onCancel(dialog: DialogInterface?) {
+            callback?.challengeResponse = null
         }
 
-        override fun onShow(dialog: DialogInterface) {
-            (dialog as AlertDialog).applyTheme()
-            val verificationHint = dialog.findViewById(R.id.verification_hint) as TextView?
-            val editVerification = dialog.findViewById(R.id.edit_verification_code) as EditText?
+        private fun performVerification(dialog: Dialog) {
+            callback?.challengeResponse = dialog.editVerificationCode.string
+        }
+
+        private fun cancelVerification(dialog: Dialog) {
+            callback?.challengeResponse = null
+        }
+
+        private fun onDialogShow(dialog: Dialog) {
+            (dialog as? AlertDialog)?.applyTheme()
+            val verificationHint = dialog.verificationHint
+            val editVerification = dialog.editVerificationCode
             if (verificationHint == null || editVerification == null) return
             when {
                 "Push".equals(challengeType, ignoreCase = true) -> {
@@ -753,31 +746,21 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val builder = AlertDialog.Builder(context)
             builder.setView(R.layout.dialog_password_sign_in)
-            builder.setPositiveButton(R.string.action_sign_in) { dialog, _ ->
-                val alertDialog = dialog as AlertDialog
-                val editUsername = alertDialog.findViewById(R.id.username) as EditText
-                val editPassword = alertDialog.findViewById(R.id.password) as EditText
-                val activity = activity as SignInActivity
-                val username = editUsername.text.toString()
-                val password = editPassword.text.toString()
-                activity.setDefaultAPI()
-                activity.performUserPassLogin(username, password)
-            }
+            builder.positive(R.string.action_sign_in, this::onPositiveButton)
             builder.setNegativeButton(android.R.string.cancel, null)
 
             val alertDialog = builder.create()
-            alertDialog.setOnShowListener {
-                (it as AlertDialog)
-                it.applyTheme()
-                val editUsername = it.findViewById(R.id.username) as EditText
-                val editPassword = it.findViewById(R.id.password) as EditText
+            alertDialog.onShow { dialog ->
+                dialog.applyTheme()
+                val editUsername = dialog.editUsername
+                val editPassword = dialog.editPassword
                 val textWatcher = object : TextWatcher {
                     override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
 
                     }
 
                     override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                        val button = it.getButton(DialogInterface.BUTTON_POSITIVE) ?: return
+                        val button = dialog.getButton(DialogInterface.BUTTON_POSITIVE) ?: return
                         button.isEnabled = editUsername.length() > 0 && editPassword.length() > 0
                     }
 
@@ -790,6 +773,14 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                 editPassword.addTextChangedListener(textWatcher)
             }
             return alertDialog
+        }
+
+        private fun onPositiveButton(dialog: Dialog) {
+            val activity = activity as SignInActivity
+            val username = dialog.editUsername.string.orEmpty()
+            val password = dialog.editPassword.string.orEmpty()
+            activity.setDefaultAPI()
+            activity.performUserPassLogin(username, password)
         }
     }
 
@@ -1069,7 +1060,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                         val sia = activity as SignInActivity
                         val df = InputLoginVerificationDialogFragment()
                         df.isCancelable = false
-                        df.setCallback(this@InputLoginVerificationCallback)
+                        df.callback = this@InputLoginVerificationCallback
                         df.challengeType = challengeType
                         df.show(sia.supportFragmentManager, "login_challenge_$challengeType")
                     }

@@ -38,6 +38,7 @@ import org.mariotaku.twidere.extension.model.getAccountKey
 import org.mariotaku.twidere.extension.model.setActivated
 import org.mariotaku.twidere.extension.model.setColor
 import org.mariotaku.twidere.extension.model.setPosition
+import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.loader.AccountDetailsLoader
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.AccountPreferences
@@ -230,10 +231,7 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
             builder.setTitle(R.string.title_account_delete_confirm)
             builder.setMessage(R.string.message_account_delete_confirm)
             val dialog = builder.create()
-            dialog.setOnShowListener {
-                it as AlertDialog
-                it.applyTheme()
-            }
+            dialog.onShow { it.applyTheme() }
             return dialog
         }
 

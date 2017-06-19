@@ -11,6 +11,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_INTENT
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.model.isAccountValid
+import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.support.removeAccountSupport
@@ -46,10 +47,7 @@ class InvalidAccountAlertActivity : FragmentActivity() {
 
             }
             val dialog = builder.create()
-            dialog.setOnShowListener {
-                it as AlertDialog
-                it.applyTheme()
-            }
+            dialog.onShow { it.applyTheme() }
             return dialog
         }
 

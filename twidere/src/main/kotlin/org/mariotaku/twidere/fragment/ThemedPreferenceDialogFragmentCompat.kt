@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.preference.PreferenceDialogFragmentCompat
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import javax.inject.Inject
 
@@ -43,7 +44,7 @@ abstract class ThemedPreferenceDialogFragmentCompat : PreferenceDialogFragmentCo
         onPrepareDialogBuilder(builder)
         // Create the dialog
         val dialog = builder.create()
-        dialog.setOnShowListener { dialog -> (dialog as AlertDialog).applyTheme() }
+        dialog.onShow { it.applyTheme() }
         if (needInputMethod()) {
             supportRequestInputMethod(dialog)
         }

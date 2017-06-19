@@ -25,6 +25,7 @@ import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_STATUS
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.ParcelableStatus
 
@@ -51,10 +52,7 @@ abstract class AbsSimpleStatusOperationDialogFragment : BaseDialogFragment(), Di
         builder.setPositiveButton(android.R.string.ok, this)
         builder.setNegativeButton(android.R.string.cancel, null)
         val dialog = builder.create()
-        dialog.setOnShowListener {
-            it as AlertDialog
-            it.applyTheme()
-        }
+        dialog.onShow { it.applyTheme() }
         return dialog
     }
 

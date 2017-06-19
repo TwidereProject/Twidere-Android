@@ -27,13 +27,13 @@
     android:padding="@dimen/element_spacing_large">
 
     <CheckBox
-        android:id="@+id/exclude"
+        android:id="@+id/isExcluded"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/exclude_this_host"/>
 
     <org.mariotaku.twidere.view.FixedEditText
-        android:id="@+id/host"
+        android:id="@+id/editHost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/host_mapping_host"
@@ -42,7 +42,7 @@
         app:backgroundTint="?colorAccent"/>
 
     <org.mariotaku.twidere.view.FixedEditText
-        android:id="@+id/address"
+        android:id="@+id/editAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"

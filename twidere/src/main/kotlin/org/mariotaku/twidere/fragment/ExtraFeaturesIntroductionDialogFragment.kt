@@ -8,13 +8,13 @@ import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AlertDialog
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
+import kotlinx.android.synthetic.main.dialog_extra_features_introduction.*
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_REQUEST_CODE
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.model.analyzer.PurchaseConfirm
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.model.analyzer.PurchaseIntroduction
@@ -49,20 +49,19 @@ class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
             }
         }
         val dialog = builder.create()
-        dialog.setOnShowListener {
-            it as AlertDialog
+        dialog.onShow {
             it.applyTheme()
-            it.findViewById(R.id.restorePurchaseHint)?.visibility = if (restorePurchaseIntent != null) {
+            it.restorePurchaseHint.visibility = if (restorePurchaseIntent != null) {
                 View.VISIBLE
             } else {
                 View.GONE
             }
             val description = ExtraFeaturesService.getIntroduction(context, feature)
-            val featureIcon = it.findViewById(R.id.featureIcon) as ImageView
-            val featureDescription = it.findViewById(R.id.featureDescription) as TextView
+            val featureIcon = it.featureIcon
+            val featureDescription = it.featureDescription
             featureIcon.setImageResource(description.icon)
             featureDescription.text = description.description
-            it.findViewById(R.id.buyFeaturesPack)?.setOnClickListener {
+            it.buyFeaturesPack.setOnClickListener {
                 startPurchase(ExtraFeaturesService.FEATURE_FEATURES_PACK)
                 dismiss()
             }

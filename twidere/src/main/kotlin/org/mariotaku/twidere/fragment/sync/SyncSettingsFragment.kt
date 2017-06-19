@@ -11,6 +11,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.SYNC_PREFERENCES_NAME
 import org.mariotaku.twidere.constant.dataSyncProviderInfoKey
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BasePreferenceFragment
 import org.mariotaku.twidere.util.TaskServiceRunner
@@ -91,10 +92,7 @@ class SyncSettingsFragment : BasePreferenceFragment() {
             }
             builder.setNegativeButton(android.R.string.cancel, null)
             val dialog = builder.create()
-            dialog.setOnShowListener {
-                it as AlertDialog
-                it.applyTheme()
-            }
+            dialog.onShow { it.applyTheme() }
             return dialog
         }
 

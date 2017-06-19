@@ -10,6 +10,7 @@ import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.onShow
 
 /**
  * Created by mariotaku on 2016/12/13.
@@ -30,10 +31,7 @@ class PermissionRequestDialog : BaseDialogFragment() {
             callback.onPermissionRequestCancelled(requestCode)
         }
         val dialog = builder.create()
-        dialog.setOnShowListener {
-            it as AlertDialog
-            it.applyTheme()
-        }
+        dialog.onShow { it.applyTheme() }
         return dialog
     }
 

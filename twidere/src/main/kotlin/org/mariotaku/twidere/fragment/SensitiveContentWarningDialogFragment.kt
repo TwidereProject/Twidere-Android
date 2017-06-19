@@ -27,6 +27,7 @@ import org.mariotaku.ktextension.getNullableTypedArray
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
@@ -60,10 +61,7 @@ class SensitiveContentWarningDialogFragment : BaseDialogFragment(), DialogInterf
         builder.setPositiveButton(android.R.string.ok, this)
         builder.setNegativeButton(android.R.string.cancel, null)
         val dialog = builder.create()
-        dialog.setOnShowListener {
-            it as AlertDialog
-            it.applyTheme()
-        }
+        dialog.onShow { it.applyTheme() }
         return dialog
     }
 

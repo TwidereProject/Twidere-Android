@@ -81,6 +81,7 @@ import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.getDirectMessageMaxParticipants
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.*
+import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.extension.view.calculateSpaceItemHeight
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BaseFragment
@@ -732,10 +733,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
                 (parentFragment as MessageConversationInfoFragment).openEditAction(action.type)
             }
             val dialog = builder.create()
-            dialog.setOnShowListener {
-                it as AlertDialog
-                it.applyTheme()
-            }
+            dialog.onShow { it.applyTheme() }
             return dialog
         }
 
@@ -753,10 +751,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
                 (parentFragment as MessageConversationInfoFragment).performSetConversationName(editName.text.toString())
             }
             val dialog = builder.create()
-            dialog.setOnShowListener {
-                it as AlertDialog
-                it.applyTheme()
-            }
+            dialog.onShow { it.applyTheme() }
             return dialog
         }
     }
@@ -771,10 +766,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             }
             builder.setNegativeButton(android.R.string.cancel, null)
             val dialog = builder.create()
-            dialog.setOnShowListener {
-                it as AlertDialog
-                it.applyTheme()
-            }
+            dialog.onShow { it.applyTheme() }
             return dialog
         }
 
@@ -789,10 +781,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             }
             builder.setNegativeButton(android.R.string.cancel, null)
             val dialog = builder.create()
-            dialog.setOnShowListener {
-                it as AlertDialog
-                it.applyTheme()
-            }
+            dialog.onShow { it.applyTheme() }
             return dialog
         }
 

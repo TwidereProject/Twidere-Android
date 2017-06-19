@@ -28,6 +28,7 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_STATUS
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.model.referencedUsers
+import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.CreateUserMuteDialogFragment
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -52,10 +53,7 @@ class MuteStatusUsersDialogFragment : BaseDialogFragment() {
             CreateUserMuteDialogFragment.show(fragmentManager, referencedUsers[which])
         }
         val dialog = builder.create()
-        dialog.setOnShowListener {
-            it as AlertDialog
-            it.applyTheme()
-        }
+        dialog.onShow { it.applyTheme() }
         return dialog
     }
 }

@@ -45,7 +45,7 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
-import org.mariotaku.twidere.extension.AlertDialogExtensionsKt;
+import org.mariotaku.twidere.extension.DialogExtensionsKt;
 import org.mariotaku.twidere.fragment.iface.ISupportDialogFragmentCallback;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
@@ -122,7 +122,7 @@ public class FileSelectorDialogFragment extends BaseDialogFragment implements Lo
             @Override
             public void onShow(final DialogInterface dialog) {
                 final AlertDialog alertDialog = (AlertDialog) dialog;
-                AlertDialogExtensionsKt.applyTheme(alertDialog);
+                DialogExtensionsKt.applyTheme(alertDialog);
                 final ListView listView = alertDialog.getListView();
                 listView.setOnItemClickListener(FileSelectorDialogFragment.this);
             }

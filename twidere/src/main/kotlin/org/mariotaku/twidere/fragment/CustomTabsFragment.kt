@@ -41,6 +41,7 @@ import android.widget.AbsListView.MultiChoiceModeListener
 import android.widget.AdapterView.OnItemClickListener
 import com.bumptech.glide.Glide
 import com.mobeta.android.dslv.SimpleDragSortCursorAdapter
+import kotlinx.android.synthetic.main.dialog_custom_tab_editor.*
 import kotlinx.android.synthetic.main.layout_draggable_list_with_empty_view.*
 import kotlinx.android.synthetic.main.list_item_section_header.view.*
 import org.mariotaku.chameleon.Chameleon
@@ -233,8 +234,8 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
 
         private val activityResultMap: SparseArray<TabConfiguration.ExtraConfiguration> = SparseArray()
 
-        override fun onShow(dialog: DialogInterface) {
-            dialog as AlertDialog
+        override fun onShow(dialogInterface: DialogInterface) {
+            val dialog = dialogInterface as AlertDialog
             dialog.applyTheme()
             @CustomTabType
             val tabType: String
@@ -262,11 +263,11 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
                 }
             }
 
-            val tabName = dialog.findViewById(R.id.tabName) as EditText
-            val iconSpinner = dialog.findViewById(R.id.tabIconSpinner) as Spinner
-            val accountSpinner = dialog.findViewById(R.id.accountSpinner) as Spinner
-            val accountContainer = dialog.findViewById(R.id.accountContainer)!!
-            val extraConfigContainer = dialog.findViewById(R.id.extraConfigContainer) as LinearLayout
+            val tabName = dialog.tabName
+            val iconSpinner = dialog.tabIconSpinner
+            val accountSpinner = dialog.accountSpinner
+            val accountContainer = dialog.accountContainer
+            val extraConfigContainer = dialog.extraConfigContainer
 
             val positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
 

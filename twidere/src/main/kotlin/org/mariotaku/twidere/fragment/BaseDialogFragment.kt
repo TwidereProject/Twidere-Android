@@ -24,6 +24,7 @@ import android.content.SharedPreferences
 import android.support.v4.app.DialogFragment
 import com.squareup.otto.Bus
 import com.twitter.Validator
+import okhttp3.Dns
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
@@ -50,6 +51,8 @@ open class BaseDialogFragment : DialogFragment() {
     lateinit var keyboardShortcutsHandler: KeyboardShortcutsHandler
     @Inject
     lateinit var bus: Bus
+    @Inject
+    lateinit var dns: Dns
     @Inject
     lateinit var extraFeaturesService: ExtraFeaturesService
     @Inject

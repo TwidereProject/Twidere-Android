@@ -26,7 +26,7 @@
     android:padding="8dp">
 
     <android.support.v7.widget.AppCompatAutoCompleteTextView
-        android:id="@+id/edit_text"
+        android:id="@+id/editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:completionThreshold="1"

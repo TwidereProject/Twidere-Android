@@ -1762,8 +1762,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
             builder.setMultiChoiceItems(entries, states, null)
             val dialog = builder.create()
-            dialog.setOnShowListener { dialog ->
-                dialog as AlertDialog
+            dialog.onShow { dialog ->
                 dialog.applyTheme()
                 dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
                     val checkedPositions = dialog.listView.checkedItemPositions

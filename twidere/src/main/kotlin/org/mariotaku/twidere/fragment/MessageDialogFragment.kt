@@ -28,6 +28,7 @@ import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_MESSAGE
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_TITLE
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.onShow
 
 /**
  * Created by mariotaku on 14-6-24.
@@ -42,10 +43,7 @@ class MessageDialogFragment : BaseDialogFragment() {
         builder.setMessage(args.getString(EXTRA_MESSAGE))
         builder.setPositiveButton(android.R.string.ok, null)
         val dialog = builder.create()
-        dialog.setOnShowListener {
-            it as AlertDialog
-            it.applyTheme()
-        }
+        dialog.onShow { it.applyTheme() }
         return dialog
     }
 

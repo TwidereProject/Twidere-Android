@@ -1,7 +1,9 @@
 package org.mariotaku.twidere.extension
 
+import android.app.Dialog
 import android.content.DialogInterface.*
 import android.content.res.ColorStateList
+import android.support.annotation.StringRes
 import android.support.v7.app.AlertDialog
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonUtils
@@ -20,4 +22,30 @@ fun AlertDialog.applyTheme(): AlertDialog {
     getButton(BUTTON_NEGATIVE)?.setTextColor(buttonColor)
     getButton(BUTTON_NEUTRAL)?.setTextColor(buttonColor)
     return this
+}
+
+fun <T : Dialog> T.applyOnShow(action: T.() -> Unit) {
+    setOnShowListener { dialog ->
+        @Suppress("UNCHECKED_CAST")
+        action(dialog as T)
+    }
+}
+
+fun AlertDialog.Builder.positive(@StringRes textId: Int, action: (dialog: AlertDialog) -> Unit) {
+    setPositiveButton(textId) { dialog, _ ->
+        action(dialog as AlertDialog)
+    }
+}
+
+fun AlertDialog.Builder.negative(@StringRes textId: Int, action: (dialog: AlertDialog) -> Unit) {
+    setNegativeButton(textId) { dialog, _ ->
+        action(dialog as AlertDialog)
+    }
+}
+
+fun <T : Dialog> T.onShow(action: (dialog: T) -> Unit) {
+    setOnShowListener { dialog ->
+        @Suppress("UNCHECKED_CAST")
+        action(dialog as T)
+    }
 }

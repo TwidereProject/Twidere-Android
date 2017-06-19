@@ -26,6 +26,7 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_STATUS
 import org.mariotaku.twidere.constant.nameFirstKey
+import org.mariotaku.twidere.extension.applyOnShow
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.model.referencedUsers
 import org.mariotaku.twidere.fragment.BaseDialogFragment
@@ -52,10 +53,7 @@ class BlockStatusUsersDialogFragment : BaseDialogFragment() {
             CreateUserBlockDialogFragment.show(fragmentManager, referencedUsers[which])
         }
         val dialog = builder.create()
-        dialog.setOnShowListener {
-            it as AlertDialog
-            it.applyTheme()
-        }
+        dialog.applyOnShow { applyTheme() }
         return dialog
     }
 }

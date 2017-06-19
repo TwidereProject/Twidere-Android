@@ -41,7 +41,7 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
-import org.mariotaku.twidere.extension.AlertDialogExtensionsKt;
+import org.mariotaku.twidere.extension.DialogExtensionsKt;
 import org.mariotaku.twidere.fragment.iface.ISupportDialogFragmentCallback;
 import org.mariotaku.twidere.util.DataImportExportUtils;
 
@@ -125,7 +125,7 @@ public final class DataExportImportTypeSelectorDialogFragment extends BaseDialog
 
     @Override
     public final void onShow(final DialogInterface dialog) {
-        AlertDialogExtensionsKt.applyTheme((AlertDialog) dialog);
+        DialogExtensionsKt.applyTheme((AlertDialog) dialog);
         updatePositiveButton(dialog);
     }
 

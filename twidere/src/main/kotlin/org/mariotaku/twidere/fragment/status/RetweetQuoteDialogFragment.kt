@@ -44,6 +44,7 @@ import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.model.can_retweet
 import org.mariotaku.twidere.extension.model.is_my_retweet
 import org.mariotaku.twidere.extension.model.textLimit
+import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.*
@@ -310,10 +311,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
             builder.setPositiveButton(R.string.send_anyway, this)
             builder.setNegativeButton(android.R.string.cancel, null)
             val dialog = builder.create()
-            dialog.setOnShowListener {
-                it as AlertDialog
-                it.applyTheme()
-            }
+            dialog.onShow { it.applyTheme() }
             return dialog
         }
 

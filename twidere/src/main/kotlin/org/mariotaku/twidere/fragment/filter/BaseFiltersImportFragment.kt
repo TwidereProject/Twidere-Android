@@ -13,9 +13,9 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.CheckBox
-import android.widget.TextView
 import android.widget.Toast
 import com.bumptech.glide.Glide
+import kotlinx.android.synthetic.main.dialog_block_mute_filter_user_confirm.*
 import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.alwaysUi
@@ -28,6 +28,7 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
@@ -248,11 +249,10 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
             builder.setPositiveButton(android.R.string.ok, this)
             builder.setNegativeButton(android.R.string.cancel, null)
             val dialog = builder.create()
-            dialog.setOnShowListener {
-                it as AlertDialog
-                it.applyTheme()
-                val confirmMessageView = dialog.findViewById(R.id.confirmMessage) as TextView
-                val filterEverywhereHelp = dialog.findViewById(R.id.filterEverywhereHelp)!!
+            dialog.onShow { dialog ->
+                dialog.applyTheme()
+                val confirmMessageView = dialog.confirmMessage
+                val filterEverywhereHelp = dialog.filterEverywhereHelp
                 filterEverywhereHelp.setOnClickListener {
                     MessageDialogFragment.show(childFragmentManager, title = getString(R.string.filter_everywhere),
                             message = getString(R.string.filter_everywhere_description), tag = "filter_everywhere_help")

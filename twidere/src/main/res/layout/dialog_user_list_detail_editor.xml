@@ -25,11 +25,11 @@
     android:padding="@dimen/element_spacing_normal">
 
     <com.rengwuxian.materialedittext.MaterialEditText
-        android:id="@+id/name"
+        android:id="@+id/editName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/is_public"
-        android:layout_toStartOf="@+id/is_public"
+        android:layout_toLeftOf="@+id/isPublic"
+        android:layout_toStartOf="@+id/isPublic"
         android:hint="@string/user_list_details_name"
         android:inputType="text"
         android:maxLength="20"
@@ -40,10 +40,10 @@
         app:met_maxCharacters="25"/>
 
     <com.rengwuxian.materialedittext.MaterialEditText
-        android:id="@+id/description"
+        android:id="@+id/editDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/name"
+        android:layout_below="@+id/editName"
         android:gravity="top"
         android:hint="@string/user_list_details_description"
         android:inputType="textMultiLine"
@@ -54,13 +54,13 @@
         app:met_maxCharacters="100"/>
 
     <CheckBox
-        android:id="@+id/is_public"
+        android:id="@+id/isPublic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/name"
+        android:layout_alignBottom="@+id/editName"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/name"
+        android:layout_alignTop="@+id/editName"
         android:checked="true"
         android:maxLines="1"
         android:text="@string/user_list_details_is_public"/>

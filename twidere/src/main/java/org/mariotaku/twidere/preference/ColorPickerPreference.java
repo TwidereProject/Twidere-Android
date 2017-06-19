@@ -38,7 +38,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.extension.AlertDialogExtensionsKt;
+import org.mariotaku.twidere.extension.DialogExtensionsKt;
 import org.mariotaku.twidere.preference.iface.IDialogPreference;
 import org.mariotaku.twidere.util.TwidereColorUtils;
 
@@ -152,7 +152,7 @@ public class ColorPickerPreference extends DialogPreference implements
         public void onShow(DialogInterface dialog) {
             final ColorPickerPreference preference = (ColorPickerPreference) getPreference();
             final AlertDialog alertDialog = (AlertDialog) dialog;
-            AlertDialogExtensionsKt.applyTheme(alertDialog);
+            DialogExtensionsKt.applyTheme(alertDialog);
             final View windowView = alertDialog.getWindow().getDecorView();
             if (windowView == null) return;
             mController = new ColorPickerDialog.Controller(getContext(), windowView);
