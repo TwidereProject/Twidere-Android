@@ -13,40 +13,40 @@
     app:ignorePadding="true">
 
     <org.mariotaku.twidere.view.IconActionView
-        android:id="@+id/activity_type"
+        android:id="@+id/activityType"
         android:layout_width="@dimen/element_size_small"
         android:layout_height="@dimen/element_size_small"
-        android:layout_alignEnd="@+id/profile_image_space"
-        android:layout_alignRight="@+id/profile_image_space"
-        android:layout_alignTop="@+id/profile_images_container"
+        android:layout_alignEnd="@+id/profileImageSpace"
+        android:layout_alignRight="@+id/profileImageSpace"
+        android:layout_alignTop="@+id/profileImagesContainer"
         android:padding="@dimen/element_spacing_small"
         android:scaleType="centerInside"
         tools:src="@drawable/ic_indicator_retweet"
         tools:tint="@color/highlight_retweet"/>
 
     <Space
-        android:id="@+id/profile_image_space"
+        android:id="@+id/profileImageSpace"
         android:layout_width="@dimen/icon_size_status_profile_image"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/activity_type"
-        android:layout_alignTop="@+id/activity_type"
-        android:layout_below="@+id/profile_images_container"
+        android:layout_alignBottom="@+id/activityType"
+        android:layout_alignTop="@+id/activityType"
+        android:layout_below="@+id/profileImagesContainer"
         tools:visibility="visible"/>
 
     <LinearLayout
-        android:id="@+id/profile_images_container"
+        android:id="@+id/profileImagesContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/title"
         android:layout_alignStart="@+id/title"
-        android:layout_toEndOf="@+id/profile_image_space"
-        android:layout_toRightOf="@+id/profile_image_space"
+        android:layout_toEndOf="@+id/profileImageSpace"
+        android:layout_toRightOf="@+id/profileImageSpace"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:visibility="visible">
 
         <org.mariotaku.twidere.view.ProfileImageView
-            android:id="@+id/activity_profile_image_0"
+            android:id="@+id/activityProfileImage0"
             style="?profileImageStyle"
             android:layout_width="@dimen/profile_image_size_activity_small"
             android:layout_height="@dimen/profile_image_size_activity_small"
@@ -55,7 +55,7 @@
             tools:src="@drawable/ic_profile_image_twidere"/>
 
         <org.mariotaku.twidere.view.ProfileImageView
-            android:id="@+id/activity_profile_image_1"
+            android:id="@+id/activityProfileImage1"
             style="?profileImageStyle"
             android:layout_width="@dimen/profile_image_size_activity_small"
             android:layout_height="@dimen/profile_image_size_activity_small"
@@ -64,7 +64,7 @@
             tools:src="@mipmap/ic_launcher_hondajojo"/>
 
         <org.mariotaku.twidere.view.ProfileImageView
-            android:id="@+id/activity_profile_image_2"
+            android:id="@+id/activityProfileImage2"
             style="?profileImageStyle"
             android:layout_width="@dimen/profile_image_size_activity_small"
             android:layout_height="@dimen/profile_image_size_activity_small"
@@ -73,7 +73,7 @@
             tools:src="@drawable/ic_profile_image_twidere"/>
 
         <org.mariotaku.twidere.view.ProfileImageView
-            android:id="@+id/activity_profile_image_3"
+            android:id="@+id/activityProfileImage3"
             style="?profileImageStyle"
             android:layout_width="@dimen/profile_image_size_activity_small"
             android:layout_height="@dimen/profile_image_size_activity_small"
@@ -82,7 +82,7 @@
             tools:src="@mipmap/ic_launcher_hondajojo"/>
 
         <org.mariotaku.twidere.view.ProfileImageView
-            android:id="@+id/activity_profile_image_4"
+            android:id="@+id/activityProfileImage4"
             style="?profileImageStyle"
             android:layout_width="@dimen/profile_image_size_activity_small"
             android:layout_height="@dimen/profile_image_size_activity_small"
@@ -91,7 +91,7 @@
             tools:src="@drawable/ic_profile_image_twidere"/>
 
         <org.mariotaku.twidere.view.BadgeView
-            android:id="@+id/activity_profile_image_more_number"
+            android:id="@+id/activityProfileImageMoreNumber"
             style="?profileImageStyle"
             android:layout_width="@dimen/profile_image_size_activity_small"
             android:layout_height="@dimen/profile_image_size_activity_small"
@@ -107,12 +107,12 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/profile_images_container"
+        android:layout_below="@+id/profileImagesContainer"
         android:layout_marginLeft="@dimen/element_spacing_normal"
         android:layout_marginStart="@dimen/element_spacing_normal"
-        android:layout_toEndOf="@+id/activity_type"
+        android:layout_toEndOf="@+id/activityType"
         android:layout_toLeftOf="@+id/time"
-        android:layout_toRightOf="@+id/activity_type"
+        android:layout_toRightOf="@+id/activityType"
         android:layout_toStartOf="@+id/time"
         android:gravity="center_vertical"
         android:minHeight="@dimen/element_size_small"

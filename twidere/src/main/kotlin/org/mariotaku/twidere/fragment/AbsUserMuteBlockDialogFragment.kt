@@ -38,7 +38,7 @@ abstract class AbsUserMuteBlockDialogFragment : BaseDialogFragment(), DialogInte
     override fun onClick(dialog: DialogInterface, which: Int) {
         when (which) {
             DialogInterface.BUTTON_POSITIVE -> {
-                val filterEverywhere = ((dialog as Dialog).findViewById(R.id.filterEverywhereToggle) as CheckBox).isChecked
+                val filterEverywhere = (dialog as Dialog).findViewById<CheckBox>(R.id.filterEverywhereToggle).isChecked
                 performUserAction(user, filterEverywhere)
             }
             else -> {

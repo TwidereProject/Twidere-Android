@@ -27,9 +27,9 @@ import android.widget.TextView
 
 open class TwoLineWithIconViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    val icon = itemView.findViewById(android.R.id.icon) as ImageView
-    val text1 = itemView.findViewById(android.R.id.text1) as TextView
-    val text2 = itemView.findViewById(android.R.id.text2) as TextView
-    val checkbox = itemView.findViewById(android.R.id.checkbox) as? CheckBox
+    val icon: ImageView = itemView.findViewById<ImageView>(android.R.id.icon)
+    val text1: TextView = itemView.findViewById<TextView>(android.R.id.text1)
+    val text2: TextView = itemView.findViewById<TextView>(android.R.id.text2)
+    val checkbox: CheckBox? = itemView.findViewById<CheckBox>(android.R.id.checkbox)
 
 }

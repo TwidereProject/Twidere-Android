@@ -91,7 +91,7 @@ class AppBarChildBehavior(
     }
 
     override fun onLayoutChild(parent: CoordinatorLayout, child: View, layoutDirection: Int): Boolean {
-        val target = parent.findViewById(targetViewId)
+        val target = parent.findViewById<View>(targetViewId)
         val dependency = parent.getDependencies(child).first()
 
         dependency.getFrameRelatedTo(dependencyRect, parent)
@@ -106,9 +106,9 @@ class AppBarChildBehavior(
     }
 
     override fun onDependentViewChanged(parent: CoordinatorLayout, child: View, dependency: View): Boolean {
-        val appBar = parent.findViewById(appBarId)
-        val target = parent.findViewById(targetViewId)
-        val toolbar = parent.findViewById(toolbarId)
+        val appBar = parent.findViewById<View>(appBarId)
+        val target = parent.findViewById<View>(targetViewId)
+        val toolbar = parent.findViewById<View>(toolbarId)
         val behavior = (appBar.layoutParams as CoordinatorLayout.LayoutParams).behavior as AppBarLayout.Behavior
         toolbar.getLocationOnScreen(tempLocation)
         val offset = behavior.topAndBottomOffset

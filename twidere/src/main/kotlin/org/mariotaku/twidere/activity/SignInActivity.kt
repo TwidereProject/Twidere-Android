@@ -601,7 +601,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
 
         override fun onLoadFinished(loader: Loader<List<CustomAPIConfig>>, data: List<CustomAPIConfig>) {
             val dialog = dialog ?: return
-            val listView = dialog.findViewById(R.id.expandableList) as ExpandableListView
+            val listView: ExpandableListView = dialog.findViewById(R.id.expandableList)
             val defaultConfig = preferences[defaultAPIConfigKey]
             defaultConfig.name = getString(R.string.login_type_user_settings)
             val allConfig = ArraySet(data)
@@ -658,7 +658,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?,
                     parent: ViewGroup): View {
                 val view = convertView ?: inflater.inflate(android.R.layout.simple_expandable_list_item_1, parent, false)
-                val text1 = view.findViewById(android.R.id.text1) as TextView
+                val text1 = view.findViewById<TextView>(android.R.id.text1)
                 val group = getGroup(groupPosition)
                 text1.text = APIEditorDialogFragment.getTypeTitle(context, group.type)
                 return view
@@ -668,7 +668,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                     convertView: View?, parent: ViewGroup): View {
                 val view = convertView ?: inflater.inflate(android.R.layout.simple_list_item_1, parent, false)
                 val config = getChild(groupPosition, childPosition)
-                val text1 = view.findViewById(android.R.id.text1) as TextView
+                val text1 = view.findViewById<TextView>(android.R.id.text1)
                 text1.text = config.name
                 return view
             }

@@ -269,8 +269,8 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
         override fun bindView(view: View, context: Context, cursor: Cursor) {
             super.bindView(view, context, cursor)
             val indices = this.indices!!
-            val iconView = view.findViewById(android.R.id.icon)
-            val summaryView = view.findViewById(android.R.id.text2) as TextView
+            val iconView = view.findViewById<View>(android.R.id.icon)
+            val summaryView = view.findViewById<TextView>(android.R.id.text2)
 
             indices.parseFields(tempObject, cursor)
 

@@ -39,13 +39,13 @@ class AccountViewHolder(
 ) : RecyclerView.ViewHolder(itemView) {
 
     private val content = itemView as IColorLabelView
-    private val name = itemView.findViewById(android.R.id.text1) as TextView
-    private val screenName = itemView.findViewById(android.R.id.text2) as TextView
-    private val profileImage = itemView.findViewById(android.R.id.icon) as ProfileImageView
-    private val toggle = itemView.findViewById(android.R.id.toggle) as CompoundButton
-    private val toggleContainer = itemView.findViewById(R.id.toggle_container)
-    private val accountType = itemView.findViewById(R.id.account_type) as ImageView
-    private val dragHandle = itemView.findViewById(R.id.drag_handle)
+    private val name: TextView = itemView.findViewById(android.R.id.text1)
+    private val screenName: TextView = itemView.findViewById(android.R.id.text2)
+    private val profileImage: ProfileImageView = itemView.findViewById(android.R.id.icon)
+    private val toggle: CompoundButton = itemView.findViewById(android.R.id.toggle)
+    private val toggleContainer: View = itemView.findViewById(R.id.toggle_container)
+    private val accountType: ImageView = itemView.findViewById(R.id.account_type)
+    private val dragHandle: View = itemView.findViewById(R.id.drag_handle)
 
     init {
         profileImage.style = adapter.profileImageStyle

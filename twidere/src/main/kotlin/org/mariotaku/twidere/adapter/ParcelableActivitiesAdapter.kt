@@ -421,11 +421,10 @@ class ParcelableActivitiesAdapter(
 
     internal class StubViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        internal val text1 = itemView.findViewById(android.R.id.text1) as TextView
-        internal val text2 = itemView.findViewById(android.R.id.text2) as TextView
+        internal val text1 = itemView.findViewById<TextView>(android.R.id.text1)
+        internal val text2 = itemView.findViewById<TextView>(android.R.id.text2)
 
         init {
-
             text2.setSingleLine(false)
         }
 

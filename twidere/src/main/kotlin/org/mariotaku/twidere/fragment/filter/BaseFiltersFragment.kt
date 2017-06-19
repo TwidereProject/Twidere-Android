@@ -343,7 +343,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
         override fun bindView(view: View, context: Context, cursor: Cursor) {
             super.bindView(view, context, cursor)
             val indices = this.indices!!
-            val text1 = view.findViewById(android.R.id.text1) as TextView
+            val text1 = view.findViewById<TextView>(android.R.id.text1)
 
             val ssb = SpannableStringBuilder(cursor.getString(indices[Filters.VALUE]))
             if (cursor.getLong(indices[Filters.SOURCE]) >= 0) {

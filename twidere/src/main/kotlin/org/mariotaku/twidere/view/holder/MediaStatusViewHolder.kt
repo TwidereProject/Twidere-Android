@@ -100,7 +100,7 @@ class MediaStatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: 
 
     override fun setStatusClickListener(listener: IStatusViewHolder.StatusClickListener?) {
         this.listener = listener
-        itemView.findViewById(R.id.itemContent).setOnClickListener(this)
+        itemView.itemContent.setOnClickListener(this)
     }
 
     override fun setTextSize(textSize: Float) {

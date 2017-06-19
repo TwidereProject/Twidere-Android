@@ -16,6 +16,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.fragment_content_listview.*
 import org.mariotaku.kpreferences.KPreferences
@@ -167,9 +168,9 @@ class FilteredUsersFragment : BaseFiltersFragment() {
         override fun bindView(view: View, context: Context, cursor: Cursor) {
             super.bindView(view, context, cursor)
             val indices = this.indices!!
-            val icon = view.findViewById(android.R.id.icon)
-            val text1 = view.findViewById(android.R.id.text1) as TextView
-            val text2 = view.findViewById(android.R.id.text2) as TextView
+            val icon = view.findViewById<ImageView>(android.R.id.icon)
+            val text1 = view.findViewById<TextView>(android.R.id.text1)
+            val text2 = view.findViewById<TextView>(android.R.id.text2)
 
             icon.visibility = View.GONE
 

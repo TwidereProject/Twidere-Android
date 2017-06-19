@@ -528,7 +528,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     override fun onDestroyActionMode(mode: ActionMode) {
         val window = window
-        val contentView = window.findViewById(android.R.id.content)
+        val contentView = window.findViewById<View>(android.R.id.content)
         contentView.setPadding(contentView.paddingLeft, 0,
                 contentView.paddingRight, contentView.paddingBottom)
     }
@@ -1924,7 +1924,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private class AccountIconViewHolder(val adapter: AccountIconsAdapter, itemView: View) : ViewHolder(itemView) {
-        private val iconView = itemView.findViewById(android.R.id.icon) as ShapedImageView
+        private val iconView = itemView.findViewById<ShapedImageView>(android.R.id.icon)
 
         init {
             itemView.setOnClickListener {

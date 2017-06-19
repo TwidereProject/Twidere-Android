@@ -28,15 +28,15 @@ import org.mariotaku.twidere.util.view.ConsumerKeySecretValidator
 
 class APIEditorDialogFragment : BaseDialogFragment() {
 
-    private val loadDefaults by lazy { dialog.findViewById(R.id.loadDefaults) }
-    private val editAPIUrlFormat by lazy { dialog.findViewById(R.id.editApiUrlFormat) as EditText }
-    private val editSameOAuthSigningUrl by lazy { dialog.findViewById(R.id.editSameOAuthSigningUrl) as CheckBox }
-    private val editNoVersionSuffix by lazy { dialog.findViewById(R.id.editNoVersionSuffix) as CheckBox }
-    private val editConsumerKey by lazy { dialog.findViewById(R.id.editConsumerKey) as MaterialEditText }
-    private val editConsumerSecret by lazy { dialog.findViewById(R.id.editConsumerSecret) as MaterialEditText }
-    private val editAuthType by lazy { dialog.findViewById(R.id.editAuthType) as RadioGroup }
-    private val apiFormatHelpButton by lazy { dialog.findViewById(R.id.apiUrlFormatHelp) }
-    private val accountTypeSpinner by lazy { dialog.findViewById(R.id.accountTypeSpinner) as Spinner }
+    private val loadDefaults by lazy { dialog.findViewById<View>(R.id.loadDefaults) }
+    private val editAPIUrlFormat by lazy { dialog.findViewById<EditText>(R.id.editApiUrlFormat) }
+    private val editSameOAuthSigningUrl by lazy { dialog.findViewById<CheckBox>(R.id.editSameOAuthSigningUrl) }
+    private val editNoVersionSuffix by lazy { dialog.findViewById<CheckBox>(R.id.editNoVersionSuffix) }
+    private val editConsumerKey by lazy { dialog.findViewById<MaterialEditText>(R.id.editConsumerKey) }
+    private val editConsumerSecret by lazy { dialog.findViewById<MaterialEditText>(R.id.editConsumerSecret) }
+    private val editAuthType by lazy { dialog.findViewById<RadioGroup>(R.id.editAuthType) }
+    private val apiFormatHelpButton by lazy { dialog.findViewById<View>(R.id.apiUrlFormatHelp) }
+    private val accountTypeSpinner by lazy { dialog.findViewById<Spinner>(R.id.accountTypeSpinner) }
 
     private var editNoVersionSuffixChanged: Boolean = false
     private lateinit var apiConfig: CustomAPIConfig
@@ -183,7 +183,7 @@ class APIEditorDialogFragment : BaseDialogFragment() {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val view = super.getView(position, convertView, parent)
                 val type = getItem(position)
-                (view.findViewById(android.R.id.text1) as TextView).text = type.getLocalizedName(context)
+                view.findViewById<TextView>(android.R.id.text1).text = type.getLocalizedName(context)
                 return view
             }
 
@@ -203,14 +203,14 @@ class APIEditorDialogFragment : BaseDialogFragment() {
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             val view = super.getView(position, convertView, parent)
-            val textView = view.findViewById(android.R.id.text1) as TextView
+            val textView = view.findViewById<TextView>(android.R.id.text1)
             textView.text = getTypeTitle(context, getItem(position))
             return view
         }
 
         override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup?): View {
             val view = super.getDropDownView(position, convertView, parent)
-            val textView = view.findViewById(android.R.id.text1) as TextView
+            val textView = view.findViewById<TextView>(android.R.id.text1)
             textView.text = getTypeTitle(context, getItem(position))
             return view
         }

@@ -394,7 +394,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
         }
 
         override fun getAccount(): AccountDetails? {
-            return (dialog.findViewById(R.id.accountSpinner) as Spinner).selectedItem as? AccountDetails
+            return dialog.findViewById<Spinner>(R.id.accountSpinner).selectedItem as? AccountDetails
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -436,8 +436,8 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
 
         override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
             val view = super.getDropDownView(position, convertView, parent)
-            view.findViewById(android.R.id.text2).visibility = View.GONE
-            val text1 = view.findViewById(android.R.id.text1) as TextView
+            view.findViewById<View>(android.R.id.text2).visibility = View.GONE
+            val text1 = view.findViewById<TextView>(android.R.id.text1)
             val item = getItem(position)
             text1.spannable = item.name
             bindIconView(item, view)
@@ -457,7 +457,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
         }
 
         private fun bindIconView(item: DrawableHolder, view: View) {
-            val icon = view.findViewById(android.R.id.icon) as ImageView
+            val icon = view.findViewById<ImageView>(android.R.id.icon)
             icon.setColorFilter(iconColor, Mode.SRC_ATOP)
             icon.setImageDrawable(item.createDrawable(icon.context))
         }

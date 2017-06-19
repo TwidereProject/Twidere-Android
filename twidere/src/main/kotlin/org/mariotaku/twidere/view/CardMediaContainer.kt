@@ -144,11 +144,11 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
             }
             (this.layoutParams as MediaLayoutParams).media = item
             this.visibility = View.VISIBLE
-            findViewById(lp.videoViewId)?.visibility = View.VISIBLE
+            findViewById<View>(lp.videoViewId)?.visibility = View.VISIBLE
         } else {
             Glide.clear(this)
             this.visibility = View.GONE
-            findViewById(lp.videoViewId)?.visibility = View.GONE
+            findViewById<View>(lp.videoViewId)?.visibility = View.GONE
         }
     }
 
@@ -230,7 +230,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         val widthSpec = View.MeasureSpec.makeMeasureSpec(contentWidth, View.MeasureSpec.EXACTLY)
         val heightSpec = View.MeasureSpec.makeMeasureSpec(childHeight, View.MeasureSpec.EXACTLY)
         child.measure(widthSpec, heightSpec)
-        findViewById(videoViewIds[0])?.measure(widthSpec, heightSpec)
+        findViewById<View>(videoViewIds[0])?.measure(widthSpec, heightSpec)
         return childHeight
     }
 
@@ -241,7 +241,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         val right = left + child.measuredWidth
         val bottom = top + child.measuredHeight
         child.layout(left, top, right, bottom)
-        findViewById(videoViewIds[0])?.layout(left, top, right, bottom)
+        findViewById<View>(videoViewIds[0])?.layout(left, top, right, bottom)
     }
 
     private fun measureGridMedia(childCount: Int, columnCount: Int, contentWidth: Int,
@@ -253,7 +253,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         val heightSpec = View.MeasureSpec.makeMeasureSpec(childHeight, View.MeasureSpec.EXACTLY)
         for (i in 0 until childCount) {
             getChildAt(childIndices[i]).measure(widthSpec, heightSpec)
-            findViewById(videoViewIds[i])?.measure(widthSpec, heightSpec)
+            findViewById<View>(videoViewIds[i])?.measure(widthSpec, heightSpec)
         }
         val rowsCount = Math.ceil(childCount / columnCount.toDouble()).toInt()
         return rowsCount * childHeight + (rowsCount - 1) * verticalSpacing
@@ -268,7 +268,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
             val colIdx = i % columnCount
             val child = getChildAt(childIndices[i])
             child.layout(left, top, left + child.measuredWidth, top + child.measuredHeight)
-            findViewById(videoViewIds[i])?.layout(left, top, left + child.measuredWidth,
+            findViewById<View>(videoViewIds[i])?.layout(left, top, left + child.measuredWidth,
                     top + child.measuredHeight)
             if (colIdx == columnCount - 1) {
                 // Last item in this row, set top of next row to last view bottom + verticalSpacing
@@ -297,9 +297,9 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         child1.measure(widthSpec, childRightHeightSpec)
         child2.measure(widthSpec, childRightHeightSpec)
 
-        findViewById(videoViewIds[0])?.measure(widthSpec, childLeftHeightSpec)
-        findViewById(videoViewIds[1])?.measure(widthSpec, childRightHeightSpec)
-        findViewById(videoViewIds[2])?.measure(widthSpec, childRightHeightSpec)
+        findViewById<View>(videoViewIds[0])?.measure(widthSpec, childLeftHeightSpec)
+        findViewById<View>(videoViewIds[1])?.measure(widthSpec, childRightHeightSpec)
+        findViewById<View>(videoViewIds[2])?.measure(widthSpec, childRightHeightSpec)
         return Math.round(contentWidth.toFloat() * WIDTH_HEIGHT_RATIO * ratioMultiplier)
     }
 
@@ -317,11 +317,11 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         child2.layout(rightColLeft, child2Top, rightColLeft + child2.measuredWidth,
                 child2Top + child2.measuredHeight)
 
-        findViewById(videoViewIds[0])?.layout(left, top, left + child0.measuredWidth,
+        findViewById<View>(videoViewIds[0])?.layout(left, top, left + child0.measuredWidth,
                 top + child0.measuredHeight)
-        findViewById(videoViewIds[1])?.layout(rightColLeft, top,
+        findViewById<View>(videoViewIds[1])?.layout(rightColLeft, top,
                 rightColLeft + child1.measuredWidth, top + child1.measuredHeight)
-        findViewById(videoViewIds[2])?.layout(rightColLeft, child2Top,
+        findViewById<View>(videoViewIds[2])?.layout(rightColLeft, child2Top,
                 rightColLeft + child2.measuredWidth, child2Top + child2.measuredHeight)
     }
 

@@ -369,8 +369,8 @@ object ThemeUtils {
 
     fun setCompatContentViewOverlay(window: Window, overlay: Drawable?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) return
-        val contentLayout = window.findViewById(android.support.v7.appcompat.R.id.action_bar_activity_content)
-                ?: window.findViewById(android.R.id.content) as? FrameLayout ?: return
+        val contentLayout = window.findViewById<FrameLayout>(android.support.v7.appcompat.R.id.action_bar_activity_content)
+                ?: window.findViewById<FrameLayout>(android.R.id.content) ?: return
         ViewSupport.setForeground(contentLayout, overlay)
     }
 

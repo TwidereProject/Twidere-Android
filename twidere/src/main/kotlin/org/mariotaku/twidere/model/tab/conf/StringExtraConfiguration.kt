@@ -33,7 +33,7 @@ class StringExtraConfiguration(key: String, title: StringHolder, private val def
 
     override fun onViewCreated(context: Context, view: View, fragment: CustomTabsFragment.TabEditorDialogFragment) {
         super.onViewCreated(context, view, fragment)
-        editText = view.findViewById(R.id.editText) as EditText
+        editText = view.findViewById<EditText>(R.id.editText)
         editText.hint = title.createString(context)
         editText.setText(def)
     }

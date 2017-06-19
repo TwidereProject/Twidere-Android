@@ -135,7 +135,7 @@ class CardPollViewController : ContainerView.ViewController() {
                     val pollItem = view.pollContainer.getChildAt(i)
                     pollItem.isClickable = false
                     clickedChoice = true
-                    val choiceRadioButton = pollItem.findViewById(R.id.choice_button) as RadioButton
+                    val choiceRadioButton: RadioButton = pollItem.findViewById(R.id.choice_button)
                     val checked = v === pollItem
                     choiceRadioButton.isChecked = checked
                     if (checked) {
@@ -181,9 +181,9 @@ class CardPollViewController : ContainerView.ViewController() {
         for (i in 0..choicesCount - 1) {
             val pollItem = view.pollContainer.getChildAt(i)
 
-            val choicePercentView = pollItem.findViewById(R.id.choice_percent) as TextView
-            val choiceLabelView = pollItem.findViewById(R.id.choice_label) as TextView
-            val choiceRadioButton = pollItem.findViewById(R.id.choice_button) as RadioButton
+            val choicePercentView: TextView = pollItem.findViewById(R.id.choice_percent)
+            val choiceLabelView: TextView = pollItem.findViewById(R.id.choice_label)
+            val choiceRadioButton: RadioButton = pollItem.findViewById(R.id.choice_button)
 
             val choiceIndex = i + 1
             val label = card.getAsString("choice${choiceIndex}_label", null)

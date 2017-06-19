@@ -44,7 +44,7 @@ class SourceAutoCompleteAdapter(context: Context) : SimpleCursorAdapter(context,
 
     override fun bindView(view: View, context: Context?, cursor: Cursor) {
         if (isCursorClosed) return
-        val text1 = view.findViewById(android.R.id.text1) as TextView
+        val text1 = view.findViewById<TextView>(android.R.id.text1)
         text1.text = convertToString(cursor)
         super.bindView(view, context, cursor)
     }

@@ -1265,7 +1265,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
 
             internal class ProfileImageViewHolder(private val adapter: CountsUsersAdapter, itemView: View) : ViewHolder(itemView), OnClickListener {
-                private val profileImageView = itemView.findViewById(R.id.profileImage) as ProfileImageView
+                private val profileImageView = itemView.findViewById<ProfileImageView>(R.id.profileImage)
 
                 init {
                     itemView.setOnClickListener(this)
@@ -1848,7 +1848,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             }
 
         class StatusErrorItemViewHolder(itemView: View) : ViewHolder(itemView) {
-            private val textView = itemView.findViewById(android.R.id.text1) as TextView
+            private val textView = itemView.findViewById<TextView>(android.R.id.text1)
 
             init {
                 textView.movementMethod = LinkMovementMethod.getInstance()

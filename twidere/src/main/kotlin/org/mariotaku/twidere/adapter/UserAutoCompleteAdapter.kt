@@ -74,9 +74,9 @@ class UserAutoCompleteAdapter(
 
     override fun bindView(view: View, context: Context, cursor: Cursor) {
         val user = indices!!.newObject(cursor)
-        val text1 = view.findViewById(android.R.id.text1) as TextView
-        val text2 = view.findViewById(android.R.id.text2) as TextView
-        val icon = view.findViewById(android.R.id.icon) as ProfileImageView
+        val text1 = view.findViewById<TextView>(android.R.id.text1)
+        val text2 = view.findViewById<TextView>(android.R.id.text2)
+        val icon = view.findViewById<ProfileImageView>(android.R.id.icon)
 
         icon.style = profileImageStyle
 

@@ -94,9 +94,9 @@ class InteractionsTabConfiguration : TabConfiguration() {
         private var valueBackup: Boolean = false
 
         override fun onAccountSelectionChanged(account: AccountDetails?) {
-            val checkBox = view.findViewById(android.R.id.checkbox) as CheckBox
-            val titleView = view.findViewById(android.R.id.title) as TextView
-            val summaryView = view.findViewById(android.R.id.summary) as TextView
+            val checkBox: CheckBox = view.findViewById(android.R.id.checkbox)
+            val titleView: TextView = view.findViewById(android.R.id.title)
+            val summaryView: TextView = view.findViewById(android.R.id.summary)
 
             var requiresStreaming = false
             var interactionsAvailable = false

@@ -91,7 +91,7 @@ class AccountSelectorAdapter(
                 return AccountsDashboardFragment.AccountSpaceViewHolder(view)
             }
             ITEM_VIEW_TYPE_ICON -> {
-                val view = inflater.inflate(R.layout.adapter_item_dashboard_account, container, false)
+                val view = inflater.inflate(AccountProfileImageViewHolder.layoutResource, container, false)
                 return AccountProfileImageViewHolder(this, view)
             }
         }

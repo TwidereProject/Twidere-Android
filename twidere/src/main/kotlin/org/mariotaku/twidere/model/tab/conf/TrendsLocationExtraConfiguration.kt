@@ -47,9 +47,10 @@ open class TrendsLocationExtraConfiguration(
 
     override fun onViewCreated(context: Context, view: View, fragment: TabEditorDialogFragment) {
         super.onViewCreated(context, view, fragment)
-        val titleView = view.findViewById(android.R.id.title) as TextView
-        summaryView = view.findViewById(android.R.id.summary) as TextView
+        val titleView = view.findViewById<TextView>(android.R.id.title)
         titleView.text = title.createString(context)
+
+        summaryView = view.findViewById<TextView>(android.R.id.summary)
         summaryView.visibility = View.GONE
         view.setOnClickListener {
             val account = fragment.account ?: return@setOnClickListener
@@ -73,8 +74,8 @@ open class TrendsLocationExtraConfiguration(
 
     override fun onAccountSelectionChanged(account: AccountDetails?) {
         super.onAccountSelectionChanged(account)
-        val titleView = view.findViewById(android.R.id.title) as TextView
-        val summaryView = view.findViewById(android.R.id.summary) as TextView
+        val titleView: TextView = view.findViewById(android.R.id.title)
+        val summaryView: TextView = view.findViewById(android.R.id.summary)
         val canSelectLocation = account?.type == AccountType.TWITTER
         view.isEnabled = canSelectLocation
         titleView.isEnabled = canSelectLocation

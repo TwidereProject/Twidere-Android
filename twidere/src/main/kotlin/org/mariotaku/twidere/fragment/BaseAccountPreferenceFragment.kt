@@ -88,7 +88,7 @@ abstract class BaseAccountPreferenceFragment : BasePreferenceFragment() {
         if (!TextUtils.isEmpty(switchKey)) {
             inflater.inflate(R.menu.menu_switch_preference, menu)
             val actionView = menu.findItem(R.id.toggle).actionView
-            val toggle = actionView.findViewById(android.R.id.toggle) as CompoundButton
+            val toggle = actionView.findViewById<CompoundButton>(android.R.id.toggle)
             val prefs = preferenceManager.sharedPreferences
             toggle.setOnCheckedChangeListener { _, isChecked ->
                 val editor = prefs.edit()

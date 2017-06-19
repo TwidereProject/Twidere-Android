@@ -65,11 +65,11 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
     override val Dialog.loadProgress: View get() = findViewById(R.id.loadProgress)
     override val Dialog.itemContent: View get() = findViewById(R.id.itemContent)
 
-    private val Dialog.textCountView get() = findViewById(R.id.commentTextCount) as StatusTextCountView
+    private val Dialog.textCountView: StatusTextCountView get() = findViewById(R.id.commentTextCount)
 
-    private val Dialog.commentContainer get() = findViewById(R.id.commentContainer) as RelativeLayout
-    private val Dialog.editComment get() = findViewById(R.id.editComment) as ComposeEditText
-    private val Dialog.quoteOriginal get() = findViewById(R.id.quoteOriginal) as CheckBox
+    private val Dialog.commentContainer: RelativeLayout get() = findViewById(R.id.commentContainer)
+    private val Dialog.editComment: ComposeEditText get() = findViewById(R.id.editComment)
+    private val Dialog.quoteOriginal: CheckBox get() = findViewById(R.id.quoteOriginal)
 
     private val text: String?
         get() = arguments.getString(EXTRA_TEXT)

@@ -182,7 +182,7 @@ class TrendsLocationSelectorActivity : BaseActivity() {
             } else {
                 view = inflater.inflate(android.R.layout.simple_expandable_list_item_1, parent, false)
             }
-            (view.findViewById(android.R.id.text1) as TextView).text = getGroup(groupPosition).name
+            view.findViewById<TextView>(android.R.id.text1).text = getGroup(groupPosition).name
             return view
         }
 
@@ -194,7 +194,7 @@ class TrendsLocationSelectorActivity : BaseActivity() {
                 view = inflater.inflate(android.R.layout.simple_list_item_1, parent, false)
             }
             val location = getChild(groupPosition, childPosition)
-            val text1 = view.findViewById(android.R.id.text1) as TextView
+            val text1 = view.findViewById<TextView>(android.R.id.text1)
             if (location.parentId == WORLDWIDE) {
                 text1.setText(R.string.location_countrywide)
             } else {

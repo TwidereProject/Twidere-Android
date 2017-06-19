@@ -654,7 +654,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
     internal class SpaceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     internal class AddUserViewHolder(itemView: View, adapter: ConversationInfoAdapter) : RecyclerView.ViewHolder(itemView) {
 
-        private val itemContent = itemView.findViewById(R.id.itemContent)
+        private val itemContent = itemView.findViewById<View>(R.id.itemContent)
 
         init {
             itemContent.setOnClickListener {
@@ -668,9 +668,9 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             itemView: View,
             adapter: ConversationInfoAdapter
     ) : SimpleUserViewHolder<ConversationInfoAdapter>(itemView, adapter) {
-        private val headerIcon = itemView.findViewById(R.id.headerIcon)
 
-        private val itemContent = itemView.findViewById(R.id.itemContent)
+        private val headerIcon = itemView.findViewById<View>(R.id.headerIcon)
+        private val itemContent = itemView.findViewById<View>(R.id.itemContent)
 
         init {
             itemContent.setOnClickListener {
@@ -749,7 +749,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             builder.setView(R.layout.dialog_edit_conversation_name)
             builder.setNegativeButton(android.R.string.cancel, null)
             builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
-                val editName = (dialog as Dialog).findViewById(R.id.editName) as EditText
+                val editName = (dialog as Dialog).findViewById<EditText>(R.id.editName)
                 (parentFragment as MessageConversationInfoFragment).performSetConversationName(editName.text.toString())
             }
             val dialog = builder.create()

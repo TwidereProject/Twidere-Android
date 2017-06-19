@@ -36,7 +36,7 @@ class ThemedEditTextPreferenceDialogFragmentCompat : ThemedPreferenceDialogFragm
     override fun onCreateDialogView(context: Context): View {
         val view = super.onCreateDialogView(context)
         val theme = Chameleon.getOverrideTheme(context, context)
-        editText = view.findViewById(android.R.id.edit) as EditText
+        editText = view.findViewById<EditText>(android.R.id.edit)
         val appearance = ChameleonTextView.Appearance.create(editText, context, null, theme)
         appearance.backgroundTintColor = theme.colorAccent
         ChameleonTextView.Appearance.apply(editText, appearance)

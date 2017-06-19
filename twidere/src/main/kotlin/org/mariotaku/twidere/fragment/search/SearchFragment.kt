@@ -104,7 +104,7 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface,
                 actionBar.setDisplayShowTitleEnabled(false)
                 actionBar.setDisplayShowCustomEnabled(true)
                 val customView = actionBar.customView
-                val editQuery = customView.findViewById(R.id.editQuery) as TextView
+                val editQuery: TextView = customView.findViewById(R.id.editQuery)
                 editQuery.setTextColor(ThemeUtils.getColorDependent(theme.colorToolbar))
                 editQuery.spannable = query
                 customView.setOnClickListener {

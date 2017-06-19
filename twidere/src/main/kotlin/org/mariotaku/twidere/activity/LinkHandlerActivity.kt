@@ -518,7 +518,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
     }
 
     private fun updateActionsButton() {
-        val fab = window.findViewById(R.id.actionsButton) as? FloatingActionButton ?: return
+        val fab = window.findViewById<FloatingActionButton>(R.id.actionsButton) ?: return
         val fragment = currentVisibleFragment as? IFloatingActionButtonFragment
         val info = fragment?.getActionInfo("link_handler") ?: run {
             fab.visibility = View.GONE

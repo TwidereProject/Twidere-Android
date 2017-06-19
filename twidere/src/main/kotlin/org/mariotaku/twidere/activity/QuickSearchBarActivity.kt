@@ -514,17 +514,17 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
 
         internal class SearchViewHolder(view: View) {
 
-            internal val icon = view.findViewById(android.R.id.icon) as ImageView
-            internal val text1 = view.findViewById(android.R.id.text1) as TextView
-            internal val edit_query = view.findViewById(R.id.edit_query)
+            internal val icon: ImageView = view.findViewById(android.R.id.icon)
+            internal val text1: TextView = view.findViewById(android.R.id.text1)
+            internal val edit_query: View = view.findViewById(R.id.edit_query)
 
         }
 
         internal class UserViewHolder(view: View) {
 
-            internal val icon = view.findViewById(android.R.id.icon) as ProfileImageView
-            internal val text1 = view.findViewById(android.R.id.text1) as TextView
-            internal val text2 = view.findViewById(android.R.id.text2) as TextView
+            internal val icon: ProfileImageView = view.findViewById(android.R.id.icon)
+            internal val text1: TextView = view.findViewById(android.R.id.text1)
+            internal val text2: TextView = view.findViewById(android.R.id.text2)
 
         }
 

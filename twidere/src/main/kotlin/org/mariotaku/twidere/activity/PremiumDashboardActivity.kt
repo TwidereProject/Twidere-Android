@@ -157,11 +157,11 @@ class PremiumDashboardActivity : BaseActivity() {
     }
 
     open class ExtraFeatureViewController : ContainerView.ViewController() {
-        protected val titleView by lazy { view.findViewById(R.id.title) as TextView }
-        protected val messageView by lazy { view.findViewById(R.id.message) as TextView }
-        protected val button1 by lazy { view.findViewById(R.id.button1) as Button }
+        protected val titleView: TextView by lazy { view.findViewById<TextView>(R.id.title) }
+        protected val messageView: TextView by lazy { view.findViewById<TextView>(R.id.message) }
+        protected val button1: Button by lazy { view.findViewById<Button>(R.id.button1) }
+        protected val button2: Button  by lazy { view.findViewById<Button>(R.id.button2) }
 
-        protected val button2 by lazy { view.findViewById(R.id.button2) as Button }
         @Inject
         protected lateinit var extraFeaturesService: ExtraFeaturesService
 

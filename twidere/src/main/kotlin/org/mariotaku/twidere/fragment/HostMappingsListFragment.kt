@@ -245,8 +245,8 @@ class HostMappingsListFragment : AbsContentListViewFragment<HostMappingsListFrag
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val view = super.getView(position, convertView, parent)
-            val text1 = view.findViewById(android.R.id.text1) as TextView
-            val text2 = view.findViewById(android.R.id.text2) as TextView
+            val text1 = view.findViewById<TextView>(android.R.id.text1)
+            val text2 = view.findViewById<TextView>(android.R.id.text2)
             val (key, value) = getItem(position)
             text1.text = key
             if (key == value) {

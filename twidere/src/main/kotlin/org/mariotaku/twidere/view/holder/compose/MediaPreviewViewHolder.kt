@@ -21,10 +21,10 @@ package org.mariotaku.twidere.view.holder.compose
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import android.widget.ImageView
 import com.bumptech.glide.load.resource.drawable.GlideDrawable
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import kotlinx.android.synthetic.main.grid_item_media_editor.view.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.MediaPreviewAdapter
 import org.mariotaku.twidere.model.ParcelableMedia
@@ -33,11 +33,11 @@ import java.lang.Exception
 
 class MediaPreviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnLongClickListener, View.OnClickListener {
 
-    private val imageView = itemView.findViewById(R.id.image) as ImageView
-    private val videoIndicatorView = itemView.findViewById(R.id.videoIndicator)
-    private val loadProgress = itemView.findViewById(R.id.loadProgress)
-    private val removeView = itemView.findViewById(R.id.remove)
-    private val editView = itemView.findViewById(R.id.edit)
+    private val imageView = itemView.image
+    private val videoIndicatorView = itemView.videoIndicator
+    private val loadProgress = itemView.loadProgress
+    private val removeView = itemView.remove
+    private val editView = itemView.edit
 
     private val requestListener = object : RequestListener<String, GlideDrawable> {
         override fun onException(e: Exception?, model: String?, target: Target<GlideDrawable>?,

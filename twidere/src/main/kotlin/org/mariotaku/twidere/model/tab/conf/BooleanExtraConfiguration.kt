@@ -42,8 +42,8 @@ open class BooleanExtraConfiguration(
 
     override fun onViewCreated(context: Context, view: View, fragment: CustomTabsFragment.TabEditorDialogFragment) {
         super.onViewCreated(context, view, fragment)
-        val titleView = view.findViewById(android.R.id.title) as TextView
-        val summaryView = view.findViewById(android.R.id.summary) as TextView
+        val titleView = view.findViewById<TextView>(android.R.id.title)
+        val summaryView = view.findViewById<TextView>(android.R.id.summary)
         titleView.text = title.createString(context)
 
         val summary = this.summary
@@ -54,7 +54,7 @@ open class BooleanExtraConfiguration(
             summaryView.visibility = View.GONE
         }
 
-        checkBox = view.findViewById(android.R.id.checkbox) as CheckBox
+        checkBox = view.findViewById<CheckBox>(android.R.id.checkbox)
         checkBox.visibility = View.VISIBLE
         view.setOnClickListener { checkBox.toggle() }
 

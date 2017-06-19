@@ -41,7 +41,7 @@ class EditAltTextDialogFragment : BaseDialogFragment() {
         builder.setNegativeButton(android.R.string.cancel, null)
         val position = arguments.getInt(EXTRA_POSITION)
         builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
-            val editText = (dialog as Dialog).findViewById(R.id.edit_text) as EditText
+            val editText = (dialog as Dialog).findViewById<EditText>(R.id.edit_text)
             val altText = ParseUtils.parseString(editText.text)
             callback?.onSetAltText(position, altText)
         }
