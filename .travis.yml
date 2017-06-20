@@ -47,7 +47,7 @@ cache:
     - $HOME/.m2/
 
 before_install:
-  - $ANDROID_HOME/tools/bin/sdkmanager --update
+  - yes y | $ANDROID_HOME/tools/bin/sdkmanager --update
   - yes y | $ANDROID_HOME/tools/bin/sdkmanager --licenses
   - ./travis/scripts/decode_private_configs.sh
 
