@@ -3,9 +3,9 @@ IDEA additional info:
 Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
---- twidere/build.gradle        (date 1493143158000)
-+++ twidere/build.gradle        (revision )
-@@ -7,23 +7,23 @@ apply plugin: 'kotlin-android-extensions'
+--- twidere/build.gradle	(date 1497922956000)
++++ twidere/build.gradle	(revision )
+@@ -7,15 +7,15 @@
  apply plugin: 'androidsvgdrawable'
  
  // START Non-FOSS component
@@ -24,18 +24,20 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
          // END Non-FOSS component
      }
  
-     dependencies {
-         // START Non-FOSS component
--        classpath "io.fabric.tools:gradle:${libVersions['FabricPlugin']}"
--        classpath "com.github.triplet.gradle:play-publisher:${libVersions['PlayPublisher']}"
--        classpath 'com.google.gms:google-services:3.0.0'
-+//        classpath "io.fabric.tools:gradle:${libVersions['FabricPlugin']}"
-+//        classpath "com.github.triplet.gradle:play-publisher:${libVersions['PlayPublisher']}"
-+//        classpath 'com.google.gms:google-services:3.0.0'
-         // END Non-FOSS component
+@@ -28,9 +28,9 @@
+         }
  
-         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${libVersions['Kotlin']}"
-@@ -56,7 +56,7 @@ android {
+         // START Non-FOSS component
+-        classpath "io.fabric.tools:gradle:${pluginVersions['Fabric']}"
+-        classpath "com.github.triplet.gradle:play-publisher:${pluginVersions['PlayPublisher']}"
+-        classpath "com.google.gms:google-services:${pluginVersions['PlayServices']}"
++//        classpath "io.fabric.tools:gradle:${pluginVersions['Fabric']}"
++//        classpath "com.github.triplet.gradle:play-publisher:${pluginVersions['PlayPublisher']}"
++//        classpath "com.google.gms:google-services:${pluginVersions['PlayServices']}"
+         // END Non-FOSS component
+     }
+ }
+@@ -56,7 +56,7 @@
  
      productFlavors {
          // START Non-FOSS component
@@ -44,7 +46,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
          // END Non-FOSS component
          fdroid {}
      }
-@@ -88,7 +88,7 @@ repositories {
+@@ -88,7 +88,7 @@
      mavenLocal()
      maven { url 'https://s3.amazonaws.com/repo.commonsware.com' }
      // START Non-FOSS component
@@ -53,7 +55,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
      // END Non-FOSS component
      flatDir { dirs "$projectDir/lib" }
  }
-@@ -104,17 +104,17 @@ dependencies {
+@@ -104,17 +104,17 @@
      compile project(':twidere.component.nyan')
  
      // START Non-FOSS component
@@ -82,7 +84,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
      // END Non-FOSS component
  
      fdroidCompile "org.osmdroid:osmdroid-android:${libVersions['OSMDroid']}"
-@@ -239,12 +239,12 @@ task svgToMipmap(type: SvgDrawableTask) {
+@@ -243,8 +243,8 @@
  }
  
  // START Non-FOSS component
@@ -95,8 +97,4 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 +//    track = 'beta'
 +//}
  // END Non-FOSS component
- 
- // START Non-FOSS component
--apply plugin: 'com.google.gms.google-services'
-+//apply plugin: 'com.google.gms.google-services'
- // END Non-FOSS component
+\ No newline at end of file
