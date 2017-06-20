@@ -1697,8 +1697,11 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             val userKey = user.key
             val isFiltering = DataStoreUtils.isFilteringUser(context, userKey)
             if (accountKey == user.key) {
-                return SingleResponse(ParcelableRelationshipUtils.create(accountKey, userKey,
-                        null, isFiltering))
+                return SingleResponse(ParcelableRelationship().apply {
+                    account_key = accountKey
+                    user_key = userKey
+                    filtering = isFiltering
+                })
             }
             val details = AccountUtils.getAccountDetails(AccountManager.get(context),
                     accountKey, true) ?: return SingleResponse(MicroBlogException("No Account"))

@@ -34,7 +34,10 @@ import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.toNulls
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.twitter.model.*
+import org.mariotaku.microblog.library.twitter.model.FriendshipUpdate
+import org.mariotaku.microblog.library.twitter.model.SavedSearch
+import org.mariotaku.microblog.library.twitter.model.UserList
+import org.mariotaku.microblog.library.twitter.model.UserListUpdate
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants
@@ -336,16 +339,13 @@ class AsyncTwitterWrapper(
     }
 
     fun updateFriendship(accountKey: UserKey, userKey: UserKey, update: FriendshipUpdate) {
-        TaskStarter.execute(object : ExceptionHandlingAbstractTask<Any?, Relationship, Exception, Any>(context) {
-            override val exceptionClass = Exception::class.java
+        TaskStarter.execute(object : AbsAccountRequestTask<Any?, ParcelableRelationship, Any>(context, accountKey) {
 
-            override fun onExecute(params: Any?): Relationship {
-                val microBlog = MicroBlogAPIFactory.getInstance(context, accountKey)
-                        ?: throw MicroBlogException("No account")
-                val relationship = microBlog.updateFriendship(userKey.id, update)
+            override fun onExecute(account: AccountDetails, params: Any?): ParcelableRelationship {
+                val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                val relationship = microBlog.updateFriendship(userKey.id, update).toParcelable(accountKey, userKey)
                 val cr = context.contentResolver
-                if (!relationship.isSourceWantRetweetsFromTarget) {
-                    // TODO remove cached retweets
+                if (update["retweets"] == false) {
                     val where = Expression.and(
                             Expression.equalsArgs(Statuses.ACCOUNT_KEY),
                             Expression.equalsArgs(Statuses.RETWEETED_BY_USER_KEY)
@@ -354,16 +354,15 @@ class AsyncTwitterWrapper(
                     cr.delete(Statuses.CONTENT_URI, where.sql, selectionArgs)
                 }
 
-                ParcelableRelationshipUtils.insert(cr, listOf(ParcelableRelationshipUtils
-                        .create(accountKey, userKey, relationship)))
+                ParcelableRelationshipUtils.insert(cr, listOf(relationship))
                 return relationship
             }
 
-            override fun onSucceed(callback: Any?, result: Relationship) {
+            override fun onSucceed(callback: Any?, result: ParcelableRelationship) {
                 bus.post(FriendshipUpdatedEvent(accountKey, userKey, result))
             }
 
-            override fun onException(callback: Any?, exception: Exception) {
+            override fun onException(callback: Any?, exception: MicroBlogException) {
                 if (exception !is MicroBlogException) {
                     Analyzer.logException(exception)
                     return

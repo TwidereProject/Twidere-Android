@@ -21,7 +21,6 @@ package org.mariotaku.twidere.model.util
 
 import android.content.ContentResolver
 import android.support.v4.util.ArraySet
-import org.mariotaku.microblog.library.twitter.model.Relationship
 import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.extension.bulkInsert
@@ -32,25 +31,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships
 import org.mariotaku.twidere.util.updateItems
 
 object ParcelableRelationshipUtils {
-
-    fun create(accountKey: UserKey, userKey: UserKey, relationship: Relationship?,
-            filtering: Boolean = false): ParcelableRelationship {
-        val obj = ParcelableRelationship()
-        obj.account_key = accountKey
-        obj.user_key = userKey
-        if (relationship != null) {
-            obj.following = relationship.isSourceFollowingTarget
-            obj.followed_by = relationship.isSourceFollowedByTarget
-            obj.blocking = relationship.isSourceBlockingTarget
-            obj.blocked_by = relationship.isSourceBlockedByTarget
-            obj.muting = relationship.isSourceMutingTarget
-            obj.retweet_enabled = relationship.isSourceWantRetweetsFromTarget
-            obj.notifications_enabled = relationship.isSourceNotificationsEnabledForTarget
-            obj.can_dm = relationship.canSourceDMTarget()
-        }
-        obj.filtering = filtering
-        return obj
-    }
 
     fun create(user: ParcelableUser, filtering: Boolean): ParcelableRelationship {
         val obj = ParcelableRelationship()

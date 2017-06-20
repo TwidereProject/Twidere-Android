@@ -22,7 +22,7 @@ package org.mariotaku.twidere.model.event;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import org.mariotaku.microblog.library.twitter.model.Relationship;
+import org.mariotaku.twidere.model.ParcelableRelationship;
 import org.mariotaku.twidere.model.UserKey;
 
 /**
@@ -35,9 +35,9 @@ public class FriendshipUpdatedEvent {
     @NonNull
     UserKey userKey;
     @NonNull
-    Relationship relationship;
+    ParcelableRelationship relationship;
 
-    public FriendshipUpdatedEvent(@NonNull UserKey accountKey, @NonNull UserKey userKey, @NonNull Relationship relationship) {
+    public FriendshipUpdatedEvent(@NonNull UserKey accountKey, @NonNull UserKey userKey, @NonNull ParcelableRelationship relationship) {
         this.accountKey = accountKey;
         this.userKey = userKey;
         this.relationship = relationship;
@@ -54,7 +54,7 @@ public class FriendshipUpdatedEvent {
     }
 
     @NonNull
-    public Relationship getRelationship() {
+    public ParcelableRelationship getRelationship() {
         return relationship;
     }
 
