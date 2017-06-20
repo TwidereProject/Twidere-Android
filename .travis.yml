@@ -13,14 +13,14 @@ android:
     - android-26
 
     # Additional components
-#    - extra-google-google_play_services
-#    - extra-google-m2repository
-#    - extra-android-m2repository
+    - extra-google-google_play_services
+    - extra-google-m2repository
+    - extra-android-m2repository
 
   licenses:
-#    - 'android-sdk-preview-license-.+'
+    - 'android-sdk-preview-license-.+'
     - 'android-sdk-license-.+'
-#    - 'google-gdk-license-.+'
+    - 'google-gdk-license-.+'
 
 env:
   global:
@@ -47,6 +47,7 @@ cache:
     - $HOME/.m2/
 
 before_install:
+  - yes y | $ANDROID_HOME/tools/bin/sdkmanager --licenses
   - ./travis/scripts/decode_private_configs.sh
 
 install:
