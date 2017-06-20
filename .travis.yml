@@ -8,8 +8,7 @@ android:
   components:
     - tools
     - tools # To fix https://github.com/travis-ci/travis-ci/issues/6040
-    - tools-26.0.2
-    - platform-tools-26.0.0
+    - platform-tools
     - build-tools-26.0.0
     - android-26
 
@@ -48,6 +47,7 @@ cache:
     - $HOME/.m2/
 
 before_install:
+  - $ANDROID_HOME/tools/bin/sdkmanager --update
   - yes y | $ANDROID_HOME/tools/bin/sdkmanager --licenses
   - ./travis/scripts/decode_private_configs.sh
 
