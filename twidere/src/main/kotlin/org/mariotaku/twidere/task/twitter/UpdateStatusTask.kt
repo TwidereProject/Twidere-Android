@@ -40,12 +40,9 @@ import org.mariotaku.twidere.alias.MastodonStatusUpdate
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.extension.calculateInSampleSize
+import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
-import org.mariotaku.twidere.extension.model.applyUpdateStatus
-import org.mariotaku.twidere.extension.model.getMediaSizeLimit
-import org.mariotaku.twidere.extension.model.newMicroBlogInstance
-import org.mariotaku.twidere.extension.model.textLimit
 import org.mariotaku.twidere.extension.text.twitter.getTweetLength
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.account.AccountExtras
@@ -454,7 +451,7 @@ class UpdateStatusTask(
 
         val details = statusUpdate.accounts[index]
         if (statusUpdate.draft_action == Draft.Action.REPLY && inReplyToStatus != null) {
-            status.inReplyToId(inReplyToStatus.id)
+            status.inReplyToId(inReplyToStatus.originalId)
         }
         val mediaIds = pendingUpdate.mediaIds[index]
         if (mediaIds != null) {
