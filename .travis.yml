@@ -7,15 +7,16 @@ jdk: oraclejdk8
 android:
   components:
     - tools
-    - tools-26.0.2 # To fix https://github.com/travis-ci/travis-ci/issues/6040
+    - tools # To fix https://github.com/travis-ci/travis-ci/issues/6040
+    - tools-26.0.2
     - platform-tools-26.0.0
     - build-tools-26.0.0
     - android-26
 
     # Additional components
-    - extra-google-google_play_services
-    - extra-google-m2repository
-    - extra-android-m2repository
+    - extra-google-google_play_services-41
+    - extra-google-m2repository-54
+    - extra-android-m2repository-47.0.0
 
   licenses:
     - 'android-sdk-preview-license-.+'
