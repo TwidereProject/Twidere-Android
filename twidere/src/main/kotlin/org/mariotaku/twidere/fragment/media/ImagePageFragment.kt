@@ -61,9 +61,8 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
-        val activity = activity
-        if (isVisibleToUser && activity != null) {
-            activity.supportInvalidateOptionsMenu()
+        if (isVisibleToUser) {
+            activity?.invalidateOptionsMenu()
         }
     }
 
@@ -85,9 +84,8 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
 
     override fun onMediaLoadStateChange(@State state: Int) {
         mediaLoadState = state
-        val activity = activity
-        if (userVisibleHint && activity != null) {
-            activity.supportInvalidateOptionsMenu()
+        if (userVisibleHint) {
+            activity?.invalidateOptionsMenu()
         }
     }
 

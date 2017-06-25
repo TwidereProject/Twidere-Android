@@ -54,7 +54,7 @@ import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.onShow
-import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback
+import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowInsetsCallback
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
 import org.mariotaku.twidere.fragment.statuses.UserListTimelineFragment
 import org.mariotaku.twidere.fragment.users.UserListMembersFragment
@@ -68,7 +68,7 @@ import org.mariotaku.twidere.model.event.UserListUpdatedEvent
 import org.mariotaku.twidere.util.*
 
 class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
-        LoaderCallbacks<SingleResponse<ParcelableUserList>>, SystemWindowsInsetsCallback,
+        LoaderCallbacks<SingleResponse<ParcelableUserList>>, SystemWindowInsetsCallback,
         SupportFragmentCallback {
 
     private var userListLoaderInitialized: Boolean = false

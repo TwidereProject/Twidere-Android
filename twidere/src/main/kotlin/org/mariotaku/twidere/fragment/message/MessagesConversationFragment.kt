@@ -131,7 +131,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         }
         adapter.listener = object : MessagesConversationAdapter.Listener {
             override fun onMediaClick(position: Int, media: ParcelableMedia, accountKey: UserKey?) {
-                val message = adapter.getMessage(position) ?: return
+                val message = adapter.getMessage(position)
                 IntentUtils.openMediaDirectly(context = context, accountKey = accountKey,
                         media = message.media, current = media,
                         newDocument = preferences[newDocumentApiKey], message = message)
@@ -314,7 +314,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
 
     override fun onLoadMoreContents(position: Long) {
         if (ILoadMoreSupportAdapter.START !in position) return
-        val message = adapter.getMessage(adapter.messageRange.endInclusive) ?: return
+        val message = adapter.getMessage(adapter.messageRange.endInclusive)
         setLoadMoreIndicatorPosition(position)
         val param = GetMessagesTask.LoadMoreMessageTaskParam(context, accountKey, conversationId,
                 message.id)
@@ -326,7 +326,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         if (menuInfo !is ExtendedRecyclerView.ContextMenuInfo) return
         when (menuInfo.recyclerViewId) {
             R.id.recyclerView -> {
-                val message = adapter.getMessage(menuInfo.position) ?: return
+                val message = adapter.getMessage(menuInfo.position)
                 val conversation = adapter.conversation
                 menu.setHeaderTitle(message.getSummaryText(context, userColorNameManager, conversation,
                         preferences[nameFirstKey]))
@@ -345,7 +345,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         }
         when (menuInfo.recyclerViewId) {
             R.id.recyclerView -> {
-                val message = adapter.getMessage(menuInfo.position) ?: return true
+                val message = adapter.getMessage(menuInfo.position)
                 when (item.itemId) {
                     R.id.copy -> {
                         ClipboardUtils.setText(context, message.text_unescaped)

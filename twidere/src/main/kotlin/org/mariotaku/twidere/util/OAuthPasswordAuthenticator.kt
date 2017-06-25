@@ -41,7 +41,6 @@ import org.mariotaku.twidere.TwidereConstants.OAUTH_CALLBACK_OOB
 import org.mariotaku.twidere.util.net.SimpleCookieJar
 import java.io.IOException
 import java.io.Reader
-import java.net.URI
 
 class OAuthPasswordAuthenticator(
         private val oauth: TwitterOAuth,
@@ -406,8 +405,8 @@ class OAuthPasswordAuthenticator(
             val location = response.header("Location")
             val builder = response.newBuilder()
             if (!TextUtils.isEmpty(location) && !endpoint.checkEndpoint(location)) {
-                val originalLocation = HttpUrl.get(URI.create("https://api.twitter.com/").resolve(location))
-                val locationBuilder = HttpUrl.parse(endpoint.url).newBuilder()
+                val originalLocation = HttpUrl.parse("https://api.twitter.com/")?.resolve(location)!!
+                val locationBuilder = HttpUrl.parse(endpoint.url)!!.newBuilder()
                 for (pathSegments in originalLocation.pathSegments()) {
                     locationBuilder.addPathSegment(pathSegments)
                 }

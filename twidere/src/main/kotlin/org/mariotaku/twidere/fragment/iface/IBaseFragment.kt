@@ -39,31 +39,31 @@ interface IBaseFragment<out F : Fragment> {
     val tabId: Long
         get() = (this as Fragment).arguments?.getLong(IntentConstants.EXTRA_TAB_ID, -1L) ?: -1L
 
-    fun requestFitSystemWindows() {
+    fun requestApplyInsets() {
         val fragment = this as Fragment
         val activity = fragment.activity
         val parentFragment = fragment.parentFragment
-        val callback: IBaseFragment.SystemWindowsInsetsCallback
-        if (parentFragment is IBaseFragment.SystemWindowsInsetsCallback) {
+        val callback: SystemWindowInsetsCallback
+        if (parentFragment is SystemWindowInsetsCallback) {
             callback = parentFragment
-        } else if (activity is IBaseFragment.SystemWindowsInsetsCallback) {
+        } else if (activity is SystemWindowInsetsCallback) {
             callback = activity
         } else {
             return
         }
         val insets = Rect()
-        if (callback.getSystemWindowsInsets(insets)) {
-            fitSystemWindows(insets)
+        if (callback.getSystemWindowInsets(insets)) {
+            applySystemWindowInsets(insets)
         }
     }
 
-    fun fitSystemWindows(insets: Rect) {
-        val fragment = this as Fragment
-        fragment.view?.setPadding(insets.left, insets.top, insets.right, insets.bottom)
+    fun applySystemWindowInsets(insets: Rect) {
+        this as Fragment
+        view?.setPadding(insets.left, insets.top, insets.right, insets.bottom)
     }
 
-    interface SystemWindowsInsetsCallback {
-        fun getSystemWindowsInsets(insets: Rect): Boolean
+    interface SystemWindowInsetsCallback {
+        fun getSystemWindowInsets(insets: Rect): Boolean
     }
 
     fun executeAfterFragmentResumed(useHandler: Boolean = false, action: (F) -> Unit): Promise<Unit, Exception>

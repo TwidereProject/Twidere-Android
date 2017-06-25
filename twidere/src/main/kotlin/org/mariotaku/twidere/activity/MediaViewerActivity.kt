@@ -35,10 +35,7 @@ import android.support.v4.view.ViewPager
 import android.support.v4.widget.ViewDragHelper
 import android.support.v7.app.WindowDecorActionBar
 import android.support.v7.app.decorToolbar
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.WindowManager
+import android.view.*
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_media_viewer.*
 import org.mariotaku.chameleon.Chameleon
@@ -159,7 +156,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
             override fun onApplyWindowInsets(left: Int, top: Int, right: Int, bottom: Int) {
                 val statusBarHeight = top - ThemeUtils.getActionBarHeight(this@MediaViewerActivity)
                 activityLayout.setStatusBarHeight(statusBarHeight)
-                onFitSystemWindows(Rect(left, top, right, bottom))
+                onApplySystemWindowInsets(Rect(left, top, right, bottom))
             }
         }
     }
@@ -268,6 +265,11 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
+        currentFragment
+        return super.onKeyUp(keyCode, event)
     }
 
     override fun toggleBar() {
@@ -405,13 +407,13 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         controlBarShowHideHelper.setControlBarVisibleAnimate(visible, listener)
     }
 
-    override fun onFitSystemWindows(insets: Rect) {
-        super.onFitSystemWindows(insets)
+    override fun onApplySystemWindowInsets(insets: Rect) {
+        super.onApplySystemWindowInsets(insets)
         val adapter = viewPager.adapter
         if (adapter.count == 0) return
         val fragment = adapter.instantiateItem(viewPager, viewPager.currentItem)
         if (fragment is IBaseFragment<*>) {
-            fragment.requestFitSystemWindows()
+            fragment.requestApplyInsets()
         }
     }
 
@@ -559,5 +561,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         const val FLAG_SYSTEM_UI_HIDE_BARS = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
                 View.SYSTEM_UI_FLAG_FULLSCREEN
     }
+
+    interface Media
 }
 

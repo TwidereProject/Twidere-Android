@@ -197,7 +197,7 @@ class UserTimelineLoader(
             if (atomLink != null || elementName != "link" || attributes == null) return
             if (attributes["rel"] == "alternate" && attributes["type"] == "application/atom+xml") {
                 val href = attributes["href"] ?: return
-                atomLink = HttpUrl.parse(profileUrl).resolve(href).toString()
+                atomLink = HttpUrl.parse(profileUrl)?.resolve(href)?.toString()
             }
         }
     }

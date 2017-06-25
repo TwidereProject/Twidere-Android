@@ -253,7 +253,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         return inflater.inflate(R.layout.layout_media_viewer_exo_player_view, parent, false)
     }
 
-    override fun fitSystemWindows(insets: Rect) {
+    override fun applySystemWindowInsets(insets: Rect) {
         val lp = videoControl.layoutParams
         if (lp is ViewGroup.MarginLayoutParams) {
             lp.bottomMargin = insets.bottom
@@ -271,7 +271,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        requestFitSystemWindows()
+        requestApplyInsets()
     }
 
     override fun executeAfterFragmentResumed(useHandler: Boolean, action: (ExoPlayerPageFragment) -> Unit) = TODO()
@@ -384,7 +384,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         override val specialCharacter: Char = '_'
 
         override fun inputStream(): InputStream {
-            return request().body().byteStream()
+            return request().body()!!.byteStream()
         }
 
         override fun close() {

@@ -159,7 +159,7 @@ class CacheProvider : ContentProvider() {
                 throw IllegalArgumentException(uri.toString())
             if (AUTHORITY_TWIDERE_CACHE != uri.authority)
                 throw IllegalArgumentException(uri.toString())
-            return ByteString.decodeBase64(uri.lastPathSegment).utf8()
+            return ByteString.decodeBase64(uri.lastPathSegment)!!.utf8()
         }
 
 

@@ -288,7 +288,7 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
             usersAdapter.setCheckState(user.key, true)
         }
         usersAdapter.notifyDataSetChanged()
-        activity?.supportInvalidateOptionsMenu()
+        activity?.invalidateOptionsMenu()
     }
 
 

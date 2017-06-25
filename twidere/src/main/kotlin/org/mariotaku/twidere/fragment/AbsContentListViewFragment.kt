@@ -96,7 +96,7 @@ abstract class AbsContentListViewFragment<A : ListAdapter> : BaseFragment(),
         setRefreshEnabled(false)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is IControlBarActivity) {
             context.registerControlBarOffsetListener(this)
@@ -149,7 +149,7 @@ abstract class AbsContentListViewFragment<A : ListAdapter> : BaseFragment(),
         super.onStop()
     }
 
-    override fun fitSystemWindows(insets: Rect) {
+    override fun applySystemWindowInsets(insets: Rect) {
         listView.setPadding(insets.left, insets.top, insets.right, insets.bottom)
         errorContainer.setPadding(insets.left, insets.top, insets.right, insets.bottom)
         progressContainer.setPadding(insets.left, insets.top, insets.right, insets.bottom)

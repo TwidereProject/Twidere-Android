@@ -168,7 +168,7 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        requestFitSystemWindows()
+        requestApplyInsets()
     }
 
     override fun getDownloadExtra(): Any? {
@@ -197,7 +197,7 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         videoView.setVideoURI(result.cacheUri)
         videoControl.visibility = View.GONE
         setMediaViewVisible(true)
-        activity.supportInvalidateOptionsMenu()
+        activity.invalidateOptionsMenu()
     }
 
     override fun releaseMediaResources() {
@@ -261,7 +261,7 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         super.setUserVisibleHint(isVisibleToUser)
         if (activity == null) return
         if (isVisibleToUser) {
-            activity.supportInvalidateOptionsMenu()
+            activity?.invalidateOptionsMenu()
         } else if (videoView.isPlaying) {
             videoView.pause()
             updatePlayerState()
@@ -295,7 +295,7 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         return inflater.inflate(R.layout.layout_media_viewer_texture_video_view, container, false)
     }
 
-    override fun fitSystemWindows(insets: Rect) {
+    override fun applySystemWindowInsets(insets: Rect) {
         val lp = videoControl.layoutParams
         if (lp is ViewGroup.MarginLayoutParams) {
             lp.bottomMargin = insets.bottom

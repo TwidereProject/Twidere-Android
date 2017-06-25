@@ -27,10 +27,10 @@ interface IExtendedView {
 
     var touchInterceptor: IExtendedView.TouchInterceptor?
     var onSizeChangedListener: IExtendedView.OnSizeChangedListener?
-    var onFitSystemWindowsListener: IExtendedView.OnFitSystemWindowsListener?
+    var onApplySystemWindowInsetsListener: IExtendedView.OnApplySystemWindowInsetsListener?
 
-    interface OnFitSystemWindowsListener {
-        fun onFitSystemWindows(insets: Rect)
+    interface OnApplySystemWindowInsetsListener {
+        fun onApplySystemWindowInsets(insets: Rect)
     }
 
     interface OnSizeChangedListener {

@@ -175,7 +175,7 @@ dependencies {
     compile "com.github.mariotaku.RestFu:library:${libVersions['RestFu']}"
     compile "com.github.mariotaku.RestFu:okhttp3:${libVersions['RestFu']}"
     compile "com.github.mariotaku.RestFu:logansquare:${libVersions['RestFu']}"
-    compile 'com.squareup.okhttp3:okhttp:3.6.0'
+    compile "com.squareup.okhttp3:okhttp:${libVersions['OkHttp']}"
     compile 'com.lnikkila:extendedtouchview:0.1.0'
     compile 'com.google.dagger:dagger:2.8'
     compile 'org.attoparser:attoparser:2.0.3.RELEASE'

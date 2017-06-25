@@ -20,10 +20,10 @@
 package org.mariotaku.twidere.view
 
 import android.content.Context
+import android.os.Build
 import android.support.v13.view.inputmethod.EditorInfoCompat
 import android.support.v13.view.inputmethod.InputConnectionCompat
 import android.support.v13.view.inputmethod.InputContentInfoCompat
-import android.support.v4.os.BuildCompat
 import android.text.InputType
 import android.text.Selection
 import android.text.method.ArrowKeyMovementMethod
@@ -57,7 +57,7 @@ class ComposeEditText(
     init {
         setupEmojiFactory()
         setTokenizer(StatusTextTokenizer())
-        onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+        onItemClickListener = AdapterView.OnItemClickListener { _, _, _, _ ->
             removeIMESuggestions()
         }
         // HACK: remove AUTO_COMPLETE flag to force IME show auto completion
@@ -99,7 +99,8 @@ class ComposeEditText(
 
         val callback = InputConnectionCompat.OnCommitContentListener { inputContentInfo, flags, _ ->
             // read and display inputContentInfo asynchronously
-            if (BuildCompat.isAtLeastNMR1() && InputConnectionCompat.INPUT_CONTENT_GRANT_READ_URI_PERMISSION in flags) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1
+                    && InputConnectionCompat.INPUT_CONTENT_GRANT_READ_URI_PERMISSION in flags) {
                 try {
                     inputContentInfo.requestPermission()
                 } catch (e: Exception) {

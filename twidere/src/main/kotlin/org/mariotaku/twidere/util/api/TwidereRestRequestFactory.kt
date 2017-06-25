@@ -45,7 +45,7 @@ class TwidereRestRequestFactory(
         val bodyType = restMethod.bodyType
         val extras = restMethod.extras
 
-        if (queries != null && extraRequestParams != null) {
+        if (extraRequestParams != null) {
             for ((key, value) in extraRequestParams) {
                 queries.add(key, value)
             }

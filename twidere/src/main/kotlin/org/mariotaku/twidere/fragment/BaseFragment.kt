@@ -97,12 +97,12 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        requestFitSystemWindows()
+        requestApplyInsets()
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
-        GeneralComponent.get(context!!).inject(this)
+        GeneralComponent.get(context).inject(this)
     }
 
     override fun executeAfterFragmentResumed(useHandler: Boolean, action: (BaseFragment) -> Unit)

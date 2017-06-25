@@ -19,11 +19,14 @@
 
 package org.mariotaku.twidere.view
 
+import android.annotation.TargetApi
 import android.content.Context
-import android.graphics.Rect
+import android.os.Build
 import android.util.AttributeSet
 import android.view.MotionEvent
+import android.view.WindowInsets
 import android.widget.FrameLayout
+import org.mariotaku.ktextension.systemWindowInsets
 import org.mariotaku.twidere.view.iface.IExtendedView
 
 open class ExtendedFrameLayout(context: Context, attrs: AttributeSet? = null) :
@@ -31,7 +34,7 @@ open class ExtendedFrameLayout(context: Context, attrs: AttributeSet? = null) :
 
     override var touchInterceptor: IExtendedView.TouchInterceptor? = null
     override var onSizeChangedListener: IExtendedView.OnSizeChangedListener? = null
-    override var onFitSystemWindowsListener: IExtendedView.OnFitSystemWindowsListener? = null
+    override var onApplySystemWindowInsetsListener: IExtendedView.OnApplySystemWindowInsetsListener? = null
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         if (touchInterceptor != null) {
@@ -49,11 +52,10 @@ open class ExtendedFrameLayout(context: Context, attrs: AttributeSet? = null) :
         return super.onInterceptTouchEvent(event)
     }
 
-    override fun fitSystemWindows(insets: Rect): Boolean {
-        if (onFitSystemWindowsListener != null) {
-            onFitSystemWindowsListener!!.onFitSystemWindows(insets)
-        }
-        return super.fitSystemWindows(insets)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    override fun onApplyWindowInsets(insets: WindowInsets): WindowInsets {
+        onApplySystemWindowInsetsListener?.onApplySystemWindowInsets(insets.systemWindowInsets)
+        return super.onApplyWindowInsets(insets)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {

@@ -211,7 +211,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         val refreshOnStart = preferences.getBoolean(SharedPreferenceConstants.KEY_REFRESH_ON_START, false)
         var tabDisplayOptionInt = Utils.getTabDisplayOptionInt(this)
 
-        homeContent.onFitSystemWindowsListener = this
+        homeContent.onApplySystemWindowInsetsListener = this
         mainPager.adapter = pagerAdapter
         mainTabs.setViewPager(mainPager)
         mainTabs.setOnPageChangeListener(this)
@@ -376,11 +376,11 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         return true
     }
 
-    override fun onFitSystemWindows(insets: Rect) {
-        super.onFitSystemWindows(insets)
+    override fun onApplySystemWindowInsets(insets: Rect) {
+        super.onApplySystemWindowInsets(insets)
         val fragment = leftDrawerFragment
         if (fragment is AccountsDashboardFragment) {
-            fragment.requestFitSystemWindows()
+            fragment.requestApplyInsets()
         }
     }
 
@@ -391,7 +391,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         }
     }
 
-    override fun getSystemWindowsInsets(insets: Rect): Boolean {
+    override fun getSystemWindowInsets(insets: Rect): Boolean {
         if (mainTabs == null || homeContent == null) return false
         val height = mainTabs.height
         if (height != 0) {

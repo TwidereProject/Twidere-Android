@@ -35,7 +35,7 @@ import org.mariotaku.twidere.view.iface.IExtendedView
  * Created by mariotaku on 16/3/16.
  */
 abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInterface,
-        SupportFragmentCallback, IBaseFragment.SystemWindowsInsetsCallback, ControlBarOffsetListener,
+        SupportFragmentCallback, IBaseFragment.SystemWindowInsetsCallback, ControlBarOffsetListener,
         HideUiOnScroll, OnPageChangeListener, IToolBarSupportFragment, KeyboardShortcutCallback {
 
     protected lateinit var pagerAdapter: SupportTabsAdapter
@@ -64,7 +64,7 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
                     if (i > currentItem - pageLimit - 1 || i < currentItem + pageLimit) {
                         val obj = pagerAdapter.instantiateItem(viewPager, i)
                         if (obj is IBaseFragment<*>) {
-                            obj.requestFitSystemWindows()
+                            obj.requestApplyInsets()
                         }
                     }
                 }
@@ -87,7 +87,7 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
 
     protected abstract fun addTabs(adapter: SupportTabsAdapter)
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is IControlBarActivity) {
             context.registerControlBarOffsetListener(this)
@@ -134,10 +134,10 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
         return false
     }
 
-    override fun fitSystemWindows(insets: Rect) {
+    override fun applySystemWindowInsets(insets: Rect) {
     }
 
-    override fun getSystemWindowsInsets(insets: Rect): Boolean {
+    override fun getSystemWindowInsets(insets: Rect): Boolean {
         if (toolbarTabs == null) return false
         insets.set(0, toolbarContainer.height, 0, 0)
         return true

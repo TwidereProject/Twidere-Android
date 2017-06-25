@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.view
 
+import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
@@ -26,7 +27,9 @@ import android.os.Build
 import android.support.annotation.DrawableRes
 import android.util.AttributeSet
 import android.view.MotionEvent
+import android.view.WindowInsets
 import android.widget.RelativeLayout
+import org.mariotaku.ktextension.systemWindowInsets
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.view.iface.IExtendedView
 
@@ -35,7 +38,7 @@ open class ExtendedRelativeLayout(context: Context, attrs: AttributeSet? = null)
 
     override var touchInterceptor: IExtendedView.TouchInterceptor? = null
     override var onSizeChangedListener: IExtendedView.OnSizeChangedListener? = null
-    override var onFitSystemWindowsListener: IExtendedView.OnFitSystemWindowsListener? = null
+    override var onApplySystemWindowInsetsListener: IExtendedView.OnApplySystemWindowInsetsListener? = null
     private var usePaddingBackup: Boolean = false
 
     private val paddingBackup = Rect()
@@ -66,12 +69,6 @@ open class ExtendedRelativeLayout(context: Context, attrs: AttributeSet? = null)
         return super.onInterceptTouchEvent(event)
     }
 
-    @Deprecated("Deprecated in Android")
-    override fun fitSystemWindows(insets: Rect): Boolean {
-        onFitSystemWindowsListener?.onFitSystemWindows(insets)
-        @Suppress("DEPRECATION")
-        return super.fitSystemWindows(insets)
-    }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (touchInterceptor != null) {
@@ -106,6 +103,12 @@ open class ExtendedRelativeLayout(context: Context, attrs: AttributeSet? = null)
         @Suppress("DEPRECATION")
         super.setBackgroundDrawable(background)
         restorePadding()
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    override fun onApplyWindowInsets(insets: WindowInsets): WindowInsets {
+        onApplySystemWindowInsetsListener?.onApplySystemWindowInsets(insets.systemWindowInsets)
+        return super.onApplyWindowInsets(insets)
     }
 
     private fun backupPadding() {

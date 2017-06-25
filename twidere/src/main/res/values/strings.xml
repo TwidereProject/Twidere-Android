@@ -347,6 +347,7 @@
     <string name="error_message_status_too_long">Tweet too long.</string>
     <string name="error_message_tweet_shorten_failed">Tweet shorten failed.</string>
     <string name="error_message_tweet_shortener_not_found">Tweet shortener not found, maybe it was uninstalled.</string>
+    <string name="error_message_video_upload_not_supported">Video upload not supported</string>
     <string name="error_no_access_for_credentials">Your application can\'t access this resource.</string>
     <string name="error_no_dm_permission">No direct message permission, check your Twitter application permission setting.</string>
     <string name="error_title_device_incompatible">Incompatible device</string>
@@ -872,6 +873,7 @@
     <string name="preference_title_media_preload_non_metered_network">Preload on free network</string>
     <string name="preference_title_multi_column_tab_width">Multi column tab width</string>
     <string name="preference_title_multi_column_tabs">Multi column tabs</string>
+    <string name="preference_title_navbar_style">Navbar style</string>
     <string name="preference_title_notification_ringtone">Ringtone</string>
     <string name="preference_title_override_language">App language</string>
     <string name="preference_title_portrait">Portrait</string>
@@ -920,7 +922,7 @@
 
     <!-- Normally you don't need to translate this -->
     <string name="provider_default">Twidere</string>
-    <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+    <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
     <string name="provider_fanfou">Fanfou</string>
     <string name="provider_gnusocial_de">GNU Social.de</string>
     <string name="provider_gnusocial_net">GNU Social.net</string>
@@ -1321,5 +1323,4 @@
     <string name="users_blocked">Blocked these users.</string>
     <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>\'s lists</string>
     <string name="users_statuses">User\'s tweets</string>
-    <string name="error_message_video_upload_not_supported">Video upload not supported</string>
 </resources>

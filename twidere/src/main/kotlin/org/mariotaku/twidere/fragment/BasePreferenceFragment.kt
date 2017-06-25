@@ -75,7 +75,7 @@ abstract class BasePreferenceFragment : PreferenceFragmentCompat(), IBaseFragmen
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        requestFitSystemWindows()
+        requestApplyInsets()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -125,7 +125,7 @@ abstract class BasePreferenceFragment : PreferenceFragmentCompat(), IBaseFragmen
         return actionHelper.executeAfterFragmentResumed(useHandler, action)
     }
 
-    override fun fitSystemWindows(insets: Rect) {
+    override fun applySystemWindowInsets(insets: Rect) {
         listView.setPadding(insets.left, insets.top, insets.right, insets.bottom)
     }
 

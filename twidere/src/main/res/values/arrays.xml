@@ -30,6 +30,11 @@
         <item>Scale</item>
         <item>Real size</item>
     </string-array>
+    <string-array name="entries_navbar_style">
+        <item>Default</item>
+        <item>Transparent</item>
+        <item>Colored</item>
+    </string-array>
     <string-array name="entries_notification_content">
         <item>Home</item>
         <item>Interactions</item>
@@ -43,6 +48,13 @@
         <item>HTTP</item>
         <item>Reverse proxy</item>
         <!--<item>SOCKS</item>-->
+    </string-array>
+    <string-array name="entries_quick_access_shortcut_types">
+        <item>User</item>
+        <item>User timeline</item>
+        <item>User Favorites</item>
+        <item>List</item>
+        <item>List timeline</item>
     </string-array>
     <string-array name="entries_refresh_interval">
         <item>3 minutes</item>
@@ -73,13 +85,6 @@
         <item>Default</item>
         <item>Pure white/black</item>
         <item>Transparent</item>
-    </string-array>
-    <string-array name="entries_quick_access_shortcut_types">
-        <item>User</item>
-        <item>User timeline</item>
-        <item>User Favorites</item>
-        <item>List</item>
-        <item>List timeline</item>
     </string-array>
     <string-array name="entries_user_timeline_filter">
         <item>Replies</item>

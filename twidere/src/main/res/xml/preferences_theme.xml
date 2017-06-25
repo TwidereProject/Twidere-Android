@@ -45,6 +45,20 @@
             android:value="true"/>
     </org.mariotaku.twidere.preference.ColorPickerPreference>
 
+    <org.mariotaku.twidere.preference.EntrySummaryListPreference
+        android:entries="@array/entries_navbar_style"
+        android:entryValues="@array/values_navbar_style"
+        android:key="navbar_style"
+        android:order="24"
+        android:title="@string/preference_title_navbar_style">
+        <extra
+            android:name="should_recreate"
+            android:value="true"/>
+        <extra
+            android:name="recreate_activity"
+            android:value="true"/>
+    </org.mariotaku.twidere.preference.EntrySummaryListPreference>
+
     <org.mariotaku.twidere.preference.EmojiSupportPreference
         android:key="emoji_support"
         android:order="25"

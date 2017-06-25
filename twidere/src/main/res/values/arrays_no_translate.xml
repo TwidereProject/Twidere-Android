@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!--
   ~                 Twidere - Twitter client for Android
   ~
@@ -17,65 +17,63 @@
   ~  You should have received a copy of the GNU General Public License
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-
 <resources>
-    <string-array name="values_refresh_interval">
-        <item>3</item>
-        <item>5</item>
-        <item>10</item>
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>120</item>
-        <item>240</item>
-    </string-array>
-    <string-array name="values_theme">
-        <item>light</item>
-        <item>dark</item>
-        <item>auto</item>
-    </string-array>
-    <string-array name="values_theme_background">
-        <item>default</item>
-        <item>solid</item>
-        <item>transparent</item>
+    <string-array name="dependency_values_false">
+        <item>false</item>
     </string-array>
     <string-array name="dependency_values_true">
         <item>true</item>
     </string-array>
-    <string-array name="dependency_values_false">
-        <item>false</item>
+
+    <string-array name="names_official_consumer_secret">
+        <!--Twitter for Android-->
+        <item>Twitter for Android</item>
+        <!--Twitter for iPhone-->
+        <item>Twitter for iPhone</item>
+        <!--Twitter for iPad-->
+        <item>Twitter for iPad</item>
+        <!--Twitter for Mac-->
+        <item>Twitter for Mac</item>
+        <!--Twitter for Windows Phone-->
+        <item>Twitter for Windows Phone</item>
+        <!--Twitter for Google TV-->
+        <item>Twitter for Google TV</item>
+        <!--TweetDeck-->
+        <item>TweetDeck</item>
     </string-array>
-    <string-array name="values_tab_display_option">
-        <item>icon</item>
-        <item>label</item>
-        <item>both</item>
+
+    <string-array name="types_official_consumer_secret">
+        <!--Twitter for Android-->
+        <item>TWITTER_FOR_ANDROID</item>
+        <!--Twitter for iPhone-->
+        <item>TWITTER_FOR_IPHONE</item>
+        <!--Twitter for iPad-->
+        <item>TWITTER_FOR_IPAD</item>
+        <!--Twitter for Mac-->
+        <item>TWITTER_FOR_MAC</item>
+        <!--Twitter for Windows Phone-->
+        <item>TWITTER_FOR_WINDOWS_PHONE</item>
+        <!--Twitter for Google TV-->
+        <item>TWITTER_FOR_GOOGLE_TV</item>
+        <!--TweetDeck-->
+        <item>TWEETDECK</item>
     </string-array>
-    <string-array name="values_compose_now_action">
-        <item>compose</item>
-        <item>take_photo</item>
-        <item>pick_image</item>
-    </string-array>
-    <string-array name="values_media_preview_style">
-        <item>crop</item>
-        <item>scale</item>
-        <item>real_size</item>
-    </string-array>
+
     <string-array name="value_image_sources">
         <item>camera</item>
         <item>gallery</item>
         <item>clipboard</item>
     </string-array>
-    <string-array name="values_profile_image_style">
-        <item>round</item>
-        <item>square</item>
+
+    <string-array name="values_compose_location">
+        <item>none</item>
+        <item>place</item>
+        <item>coordinate</item>
     </string-array>
-    <string-array name="values_proxy_type">
-        <item>http</item>
-        <item>reverse</item>
-        <!--<item>socks</item>-->
-    </string-array>
-    <string-array name="values_media_preload">
-        <item>wifi</item>
+    <string-array name="values_compose_now_action">
+        <item>compose</item>
+        <item>take_photo</item>
+        <item>pick_image</item>
     </string-array>
     <string-array name="values_home_refresh_content">
         <item>mentions</item>
@@ -83,31 +81,23 @@
         <item>trends</item>
         <item>saved_searches</item>
     </string-array>
+    <string-array name="values_media_preload">
+        <item>wifi</item>
+    </string-array>
+    <string-array name="values_media_preview_style">
+        <item>crop</item>
+        <item>scale</item>
+        <item>real_size</item>
+    </string-array>
+    <string-array name="values_navbar_style">
+        <item>default</item>
+        <item>transparent</item>
+        <item>colored</item>
+    </string-array>
     <string-array name="values_notification_content">
         <item>home</item>
         <item>mentions</item>
         <item>inbox</item>
-    </string-array>
-    <string-array name="values_compose_location">
-        <item>none</item>
-        <item>place</item>
-        <item>coordinate</item>
-    </string-array>
-    <string-array name="values_tab_column_width">
-        <item>narrow</item>
-        <item>normal</item>
-        <item>wide</item>
-    </string-array>
-    <string-array name="values_quick_access_shortcut_types">
-        <item>user</item>
-        <item>user_timeline</item>
-        <item>user_favorites</item>
-        <item>list</item>
-        <item>list_timeline</item>
-    </string-array>
-    <string-array name="values_user_timeline_filter">
-        <item>replies</item>
-        <item>retweets</item>
     </string-array>
     <!-- CRC32 checksum of consumer secret of official clients to check whether user is using official keys -->
     <string-array name="values_official_consumer_secret_crc32">
@@ -126,36 +116,54 @@
         <!--TweetDeck-->
         <item>ac602936</item>
     </string-array>
-    <string-array name="names_official_consumer_secret">
-        <!--Twitter for Android-->
-        <item>Twitter for Android</item>
-        <!--Twitter for iPhone-->
-        <item>Twitter for iPhone</item>
-        <!--Twitter for iPad-->
-        <item>Twitter for iPad</item>
-        <!--Twitter for Mac-->
-        <item>Twitter for Mac</item>
-        <!--Twitter for Windows Phone-->
-        <item>Twitter for Windows Phone</item>
-        <!--Twitter for Google TV-->
-        <item>Twitter for Google TV</item>
-        <!--TweetDeck-->
-        <item>TweetDeck</item>
+    <string-array name="values_profile_image_style">
+        <item>round</item>
+        <item>square</item>
     </string-array>
-    <string-array name="types_official_consumer_secret">
-        <!--Twitter for Android-->
-        <item>TWITTER_FOR_ANDROID</item>
-        <!--Twitter for iPhone-->
-        <item>TWITTER_FOR_IPHONE</item>
-        <!--Twitter for iPad-->
-        <item>TWITTER_FOR_IPAD</item>
-        <!--Twitter for Mac-->
-        <item>TWITTER_FOR_MAC</item>
-        <!--Twitter for Windows Phone-->
-        <item>TWITTER_FOR_WINDOWS_PHONE</item>
-        <!--Twitter for Google TV-->
-        <item>TWITTER_FOR_GOOGLE_TV</item>
-        <!--TweetDeck-->
-        <item>TWEETDECK</item>
+    <string-array name="values_proxy_type">
+        <item>http</item>
+        <item>reverse</item>
+        <!--<item>socks</item>-->
+    </string-array>
+    <string-array name="values_quick_access_shortcut_types">
+        <item>user</item>
+        <item>user_timeline</item>
+        <item>user_favorites</item>
+        <item>list</item>
+        <item>list_timeline</item>
+    </string-array>
+    <string-array name="values_refresh_interval">
+        <item>3</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>120</item>
+        <item>240</item>
+    </string-array>
+    <string-array name="values_tab_column_width">
+        <item>narrow</item>
+        <item>normal</item>
+        <item>wide</item>
+    </string-array>
+    <string-array name="values_tab_display_option">
+        <item>icon</item>
+        <item>label</item>
+        <item>both</item>
+    </string-array>
+    <string-array name="values_theme">
+        <item>light</item>
+        <item>dark</item>
+        <item>auto</item>
+    </string-array>
+    <string-array name="values_theme_background">
+        <item>default</item>
+        <item>solid</item>
+        <item>transparent</item>
+    </string-array>
+    <string-array name="values_user_timeline_filter">
+        <item>replies</item>
+        <item>retweets</item>
     </string-array>
 </resources>

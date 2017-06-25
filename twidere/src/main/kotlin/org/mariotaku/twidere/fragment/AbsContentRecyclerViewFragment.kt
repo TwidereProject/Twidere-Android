@@ -162,7 +162,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
         refreshEnabled = position == ILoadMoreSupportAdapter.NONE
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is IControlBarActivity) {
             context.registerControlBarOffsetListener(this)
@@ -249,7 +249,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
     protected open val extraContentPadding: Rect
         get() = Rect()
 
-    override fun fitSystemWindows(insets: Rect) {
+    override fun applySystemWindowInsets(insets: Rect) {
         val extraPadding = extraContentPadding
         recyclerView.setPadding(insets.left + extraPadding.left, insets.top + extraPadding.top,
                 insets.right + extraPadding.right, insets.bottom + extraPadding.bottom)

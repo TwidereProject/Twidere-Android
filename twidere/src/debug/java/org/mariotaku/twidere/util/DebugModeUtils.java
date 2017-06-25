@@ -87,6 +87,11 @@ public class DebugModeUtils {
     static void initLeakCanary(Application application) {
         if (!BuildConfig.LEAK_CANARY_ENABLED) return;
         LeakCanary.enableDisplayLeakActivity(application);
+        if (LeakCanary.isInAnalyzerProcess(application)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
         sRefWatcher = LeakCanary.install(application);
     }
 

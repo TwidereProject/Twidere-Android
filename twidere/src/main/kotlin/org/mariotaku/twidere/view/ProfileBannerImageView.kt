@@ -19,12 +19,15 @@
 
 package org.mariotaku.twidere.view
 
+import android.annotation.TargetApi
 import android.content.Context
-import android.graphics.Rect
+import android.os.Build
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import android.view.WindowInsets
 import android.widget.ImageView
+import org.mariotaku.ktextension.systemWindowInsets
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.view.iface.IExtendedView
 
@@ -33,7 +36,7 @@ class ProfileBannerImageView(context: Context, attrs: AttributeSet) :
 
     override var onSizeChangedListener: IExtendedView.OnSizeChangedListener? = null
     override var touchInterceptor: IExtendedView.TouchInterceptor? = null
-    override var onFitSystemWindowsListener: IExtendedView.OnFitSystemWindowsListener? = null
+    override var onApplySystemWindowInsetsListener: IExtendedView.OnApplySystemWindowInsetsListener? = null
 
     var bannerAspectRatio: Float = 0.toFloat()
 
@@ -42,14 +45,6 @@ class ProfileBannerImageView(context: Context, attrs: AttributeSet) :
         bannerAspectRatio = a.getFraction(R.styleable.ProfileBannerImageView_bannerAspectRatio, 1, 1, 2f)
         a.recycle()
         scaleType = ImageView.ScaleType.CENTER_CROP
-    }
-
-    @Deprecated("")
-    override fun fitSystemWindows(insets: Rect): Boolean {
-        if (onFitSystemWindowsListener != null) {
-            onFitSystemWindowsListener!!.onFitSystemWindows(insets)
-        }
-        return super.fitSystemWindows(insets)
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -80,5 +75,11 @@ class ProfileBannerImageView(context: Context, attrs: AttributeSet) :
         if (onSizeChangedListener != null) {
             onSizeChangedListener!!.onSizeChanged(this, w, h, oldw, oldh)
         }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    override fun onApplyWindowInsets(insets: WindowInsets): WindowInsets {
+        onApplySystemWindowInsetsListener?.onApplySystemWindowInsets(insets.systemWindowInsets)
+        return super.onApplyWindowInsets(insets)
     }
 }

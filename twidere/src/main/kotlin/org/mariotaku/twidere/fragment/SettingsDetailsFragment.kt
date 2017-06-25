@@ -22,7 +22,9 @@ package org.mariotaku.twidere.fragment
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
+import android.support.v4.view.ViewCompat
 import android.support.v7.preference.PreferenceScreen
+import android.view.View
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.activity.SettingsActivity
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_SHOULD_TERMINATE
@@ -55,6 +57,12 @@ class SettingsDetailsFragment : BasePreferenceFragment(), OnSharedPreferenceChan
         if (resId != 0) {
             addPreferencesFromResource(resId)
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        listView.fitsSystemWindows = true
+        ViewCompat.requestApplyInsets(listView)
     }
 
     override fun onStart() {

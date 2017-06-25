@@ -58,7 +58,7 @@ class TintedStatusFrameLayout(context: Context, attrs: AttributeSet? = null) :
         setWillNotDraw(false)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-            ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
+            ViewCompat.setOnApplyWindowInsetsListener(this) { _, insets ->
                 val top = insets.systemWindowInsetTop
                 val left = insets.systemWindowInsetLeft
                 val right = insets.systemWindowInsetRight

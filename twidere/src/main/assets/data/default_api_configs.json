@@ -15,13 +15,13 @@
     "name": "Fanfou",
     "type": "fanfou",
     "localized_name": "@string/provider_fanfou",
-    "api_url_format": "http://api.fanfou.com/",
+    "api_url_format": "https://api2.fanfou.com/",
     "auth_type": "oauth",
     "same_oauth_url": true,
     "no_version_suffix": true,
     "consumer_key": "86d1146dda1d21d59351008a1d1058fd",
     "consumer_secret": "c00f4b83dbfc52e2ed78a21d4edfc3cc",
-    "sign_up_url": "http://fanfou.com/register"
+    "sign_up_url": "https://fanfou.com/register"
   },
   {
     "name": "Quitter.se",

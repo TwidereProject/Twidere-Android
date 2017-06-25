@@ -112,7 +112,7 @@ import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.StatusesFragmentDelegate
-import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback
+import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowInsetsCallback
 import org.mariotaku.twidere.fragment.iface.IToolBarSupportFragment
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
@@ -152,7 +152,7 @@ import java.util.*
 
 class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         OnSizeChangedListener, OnTouchListener, DrawerCallback, SupportFragmentCallback,
-        SystemWindowsInsetsCallback, RefreshScrollTopInterface, OnPageChangeListener,
+        SystemWindowInsetsCallback, RefreshScrollTopInterface, OnPageChangeListener,
         KeyboardShortcutCallback, UserColorChangedListener, UserNicknameChangedListener,
         IToolBarSupportFragment, StatusesFragmentDelegate,
         AbsContentRecyclerViewFragment.RefreshCompleteListener {
@@ -554,7 +554,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         return false
     }
 
-    override fun getSystemWindowsInsets(insets: Rect): Boolean {
+    override fun getSystemWindowInsets(insets: Rect): Boolean {
         return false
     }
 
@@ -1158,7 +1158,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     private val keyboardShortcutRecipient: Fragment?
         get() = currentVisibleFragment
 
-    override fun fitSystemWindows(insets: Rect) {
+    override fun applySystemWindowInsets(insets: Rect) {
     }
 
     override fun setupWindow(activity: FragmentActivity): Boolean {
@@ -1295,7 +1295,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     override fun onSizeChanged(view: View, w: Int, h: Int, oldw: Int, oldh: Int) {
         bannerWidth = w
         if (w != oldw || h != oldh) {
-            requestFitSystemWindows()
+            requestApplyInsets()
         }
     }
 

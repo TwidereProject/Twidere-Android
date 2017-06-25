@@ -43,7 +43,7 @@ import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.fragment.AbsToolbarTabPagesFragment
-import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback
+import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowInsetsCallback
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
 import org.mariotaku.twidere.fragment.statuses.MediaStatusesSearchFragment
@@ -59,7 +59,7 @@ import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.ThemeUtils
 
 class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface,
-        SupportFragmentCallback, SystemWindowsInsetsCallback, ControlBarOffsetListener,
+        SupportFragmentCallback, SystemWindowInsetsCallback, ControlBarOffsetListener,
         OnPageChangeListener, LinkHandlerActivity.HideUiOnScroll {
 
     val accountKey: UserKey

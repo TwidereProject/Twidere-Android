@@ -72,13 +72,13 @@ import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.EditTextEnterHandler.EnterListener
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.mariotaku.twidere.view.ProfileImageView
-import org.mariotaku.twidere.view.iface.IExtendedView.OnFitSystemWindowsListener
+import org.mariotaku.twidere.view.iface.IExtendedView.OnApplySystemWindowInsetsListener
 
 /**
  * Created by mariotaku on 15/1/6.
  */
 class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<Cursor?>,
-        OnItemSelectedListener, OnItemClickListener, OnFitSystemWindowsListener,
+        OnItemSelectedListener, OnItemClickListener, OnApplySystemWindowInsetsListener,
         SwipeDismissListViewTouchListener.DismissCallbacks {
 
     private val systemWindowsInsets = Rect()
@@ -113,7 +113,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
                 accountSpinner.setSelection(index)
             }
         }
-        mainContent.onFitSystemWindowsListener = this
+        mainContent.onApplySystemWindowInsetsListener = this
         suggestionsList.adapter = SuggestionsAdapter(this)
         suggestionsList.onItemClickListener = this
 
@@ -259,7 +259,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         adapter.changeCursor(null)
     }
 
-    override fun onFitSystemWindows(insets: Rect) {
+    override fun onApplySystemWindowInsets(insets: Rect) {
         systemWindowsInsets.set(insets)
         updateWindowAttributes()
     }

@@ -135,7 +135,7 @@ open class OnLinkClickHandler(
         if (manager != null && manager.isActive) return
         val uri = Uri.parse(link)
         if (uri.isRelative && accountKey != null && accountKey.host != null) {
-            val absUri = HttpUrl.parse("http://${accountKey.host}/").resolve(link).toUri()
+            val absUri = HttpUrl.parse("http://${accountKey.host}/")?.resolve(link)?.toUri()!!
             openLink(context, preferences, absUri)
             return
         }

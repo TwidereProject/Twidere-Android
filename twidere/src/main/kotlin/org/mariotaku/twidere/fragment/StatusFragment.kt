@@ -695,7 +695,6 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         }
 
         override fun onException(callback: Any?, exception: MicroBlogException) {
-            val context = this.context ?: return
             Toast.makeText(context, exception.getErrorMessage(context), Toast.LENGTH_SHORT).show()
         }
     }

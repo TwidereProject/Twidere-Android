@@ -38,6 +38,8 @@ class SearchUsersFragment : ParcelableUsersFragment() {
         val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
         val query = args.getString(EXTRA_QUERY)
         val pagination = args.getParcelable<Pagination?>(EXTRA_PAGINATION)
-        return UserSearchLoader(context, accountKey, query, adapter.getData(), fromUser)
+        return UserSearchLoader(context, accountKey, query, adapter.getData(), fromUser).apply {
+            this.pagination = pagination
+        }
     }
 }

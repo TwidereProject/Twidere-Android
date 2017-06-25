@@ -1249,7 +1249,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         private val CustomAPIConfig.signUpUrlOrDefault: String?
             get() = signUpUrl ?: when (type) {
                 AccountType.TWITTER -> "https://twitter.com/signup"
-                AccountType.FANFOU -> "http://fanfou.com/register"
+                AccountType.FANFOU -> "https://fanfou.com/register"
                 else -> null
             }
 

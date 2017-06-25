@@ -277,7 +277,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         }
     }
 
-    override fun fitSystemWindows(insets: Rect) {
+    override fun applySystemWindowInsets(insets: Rect) {
         systemWindowsInsets.set(insets)
         updateSystemWindowsInsets()
     }

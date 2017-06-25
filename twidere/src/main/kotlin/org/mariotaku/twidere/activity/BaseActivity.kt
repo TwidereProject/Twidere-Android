@@ -25,6 +25,7 @@ import android.content.*
 import android.content.res.Resources
 import android.graphics.Rect
 import android.nfc.NfcAdapter
+import android.os.Build
 import android.os.Bundle
 import android.support.annotation.StyleRes
 import android.support.v4.graphics.ColorUtils
@@ -38,6 +39,7 @@ import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
+import android.view.WindowManager
 import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
 import org.mariotaku.chameleon.Chameleon
@@ -51,11 +53,8 @@ import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
 import org.mariotaku.twidere.activity.iface.IBaseActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.activity.iface.IThemedActivity
-import org.mariotaku.twidere.constant.themeBackgroundAlphaKey
-import org.mariotaku.twidere.constant.themeBackgroundOptionKey
-import org.mariotaku.twidere.constant.themeColorKey
-import org.mariotaku.twidere.constant.themeKey
-import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback
+import org.mariotaku.twidere.constant.*
+import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowInsetsCallback
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.preference.iface.IDialogPreference
 import org.mariotaku.twidere.util.*
@@ -66,17 +65,18 @@ import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
 import org.mariotaku.twidere.util.support.ActivitySupport
 import org.mariotaku.twidere.util.support.ActivitySupport.TaskDescriptionCompat
+import org.mariotaku.twidere.util.support.WindowSupport
 import org.mariotaku.twidere.util.sync.TimelineSyncManager
 import org.mariotaku.twidere.util.theme.TwidereAppearanceCreator
 import org.mariotaku.twidere.util.theme.getCurrentThemeResource
-import org.mariotaku.twidere.view.iface.IExtendedView.OnFitSystemWindowsListener
+import org.mariotaku.twidere.view.iface.IExtendedView.OnApplySystemWindowInsetsListener
 import java.lang.reflect.InvocationTargetException
 import java.util.*
 import javax.inject.Inject
 
 @SuppressLint("Registered")
 open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThemedActivity,
-        IControlBarActivity, OnFitSystemWindowsListener, SystemWindowsInsetsCallback,
+        IControlBarActivity, OnApplySystemWindowInsetsListener, SystemWindowInsetsCallback,
         KeyboardShortcutCallback, OnPreferenceDisplayDialogCallback {
 
     @Inject
@@ -169,13 +169,13 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     var keyMetaState: Int = 0
         private set
 
-    override fun getSystemWindowsInsets(insets: Rect): Boolean {
+    override fun getSystemWindowInsets(insets: Rect): Boolean {
         if (systemWindowsInsets == null) return false
         insets.set(systemWindowsInsets)
         return true
     }
 
-    override fun onFitSystemWindows(insets: Rect) {
+    override fun onApplySystemWindowInsets(insets: Rect) {
         if (systemWindowsInsets == null)
             systemWindowsInsets = Rect(insets)
         else {
@@ -227,10 +227,12 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
             StrictModeUtils.detectAllThreadPolicy()
         }
         val prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-        val themeResource = getThemeResource(prefs, prefs[themeKey], prefs[themeColorKey])
+        val themeColor = prefs[themeColorKey]
+        val themeResource = getThemeResource(prefs, prefs[themeKey], themeColor)
         if (themeResource != 0) {
             setTheme(themeResource)
         }
+        setNavigationStyle(prefs[navbarStyleKey], themeColor)
         super.onCreate(savedInstanceState)
         ActivitySupport.setTaskDescription(this, TaskDescriptionCompat(title.toString(), null,
                 ColorUtils.setAlphaComponent(overrideTheme.colorToolbar, 0xFF)))
@@ -369,6 +371,18 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     @StyleRes
     protected open fun getThemeResource(preferences: SharedPreferences, theme: String, themeColor: Int): Int {
         return getCurrentThemeResource(this, theme)
+    }
+
+    private fun setNavigationStyle(navbarStyle: String, themeColor: Int) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return
+        when (navbarStyle) {
+            "transparent" -> {
+                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+            }
+            "colored" -> {
+                WindowSupport.setNavigationBarColor(window, themeColor)
+            }
+        }
     }
 
     private fun findClass(name: String): Class<*>? {
