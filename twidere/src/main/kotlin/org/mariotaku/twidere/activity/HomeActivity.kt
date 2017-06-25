@@ -34,12 +34,16 @@ import android.content.res.Configuration
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.AsyncTask
+import android.os.Build
 import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 import android.support.v4.app.NotificationCompat
 import android.support.v4.view.GravityCompat
+import android.support.v4.view.ViewCompat
 import android.support.v4.view.ViewPager.OnPageChangeListener
+import android.support.v4.view.WindowInsetsCompat
+import android.support.v4.view.unwrapped
 import android.support.v4.widget.DrawerLayout
 import android.support.v4.widget.DrawerLayoutAccessor
 import android.support.v7.app.ActionBarDrawerToggle
@@ -71,6 +75,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarShowHideHelper
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.annotation.CustomTabType
+import org.mariotaku.twidere.annotation.NavbarStyle
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.extension.applyTheme
@@ -107,6 +112,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     private lateinit var drawerToggle: ActionBarDrawerToggle
 
     private var propertiesInitialized = false
+    private var actionsButtonBottomMargin: Int = 0
 
     private var updateUnreadCountTask: UpdateUnreadCountTask? = null
     private val readStateChangeListener = OnSharedPreferenceChangeListener { _, _ -> updateUnreadCount() }
@@ -208,10 +214,16 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
         ThemeUtils.setCompatContentViewOverlay(window, EmptyDrawable())
 
-        val refreshOnStart = preferences.getBoolean(SharedPreferenceConstants.KEY_REFRESH_ON_START, false)
+        val refreshOnStart = preferences[refreshOnStartKey]
         var tabDisplayOptionInt = Utils.getTabDisplayOptionInt(this)
 
-        homeContent.onApplySystemWindowInsetsListener = this
+        ViewCompat.setOnApplyWindowInsetsListener(homeContent, this)
+        homeMenu.fitsSystemWindows = Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ||
+                preferences[navbarStyleKey] != NavbarStyle.TRANSPARENT
+        if (!homeMenu.fitsSystemWindows) {
+            ViewCompat.setOnApplyWindowInsetsListener(homeMenu, null)
+        }
+
         mainPager.adapter = pagerAdapter
         mainTabs.setViewPager(mainPager)
         mainTabs.setOnPageChangeListener(this)
@@ -234,6 +246,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         } else {
             actionsButton.visibility = View.GONE
         }
+        actionsButtonBottomMargin = (actionsButton.layoutParams as MarginLayoutParams).bottomMargin
 
         homeContent.addOnLayoutChangeListener { _, _, top, _, _, _, oldTop, _, _ ->
             if (top != oldTop) {
@@ -376,12 +389,19 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         return true
     }
 
-    override fun onApplySystemWindowInsets(insets: Rect) {
-        super.onApplySystemWindowInsets(insets)
+    override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
+        super.onApplyWindowInsets(v, insets)
         val fragment = leftDrawerFragment
         if (fragment is AccountsDashboardFragment) {
             fragment.requestApplyInsets()
         }
+        homeMenu.setChildInsets(insets.unwrapped, insets.systemWindowInsetTop > 0)
+        if (!homeMenu.fitsSystemWindows) {
+            homeContent.setPadding(0, insets.systemWindowInsetTop, 0, 0)
+        }
+        (actionsButton.layoutParams as? MarginLayoutParams)?.bottomMargin =
+                actionsButtonBottomMargin + insets.systemWindowInsetBottom
+        return insets
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -389,17 +409,6 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         if (tabPosition >= 0) {
             mainPager.currentItem = tabPosition.coerceInOr(0 until pagerAdapter.count, 0)
         }
-    }
-
-    override fun getSystemWindowInsets(insets: Rect): Boolean {
-        if (mainTabs == null || homeContent == null) return false
-        val height = mainTabs.height
-        if (height != 0) {
-            insets.top = height
-        } else {
-            insets.top = ThemeUtils.getActionBarHeight(this)
-        }
-        return true
     }
 
     override fun setControlBarVisibleAnimate(visible: Boolean,

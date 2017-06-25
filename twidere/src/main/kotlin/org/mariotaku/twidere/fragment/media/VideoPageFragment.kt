@@ -295,7 +295,7 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         return inflater.inflate(R.layout.layout_media_viewer_texture_video_view, container, false)
     }
 
-    override fun applySystemWindowInsets(insets: Rect) {
+    override fun onApplySystemWindowInsets(insets: Rect) {
         val lp = videoControl.layoutParams
         if (lp is ViewGroup.MarginLayoutParams) {
             lp.bottomMargin = insets.bottom

@@ -253,7 +253,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         return inflater.inflate(R.layout.layout_media_viewer_exo_player_view, parent, false)
     }
 
-    override fun applySystemWindowInsets(insets: Rect) {
+    override fun onApplySystemWindowInsets(insets: Rect) {
         val lp = videoControl.layoutParams
         if (lp is ViewGroup.MarginLayoutParams) {
             lp.bottomMargin = insets.bottom

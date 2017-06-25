@@ -95,7 +95,6 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         OnSharedPreferenceChangeListener, OnClickListener, KeyboardShortcutCallback,
         NavigationView.OnNavigationItemSelectedListener, AccountSelectorAdapter.Listener {
 
-    private val EXTRA_SYNC_LOAD = "sync_load"
     private val systemWindowsInsets = Rect()
 
     private lateinit var accountsAdapter: AccountSelectorAdapter
@@ -122,8 +121,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val inflater = getLayoutInflater(savedInstanceState)
-        accountsAdapter = AccountSelectorAdapter(inflater, preferences, Glide.with(this)).also {
+        accountsAdapter = AccountSelectorAdapter(layoutInflater, preferences, Glide.with(this)).also {
             it.listener = this
         }
         accountsSelector.adapter = accountsAdapter
@@ -183,7 +181,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         accountProfileBanner.setInAnimation(context, android.R.anim.fade_in)
         accountProfileBanner.setOutAnimation(context, android.R.anim.fade_out)
         accountProfileBanner.setFactory {
-            inflater.inflate(R.layout.layout_account_dashboard_profile_banner,
+            layoutInflater.inflate(R.layout.layout_account_dashboard_profile_banner,
                     accountProfileBanner, false)
         }
 
@@ -277,7 +275,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         }
     }
 
-    override fun applySystemWindowInsets(insets: Rect) {
+    override fun onApplySystemWindowInsets(insets: Rect) {
         systemWindowsInsets.set(insets)
         updateSystemWindowsInsets()
     }
@@ -325,6 +323,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     }
 
     private fun updateSystemWindowsInsets() {
+        profileContainer?.setPadding(0, systemWindowsInsets.top, 0, 0)
     }
 
     internal fun updateAccountActions() {

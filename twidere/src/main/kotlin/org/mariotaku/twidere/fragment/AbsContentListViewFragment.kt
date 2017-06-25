@@ -149,7 +149,7 @@ abstract class AbsContentListViewFragment<A : ListAdapter> : BaseFragment(),
         super.onStop()
     }
 
-    override fun applySystemWindowInsets(insets: Rect) {
+    override fun onApplySystemWindowInsets(insets: Rect) {
         listView.setPadding(insets.left, insets.top, insets.right, insets.bottom)
         errorContainer.setPadding(insets.left, insets.top, insets.right, insets.bottom)
         progressContainer.setPadding(insets.left, insets.top, insets.right, insets.bottom)

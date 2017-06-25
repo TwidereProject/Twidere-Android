@@ -249,7 +249,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
     protected open val extraContentPadding: Rect
         get() = Rect()
 
-    override fun applySystemWindowInsets(insets: Rect) {
+    override fun onApplySystemWindowInsets(insets: Rect) {
         val extraPadding = extraContentPadding
         recyclerView.setPadding(insets.left + extraPadding.left, insets.top + extraPadding.top,
                 insets.right + extraPadding.right, insets.bottom + extraPadding.bottom)

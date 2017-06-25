@@ -18,11 +18,12 @@
   -->
 
 <org.mariotaku.twidere.view.HomeDrawerLayout
-    android:id="@+id/homeMenu"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/homeMenu"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <include
         layout="@layout/activity_home_content"

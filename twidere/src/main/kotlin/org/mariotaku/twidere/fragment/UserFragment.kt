@@ -1158,7 +1158,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     private val keyboardShortcutRecipient: Fragment?
         get() = currentVisibleFragment
 
-    override fun applySystemWindowInsets(insets: Rect) {
+    override fun onApplySystemWindowInsets(insets: Rect) {
     }
 
     override fun setupWindow(activity: FragmentActivity): Boolean {

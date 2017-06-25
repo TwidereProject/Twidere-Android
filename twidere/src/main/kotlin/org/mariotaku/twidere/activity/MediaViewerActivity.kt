@@ -20,7 +20,6 @@ import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -31,7 +30,9 @@ import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.ColorUtils
+import android.support.v4.view.ViewCompat
 import android.support.v4.view.ViewPager
+import android.support.v4.view.WindowInsetsCompat
 import android.support.v4.widget.ViewDragHelper
 import android.support.v7.app.WindowDecorActionBar
 import android.support.v7.app.decorToolbar
@@ -67,7 +68,6 @@ import org.mariotaku.twidere.util.PermissionUtils
 import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.support.WindowSupport
-import org.mariotaku.twidere.view.TintedStatusFrameLayout
 import org.mariotaku.twidere.view.viewer.MediaSwipeCloseContainer
 import java.io.File
 import javax.inject.Inject
@@ -152,12 +152,10 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         swipeContainer.backgroundAlpha = 1f
         WindowSupport.setStatusBarColor(window, Color.TRANSPARENT)
         activityLayout.setStatusBarColor(overrideTheme.colorToolbar)
-        activityLayout.windowInsetsListener = object : TintedStatusFrameLayout.WindowInsetsListener {
-            override fun onApplyWindowInsets(left: Int, top: Int, right: Int, bottom: Int) {
-                val statusBarHeight = top - ThemeUtils.getActionBarHeight(this@MediaViewerActivity)
-                activityLayout.setStatusBarHeight(statusBarHeight)
-                onApplySystemWindowInsets(Rect(left, top, right, bottom))
-            }
+        ViewCompat.setOnApplyWindowInsetsListener(activityLayout) { view, insets ->
+            val statusBarHeight = insets.systemWindowInsetTop - ThemeUtils.getActionBarHeight(this)
+            activityLayout.setStatusBarHeight(statusBarHeight)
+            onApplyWindowInsets(view, insets)
         }
     }
 
@@ -407,14 +405,14 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         controlBarShowHideHelper.setControlBarVisibleAnimate(visible, listener)
     }
 
-    override fun onApplySystemWindowInsets(insets: Rect) {
-        super.onApplySystemWindowInsets(insets)
+    override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
         val adapter = viewPager.adapter
-        if (adapter.count == 0) return
+        if (adapter.count == 0) return insets
         val fragment = adapter.instantiateItem(viewPager, viewPager.currentItem)
         if (fragment is IBaseFragment<*>) {
             fragment.requestApplyInsets()
         }
+        return insets
     }
 
     private fun processShareIntent(intent: Intent) {

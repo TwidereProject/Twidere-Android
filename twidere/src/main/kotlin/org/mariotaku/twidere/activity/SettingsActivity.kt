@@ -43,7 +43,6 @@ import kotlinx.android.synthetic.main.activity_settings.*
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
-import org.mariotaku.ktextension.systemWindowInsets
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.ACTION_NAVIGATION_BACK
@@ -89,8 +88,8 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
         slidingPane.setShadowResourceRight(R.drawable.sliding_pane_shadow_right)
         slidingPane.sliderFadeColor = 0
 
-        ViewCompat.setOnApplyWindowInsetsListener(slidingPane) listener@ { _, insets ->
-            onApplySystemWindowInsets(insets.systemWindowInsets)
+        ViewCompat.setOnApplyWindowInsetsListener(slidingPane) listener@ { view, insets ->
+            onApplyWindowInsets(view, insets)
             entriesList.setPadding(0, insets.systemWindowInsetTop, 0, insets.systemWindowInsetBottom)
             return@listener insets
         }

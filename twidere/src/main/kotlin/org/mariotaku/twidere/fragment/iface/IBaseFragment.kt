@@ -53,11 +53,11 @@ interface IBaseFragment<out F : Fragment> {
         }
         val insets = Rect()
         if (callback.getSystemWindowInsets(insets)) {
-            applySystemWindowInsets(insets)
+            onApplySystemWindowInsets(insets)
         }
     }
 
-    fun applySystemWindowInsets(insets: Rect) {
+    fun onApplySystemWindowInsets(insets: Rect) {
         this as Fragment
         view?.setPadding(insets.left, insets.top, insets.right, insets.bottom)
     }

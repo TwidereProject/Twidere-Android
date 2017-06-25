@@ -26,12 +26,13 @@ import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.graphics.PorterDuff.Mode
-import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.CursorLoader
 import android.support.v4.content.Loader
+import android.support.v4.view.ViewCompat
+import android.support.v4.view.WindowInsetsCompat
 import android.support.v4.widget.CursorAdapter
 import android.text.Editable
 import android.text.TextUtils
@@ -72,16 +73,13 @@ import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.EditTextEnterHandler.EnterListener
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.mariotaku.twidere.view.ProfileImageView
-import org.mariotaku.twidere.view.iface.IExtendedView.OnApplySystemWindowInsetsListener
 
 /**
  * Created by mariotaku on 15/1/6.
  */
 class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<Cursor?>,
-        OnItemSelectedListener, OnItemClickListener, OnApplySystemWindowInsetsListener,
-        SwipeDismissListViewTouchListener.DismissCallbacks {
+        OnItemSelectedListener, OnItemClickListener, SwipeDismissListViewTouchListener.DismissCallbacks {
 
-    private val systemWindowsInsets = Rect()
     private var textChanged: Boolean = false
     private var hasQrScanner: Boolean = false
 
@@ -113,7 +111,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
                 accountSpinner.setSelection(index)
             }
         }
-        mainContent.onApplySystemWindowInsetsListener = this
+        ViewCompat.setOnApplyWindowInsetsListener(mainContent, this)
         suggestionsList.adapter = SuggestionsAdapter(this)
         suggestionsList.onItemClickListener = this
 
@@ -259,9 +257,11 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         adapter.changeCursor(null)
     }
 
-    override fun onApplySystemWindowInsets(insets: Rect) {
-        systemWindowsInsets.set(insets)
+
+    override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
+        super.onApplyWindowInsets(v, insets)
         updateWindowAttributes()
+        return insets
     }
 
     override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
@@ -331,7 +331,8 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         }
 
     private fun updateWindowAttributes() {
-        val window = window
+        val window = window ?: return
+        val systemWindowsInsets = systemWindowsInsets ?: return
         val attributes = window.attributes
         attributes.gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
         attributes.y = systemWindowsInsets.top

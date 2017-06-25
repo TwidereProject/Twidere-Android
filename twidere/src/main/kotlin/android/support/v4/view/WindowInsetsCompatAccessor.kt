@@ -17,24 +17,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.ktextension
+package android.support.v4.view
 
-import android.annotation.TargetApi
-import android.graphics.Rect
-import android.os.Build
-import android.support.v4.view.WindowInsetsCompat
-import android.view.WindowInsets
-
-inline val WindowInsetsCompat.systemWindowInsets: Rect
-    get() = Rect(systemWindowInsetLeft, systemWindowInsetTop, systemWindowInsetRight,
-            systemWindowInsetBottom)
-
-fun WindowInsetsCompat.getSystemWindowInsets(rect: Rect) {
-    rect.set(systemWindowInsetLeft, systemWindowInsetTop, systemWindowInsetRight,
-            systemWindowInsetBottom)
-}
-
-inline val WindowInsets.systemWindowInsets: Rect
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    get() = Rect(systemWindowInsetLeft, systemWindowInsetTop, systemWindowInsetRight,
-            systemWindowInsetBottom)
+/**
+ * Created by mariotaku on 2017/6/25.
+ */
+val WindowInsetsCompat.unwrapped: Any?
+    @Suppress("RestrictedApi")
+    get() = WindowInsetsCompat.unwrap(this)
