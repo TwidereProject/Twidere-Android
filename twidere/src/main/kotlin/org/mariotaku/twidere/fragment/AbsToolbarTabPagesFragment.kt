@@ -6,6 +6,7 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
+import android.support.v4.view.OnApplyWindowInsetsListener
 import android.support.v4.view.ViewPager.OnPageChangeListener
 import android.support.v7.widget.Toolbar
 import android.view.KeyEvent
@@ -28,6 +29,7 @@ import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
+import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.view.TabPagerIndicator
 import org.mariotaku.twidere.view.iface.IExtendedView
 
@@ -52,6 +54,11 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
         toolbarTabs.setViewPager(viewPager)
         toolbarTabs.setTabDisplayOption(TabPagerIndicator.DisplayOption.LABEL)
 
+        tabPagesFragmentView.applyWindowInsetsListener = OnApplyWindowInsetsListener listener@ { _, insets ->
+            val top = insets.systemWindowInsetTop
+            tabPagesFragmentView.setPadding(0, top, 0, 0)
+            return@listener insets
+        }
 
         addTabs(pagerAdapter)
         toolbarTabs.notifyDataSetChanged()
@@ -138,8 +145,13 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
     }
 
     override fun getSystemWindowInsets(caller: Fragment, insets: Rect): Boolean {
-        if (toolbarTabs == null) return false
-        insets.set(0, toolbarContainer.height, 0, 0)
+        insetsCallback?.getSystemWindowInsets(this, insets)
+        val height = toolbarContainer.height
+        if (height != 0) {
+            insets.top = height
+        } else {
+            insets.top = ThemeUtils.getActionBarHeight(context)
+        }
         return true
     }
 

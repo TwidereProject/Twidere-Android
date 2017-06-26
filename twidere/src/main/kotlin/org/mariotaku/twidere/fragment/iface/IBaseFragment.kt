@@ -39,18 +39,22 @@ interface IBaseFragment<out F : Fragment> {
     val tabId: Long
         get() = (this as Fragment).arguments?.getLong(IntentConstants.EXTRA_TAB_ID, -1L) ?: -1L
 
+    val insetsCallback: SystemWindowInsetsCallback?
+        get() {
+            val fragment = this as Fragment
+            val activity = fragment.activity
+            val parentFragment = fragment.parentFragment
+            if (parentFragment is SystemWindowInsetsCallback) {
+                return parentFragment
+            } else if (activity is SystemWindowInsetsCallback) {
+                return activity
+            }
+            return null
+        }
+
     fun requestApplyInsets() {
         val fragment = this as Fragment
-        val activity = fragment.activity
-        val parentFragment = fragment.parentFragment
-        val callback: SystemWindowInsetsCallback
-        if (parentFragment is SystemWindowInsetsCallback) {
-            callback = parentFragment
-        } else if (activity is SystemWindowInsetsCallback) {
-            callback = activity
-        } else {
-            return
-        }
+        val callback = insetsCallback ?: return
         val insets = Rect()
         if (callback.getSystemWindowInsets(fragment, insets)) {
             onApplySystemWindowInsets(insets)

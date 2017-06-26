@@ -555,7 +555,9 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     override fun getSystemWindowInsets(caller: Fragment, insets: Rect): Boolean {
-        return false
+        insetsCallback?.getSystemWindowInsets(this, insets)
+        insets.top = 0
+        return true
     }
 
     fun getUserInfo(accountKey: UserKey, userKey: UserKey?, screenName: String?,
