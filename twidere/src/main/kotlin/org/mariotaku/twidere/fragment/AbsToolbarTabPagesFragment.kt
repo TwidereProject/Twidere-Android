@@ -137,7 +137,7 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
     override fun onApplySystemWindowInsets(insets: Rect) {
     }
 
-    override fun getSystemWindowInsets(insets: Rect): Boolean {
+    override fun getSystemWindowInsets(caller: Fragment, insets: Rect): Boolean {
         if (toolbarTabs == null) return false
         insets.set(0, toolbarContainer.height, 0, 0)
         return true

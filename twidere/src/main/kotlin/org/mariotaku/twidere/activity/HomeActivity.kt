@@ -389,6 +389,19 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         return true
     }
 
+    override fun getSystemWindowInsets(caller: Fragment, insets: Rect): Boolean {
+        if (caller === leftDrawerFragment) return super.getSystemWindowInsets(caller, insets)
+        if (mainTabs == null || homeContent == null) return false
+        val height = mainTabs.height
+        if (height != 0) {
+            insets.top = height
+        } else {
+            insets.top = ThemeUtils.getActionBarHeight(this)
+        }
+        insets.bottom = systemWindowsInsets?.bottom ?: 0
+        return true
+    }
+
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
         super.onApplyWindowInsets(v, insets)
         val fragment = leftDrawerFragment

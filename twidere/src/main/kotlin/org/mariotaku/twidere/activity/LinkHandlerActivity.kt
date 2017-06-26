@@ -153,6 +153,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
                 val f = currentVisibleFragment as? IFloatingActionButtonFragment
                 f?.onActionClick("link_handler")
             }
+            contentView.applyWindowInsetsListener = this
             contentFragmentId = R.id.contentFragment
         }
 
@@ -206,11 +207,13 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
     }
 
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
-        return super.onApplyWindowInsets(v, insets)
+        val result = super.onApplyWindowInsets(v, insets)
         val fragment = currentVisibleFragment
         if (fragment is IBaseFragment<*>) {
             fragment.requestApplyInsets()
         }
+
+        return result.consumeSystemWindowInsets()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

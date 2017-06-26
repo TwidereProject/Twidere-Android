@@ -38,15 +38,15 @@ import android.support.v4.view.OnApplyWindowInsetsListener as OnApplyWindowInset
 /**
  * Created by mariotaku on 14/11/26.
  */
-class TintedStatusFrameLayout(context: Context, attrs: AttributeSet? = null) :
-        ExtendedFrameLayout(context, attrs), TintedStatusLayout, ChameleonView,
+class TintedStatusRelativeLayout(context: Context, attrs: AttributeSet? = null) :
+        ExtendedRelativeLayout(context, attrs), TintedStatusLayout, ChameleonView,
         ChameleonView.StatusBarThemeable {
 
     override var setPaddingEnabled: Boolean = false
 
     private val colorPaint: Paint
     private var statusBarHeight: Int = 0
-    var windowInsetsListener: OnApplyWindowInsetsListenerCompat? = null
+    var applyWindowInsetsListener: OnApplyWindowInsetsListenerCompat? = null
 
     init {
         val a = context.obtainStyledAttributes(attrs, R.styleable.TintedStatusLayout)
@@ -65,7 +65,7 @@ class TintedStatusFrameLayout(context: Context, attrs: AttributeSet? = null) :
                     setPadding(left, top, right, bottom)
                 }
                 setStatusBarHeight(top)
-                windowInsetsListener?.onApplyWindowInsets(view, insets)
+                applyWindowInsetsListener?.onApplyWindowInsets(view, insets)
                 insets.consumeSystemWindowInsets()
             }
         }

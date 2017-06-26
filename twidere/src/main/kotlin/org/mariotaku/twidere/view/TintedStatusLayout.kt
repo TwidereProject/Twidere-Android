@@ -29,4 +29,8 @@ interface TintedStatusLayout : IExtendedView {
 
     var setPaddingEnabled: Boolean
 
+
+    interface WindowInsetsListener {
+        fun onApplyWindowInsets(left: Int, top: Int, right: Int, bottom: Int)
+    }
 }
