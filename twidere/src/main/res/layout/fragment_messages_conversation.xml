@@ -17,14 +17,15 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<RelativeLayout
-    android:id="@+id/conversationContainer"
+<org.mariotaku.twidere.view.TintedStatusRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/conversationContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:visibility="visible"
+    app:setPadding="true"
     tools:context=".fragment.message.MessagesConversationFragment">
 
     <include
@@ -180,4 +181,4 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
         android:background="?android:windowContentOverlay"/>
-</RelativeLayout>
+</org.mariotaku.twidere.view.TintedStatusRelativeLayout>

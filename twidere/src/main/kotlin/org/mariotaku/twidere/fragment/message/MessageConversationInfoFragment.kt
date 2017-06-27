@@ -165,6 +165,9 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         appBarIcon.style = profileImageStyle
         conversationAvatar.style = profileImageStyle
 
+        toolbarLayout.setStatusBarScrimColor(theme.statusBarColor)
+        coordinatorLayout.setStatusBarBackgroundColor(theme.statusBarColor)
+
         val avatarBackground = ChameleonUtils.getColorDependent(theme.colorToolbar)
         appBarIcon.setShapeBackground(avatarBackground)
         appBarTitle.setTextColor(ChameleonUtils.getColorDependent(theme.colorToolbar))
@@ -212,6 +215,10 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_messages_conversation_info, menu)
+    }
+
+    override fun onApplySystemWindowInsets(insets: Rect) {
+        // No-op
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
