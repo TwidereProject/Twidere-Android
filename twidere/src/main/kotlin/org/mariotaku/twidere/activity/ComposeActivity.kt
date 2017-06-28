@@ -1024,11 +1024,17 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             val selectionEnd = editText.length()
             editText.setSelection(selectionStart, selectionEnd)
         }
+
+        editSummary.string = status.extras?.summary_text
+
+        editSummaryEnabled = !editSummary.empty
         statusVisibility = intent.getStringExtra(EXTRA_VISIBILITY) ?: status.extras?.visibility
         possiblySensitive = intent.getBooleanExtra(EXTRA_IS_POSSIBLY_SENSITIVE,
                 details.type == AccountType.MASTODON && status.is_possibly_sensitive)
         accountsAdapter.selectedAccountKeys = arrayOf(status.account_key)
         showReplyLabelAndHint(status)
+
+        editText.requestFocus()
         return true
     }
 
