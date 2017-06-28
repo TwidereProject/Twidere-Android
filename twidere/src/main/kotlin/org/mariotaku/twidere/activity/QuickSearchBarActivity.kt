@@ -332,10 +332,9 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
 
     private fun updateWindowAttributes() {
         val window = window ?: return
-        val systemWindowsInsets = systemWindowsInsets ?: return
         val attributes = window.attributes
         attributes.gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
-        attributes.y = systemWindowsInsets.top
+        attributes.y = systemWindowsInsets?.top ?: 0
         window.attributes = attributes
     }
 
