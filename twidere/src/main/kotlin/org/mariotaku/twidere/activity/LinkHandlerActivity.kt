@@ -138,7 +138,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
                 supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
                 supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_MODE_OVERLAY)
             }
-            ViewCompat.setOnApplyWindowInsetsListener(window.decorView, this)
+            ViewCompat.setOnApplyWindowInsetsListener(window.findViewById(android.R.id.content), this)
             contentFragmentId = android.R.id.content
         } else {
             setContentView(R.layout.activity_link_handler)
