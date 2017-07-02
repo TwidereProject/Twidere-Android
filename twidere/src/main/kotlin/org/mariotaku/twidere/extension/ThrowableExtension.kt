@@ -44,7 +44,11 @@ private fun MicroBlogException.getMicroBlogErrorMessage(context: Context): Strin
         val nextResetTime = DateUtils.getRelativeTimeSpanString(System.currentTimeMillis() + secUntilReset)
         return context.getString(R.string.error_message_rate_limit, nextResetTime.trim())
     } else if (isCausedByNetworkIssue) {
-        return context.getString(R.string.message_toast_network_error)
+        val msg = cause?.message
+        if (msg.isNullOrEmpty()) {
+            return context.getString(R.string.message_toast_network_error)
+        }
+        return context.getString(R.string.message_toast_network_error_with_message, msg)
     }
     val msg = if (StatusCodeMessageUtils.containsTwitterError(errorCode)) {
         StatusCodeMessageUtils.getTwitterErrorMessage(context, errorCode)

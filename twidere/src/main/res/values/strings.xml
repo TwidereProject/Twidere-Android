@@ -677,6 +677,7 @@
     <string name="message_toast_login_verification_failed">Login verification failed</string>
     <!-- Toast message for network errors -->
     <string name="message_toast_network_error">Network error</string>
+    <string name="message_toast_network_error_with_message">Network error: <xliff:g id="message">%s</xliff:g></string>
     <string name="message_toast_no_account">No account</string>
     <string name="message_toast_no_account_permission">Account permission is required</string>
     <string name="message_toast_no_account_selected">No account selected</string>
