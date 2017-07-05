@@ -489,46 +489,46 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                 return new Extras[size];
             }
         };
+
         @JsonField(name = "external_url")
-
         public String external_url;
+
         @JsonField(name = "quoted_external_url")
-
         public String quoted_external_url;
+
         @JsonField(name = "retweeted_external_url")
-
         public String retweeted_external_url;
+
         @JsonField(name = "statusnet_conversation_id")
-
         public String statusnet_conversation_id;
+
         @JsonField(name = "support_entities")
-
         public boolean support_entities;
-        @JsonField(name = "user_profile_image_url_fallback")
 
+        @JsonField(name = "user_profile_image_url_fallback")
         @Nullable
         public String user_profile_image_url_fallback;
+
         @JsonField(name = "user_statusnet_profile_url")
-
         public String user_statusnet_profile_url;
-        @JsonField(name = "display_text_range")
 
+        @JsonField(name = "display_text_range")
         @Nullable
         public int[] display_text_range;
-        @JsonField(name = "quoted_display_text_range")
 
+        @JsonField(name = "quoted_display_text_range")
         @Nullable
         public int[] quoted_display_text_range;
-        @JsonField(name = "conversation_id")
 
+        @JsonField(name = "conversation_id")
         @Nullable
         public String conversation_id;
-        @JsonField(name = "summary_text")
 
+        @JsonField(name = "summary_text")
         @Nullable
         public String summary_text;
-        @JsonField(name = "visibility")
 
+        @JsonField(name = "visibility")
         @Nullable
         public String visibility;
 
