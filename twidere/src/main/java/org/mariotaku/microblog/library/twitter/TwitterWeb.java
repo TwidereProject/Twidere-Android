@@ -34,7 +34,9 @@ import org.mariotaku.restfu.annotation.param.Query;
 
 public interface TwitterWeb {
     @GET("/i/activity/favorited_popup")
-    @Headers(value = {@KeyValue(key = "Accept", value = "application/json")})
+    @Headers({@KeyValue(key = "Accept", value = "application/json"),
+            @KeyValue(key = "X-Requested-With", value = "XMLHttpRequest"),
+            @KeyValue(key = "User-Agent", value = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36")})
     FavoritedPopup getFavoritedPopup(@Query("id") String statusId) throws MicroBlogException;
 
     @GET("/{screen_name}/status/{id}")
