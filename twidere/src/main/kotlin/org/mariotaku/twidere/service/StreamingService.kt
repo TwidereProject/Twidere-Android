@@ -32,11 +32,12 @@ import org.mariotaku.twidere.constant.streamingEnabledKey
 import org.mariotaku.twidere.constant.streamingNonMeteredNetworkKey
 import org.mariotaku.twidere.constant.streamingPowerSavingKey
 import org.mariotaku.twidere.extension.model.*
-import org.mariotaku.twidere.extension.model.api.*
+import org.mariotaku.twidere.extension.model.api.key
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
+import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
-import org.mariotaku.twidere.model.util.*
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
@@ -467,10 +468,14 @@ class StreamingService : BaseService() {
         fun startOrStopService(context: Context) {
             val streamingIntent = Intent(context, StreamingService::class.java)
             val holder = DependencyHolder.get(context)
-            if (holder.activityTracker.isHomeActivityLaunched) {
-                context.startService(streamingIntent)
-            } else {
-                context.stopService(streamingIntent)
+            try {
+                if (holder.activityTracker.isHomeActivityLaunched) {
+                    context.startService(streamingIntent)
+                } else {
+                    context.stopService(streamingIntent)
+                }
+            } catch (e: IllegalStateException) {
+                // This shouldn't happen, catch it.
             }
         }
     }
