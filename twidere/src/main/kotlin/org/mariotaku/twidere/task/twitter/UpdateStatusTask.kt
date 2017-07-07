@@ -917,9 +917,14 @@ class UpdateStatusTask(
             o.inSampleSize = o.calculateInSampleSize(imageLimit.maxWidth, imageLimit.maxHeight)
             o.inJustDecodeBounds = false
             // Do actual image decoding
-            val bitmap = context.contentResolver.openInputStream(mediaUri).use {
-                BitmapFactory.decodeStream(it, null, o)
-            } ?: return null
+            val bitmap = try {
+                context.contentResolver.openInputStream(mediaUri).use {
+                    BitmapFactory.decodeStream(it, null, o)
+                } ?: return null
+            } catch (oome: OutOfMemoryError) {
+                Analyzer.logException(OutOfMemoryError("OOM Image size: $imageSize, width: ${o.outWidth}, height: ${o.outHeight}, type: ${o.outMimeType}"))
+                return null
+            }
 
             val size = Point(bitmap.width, bitmap.height)
             val ext = MimeTypeMap.getSingleton().getExtensionFromMimeType(mediaType)
