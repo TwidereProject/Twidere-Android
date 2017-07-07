@@ -276,16 +276,16 @@ class TwidereDns(context: Context, private val preferences: SharedPreferences) :
                 val a = lookup.run()
                 if (a == null) {
                     if (lookup.result == Lookup.TYPE_NOT_FOUND) {
-                        val aaaa = newLookup(resolver, name, Type.AAAA).run()
-                        if (aaaa != null)
-                            return aaaa
+//                        val aaaa = newLookup(resolver, name, Type.AAAA).run()
+//                        if (aaaa != null) return aaaa
                     }
                     throw UnknownHostException("unknown host")
                 }
                 if (!all)
                     return a
-                val aaaa = newLookup(resolver, name, Type.AAAA).run() ?: return a
-                return a + aaaa
+//                val aaaa = newLookup(resolver, name, Type.AAAA).run() ?: return a
+//                return a + aaaa
+                return a
             } catch (e: TextParseException) {
                 throw UnknownHostException("invalid name")
             }

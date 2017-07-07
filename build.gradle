@@ -43,7 +43,7 @@ subprojects {
                     PlayServices      : '3.1.0',
             ]
             libVersions = [
-                    Kotlin               : '1.1.2-5',
+                    Kotlin               : '1.1.3-2',
                     SupportLib           : '26.0.0-beta2',
                     MariotakuCommons     : '0.9.15',
                     RestFu               : '0.9.57',

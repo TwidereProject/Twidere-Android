@@ -32,6 +32,14 @@ fun Cursor.safeGetInt(columnIndex: Int, def: Int = -1): Int {
     }
 }
 
+fun Cursor.safeGetString(columnIndex: Int, def: String = ""): String {
+    try {
+        return getString(columnIndex)
+    } catch(e: IllegalStateException) {
+        return def
+    }
+}
+
 fun <T> Cursor.map(indices: ObjectCursor.CursorIndices<T>): List<T> {
     val list = ArrayList<T>()
     moveToFirst()

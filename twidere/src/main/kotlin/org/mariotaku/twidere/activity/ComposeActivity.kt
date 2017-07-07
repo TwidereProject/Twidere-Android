@@ -1933,6 +1933,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 adapter.setSelection(layoutPosition)
                 return@setOnLongClickListener true
             }
+            iconView.style = adapter.profileImageStyle
         }
 
         fun showAccount(adapter: AccountIconsAdapter, account: AccountDetails, isSelected: Boolean) {
