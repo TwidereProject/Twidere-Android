@@ -190,6 +190,7 @@ abstract class ParcelableStatusesAdapter(
             changed = this.data != data
         }
         this.data = data
+        this.infoCache = if (data != null) arrayOfNulls(data.size) else null
         gapLoadingIds.clear()
         updateItemCount()
         notifyDataSetChanged()

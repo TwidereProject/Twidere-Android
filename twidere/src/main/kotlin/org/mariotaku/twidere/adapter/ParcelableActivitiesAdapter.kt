@@ -176,7 +176,7 @@ class ParcelableActivitiesAdapter(
             filteredUserKeys = data.filteredUserIds
         }
         this.data = data
-        infoCache = if (data != null) arrayOfNulls(data.size) else null
+        this.infoCache = if (data != null) arrayOfNulls(data.size) else null
         gapLoadingIds.clear()
         updateItemCount()
         notifyDataSetChanged()
