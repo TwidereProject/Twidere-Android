@@ -217,7 +217,7 @@ object HttpClientFactory {
 
         private fun configProxy(builder: OkHttpClient.Builder) {
             val proxyType = prefs.getString(KEY_PROXY_TYPE, null) ?: return
-            val proxyHost = prefs.getString(KEY_PROXY_HOST, null)?.takeIf(String::isNotEmpty) ?: return
+            val proxyHostOrFormat = prefs.getString(KEY_PROXY_HOST, null)?.takeIf(String::isNotEmpty) ?: return
             val proxyPort = prefs.getString(KEY_PROXY_PORT, null).toIntOr(-1)
             val username = prefs.getString(KEY_PROXY_USERNAME, null)?.takeIf(String::isNotEmpty)
             val password = prefs.getString(KEY_PROXY_PASSWORD, null)?.takeIf(String::isNotEmpty)
@@ -226,7 +226,7 @@ object HttpClientFactory {
                     if (proxyPort !in (0..65535)) {
                         return
                     }
-                    val address = InetSocketAddress.createUnresolved(proxyHost, proxyPort)
+                    val address = InetSocketAddress.createUnresolved(proxyHostOrFormat, proxyPort)
                     builder.proxy(Proxy(Proxy.Type.HTTP, address))
 
                     builder.authenticator { _, response ->
@@ -241,7 +241,7 @@ object HttpClientFactory {
                     }
                 }
                 "reverse" -> {
-                    builder.addInterceptor(ReverseProxyInterceptor(proxyHost, username, password))
+                    builder.addInterceptor(ReverseProxyInterceptor(proxyHostOrFormat, username, password))
                 }
             }
 
@@ -260,7 +260,7 @@ object HttpClientFactory {
             val url = request.url()
             val builder = request.newBuilder()
             val replacedUrl = HttpUrl.parse(replaceUrl(url, proxyFormat)) ?: run {
-                throw IOException("Invalid reverse proxy format")
+                throw IOException("Invalid reverse proxy format '$proxyFormat' for proxy host setting")
             }
             builder.url(replacedUrl)
             if (proxyUsername != null && proxyPassword != null) {

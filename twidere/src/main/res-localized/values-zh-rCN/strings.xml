@@ -777,8 +777,10 @@
   <string name="provider_quitter_se">Quitter.se</string>
   <string name="proxy">代理服务器</string>
   <string name="proxy_host">代理服务器主机名</string>
+  <string name="proxy_host_summary">HTTP代理：example.com\n反向代理：https://proxy.com/[SCHEME]/[AUTHORITY]/[PATH][?QUERY][#FRAGMENT]</string>
   <string name="proxy_password">代理服务器密码</string>
   <string name="proxy_port">代理服务器端口</string>
+  <string name="proxy_port_summary">使用反向代理时将被忽略</string>
   <string name="proxy_summary">为所有网络请求使用代理</string>
   <string name="proxy_type">代理服务器类型</string>
   <string name="proxy_username">代理服务器用户名</string>
