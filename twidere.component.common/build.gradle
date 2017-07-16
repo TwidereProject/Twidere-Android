@@ -116,10 +116,13 @@ install {
 }
 
 bintray {
-    def properties = new Properties()
-    properties.load(rootProject.file('private/bintray.properties').newDataInputStream())
-    user = properties.getProperty('user')
-    key = properties.getProperty('key')
+    def propsFile = rootProject.file('private/bintray.properties')
+    if (propsFile.exists()) {
+        def properties = new Properties()
+        properties.load(propsFile.newDataInputStream())
+        user = properties.getProperty('user')
+        key = properties.getProperty('key')
+    }
 
     pkg {
         name = archivesBaseName
