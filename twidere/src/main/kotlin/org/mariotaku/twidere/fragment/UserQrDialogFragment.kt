@@ -94,6 +94,7 @@ class UserQrDialogFragment : BaseDialogFragment() {
             val qrCode = QrCode.encodeSegments(segments, QrCode.Ecc.HIGH, 5, 40, -1, true)
             val uniqr = UniqR(AndroidPlatform(), background, QrCodeData(qrCode))
             uniqr.scale = 3
+            uniqr.dotSize = 1
             uniqr.qrPatternColor = palette.patternColor
             val result = uniqr.build().produceResult()
             background.recycle()
@@ -138,8 +139,8 @@ class UserQrDialogFragment : BaseDialogFragment() {
         private fun getOptimalPatternColor(color: Int): Int {
             val yiq = IntArray(3)
             TwidereColorUtils.colorToYIQ(color, yiq)
-            if (yiq[0] > 128) {
-                yiq[0] = 128
+            if (yiq[0] > 96) {
+                yiq[0] = 96
                 return TwidereColorUtils.YIQToColor(Color.alpha(color), yiq)
             }
             return color
