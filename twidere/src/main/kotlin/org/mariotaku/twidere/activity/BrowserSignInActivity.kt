@@ -249,9 +249,9 @@ class BrowserSignInActivity : BaseActivity() {
             webSettings.applyDefault()
             webView.webViewClient = object : WebViewClient() {
                 @Suppress("OverridingDeprecatedMember")
-                override fun shouldOverrideUrlLoading(view: WebView?, url: String?) = false
+                override fun shouldOverrideUrlLoading(wv: WebView?, url: String?) = false
 
-                override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?) = false
+                override fun shouldOverrideUrlLoading(wv: WebView?, request: WebResourceRequest?) = false
             }
             webView.webChromeClient = object : WebChromeClient() {
                 override fun onCloseWindow(window: WebView) {

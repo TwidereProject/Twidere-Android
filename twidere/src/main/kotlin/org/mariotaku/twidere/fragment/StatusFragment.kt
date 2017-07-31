@@ -426,7 +426,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             errorText.spannable = errorInfo.message
             errorIcon.setImageResource(errorInfo.icon)
         }
-        activity.supportInvalidateOptionsMenu()
+        activity.invalidateOptionsMenu()
     }
 
     override fun onLoaderReset(loader: Loader<SingleResponse<ParcelableStatus>>) {

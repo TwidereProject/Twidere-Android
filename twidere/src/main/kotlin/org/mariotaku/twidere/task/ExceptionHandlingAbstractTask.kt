@@ -50,8 +50,9 @@ abstract class ExceptionHandlingAbstractTask<Params, Result, TaskException : Exc
     override final fun doLongOperation(params: Params): SingleResponse<Result> {
         try {
             return SingleResponse(onExecute(params))
-        } catch (tr: TaskException) {
-            return SingleResponse(tr)
+        } catch (tr: Exception) {
+            if (exceptionClass.isInstance(tr)) return SingleResponse(tr)
+            throw tr
         }
     }
 

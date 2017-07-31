@@ -23,7 +23,6 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.annotation.DrawableRes
 import android.support.v4.content.ContextCompat
-import android.support.v4.view.MenuItemCompat
 import android.view.Menu
 import android.view.MenuItem
 import android.view.SubMenu
@@ -63,13 +62,11 @@ fun Menu.setMenuItemTitle(id: Int, title: Int) {
 fun Menu.setMenuItemShowAsActionFlags(id: Int, flags: Int) {
     val item = findItem(id) ?: return
     item.setShowAsActionFlags(flags)
-    MenuItemCompat.setShowAsAction(item, flags)
 }
 
 fun Menu.findSubmenu(id: Int): SubMenu? {
     return findItem(id)?.subMenu
 }
-
 
 fun MenuItem.setActionIcon(context: Context, @DrawableRes iconRes: Int) {
     val oldIcon = this.icon
