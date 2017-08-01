@@ -54,6 +54,7 @@ import org.mariotaku.ktextension.systemWindowInsets
 import org.mariotaku.ktextension.unregisterReceiverSafe
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.BuildConfig
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
 import org.mariotaku.twidere.activity.iface.IBaseActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
@@ -125,6 +126,9 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
 
     protected val gifShareProvider: GifShareProvider?
         get() = gifShareProviderFactory.newInstance(this)
+
+    protected val isDialogTheme: Boolean
+        get() = ThemeUtils.getBooleanFromAttribute(this, R.attr.isDialogTheme)
 
     override final val currentThemeBackgroundAlpha by lazy {
         themeBackgroundAlpha
@@ -381,7 +385,7 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     }
 
     private fun onApplyNavigationStyle(navbarStyle: String, themeColor: Int) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP || isDialogTheme) return
         when (navbarStyle) {
             NavbarStyle.TRANSPARENT -> {
                 window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)

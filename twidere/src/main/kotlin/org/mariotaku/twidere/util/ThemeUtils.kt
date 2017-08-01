@@ -27,6 +27,7 @@ import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.support.annotation.AttrRes
 import android.support.annotation.ColorInt
 import android.support.annotation.StyleRes
 import android.support.v4.content.ContextCompat
@@ -448,7 +449,7 @@ object ThemeUtils {
         }
     }
 
-    fun getColorFromAttribute(context: Context, attr: Int, styleRes: Int = 0, def: Int = 0): Int {
+    fun getColorFromAttribute(context: Context, @AttrRes attr: Int, styleRes: Int = 0, def: Int = 0): Int {
         val a = context.obtainStyledAttributes(null, intArrayOf(attr), 0, styleRes)
         try {
             return a.getColor(0, def)
@@ -457,7 +458,16 @@ object ThemeUtils {
         }
     }
 
-    fun getDrawableFromThemeAttribute(context: Context, attr: Int): Drawable {
+    fun getBooleanFromAttribute(context: Context, @AttrRes attr: Int, styleRes: Int = 0, def: Boolean = false): Boolean {
+        val a = context.obtainStyledAttributes(null, intArrayOf(attr), 0, styleRes)
+        try {
+            return a.getBoolean(0, def)
+        } finally {
+            a.recycle()
+        }
+    }
+
+    fun getDrawableFromThemeAttribute(context: Context, @AttrRes attr: Int): Drawable {
         val a = TintTypedArray.obtainStyledAttributes(context, null, intArrayOf(attr))
         try {
             return a.getDrawable(0)

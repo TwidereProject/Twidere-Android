@@ -63,8 +63,8 @@
         <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
         <item name="cardItemBackgroundColor">@color/background_color_card_item_light</item>
 
-
         <!-- Twidere specific styles -->
+        <item name="isDialogTheme">true</item>
         <item name="menuIconColor">@color/action_icon_dark</item>
         <item name="messageBubbleColor">@color/message_bubble_color_light</item>
         <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_light</item>

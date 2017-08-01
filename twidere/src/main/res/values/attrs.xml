@@ -13,7 +13,7 @@
         <attr name="quoteIndicatorBackgroundColor" format="color"/>
         <attr name="linePageIndicatorStyle" format="reference"/>
         <attr name="mediaLabelBackground" format="color"/>
-
+        <attr name="isDialogTheme" format="boolean"/>
     </declare-styleable>
     <declare-styleable name="TwidereTheme">
         <attr name="darkThemeResource" format="reference"/>
