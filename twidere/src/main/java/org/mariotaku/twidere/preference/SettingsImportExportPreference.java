@@ -50,7 +50,7 @@ public class SettingsImportExportPreference extends DialogPreference implements 
     }
 
     @Override
-    public void displayDialog(PreferenceFragmentCompat fragment) {
+    public void displayDialog(@NonNull PreferenceFragmentCompat fragment) {
         ImportExportDialogFragment df = ImportExportDialogFragment.newInstance(getKey());
         df.setTargetFragment(fragment, 0);
         df.show(fragment.getFragmentManager(), getKey());

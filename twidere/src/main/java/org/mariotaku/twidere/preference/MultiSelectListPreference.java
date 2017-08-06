@@ -53,7 +53,7 @@ abstract class MultiSelectListPreference extends DialogPreference implements IDi
 
 
     @Override
-    public void displayDialog(PreferenceFragmentCompat fragment) {
+    public void displayDialog(@NonNull PreferenceFragmentCompat fragment) {
         final MultiSelectListDialogFragment df = MultiSelectListDialogFragment.newInstance(getKey());
         df.setTargetFragment(fragment, 0);
         df.show(fragment.getFragmentManager(), getKey());

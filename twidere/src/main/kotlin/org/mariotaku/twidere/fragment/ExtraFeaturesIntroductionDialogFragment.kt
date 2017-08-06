@@ -102,14 +102,24 @@ class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
     companion object {
         const val EXTRA_FEATURE = "feature"
         const val EXTRA_SOURCE = "source"
-        fun show(fm: FragmentManager, feature: String, source: String? = null, requestCode: Int = 0): ExtraFeaturesIntroductionDialogFragment {
+
+        const val FRAGMENT_TAG = "extra_features_introduction"
+
+        fun create(feature: String, source: String? = null, requestCode: Int = 0):
+                ExtraFeaturesIntroductionDialogFragment {
             val df = ExtraFeaturesIntroductionDialogFragment()
             df.arguments = Bundle {
                 this[EXTRA_FEATURE] = feature
                 this[EXTRA_SOURCE] = source
                 this[EXTRA_REQUEST_CODE] = requestCode
             }
-            df.show(fm, "extra_features_introduction")
+            return df
+        }
+
+        fun show(fm: FragmentManager, feature: String, source: String? = null, requestCode: Int = 0):
+                ExtraFeaturesIntroductionDialogFragment {
+            val df = create(feature, source, requestCode)
+            df.show(fm, FRAGMENT_TAG)
             return df
         }
     }

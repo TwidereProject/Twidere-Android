@@ -72,15 +72,20 @@ class SetUserNicknameDialogFragment : BaseDialogFragment(), OnClickListener {
 
     companion object {
 
-        private val FRAGMENT_TAG_SET_USER_NICKNAME = "set_user_nickname"
+        const val FRAGMENT_TAG = "set_user_nickname"
 
-        fun show(fm: FragmentManager, userKey: UserKey, nickname: String?): SetUserNicknameDialogFragment {
+        fun create(userKey: UserKey, nickname: String?): SetUserNicknameDialogFragment {
             val f = SetUserNicknameDialogFragment()
             val args = Bundle()
             args.putParcelable(EXTRA_USER_KEY, userKey)
             args.putString(EXTRA_NAME, nickname)
             f.arguments = args
-            f.show(fm, FRAGMENT_TAG_SET_USER_NICKNAME)
+            return f
+        }
+
+        fun show(fm: FragmentManager, userKey: UserKey, nickname: String?): SetUserNicknameDialogFragment {
+            val f = create(userKey, nickname)
+            f.show(fm, FRAGMENT_TAG)
             return f
         }
     }

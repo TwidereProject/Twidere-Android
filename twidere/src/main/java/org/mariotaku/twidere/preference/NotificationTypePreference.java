@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.DialogPreference;
 import android.support.v7.preference.PreferenceDialogFragmentCompat;
@@ -94,7 +95,7 @@ public class NotificationTypePreference extends DialogPreference implements
     }
 
     @Override
-    public void displayDialog(PreferenceFragmentCompat fragment) {
+    public void displayDialog(@NonNull PreferenceFragmentCompat fragment) {
         final NotificationTypeDialogFragment df = NotificationTypeDialogFragment.newInstance(getKey());
         df.setTargetFragment(fragment, 0);
         df.show(fragment.getFragmentManager(), getKey());

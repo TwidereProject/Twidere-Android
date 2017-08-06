@@ -30,7 +30,8 @@ import org.mariotaku.twidere.preference.iface.IDialogPreference
 /**
  * Created by mariotaku on 16/3/15.
  */
-class ThemedEditTextPreference(context: Context, attrs: AttributeSet? = null) : EditTextPreference(context, attrs), IDialogPreference {
+class ThemedEditTextPreference(context: Context, attrs: AttributeSet? = null) :
+        EditTextPreference(context, attrs), IDialogPreference {
 
     override fun displayDialog(fragment: PreferenceFragmentCompat) {
         val df = ThemedEditTextPreferenceDialogFragmentCompat.newInstance(key)

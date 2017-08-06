@@ -185,7 +185,7 @@ public class SeekBarDialogPreference extends DialogPreference implements IDialog
     }
 
     @Override
-    public void displayDialog(PreferenceFragmentCompat fragment) {
+    public void displayDialog(@NonNull PreferenceFragmentCompat fragment) {
         SeekBarDialogPreferenceFragment df = SeekBarDialogPreferenceFragment.newInstance(getKey());
         df.setTargetFragment(fragment, 0);
         df.show(fragment.getFragmentManager(), getKey());

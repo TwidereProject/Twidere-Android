@@ -127,7 +127,7 @@ class UserTimelineFragment : ParcelableStatusesFragment() {
     override fun onFilterClick(holder: TimelineFilterHeaderViewHolder) {
         val df = UserTimelineFilterDialogFragment()
         df.setTargetFragment(this, REQUEST_SET_TIMELINE_FILTER)
-        df.show(childFragmentManager, "set_timeline_filter")
+        df.show(fragmentManager, "set_timeline_filter")
     }
 
     @Subscribe
