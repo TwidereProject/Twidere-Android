@@ -7,16 +7,12 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'androidsvgdrawable'
 
 // START Non-FOSS component
-apply plugin: 'io.fabric'
 apply plugin: 'com.github.triplet.play'
 // END Non-FOSS component
 
 buildscript {
     repositories {
         jcenter()
-        // START Non-FOSS component
-        maven { url 'https://maven.fabric.io/public' }
-        // END Non-FOSS component
     }
 
     dependencies {
@@ -28,7 +24,6 @@ buildscript {
         }
 
         // START Non-FOSS component
-        classpath "io.fabric.tools:gradle:${pluginVersions['Fabric']}"
         classpath "com.github.triplet.gradle:play-publisher:${pluginVersions['PlayPublisher']}"
         classpath "com.google.gms:google-services:${pluginVersions['PlayServices']}"
         // END Non-FOSS component
@@ -87,9 +82,6 @@ android {
 repositories {
     mavenLocal()
     maven { url 'https://s3.amazonaws.com/repo.commonsware.com' }
-    // START Non-FOSS component
-    maven { url 'https://maven.fabric.io/public' }
-    // END Non-FOSS component
     flatDir { dirs "$projectDir/lib" }
 }
 
@@ -107,9 +99,6 @@ dependencies {
     googleCompile "com.google.android.gms:play-services-maps:${libVersions['PlayServices']}"
     googleCompile "com.google.android.gms:play-services-auth:${libVersions['PlayServices']}"
     googleCompile "com.google.maps.android:android-maps-utils:${libVersions['MapsUtils']}"
-    googleCompile("com.crashlytics.sdk.android:crashlytics:${libVersions['Crashlyrics']}@aar") {
-        transitive = true
-    }
     googleCompile "com.anjlab.android.iab.v3:library:${libVersions['IABv3']}"
     googleCompile "com.dropbox.core:dropbox-core-sdk:${libVersions['DropboxCoreSdk']}"
     googleCompile("com.google.apis:google-api-services-drive:${libVersions['GoogleDriveApi']}") {
