@@ -406,13 +406,14 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
     }
 
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
+        val result = super.onApplyWindowInsets(v, insets)
         val adapter = viewPager.adapter
         if (adapter.count == 0) return insets
         val fragment = adapter.instantiateItem(viewPager, viewPager.currentItem)
         if (fragment is IBaseFragment<*>) {
             fragment.requestApplyInsets()
         }
-        return insets
+        return result
     }
 
     private fun processShareIntent(intent: Intent) {
