@@ -3,41 +3,29 @@ IDEA additional info:
 Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
---- twidere/build.gradle	(date 1497922956000)
+--- twidere/build.gradle	(revision 892f68358e70e43bbb2a3bf50b39f7371c5c4671)
 +++ twidere/build.gradle	(revision )
-@@ -7,15 +7,15 @@
+@@ -7,7 +7,7 @@
  apply plugin: 'androidsvgdrawable'
  
  // START Non-FOSS component
--apply plugin: 'io.fabric'
 -apply plugin: 'com.github.triplet.play'
-+//apply plugin: 'io.fabric'
 +//apply plugin: 'com.github.triplet.play'
  // END Non-FOSS component
  
  buildscript {
-     repositories {
-         jcenter()
-         // START Non-FOSS component
--        maven { url 'https://maven.fabric.io/public' }
-+//        maven { url 'https://maven.fabric.io/public' }
-         // END Non-FOSS component
-     }
- 
-@@ -28,9 +28,9 @@
+@@ -24,8 +24,8 @@
          }
  
          // START Non-FOSS component
--        classpath "io.fabric.tools:gradle:${pluginVersions['Fabric']}"
 -        classpath "com.github.triplet.gradle:play-publisher:${pluginVersions['PlayPublisher']}"
 -        classpath "com.google.gms:google-services:${pluginVersions['PlayServices']}"
-+//        classpath "io.fabric.tools:gradle:${pluginVersions['Fabric']}"
 +//        classpath "com.github.triplet.gradle:play-publisher:${pluginVersions['PlayPublisher']}"
 +//        classpath "com.google.gms:google-services:${pluginVersions['PlayServices']}"
          // END Non-FOSS component
      }
  }
-@@ -56,7 +56,7 @@
+@@ -51,7 +51,7 @@
  
      productFlavors {
          // START Non-FOSS component
@@ -46,25 +34,13 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
          // END Non-FOSS component
          fdroid {}
      }
-@@ -88,7 +88,7 @@
-     mavenLocal()
-     maven { url 'https://s3.amazonaws.com/repo.commonsware.com' }
-     // START Non-FOSS component
--    maven { url 'https://maven.fabric.io/public' }
-+//    maven { url 'https://maven.fabric.io/public' }
-     // END Non-FOSS component
-     flatDir { dirs "$projectDir/lib" }
- }
-@@ -104,17 +104,17 @@
+@@ -96,14 +96,14 @@
      compile project(':twidere.component.nyan')
  
      // START Non-FOSS component
 -    googleCompile "com.google.android.gms:play-services-maps:${libVersions['PlayServices']}"
 -    googleCompile "com.google.android.gms:play-services-auth:${libVersions['PlayServices']}"
 -    googleCompile "com.google.maps.android:android-maps-utils:${libVersions['MapsUtils']}"
--    googleCompile("com.crashlytics.sdk.android:crashlytics:${libVersions['Crashlyrics']}@aar") {
--        transitive = true
--    }
 -    googleCompile "com.anjlab.android.iab.v3:library:${libVersions['IABv3']}"
 -    googleCompile "com.dropbox.core:dropbox-core-sdk:${libVersions['DropboxCoreSdk']}"
 -    googleCompile("com.google.apis:google-api-services-drive:${libVersions['GoogleDriveApi']}") {
@@ -73,9 +49,6 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 +//    googleCompile "com.google.android.gms:play-services-maps:${libVersions['PlayServices']}"
 +//    googleCompile "com.google.android.gms:play-services-auth:${libVersions['PlayServices']}"
 +//    googleCompile "com.google.maps.android:android-maps-utils:${libVersions['MapsUtils']}"
-+//    googleCompile("com.crashlytics.sdk.android:crashlytics:${libVersions['Crashlyrics']}@aar") {
-+//        transitive = true
-+//    }
 +//    googleCompile "com.anjlab.android.iab.v3:library:${libVersions['IABv3']}"
 +//    googleCompile "com.dropbox.core:dropbox-core-sdk:${libVersions['DropboxCoreSdk']}"
 +//    googleCompile("com.google.apis:google-api-services-drive:${libVersions['GoogleDriveApi']}") {
@@ -84,7 +57,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
      // END Non-FOSS component
  
      fdroidCompile "org.osmdroid:osmdroid-android:${libVersions['OSMDroid']}"
-@@ -243,8 +243,8 @@
+@@ -231,8 +231,8 @@
  }
  
  // START Non-FOSS component
