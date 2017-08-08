@@ -18,7 +18,7 @@
   -->
 
 <org.mariotaku.twidere.view.ColorLabelRelativeLayout
-    android:id="@+id/item_content"
+    android:id="@+id/itemContent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -30,7 +30,7 @@
     tools:context=".adapter.ParcelableUsersAdapter">
 
     <org.mariotaku.twidere.view.ProfileImageView
-        android:id="@+id/profile_image"
+        android:id="@+id/profileImage"
         style="?profileImageStyle"
         android:layout_width="@dimen/icon_size_card_list_item"
         android:layout_height="@dimen/icon_size_card_list_item"
@@ -41,7 +41,8 @@
         android:layout_marginRight="@dimen/element_spacing_normal"
         android:contentDescription="@string/profile_image"
         android:scaleType="fitCenter"
-        tools:src="@mipmap/ic_launcher"/>
+        tools:src="@drawable/ic_profile_image_twidere"
+        android:contextClickable="true"/>
 
 
     <org.mariotaku.twidere.view.NameView
@@ -52,8 +53,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_alignWithParentIfMissing="true"
-        android:layout_toEndOf="@id/profile_image"
-        android:layout_toRightOf="@id/profile_image"
+        android:layout_toEndOf="@+id/profileImage"
+        android:layout_toRightOf="@+id/profileImage"
         android:gravity="center_vertical"
         app:nv_primaryTextColor="?android:textColorPrimary"
         app:nv_primaryTextStyle="bold"
@@ -62,7 +63,7 @@
 
 
     <org.mariotaku.twidere.view.ActionIconThemedTextView
-        android:id="@+id/external_indicator"
+        android:id="@+id/externalIndicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/name"
@@ -74,13 +75,13 @@
         android:textStyle="italic"
         tools:text="External group at gnu.io"/>
 
-    <TextView
+    <org.mariotaku.twidere.view.FixedTextView
         android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/name"
         android:layout_alignStart="@+id/name"
-        android:layout_below="@+id/external_indicator"
+        android:layout_below="@+id/externalIndicator"
         android:paddingTop="@dimen/element_spacing_small"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="?android:attr/textColorSecondary"
@@ -95,29 +96,29 @@
         android:orientation="horizontal"
         android:paddingTop="@dimen/element_spacing_small">
 
-        <TextView
-            android:id="@+id/members_count"
+        <org.mariotaku.twidere.view.FixedTextView
+            android:id="@+id/membersCount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:drawableLeft="@drawable/ic_indicator_followers"
             android:drawablePadding="4dp"
             android:drawableStart="@drawable/ic_indicator_followers"
-            android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            tools:text="255"/>
+            tools:text="255"
+            android:maxLines="1"/>
 
-        <TextView
-            android:id="@+id/admins_count"
+        <org.mariotaku.twidere.view.FixedTextView
+            android:id="@+id/adminsCount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:drawableLeft="@drawable/ic_indicator_followers"
             android:drawablePadding="4dp"
             android:drawableStart="@drawable/ic_indicator_followers"
-            android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            tools:text="255"/>
+            tools:text="255"
+            android:maxLines="1"/>
     </LinearLayout>
 
 </org.mariotaku.twidere.view.ColorLabelRelativeLayout>

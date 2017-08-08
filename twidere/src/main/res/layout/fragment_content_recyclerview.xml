@@ -16,28 +16,31 @@
   ~  You should have received a copy of the GNU General Public License
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-
+<!-- Don't remove this FrameLayout!!! Or content will get fucked up when switching pages! -->
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
-
-    <include layout="@layout/layout_content_fragment_common"/>
+    android:layout_height="match_parent">
 
     <org.mariotaku.twidere.view.ExtendedSwipeRefreshLayout
-        android:id="@+id/swipe_layout"
+        android:id="@+id/swipeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false">
 
-        <org.mariotaku.twidere.view.ExtendedRecyclerView
-            android:id="@+id/recycler_view"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:focusable="true"
-            android:scrollbars="vertical"/>
+            android:layout_height="match_parent">
 
+            <include layout="@layout/layout_content_fragment_common"/>
+
+            <org.mariotaku.twidere.view.ExtendedRecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:focusable="true"
+                android:scrollbars="vertical"/>
+        </FrameLayout>
     </org.mariotaku.twidere.view.ExtendedSwipeRefreshLayout>
 </FrameLayout>

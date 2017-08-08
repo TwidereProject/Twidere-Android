@@ -4,6 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <include layout="@layout/card_item_status_compact"/>
+    <include layout="@layout/list_item_status"/>
 
 </FrameLayout>

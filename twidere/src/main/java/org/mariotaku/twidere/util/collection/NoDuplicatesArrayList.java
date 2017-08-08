@@ -24,47 +24,42 @@ import java.util.Collection;
 
 public class NoDuplicatesArrayList<E> extends ArrayList<E> {
 
-	private static final long serialVersionUID = -7277301117508689125L;
+    private static final long serialVersionUID = -7277301117508689125L;
 
-	public NoDuplicatesArrayList() {
-	}
+    public NoDuplicatesArrayList() {
+    }
 
-	public NoDuplicatesArrayList(final Collection<? extends E> collection) {
-		addAll(collection);
-	}
+    public NoDuplicatesArrayList(final Collection<? extends E> collection) {
+        addAll(collection);
+    }
 
-	public NoDuplicatesArrayList(final int capacity) {
-		super(capacity);
-	}
+    public NoDuplicatesArrayList(final int capacity) {
+        super(capacity);
+    }
 
-	@Override
-	public boolean add(final E e) {
-		if (contains(e))
-			return false;
-		else
-			return super.add(e);
-	}
+    @Override
+    public boolean add(final E e) {
+        if (contains(e)) return false;
+        return super.add(e);
+    }
 
-	@Override
-	public void add(final int index, final E element) {
-		if (contains(element))
-			return;
-		else {
-			super.add(index, element);
-		}
-	}
+    @Override
+    public void add(final int index, final E element) {
+        if (contains(element)) return;
+        super.add(index, element);
+    }
 
-	@Override
-	public boolean addAll(final Collection<? extends E> collection) {
-		final Collection<E> copy = new ArrayList<>(collection);
-		copy.removeAll(this);
-		return super.addAll(copy);
-	}
+    @Override
+    public boolean addAll(final Collection<? extends E> collection) {
+        final Collection<E> copy = new ArrayList<>(collection);
+        copy.removeAll(this);
+        return super.addAll(copy);
+    }
 
-	@Override
-	public boolean addAll(final int index, final Collection<? extends E> collection) {
-		final Collection<E> copy = new ArrayList<>(collection);
-		copy.removeAll(this);
-		return super.addAll(index, copy);
-	}
+    @Override
+    public boolean addAll(final int index, final Collection<? extends E> collection) {
+        final Collection<E> copy = new ArrayList<>(collection);
+        copy.removeAll(this);
+        return super.addAll(index, copy);
+    }
 }

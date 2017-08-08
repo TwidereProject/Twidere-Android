@@ -23,30 +23,30 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.FixedAsyncTaskLoader;
 import android.support.v4.content.LoaderAccessor;
 
 import org.mariotaku.library.objectcursor.ObjectCursor;
 
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * Created by mariotaku on 15-7-5.
  */
-public class ObjectCursorLoader<T> extends AsyncTaskLoader<List<T>> {
+public class ObjectCursorLoader<T> extends FixedAsyncTaskLoader<List<T>> {
 
     final ForceLoadContentObserver mObserver;
-    final Class<? extends ObjectCursor.CursorIndices<T>> mIndicesClass;
+    final Class<T> mObjectClass;
 
     Uri mUri;
     String[] mProjection;
     String mSelection;
     String[] mSelectionArgs;
     String mSortOrder;
+    boolean mUseCache;
 
     ObjectCursor<T> mObjects;
 
@@ -65,23 +65,13 @@ public class ObjectCursorLoader<T> extends AsyncTaskLoader<List<T>> {
     }
 
     protected ObjectCursor<T> createObjectCursor(Cursor cursor, ObjectCursor.CursorIndices<T> indices) {
-        return new ObjectCursor<>(cursor, indices);
+        return new ObjectCursor<>(cursor, indices, mUseCache);
     }
 
     @SuppressWarnings("TryWithIdenticalCatches")
     @NonNull
     private ObjectCursor.CursorIndices<T> createIndices(final Cursor cursor) {
-        try {
-            return mIndicesClass.getConstructor(Cursor.class).newInstance(cursor);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+        return ObjectCursor.indicesFrom(cursor, mObjectClass);
     }
 
     /* Runs on the UI thread */
@@ -112,9 +102,9 @@ public class ObjectCursorLoader<T> extends AsyncTaskLoader<List<T>> {
      * calls to {@link #setUri(Uri)}, {@link #setSelection(String)}, etc
      * to specify the query to perform.
      */
-    public ObjectCursorLoader(Context context, Class<? extends ObjectCursor.CursorIndices<T>> indicesClass) {
+    public ObjectCursorLoader(Context context, Class<T> objectClass) {
         super(context);
-        mIndicesClass = indicesClass;
+        mObjectClass = objectClass;
         mObserver = new ForceLoadContentObserver();
     }
 
@@ -124,11 +114,10 @@ public class ObjectCursorLoader<T> extends AsyncTaskLoader<List<T>> {
      * ContentResolver.query()} for documentation on the meaning of the
      * parameters.  These will be passed as-is to that call.
      */
-    public ObjectCursorLoader(Context context, Class<? extends ObjectCursor.CursorIndices<T>> indicesClass,
-                              Uri uri, String[] projection, String selection,
-                              String[] selectionArgs, String sortOrder) {
+    public ObjectCursorLoader(Context context, Class<T> objectClass, Uri uri, String[] projection,
+            String selection, String[] selectionArgs, String sortOrder) {
         super(context);
-        mIndicesClass = indicesClass;
+        mObjectClass = objectClass;
         mObserver = new ForceLoadContentObserver();
         mUri = uri;
         mProjection = projection;
@@ -224,6 +213,14 @@ public class ObjectCursorLoader<T> extends AsyncTaskLoader<List<T>> {
         mSortOrder = sortOrder;
     }
 
+    public boolean isUseCache() {
+        return mUseCache;
+    }
+
+    public void setUseCache(boolean mUseCache) {
+        this.mUseCache = mUseCache;
+    }
+
     @Override
     public void dump(String prefix, FileDescriptor fd, PrintWriter writer, String[] args) {
         super.dump(prefix, fd, writer, args);
@@ -244,7 +241,11 @@ public class ObjectCursorLoader<T> extends AsyncTaskLoader<List<T>> {
         writer.println(mSortOrder);
         writer.print(prefix);
         writer.print("mObjects=");
-        writer.println(mObjects);
+        if (mObjects != null) {
+            writer.println(mObjects.getCursor());
+        } else {
+            writer.println("null");
+        }
         writer.print(prefix);
         writer.print("mContentChanged=");
         writer.println(LoaderAccessor.isContentChanged(this));

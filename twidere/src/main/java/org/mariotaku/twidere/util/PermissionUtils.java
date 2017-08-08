@@ -19,9 +19,7 @@
 
 package org.mariotaku.twidere.util;
 
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.support.v4.content.ContextCompat;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -36,10 +34,6 @@ public class PermissionUtils {
         final int idx = ArrayUtils.indexOf(permissions, permission);
         if (idx != -1) return grantResults[idx];
         return 0;
-    }
-
-    public static boolean hasPermission(Context context, String permission) {
-        return ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
     }
 
     public static boolean hasPermission(String[] permissions, int[] grantResults, String permission) {

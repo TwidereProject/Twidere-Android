@@ -1,3 +1,21 @@
+/*
+ *         Twidere - Twitter client for Android
+ *
+ * Copyright 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.mariotaku.twidere.model;
 
 import android.os.Parcel;
@@ -20,7 +38,9 @@ import java.util.List;
 @ParcelablePlease
 public class UserKey implements Comparable<UserKey>, Parcelable {
 
-    public static final UserKey SELF_REFERENCE = new UserKey("#self#", "#self#");
+    private static final String ID_PLACEHOLDER = "#placeholder";
+    public static final UserKey SELF = new UserKey("#self#", "#self#");
+    public static final UserKey INVALID = new UserKey("#invalid#", "#invalid#");
 
     public static final Creator<UserKey> CREATOR = new Creator<UserKey>() {
         @Override
@@ -54,8 +74,12 @@ public class UserKey implements Comparable<UserKey>, Parcelable {
 
     }
 
-    public boolean isSelfReference() {
-        return equals(SELF_REFERENCE);
+    public boolean isSelf() {
+        return equals(SELF);
+    }
+
+    public boolean isValid() {
+        return !equals(INVALID);
     }
 
     @NonNull
@@ -118,13 +142,17 @@ public class UserKey implements Comparable<UserKey>, Parcelable {
         UserKeyParcelablePlease.writeToParcel(this, dest, flags);
     }
 
-    public boolean check(String accountId, String accountHost) {
-        return this.id.equals(accountId);
+    public boolean check(@NonNull String accountId, @Nullable String accountHost) {
+        if (!accountId.equals(this.id)) {
+            return false;
+        } else if (accountHost != null && this.host != null) {
+            return accountHost.equals(this.host);
+        }
+        return true;
     }
 
-    @Nullable
-    public static UserKey valueOf(@Nullable String str) {
-        if (str == null) return null;
+    @NonNull
+    public static UserKey valueOf(@NonNull String str) {
         boolean escaping = false, idFinished = false;
         StringBuilder idBuilder = new StringBuilder(str.length()),
                 hostBuilder = new StringBuilder(str.length());
@@ -161,8 +189,7 @@ public class UserKey implements Comparable<UserKey>, Parcelable {
     }
 
     @Nullable
-    public static UserKey[] arrayOf(@Nullable String str) {
-        if (str == null) return null;
+    public static UserKey[] arrayOf(@NonNull String str) {
         List<String> split = split(str, ",");
         UserKey[] keys = new UserKey[split.size()];
         for (int i = 0, splitLength = split.size(); i < splitLength; i++) {

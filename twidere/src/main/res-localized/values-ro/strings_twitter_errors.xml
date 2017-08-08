@@ -24,6 +24,7 @@
   <string name="error_twitter_144">Tweet inexistent, probabil a fost sters.</string>
   <string name="error_twitter_161">Deja ati cerut sa il urmariti pe acest utilizator.</string>
   <!-- 172 You have been blocked from following this account at the request of the user. -->
+  <string name="error_twitter_162">Ati fost blocat de acest utilizator.</string>
   <!-- 172 There was an error creating your search: Corresponds with HTTP 403 - The saved search already exists. -->
   <!-- 179 Sorry, you are not authorized to see this status: Corresponds with HTTP 403 - thrown when a Tweet cannot be viewed by the authenticating user, usually due to the tweet's author having protected their tweets. -->
   <!-- 187 Status is a duplicate: The status text has been Tweeted already by the authenticated account. -->

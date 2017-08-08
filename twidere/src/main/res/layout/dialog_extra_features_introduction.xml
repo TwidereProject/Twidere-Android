@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/element_spacing_normal">
+
+    <org.mariotaku.twidere.view.FixedTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/element_spacing_normal"
+        android:text="@string/extra_features_description"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textSize="16sp"/>
+
+    <TableRow android:layout_margin="@dimen/element_spacing_normal">
+
+        <org.mariotaku.twidere.view.IconActionView
+            android:id="@+id/featureIcon"
+            android:layout_width="@dimen/element_size_small"
+            android:layout_height="@dimen/element_size_small"
+            android:layout_weight="0"
+            app:iabColor="?android:textColorSecondary"
+            tools:src="@drawable/ic_action_refresh"/>
+
+        <org.mariotaku.twidere.view.FixedTextView
+            android:id="@+id/featureDescription"
+            android:layout_marginLeft="@dimen/element_spacing_normal"
+            android:layout_marginStart="@dimen/element_spacing_normal"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/element_size_small"
+            android:textSize="15sp"
+            tools:text="@string/extra_feature_description_sync_data"/>
+    </TableRow>
+
+    <org.mariotaku.twidere.view.FixedTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/element_spacing_normal"
+        android:text="@string/extra_features_pack_description"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textSize="16sp"/>
+
+    <Button
+        android:id="@+id/buyFeaturesPack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/action_purchase_features_pack"/>
+
+    <org.mariotaku.twidere.view.FixedTextView
+        android:id="@+id/restorePurchaseHint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/element_spacing_normal"
+        android:text="@string/extra_features_restore_purchase_hint"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textSize="16sp"/>
+</TableLayout>

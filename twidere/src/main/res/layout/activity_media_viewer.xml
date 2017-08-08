@@ -17,15 +17,27 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-       xmlns:tools="http://schemas.android.com/tools"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent"
-       tools:menu="menu_media_viewer_image_page">
+<org.mariotaku.twidere.view.TintedStatusFrameLayout
+    android:id="@+id/activityLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    app:setPadding="false"
+    tools:menu="menu_media_viewer_image_page">
 
-    <org.mariotaku.twidere.view.MediaViewPager
-        android:id="@+id/view_pager"
+    <org.mariotaku.twidere.view.viewer.MediaSwipeCloseContainer
+        android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:background="#000000">
 
-</merge>
+        <org.mariotaku.twidere.view.MediaViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </org.mariotaku.twidere.view.viewer.MediaSwipeCloseContainer>
+</org.mariotaku.twidere.view.TintedStatusFrameLayout>

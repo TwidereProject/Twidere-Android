@@ -1,20 +1,19 @@
 /*
- *                 Twidere - Twitter client for Android
+ *         Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
+ * Copyright 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.mariotaku.microblog.library.twitter.model;
@@ -110,10 +109,10 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     @JsonField(name = "contributors")
     Contributor[] contributors;
 
-    @JsonField(name = "retweet_count")
+    @JsonField(name = {"retweet_count", "repeat_num"})
     long retweetCount = -1;
 
-    @JsonField(name = "favorite_count")
+    @JsonField(name = {"favorite_count", "fave_num"})
     long favoriteCount = -1;
 
     @JsonField(name = "reply_count")
@@ -121,7 +120,7 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
 
     @JsonField(name = "favorited")
     boolean favorited;
-    @JsonField(name = "retweeted")
+    @JsonField(name = {"retweeted", "repeated"})
     boolean retweeted;
     @JsonField(name = "lang")
     String lang;
@@ -132,20 +131,20 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     @JsonField(name = "retweeted_status")
     Status retweetedStatus;
 
-    @JsonField(name = "quoted_status")
+    /**
+     * <code>repost_status</code> is for Fanfou, <code>quoted_status</code> is for twitter
+     */
+    @JsonField(name = {"quoted_status", "repost_status"})
     Status quotedStatus;
+
+    /**
+     * <code>repost_status_id</code> is for Fanfou, <code>quoted_status_id_str</code> is for twitter
+     */
+    @JsonField(name = {"quoted_status_id_str", "repost_status_id"})
+    String quotedStatusId;
 
     @JsonField(name = "is_quote_status")
     boolean isQuoteStatus;
-
-    @JsonField(name = "quoted_status_id_str")
-    String quotedStatusId;
-
-    @JsonField(name = "repost_status")
-    Status repostStatus;
-
-    @JsonField(name = "repost_status_id")
-    String repostStatusId;
 
     @JsonField(name = "card")
     CardEntity card;
@@ -172,6 +171,9 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     @JsonField(name = "statusnet_conversation_id")
     String statusnetConversationId;
 
+    @JsonField(name = "conversation_id")
+    String conversationId;
+
 
     /**
      * For GNU social
@@ -192,6 +194,19 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
 
     @JsonField(name = "display_text_range")
     int[] displayTextRange;
+
+    /**
+     * GNU social value
+     * Format: {@code "tag:[gnusocial.host],YYYY-MM-DD:noticeId=[noticeId]:objectType=[objectType]"}
+     */
+    @JsonField(name = "uri")
+    String uri;
+
+    @JsonField(name = "timestamp_ms")
+    long timestampMs = -1;
+
+    @JsonField(name = "extended_tweet")
+    ExtendedTweet extendedTweet;
 
     @ParcelableNoThanks
     private transient long sortId = -1;
@@ -227,18 +242,10 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     }
 
     public String getFullText() {
+        if (extendedTweet != null) {
+            return extendedTweet.fullText;
+        }
         return fullText;
-    }
-
-    public String getExtendedText() {
-        if (fullText != null) return fullText;
-        return text;
-    }
-
-    public String getHtmlText() {
-        if (statusnetHtml != null) return statusnetHtml;
-        if (fullText != null) return fullText;
-        return text;
     }
 
     public String getStatusnetHtml() {
@@ -253,6 +260,9 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
      * UTC time when this Tweet was created.
      */
     public Date getCreatedAt() {
+        if (timestampMs != -1) {
+            return new Date(timestampMs);
+        }
         return createdAt;
     }
 
@@ -342,16 +352,16 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
         return possiblySensitive;
     }
 
-
     @Override
     public MediaEntity[] getExtendedMediaEntities() {
+        Entities extendedEntities = getExtendedEntities();
         if (extendedEntities == null) return null;
         return extendedEntities.getMedia();
     }
 
-
     @Override
     public HashtagEntity[] getHashtagEntities() {
+        Entities entities = getEntities();
         if (entities == null) return null;
         return entities.getHashtags();
     }
@@ -359,6 +369,7 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
 
     @Override
     public MediaEntity[] getMediaEntities() {
+        Entities entities = getEntities();
         if (entities == null) return null;
         return entities.getMedia();
     }
@@ -366,18 +377,31 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
 
     @Override
     public UrlEntity[] getUrlEntities() {
+        Entities entities = getEntities();
         if (entities == null) return null;
         return entities.getUrls();
     }
 
-    public Entities getEntities() {
-        return entities;
-    }
 
     @Override
     public UserMentionEntity[] getUserMentionEntities() {
+        Entities entities = getEntities();
         if (entities == null) return null;
         return entities.getUserMentions();
+    }
+
+    public Entities getEntities() {
+        if (extendedTweet != null) {
+            return extendedTweet.entities;
+        }
+        return entities;
+    }
+
+    public Entities getExtendedEntities() {
+        if (extendedTweet != null) {
+            return extendedTweet.extendedEntities;
+        }
+        return extendedEntities;
     }
 
     /**
@@ -403,6 +427,10 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
 
     public Attention[] getAttentions() {
         return attentions;
+    }
+
+    public String getConversationId() {
+        return conversationId;
     }
 
     public String getLang() {
@@ -436,6 +464,9 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     }
 
     public int[] getDisplayTextRange() {
+        if (extendedTweet != null) {
+            return extendedTweet.displayTextRange;
+        }
         return displayTextRange;
     }
 
@@ -445,6 +476,27 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
 
     public String getQuotedStatusId() {
         return quotedStatusId;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+
+    // Convenience getters
+
+    public String getExtendedText() {
+        String fullText = getFullText();
+        if (fullText != null) return fullText;
+        return getText();
+    }
+
+    public String getHtmlText() {
+        String statusnetHtml = getStatusnetHtml();
+        if (statusnetHtml != null) return statusnetHtml;
+        String fullText = getFullText();
+        if (fullText != null) return fullText;
+        return getText();
     }
 
     @Override
@@ -483,7 +535,6 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
                 ", descendentReplyCount=" + descendentReplyCount +
                 ", retweetedStatus=" + retweetedStatus +
                 ", quotedStatus=" + quotedStatus +
-                ", repostStatus=" + repostStatus +
                 ", card=" + card +
                 ", possiblySensitive=" + possiblySensitive +
                 ", attachments=" + Arrays.toString(attachments) +
@@ -521,20 +572,46 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
         fixStatus();
     }
 
-    protected void fixStatus() {
+    void fixStatus() {
         // Fix for fanfou
         if (TextUtils.isEmpty(inReplyToStatusId)) {
             inReplyToStatusId = null;
             inReplyToUserId = null;
             inReplyToScreenName = null;
         }
-        if (quotedStatus == null && repostStatus != null) {
-            quotedStatus = repostStatus;
-            quotedStatusId = repostStatusId;
+        if (quotedStatus != null) {
             isQuoteStatus = true;
+            // Set repost media to null if identical to original
+            if (photo != null && photo.equals(quotedStatus.photo)) {
+                photo = null;
+            }
         }
     }
 
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        StatusParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<Status> CREATOR = new Creator<Status>() {
+        @Override
+        public Status createFromParcel(Parcel source) {
+            Status target = new Status();
+            StatusParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        @Override
+        public Status[] newArray(int size) {
+            return new Status[size];
+        }
+    };
 
     @ParcelablePlease
     @JsonObject
@@ -567,27 +644,42 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
         };
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+    @ParcelablePlease
+    @JsonObject
+    public static class ExtendedTweet implements Parcelable {
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        StatusParcelablePlease.writeToParcel(this, dest, flags);
-    }
+        @JsonField(name = "full_text")
+        String fullText;
 
-    public static final Creator<Status> CREATOR = new Creator<Status>() {
+        @JsonField(name = "entities")
+        Entities entities;
+
+        @JsonField(name = "extended_entities")
+        Entities extendedEntities;
+
+        @JsonField(name = "display_text_range")
+        int[] displayTextRange;
+
         @Override
-        public Status createFromParcel(Parcel source) {
-            Status target = new Status();
-            StatusParcelablePlease.readFromParcel(target, source);
-            return target;
+        public int describeContents() {
+            return 0;
         }
 
         @Override
-        public Status[] newArray(int size) {
-            return new Status[size];
+        public void writeToParcel(Parcel dest, int flags) {
+            Status$ExtendedTweetParcelablePlease.writeToParcel(this, dest, flags);
         }
-    };
+
+        public static final Creator<ExtendedTweet> CREATOR = new Creator<ExtendedTweet>() {
+            public ExtendedTweet createFromParcel(Parcel source) {
+                ExtendedTweet target = new ExtendedTweet();
+                Status$ExtendedTweetParcelablePlease.readFromParcel(target, source);
+                return target;
+            }
+
+            public ExtendedTweet[] newArray(int size) {
+                return new ExtendedTweet[size];
+            }
+        };
+    }
 }

@@ -3,15 +3,15 @@
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:title="@string/notifications">
+    android:title="@string/settings_notifications">
 
     <org.mariotaku.twidere.preference.NotificationAccountsListPreference
         android:key="cat_accounts"
-        android:title="@string/accounts"
+        android:title="@string/preference_title_accounts"
         app:switchDefault="true"
         app:switchKey="notification"/>
 
-    <PreferenceCategory
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
         android:key="cat_general"
         android:title="@string/general">
 
@@ -27,6 +27,6 @@
             android:key="pebble_notifications"
             android:summary="@string/pebble_notifications_summary"
             android:title="@string/pebble_notifications"/>
-    </PreferenceCategory>
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 
 </PreferenceScreen>

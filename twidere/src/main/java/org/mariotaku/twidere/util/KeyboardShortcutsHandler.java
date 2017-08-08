@@ -2,6 +2,7 @@ package org.mariotaku.twidere.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.support.annotation.NonNull;
@@ -40,19 +41,19 @@ public class KeyboardShortcutsHandler implements KeyboardShortcutConstants {
     private static final SparseArrayCompat<String> sMetaNameMap = new SparseArrayCompat<>();
 
     static {
-        sActionLabelMap.put(ACTION_COMPOSE, R.string.compose);
-        sActionLabelMap.put(ACTION_SEARCH, R.string.search);
+        sActionLabelMap.put(ACTION_COMPOSE, R.string.action_compose);
+        sActionLabelMap.put(ACTION_SEARCH, R.string.action_search);
         sActionLabelMap.put(ACTION_MESSAGE, R.string.new_direct_message);
         sActionLabelMap.put(ACTION_HOME_ACCOUNTS_DASHBOARD, R.string.open_accounts_dashboard);
-        sActionLabelMap.put(ACTION_STATUS_REPLY, R.string.reply);
-        sActionLabelMap.put(ACTION_STATUS_RETWEET, R.string.retweet);
-        sActionLabelMap.put(ACTION_STATUS_FAVORITE, R.string.like);
+        sActionLabelMap.put(ACTION_STATUS_REPLY, R.string.action_reply);
+        sActionLabelMap.put(ACTION_STATUS_RETWEET, R.string.action_retweet);
+        sActionLabelMap.put(ACTION_STATUS_FAVORITE, R.string.action_like);
         sActionLabelMap.put(ACTION_NAVIGATION_PREVIOUS, R.string.previous_item);
         sActionLabelMap.put(ACTION_NAVIGATION_NEXT, R.string.next_item);
         sActionLabelMap.put(ACTION_NAVIGATION_PAGE_DOWN, R.string.page_down);
         sActionLabelMap.put(ACTION_NAVIGATION_PAGE_UP, R.string.page_up);
         sActionLabelMap.put(ACTION_NAVIGATION_TOP, R.string.jump_to_top);
-        sActionLabelMap.put(ACTION_NAVIGATION_REFRESH, R.string.refresh);
+        sActionLabelMap.put(ACTION_NAVIGATION_REFRESH, R.string.action_refresh);
         sActionLabelMap.put(ACTION_NAVIGATION_PREVIOUS_TAB, R.string.previous_tab);
         sActionLabelMap.put(ACTION_NAVIGATION_NEXT_TAB, R.string.next_tab);
         sActionLabelMap.put(ACTION_NAVIGATION_BACK, R.string.keyboard_shortcut_back);
@@ -64,11 +65,10 @@ public class KeyboardShortcutsHandler implements KeyboardShortcutConstants {
         sMetaNameMap.put(KeyEvent.META_SHIFT_ON, "shift");
     }
 
-    private final SharedPreferencesWrapper mPreferences;
+    private final SharedPreferences mPreferences;
 
     public KeyboardShortcutsHandler(final Context context) {
-        mPreferences = SharedPreferencesWrapper.getInstance(context,
-                KEYBOARD_SHORTCUTS_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        mPreferences = context.getSharedPreferences(KEYBOARD_SHORTCUTS_PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 
     public String findAction(@NonNull KeyboardShortcutSpec spec) {
@@ -173,7 +173,7 @@ public class KeyboardShortcutsHandler implements KeyboardShortcutConstants {
                 return true;
             }
             case ACTION_MESSAGE: {
-                IntentUtils.openMessageConversation(context, null, null);
+                // TODO: open message creator
                 return true;
             }
         }

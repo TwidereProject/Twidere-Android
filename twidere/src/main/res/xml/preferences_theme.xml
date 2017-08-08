@@ -13,7 +13,10 @@
         android:order="21"
         android:title="@string/theme">
         <extra
-            android:name="restart_activity"
+            android:name="should_recreate"
+            android:value="true"/>
+        <extra
+            android:name="recreate_activity"
             android:value="true"/>
     </org.mariotaku.twidere.preference.EntrySummaryListPreference>
 
@@ -22,10 +25,10 @@
         android:order="22"
         android:title="@string/background">
         <extra
-            android:name="notify_change"
+            android:name="should_recreate"
             android:value="true"/>
         <extra
-            android:name="restart_activity"
+            android:name="recreate_activity"
             android:value="true"/>
     </org.mariotaku.twidere.preference.ThemeBackgroundPreference>
 
@@ -35,33 +38,33 @@
         android:title="@string/color"
         app:defaultColor="@color/branding_color">
         <extra
-            android:name="notify_change"
+            android:name="should_recreate"
             android:value="true"/>
         <extra
-            android:name="restart_activity"
+            android:name="recreate_activity"
             android:value="true"/>
     </org.mariotaku.twidere.preference.ColorPickerPreference>
 
-    <org.mariotaku.twidere.preference.ThemeFontFamilyPreference
-        android:defaultValue="sans-serif-light"
-        android:enabled="@bool/has_font_family"
-        android:key="theme_font_family"
+    <org.mariotaku.twidere.preference.EntrySummaryListPreference
+        android:entries="@array/entries_navbar_style"
+        android:entryValues="@array/values_navbar_style"
+        android:key="navbar_style"
         android:order="24"
-        android:title="@string/font_family">
+        android:title="@string/preference_title_navbar_style">
         <extra
-            android:name="notify_change"
+            android:name="should_recreate"
             android:value="true"/>
         <extra
-            android:name="restart_activity"
+            android:name="recreate_activity"
             android:value="true"/>
-    </org.mariotaku.twidere.preference.ThemeFontFamilyPreference>
+    </org.mariotaku.twidere.preference.EntrySummaryListPreference>
 
     <org.mariotaku.twidere.preference.EmojiSupportPreference
         android:key="emoji_support"
         android:order="25"
         android:title="@string/emoji_support">
         <extra
-            android:name="notify_change"
+            android:name="should_recreate"
             android:value="true"/>
     </org.mariotaku.twidere.preference.EmojiSupportPreference>
 

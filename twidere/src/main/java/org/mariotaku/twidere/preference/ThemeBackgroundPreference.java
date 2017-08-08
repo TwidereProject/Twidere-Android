@@ -23,6 +23,7 @@ import android.widget.SeekBar;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.extension.DialogExtensionsKt;
 import org.mariotaku.twidere.preference.iface.IDialogPreference;
 
 /**
@@ -97,7 +98,7 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
     }
 
     @Override
-    public void displayDialog(PreferenceFragmentCompat fragment) {
+    public void displayDialog(@NonNull PreferenceFragmentCompat fragment) {
         InternalDialogFragment df = InternalDialogFragment.newInstance(getKey());
         df.setTargetFragment(fragment, 0);
         df.show(fragment.getFragmentManager(), getKey());
@@ -172,10 +173,11 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
             dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                 @Override
                 public void onShow(DialogInterface dialog) {
+                    final AlertDialog alertDialog = (AlertDialog) dialog;
+                    DialogExtensionsKt.applyTheme(alertDialog);
                     if (preferences != null) {
-                        final AlertDialog materialDialog = (AlertDialog) dialog;
-                        final LayoutInflater inflater = materialDialog.getLayoutInflater();
-                        final ListView listView = materialDialog.getListView();
+                        final LayoutInflater inflater = alertDialog.getLayoutInflater();
+                        final ListView listView = alertDialog.getListView();
                         assert listView != null;
                         final ViewGroup listViewParent = (ViewGroup) listView.getParent();
                         listViewParent.removeView(listView);

@@ -31,10 +31,6 @@ public class UriUtils {
     private UriUtils() {
     }
 
-    public static Uri appendQueryParameters(final Uri uri, final String key, long value) {
-        return appendQueryParameters(uri, key, ParseUtils.parseString(value));
-    }
-
     public static Uri appendQueryParameters(final Uri uri, final String key, String value) {
         final Uri.Builder builder = uri.buildUpon();
         builder.appendQueryParameter(key, value);
@@ -42,7 +38,7 @@ public class UriUtils {
     }
 
     public static Uri appendQueryParameters(Uri uri, String key, boolean value) {
-        return appendQueryParameters(uri, key, ParseUtils.parseString(value));
+        return appendQueryParameters(uri, key, String.valueOf(value));
     }
 
     @Nullable

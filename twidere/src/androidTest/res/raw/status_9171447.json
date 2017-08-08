@@ -1,0 +1,51 @@
+{
+  "text": "Yalp Store (Download apks from Google Play Store). !gnusocial\n\nhttps:\/\/f-droid.org\/app\/com.github.yeriomin.yalpstore",
+  "truncated": false,
+  "created_at": "Sun Jan 01 07:52:45 +0000 2017",
+  "in_reply_to_status_id": null,
+  "uri": "tag:loadaverage.org,2017-01-01:noticeId=9171447:objectType=note",
+  "source": "Twidere",
+  "source_link": "https:\/\/github.com\/TwidereProject\/",
+  "id": 9171447,
+  "in_reply_to_user_id": null,
+  "in_reply_to_screen_name": null,
+  "geo": null,
+  "attachments": [
+    {
+      "url": "https:\/\/f-droid.org\/repository\/browse\/?fdid=com.github.yeriomin.yalpstore",
+      "mimetype": "text\/html; charset=UTF-8",
+      "size": null
+    }
+  ],
+  "user": {
+    "id": 350908,
+    "name": "Jean",
+    "screen_name": "d0e",
+    "location": "",
+    "description": "This is a work of fiction. Names, characters, businesses, places, events and incidents are either the products of the author\u2019s imagination or used in a fictitious manner. Any resemblance to actual persons, living or dead, or actual events is purely coincidental. All rights reserved.",
+    "profile_image_url": "https:\/\/loadaverage.org\/avatar\/350908-48-20161231161632.png",
+    "profile_image_url_https": "https:\/\/loadaverage.org\/avatar\/350908-48-20161231161632.png",
+    "profile_image_url_profile_size": "https:\/\/loadaverage.org\/avatar\/350908-96-20161231161618.png",
+    "profile_image_url_original": "https:\/\/loadaverage.org\/avatar\/350908-300-20161231161618.png",
+    "groups_count": 52,
+    "linkcolor": false,
+    "backgroundcolor": false,
+    "url": null,
+    "protected": false,
+    "followers_count": 16,
+    "friends_count": 18,
+    "created_at": "Sat Nov 26 06:28:35 +0000 2016",
+    "utc_offset": "0",
+    "time_zone": "UTC",
+    "statuses_count": 312,
+    "following": false,
+    "statusnet_blocking": false,
+    "notifications": false,
+    "statusnet_profile_url": "https:\/\/loadaverage.org\/d0e",
+    "favourites_count": 30
+  },
+  "statusnet_html": "Yalp Store (Download apks from Google Play Store). !<a href=\"https:\/\/status.vinilox.eu\/group\/1987\/id\" class=\"h-card u-url p-nickname group\" title=\"gnusocial (gnusocial)\">gnusocial<\/a><br \/>\n<br \/>\n<a href=\"https:\/\/f-droid.org\/repository\/browse\/?fdid=com.github.yeriomin.yalpstore\" title=\"https:\/\/f-droid.org\/repository\/browse\/?fdid=com.github.yeriomin.yalpstore\" rel=\"nofollow external noreferrer\" class=\"attachment\" id=\"attachment-3377818\">https:\/\/f-droid.org\/app\/com.github.yeriomin.yalpstore<\/a>",
+  "statusnet_conversation_id": 8440999,
+  "favorited": false,
+  "repeated": false
+}

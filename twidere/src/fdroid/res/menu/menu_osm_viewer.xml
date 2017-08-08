@@ -25,6 +25,6 @@
         android:id="@id/center"
         android:icon="@drawable/ic_action_my_location"
         app:showAsAction="always"
-        android:title="@string/center"/>
+        android:title="@string/action_center"/>
 
 </menu>

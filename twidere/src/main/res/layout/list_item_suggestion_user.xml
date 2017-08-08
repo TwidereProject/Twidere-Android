@@ -38,7 +38,7 @@
         android:layout_height="@dimen/element_size_quick_search_bar_item_icon"
         android:contentDescription="@string/icon"
         android:scaleType="centerCrop"
-        tools:src="@mipmap/ic_launcher"/>
+        tools:src="@drawable/ic_profile_image_twidere"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -50,25 +50,25 @@
         android:paddingRight="0dp"
         android:paddingStart="@dimen/element_spacing_small">
 
-        <TextView
+        <org.mariotaku.twidere.view.FixedTextView
             android:id="@android:id/text1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="?android:textColorPrimary"
-            tools:text="Mariotaku"/>
+            tools:text="Mariotaku"
+            android:maxLines="1"/>
 
-        <TextView
+        <org.mariotaku.twidere.view.FixedTextView
             android:id="@android:id/text2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/element_spacing_small"
             android:layout_marginStart="@dimen/element_spacing_small"
-            android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:textColorSecondary"
-            tools:text="\@mariotaku"/>
+            tools:text="\@mariotaku"
+            android:maxLines="1"/>
     </LinearLayout>
 
 </LinearLayout>

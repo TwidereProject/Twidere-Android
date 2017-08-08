@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>ic_label_gallery-mdpi</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Action-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic_label_gallery-mdpi">
+            <g id="image_image" transform="translate(2.000000, 2.000000)">
+                <g id="Group">
+                    <polygon id="Shape" points="0 0 20 0 20 20 0 20"></polygon>
+                    <path d="M17.5,15.8333333 L17.5,4.16666667 C17.5,3.25 16.75,2.5 15.8333333,2.5 L4.16666667,2.5 C3.25,2.5 2.5,3.25 2.5,4.16666667 L2.5,15.8333333 C2.5,16.75 3.25,17.5 4.16666667,17.5 L15.8333333,17.5 C16.75,17.5 17.5,16.75 17.5,15.8333333 Z M7.08333333,11.25 L9.16666667,13.7583333 L12.0833333,10 L15.8333333,15 L4.16666667,15 L7.08333333,11.25 Z" id="Shape" fill="#FFFFFF" fill-rule="nonzero"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

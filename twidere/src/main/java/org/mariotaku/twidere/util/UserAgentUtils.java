@@ -31,6 +31,11 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import java.lang.reflect.Constructor;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by mariotaku on 15/4/12.
@@ -73,45 +78,29 @@ public class UserAgentUtils {
 
     @WorkerThread
     @Nullable
-    public static String getDefaultUserAgentStringSafe(Context context) {
+    public static String getDefaultUserAgentStringSafe(final Context context) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
             //noinspection ResourceType
             return getDefaultUserAgentString(context);
         }
         final Handler handler = new Handler(Looper.getMainLooper());
+        FutureTask<String> task = new FutureTask<>(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                return getDefaultUserAgentString(context);
+            }
+        });
         try {
-            final FetchUserAgentRunnable runnable = new FetchUserAgentRunnable(context);
-            handler.post(runnable);
-            runnable.waitForExecution();
-            return runnable.getUserAgent();
+            handler.post(task);
+            return task.get(1, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
         } finally {
             handler.removeCallbacksAndMessages(null);
-        }
-    }
-
-    private static class FetchUserAgentRunnable implements Runnable {
-
-        private final Context context;
-        private String userAgent;
-        private boolean userAgentSet;
-
-        public FetchUserAgentRunnable(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        public void run() {
-            userAgent = getDefaultUserAgentString(context);
-            userAgentSet = true;
-        }
-
-        public String getUserAgent() {
-            return userAgent;
-        }
-
-        public void waitForExecution() {
-            //noinspection StatementWithEmptyBody
-            while (!userAgentSet) ;
         }
     }
 

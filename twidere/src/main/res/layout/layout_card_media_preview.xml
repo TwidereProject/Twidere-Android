@@ -20,45 +20,56 @@
 
 <merge
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:showIn="@layout/card_item_status_compact">
+    tools:showIn="@layout/list_item_status">
 
-    <com.commonsware.cwac.layouts.AspectLockedFrameLayout
-        android:id="@+id/media_preview_item_0"
+    <org.mariotaku.twidere.view.MediaPreviewImageView
+        android:id="@+id/mediaPreviewItem0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:foreground="?selectableItemBackground">
+        android:contentDescription="@string/media"
+        android:foreground="?selectableItemBackground"
+        android:foregroundGravity="center"
+        android:scaleType="centerCrop"
+        app:layout_isMediaItemView="true"
+        tools:ignore="DuplicateIncludedIds"
+        tools:src="@drawable/featured_graphics"/>
 
-        <include layout="@layout/layout_card_media_preview_item"/>
-    </com.commonsware.cwac.layouts.AspectLockedFrameLayout>
-
-    <com.commonsware.cwac.layouts.AspectLockedFrameLayout
-        android:id="@+id/media_preview_item_1"
+    <org.mariotaku.twidere.view.MediaPreviewImageView
+        android:id="@+id/mediaPreviewItem1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:foreground="?selectableItemBackground">
+        android:contentDescription="@string/media"
+        android:foreground="?selectableItemBackground"
+        android:foregroundGravity="center"
+        android:scaleType="centerCrop"
+        app:layout_isMediaItemView="true"
+        tools:ignore="DuplicateIncludedIds"
+        tools:src="@drawable/featured_graphics"/>
 
-        <include layout="@layout/layout_card_media_preview_item"/>
-    </com.commonsware.cwac.layouts.AspectLockedFrameLayout>
-
-    <com.commonsware.cwac.layouts.AspectLockedFrameLayout
-        android:id="@+id/media_preview_item_2"
+    <org.mariotaku.twidere.view.MediaPreviewImageView
+        android:id="@+id/mediaPreviewItem2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:foreground="?selectableItemBackground">
+        android:contentDescription="@string/media"
+        android:foreground="?selectableItemBackground"
+        android:foregroundGravity="center"
+        android:scaleType="centerCrop"
+        app:layout_isMediaItemView="true"
+        tools:ignore="DuplicateIncludedIds"
+        tools:src="@drawable/featured_graphics"/>
 
-        <include layout="@layout/layout_card_media_preview_item"/>
-    </com.commonsware.cwac.layouts.AspectLockedFrameLayout>
-
-    <com.commonsware.cwac.layouts.AspectLockedFrameLayout
-        android:id="@+id/media_preview_item_3"
+    <org.mariotaku.twidere.view.MediaPreviewImageView
+        android:id="@+id/mediaPreviewItem3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:foreground="?selectableItemBackground">
+        android:contentDescription="@string/media"
+        android:foreground="?selectableItemBackground"
+        android:foregroundGravity="center"
+        android:scaleType="centerCrop"
+        app:layout_isMediaItemView="true"
+        tools:ignore="DuplicateIncludedIds"
+        tools:src="@drawable/featured_graphics"/>
 
-        <include layout="@layout/layout_card_media_preview_item"/>
-
-    </com.commonsware.cwac.layouts.AspectLockedFrameLayout>
 </merge>

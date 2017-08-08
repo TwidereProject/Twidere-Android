@@ -26,7 +26,7 @@ public class CircleLayerDrawable extends AnimationLayerDrawable {
     }
 
     @Override
-    public void draw(final Canvas canvas) {
+    public void draw(@NonNull final Canvas canvas) {
         final CircleState state = (CircleState) mState;
         final float progress = getProgress();
         final Rect bounds = getBounds();

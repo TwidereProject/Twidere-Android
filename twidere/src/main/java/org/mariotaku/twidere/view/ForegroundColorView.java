@@ -28,6 +28,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -88,7 +89,6 @@ public class ForegroundColorView extends View implements IForegroundView {
      * the padding area.
      *
      * @param drawable The Drawable to be drawn on top of the children.
-     * @attr ref android.R.styleable#FrameLayout_foreground
      */
     @Override
     public void setForeground(final Drawable drawable) {
@@ -101,7 +101,6 @@ public class ForegroundColorView extends View implements IForegroundView {
      * Describes how the foreground is positioned. Defaults to START and TOP.
      *
      * @param foregroundGravity See {@link android.view.Gravity}
-     * @attr ref android.R.styleable#FrameLayout_foregroundGravity
      */
     @Override
     public void setForegroundGravity(final int foregroundGravity) {
@@ -110,7 +109,7 @@ public class ForegroundColorView extends View implements IForegroundView {
         }
     }
 
-    public void setAlphaPatternEnable(final boolean alphaPattern) {
+    public void setAlphaPatternEnabled(final boolean alphaPattern) {
         if (mAlphaPattern == alphaPattern) return;
         mAlphaPattern = alphaPattern;
         invalidate();
@@ -145,7 +144,7 @@ public class ForegroundColorView extends View implements IForegroundView {
     }
 
     @Override
-    protected boolean verifyDrawable(final Drawable who) {
+    protected boolean verifyDrawable(@NonNull final Drawable who) {
         return super.verifyDrawable(who) || (mForegroundViewHelper != null && mForegroundViewHelper.verifyDrawable(who));
     }
 

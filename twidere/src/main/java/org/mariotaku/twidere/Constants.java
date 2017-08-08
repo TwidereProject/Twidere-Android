@@ -19,11 +19,7 @@
 
 package org.mariotaku.twidere;
 
-import org.mariotaku.twidere.annotation.Preference;
 import org.mariotaku.twidere.model.UserKey;
-
-import static org.mariotaku.twidere.annotation.PreferenceType.BOOLEAN;
-import static org.mariotaku.twidere.annotation.PreferenceType.STRING;
 
 /**
  * Constants requires full application to build or useless for other
@@ -34,7 +30,9 @@ import static org.mariotaku.twidere.annotation.PreferenceType.STRING;
 public interface Constants extends TwidereConstants {
 
     String DATABASES_NAME = "twidere.sqlite";
-    int DATABASES_VERSION = 151;
+    int DATABASES_VERSION = 184;
+
+    int EXTRA_FEATURES_NOTICE_VERSION = 2;
 
     int MENU_GROUP_STATUS_EXTENSION = 10;
     int MENU_GROUP_COMPOSE_EXTENSION = 11;
@@ -51,13 +49,14 @@ public interface Constants extends TwidereConstants {
     int LINK_ID_USER_FRIENDS = 6;
     int LINK_ID_USER_BLOCKS = 7;
     int LINK_ID_USER_MEDIA_TIMELINE = 8;
-    int LINK_ID_DIRECT_MESSAGES_CONVERSATION = 9;
+
     int LINK_ID_USER_LIST = 10;
     int LINK_ID_USER_LISTS = 11;
     int LINK_ID_USER_LIST_TIMELINE = 12;
     int LINK_ID_USER_LIST_MEMBERS = 13;
     int LINK_ID_USER_LIST_SUBSCRIBERS = 14;
     int LINK_ID_USER_LIST_MEMBERSHIPS = 15;
+
     int LINK_ID_GROUP = 16;
     int LINK_ID_USER_GROUPS = 17;
     int LINK_ID_SAVED_SEARCHES = 19;
@@ -67,21 +66,31 @@ public interface Constants extends TwidereConstants {
     int LINK_ID_STATUS_RETWEETERS = 25;
     int LINK_ID_STATUS_FAVORITERS = 27;
     int LINK_ID_SEARCH = 28;
-    int LINK_ID_DIRECT_MESSAGES = 29;
-    int LINK_ID_INTERACTIONS = 30;
-    int LINK_ID_PUBLIC_TIMELINE = 31;
+    int LINK_ID_MASTODON_SEARCH = 29;
+
+    int LINK_ID_MESSAGES = 30;
+    int LINK_ID_MESSAGES_CONVERSATION = 31;
+    int LINK_ID_MESSAGES_CONVERSATION_NEW = 32;
+    int LINK_ID_MESSAGES_CONVERSATION_INFO = 33;
+
+    int LINK_ID_INTERACTIONS = 35;
+    int LINK_ID_PUBLIC_TIMELINE = 36;
+    int LINK_ID_NETWORK_PUBLIC_TIMELINE = 37;
     int LINK_ID_MUTES_USERS = 41;
     int LINK_ID_MAP = 51;
-    int LINK_ID_SCHEDULED_STATUSES = 61;
     int LINK_ID_ACCOUNTS = 101;
     int LINK_ID_DRAFTS = 102;
-    int LINK_ID_FILTERS = 103;
-    int LINK_ID_PROFILE_EDITOR = 104;
+    int LINK_ID_FILTERS = 110;
+    int LINK_ID_FILTERS_IMPORT_BLOCKS = 111;
+    int LINK_ID_FILTERS_IMPORT_MUTES = 112;
+    int LINK_ID_FILTERS_SUBSCRIPTIONS = 113;
+    int LINK_ID_FILTERS_SUBSCRIPTIONS_ADD = 114;
+    int LINK_ID_PROFILE_EDITOR = 121;
 
     String TWIDERE_PREVIEW_NICKNAME = "Twidere";
     String TWIDERE_PREVIEW_NAME = "Twidere Project";
     String TWIDERE_PREVIEW_SCREEN_NAME = "TwidereProject";
-    String TWIDERE_PREVIEW_TEXT_HTML = "Twidere is an open source twitter client for Android, see <a href='https://github.com/mariotaku/twidere'>github.com/mariotak&#8230;<a/>";
+    String TWIDERE_PREVIEW_TEXT_HTML = "Twidere is an open source twitter client for Android, see <a href='https://github.com/mariotaku/twidere'>github.com/mariotak&#8230;</a>";
     String TWIDERE_PREVIEW_TEXT_UNESCAPED = "Twidere is an open source twitter client for Android, see github.com/mariotak&#8230;";
     String TWIDERE_PREVIEW_SOURCE = "Twidere for Android";
 
@@ -100,8 +109,9 @@ public interface Constants extends TwidereConstants {
             R.color.material_orange, R.color.material_deep_orange};
 
     // SharedPreferences constants
-    @Preference(type = STRING, exportable = false)
     String KEY_DEVICE_SERIAL = "device_serial";
 
-    String GOOGLE_APIS_SERVER_CLIENT_ID = "223623398518-1p34hsndj7couh2c9c2f8909amh9euhf.apps.googleusercontent.com";
+    // Intent constants
+    String EXTRA_PRODUCT_TYPE = "product_type";
+
 }

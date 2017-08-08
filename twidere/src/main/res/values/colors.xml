@@ -7,7 +7,6 @@
     <color name="background_color_window_viewer">#000</color>
     <color name="background_color_window_white">#fff</color>
     <color name="background_color_window_black">#000</color>
-    <color name="background_color_window_settings_wizard">#fafafa</color>
     <color name="bg_refresh_progress_color_light">#f5f5f5</color>
     <color name="bg_refresh_progress_color_dark">#333333</color>
     <color name="bg_color_transparent_dark">#ff000000</color>
@@ -34,6 +33,7 @@
     <color name="branding_color">@color/material_cyan</color>
     <color name="bg_color_tab_pressed">#40808080</color>
     <color name="bg_color_media_viewer">#cc000000</color>
+    <color name="ab_bg_color_media_viewer">#80000000</color>
     <color name="background_color_card_item_dark">#424242</color>
     <color name="background_color_card_item_light">#ffffff</color>
     <color name="background_color_action_bar_dark">#212121</color>
@@ -41,5 +41,9 @@
     <color name="drawer_banner_foreground">#80000000</color>
     <color name="quote_indicator_background_dark">#40aaaaaa</color>
     <color name="quote_indicator_background_light">#40333333</color>
+
+    <color name="home_page_margin_color">#20333333</color>
+
+    <color name="bg_ic_launcher_adaptive">#85F1FF</color>
 
 </resources>

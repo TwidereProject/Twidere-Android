@@ -22,6 +22,16 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="fab_visible"
+        android:summary="@string/fab_visible_summary"
+        android:title="@string/fab_visible">
+        <extra
+            android:name="should_recreate"
+            android:value="true"/>
+    </SwitchPreferenceCompat>
+
+    <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="quick_send"
         android:summary="@string/quick_send_summary"
@@ -60,11 +70,4 @@
         android:summary="@string/quote_format_summary"
         android:title="@string/quote_format"/>
 
-    <org.mariotaku.twidere.preference.ThemedEditTextPreference
-        android:defaultValue="[TITLE] - [TEXT]"
-        android:dialogTitle="@string/share_format"
-        android:key="share_format"
-        android:singleLine="true"
-        android:summary="@string/share_format_summary"
-        android:title="@string/share_format"/>
 </PreferenceScreen>

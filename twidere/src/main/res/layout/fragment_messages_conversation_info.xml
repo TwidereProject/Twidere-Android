@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:background="?colorToolbar"
+        android:fitsSystemWindows="true">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/toolbarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:titleEnabled="false">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?colorToolbar"
+                app:contentInsetStart="0dp"
+                app:contentInsetStartWithNavigation="0dp"
+                app:layout_collapseMode="pin">
+
+                <include
+                    layout="@layout/layout_toolbar_message_conversation_title"
+                    tools:visibility="gone"/>
+
+            </android.support.v7.widget.Toolbar>
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <org.mariotaku.twidere.view.ExtendedRecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:listitem="@layout/list_item_conversation_info_user"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/editButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/element_spacing_large"
+        android:src="@drawable/ic_action_edit"
+        app:backgroundTint="?android:colorBackground"
+        app:layout_anchor="@+id/appBar"
+        app:layout_anchorGravity="bottom|end"
+        tools:tint="?android:colorForeground"/>
+
+    <org.mariotaku.twidere.view.ProfileImageView
+        android:id="@+id/appBarIcon"
+        android:layout_width="@dimen/icon_size_conversation_info"
+        android:layout_height="@dimen/icon_size_conversation_info"
+        app:behavior_alignmentRule="bottom|start"
+        app:behavior_appBarId="@+id/appBar"
+        app:behavior_childTransformation="org.mariotaku.twidere.util.view.ConversationAvatarTransformation"
+        app:behavior_dependencyViewId="@+id/appBar"
+        app:behavior_marginBottom="@dimen/element_spacing_xlarge"
+        app:behavior_marginStart="@dimen/element_spacing_xlarge"
+        app:behavior_targetViewId="@+id/conversationAvatar"
+        app:behavior_toolbarId="@+id/toolbar"
+        app:layout_behavior="org.mariotaku.twidere.util.view.AppBarChildBehavior"
+        app:sivDrawShadow="false"
+        app:sivElevation="8dp"
+        app:sivShape="circle"
+        tools:src="@drawable/ic_profile_image_default_group"/>
+
+    <org.mariotaku.twidere.view.FixedTextView
+        android:id="@+id/appBarTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="?android:textAppearanceLarge"
+        android:textColor="?android:textColorPrimary"
+        android:textStyle="normal"
+        app:behavior_alignmentRule="toEndOf|aboveCenter"
+        app:behavior_appBarId="@+id/appBar"
+        app:behavior_childTransformation="org.mariotaku.twidere.util.view.ConversationTitlesTransformation"
+        app:behavior_dependencyViewId="@+id/appBarIcon"
+        app:behavior_marginStart="@dimen/element_spacing_normal"
+        app:behavior_targetViewId="@+id/conversationTitle"
+        app:behavior_toolbarId="@+id/toolbar"
+        app:layout_behavior="org.mariotaku.twidere.util.view.AppBarChildBehavior"
+        tools:text="Title"/>
+
+    <org.mariotaku.twidere.view.FixedTextView
+        android:id="@+id/appBarSubtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:textColor="?android:textColorSecondary"
+        android:textStyle="normal"
+        app:behavior_alignmentRule="toEndOf|belowCenter"
+        app:behavior_appBarId="@+id/appBar"
+        app:behavior_childTransformation="org.mariotaku.twidere.util.view.ConversationTitlesTransformation"
+        app:behavior_dependencyViewId="@+id/appBarIcon"
+        app:behavior_marginStart="@dimen/element_spacing_normal"
+        app:behavior_marginTop="@dimen/element_spacing_small"
+        app:behavior_targetViewId="@+id/conversationSubtitle"
+        app:behavior_toolbarId="@+id/toolbar"
+        app:layout_behavior="org.mariotaku.twidere.util.view.AppBarChildBehavior"
+        tools:text="Subtitle"/>
+
+</android.support.design.widget.CoordinatorLayout>

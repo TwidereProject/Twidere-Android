@@ -9,9 +9,11 @@ import android.support.annotation.StringDef;
         ReadPositionTag.ACTIVITIES_ABOUT_ME,
         ReadPositionTag.HOME_TIMELINE,
         ReadPositionTag.DIRECT_MESSAGES,
+        ReadPositionTag.CUSTOM_TIMELINE,
 })
 public @interface ReadPositionTag {
     String HOME_TIMELINE = "home_timeline";
     String ACTIVITIES_ABOUT_ME = "activities_about_me";
     String DIRECT_MESSAGES = "direct_messages";
+    String CUSTOM_TIMELINE = "custom_timeline";
 }

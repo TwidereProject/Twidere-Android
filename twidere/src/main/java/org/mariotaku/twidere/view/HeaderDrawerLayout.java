@@ -112,6 +112,33 @@ public class HeaderDrawerLayout extends ViewGroup {
     }
 
     @Override
+    public boolean onTouchEvent(@NonNull MotionEvent event) {
+        mDragHelper.processTouchEvent(event);
+        return true;
+    }
+
+    @Override
+    public boolean canScrollVertically(final int direction) {
+        if (direction > 0) {
+            return getHeaderTop() > getHeaderTopMaximum();
+        } else if (direction < 0) {
+            return getHeaderTop() < getHeaderTopMaximum();
+        }
+        return false;
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        final View child = getChildAt(0);
+
+        final int childWidthMeasureSpec = makeChildMeasureSpec(widthMeasureSpec, getPaddingLeft() + getPaddingRight());
+        final int childHeightMeasureSpec = makeChildMeasureSpec(heightMeasureSpec, getPaddingTop() + getPaddingBottom());
+
+        child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         for (int i = 0, j = getChildCount(); i < j; i++) {
             final View child = getChildAt(i);
@@ -133,6 +160,29 @@ public class HeaderDrawerLayout extends ViewGroup {
             }
             child.layout(left, top, right, bottom);
             notifyOffsetChanged();
+        }
+    }
+
+    @Override
+    public void computeScroll() {
+        boolean invalidate = mDragHelper.continueSettling(true);
+        if (!mTouchDown && mScroller.computeScrollOffset()) {
+            if (!invalidate) {
+                offsetHeaderBy(mScroller.getCurrY() - getHeaderTop());
+            }
+            invalidate = true;
+        }
+        updateViewOffset();
+        if (invalidate) {
+            ViewCompat.postInvalidateOnAnimation(this);
+        }
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        if (getChildCount() != 1) {
+            throw new IllegalArgumentException("Add subview by XML is not allowed.");
         }
     }
 
@@ -158,21 +208,6 @@ public class HeaderDrawerLayout extends ViewGroup {
         return mContainer.getTop();
     }
 
-    @Override
-    public void computeScroll() {
-        boolean invalidate = mDragHelper.continueSettling(true);
-        if (!mTouchDown && mScroller.computeScrollOffset()) {
-            if (!invalidate) {
-                offsetHeaderBy(mScroller.getCurrY() - getHeaderTop());
-            }
-            invalidate = true;
-        }
-        updateViewOffset();
-        if (invalidate) {
-            ViewCompat.postInvalidateOnAnimation(this);
-        }
-    }
-
     public int getHeaderTopMaximum() {
         return mContainer.getHeaderTopMaximum();
     }
@@ -181,26 +216,12 @@ public class HeaderDrawerLayout extends ViewGroup {
         return mContainer.getHeaderTopMinimum();
     }
 
-    @Override
-    public boolean onTouchEvent(@NonNull MotionEvent event) {
-        mDragHelper.processTouchEvent(event);
-        return true;
-    }
-
     public void setDrawerCallback(DrawerCallback callback) {
         mDrawerCallback = callback;
     }
 
     private boolean canScrollCallback(float dy) {
         return mDrawerCallback.canScroll(dy);
-    }
-
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-        if (getChildCount() != 1) {
-            throw new IllegalArgumentException("Add subview by XML is not allowed.");
-        }
     }
 
     private void cancelTouchCallback() {
@@ -274,17 +295,6 @@ public class HeaderDrawerLayout extends ViewGroup {
 
     private void setScrollingHeaderByGesture(boolean scrolling) {
         mScrollingHeaderByGesture = scrolling;
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        final View child = getChildAt(0);
-
-        final int childWidthMeasureSpec = makeChildMeasureSpec(widthMeasureSpec, getPaddingLeft() + getPaddingRight());
-        final int childHeightMeasureSpec = makeChildMeasureSpec(heightMeasureSpec, getPaddingTop() + getPaddingBottom());
-
-        child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     private boolean shouldLayoutHeaderBottomCallback() {

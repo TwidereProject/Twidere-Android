@@ -18,56 +18,55 @@
   -->
 
 <org.mariotaku.twidere.view.TintedStatusFrameLayout
+    android:id="@+id/userFragmentView"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     app:setPadding="false">
 
     <RelativeLayout
-        android:id="@+id/profile_banner_container"
+        android:id="@+id/profileBannerContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top">
 
         <org.mariotaku.twidere.view.ProfileBannerImageView
-            android:id="@+id/profile_banner"
+            android:id="@+id/profileBanner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            app:bannerAspectRatio="@fraction/aspect_ratio_profile_banner"
+            tools:src="@drawable/nyan_stars_background"/>
 
-        <FrameLayout
-            android:id="@+id/profile_birthday_banner"
+        <ViewStub
+            android:id="@+id/profileBirthdayStub"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/profile_banner"
-            android:layout_alignTop="@+id/profile_banner"
-            android:visibility="gone">
-
-            <org.mariotaku.twidere.view.BirthdayView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-        </FrameLayout>
+            android:layout_alignBottom="@+id/profileBanner"
+            android:layout_alignTop="@+id/profileBanner"
+            android:layout="@layout/layout_user_profile_birthday_stub"/>
     </RelativeLayout>
 
     <org.mariotaku.twidere.view.ExtendedRelativeLayout
-        android:id="@+id/profile_content_container"
+        android:id="@+id/profileContentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <org.mariotaku.twidere.view.ExtendedFrameLayout
-            android:id="@+id/details_container"
+        <org.mariotaku.twidere.view.ExtendedSwipeRefreshLayout
+            android:id="@+id/userProfileSwipeLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <org.mariotaku.twidere.view.HeaderDrawerLayout
-                android:id="@+id/user_profile_drawer"
+                android:id="@+id/userProfileDrawer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:hdl_contentLayout="@layout/fragment_content_pages"
                 app:hdl_headerLayout="@layout/header_user"/>
-        </org.mariotaku.twidere.view.ExtendedFrameLayout>
+        </org.mariotaku.twidere.view.ExtendedSwipeRefreshLayout>
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -75,11 +74,11 @@
             android:layout_height="?actionBarSize"
             android:layout_alignParentTop="true"
             android:elevation="@dimen/toolbar_elevation"
-            android:tag="ate_ignore"
-            app:popupTheme="?actionBarPopupTheme"/>
+            app:popupTheme="?actionBarPopupTheme"
+            tools:elevation="0dp"/>
 
         <View
-            android:id="@+id/window_overlay"
+            android:id="@+id/windowOverlay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/toolbar"

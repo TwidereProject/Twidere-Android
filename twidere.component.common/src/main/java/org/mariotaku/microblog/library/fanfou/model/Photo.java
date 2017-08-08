@@ -1,3 +1,21 @@
+/*
+ *         Twidere - Twitter client for Android
+ *
+ * Copyright 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.mariotaku.microblog.library.fanfou.model;
 
 import android.os.Parcel;
@@ -46,6 +64,31 @@ public class Photo implements Parcelable {
                 ", thumbUrl='" + thumbUrl + '\'' +
                 ", largeUrl='" + largeUrl + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Photo photo = (Photo) o;
+
+        if (url != null ? !url.equals(photo.url) : photo.url != null) return false;
+        if (imageUrl != null ? !imageUrl.equals(photo.imageUrl) : photo.imageUrl != null)
+            return false;
+        if (thumbUrl != null ? !thumbUrl.equals(photo.thumbUrl) : photo.thumbUrl != null)
+            return false;
+        return largeUrl != null ? largeUrl.equals(photo.largeUrl) : photo.largeUrl == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = url != null ? url.hashCode() : 0;
+        result = 31 * result + (imageUrl != null ? imageUrl.hashCode() : 0);
+        result = 31 * result + (thumbUrl != null ? thumbUrl.hashCode() : 0);
+        result = 31 * result + (largeUrl != null ? largeUrl.hashCode() : 0);
+        return result;
     }
 
     @Override

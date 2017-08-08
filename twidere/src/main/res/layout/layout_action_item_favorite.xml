@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:contentDescription="@string/like"
+        android:contentDescription="@string/action_like"
         android:scaleType="centerInside"
         android:src="@drawable/ic_action_heart"/>
 </FrameLayout>

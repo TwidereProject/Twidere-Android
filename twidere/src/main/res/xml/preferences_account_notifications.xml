@@ -14,39 +14,39 @@
         android:ringtoneType="notification"
         android:showDefault="true"
         android:showSilent="true"
-        android:title="@string/notification_ringtone"/>
+        android:title="@string/preference_title_notification_ringtone"/>
 
     <org.mariotaku.twidere.preference.ColorPickerPreference
         android:key="notification_light_color"
         android:title="@string/notification_light_color"
         app:defaultColor="@color/branding_color"/>
 
-    <PreferenceCategory
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
         android:key="cat_notifications_type"
         android:title="@string/notifications_type">
         <org.mariotaku.twidere.preference.NotificationTypePreference
             android:key="notification_type_home"
-            android:title="@string/home"
+            android:title="@string/notification_type_home"
             app:dependencyKey="home_timeline_notification"
             app:dependencyValueDefault="false"
             app:dependencyValues="@array/dependency_values_true"
             app:notificationType="none"/>
         <org.mariotaku.twidere.preference.NotificationTypePreference
             android:key="notification_type_mentions"
-            android:title="@string/interactions"
+            android:title="@string/notification_type_interactions"
             app:dependencyKey="mentions_notification"
             app:dependencyValueDefault="false"
             app:dependencyValues="@array/dependency_values_true"
             app:notificationType="vibration|light"/>
         <org.mariotaku.twidere.preference.NotificationTypePreference
             android:key="notification_type_direct_messages"
-            android:title="@string/direct_messages"
+            android:title="@string/notification_type_messages"
             app:dependencyKey="direct_messages_notification"
             app:dependencyValueDefault="false"
             app:dependencyValues="@array/dependency_values_true"
             app:notificationType="ringtone|vibration|light"/>
-    </PreferenceCategory>
-    <PreferenceCategory
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
         android:key="cat_other_settings"
         android:title="@string/other_settings">
         <SwitchPreferenceCompat
@@ -58,6 +58,6 @@
             android:defaultValue="false"
             android:key="notification_mentions_only"
             android:title="@string/mentions_only"/>
-    </PreferenceCategory>
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 
 </PreferenceScreen>

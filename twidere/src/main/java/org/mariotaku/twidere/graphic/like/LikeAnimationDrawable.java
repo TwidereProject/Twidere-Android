@@ -203,7 +203,7 @@ public class LikeAnimationDrawable extends Drawable implements Animatable, Drawa
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(@NonNull Canvas canvas) {
         mState.mCircleLayer.draw(canvas);
         mState.mParticleLayer.draw(canvas);
         mState.mIconDrawable.draw(canvas);
@@ -231,17 +231,17 @@ public class LikeAnimationDrawable extends Drawable implements Animatable, Drawa
     }
 
     @Override
-    public void invalidateDrawable(Drawable who) {
+    public void invalidateDrawable(@NonNull Drawable who) {
         invalidateSelf();
     }
 
     @Override
-    public void scheduleDrawable(Drawable who, Runnable what, long when) {
+    public void scheduleDrawable(@NonNull Drawable who, @NonNull Runnable what, long when) {
         scheduleSelf(what, when);
     }
 
     @Override
-    public void unscheduleDrawable(Drawable who, Runnable what) {
+    public void unscheduleDrawable(@NonNull Drawable who, @NonNull Runnable what) {
         unscheduleSelf(what);
     }
 
@@ -255,6 +255,7 @@ public class LikeAnimationDrawable extends Drawable implements Animatable, Drawa
         return super.getChangingConfigurations() | mState.getChangingConfigurations();
     }
 
+    @NonNull
     @Override
     public Drawable mutate() {
         if (!mMutated && super.mutate() == this) {

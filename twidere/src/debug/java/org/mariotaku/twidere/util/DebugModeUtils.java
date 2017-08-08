@@ -19,22 +19,21 @@
 
 package org.mariotaku.twidere.util;
 
-import android.app.Activity;
 import android.app.Application;
-import android.os.Bundle;
+import android.os.Build;
+import android.webkit.WebView;
 
+import com.facebook.stetho.DumperPluginsProvider;
 import com.facebook.stetho.Stetho;
+import com.facebook.stetho.dumpapp.DumperPlugin;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
-import com.squareup.leakcanary.AndroidExcludedRefs;
-import com.squareup.leakcanary.DisplayLeakService;
-import com.squareup.leakcanary.ExcludedRefs;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
-import com.squareup.leakcanary.ServiceHeapDumpListener;
 
 import org.mariotaku.twidere.BuildConfig;
-import org.mariotaku.twidere.activity.ComposeActivity;
 import org.mariotaku.twidere.util.net.NoIntercept;
+import org.mariotaku.twidere.util.stetho.AccountsDumperPlugin;
+import org.mariotaku.twidere.util.stetho.UserStreamDumperPlugin;
 
 import java.io.IOException;
 
@@ -68,57 +67,32 @@ public class DebugModeUtils {
 
     public static void initForApplication(final Application application) {
         Stetho.initialize(Stetho.newInitializerBuilder(application)
-                .enableDumpapp(Stetho.defaultDumperPluginsProvider(application))
+                .enableDumpapp(new DumperPluginsProvider() {
+                    @Override
+                    public Iterable<DumperPlugin> get() {
+                        return new Stetho.DefaultDumperPluginsBuilder(application)
+                                .provide(new AccountsDumperPlugin(application))
+                                .provide(new UserStreamDumperPlugin(application))
+                                .finish();
+                    }
+                })
                 .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(application))
                 .build());
         initLeakCanary(application);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            WebView.setWebContentsDebuggingEnabled(true);
+        }
     }
 
     static void initLeakCanary(Application application) {
         if (!BuildConfig.LEAK_CANARY_ENABLED) return;
-        ExcludedRefs.Builder excludedRefsBuilder = AndroidExcludedRefs.createAppDefaults();
         LeakCanary.enableDisplayLeakActivity(application);
-        ServiceHeapDumpListener heapDumpListener = new ServiceHeapDumpListener(application, DisplayLeakService.class);
-        final RefWatcher refWatcher = LeakCanary.androidWatcher(application, heapDumpListener, excludedRefsBuilder.build());
-        application.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
-            @Override
-            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-
-            }
-
-            @Override
-            public void onActivityStarted(Activity activity) {
-
-            }
-
-            @Override
-            public void onActivityResumed(Activity activity) {
-
-            }
-
-            @Override
-            public void onActivityPaused(Activity activity) {
-
-            }
-
-            @Override
-            public void onActivityStopped(Activity activity) {
-
-            }
-
-            @Override
-            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
-            }
-
-            @Override
-            public void onActivityDestroyed(Activity activity) {
-                // Ignore memory leak caused by LocationManager
-                if (activity.getClass() == ComposeActivity.class) return;
-                refWatcher.watch(activity);
-            }
-        });
-        sRefWatcher = refWatcher;
+        if (LeakCanary.isInAnalyzerProcess(application)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        sRefWatcher = LeakCanary.install(application);
     }
 
     public static void watchReferenceLeak(final Object object) {

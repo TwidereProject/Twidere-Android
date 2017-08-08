@@ -33,14 +33,15 @@
 -dontwarn sun.misc.**
 -dontwarn sun.nio.**
 -dontwarn java.nio.file.**
-
+-dontwarn InnerClasses
 
 -keepattributes *Annotation*
 -keepattributes EnclosingMethod
 -keepattributes SourceFile
 -keepattributes LineNumberTable
 -keepattributes Signature
--keepattributes InnetClasses
+-keepattributes InnerClasses
+
 
 # https://github.com/bluelinelabs/LoganSquare
 -keep class com.bluelinelabs.logansquare.annotation.JsonObject
@@ -63,6 +64,23 @@
 -keepclassmembers class * extends android.support.v4.view.ActionProvider {
     <init>(android.content.Context);
 }
+
+# Essential components
+-keep class * extends org.mariotaku.twidere.util.Analyzer
+-keep class * extends org.mariotaku.twidere.util.MapFragmentFactory
+-keep class * extends org.mariotaku.twidere.util.twitter.card.TwitterCardViewFactory
+
+# Extra feature service
+-keep class * extends org.mariotaku.twidere.util.premium.ExtraFeaturesService
+
+# Extra feature component factories
+-keep class * extends org.mariotaku.twidere.util.gifshare.GifShareProvider.Factory
+-keep class * extends org.mariotaku.twidere.util.schedule.StatusScheduleProvider.Factory
+-keep class * extends org.mariotaku.twidere.util.sync.DataSyncProvider.Factory
+-keep class * extends org.mariotaku.twidere.util.sync.TimelineSyncManager.Factory
+
+# View components
+-keep class * extends org.mariotaku.twidere.util.view.AppBarChildBehavior.ChildTransformation
 
 -keepclassmembers class * {
     private <fields>;

@@ -1,20 +1,19 @@
 /*
- * 				Twidere - Twitter client for Android
- * 
- *  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
- * 
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- * 
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- * 
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *         Twidere - Twitter client for Android
+ *
+ * Copyright 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.mariotaku.twidere.model;
@@ -22,6 +21,7 @@ package org.mariotaku.twidere.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
@@ -33,6 +33,7 @@ import org.mariotaku.commons.objectcursor.LoganSquareCursorFieldConverter;
 import org.mariotaku.library.objectcursor.annotation.AfterCursorObjectCreated;
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
+import org.mariotaku.twidere.model.util.ContentObjectColorConverter;
 import org.mariotaku.twidere.model.util.UserKeyConverter;
 import org.mariotaku.twidere.model.util.UserKeyCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore;
@@ -157,15 +158,15 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
     public long media_count = -1;
 
     @ParcelableThisPlease
-    @JsonField(name = "background_color")
+    @JsonField(name = "background_color", typeConverter = ContentObjectColorConverter.class)
     @CursorField(CachedUsers.BACKGROUND_COLOR)
     public int background_color;
     @ParcelableThisPlease
-    @JsonField(name = "link_color")
+    @JsonField(name = "link_color", typeConverter = ContentObjectColorConverter.class)
     @CursorField(CachedUsers.LINK_COLOR)
     public int link_color;
     @ParcelableThisPlease
-    @JsonField(name = "text_color")
+    @JsonField(name = "text_color", typeConverter = ContentObjectColorConverter.class)
     @CursorField(CachedUsers.TEXT_COLOR)
     public int text_color;
 
@@ -179,6 +180,7 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
     @ParcelableThisPlease
     @JsonField(name = "extras")
     @CursorField(value = CachedUsers.EXTRAS, converter = LoganSquareCursorFieldConverter.class)
+    @Nullable
     public Extras extras;
 
     @ParcelableNoThanks
@@ -190,9 +192,16 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
     public int score;
 
     @ParcelableThisPlease
+    @CursorField(value = CachedUsers.USER_TYPE)
+    public String user_type;
+
+    @ParcelableThisPlease
     public int color;
     @ParcelableThisPlease
     public String nickname;
+
+    @ParcelableThisPlease
+    public boolean is_filtered;
 
     public static final Creator<ParcelableUser> CREATOR = new Creator<ParcelableUser>() {
         @Override
@@ -212,7 +221,7 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
     }
 
     public ParcelableUser(final UserKey account_key, final UserKey key, final String name,
-                          final String screenName, final String profileImageUrl) {
+            final String screenName, final String profileImageUrl) {
         this.account_key = account_key;
         this.key = key;
         this.name = name;
@@ -327,24 +336,34 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
         @JsonField(name = "profile_image_url_original")
         @ParcelableThisPlease
         public String profile_image_url_original;
-        @JsonField(name = "profile_image_url_profile_size")
+        @JsonField(name = "profile_image_url_fallback")
         @ParcelableThisPlease
-        public String profile_image_url_profile_size;
+        @Nullable
+        public String profile_image_url_fallback;
         @JsonField(name = "groups_count")
         @ParcelableThisPlease
         public long groups_count = -1;
         @JsonField(name = "unique_id")
         @ParcelableThisPlease
         public String unique_id;
-        @JsonField(name = "statusnet_blocking")
+        @JsonField(name = "blocking")
         @ParcelableThisPlease
-        public boolean statusnet_blocking;
-        @JsonField(name = "statusnet_blocked_by")
+        public boolean blocking;
+        @JsonField(name = "blocked_by")
         @ParcelableThisPlease
-        public boolean statusnet_blocked_by;
-        @JsonField(name = "statusnet_followed_by")
+        public boolean blocked_by;
+        @JsonField(name = "followed_by")
         @ParcelableThisPlease
-        public boolean statusnet_followed_by;
+        public boolean followed_by;
+        @JsonField(name = "muting")
+        @ParcelableThisPlease
+        public boolean muting;
+        @JsonField(name = "notifications_enabled")
+        @ParcelableThisPlease
+        public boolean notifications_enabled;
+        @JsonField(name = "pinned_status_ids")
+        @ParcelableThisPlease
+        public String[] pinned_status_ids;
 
 
         @Override
@@ -357,20 +376,6 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
             ParcelableUser$ExtrasParcelablePlease.writeToParcel(this, dest, flags);
         }
 
-        @Override
-        public String toString() {
-            return "Extras{" +
-                    "statusnet_profile_url='" + statusnet_profile_url + '\'' +
-                    ", ostatus_uri='" + ostatus_uri + '\'' +
-                    ", profile_image_url_original='" + profile_image_url_original + '\'' +
-                    ", profile_image_url_profile_size='" + profile_image_url_profile_size + '\'' +
-                    ", groups_count=" + groups_count +
-                    ", unique_id='" + unique_id + '\'' +
-                    ", statusnet_blocking=" + statusnet_blocking +
-                    ", statusnet_blocked_by=" + statusnet_blocked_by +
-                    ", statusnet_followed_by=" + statusnet_followed_by +
-                    '}';
-        }
 
         public static final Creator<Extras> CREATOR = new Creator<Extras>() {
             @Override

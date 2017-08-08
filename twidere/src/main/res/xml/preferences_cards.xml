@@ -5,25 +5,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:title="@string/cards">
 
-    <PreferenceCategory
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
         android:key="cat_card_preview"
         android:order="11"
         android:title="@string/preview">
         <org.mariotaku.twidere.preference.CardPreviewPreference
             android:key="card_preview"/>
-    </PreferenceCategory>
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 
     <org.mariotaku.twidere.preference.SeekBarDialogPreference
-        android:defaultValue="@integer/default_text_size"
+        android:defaultValue="15"
         android:key="text_size_int"
         android:order="22"
-        android:summary="@string/text_size_summary"
-        android:title="@string/size"
+        android:title="@string/preference_title_text_size"
         app:max="24"
         app:min="12"
         app:progressTextSuffix="sp">
         <extra
-            android:name="notify_change"
+            android:name="should_recreate"
             android:value="true"/>
     </org.mariotaku.twidere.preference.SeekBarDialogPreference>
 
@@ -33,7 +32,7 @@
         android:order="23"
         android:title="@string/profile_image">
         <extra
-            android:name="notify_change"
+            android:name="should_recreate"
             android:value="true"/>
     </SwitchPreferenceCompat>
 
@@ -45,7 +44,7 @@
         android:order="24"
         android:title="@string/profile_image_style">
         <extra
-            android:name="notify_change"
+            android:name="should_recreate"
             android:value="true"/>
     </org.mariotaku.twidere.preference.EntrySummaryListPreference>
 
@@ -55,9 +54,21 @@
         android:order="25"
         android:title="@string/media_preview">
         <extra
-            android:name="notify_change"
+            android:name="should_recreate"
             android:value="true"/>
     </SwitchPreferenceCompat>
+
+    <org.mariotaku.twidere.preference.EntrySummaryListPreference
+        android:defaultValue="crop"
+        android:entries="@array/entries_media_preview_style"
+        android:entryValues="@array/values_media_preview_style"
+        android:key="media_preview_style"
+        android:order="26"
+        android:title="@string/media_preview_style">
+        <extra
+            android:name="should_recreate"
+            android:value="true"/>
+    </org.mariotaku.twidere.preference.EntrySummaryListPreference>
 
     <org.mariotaku.twidere.preference.LinkHighlightPreference
         android:defaultValue="none"
@@ -65,17 +76,26 @@
         android:order="27"
         android:title="@string/link_highlight_option">
         <extra
-            android:name="notify_change"
+            android:name="should_recreate"
             android:value="true"/>
     </org.mariotaku.twidere.preference.LinkHighlightPreference>
 
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="light_font"
+        android:order="28"
+        android:title="@string/preference_title_light_font">
+        <extra
+            android:name="should_recreate"
+            android:value="true"/>
+    </SwitchPreferenceCompat>
     <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="hide_card_actions"
         android:order="33"
         android:title="@string/hide_card_actions">
         <extra
-            android:name="notify_change"
+            android:name="should_recreate"
             android:value="true"/>
     </SwitchPreferenceCompat>
 
@@ -86,8 +106,15 @@
         android:summary="@string/i_want_my_stars_back_summary"
         android:title="@string/i_want_my_stars_back">
         <extra
-            android:name="notify_change"
+            android:name="should_recreate"
             android:value="true"/>
     </SwitchPreferenceCompat>
+
+    <org.mariotaku.twidere.preference.FavoriteConfirmSwitchPreference
+        android:defaultValue="false"
+        android:key="favorite_confirmation"
+        android:order="35"
+        android:summary="@string/preference_summary_favorite_confirmation"
+        android:title="@string/preference_title_favorite_confirmation"/>
 
 </PreferenceScreen>

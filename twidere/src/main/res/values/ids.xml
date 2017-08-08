@@ -48,6 +48,7 @@
     <item name="up" type="id"/>
     <item name="down" type="id"/>
     <item name="copy" type="id"/>
+    <item name="copy_url" type="id"/>
     <item name="right_pane" type="id"/>
     <item name="right_pane_container" type="id"/>
     <item name="toggle_sensitive" type="id"/>
@@ -56,6 +57,7 @@
     <item name="delete_from_list" type="id"/>
     <item name="statuses" type="id"/>
     <item name="favorites" type="id"/>
+    <item name="likes" type="id"/>
     <item name="lists" type="id"/>
     <item name="groups" type="id"/>
     <item name="public_timeline" type="id"/>
@@ -76,11 +78,10 @@
     <item name="progress" type="id"/>
     <item name="open_with_account" type="id"/>
     <item name="accounts" type="id"/>
-    <item name="inverse_selection" type="id"/>
     <item name="edit_media" type="id"/>
     <item name="reset" type="id"/>
     <item name="info" type="id"/>
     <item name="messages" type="id"/>
     <item name="interactions" type="id"/>
-    <item name="plus_service" type="id"/>
+    <item name="premium_features" type="id"/>
 </resources>

@@ -1,4 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -17,70 +19,93 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<ScrollView android:id="@+id/status_container"
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="@dimen/element_spacing_normal"
-            android:paddingLeft="@dimen/element_spacing_large"
-            android:paddingRight="@dimen/element_spacing_large"
-            android:paddingTop="@dimen/element_spacing_normal">
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/element_spacing_normal"
+        android:paddingLeft="@dimen/element_spacing_large"
+        android:paddingRight="@dimen/element_spacing_large"
+        android:paddingTop="@dimen/element_spacing_normal">
 
         <RelativeLayout
-            android:id="@+id/comment_container"
+            android:id="@+id/commentContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <org.mariotaku.twidere.view.ComposeEditText
-                android:id="@+id/edit_comment"
+                android:id="@+id/editComment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentStart="true"
                 android:completionThreshold="1"
                 android:focusable="true"
+                android:gravity="start|center_vertical"
                 android:hint="@string/comment_hint"
                 android:inputType="textMultiLine|textLongMessage|textCapSentences"
-                android:singleLine="false"
-                android:visibility="visible">
+                android:visibility="visible"
+                app:backgroundTint="?colorAccent">
 
                 <requestFocus/>
             </org.mariotaku.twidere.view.ComposeEditText>
 
             <org.mariotaku.twidere.view.StatusTextCountView
-                android:id="@+id/comment_text_count"
+                android:id="@+id/commentTextCount"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/comment_menu"
-                android:layout_alignLeft="@+id/edit_comment"
-                android:layout_alignStart="@+id/edit_comment"
-                android:layout_alignTop="@+id/comment_menu"
-                android:layout_below="@+id/edit_comment"
-                android:layout_toLeftOf="@+id/comment_menu"
-                android:layout_toStartOf="@+id/comment_menu"
+                android:layout_height="@dimen/element_size_normal"
+                android:layout_alignLeft="@+id/editComment"
+                android:layout_alignStart="@+id/editComment"
+                android:layout_below="@+id/editComment"
+                android:layout_toLeftOf="@+id/quoteOriginal"
+                android:layout_toStartOf="@+id/quoteOriginal"
                 android:gravity="center_vertical|start"
                 android:paddingLeft="@dimen/element_spacing_normal"
                 android:paddingRight="@dimen/element_spacing_normal"
+                android:textColor="?android:textColorSecondary"
                 tools:text="140"/>
 
-            <org.mariotaku.twidere.view.IconActionButton
-                android:id="@+id/comment_menu"
-                style="?cardActionButtonStyle"
-                android:layout_width="@dimen/element_size_normal"
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/quoteOriginal"
+                android:layout_width="wrap_content"
                 android:layout_height="@dimen/element_size_normal"
-                android:layout_alignEnd="@+id/edit_comment"
-                android:layout_alignRight="@+id/edit_comment"
-                android:layout_below="@+id/edit_comment"
-                android:color="?android:textColorTertiary"
+                android:layout_alignEnd="@+id/editComment"
+                android:layout_alignRight="@+id/editComment"
+                android:layout_below="@+id/editComment"
                 android:focusable="false"
-                android:src="@drawable/ic_action_more_vertical"/>
+                android:gravity="center_vertical"
+                android:text="@string/quote_original_status"
+                android:visibility="gone"/>
         </RelativeLayout>
 
-        <include layout="@layout/card_item_status_compact"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include layout="@layout/list_item_status"/>
+
+            <FrameLayout
+                android:id="@+id/loadProgress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/element_size_mlarge"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
+            </FrameLayout>
+        </FrameLayout>
     </LinearLayout>
 
 </ScrollView>

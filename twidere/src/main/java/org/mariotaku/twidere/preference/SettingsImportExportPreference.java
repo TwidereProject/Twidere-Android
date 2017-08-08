@@ -34,6 +34,7 @@ import android.util.AttributeSet;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.DataExportActivity;
 import org.mariotaku.twidere.activity.DataImportActivity;
+import org.mariotaku.twidere.extension.DialogExtensionsKt;
 import org.mariotaku.twidere.preference.iface.IDialogPreference;
 
 /**
@@ -49,7 +50,7 @@ public class SettingsImportExportPreference extends DialogPreference implements 
     }
 
     @Override
-    public void displayDialog(PreferenceFragmentCompat fragment) {
+    public void displayDialog(@NonNull PreferenceFragmentCompat fragment) {
         ImportExportDialogFragment df = ImportExportDialogFragment.newInstance(getKey());
         df.setTargetFragment(fragment, 0);
         df.show(fragment.getFragmentManager(), getKey());
@@ -83,7 +84,14 @@ public class SettingsImportExportPreference extends DialogPreference implements 
                     startActivity(values[which]);
                 }
             });
-            return builder.create();
+            final AlertDialog dialog = builder.create();
+            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(final DialogInterface dialog) {
+                    DialogExtensionsKt.applyTheme((AlertDialog) dialog);
+                }
+            });
+            return dialog;
         }
 
         @Override

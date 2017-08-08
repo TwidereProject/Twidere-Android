@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.fragment;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -29,11 +28,13 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.FixedAsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils.TruncateAt;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,7 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
+import org.mariotaku.twidere.extension.DialogExtensionsKt;
 import org.mariotaku.twidere.fragment.iface.ISupportDialogFragmentCallback;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
@@ -57,6 +59,10 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import static android.os.Environment.getExternalStorageDirectory;
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACTION;
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_FILE_EXTENSIONS;
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_PATH;
+import static org.mariotaku.twidere.constant.IntentConstants.INTENT_ACTION_PICK_DIRECTORY;
 
 public class FileSelectorDialogFragment extends BaseDialogFragment implements LoaderCallbacks<List<File>>,
         OnClickListener, OnItemClickListener {
@@ -112,8 +118,15 @@ public class FileSelectorDialogFragment extends BaseDialogFragment implements Lo
             builder.setPositiveButton(android.R.string.ok, this);
         }
         final AlertDialog dialog = builder.create();
-        final ListView listView = dialog.getListView();
-        listView.setOnItemClickListener(this);
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(final DialogInterface dialog) {
+                final AlertDialog alertDialog = (AlertDialog) dialog;
+                DialogExtensionsKt.applyTheme(alertDialog);
+                final ListView listView = alertDialog.getListView();
+                listView.setOnItemClickListener(FileSelectorDialogFragment.this);
+            }
+        });
         return dialog;
     }
 
@@ -207,7 +220,7 @@ public class FileSelectorDialogFragment extends BaseDialogFragment implements Lo
         public FilesAdapter(final Context context) {
             super(context, android.R.layout.simple_list_item_1);
             mResources = context.getResources();
-            mActionIconColor = !ThemeUtils.isLightTheme(context) ? 0xffffffff : 0xc0333333;
+            mActionIconColor = !ThemeUtils.INSTANCE.isLightTheme(context) ? 0xffffffff : 0xc0333333;
             mPadding = (int) (4 * mResources.getDisplayMetrics().density);
         }
 
@@ -217,7 +230,7 @@ public class FileSelectorDialogFragment extends BaseDialogFragment implements Lo
         }
 
         @Override
-        public View getView(final int position, final View convertView, final ViewGroup parent) {
+        public View getView(final int position, @Nullable final View convertView, final ViewGroup parent) {
             final View view = super.getView(position, convertView, parent);
             final TextView text = (TextView) (view instanceof TextView ? view : view.findViewById(android.R.id.text1));
             final File file = getItem(position);
@@ -249,7 +262,7 @@ public class FileSelectorDialogFragment extends BaseDialogFragment implements Lo
 
     }
 
-    private static class FilesLoader extends AsyncTaskLoader<List<File>> {
+    private static class FilesLoader extends FixedAsyncTaskLoader<List<File>> {
 
         private final File path;
         private final String[] extensions;

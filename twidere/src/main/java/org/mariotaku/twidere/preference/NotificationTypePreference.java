@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.DialogPreference;
 import android.support.v7.preference.PreferenceDialogFragmentCompat;
@@ -66,9 +67,9 @@ public class NotificationTypePreference extends DialogPreference implements
     private String[] getEntries() {
         final Context context = getContext();
         final String[] entries = new String[3];
-        entries[0] = context.getString(R.string.ringtone);
-        entries[1] = context.getString(R.string.vibration);
-        entries[2] = context.getString(R.string.light);
+        entries[0] = context.getString(R.string.notification_method_ringtone);
+        entries[1] = context.getString(R.string.notification_method_vibration);
+        entries[2] = context.getString(R.string.notification_method_light);
         return entries;
     }
 
@@ -94,7 +95,7 @@ public class NotificationTypePreference extends DialogPreference implements
     }
 
     @Override
-    public void displayDialog(PreferenceFragmentCompat fragment) {
+    public void displayDialog(@NonNull PreferenceFragmentCompat fragment) {
         final NotificationTypeDialogFragment df = NotificationTypeDialogFragment.newInstance(getKey());
         df.setTargetFragment(fragment, 0);
         df.show(fragment.getFragmentManager(), getKey());

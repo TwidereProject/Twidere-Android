@@ -45,8 +45,7 @@ public class UnreadItem {
         if (!(obj instanceof UnreadItem)) return false;
         final UnreadItem other = (UnreadItem) obj;
         if (account_id != other.account_id) return false;
-        if (id != other.id) return false;
-        return true;
+        return id == other.id;
     }
 
     @Override

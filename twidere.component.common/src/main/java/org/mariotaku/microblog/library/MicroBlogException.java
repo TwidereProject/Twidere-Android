@@ -1,20 +1,19 @@
 /*
- *                 Twidere - Twitter client for Android
+ *         Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
+ * Copyright 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.mariotaku.microblog.library;
@@ -22,13 +21,13 @@ package org.mariotaku.microblog.library;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.mariotaku.restfu.http.HttpRequest;
-import org.mariotaku.restfu.http.HttpResponse;
 import org.mariotaku.microblog.library.twitter.http.HttpResponseCode;
 import org.mariotaku.microblog.library.twitter.model.ErrorInfo;
 import org.mariotaku.microblog.library.twitter.model.RateLimitStatus;
 import org.mariotaku.microblog.library.twitter.model.TwitterResponse;
 import org.mariotaku.microblog.library.twitter.util.InternalParseUtil;
+import org.mariotaku.restfu.http.HttpRequest;
+import org.mariotaku.restfu.http.HttpResponse;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -82,7 +81,7 @@ public class MicroBlogException extends Exception implements TwitterResponse, Ht
 
 
     public ErrorInfo[] getErrors() {
-        if (errors != null && errorMessage != null && requestPath != null) {
+        if (errors == null && errorMessage != null && requestPath != null) {
             return new ErrorInfo[]{new SingleErrorInfo(errorMessage, requestPath)};
         }
         return errors;
@@ -100,7 +99,7 @@ public class MicroBlogException extends Exception implements TwitterResponse, Ht
      * Twitter Developers</a>
      * @since Twitter4J 2.1.2
      */
-    public boolean exceededRateLimitation() {
+    public boolean isRateLimitExceeded() {
         return statusCode == 400 && getRateLimitStatus() != null // REST API
                 || statusCode == ENHANCE_YOUR_CLAIM // Streaming API
                 || statusCode == TOO_MANY_REQUESTS; // API 1.1
@@ -259,7 +258,9 @@ public class MicroBlogException extends Exception implements TwitterResponse, Ht
 
     @Override
     public String toString() {
-        return getMessage();
+        final String message = getMessage();
+        if (message == null) return getClass().getSimpleName();
+        return message;
     }
 
     public String getErrorMessage() {

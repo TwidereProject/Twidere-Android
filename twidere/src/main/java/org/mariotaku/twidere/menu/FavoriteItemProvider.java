@@ -3,6 +3,7 @@ package org.mariotaku.twidere.menu;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ActionProvider;
 import android.support.v4.view.MenuItemCompat;
@@ -89,21 +90,21 @@ public class FavoriteItemProvider extends ActionProvider {
         }
 
         @Override
-        public void invalidateDrawable(Drawable who) {
+        public void invalidateDrawable(@NonNull Drawable who) {
             final View view = mViewRef.get();
             if (view == null) return;
             view.invalidate();
         }
 
         @Override
-        public void scheduleDrawable(Drawable who, Runnable what, long when) {
+        public void scheduleDrawable(@NonNull Drawable who, @NonNull Runnable what, long when) {
             final View view = mViewRef.get();
             if (view == null) return;
             view.postDelayed(what, when);
         }
 
         @Override
-        public void unscheduleDrawable(Drawable who, Runnable what) {
+        public void unscheduleDrawable(@NonNull Drawable who, @NonNull Runnable what) {
             final View view = mViewRef.get();
             if (view == null) return;
             view.post(what);

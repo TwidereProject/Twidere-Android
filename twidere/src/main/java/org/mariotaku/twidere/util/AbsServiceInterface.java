@@ -27,11 +27,13 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.IInterface;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
-import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.constant.IntentConstants;
 import org.mariotaku.twidere.util.ServiceUtils.ServiceToken;
+
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 
 public abstract class AbsServiceInterface<I extends IInterface> implements IInterface {
 
@@ -42,19 +44,6 @@ public abstract class AbsServiceInterface<I extends IInterface> implements IInte
     private I mIInterface;
 
     private ServiceToken mToken;
-
-    private final ServiceConnection mConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(final ComponentName service, final IBinder obj) {
-            mIInterface = AbsServiceInterface.this.onServiceConnected(service, obj);
-        }
-
-        @Override
-        public void onServiceDisconnected(final ComponentName service) {
-            mIInterface = null;
-        }
-    };
 
     protected abstract I onServiceConnected(ComponentName service, IBinder obj);
 
@@ -75,20 +64,46 @@ public abstract class AbsServiceInterface<I extends IInterface> implements IInte
     }
 
     public final void unbindService() {
+        if (mIInterface == null || mToken == null) return;
         ServiceUtils.unbindFromService(mToken);
     }
 
-    public final void waitForService() {
+    public final boolean waitForService() {
+        if (mIInterface != null || mToken != null) return true;
         final Intent intent = new Intent(IntentConstants.INTENT_ACTION_EXTENSION_SHORTEN_STATUS);
         final ComponentName component = ComponentName.unflattenFromString(mShortenerName);
         intent.setComponent(component);
-        mToken = ServiceUtils.bindToService(mContext, intent, mConnection);
-        while (mIInterface == null) {
-            try {
-                Thread.sleep(100L);
-            } catch (final InterruptedException e) {
-                Log.w(TwidereConstants.LOGTAG, e);
+        final FutureTask<Boolean> futureTask = new FutureTask<>(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return mIInterface != null;
             }
+        });
+        mToken = ServiceUtils.bindToService(mContext, intent, new ServiceConnection() {
+            @Override
+            public void onServiceConnected(final ComponentName name, final IBinder obj) {
+                mIInterface = AbsServiceInterface.this.onServiceConnected(name, obj);
+                if (!futureTask.isDone() && !futureTask.isCancelled()) {
+                    futureTask.run();
+                }
+            }
+
+            @Override
+            public void onServiceDisconnected(final ComponentName name) {
+                mIInterface = null;
+                if (!futureTask.isDone() && !futureTask.isCancelled()) {
+                    futureTask.run();
+                }
+            }
+        });
+        if (mToken == null) return false;
+
+        try {
+            return futureTask.get();
+        } catch (InterruptedException e) {
+            return false;
+        } catch (ExecutionException e) {
+            return false;
         }
     }
 
@@ -97,6 +112,7 @@ public abstract class AbsServiceInterface<I extends IInterface> implements IInte
     }
 
     public interface CheckServiceAction {
+        @SuppressWarnings("RedundantThrows")
         void check(@Nullable Bundle metaData) throws CheckServiceException;
     }
 

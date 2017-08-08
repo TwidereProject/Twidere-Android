@@ -25,11 +25,10 @@
     android:orientation="horizontal"
     android:padding="@dimen/element_spacing_normal">
 
-    <android.support.v7.widget.SwitchCompat
+    <org.mariotaku.twidere.view.ToolbarToggleSwitch
         android:id="@android:id/toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:tag="tint|primary_color_dependent"/>
+        android:layout_gravity="center"/>
 
 </FrameLayout>

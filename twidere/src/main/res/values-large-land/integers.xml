@@ -3,6 +3,5 @@
 
     <integer name="nyan_star_rows">8</integer>
     <integer name="nyan_star_cols">23</integer>
-    <integer name="default_multi_column_list_count">2</integer>
 
 </resources>

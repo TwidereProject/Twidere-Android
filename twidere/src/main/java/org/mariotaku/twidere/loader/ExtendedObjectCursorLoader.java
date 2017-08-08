@@ -22,7 +22,6 @@ package org.mariotaku.twidere.loader;
 import android.content.Context;
 import android.net.Uri;
 
-import org.mariotaku.library.objectcursor.ObjectCursor;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 
 /**
@@ -30,15 +29,14 @@ import org.mariotaku.twidere.loader.iface.IExtendedLoader;
  */
 public class ExtendedObjectCursorLoader<E> extends ObjectCursorLoader<E> implements IExtendedLoader {
 
-    public ExtendedObjectCursorLoader(Context context, Class<? extends ObjectCursor.CursorIndices<E>> indicesClass,
-                                      Uri uri, String[] projection, String selection, String[] selectionArgs,
-                                      String sortOrder, boolean fromUser) {
+    public ExtendedObjectCursorLoader(Context context, Class<E> indicesClass, Uri uri,
+            String[] projection, String selection, String[] selectionArgs, String sortOrder, boolean fromUser) {
         super(context, indicesClass, uri, projection, selection, selectionArgs, sortOrder);
         setFromUser(fromUser);
     }
 
     @Override
-    public boolean isFromUser() {
+    public boolean getFromUser() {
         return true;
     }
 

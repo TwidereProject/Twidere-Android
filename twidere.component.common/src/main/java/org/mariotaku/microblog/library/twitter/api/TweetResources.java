@@ -1,48 +1,40 @@
 /*
- *                 Twidere - Twitter client for Android
+ *         Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
+ * Copyright 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.mariotaku.microblog.library.twitter.api;
 
-import org.mariotaku.restfu.annotation.method.GET;
-import org.mariotaku.restfu.annotation.method.POST;
-import org.mariotaku.restfu.annotation.param.KeyValue;
-import org.mariotaku.restfu.annotation.param.Param;
-import org.mariotaku.restfu.annotation.param.Path;
-import org.mariotaku.restfu.annotation.param.Queries;
-import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.IDs;
 import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.microblog.library.twitter.model.ResponseList;
 import org.mariotaku.microblog.library.twitter.model.Status;
 import org.mariotaku.microblog.library.twitter.model.StatusUpdate;
+import org.mariotaku.microblog.library.twitter.template.StatusAnnotationTemplate;
+import org.mariotaku.restfu.annotation.method.GET;
+import org.mariotaku.restfu.annotation.method.POST;
+import org.mariotaku.restfu.annotation.param.KeyValue;
+import org.mariotaku.restfu.annotation.param.Param;
+import org.mariotaku.restfu.annotation.param.Params;
+import org.mariotaku.restfu.annotation.param.Path;
+import org.mariotaku.restfu.annotation.param.Query;
 
 @SuppressWarnings("RedundantThrows")
-@Queries({@KeyValue(key = "include_my_retweet", valueKey = "include_my_retweet"),
-        @KeyValue(key = "include_rts", valueKey = "include_entities"),
-        @KeyValue(key = "include_entities", valueKey = "include_entities"),
-        @KeyValue(key = "include_cards", valueKey = "include_cards"),
-        @KeyValue(key = "cards_platform", valueKey = "cards_platform"),
-        @KeyValue(key = "include_reply_count", valueKey = "include_reply_count"),
-        @KeyValue(key = "include_descendent_reply_count", valueKey = "include_descendent_reply_count"),
-        @KeyValue(key = "include_ext_alt_text", valueKey = "include_ext_alt_text")
-})
+@Params(template = StatusAnnotationTemplate.class)
 public interface TweetResources {
     @POST("/statuses/destroy/{id}.json")
     Status destroyStatus(@Path("id") String statusId) throws MicroBlogException;
@@ -56,10 +48,14 @@ public interface TweetResources {
     @POST("/statuses/retweet/{id}.json")
     Status retweetStatus(@Path("id") String statusId) throws MicroBlogException;
 
+    @POST("/statuses/unretweet/{id}.json")
+    Status unretweetStatus(@Path("id") String statusId) throws MicroBlogException;
+
     @GET("/statuses/show.json")
     Status showStatus(@Query("id") String id) throws MicroBlogException;
 
     @POST("/statuses/update.json")
+    @Params({@KeyValue(key = "tweet_mode", valueKey = "tweet_mode")})
     Status updateStatus(@Param StatusUpdate latestStatus) throws MicroBlogException;
 
     @POST("/statuses/lookup.json")

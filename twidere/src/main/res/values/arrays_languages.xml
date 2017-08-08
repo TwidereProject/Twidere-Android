@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~             Twidere - Twitter client for Android
+  ~
+  ~  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+    <array name="entries_app_languages">
+        <item>""</item>
+        <item>af</item>
+        <item>an</item>
+        <item>ar</item>
+        <item>ast</item>
+        <item>ca</item>
+        <item>cs</item>
+        <item>da</item>
+        <item>de</item>
+        <item>el</item>
+        <item>en_GB</item>
+        <item>en_US</item>
+        <item>es</item>
+        <item>fa</item>
+        <item>fi</item>
+        <item>fr</item>
+        <item>gl</item>
+        <item>hi</item>
+        <item>hr</item>
+        <item>hu</item>
+        <item>in</item>
+        <item>it</item>
+        <item>iw</item>
+        <item>ja</item>
+        <item>ko</item>
+        <item>lo</item>
+        <item>ms</item>
+        <item>nl</item>
+        <item>no</item>
+        <item>pl</item>
+        <item>pt</item>
+        <item>ro</item>
+        <item>ru</item>
+        <item>sk</item>
+        <item>sr</item>
+        <item>sv</item>
+        <item>ta</item>
+        <item>te</item>
+        <item>th</item>
+        <item>tr</item>
+        <item>uk</item>
+        <item>vi</item>
+        <item>zh</item>
+        <item>zh_CN</item>
+        <item>zh_HK</item>
+        <item>zu</item>
+    </array>
+    <array name="values_app_languages">
+        <item>System Default</item>
+        <item>Afrikaans</item>
+        <item>Aragonese</item>
+        <item>Arabic</item>
+        <item>Asturian</item>
+        <item>Catalan</item>
+        <item>Czech</item>
+        <item>Danish</item>
+        <item>German</item>
+        <item>Greek</item>
+        <item>English (GB)</item>
+        <item>English (United States)</item>
+        <item>Spanish</item>
+        <item>Persian</item>
+        <item>Finnish</item>
+        <item>French</item>
+        <item>Galician</item>
+        <item>Hindi</item>
+        <item>Croatian</item>
+        <item>Hungarian</item>
+        <item>Indonesian</item>
+        <item>Italian</item>
+        <item>Hebrew</item>
+        <item>Japanese</item>
+        <item>Korean</item>
+        <item>Lao</item>
+        <item>Malay</item>
+        <item>Dutch</item>
+        <item>Norwegian</item>
+        <item>Polish</item>
+        <item>Portuguese</item>
+        <item>Romanian</item>
+        <item>Russian</item>
+        <item>Slovak</item>
+        <item>Serbian</item>
+        <item>Swedish</item>
+        <item>Tamil</item>
+        <item>Telugu</item>
+        <item>Thai</item>
+        <item>Turkish</item>
+        <item>Ukrainian</item>
+        <item>Vietnamese</item>
+        <item>Chinese</item>
+        <item>Chinese (Simplified)</item>
+        <item>Chinese (Hong Kong)</item>
+        <item>Zulu</item>
+    </array>
+</resources>

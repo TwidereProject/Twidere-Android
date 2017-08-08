@@ -60,9 +60,8 @@ public class SQLiteDatabaseWrapper {
         mDatabase.execSQL(sql, bindArgs);
     }
 
-    public boolean isReady() {
-        if (mLazyLoadCallback != null) return true;
-        return mDatabase != null;
+    public void prepare() {
+        tryCreateDatabase();
     }
 
     public Cursor query(final String table, final String[] columns, final String selection,
@@ -107,7 +106,7 @@ public class SQLiteDatabaseWrapper {
         return mDatabase.update(table, values, whereClause, whereArgs);
     }
 
-    private void tryCreateDatabase() {
+    private synchronized void tryCreateDatabase() {
         if (mLazyLoadCallback == null || mDatabase != null) return;
         mDatabase = mLazyLoadCallback.onCreateSQLiteDatabase();
         if (mDatabase == null)

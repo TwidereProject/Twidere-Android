@@ -39,19 +39,19 @@ public class PermissionsManager implements Constants {
 
     private static final String[] PERMISSIONS_DENIED = {PERMISSION_DENIED};
 
-    private final SharedPreferencesWrapper mPreferences;
-    private final PackageManager mPackageManager;
-    private final Context mContext;
+    private final SharedPreferences preferences;
+    private final PackageManager packageManager;
+    private final Context context;
 
     public PermissionsManager(final Context context) {
-        mContext = context;
-        mPreferences = SharedPreferencesWrapper.getInstance(context, PERMISSION_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        mPackageManager = context.getPackageManager();
+        this.context = context;
+        preferences = context.getSharedPreferences(PERMISSION_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        packageManager = context.getPackageManager();
     }
 
     public boolean accept(final String packageName, final String[] permissions) {
         if (packageName == null || permissions == null) return false;
-        final SharedPreferences.Editor editor = mPreferences.edit();
+        final SharedPreferences.Editor editor = preferences.edit();
         editor.putString(packageName, TwidereArrayUtils.toString(permissions, '|', false));
         return editor.commit();
     }
@@ -71,7 +71,7 @@ public class PermissionsManager implements Constants {
 
     public boolean checkPermission(final String packageName, final String... requiredPermissions) {
         if (requiredPermissions == null || requiredPermissions.length == 0) return true;
-        if (mContext.getPackageName().equals(packageName)) return true;
+        if (context.getPackageName().equals(packageName)) return true;
         if (checkSignature(packageName)) return true;
         final String[] permissions = getPermissions(packageName);
         return TwidereArrayUtils.contains(permissions, requiredPermissions);
@@ -82,14 +82,14 @@ public class PermissionsManager implements Constants {
     }
 
     public boolean checkSignature(final String pname) {
-        if (mContext.getPackageName().equals(pname)) return true;
+        if (context.getPackageName().equals(pname)) return true;
         if (BuildConfig.DEBUG) return false;
-        return mPackageManager.checkSignatures(pname, mContext.getPackageName()) == PackageManager.SIGNATURE_MATCH;
+        return packageManager.checkSignatures(pname, context.getPackageName()) == PackageManager.SIGNATURE_MATCH;
     }
 
     public boolean deny(final String packageName) {
         if (packageName == null) return false;
-        final SharedPreferences.Editor editor = mPreferences.edit();
+        final SharedPreferences.Editor editor = preferences.edit();
         editor.putString(packageName, PERMISSION_DENIED);
         return editor.commit();
 
@@ -97,7 +97,7 @@ public class PermissionsManager implements Constants {
 
     public Map<String, String> getAll() {
         final Map<String, String> map = new HashMap<>();
-        for (final Map.Entry<String, ?> entry : mPreferences.getAll().entrySet()) {
+        for (final Map.Entry<String, ?> entry : preferences.getAll().entrySet()) {
             if (entry.getValue() instanceof String) {
                 map.put(entry.getKey(), (String) entry.getValue());
             }
@@ -106,7 +106,7 @@ public class PermissionsManager implements Constants {
     }
 
     public String getPackageNameByUid(final int uid) {
-        final String[] pkgs = mPackageManager.getPackagesForUid(uid);
+        final String[] pkgs = packageManager.getPackagesForUid(uid);
         if (pkgs != null && pkgs.length > 0) return pkgs[0];
         return null;
     }
@@ -117,7 +117,7 @@ public class PermissionsManager implements Constants {
 
     public String[] getPermissions(final String packageName) {
         if (isEmpty(packageName)) return new String[0];
-        final String permissionsString = mPreferences.getString(packageName, null);
+        final String permissionsString = preferences.getString(packageName, null);
         if (isEmpty(permissionsString)) return new String[0];
         if (permissionsString.contains(PERMISSION_DENIED)) return PERMISSIONS_DENIED;
         return permissionsString.split("\\|");
@@ -125,7 +125,7 @@ public class PermissionsManager implements Constants {
 
     public boolean revoke(final String packageName) {
         if (packageName == null) return false;
-        final SharedPreferences.Editor editor = mPreferences.edit();
+        final SharedPreferences.Editor editor = preferences.edit();
         editor.remove(packageName);
         return editor.commit();
     }

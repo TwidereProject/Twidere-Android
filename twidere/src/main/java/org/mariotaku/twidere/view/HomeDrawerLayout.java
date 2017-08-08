@@ -1,59 +1,23 @@
 package org.mariotaku.twidere.view;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.os.Build;
-import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import com.afollestad.appthemeengine.ATE;
-import com.afollestad.appthemeengine.ATEActivity;
-import com.afollestad.appthemeengine.Config;
-import com.afollestad.appthemeengine.inflation.ViewInterface;
+import org.mariotaku.chameleon.view.ChameleonDrawerLayout;
 
-/**
- * @author Aidan Follestad (afollestad)
- */
-public class HomeDrawerLayout extends DrawerLayout implements ViewInterface {
+public class HomeDrawerLayout extends ChameleonDrawerLayout {
 
     private ShouldDisableDecider mShouldDisableDecider;
-    private int state;
     private int mStartLockMode, mEndLockMode;
 
     public HomeDrawerLayout(Context context) {
         super(context);
-        init(context, null);
     }
 
     public HomeDrawerLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context, null);
-    }
-
-    public HomeDrawerLayout(Context context, AttributeSet attrs, @Nullable ATEActivity keyContext) {
-        super(context, attrs);
-        init(context, keyContext);
-    }
-
-    private void init(Context context, @Nullable ATEActivity keyContext) {
-        if (keyContext == null && context instanceof ATEActivity) {
-            keyContext = (ATEActivity) context;
-        }
-        final String key = keyContext != null ? keyContext.getATEKey() : null;
-        if (Config.coloredStatusBar(context, key)) {
-            // Sets the status bar overlayed by the DrawerLayout
-            setStatusBarBackgroundColor(Config.statusBarColor(context, key));
-            if (context instanceof Activity && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                final Activity activity = (Activity) context;
-                // Sets Activity status bar to transparent, DrawerLayout overlays a color.
-                activity.getWindow().setStatusBarColor(Color.TRANSPARENT);
-                ATE.invalidateLightStatusBar(activity, key);
-            }
-        }
     }
 
     public void setShouldDisableDecider(ShouldDisableDecider shouldDisableDecider) {
@@ -83,16 +47,6 @@ public class HomeDrawerLayout extends DrawerLayout implements ViewInterface {
             }
         }
         return super.dispatchTouchEvent(ev);
-    }
-
-    @Override
-    public boolean setsStatusBarColor() {
-        return true;
-    }
-
-    @Override
-    public boolean setsToolbarColor() {
-        return false;
     }
 
 

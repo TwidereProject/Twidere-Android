@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:id="@+id/count_item"
+    android:id="@+id/countItem"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
@@ -14,24 +14,24 @@
     android:orientation="vertical"
     android:padding="@dimen/element_spacing_normal">
 
-    <TextView
+    <org.mariotaku.twidere.view.FixedTextView
         android:id="@+id/count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/element_spacing_small"
         android:layout_marginRight="@dimen/element_spacing_small"
-        android:singleLine="true"
         android:textAppearance="?android:textAppearanceSmall"
         android:textColor="?android:textColorPrimary"
         android:textStyle="bold"
-        tools:text="255"/>
+        tools:text="255"
+        android:maxLines="1"/>
 
-    <TextView
+    <org.mariotaku.twidere.view.FixedTextView
         android:id="@+id/label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:singleLine="true"
         android:textAppearance="?android:textAppearanceSmall"
         android:textColor="?android:textColorSecondary"
-        tools:text="Count"/>
+        tools:text="Count"
+        android:maxLines="1"/>
 </LinearLayout>

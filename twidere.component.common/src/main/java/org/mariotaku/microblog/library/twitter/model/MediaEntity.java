@@ -1,20 +1,19 @@
 /*
- *                 Twidere - Twitter client for Android
+ *         Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
- *   
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Copyright 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.mariotaku.microblog.library.twitter.model;
@@ -76,6 +75,8 @@ public class MediaEntity extends UrlEntity implements Parcelable {
     Map<String, Feature> features;
     @JsonField(name = "ext_alt_text")
     String altText;
+    @JsonField(name = "ext")
+    ExtInfo extInfo;
 
     public Map<String, Feature> getFeatures() {
         return features;
@@ -135,6 +136,10 @@ public class MediaEntity extends UrlEntity implements Parcelable {
         return altText;
     }
 
+    public ExtInfo getExtInfo() {
+        return extInfo;
+    }
+
     @Override
     public String toString() {
         return "MediaEntity{" +
@@ -154,13 +159,36 @@ public class MediaEntity extends UrlEntity implements Parcelable {
                 '}';
     }
 
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        MediaEntityParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<MediaEntity> CREATOR = new Creator<MediaEntity>() {
+        @Override
+        public MediaEntity createFromParcel(Parcel source) {
+            MediaEntity target = new MediaEntity();
+            MediaEntityParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        @Override
+        public MediaEntity[] newArray(int size) {
+            return new MediaEntity[size];
+        }
+    };
+
     public @interface Type {
         String PHOTO = "photo";
         String VIDEO = "video";
         String ANIMATED_GIF = "animated_gif";
-
     }
-
 
     @ParcelablePlease
     @JsonObject
@@ -392,6 +420,78 @@ public class MediaEntity extends UrlEntity implements Parcelable {
         String LARGE = "large";
     }
 
+    @ParcelablePlease
+    @JsonObject
+    public static class ExtInfo implements Parcelable {
+
+        @JsonField(name = "stickerInfo")
+        Item stickerInfo;
+        @JsonField(name = "altText")
+        Item altText;
+
+        public Item getStickerInfo() {
+            return stickerInfo;
+        }
+
+        public Item getAltText() {
+            return altText;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            MediaEntity$ExtInfoParcelablePlease.writeToParcel(this, dest, flags);
+        }
+
+        public static final Creator<ExtInfo> CREATOR = new Creator<ExtInfo>() {
+            public ExtInfo createFromParcel(Parcel source) {
+                ExtInfo target = new ExtInfo();
+                MediaEntity$ExtInfoParcelablePlease.readFromParcel(target, source);
+                return target;
+            }
+
+            public ExtInfo[] newArray(int size) {
+                return new ExtInfo[size];
+            }
+        };
+
+        @ParcelablePlease
+        @JsonObject
+        public static class Item implements Parcelable {
+            @JsonField(name = "ttl")
+            long ttl;
+
+            public long getTtl() {
+                return ttl;
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                MediaEntity$ExtInfo$ItemParcelablePlease.writeToParcel(this, dest, flags);
+            }
+
+            public static final Creator<Item> CREATOR = new Creator<Item>() {
+                public Item createFromParcel(Parcel source) {
+                    Item target = new Item();
+                    MediaEntity$ExtInfo$ItemParcelablePlease.readFromParcel(target, source);
+                    return target;
+                }
+
+                public Item[] newArray(int size) {
+                    return new Item[size];
+                }
+            };
+        }
+    }
 
     @ParcelablePlease
     @JsonObject
@@ -450,30 +550,6 @@ public class MediaEntity extends UrlEntity implements Parcelable {
             }
         };
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        MediaEntityParcelablePlease.writeToParcel(this, dest, flags);
-    }
-
-    public static final Creator<MediaEntity> CREATOR = new Creator<MediaEntity>() {
-        @Override
-        public MediaEntity createFromParcel(Parcel source) {
-            MediaEntity target = new MediaEntity();
-            MediaEntityParcelablePlease.readFromParcel(target, source);
-            return target;
-        }
-
-        @Override
-        public MediaEntity[] newArray(int size) {
-            return new MediaEntity[size];
-        }
-    };
 
     public static class SizeMapBagger extends ParcelMapBagger<Size> {
         public SizeMapBagger() {

@@ -27,6 +27,7 @@ import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.DialogInterface.OnShowListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.util.SparseBooleanArray;
@@ -40,13 +41,17 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
+import org.mariotaku.twidere.extension.DialogExtensionsKt;
 import org.mariotaku.twidere.fragment.iface.ISupportDialogFragmentCallback;
 import org.mariotaku.twidere.util.DataImportExportUtils;
+
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_FLAGS;
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_PATH;
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_TITLE;
 
 public final class DataExportImportTypeSelectorDialogFragment extends BaseDialogFragment implements
         OnMultiChoiceClickListener, OnClickListener, OnShowListener, OnItemClickListener {
 
-    private TypeAdapter mAdapter;
     private ListView mListView;
 
     @Override
@@ -79,20 +84,20 @@ public final class DataExportImportTypeSelectorDialogFragment extends BaseDialog
     public final Dialog onCreateDialog(final Bundle savedInstanceState) {
         final Context context = getActivity();
         final int flags = getEnabledFlags();
-        mAdapter = new TypeAdapter(context, flags);
         mListView = new ListView(context);
-        mAdapter.add(new Type(R.string.settings, DataImportExportUtils.FLAG_PREFERENCES));
-        mAdapter.add(new Type(R.string.nicknames, DataImportExportUtils.FLAG_NICKNAMES));
-        mAdapter.add(new Type(R.string.user_colors, DataImportExportUtils.FLAG_USER_COLORS));
-        mAdapter.add(new Type(R.string.custom_host_mapping, DataImportExportUtils.FLAG_HOST_MAPPING));
-        mAdapter.add(new Type(R.string.keyboard_shortcuts, DataImportExportUtils.FLAG_KEYBOARD_SHORTCUTS));
-        mAdapter.add(new Type(R.string.filters, DataImportExportUtils.FLAG_FILTERS));
-        mAdapter.add(new Type(R.string.tabs, DataImportExportUtils.FLAG_TABS));
-        mListView.setAdapter(mAdapter);
+        final TypeAdapter adapter = new TypeAdapter(context, flags);
+        adapter.add(new Type(R.string.settings, DataImportExportUtils.FLAG_PREFERENCES));
+        adapter.add(new Type(R.string.title_nicknames, DataImportExportUtils.FLAG_NICKNAMES));
+        adapter.add(new Type(R.string.title_user_colors, DataImportExportUtils.FLAG_USER_COLORS));
+        adapter.add(new Type(R.string.custom_host_mapping, DataImportExportUtils.FLAG_HOST_MAPPING));
+        adapter.add(new Type(R.string.keyboard_shortcuts, DataImportExportUtils.FLAG_KEYBOARD_SHORTCUTS));
+        adapter.add(new Type(R.string.title_filters, DataImportExportUtils.FLAG_FILTERS));
+        adapter.add(new Type(R.string.tabs, DataImportExportUtils.FLAG_TABS));
+        mListView.setAdapter(adapter);
         mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         mListView.setOnItemClickListener(this);
-        for (int i = 0, j = mAdapter.getCount(); i < j; i++) {
-            mListView.setItemChecked(i, mAdapter.isEnabled(i));
+        for (int i = 0, j = adapter.getCount(); i < j; i++) {
+            mListView.setItemChecked(i, adapter.isEnabled(i));
         }
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(getTitle());
@@ -120,6 +125,7 @@ public final class DataExportImportTypeSelectorDialogFragment extends BaseDialog
 
     @Override
     public final void onShow(final DialogInterface dialog) {
+        DialogExtensionsKt.applyTheme((AlertDialog) dialog);
         updatePositiveButton(dialog);
     }
 
@@ -192,7 +198,7 @@ public final class DataExportImportTypeSelectorDialogFragment extends BaseDialog
         }
 
         @Override
-        public View getView(final int position, final View convertView, final ViewGroup parent) {
+        public View getView(final int position, @Nullable final View convertView, final ViewGroup parent) {
             final View view = super.getView(position, convertView, parent);
             final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
             text1.setText(getItem(position).title);

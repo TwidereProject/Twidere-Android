@@ -6,7 +6,7 @@
     android:key="settings_content"
     android:title="@string/content_and_storage">
 
-    <PreferenceCategory
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
         android:key="category_content"
         android:title="@string/content">
 
@@ -17,7 +17,7 @@
             android:summaryOn="@string/name_first_summary_on"
             android:title="@string/name_first">
             <extra
-                android:name="notify_change"
+                android:name="should_recreate"
                 android:value="true"/>
         </SwitchPreferenceCompat>
 
@@ -42,10 +42,10 @@
             android:summaryOn="@string/read_from_bottom_summary_on"
             android:title="@string/read_from_bottom"/>
 
-        <org.mariotaku.twidere.preference.TrendsLocationPreference
-            android:key="local_trends_woeid"
-            android:summary="@string/trends_location_summary"
-            android:title="@string/trends_location"/>
+        <Preference
+            android:enabled="false"
+            android:summary="@string/preference_summary_trends_location"
+            android:title="@string/preference_title_trends_location"/>
 
         <org.mariotaku.twidere.preference.TranslationDestinationPreference
             android:key="translation_destination"
@@ -64,22 +64,22 @@
             android:summary="%s"
             android:title="@string/media_uploader"/>
 
-        <org.mariotaku.twidere.preference.TimelineSyncPreference
-            android:defaultValue=""
-            android:key="timeline_sync_service"
-            android:summary="%s"
-            android:title="@string/timeline_sync_service"/>
-
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:enabled="@bool/support_new_document_intent"
             android:key="new_document_api"
-            android:summary="@string/new_document_api_summary"
-            android:title="@string/new_document_api"/>
+            android:summary="@string/preference_multitasking_summary"
+            android:title="@string/preference_multitasking"/>
 
-    </PreferenceCategory>
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="chrome_custom_tab"
+            android:summary="@string/preference_summary_chrome_custom_tab"
+            android:title="@string/preference_title_chrome_custom_tab"/>
 
-    <PreferenceCategory
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
+
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
         android:key="category_safety"
         android:title="@string/safety">
         <SwitchPreferenceCompat
@@ -92,6 +92,11 @@
             android:key="display_sensitive_contents"
             android:summary="@string/display_sensitive_contents_summary"
             android:title="@string/display_sensitive_contents"/>
-    </PreferenceCategory>
+        <org.mariotaku.twidere.preference.RandomizeAccountNamePreference
+            android:defaultValue="false"
+            android:key="randomize_account_name"
+            android:summary="@string/preference_randomize_account_name_summary"
+            android:title="@string/preference_randomize_account_name"/>
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 
 </PreferenceScreen>

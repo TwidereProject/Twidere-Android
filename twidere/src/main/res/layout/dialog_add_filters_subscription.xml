@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Twidere - Twitter client for Android
+  ~
+  ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/element_spacing_large">
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/title_subscription_name"
+        android:inputType="text"
+        android:maxLines="1"
+        app:met_baseColor="?android:textColorPrimary"
+        app:met_floatingLabel="normal"
+        app:met_floatingLabelText="@string/title_subscription_name"
+        app:met_primaryColor="?colorAccent"/>
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/url"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="@string/title_subscription_url"
+        android:inputType="textUri"
+        android:maxLines="1"
+        app:met_baseColor="?android:textColorPrimary"
+        app:met_floatingLabel="normal"
+        app:met_floatingLabelText="@string/title_subscription_url"
+        app:met_primaryColor="?colorAccent"/>
+
+</LinearLayout>

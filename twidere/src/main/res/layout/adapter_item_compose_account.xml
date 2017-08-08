@@ -19,42 +19,22 @@
 <org.mariotaku.twidere.view.CheckableLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tool="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="?actionBarSize"
+    android:layout_height="match_parent"
     android:clipToPadding="false"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:padding="@dimen/element_spacing_msmall">
+    android:padding="@dimen/element_spacing_msmall"
+    tools:layout_height="?actionBarSize">
 
     <org.mariotaku.twidere.view.ProfileImageView
         android:id="@android:id/icon"
-        style="?profileImageStyleLarge"
-        android:layout_width="@dimen/element_size_normal"
-        android:layout_height="@dimen/element_size_normal"
+        style="?profileImageStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         app:sivBorder="true"
         app:sivBorderWidth="@dimen/line_width_compose_account_profile_image"
-        app:sivElevation="@dimen/elevation_card"/>
+        tools:src="@drawable/ic_profile_image_twidere"/>
 
-    <android.support.v7.widget.CardView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/element_spacing_msmall"
-        android:layout_marginStart="@dimen/element_spacing_msmall"
-        app:cardBackgroundColor="?android:colorBackground"
-        app:cardElevation="@dimen/elevation_card"
-        app:contentPadding="@dimen/element_spacing_msmall">
-
-        <TextView
-            android:id="@android:id/text1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="?android:textColorPrimary"
-            android:textStyle="bold"
-            tool:text="Name"/>
-
-    </android.support.v7.widget.CardView>
 </org.mariotaku.twidere.view.CheckableLinearLayout>

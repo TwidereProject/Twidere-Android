@@ -4,42 +4,25 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/auto_refresh">
 
-    <SwitchPreferenceCompat
-        android:disableDependentsState="false"
-        android:key="auto_refresh"
-        android:title="@string/auto_refresh"/>
-
-    <PreferenceCategory
-        android:dependency="auto_refresh"
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
         android:key="cat_refresh_content"
         android:title="@string/content_to_refresh">
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="auto_refresh_home_timeline"
-            android:title="@string/home"/>
+            android:title="@string/refresh_type_home"/>
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="auto_refresh_mentions"
-            android:title="@string/mentions"/>
+            android:title="@string/refresh_type_interactions"/>
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="auto_refresh_direct_messages"
-            android:title="@string/direct_messages"/>
+            android:title="@string/refresh_type_messages"/>
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="auto_refresh_trends"
-            android:title="@string/trends"/>
-    </PreferenceCategory>
-
-    <!--<PreferenceCategory-->
-        <!--android:enabled="false"-->
-        <!--android:key="cat_streaming"-->
-        <!--android:title="@string/streaming">-->
-
-        <!--<SwitchPreference-->
-            <!--android:key="enable_streaming"-->
-            <!--android:title="@string/enable_streaming"/>-->
-
-    <!--</PreferenceCategory>-->
+            android:title="@string/refresh_type_trends"/>
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 
 </PreferenceScreen>

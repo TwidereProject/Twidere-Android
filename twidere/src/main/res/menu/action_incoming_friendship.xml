@@ -4,7 +4,7 @@
     <item
         android:id="@id/accept"
         android:icon="@drawable/ic_action_confirm"
-        android:title="@string/accept"/>
+        android:title="@string/action_accept_friend_request"/>
     <item
         android:id="@id/deny"
         android:icon="@drawable/ic_action_cancel"

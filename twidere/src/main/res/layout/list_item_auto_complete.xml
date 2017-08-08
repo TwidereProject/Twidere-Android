@@ -17,7 +17,8 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
@@ -31,7 +32,7 @@
         android:layout_width="@dimen/icon_size_list_item_small"
         android:layout_height="@dimen/icon_size_list_item_small"
         android:contentDescription="@string/icon"
-        android:scaleType="fitCenter" />
+        android:scaleType="fitCenter"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,19 +44,19 @@
         android:paddingRight="0dp"
         android:paddingStart="@dimen/element_spacing_small">
 
-        <TextView
+        <org.mariotaku.twidere.view.FixedTextView
             android:id="@android:id/text1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:maxLines="1"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-        <TextView
+        <org.mariotaku.twidere.view.FixedTextView
             android:id="@android:id/text2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:maxLines="1"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
     </LinearLayout>
 
 </LinearLayout>

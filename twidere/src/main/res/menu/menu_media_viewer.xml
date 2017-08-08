@@ -22,12 +22,12 @@
     <item
         android:id="@id/refresh"
         android:icon="@drawable/ic_action_refresh"
-        android:title="@string/refresh"
+        android:title="@string/action_refresh"
         app:showAsAction="ifRoom" />
     <item
         android:id="@id/share"
         android:icon="@drawable/ic_action_share"
-        android:title="@string/share"
+        android:title="@string/action_share"
         app:showAsAction="ifRoom" />
     <item
         android:id="@id/save"
@@ -36,5 +36,5 @@
     <item
         android:id="@id/open_in_browser"
         android:icon="@drawable/ic_action_web"
-        android:title="@string/open_in_browser" />
+        android:title="@string/action_open_in_browser" />
 </menu>

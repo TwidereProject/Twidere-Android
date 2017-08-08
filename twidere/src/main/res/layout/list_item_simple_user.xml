@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Twidere - Twitter client for Android
+  ~
+  ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<LinearLayout
+    android:id="@+id/listItem"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:minHeight="?listPreferredItemHeight"
+    android:orientation="horizontal"
+    android:padding="@dimen/element_spacing_normal">
+
+    <org.mariotaku.twidere.view.ProfileImageView
+        android:id="@+id/profileImage"
+        style="?profileImageStyle"
+        android:layout_width="@dimen/icon_size_list_item_small"
+        android:layout_height="@dimen/icon_size_list_item_small"
+        android:layout_weight="0"
+        android:contentDescription="@string/icon"
+        android:scaleType="centerCrop"
+        tools:src="@drawable/ic_profile_image_twidere"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingEnd="0dp"
+        android:paddingLeft="@dimen/element_spacing_small"
+        android:paddingRight="0dp"
+        android:paddingStart="@dimen/element_spacing_small">
+
+        <org.mariotaku.twidere.view.FixedTextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:duplicateParentState="true"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="?android:textColorPrimary"
+            tools:text="User name"/>
+
+        <org.mariotaku.twidere.view.FixedTextView
+            android:id="@+id/screenName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:duplicateParentState="true"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            tools:text="\@screenname"/>
+    </LinearLayout>
+
+    <org.mariotaku.twidere.view.ActivatedCheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:clickable="false"
+        android:focusable="false"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+</LinearLayout>

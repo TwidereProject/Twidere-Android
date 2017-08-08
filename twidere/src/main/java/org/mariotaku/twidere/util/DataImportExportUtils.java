@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.util;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -27,28 +28,20 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
-import android.util.Log;
 
-import com.bluelinelabs.logansquare.JsonMapper;
 import com.bluelinelabs.logansquare.LoganSquare;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 
-import org.mariotaku.commons.logansquare.LoganSquareMapperFinder;
+import org.mariotaku.library.exportablepreferences.PreferencesExporter;
+import org.mariotaku.library.exportablepreferences.annotation.PreferenceType;
 import org.mariotaku.library.objectcursor.ObjectCursor;
+import org.mariotaku.restfu.RestFuUtils;
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.annotation.Preference;
-import org.mariotaku.twidere.annotation.PreferenceType;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.model.FiltersData;
-import org.mariotaku.twidere.model.FiltersData$BaseItemCursorIndices;
-import org.mariotaku.twidere.model.FiltersData$BaseItemValuesCreator;
-import org.mariotaku.twidere.model.FiltersData$UserItemCursorIndices;
-import org.mariotaku.twidere.model.FiltersData$UserItemValuesCreator;
 import org.mariotaku.twidere.model.Tab;
-import org.mariotaku.twidere.model.TabCursorIndices;
-import org.mariotaku.twidere.model.TabValuesCreator;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
@@ -57,12 +50,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
@@ -94,7 +86,7 @@ public class DataImportExportUtils implements Constants {
         final ZipOutputStream zos = new ZipOutputStream(fos);
         try {
             if (hasFlag(flags, FLAG_PREFERENCES)) {
-                exportSharedPreferencesData(zos, context, SHARED_PREFERENCES_NAME, ENTRY_PREFERENCES, new AnnotationProcessStrategy(SharedPreferenceConstants.class));
+                exportSharedPreferencesData(zos, context, SHARED_PREFERENCES_NAME, ENTRY_PREFERENCES, new PreferencesExporterStrategy(SharedPreferenceConstants.class));
             }
             if (hasFlag(flags, FLAG_NICKNAMES)) {
                 exportSharedPreferencesData(zos, context, USER_NICKNAME_PREFERENCES_NAME, ENTRY_NICKNAMES, ConvertToStringProcessStrategy.SINGLETON);
@@ -114,13 +106,13 @@ public class DataImportExportUtils implements Constants {
 
                 final ContentResolver cr = context.getContentResolver();
                 data.setUsers(queryAll(cr, Filters.Users.CONTENT_URI, Filters.Users.COLUMNS,
-                        FiltersData$UserItemCursorIndices.class));
+                        FiltersData.UserItem.class));
                 data.setKeywords(queryAll(cr, Filters.Keywords.CONTENT_URI, Filters.Keywords.COLUMNS,
-                        FiltersData$BaseItemCursorIndices.class));
+                        FiltersData.BaseItem.class));
                 data.setSources(queryAll(cr, Filters.Sources.CONTENT_URI, Filters.Sources.COLUMNS,
-                        FiltersData$BaseItemCursorIndices.class));
+                        FiltersData.BaseItem.class));
                 data.setLinks(queryAll(cr, Filters.Links.CONTENT_URI, Filters.Links.COLUMNS,
-                        FiltersData$BaseItemCursorIndices.class));
+                        FiltersData.BaseItem.class));
                 exportItem(zos, ENTRY_FILTERS, FiltersData.class, data);
             }
             if (hasFlag(flags, FLAG_TABS)) {
@@ -130,7 +122,7 @@ public class DataImportExportUtils implements Constants {
                 if (c != null) {
                     final List<Tab> tabs = new ArrayList<>(c.getCount());
                     try {
-                        TabCursorIndices ci = new TabCursorIndices(c);
+                        final ObjectCursor.CursorIndices<Tab> ci = ObjectCursor.indicesFrom(c, Tab.class);
                         c.moveToFirst();
                         while (!c.isAfterLast()) {
                             tabs.add(ci.newObject(c));
@@ -145,22 +137,17 @@ public class DataImportExportUtils implements Constants {
             zos.finish();
             zos.flush();
         } finally {
-            Utils.closeSilently(zos);
-            Utils.closeSilently(fos);
+            RestFuUtils.closeSilently(zos);
+            RestFuUtils.closeSilently(fos);
         }
     }
 
     private static <T> List<T> queryAll(ContentResolver cr, Uri uri, String[] projection,
-                                        Class<? extends ObjectCursor.CursorIndices<T>> cls) {
+            Class<T> cls) throws IOException {
         Cursor c = cr.query(uri, projection, null, null, null);
         if (c == null) return null;
         try {
-            final ObjectCursor.CursorIndices<T> ci;
-            try {
-                ci = cls.getConstructor(Cursor.class).newInstance(c);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            final ObjectCursor.CursorIndices<T> ci = ObjectCursor.indicesFrom(c, cls);
             List<T> items = new ArrayList<>(c.getCount());
             c.moveToFirst();
             while (!c.isAfterLast()) {
@@ -202,45 +189,33 @@ public class DataImportExportUtils implements Constants {
         return flags;
     }
 
-    public static HashMap<String, Preference> getSupportedPreferencesMap(Class cls) {
-        final Field[] fields = cls.getDeclaredFields();
-        final HashMap<String, Preference> supportedPrefsMap = new HashMap<>();
-        for (final Field field : fields) {
-            final Preference annotation = field.getAnnotation(Preference.class);
-            if (Modifier.isStatic(field.getModifiers()) && field.getType() == String.class
-                    && annotation != null && annotation.exportable() && annotation.type() != PreferenceType.INVALID) {
-                try {
-                    supportedPrefsMap.put((String) field.get(null), annotation);
-                } catch (final IllegalAccessException | IllegalArgumentException e) {
-                    Log.w(LOGTAG, e);
-                }
-            }
-        }
-        return supportedPrefsMap;
-    }
-
     public static void importData(final Context context, final File src, final int flags) throws IOException {
         if (src == null) throw new FileNotFoundException();
         final ZipFile zipFile = new ZipFile(src);
         if (hasFlag(flags, FLAG_PREFERENCES)) {
-            importSharedPreferencesData(zipFile, context, SHARED_PREFERENCES_NAME, ENTRY_PREFERENCES, new AnnotationProcessStrategy(SharedPreferenceConstants.class));
+            importSharedPreferencesData(zipFile, context, SHARED_PREFERENCES_NAME, ENTRY_PREFERENCES,
+                    new PreferencesExporterStrategy(SharedPreferenceConstants.class));
         }
         if (hasFlag(flags, FLAG_NICKNAMES)) {
-            importSharedPreferencesData(zipFile, context, USER_NICKNAME_PREFERENCES_NAME, ENTRY_NICKNAMES, ConvertToStringProcessStrategy.SINGLETON);
+            importSharedPreferencesData(zipFile, context, USER_NICKNAME_PREFERENCES_NAME, ENTRY_NICKNAMES,
+                    ConvertToStringProcessStrategy.SINGLETON);
         }
         if (hasFlag(flags, FLAG_USER_COLORS)) {
-            importSharedPreferencesData(zipFile, context, USER_COLOR_PREFERENCES_NAME, ENTRY_USER_COLORS, ConvertToIntProcessStrategy.SINGLETON);
+            importSharedPreferencesData(zipFile, context, USER_COLOR_PREFERENCES_NAME, ENTRY_USER_COLORS,
+                    ConvertToIntProcessStrategy.SINGLETON);
         }
         if (hasFlag(flags, FLAG_HOST_MAPPING)) {
-            importSharedPreferencesData(zipFile, context, HOST_MAPPING_PREFERENCES_NAME, ENTRY_HOST_MAPPING, ConvertToStringProcessStrategy.SINGLETON);
+            importSharedPreferencesData(zipFile, context, HOST_MAPPING_PREFERENCES_NAME, ENTRY_HOST_MAPPING,
+                    ConvertToStringProcessStrategy.SINGLETON);
         }
         if (hasFlag(flags, FLAG_KEYBOARD_SHORTCUTS)) {
-            importSharedPreferencesData(zipFile, context, KEYBOARD_SHORTCUTS_PREFERENCES_NAME, ENTRY_KEYBOARD_SHORTCUTS, ConvertToStringProcessStrategy.SINGLETON);
+            importSharedPreferencesData(zipFile, context, KEYBOARD_SHORTCUTS_PREFERENCES_NAME,
+                    ENTRY_KEYBOARD_SHORTCUTS, ConvertToStringProcessStrategy.SINGLETON);
         }
         if (hasFlag(flags, FLAG_FILTERS)) {
             importItem(context, zipFile, ENTRY_FILTERS, FiltersData.class, new ContentResolverProcessStrategy<FiltersData>() {
                 @Override
-                public boolean importItem(ContentResolver cr, FiltersData filtersData) {
+                public boolean importItem(ContentResolver cr, FiltersData filtersData) throws IOException {
                     if (filtersData == null) return false;
                     insertBase(cr, Filters.Keywords.CONTENT_URI, filtersData.getKeywords());
                     insertBase(cr, Filters.Sources.CONTENT_URI, filtersData.getSources());
@@ -249,33 +224,38 @@ public class DataImportExportUtils implements Constants {
                     return true;
                 }
 
-                void insertBase(ContentResolver cr, Uri uri, List<FiltersData.BaseItem> items) {
+                void insertBase(ContentResolver cr, Uri uri, List<FiltersData.BaseItem> items) throws IOException {
                     if (items == null) return;
+                    final ObjectCursor.ValuesCreator<FiltersData.BaseItem> baseItemCreator =
+                            ObjectCursor.valuesCreatorFrom(FiltersData.BaseItem.class);
                     List<ContentValues> values = new ArrayList<>(items.size());
                     for (FiltersData.BaseItem item : items) {
-                        values.add(FiltersData$BaseItemValuesCreator.create(item));
+                        values.add(baseItemCreator.create(item));
                     }
                     ContentResolverUtils.bulkInsert(cr, uri, values);
                 }
 
-                void insertUser(ContentResolver cr, Uri uri, List<FiltersData.UserItem> items) {
+                void insertUser(ContentResolver cr, Uri uri, List<FiltersData.UserItem> items) throws IOException {
                     if (items == null) return;
+                    final ObjectCursor.ValuesCreator<FiltersData.UserItem> userItemCreator =
+                            ObjectCursor.valuesCreatorFrom(FiltersData.UserItem.class);
                     List<ContentValues> values = new ArrayList<>(items.size());
                     for (FiltersData.UserItem item : items) {
-                        values.add(FiltersData$UserItemValuesCreator.create(item));
+                        values.add(userItemCreator.create(item));
                     }
                     ContentResolverUtils.bulkInsert(cr, uri, values);
                 }
             });
         }
         if (hasFlag(flags, FLAG_TABS)) {
+            final ObjectCursor.ValuesCreator<Tab> creator = ObjectCursor.valuesCreatorFrom(Tab.class);
             importItemsList(context, zipFile, ENTRY_TABS, Tab.class, new ContentResolverProcessStrategy<List<Tab>>() {
                 @Override
-                public boolean importItem(ContentResolver cr, List<Tab> items) {
+                public boolean importItem(ContentResolver cr, List<Tab> items) throws IOException {
                     if (items == null) return false;
                     List<ContentValues> values = new ArrayList<>(items.size());
                     for (Tab item : items) {
-                        values.add(TabValuesCreator.create(item));
+                        values.add(creator.create(item));
                     }
                     cr.delete(Tabs.CONTENT_URI, null, null);
                     ContentResolverUtils.bulkInsert(cr, Tabs.CONTENT_URI, values);
@@ -291,8 +271,8 @@ public class DataImportExportUtils implements Constants {
     }
 
     private static void importSharedPreferencesData(@NonNull final ZipFile zipFile, @NonNull final Context context,
-                                                    @NonNull final String preferencesName, @NonNull final String entryName,
-                                                    @NonNull final SharedPreferencesProcessStrategy strategy) throws IOException {
+            @NonNull final String preferencesName, @NonNull final String entryName,
+            @NonNull final SharedPreferencesProcessStrategy strategy) throws IOException {
         final ZipEntry entry = zipFile.getEntry(entryName);
         if (entry == null) return;
         final JsonParser jsonParser = LoganSquare.JSON_FACTORY.createParser(zipFile.getInputStream(entry));
@@ -305,90 +285,95 @@ public class DataImportExportUtils implements Constants {
         }
         final SharedPreferences preferences = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = preferences.edit();
-        while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
-            String key = jsonParser.getCurrentName();
-            strategy.importValue(jsonParser, key, editor);
-        }
+        strategy.importAll(jsonParser, editor);
         editor.apply();
     }
 
     private static void exportSharedPreferencesData(@NonNull final ZipOutputStream zos, final Context context,
-                                                    @NonNull final String preferencesName, @NonNull final String entryName,
-                                                    @NonNull final SharedPreferencesProcessStrategy strategy) throws IOException {
+            @NonNull final String preferencesName, @NonNull final String entryName,
+            @NonNull final SharedPreferencesProcessStrategy strategy) throws IOException {
         final SharedPreferences preferences = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE);
-        final Map<String, ?> map = preferences.getAll();
         zos.putNextEntry(new ZipEntry(entryName));
         final JsonGenerator jsonGenerator = LoganSquare.JSON_FACTORY.createGenerator(zos);
         jsonGenerator.writeStartObject();
-        for (String key : map.keySet()) {
-            strategy.exportValue(jsonGenerator, key, preferences);
-        }
+        strategy.exportAll(jsonGenerator, preferences);
         jsonGenerator.writeEndObject();
         jsonGenerator.flush();
         zos.closeEntry();
     }
 
     private static <T> void importItemsList(@NonNull final Context context,
-                                            @NonNull final ZipFile zipFile,
-                                            @NonNull final String entryName,
-                                            @NonNull final Class<T> itemCls,
-                                            @NonNull final ContentResolverProcessStrategy<List<T>> strategy)
+            @NonNull final ZipFile zipFile,
+            @NonNull final String entryName,
+            @NonNull final Class<T> itemCls,
+            @NonNull final ContentResolverProcessStrategy<List<T>> strategy)
             throws IOException {
         final ZipEntry entry = zipFile.getEntry(entryName);
         if (entry == null) return;
-        final JsonMapper<T> mapper = LoganSquareMapperFinder.mapperFor(itemCls);
-        List<T> itemsList = mapper.parseList(zipFile.getInputStream(entry));
+        List<T> itemsList = JsonSerializer.parseList(zipFile.getInputStream(entry), itemCls);
         strategy.importItem(context.getContentResolver(), itemsList);
     }
 
 
     private static <T> void exportItemsList(@NonNull final ZipOutputStream zos,
-                                            @NonNull final String entryName,
-                                            @NonNull final Class<T> itemCls,
-                                            @NonNull final List<T> itemList) throws IOException {
+            @NonNull final String entryName,
+            @NonNull final Class<T> itemCls,
+            @NonNull final List<T> itemList) throws IOException {
         zos.putNextEntry(new ZipEntry(entryName));
-        final JsonGenerator jsonGenerator = LoganSquare.JSON_FACTORY.createGenerator(zos);
-        LoganSquareMapperFinder.mapperFor(itemCls).serialize(itemList, jsonGenerator);
-        jsonGenerator.flush();
+        JsonSerializer.serialize(itemList, zos, itemCls);
         zos.closeEntry();
     }
 
     private static <T> void importItem(@NonNull final Context context,
-                                       @NonNull final ZipFile zipFile,
-                                       @NonNull final String entryName,
-                                       @NonNull final Class<T> itemCls,
-                                       @NonNull final ContentResolverProcessStrategy<T> strategy)
+            @NonNull final ZipFile zipFile,
+            @NonNull final String entryName,
+            @NonNull final Class<T> itemCls,
+            @NonNull final ContentResolverProcessStrategy<T> strategy)
             throws IOException {
         final ZipEntry entry = zipFile.getEntry(entryName);
         if (entry == null) return;
-        final JsonMapper<T> mapper = LoganSquareMapperFinder.mapperFor(itemCls);
-        T item = mapper.parse(zipFile.getInputStream(entry));
+        T item = JsonSerializer.parse(zipFile.getInputStream(entry), itemCls);
         strategy.importItem(context.getContentResolver(), item);
     }
 
 
     private static <T> void exportItem(@NonNull final ZipOutputStream zos,
-                                       @NonNull final String entryName,
-                                       @NonNull final Class<T> itemCls,
-                                       @NonNull final T item) throws IOException {
+            @NonNull final String entryName,
+            @NonNull final Class<T> itemCls,
+            @NonNull final T item) throws IOException {
         zos.putNextEntry(new ZipEntry(entryName));
-        final JsonGenerator jsonGenerator = LoganSquare.JSON_FACTORY.createGenerator(zos);
-        LoganSquareMapperFinder.mapperFor(itemCls).serialize(item, jsonGenerator, true);
-        jsonGenerator.flush();
+        JsonSerializer.serialize(item, zos, itemCls);
         zos.closeEntry();
     }
 
     private interface ContentResolverProcessStrategy<T> {
-        boolean importItem(ContentResolver cr, T item);
+        boolean importItem(ContentResolver cr, T item) throws IOException;
     }
 
-    private interface SharedPreferencesProcessStrategy {
-        boolean importValue(JsonParser jsonParser, String key, SharedPreferences.Editor editor) throws IOException;
+    private abstract static class SharedPreferencesProcessStrategy {
 
-        boolean exportValue(JsonGenerator jsonGenerator, String key, SharedPreferences preferences) throws IOException;
+        public boolean importAll(JsonParser jsonParser, SharedPreferences.Editor editor) throws IOException {
+            while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
+                String key = jsonParser.getCurrentName();
+                importValue(jsonParser, key, editor);
+            }
+            return true;
+        }
+
+        public boolean exportAll(JsonGenerator jsonGenerator, SharedPreferences preferences) throws IOException {
+            final Map<String, ?> map = preferences.getAll();
+            for (String key : map.keySet()) {
+                exportValue(jsonGenerator, key, preferences);
+            }
+            return true;
+        }
+
+        public abstract boolean importValue(JsonParser jsonParser, String key, SharedPreferences.Editor editor) throws IOException;
+
+        public abstract boolean exportValue(JsonGenerator jsonGenerator, String key, SharedPreferences preferences) throws IOException;
     }
 
-    private static final class ConvertToStringProcessStrategy implements SharedPreferencesProcessStrategy {
+    private static final class ConvertToStringProcessStrategy extends SharedPreferencesProcessStrategy {
 
         private static final SharedPreferencesProcessStrategy SINGLETON = new ConvertToStringProcessStrategy();
 
@@ -412,7 +397,7 @@ public class DataImportExportUtils implements Constants {
         }
     }
 
-    private static final class ConvertToIntProcessStrategy implements SharedPreferencesProcessStrategy {
+    private static final class ConvertToIntProcessStrategy extends SharedPreferencesProcessStrategy {
 
         private static final SharedPreferencesProcessStrategy SINGLETON = new ConvertToIntProcessStrategy();
 
@@ -436,76 +421,124 @@ public class DataImportExportUtils implements Constants {
         }
     }
 
-    private static final class AnnotationProcessStrategy implements SharedPreferencesProcessStrategy {
+    private static final class PreferencesExporterStrategy extends SharedPreferencesProcessStrategy {
 
-        private final HashMap<String, Preference> supportedMap;
+        private final Class<?> cls;
 
-        AnnotationProcessStrategy(Class cls) {
-            this.supportedMap = getSupportedPreferencesMap(cls);
+        PreferencesExporterStrategy(Class<?> cls) {
+            this.cls = cls;
+        }
+
+        @SuppressLint("SwitchIntDef")
+        @Override
+        public boolean importAll(JsonParser jsonParser, SharedPreferences.Editor editor) throws IOException {
+            if (jsonParser.getCurrentToken() == null) {
+                jsonParser.nextToken();
+            }
+            if (jsonParser.getCurrentToken() != JsonToken.START_OBJECT) {
+                jsonParser.skipChildren();
+                return false;
+            }
+            PreferencesExporter exporter = PreferencesExporter.get(cls);
+            PreferencesExporter.ImportHandler handler = exporter.importTo(editor);
+            while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = jsonParser.getCurrentName();
+                jsonParser.nextToken();
+                switch (handler.getType(fieldName)) {
+                    case PreferenceType.BOOLEAN: {
+                        handler.onBoolean(fieldName, jsonParser.getValueAsBoolean());
+                        break;
+                    }
+                    case PreferenceType.INT: {
+                        handler.onInt(fieldName, jsonParser.getValueAsInt());
+                        break;
+                    }
+                    case PreferenceType.LONG: {
+                        handler.onLong(fieldName, jsonParser.getValueAsLong());
+                        break;
+                    }
+                    case PreferenceType.FLOAT: {
+                        handler.onFloat(fieldName, (float) jsonParser.getValueAsDouble());
+                        break;
+                    }
+                    case PreferenceType.STRING: {
+                        handler.onString(fieldName, jsonParser.getValueAsString());
+                        break;
+                    }
+                    case PreferenceType.STRING_SET: {
+                        if (jsonParser.getCurrentToken() == JsonToken.START_ARRAY) {
+                            Set<String> stringSet = new HashSet<>();
+                            while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
+                                stringSet.add(jsonParser.getValueAsString(null));
+                            }
+                            handler.onStringSet(fieldName, stringSet);
+                        } else {
+                            handler.onStringSet(fieldName, null);
+                        }
+                        break;
+                    }
+                }
+
+                jsonParser.skipChildren();
+            }
+            return true;
+        }
+
+        @SuppressLint("SwitchIntDef")
+        @Override
+        public boolean exportAll(final JsonGenerator jsonGenerator, SharedPreferences preferences) throws IOException {
+            PreferencesExporter exporter = PreferencesExporter.get(cls);
+            exporter.exportTo(preferences, new PreferencesExporter.ExportHandler() {
+                @Override
+                public void onBoolean(String key, boolean value) throws IOException {
+                    jsonGenerator.writeBooleanField(key, value);
+                }
+
+                @Override
+                public void onInt(String key, int value) throws IOException {
+                    jsonGenerator.writeNumberField(key, value);
+                }
+
+                @Override
+                public void onLong(String key, long value) throws IOException {
+                    jsonGenerator.writeNumberField(key, value);
+                }
+
+                @Override
+                public void onFloat(String key, float value) throws IOException {
+                    jsonGenerator.writeNumberField(key, value);
+                }
+
+                @Override
+                public void onString(String key, String value) throws IOException {
+                    jsonGenerator.writeStringField(key, value);
+                }
+
+                @Override
+                public void onStringSet(String key, Set<String> value) throws IOException {
+                    if (value != null) {
+                        jsonGenerator.writeArrayFieldStart(key);
+                        for (String s : value) {
+                            jsonGenerator.writeString(s);
+                        }
+                        jsonGenerator.writeEndArray();
+                    } else {
+                        jsonGenerator.writeNullField(key);
+                    }
+                }
+
+            });
+            return true;
         }
 
         @Override
         public boolean importValue(JsonParser jsonParser, String key, SharedPreferences.Editor editor) throws IOException {
-            final JsonToken token = jsonParser.nextToken();
-            if (token == null) return false;
-            final Preference preference = supportedMap.get(key);
-            if (preference == null || !preference.exportable()) return false;
-            switch (preference.type()) {
-                case PreferenceType.BOOLEAN: {
-                    editor.putBoolean(key, jsonParser.getValueAsBoolean());
-                    break;
-                }
-                case PreferenceType.INT: {
-                    editor.putInt(key, jsonParser.getValueAsInt());
-                    break;
-                }
-                case PreferenceType.LONG: {
-                    editor.putLong(key, jsonParser.getValueAsLong());
-                    break;
-                }
-                case PreferenceType.FLOAT: {
-                    editor.putFloat(key, (float) jsonParser.getValueAsDouble());
-                    break;
-                }
-                case PreferenceType.STRING: {
-                    editor.putString(key, jsonParser.getValueAsString());
-                    break;
-                }
-                default: {
-                    break;
-                }
-            }
-            return true;
+            return false;
         }
 
         @Override
         public boolean exportValue(JsonGenerator jsonGenerator, String key, SharedPreferences preferences) throws IOException {
-            final Preference preference = supportedMap.get(key);
-            if (preference == null || !preference.exportable()) return false;
-            try {
-                switch (preference.type()) {
-                    case PreferenceType.BOOLEAN:
-                        jsonGenerator.writeBooleanField(key, preferences.getBoolean(key, preference.defaultBoolean()));
-                        break;
-                    case PreferenceType.INT:
-                        jsonGenerator.writeNumberField(key, preferences.getInt(key, preference.defaultInt()));
-                        break;
-                    case PreferenceType.LONG:
-                        jsonGenerator.writeNumberField(key, preferences.getLong(key, preference.defaultLong()));
-                        break;
-                    case PreferenceType.FLOAT:
-                        jsonGenerator.writeNumberField(key, preferences.getFloat(key, preference.defaultFloat()));
-                        break;
-                    case PreferenceType.STRING:
-                        jsonGenerator.writeStringField(key, preferences.getString(key, preference.defaultString()));
-                        break;
-                    default:
-                        break;
-                }
-            } catch (ClassCastException e) {
-                return false;
-            }
-            return true;
+            return false;
         }
     }
 

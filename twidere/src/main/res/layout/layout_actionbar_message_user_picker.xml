@@ -28,41 +28,42 @@
     tools:layout_height="?actionBarSize">
 
     <android.support.v7.widget.AppCompatSpinner
-        android:id="@+id/account_spinner"
+        android:id="@+id/accountSpinner"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:tag="tint|primary_color_dependent"
+        android:layout_marginBottom="@dimen/element_spacing_small"
+        android:layout_marginTop="@dimen/element_spacing_small"
         tools:listitem="@layout/spinner_item_account_icon"/>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_toEndOf="@+id/account_spinner"
-        android:layout_toRightOf="@+id/account_spinner">
+        android:layout_toEndOf="@+id/accountSpinner"
+        android:layout_toRightOf="@+id/accountSpinner">
 
-        <EditText
-            android:id="@+id/user_query"
+        <org.mariotaku.twidere.view.FixedEditText
+            android:id="@+id/editUserQuery"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/element_spacing_normal"
             android:layout_marginRight="@dimen/element_spacing_normal"
-            android:gravity="bottom|center_vertical"
+            android:gravity="center_vertical"
             android:inputType="textPersonName|textMultiLine"
-            android:tag="tint|primary_color_dependent,text_color|primary_color_dependent">
+            app:backgroundTint="?android:colorForeground">
 
             <requestFocus/>
-        </EditText>
+        </org.mariotaku.twidere.view.FixedEditText>
 
         <android.support.v7.widget.AppCompatImageButton
-            android:id="@+id/query_button"
+            android:id="@+id/queryButton"
             style="?actionButtonStyle"
             android:layout_width="@dimen/element_size_normal"
             android:layout_height="@dimen/element_size_normal"
             android:layout_gravity="end|center_vertical"
-            android:contentDescription="@string/search"
+            android:contentDescription="@string/action_search"
             android:scaleType="centerInside"
             android:src="@drawable/ic_action_search"
-            android:tag="tint|primary_color_dependent"
             app:backgroundTintMode="src_atop"/>
     </FrameLayout>
 

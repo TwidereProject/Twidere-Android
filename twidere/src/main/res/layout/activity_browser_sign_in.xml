@@ -20,26 +20,29 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <WebView
-        android:id="@+id/webview"
+        android:id="@+id/webView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
     <FrameLayout
-        android:id="@+id/progress_container"
+        android:id="@+id/progressContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="false">
 
-        <com.pnikosis.materialishprogress.ProgressWheel
-            android:layout_width="@dimen/element_size_mlarge"
-            android:layout_height="@dimen/element_size_mlarge"
-            android:layout_gravity="center"
-            app:matProg_progressIndeterminate="true"/>
+        <ProgressBar
+            android:id="@+id/loadProgress"
+            style="?android:progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:layout_gravity="top"
+            android:layout_marginTop="-2dp"
+            android:indeterminate="false"
+            android:max="100"/>
     </FrameLayout>
 
 </RelativeLayout>

@@ -18,99 +18,16 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<merge
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:minWidth="@dimen/minimum_width_list_layout_content"
     tools:context=".activity.UserListSelectorActivity">
 
-    <LinearLayout
-        android:id="@+id/user_lists_container"
+    <include
+        layout="@layout/layout_list_with_empty_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="?android:dividerVertical"
-        android:orientation="vertical"
-        android:showDividers="middle"
-        android:visibility="gone">
-
-        <ListView
-            android:id="@+id/user_lists_list"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
-
-        <LinearLayout
-            android:id="@+id/create_list_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <Button
-                android:id="@+id/create_list"
-                style="?android:borderlessButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/button_bar_height"
-                android:gravity="center"
-                android:text="@string/new_user_list"/>
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/users_list_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="?android:dividerVertical"
-        android:orientation="vertical"
-        android:showDividers="middle"
-        tools:context=".activity.UserListSelectorActivity">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                style="?android:listSeparatorTextViewStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/user"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="@dimen/element_spacing_normal">
-
-                <AutoCompleteTextView
-                    android:id="@+id/edit_screen_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:singleLine="true"/>
-
-                <org.mariotaku.twidere.view.IconActionButton
-                    android:id="@+id/screen_name_confirm"
-                    android:layout_width="@dimen/minimum_element_size"
-                    android:layout_height="@dimen/minimum_element_size"
-                    android:layout_weight="0"
-                    android:background="?selectableItemBackground"
-                    android:color="?menuIconColor"
-                    android:contentDescription="@string/search"
-                    android:src="@drawable/ic_action_search"
-                    tools:tint="?menuIconColor"/>
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <ListView
-            android:id="@+id/users_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </LinearLayout>
-
-</merge>
+        android:layout_height="match_parent"/>
+</FrameLayout>

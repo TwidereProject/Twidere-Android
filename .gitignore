@@ -13,6 +13,7 @@ local.properties
 # User-specific configurations
 /.idea
 *.iml
+gradle-app.setting
 
 # OS-specific files
 .DS_Store
@@ -24,5 +25,14 @@ ehthumbs.db
 Thumbs.db
 
 # Private files
-/signing.properties
-/twidere.jks
+/private
+
+# Local files
+/captures
+/reports
+
+# Temp files
+/temp
+
+# JRE error dumps
+hs_err_*.log

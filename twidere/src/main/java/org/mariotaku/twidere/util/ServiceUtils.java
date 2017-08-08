@@ -37,10 +37,6 @@ public final class ServiceUtils {
     private ServiceUtils() {
     }
 
-    public static ServiceToken bindToService(final Context context, final Intent intent) {
-        return bindToService(context, intent, null);
-    }
-
     public static ServiceToken bindToService(final Context context, final Intent intent,
                                              final ServiceConnection callback) {
 
@@ -53,7 +49,7 @@ public final class ServiceUtils {
                 return new ServiceToken(cw);
             }
         }
-        Log.e(LOGTAG, "Failed to bind to service");
+        DebugLog.w(LOGTAG, "Failed to bind to service", null);
         return null;
     }
 

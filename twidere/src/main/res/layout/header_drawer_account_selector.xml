@@ -17,31 +17,31 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<RelativeLayout
-    android:id="@+id/account_dashboard_header"
+<org.mariotaku.twidere.view.AccountDashboardHeaderView
+    android:id="@+id/accountDashboardHeader"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants"
+    app:sizeMeasurementId="@+id/profileContainer"
     tools:layout_height="160dp"
     tools:layout_width="280dp">
 
     <ViewSwitcher
-        android:id="@+id/account_profile_banner"
+        android:id="@+id/accountProfileBanner"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignBottom="@id/profile_container"
-        android:layout_alignTop="@id/profile_container"
+        android:layout_alignBottom="@+id/profileContainer"
+        android:layout_alignTop="@+id/profileContainer"
         android:contentDescription="@string/profile_banner"
         android:focusable="false"
         android:foreground="@color/drawer_banner_foreground"
-        android:scaleType="centerCrop"
         tools:background="@drawable/nyan_stars_background"/>
 
     <FrameLayout
-        android:id="@+id/profile_container"
+        android:id="@+id/profileContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:focusable="false"
@@ -52,43 +52,74 @@
             android:layout_height="wrap_content"
             android:focusable="false"
             android:paddingBottom="@dimen/element_spacing_normal"
-            android:paddingLeft="@dimen/element_spacing_large"
-            android:paddingRight="@dimen/element_spacing_large"
             android:paddingTop="@dimen/element_spacing_normal">
 
             <org.mariotaku.twidere.view.ProfileImageView
-                android:id="@+id/profile_image"
+                android:id="@+id/profileImage"
                 style="?profileImageStyle"
                 android:layout_width="@dimen/icon_size_profile_image_dashboard_current"
                 android:layout_height="@dimen/icon_size_profile_image_dashboard_current"
                 android:layout_marginBottom="@dimen/element_spacing_mlarge"
+                android:layout_marginLeft="@dimen/element_spacing_large"
+                android:layout_marginStart="@dimen/element_spacing_large"
                 android:layout_marginTop="@dimen/element_spacing_mlarge"
                 android:focusable="false"
                 app:sivBorder="true"
                 app:sivBorderWidth="2dp"
-                tools:src="@mipmap/ic_launcher"/>
+                tools:src="@drawable/ic_profile_image_twidere"/>
 
-            <org.mariotaku.twidere.view.ExtendedRecyclerView
-                android:id="@+id/other_accounts_list"
+            <org.mariotaku.twidere.view.ExtendedViewPager
+                android:id="@+id/otherAccountsList"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/profile_image"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignTop="@id/profile_image"
+                android:layout_height="52dp"
+                android:layout_alignBottom="@id/profileImage"
+                android:layout_alignTop="@id/profileImage"
                 android:layout_marginBottom="@dimen/element_spacing_large"
-                android:layout_toEndOf="@id/profile_image"
-                android:layout_toRightOf="@id/profile_image"
+                android:layout_toEndOf="@+id/hasPrevAccountIndicator"
+                android:layout_toLeftOf="@+id/hasNextAccountIndicator"
+                android:layout_toRightOf="@+id/hasPrevAccountIndicator"
+                android:layout_toStartOf="@+id/hasNextAccountIndicator"
                 android:focusable="false"
+                android:overScrollMode="never"
                 tools:listitem="@layout/adapter_item_dashboard_account"
                 tools:paddingStart="@dimen/element_spacing_large"
                 tools:visibility="visible"/>
+
+            <ImageButton
+                android:id="@+id/hasNextAccountIndicator"
+                android:layout_width="@dimen/element_spacing_large"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/otherAccountsList"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/otherAccountsList"
+                android:background="?selectableItemBackgroundBorderless"
+                android:contentDescription="@string/next_item"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_indicator_arrow_next"/>
+
+            <ImageButton
+                android:id="@+id/hasPrevAccountIndicator"
+                android:layout_width="@dimen/element_spacing_large"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/otherAccountsList"
+                android:layout_alignTop="@+id/otherAccountsList"
+                android:layout_toEndOf="@id/profileImage"
+                android:layout_toRightOf="@id/profileImage"
+                android:background="?selectableItemBackgroundBorderless"
+                android:contentDescription="@string/previous_item"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_indicator_arrow_prev"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignParentBottom="true"
-                android:layout_below="@id/profile_image"
+                android:layout_below="@id/profileImage"
+                android:layout_marginEnd="@dimen/element_spacing_large"
+                android:layout_marginLeft="@dimen/element_spacing_large"
+                android:layout_marginRight="@dimen/element_spacing_large"
+                android:layout_marginStart="@dimen/element_spacing_large"
                 android:baselineAligned="false"
                 android:focusable="false"
                 android:gravity="center_vertical"
@@ -101,23 +132,25 @@
                     android:focusable="false"
                     android:orientation="vertical">
 
-                    <TextView
+                    <org.mariotaku.twidere.view.FixedTextView
                         android:id="@+id/name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:ellipsize="end"
                         android:focusable="false"
-                        android:singleLine="true"
+                        android:maxLines="1"
                         android:textAppearance="?android:textAppearanceSmall"
                         android:textColor="@android:color/white"
                         android:textStyle="bold"
                         tools:text="Name"/>
 
-                    <TextView
-                        android:id="@+id/screen_name"
+                    <org.mariotaku.twidere.view.FixedTextView
+                        android:id="@+id/screenName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:ellipsize="end"
                         android:focusable="false"
-                        android:singleLine="true"
+                        android:maxLines="1"
                         android:textAppearance="?android:textAppearanceSmall"
                         android:textColor="@color/material_grey"
                         tools:text="\@username"/>
@@ -132,18 +165,17 @@
                     tools:foreground="@drawable/ic_action_status_compose">
 
                     <android.support.v7.widget.ActionMenuView
-                        android:id="@+id/account_dashboard_menu"
+                        android:id="@+id/accountDashboardMenu"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:focusable="true"
-                        android:tag="ate_ignore"/>
+                        android:focusable="true"/>
                 </FrameLayout>
 
             </LinearLayout>
         </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/floating_profile_image_snapshot"
+        <org.mariotaku.twidere.view.ShapedImageView
+            android:id="@+id/floatingProfileImageSnapshot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:focusable="false"
@@ -153,20 +185,20 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/no_account_container"
+        android:id="@+id/noAccountContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/profile_container"
-        android:layout_alignTop="@+id/profile_container"
+        android:layout_alignBottom="@+id/profileContainer"
+        android:layout_alignTop="@+id/profileContainer"
         android:clickable="true"
         tools:visibility="gone">
 
-        <TextView
+        <org.mariotaku.twidere.view.FixedTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/no_account"/>
+            android:text="@string/message_toast_no_account"/>
 
     </FrameLayout>
 
-</RelativeLayout>
+</org.mariotaku.twidere.view.AccountDashboardHeaderView>

@@ -13,8 +13,13 @@
         <attr name="quoteIndicatorBackgroundColor" format="color"/>
         <attr name="linePageIndicatorStyle" format="reference"/>
         <attr name="mediaLabelBackground" format="color"/>
-        <attr name="ateThemeKey" format="string"/>
+        <attr name="isDialogTheme" format="boolean"/>
     </declare-styleable>
+    <declare-styleable name="TwidereTheme">
+        <attr name="darkThemeResource" format="reference"/>
+        <attr name="lightThemeResource" format="reference"/>
+    </declare-styleable>
+
     <declare-styleable name="ColorLabelView">
         <attr name="ignorePadding" format="boolean"/>
         <attr name="backgroundColor" format="color"/>
@@ -80,6 +85,9 @@
         <attr name="android:action"/>
         <attr name="android:tag"/>
     </declare-styleable>
+    <declare-styleable name="SyncItemPreference">
+        <attr name="syncType" format="string"/>
+    </declare-styleable>
     <declare-styleable name="IconActionButton">
         <attr name="iabColor" format="color"/>
         <attr name="iabActivatedColor" format="color"/>
@@ -95,6 +103,7 @@
         <attr name="sivElevation" format="dimension"/>
         <attr name="sivCornerRadius" format="dimension"/>
         <attr name="sivCornerRadiusRatio" format="fraction"/>
+        <attr name="sivDrawShadow" format="boolean"/>
         <attr name="sivShape"/>
     </declare-styleable>
     <declare-styleable name="HeaderDrawerLayout">
@@ -127,6 +136,71 @@
         <attr name="android:foreground"/>
         <attr name="android:foregroundGravity"/>
     </declare-styleable>
+    <declare-styleable name="AccountDashboardHeaderView">
+        <attr name="sizeMeasurementId" format="reference"/>
+    </declare-styleable>
+    <declare-styleable name="PremiumEntryPreference">
+        <attr name="requiredFeature" format="string"/>
+    </declare-styleable>
+    <declare-styleable name="ProfileBannerImageView">
+        <attr name="bannerAspectRatio" format="fraction"/>
+    </declare-styleable>
+    <declare-styleable name="AppBarChildBehavior">
+        <attr name="behavior_appBarId" format="reference"/>
+        <attr name="behavior_toolbarId" format="reference"/>
+        <attr name="behavior_dependencyViewId" format="reference"/>
+        <attr name="behavior_targetViewId" format="reference"/>
+
+        <attr name="behavior_marginLeft" format="dimension"/>
+        <attr name="behavior_marginRight" format="dimension"/>
+        <attr name="behavior_marginStart" format="dimension"/>
+        <attr name="behavior_marginEnd" format="dimension"/>
+        <attr name="behavior_marginTop" format="dimension"/>
+        <attr name="behavior_marginBottom" format="dimension"/>
+
+        <attr name="behavior_alignmentRule"/>
+
+        <attr name="behavior_childTransformation" format="string"/>
+    </declare-styleable>
+    <declare-styleable name="IExtendedViewPadding">
+        <attr name="android:paddingTop"/>
+        <attr name="android:paddingBottom"/>
+        <attr name="android:paddingLeft"/>
+        <attr name="android:paddingRight"/>
+        <attr name="android:paddingStart"/>
+        <attr name="android:paddingEnd"/>
+        <attr name="android:padding"/>
+    </declare-styleable>
+    <declare-styleable name="MediaLayoutParams">
+        <attr name="layout_isMediaItemView" format="boolean"/>
+        <attr name="layout_videoViewId" format="reference"/>
+    </declare-styleable>
+    <declare-styleable name="MaxHeightScrollView">
+        <attr name="android:maxHeight"/>
+    </declare-styleable>
+    <attr name="behavior_alignmentRule">
+        <flag name="left" value="0x00000001"/>
+        <flag name="right" value="0x00000002"/>
+        <flag name="toLeftOf" value="0x00000004"/>
+        <flag name="toRightOf" value="0x00000008"/>
+        <flag name="toLeftOfCenter" value="0x00000010"/>
+        <flag name="toRightOfCenter" value="0x00000020"/>
+        <flag name="centerHorizontal" value="0x00000003"/>
+        <flag name="start" value="0x00001001"/>
+        <flag name="end" value="0x00001002"/>
+        <flag name="toStartOf" value="0x00001004"/>
+        <flag name="toEndOf" value="0x00001008"/>
+        <flag name="toStartOfCenter" value="0x00001010"/>
+        <flag name="toEndOfCenter" value="0x00001020"/>
+        <flag name="top" value="0x00010000"/>
+        <flag name="bottom" value="0x00020000"/>
+        <flag name="above" value="0x00040000"/>
+        <flag name="below" value="0x00080000"/>
+        <flag name="aboveCenter" value="0x00100000"/>
+        <flag name="belowCenter" value="0x00200000"/>
+        <flag name="centerVertical" value="0x00030000"/>
+        <flag name="center" value="0x00030003"/>
+    </attr>
     <attr name="notificationType">
         <flag name="none" value="0"/>
         <flag name="ringtone" value="1"/>

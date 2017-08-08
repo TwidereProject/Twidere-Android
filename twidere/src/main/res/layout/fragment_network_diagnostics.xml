@@ -5,18 +5,20 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/log_text"
+    <org.mariotaku.twidere.view.FixedTextView
+        android:id="@+id/logText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:padding="@dimen/element_spacing_normal"
+        android:scrollbarStyle="outsideOverlay"
         android:scrollbars="vertical"
         android:textAppearance="?android:textAppearanceSmall"
         android:textColor="?android:textColorPrimary"
         android:typeface="monospace"/>
 
     <Button
-        android:id="@+id/start_diagnostics"
+        android:id="@+id/startDiagnostics"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"

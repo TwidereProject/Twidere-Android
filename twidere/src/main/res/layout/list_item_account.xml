@@ -48,9 +48,9 @@
         android:layout_centerVertical="true"
         android:layout_toEndOf="@+id/drag_handle"
         android:layout_toRightOf="@+id/drag_handle"
-        android:contentDescription="@string/your_profile_image"
+        android:contentDescription="@string/label_your_profile_image"
         android:scaleType="fitCenter"
-        tools:src="@mipmap/ic_launcher"/>
+        tools:src="@drawable/ic_profile_image_twidere"/>
 
     <ImageView
         android:id="@+id/account_type"
@@ -76,20 +76,22 @@
         android:orientation="vertical"
         android:padding="@dimen/element_spacing_normal">
 
-        <TextView
+        <org.mariotaku.twidere.view.FixedTextView
             android:id="@android:id/text1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="?android:textColorPrimary"
             tools:text="Name"/>
 
-        <TextView
+        <org.mariotaku.twidere.view.FixedTextView
             android:id="@android:id/text2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:textColorSecondary"
             tools:text="\@screenname"/>

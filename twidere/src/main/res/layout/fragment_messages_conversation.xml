@@ -17,176 +17,168 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<FrameLayout
+<org.mariotaku.twidere.view.TintedStatusRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/conversationContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.MessagesConversationFragment">
+    android:visibility="visible"
+    app:setPadding="true"
+    tools:context=".fragment.message.MessagesConversationFragment">
+
+    <include
+        android:id="@+id/listContainer"
+        layout="@layout/fragment_content_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/inputPanel"
+        android:layout_below="@+id/toolbar"/>
+
+    <View
+        android:id="@+id/inputPanelShadowCompat"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/element_spacing_small"
+        android:layout_above="@+id/inputPanel"
+        android:background="@drawable/shadow_top"/>
 
     <RelativeLayout
-        android:id="@+id/conversation_container"
+        android:id="@+id/inputPanel"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        tools:visibility="visible">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="?android:colorBackground"
+        android:clipToPadding="false"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:outlineProvider="bounds"
+        android:padding="@dimen/element_spacing_normal"
+        tools:ignore="UnusedAttribute">
+
+        <org.mariotaku.twidere.view.IconActionView
+            android:id="@+id/addMedia"
+            android:layout_width="@dimen/element_size_normal"
+            android:layout_height="@dimen/element_size_normal"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginEnd="@dimen/element_spacing_normal"
+            android:layout_marginRight="@dimen/element_spacing_normal"
+            android:background="?selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="@string/add_image"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_action_gallery"
+            android:visibility="gone"
+            app:iabColor="?android:textColorSecondary"
+            tools:tint="?android:textColorSecondary"
+            tools:visibility="visible"/>
 
         <FrameLayout
-            android:id="@+id/list_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/input_panel">
+            android:id="@+id/sendMessageContainer"
+            android:layout_width="@dimen/element_size_normal"
+            android:layout_height="@dimen/element_size_normal"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true">
 
-            <org.mariotaku.twidere.view.ExtendedRecyclerView
-                android:id="@+id/recycler_view"
+            <org.mariotaku.twidere.view.IconActionView
+                android:id="@+id/sendMessage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scrollbars="vertical"/>
-
-        </FrameLayout>
-
-        <View
-            android:id="@+id/input_panel_shadow_compat"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/element_spacing_small"
-            android:layout_above="@+id/input_panel"
-            android:background="@drawable/shadow_top"/>
-
-        <RelativeLayout
-            android:id="@+id/input_panel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="?android:colorBackground"
-            android:gravity="bottom"
-            android:orientation="horizontal"
-            android:outlineProvider="bounds"
-            android:padding="@dimen/element_spacing_normal"
-            tools:ignore="UnusedAttribute">
-
-            <org.mariotaku.twidere.view.IconActionView
-                android:id="@+id/add_image"
-                android:layout_width="@dimen/element_size_normal"
-                android:layout_height="@dimen/element_size_normal"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:background="?selectableItemBackground"
+                android:background="?selectableItemBackgroundBorderless"
                 android:clickable="true"
-                android:color="?android:textColorSecondary"
-                android:contentDescription="@string/add_image"
+                android:contentDescription="@string/action_send"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_action_gallery"
-                android:visibility="gone"/>
+                android:src="@drawable/ic_action_send"
+                app:iabColor="?android:textColorSecondary"
+                tools:tint="?android:textColorSecondary"/>
 
-            <org.mariotaku.twidere.view.IconActionView
-                android:id="@+id/send"
-                android:layout_width="@dimen/element_size_normal"
-                android:layout_height="@dimen/element_size_normal"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:background="?selectableItemBackground"
-                android:clickable="true"
-                android:color="?android:textColorSecondary"
-                android:contentDescription="@string/send"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_action_send"/>
-
-            <org.mariotaku.messagebubbleview.library.MessageBubbleView
-                android:id="@+id/edit_text_container"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignWithParentIfMissing="true"
-                android:layout_gravity="end"
-                android:layout_toEndOf="@+id/add_image"
-                android:layout_toLeftOf="@+id/send"
-                android:layout_toRightOf="@+id/add_image"
-                android:layout_toStartOf="@+id/send"
-                app:bubbleColor="?messageBubbleColor"
-                app:caretHeight="8dp"
-                app:caretPosition="topEnd"
-                app:caretWidth="8dp"
-                app:cornerRadius="2dp">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="@dimen/element_size_normal"
-                    android:padding="@dimen/element_spacing_normal">
-
-                    <org.mariotaku.twidere.view.ComposeEditText
-                        android:id="@+id/edit_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:background="@null"
-                        android:completionThreshold="1"
-                        android:focusable="true"
-                        android:gravity="start|center_vertical"
-                        android:hint="@string/type_to_compose"
-                        android:inputType="textShortMessage|textMultiLine|textCapSentences"
-                        android:maxHeight="140dp"
-                        android:singleLine="false"
-                        android:textAppearance="?android:textAppearanceMedium"
-                        android:textColor="?android:textColorPrimary"
-                        android:textColorHint="?android:textColorTertiary">
-
-                        <requestFocus/>
-                    </org.mariotaku.twidere.view.ComposeEditText>
-
-                </FrameLayout>
-            </org.mariotaku.messagebubbleview.library.MessageBubbleView>
-
-        </RelativeLayout>
-    </RelativeLayout>
-
-    <FrameLayout
-        android:id="@+id/recipient_selector_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible"
-        tools:visibility="gone">
-
-        <ListView
-            android:id="@+id/users_search_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingLeft="@dimen/element_spacing_normal"
-            android:paddingRight="@dimen/element_spacing_normal"
-            android:scrollbarStyle="outsideInset"/>
-
-        <LinearLayout
-            android:id="@+id/users_search_empty"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/element_spacing_normal"
-            android:paddingRight="@dimen/element_spacing_normal">
-
-            <org.mariotaku.twidere.view.IconActionView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:color="?android:textColorSecondary"
-                android:src="@drawable/ic_info_search"/>
-
-            <TextView
-                android:id="@+id/users_search_empty_text"
+            <com.pnikosis.materialishprogress.ProgressWheel
+                android:id="@+id/sendProgress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="@dimen/element_spacing_normal"
-                android:gravity="center"
-                android:textAppearance="?android:textAppearanceMedium"/>
-        </LinearLayout>
+                android:visibility="gone"
+                app:matProg_barColor="?colorAccent"
+                app:matProg_barWidth="3dp"
+                app:matProg_progressIndeterminate="true"/>
+        </FrameLayout>
 
-        <ProgressBar
-            android:id="@+id/users_search_progress"
-            style="?android:progressBarStyleLarge"
+        <org.mariotaku.messagebubbleview.library.MessageBubbleView
+            android:id="@+id/editTextContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone"/>
-    </FrameLayout>
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_gravity="end"
+            android:layout_toEndOf="@+id/addMedia"
+            android:layout_toLeftOf="@+id/sendMessageContainer"
+            android:layout_toRightOf="@+id/addMedia"
+            android:layout_toStartOf="@+id/sendMessageContainer"
+            app:bubbleColor="?messageBubbleColor"
+            app:caretHeight="@dimen/element_spacing_normal"
+            app:caretPosition="topEnd"
+            app:caretWidth="@dimen/element_spacing_normal"
+            app:cornerRadius="2dp">
 
-</FrameLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:minHeight="@dimen/element_size_normal"
+                android:orientation="vertical"
+                android:padding="@dimen/element_spacing_normal">
+
+                <org.mariotaku.twidere.view.ComposeEditText
+                    android:id="@+id/editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@null"
+                    android:completionThreshold="1"
+                    android:focusable="true"
+                    android:gravity="start|center_vertical"
+                    android:hint="@string/type_to_compose"
+                    android:inputType="textShortMessage|textMultiLine|textCapSentences"
+                    android:maxHeight="140dp"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:textColor="?android:textColorPrimary"
+                    android:textColorHint="?android:textColorTertiary">
+
+                    <requestFocus/>
+                </org.mariotaku.twidere.view.ComposeEditText>
+
+                <org.mariotaku.twidere.view.ExtendedRecyclerView
+                    android:id="@+id/attachedMediaPreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="104dp"
+                    android:layout_marginTop="@dimen/element_spacing_normal"
+                    android:clipChildren="false"
+                    tools:listitem="@layout/grid_item_media_editor"/>
+
+            </LinearLayout>
+        </org.mariotaku.messagebubbleview.library.MessageBubbleView>
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:layout_alignParentTop="true"
+        android:background="?colorToolbar"
+        android:elevation="@dimen/toolbar_elevation"
+        app:contentInsetStart="0dp"
+        app:contentInsetStartWithNavigation="0dp"
+        app:popupTheme="?actionBarPopupTheme"
+        tools:elevation="0dp">
+
+        <include layout="@layout/layout_toolbar_message_conversation_title"/>
+    </android.support.v7.widget.Toolbar>
+
+    <View
+        android:id="@+id/windowOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:background="?android:windowContentOverlay"/>
+</org.mariotaku.twidere.view.TintedStatusRelativeLayout>

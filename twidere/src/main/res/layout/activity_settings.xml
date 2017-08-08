@@ -18,33 +18,35 @@
   -->
 
 <android.support.v4.widget.SlidingPaneLayout
-    android:id="@+id/sliding_pane"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/slidingPane"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <FrameLayout
-        android:layout_width="240dp"
+        android:layout_width="@dimen/settings_panel_width_entries"
         android:layout_height="match_parent"
         android:layout_gravity="start">
 
         <ListView
-            android:id="@+id/entries_list"
+            android:id="@+id/entriesList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clipToPadding="false"
             android:divider="@null"
             android:dividerHeight="0dp"
+            android:scrollbarStyle="insideInset"
             tools:listitem="@layout/list_item_preference_header_item"/>
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/detail_fragment_container"
+        android:id="@+id/detailFragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="end"
-        android:layout_marginLeft="@dimen/element_size_normal"
-        android:layout_marginStart="@dimen/element_size_normal"
+        android:layout_marginLeft="@dimen/settings_panel_margin_start_details"
+        android:layout_marginStart="@dimen/settings_panel_margin_start_details"
         android:clickable="true"
         tools:background="?android:colorBackground"/>
 </android.support.v4.widget.SlidingPaneLayout>

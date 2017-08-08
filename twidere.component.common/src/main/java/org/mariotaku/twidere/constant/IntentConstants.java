@@ -1,20 +1,19 @@
 /*
- * 				Twidere - Twitter client for Android
- * 
- *  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
- * 
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- * 
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- * 
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *         Twidere - Twitter client for Android
+ *
+ * Copyright 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.mariotaku.twidere.constant;
@@ -39,8 +38,6 @@ public interface IntentConstants {
     String INTENT_ACTION_PICK_DIRECTORY = INTENT_PACKAGE_PREFIX + "PICK_DIRECTORY";
     String INTENT_ACTION_EXTENSIONS = INTENT_PACKAGE_PREFIX + "EXTENSIONS";
     String INTENT_ACTION_CUSTOM_TABS = INTENT_PACKAGE_PREFIX + "CUSTOM_TABS";
-    String INTENT_ACTION_ADD_TAB = INTENT_PACKAGE_PREFIX + "ADD_TAB";
-    String INTENT_ACTION_EDIT_TAB = INTENT_PACKAGE_PREFIX + "EDIT_TAB";
     String INTENT_ACTION_SERVICE_COMMAND = INTENT_PACKAGE_PREFIX + "SERVICE_COMMAND";
     String INTENT_ACTION_REQUEST_PERMISSIONS = INTENT_PACKAGE_PREFIX + "REQUEST_PERMISSIONS";
     String INTENT_ACTION_SELECT_USER_LIST = INTENT_PACKAGE_PREFIX + "SELECT_USER_LIST";
@@ -49,7 +46,6 @@ public interface IntentConstants {
     String INTENT_ACTION_COMPOSE_PICK_IMAGE = INTENT_PACKAGE_PREFIX + "COMPOSE_PICK_IMAGE";
     String INTENT_ACTION_HIDDEN_SETTINGS_ENTRY = INTENT_PACKAGE_PREFIX + "HIDDEN_SETTINGS_ENTRY";
     String INTENT_ACTION_EMOJI_SUPPORT_ABOUT = INTENT_PACKAGE_PREFIX + "EMOJI_SUPPORT_ABOUT";
-    String INTENT_ACTION_PLUS_SERVICE_SIGN_IN = INTENT_PACKAGE_PREFIX + "PLUS_SERVICE_SIGN_IN";
 
     String INTENT_ACTION_EXTENSION_EDIT_IMAGE = INTENT_PACKAGE_PREFIX + "EXTENSION_EDIT_IMAGE";
     String INTENT_ACTION_EXTENSION_UPLOAD = INTENT_PACKAGE_PREFIX + "EXTENSION_UPLOAD";
@@ -74,20 +70,6 @@ public interface IntentConstants {
 
     String BROADCAST_NOTIFICATION_DELETED = INTENT_PACKAGE_PREFIX + "NOTIFICATION_DELETED";
 
-    String BROADCAST_USER_LIST_MEMBERS_DELETED = INTENT_PACKAGE_PREFIX + "USER_LIST_MEMBER_DELETED";
-    String BROADCAST_REFRESH_HOME_TIMELINE = INTENT_PACKAGE_PREFIX + "REFRESH_HOME_TIMELINE";
-    String BROADCAST_REFRESH_NOTIFICATIONS = INTENT_PACKAGE_PREFIX + "REFRESH_NOTIFICATIONS";
-    String BROADCAST_REFRESH_DIRECT_MESSAGES = INTENT_PACKAGE_PREFIX + "REFRESH_DIRECT_MESSAGES";
-    String BROADCAST_REFRESH_TRENDS = INTENT_PACKAGE_PREFIX + "REFRESH_TRENDS";
-    String BROADCAST_RESCHEDULE_HOME_TIMELINE_REFRESHING = INTENT_PACKAGE_PREFIX
-            + "RESCHEDULE_HOME_TIMELINE_REFRESHING";
-    String BROADCAST_RESCHEDULE_MENTIONS_REFRESHING = INTENT_PACKAGE_PREFIX
-            + "RESCHEDULE_MENTIONS_REFRESHING";
-    String BROADCAST_RESCHEDULE_DIRECT_MESSAGES_REFRESHING = INTENT_PACKAGE_PREFIX
-            + "RESCHEDULE_DIRECT_MESSAGES_REFRESHING";
-    String BROADCAST_RESCHEDULE_TRENDS_REFRESHING = INTENT_PACKAGE_PREFIX
-            + "RESCHEDULE_TRENDS_REFRESHING";
-
     String EXTRA_LATITUDE = "latitude";
     String EXTRA_LONGITUDE = "longitude";
     String EXTRA_URI = "uri";
@@ -95,6 +77,7 @@ public interface IntentConstants {
     String EXTRA_MENTIONS = "mentions";
     String EXTRA_ACCOUNT_KEY = "account_key";
     String EXTRA_ACCOUNT_HOST = "account_host";
+    String EXTRA_ACCOUNT_TYPE = "account_type";
     String EXTRA_ACCOUNT_KEYS = "account_keys";
     String EXTRA_PAGE = "page";
     String EXTRA_DATA = "data";
@@ -109,6 +92,7 @@ public interface IntentConstants {
     String EXTRA_SINCE_SORT_ID = "since_sort_id";
     String EXTRA_STATUS_ID = "status_id";
     String EXTRA_SCREEN_NAME = "screen_name";
+    String EXTRA_EXCLUDE_REPLIES = "exclude_replies";
     String EXTRA_SCREEN_NAMES = "screen_names";
     String EXTRA_LIST_NAME = "list_name";
     String EXTRA_GROUP_NAME = "group_name";
@@ -143,9 +127,12 @@ public interface IntentConstants {
     String EXTRA_IS_PUBLIC = "is_public";
     String EXTRA_USER = "user";
     String EXTRA_USERS = "users";
+    String EXTRA_OPEN_CONVERSATION = "open_conversation";
     String EXTRA_ITEMS = "items";
     String EXTRA_USER_LIST = "user_list";
+    String EXTRA_USER_LISTS = "user_lists";
     String EXTRA_APPEND_TEXT = "append_text";
+    String EXTRA_IS_REPLACE_MODE = "is_replace_mode";
     String EXTRA_NAME = "name";
     String EXTRA_POSITION = "position";
     String EXTRA_ARGUMENTS = "arguments";
@@ -156,9 +143,15 @@ public interface IntentConstants {
     String EXTRA_IMAGE_URI = "image_uri";
     String EXTRA_ACTIVATED_ONLY = "activated_only";
     String EXTRA_TAB_POSITION = "tab_position";
+    String EXTRA_TAB_ID = "tab_id";
     String EXTRA_OAUTH_VERIFIER = "oauth_verifier";
+    String EXTRA_CODE = "code";
+    String EXTRA_COOKIE = "cookie";
+    String EXTRA_ACCESS_TOKEN = "access_token";
     String EXTRA_REQUEST_TOKEN = "request_token";
     String EXTRA_REQUEST_TOKEN_SECRET = "request_token_secret";
+    String EXTRA_CLIENT_ID = "client_id";
+    String EXTRA_CLIENT_SECRET = "client_secret";
     String EXTRA_OMIT_INTENT_EXTRA = "omit_intent_extra";
     String EXTRA_COMMAND = "command";
     String EXTRA_WIDTH = "width";
@@ -169,9 +162,9 @@ public interface IntentConstants {
     String EXTRA_LOCATION = "location";
     String EXTRA_URL = "url";
     String EXTRA_PROFILE_URL = "profile_url";
-    String EXTRA_NEXT_PAGE = "next_page";
-    String EXTRA_NEXT_CURSOR = "next_cursor";
-    String EXTRA_PREV_CURSOR = "prev_cursor";
+    String EXTRA_NEXT_PAGINATION = "next_pagination";
+    String EXTRA_PREV_PAGINATION = "prev_pagination";
+    String EXTRA_PAGINATION = "pagination";
     String EXTRA_EXTRA_INTENT = "extra_intent";
     String EXTRA_IS_MY_ACCOUNT = "is_my_account";
     String EXTRA_TAB_TYPE = "tab_type";
@@ -181,6 +174,7 @@ public interface IntentConstants {
     String EXTRA_ALPHA_SLIDER = "alpha_slider";
     String EXTRA_OPEN_ACCOUNTS_DRAWER = "open_accounts_drawer";
     String EXTRA_RECIPIENT_ID = "recipient_id";
+    String EXTRA_CONVERSATION_ID = "conversation_id";
     String EXTRA_OFFICIAL_KEY_ONLY = "official_key_only";
     String EXTRA_SEARCH_ID = "search_id";
     String EXTRA_CLEAR_BUTTON = "clear_button";
@@ -197,9 +191,11 @@ public interface IntentConstants {
     String EXTRA_HIDE_QUOTES = "hide_quotes";
     String EXTRA_HIDE_REPLIES = "hide_replies";
     String EXTRA_MENTIONS_ONLY = "mentions_only";
-    String EXTRA_CHANGED = "changed";
-    String EXTRA_NOTIFY_CHANGE = "notify_change";
     String EXTRA_RESTART_ACTIVITY = "restart_activity";
+    String EXTRA_RECREATE_ACTIVITY = "recreate_activity";
+    String EXTRA_SHOULD_RECREATE = "should_recreate";
+    String EXTRA_SHOULD_RESTART = "should_restart";
+    String EXTRA_SHOULD_TERMINATE = "should_terminate";
     String EXTRA_FROM_USER = "from_user";
     String EXTRA_SHOW_MEDIA_PREVIEW = "show_media_preview";
     String EXTRA_SHOW_EXTRA_TYPE = "show_extra_type";
@@ -213,6 +209,24 @@ public interface IntentConstants {
     String EXTRA_IS_POSSIBLY_SENSITIVE = "is_possibly_sensitive";
     String EXTRA_REFERRAL = "referral";
     String EXTRA_LOADING_MORE = "loading_more";
+    String EXTRA_PINNED_STATUS_IDS = "pinned_status_ids";
+    String EXTRA_SHOULD_INIT_LOADER = "should_init_loader";
     String EXTRA_START_INTENT = "start_intent";
-    String EXTRA_SELECT_ONLY_ITEM = "select_only_item";
+    String EXTRA_SELECT_ONLY_ITEM_AUTOMATICALLY = "select_only_item_automatically";
+    String EXTRA_OBJECT = "object";
+    String EXTRA_SIMPLE_LAYOUT = "simple_layout";
+    String EXTRA_API_CONFIG = "api_config";
+    String EXTRA_COUNT = "count";
+    String EXTRA_REQUEST_CODE = "request_code";
+    String EXTRA_FROM_CACHE = "from_cache";
+    String EXTRA_SHOW_MY_LISTS = "show_my_lists";
+    String EXTRA_WOEID = "woeid";
+    String EXTRA_PLACE = "place";
+    String EXTRA_PLACE_NAME = "place_name";
+    String EXTRA_SCHEDULE_INFO = "schedule_info";
+    String EXTRA_VISIBILITY = "visibility";
+    String EXTRA_SELECTION = "selection";
+    String EXTRA_SAVE_DRAFT = "save_draft";
+    String EXTRA_HOST = "host";
+    String EXTRA_LOCAL = "local";
 }

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>ic_action_qr-mdpi</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Action-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic_action_qr-mdpi">
+            <polygon id="Shape" points="4 4 28 4 28 28 4 28"></polygon>
+            <g id="Group" transform="translate(6.000000, 6.000000)" fill="#FFFFFF">
+                <rect id="Rectangle-2" x="16" y="18" width="2" height="2"></rect>
+                <rect id="Rectangle-2" x="16" y="12" width="2" height="2"></rect>
+                <rect id="Rectangle-2" x="14" y="8" width="2" height="2"></rect>
+                <rect id="Rectangle-2" x="18" y="8" width="2" height="2"></rect>
+                <rect id="Rectangle-2" x="18" y="14" width="2" height="4"></rect>
+                <polygon id="Combined-Shape" points="12 18 16 18 16 14 14 14 14 16 10 16 10 20 12 20"></polygon>
+                <polygon id="Combined-Shape" points="11 8 11 14 9 14 9 10 7 10 7 8"></polygon>
+                <rect id="Rectangle-2" x="9" y="2" width="2" height="4"></rect>
+                <polygon id="Combined-Shape" points="4 12 4 8 2 8 2 10 0 10 0 12"></polygon>
+                <path d="M14,0 L20,0 L20,6 L14,6 L14,0 Z M16,2 L16,4 L18,4 L18,2 L16,2 Z" id="Combined-Shape"></path>
+                <path d="M0,0 L6,0 L6,6 L0,6 L0,0 Z M2,2 L2,4 L4,4 L4,2 L2,2 Z" id="Combined-Shape"></path>
+                <path d="M0,14 L6,14 L6,20 L0,20 L0,14 Z M2,16 L2,18 L4,18 L4,16 L2,16 Z" id="Combined-Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>

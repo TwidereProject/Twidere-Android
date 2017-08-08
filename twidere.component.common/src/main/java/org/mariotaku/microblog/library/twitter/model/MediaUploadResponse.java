@@ -1,28 +1,31 @@
 /*
- *                 Twidere - Twitter client for Android
+ *         Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
+ * Copyright 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.mariotaku.microblog.library.twitter.model;
 
+import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * Created by mariotaku on 15/5/7.
@@ -39,6 +42,7 @@ public class MediaUploadResponse extends TwitterResponseObject implements Twitte
     @JsonField(name = "video")
     Video video;
     @JsonField(name = "processing_info")
+    @Nullable
     ProcessingInfo processingInfo;
 
     public String getId() {
@@ -57,6 +61,7 @@ public class MediaUploadResponse extends TwitterResponseObject implements Twitte
         return video;
     }
 
+    @Nullable
     public ProcessingInfo getProcessingInfo() {
         return processingInfo;
     }
@@ -92,9 +97,9 @@ public class MediaUploadResponse extends TwitterResponseObject implements Twitte
     @JsonObject
     public static class Image {
 
-        @JsonField(name = "width")
+        @JsonField(name = "w")
         int width;
-        @JsonField(name = "height")
+        @JsonField(name = "h")
         int height;
         @JsonField(name = "image_type")
         String imageType;
@@ -160,6 +165,7 @@ public class MediaUploadResponse extends TwitterResponseObject implements Twitte
 
 
         @StringDef({State.PENDING, State.IN_PROGRESS, State.FAILED, State.SUCCEEDED})
+        @Retention(RetentionPolicy.SOURCE)
         public @interface State {
             String PENDING = "pending";
             String IN_PROGRESS = "in_progress";

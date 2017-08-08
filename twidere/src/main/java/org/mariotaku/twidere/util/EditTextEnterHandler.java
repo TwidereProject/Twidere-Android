@@ -43,7 +43,7 @@ public class EditTextEnterHandler implements View.OnKeyListener, OnEditorActionL
     private ArrayList<TextWatcher> textWatchers;
     private boolean appendText;
 
-    public EditTextEnterHandler(@Nullable EnterListener listener, boolean enabled) {
+    EditTextEnterHandler(@Nullable EnterListener listener, boolean enabled) {
         this.listener = listener;
         this.enabled = enabled;
     }

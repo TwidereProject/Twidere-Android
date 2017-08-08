@@ -3,32 +3,29 @@ IDEA additional info:
 Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
---- twidere/build.gradle	(date 1467162711000)
+--- twidere/build.gradle	(revision 892f68358e70e43bbb2a3bf50b39f7371c5c4671)
 +++ twidere/build.gradle	(revision )
-@@ -5,19 +5,19 @@
+@@ -7,7 +7,7 @@
  apply plugin: 'androidsvgdrawable'
  
  // START Non-FOSS component
--apply plugin: 'io.fabric'
-+//apply plugin: 'io.fabric'
+-apply plugin: 'com.github.triplet.play'
++//apply plugin: 'com.github.triplet.play'
  // END Non-FOSS component
  
  buildscript {
-     repositories {
-         // START Non-FOSS component
--        maven { url 'https://maven.fabric.io/public' }
-+//        maven { url 'https://maven.fabric.io/public' }
-         // END Non-FOSS component
-     }
+@@ -24,8 +24,8 @@
+         }
  
-     dependencies {
          // START Non-FOSS component
--        classpath 'io.fabric.tools:gradle:1.21.5'
-+//        classpath 'io.fabric.tools:gradle:1.21.5'
+-        classpath "com.github.triplet.gradle:play-publisher:${pluginVersions['PlayPublisher']}"
+-        classpath "com.google.gms:google-services:${pluginVersions['PlayServices']}"
++//        classpath "com.github.triplet.gradle:play-publisher:${pluginVersions['PlayPublisher']}"
++//        classpath "com.google.gms:google-services:${pluginVersions['PlayServices']}"
          // END Non-FOSS component
      }
  }
-@@ -47,7 +47,7 @@
+@@ -51,7 +51,7 @@
  
      productFlavors {
          // START Non-FOSS component
@@ -37,37 +34,40 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
          // END Non-FOSS component
          fdroid {}
      }
-@@ -77,7 +77,7 @@
- repositories {
-     maven { url 'https://s3.amazonaws.com/repo.commonsware.com' }
-     // START Non-FOSS component
--    maven { url 'https://maven.fabric.io/public' }
-+//    maven { url 'https://maven.fabric.io/public' }
-     // END Non-FOSS component
-     flatDir { dirs "$projectDir/lib" }
- }
-@@ -100,11 +100,11 @@
+@@ -96,14 +96,14 @@
      compile project(':twidere.component.nyan')
  
      // START Non-FOSS component
--    googleCompile 'com.google.android.gms:play-services-maps:9.0.2'
--    googleCompile 'com.google.android.gms:play-services-auth:9.0.2'
--    googleCompile 'com.google.maps.android:android-maps-utils:0.4.3'
--    googleCompile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') { transitive = true }
--    googleCompile ':YouTubeAndroidPlayerApi:1.2.2@jar'
-+//    googleCompile 'com.google.android.gms:play-services-maps:9.0.2'
-+//    googleCompile 'com.google.android.gms:play-services-auth:9.0.2'
-+//    googleCompile 'com.google.maps.android:android-maps-utils:0.4.3'
-+//    googleCompile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') { transitive = true }
-+//    googleCompile ':YouTubeAndroidPlayerApi:1.2.2@jar'
+-    googleCompile "com.google.android.gms:play-services-maps:${libVersions['PlayServices']}"
+-    googleCompile "com.google.android.gms:play-services-auth:${libVersions['PlayServices']}"
+-    googleCompile "com.google.maps.android:android-maps-utils:${libVersions['MapsUtils']}"
+-    googleCompile "com.anjlab.android.iab.v3:library:${libVersions['IABv3']}"
+-    googleCompile "com.dropbox.core:dropbox-core-sdk:${libVersions['DropboxCoreSdk']}"
+-    googleCompile("com.google.apis:google-api-services-drive:${libVersions['GoogleDriveApi']}") {
+-        exclude group: 'org.apache.httpcomponents'
+-    }
++//    googleCompile "com.google.android.gms:play-services-maps:${libVersions['PlayServices']}"
++//    googleCompile "com.google.android.gms:play-services-auth:${libVersions['PlayServices']}"
++//    googleCompile "com.google.maps.android:android-maps-utils:${libVersions['MapsUtils']}"
++//    googleCompile "com.anjlab.android.iab.v3:library:${libVersions['IABv3']}"
++//    googleCompile "com.dropbox.core:dropbox-core-sdk:${libVersions['DropboxCoreSdk']}"
++//    googleCompile("com.google.apis:google-api-services-drive:${libVersions['GoogleDriveApi']}") {
++//        exclude group: 'org.apache.httpcomponents'
++//    }
      // END Non-FOSS component
  
-     fdroidCompile 'org.osmdroid:osmdroid-android:5.1'
-@@ -199,5 +199,5 @@
+     fdroidCompile "org.osmdroid:osmdroid-android:${libVersions['OSMDroid']}"
+@@ -231,8 +231,8 @@
  }
  
  // START Non-FOSS component
--apply plugin: 'com.google.gms.google-services'
-+//apply plugin: 'com.google.gms.google-services'
+-play {
+-    jsonFile = rootProject.file('private/google_play_publish.json')
+-    track = 'beta'
+-}
++//play {
++//    jsonFile = rootProject.file('private/google_play_publish.json')
++//    track = 'beta'
++//}
  // END Non-FOSS component
 \ No newline at end of file

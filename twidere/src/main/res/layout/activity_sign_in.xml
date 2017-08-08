@@ -32,71 +32,62 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/username_password"
+            android:id="@+id/usernamePasswordContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="8dp">
 
-            <EditText
-                android:id="@+id/username"
+            <org.mariotaku.twidere.view.FixedEditText
+                android:id="@+id/editUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/username"
+                android:hint="@string/label_username"
                 android:inputType="textEmailAddress"
-                android:singleLine="true"
-                android:typeface="normal"/>
+                android:maxLines="1"
+                android:typeface="normal"
+                app:backgroundTint="?colorAccent"/>
 
-            <EditText
-                android:id="@+id/password"
+            <org.mariotaku.twidere.view.FixedEditText
+                android:id="@+id/editPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="@string/password"
+                android:hint="@string/label_password"
                 android:inputType="textPassword"
-                android:singleLine="true"
-                android:typeface="normal"/>
+                android:maxLines="1"
+                android:typeface="normal"
+                app:backgroundTint="?colorAccent"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/sign_in_sign_up"
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/signIn"
+            style="?android:buttonStyleSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clipChildren="false"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <android.support.v7.widget.AppCompatButton
-                android:id="@+id/sign_up"
-                style="?android:buttonStyleSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:minHeight="@dimen/element_size_normal"
-                android:text="@string/register"/>
-
-            <android.support.v7.widget.AppCompatButton
-                android:id="@+id/sign_in"
-                style="?android:buttonStyleSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:minHeight="@dimen/element_size_normal"
-                android:text="@string/sign_in"
-                app:backgroundTint="@color/material_light_green"/>
-
-        </LinearLayout>
+            android:minHeight="@dimen/element_size_normal"
+            android:text="@string/action_sign_in"
+            app:backgroundTint="@color/material_light_green"/>
 
         <Button
-            android:id="@+id/password_sign_in"
-            style="?android:borderlessButtonStyle"
+            android:id="@+id/signUp"
+            style="?borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:clickable="true"
-            android:gravity="center_vertical"
-            android:minHeight="36dp"
-            android:text="@string/password_sign_in_twitter_only"
+            android:gravity="start|center_vertical"
+            android:minHeight="@dimen/element_spacing_xsmall"
+            android:text="@string/action_register"
             android:textAppearance="?android:textAppearanceSmall"/>
+
+        <Button
+            android:id="@+id/passwordSignIn"
+            style="?borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start|center_vertical"
+            android:minHeight="@dimen/element_size_xsmall"
+            android:text="@string/label_password_sign_in"
+            android:textAppearance="?android:textAppearanceSmall"/>
+
     </LinearLayout>
 </ScrollView>

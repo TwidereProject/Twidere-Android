@@ -12,7 +12,8 @@
     <SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="preload_wifi_only"
-        android:title="@string/preload_wifi_only"/>
+        android:summary="@string/preference_summary_media_preload_non_metered_network"
+        android:title="@string/preference_title_media_preload_non_metered_network"/>
 
     <SwitchPreferenceCompat
         android:defaultValue="false"
@@ -22,7 +23,7 @@
 
     <Preference
         android:fragment="org.mariotaku.twidere.fragment.SettingsDetailsFragment"
-        android:title="@string/advanced">
+        android:title="@string/preference_title_advanced">
         <extra
             android:name="resid"
             android:value="@xml/preferences_advanced_network"/>

@@ -78,7 +78,7 @@ public class SavedSearchesAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public boolean removeItem(UserKey accountId, long searchId) {
+    public boolean removeItem(UserKey accountKey, long searchId) {
         if (mData == null) return false;
         for (int i = 0, mDataSize = mData.size(); i < mDataSize; i++) {
             SavedSearch search = mData.get(i);

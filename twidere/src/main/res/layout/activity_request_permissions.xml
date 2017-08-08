@@ -45,7 +45,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@android:id/icon"
+                    android:id="@+id/iconView"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
                     android:layout_margin="4dp"
@@ -58,25 +58,25 @@
                     android:gravity="center_vertical"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@android:id/text1"
+                    <org.mariotaku.twidere.view.FixedTextView
+                        android:id="@+id/nameView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:singleLine="true"
+                        android:maxLines="1"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textStyle="bold"/>
 
-                    <TextView
-                        android:id="@android:id/text2"
+                    <org.mariotaku.twidere.view.FixedTextView
+                        android:id="@+id/descriptionView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:singleLine="true"
+                        android:maxLines="1"
                         android:textAppearance="?android:attr/textAppearanceSmall"/>
                 </LinearLayout>
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/message"
+            <org.mariotaku.twidere.view.FixedTextView
+                android:id="@+id/messageView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="16dp"
@@ -87,7 +87,7 @@
     </ScrollView>
 
     <LinearLayout
-        android:id="@+id/buttons"
+        android:id="@+id/buttonsContainer"
         android:layout_width="match_parent"
         android:layout_height="@dimen/button_bar_height"
         android:divider="?android:dividerHorizontal"
@@ -101,7 +101,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/accept_permission_request"/>
+            android:text="@string/action_accept_permission_request"/>
 
         <Button
             android:id="@+id/deny"

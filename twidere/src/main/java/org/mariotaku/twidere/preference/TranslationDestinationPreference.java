@@ -25,6 +25,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.Preference;
 import android.text.TextUtils;
@@ -41,6 +42,7 @@ import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.Language;
 import org.mariotaku.microblog.library.twitter.model.ResponseList;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.extension.DialogExtensionsKt;
 import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 
 import java.text.Collator;
@@ -125,8 +127,9 @@ public class TranslationDestinationPreference extends Preference implements OnCl
             return -1;
         }
 
+        @NonNull
         @Override
-        public View getView(final int position, final View convertView, final ViewGroup parent) {
+        public View getView(final int position, final View convertView, @NonNull final ViewGroup parent) {
             final View view = super.getView(position, convertView, parent);
             final TextView text = (TextView) (view instanceof TextView ? view : view.findViewById(android.R.id.text1));
             final Language item = getItem(position);
@@ -162,7 +165,7 @@ public class TranslationDestinationPreference extends Preference implements OnCl
 
         @Override
         protected ResponseList<Language> doInBackground(final Object... args) {
-            final MicroBlog twitter = MicroBlogAPIFactory.getDefaultTwitterInstance(getContext(), false);
+            final MicroBlog twitter = MicroBlogAPIFactory.getDefaultTwitterInstance(getContext());
             if (twitter == null) return null;
             try {
                 mSelectedLanguageCode = twitter.getAccountSettings().getLanguage();
@@ -187,10 +190,17 @@ public class TranslationDestinationPreference extends Preference implements OnCl
                     TranslationDestinationPreference.this);
             selectorBuilder.setNegativeButton(android.R.string.cancel, null);
             mDialog = selectorBuilder.create();
-            final ListView lv = mDialog.getListView();
-            if (lv != null) {
-                lv.setFastScrollEnabled(true);
-            }
+            mDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(final DialogInterface dialog) {
+                    final AlertDialog alertDialog = (AlertDialog) dialog;
+                    DialogExtensionsKt.applyTheme(alertDialog);
+                    final ListView lv = alertDialog.getListView();
+                    if (lv != null) {
+                        lv.setFastScrollEnabled(true);
+                    }
+                }
+            });
             mDialog.show();
         }
 
@@ -199,7 +209,7 @@ public class TranslationDestinationPreference extends Preference implements OnCl
             if (mProgress.isShowing()) {
                 mProgress.dismiss();
             }
-            mProgress.setMessage(getContext().getString(R.string.please_wait));
+            mProgress.setMessage(getContext().getString(R.string.message_please_wait));
             mProgress.setOnCancelListener(this);
             mProgress.show();
         }

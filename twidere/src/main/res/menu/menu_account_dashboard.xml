@@ -6,7 +6,7 @@
         <item
             android:id="@id/search"
             android:icon="@drawable/ic_action_search"
-            android:title="@string/search"/>
+            android:title="@string/action_search"/>
         <item
             android:id="@id/interactions"
             android:icon="@drawable/ic_action_notification"
@@ -14,11 +14,17 @@
         <item
             android:id="@id/messages"
             android:icon="@drawable/ic_action_message"
-            android:title="@string/direct_messages"/>
+            android:title="@string/title_direct_messages"/>
         <item
             android:id="@id/favorites"
+            android:enabled="false"
+            android:icon="@drawable/ic_action_star"
+            android:title="@string/title_favorites"
+            android:visible="false"/>
+        <item
+            android:id="@id/likes"
             android:icon="@drawable/ic_action_heart"
-            android:title="@string/likes"/>
+            android:title="@string/title_likes"/>
         <item
             android:id="@id/lists"
             android:icon="@drawable/ic_action_list"
@@ -30,7 +36,11 @@
         <item
             android:id="@id/public_timeline"
             android:icon="@drawable/ic_action_quote"
-            android:title="@string/public_timeline"/>
+            android:title="@string/title_public_timeline"/>
+        <item
+            android:id="@+id/network_public_timeline"
+            android:icon="@drawable/ic_action_web"
+            android:title="@string/title_network_public_timeline"/>
     </group>
     <group
         android:id="@+id/app_menu"
@@ -38,21 +48,19 @@
         <item
             android:id="@id/accounts"
             android:icon="@drawable/ic_action_accounts"
-            android:title="@string/accounts"/>
+            android:title="@string/title_accounts"/>
         <item
             android:id="@id/drafts"
             android:icon="@drawable/ic_action_draft"
-            android:title="@string/drafts"/>
+            android:title="@string/title_drafts"/>
         <item
             android:id="@id/filters"
             android:icon="@drawable/ic_action_speaker_muted"
-            android:title="@string/filters"/>
+            android:title="@string/title_filters"/>
         <item
-            android:id="@id/plus_service"
-            android:enabled="@bool/is_debug"
+            android:id="@id/premium_features"
             android:icon="@drawable/ic_action_infinity"
-            android:title="@string/plus_service_name"
-            android:visible="@bool/is_debug"/>
+            android:title="@string/title_premium_features_name"/>
         <item
             android:id="@id/settings"
             android:icon="@drawable/ic_action_settings"

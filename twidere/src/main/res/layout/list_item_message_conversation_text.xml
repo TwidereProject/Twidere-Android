@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Twidere - Twitter client for Android
+  ~
+  ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/element_spacing_normal">
+
+    <org.mariotaku.twidere.view.FixedTextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="@dimen/element_spacing_normal"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:textColor="?android:textColorTertiary"
+        tools:text="Yesterday"/>
+
+    <RelativeLayout
+        android:id="@+id/messageContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <org.mariotaku.twidere.view.ProfileImageView
+            android:id="@+id/profileImage"
+            android:layout_width="@dimen/profile_image_size_direct_message"
+            android:layout_height="@dimen/profile_image_size_direct_message"
+            android:layout_alignBottom="@+id/messageBubble"
+            tools:src="@drawable/ic_profile_image_twidere"/>
+
+        <org.mariotaku.messagebubbleview.library.MessageBubbleView
+            android:id="@+id/messageBubble"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/profileImage"
+            android:layout_toRightOf="@+id/profileImage"
+            android:clickable="true"
+            android:minHeight="@dimen/profile_image_size_direct_message"
+            android:minWidth="@dimen/element_size_normal"
+            app:bubbleColor="?messageBubbleColor"
+            app:caretHeight="@dimen/element_spacing_normal"
+            app:caretPosition="bottomStart"
+            app:caretWidth="@dimen/element_spacing_normal"
+            app:cornerRadius="2dp">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/mediaPreview"
+                android:padding="@dimen/element_spacing_normal">
+
+                <org.mariotaku.twidere.view.CardMediaContainer
+                    android:id="@+id/mediaPreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/element_spacing_normal"
+                    android:visibility="gone">
+
+                    <include layout="@layout/layout_card_media_preview"/>
+
+                </org.mariotaku.twidere.view.CardMediaContainer>
+
+                <org.mariotaku.twidere.view.TimelineContentTextView
+                    android:id="@+id/text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/mediaPreview"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="?android:attr/textColorPrimary"
+                    tools:text="@string/sample_status_text"/>
+
+            </RelativeLayout>
+        </org.mariotaku.messagebubbleview.library.MessageBubbleView>
+
+        <org.mariotaku.twidere.view.FixedTextView
+            android:id="@+id/nameTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/messageBubble"
+            android:layout_alignStart="@+id/messageBubble"
+            android:layout_below="@+id/messageBubble"
+            android:layout_margin="@dimen/element_spacing_normal"
+            android:textColor="?android:attr/textColorTertiary"
+            tools:text="12:00"/>
+    </RelativeLayout>
+</LinearLayout>

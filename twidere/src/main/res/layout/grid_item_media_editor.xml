@@ -24,7 +24,7 @@
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     tools:layout_gravity="center"
-    tools:layout_height="128dp">
+    tools:showIn="@layout/activity_compose">
 
     <org.mariotaku.twidere.view.HighlightImageView
         android:id="@+id/image"
@@ -32,6 +32,21 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         tools:src="@drawable/nyan_stars_background_tile"/>
+
+    <ProgressBar
+        android:id="@+id/loadProgress"
+        style="?android:progressBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <ImageView
+        android:id="@+id/videoIndicator"
+        android:layout_width="@dimen/element_size_msmall"
+        android:layout_height="@dimen/element_size_msmall"
+        android:layout_gravity="center"
+        android:contentDescription="@string/label_video"
+        android:src="@drawable/ic_card_media_play"/>
 
     <com.lnikkila.extendedtouchview.ExtendedTouchView
         android:id="@+id/remove"
@@ -68,7 +83,7 @@
         android:layout_marginRight="@dimen/element_spacing_minus_mlarge"
         android:background="?selectableItemBackgroundBorderless"
         android:clickable="true"
-        android:contentDescription="@string/edit"
+        android:contentDescription="@string/action_edit"
         app:touchHeight="@dimen/element_size_normal"
         app:touchWidth="@dimen/element_size_normal">
 
@@ -76,7 +91,7 @@
             android:layout_width="@dimen/element_size_small"
             android:layout_height="@dimen/element_size_small"
             android:layout_gravity="center"
-            android:contentDescription="@string/edit"
+            android:contentDescription="@string/action_edit"
             android:scaleType="center"
             android:src="@drawable/ic_btn_grid_item_edit"/>
     </com.lnikkila.extendedtouchview.ExtendedTouchView>

@@ -18,13 +18,13 @@
   <!-- 135 Could not authenticate you: Corresponds with HTTP 401 - it means that your oauth_timestamp is either ahead or behind our acceptable range -->
   <string name="error_twitter_135">لطفاً ساعت سامانه‌تان را بررسی کنید.</string>
   <!-- 136 Blocked by user while retweeting: You have been blocked from retweeting this user's tweets at their request. -->
-  <string name="error_twitter_136">توسّط این کاربر مسدود شده‌اید.</string>
+  <string name="error_twitter_136">این کاربر را مسدود کرده‌اید.</string>
   <string name="error_twitter_139">این توییت را پیش‌تر برگزیده بودید.</string>
   <!-- 144 No status found with that ID. -->
   <string name="error_twitter_144">توییت پیدا نشد. شاید حذف شده است.</string>
   <string name="error_twitter_161">پیش‌تر درخواست دنیال کردن این کاربر را داده بودید.</string>
   <!-- 172 You have been blocked from following this account at the request of the user. -->
-  <string name="error_twitter_162">این کاربر را مسدود کرده‌اید.</string>
+  <string name="error_twitter_162">توسّط این کاربر مسدود شده‌اید.</string>
   <!-- 172 There was an error creating your search: Corresponds with HTTP 403 - The saved search already exists. -->
   <string name="error_twitter_172">این جست‌وجو را پیش‌تر ذخیره کرده‌اید.</string>
   <!-- 179 Sorry, you are not authorized to see this status: Corresponds with HTTP 403 - thrown when a Tweet cannot be viewed by the authenticating user, usually due to the tweet's author having protected their tweets. -->

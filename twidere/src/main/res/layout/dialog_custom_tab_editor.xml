@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/element_spacing_large">
+
+    <LinearLayout
+        android:id="@+id/nameIconContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/tabIconSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/element_spacing_normal"
+            tools:listitem="@layout/spinner_item_custom_tab_icon"/>
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/tabName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/element_spacing_normal"
+            android:hint="@string/tab_editor_hint_name"
+            android:maxLines="1"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            app:met_baseColor="?android:colorForeground"
+            app:met_floatingLabelAlwaysShown="true"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/accountContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <org.mariotaku.twidere.view.FixedTextView
+            android:id="@+id/sectionHeader"
+            style="?android:listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/label_account"
+            android:textColor="?colorAccent"
+            tools:showIn="@layout/dialog_custom_tab_editor"/>
+
+        <Spinner
+            android:id="@+id/accountSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/element_spacing_normal"
+            tools:listitem="@layout/list_item_two_line_small"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/extraConfigContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"/>
+</LinearLayout>

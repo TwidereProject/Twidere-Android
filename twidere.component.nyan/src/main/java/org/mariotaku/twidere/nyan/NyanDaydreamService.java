@@ -62,7 +62,7 @@ public class NyanDaydreamService extends DreamService implements NyanConstants,
     }
 
     @Override
-    public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
+    public void onSharedPreferenceChanged(final SharedPreferences preferences, final String key) {
         if (KEY_LIVE_WALLPAPER_SCALE.equals(key)) {
             updateView();
         }

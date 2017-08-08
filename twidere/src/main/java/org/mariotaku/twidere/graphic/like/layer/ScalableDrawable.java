@@ -33,21 +33,21 @@ public class ScalableDrawable extends Drawable implements Drawable.Callback {
 
     // overrides from Drawable.Callback
     @Override
-    public void invalidateDrawable(Drawable who) {
+    public void invalidateDrawable(@NonNull Drawable who) {
         if (getCallback() != null) {
             getCallback().invalidateDrawable(this);
         }
     }
 
     @Override
-    public void scheduleDrawable(Drawable who, Runnable what, long when) {
+    public void scheduleDrawable(@NonNull Drawable who, @NonNull Runnable what, long when) {
         if (getCallback() != null) {
             getCallback().scheduleDrawable(this, what, when);
         }
     }
 
     @Override
-    public void unscheduleDrawable(Drawable who, Runnable what) {
+    public void unscheduleDrawable(@NonNull Drawable who, @NonNull Runnable what) {
         if (getCallback() != null) {
             getCallback().unscheduleDrawable(this, what);
         }
@@ -55,7 +55,7 @@ public class ScalableDrawable extends Drawable implements Drawable.Callback {
 
     // overrides from Drawable
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(@NonNull Canvas canvas) {
         if (mState.getScale() <= 0) return;
         mState.mDrawable.draw(canvas);
     }
@@ -126,6 +126,7 @@ public class ScalableDrawable extends Drawable implements Drawable.Callback {
         return mState.mDrawable.getIntrinsicHeight();
     }
 
+    @NonNull
     @Override
     public Drawable mutate() {
         if (!mMutated && super.mutate() == this) {

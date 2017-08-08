@@ -1,20 +1,19 @@
 /*
- * Twidere - Twitter client for Android
+ *         Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
+ * Copyright 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.mariotaku.microblog.library.twitter.model;
@@ -23,7 +22,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringDef;
-import android.text.TextUtils;
 
 import com.bluelinelabs.logansquare.JsonMapper;
 import com.bluelinelabs.logansquare.LoganSquare;
@@ -246,39 +244,11 @@ public class Activity extends TwitterResponseObject implements TwitterResponse, 
         }
     }
 
-    public static Activity fromMention(String accountId, Status status) {
-        final Activity activity = new Activity();
-
-        activity.maxPosition = activity.minPosition = status.getId();
-        activity.maxSortPosition = activity.minSortPosition = status.getSortId();
-        activity.createdAt = status.getCreatedAt();
-
-        if (TextUtils.equals(status.getInReplyToUserId(), accountId)) {
-            activity.action = Action.REPLY;
-            activity.targetStatuses = new Status[]{status};
-
-            //TODO set target statuses (in reply to status)
-            activity.targetObjectStatuses = new Status[0];
-        } else if (status.quotedStatus != null && TextUtils.equals(status.quotedStatus.user.getId(),
-                accountId)) {
-            activity.action = Action.QUOTE;
-            activity.targetStatuses = new Status[]{status};
-            activity.targetObjectStatuses = new Status[0];
-        } else {
-            activity.action = Action.MENTION;
-            activity.targetUsers = new User[0];
-            activity.targetObjectStatuses = new Status[]{status};
-        }
-        activity.sourcesSize = 1;
-        activity.sources = new User[]{status.getUser()};
-        return activity;
-    }
-
     @StringDef({Action.FAVORITE, Action.FOLLOW, Action.MENTION, Action.REPLY, Action.RETWEET,
             Action.LIST_MEMBER_ADDED, Action.LIST_CREATED, Action.FAVORITED_RETWEET,
             Action.RETWEETED_RETWEET, Action.QUOTE, Action.RETWEETED_MENTION,
             Action.FAVORITED_MENTION, Action.JOINED_TWITTER, Action.MEDIA_TAGGED,
-            Action.FAVORITED_MEDIA_TAGGED, Action.RETWEETED_MEDIA_TAGGED})
+            Action.FAVORITED_MEDIA_TAGGED, Action.RETWEETED_MEDIA_TAGGED, Action.INVALID})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Action {
         String FAVORITE = "favorite";
@@ -313,6 +283,7 @@ public class Activity extends TwitterResponseObject implements TwitterResponse, 
         String MEDIA_TAGGED = "media_tagged";
         String FAVORITED_MEDIA_TAGGED = "favorited_media_tagged";
         String RETWEETED_MEDIA_TAGGED = "retweeted_media_tagged";
+        String INVALID = "invalid";
 
         String[] MENTION_ACTIONS = {MENTION, REPLY, QUOTE};
     }

@@ -3,7 +3,7 @@
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:title="@string/refresh">
+    android:title="@string/action_refresh">
 
     <org.mariotaku.twidere.preference.AutoRefreshAccountsListPreference
         android:key="cat_auto_refresh"
@@ -11,10 +11,10 @@
         app:switchDefault="true"
         app:switchKey="auto_refresh"/>
 
-    <PreferenceCategory
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
         android:key="cat_general"
         android:title="@string/general">
-        <org.mariotaku.twidere.preference.EntrySummaryListPreference
+        <org.mariotaku.twidere.preference.RefreshIntervalPreference
             android:defaultValue="15"
             android:entries="@array/entries_refresh_interval"
             android:entryValues="@array/values_refresh_interval"
@@ -24,7 +24,19 @@
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="stop_auto_refresh_when_battery_low"
-            android:title="@string/stop_auto_refresh_when_battery_low"/>
+            android:summary="@string/preference_summary_auto_refresh_power_saving"
+            android:title="@string/preference_title_auto_refresh_power_saving"/>
+
+        <SwitchPreferenceCompat
+            android:defaultValue="@bool/use_legacy_refresh_service"
+            android:enabled="@bool/use_job_refresh_service"
+            android:key="auto_refresh_compatibility_mode"
+            android:summary="@string/preference_summary_auto_refresh_compatibility_mode"
+            android:title="@string/preference_title_auto_refresh_compatibility_mode">
+            <extra
+                android:name="should_terminate"
+                android:value="true"/>
+        </SwitchPreferenceCompat>
 
         <org.mariotaku.twidere.preference.HomeRefreshContentPreference
             android:key="home_refresh"
@@ -40,6 +52,6 @@
             android:key="refresh_after_tweet"
             android:summary="@string/refresh_after_status_updated_summary"
             android:title="@string/refresh_after_status_updated"/>
-    </PreferenceCategory>
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 
 </PreferenceScreen>

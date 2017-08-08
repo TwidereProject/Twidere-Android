@@ -28,7 +28,7 @@ public class ParticleLayerDrawable extends AnimationLayerDrawable {
     }
 
     @Override
-    public void draw(final Canvas canvas) {
+    public void draw(@NonNull final Canvas canvas) {
         final ParticleLayerState state = (ParticleLayerState) mState;
         final float progress = getProgress();
         if (progress < 0) return;

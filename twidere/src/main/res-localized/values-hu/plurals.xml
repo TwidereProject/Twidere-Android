@@ -43,8 +43,8 @@
     <item quantity="other"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> tweet naponta)</item>
   </plurals>
   <plurals name="N_others">
-    <item quantity="one">és még valaki</item>
-    <item quantity="other">és még <xliff:g id="count">%d</xliff:g></item>
+    <item quantity="one">további</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> felhasználó</item>
   </plurals>
   <plurals name="N_statuses">
     <item quantity="one"><xliff:g id="count">%d</xliff:g> tweet</item>
@@ -52,7 +52,7 @@
   </plurals>
   <plurals name="N_favorites">
     <item quantity="one"><xliff:g id="count">%d</xliff:g> kedvelés</item>
-    <item quantity="other"><xliff:g id="count">%d</xliff:g> kedvelés</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> kedvenc</item>
   </plurals>
   <plurals name="N_likes">
     <item quantity="one"><xliff:g id="count">%d</xliff:g> kedvelés</item>

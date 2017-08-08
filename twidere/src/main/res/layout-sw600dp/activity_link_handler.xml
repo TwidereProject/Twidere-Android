@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.mariotaku.twidere.view.TintedStatusRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/contentView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:setPadding="false">
+
+    <FrameLayout
+        android:id="@+id/contentFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"/>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:layout_alignParentTop="true"
+        android:background="?colorToolbar"
+        android:elevation="@dimen/toolbar_elevation"
+        app:popupTheme="?actionBarPopupTheme"
+        tools:elevation="0dp"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/actionsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/element_spacing_large"
+        android:clickable="true"
+        android:src="@drawable/ic_action_status_compose"
+        app:backgroundTint="?colorToolbar"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"/>
+
+    <View
+        android:id="@+id/windowOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:background="?android:windowContentOverlay"/>
+
+</org.mariotaku.twidere.view.TintedStatusRelativeLayout>

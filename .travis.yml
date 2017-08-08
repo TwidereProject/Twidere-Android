@@ -1,62 +1,90 @@
 language: android
+
+sudo: required
+
+jdk: oraclejdk8
+
 android:
   components:
-    # Uncomment the lines below if you want to
-    # use the latest revision of Android SDK Tools
-    - platform-tools
     - tools
-
-    # The BuildTools version used by your project
-    - build-tools-24.0.0
-
-    # The SDK version used to compile your project
-    - android-24
+    - tools # To fix https://github.com/travis-ci/travis-ci/issues/6040
+    - platform-tools
+    - build-tools-26.0.0
+    - android-26
 
     # Additional components
-    - extra-google-google_play_services
-    - extra-google-m2repository
-    - extra-android-m2repository
+    - extra-google-google_play_services-41
+    - extra-google-m2repository-54
+    - extra-android-m2repository-47.0.0
 
-    # Specify at least one system image,
-    # if you need to run emulator(s) during your tests
-    # - sys-img-armeabi-v7a-android-19
-    # - sys-img-x86-android-17
-sudo: false
-
-jdk:
-  - oraclejdk8
+  licenses:
+    - 'android-sdk-preview-license-.+'
+    - 'android-sdk-license-.+'
+    - 'google-gdk-license-.+'
 
 env:
   global:
-    MALLOC_ARENA_MAX=2
-    GRADLE_OPTS=-Xmx2048m -Dorg.gradle.parallel=false
+    # COMPONENT_GOOGLE_REPO
+    - secure: "OQ/wkORxY2qv4CmAdMxyW4ihRt5GRyxKxQRZpsdjMbwIKf3DlY6vBoNIEQ46sRRLAKOzkQ3LirodbWRCBlDN9WFw4XRsLTveqqtslMGeLf04peazXMIa6rJ22BCDGEmnzRNx6r3JRb9wEK1plNv4u4G9DgQ7ShzbwdZ8A5grlg8="
 
 addons:
   apt:
     packages:
+      - curl
       - tar
       - gzip
       - patch
+      - openssh-client
+      - git
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.m2/
 
 before_install:
-  - openssl aes-256-cbc -K $encrypted_9b8203f9524d_key -iv $encrypted_9b8203f9524d_iv -in travis/configs/twidere_private_config.tar.gz.enc -out travis/configs/twidere_private_config.tar.gz -d
+  - yes y | $ANDROID_HOME/tools/bin/sdkmanager --update
+  - yes y | $ANDROID_HOME/tools/bin/sdkmanager --licenses
+  - ./travis/scripts/decode_private_configs.sh
 
 install:
-  # Extracts build configs into source tree
-  - tar zxf travis/configs/twidere_private_config.tar.gz
+  - ./travis/scripts/fetch_private_files.sh
 
 before_script:
   # Validate if patches work
-  - patch --dry-run -d twidere < twidere/patches/remove_closed_source_dependencies.patch
+  - ./travis/scripts/patch_sources.sh
+  # Validate if Google components fetched successfully
+  - ./travis/scripts/test_private_files.sh
 
-script: ./gradlew build --no-daemon --stacktrace
+script:
+  - ./gradlew clean build
+
+after_failure:
+  - ./travis/scripts/upload_error_logs.sh
 
 deploy:
-  provider: releases
-  api_key:
-    secure: WKtKwda3hegqO9QVujdonNoL2ESJUR80WHNq/13wDsbCABo/GNnuqHNYZmml3wAifEKKeCEYfNZRUuHQ8eHs54Lj5BlGRX5i+1LrGhhgnVFQgmrhIv4RJuVQ663kDEh+Jwo4vowJ2mxNDvLvOhfZwxjULPDiknqy6u5PyW3id5M=
-  file_glob: true
-  file: '**/*-release.apk'
-  on:
-    repo: TwidereProject/Twidere-Android
-    tags: true
+  - provider: releases
+    prerelease: true
+    api_key:
+      secure: "WKtKwda3hegqO9QVujdonNoL2ESJUR80WHNq/13wDsbCABo/GNnuqHNYZmml3wAifEKKeCEYfNZRUuHQ8eHs54Lj5BlGRX5i+1LrGhhgnVFQgmrhIv4RJuVQ663kDEh+Jwo4vowJ2mxNDvLvOhfZwxjULPDiknqy6u5PyW3id5M="
+    file_glob: true
+    file: '**/*-release.apk'
+    on:
+      repo: TwidereProject/Twidere-Android
+      tags: true
+  # Publish to Google Play store
+  - provider: script
+    script: ./gradlew publishGoogleRelease
+    on:
+      repo: TwidereProject/Twidere-Android
+      tags: true
+  # Upload common component library to Bintray
+  - provider: script
+    script: ./gradlew twidere.component.common:bintrayUpload
+    on:
+      repo: TwidereProject/Twidere-Android
+      tags: true

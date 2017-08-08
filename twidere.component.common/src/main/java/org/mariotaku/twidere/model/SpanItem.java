@@ -1,15 +1,35 @@
+/*
+ *         Twidere - Twitter client for Android
+ *
+ * Copyright 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.mariotaku.twidere.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.Spanned;
-import android.text.style.URLSpan;
+import android.support.annotation.IntDef;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableNoThanks;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * Created by mariotaku on 16/3/21.
@@ -41,6 +61,11 @@ public class SpanItem implements Parcelable {
     @ParcelableThisPlease
     public String link;
 
+    @ParcelableThisPlease
+    @JsonField(name = "type")
+    @SpanType
+    public int type = SpanType.LINK;
+
     @ParcelableNoThanks
     public int orig_start = -1;
     @ParcelableNoThanks
@@ -52,6 +77,7 @@ public class SpanItem implements Parcelable {
                 "start=" + start +
                 ", end=" + end +
                 ", link='" + link + '\'' +
+                ", type=" + type +
                 ", orig_start=" + orig_start +
                 ", orig_end=" + orig_end +
                 '}';
@@ -67,11 +93,12 @@ public class SpanItem implements Parcelable {
         SpanItemParcelablePlease.writeToParcel(this, dest, flags);
     }
 
-    public static SpanItem from(Spanned spanned, URLSpan span) {
-        SpanItem spanItem = new SpanItem();
-        spanItem.link = span.getURL();
-        spanItem.start = spanned.getSpanStart(span);
-        spanItem.end = spanned.getSpanEnd(span);
-        return spanItem;
+    @IntDef({SpanType.HIDE, SpanType.LINK, SpanType.ACCT_MENTION, SpanType.HASHTAG})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface SpanType {
+        int HIDE = -1;
+        int LINK = 0;
+        int ACCT_MENTION = 1;
+        int HASHTAG = 2;
     }
 }

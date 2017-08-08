@@ -39,6 +39,7 @@ import android.view.MenuItem;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.KeyboardShortcutPreferenceCompatActivity;
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants;
+import org.mariotaku.twidere.extension.DialogExtensionsKt;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutSpec;
 
@@ -91,7 +92,7 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
             setTitle(KeyboardShortcutsHandler.getActionLabel(context, action));
             mPreferencesChangeListener = new OnSharedPreferenceChangeListener() {
                 @Override
-                public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                public void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
                     updateSummary();
                 }
             };
@@ -102,8 +103,8 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
         protected void onClick() {
             final Context context = getContext();
             final Intent intent = new Intent(context, KeyboardShortcutPreferenceCompatActivity.class);
-            intent.putExtra(KeyboardShortcutPreferenceCompatActivity.EXTRA_CONTEXT_TAG, mContextTag);
-            intent.putExtra(KeyboardShortcutPreferenceCompatActivity.EXTRA_KEY_ACTION, mAction);
+            intent.putExtra(KeyboardShortcutPreferenceCompatActivity.Companion.getEXTRA_CONTEXT_TAG(), mContextTag);
+            intent.putExtra(KeyboardShortcutPreferenceCompatActivity.Companion.getEXTRA_KEY_ACTION(), mAction);
             context.startActivity(intent);
         }
 
@@ -133,7 +134,7 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
         public void onClick(DialogInterface dialog, int which) {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE: {
-                    mKeyboardShortcutsHandler.reset();
+                    keyboardShortcutsHandler.reset();
                     break;
                 }
             }
@@ -146,7 +147,14 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
             builder.setMessage(R.string.reset_keyboard_shortcuts_confirm);
             builder.setPositiveButton(android.R.string.ok, this);
             builder.setNegativeButton(android.R.string.cancel, this);
-            return builder.create();
+            final AlertDialog dialog = builder.create();
+            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(final DialogInterface dialog) {
+                    DialogExtensionsKt.applyTheme((AlertDialog) dialog);
+                }
+            });
+            return dialog;
         }
     }
 }

@@ -20,5 +20,5 @@
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:color="#e0e0e0" android:state_pressed="true"/>
-    <item android:color="#f8f8f8"/>
+    <item android:color="#f0f0f0"/>
 </selector>

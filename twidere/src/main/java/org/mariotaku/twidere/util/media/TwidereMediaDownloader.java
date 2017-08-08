@@ -1,39 +1,33 @@
 package org.mariotaku.twidere.util.media;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.webkit.URLUtil;
-
-import com.squareup.pollexor.Thumbor;
-import com.squareup.pollexor.ThumborUrlBuilder;
 
 import org.mariotaku.mediaviewer.library.CacheDownloadLoader;
 import org.mariotaku.mediaviewer.library.MediaDownloader;
-import org.mariotaku.restfu.RestRequest;
 import org.mariotaku.restfu.annotation.method.GET;
-import org.mariotaku.restfu.http.Authorization;
-import org.mariotaku.restfu.http.Endpoint;
 import org.mariotaku.restfu.http.HttpRequest;
 import org.mariotaku.restfu.http.HttpResponse;
 import org.mariotaku.restfu.http.MultiValueMap;
 import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.restfu.http.mime.Body;
-import org.mariotaku.restfu.oauth.OAuthAuthorization;
-import org.mariotaku.restfu.oauth.OAuthEndpoint;
-import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.extension.model.AccountExtensionsKt;
+import org.mariotaku.twidere.extension.model.CredentialsExtensionsKt;
 import org.mariotaku.twidere.model.CacheMetadata;
-import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.UserKey;
-import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
+import org.mariotaku.twidere.model.account.cred.Credentials;
+import org.mariotaku.twidere.model.util.AccountUtils;
 import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.MicroBlogAPIFactory;
-import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.UserAgentUtils;
+import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
 import org.mariotaku.twidere.util.net.NoIntercept;
 
@@ -44,40 +38,19 @@ import java.io.InputStream;
 /**
  * Created by mariotaku on 16/1/28.
  */
-public class TwidereMediaDownloader implements MediaDownloader, Constants {
+public class TwidereMediaDownloader implements MediaDownloader {
 
-    private final Context mContext;
-    private final SharedPreferencesWrapper mPreferences;
-    private final RestHttpClient mClient;
-    private final String mUserAgent;
+    private final Context context;
+    private final RestHttpClient client;
+    private final String userAgent;
+    private final ThumborWrapper thumbor;
 
-    private Thumbor mThumbor;
-
-    public TwidereMediaDownloader(final Context context, SharedPreferencesWrapper preferences,
-                                  RestHttpClient client) {
-        mContext = context;
-        mPreferences = preferences;
-        mClient = client;
-        mUserAgent = UserAgentUtils.getDefaultUserAgentStringSafe(context);
-        reloadConnectivitySettings();
-    }
-
-    public void reloadConnectivitySettings() {
-        if (mPreferences.getBoolean(KEY_THUMBOR_ENABLED)) {
-            final String address = mPreferences.getString(KEY_THUMBOR_ADDRESS, null);
-            final String securityKey = mPreferences.getString(KEY_THUMBOR_SECURITY_KEY, null);
-            if (address != null && URLUtil.isValidUrl(address)) {
-                if (TextUtils.isEmpty(securityKey)) {
-                    mThumbor = Thumbor.create(address);
-                } else {
-                    mThumbor = Thumbor.create(address, securityKey);
-                }
-            } else {
-                mThumbor = null;
-            }
-        } else {
-            mThumbor = null;
-        }
+    public TwidereMediaDownloader(final Context context, final RestHttpClient client,
+            final ThumborWrapper thumbor) {
+        this.context = context;
+        this.client = client;
+        this.thumbor = thumbor;
+        this.userAgent = UserAgentUtils.getDefaultUserAgentStringSafe(context);
     }
 
     @NonNull
@@ -89,7 +62,7 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
                 skipUrlReplacing = ((MediaExtra) extra).isSkipUrlReplacing();
             }
             if (!skipUrlReplacing) {
-                final ParcelableMedia media = PreviewMediaExtractor.fromLink(url, mClient, extra);
+                final ParcelableMedia media = PreviewMediaExtractor.fromLink(url, client, extra);
                 if (media != null && media.media_url != null) {
                     return getInternal(media.media_url, extra);
                 }
@@ -100,7 +73,7 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
                 final String fallbackUrl = ((MediaExtra) extra).getFallbackUrl();
                 if (fallbackUrl != null) {
                     final ParcelableMedia media = PreviewMediaExtractor.fromLink(fallbackUrl,
-                            mClient, extra);
+                            client, extra);
                     if (media != null && media.media_url != null) {
                         return getInternal(media.media_url, extra);
                     } else {
@@ -113,43 +86,32 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
     }
 
     protected CacheDownloadLoader.DownloadResult getInternal(@NonNull String url,
-                                                             @Nullable Object extra) throws IOException {
+            @Nullable Object extra) throws IOException {
         final Uri uri = Uri.parse(url);
-        Authorization auth = null;
-        ParcelableCredentials account = null;
+        Credentials credentials = null;
         boolean useThumbor = true;
         if (extra instanceof MediaExtra) {
             useThumbor = ((MediaExtra) extra).isUseThumbor();
             UserKey accountKey = ((MediaExtra) extra).getAccountKey();
             if (accountKey != null) {
-                account = ParcelableCredentialsUtils.getCredentials(mContext, accountKey);
-                auth = MicroBlogAPIFactory.getAuthorization(account);
-            }
-        }
-        final Uri modifiedUri = getReplacedUri(uri, account != null ? account.api_url_format : null);
-        final MultiValueMap<String> additionalHeaders = new MultiValueMap<>();
-        additionalHeaders.add("User-Agent", mUserAgent);
-        final String method = GET.METHOD;
-        final String requestUri;
-        if (isAuthRequired(uri, account) && auth != null && auth.hasAuthorization()) {
-            final Endpoint endpoint;
-            if (auth instanceof OAuthAuthorization) {
-                endpoint = new OAuthEndpoint(getEndpoint(modifiedUri), getEndpoint(uri));
-            } else {
-                endpoint = new Endpoint(getEndpoint(modifiedUri));
-            }
-            final MultiValueMap<String> queries = new MultiValueMap<>();
-            for (String name : uri.getQueryParameterNames()) {
-                for (String value : uri.getQueryParameters(name)) {
-                    queries.add(name, value);
+                final AccountManager am = AccountManager.get(context);
+                Account account = AccountUtils.findByAccountKey(am, accountKey);
+                if (account != null) {
+                    credentials = AccountExtensionsKt.getCredentials(account, am);
                 }
             }
-            final RestRequest info = new RestRequest(method, false, uri.getPath(), additionalHeaders,
-                    queries, null, null, null, null);
-            additionalHeaders.add("Authorization", auth.getHeader(endpoint, info));
+        }
+        final Uri modifiedUri = getReplacedUri(uri, credentials != null ? credentials.api_url_format : null);
+        final MultiValueMap<String> additionalHeaders = new MultiValueMap<>();
+        additionalHeaders.add("User-Agent", userAgent);
+        final String method = GET.METHOD;
+        final String requestUri;
+        if (isAuthRequired(credentials, uri)) {
+            additionalHeaders.add("Authorization", CredentialsExtensionsKt.authorizationHeader(credentials,
+                    uri, modifiedUri, null));
             requestUri = modifiedUri.toString();
-        } else if (mThumbor != null && useThumbor) {
-            requestUri = mThumbor.buildImage(modifiedUri.toString()).filter(ThumborUrlBuilder.quality(85)).toUrl();
+        } else if (thumbor != null && useThumbor) {
+            requestUri = thumbor.buildUri(modifiedUri.toString());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 additionalHeaders.add("Accept", "image/webp, */*");
             }
@@ -161,7 +123,7 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
         builder.url(requestUri);
         builder.headers(additionalHeaders);
         builder.tag(NoIntercept.INSTANCE);
-        final HttpResponse resp = mClient.newCall(builder.build()).execute();
+        final HttpResponse resp = client.newCall(builder.build()).execute();
         if (!resp.isSuccessful()) {
             final String detailMessage = "Unable to get " + requestUri + ", response code: "
                     + resp.getStatus();
@@ -172,11 +134,11 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
         }
         final Body body = resp.getBody();
         final CacheMetadata metadata = new CacheMetadata();
-        metadata.setContentType(body.contentType().getContentType());
+        metadata.setContentType(Utils.INSTANCE.sanitizeMimeType(body.contentType().getContentType()));
         return new TwidereDownloadResult(body, metadata);
     }
 
-    private String getEndpoint(Uri uri) {
+    public static String getEndpoint(Uri uri) {
         final StringBuilder sb = new StringBuilder();
         sb.append(uri.getScheme());
         sb.append("://");
@@ -189,7 +151,7 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
         return sb.toString();
     }
 
-    private boolean isAuthRequired(final Uri uri, @Nullable final ParcelableCredentials credentials) {
+    public static boolean isAuthRequired(@Nullable final Credentials credentials, @NonNull final Uri uri) {
         if (credentials == null) return false;
         final String host = uri.getHost();
         if (credentials.api_url_format != null && credentials.api_url_format.contains(host)) {
@@ -198,11 +160,11 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
         return "ton.twitter.com".equalsIgnoreCase(host);
     }
 
-    private boolean isTwitterUri(final Uri uri) {
+    private static boolean isTwitterUri(final Uri uri) {
         return uri != null && "ton.twitter.com".equalsIgnoreCase(uri.getHost());
     }
 
-    private Uri getReplacedUri(@NonNull final Uri uri, final String apiUrlFormat) {
+    public static Uri getReplacedUri(@NonNull final Uri uri, final String apiUrlFormat) {
         if (apiUrlFormat == null) return uri;
         if (isTwitterUri(uri)) {
             final StringBuilder sb = new StringBuilder();

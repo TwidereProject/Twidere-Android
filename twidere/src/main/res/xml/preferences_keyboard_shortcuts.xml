@@ -3,30 +3,30 @@
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/keyboard_shortcuts">
-    <PreferenceCategory
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
         android:key="cat_general"
         android:title="@string/general">
         <org.mariotaku.twidere.preference.KeyboardShortcutPreference
             android:action="compose"
-            android:title="@string/compose"/>
+            android:title="@string/action_compose"/>
         <org.mariotaku.twidere.preference.KeyboardShortcutPreference
             android:action="search"
-            android:title="@string/search"/>
+            android:title="@string/action_search"/>
         <org.mariotaku.twidere.preference.KeyboardShortcutPreference
             android:action="message"
-            android:title="@string/direct_messages"/>
-    </PreferenceCategory>
+            android:title="@string/title_direct_messages"/>
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 
-    <PreferenceCategory
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
         android:key="cat_home"
-        android:title="@string/home">
+        android:title="@string/title_home">
         <org.mariotaku.twidere.preference.KeyboardShortcutPreference
             android:action="home.accounts_dashboard"
             android:tag="home"
             android:title="@string/open_accounts_dashboard"/>
-    </PreferenceCategory>
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 
-    <PreferenceCategory
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
         android:key="cat_navigation"
         android:title="@string/navigation">
         <org.mariotaku.twidere.preference.KeyboardShortcutPreference
@@ -56,7 +56,7 @@
         <org.mariotaku.twidere.preference.KeyboardShortcutPreference
             android:action="navigation.refresh"
             android:tag="navigation"
-            android:title="@string/refresh"/>
+            android:title="@string/action_refresh"/>
         <org.mariotaku.twidere.preference.KeyboardShortcutPreference
             android:action="navigation.back"
             android:tag="navigation"
@@ -65,22 +65,22 @@
             android:action="navigation.top"
             android:tag="navigation"
             android:title="@string/jump_to_top"/>
-    </PreferenceCategory>
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 
-    <PreferenceCategory
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
         android:key="cat_statuses"
-        android:title="@string/statuses">
+        android:title="@string/title_statuses">
         <org.mariotaku.twidere.preference.KeyboardShortcutPreference
             android:action="status.reply"
             android:tag="status"
-            android:title="@string/reply"/>
+            android:title="@string/action_reply"/>
         <org.mariotaku.twidere.preference.KeyboardShortcutPreference
             android:action="status.retweet"
             android:tag="status"
-            android:title="@string/retweet"/>
+            android:title="@string/action_retweet"/>
         <org.mariotaku.twidere.preference.KeyboardShortcutPreference
             android:action="status.favorite"
             android:tag="status"
-            android:title="@string/favorite"/>
-    </PreferenceCategory>
+            android:title="@string/action_favorite"/>
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 </PreferenceScreen>

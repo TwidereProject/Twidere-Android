@@ -8,6 +8,11 @@
         android:title="@string/mention_this_user"
         app:showAsAction="ifRoom"/>
     <item
+        android:id="@+id/qr_code"
+        android:icon="@drawable/ic_action_qr"
+        android:title="@string/action_qr_code"
+        app:showAsAction="ifRoom"/>
+    <item
         android:id="@id/send_direct_message"
         android:icon="@drawable/ic_action_message"
         android:title="@string/send_direct_message"
@@ -15,20 +20,15 @@
     <item
         android:id="@id/add_to_list"
         android:icon="@drawable/ic_action_add_to_list"
-        android:title="@string/add_to_list"/>
+        android:title="@string/action_add_to_list"/>
     <item
         android:id="@id/set_color"
         android:icon="@drawable/ic_action_color_palette"
-        android:title="@string/set_color"/>
+        android:title="@string/action_set_color"/>
     <item
         android:id="@id/set_nickname"
         android:icon="@drawable/ic_action_edit"
-        android:title="@string/set_nickname"/>
-    <item
-        android:id="@id/add_to_filter"
-        android:checkable="true"
-        android:icon="@drawable/ic_action_speaker_muted"
-        android:title="@string/add_to_filter"/>
+        android:title="@string/action_set_nickname"/>
     <item
         android:id="@+id/incoming_friendships"
         android:icon="@drawable/ic_action_profile"
@@ -42,35 +42,42 @@
         android:icon="@drawable/ic_action_search"
         android:title="@string/saved_searches"/>
     <item
-        android:id="@+id/scheduled_statuses"
-        android:icon="@drawable/ic_action_time"
-        android:title="@string/scheduled_statuses"/>
+        android:id="@+id/enable_notifications"
+        android:checkable="true"
+        android:checked="false"
+        android:icon="@drawable/ic_action_notification"
+        android:title="@string/enable_notifications"/>
     <item
         android:id="@id/enable_retweets"
         android:checkable="true"
         android:icon="@drawable/ic_action_retweet"
         android:title="@string/enable_retweets"/>
     <item
+        android:id="@id/add_to_filter"
+        android:checkable="true"
+        android:icon="@drawable/ic_action_speaker_muted"
+        android:title="@string/action_add_to_filter"/>
+    <item
         android:id="@id/mute_user"
         android:checkable="true"
-        android:icon="@drawable/ic_action_mic_muted"
-        android:title="@string/twitter_mute_user"/>
+        android:icon="@drawable/ic_action_visibility_off"
+        android:title="@string/action_twitter_mute_user"/>
     <item
         android:id="@id/block"
         android:icon="@drawable/ic_action_block"
-        android:title="@string/block"/>
+        android:title="@string/action_block"/>
     <item
         android:id="@id/report_spam"
         android:icon="@drawable/ic_action_warning"
-        android:title="@string/report_for_spam"/>
+        android:title="@string/action_report_spam"/>
     <item
         android:id="@+id/muted_users"
-        android:icon="@drawable/ic_action_mic_muted"
-        android:title="@string/twitter_muted_users"/>
+        android:icon="@drawable/ic_action_visibility_off"
+        android:title="@string/action_twitter_muted_users"/>
     <item
         android:id="@+id/blocked_users"
         android:icon="@drawable/ic_action_block"
-        android:title="@string/blocked_users"/>
+        android:title="@string/title_blocked_users"/>
     <item
         android:id="@id/open_with_account"
         android:icon="@drawable/ic_action_accounts"
@@ -78,6 +85,6 @@
     <item
         android:id="@id/open_in_browser"
         android:icon="@drawable/ic_action_web"
-        android:title="@string/open_in_browser"/>
+        android:title="@string/action_open_in_browser"/>
 
 </menu>

@@ -6,10 +6,10 @@ import org.mariotaku.twidere.model.UserKey;
  * Created by mariotaku on 16/1/28.
  */
 public class MediaExtra {
-    UserKey accountKey;
-    boolean useThumbor = true;
-    String fallbackUrl;
-    boolean skipUrlReplacing;
+    private UserKey accountKey;
+    private boolean useThumbor = true;
+    private String fallbackUrl;
+    private boolean skipUrlReplacing;
 
     public UserKey getAccountKey() {
         return accountKey;

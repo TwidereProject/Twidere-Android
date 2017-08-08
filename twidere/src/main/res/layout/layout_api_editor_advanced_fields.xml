@@ -29,10 +29,10 @@
     android:paddingLeft="@dimen/element_spacing_normal"
     android:paddingRight="0dp"
     android:paddingStart="@dimen/element_spacing_normal"
-    tools:showIn="@layout/layout_api_editor">
+    tools:showIn="@layout/dialog_api_editor">
 
     <CheckBox
-        android:id="@+id/same_oauth_signing_url"
+        android:id="@+id/editSameOAuthSigningUrl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/element_spacing_normal"
@@ -42,7 +42,7 @@
         tools:checked="true"/>
 
     <CheckBox
-        android:id="@+id/no_version_suffix"
+        android:id="@+id/editNoVersionSuffix"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/element_spacing_normal"
@@ -52,29 +52,29 @@
         tools:checked="false"/>
 
     <com.rengwuxian.materialedittext.MaterialEditText
-        android:id="@+id/consumer_key"
+        android:id="@+id/editConsumerKey"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/consumer_key"
         android:inputType="text|textVisiblePassword"
-        android:singleLine="true"
         app:met_baseColor="?android:textColorPrimary"
         app:met_floatingLabel="normal"
         app:met_floatingLabelText="@string/consumer_key"
-        tools:text="0123456789ABCD"/>
+        tools:text="0123456789ABCD"
+        android:maxLines="1"/>
 
     <com.rengwuxian.materialedittext.MaterialEditText
-        android:id="@+id/consumer_secret"
+        android:id="@+id/editConsumerSecret"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/consumer_secret"
         android:inputType="text|textVisiblePassword"
-        android:singleLine="true"
         app:met_baseColor="?android:textColorPrimary"
         app:met_floatingLabel="normal"
         app:met_floatingLabelText="@string/consumer_secret"
-        tools:text="0123456789ABCD"/>
+        tools:text="0123456789ABCD"
+        android:maxLines="1"/>
 
 </LinearLayout>
