@@ -24,8 +24,9 @@ import android.support.test.InstrumentationRegistry
 import org.mariotaku.twidere.extension.model.updateDetails
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.test.R
 import org.mariotaku.twidere.util.support.removeAccountSupport
+
+import com.emojidex.twidere.test.R
 
 /**
  * Created by mariotaku on 2017/4/16.

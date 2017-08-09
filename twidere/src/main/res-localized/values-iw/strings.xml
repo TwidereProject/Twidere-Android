@@ -417,7 +417,6 @@
   <string name="unknown_location">מיקום לא ידוע</string>
   <string name="updated_list_details">פרטי הרשימה \"<xliff:g id="list">%s</xliff:g>\" עודכנו.</string>
   <string name="updating_status_notification">שולח ציוץ&#8230;</string>
-  <string name="usage_statistics">סטטיסטיקות שימוש</string>
   <string name="user_blocked">משתמש זה נחסם.</string>
   <string name="user_filter_name">משתמש: <xliff:g id="name">%s</xliff:g></string>
   <!-- User list description -->

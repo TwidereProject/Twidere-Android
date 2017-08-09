@@ -525,7 +525,6 @@
   <string name="remove_sensitive_mark">Verwijder gevoelige markering</string>
   <string name="replies">Reacties</string>
   <string name="report_for_spam">Rapporteer spam</string>
-  <string name="report_usage_statistics_now">Gebruiksstatistieken nu rapporteren</string>
   <string name="report_user">Rapporteer <xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">Rapporteer <xliff:g id="name">%s</xliff:g> voor spam? Je zult deze gebruiker ook blokkeren.</string>
   <string name="reported_user_for_spam">Rapporteer deze gebruiker voor spam.</string>
@@ -711,9 +710,6 @@
   <string name="updated_list_details">\'\'<xliff:g id="list">%s</xliff:g>\'\' lijst details bijgewerkt.</string>
   <string name="updating_status_notification">Tweet versturen&#8230;</string>
   <string name="uploader_version_incompatible">Incompatibele media-uploader</string>
-  <string name="usage_statistics">Gebruiksstatistieken</string>
-  <string name="usage_statistics_header_summary">Twidere nam deel in enkele onderzoeksprojecten; bijdragen aan deze projecten verbetert Twidere en andere toekomstige applicaties.</string>
-  <string name="usage_statistics_notification_summary">Help ons om Twidere te verbeteren!</string>
   <string name="user_blocked">Deze gebruiker is geblokkeerd.</string>
   <string name="user_filter_name">Gebruiker:<xliff:g id="name">%s</xliff:g></string>
   <string name="user_list_details">Lijstdetails</string>

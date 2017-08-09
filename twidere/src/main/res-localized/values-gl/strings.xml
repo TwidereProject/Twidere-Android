@@ -809,7 +809,6 @@
   <string name="remove_sensitive_mark">Desmarcar como sensible</string>
   <string name="replies">Respostas</string>
   <string name="report_for_spam">Denunciar spam</string>
-  <string name="report_usage_statistics_now">Aportar agora estatísticas de uso</string>
   <string name="report_user">Denunciar a <xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">Denunciar a <xliff:g id="name">%s</xliff:g> por spam? Tamén podes bloquear a este usuario.</string>
   <string name="reported_user_for_spam">Denunciado este usuario por spam.</string>
@@ -1048,9 +1047,6 @@
   <string name="updated_list_details">Detalles da lista \"<xliff:g id="list">%s</xliff:g>\" actualizados.</string>
   <string name="updating_status_notification">Enviando chío&#8230;</string>
   <string name="uploader_version_incompatible">Xestor de subida multimedia incompatible</string>
-  <string name="usage_statistics">Estatísticas de uso</string>
-  <string name="usage_statistics_header_summary">Twidere participa nalgúns proxectos de investigación, unir eses proxectos farán mellor a Twidere e algunha outra aplicación.</string>
-  <string name="usage_statistics_notification_summary">Axúdanos a mellorar Twidere!</string>
   <string name="user_blocked">Este usuario foi bloqueado.</string>
   <string name="user_filter_name">Usuario: <xliff:g id="name">%s</xliff:g></string>
   <string name="user_list_details">Detalles da lista</string>

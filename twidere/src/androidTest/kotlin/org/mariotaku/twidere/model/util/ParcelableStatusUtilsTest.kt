@@ -9,8 +9,9 @@ import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.test.R
 import org.mariotaku.twidere.util.JsonSerializer
+
+import com.emojidex.twidere.test.R
 
 /**
  * Created by mariotaku on 2017/1/4.

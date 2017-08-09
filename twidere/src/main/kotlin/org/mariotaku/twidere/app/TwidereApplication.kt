@@ -45,7 +45,6 @@ import org.mariotaku.mediaviewer.library.MediaDownloader
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants
-import org.mariotaku.twidere.Constants.KEY_USAGE_STATISTICS
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.AssistLauncherActivity
 import org.mariotaku.twidere.activity.MainActivity
@@ -138,7 +137,6 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
 
         updateEasterEggIcon()
 
-        migrateUsageStatisticsPreferences()
         GeneralComponent.get(this).inject(this)
 
         autoRefreshController.appStarted()
@@ -292,20 +290,6 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
         if (!sharedPreferences[bugReportsKey]) return
         Analyzer.implementation = ServiceLoader.load(Analyzer::class.java).firstOrNull()
         Analyzer.init(this)
-    }
-
-    private fun migrateUsageStatisticsPreferences() {
-        val preferences = sharedPreferences
-        val hasUsageStatistics = preferences.contains(KEY_USAGE_STATISTICS)
-        if (hasUsageStatistics) return
-        if (preferences.contains(KEY_UCD_DATA_PROFILING) || preferences.contains(KEY_SPICE_DATA_PROFILING)) {
-            val prevUsageEnabled = preferences.getBoolean(KEY_UCD_DATA_PROFILING, false) || preferences.getBoolean(KEY_SPICE_DATA_PROFILING, false)
-            val editor = preferences.edit()
-            editor.putBoolean(KEY_USAGE_STATISTICS, prevUsageEnabled)
-            editor.remove(KEY_UCD_DATA_PROFILING)
-            editor.remove(KEY_SPICE_DATA_PROFILING)
-            editor.apply()
-        }
     }
 
     private fun reloadDnsSettings() {

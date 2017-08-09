@@ -264,7 +264,6 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
         setupSlidingMenu()
         setupBars()
-        showDataProfilingRequest()
         initUnreadCount()
         setupHomeTabs()
         updateActionsButton()
@@ -838,23 +837,6 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             }
             false
         })
-    }
-
-    private fun showDataProfilingRequest() {
-        //spice
-        if (preferences.contains(KEY_USAGE_STATISTICS)) {
-            return
-        }
-        val intent = Intent(this, UsageStatisticsActivity::class.java)
-        val contentIntent = PendingIntent.getActivity(this, 0, intent, 0)
-        val builder = NotificationCompat.Builder(this)
-        builder.setAutoCancel(true)
-        builder.setSmallIcon(R.drawable.ic_stat_info)
-        builder.setTicker(getString(R.string.usage_statistics))
-        builder.setContentTitle(getString(R.string.usage_statistics))
-        builder.setContentText(getString(R.string.usage_statistics_notification_summary))
-        builder.setContentIntent(contentIntent)
-        notificationManager.notify(NOTIFICATION_ID_DATA_PROFILING, builder.build())
     }
 
     private fun triggerActionsClick() {

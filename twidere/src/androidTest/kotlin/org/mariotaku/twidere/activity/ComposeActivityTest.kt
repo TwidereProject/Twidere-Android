@@ -31,8 +31,9 @@ import org.junit.runner.RunWith
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableStatusUpdate
-import org.mariotaku.twidere.test.R
 import org.mariotaku.twidere.util.getJsonResource
+
+import com.emojidex.twidere.test.R
 
 /**
  * Created by mariotaku on 2017/4/16.

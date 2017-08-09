@@ -400,7 +400,6 @@
   <string name="unknown_location">Neznámá poloha</string>
   <string name="unread_count">Počet nepřečtených položek</string>
   <string name="updating_status_notification">Odesílání tweetu&#8230;</string>
-  <string name="usage_statistics">Statistiky využití</string>
   <string name="user_blocked">Blokovat tohoto uživatele.</string>
   <string name="user_filter_name">Uživatel: <xliff:g id="name">%s </xliff:g></string>
   <!-- User list description -->

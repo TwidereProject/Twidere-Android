@@ -28,8 +28,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUserMention
-import org.mariotaku.twidere.test.R
 import org.mariotaku.twidere.util.JsonSerializer
+
+import com.emojidex.twidere.test.R
 
 /**
  * Created by mariotaku on 2017/4/2.
