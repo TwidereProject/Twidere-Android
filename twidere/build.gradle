@@ -34,7 +34,7 @@ android {
 
     defaultConfig {
         applicationId "com.emojidex.twidere"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 26
         versionCode 4
         versionName "1.0.4"
@@ -199,7 +199,7 @@ dependencies {
     compile "nl.komponents.kovenant:kovenant-functional:${libVersions['Kovenant']}"
     compile "nl.komponents.kovenant:kovenant-combine:${libVersions['Kovenant']}"
 
-    compile 'org.genshin:emojidexandroid-lib:0.0.5'
+    compile 'com.emojidex:emojidexandroid-lib:0.0.11'
 }
 
 task svgToDrawable(type: SvgDrawableTask) {

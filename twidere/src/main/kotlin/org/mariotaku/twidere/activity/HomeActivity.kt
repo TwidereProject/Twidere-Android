@@ -58,6 +58,7 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
 import android.view.ViewGroup.MarginLayoutParams
+import com.emojidex.emojidexandroid.Emojidex
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetView
 import com.squareup.otto.Subscribe
@@ -78,6 +79,7 @@ import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.NavbarStyle
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.*
+import org.mariotaku.twidere.emojidex.EmojidexUpdater
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.fragment.AccountsDashboardFragment
@@ -285,6 +287,11 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         if (!showDrawerTutorial() && !kPreferences[defaultAutoRefreshAskedKey]) {
             showAutoRefreshConfirm()
         }
+
+        // Initialize emojidex.
+        val emojidex = Emojidex.getInstance()
+        emojidex.initialize(this)
+        EmojidexUpdater(this).startUpdateThread()
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

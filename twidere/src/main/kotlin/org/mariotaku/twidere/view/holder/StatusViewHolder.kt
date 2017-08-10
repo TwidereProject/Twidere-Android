@@ -17,6 +17,7 @@ import android.view.View.OnLongClickListener
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.RequestManager
+import com.emojidex.emojidexandroid.Emojidex
 import kotlinx.android.synthetic.main.list_item_status.view.*
 import org.mariotaku.ktextension.*
 import org.mariotaku.microblog.library.mastodon.annotation.StatusVisibility
@@ -137,6 +138,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         quotedMediaPreview.visibility = View.GONE
         quotedMediaLabel.visibility = View.GONE
         mediaPreview.displayMedia(R.drawable.featured_graphics)
+
+        // Convert to emojidex.
+        textView.setText(Emojidex.getInstance().emojify(textView.getText()))
     }
 
     override fun display(status: ParcelableStatus, displayInReplyTo: Boolean,

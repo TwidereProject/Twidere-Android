@@ -56,6 +56,7 @@ import android.widget.Space
 import android.widget.TextView
 import android.widget.Toast
 import com.bumptech.glide.Glide
+import com.emojidex.emojidexandroid.Emojidex
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.adapter_item_status_count_label.view.*
 import kotlinx.android.synthetic.main.fragment_status.*
@@ -987,6 +988,9 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
             textView.movementMethod = LinkMovementMethod.getInstance()
             itemView.quotedText.movementMethod = null
+
+            // Convert to emojidex.
+            textView.setText(Emojidex.getInstance().emojify(textView.getText()))
         }
 
         override fun onClick(v: View) {

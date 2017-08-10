@@ -5,26 +5,28 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.emojidex.emojidexandroid.DownloadListener;
-import com.emojidex.emojidexandroid.Emoji;
-import com.emojidex.emojidexandroid.EmojiDownloader;
 import com.emojidex.emojidexandroid.EmojiFormat;
 import com.emojidex.emojidexandroid.Emojidex;
+import com.emojidex.emojidexandroid.downloader.DownloadConfig;
+import com.emojidex.emojidexandroid.downloader.DownloadListener;
+import com.emojidex.emojidexandroid.downloader.EmojiDownloader;
 
 import org.mariotaku.twidere.R;
 
-import java.util.Date;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 
 /**
  * Created by kou on 16/07/13.
  */
 public class EmojidexUpdater {
-    static final String TAG = "Twidere::EmojidexUpdater";
-    static final String PREF_KEY = "lastEmojidexUpdateTime";
+    static final String TAG = "emojidex-Twidere::EmojidexUpdater";
+    static final String PREFERENCE_KEY = "lastEmojidexUpdateTime";
 
     private final Context context;
     private final Emojidex emojidex;
+
+    private final Collection<Integer> downloadHandles = new LinkedHashSet<Integer>();
 
     /**
      * Construct object.
@@ -52,7 +54,8 @@ public class EmojidexUpdater {
      */
     public boolean startUpdateThread(boolean forceFlag)
     {
-        if( !checkExecUpdate() && !forceFlag )
+        if(     !downloadHandles.isEmpty()
+                ||  (!checkExecUpdate() && !forceFlag) )
         {
             Log.d(TAG, "Skip update.");
             return false;
@@ -60,9 +63,34 @@ public class EmojidexUpdater {
 
         Log.d(TAG, "Start update.");
 
-        final LinkedHashSet<EmojiFormat> formats = new LinkedHashSet<EmojiFormat>();
-        formats.add(EmojiFormat.toFormat(context.getString(R.string.emoji_format_default)));
-        return emojidex.download(formats.toArray(new EmojiFormat[formats.size()]), new CustomDownloadListener(forceFlag));
+        final DownloadConfig config =
+                new DownloadConfig()
+                        .addFormat(EmojiFormat.toFormat(context.getString(R.string.emoji_format_default)))
+                ;
+        final EmojiDownloader downloader = emojidex.getEmojiDownloader();
+
+        boolean result = false;
+
+        // UTF
+        int handle = downloader.downloadUTFEmoji(config);
+        if(handle != EmojiDownloader.HANDLE_NULL)
+        {
+            downloadHandles.add(handle);
+            result = true;
+        }
+
+        // Extended
+        handle = downloader.downloadExtendedEmoji(config);
+        if(handle != EmojiDownloader.HANDLE_NULL)
+        {
+            downloadHandles.add(handle);
+            result = true;
+        }
+
+        if(result)
+            emojidex.addDownloadListener(new CustomDownloadListener());
+
+        return result;
     }
 
     /**
@@ -81,56 +109,45 @@ public class EmojidexUpdater {
     private boolean checkUpdateTime()
     {
         final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        final long lastUpdateTime = pref.getLong(PREF_KEY, 0);
-        final long currentTime = new Date().getTime();
-        final long updateInterval = 1000 * 60 * 60 * 24 * 7;
+        final long lastUpdateTime = pref.getLong(PREFERENCE_KEY, 0);
+        final long currentTime = System.currentTimeMillis();
+        final long updateInterval = 1000 * 60 * 60 * 24 * 7;    // 7 days
         return (currentTime - lastUpdateTime) > updateInterval;
     }
 
-    /**
-     * Custom download listener.
-     */
-    class CustomDownloadListener extends DownloadListener
+    private class CustomDownloadListener extends DownloadListener
     {
-        private final boolean force;
-
-        public CustomDownloadListener(boolean forceFlag)
+        @Override
+        public void onFinish(int handle, EmojiDownloader.Result result)
         {
-            force = forceFlag;
-        }
-
-        @Override
-        public void onPreAllEmojiDownload() {
-            emojidex.reload();
-        }
-
-        @Override
-        public void onPostAllJsonDownload(EmojiDownloader downloader)
-        {
-            super.onPostAllJsonDownload(downloader);
-        }
-
-        @Override
-        public void onPostOneEmojiDownload(String emojiName) {
-            final Emoji emoji = emojidex.getEmoji(emojiName);
-            if(emoji != null)
+            if(     downloadHandles.remove(handle)
+                    &&  downloadHandles.isEmpty()       )
             {
-                emoji.reloadImage();
+                // If emoji download failed, execute force update next time.
+                final long updateTime = result.getFailedCount() > 0 ? 0 : System.currentTimeMillis();
+                final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+                final SharedPreferences.Editor prefEditor = pref.edit();
+                prefEditor.putLong(PREFERENCE_KEY, updateTime);
+                prefEditor.commit();
+
+                // Remove listener.
+                emojidex.removeDownloadListener(this);
+
+                Log.d(TAG, "End update.");
             }
         }
 
         @Override
-        public void onFinish() {
-            super.onFinish();
+        public void onCancelled(int handle, EmojiDownloader.Result result)
+        {
+            if(     downloadHandles.remove(handle)
+                    &&  downloadHandles.isEmpty()       )
+            {
+                // Remove listener.
+                emojidex.removeDownloadListener(this);
 
-            // Save update time.
-            final long updateTime = new Date().getTime();
-            final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-            final SharedPreferences.Editor prefEditor = pref.edit();
-            prefEditor.putLong(PREF_KEY, updateTime);
-            prefEditor.commit();
-
-            Log.d(TAG, "End update.");
+                Log.d(TAG, "Cancel update.");
+            }
         }
     }
 }
