@@ -31,7 +31,7 @@ class KeyboardShortcutPreference(context: Context, attrs: AttributeSet? = null) 
 
     private val preferencesChangeListener: SharedPreferences.OnSharedPreferenceChangeListener
 
-    val contextTag: String
+    val contextTag: String?
     val action: String
 
     @Inject
@@ -42,7 +42,6 @@ class KeyboardShortcutPreference(context: Context, attrs: AttributeSet? = null) 
         val a = context.obtainStyledAttributes(attrs, R.styleable.KeyboardShortcutPreference)
         contextTag = a.getString(R.styleable.KeyboardShortcutPreference_android_tag)
         action = a.getString(R.styleable.KeyboardShortcutPreference_android_action)
-                .takeUnless(String::isNullOrEmpty) ?: throw IllegalArgumentException("android:action required")
         a.recycle()
 
         key = action
