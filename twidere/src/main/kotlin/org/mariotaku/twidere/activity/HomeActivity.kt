@@ -409,7 +409,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             fragment.requestApplyInsets()
         }
         homeMenu.setChildInsets(insets.unwrapped, insets.systemWindowInsetTop > 0)
-        if (!homeMenu.fitsSystemWindows) {
+        if (!ViewCompat.getFitsSystemWindows(homeMenu)) {
             homeContent.setPadding(0, insets.systemWindowInsetTop, 0, 0)
         }
         (actionsButton.layoutParams as? MarginLayoutParams)?.bottomMargin =

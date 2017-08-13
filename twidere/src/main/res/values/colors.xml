@@ -36,6 +36,8 @@
     <color name="ab_bg_color_media_viewer">#80000000</color>
     <color name="background_color_card_item_dark">#424242</color>
     <color name="background_color_card_item_light">#ffffff</color>
+    <color name="background_color_profile_image_dark">#4A4A4A</color>
+    <color name="background_color_profile_image_light">#eeeeee</color>
     <color name="background_color_action_bar_dark">#212121</color>
     <color name="bg_color_video_playback_progress">#A0000000</color>
     <color name="drawer_banner_foreground">#80000000</color>
