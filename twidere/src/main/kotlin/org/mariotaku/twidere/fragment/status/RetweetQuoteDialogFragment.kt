@@ -119,7 +119,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
         }
 
         getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
-            if (status.is_my_retweet) {
+            if (!shouldQuoteRetweet(account) && status.is_my_retweet) {
                 twitterWrapper.cancelRetweetAsync(account.key, status.id, status.my_retweet_id)
                 dismiss()
             } else if (retweetOrQuote(account, status, showProtectedConfirm)) {
@@ -185,6 +185,12 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
             positiveButton.isEnabled = status.can_retweet
         }
         textCountView.textCount = validator.getTweetLength(s.toString())
+    }
+
+    private fun DialogInterface.shouldQuoteRetweet(account: AccountDetails): Boolean {
+        if (this !is AlertDialog) return false
+        if (!canQuoteRetweet(account)) return false
+        return !editComment.empty
     }
 
     @CheckResult
