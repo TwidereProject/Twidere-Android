@@ -23,7 +23,7 @@ android {
     defaultConfig {
         applicationId "org.mariotaku.twidere"
         minSdkVersion 20
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -37,7 +37,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.google.android.support:wearable:2.0.0'
-    compile "com.google.android.gms:play-services-wearable:${libVersions['PlayServices']}"
+    compileOnly 'com.google.android.wearable:wearable:2.0.4'
+    implementation 'com.google.android.support:wearable:2.0.4'
+    implementation "com.google.android.gms:play-services-wearable:${libVersions['PlayServices']}"
 }

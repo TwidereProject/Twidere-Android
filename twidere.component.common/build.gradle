@@ -20,7 +20,6 @@
  */
 
 apply plugin: 'com.android.library'
-apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.dcendents.android-maven'
 
@@ -47,7 +46,7 @@ buildscript {
 android {
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode projectVersionCode
         versionName projectVersionName
     }
@@ -65,20 +64,21 @@ repositories {
 }
 
 dependencies {
-    apt "com.bluelinelabs:logansquare-compiler:${libVersions['LoganSquare']}"
-    apt 'com.hannesdorfmann.parcelableplease:processor:1.0.2'
-    apt "com.github.mariotaku.ObjectCursor:processor:${libVersions['ObjectCursor']}"
-    apt "com.github.mariotaku.ExportablePreferences:processor:${libVersions['ExportablePreferences']}"
-    compile "com.android.support:support-annotations:${libVersions['SupportLib']}"
-    compile "com.bluelinelabs:logansquare:${libVersions['LoganSquare']}"
-    compile "com.github.mariotaku.RestFu:library:${libVersions['RestFu']}"
-    compile "com.github.mariotaku.RestFu:oauth:${libVersions['RestFu']}"
-    compile "com.github.mariotaku.RestFu:oauth2:${libVersions['RestFu']}"
-    compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.2'
-    compile "com.github.mariotaku.ObjectCursor:core:${libVersions['ObjectCursor']}"
-    compile "com.github.mariotaku.ExportablePreferences:core:${libVersions['ExportablePreferences']}"
-    compile "com.github.mariotaku.CommonsLibrary:objectcursor:${libVersions['MariotakuCommons']}"
-    compile "com.github.mariotaku.CommonsLibrary:logansquare:${libVersions['MariotakuCommons']}"
+    annotationProcessor "com.bluelinelabs:logansquare-compiler:${libVersions['LoganSquare']}"
+    annotationProcessor "com.hannesdorfmann.parcelableplease:processor:${libVersions['ParcelablePlease']}"
+    annotationProcessor "com.github.mariotaku.ObjectCursor:processor:${libVersions['ObjectCursor']}"
+    annotationProcessor "com.github.mariotaku.ExportablePreferences:processor:${libVersions['ExportablePreferences']}"
+
+    api "com.android.support:support-annotations:${libVersions['SupportLib']}"
+    api "com.bluelinelabs:logansquare:${libVersions['LoganSquare']}"
+    api "com.github.mariotaku.RestFu:library:${libVersions['RestFu']}"
+    api "com.github.mariotaku.RestFu:oauth:${libVersions['RestFu']}"
+    api "com.github.mariotaku.RestFu:oauth2:${libVersions['RestFu']}"
+    api "com.hannesdorfmann.parcelableplease:annotation:${libVersions['ParcelablePlease']}"
+    api "com.github.mariotaku.ObjectCursor:core:${libVersions['ObjectCursor']}"
+    api "com.github.mariotaku.ExportablePreferences:core:${libVersions['ExportablePreferences']}"
+    api "com.github.mariotaku.CommonsLibrary:objectcursor:${libVersions['MariotakuCommons']}"
+    api "com.github.mariotaku.CommonsLibrary:logansquare:${libVersions['MariotakuCommons']}"
 }
 
 install {
