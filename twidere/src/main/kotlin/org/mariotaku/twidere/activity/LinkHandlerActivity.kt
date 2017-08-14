@@ -97,7 +97,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
         multiSelectHandler.dispatchOnCreate()
 
         fragmentLifecycleCallbacks = object : FragmentManager.FragmentLifecycleCallbacks() {
-            override fun onFragmentViewCreated(fm: FragmentManager, f: Fragment, v: View, savedInstanceState: Bundle?) {
+            override fun onFragmentViewCreated(fm: FragmentManager, f: Fragment, v: View, savedState: Bundle?) {
                 if (f is IToolBarSupportFragment) {
                     setSupportActionBar(f.toolbar)
                 }

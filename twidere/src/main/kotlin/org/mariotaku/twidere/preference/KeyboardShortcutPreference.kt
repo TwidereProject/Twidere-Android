@@ -50,7 +50,7 @@ class KeyboardShortcutPreference(context: Context, attrs: AttributeSet? = null) 
         isPersistent = false
         dialogTitle = KeyboardShortcutsHandler.getActionLabel(context, action)
         title = KeyboardShortcutsHandler.getActionLabel(context, action)
-        preferencesChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { preferences, key -> updateSummary() }
+        preferencesChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, _ -> updateSummary() }
         updateSummary()
     }
 

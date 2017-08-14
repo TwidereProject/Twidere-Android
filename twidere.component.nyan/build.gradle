@@ -37,5 +37,5 @@ android {
 }
 
 dependencies {
-    api "com.android.support:support-compat:${libVersions['SupportLib']}"
+    implementation "com.android.support:support-compat:${libVersions['SupportLib']}"
 }

@@ -184,7 +184,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
 
     override fun onCreateAdapter(context: Context): SelectableUsersAdapter {
         val adapter = SelectableUsersAdapter(context, Glide.with(this))
-        adapter.itemCheckedListener = listener@ { position, value ->
+        adapter.itemCheckedListener = listener@ { _, _ ->
             if (!extraFeaturesService.isEnabled(ExtraFeaturesService.FEATURE_FILTERS_IMPORT)) {
                 ExtraFeaturesIntroductionDialogFragment.show(fragmentManager,
                         feature = ExtraFeaturesService.FEATURE_FILTERS_IMPORT,

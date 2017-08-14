@@ -69,16 +69,16 @@ dependencies {
     annotationProcessor "com.github.mariotaku.ObjectCursor:processor:${libVersions['ObjectCursor']}"
     annotationProcessor "com.github.mariotaku.ExportablePreferences:processor:${libVersions['ExportablePreferences']}"
 
-    api "com.android.support:support-annotations:${libVersions['SupportLib']}"
-    api "com.bluelinelabs:logansquare:${libVersions['LoganSquare']}"
-    api "com.github.mariotaku.RestFu:library:${libVersions['RestFu']}"
-    api "com.github.mariotaku.RestFu:oauth:${libVersions['RestFu']}"
-    api "com.github.mariotaku.RestFu:oauth2:${libVersions['RestFu']}"
-    api "com.hannesdorfmann.parcelableplease:annotation:${libVersions['ParcelablePlease']}"
-    api "com.github.mariotaku.ObjectCursor:core:${libVersions['ObjectCursor']}"
-    api "com.github.mariotaku.ExportablePreferences:core:${libVersions['ExportablePreferences']}"
-    api "com.github.mariotaku.CommonsLibrary:objectcursor:${libVersions['MariotakuCommons']}"
-    api "com.github.mariotaku.CommonsLibrary:logansquare:${libVersions['MariotakuCommons']}"
+    implementation "com.android.support:support-annotations:${libVersions['SupportLib']}"
+    implementation "com.bluelinelabs:logansquare:${libVersions['LoganSquare']}"
+    implementation "com.github.mariotaku.RestFu:library:${libVersions['RestFu']}"
+    implementation "com.github.mariotaku.RestFu:oauth:${libVersions['RestFu']}"
+    implementation "com.github.mariotaku.RestFu:oauth2:${libVersions['RestFu']}"
+    implementation "com.hannesdorfmann.parcelableplease:annotation:${libVersions['ParcelablePlease']}"
+    implementation "com.github.mariotaku.ObjectCursor:core:${libVersions['ObjectCursor']}"
+    implementation "com.github.mariotaku.ExportablePreferences:core:${libVersions['ExportablePreferences']}"
+    implementation "com.github.mariotaku.CommonsLibrary:objectcursor:${libVersions['MariotakuCommons']}"
+    implementation "com.github.mariotaku.CommonsLibrary:logansquare:${libVersions['MariotakuCommons']}"
 }
 
 install {

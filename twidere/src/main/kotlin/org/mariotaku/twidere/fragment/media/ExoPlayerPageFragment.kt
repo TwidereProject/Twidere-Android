@@ -180,7 +180,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         }
         playerView.useController = !isControlDisabled
         playerView.controllerShowTimeoutMs = 0
-        playerView.setOnSystemUiVisibilityChangeListener { visibility ->
+        playerView.setOnSystemUiVisibilityChangeListener {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) return@setOnSystemUiVisibilityChangeListener
             val visible = MediaViewerActivity.FLAG_SYSTEM_UI_HIDE_BARS !in
                     activity.window.decorView.systemUiVisibility
