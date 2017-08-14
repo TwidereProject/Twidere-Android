@@ -3,7 +3,7 @@ IDEA additional info:
 Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
---- twidere/build.gradle	(revision 892f68358e70e43bbb2a3bf50b39f7371c5c4671)
+--- twidere/build.gradle	(revision b337495c8a0c3aa9524f31b28123ca87dbf65ab5)
 +++ twidere/build.gradle	(revision )
 @@ -7,7 +7,7 @@
  apply plugin: 'androidsvgdrawable'
@@ -25,39 +25,43 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
          // END Non-FOSS component
      }
  }
-@@ -51,7 +51,7 @@
+@@ -53,9 +53,9 @@
  
      productFlavors {
          // START Non-FOSS component
--        google {}
-+//        google {}
+-        google {
+-            dimension 'channel'
+-        }
++//        google {
++//            dimension 'channel'
++//        }
          // END Non-FOSS component
-         fdroid {}
-     }
-@@ -96,14 +96,14 @@
-     compile project(':twidere.component.nyan')
+         fdroid {
+             dimension 'channel'
+@@ -102,14 +102,14 @@
+     implementation project(':twidere.component.nyan')
  
      // START Non-FOSS component
--    googleCompile "com.google.android.gms:play-services-maps:${libVersions['PlayServices']}"
--    googleCompile "com.google.android.gms:play-services-auth:${libVersions['PlayServices']}"
--    googleCompile "com.google.maps.android:android-maps-utils:${libVersions['MapsUtils']}"
--    googleCompile "com.anjlab.android.iab.v3:library:${libVersions['IABv3']}"
--    googleCompile "com.dropbox.core:dropbox-core-sdk:${libVersions['DropboxCoreSdk']}"
--    googleCompile("com.google.apis:google-api-services-drive:${libVersions['GoogleDriveApi']}") {
+-    googleImplementation "com.google.android.gms:play-services-maps:${libVersions['PlayServices']}"
+-    googleImplementation "com.google.android.gms:play-services-auth:${libVersions['PlayServices']}"
+-    googleImplementation "com.google.maps.android:android-maps-utils:${libVersions['MapsUtils']}"
+-    googleImplementation "com.anjlab.android.iab.v3:library:${libVersions['IABv3']}"
+-    googleImplementation "com.dropbox.core:dropbox-core-sdk:${libVersions['DropboxCoreSdk']}"
+-    googleImplementation("com.google.apis:google-api-services-drive:${libVersions['GoogleDriveApi']}") {
 -        exclude group: 'org.apache.httpcomponents'
 -    }
-+//    googleCompile "com.google.android.gms:play-services-maps:${libVersions['PlayServices']}"
-+//    googleCompile "com.google.android.gms:play-services-auth:${libVersions['PlayServices']}"
-+//    googleCompile "com.google.maps.android:android-maps-utils:${libVersions['MapsUtils']}"
-+//    googleCompile "com.anjlab.android.iab.v3:library:${libVersions['IABv3']}"
-+//    googleCompile "com.dropbox.core:dropbox-core-sdk:${libVersions['DropboxCoreSdk']}"
-+//    googleCompile("com.google.apis:google-api-services-drive:${libVersions['GoogleDriveApi']}") {
++//    googleImplementation "com.google.android.gms:play-services-maps:${libVersions['PlayServices']}"
++//    googleImplementation "com.google.android.gms:play-services-auth:${libVersions['PlayServices']}"
++//    googleImplementation "com.google.maps.android:android-maps-utils:${libVersions['MapsUtils']}"
++//    googleImplementation "com.anjlab.android.iab.v3:library:${libVersions['IABv3']}"
++//    googleImplementation "com.dropbox.core:dropbox-core-sdk:${libVersions['DropboxCoreSdk']}"
++//    googleImplementation("com.google.apis:google-api-services-drive:${libVersions['GoogleDriveApi']}") {
 +//        exclude group: 'org.apache.httpcomponents'
 +//    }
      // END Non-FOSS component
  
-     fdroidCompile "org.osmdroid:osmdroid-android:${libVersions['OSMDroid']}"
-@@ -231,8 +231,8 @@
+     fdroidImplementation "org.osmdroid:osmdroid-android:${libVersions['OSMDroid']}"
+@@ -240,8 +240,8 @@
  }
  
  // START Non-FOSS component
