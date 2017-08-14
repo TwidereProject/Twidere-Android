@@ -26,12 +26,13 @@ import android.os.Binder;
 import android.os.Process;
 import android.text.TextUtils;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import kotlin.collections.ArraysKt;
 
 import static android.text.TextUtils.isEmpty;
 
@@ -148,6 +149,6 @@ public class PermissionsManager implements Constants {
     }
 
     public boolean isDenied(String packageName) {
-        return ArrayUtils.contains(getPermissions(packageName), PERMISSION_DENIED);
+        return ArraysKt.contains(getPermissions(packageName), PERMISSION_DENIED);
     }
 }

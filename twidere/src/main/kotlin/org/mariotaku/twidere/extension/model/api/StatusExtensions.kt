@@ -21,8 +21,8 @@ package org.mariotaku.twidere.extension.model.api
 
 import android.text.Spanned
 import android.text.style.URLSpan
-import org.apache.commons.lang3.text.translate.EntityArrays
-import org.apache.commons.lang3.text.translate.LookupTranslator
+import org.apache.commons.text.translate.EntityArrays
+import org.apache.commons.text.translate.LookupTranslator
 import org.mariotaku.commons.text.CodePointArray
 import org.mariotaku.ktextension.isNotNullOrEmpty
 import org.mariotaku.ktextension.mapToArray
@@ -340,7 +340,7 @@ private fun Status.getInReplyToUserKey(accountKey: UserKey): UserKey? {
 
 private val noticeUriRegex = Regex("tag:([\\w\\d.]+),(\\d{4}-\\d{2}-\\d{2}):noticeId=(\\d+):objectType=(\\w+)")
 
-private object twitterRawTextTranslator : LookupTranslator(*EntityArrays.BASIC_UNESCAPE())
+private object twitterRawTextTranslator : LookupTranslator(EntityArrays.BASIC_UNESCAPE)
 
 class StatusTextWithIndices {
     var text: String? = null

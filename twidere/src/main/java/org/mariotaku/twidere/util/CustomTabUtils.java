@@ -30,7 +30,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.library.objectcursor.ObjectCursor;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
@@ -56,6 +55,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import kotlin.collections.ArraysKt;
 
 public class CustomTabUtils implements Constants {
 
@@ -214,10 +215,10 @@ public class CustomTabUtils implements Constants {
             final UserKey[] activatedAccountKeys, UserKey accountKey) {
         final UserKey[] accountKeys = Utils.INSTANCE.getAccountKeys(context, args);
         if (accountKeys != null) {
-            return ArrayUtils.contains(accountKeys, accountKey);
+            return ArraysKt.contains(accountKeys, accountKey);
         }
         if (activatedAccountKeys != null) {
-            return ArrayUtils.contains(activatedAccountKeys, accountKey);
+            return ArraysKt.contains(activatedAccountKeys, accountKey);
         }
         return false;
     }
