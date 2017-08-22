@@ -22,10 +22,7 @@ package org.mariotaku.twidere.util.dagger
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import dagger.Component
-import org.mariotaku.twidere.activity.BaseActivity
-import org.mariotaku.twidere.activity.ComposeActivity
-import org.mariotaku.twidere.activity.MediaViewerActivity
-import org.mariotaku.twidere.activity.PremiumDashboardActivity
+import org.mariotaku.twidere.activity.*
 import org.mariotaku.twidere.adapter.*
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.fragment.BaseDialogFragment
@@ -150,9 +147,11 @@ interface GeneralComponent {
 
     fun inject(service: BaseService)
 
-    companion object {
+    fun inject(activity: MainActivity)
 
+    companion object {
         private var instance: GeneralComponent? = null
+
         fun get(context: Context): GeneralComponent {
             return instance ?: run {
                 val helper = DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build()

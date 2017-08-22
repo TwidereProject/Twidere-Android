@@ -57,4 +57,9 @@
         <item name="colorPrimary">@color/nyan_background</item>
     </style>
 
+    <style name="Theme.Twidere.Launcher" parent="Theme.Twidere.Dark.NoActionBar">
+        <item name="darkThemeResource">@style/Theme.Twidere.Dark.Launcher</item>
+        <item name="lightThemeResource">@style/Theme.Twidere.Light.Launcher</item>
+    </style>
+
 </resources>

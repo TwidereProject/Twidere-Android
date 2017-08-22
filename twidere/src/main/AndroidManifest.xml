@@ -161,7 +161,7 @@
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.Twidere.NoActionBar"
+            android:theme="@style/Theme.Twidere.Launcher"
             android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -181,7 +181,7 @@
             android:icon="@mipmap/ic_launcher_hondajojo"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.Twidere.NoActionBar"
+            android:theme="@style/Theme.Twidere.Launcher"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

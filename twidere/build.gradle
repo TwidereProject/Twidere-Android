@@ -198,7 +198,7 @@ dependencies {
     implementation "com.github.mariotaku.CommonsLibrary:io:${libVersions['MariotakuCommons']}"
     implementation "com.github.mariotaku.CommonsLibrary:text:${libVersions['MariotakuCommons']}"
     implementation "com.github.mariotaku.CommonsLibrary:text-kotlin:${libVersions['MariotakuCommons']}"
-    implementation "com.github.mariotaku.CommonsLibrary:emojione:${libVersions['MariotakuCommons']}"
+    implementation "com.github.mariotaku.CommonsLibrary:emojione-android:${libVersions['MariotakuCommons']}"
     implementation "com.github.mariotaku.CommonsLibrary:objectcursor:${libVersions['MariotakuCommons']}"
     implementation "com.github.mariotaku.CommonsLibrary:logansquare:${libVersions['MariotakuCommons']}"
     implementation "com.github.mariotaku:KPreferences:${libVersions['KPreferences']}"

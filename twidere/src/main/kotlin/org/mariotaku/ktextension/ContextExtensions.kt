@@ -1,8 +1,10 @@
 package org.mariotaku.ktextension
 
 import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 
 /**
@@ -26,3 +28,9 @@ fun Context.unregisterReceiverSafe(receiver: BroadcastReceiver?): Boolean {
         return false
     }
 }
+
+val Context.componentIcon: Drawable?
+    get() {
+        val info = packageManager.getActivityInfo(ComponentName(this, javaClass), 0)
+        return info.loadIcon(packageManager)
+    }

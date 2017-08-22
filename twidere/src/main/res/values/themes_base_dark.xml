@@ -78,7 +78,6 @@
     <style name="Theme.Twidere.Dark.NoActionBar" parent="Theme.Twidere.Dark">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-
     </style>
 
     <style name="Theme.Twidere.Dark.ActionBar" parent="Theme.Twidere.Dark">
@@ -118,5 +117,7 @@
         <item name="android:windowActionBarOverlay">false</item>
         <item name="android:windowActionModeOverlay">false</item>
     </style>
+
+    <style name="Theme.Twidere.Dark.Launcher" parent="Theme.Twidere.Dark.NoActionBar"/>
 
 </resources>

@@ -145,6 +145,9 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     override val themeBackgroundOption: String
         get() = themePreferences[themeBackgroundOptionKey]
 
+    open val themeNavigationStyle: String
+        get() = themePreferences[navbarStyleKey]
+
     private var isNightBackup: Int = TwilightManagerAccessor.UNSPECIFIED
 
     private val actionHelper = IBaseActivity.ActionHelper(this)
@@ -237,13 +240,12 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
             StrictModeUtils.detectAllVmPolicy()
             StrictModeUtils.detectAllThreadPolicy()
         }
-        val prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-        val themeColor = prefs[themeColorKey]
-        val themeResource = getThemeResource(prefs, prefs[themeKey], themeColor)
+        val themeColor = themePreferences[themeColorKey]
+        val themeResource = getThemeResource(themePreferences, themePreferences[themeKey], themeColor)
         if (themeResource != 0) {
             setTheme(themeResource)
         }
-        onApplyNavigationStyle(prefs[navbarStyleKey], themeColor)
+        onApplyNavigationStyle(themeNavigationStyle, themeColor)
         super.onCreate(savedInstanceState)
         ActivitySupport.setTaskDescription(this, TaskDescriptionCompat(title.toString(), null,
                 ColorUtils.setAlphaComponent(overrideTheme.colorToolbar, 0xFF)))

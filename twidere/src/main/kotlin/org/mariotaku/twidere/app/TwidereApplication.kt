@@ -59,6 +59,7 @@ import org.mariotaku.twidere.service.StreamingService
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
 import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.util.emoji.EmojioneTranslator
 import org.mariotaku.twidere.util.kovenant.startKovenant
 import org.mariotaku.twidere.util.kovenant.stopKovenant
 import org.mariotaku.twidere.util.media.MediaPreloader
@@ -130,6 +131,7 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
             StrictModeUtils.detectAllVmPolicy()
         }
         super.onCreate()
+        EmojioneTranslator.init(this)
         applyLanguageSettings()
         startKovenant()
         initializeAsyncTask()

@@ -21,6 +21,7 @@ package org.mariotaku.twidere.util.cache
 
 import com.bumptech.glide.disklrucache.DiskLruCache
 import org.mariotaku.twidere.BuildConfig
+import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.JsonSerializer
 import java.io.File
 import java.io.IOException
@@ -29,22 +30,24 @@ import java.io.IOException
  * Created by mariotaku on 2017/3/1.
  */
 
-class JsonCache(val cacheDir: File) {
+class JsonCache(cacheDir: File) {
 
-    private val cache = try {
+    private val cache: DiskLruCache? = try {
         DiskLruCache.open(cacheDir, BuildConfig.VERSION_CODE, 1, 100 * 1048576)
     } catch (e: IOException) {
+        DebugLog.w(tr = e)
         null
     }
 
     fun <T> getList(key: String, cls: Class<T>): List<T>? {
         val value = cache?.get(key) ?: return null
-        try {
-            return value.getFile(0)?.inputStream()?.use {
+        return try {
+            value.getFile(0)?.inputStream()?.use {
                 JsonSerializer.parseList(it, cls)
             }
         } catch (e: IOException) {
-            return null
+            DebugLog.w(tr = e)
+            null
         }
     }
 
@@ -55,6 +58,8 @@ class JsonCache(val cacheDir: File) {
                 JsonSerializer.serialize(list, it, cls)
             }
             editor.commit()
+        } catch (e: IOException) {
+            DebugLog.w(tr = e)
         } finally {
             editor.abortUnlessCommitted()
         }
