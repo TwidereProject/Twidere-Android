@@ -18,16 +18,16 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tool="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal">
+              xmlns:tool="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="horizontal">
 
     <org.mariotaku.twidere.view.ProfileImageView
         android:id="@android:id/icon"
         style="?profileImageStyle"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
     <org.mariotaku.twidere.view.FixedTextView
         android:id="@android:id/text1"
@@ -38,6 +38,6 @@
         android:textAppearance="?android:textAppearanceSmall"
         android:textColor="?android:textColorPrimary"
         android:textStyle="bold"
-        tool:text="Name" />
+        tool:text="Name"/>
 
 </LinearLayout>

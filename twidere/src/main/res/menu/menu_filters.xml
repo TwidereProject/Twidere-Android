@@ -5,7 +5,7 @@
     <item
         android:id="@id/add"
         android:icon="@drawable/ic_action_add"
-        app:showAsAction="always"
-        android:title="@string/action_add_filter_rule"/>
+        android:title="@string/action_add_filter_rule"
+        app:showAsAction="always"/>
 
 </menu>

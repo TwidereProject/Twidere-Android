@@ -19,12 +19,12 @@
 
 <!--suppress AndroidUnknownAttribute -->
 <view xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    class="org.mariotaku.twidere.view.TabPagerIndicator$ItemLayout"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:background="?selectableItemBackground"
-    tools:layout_height="?actionBarSize">
+      xmlns:tools="http://schemas.android.com/tools"
+      class="org.mariotaku.twidere.view.TabPagerIndicator$ItemLayout"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:background="?selectableItemBackground"
+      tools:layout_height="?actionBarSize">
 
     <LinearLayout
         android:id="@+id/tab_content"
@@ -40,7 +40,7 @@
             android:layout_height="@dimen/action_icon_size"
             android:contentDescription="@string/icon"
             android:scaleType="centerInside"
-            tools:src="@drawable/ic_action_home" />
+            tools:src="@drawable/ic_action_home"/>
 
         <org.mariotaku.twidere.view.FixedTextView
             android:id="@+id/tab_label"
@@ -50,7 +50,7 @@
             android:textAllCaps="true"
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="?android:textColorPrimary"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
     </LinearLayout>
 
     <org.mariotaku.twidere.view.BadgeView
@@ -65,7 +65,7 @@
         android:ellipsize="none"
         android:gravity="center"
         android:padding="@dimen/element_spacing_xsmall"
-        android:textColor="@android:color/white"
-        android:maxLines="1"/>
+        android:singleLine="true"
+        android:textColor="@android:color/white"/>
 
 </view>

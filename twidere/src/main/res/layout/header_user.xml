@@ -18,10 +18,10 @@
   -->
 
 <RelativeLayout
-    android:id="@+id/headerUserProfile"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/headerUserProfile"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:showIn="@layout/fragment_user">
@@ -175,6 +175,7 @@
                 android:layout_height="wrap_content"
                 android:background="?selectableItemBackground"
                 android:clickable="true"
+                android:focusable="true"
                 android:orientation="vertical"
                 android:padding="@dimen/element_spacing_small">
 
@@ -195,6 +196,7 @@
                 android:layout_height="wrap_content"
                 android:background="?selectableItemBackground"
                 android:clickable="true"
+                android:focusable="true"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="@dimen/element_spacing_small">
@@ -224,6 +226,7 @@
                 android:layout_height="wrap_content"
                 android:background="?selectableItemBackground"
                 android:clickable="true"
+                android:focusable="true"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="@dimen/element_spacing_small">
@@ -253,6 +256,7 @@
                 android:layout_height="wrap_content"
                 android:background="?selectableItemBackground"
                 android:clickable="true"
+                android:focusable="true"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="@dimen/element_spacing_small">
@@ -290,6 +294,7 @@
                     android:layout_weight="1"
                     android:background="?selectableItemBackground"
                     android:clickable="true"
+                    android:focusable="true"
                     android:gravity="center"
                     android:orientation="vertical"
                     android:padding="@dimen/element_spacing_small">
@@ -320,6 +325,7 @@
                     android:layout_weight="1"
                     android:background="?selectableItemBackground"
                     android:clickable="true"
+                    android:focusable="true"
                     android:gravity="center"
                     android:orientation="vertical"
                     android:padding="@dimen/element_spacing_small">
@@ -350,6 +356,7 @@
                     android:layout_weight="1"
                     android:background="?selectableItemBackground"
                     android:clickable="true"
+                    android:focusable="true"
                     android:gravity="center"
                     android:orientation="vertical"
                     android:padding="@dimen/element_spacing_small">
@@ -380,6 +387,7 @@
                     android:layout_weight="1"
                     android:background="?selectableItemBackground"
                     android:clickable="true"
+                    android:focusable="true"
                     android:gravity="center"
                     android:orientation="vertical"
                     android:padding="@dimen/element_spacing_small">

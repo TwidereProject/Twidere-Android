@@ -22,8 +22,8 @@
     <gradient
         android:angle="270"
         android:centerColor="#30000000"
-        android:endColor="#80000000"
         android:centerX="0.7"
-        android:startColor="#00000000" />
+        android:endColor="#80000000"
+        android:startColor="#00000000"/>
 
 </shape>

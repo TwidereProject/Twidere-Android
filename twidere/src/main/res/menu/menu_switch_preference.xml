@@ -4,8 +4,8 @@
 
     <item
         android:id="@id/toggle"
+        android:title="@string/action_toggle"
         app:actionLayout="@layout/action_item_switch"
-        app:showAsAction="always"
-        android:title="@string/action_toggle"/>
+        app:showAsAction="always"/>
 
 </menu>

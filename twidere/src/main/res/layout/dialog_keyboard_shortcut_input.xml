@@ -19,8 +19,8 @@
   -->
 
 <org.mariotaku.twidere.view.ExtendedLinearLayout
-    android:id="@+id/keyboard_shortcut_input"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/keyboard_shortcut_input"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"

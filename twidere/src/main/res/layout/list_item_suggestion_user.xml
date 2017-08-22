@@ -54,10 +54,10 @@
             android:id="@android:id/text1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="?android:textColorPrimary"
-            tools:text="Mariotaku"
-            android:maxLines="1"/>
+            tools:text="Mariotaku"/>
 
         <org.mariotaku.twidere.view.FixedTextView
             android:id="@android:id/text2"
@@ -65,10 +65,10 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/element_spacing_small"
             android:layout_marginStart="@dimen/element_spacing_small"
+            android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:textColorSecondary"
-            tools:text="\@mariotaku"
-            android:maxLines="1"/>
+            tools:text="\@mariotaku"/>
     </LinearLayout>
 
 </LinearLayout>

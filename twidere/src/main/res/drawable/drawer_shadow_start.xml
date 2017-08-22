@@ -18,10 +18,10 @@
   -->
 
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <size android:width="8dp" />
+    <size android:width="8dp"/>
     <gradient
         android:centerColor="#11000000"
         android:endColor="#00000000"
-        android:startColor="#33000000" />
+        android:startColor="#33000000"/>
 
 </shape>

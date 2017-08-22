@@ -18,12 +18,12 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:descendantFocusability="blocksDescendants"
-    android:gravity="center_vertical"
-    android:minHeight="?listPreferredItemHeightSmall"
-    android:orientation="horizontal">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:descendantFocusability="blocksDescendants"
+              android:gravity="center_vertical"
+              android:minHeight="?listPreferredItemHeightSmall"
+              android:orientation="horizontal">
 
     <ImageView
         android:id="@android:id/icon"
@@ -33,7 +33,7 @@
         android:layout_marginStart="12dp"
         android:layout_weight="0"
         android:contentDescription="@string/icon"
-        android:scaleType="centerInside" />
+        android:scaleType="centerInside"/>
 
     <org.mariotaku.twidere.view.FixedTextView
         android:id="@android:id/text1"
@@ -43,9 +43,9 @@
         android:layout_marginStart="8dp"
         android:layout_weight="1"
         android:gravity="center_vertical"
+        android:maxLines="1"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="?android:textColorPrimary"
-        android:maxLines="1"/>
+        android:textColor="?android:textColorPrimary"/>
 
     <CheckBox
         android:id="@android:id/checkbox"
@@ -58,6 +58,6 @@
         android:layout_weight="0"
         android:clickable="false"
         android:focusable="false"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
 </LinearLayout>

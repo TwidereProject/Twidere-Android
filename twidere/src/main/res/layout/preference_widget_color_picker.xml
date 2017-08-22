@@ -26,4 +26,4 @@
     android:layout_gravity="center"
     android:adjustViewBounds="true"
     android:scaleType="centerCrop"
-    app:sivShape="circle" />
+    app:sivShape="circle"/>

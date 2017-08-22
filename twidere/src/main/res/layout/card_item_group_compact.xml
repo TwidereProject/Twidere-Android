@@ -18,10 +18,10 @@
   -->
 
 <org.mariotaku.twidere.view.ColorLabelRelativeLayout
-    android:id="@+id/itemContent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/itemContent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
@@ -40,9 +40,9 @@
         android:layout_marginEnd="@dimen/element_spacing_normal"
         android:layout_marginRight="@dimen/element_spacing_normal"
         android:contentDescription="@string/profile_image"
+        android:contextClickable="true"
         android:scaleType="fitCenter"
-        tools:src="@drawable/ic_profile_image_twidere"
-        android:contextClickable="true"/>
+        tools:src="@drawable/ic_profile_image_twidere"/>
 
 
     <org.mariotaku.twidere.view.NameView
@@ -104,9 +104,9 @@
             android:drawableLeft="@drawable/ic_indicator_followers"
             android:drawablePadding="4dp"
             android:drawableStart="@drawable/ic_indicator_followers"
+            android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            tools:text="255"
-            android:maxLines="1"/>
+            tools:text="255"/>
 
         <org.mariotaku.twidere.view.FixedTextView
             android:id="@+id/adminsCount"
@@ -116,9 +116,9 @@
             android:drawableLeft="@drawable/ic_indicator_followers"
             android:drawablePadding="4dp"
             android:drawableStart="@drawable/ic_indicator_followers"
+            android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            tools:text="255"
-            android:maxLines="1"/>
+            tools:text="255"/>
     </LinearLayout>
 
 </org.mariotaku.twidere.view.ColorLabelRelativeLayout>

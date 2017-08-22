@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.mariotaku.twidere.view.FixedTextView
-    android:id="@+id/sectionHeader"
-    style="?android:listSeparatorTextViewStyle"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sectionHeader"
+    style="?android:listSeparatorTextViewStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:textColor="?colorAccent"

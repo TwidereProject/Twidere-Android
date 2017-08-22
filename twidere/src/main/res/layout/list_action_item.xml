@@ -15,30 +15,30 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_centerVertical="true"
-    android:layout_toEndOf="@android:id/icon"
-    android:layout_toRightOf="@android:id/icon"
-    android:gravity="center_vertical"
-    android:minHeight="48dp"
-    android:orientation="horizontal"
-    android:padding="8dp">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_centerVertical="true"
+              android:layout_toEndOf="@android:id/icon"
+              android:layout_toRightOf="@android:id/icon"
+              android:gravity="center_vertical"
+              android:minHeight="48dp"
+              android:orientation="horizontal"
+              android:padding="8dp">
 
     <org.mariotaku.twidere.view.FixedTextView
         android:id="@android:id/text1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:maxLines="1"/>
+        android:maxLines="1"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <org.mariotaku.twidere.view.FixedTextView
         android:id="@android:id/text2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="0"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:maxLines="1"/>
+        android:maxLines="1"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
 </LinearLayout>
