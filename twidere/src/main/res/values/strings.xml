@@ -81,6 +81,7 @@
     <string name="action_quote">Quote</string>
     <string name="action_record_video">Record video</string>
     <string name="action_refresh">Refresh</string>
+    <string name="action_refresh_launch_presentations">Refresh launch screens</string>
     <string name="action_register">Register</string>
     <string name="action_remove_conversation_avatar">Remove icon</string>
     <string name="action_reply">Reply</string>

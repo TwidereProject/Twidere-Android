@@ -39,6 +39,7 @@ class RefreshLaunchPresentationsTask(context: Context) : BaseAbstractTask<Unit?,
                 .build()
         try {
             val presentations = restHttpClient.newCall(request).execute().use {
+                if (!it.isSuccessful) return@use null
                 return@use JsonSerializer.parseList(it.body.stream(), LaunchPresentation::class.java)
             }
             jsonCache.saveList(JSON_CACHE_KEY, presentations, LaunchPresentation::class.java)

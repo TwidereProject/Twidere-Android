@@ -79,10 +79,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top|end"
-            android:layout_marginEnd="@dimen/element_spacing_normal"
-            android:layout_marginRight="@dimen/element_spacing_normal"
-            android:layout_marginTop="@dimen/element_spacing_normal"
+            android:layout_marginEnd="@dimen/element_spacing_large"
+            android:layout_marginRight="@dimen/element_spacing_large"
+            android:layout_marginTop="@dimen/element_spacing_large"
+            android:background="@drawable/bg_btn_launch_presentation_skip"
+            android:minHeight="36dp"
+            android:minWidth="56dp"
             android:text="@string/action_skip"
-            android:visibility="gone"/>
+            android:textColor="@android:color/white"
+            android:visibility="gone"
+            tools:visibility="visible"/>
     </FrameLayout>
 </RelativeLayout>

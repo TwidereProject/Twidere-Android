@@ -85,6 +85,7 @@ val homeRefreshDirectMessagesKey = KBooleanKey(KEY_HOME_REFRESH_DIRECT_MESSAGES,
 val homeRefreshSavedSearchesKey = KBooleanKey(KEY_HOME_REFRESH_SAVED_SEARCHES, true)
 val composeStatusVisibilityKey = KNullableStringKey("compose_status_visibility", null)
 val navbarStyleKey = KStringKey(KEY_NAVBAR_STYLE, NavbarStyle.DEFAULT)
+val lastLaunchPresentationTimeKey = KLongKey("last_launch_presentation_time", -1)
 
 object cacheSizeLimitKey : KSimpleKey<Int>(KEY_CACHE_SIZE_LIMIT, 300) {
     override fun read(preferences: SharedPreferences) = preferences.getInt(key, def).coerceIn(100,

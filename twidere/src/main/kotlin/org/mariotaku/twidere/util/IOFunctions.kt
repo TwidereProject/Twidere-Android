@@ -11,7 +11,7 @@ import java.io.OutputStream
  */
 
 fun tempFileInputStream(context: Context, write: (OutputStream) -> Unit): InputStream {
-    val file = File.createTempFile("twidere__temp_is_file", "tmp", context.cacheDir)
+    val file = File.createTempFile("twidere__temp_is_file", ".tmp", context.cacheDir)
     file.outputStream().use { write(it) }
     return TempFileInputStream(file)
 }

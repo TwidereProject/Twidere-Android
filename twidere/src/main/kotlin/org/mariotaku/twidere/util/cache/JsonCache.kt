@@ -51,7 +51,11 @@ class JsonCache(cacheDir: File) {
         }
     }
 
-    fun <T> saveList(key: String, list: List<T>, cls: Class<T>) {
+    fun <T> saveList(key: String, list: List<T>?, cls: Class<T>) {
+        if (list == null) {
+            cache?.remove(key)
+            return
+        }
         val editor = cache?.edit(key) ?: return
         try {
             editor.getFile(0)?.outputStream()?.use {

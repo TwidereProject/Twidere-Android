@@ -57,7 +57,7 @@ class TaskServiceRunner(
         return false
     }
 
-    fun createRefreshTask(@Action action: String): AbstractTask<*, *, (Boolean) -> Unit>? {
+    private fun createRefreshTask(@Action action: String): AbstractTask<*, *, (Boolean) -> Unit>? {
         if (!Utils.isBatteryOkay(context) && preferences[stopAutoRefreshWhenBatteryLowKey]) {
             // Low battery, don't refresh
             return null

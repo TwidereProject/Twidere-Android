@@ -117,6 +117,8 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     lateinit var restHttpClient: RestHttpClient
     @Inject
     lateinit var mastodonApplicationRegistry: MastodonApplicationRegistry
+    @Inject
+    lateinit var taskServiceRunner: TaskServiceRunner
 
     protected val statusScheduleProvider: StatusScheduleProvider?
         get() = statusScheduleProviderFactory.newInstance(this)

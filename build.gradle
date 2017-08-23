@@ -46,7 +46,7 @@ subprojects {
                     MariotakuCommons     : '0.9.17',
                     RestFu               : '0.9.57',
                     ObjectCursor         : '0.9.20',
-                    PlayServices         : '11.0.4',
+                    PlayServices         : '11.2.0',
                     MapsUtils            : '0.5',
                     Crashlyrics          : '2.6.8',
                     DropboxCoreSdk       : '3.0.3',

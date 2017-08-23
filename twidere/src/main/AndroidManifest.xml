@@ -561,6 +561,15 @@
         <activity
             android:name=".activity.content.FavoriteConfirmDialogActivity"
             android:theme="@style/Theme.Twidere.NoDisplay"/>
+        <activity
+            android:name=".activity.presentation.ToggleRefreshActivity"
+            android:label="@string/action_refresh_launch_presentations"
+            android:theme="@style/Theme.Twidere.NoDisplay">
+            <intent-filter>
+                <action android:name="org.mariotaku.twidere.HIDDEN_SETTINGS_ENTRY"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
 
         <service
             android:name=".service.LegacyTaskService"
