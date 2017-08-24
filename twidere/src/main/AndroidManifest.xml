@@ -125,9 +125,6 @@
             android:required="false"/>
 
         <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="dc4ee756d3b705e00011782f1426fc8656ad3bd9"/>
-        <meta-data
             android:name="com.google.android.backup.api_key"
             android:value="AEdPqrEAAAAIKbKATV1AGbLB4kem3w8QaPVJSPVVumbMHxkfwA"/>
         <meta-data
