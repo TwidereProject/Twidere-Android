@@ -23,12 +23,11 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.os.Bundle
+import android.support.v4.content.pm.ShortcutManagerCompat
 import android.support.v7.app.AlertDialog
-import com.bumptech.glide.Glide
 import nl.komponents.kovenant.combine.and
+import nl.komponents.kovenant.ui.alwaysUi
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.kpreferences.get
@@ -41,17 +40,16 @@ import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.activity.UserListSelectorActivity
 import org.mariotaku.twidere.activity.UserSelectorActivity
 import org.mariotaku.twidere.constant.nameFirstKey
-import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.extension.applyOnShow
 import org.mariotaku.twidere.extension.applyTheme
-import org.mariotaku.twidere.extension.loadProfileImage
+import org.mariotaku.twidere.extension.dismissProgressDialog
+import org.mariotaku.twidere.extension.showProgressDialog
 import org.mariotaku.twidere.fragment.BaseDialogFragment
-import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.IntentUtils
-import org.mariotaku.twidere.util.glide.DeferredTarget
+import org.mariotaku.twidere.util.shortcut.ShortcutCreator
 import java.lang.ref.WeakReference
 
 class CreateQuickAccessShortcutActivity : BaseActivity() {
@@ -159,32 +157,21 @@ class CreateQuickAccessShortcutActivity : BaseActivity() {
                 finish()
             }
             else -> {
-                val displayName = userColorNameManager.getDisplayName(user, preferences[nameFirstKey])
-                val deferred = Glide.with(this).loadProfileImage(this, user,
-                        shapeStyle = preferences[profileImageStyleKey], cornerRadiusRatio = 0.1f,
-                        size = getString(R.string.profile_image_size)).into(DeferredTarget())
                 val weakThis = WeakReference(this)
-                executeAfterFragmentResumed {
-                    ProgressDialogFragment.show(it.supportFragmentManager, TAG_LOAD_ICON_PROGRESS)
-                } and deferred.promise.successUi { drawable ->
+                val promise = showProgressDialog(TAG_LOAD_ICON_PROGRESS)
+                        .and(ShortcutCreator.userShortcut(this, user.account_key, user))
+                promise.successUi { (_, shortcut) ->
                     val activity = weakThis.get() ?: return@successUi
-                    val launchIntent = IntentUtils.userProfile(accountKey, user.key,
-                            user.screen_name, profileUrl = user.extras?.statusnet_profile_url)
-                    val icon = Bitmap.createBitmap(drawable.intrinsicWidth,
-                            drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
-                    val canvas = Canvas(icon)
-                    drawable.setBounds(0, 0, icon.width, icon.height)
-                    drawable.draw(canvas)
-                    activity.setResult(Activity.RESULT_OK, Intent().apply {
-                        putExtra(Intent.EXTRA_SHORTCUT_INTENT, launchIntent)
-                        putExtra(Intent.EXTRA_SHORTCUT_ICON, icon)
-                        putExtra(Intent.EXTRA_SHORTCUT_NAME, displayName)
-                    })
+                    activity.setResult(Activity.RESULT_OK,
+                            ShortcutManagerCompat.createShortcutResultIntent(activity, shortcut))
                     activity.finish()
                 }.failUi {
                     val activity = weakThis.get() ?: return@failUi
                     activity.setResult(Activity.RESULT_CANCELED)
                     activity.finish()
+                }.alwaysUi {
+                    val activity = weakThis.get() ?: return@alwaysUi
+                    activity.dismissProgressDialog(TAG_LOAD_ICON_PROGRESS)
                 }
             }
         }
@@ -246,5 +233,6 @@ class CreateQuickAccessShortcutActivity : BaseActivity() {
 
     companion object {
         private const val TAG_LOAD_ICON_PROGRESS = "load_icon_progress"
+
     }
 }

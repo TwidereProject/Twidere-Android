@@ -53,6 +53,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FixedAsyncTaskLoader
 import android.support.v4.content.Loader
+import android.support.v4.content.pm.ShortcutManagerCompat
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v4.graphics.ColorUtils
 import android.support.v4.view.OnApplyWindowInsetsListener
@@ -80,6 +81,7 @@ import kotlinx.android.synthetic.main.header_user.*
 import kotlinx.android.synthetic.main.header_user.view.*
 import kotlinx.android.synthetic.main.layout_content_fragment_common.*
 import kotlinx.android.synthetic.main.layout_content_pages_common.*
+import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.then
 import nl.komponents.kovenant.ui.alwaysUi
@@ -140,6 +142,7 @@ import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener
 import org.mariotaku.twidere.util.UserColorNameManager.UserColorChangedListener
 import org.mariotaku.twidere.util.UserColorNameManager.UserNicknameChangedListener
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo
+import org.mariotaku.twidere.util.shortcut.ShortcutCreator
 import org.mariotaku.twidere.util.support.ActivitySupport
 import org.mariotaku.twidere.util.support.ActivitySupport.TaskDescriptionCompat
 import org.mariotaku.twidere.util.support.ViewSupport
@@ -678,16 +681,16 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
         userFragmentView.windowInsetsListener = OnApplyWindowInsetsListener listener@ { _, insets ->
             val top = insets.systemWindowInsetTop
-                profileContentContainer.setPadding(0, top, 0, 0)
-                profileBannerSpace.statusBarHeight = top
+            profileContentContainer.setPadding(0, top, 0, 0)
+            profileBannerSpace.statusBarHeight = top
 
-                if (profileBannerSpace.toolbarHeight == 0) {
-                    var toolbarHeight = toolbar.measuredHeight
-                    if (toolbarHeight == 0) {
-                        toolbarHeight = ThemeUtils.getActionBarHeight(context)
-                    }
-                    profileBannerSpace.toolbarHeight = toolbarHeight
+            if (profileBannerSpace.toolbarHeight == 0) {
+                var toolbarHeight = toolbar.measuredHeight
+                if (toolbarHeight == 0) {
+                    toolbarHeight = ThemeUtils.getActionBarHeight(context)
                 }
+                profileBannerSpace.toolbarHeight = toolbarHeight
+            }
             return@listener insets
         }
 
@@ -801,6 +804,9 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
         menu.setItemAvailability(R.id.blocked_users, isMyself)
         menu.setItemAvailability(R.id.block, !isMyself)
+
+        menu.setItemAvailability(R.id.add_to_home_screen,
+                ShortcutManagerCompat.isRequestPinShortcutSupported(context))
 
         var canAddToList = false
         var canMute = false
@@ -1033,9 +1039,22 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 }
                 return true
             }
+            R.id.add_to_home_screen -> {
+                if (!ShortcutManagerCompat.isRequestPinShortcutSupported(context)) return true
+                val promise = showProgressDialog(FRAGMENT_TAG_ADD_USER_SHORTCUT_TO_HOME_SCREEN)
+                        .and(ShortcutCreator.userShortcut(context, user.account_key, user))
+                val weakThis = WeakReference(this)
+                promise.successUi { (_, shortcut) ->
+                    val fragment = weakThis.get() ?: return@successUi
+                    ShortcutManagerCompat.requestPinShortcut(fragment.context, shortcut, null)
+                }.alwaysUi {
+                    val fragment = weakThis.get() ?: return@alwaysUi
+                    fragment.dismissProgressDialog(FRAGMENT_TAG_ADD_USER_SHORTCUT_TO_HOME_SCREEN)
+                }
+            }
             else -> {
                 val intent = item.intent
-                if (intent != null && intent.resolveActivity(context.packageManager) != null) {
+                if (intent?.resolveActivity(context.packageManager) != null) {
                     startActivity(intent)
                 }
             }
@@ -1590,7 +1609,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             do {
                 val resp = microBlog.getUserListOwnerships(paging)
                 resp.mapTo(ownedLists) { item ->
-                    val userList = item.toParcelable( user.account_key)
+                    val userList = item.toParcelable(user.account_key)
                     userList.is_user_inside = listMemberships.any { it.id == item.id }
                     return@mapTo userList
                 }
@@ -1836,12 +1855,13 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         private val LOADER_ID_USER = 1
         private val LOADER_ID_FRIENDSHIP = 2
 
-        private val TAB_POSITION_STATUSES = 0
-        private val TAB_POSITION_MEDIA = 1
-        private val TAB_POSITION_FAVORITES = 2
-        private val TAB_TYPE_STATUSES = "statuses"
-        private val TAB_TYPE_STATUSES_WITH_REPLIES = "statuses_with_replies"
-        private val TAB_TYPE_MEDIA = "media"
-        private val TAB_TYPE_FAVORITES = "favorites"
+        private const val TAB_POSITION_STATUSES = 0
+        private const val TAB_POSITION_MEDIA = 1
+        private const val TAB_POSITION_FAVORITES = 2
+        private const val TAB_TYPE_STATUSES = "statuses"
+        private const val TAB_TYPE_STATUSES_WITH_REPLIES = "statuses_with_replies"
+        private const val TAB_TYPE_MEDIA = "media"
+        private const val TAB_TYPE_FAVORITES = "favorites"
+        private const val FRAGMENT_TAG_ADD_USER_SHORTCUT_TO_HOME_SCREEN = "add_user_shortcut_to_home_screen"
     }
 }

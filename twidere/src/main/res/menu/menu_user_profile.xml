@@ -86,5 +86,9 @@
         android:id="@id/open_in_browser"
         android:icon="@drawable/ic_action_web"
         android:title="@string/action_open_in_browser"/>
+    <item
+        android:id="@id/add_to_home_screen"
+        android:icon="@drawable/ic_action_home"
+        android:title="@string/action_add_to_home_screen"/>
 
 </menu>
