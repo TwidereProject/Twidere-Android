@@ -85,7 +85,7 @@ val homeRefreshDirectMessagesKey = KBooleanKey(KEY_HOME_REFRESH_DIRECT_MESSAGES,
 val homeRefreshSavedSearchesKey = KBooleanKey(KEY_HOME_REFRESH_SAVED_SEARCHES, true)
 val composeStatusVisibilityKey = KNullableStringKey("compose_status_visibility", null)
 val navbarStyleKey = KStringKey(KEY_NAVBAR_STYLE, NavbarStyle.DEFAULT)
-val lastLaunchPresentationTimeKey = KLongKey("last_launch_presentation_time", -1)
+val lastLaunchTimeKey = KLongKey("last_launch_time", -1)
 val promotionsEnabledKey = KBooleanKey("promotions_enabled", false)
 
 object cacheSizeLimitKey : KSimpleKey<Int>(KEY_CACHE_SIZE_LIMIT, 300) {

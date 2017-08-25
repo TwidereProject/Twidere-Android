@@ -58,6 +58,7 @@ import org.mariotaku.twidere.util.media.MediaPreloader
 import org.mariotaku.twidere.util.media.ThumborWrapper
 import org.mariotaku.twidere.util.media.TwidereMediaDownloader
 import org.mariotaku.twidere.util.net.TwidereDns
+import org.mariotaku.twidere.util.notification.ContentNotificationManager
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.refresh.AutoRefreshController
 import org.mariotaku.twidere.util.refresh.JobSchedulerAutoRefreshController

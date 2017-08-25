@@ -44,6 +44,7 @@
     <!-- [verb] Action for deleting a file or a twitter object like tweet-->
     <string name="action_delete">Delete</string>
     <string name="action_delete_messages">Delete messages</string>
+    <string name="action_disable_promotions">Disable promotions</string>
     <string name="action_dont_restart">Don\'t restart</string>
     <string name="action_dont_terminate">Don\'t quit</string>
     <!-- [verb] Edit image/settings etc. -->
@@ -769,6 +770,16 @@
 
     <string name="none">None</string>
 
+    <string name="notification_channel_description_content_interactions">Interactions like mentions and retweets</string>
+    <string name="notification_channel_description_content_messages">Important messages like DMs</string>
+    <string name="notification_channel_name_app_notices">App notices</string>
+    <string name="notification_channel_name_background_progresses">Background operations</string>
+    <string name="notification_channel_name_content_interactions">Content interactions</string>
+    <string name="notification_channel_name_content_messages">Content messages</string>
+    <string name="notification_channel_name_content_notices">Content notices</string>
+    <string name="notification_channel_name_content_subscriptions">Content subscriptions</string>
+    <string name="notification_channel_name_content_updates">Content updates</string>
+    <string name="notification_channel_name_service_statuses">Service statuses</string>
     <string name="notification_direct_message"><xliff:g id="user">%s</xliff:g> sent you a direct message.</string>
     <string name="notification_direct_message_multiple_messages"><xliff:g id="user">%1$s</xliff:g> sent you <xliff:g id="messages_count">%2$d</xliff:g> direct messages.</string>
     <string name="notification_direct_message_multiple_users"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="users_count">%2$d</xliff:g> others sent you <xliff:g id="messages_count">%3$d</xliff:g> direct messages.</string>
@@ -1329,5 +1340,4 @@
     <string name="users_blocked">Blocked these users.</string>
     <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>\'s lists</string>
     <string name="users_statuses">User\'s tweets</string>
-    <string name="action_disable_promotions">Disable promotions</string>
 </resources>

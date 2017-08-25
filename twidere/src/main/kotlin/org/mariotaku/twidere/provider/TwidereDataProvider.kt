@@ -54,6 +54,7 @@ import org.mariotaku.twidere.util.SQLiteDatabaseWrapper.LazyLoadCallback
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.database.CachedUsersQueryBuilder
 import org.mariotaku.twidere.util.database.SuggestionsCursorCreator
+import org.mariotaku.twidere.util.notification.ContentNotificationManager
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 import javax.inject.Inject

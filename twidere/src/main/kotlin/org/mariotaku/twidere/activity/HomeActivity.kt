@@ -38,7 +38,6 @@ import android.os.Build
 import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
-import android.support.v4.app.NotificationCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewCompat
 import android.support.v4.view.ViewPager.OnPageChangeListener
@@ -79,6 +78,7 @@ import org.mariotaku.twidere.annotation.NavbarStyle
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.model.notificationBuilder
 import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.fragment.AccountsDashboardFragment
 import org.mariotaku.twidere.fragment.BaseDialogFragment
@@ -91,6 +91,7 @@ import org.mariotaku.twidere.model.SupportTabSpec
 import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.UnreadCountUpdatedEvent
+import org.mariotaku.twidere.model.notification.NotificationChannelSpec
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
@@ -99,6 +100,7 @@ import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.view.HomeDrawerLayout
 import org.mariotaku.twidere.view.TabPagerIndicator
+import java.lang.ref.WeakReference
 
 class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, SupportFragmentCallback,
         OnLongClickListener, DrawerLayout.DrawerListener {
@@ -117,6 +119,18 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     private var updateUnreadCountTask: UpdateUnreadCountTask? = null
     private val readStateChangeListener = OnSharedPreferenceChangeListener { _, _ -> updateUnreadCount() }
     private val controlBarShowHideHelper = ControlBarShowHideHelper(this)
+
+    override val controlBarHeight: Int
+        get() {
+            return mainTabs.height - mainTabs.stripHeight
+        }
+
+    override val currentVisibleFragment: Fragment?
+        get() {
+            val currentItem = mainPager.currentItem
+            if (currentItem < 0 || currentItem >= pagerAdapter.count) return null
+            return pagerAdapter.instantiateItem(mainPager, currentItem)
+        }
 
     private val homeDrawerToggleDelegate = object : ActionBarDrawerToggle.Delegate {
         override fun setActionBarUpIndicator(upDrawable: Drawable, @StringRes contentDescRes: Int) {
@@ -146,34 +160,17 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         }
     }
 
-    override val controlBarHeight: Int
-        get() {
-            return mainTabs.height - mainTabs.stripHeight
+    private val keyboardShortcutRecipient: Fragment?
+        get() = when {
+            homeMenu.isDrawerOpen(GravityCompat.START) -> leftDrawerFragment
+            homeMenu.isDrawerOpen(GravityCompat.END) -> null
+            else -> currentVisibleFragment
         }
-
-    fun closeAccountsDrawer() {
-        if (homeMenu == null) return
-        homeMenu.closeDrawers()
-    }
 
     private val activatedAccountKeys: Array<UserKey>
         get() = DataStoreUtils.getActivatedAccountKeys(this)
 
-    override val currentVisibleFragment: Fragment?
-        get() {
-            val currentItem = mainPager.currentItem
-            if (currentItem < 0 || currentItem >= pagerAdapter.count) return null
-            return pagerAdapter.instantiateItem(mainPager, currentItem)
-        }
-
-    override fun triggerRefresh(position: Int): Boolean {
-        val f = pagerAdapter.instantiateItem(mainPager, position)
-        if (f.activity == null || f.isDetached) return false
-        if (f !is RefreshScrollTopInterface) return false
-        return f.triggerRefresh()
-    }
-
-    val leftDrawerFragment: Fragment?
+    private val leftDrawerFragment: Fragment?
         get() = supportFragmentManager.findFragmentById(R.id.leftDrawer)
 
     private val isDrawerOpen: Boolean
@@ -220,7 +217,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         ViewCompat.setOnApplyWindowInsetsListener(homeContent, this)
         homeMenu.fitsSystemWindows = Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ||
                 preferences[navbarStyleKey] != NavbarStyle.TRANSPARENT
-        if (!homeMenu.fitsSystemWindows) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP || !ViewCompat.getFitsSystemWindows(homeMenu)) {
             ViewCompat.setOnApplyWindowInsetsListener(homeMenu, null)
         }
 
@@ -544,6 +541,12 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         return super.onKeyUp(keyCode, event)
     }
 
+    override fun triggerRefresh(position: Int): Boolean {
+        val f = pagerAdapter.instantiateItem(mainPager, position)
+        if (f.activity == null || f.isDetached) return false
+        if (f !is RefreshScrollTopInterface) return false
+        return f.triggerRefresh()
+    }
 
     fun notifyAccountsChanged() {
     }
@@ -551,11 +554,6 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     @Subscribe
     fun notifyUnreadCountUpdated(event: UnreadCountUpdatedEvent) {
         updateUnreadCount()
-    }
-
-    fun openSearchView(account: AccountDetails?) {
-        selectedAccountToSearch = account
-        onSearchRequested()
     }
 
     fun updateUnreadCount() {
@@ -580,10 +578,10 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             if (mainTabs.columns > 1) {
                 val lp = actionsButton.layoutParams
                 val total: Float
-                if (lp is MarginLayoutParams) {
-                    total = (lp.bottomMargin + actionsButton.height).toFloat()
+                total = if (lp is MarginLayoutParams) {
+                    (lp.bottomMargin + actionsButton.height).toFloat()
                 } else {
-                    total = actionsButton.height.toFloat()
+                    actionsButton.height.toFloat()
                 }
                 return 1 - actionsButton.translationY / total
             }
@@ -626,16 +624,15 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         return homeDrawerToggleDelegate
     }
 
-    private val keyboardShortcutRecipient: Fragment?
-        get() {
-            if (homeMenu.isDrawerOpen(GravityCompat.START)) {
-                return leftDrawerFragment
-            } else if (homeMenu.isDrawerOpen(GravityCompat.END)) {
-                return null
-            } else {
-                return currentVisibleFragment
-            }
-        }
+    fun closeAccountsDrawer() {
+        if (homeMenu == null) return
+        homeMenu.closeDrawers()
+    }
+
+    private fun openSearchView(account: AccountDetails?) {
+        selectedAccountToSearch = account
+        onSearchRequested()
+    }
 
     private fun handleFragmentKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler,
             keyCode: Int, repeatCount: Int,
@@ -678,11 +675,10 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         if (Intent.ACTION_SEARCH == action) {
             val query = intent.getStringExtra(SearchManager.QUERY)
             val appSearchData = intent.getBundleExtra(SearchManager.APP_DATA)
-            val accountKey: UserKey?
-            if (appSearchData != null && appSearchData.containsKey(EXTRA_ACCOUNT_KEY)) {
-                accountKey = appSearchData.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+            val accountKey = if (appSearchData != null && appSearchData.containsKey(EXTRA_ACCOUNT_KEY)) {
+                appSearchData.getParcelable(EXTRA_ACCOUNT_KEY)
             } else {
-                accountKey = Utils.getDefaultAccountKey(this)
+                Utils.getDefaultAccountKey(this)
             }
             IntentUtils.openSearch(this, accountKey, query)
             return -1
@@ -847,7 +843,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         }
         val intent = Intent(this, UsageStatisticsActivity::class.java)
         val contentIntent = PendingIntent.getActivity(this, 0, intent, 0)
-        val builder = NotificationCompat.Builder(this)
+        val builder = NotificationChannelSpec.appNotices.notificationBuilder(this)
         builder.setAutoCancel(true)
         builder.setSmallIcon(R.drawable.ic_stat_info)
         builder.setTicker(getString(R.string.usage_statistics))
@@ -889,7 +885,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     }
 
 
-    fun hasMultiColumns(): Boolean {
+    private fun hasMultiColumns(): Boolean {
         if (!DeviceUtils.isDeviceTablet(this) || !DeviceUtils.isScreenTablet(this)) return false
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             return preferences.getBoolean("multi_column_tabs_landscape", resources.getBoolean(R.bool.default_multi_column_tabs_land))
@@ -907,17 +903,20 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     }
 
     private class UpdateUnreadCountTask(
-            private val context: Context,
+            context: Context,
             private val preferences: SharedPreferences,
             private val readStateManager: ReadStateManager,
-            private val indicator: TabPagerIndicator,
+            indicator: TabPagerIndicator,
             private val tabs: Array<SupportTabSpec>
     ) : AsyncTask<Any, UpdateUnreadCountTask.TabBadge, SparseIntArray>() {
 
         private val activatedKeys = DataStoreUtils.getActivatedAccountKeys(context)
+        private val contextRef = WeakReference(context)
+        private val indicatorRef = WeakReference(indicator)
 
         override fun doInBackground(vararg params: Any): SparseIntArray {
             val result = SparseIntArray()
+            val context = contextRef.get() ?: return result
             tabs.forEachIndexed { i, spec ->
                 if (spec.type == null) {
                     publishProgress(TabBadge(i, -1))
@@ -969,6 +968,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         }
 
         override fun onPostExecute(result: SparseIntArray) {
+            val indicator = indicatorRef.get() ?: return
             indicator.clearBadge()
             for (i in 0 until result.size()) {
                 indicator.setBadge(result.keyAt(i), result.valueAt(i))
@@ -976,6 +976,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         }
 
         override fun onProgressUpdate(vararg values: TabBadge) {
+            val indicator = indicatorRef.get() ?: return
             for (value in values) {
                 indicator.setBadge(value.index, value.count)
             }

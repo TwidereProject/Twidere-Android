@@ -23,16 +23,13 @@ import android.accounts.AccountManager
 import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.Service
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
-import android.provider.BaseColumns
 import android.support.annotation.UiThread
 import android.support.annotation.WorkerThread
 import android.support.v4.app.NotificationCompat
-import android.support.v4.app.NotificationCompat.Builder
 import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
@@ -41,7 +38,6 @@ import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.abstask.library.ManualTaskStarter
 import org.mariotaku.kpreferences.get
-import org.mariotaku.ktextension.configure
 import org.mariotaku.ktextension.getNullableTypedArrayExtra
 import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.ktextension.useCursor
@@ -58,9 +54,12 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.constant.refreshAfterTweetKey
 import org.mariotaku.twidere.extension.getErrorMessage
+import org.mariotaku.twidere.extension.model.notificationBuilder
+import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtras
 import org.mariotaku.twidere.model.draft.StatusObjectActionExtras
+import org.mariotaku.twidere.model.notification.NotificationChannelSpec
 import org.mariotaku.twidere.model.schedule.ScheduleInfo
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUpdateUtils
@@ -183,7 +182,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
 
     private fun sendMessage(message: ParcelableNewMessage) {
         val title = getString(R.string.sending_direct_message)
-        val builder = Builder(this)
+        val builder = NotificationChannelSpec.backgroundProgresses.notificationBuilder(this)
         builder.setSmallIcon(R.drawable.ic_stat_send)
         builder.setProgress(100, 0, true)
         builder.setTicker(title)
@@ -239,7 +238,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
 
     private fun updateStatuses(statuses: Array<ParcelableStatusUpdate>, scheduleInfo: ScheduleInfo? = null) {
         val context = this
-        val builder = Builder(context)
+        val builder = NotificationChannelSpec.backgroundProgresses.notificationBuilder(context)
         startForeground(NOTIFICATION_ID_UPDATE_STATUS, updateUpdateStatusNotification(context,
                 builder, 0, null))
         for (item in statuses) {
@@ -321,9 +320,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
             invokeAfterExecute(task, result)
 
             if (!result.succeed) {
-                contentResolver.insert(Drafts.CONTENT_URI_NOTIFICATIONS, configure(ContentValues()) {
-                    put(BaseColumns._ID, result.draftId)
-                })
+                contentResolver.insert(Drafts.CONTENT_URI_NOTIFICATIONS.withAppendedPath(result.draftId.toString()), null)
             }
         }
         if (preferences[refreshAfterTweetKey]) {
