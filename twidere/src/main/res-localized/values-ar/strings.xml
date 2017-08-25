@@ -198,7 +198,7 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">دعم Emoji</string>
   <string name="empty_content">محتوى فارغ</string>
-  <string name="enable_notifications">تفعيل الاشعارات</string>
+  <string name="action_enable_notifications">تفعيل الاشعارات</string>
   <string name="error_info_oauth_timestamp_error">الرجاء التحقق من تاريخ النظام الخاص بك وإعدادات الوقت.</string>
   <string name="error_message">خطأ: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_media_message_too_many">وسائط كثيرة جداً</string>

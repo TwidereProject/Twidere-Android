@@ -272,8 +272,8 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Emoji支持</string>
   <string name="empty_content">空内容</string>
-  <string name="enable_notifications">启用通知</string>
-  <string name="enable_retweets">启用转推</string>
+  <string name="action_enable_notifications">启用通知</string>
+  <string name="action_enable_retweets">启用转推</string>
   <string name="enable_streaming">启用实时流</string>
   <string name="error_info_oauth_timestamp_error">请检查您的系统日期和时间设置</string>
   <string name="error_message">发生问题：<xliff:g id="message">%s</xliff:g></string>

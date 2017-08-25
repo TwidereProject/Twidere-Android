@@ -196,7 +196,7 @@
   <string name="ellipsis">...</string>
   <string name="emoji_support">Поддержка смайлов</string>
   <string name="empty_content">Пустое содержимое</string>
-  <string name="enable_retweets">Включить ретвиты</string>
+  <string name="action_enable_retweets">Включить ретвиты</string>
   <string name="enable_streaming">Включить стриминг</string>
   <string name="error_info_oauth_timestamp_error">Пожалуйста, проверьте ваши системную дату и настройки времени.</string>
   <string name="error_message">Ошибка: <xliff:g id="message">%s</xliff:g></string>

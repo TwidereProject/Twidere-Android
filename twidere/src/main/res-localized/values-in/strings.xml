@@ -244,7 +244,7 @@
   <string name="ellipsis">...</string>
   <string name="emoji_support">Dukungan emoji</string>
   <string name="empty_content">Konten kosong</string>
-  <string name="enable_retweets">Aktifkan retweets</string>
+  <string name="action_enable_retweets">Aktifkan retweets</string>
   <string name="enable_streaming">Aktifkan Streaming</string>
   <string name="error_info_oauth_timestamp_error">Mohon cek tanggal sistem Anda &amp; pengaturan waktu.</string>
   <string name="error_message">Kesalahan: <xliff:g id="message">%s</xliff:g></string>

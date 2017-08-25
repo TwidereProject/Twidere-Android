@@ -35,6 +35,8 @@ abstract class ExtraFeaturesService {
 
     abstract fun isEnabled(feature: String): Boolean
 
+    abstract fun isPurchased(feature: String): Boolean
+
     /**
      * For debug purpose only, this will remove purchased product
      */

@@ -179,7 +179,7 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Emoji-tuki</string>
   <string name="empty_content">Tyhjennä sisältö</string>
-  <string name="enable_retweets">Ota uudelleentwiitit käyttöön</string>
+  <string name="action_enable_retweets">Ota uudelleentwiitit käyttöön</string>
   <string name="enable_streaming">Ota striimaus käyttöön</string>
   <string name="error_message">Virhe: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_media_upload_failed">Median lähettäminen epäonnistui.</string>

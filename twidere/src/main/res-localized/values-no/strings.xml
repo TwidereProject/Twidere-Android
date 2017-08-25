@@ -167,7 +167,7 @@
   <string name="edit_tabs">Rediger faner</string>
   <string name="ellipsis">&#8230;</string>
   <string name="empty_content">Tomt innhold</string>
-  <string name="enable_retweets">Aktiver retweets</string>
+  <string name="action_enable_retweets">Aktiver retweets</string>
   <string name="enable_streaming">Aktiver strømming</string>
   <string name="error_message">Feil: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_message_too_long">Melding for lang.</string>

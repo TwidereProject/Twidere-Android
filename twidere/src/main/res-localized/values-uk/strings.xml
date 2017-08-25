@@ -181,7 +181,7 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Підтримка Емодзі</string>
   <string name="empty_content">Порожній вміст</string>
-  <string name="enable_retweets">Увімкнути ретвіти</string>
+  <string name="action_enable_retweets">Увімкнути ретвіти</string>
   <string name="enable_streaming">Увімкнути стримінг</string>
   <string name="error_message">Помилка: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_device_incompatible">Цей пристрій несумісний з Twidere, рекомендуємо оновлення до крайньої ОС Android.\nМожна надіслати інформацію нижче, щоб допомогти мені звернутися до виробника пристрою з цією проблемою.</string>

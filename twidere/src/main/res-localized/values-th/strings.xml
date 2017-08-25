@@ -268,8 +268,8 @@
   <string name="ellipsis">...</string>
   <string name="emoji_support">สนับสนุนอีโมจิ</string>
   <string name="empty_content">เนื้อหาว่างเปล่า</string>
-  <string name="enable_notifications">เปิดใช้งานการแจ้งเตือน</string>
-  <string name="enable_retweets">เปิดการรีทวีต</string>
+  <string name="action_enable_notifications">เปิดใช้งานการแจ้งเตือน</string>
+  <string name="action_enable_retweets">เปิดการรีทวีต</string>
   <string name="enable_streaming">เปิดการใช้งานสตรีมมิ่ง</string>
   <string name="error_info_oauth_timestamp_error">กรุณาตรวจสอบวันของระบบของคุณ และตั้งค่าเวลา</string>
   <string name="error_message">ผิดพลาด: <xliff:g id="message">%s</xliff:g></string>

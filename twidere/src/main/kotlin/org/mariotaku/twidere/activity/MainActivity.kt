@@ -35,6 +35,9 @@ import android.view.View
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
+import com.bumptech.glide.load.resource.drawable.GlideDrawable
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import kotlinx.android.synthetic.main.activity_main.*
 import nl.komponents.kovenant.Promise
 import org.mariotaku.chameleon.Chameleon
@@ -50,6 +53,7 @@ import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
 import org.mariotaku.twidere.activity.iface.IBaseActivity
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_INTENT
 import org.mariotaku.twidere.constant.lastLaunchPresentationTimeKey
+import org.mariotaku.twidere.constant.promotionsEnabledKey
 import org.mariotaku.twidere.constant.themeColorKey
 import org.mariotaku.twidere.constant.themeKey
 import org.mariotaku.twidere.extension.model.hasInvalidAccount
@@ -108,6 +112,12 @@ open class MainActivity : ChameleonActivity(), IBaseActivity<MainActivity> {
         GeneralComponent.get(this).inject(this)
         setContentView(R.layout.activity_main)
 
+        if (!preferences[promotionsEnabledKey]) {
+            main.visibility = View.GONE
+            launchDirectly()
+            return
+        }
+
         main.visibility = View.VISIBLE
         appIcon.setImageDrawable(componentIcon)
         skipPresentation.setOnClickListener {
@@ -139,10 +149,13 @@ open class MainActivity : ChameleonActivity(), IBaseActivity<MainActivity> {
 
     private fun showPresentationOrLaunch() {
         val lastLaunchPresentationTime = preferences[lastLaunchPresentationTimeKey]
-        val maximumDuration = TimeUnit.HOURS.toMillis(6)
-        // Show again at least 6 hours later
-        if (!BuildConfig.DEBUG && lastLaunchPresentationTime >= 0 &&
-                System.currentTimeMillis() - lastLaunchPresentationTime < maximumDuration) {
+        val maximumDuration = if (BuildConfig.DEBUG) {
+            TimeUnit.SECONDS.toMillis(30)
+        } else {
+            TimeUnit.HOURS.toMillis(6)
+        }
+        // Show again at least 6 hours later (30 secs for debug builds)
+        if (lastLaunchPresentationTime >= 0 && System.currentTimeMillis() - lastLaunchPresentationTime < maximumDuration) {
             launchDirectly()
             return
         }
@@ -152,7 +165,6 @@ open class MainActivity : ChameleonActivity(), IBaseActivity<MainActivity> {
         }
         if (presentation != null) {
             displayPresentation(presentation)
-            preferences[lastLaunchPresentationTimeKey] = System.currentTimeMillis()
             launchLater()
         } else {
             launchDirectly()
@@ -200,6 +212,20 @@ open class MainActivity : ChameleonActivity(), IBaseActivity<MainActivity> {
         skipPresentation.visibility = View.VISIBLE
         controlOverlay.tag = presentation
         Glide.with(this).load(presentation.images.first().url)
+                .listener(object : RequestListener<String, GlideDrawable> {
+                    override fun onException(e: Exception?, model: String?,
+                            target: Target<GlideDrawable>?, isFirstResource: Boolean): Boolean {
+                        return false
+                    }
+
+                    override fun onResourceReady(resource: GlideDrawable?, model: String?,
+                            target: Target<GlideDrawable>?, isFromMemoryCache: Boolean,
+                            isFirstResource: Boolean): Boolean {
+                        preferences[lastLaunchPresentationTimeKey] = System.currentTimeMillis()
+                        return false
+                    }
+
+                })
                 .priority(Priority.HIGH)
                 .into(presentationView)
     }

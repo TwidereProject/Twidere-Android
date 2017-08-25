@@ -268,8 +268,8 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Sofitu de fustaxes</string>
   <string name="empty_content">Conteníu baleru</string>
-  <string name="enable_notifications">Habilitar avisos</string>
-  <string name="enable_retweets">Habilitar retuits</string>
+  <string name="action_enable_notifications">Habilitar avisos</string>
+  <string name="action_enable_retweets">Habilitar retuits</string>
   <string name="enable_streaming">Habilitar tuits en tiempu real</string>
   <string name="error_info_oauth_timestamp_error">Comprueba los axustes de data y hora del to sistema, por favor.</string>
   <string name="error_message">Fallu: <xliff:g id="message">%s</xliff:g></string>

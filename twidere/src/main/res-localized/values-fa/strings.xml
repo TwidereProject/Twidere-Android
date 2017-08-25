@@ -268,8 +268,8 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">پشتیبانی اموجی</string>
   <string name="empty_content">محتوای خالی</string>
-  <string name="enable_notifications">فعّال کردن آگاهی‌ها</string>
-  <string name="enable_retweets">فعّال کردن بازتوییت‌ها</string>
+  <string name="action_enable_notifications">فعّال کردن آگاهی‌ها</string>
+  <string name="action_enable_retweets">فعّال کردن بازتوییت‌ها</string>
   <string name="enable_streaming">فعّال کردن جریان</string>
   <string name="error_info_oauth_timestamp_error">لطفاً تنظیمات تاریخ و زمان سامانه‌تان را بررسی کنید.</string>
   <string name="error_message">خطا: <xliff:g id="message">%s</xliff:g></string>

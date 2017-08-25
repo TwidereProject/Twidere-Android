@@ -176,7 +176,7 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Supporto per Emojis</string>
   <string name="empty_content">Contenuto vuoto</string>
-  <string name="enable_retweets">Abilita retweet</string>
+  <string name="action_enable_retweets">Abilita retweet</string>
   <string name="enable_streaming">Attiva streaming</string>
   <string name="error_message">Errore: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_device_incompatible">Questo dispositivo non è compatibile con Twidere, è consigliato l\'aggiornamento all\'ultima versione di Android OS.\nPuoi mandare le informazioni presenti qui sotto per aiutarmi a segnalare il problema al produttore del dispositivo.</string>

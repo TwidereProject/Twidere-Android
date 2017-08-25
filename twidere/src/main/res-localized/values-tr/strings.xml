@@ -245,7 +245,7 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Emoji destek</string>
   <string name="empty_content">Boş içerik</string>
-  <string name="enable_retweets">Retweetleri etkinleştir</string>
+  <string name="action_enable_retweets">Retweetleri etkinleştir</string>
   <string name="enable_streaming">Akışı etkinleştir</string>
   <string name="error_message">Hata: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_device_incompatible">Bu cihaz Twidere ile uyumlu değildir, en son Android işletim sistemi yükseltme önerilir.\nYardımcı olabilmek için aşağıdaki bilgileri gönderebilirsiniz.</string>

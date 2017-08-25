@@ -262,8 +262,8 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Emoji-stöd</string>
   <string name="empty_content">Tomt innehåll</string>
-  <string name="enable_notifications">Aktivera notifieringar</string>
-  <string name="enable_retweets">Aktivera retweets</string>
+  <string name="action_enable_notifications">Aktivera notifieringar</string>
+  <string name="action_enable_retweets">Aktivera retweets</string>
   <string name="enable_streaming">Aktivera direktuppspelning</string>
   <string name="error_info_oauth_timestamp_error">Var god kontrollera dina systeminställningar för tid- och datum.</string>
   <string name="error_message">Fel: <xliff:g id="message">%s</xliff:g></string>

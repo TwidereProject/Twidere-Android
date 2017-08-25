@@ -22,10 +22,14 @@ import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.alwaysUi
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
+import org.mariotaku.kpreferences.get
+import org.mariotaku.kpreferences.set
+import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.REQUEST_PURCHASE_EXTRA_FEATURES
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter
+import org.mariotaku.twidere.constant.promotionsEnabledKey
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.util.Analyzer
@@ -103,6 +107,12 @@ class PremiumDashboardActivity : BaseActivity() {
         return true
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        super.onPrepareOptionsMenu(menu)
+        menu.setItemAvailability(R.id.disable_promotions, preferences[promotionsEnabledKey])
+        return true
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
@@ -136,6 +146,10 @@ class PremiumDashboardActivity : BaseActivity() {
                         }
                     }
                 }
+            }
+            R.id.disable_promotions -> {
+                preferences[promotionsEnabledKey] = false
+                recreate()
             }
         }
         return true

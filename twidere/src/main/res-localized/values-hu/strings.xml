@@ -271,8 +271,8 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Emoji támogatás</string>
   <string name="empty_content">Üres</string>
-  <string name="enable_notifications">Értesítések engedélyezése</string>
-  <string name="enable_retweets">Retweetek engedélyezése</string>
+  <string name="action_enable_notifications">Értesítések engedélyezése</string>
+  <string name="action_enable_retweets">Retweetek engedélyezése</string>
   <string name="enable_streaming">Közvetítés engedélyezése</string>
   <string name="error_info_oauth_timestamp_error">Kérjük, ellenőrizd a rendszer dátum- &amp; időbeállításait.</string>
   <string name="error_message">Hiba: <xliff:g id="message">%s</xliff:g></string>

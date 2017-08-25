@@ -51,6 +51,9 @@
     <string name="action_edit_conversation_avatar">Edit icon</string>
     <string name="action_edit_conversation_name">Edit name</string>
     <string name="action_edit_filter_rule">Edit rule</string>
+    <string name="action_enable">Enable</string>
+    <string name="action_enable_notifications">Enable notifications</string>
+    <string name="action_enable_retweets">Enable retweets</string>
     <string name="action_favorite">Favorite</string>
     <string name="action_filter_import_from_blocked_users">Import from blocked users</string>
     <string name="action_filter_import_from_muted_users">Import from muted users</string>
@@ -330,8 +333,6 @@
 
     <string name="empty_content">Empty content</string>
 
-    <string name="enable_notifications">Enable notifications</string>
-    <string name="enable_retweets">Enable retweets</string>
     <string name="enable_streaming">Enable streaming</string>
 
     <string name="error_info_oauth_timestamp_error">Please check your system date &amp; time settings.</string>
@@ -656,6 +657,7 @@
     <string name="message_sync_disconnect_from_name_confirm">Disconnect from <xliff:g example="ownCloud" id="name">%s</xliff:g>?</string>
     <string name="message_sync_last_synced_time">Last synced: <xliff:g example="2017/1/1 12:00" id="time">%s</xliff:g></string>
     <string name="message_tab_field_is_required">Field \"<xliff:g example="Field" id="name">%s</xliff:g>\" is required</string>
+    <string name="message_title_promotions_reward">Enable promotions to use all enhanced features for free, we promise not to disturb you!</string>
     <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
@@ -1212,6 +1214,7 @@
     <string name="title_open_source_license">Open source license</string>
     <string name="title_pin_status_confirm">Pin tweet</string>
     <string name="title_premium_features_name">Twidere ∞</string>
+    <string name="title_promotions_reward">Promotions reward</string>
     <string name="title_public_timeline">Public timeline</string>
     <string name="title_quick_action">Quick action</string>
     <string name="title_retweet_quote_confirm">Retweet to your followers?</string>
@@ -1326,4 +1329,5 @@
     <string name="users_blocked">Blocked these users.</string>
     <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>\'s lists</string>
     <string name="users_statuses">User\'s tweets</string>
+    <string name="action_disable_promotions">Disable promotions</string>
 </resources>

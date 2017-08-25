@@ -271,8 +271,8 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Soporte de risoños</string>
   <string name="empty_content">Sen contido</string>
-  <string name="enable_notifications">Activar notificacións</string>
-  <string name="enable_retweets">Activar rechouchíos</string>
+  <string name="action_enable_notifications">Activar notificacións</string>
+  <string name="action_enable_retweets">Activar rechouchíos</string>
   <string name="enable_streaming">Activar streaming</string>
   <string name="error_info_oauth_timestamp_error">Por favor comproba data e hora nos teus axustes.</string>
   <string name="error_message">Erro: <xliff:g id="message">%s</xliff:g></string>

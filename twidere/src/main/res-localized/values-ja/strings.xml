@@ -272,8 +272,8 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">絵文字対応</string>
   <string name="empty_content">コンテンツなし</string>
-  <string name="enable_notifications">通知をオン</string>
-  <string name="enable_retweets">リツイートを有効</string>
+  <string name="action_enable_notifications">通知をオン</string>
+  <string name="action_enable_retweets">リツイートを有効</string>
   <string name="enable_streaming">ストリーミングを使用</string>
   <string name="error_info_oauth_timestamp_error">システムの日付と時刻の設定を確認してください。</string>
   <string name="error_message">エラー：<xliff:g id="message">%s</xliff:g></string>

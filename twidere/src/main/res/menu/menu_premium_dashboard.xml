@@ -7,4 +7,7 @@
         android:title="@string/action_consume_purchase"
         android:visible="@bool/debug"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/disable_promotions"
+        android:title="@string/action_disable_promotions"/>
 </menu>

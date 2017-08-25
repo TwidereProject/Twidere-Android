@@ -271,8 +271,8 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">이모티콘 지원</string>
   <string name="empty_content">내용 없음</string>
-  <string name="enable_notifications">알림 사용</string>
-  <string name="enable_retweets">리트윗 사용</string>
+  <string name="action_enable_notifications">알림 사용</string>
+  <string name="action_enable_retweets">리트윗 사용</string>
   <string name="enable_streaming">스트리밍 작동</string>
   <string name="error_info_oauth_timestamp_error">시스템 날짜와 시간 설정을 확인해주세요.</string>
   <string name="error_message">오류: <xliff:g id="message">%s</xliff:g></string>

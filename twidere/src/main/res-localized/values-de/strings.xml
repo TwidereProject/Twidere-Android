@@ -270,8 +270,8 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Emoji-Unterstützung</string>
   <string name="empty_content">Leerer Inhalt</string>
-  <string name="enable_notifications">Benachrichtigungen aktivieren</string>
-  <string name="enable_retweets">Retweets erlauben</string>
+  <string name="action_enable_notifications">Benachrichtigungen aktivieren</string>
+  <string name="action_enable_retweets">Retweets erlauben</string>
   <string name="enable_streaming">Streaming freischalten</string>
   <string name="error_info_oauth_timestamp_error">Bitte überprüfe dein Systemdatum und die Zeiteinstellungen.</string>
   <string name="error_message">Fehler: <xliff:g id="message">%s</xliff:g></string>
