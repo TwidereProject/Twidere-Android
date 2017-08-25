@@ -756,10 +756,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         mediaPreviewAdapter.setAltText(position, altText)
     }
 
-    internal fun requestSkipDraft() {
-        shouldSkipDraft = true
-    }
-
     private fun locationMenuItemSelected(item: MenuItem) {
         item.isChecked = true
         var attachLocationChecked = false

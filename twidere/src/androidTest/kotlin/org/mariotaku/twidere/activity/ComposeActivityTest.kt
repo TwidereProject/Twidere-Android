@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.activity
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
@@ -30,6 +29,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.extension.set
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableStatusUpdate
 import org.mariotaku.twidere.test.R
@@ -167,7 +167,12 @@ class ComposeActivityTest {
         activity.finish()
     }
 
-    private fun Activity.getStatusUpdateTest(checkLength: Boolean): ParcelableStatusUpdate {
+    private fun ComposeActivity.requestSkipDraft() {
+        val shouldSkipDraft = javaClass.getDeclaredField("shouldSkipDraft")
+        this[shouldSkipDraft] = true
+    }
+
+    private fun ComposeActivity.getStatusUpdateTest(checkLength: Boolean): ParcelableStatusUpdate {
         val getStatusUpdate = javaClass.getDeclaredMethod("getStatusUpdate",
                 kotlin.Boolean::class.java).apply {
             isAccessible = true

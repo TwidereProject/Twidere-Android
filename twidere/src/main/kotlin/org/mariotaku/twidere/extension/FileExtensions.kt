@@ -19,28 +19,31 @@
 
 package org.mariotaku.twidere.extension
 
-import java.lang.reflect.Field
+import org.mariotaku.twidere.util.DebugLog
+import java.io.File
+import java.io.FileInputStream
+import java.io.InputStream
+import java.io.OutputStream
 
-/**
- * Created by mariotaku on 2017/4/17.
- */
-
-operator fun Any.get(field: Field): Any? {
-    val accessible = field.isAccessible
-    try {
-        field.isAccessible = true
-        return field[this]
-    } finally {
-        field.isAccessible = accessible
-    }
+fun File.tempInputStream(write: (OutputStream) -> Unit): InputStream {
+    val file = File.createTempFile("twidere__temp_is_file", ".tmp", this)
+    file.outputStream().use { write(it) }
+    return TempFileInputStream(file)
 }
 
-operator fun Any.set(field: Field, any: Any?) {
-    val accessible = field.isAccessible
-    try {
-        field.isAccessible = true
-        field[this] = any
-    } finally {
-        field.isAccessible = accessible
+internal class TempFileInputStream(val file: File) : FileInputStream(file) {
+    override fun close() {
+        try {
+            super.close()
+        } finally {
+            file.delete()
+        }
+    }
+
+    override fun finalize() {
+        if (file.exists()) {
+            DebugLog.w(msg = "Stream not properly closed, ${file.absolutePath} not deleted")
+        }
+        super.finalize()
     }
 }

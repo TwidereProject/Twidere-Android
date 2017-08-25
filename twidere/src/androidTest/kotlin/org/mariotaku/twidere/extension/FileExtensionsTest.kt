@@ -19,28 +19,28 @@
 
 package org.mariotaku.twidere.extension
 
-import java.lang.reflect.Field
+import android.support.test.InstrumentationRegistry
+import android.support.test.runner.AndroidJUnit4
+import org.junit.Assert
+import org.junit.Test
+import org.junit.runner.RunWith
+import java.util.*
 
 /**
- * Created by mariotaku on 2017/4/17.
+ * Created by mariotaku on 2017/1/24.
  */
-
-operator fun Any.get(field: Field): Any? {
-    val accessible = field.isAccessible
-    try {
-        field.isAccessible = true
-        return field[this]
-    } finally {
-        field.isAccessible = accessible
+@RunWith(AndroidJUnit4::class)
+class FileExtensionsTest {
+    @Test
+    fun testTempFileInputStream() {
+        val context = InstrumentationRegistry.getTargetContext()
+        val random = Random()
+        val testData = ByteArray(1024)
+        random.nextBytes(testData)
+        val compareData = context.cacheDir.tempInputStream { os ->
+            os.write(testData)
+        }.use { it.readBytes(1024) }
+        Assert.assertArrayEquals(testData, compareData)
     }
-}
 
-operator fun Any.set(field: Field, any: Any?) {
-    val accessible = field.isAccessible
-    try {
-        field.isAccessible = true
-        field[this] = any
-    } finally {
-        field.isAccessible = accessible
-    }
 }
