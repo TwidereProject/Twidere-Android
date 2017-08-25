@@ -61,6 +61,7 @@ class ComposeActivityTest {
         val statusUpdate = activity.getStatusUpdateTest(false)
         Assert.assertEquals("Test Reply", statusUpdate.text)
         assertExcludedMatches(emptyArray(), statusUpdate)
+        activity.requestSkipDraft()
         activity.finish()
     }
 
@@ -80,6 +81,7 @@ class ComposeActivityTest {
         val statusUpdate = activity.getStatusUpdateTest(false)
         Assert.assertEquals("Test Reply", statusUpdate.text)
         assertExcludedMatches(arrayOf("17484680", "57610574"), statusUpdate)
+        activity.requestSkipDraft()
         activity.finish()
     }
 
@@ -101,6 +103,7 @@ class ComposeActivityTest {
         Assert.assertEquals("https://twitter.com/t_deyarmin/status/847950697987493888",
                 statusUpdate.attachment_url)
         assertExcludedMatches(emptyArray(), statusUpdate)
+        activity.requestSkipDraft()
         activity.finish()
     }
 
@@ -120,6 +123,7 @@ class ComposeActivityTest {
         val statusUpdate = activity.getStatusUpdateTest(false)
         Assert.assertEquals("Test Reply", statusUpdate.text)
         assertExcludedMatches(emptyArray(), statusUpdate)
+        activity.requestSkipDraft()
         activity.finish()
     }
 
@@ -139,6 +143,7 @@ class ComposeActivityTest {
         val statusUpdate = activity.getStatusUpdateTest(false)
         Assert.assertEquals("Test Reply", statusUpdate.text)
         assertExcludedMatches(arrayOf("57610574"), statusUpdate)
+        activity.requestSkipDraft()
         activity.finish()
     }
 
@@ -158,6 +163,7 @@ class ComposeActivityTest {
         val statusUpdate = activity.getStatusUpdateTest(false)
         Assert.assertEquals("Test Reply", statusUpdate.text)
         assertExcludedMatches(arrayOf("583328497", "57610574"), statusUpdate)
+        activity.requestSkipDraft()
         activity.finish()
     }
 
