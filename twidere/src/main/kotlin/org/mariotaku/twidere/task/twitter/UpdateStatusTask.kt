@@ -732,7 +732,7 @@ class UpdateStatusTask(
                 }
                 body?.deleteOnSuccess?.addAllTo(deleteOnSuccess)
                 body?.deleteAlways?.addAllTo(deleteAlways)
-                if (media.alt_text?.isNotEmpty() ?: false) {
+                if (media.alt_text?.isNotEmpty() == true) {
                     try {
                         upload.createMetadata(NewMediaMetadata(resp.id, media.alt_text))
                     } catch (e: MicroBlogException) {

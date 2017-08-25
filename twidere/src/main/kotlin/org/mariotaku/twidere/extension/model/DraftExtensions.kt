@@ -17,9 +17,10 @@ import org.apache.james.mime4j.stream.MimeConfig
 import org.apache.james.mime4j.stream.RawField
 import org.apache.james.mime4j.util.MimeUtil
 import org.mariotaku.ktextension.mapToArray
-import org.mariotaku.ktextension.toIntOr
 import org.mariotaku.ktextension.toString
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.extension.mime4j.getBooleanParameter
+import org.mariotaku.twidere.extension.mime4j.getIntParameter
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.Draft.Action
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtras
@@ -90,6 +91,8 @@ fun Draft.writeMimeMessageTo(context: Context, st: OutputStream) {
                 val parameters = NonEmptyHashMap<String, String?>()
                 parameters["alt_text"] = mediaItem.alt_text
                 parameters["media_type"] = mediaItem.type.toString()
+                parameters["delete_on_success"] = mediaItem.delete_on_success.toString()
+                parameters["delete_always"] = mediaItem.delete_always.toString()
                 val storage = contentResolver.openInputStream(uri).use { storageProvider.store(it) }
                 this.filename = uri.lastPathSegment
                 this.contentTransferEncoding = MimeUtil.ENC_BASE64
@@ -260,9 +263,15 @@ private class BodyPartHandler(private val context: Context, private val draft: D
                     val filename = contentDisposition.filename ?: return
                     val mediaFile = File(context.filesDir, filename)
                     media = ParcelableMediaUpdate().apply {
-                        bd.transferEncoding
-                        this.type = contentType?.getParameter("media_type").toIntOr(ParcelableMedia.Type.UNKNOWN)
-                        this.alt_text = contentType?.getParameter("alt_text")
+                        if (contentType != null) {
+                            this.type = contentType.getIntParameter("media_type",
+                                    ParcelableMedia.Type.UNKNOWN)
+                            this.alt_text = contentType.getParameter("alt_text")
+                            this.delete_on_success = contentType.getBooleanParameter("delete_on_success")
+                            this.delete_always = contentType.getBooleanParameter("delete_always")
+                        } else {
+                            this.type = ParcelableMedia.Type.UNKNOWN
+                        }
                         FileOutputStream(mediaFile).use {
                             st.copyTo(it)
                             it.flush()

@@ -80,10 +80,11 @@ public class ParcelableMediaUpdate implements Parcelable {
     @Override
     public String toString() {
         return "ParcelableMediaUpdate{" +
-                "alt_text='" + alt_text + '\'' +
-                ", uri='" + uri + '\'' +
+                "uri='" + uri + '\'' +
                 ", type=" + type +
+                ", alt_text='" + alt_text + '\'' +
                 ", delete_on_success=" + delete_on_success +
+                ", delete_always=" + delete_always +
                 '}';
     }
 
