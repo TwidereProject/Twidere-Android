@@ -31,7 +31,8 @@ enum class NotificationChannelSpec(
         @StringRes val nameRes: Int,
         @StringRes val descriptionRes: Int = 0,
         val importance: Int,
-        val showBadge: Boolean = false) {
+        val showBadge: Boolean = false,
+        val grouped: Boolean = false) {
     /**
      * For notifications send by app itself.
      * Such as "what's new"
@@ -54,36 +55,30 @@ enum class NotificationChannelSpec(
             importance = NotificationManager.IMPORTANCE_MIN),
 
     /**
-     * For import notifications related to micro-blogging features.
-     * Such as failure to update status.
-     */
-    contentNotices("content_notices", R.string.notification_channel_name_content_notices,
-            importance = NotificationManager.IMPORTANCE_HIGH, showBadge = true),
-    /**
      * For updates related to micro-blogging features.
      * Such as new statuses posted by friends.
      */
     contentUpdates("content_updates", R.string.notification_channel_name_content_updates,
-            importance = NotificationManager.IMPORTANCE_DEFAULT, showBadge = true),
+            importance = NotificationManager.IMPORTANCE_DEFAULT, showBadge = true, grouped = true),
     /**
      * For updates related to micro-blogging features.
      * Such as new statuses posted by friends user subscribed to.
      */
     contentSubscriptions("content_subscriptions", R.string.notification_channel_name_content_subscriptions,
-            importance = NotificationManager.IMPORTANCE_HIGH, showBadge = true),
+            importance = NotificationManager.IMPORTANCE_HIGH, showBadge = true, grouped = true),
     /**
      * For interactions related to micro-blogging features.
      * Such as replies and likes.
      */
     contentInteractions("content_interactions", R.string.notification_channel_name_content_interactions,
             descriptionRes = R.string.notification_channel_description_content_interactions,
-            importance = NotificationManager.IMPORTANCE_HIGH, showBadge = true),
+            importance = NotificationManager.IMPORTANCE_HIGH, showBadge = true, grouped = true),
     /**
      * For messages related to micro-blogging features.
      * Such as direct messages.
      */
     contentMessages("content_messages", R.string.notification_channel_name_content_messages,
             descriptionRes = R.string.notification_channel_description_content_messages,
-            importance = NotificationManager.IMPORTANCE_HIGH, showBadge = true)
+            importance = NotificationManager.IMPORTANCE_HIGH, showBadge = true, grouped = true)
 
 }

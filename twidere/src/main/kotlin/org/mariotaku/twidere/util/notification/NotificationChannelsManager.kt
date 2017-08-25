@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.util.notification
 
+import android.accounts.AccountManager
 import android.annotation.TargetApi
 import android.app.NotificationChannel
 import android.app.NotificationChannelGroup
@@ -27,53 +28,102 @@ import android.content.Context
 import android.os.Build
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.constant.nameFirstKey
-import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.extension.model.notificationChannelGroupId
+import org.mariotaku.twidere.extension.model.notificationChannelId
 import org.mariotaku.twidere.model.notification.NotificationChannelSpec
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.dagger.DependencyHolder
 
 /**
  * Created by mariotaku on 2017/8/25.
  */
 object NotificationChannelsManager {
-    fun createChannels(context: Context) {
+
+    fun initialize(context: Context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
-        NotificationChannelCreatorImpl.createChannels(context)
+        NotificationChannelManagerImpl.initialize(context)
     }
 
-    fun createAccountGroup(context: Context, account: AccountDetails) {
+    fun updateAccountChannelsAndGroups(context: Context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
-        NotificationChannelCreatorImpl.createAccountGroup(context, account)
+        NotificationChannelManagerImpl.updateAccountChannelsAndGroups(context)
     }
 
     @TargetApi(Build.VERSION_CODES.O)
-    private object NotificationChannelCreatorImpl {
+    private object NotificationChannelManagerImpl {
 
-        fun createChannels(context: Context) {
+        fun initialize(context: Context) {
             val nm = context.getSystemService(NotificationManager::class.java)
-            val values = NotificationChannelSpec.values()
-            nm.notificationChannels.filterNot { channel ->
-                values.any { channel.id == it.id }
-            }.forEach {
-                nm.deleteNotificationChannel(it.id)
-            }
-            for (spec in values) {
+
+            val addedChannels = mutableListOf<String>()
+
+            for (spec in NotificationChannelSpec.values()) {
+                if (spec.grouped) continue
                 val channel = NotificationChannel(spec.id, context.getString(spec.nameRes), spec.importance)
+
                 if (spec.descriptionRes != 0) {
                     channel.description = context.getString(spec.descriptionRes)
                 }
                 channel.setShowBadge(spec.showBadge)
                 nm.createNotificationChannel(channel)
+                addedChannels.add(channel.id)
+            }
+
+            nm.notificationChannels.forEach {
+                if (it.id !in addedChannels && it.group == null) {
+                    nm.deleteNotificationChannel(it.id)
+                }
             }
         }
 
-        fun createAccountGroup(context: Context, account: AccountDetails) {
-            val nm = context.getSystemService(NotificationManager::class.java)
+        fun updateAccountChannelsAndGroups(context: Context) {
             val holder = DependencyHolder.get(context)
+
+            val am = AccountManager.get(context)
+            val nm = context.getSystemService(NotificationManager::class.java)
             val pref = holder.preferences
             val ucnm = holder.userColorNameManager
-            val group = NotificationChannelGroup(account.key.toString(),
-                    ucnm.getDisplayName(account.user, pref[nameFirstKey]))
-            nm.createNotificationChannelGroup(group)
+
+            val accounts = AccountUtils.getAllAccountDetails(am, false)
+            val specs = NotificationChannelSpec.values()
+
+            val addedChannels = mutableListOf<String>()
+            val addedGroups = mutableListOf<String>()
+
+            accounts.forEach { account ->
+                val group = NotificationChannelGroup(account.key.notificationChannelGroupId(),
+                        ucnm.getDisplayName(account.user, pref[nameFirstKey]))
+
+                addedGroups.add(group.id)
+                nm.createNotificationChannelGroup(group)
+
+                for (spec in specs) {
+                    if (!spec.grouped) continue
+                    val channel = NotificationChannel(account.key.notificationChannelId(spec.id),
+                            context.getString(spec.nameRes), spec.importance)
+
+                    if (spec.descriptionRes != 0) {
+                        channel.description = context.getString(spec.descriptionRes)
+                    }
+                    channel.group = group.id
+                    channel.setShowBadge(spec.showBadge)
+                    nm.createNotificationChannel(channel)
+                    addedChannels.add(channel.id)
+                }
+
+            }
+
+            // Delete all channels and groups of non-existing accounts
+            nm.notificationChannels.forEach {
+                if (it.id !in addedChannels && it.group != null) {
+                    nm.deleteNotificationChannel(it.id)
+                }
+            }
+            nm.notificationChannelGroups.forEach {
+                if (it.id !in addedGroups) {
+                    nm.deleteNotificationChannelGroup(it.id)
+                }
+            }
         }
     }
 }

@@ -774,11 +774,10 @@
     <string name="notification_channel_description_content_messages">Important messages like DMs</string>
     <string name="notification_channel_name_app_notices">App notices</string>
     <string name="notification_channel_name_background_progresses">Background operations</string>
-    <string name="notification_channel_name_content_interactions">Content interactions</string>
-    <string name="notification_channel_name_content_messages">Content messages</string>
-    <string name="notification_channel_name_content_notices">Content notices</string>
-    <string name="notification_channel_name_content_subscriptions">Content subscriptions</string>
-    <string name="notification_channel_name_content_updates">Content updates</string>
+    <string name="notification_channel_name_content_interactions">Interactions</string>
+    <string name="notification_channel_name_content_messages">Messages</string>
+    <string name="notification_channel_name_content_subscriptions">Subscriptions</string>
+    <string name="notification_channel_name_content_updates">Updates</string>
     <string name="notification_channel_name_service_statuses">Service statuses</string>
     <string name="notification_direct_message"><xliff:g id="user">%s</xliff:g> sent you a direct message.</string>
     <string name="notification_direct_message_multiple_messages"><xliff:g id="user">%1$s</xliff:g> sent you <xliff:g id="messages_count">%2$d</xliff:g> direct messages.</string>

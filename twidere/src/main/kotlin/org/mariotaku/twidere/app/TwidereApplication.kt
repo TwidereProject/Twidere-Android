@@ -134,7 +134,7 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
         }
         super.onCreate()
         EmojioneTranslator.init(this)
-        NotificationChannelsManager.createChannels(this)
+        NotificationChannelsManager.initialize(this)
         applyLanguageSettings()
         startKovenant()
         initializeAsyncTask()
@@ -159,7 +159,10 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
 
         Analyzer.preferencesChanged(sharedPreferences)
         DataSyncProvider.Factory.notifyUpdate(this)
+
+        NotificationChannelsManager.updateAccountChannelsAndGroups(this)
     }
+
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
         applyLanguageSettings()
@@ -334,6 +337,10 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
                 return executor.submit(callable)
             }
         })
+    }
+
+    private fun updateAccountNotificationGroup() {
+
     }
 
     companion object {

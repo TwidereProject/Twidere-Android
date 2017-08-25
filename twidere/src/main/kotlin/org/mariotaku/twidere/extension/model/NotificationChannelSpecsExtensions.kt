@@ -20,12 +20,24 @@
 package org.mariotaku.twidere.extension.model
 
 import android.content.Context
+import android.net.Uri
 import android.support.v4.app.NotificationCompat
+import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.notification.NotificationChannelSpec
 
-/**
- * Created by mariotaku on 2017/8/25.
- */
 fun NotificationChannelSpec.notificationBuilder(context: Context): NotificationCompat.Builder {
     return NotificationCompat.Builder(context, id)
+}
+
+fun NotificationChannelSpec.accountNotificationBuilder(context: Context, accountKey: UserKey): NotificationCompat.Builder {
+    if (!grouped) throw IllegalArgumentException("Requires grouped channel")
+    return NotificationCompat.Builder(context, accountKey.notificationChannelId(id)).setGroup(accountKey.notificationChannelGroupId())
+}
+
+fun UserKey.notificationChannelId(id: String): String {
+    return "${id}_${Uri.encode(toString())}"
+}
+
+fun UserKey.notificationChannelGroupId(): String {
+    return Uri.encode(toString())
 }
