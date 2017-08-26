@@ -47,5 +47,6 @@
     <color name="home_page_margin_color">#20333333</color>
 
     <color name="bg_ic_launcher_adaptive">#85F1FF</color>
+    <color name="bg_ic_shortcut_adaptive">#FAFAFA</color>
 
 </resources>

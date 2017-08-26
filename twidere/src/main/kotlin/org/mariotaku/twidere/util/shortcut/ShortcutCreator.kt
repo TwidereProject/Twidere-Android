@@ -32,6 +32,7 @@ import nl.komponents.kovenant.then
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.ImageShapeStyle
+import org.mariotaku.twidere.constant.iWantMyStarsBackKey
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.extension.loadProfileImage
@@ -51,11 +52,10 @@ object ShortcutCreator {
     private const val adaptiveIconSizeDp = 108
     private const val adaptiveIconOuterSidesDp = 18
 
-    fun userShortcut(context: Context, accountKey: UserKey?, user: ParcelableUser): Promise<ShortcutInfoCompat, Exception> {
+    fun user(context: Context, accountKey: UserKey?, user: ParcelableUser): Promise<ShortcutInfoCompat, Exception> {
         val holder = DependencyHolder.get(context)
         val preferences = holder.preferences
         val userColorNameManager = holder.userColorNameManager
-
 
         val profileImageStyle = if (useAdaptiveIcon) ImageShapeStyle.SHAPE_RECTANGLE else preferences[profileImageStyleKey]
         val profileImageCornerRadiusRatio = if (useAdaptiveIcon) 0f else 0.1f
@@ -67,7 +67,7 @@ object ShortcutCreator {
         val weakContext = WeakReference(context)
         return deferred.promise.then { drawable ->
             val ctx = weakContext.get() ?: throw InterruptedException()
-            val builder = ShortcutInfoCompat.Builder(ctx, "user-shortcut-$accountKey-${user.key}")
+            val builder = ShortcutInfoCompat.Builder(ctx, "$accountKey:user:${user.key}")
             builder.setIcon(drawable.toProfileImageIcon(ctx))
             builder.setShortLabel(userColorNameManager.getDisplayName(user, preferences[nameFirstKey]))
             val launchIntent = IntentUtils.userProfile(accountKey, user.key,
@@ -75,6 +75,38 @@ object ShortcutCreator {
             builder.setIntent(launchIntent)
             return@then builder.build()
         }
+    }
+
+    fun userFavorites(context: Context, accountKey: UserKey?, user: ParcelableUser): Promise<ShortcutInfoCompat, Exception> {
+        val holder = DependencyHolder.get(context)
+        val preferences = holder.preferences
+        val userColorNameManager = holder.userColorNameManager
+
+        val launchIntent = IntentUtils.userFavorites(accountKey, user.key,
+                user.screen_name, profileUrl = user.extras?.statusnet_profile_url)
+        val builder = ShortcutInfoCompat.Builder(context, "$accountKey:user-favorites:${user.key}")
+        builder.setIntent(launchIntent)
+        builder.setShortLabel(userColorNameManager.getDisplayName(user, preferences[nameFirstKey]))
+        if (preferences[iWantMyStarsBackKey]) {
+            builder.setIcon(IconCompat.createWithResource(context, R.mipmap.ic_shortcut_favorite))
+        } else {
+            builder.setIcon(IconCompat.createWithResource(context, R.mipmap.ic_shortcut_like))
+        }
+        return Promise.of(builder.build())
+    }
+
+    fun userTimeline(context: Context, accountKey: UserKey?, user: ParcelableUser): Promise<ShortcutInfoCompat, Exception> {
+        val holder = DependencyHolder.get(context)
+        val preferences = holder.preferences
+        val userColorNameManager = holder.userColorNameManager
+
+        val launchIntent = IntentUtils.userTimeline(accountKey, user.key,
+                user.screen_name, profileUrl = user.extras?.statusnet_profile_url)
+        val builder = ShortcutInfoCompat.Builder(context, "$accountKey:user-timeline:${user.key}")
+        builder.setIntent(launchIntent)
+        builder.setShortLabel(userColorNameManager.getDisplayName(user, preferences[nameFirstKey]))
+        builder.setIcon(IconCompat.createWithResource(context, R.mipmap.ic_shortcut_quote))
+        return Promise.of(builder.build())
     }
 
     private fun Drawable.toProfileImageIcon(context: Context): IconCompat {

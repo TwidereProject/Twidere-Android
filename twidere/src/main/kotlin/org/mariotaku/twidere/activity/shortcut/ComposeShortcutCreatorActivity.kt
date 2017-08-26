@@ -29,7 +29,7 @@ import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.INTENT_ACTION_COMPOSE
 
-class CreateComposeShortcutActivity : Activity() {
+class ComposeShortcutCreatorActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -390,7 +390,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.shortcut.CreateComposeShortcutActivity"
+            android:name=".activity.shortcut.ComposeShortcutCreatorActivity"
             android:enabled="@bool/use_legacy_widget_shortcuts"
             android:icon="@mipmap/ic_shortcut_compose"
             android:label="@string/title_compose"
@@ -402,8 +402,31 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.shortcut.CreateQuickAccessShortcutActivity"
-            android:label="@string/title_quick_action"
+            android:name=".activity.shortcut.UserFavoritesShortcutCreatorActivity"
+            android:icon="@mipmap/ic_shortcut_favorite"
+            android:label="@string/title_favorites"
+            android:theme="@style/Theme.Twidere.NoDisplay">
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.shortcut.UserTimelineShortcutCreatorActivity"
+            android:icon="@mipmap/ic_shortcut_quote"
+            android:label="@string/title_statuses"
+            android:theme="@style/Theme.Twidere.NoDisplay">
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.shortcut.UserShortcutCreatorActivity"
+            android:icon="@mipmap/ic_shortcut_user"
+            android:label="@string/title_user"
             android:theme="@style/Theme.Twidere.NoDisplay">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT"/>
