@@ -391,7 +391,8 @@
         </activity>
         <activity
             android:name=".activity.shortcut.CreateComposeShortcutActivity"
-            android:icon="@drawable/ic_app_shortcut_compose"
+            android:enabled="@bool/use_legacy_widget_shortcuts"
+            android:icon="@mipmap/ic_shortcut_compose"
             android:label="@string/title_compose"
             android:theme="@style/Theme.Twidere.NoDisplay">
             <intent-filter>

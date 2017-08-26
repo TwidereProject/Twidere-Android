@@ -1,6 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
+    <bool name="support_new_document_intent">false</bool>
+
     <bool name="use_job_refresh_service">false</bool>
     <bool name="use_legacy_refresh_service">true</bool>
-    <bool name="support_new_document_intent">false</bool>
+    <bool name="use_legacy_widget_shortcuts">true</bool>
 </resources>

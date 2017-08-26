@@ -21,9 +21,10 @@ package org.mariotaku.twidere.activity.shortcut
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
 import android.os.Bundle
+import android.support.v4.content.pm.ShortcutInfoCompat
+import android.support.v4.content.pm.ShortcutManagerCompat
+import android.support.v4.graphics.drawable.IconCompat
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.INTENT_ACTION_COMPOSE
@@ -32,27 +33,12 @@ class CreateComposeShortcutActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setVisible(true)
-        val intent = Intent()
-        val launchIntent = Intent(INTENT_ACTION_COMPOSE).apply {
-            `package` = BuildConfig.APPLICATION_ID
-        }
-        val icon = BitmapFactory.decodeResource(resources, R.drawable.ic_app_shortcut_compose,
-                BitmapFactory.Options().apply { inMutable = true }).apply {
-            val appIcon = BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher, BitmapFactory.Options().apply {
-                inSampleSize = 3
-            })
-            val canvas = Canvas(this)
-            val appIconLeft = (width - appIcon.width).toFloat()
-            val appIconTop = (height - appIcon.height).toFloat()
-            canvas.drawBitmap(appIcon, appIconLeft, appIconTop, null)
-            appIcon.recycle()
-        }
-
-        intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, launchIntent)
-        intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, icon)
-        intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, getString(R.string.action_compose))
-        setResult(RESULT_OK, intent)
+        val shortcut = ShortcutInfoCompat.Builder(this, "compose")
+                .setIcon(IconCompat.createWithResource(this, R.mipmap.ic_shortcut_compose))
+                .setShortLabel(getString(R.string.action_compose))
+                .setIntent(Intent(INTENT_ACTION_COMPOSE).setPackage(BuildConfig.APPLICATION_ID))
+                .build()
+        setResult(RESULT_OK, ShortcutManagerCompat.createShortcutResultIntent(this, shortcut))
         finish()
     }
 }
