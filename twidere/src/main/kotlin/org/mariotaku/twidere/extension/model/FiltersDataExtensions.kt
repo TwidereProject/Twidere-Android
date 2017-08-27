@@ -4,9 +4,9 @@ import android.content.ContentResolver
 import android.net.Uri
 import org.mariotaku.ktextension.addAllEnhanced
 import org.mariotaku.ktextension.isNullOrEmpty
-import org.mariotaku.ktextension.map
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.twidere.extension.queryAll
 import org.mariotaku.twidere.model.FiltersData
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
@@ -23,25 +23,13 @@ import java.util.*
 fun FiltersData.read(cr: ContentResolver, loadSubscription: Boolean = false) {
     fun readBaseItems(uri: Uri): List<FiltersData.BaseItem>? {
         val where = if (loadSubscription) null else Expression.lesserThan(Filters.SOURCE, 0).sql
-        val c = cr.query(uri, Filters.COLUMNS, where, null, null) ?: return null
-        @Suppress("ConvertTryFinallyToUseCall")
-        try {
-            val indices = ObjectCursor.indicesFrom(c, FiltersData.BaseItem::class.java)
-            return c.map(indices)
-        } finally {
-            c.close()
-        }
+        return cr.queryAll(uri, Filters.COLUMNS, where, null, null,
+                FiltersData.BaseItem::class.java)
     }
     this.users = run {
         val where = if (loadSubscription) null else Expression.lesserThan(Filters.Users.SOURCE, 0).sql
-        val c = cr.query(Filters.Users.CONTENT_URI, Filters.Users.COLUMNS, where, null, null) ?: return@run null
-        @Suppress("ConvertTryFinallyToUseCall")
-        try {
-            val indices = ObjectCursor.indicesFrom(c, FiltersData.UserItem::class.java)
-            return@run c.map(indices)
-        } finally {
-            c.close()
-        }
+        return@run cr.queryAll(Filters.Users.CONTENT_URI, Filters.Users.COLUMNS, where, null,
+                null, FiltersData.UserItem::class.java)
     }
     this.keywords = readBaseItems(Filters.Keywords.CONTENT_URI)
     this.sources = readBaseItems(Filters.Sources.CONTENT_URI)
@@ -183,7 +171,7 @@ fun FiltersData.addAll(data: FiltersData, ignoreDuplicates: Boolean = false): Bo
 }
 
 fun FiltersData.removeAll(data: FiltersData): Boolean {
-    var changed: Boolean = false
+    var changed = false
     changed = changed or (data.users?.let { this.users?.removeAll(it) } ?: false)
     changed = changed or (data.keywords?.let { this.keywords?.removeAll(it) } ?: false)
     changed = changed or (data.sources?.let { this.sources?.removeAll(it) } ?: false)

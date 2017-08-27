@@ -94,15 +94,11 @@ class NetworkDiagnosticsFragment : BaseFragment() {
     internal class DiagnosticsTask(fragment: NetworkDiagnosticsFragment) : AsyncTask<Any, LogText, Unit>() {
 
         private val fragmentRef = WeakReference(fragment)
-
-        private val context = fragment.activity.applicationContext
-        private val connectivityManager: ConnectivityManager
-
-        init {
-            connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        }
+        private val contextRef = WeakReference(fragment.activity.applicationContext)
 
         override fun doInBackground(vararg params: Any) {
+            val context = contextRef.get() ?: return
+            val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             logPrintln("**** NOTICE ****", LogText.State.WARNING)
             logPrintln()
             logPrintln("Text below may have personal information, BE CAREFUL TO MAKE IT PUBLIC",
@@ -245,7 +241,7 @@ class NetworkDiagnosticsFragment : BaseFragment() {
             logPrintln(context.resources.configuration.toString())
             logPrintln()
             logPrintln(("Active network info: "))
-            logPrintln((connectivityManager.activeNetworkInfo.toString()))
+            logPrintln((cm.activeNetworkInfo.toString()))
         }
 
         override fun onProgressUpdate(vararg values: LogText) {

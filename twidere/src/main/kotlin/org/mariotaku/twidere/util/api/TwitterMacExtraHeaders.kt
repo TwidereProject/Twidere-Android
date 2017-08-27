@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.util.api
 
-import android.os.Build
 import org.mariotaku.ktextension.bcp47Tag
 import org.mariotaku.restfu.http.MultiValueMap
 import org.mariotaku.twidere.extension.restfu.contains

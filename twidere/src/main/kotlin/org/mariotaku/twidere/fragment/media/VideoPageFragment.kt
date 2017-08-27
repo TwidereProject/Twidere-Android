@@ -27,7 +27,6 @@ import android.graphics.drawable.ColorDrawable
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
@@ -384,7 +383,7 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         const val EXTRA_DEFAULT_MUTE = "default_mute"
         internal const val EXTRA_PAUSED_BY_USER = "paused_by_user"
         internal const val EXTRA_PLAY_AUDIO = "play_audio"
-        internal val SUPPORTED_VIDEO_TYPES: Array<String>
+        internal val SUPPORTED_VIDEO_TYPES: Array<String> = arrayOf("video/webm", "video/mp4")
         internal val FALLBACK_VIDEO_TYPES: Array<String> = arrayOf("video/mp4")
 
         internal val MediaViewerFragment.isLoopEnabled: Boolean
@@ -397,14 +396,6 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
             get() = arguments.getParcelable<ParcelableMedia>(EXTRA_MEDIA)
         internal val MediaViewerFragment.accountKey: UserKey
             get() = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-
-        init {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                SUPPORTED_VIDEO_TYPES = arrayOf("video/mp4")
-            } else {
-                SUPPORTED_VIDEO_TYPES = arrayOf("video/webm", "video/mp4")
-            }
-        }
 
 
         @SuppressLint("SwitchIntDef")

@@ -2,7 +2,6 @@ package org.mariotaku.twidere.text
 
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.text.TextPaint
 import android.text.style.ReplacementSpan
 
 /**

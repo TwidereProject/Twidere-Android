@@ -25,6 +25,7 @@ import android.animation.Animator
 import android.animation.Animator.AnimatorListener
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -77,6 +78,7 @@ import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.extension.loadProfileBanner
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.setActivated
+import org.mariotaku.twidere.extension.queryCount
 import org.mariotaku.twidere.fragment.AccountsDashboardFragment.AccountsInfo
 import org.mariotaku.twidere.graphic.BadgeDrawable
 import org.mariotaku.twidere.menu.AccountToggleProvider
@@ -119,6 +121,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     private var useStarsForLikes: Boolean = false
     private var loaderInitialized: Boolean = false
 
+    @SuppressLint("RestrictedApi")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         accountsAdapter = AccountSelectorAdapter(layoutInflater, preferences, Glide.with(this)).also {
@@ -741,7 +744,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         private fun loadAccountsInfo(loadFromDb: Boolean): AccountsInfo {
             val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(context), true)
             val draftsCount = if (loadFromDb) {
-                DataStoreUtils.queryCount(context.contentResolver, Drafts.CONTENT_URI_UNSENT, null,
+                context.contentResolver.queryCount(Drafts.CONTENT_URI_UNSENT, null,
                         null)
             } else {
                 -1

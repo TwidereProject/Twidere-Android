@@ -263,7 +263,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
                     if (id >= 0) {
                         val valueWhere = Expression.equalsArgs(Filters.VALUE).sql
                         val valueWhereArgs = arrayOf(text)
-                        if (DataStoreUtils.queryCount(resolver, uri, valueWhere, valueWhereArgs) == 0) {
+                        if (resolver.queryCount(uri, valueWhere, valueWhereArgs) == 0) {
                             val idWhere = Expression.equals(Filters._ID, id).sql
                             resolver.update(uri, values, idWhere, null)
                         } else {

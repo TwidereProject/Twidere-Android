@@ -24,10 +24,16 @@ import android.content.ContentResolver
 import android.database.Cursor
 import android.net.Uri
 import org.mariotaku.ktextension.map
-import org.mariotaku.ktextension.useCursor
 import org.mariotaku.library.objectcursor.ObjectCursor
+import org.mariotaku.sqliteqb.library.SQLFunctions
+import org.mariotaku.twidere.extension.model.component1
+import org.mariotaku.twidere.model.CursorReference
 import org.mariotaku.twidere.util.TwidereQueryBuilder
 import org.mariotaku.twidere.util.content.ContentResolverUtils
+
+fun ContentResolver.queryReference(uri: Uri, projection: Array<String>? = null,
+        selection: String? = null, selectionArgs: Array<String>? = null, sortOrder: String? = null) =
+        CursorReference(query(uri, projection, selection, selectionArgs, sortOrder))
 
 @SuppressLint("Recycle")
 fun ContentResolver.rawQuery(sql: String, selectionArgs: Array<String>?, notifyUri: Uri? = null): Cursor? {
@@ -37,20 +43,27 @@ fun ContentResolver.rawQuery(sql: String, selectionArgs: Array<String>?, notifyU
 
 fun <T> ContentResolver.queryOne(uri: Uri, projection: Array<String>?, selection: String?,
         selectionArgs: Array<String>?, sortOrder: String? = null, cls: Class<T>): T? {
-    val cursor = this.query(uri, projection, selection, selectionArgs, sortOrder)
-    return cursor.useCursor { cur ->
-        if (!cur.moveToFirst()) return@useCursor null
+    return queryReference(uri, projection, selection, selectionArgs, sortOrder).use { (cur) ->
+        if (!cur.moveToFirst()) return@use null
         val indices = ObjectCursor.indicesFrom(cur, cls)
-        return@useCursor indices.newObject(cur)
+        return@use indices.newObject(cur)
     }
 }
 
-
 fun <T> ContentResolver.queryAll(uri: Uri, projection: Array<String>?, selection: String?,
         selectionArgs: Array<String>?, sortOrder: String? = null, cls: Class<T>): List<T> {
-    val cursor = this.query(uri, projection, selection, selectionArgs, sortOrder)
-    return cursor.useCursor { cur ->
-        return@useCursor cur.map(ObjectCursor.indicesFrom(cur, cls))
+    return queryReference(uri, projection, selection, selectionArgs, sortOrder).use { (cur) ->
+        return@use cur.map(ObjectCursor.indicesFrom(cur, cls))
+    }
+}
+
+fun ContentResolver.queryCount(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
+    val projection = arrayOf(SQLFunctions.COUNT())
+    return queryReference(uri, projection, selection, selectionArgs, null).use { (cur) ->
+        if (cur.moveToFirst()) {
+            return@use cur.getInt(0)
+        }
+        return@use -1
     }
 }
 

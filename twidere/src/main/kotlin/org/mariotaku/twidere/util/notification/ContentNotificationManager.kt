@@ -48,6 +48,7 @@ import org.mariotaku.twidere.constant.iWantMyStarsBackKey
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.formattedTextWithIndices
+import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.extension.rawQuery
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.notification.NotificationChannelSpec
@@ -364,18 +365,8 @@ class ContentNotificationManager(
     fun showDraft(draftUri: Uri): Long {
         val draftId = draftUri.lastPathSegment.toLongOrNull() ?: return -1
         val where = Expression.equals(Drafts._ID, draftId)
-        val c = context.contentResolver.query(Drafts.CONTENT_URI, Drafts.COLUMNS, where.sql,
-                null, null) ?: return -1
-        val i = ObjectCursor.indicesFrom(c, Draft::class.java)
-        val item: Draft
-        try {
-            if (!c.moveToFirst()) return -1
-            item = i.newObject(c)
-        } catch (e: IOException) {
-            return -1
-        } finally {
-            c.close()
-        }
+        val item = context.contentResolver.queryOne(Drafts.CONTENT_URI, Drafts.COLUMNS, where.sql,
+                null, null, Draft::class.java) ?: return -1
         val title = context.getString(R.string.status_not_updated)
         val message = context.getString(R.string.status_not_updated_summary)
         val intent = Intent()

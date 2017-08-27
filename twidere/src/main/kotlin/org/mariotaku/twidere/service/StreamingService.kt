@@ -35,6 +35,7 @@ import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.key
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.queryCount
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.notification.NotificationChannelSpec
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
@@ -389,7 +390,7 @@ class StreamingService : BaseService() {
                         Expression.equalsArgs(CachedRelationships.USER_KEY),
                         Expression.equals(CachedRelationships.NOTIFICATIONS_ENABLED, 1)).sql
                 val whereArgs = arrayOf(account.key.toString(), userKey.toString())
-                if (DataStoreUtils.queryCount(context.contentResolver, CachedRelationships.CONTENT_URI,
+                if (context.contentResolver.queryCount(CachedRelationships.CONTENT_URI,
                         where, whereArgs) <= 0) return
 
                 contentNotificationManager.showUserNotification(account.key, status, userKey)

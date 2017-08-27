@@ -11,8 +11,10 @@ import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.TwidereConstants.ACCOUNT_TYPE
+import org.mariotaku.twidere.extension.model.component1
 import org.mariotaku.twidere.extension.model.setAccountKey
 import org.mariotaku.twidere.extension.model.setAccountUser
+import org.mariotaku.twidere.extension.queryReference
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.Tab
@@ -58,33 +60,34 @@ class UpdateAccountInfoTask(
     }
 
     private fun updateTabs(resolver: ContentResolver, accountKey: UserKey) {
-        val tabsCursor = resolver.query(Tabs.CONTENT_URI, Tabs.COLUMNS, null, null, null) ?: return
-        try {
+        resolver.queryReference(Tabs.CONTENT_URI, Tabs.COLUMNS, null, null,
+                null).use { (tabsCursor) ->
+            if (tabsCursor == null) return
             val indices = ObjectCursor.indicesFrom(tabsCursor, Tab::class.java)
             val creator = ObjectCursor.valuesCreatorFrom(Tab::class.java)
             tabsCursor.moveToFirst()
             val values = LongSparseArray<ContentValues>()
-            while (!tabsCursor.isAfterLast) {
-                val tab = indices.newObject(tabsCursor)
-                val arguments = tab.arguments
-                if (arguments != null) {
-                    val accountId = arguments.accountId
-                    val keys = arguments.accountKeys
-                    if (TextUtils.equals(accountKey.id, accountId) && keys == null) {
-                        arguments.accountKeys = arrayOf(accountKey)
-                        values.put(tab.id, creator.create(tab))
+            try {
+                while (!tabsCursor.isAfterLast) {
+                    val tab = indices.newObject(tabsCursor)
+                    val arguments = tab.arguments
+                    if (arguments != null) {
+                        val accountId = arguments.accountId
+                        val keys = arguments.accountKeys
+                        if (TextUtils.equals(accountKey.id, accountId) && keys == null) {
+                            arguments.accountKeys = arrayOf(accountKey)
+                            values.put(tab.id, creator.create(tab))
+                        }
                     }
+                    tabsCursor.moveToNext()
                 }
-                tabsCursor.moveToNext()
+            } catch (e: IOException) {
+                // Ignore
             }
             for (i in 0 until values.size()) {
                 val where = Expression.equals(Tabs._ID, values.keyAt(i)).sql
                 resolver.update(Tabs.CONTENT_URI, values.valueAt(i), where, null)
             }
-        } catch (e: IOException) {
-            // Ignore
-        } finally {
-            tabsCursor.close()
         }
     }
 }

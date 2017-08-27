@@ -46,6 +46,7 @@ import org.mariotaku.twidere.adapter.SelectableUsersAdapter
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.model.isOfficial
+import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.extension.text.appendCompat
 import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.loader.CacheUserSearchLoader
@@ -324,17 +325,8 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
         val where = Expression.and(Expression.equalsArgs(Conversations.ACCOUNT_KEY),
                 Expression.equalsArgs(Conversations.PARTICIPANT_KEYS)).sql
         val whereArgs = arrayOf(accountKey.toString(), participantKeys.sorted().joinToString(","))
-        val cur = resolver.query(Conversations.CONTENT_URI, Conversations.COLUMNS, where, whereArgs, null) ?: return null
-        @Suppress("ConvertTryFinallyToUseCall")
-        try {
-            if (cur.moveToFirst()) {
-                val indices = ObjectCursor.indicesFrom(cur, ParcelableMessageConversation::class.java)
-                return indices.newObject(cur)
-            }
-        } finally {
-            cur.close()
-        }
-        return null
+        return resolver.queryOne(Conversations.CONTENT_URI, Conversations.COLUMNS, where, whereArgs,
+                null, ParcelableMessageConversation::class.java)
     }
 
     internal class PerformSearchRequestRunnable(val query: String, fragment: MessageNewConversationFragment) : Runnable {

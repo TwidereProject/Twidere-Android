@@ -58,6 +58,7 @@ import org.mariotaku.twidere.receiver.ConnectivityStateReceiver
 import org.mariotaku.twidere.service.StreamingService
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
+import org.mariotaku.twidere.util.dagger.ApplicationModule
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.emoji.EmojioneTranslator
 import org.mariotaku.twidere.util.kovenant.startKovenant
@@ -114,6 +115,10 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
 
     val sqLiteOpenHelper: SQLiteOpenHelper by lazy {
         TwidereSQLiteOpenHelper(this, Constants.DATABASES_NAME, Constants.DATABASES_VERSION)
+    }
+
+    val applicationModule: ApplicationModule by lazy {
+        ApplicationModule(this)
     }
 
     private val sharedPreferences: SharedPreferences by lazy {

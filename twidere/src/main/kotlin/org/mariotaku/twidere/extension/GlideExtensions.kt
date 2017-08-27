@@ -24,8 +24,6 @@ import com.bumptech.glide.DrawableRequestBuilder
 import com.bumptech.glide.DrawableTypeRequest
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.target.ImageViewTarget
-import com.bumptech.glide.request.target.Target
 import jp.wasabeef.glide.transformations.CropCircleTransformation
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.ImageShapeStyle

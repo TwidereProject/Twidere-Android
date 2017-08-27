@@ -1,6 +1,5 @@
 package org.mariotaku.twidere.view.holder
 
-import android.graphics.Typeface
 import android.support.v4.content.ContextCompat
 import android.support.v4.widget.TextViewCompat
 import android.support.v7.widget.RecyclerView
@@ -8,9 +7,7 @@ import android.support.v7.widget.RecyclerView.ViewHolder
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.Spanned
-import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
-import android.text.style.StyleSpan
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
