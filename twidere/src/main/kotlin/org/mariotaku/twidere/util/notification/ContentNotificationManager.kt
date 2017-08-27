@@ -272,6 +272,7 @@ class ContentNotificationManager(
         val unreadHaving = Expression.greaterThan(Conversations.UNREAD_COUNT, 0)
         val cur = cr.getUnreadMessagesEntriesCursor(projection, arrayOf(accountKey),
                 extraHaving = unreadHaving) ?: return
+        @Suppress("ConvertTryFinallyToUseCall")
         try {
             if (cur.isEmpty) return
 

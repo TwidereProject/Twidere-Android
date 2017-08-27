@@ -122,6 +122,7 @@ class MarkMessageReadTask(
             @SuppressLint("Recycle")
             val cur = query(Messages.CONTENT_URI, Messages.COLUMNS,
                     where, whereArgs, OrderBy(Messages.LOCAL_TIMESTAMP, false).sql) ?: return null
+            @Suppress("ConvertTryFinallyToUseCall")
             try {
                 if (cur.moveToFirst()) {
                     val indices = ObjectCursor.indicesFrom(cur, ParcelableMessage::class.java)

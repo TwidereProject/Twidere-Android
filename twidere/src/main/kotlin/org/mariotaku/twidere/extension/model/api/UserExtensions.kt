@@ -39,7 +39,7 @@ fun User.getProfileImageOfSize(size: String): String {
         if (larger != null) return larger
     }
     val profileImage = profileImageUrlHttps ?: profileImageUrl
-    return Utils.getTwitterProfileImageOfSize(profileImage, size) ?: profileImage
+    return Utils.getTwitterProfileImageOfSize(profileImage, size)
 }
 
 

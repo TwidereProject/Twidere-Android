@@ -316,12 +316,10 @@ class AccountsDumperPlugin(val context: Context) : DumperPlugin {
             return JsonPath.parse(JsonSerializer.serialize(details), configuration)
         }
 
-        private fun Any.prettyPrint() = if (this is JSONObject) {
-            toString(4)
-        } else if (this is JSONArray) {
-            toString(4)
-        } else {
-            toString()
+        private fun Any.prettyPrint() = when {
+            this is JSONObject -> toString(4)
+            this is JSONArray -> toString(4)
+            else -> toString()
         }
 
     }

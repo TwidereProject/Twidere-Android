@@ -121,6 +121,7 @@ class ParcelableUserLoader(
             }
             resolver.query(CachedUsers.CONTENT_URI, CachedUsers.COLUMNS, where.sql,
                     whereArgs, null)?.let { cur ->
+                @Suppress("ConvertTryFinallyToUseCall")
                 try {
                     cur.moveToFirst()
                     val indices = ObjectCursor.indicesFrom(cur, ParcelableUser::class.java)

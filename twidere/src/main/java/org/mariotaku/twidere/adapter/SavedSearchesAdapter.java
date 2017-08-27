@@ -68,7 +68,7 @@ public class SavedSearchesAdapter extends BaseAdapter {
     public View getView(final int position, final View convertView, final ViewGroup parent) {
         final View view = convertView != null ? convertView : mInflater.inflate(
                 android.R.layout.simple_list_item_1, null);
-        final TextView text = (TextView) view.findViewById(android.R.id.text1);
+        final TextView text = view.findViewById(android.R.id.text1);
         text.setText(getItem(position).getName());
         return view;
     }

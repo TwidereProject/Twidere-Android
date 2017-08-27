@@ -404,7 +404,7 @@ class StreamingService : BaseService() {
             }
 
             override fun onDisconnectNotice(code: Int, reason: String?): Boolean {
-                disconnect();
+                disconnect()
                 return true
             }
 

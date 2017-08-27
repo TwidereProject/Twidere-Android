@@ -20,8 +20,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.IntRange;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
@@ -114,7 +112,7 @@ public class ExtendedDividerItemDecoration extends RecyclerView.ItemDecoration {
             final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child
                     .getLayoutParams();
             final int top = child.getBottom() + params.bottomMargin +
-                    Math.round(ViewCompat.getTranslationY(child));
+                    Math.round(child.getTranslationY());
             final int bottom = top + mDivider.getIntrinsicHeight();
             if (mPadding != null && mPadding.get(childPos, mPaddingRect)) {
                 mDivider.setBounds(left + mPaddingRect.left, top + mPaddingRect.top, right - mPaddingRect.right,
@@ -145,7 +143,7 @@ public class ExtendedDividerItemDecoration extends RecyclerView.ItemDecoration {
             final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child
                     .getLayoutParams();
             final int left = child.getRight() + params.rightMargin +
-                    Math.round(ViewCompat.getTranslationX(child));
+                    Math.round(child.getTranslationX());
             final int right = left + mDivider.getIntrinsicHeight();
 
             mDivider.setBounds(left + mPaddingRect.left, top + mPaddingRect.top, right - mPaddingRect.right,

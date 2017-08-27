@@ -24,7 +24,9 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Accounts
  */
 @Suppress("deprecation")
 fun migrateAccounts(am: AccountManager, db: SQLiteDatabase) {
-    val cur = db.query(Accounts.TABLE_NAME, Accounts.COLUMNS, null, null, null, null, null) ?: return
+    val cur = db.query(Accounts.TABLE_NAME, Accounts.COLUMNS, null, null,
+            null, null, null) ?: return
+    @Suppress("ConvertTryFinallyToUseCall")
     try {
         val indices = ObjectCursor.indicesFrom(cur, ParcelableCredentials::class.java)
         cur.moveToFirst()

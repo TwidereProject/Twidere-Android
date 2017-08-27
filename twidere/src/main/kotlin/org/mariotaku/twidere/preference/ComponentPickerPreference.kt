@@ -55,7 +55,7 @@ abstract class ComponentPickerPreference(context: Context, attrs: AttributeSet? 
         val values = arrayOfNulls<CharSequence>(infoListSize + 1)
         entries[0] = noneEntry
         values[0] = ""
-        for (i in 0..infoListSize - 1) {
+        for (i in 0 until infoListSize) {
             val info = infoList[i]
             entries[i + 1] = info.loadLabel(packageManager)
             values[i + 1] = getComponentName(info).flattenToString()

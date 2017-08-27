@@ -165,7 +165,7 @@ fun FiltersData.parse(parser: XmlPullParser) {
 }
 
 fun FiltersData.addAll(data: FiltersData, ignoreDuplicates: Boolean = false): Boolean {
-    var changed: Boolean = false
+    var changed = false
     initFields()
     if (data.users != null) {
         changed = changed or this.users.addAllEnhanced(collection = data.users, ignoreDuplicates = ignoreDuplicates)

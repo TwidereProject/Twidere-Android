@@ -47,6 +47,7 @@ object FilterQueryBuilder {
                 textPlain, quotedTextPlain, spans, quotedSpans, source, quotedSource, retweetedByKey,
                 quotedUserKey, true)
         val cur = cr.rawQuery(query.first, query.second) ?: return false
+        @Suppress("ConvertTryFinallyToUseCall")
         try {
             return cur.moveToFirst() && cur.getInt(0) != 0
         } finally {

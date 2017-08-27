@@ -410,9 +410,9 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
 
         public void addTab(int icon, CharSequence label, int unread, boolean isCurrent) {
             final ItemLayout layout = (ItemLayout) inflater.inflate(R.layout.layout_tab_item, this, false);
-            final ImageView tabIcon = (ImageView) layout.findViewById(R.id.tab_icon);
-            final BadgeView badgeView = (BadgeView) layout.findViewById(R.id.unread_indicator);
-            final TextView tabLabel = (TextView) layout.findViewById(R.id.tab_label);
+            final ImageView tabIcon = layout.findViewById(R.id.tab_icon);
+            final BadgeView badgeView = layout.findViewById(R.id.unread_indicator);
+            final TextView tabLabel = layout.findViewById(R.id.tab_label);
 
             layout.setStripColor(stripColor);
             layout.setStripHeight(stripHeight);
@@ -500,9 +500,9 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
             this.itemView = (ItemLayout) itemView;
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
-            iconView = (ImageView) itemView.findViewById(R.id.tab_icon);
-            labelView = (TextView) itemView.findViewById(R.id.tab_label);
-            badgeView = (BadgeView) itemView.findViewById(R.id.unread_indicator);
+            iconView = itemView.findViewById(R.id.tab_icon);
+            labelView = itemView.findViewById(R.id.tab_label);
+            badgeView = itemView.findViewById(R.id.unread_indicator);
         }
 
         @Override

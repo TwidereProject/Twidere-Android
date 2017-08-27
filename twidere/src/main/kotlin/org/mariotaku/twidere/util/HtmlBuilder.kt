@@ -62,7 +62,7 @@ class HtmlBuilder(
         val sb = StringBuilder()
         val linksSize = spanSpecs.size
         val items = arrayOfNulls<SpanItem>(linksSize)
-        for (i in 0..linksSize - 1) {
+        for (i in 0 until linksSize) {
             val spec = spanSpecs[i]
             val start = spec.start
             val end = spec.end

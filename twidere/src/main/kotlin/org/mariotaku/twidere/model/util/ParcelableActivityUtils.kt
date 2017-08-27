@@ -12,11 +12,11 @@ import org.mariotaku.twidere.model.UserKey
 object ParcelableActivityUtils {
 
     /**
-     * @param activity        Activity for processing
+     * @param sources Source users
      * *
      * @param filtered Those ids will be removed from source_ids.
      * *
-     * @param followingOnly   Limit following users in sources
+     * @param followingOnly Limit following users in sources
      * *
      * @return true if source ids changed, false otherwise
      */

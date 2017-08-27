@@ -338,7 +338,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
         val stream = body.stream()
         var response = upload.initUploadMedia(mediaType, length, null, null)
         val segments = if (length == 0L) 0 else (length / BULK_SIZE + 1).toInt()
-        for (segmentIndex in 0..segments - 1) {
+        for (segmentIndex in 0 until segments) {
             val currentBulkSize = Math.min(BULK_SIZE, length - segmentIndex * BULK_SIZE).toInt()
             val bulk = SimpleBody(ContentType.OCTET_STREAM, null, currentBulkSize.toLong(),
                     stream)

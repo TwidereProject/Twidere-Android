@@ -144,7 +144,7 @@ class TwidereDns(context: Context, private val preferences: SharedPreferences) :
     private fun addLogSplit(logger: TimingLogger, host: String, message: String, depth: Int) {
         if (BuildConfig.DEBUG) return
         val sb = StringBuilder()
-        for (i in 0..depth - 1) {
+        for (i in 0 until depth) {
             sb.append(">")
         }
         sb.append(" ")

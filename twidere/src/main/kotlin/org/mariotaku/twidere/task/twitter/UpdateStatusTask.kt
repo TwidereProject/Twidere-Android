@@ -193,7 +193,7 @@ class UpdateStatusTask(
         }
 
         val sharedMedia = HashMap<UserKey, MediaUploadResult>()
-        for (i in 0..pending.length - 1) {
+        for (i in 0 until pending.length) {
             val account = update.accounts[i]
             // Skip upload if shared media found
             val accountKey = account.key
@@ -357,7 +357,7 @@ class UpdateStatusTask(
         val ownerIds = ownersList.map {
             it.id
         }.toTypedArray()
-        for (i in 0..pendingUpdate.length - 1) {
+        for (i in 0 until pendingUpdate.length) {
             val account = update.accounts[i]
             val mediaIds: Array<String>?
             when (account.type) {
@@ -472,7 +472,7 @@ class UpdateStatusTask(
     private fun statusShortenCallback(shortener: StatusShortenerInterface?,
             pendingUpdate: PendingStatusUpdate, updateResult: UpdateStatusResult) {
         if (shortener == null || !shortener.waitForService()) return
-        for (i in 0..pendingUpdate.length - 1) {
+        for (i in 0 until pendingUpdate.length) {
             val shortenResult = pendingUpdate.statusShortenResults[i]
             val status = updateResult.statuses[i]
             if (shortenResult == null || status == null) continue
@@ -483,7 +483,7 @@ class UpdateStatusTask(
     private fun mediaUploadCallback(uploader: MediaUploaderInterface?,
             pendingUpdate: PendingStatusUpdate, updateResult: UpdateStatusResult) {
         if (uploader == null || !uploader.waitForService()) return
-        for (i in 0..pendingUpdate.length - 1) {
+        for (i in 0 until pendingUpdate.length) {
             val uploadResult = pendingUpdate.mediaUploadResults[i]
             val status = updateResult.statuses[i]
             if (uploadResult == null || status == null) continue
@@ -845,7 +845,7 @@ class UpdateStatusTask(
             val stream = body.stream()
             var response = upload.initUploadMedia(mediaType, length, mediaCategory, ownerIds)
             val segments = if (length == 0L) 0 else (length / BULK_SIZE + 1).toInt()
-            for (segmentIndex in 0..segments - 1) {
+            for (segmentIndex in 0 until segments) {
                 val currentBulkSize = Math.min(BULK_SIZE.toLong(), length - segmentIndex * BULK_SIZE).toInt()
                 val bulk = SimpleBody(ContentType.OCTET_STREAM, null, currentBulkSize.toLong(),
                         stream)

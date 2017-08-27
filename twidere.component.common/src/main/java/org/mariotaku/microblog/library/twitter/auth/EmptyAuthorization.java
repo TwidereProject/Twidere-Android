@@ -18,6 +18,8 @@
 
 package org.mariotaku.microblog.library.twitter.auth;
 
+import android.support.annotation.NonNull;
+
 import org.mariotaku.restfu.RestRequest;
 import org.mariotaku.restfu.http.Authorization;
 import org.mariotaku.restfu.http.Endpoint;
@@ -28,7 +30,7 @@ import org.mariotaku.restfu.http.Endpoint;
 public final class EmptyAuthorization implements Authorization {
 
     @Override
-    public String getHeader(Endpoint endpoint, RestRequest info) {
+    public String getHeader(@NonNull Endpoint endpoint, @NonNull RestRequest info) {
         return null;
     }
 

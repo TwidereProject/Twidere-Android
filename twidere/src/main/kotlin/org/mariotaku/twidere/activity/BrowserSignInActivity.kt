@@ -60,13 +60,14 @@ class BrowserSignInActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_browser_sign_in)
-        webView.setWebChromeClient(AuthorizationWebChromeClient(this))
-        webView.setWebViewClient(AuthorizationWebViewClient(this))
+        webView.webChromeClient = AuthorizationWebChromeClient(this)
+        webView.webViewClient = AuthorizationWebViewClient(this)
         webView.isVerticalScrollBarEnabled = false
         webView.addJavascriptInterface(InjectorJavaScriptInterface(this), "injector")
-        val webSettings = webView.settings
-        webSettings.applyDefault()
-        webSettings.setSupportMultipleWindows(true)
+        webView.settings.apply {
+            applyDefault()
+            setSupportMultipleWindows(true)
+        }
 
         webView.loadUrl(intent.dataString)
     }

@@ -78,12 +78,12 @@ abstract class BaseGroupsLoader(
                 nextPagination = CursorPagination.valueOf(listLoaded.nextCursor)
                 prevPagination = CursorPagination.valueOf(listLoaded.previousCursor)
                 val dataSize = data.size
-                for (i in 0..listSize - 1) {
+                for (i in 0 until listSize) {
                     val group = listLoaded[i]
                     data.add(ParcelableGroupUtils.from(group, accountKey, dataSize + i, isMember(group)))
                 }
             } else {
-                for (i in 0..listSize - 1) {
+                for (i in 0 until listSize) {
                     val list = listLoaded[i]
                     data.add(ParcelableGroupUtils.from(listLoaded[i], accountKey, i, isMember(list)))
                 }

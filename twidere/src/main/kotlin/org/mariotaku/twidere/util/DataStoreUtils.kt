@@ -621,6 +621,7 @@ object DataStoreUtils {
         val where = Expression.equalsArgs(Filters.Users.USER_KEY)
         val c = cr.query(Filters.Users.CONTENT_URI, arrayOf(SQLFunctions.COUNT()),
                 where.sql, arrayOf(userKey), null) ?: return false
+        @Suppress("ConvertTryFinallyToUseCall")
         try {
             if (c.moveToFirst()) {
                 return c.getLong(0) > 0
@@ -812,6 +813,7 @@ object DataStoreUtils {
     fun queryCount(cr: ContentResolver, uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
         val projection = arrayOf(SQLFunctions.COUNT())
         val cur = cr.query(uri, projection, selection, selectionArgs, null) ?: return -1
+        @Suppress("ConvertTryFinallyToUseCall")
         try {
             if (cur.moveToFirst()) {
                 return cur.getInt(0)
@@ -909,6 +911,7 @@ object DataStoreUtils {
         val whereArgs = arrayOf(accountKey.toString(), statusId)
         for (uri in DataStoreUtils.STATUSES_URIS) {
             val cur = resolver.query(uri, Statuses.COLUMNS, where, whereArgs, null) ?: continue
+            @Suppress("ConvertTryFinallyToUseCall")
             try {
                 if (cur.moveToFirst()) {
                     val indices = ObjectCursor.indicesFrom(cur, ParcelableStatus::class.java)
@@ -956,6 +959,7 @@ object DataStoreUtils {
                 Expression.equalsArgs(Conversations.CONVERSATION_ID)).sql
         val whereArgs = arrayOf(accountKey.toString(), conversationId)
         val cur = resolver.query(Conversations.CONTENT_URI, Conversations.COLUMNS, where, whereArgs, null) ?: return null
+        @Suppress("ConvertTryFinallyToUseCall")
         try {
             if (cur.moveToFirst()) {
                 val indices = ObjectCursor.indicesFrom(cur, ParcelableMessageConversation::class.java)

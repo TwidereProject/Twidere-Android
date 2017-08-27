@@ -33,7 +33,7 @@ import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 /**
  * Created by mariotaku on 15/4/6.
  */
-class StatusAdapterLinkClickHandler<D>(context: Context, preferences: SharedPreferences) :
+class StatusAdapterLinkClickHandler<out D>(context: Context, preferences: SharedPreferences) :
         OnLinkClickHandler(context, null, preferences), Constants {
 
     private var adapter: IStatusesAdapter<D>? = null

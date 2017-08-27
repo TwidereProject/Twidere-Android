@@ -245,7 +245,7 @@ object Utils {
         if (projection == null) return AllColumns()
         val length = projection.size
         val columns = arrayOfNulls<Column>(length)
-        for (i in 0..length - 1) {
+        for (i in 0 until length) {
             columns[i] = Column(projection[i])
         }
         return Columns(*columns)

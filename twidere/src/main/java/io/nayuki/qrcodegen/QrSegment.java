@@ -254,7 +254,7 @@ public final class QrSegment {
 		
 		/*-- Constructor --*/
 		
-		private Mode(int mode, int... ccbits) {
+		Mode(int mode, int... ccbits) {
 			this.modeBits = mode;
 			numBitsCharCount = ccbits;
 		}

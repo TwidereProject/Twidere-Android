@@ -6,7 +6,6 @@ import android.content.Intent
 import android.view.ActionProvider
 import android.view.Menu
 import android.view.SubMenu
-import android.view.View
 import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT
 import org.mariotaku.twidere.model.AccountDetails
@@ -23,10 +22,6 @@ class AccountActionProvider(
 
     override fun hasSubMenu(): Boolean {
         return true
-    }
-
-    override fun onCreateActionView(): View? {
-        return null
     }
 
     override fun onPrepareSubMenu(subMenu: SubMenu) {
@@ -50,6 +45,9 @@ class AccountActionProvider(
             }
         }
     }
+
+    @Suppress("OverridingDeprecatedMember")
+    override fun onCreateActionView() = null
 
     companion object {
 

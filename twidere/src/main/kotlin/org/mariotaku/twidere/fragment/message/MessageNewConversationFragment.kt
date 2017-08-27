@@ -325,6 +325,7 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
                 Expression.equalsArgs(Conversations.PARTICIPANT_KEYS)).sql
         val whereArgs = arrayOf(accountKey.toString(), participantKeys.sorted().joinToString(","))
         val cur = resolver.query(Conversations.CONTENT_URI, Conversations.COLUMNS, where, whereArgs, null) ?: return null
+        @Suppress("ConvertTryFinallyToUseCall")
         try {
             if (cur.moveToFirst()) {
                 val indices = ObjectCursor.indicesFrom(cur, ParcelableMessageConversation::class.java)

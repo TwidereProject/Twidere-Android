@@ -97,13 +97,13 @@ abstract class BaseUserListsLoader(
                 nextPagination = CursorPagination.valueOf(listLoaded.nextCursor)
                 prevPagination = CursorPagination.valueOf(listLoaded.previousCursor)
                 val dataSize = data.size
-                for (i in 0..listSize - 1) {
+                for (i in 0 until listSize) {
                     val list = listLoaded[i]
                     data.add(list.toParcelable(accountKey, (dataSize + i).toLong(),
                             isFollowing(list), profileImageSize))
                 }
             } else {
-                for (i in 0..listSize - 1) {
+                for (i in 0 until listSize) {
                     val list = listLoaded[i]
                     data.add(listLoaded[i].toParcelable(accountKey, i.toLong(),
                             isFollowing(list), profileImageSize))

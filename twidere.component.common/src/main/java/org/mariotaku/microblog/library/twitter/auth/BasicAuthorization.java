@@ -18,6 +18,7 @@
 
 package org.mariotaku.microblog.library.twitter.auth;
 
+import android.support.annotation.NonNull;
 import android.util.Base64;
 
 import org.mariotaku.restfu.RestRequest;
@@ -38,7 +39,7 @@ public final class BasicAuthorization implements Authorization {
     }
 
     @Override
-    public String getHeader(Endpoint endpoint, RestRequest info) {
+    public String getHeader(@NonNull Endpoint endpoint, @NonNull RestRequest info) {
         if (!hasAuthorization()) return null;
         return "Basic " + Base64.encodeToString((user + ":" + password).getBytes(), Base64.NO_WRAP);
     }

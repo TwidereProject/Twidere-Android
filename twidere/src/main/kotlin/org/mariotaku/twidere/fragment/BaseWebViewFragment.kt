@@ -37,12 +37,13 @@ open class BaseWebViewFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val view = webView
-        view!!.setWebViewClient(createWebViewClient())
-        val settings = view.settings
-        settings.builtInZoomControls = true
-        settings.javaScriptEnabled = true
-        WebSettingsSupport.setAllowUniversalAccessFromFileURLs(settings, true)
+        val view = webView!!
+        view.webViewClient = createWebViewClient()
+        view.settings.apply {
+            builtInZoomControls = true
+            javaScriptEnabled = true
+            WebSettingsSupport.setAllowUniversalAccessFromFileURLs(this, true)
+        }
     }
 
 

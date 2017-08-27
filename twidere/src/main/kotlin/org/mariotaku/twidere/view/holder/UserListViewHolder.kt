@@ -42,25 +42,17 @@ class UserListViewHolder(
         private val adapter: IUserListsAdapter<*>
 ) : ViewHolder(itemView), View.OnClickListener, View.OnLongClickListener {
 
-    private val itemContent: ColorLabelRelativeLayout
-    private val profileImageView: ProfileImageView
-    private val nameView: TextView
-    private val createdByView: TextView
-    private val descriptionView: TextView
-    private val membersCountView: TextView
-    private val subscribersCountView: TextView
+    private val itemContent: ColorLabelRelativeLayout = itemView.itemContent
+    private val profileImageView: ProfileImageView = itemView.profileImage
+    private val nameView: TextView = itemView.name
+    private val createdByView: TextView = itemView.createdBy
+    private val descriptionView: TextView = itemView.description
+    private val membersCountView: TextView = itemView.membersCount
+    private val subscribersCountView: TextView = itemView.subscribersCount
 
     private var userListClickListener: IUserListsAdapter.UserListClickListener? = null
 
     init {
-        itemContent = itemView.itemContent
-        profileImageView = itemView.profileImage
-        nameView = itemView.name
-        createdByView = itemView.createdBy
-        descriptionView = itemView.description
-        membersCountView = itemView.membersCount
-        subscribersCountView = itemView.subscribersCount
-
         profileImageView.style = adapter.profileImageStyle
     }
 

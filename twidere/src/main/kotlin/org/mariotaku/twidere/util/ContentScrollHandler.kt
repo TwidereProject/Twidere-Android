@@ -154,7 +154,7 @@ open class ContentScrollHandler<A>(
         fun post(runnable: Runnable)
     }
 
-    interface ContentListSupport<A> {
+    interface ContentListSupport<out A> {
 
         val adapter: A?
 
