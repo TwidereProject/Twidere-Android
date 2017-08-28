@@ -88,7 +88,7 @@
   <string name="profile_link_color_main_color">లంకె రంగు (ముఖ్య రంగు)</string>
   <string name="profile_text_color">పాఠ్యపు రంగు</string>
   <!-- Normally you don't need to translate this -->
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="refresh_type_home">ముంగిలి</string>
   <string name="refresh_type_messages">సందేశాలు</string>
   <string name="refresh_type_trends">పోకడలు</string>

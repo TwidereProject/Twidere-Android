@@ -118,7 +118,7 @@
   <!-- Previous item (tweet, user etc.) -->
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="quote_user">Παράθεση <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_count">Έγινε ρετουϊτ από <xliff:g id="retweet_count">%d</xliff:g> χρήστες</string>
   <string name="retweeted_by_name">Έγινε ρετουϊτ από <xliff:g id="user_name">%s</xliff:g></string>

@@ -42,7 +42,7 @@
   </string-array>
   <string-array name="entries_proxy_type">
     <item>HTTP</item>
-    <item>Reverse proxy</item>
+    <item>Обратный прокси</item>
     <!--<item>SOCKS</item>-->
   </string-array>
   <string-array name="entries_refresh_interval">
@@ -77,9 +77,13 @@
   </string-array>
   <string-array name="entries_quick_access_shortcut_types">
     <item>Пользователь</item>
-    <item>User timeline</item>
-    <item>User Favorites</item>
+    <item>Хронология</item>
+    <item>Избранное</item>
     <item>Список</item>
     <item>Список</item>
+  </string-array>
+  <string-array name="entries_user_timeline_filter">
+    <item>Ответы</item>
+    <item>Ретвиты</item>
   </string-array>
 </resources>

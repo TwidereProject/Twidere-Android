@@ -34,4 +34,6 @@
   <string name="error_twitter_193">A foto que queres subir é grande de máis.</string>
   <!-- 215 Bad authentication data: Typically sent with 1.1 responses with HTTP code 400. The method requires authentication but it was not presented or was wholly invalid -->
   <string name="error_twitter_215">Se cadra precisas entrar de novo.</string>
+  <string name="error_twitter_326">A túa conta foi suspendida, máis detalles en https://twitter.com/ </string>
+  <string name="error_twitter_327">Xa rechouchiaches este chío.</string>
 </resources>

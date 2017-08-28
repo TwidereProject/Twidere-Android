@@ -177,7 +177,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Emoji ondersteuning</string>
   <string name="empty_content">Lege inhoud</string>
-  <string name="action_enable_retweets">Retweets inschakelen</string>
   <string name="enable_streaming">Streaming inschakelen</string>
   <string name="error_message">Fout: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_device_incompatible">Dit apparaat is niet compatibel met Twidere, upgraden naar de nieuwste Android OS wordt aanbevolen. \nJe kunt de onderstaande informatie verzenden om mij te helpen dit probleem te melden bij de fabrikant van je toestel.</string>
@@ -484,7 +483,7 @@
   <string name="projects_we_took_part">Projecten waar we aan deelnamen</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="provider_fanfou">Fanfou</string>
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>

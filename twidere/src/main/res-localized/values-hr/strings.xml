@@ -156,7 +156,6 @@
   <string name="edit_tabs">Uredi tabove</string>
   <string name="ellipsis">&#8230;</string>
   <string name="empty_content">Prazan sadržaj</string>
-  <string name="action_enable_retweets">Omogući retweetove</string>
   <string name="enable_streaming">Omogući streaming</string>
   <string name="error_message">Greška: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_message_too_long">Poruka preduga.</string>
@@ -409,7 +408,7 @@
   <string name="project_account">Račun projekta</string>
   <string name="projects_we_took_part">Projekti u kojima smo sudjelovali</string>
   <!-- Normally you don't need to translate this -->
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="proxy">Proxy</string>
   <string name="proxy_host">Proxy Host</string>
   <string name="proxy_port">Proxy Port</string>

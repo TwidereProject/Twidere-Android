@@ -3,7 +3,7 @@
 <resources>
   <string-array name="entries_auto_refresh_content">
     <item>ホーム</item>
-    <item>つながり</item>
+    <item>みんなの反応</item>
     <item>ダイレクトメッセージ</item>
     <item>トレンド</item>
   </string-array>

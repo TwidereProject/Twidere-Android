@@ -34,6 +34,7 @@
   <string name="action_center">Centro</string>
   <string name="action_clear">Limpar</string>
   <string name="action_clear_messages">Limpar mensaxes</string>
+  <string name="action_comment">Comentar</string>
   <string name="action_compose">Escribir chío</string>
   <string name="action_compose_message_convert_to_status">Converter en chío</string>
   <string name="action_connect_to_buffer">Conectar</string>
@@ -271,8 +272,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Soporte de risoños</string>
   <string name="empty_content">Sen contido</string>
-  <string name="action_enable_notifications">Activar notificacións</string>
-  <string name="action_enable_retweets">Activar rechouchíos</string>
   <string name="enable_streaming">Activar streaming</string>
   <string name="error_info_oauth_timestamp_error">Por favor comproba data e hora nos teus axustes.</string>
   <string name="error_message">Erro: <xliff:g id="message">%s</xliff:g></string>
@@ -478,6 +477,7 @@
   <string name="login_challenge_retype_email_hint">Introduce de novo o correo-e asociado á túa conta de Twitter.</string>
   <string name="login_challenge_retype_phone_hint">Introduce de novo o número de teléfono asociado á túa conta de Twitter.</string>
   <string name="login_type_default">Por defecto</string>
+  <string name="login_type_user_settings">Axustes de usuario</string>
   <string name="login_verification">Verificación de entrada</string>
   <string name="login_verification_pin_hint">Para entrar, introduce o PIN recibido no teu teléfono.</string>
   <string name="login_verification_push_hint">Aceptar a petición de verificación de entrada da aplicación Twitter. Cando aceptes preme OK.</string>
@@ -766,7 +766,7 @@
   <string name="projects_we_took_part">Proxectos nos que participamos</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="provider_fanfou">Fanfou</string>
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>
@@ -1014,6 +1014,7 @@
   <string name="title_user_list_ownerships">Creado</string>
   <string name="title_user_list_subscriptions">Subscricións</string>
   <string name="title_user_timeline_filter">Filtro da liña de tempo</string>
+  <string name="title_userlist_subscribers">Subscritores</string>
   <string name="title_users_favorited_this">Marcado favorito por</string>
   <string name="title_users_liked_this">Gustaron disto</string>
   <string name="title_users_retweeted_this">Rechouchiado por</string>

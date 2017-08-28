@@ -34,4 +34,6 @@
   <string name="error_twitter_193">ภาพที่อัพโหลดมีขนาดใหญ่เกินไป</string>
   <!-- 215 Bad authentication data: Typically sent with 1.1 responses with HTTP code 400. The method requires authentication but it was not presented or was wholly invalid -->
   <string name="error_twitter_215">คุณอาจจะต้องเข้าสู่ระบบอีกครั้ง</string>
+  <string name="error_twitter_326">บัญชีของคุณถูกระงับ กรุณาเยี่ยมชม https://twitter.com/ สำหรับรายละเอียด</string>
+  <string name="error_twitter_327">คุณได้รีทวีตนี้ไปแล้ว</string>
 </resources>

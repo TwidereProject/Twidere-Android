@@ -23,6 +23,7 @@
   <string name="action_add_member">添加成员</string>
   <string name="action_add_tab">添加标签页</string>
   <string name="action_add_to_filter">添加到过滤器</string>
+  <string name="action_add_to_home_screen">添加到主屏幕</string>
   <string name="action_add_to_list">添加到列表</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">阻止</string>
@@ -43,6 +44,7 @@
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">删除</string>
   <string name="action_delete_messages">删除信息</string>
+  <string name="action_disable_promotions">禁用推广</string>
   <string name="action_dont_restart">不重启</string>
   <string name="action_dont_terminate">不退出</string>
   <!-- [verb] Edit image/settings etc. -->
@@ -50,6 +52,9 @@
   <string name="action_edit_conversation_avatar">编辑图标</string>
   <string name="action_edit_conversation_name">编辑名称</string>
   <string name="action_edit_filter_rule">编辑规则</string>
+  <string name="action_enable">启用</string>
+  <string name="action_enable_notifications">启用通知</string>
+  <string name="action_enable_retweets">启用转推</string>
   <string name="action_favorite">收藏</string>
   <string name="action_filter_import_from_blocked_users">从被阻止的用户导入</string>
   <string name="action_filter_import_from_muted_users">从被隐藏的用户导入</string>
@@ -81,6 +86,7 @@
   <string name="action_quote">引用</string>
   <string name="action_record_video">录像</string>
   <string name="action_refresh">刷新</string>
+  <string name="action_refresh_launch_presentations">刷新启动屏幕</string>
   <string name="action_register">注册</string>
   <string name="action_remove_conversation_avatar">删除图标</string>
   <string name="action_reply">回复</string>
@@ -272,8 +278,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Emoji支持</string>
   <string name="empty_content">空内容</string>
-  <string name="action_enable_notifications">启用通知</string>
-  <string name="action_enable_retweets">启用转推</string>
   <string name="enable_streaming">启用实时流</string>
   <string name="error_info_oauth_timestamp_error">请检查您的系统日期和时间设置</string>
   <string name="error_message">发生问题：<xliff:g id="message">%s</xliff:g></string>
@@ -290,6 +294,7 @@
   <string name="error_message_status_too_long">推文太长</string>
   <string name="error_message_tweet_shorten_failed">推文缩短失败</string>
   <string name="error_message_tweet_shortener_not_found">未找到推文缩短扩展，它可能已经被删除</string>
+  <string name="error_message_video_upload_not_supported">不支持视频上传</string>
   <string name="error_no_access_for_credentials">您的应用不能访问这个接口</string>
   <string name="error_no_dm_permission">没有私信权限。请检查您注册的 Twitter 应用的权限设置。</string>
   <string name="error_title_device_incompatible">不兼容的设备</string>
@@ -538,6 +543,7 @@
   <string name="message_sync_disconnect_from_name_confirm">从 <xliff:g example="ownCloud" id="name">%s</xliff:g> 断开连接？</string>
   <string name="message_sync_last_synced_time">上次同步： <xliff:g example="2017/1/1 12:00" id="time">%s</xliff:g></string>
   <string name="message_tab_field_is_required">字段 “<xliff:g example="Field" id="name">%s</xliff:g>” 必填</string>
+  <string name="message_title_promotions_reward">启用推广就可以免费使用所有增强功能。我们承诺不会打扰您的使用体验！</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
@@ -560,6 +566,7 @@
   <string name="message_toast_login_verification_failed">登录验证失败</string>
   <!-- Toast message for network errors -->
   <string name="message_toast_network_error">网络错误</string>
+  <string name="message_toast_network_error_with_message">网络错误：<xliff:g id="message">%s</xliff:g></string>
   <string name="message_toast_no_account">没有帐号</string>
   <string name="message_toast_no_account_permission">需要帐号权限</string>
   <string name="message_toast_no_account_selected">没有选择帐号</string>
@@ -636,6 +643,15 @@
   <string name="no_user_found">没有找到用户</string>
   <string name="no_version_suffix">没有版本后缀</string>
   <string name="none">无</string>
+  <string name="notification_channel_description_content_interactions">互动，例如提及和转推</string>
+  <string name="notification_channel_description_content_messages">重要的消息，例如私信</string>
+  <string name="notification_channel_name_app_notices">应用提醒</string>
+  <string name="notification_channel_name_background_progresses">后台操作</string>
+  <string name="notification_channel_name_content_interactions">互动</string>
+  <string name="notification_channel_name_content_messages">私信</string>
+  <string name="notification_channel_name_content_subscriptions">订阅</string>
+  <string name="notification_channel_name_content_updates">更新</string>
+  <string name="notification_channel_name_service_statuses">服务状态</string>
   <string name="notification_direct_message"><xliff:g id="user">%s</xliff:g> 给您发送了一条私信</string>
   <string name="notification_direct_message_multiple_messages"><xliff:g id="user">%1$s</xliff:g> 给您发了 <xliff:g id="messages_count">%2$d</xliff:g> 条私信</string>
   <string name="notification_direct_message_multiple_users"><xliff:g id="user">%1$s</xliff:g> 和其他 <xliff:g id="users_count">%2$d</xliff:g> 人给您发了 <xliff:g id="messages_count">%3$d</xliff:g> 条私信</string>
@@ -728,6 +744,7 @@
   <string name="preference_title_media_preload_non_metered_network">在免费网络下预加载</string>
   <string name="preference_title_multi_column_tab_width">多栏标签页宽度</string>
   <string name="preference_title_multi_column_tabs">多栏标签页</string>
+  <string name="preference_title_navbar_style">导航栏样式</string>
   <string name="preference_title_notification_ringtone">铃声</string>
   <string name="preference_title_override_language">应用程序语言</string>
   <string name="preference_title_portrait">纵向模式</string>
@@ -768,7 +785,7 @@
   <string name="projects_we_took_part">我们参与的项目</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="provider_fanfou">饭否</string>
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>
@@ -988,6 +1005,7 @@
   <string name="title_open_source_license">开源许可</string>
   <string name="title_pin_status_confirm">置顶推文</string>
   <string name="title_premium_features_name">Twidere ∞</string>
+  <string name="title_promotions_reward">推广奖励</string>
   <string name="title_public_timeline">公共时间线</string>
   <string name="title_quick_action">快捷操作</string>
   <string name="title_retweet_quote_confirm">转推给您的关注者吗？</string>

@@ -243,7 +243,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Suporte de Emoji</string>
   <string name="empty_content">Nenhum conteúdo</string>
-  <string name="action_enable_retweets">Ativar retweets</string>
   <string name="enable_streaming">Habilitar atualização em tempo real</string>
   <string name="error_message">Erro: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_device_incompatible">Este dispositivo não é compatível com Twidere, atualize para o Android mais recente. \nVocê pode enviar as informações abaixo para ajudar-me a relatar esse problema para o fabricante do dispositivo.</string>
@@ -561,7 +560,7 @@
   <string name="projects_we_took_part">Projetos que participamos</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="provider_fanfou">Fanfou</string>
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>

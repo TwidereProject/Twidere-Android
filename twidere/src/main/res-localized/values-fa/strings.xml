@@ -268,8 +268,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">پشتیبانی اموجی</string>
   <string name="empty_content">محتوای خالی</string>
-  <string name="action_enable_notifications">فعّال کردن آگاهی‌ها</string>
-  <string name="action_enable_retweets">فعّال کردن بازتوییت‌ها</string>
   <string name="enable_streaming">فعّال کردن جریان</string>
   <string name="error_info_oauth_timestamp_error">لطفاً تنظیمات تاریخ و زمان سامانه‌تان را بررسی کنید.</string>
   <string name="error_message">خطا: <xliff:g id="message">%s</xliff:g></string>
@@ -751,7 +749,7 @@
   <string name="projects_we_took_part">پروژه‌هایی که در آن‌ها مشارکت داریم</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">توییدر</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="provider_fanfou">فن‌فو</string>
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>

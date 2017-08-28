@@ -272,8 +272,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Soporte para emojis</string>
   <string name="empty_content">Contenido vacío</string>
-  <string name="action_enable_notifications">Activar notificaciones</string>
-  <string name="action_enable_retweets">Habilitar retweets</string>
   <string name="enable_streaming">Habilitar streaming</string>
   <string name="error_info_oauth_timestamp_error">Por favor, verifique los ajustes de fecha y hora del sistema.</string>
   <string name="error_message">Error: <xliff:g id="message">%s</xliff:g></string>
@@ -768,7 +766,7 @@
   <string name="projects_we_took_part">Proyectos en los que participamos</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="provider_fanfou">Fanfou</string>
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>

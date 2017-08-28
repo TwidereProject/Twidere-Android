@@ -56,6 +56,7 @@
   <string name="action_filter_subscriptions_card_manage">Feliratkozások kezelése</string>
   <string name="action_finish">Befejezés</string>
   <string name="action_follow">Követés</string>
+  <string name="action_format_search_update_status">Tweet <xliff:g id="text">%1$s</xliff:g></string>
   <!-- [verb] Perform import action -->
   <string name="action_import">Import</string>
   <string name="action_import_from">Importálás&#8230;</string>
@@ -236,21 +237,21 @@
   <string name="default_api_settings_summary">Újra be kell jelentkezni a beállítások érvénybelépéséhez</string>
   <string name="default_ringtone">Alapértelmezett csengőhang</string>
   <string name="delete_conversation">Beszélgetés törlése</string>
-  <string name="delete_conversation_confirm_message">Töröljem az összes elemét ennek a beszélgetésnek ?</string>
-  <string name="delete_drafts_confirm">Töröljem a kiválasztott piszkozatokat?</string>
-  <string name="delete_message_confirm_message">Töröljem ezt az üzenetet?</string>
+  <string name="delete_conversation_confirm_message">Törlöd ennek a beszélgetésnek az összes üzenetét?</string>
+  <string name="delete_drafts_confirm">Törlöd a kiválasztott piszkozatokat?</string>
+  <string name="delete_message_confirm_message">Törlöd ezt az üzenetet?</string>
   <string name="delete_user"><xliff:g id="name">%s</xliff:g> felhasználó törlése</string>
-  <string name="delete_user_confirm_message">Töröljem <xliff:g id="name">%s</xliff:g> felhasználót? Ezt nem lehet visszavonni.</string>
-  <string name="delete_user_from_list_confirm">Töröljem <xliff:g id="user">%1$s</xliff:g> felhasználót a listából: "<xliff:g id="list">%2$s</xliff:g>\"?</string>
+  <string name="delete_user_confirm_message">Törlöd <xliff:g id="name">%s</xliff:g> felhasználót? Ezt nem lehet visszavonni.</string>
+  <string name="delete_user_from_list_confirm">Törlöd <xliff:g id="user">%1$s</xliff:g> felhasználót a listából: "<xliff:g id="list">%2$s</xliff:g>\"?</string>
   <string name="delete_user_list"><xliff:g id="name">%s</xliff:g> lista törlése</string>
-  <string name="delete_user_list_confirm_message">Töröljem a listát: <xliff:g id="name">%s</xliff:g>? Ezt nem lehet visszavonni.</string>
+  <string name="delete_user_list_confirm_message">Törlöd a listát: <xliff:g id="name">%s</xliff:g>? Ezt nem lehet visszavonni.</string>
   <string name="delete_users">Felhasználók törlése</string>
   <string name="deleted_list">\"<xliff:g id="list">%s</xliff:g>\" lista törölve.</string>
   <string name="deleted_user_from_list"><xliff:g id="user">%1$s</xliff:g> törölve a listából: "<xliff:g id="list">%2$s</xliff:g>\".</string>
   <string name="denied_users_follow_request"><xliff:g id="user">%s</xliff:g> követési kérelme elutasítva.</string>
   <string name="deny">Elutasít</string>
   <string name="destroy_saved_search">Elmentett keresés törlése: \"<xliff:g id="name">%s</xliff:g>\"</string>
-  <string name="destroy_saved_search_confirm_message">Töröljem a mentett keresést: \"<xliff:g id="name">%s</xliff:g>\"? Később újra elmentheted.</string>
+  <string name="destroy_saved_search_confirm_message">Törlöd a mentett keresést: \"<xliff:g id="name">%s</xliff:g>\"? Később újra elmentheti.</string>
   <string name="destroy_status">Tweet törlése</string>
   <string name="destroy_status_confirm_message">Ennek a tweetnek a törlése?</string>
   <string name="developed_by">Fejlesztő:</string>
@@ -271,8 +272,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Emoji támogatás</string>
   <string name="empty_content">Üres</string>
-  <string name="action_enable_notifications">Értesítések engedélyezése</string>
-  <string name="action_enable_retweets">Retweetek engedélyezése</string>
   <string name="enable_streaming">Közvetítés engedélyezése</string>
   <string name="error_info_oauth_timestamp_error">Kérjük, ellenőrizd a rendszer dátum- &amp; időbeállításait.</string>
   <string name="error_message">Hiba: <xliff:g id="message">%s</xliff:g></string>
@@ -302,10 +301,13 @@
   <string name="external_group_host_format">Külső csoport innen: <xliff:g id="host">%s</xliff:g></string>
   <string name="external_user_host_format">Külső felhasználó innen: <xliff:g id="host">%s</xliff:g></string>
   <string name="extra_configurations">Egyéb beállítások</string>
+  <string name="extra_feature_description_filters_import">Blokkolt/elnémított szűrők importálása</string>
+  <string name="extra_feature_description_filters_subscription">Feliratkozás elnémító szűrőkre és automatikus szinkronizációra</string>
   <string name="extra_feature_description_schedule_status">Tweet ütemezése (küldés később)</string>
   <string name="extra_feature_description_share_gif">GIF megosztása tweetben</string>
   <string name="extra_feature_description_sync_data">Szinkronizálás a Dropbox, Google Drive stb. szolgáltatásokkal</string>
   <string name="extra_feature_title_filters_import">Szűrők importálása</string>
+  <string name="extra_feature_title_filters_subscription">Feliratkozás szűrőkre</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">Támogassa Twidere alkalmazást, és jusson hozzá a bővített funkciókhoz</string>
   <string name="extra_features_pack_description">Vagy vedd meg a funkciók csomagot, hogy hozzájuss az összes funkcióhoz (beleértve a jövőbeli verziókat is)</string>
@@ -326,7 +328,7 @@
   <string name="followed_user">Követve <xliff:g id="user">%s</xliff:g>.</string>
   <string name="following_only">Kizárólag a te követéseid</string>
   <string name="following_only_summary">Csak a követett felhasználóktól származó értesítések megjelenítése.</string>
-  <string name="following_you">Követ téged</string>
+  <string name="following_you">Követi önt</string>
   <string name="follows">Követed</string>
   <string name="font">Betűtípus</string>
   <string name="font_family">Betűtípus</string>
@@ -360,6 +362,7 @@
   <string name="hint_message_select_user">Felhasználók keresése</string>
   <string name="hint_no_account">Nincs fiók</string>
   <string name="hint_search_gif">GIF keresése</string>
+  <string name="hint_status_reply_to_user_removed">Idézetként lesz elküldve mivel a tweet szerzőjére történő utalás el lett távolítva. &lt;a href=\"#dialog\";&gt;Miért?&lt;/a&gt;</string>
   <string name="hints">Tippek</string>
   <string name="home_refresh">Frissítés a kezdőlap idővonalon</string>
   <string name="host_mapping_address">Cím (Lehet egy másik host címe)</string>
@@ -406,6 +409,7 @@
   <string name="label_feedback_title">Cím</string>
   <string name="label_filters_subscription">Feliratkozás</string>
   <string name="label_follow_request_sent">Követési kérelem elküldve</string>
+  <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> ezen keresztül: <xliff:g example="api" id="source">%2$s</xliff:g></string>
   <string name="label_location_coarse">Körülbelüli (Város)</string>
   <string name="label_location_no_location">Semmi</string>
   <string name="label_location_precise">Pontos (Koordináta)</string>
@@ -506,10 +510,15 @@
   <string name="message_error_buffer_connection_failed">Nem lehet csatlakozni a Buffer szolgáltatáshoz</string>
   <string name="message_error_buffer_media_not_supported">Média ütemezése a Buffer szolgáltatással még nem támogatott</string>
   <string name="message_error_invalid_account">Fiókadatok sérültek, a Twidere eltávolítja az érintett fiókokat az összeomlás elkerülése végett.</string>
+  <string name="message_format_compose_message_convert_to_status">Ez a tweet üzenetként lesz elküldve <xliff:g id="name">%1$s</xliff:g> részére, folytatja? Normál tweetté történő konvertálása extra karakter használatát igényli.</string>
   <string name="message_format_conversation_avatar_update">Beszélgetés avatarja megváltozott</string>
+  <string name="message_format_conversation_avatar_update_by_user"><xliff:g example="User" id="by_user">%1$s</xliff:g> megváltoztatta a beszélgetés avatarját</string>
   <string name="message_format_conversation_name_update">Beszélgetés neve megváltozott a következőre: <xliff:g example="User" id="name">%1$s</xliff:g></string>
   <string name="message_format_conversation_name_update_by_user"><xliff:g example="User" id="by_user">%1$s</xliff:g> megváltoztatta a beszélgetés nevét a következőre: <xliff:g example="New name" id="name">%2$s</xliff:g></string>
   <string name="message_format_participants_join"><xliff:g example="User" id="name">%1$s</xliff:g> csatlakozott</string>
+  <string name="message_format_participants_join_added"><xliff:g example="Sender" id="sender">%1$s</xliff:g> hozzáadta: <xliff:g example="Recipient" id="recipient">%2$s</xliff:g></string>
+  <string name="message_format_participants_leave"><xliff:g example="User" id="name">%1$s</xliff:g> kiszállt</string>
+  <string name="message_format_sender_time"><xliff:g example="User" id="sender">%1$s</xliff:g> · <xliff:g example="12:00" id="time">%2$s</xliff:g></string>
   <string name="message_gif_sharing_introduction">GIF keresése &amp; megosztása a GIPHY révén</string>
   <string name="message_info_buffer_queue_empty">Buffer várólista üres</string>
   <string name="message_join_conversation">Csatlakozott a beszélgetéshez.</string>
@@ -518,8 +527,10 @@
   <string name="message_permission_request_share_media">A Twiderének háttértár engedélyre van szüksége média más alkalmazásokkal történő megosztásához.</string>
   <string name="message_pin_status_confirm">Kitűzi ezt a tweetet? A korábban kitűzött tweet helyére kerül.</string>
   <string name="message_please_wait">Kérem várjon.</string>
+  <string name="message_status_reply_to_user_removed_explanation">A Twitter mindig megemlíti a tweet szerzőjét a válaszban. Ha a szerző el lett távolítva, a Twidere a választ idézetként fogja elküldeni a szövegkörnyezet megőrzése céljából.</string>
   <string name="message_status_scheduling_connect_buffer_hint">Csatlakozás a Buffer szolgáltatáshoz, hogy tweeteket ütemezzen offline mód esetén is</string>
   <string name="message_status_scheduling_connected_to_buffer">A Twidere most kapcsolódik a Buffer szolgáltatáshoz</string>
+  <string name="message_summary_type_sticker">[Sticker]</string>
   <string name="message_sync_data_connect_hint">Csatlakoztasd a Twiderét hálózati tárolóeszközhöz az adatok szinkronizálásához</string>
   <string name="message_sync_data_synced_with_name">A Twidere most szinkronizálva van: <xliff:g example="ownCloud" id="name">%s</xliff:g></string>
   <string name="message_sync_disconnect_from_name_confirm"><xliff:g example="ownCloud" id="name">%s</xliff:g> kapcsolat bontása?</string>
@@ -755,7 +766,7 @@
   <string name="projects_we_took_part">Projektek amiben részt veszünk</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="provider_fanfou">Fanfou</string>
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>
@@ -779,7 +790,7 @@
   <string name="quote_user">Idézet: <xliff:g id="user_name">%s</xliff:g></string>
   <string name="rate_limit">Tweet ráta</string>
   <string name="read_from_bottom">Olvasás alulról</string>
-  <string name="read_from_bottom_summary_off">Ugrás a legújabb tweetre frissítés után-</string>
+  <string name="read_from_bottom_summary_off">Ugrás a legújabb tweetre frissítés után</string>
   <string name="read_from_bottom_summary_on">Olvasási pozíció megtartása frissítés után</string>
   <string name="recent_media">Legújabb média</string>
   <string name="refresh_after_status_updated">Frissítés tweet küldése után</string>

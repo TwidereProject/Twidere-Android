@@ -3,6 +3,8 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="account_options">Опции аккаунта</string>
   <string name="account_type_fanfou">Fanfou</string>
+  <string name="account_type_mastodon">Mastodon</string>
+  <string name="account_type_statusnet">StatusNet</string>
   <string name="account_type_twitter">Твиттер</string>
   <!-- [verb] Accept a friend request (follow request) -->
   <string name="action_accept_friend_request">Принять</string>
@@ -15,43 +17,66 @@
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">Добавить правило</string>
   <string name="action_add_filters_subscription">Добавить описание</string>
+  <string name="action_add_gif">Добавить GIF</string>
   <string name="action_add_member">Добавить пользователя</string>
+  <string name="action_add_tab">Добавить вкладку</string>
   <string name="action_add_to_filter">Добавить в фильтр</string>
   <string name="action_add_to_list">Добавить в список</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Заблокировать</string>
+  <string name="action_buffer_settings">Настройки</string>
+  <string name="action_buffer_update_now">Опубликовать сейчас</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">Отменить ретвит</string>
   <string name="action_center">Центр</string>
   <string name="action_clear">Очистить</string>
+  <string name="action_clear_messages">Очистить сообщения</string>
   <string name="action_compose">Написать</string>
+  <string name="action_compose_message_convert_to_status">Преобразовать в твит</string>
+  <string name="action_conversation_info">Информация о диалоге</string>
+  <string name="action_create_conversation">Создать диалог</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">Удалить</string>
+  <string name="action_delete_messages">Удалить сообщения</string>
   <string name="action_dont_restart">Не перезапускать</string>
+  <string name="action_dont_terminate">Не выходить</string>
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">Редактировать</string>
+  <string name="action_edit_conversation_avatar">Изменить аватар</string>
+  <string name="action_edit_conversation_name">Изменить имя</string>
+  <string name="action_edit_filter_rule">Изменить правило</string>
   <string name="action_favorite">В избранное</string>
   <string name="action_filter_import_from_blocked_users">Импортировать список заблокированных пользователей</string>
   <string name="action_filter_import_from_muted_users">Импортировать список приглушенных пользователей</string>
+  <string name="action_filter_subscriptions_card_manage">Управление подписками</string>
   <string name="action_finish">Завершено</string>
   <string name="action_follow">Читать</string>
+  <string name="action_format_search_update_status">Твитнуть <xliff:g id="text">%1$s</xliff:g></string>
   <!-- [verb] Perform import action -->
   <string name="action_import">Импорт</string>
   <string name="action_import_from">Импортировать из&#8230;</string>
   <string name="action_invert_selection">Инвертировать выбор</string>
   <!-- Used for decide something later, like permission request -->
   <string name="action_later">Позже</string>
+  <string name="action_leave_conversation">Покинуть диалог</string>
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">Мне нравится</string>
+  <string name="action_location">Местоположение</string>
+  <string name="action_mark_as_read">Пометить как прочитанное</string>
   <string name="action_mute">Игнорировать</string>
+  <string name="action_mute_notifications">Отключить уведомления</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, сохранено в <xliff:g id="time">%2$s</xliff:g></string>
+  <string name="action_next_step">След.</string>
   <string name="action_open_in_browser">Открыть в браузере</string>
   <string name="action_pick_color">Выбрать цвет</string>
   <string name="action_purchase">Купить</string>
   <string name="action_purchase_features_pack">Купить дополнительные возможности</string>
+  <string name="action_qr_code">QR-код</string>
   <string name="action_quote">Цитировать</string>
   <string name="action_record_video">Записать видео</string>
   <string name="action_refresh">Обновления</string>
+  <string name="action_register">Регистрация</string>
+  <string name="action_remove_conversation_avatar">Удалить аватар</string>
   <string name="action_reply">Ответить</string>
   <string name="action_report_spam">Сообщить о спаме</string>
   <!-- [verb] Restore purchase -->
@@ -69,10 +94,15 @@
   <string name="action_send">Отправить</string>
   <string name="action_set_color">Выбрать цвет</string>
   <string name="action_set_nickname">Задать никнейм</string>
+  <string name="action_set_status_visibility">Установить видимость</string>
   <string name="action_share">Поделиться</string>
+  <string name="action_sign_in">Войти</string>
   <!-- [verb] Used for skip some settings -->
   <string name="action_skip">Пропустить</string>
   <string name="action_start">Начнем</string>
+  <string name="action_status_pin">Прикрепить твит</string>
+  <string name="action_status_schedule">Расписание твитов</string>
+  <string name="action_status_unpin">Открепить твит</string>
   <string name="action_subscribe">Подписаться</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
   <string name="action_sync_connect_to_storage">Подключиться</string>
@@ -104,9 +134,11 @@
   <!-- App name, normally you don't need to translate this. -->
   <string name="app_name">Twidere</string>
   <string name="app_restart_confirm">Twidere будет перезапущен для применения настроек.</string>
+  <string name="app_terminate_confirm">Twidere будет остановлен для применения настроек.</string>
   <string name="appearance">Внешний вид</string>
   <string name="auth_type_basic">Простая</string>
   <string name="auth_type_oauth">OAuth</string>
+  <string name="auth_type_oauth2">OAuth 2</string>
   <string name="auth_type_twip_o">twip O Mode</string>
   <string name="auth_type_xauth">xAuth</string>
   <string name="auto_refresh">Автоматическое обновление</string>
@@ -144,6 +176,7 @@
   <string name="consumer_secret">Consumer secret</string>
   <string name="content">Содержание</string>
   <string name="content_and_storage">Контент и хранение</string>
+  <string name="content_description_sticker">Стикер</string>
   <string name="content_to_notify">Содержимое для уведомлений</string>
   <string name="content_to_refresh">Содержимое для обновления</string>
   <string name="contributors_list_summary">Если вы не нашли своё имя, напишите нам.</string>
@@ -196,7 +229,6 @@
   <string name="ellipsis">...</string>
   <string name="emoji_support">Поддержка смайлов</string>
   <string name="empty_content">Пустое содержимое</string>
-  <string name="action_enable_retweets">Включить ретвиты</string>
   <string name="enable_streaming">Включить стриминг</string>
   <string name="error_info_oauth_timestamp_error">Пожалуйста, проверьте ваши системную дату и настройки времени.</string>
   <string name="error_message">Ошибка: <xliff:g id="message">%s</xliff:g></string>
@@ -204,6 +236,7 @@
   <string name="error_message_media_upload_failed">Не удалось загрузить изображение.</string>
   <string name="error_message_media_uploader_not_found">Хостинг изображений не найден, возможно он был удалён.</string>
   <string name="error_message_message_too_long">Слишком длинное сообщение.</string>
+  <string name="error_message_message_too_many_participants">Слишком много участников</string>
   <string name="error_message_no_content">Нет содержимого</string>
   <string name="error_message_rate_limit">Достигнут лимит подключений к Твиттеру, пожалуйста попробуйте ещё раз через <xliff:g id="time">%s</xliff:g></string>
   <string name="error_message_status_too_long">Твит слишком длинный.</string>
@@ -311,6 +344,7 @@
   <string name="label_location_your_coarse_location">Ваше фиксированное расположение</string>
   <string name="label_media">Медиа</string>
   <string name="label_original_status">Исходный твит</string>
+  <string name="label_password">Пароль</string>
   <string name="label_photo">Фотография</string>
   <string name="label_poll">Опрос</string>
   <string name="label_refresh_and_sync_service">Сервис обновления и синхронизации</string>
@@ -320,9 +354,12 @@
   <!-- Mastodon feature, post to followers only -->
   <!-- Mastodon feature, post to public timelines -->
   <!-- Mastodon feature, do not show in public timelines -->
+  <string name="label_statuses">Твиты</string>
   <string name="label_streaming_service">Сервис стриминга</string>
   <string name="label_translate_from_language">Переведено с <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">Перевод</string>
+  <string name="label_username">Имя пользователя</string>
+  <string name="label_video">Видео</string>
   <string name="label_your_profile_image">Изображение вашего профиля</string>
   <string name="large">Большой</string>
   <string name="leftside_compose_button">Кнопка \"написать\" слева</string>
@@ -462,7 +499,9 @@
   <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> и <xliff:g id="count">%2$d</xliff:g> других упомянули вас.</string>
   <!-- Notification method, flashing LED light -->
   <!-- Notification method, ringtone -->
+  <string name="notification_method_ringtone">Рингтон</string>
   <!-- Notification method, device vibration -->
+  <string name="notification_method_vibration">Вибрация</string>
   <string name="notification_status">Новый твит от <xliff:g id="user">%s</xliff:g></string>
   <string name="notification_status_multiple">Новый твит от <xliff:g id="user">%1$s</xliff:g> и <xliff:g id="count">%2$d</xliff:g> других</string>
   <string name="notification_type_home">Лента</string>
@@ -552,7 +591,7 @@
   <string name="projects_we_took_part">Проекты, в которых мы принимаем участие</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="provider_fanfou">Fanfou</string>
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>
@@ -688,6 +727,7 @@
   <string name="subscribed_to_list">Подписанные на \"<xliff:g id="list">%s</xliff:g>\".</string>
   <string name="swipe_down_to_refresh">Потяните вниз для обновления</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
+  <string name="sync_provider_name_google_drive">Google Диск</string>
   <string name="system_default">По умолчанию</string>
   <string name="tab_display_option">Настройки отображения вкладок</string>
   <string name="tab_display_option_icon">Иконка</string>
@@ -758,6 +798,7 @@
   <string name="title_sync_settings">Настройки синхронизации</string>
   <string name="title_user">Пользователь</string>
   <string name="title_user_colors">Пользовательские цвета</string>
+  <string name="title_user_list">Список</string>
   <string name="title_user_list_memberships">Списки со мной</string>
   <string name="title_users_favorited_this">Пользователи добавившие в избранное</string>
   <string name="title_users_liked_this">Пользователям понравилось это</string>

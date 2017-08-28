@@ -244,7 +244,6 @@
   <string name="ellipsis">...</string>
   <string name="emoji_support">Dukungan emoji</string>
   <string name="empty_content">Konten kosong</string>
-  <string name="action_enable_retweets">Aktifkan retweets</string>
   <string name="enable_streaming">Aktifkan Streaming</string>
   <string name="error_info_oauth_timestamp_error">Mohon cek tanggal sistem Anda &amp; pengaturan waktu.</string>
   <string name="error_message">Kesalahan: <xliff:g id="message">%s</xliff:g></string>
@@ -288,7 +287,7 @@
   <string name="filter_type_links">Tautan</string>
   <string name="filter_type_sources">Sumber</string>
   <string name="filter_type_users">Pengguna</string>
-  <string name="filter_user_confirm_message">Tambahkan <xliff:g example="Username" id="name"/> pada penyaringan?</string>
+  <string name="filter_user_confirm_message">Tambahkan <xliff:g example="Username" id="name">%1$s</xliff:g> pada penyaringan?</string>
   <string name="follow_request_sent">Permintaan mengikuti terkirim</string>
   <string name="followed_user"><xliff:g id="user">%s</xliff:g> diikuti.</string>
   <string name="following_only">Pengikut Anda saja</string>
@@ -602,7 +601,7 @@
   <string name="projects_we_took_part">Proyek kami mengambil bagian</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="provider_fanfou">Fanfou</string>
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>

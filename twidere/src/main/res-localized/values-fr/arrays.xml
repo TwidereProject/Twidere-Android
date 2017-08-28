@@ -77,10 +77,10 @@
   </string-array>
   <string-array name="entries_quick_access_shortcut_types">
     <item>Utilisateur</item>
-    <item>Fil d\'actualité de l\'utlisateur</item>
+    <item>Fil d\'actualité de l\'utilisateur</item>
     <item>Favoris de l’utilisateur</item>
     <item>Liste</item>
-    <item>Liste « fil d\'actualité »</item>
+    <item>Fil d\'actualité de la liste</item>
   </string-array>
   <string-array name="entries_user_timeline_filter">
     <item>Réponses</item>

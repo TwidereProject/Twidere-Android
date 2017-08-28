@@ -179,7 +179,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Emoji-tuki</string>
   <string name="empty_content">Tyhjennä sisältö</string>
-  <string name="action_enable_retweets">Ota uudelleentwiitit käyttöön</string>
   <string name="enable_streaming">Ota striimaus käyttöön</string>
   <string name="error_message">Virhe: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_media_upload_failed">Median lähettäminen epäonnistui.</string>
@@ -470,7 +469,7 @@
   <string name="projects_we_took_part">Projektit joihin otimme osaa</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="provider_fanfou">Fanfou</string>
   <string name="provider_quitter_se">Quitter.se</string>
   <string name="proxy">Välityspalvelin</string>

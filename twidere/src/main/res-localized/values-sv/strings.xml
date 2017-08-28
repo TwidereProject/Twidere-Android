@@ -3,6 +3,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="account_options">Kontoalternativ</string>
   <string name="account_type_fanfou">Fanfou</string>
+  <string name="account_type_mastodon">Mastodon</string>
   <string name="account_type_statusnet">StatusNet</string>
   <string name="account_type_twitter">Twitter</string>
   <!-- [verb] Accept a friend request (follow request) -->
@@ -262,8 +263,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Emoji-stöd</string>
   <string name="empty_content">Tomt innehåll</string>
-  <string name="action_enable_notifications">Aktivera notifieringar</string>
-  <string name="action_enable_retweets">Aktivera retweets</string>
   <string name="enable_streaming">Aktivera direktuppspelning</string>
   <string name="error_info_oauth_timestamp_error">Var god kontrollera dina systeminställningar för tid- och datum.</string>
   <string name="error_message">Fel: <xliff:g id="message">%s</xliff:g></string>
@@ -725,7 +724,7 @@
   <string name="projects_we_took_part">Projekt vi deltog</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="provider_fanfou">Fanfou</string>
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>

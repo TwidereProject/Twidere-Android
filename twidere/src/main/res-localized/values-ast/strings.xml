@@ -268,8 +268,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Sofitu de fustaxes</string>
   <string name="empty_content">Conteníu baleru</string>
-  <string name="action_enable_notifications">Habilitar avisos</string>
-  <string name="action_enable_retweets">Habilitar retuits</string>
   <string name="enable_streaming">Habilitar tuits en tiempu real</string>
   <string name="error_info_oauth_timestamp_error">Comprueba los axustes de data y hora del to sistema, por favor.</string>
   <string name="error_message">Fallu: <xliff:g id="message">%s</xliff:g></string>
@@ -406,6 +404,7 @@
   <string name="label_follow_request_sent">Unvióse la solicitú de siguimientu</string>
   <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> per <xliff:g example="api" id="source">%2$s</xliff:g></string>
   <string name="label_location_your_coarse_location">El to allugamientu aproximáu</string>
+  <string name="label_mastodon_host">Sitiu Mastodon</string>
   <string name="label_media">Mediu</string>
   <string name="label_original_status">Tuit orixinal</string>
   <string name="label_password">Contraseña</string>
@@ -508,6 +507,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="message_permission_request_compose_location">Twidere precisa\'l permisu d\'allugamientu p\'amestar l\'allugamientu a los tuits.</string>
   <string name="message_permission_request_save_media">Twidere precisa\'l permisu d\'almacenamientu pa guardar medios.</string>
   <string name="message_permission_request_share_media">Twidere precisa\'l permisu d\'almacenamientu pa compartir medios con delles aplicaciones.</string>
+  <string name="message_pin_status_confirm">¿Fixar esti tuit? Tocaráse\'l fixáu enantes.</string>
   <string name="message_please_wait">Espera, por favor.</string>
   <string name="message_status_scheduling_connect_buffer_hint">Coneuta con Buffer pa planificar tuits, tamién fuera de llinia</string>
   <string name="message_status_scheduling_connected_to_buffer">Agora Twidere ta coneutáu con Buffer</string>
@@ -533,6 +533,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="message_toast_extra_features_not_purchased">Nun se mercaron les ameyores</string>
   <string name="message_toast_filters_import_hint">Primi «+» pa importar</string>
   <string name="message_toast_internal_storage_install_required">Nun se sofita la instalación na tarxeta SD, quiciabes se pierdan les cuentes dempués de reaniciar.</string>
+  <string name="message_toast_invalid_mastodon_host">Agospiu non válidu de Mastodon</string>
   <string name="message_toast_link_copied_to_clipboard">Copióse l\'enllaz al cartafueyu</string>
   <string name="message_toast_livewp_daydream_enabled_message">Equí hai un regalu pequeñu pa ti, alcuéntralu nos axustes del sistema :)</string>
   <string name="message_toast_login_verification_failed">Falló la verificación del aniciu de sesión</string>
@@ -743,7 +744,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="projects_we_took_part">Proyeutos nos que participamos</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="provider_fanfou">Fanfou</string>
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>
@@ -813,6 +814,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="search_hint_users">Guetar usuarios</string>
   <string name="search_statuses">Guetar tuits</string>
   <string name="search_type_local">Llocal</string>
+  <string name="search_type_media">Medios</string>
   <string name="search_type_statuses">Tuits</string>
   <string name="search_type_users">Usuarios</string>
   <string name="security_key">Clave de seguranza</string>

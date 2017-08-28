@@ -34,6 +34,7 @@
   <string name="action_center">กึ่งกลาง</string>
   <string name="action_clear">ล้าง</string>
   <string name="action_clear_messages">ลบข้อความ</string>
+  <string name="action_comment">แสดงความเห็น</string>
   <string name="action_compose">เขียน</string>
   <string name="action_compose_message_convert_to_status">แปลงไปยังทวีต</string>
   <string name="action_connect_to_buffer">เชื่อมต่อ</string>
@@ -55,6 +56,7 @@
   <string name="action_filter_subscriptions_card_manage">จัดการการติดตาม</string>
   <string name="action_finish">สำเร็จ</string>
   <string name="action_follow">ติดตาม</string>
+  <string name="action_format_search_update_status">ทวีต <xliff:g id="text">%1$s</xliff:g></string>
   <!-- [verb] Perform import action -->
   <string name="action_import">นำเข้า</string>
   <string name="action_import_from">นำเข้าจาก&#8230;</string>
@@ -107,7 +109,9 @@
   <string name="action_status_attachment">ไฟล์แนบในทวีต</string>
   <string name="action_status_block_users">กำลังบล็อครายชื่อ...</string>
   <string name="action_status_mute_users">กำลังซ่อนผู้ใช้...</string>
+  <string name="action_status_pin">ปักหมุดทวีต</string>
   <string name="action_status_schedule">ตั้งเวลาทวีต</string>
+  <string name="action_status_unpin">เลิกปักหมุดทวีต</string>
   <string name="action_subscribe">รับข่าวสาร</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
   <string name="action_sync_connect_to_storage">เชื่อมต่อ</string>
@@ -268,8 +272,6 @@
   <string name="ellipsis">...</string>
   <string name="emoji_support">สนับสนุนอีโมจิ</string>
   <string name="empty_content">เนื้อหาว่างเปล่า</string>
-  <string name="action_enable_notifications">เปิดใช้งานการแจ้งเตือน</string>
-  <string name="action_enable_retweets">เปิดการรีทวีต</string>
   <string name="enable_streaming">เปิดการใช้งานสตรีมมิ่ง</string>
   <string name="error_info_oauth_timestamp_error">กรุณาตรวจสอบวันของระบบของคุณ และตั้งค่าเวลา</string>
   <string name="error_message">ผิดพลาด: <xliff:g id="message">%s</xliff:g></string>
@@ -403,6 +405,8 @@
   <string name="label_content_rating_r">น18+</string>
   <string name="label_content_warning">คำเตือนเนื้อหา</string>
   <string name="label_data_provider">ผู้ให้บริการญานข้อมูล Twidere</string>
+  <string name="label_feedback_content">เนื้อหา</string>
+  <string name="label_feedback_title">ชื่อเรื่อง</string>
   <string name="label_filters_subscription">การติดตาม</string>
   <string name="label_follow_request_sent">ส่งคำขอติดตามแล้ว</string>
   <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> โดย <xliff:g example="api" id="source">%2$s</xliff:g></string>
@@ -472,6 +476,8 @@
   <string name="location_countrywide">ทั่วประเทศ</string>
   <string name="login_challenge_retype_email_hint">พิมพ์อีเมลที่ใช้งานกับบัญชีทวิตเตอร์ของคุณอีกครั้ง</string>
   <string name="login_challenge_retype_phone_hint">ใส่หมายเลขโทรศัพท์ที่เชื่อมต่อกับบัญชีทวิตเตอร์ของคุณ</string>
+  <string name="login_type_default">ค่าเริ่มต้น</string>
+  <string name="login_type_user_settings">การตั้งค่าผู้ใช้</string>
   <string name="login_verification">ยืนยันการล็อคอิน</string>
   <string name="login_verification_pin_hint">ตรวจสอบรหัส PIN ที่ได้รับและใส่รหัสเพื่อล็อคอิน</string>
   <string name="login_verification_push_hint">ยอมรับคำขอตรวจสอบล็อกอินจากแอพ Twitter เมื่อคุณอนุมัติคำขอ คลิกตกลง</string>
@@ -491,6 +497,7 @@
   <string name="message_account_delete_confirm">บัญชีนี้จะถูกลบจาก Twidere</string>
   <string name="message_api_data_corrupted">ข้อมูล API เสียหาย</string>
   <string name="message_api_url_format_help">[DOMAIN]: Twitter API domain.\nตัวอย่าง: https://[DOMAIN].twitter.com/ จะแทนที่ด้วย https://api.twitter.com/.</string>
+  <string name="message_app_crashed">Twidere ได้ล้มเหลว ส่งรายงานข้อผิดพลาดจะช่วยให้ฉันแก้ปัญหานี้ได้</string>
   <string name="message_auto_refresh_confirm">เปิดใช้งานรีเฟรชอัตโนมัติเพื่อโหลดทวีตใหม่โดยอัตโนมัติหรือไม่</string>
   <string name="message_blocked_user">บล็อค <xliff:g id="user">%s</xliff:g> แล้ว</string>
   <string name="message_buffer_delete_schedule_confirm">ลบทวีตล่วงหน้านี้หรือไม่</string>
@@ -518,6 +525,7 @@
   <string name="message_permission_request_compose_location">Twidere ต้องการการเข้าถึงตำแหน่งที่ตั้งเพื่อเพิ่มตำแหน่งที่ตั้งลงในทวีต</string>
   <string name="message_permission_request_save_media">Twidere ต้องการการเข้าถึงที่เก็บข้อมูลสำหรับการบันทึกสื่อ</string>
   <string name="message_permission_request_share_media">Twidere ต้องการการเข้าถึงที่เก็บข้อมูลสำหรับการแชร์รูปภาพไปยังแอพพลิเคชั่นอื่น</string>
+  <string name="message_pin_status_confirm">ปักหมุดทวีตนี้หรือไม่ ทวีตนี้จะแทนที่ทวีตที่ปักหมุดไว้ก่อนหน้านี้</string>
   <string name="message_please_wait">กรุณารอ</string>
   <string name="message_status_reply_to_user_removed_explanation">Twitter ทำให้ชื่อผู้ใช้ถูกกล่าวถึงในการตอบกลับเสมอ ถ้าเอาชื่อผู้ใช้ออก Twidere จะส่งการตอบกลับนี้เป็นการโควททวีตเพื่อรักษาบริบท</string>
   <string name="message_status_scheduling_connect_buffer_hint">เชื่อมต่อกับบัฟเฟอร์เพื่อตั้งเวลาทวีตแม้ในขณะออฟไลน์</string>
@@ -543,6 +551,7 @@
   <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_extra_features_not_purchased">ยังไม่ได้ซื้อฟังก์ชั่นเสริม</string>
   <string name="message_toast_filters_import_hint">กด \"+\" เพื่อนำเข้า</string>
+  <string name="message_toast_internal_storage_install_required">ไม่สนับสนุนการติดตั้งบนการ์ด SD บัญชีอาจจะสูญหายหลังจากรีบูต</string>
   <string name="message_toast_invalid_mastodon_host">โฮสต์ Mastodon ไม่ถูกต้อง</string>
   <string name="message_toast_link_copied_to_clipboard">คัดลอกลิงค์ไปยังคลิปบอร์ดแล้ว</string>
   <string name="message_toast_livewp_daydream_enabled_message">เรามีของขวัญเล็กๆ น้อยๆ จะให้คุณ หาให้เจอในการตั้งค่าระบบ :)</string>
@@ -570,20 +579,24 @@
   <string name="message_toast_search_saved">บันทึกการค้นหาแล้ว</string>
   <string name="message_toast_select_file_no_storage_permission">คำขอใช้ที่เก็บไฟล์จำเป็นต่อการเลือกไฟล์</string>
   <string name="message_toast_share_media_no_storage_permission">บางแอพพลิเคชั่นต้องการสิทธิ์เข้าใช้ที่เก็บข้อมูลเพื่อทำการแชร์</string>
+  <string name="message_toast_ssl_tls_error">ข้อผิดพลาดของ TLS โปรดตรวจสอบการตั้งค่านาฬิกาหรือพร็อกซี</string>
   <string name="message_toast_status_deleted">ลบทวีตแล้ว</string>
   <string name="message_toast_status_favorited">ถูกใจทวีตแล้ว</string>
   <string name="message_toast_status_like_removed">ยกเลิกถูกใจแล้ว</string>
   <string name="message_toast_status_liked">ถูกใจทวีตแล้ว</string>
+  <string name="message_toast_status_pinned">ปักหมุดทวีตแล้ว</string>
   <string name="message_toast_status_retweeted">รีทวีตแล้ว</string>
   <string name="message_toast_status_saved_to_draft">บันทึกข้อความร่างแล้ว</string>
   <string name="message_toast_status_scheduled">ตั้งเวลาทวีตแล้ว</string>
   <string name="message_toast_status_unfavorited">ยกเลิกถูกใจทวีตแล้ว</string>
+  <string name="message_toast_status_unpinned">เลิกปักหมุดทวีตแล้ว</string>
   <string name="message_toast_status_updated">ข้อความถูกส่งแล้ว</string>
   <string name="message_toast_unable_to_load_more_statuses">ไม่สามารถโหลดทวีตก่อนหน้านี้</string>
   <string name="message_toast_user_filters_removed">ลบออกจากตัวกรอง</string>
   <string name="message_toast_users_filters_added">เพิ่มในตัวกรองแล้ว</string>
   <string name="message_toast_wrong_api_key">API URL หรือ consumer key/secret ไม่ถูกต้อง โปรดตรวจสอบอีกครั้ง</string>
   <string name="message_toast_wrong_username_password">ชื่อผู้ใช้/รหัสผ่านไม่ถูกต้อง</string>
+  <string name="message_unpin_status_confirm">เลิกปักหมุดทวีตนี้หรือไม่</string>
   <string name="message_video_too_long">วิดีโอยาวเกินไป</string>
   <string name="message_video_too_short">วิดีโอสั้นเกินไป</string>
   <string name="multi_select">เลือกหลายอัน</string>
@@ -694,6 +707,7 @@
   <string name="preference_summary_media_preload_non_metered_network">โหลดสื่อบนเครือข่ายไม่จำกัดปริมาณเท่านั้น เช่น Wi-Fi</string>
   <string name="preference_summary_streaming_non_metered_network">สตรีมมิ่งบนเครือข่ายไม่จำกัดปริมาณเท่านั้น เช่น Wi-Fi</string>
   <string name="preference_summary_streaming_power_saving">สตรีมมิ่งเมื่อชาร์จเท่านั้น</string>
+  <string name="preference_summary_sync_timeline_positions">เมื่อ \"จดจำตำแหน่ง\" เปิดใช้งาน</string>
   <string name="preference_summary_trends_location">คุณสามารถตั้งค่าตำแหน่งแยกต่างหากในแท็บการตั้งค่าได้แล้ว</string>
   <string name="preference_title_accounts">บัญชีผู้ใช้</string>
   <string name="preference_title_advanced">ขั้นสูง</string>
@@ -722,6 +736,7 @@
   <string name="preference_title_streaming_power_saving">โหมดประหยัดพลังงาน</string>
   <string name="preference_title_tablet_mode">โหมดแท็บเล็ต</string>
   <string name="preference_title_text_size">ขนาดข้อความ</string>
+  <string name="preference_title_timeline_positions">ตำแหน่งไทม์ไลน์</string>
   <string name="preference_title_translate">ช่วยแปลภาษา</string>
   <string name="preference_title_trends_location">ตำแหน่งเทรนด์</string>
   <string name="preload_wifi_only">โหลดล่วงหน้าเมื่อใช้ Wi-Fi เท่านั้น</string>
@@ -751,7 +766,7 @@
   <string name="projects_we_took_part">โปรเจคที่เรามีส่วนร่วม</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="provider_fanfou">Fanfou</string>
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>
@@ -890,6 +905,7 @@
   <string name="streaming">สตรีมมิ่ง</string>
   <string name="style">รูปแบบ</string>
   <string name="subscribed_to_list">ติดตามลิสต์ \"<xliff:g id="list">%s</xliff:g>\" แล้ว</string>
+  <string name="summary_interactions_account_not_supported">บัญชีไม่สนับสนุน</string>
   <string name="swipe_down_to_refresh">ลากลงเพื่อรีเฟรช</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="sync_provider_name_google_drive">Google Drive</string>
@@ -964,6 +980,7 @@
   <string name="title_message_conversation_info">ข้อมูลการสนทนา</string>
   <string name="title_nicknames">ชื่อเล่น</string>
   <string name="title_open_source_license">ลิขสิทธิ์ซอฟต์แวร์เปิด</string>
+  <string name="title_pin_status_confirm">ปักหมุดทวีต</string>
   <string name="title_premium_features_name">Twidere ∞</string>
   <string name="title_public_timeline">หน้าหลักสาธารณะ</string>
   <string name="title_quick_action">การดำเนินการด่วน</string>
@@ -984,13 +1001,16 @@
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
   <string name="title_sync">ซิงค์ข้อมูล</string>
   <string name="title_sync_settings">ตั้งค่าการซิงค์</string>
+  <string name="title_unpin_status_confirm">เลิกปักหมุดทวีต</string>
   <string name="title_user">ผู้ใช้</string>
   <string name="title_user_colors">สีของผู้ใช้</string>
+  <string name="title_user_feedback">ความคิดเห็น</string>
   <string name="title_user_list">รายการ</string>
   <string name="title_user_list_memberships">เป็นของ</string>
   <string name="title_user_list_ownerships">สร้างแล้ว</string>
   <string name="title_user_list_subscriptions">การติดตาม</string>
   <string name="title_user_timeline_filter">ตัวกรองไทม์ไลน์</string>
+  <string name="title_userlist_subscribers">สมาชิก</string>
   <string name="title_users_favorited_this">ผู้ใช้ถูกใจสิ่งนี้</string>
   <string name="title_users_liked_this">ผู้ใช้ถูกใจสิ่งนี้</string>
   <string name="title_users_retweeted_this">ผู้ใช้ที่รีทวีตข้อความนี้</string>
