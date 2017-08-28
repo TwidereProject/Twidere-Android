@@ -328,6 +328,7 @@ class OAuthPasswordAuthenticator(
     }
 
     interface LoginVerificationCallback {
+        @Throws(MicroBlogException::class)
         fun getLoginVerification(challengeType: String): String?
     }
 
