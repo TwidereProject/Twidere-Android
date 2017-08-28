@@ -65,6 +65,7 @@ import org.mariotaku.twidere.fragment.message.MessagesConversationFragment
 import org.mariotaku.twidere.fragment.message.MessagesEntriesFragment
 import org.mariotaku.twidere.fragment.search.MastodonSearchFragment
 import org.mariotaku.twidere.fragment.search.SearchFragment
+import org.mariotaku.twidere.fragment.status.StatusFragment
 import org.mariotaku.twidere.fragment.statuses.*
 import org.mariotaku.twidere.fragment.users.*
 import org.mariotaku.twidere.graphic.ActionBarColorDrawable
@@ -167,7 +168,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
             ft.commit()
         }
         setTitle(linkId, uri)
-        finishOnly = uri.getQueryParameter(QUERY_PARAM_FINISH_ONLY)?.toBoolean() ?: false
+        finishOnly = uri.getQueryParameter(QUERY_PARAM_FINISH_ONLY)?.toBoolean() == true
 
         supportActionBar?.setBackgroundDrawable(ActionBarColorDrawable.create(overrideTheme.colorToolbar,
                 true))
@@ -913,8 +914,8 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
     }
 
     interface HideUiOnScroll
-    
-    private fun Uri.getUserKeyQueryParameter() : UserKey? {
+
+    private fun Uri.getUserKeyQueryParameter(): UserKey? {
         val value = getQueryParameter(QUERY_PARAM_USER_KEY) ?: getQueryParameter(QUERY_PARAM_USER_ID)
         return value?.let(UserKey::valueOf)
     }

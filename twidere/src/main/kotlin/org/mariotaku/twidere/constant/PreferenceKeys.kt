@@ -87,6 +87,7 @@ val composeStatusVisibilityKey = KNullableStringKey("compose_status_visibility",
 val navbarStyleKey = KStringKey(KEY_NAVBAR_STYLE, NavbarStyle.DEFAULT)
 val lastLaunchTimeKey = KLongKey("last_launch_time", -1)
 val promotionsEnabledKey = KBooleanKey("promotions_enabled", false)
+val translationDestinationKey = KNullableStringKey(KEY_TRANSLATION_DESTINATION, null)
 
 object cacheSizeLimitKey : KSimpleKey<Int>(KEY_CACHE_SIZE_LIMIT, 300) {
     override fun read(preferences: SharedPreferences) = preferences.getInt(key, def).coerceIn(100,
