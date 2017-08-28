@@ -36,8 +36,11 @@ import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import java.text.Collator
 import java.util.*
+import java.util.concurrent.atomic.AtomicInteger
 
 class TranslationDestinationDialogFragment : BaseDialogFragment() {
+
+    private val currentIndex = AtomicInteger(-1)
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(context)
@@ -45,10 +48,13 @@ class TranslationDestinationDialogFragment : BaseDialogFragment() {
         val selectedLanguage = preferences[translationDestinationKey] ?: arguments.getString(EXTRA_SELECTED_LANGUAGE)
         val selectedIndex = languages.indexOfFirst { selectedLanguage == it.code }
         builder.setSingleChoiceItems(languages.mapToArray { it.name }, selectedIndex) { _, which ->
-            preferences[translationDestinationKey] = languages[which].code
+            currentIndex.set(which)
         }
-        builder.setPositiveButton(android.R.string.ok) { _, _ ->
-
+        builder.setPositiveButton(android.R.string.ok) lambda@ { di, _ ->
+            val idx = currentIndex.get()
+            if (idx < 0) return@lambda
+            preferences[translationDestinationKey] = languages[idx].code
+            (targetFragment as? StatusFragment)?.reloadTranslation()
         }
         builder.setNegativeButton(android.R.string.cancel, null)
         val dialog = builder.create()

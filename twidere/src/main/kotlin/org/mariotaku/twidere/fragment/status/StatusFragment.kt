@@ -506,6 +506,11 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         }
     }
 
+    internal fun reloadTranslation() {
+        loadTranslationTask = null
+        loadTranslation(adapter.status)
+    }
+
     private fun setConversation(data: List<ParcelableStatus>?) {
         val readPosition = saveReadPosition()
         val changed = adapter.setData(data)
@@ -637,7 +642,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             val (accountLanguage, languages) = settings
             val fragment = weakThis.get() ?: return@successUi
             val df = TranslationDestinationDialogFragment.create(languages, accountLanguage)
-            df.show(fragment.childFragmentManager, "translation_destination_settings")
+            df.setTargetFragment(fragment, 0)
+            df.show(fragment.fragmentManager, "translation_destination_settings")
         }.alwaysUi {
             val fragment = weakThis.get() ?: return@alwaysUi
             fragment.dismissProgressDialog("get_language_settings")

@@ -32,11 +32,13 @@ import java.io.IOException
 
 class JsonCache(cacheDir: File) {
 
-    private val cache: DiskLruCache? = try {
-        DiskLruCache.open(cacheDir, BuildConfig.VERSION_CODE, 1, 100 * 1048576)
-    } catch (e: IOException) {
-        DebugLog.w(tr = e)
-        null
+    private val cache: DiskLruCache? by lazy {
+        try {
+            return@lazy DiskLruCache.open(cacheDir, BuildConfig.VERSION_CODE, 1, 100 * 1048576)
+        } catch (e: IOException) {
+            DebugLog.w(tr = e)
+            return@lazy null
+        }
     }
 
     fun <T> getList(key: String, cls: Class<T>): List<T>? {
