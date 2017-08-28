@@ -84,7 +84,6 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.ProfileImageSize
-import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.extension.applyTheme
@@ -334,7 +333,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         val status = adapter.getStatus(position)
         IntentUtils.openUserProfile(activity, status.account_key, status.user_key,
                 status.user_screen_name, status.extras?.user_statusnet_profile_url,
-                preferences[newDocumentApiKey], Referral.TIMELINE_STATUS, null)
+                preferences[newDocumentApiKey], null)
     }
 
     override fun onMediaClick(view: View, current: ParcelableMedia, accountKey: UserKey?, id: Long) {
@@ -641,8 +640,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     }
 
     private fun onUserClick(user: ParcelableUser) {
-        IntentUtils.openUserProfile(context, user, true, Referral.TIMELINE_STATUS,
-                null)
+        IntentUtils.openUserProfile(context, user, true, null)
     }
 
     class LoadSensitiveImageConfirmDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
@@ -1006,13 +1004,13 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     val activity = fragment.activity
                     IntentUtils.openUserProfile(activity, status.account_key, status.user_key,
                             status.user_screen_name, status.extras?.user_statusnet_profile_url,
-                            preferences[newDocumentApiKey], Referral.STATUS, null)
+                            preferences[newDocumentApiKey], null)
                 }
                 retweetedByView -> {
                     if (status.retweet_id != null) {
                         IntentUtils.openUserProfile(adapter.context, status.account_key,
                                 status.retweeted_by_user_key, status.retweeted_by_user_screen_name,
-                                null, preferences[newDocumentApiKey], Referral.STATUS, null)
+                                null, preferences[newDocumentApiKey], null)
                     }
                 }
                 locationView -> {

@@ -31,7 +31,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/logoContainer"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        tools:ignore="ContentDescription"/>
 
     <LinearLayout
         android:id="@+id/logoContainer"
@@ -46,7 +47,8 @@
             android:id="@+id/appIcon"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            tools:src="@mipmap/ic_launcher"/>
+            tools:src="@mipmap/ic_launcher"
+            tools:ignore="ContentDescription"/>
 
         <LinearLayout
             android:layout_width="wrap_content"

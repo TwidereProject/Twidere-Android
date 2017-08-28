@@ -995,7 +995,9 @@ class UpdateStatusTask(
                 geometry.x = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH).toIntOr(-1)
                 geometry.y = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT).toIntOr(-1)
                 duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLongOr(-1)
-                framerate = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_CAPTURE_FRAMERATE).toDoubleOr(-1.0)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    framerate = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_CAPTURE_FRAMERATE).toDoubleOr(-1.0)
+                }
 
                 size = resolver.openFileDescriptor(mediaUri, "r").use { it.statSize }
             } catch (e: Exception) {

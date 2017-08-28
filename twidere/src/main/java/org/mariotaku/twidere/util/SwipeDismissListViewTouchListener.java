@@ -22,6 +22,7 @@ package org.mariotaku.twidere.util;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.graphics.Rect;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
@@ -166,6 +167,7 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
         };
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         if (mViewWidth < 2) {

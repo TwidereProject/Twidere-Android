@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.text.Spannable
 import android.text.method.BaseMovementMethod
@@ -57,6 +58,7 @@ class TimelineContentTextView(
         return super.dispatchTouchEvent(event)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (isTextSelectable) {
             return super.onTouchEvent(event)

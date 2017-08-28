@@ -54,7 +54,6 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_QUERY
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.ACTION_NAVIGATION_BACK
@@ -272,12 +271,12 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
             SuggestionsAdapter.VIEW_TYPE_USER_SUGGESTION_ITEM -> {
                 IntentUtils.openUserProfile(this, details.key,
                         UserKey.valueOf(item.extra_id!!), item.summary, null,
-                        preferences[newDocumentApiKey], Referral.DIRECT, null)
+                        preferences[newDocumentApiKey], null)
                 finish()
             }
             SuggestionsAdapter.VIEW_TYPE_USER_SCREEN_NAME -> {
                 IntentUtils.openUserProfile(this, details.key, null, item.title,
-                        null, preferences[newDocumentApiKey], Referral.DIRECT, null)
+                        null, preferences[newDocumentApiKey], null)
                 finish()
             }
             SuggestionsAdapter.VIEW_TYPE_SAVED_SEARCH, SuggestionsAdapter.VIEW_TYPE_SEARCH_HISTORY -> {

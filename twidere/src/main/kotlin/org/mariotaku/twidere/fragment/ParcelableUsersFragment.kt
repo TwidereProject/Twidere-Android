@@ -40,7 +40,6 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.UserClickListener
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.model.getAccountType
@@ -71,10 +70,6 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         set(value) {
             super.refreshing = value
         }
-
-    protected open val userReferral: String?
-        @Referral
-        get() = null
 
     protected open val simpleLayout: Boolean
         get() = arguments.getBoolean(EXTRA_SIMPLE_LAYOUT)
@@ -209,7 +204,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
 
     override fun onUserClick(holder: UserViewHolder, position: Int) {
         val user = adapter.getUser(position) ?: return
-        IntentUtils.openUserProfile(activity, user, preferences[newDocumentApiKey], userReferral)
+        IntentUtils.openUserProfile(activity, user, preferences[newDocumentApiKey])
     }
 
     override fun onFollowClicked(holder: UserViewHolder, position: Int) {

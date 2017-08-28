@@ -69,7 +69,6 @@ import org.mariotaku.twidere.adapter.RecyclerPagerAdapter
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.ProfileImageSize
-import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.constant.extraFeaturesNoticeVersionKey
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
@@ -249,11 +248,11 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
                 val activity = activity
                 if (account.user != null) {
                     IntentUtils.openUserProfile(activity, account.user!!,
-                            preferences[newDocumentApiKey], Referral.SELF_PROFILE, null)
+                            preferences[newDocumentApiKey], null)
                 } else {
                     IntentUtils.openUserProfile(activity, account.key, account.key,
                             account.user.screen_name, null, preferences[newDocumentApiKey],
-                            Referral.SELF_PROFILE, null)
+                            null)
                 }
             }
         }

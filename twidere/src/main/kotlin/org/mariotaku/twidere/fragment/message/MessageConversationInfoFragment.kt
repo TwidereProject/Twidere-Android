@@ -71,6 +71,7 @@ import org.mariotaku.twidere.activity.UserSelectorActivity
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.annotation.ImageShapeStyle
 import org.mariotaku.twidere.annotation.ProfileImageSize
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.IntentConstants.*
@@ -267,7 +268,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         val summary = data.getSubtitle(context)
 
         val requestManager = Glide.with(this)
-        val profileImageStyle = preferences[profileImageStyleKey]
+        @ImageShapeStyle val profileImageStyle = preferences[profileImageStyleKey]
         requestManager.loadProfileImage(context, data, profileImageStyle).into(conversationAvatar)
         requestManager.loadProfileImage(context, data, profileImageStyle, size = ProfileImageSize.REASONABLY_SMALL).into(appBarIcon)
         appBarTitle.spannable = name

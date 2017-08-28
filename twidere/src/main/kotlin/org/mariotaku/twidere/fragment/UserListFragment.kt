@@ -282,7 +282,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
             R.id.profileImage -> {
                 val userList = this.userList ?: return
                 IntentUtils.openUserProfile(activity, userList.account_key, userList.user_key,
-                        userList.user_screen_name, null, preferences[newDocumentApiKey], null, null)
+                        userList.user_screen_name, null, preferences[newDocumentApiKey], null)
             }
         }
 

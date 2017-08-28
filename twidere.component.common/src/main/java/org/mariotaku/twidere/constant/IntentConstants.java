@@ -207,7 +207,7 @@ public interface IntentConstants {
     String EXTRA_QUOTE_ORIGINAL_STATUS = "quote_original_status";
     String EXTRA_CARD = "card";
     String EXTRA_IS_POSSIBLY_SENSITIVE = "is_possibly_sensitive";
-    String EXTRA_REFERRAL = "referral";
+    String EXTRA_IS_ACCOUNT_PROFILE = "account";
     String EXTRA_LOADING_MORE = "loading_more";
     String EXTRA_PINNED_STATUS_IDS = "pinned_status_ids";
     String EXTRA_SHOULD_INIT_LOADER = "should_init_loader";

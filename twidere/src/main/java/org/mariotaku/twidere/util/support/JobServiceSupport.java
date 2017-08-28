@@ -26,6 +26,7 @@
  */
 package org.mariotaku.twidere.util.support;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.job.JobParameters;
 import android.os.Build;
@@ -40,6 +41,7 @@ import java.lang.reflect.Method;
  */
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class JobServiceSupport {
+    @SuppressLint("PrivateApi")
     public static boolean handleStopJob(JobParameters params, boolean reschedule) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             // Seems fixed after Nougat, ignore!

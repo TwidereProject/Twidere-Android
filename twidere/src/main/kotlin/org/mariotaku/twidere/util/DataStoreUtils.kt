@@ -204,10 +204,9 @@ object DataStoreUtils {
 
     fun getRefreshNewestActivityMaxPositions(context: Context, uri: Uri, accountKeys: Array<UserKey?>):
             Array<String?> {
-        return getOfficialSeparatedIds(context, { accountKeys, isOfficial ->
+        return getOfficialSeparatedIds(context, { keys, isOfficial ->
             val (where, whereArgs) = getIdsWhere(isOfficial)
-            DataStoreUtils.getNewestActivityMaxPositions(context, uri, accountKeys,
-                    where, whereArgs)
+            DataStoreUtils.getNewestActivityMaxPositions(context, uri, keys, where, whereArgs)
         }, { arr1, arr2 ->
             Array(accountKeys.size) { arr1[it] ?: arr2[it] }
         }, accountKeys)
@@ -222,10 +221,9 @@ object DataStoreUtils {
 
     fun getRefreshOldestActivityMaxPositions(context: Context, uri: Uri, accountKeys: Array<UserKey?>):
             Array<String?> {
-        return getOfficialSeparatedIds(context, { accountKeys, isOfficial ->
+        return getOfficialSeparatedIds(context, { keys, isOfficial ->
             val (where, whereArgs) = getIdsWhere(isOfficial)
-            DataStoreUtils.getOldestActivityMaxPositions(context, uri, accountKeys,
-                    where, whereArgs)
+            DataStoreUtils.getOldestActivityMaxPositions(context, uri, keys, where, whereArgs)
         }, { arr1, arr2 ->
             Array(accountKeys.size) { arr1[it] ?: arr2[it] }
         }, accountKeys)
@@ -240,10 +238,9 @@ object DataStoreUtils {
 
     fun getRefreshNewestActivityMaxSortPositions(context: Context, uri: Uri, accountKeys: Array<UserKey?>):
             LongArray {
-        return getOfficialSeparatedIds(context, { accountKeys, isOfficial ->
+        return getOfficialSeparatedIds(context, { keys, isOfficial ->
             val (where, whereArgs) = getIdsWhere(isOfficial)
-            DataStoreUtils.getNewestActivityMaxSortPositions(context, uri, accountKeys,
-                    where, whereArgs)
+            DataStoreUtils.getNewestActivityMaxSortPositions(context, uri, keys, where, whereArgs)
         }, { arr1, arr2 ->
             LongArray(accountKeys.size) { arr1[it].takeIf { it > 0 } ?: arr2[it] }
         }, accountKeys)
@@ -258,10 +255,9 @@ object DataStoreUtils {
 
     fun getRefreshOldestActivityMaxSortPositions(context: Context, uri: Uri, accountKeys: Array<UserKey?>):
             LongArray {
-        return getOfficialSeparatedIds(context, { accountKeys, isOfficial ->
+        return getOfficialSeparatedIds(context, { keys, isOfficial ->
             val (where, whereArgs) = getIdsWhere(isOfficial)
-            DataStoreUtils.getOldestActivityMaxSortPositions(context, uri, accountKeys,
-                    where, whereArgs)
+            DataStoreUtils.getOldestActivityMaxSortPositions(context, uri, keys, where, whereArgs)
         }, { arr1, arr2 ->
             LongArray(accountKeys.size) { arr1[it].takeIf { it > 0 } ?: arr2[it] }
         }, accountKeys)

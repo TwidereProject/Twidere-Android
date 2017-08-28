@@ -93,12 +93,14 @@ private fun ParcelableCredentials.toCredentials(): Credentials {
         return result
     }
 
-    when (auth_type) {
-        AuthTypeInt.OAUTH, AuthTypeInt.XAUTH -> return toOAuthCredentials()
-        AuthTypeInt.BASIC -> return toBasicCredentials()
-        AuthTypeInt.TWIP_O_MODE -> return toEmptyCredentials()
+    return when (auth_type) {
+        AuthTypeInt.OAUTH, AuthTypeInt.XAUTH -> toOAuthCredentials()
+        AuthTypeInt.BASIC -> toBasicCredentials()
+        AuthTypeInt.TWIP_O_MODE -> toEmptyCredentials()
+        AuthTypeInt.OAUTH2 -> throw UnsupportedOperationException("OAuth 2 credentials are not supported")
+        else -> throw UnsupportedOperationException()
     }
-    throw UnsupportedOperationException()
+
 }
 
 @Credentials.Type

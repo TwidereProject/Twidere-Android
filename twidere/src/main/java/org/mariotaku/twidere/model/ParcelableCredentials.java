@@ -28,7 +28,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 /**
  * Created by mariotaku on 15/5/26.
  */
-@SuppressWarnings("DeprecatedIsStillUsed")
+@SuppressWarnings({"DeprecatedIsStillUsed", "deprecation"})
 @CursorObject
 @Deprecated
 public class ParcelableCredentials extends ParcelableAccount {

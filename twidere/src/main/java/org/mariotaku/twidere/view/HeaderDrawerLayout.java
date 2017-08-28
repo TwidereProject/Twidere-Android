@@ -111,6 +111,7 @@ public class HeaderDrawerLayout extends ViewGroup {
         return false;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(@NonNull MotionEvent event) {
         mDragHelper.processTouchEvent(event);

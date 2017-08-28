@@ -611,8 +611,6 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
                 if (paramUserKey != null) {
                     userHost = paramUserKey.host
                 }
-
-                args.putString(EXTRA_REFERRAL, intent.getStringExtra(EXTRA_REFERRAL))
             }
             LINK_ID_USER_LIST_MEMBERSHIPS -> {
                 fragment = UserListMembershipsFragment()

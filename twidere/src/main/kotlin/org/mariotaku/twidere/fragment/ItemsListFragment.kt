@@ -18,7 +18,6 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.VariousItemsAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter
-import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ITEMS
 import org.mariotaku.twidere.constant.displaySensitiveContentsKey
@@ -111,7 +110,7 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
             override fun onUserClick(holder: UserViewHolder, position: Int) {
                 val user = dummyItemAdapter.getUser(position) ?: return
                 IntentUtils.openUserProfile(context, user, preferences[newDocumentApiKey],
-                        Referral.TIMELINE_STATUS, null)
+                        null)
             }
         }
         adapter.hashtagClickListener = { position ->

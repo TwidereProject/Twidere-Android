@@ -21,7 +21,6 @@ import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.MediaViewerActivity
-import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.chromeCustomTabKey
 import org.mariotaku.twidere.fragment.SensitiveContentWarningDialogFragment
@@ -49,8 +48,8 @@ object IntentUtils {
     }
 
     fun openUserProfile(context: Context, user: ParcelableUser, newDocument: Boolean,
-            @Referral referral: String? = null, activityOptions: Bundle? = null) {
-        val intent = userProfile(user, referral)
+            activityOptions: Bundle? = null) {
+        val intent = userProfile(user)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && newDocument) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT)
         }
@@ -59,9 +58,8 @@ object IntentUtils {
 
     fun openUserProfile(context: Context, accountKey: UserKey?,
             userKey: UserKey?, screenName: String?, profileUrl: String?,
-            newDocument: Boolean, @Referral referral: String? = null,
-            activityOptions: Bundle? = null) {
-        val intent = userProfile(accountKey, userKey, screenName, referral, profileUrl)
+            newDocument: Boolean, activityOptions: Bundle? = null) {
+        val intent = userProfile(accountKey, userKey, screenName, profileUrl)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && newDocument) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT)
         }
@@ -69,7 +67,7 @@ object IntentUtils {
     }
 
 
-    fun userProfile(user: ParcelableUser, @Referral referral: String? = null): Intent {
+    fun userProfile(user: ParcelableUser): Intent {
         val uri = LinkCreator.getTwidereUserLink(user.account_key, user.key, user.screen_name)
         val intent = Intent(Intent.ACTION_VIEW, uri)
         intent.setExtrasClassLoader(TwidereApplication::class.java.classLoader)
@@ -77,45 +75,32 @@ object IntentUtils {
         if (user.extras != null) {
             intent.putExtra(EXTRA_PROFILE_URL, user.extras?.statusnet_profile_url)
         }
-        if (referral != null) {
-            intent.putExtra(EXTRA_REFERRAL, referral)
-        }
         return intent
     }
 
     fun userProfile(accountKey: UserKey?, userKey: UserKey?, screenName: String?,
-            @Referral referral: String? = null, profileUrl: String? = null,
-            accountHost: String? = accountKey?.host ?: userKey?.host): Intent {
+            profileUrl: String? = null, accountHost: String? = accountKey?.host ?: userKey?.host): Intent {
         val uri = LinkCreator.getTwidereUserLink(accountKey, userKey, screenName)
         val intent = Intent(Intent.ACTION_VIEW, uri)
-        if (referral != null) {
-            intent.putExtra(EXTRA_REFERRAL, referral)
-        }
         intent.putExtra(EXTRA_PROFILE_URL, profileUrl)
         intent.putExtra(EXTRA_ACCOUNT_HOST, accountHost)
         return intent
     }
 
     fun userTimeline(accountKey: UserKey?, userKey: UserKey?, screenName: String?,
-            @Referral referral: String? = null, profileUrl: String? = null): Intent {
+            profileUrl: String? = null): Intent {
         val uri = LinkCreator.getTwidereUserRelatedLink(AUTHORITY_USER_TIMELINE, accountKey,
                 userKey, screenName)
         val intent = Intent(Intent.ACTION_VIEW, uri)
-        if (referral != null) {
-            intent.putExtra(EXTRA_REFERRAL, referral)
-        }
         intent.putExtra(EXTRA_PROFILE_URL, profileUrl)
         return intent
     }
 
     fun userFavorites(accountKey: UserKey?, userKey: UserKey?, screenName: String?,
-            @Referral referral: String? = null, profileUrl: String? = null): Intent {
+            profileUrl: String? = null): Intent {
         val uri = LinkCreator.getTwidereUserRelatedLink(AUTHORITY_USER_FAVORITES, accountKey,
                 userKey, screenName)
         val intent = Intent(Intent.ACTION_VIEW, uri)
-        if (referral != null) {
-            intent.putExtra(EXTRA_REFERRAL, referral)
-        }
         intent.putExtra(EXTRA_PROFILE_URL, profileUrl)
         return intent
     }

@@ -41,7 +41,6 @@ import org.mariotaku.twidere.adapter.iface.IActivitiesAdapter
 import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
-import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.exception.UnsupportedCountIndexException
 import org.mariotaku.twidere.extension.model.activityStatus
@@ -469,7 +468,7 @@ class ParcelableActivitiesAdapter(
             val status = adapter.getActivity(position).activityStatus ?: return
             IntentUtils.openUserProfile(adapter.context, status.account_key, status.user_key,
                     status.user_screen_name, status.extras?.user_statusnet_profile_url,
-                    adapter.preferences[newDocumentApiKey], Referral.TIMELINE_STATUS, null)
+                    adapter.preferences[newDocumentApiKey], null)
         }
 
         override fun onStatusClick(holder: IStatusViewHolder, position: Int) {

@@ -15,6 +15,7 @@
  */
 package org.mariotaku.twidere.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -211,6 +212,7 @@ public class LinePageIndicator extends View implements PagerIndicator {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(@NonNull final MotionEvent ev) {
         if (super.onTouchEvent(ev)) return true;

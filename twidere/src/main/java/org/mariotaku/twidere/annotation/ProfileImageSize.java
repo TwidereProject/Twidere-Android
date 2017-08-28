@@ -21,11 +21,15 @@ package org.mariotaku.twidere.annotation;
 
 import android.support.annotation.StringDef;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * Created by mariotaku on 2017/3/6.
  */
 @StringDef({ProfileImageSize.NORMAL, ProfileImageSize.BIGGER, ProfileImageSize.REASONABLY_SMALL,
         ProfileImageSize.ORIGINAL})
+@Retention(RetentionPolicy.SOURCE)
 public @interface ProfileImageSize {
     String REASONABLY_SMALL = "reasonably_small";
     String BIGGER = "bigger";

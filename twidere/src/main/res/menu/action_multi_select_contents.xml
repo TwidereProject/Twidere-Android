@@ -4,9 +4,9 @@
 
     <item
         android:id="@id/select_account"
-        android:actionProviderClass="org.mariotaku.twidere.menu.AccountActionProvider"
         android:icon="@drawable/ic_action_user"
         android:title="@string/select_account"
+        app:actionProviderClass="org.mariotaku.twidere.menu.AccountActionProvider"
         app:showAsAction="always"/>
     <item
         android:id="@id/reply"

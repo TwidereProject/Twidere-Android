@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.view
 
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
@@ -45,6 +46,7 @@ class ExtendedImageView(context: Context, attrs: AttributeSet? = null) :
         return super.dispatchTouchEvent(event)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (touchInterceptor != null) {
             val ret = touchInterceptor!!.onTouchEvent(this, event)

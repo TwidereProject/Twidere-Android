@@ -3,7 +3,7 @@ package org.mariotaku.twidere.menu
 import android.accounts.AccountManager
 import android.content.Context
 import android.content.Intent
-import android.view.ActionProvider
+import android.support.v4.view.ActionProvider
 import android.view.Menu
 import android.view.SubMenu
 import org.mariotaku.twidere.TwidereConstants

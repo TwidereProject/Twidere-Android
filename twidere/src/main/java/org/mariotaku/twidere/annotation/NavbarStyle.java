@@ -21,10 +21,14 @@ package org.mariotaku.twidere.annotation;
 
 import android.support.annotation.StringDef;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * Created by mariotaku on 2017/6/25.
  */
 @StringDef({NavbarStyle.DEFAULT, NavbarStyle.COLORED, NavbarStyle.TRANSPARENT})
+@Retention(RetentionPolicy.SOURCE)
 public @interface NavbarStyle {
     String DEFAULT = "default";
     String COLORED = "colored";

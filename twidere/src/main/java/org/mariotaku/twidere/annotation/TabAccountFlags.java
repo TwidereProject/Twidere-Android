@@ -21,11 +21,15 @@ package org.mariotaku.twidere.annotation;
 
 import android.support.annotation.IntDef;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * Created by mariotaku on 2017/4/17.
  */
 @IntDef(value = {TabAccountFlags.FLAG_HAS_ACCOUNT, TabAccountFlags.FLAG_ACCOUNT_REQUIRED,
         TabAccountFlags.FLAG_ACCOUNT_MULTIPLE, TabAccountFlags.FLAG_ACCOUNT_MUTABLE}, flag = true)
+@Retention(RetentionPolicy.SOURCE)
 public @interface TabAccountFlags {
 
     int FLAG_HAS_ACCOUNT = 1;

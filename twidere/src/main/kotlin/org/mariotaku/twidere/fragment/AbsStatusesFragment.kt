@@ -47,7 +47,6 @@ import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.decorator.ExtendedDividerItemDecoration
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.ReadPositionTag
-import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
@@ -451,8 +450,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
     override fun onUserProfileClick(holder: IStatusViewHolder, position: Int) {
         val status = adapter.getStatus(position)
         val intent = IntentUtils.userProfile(status.account_key, status.user_key,
-                status.user_screen_name, Referral.TIMELINE_STATUS,
-                status.extras?.user_statusnet_profile_url)
+                status.user_screen_name, status.extras?.user_statusnet_profile_url)
         IntentUtils.applyNewDocument(intent, preferences[newDocumentApiKey])
         startActivity(intent)
     }

@@ -1,5 +1,5 @@
 /*
- *                 Twidere - Twitter client for Android
+ * Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
@@ -17,22 +17,20 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.activity
+package org.mariotaku.twidere.view
 
-import android.app.Activity
-import android.os.Bundle
-import android.widget.Toast
+import android.content.Context
+import android.graphics.Canvas
+import android.support.v7.widget.AppCompatImageView
+import android.util.AttributeSet
 
-import org.mariotaku.twidere.Constants
-import org.mariotaku.twidere.R
-import org.mariotaku.twidere.util.ClipboardUtils
+/**
+ * Created by mariotaku on 15/1/16.
+ */
+class BoundsImageView(context: Context, attrs: AttributeSet? = null) : AppCompatImageView(context, attrs) {
 
-class CopyLinkActivity : Activity(), Constants {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        ClipboardUtils.setText(this, intent.dataString)
-        Toast.makeText(this, R.string.message_toast_link_copied_to_clipboard, Toast.LENGTH_SHORT).show()
-        finish()
+    override fun onDraw(canvas: Canvas) {
+        setFrame(left, top, right, bottom)
+        super.onDraw(canvas)
     }
 }
