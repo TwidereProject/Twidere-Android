@@ -845,7 +845,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         // Skip if app doesn't support extra features
         if (!extraFeaturesService.isSupported()) return
         // Skip if already bought enhanced features pack or have set promotions options
-        if (!extraFeaturesService.isEnabled(ExtraFeaturesService.FEATURE_FEATURES_PACK)
+        if (extraFeaturesService.isEnabled(ExtraFeaturesService.FEATURE_FEATURES_PACK)
                 || promotionsEnabledKey in preferences) {
             return
         }
