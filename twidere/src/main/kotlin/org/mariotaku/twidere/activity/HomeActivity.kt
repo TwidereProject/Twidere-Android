@@ -22,6 +22,7 @@ package org.mariotaku.twidere.activity
 import android.accounts.Account
 import android.accounts.AccountManager
 import android.accounts.OnAccountsUpdateListener
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.app.PendingIntent
 import android.app.SearchManager
@@ -65,6 +66,7 @@ import kotlinx.android.synthetic.main.activity_home_content.*
 import kotlinx.android.synthetic.main.layout_empty_tab_hint.*
 import nl.komponents.kovenant.task
 import org.mariotaku.chameleon.ChameleonUtils
+import org.mariotaku.kpreferences.contains
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
 import org.mariotaku.ktextension.*
@@ -98,6 +100,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.service.StreamingService
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
+import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.view.HomeDrawerLayout
 import org.mariotaku.twidere.view.TabPagerIndicator
 import java.lang.ref.WeakReference
@@ -143,6 +146,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             drawerToggleButton.contentDescription = getString(contentDescRes)
         }
 
+        @SuppressLint("RestrictedApi")
         override fun getThemeUpIndicator(): Drawable {
             val a = TintTypedArray.obtainStyledAttributes(actionBarThemedContext, null,
                     HOME_AS_UP_ATTRS)
@@ -261,7 +265,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
         setupSlidingMenu()
         setupBars()
-        showDataProfilingRequest()
+        showPromotionOffer()
         initUnreadCount()
         setupHomeTabs()
         updateActionsButton()
@@ -399,6 +403,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         return true
     }
 
+    @SuppressLint("RestrictedApi")
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
         super.onApplyWindowInsets(v, insets)
         val fragment = leftDrawerFragment
@@ -836,21 +841,24 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         })
     }
 
-    private fun showDataProfilingRequest() {
-        //spice
-        if (preferences.contains(KEY_USAGE_STATISTICS)) {
+    private fun showPromotionOffer() {
+        // Skip if app doesn't support extra features
+        if (!extraFeaturesService.isSupported()) return
+        // Skip if already bought enhanced features pack or have set promotions options
+        if (!extraFeaturesService.isEnabled(ExtraFeaturesService.FEATURE_FEATURES_PACK)
+                || promotionsEnabledKey in preferences) {
             return
         }
-        val intent = Intent(this, UsageStatisticsActivity::class.java)
+        val intent = Intent(this, PremiumDashboardActivity::class.java)
         val contentIntent = PendingIntent.getActivity(this, 0, intent, 0)
         val builder = NotificationChannelSpec.appNotices.notificationBuilder(this)
         builder.setAutoCancel(true)
-        builder.setSmallIcon(R.drawable.ic_stat_info)
-        builder.setTicker(getString(R.string.usage_statistics))
-        builder.setContentTitle(getString(R.string.usage_statistics))
-        builder.setContentText(getString(R.string.usage_statistics_notification_summary))
+        builder.setSmallIcon(R.drawable.ic_stat_gift)
+        builder.setTicker(getString(R.string.message_ticker_promotions_reward))
+        builder.setContentTitle(getString(R.string.title_promotions_reward))
+        builder.setContentText(getString(R.string.message_promotions_reward))
         builder.setContentIntent(contentIntent)
-        notificationManager.notify(NOTIFICATION_ID_DATA_PROFILING, builder.build())
+        notificationManager.notify(NOTIFICATION_ID_PROMOTIONS_OFFER, builder.build())
     }
 
     private fun triggerActionsClick() {

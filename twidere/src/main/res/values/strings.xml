@@ -452,7 +452,7 @@
     <string name="hint_message_select_user">Search users</string>
     <string name="hint_no_account">No account</string>
     <string name="hint_search_gif">Search GIF</string>
-    <string name="hint_status_reply_to_user_removed">Will be sent as quote because mention to tweet user removed. &lt;a href=\"#dialog\";&gt;Why?&lt;/a&gt;</string>
+    <string name="hint_status_reply_to_user_removed">Will be sent as quote because mention to tweet author was removed. &lt;a href=\"#dialog\";&gt;Why?&lt;/a&gt;</string>
 
     <string name="hints">Hints</string>
 
@@ -650,7 +650,8 @@
     <string name="message_permission_request_share_media">Twidere needs storage permission for sharing media to some apps.</string>
     <string name="message_pin_status_confirm">Pin this tweet? This will replace previously pinned tweet.</string>
     <string name="message_please_wait">Please wait.</string>
-    <string name="message_status_reply_to_user_removed_explanation">Twitter makes tweet user always be mentioned in a reply. If tweet user was removed, Twidere will send this reply as a quote to preserve context.</string>
+    <string name="message_promotions_reward">Enable promotions to use all enhanced features for free, we promise not to disturb you!</string>
+    <string name="message_status_reply_to_user_removed_explanation">Twitter makes tweet author always be mentioned in a reply. If tweet author was removed, Twidere will send this reply as a quote to preserve context.</string>
     <string name="message_status_scheduling_connect_buffer_hint">Connect to Buffer to schedule tweets even in offline</string>
     <string name="message_status_scheduling_connected_to_buffer">Twidere is now connected to Buffer</string>
     <string name="message_summary_type_sticker">[Sticker]</string>
@@ -659,7 +660,7 @@
     <string name="message_sync_disconnect_from_name_confirm">Disconnect from <xliff:g example="ownCloud" id="name">%s</xliff:g>?</string>
     <string name="message_sync_last_synced_time">Last synced: <xliff:g example="2017/1/1 12:00" id="time">%s</xliff:g></string>
     <string name="message_tab_field_is_required">Field \"<xliff:g example="Field" id="name">%s</xliff:g>\" is required</string>
-    <string name="message_title_promotions_reward">Enable promotions to use all enhanced features for free, we promise not to disturb you!</string>
+    <string name="message_ticker_promotions_reward">Enable promotions to use all enhanced features for free!</string>
     <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
