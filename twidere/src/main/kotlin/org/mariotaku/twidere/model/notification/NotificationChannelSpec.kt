@@ -59,12 +59,14 @@ enum class NotificationChannelSpec(
      * Such as new statuses posted by friends.
      */
     contentUpdates("content_updates", R.string.notification_channel_name_content_updates,
+            descriptionRes = R.string.notification_channel_descriptions_content_updates,
             importance = NotificationManager.IMPORTANCE_DEFAULT, showBadge = true, grouped = true),
     /**
      * For updates related to micro-blogging features.
      * Such as new statuses posted by friends user subscribed to.
      */
     contentSubscriptions("content_subscriptions", R.string.notification_channel_name_content_subscriptions,
+            descriptionRes = R.string.notification_channel_descriptions_content_subscriptions,
             importance = NotificationManager.IMPORTANCE_HIGH, showBadge = true, grouped = true),
     /**
      * For interactions related to micro-blogging features.

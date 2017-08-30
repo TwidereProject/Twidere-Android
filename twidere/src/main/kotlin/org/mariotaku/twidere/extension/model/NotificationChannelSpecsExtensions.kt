@@ -41,3 +41,12 @@ fun UserKey.notificationChannelId(id: String): String {
 fun UserKey.notificationChannelGroupId(): String {
     return Uri.encode(toString())
 }
+
+fun NotificationChannelSpec.getName(context: Context): String {
+    return context.getString(nameRes)
+}
+
+fun NotificationChannelSpec.getDescription(context: Context): String? {
+    if (descriptionRes == 0) return null
+    return context.getString(descriptionRes)
+}

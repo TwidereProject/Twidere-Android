@@ -774,6 +774,8 @@
 
     <string name="notification_channel_description_content_interactions">Interactions like mentions and retweets</string>
     <string name="notification_channel_description_content_messages">Important messages like DMs</string>
+    <string name="notification_channel_descriptions_content_subscriptions">User\'s tweet notifications</string>
+    <string name="notification_channel_descriptions_content_updates">Updates like new tweets in home timeline</string>
     <string name="notification_channel_name_app_notices">App notices</string>
     <string name="notification_channel_name_background_progresses">Background operations</string>
     <string name="notification_channel_name_content_interactions">Interactions</string>

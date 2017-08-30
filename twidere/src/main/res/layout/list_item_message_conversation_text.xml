@@ -55,6 +55,7 @@
             android:layout_toEndOf="@+id/profileImage"
             android:layout_toRightOf="@+id/profileImage"
             android:clickable="true"
+            android:focusable="true"
             android:minHeight="@dimen/profile_image_size_direct_message"
             android:minWidth="@dimen/element_size_normal"
             app:bubbleColor="?messageBubbleColor"

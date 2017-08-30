@@ -22,6 +22,7 @@ package org.mariotaku.twidere.fragment
 import android.os.Bundle
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.*
+import org.mariotaku.twidere.preference.notification.AccountNotificationChannelsPreference
 
 class AccountNotificationSettingsFragment : BaseAccountPreferenceFragment() {
 
@@ -36,11 +37,13 @@ class AccountNotificationSettingsFragment : BaseAccountPreferenceFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val preference = findPreference(KEY_NOTIFICATION_LIGHT_COLOR)
-        val account = account
-        if (preference != null && account != null) {
-            preference.setDefaultValue(account.color)
+        val account = this.account
+        findPreference(KEY_NOTIFICATION_LIGHT_COLOR)?.let {
+            if (account != null) {
+                it.setDefaultValue(account.color)
+            }
         }
+        (findPreference("notification_channels") as? AccountNotificationChannelsPreference)?.account = account
     }
 
 }

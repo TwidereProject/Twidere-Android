@@ -31,6 +31,7 @@ import org.mariotaku.twidere.adapter.MessagesConversationAdapter
 import org.mariotaku.twidere.extension.model.applyTo
 import org.mariotaku.twidere.model.ParcelableMessage
 import org.mariotaku.twidere.model.SpanItem
+import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.view.FixedTextView
 import org.mariotaku.twidere.view.ProfileImageView
 
@@ -64,7 +65,14 @@ class MessageViewHolder(itemView: View, adapter: MessagesConversationAdapter) : 
     override fun display(message: ParcelableMessage, showDate: Boolean) {
         super.display(message, showDate)
 
+        messageBubble.bubbleColor = if (message.is_outgoing) {
+            adapter.bubbleColorOutgoing
+        } else {
+            adapter.bubbleColorIncoming
+        }
         messageBubble.setOutgoing(message.is_outgoing)
+
+        text.setTextColor(ThemeUtils.getColorDependent(messageBubble.bubbleColor.defaultColor))
 
         // Loop through text and spans to found non-space char count
         val hideText = run {
