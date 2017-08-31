@@ -47,19 +47,23 @@ fun Menu.setItemChecked(id: Int, checked: Boolean) {
     findItem(id)?.isChecked = checked
 }
 
-fun Menu.setMenuItemIcon(id: Int, icon: Int) {
+fun Menu.setItemIcon(id: Int, icon: Int) {
     findItem(id)?.setIcon(icon)
 }
 
-fun Menu.setMenuItemIcon(id: Int, icon: Drawable) {
+fun Menu.setItemIcon(id: Int, icon: Drawable) {
     findItem(id)?.icon = icon
 }
 
-fun Menu.setMenuItemTitle(id: Int, title: Int) {
+fun Menu.setItemTitle(id: Int, title: Int) {
     findItem(id)?.setTitle(title)
 }
 
-fun Menu.setMenuItemShowAsActionFlags(id: Int, flags: Int) {
+fun Menu.setItemTitle(id: Int, title: CharSequence?) {
+    findItem(id)?.title = title
+}
+
+fun Menu.setItemShowAsActionFlags(id: Int, flags: Int) {
     val item = findItem(id) ?: return
     item.setShowAsActionFlags(flags)
 }

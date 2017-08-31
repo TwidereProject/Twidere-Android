@@ -45,7 +45,11 @@ class TintedStatusRelativeLayout(context: Context, attrs: AttributeSet? = null) 
     override var setPaddingEnabled: Boolean = false
 
     private val colorPaint: Paint
-    private var statusBarHeight: Int = 0
+    var statusBarHeight: Int = 0
+        set(value) {
+            field = value
+            invalidate()
+        }
     var applyWindowInsetsListener: OnApplyWindowInsetsListenerCompat? = null
 
     init {
@@ -56,17 +60,21 @@ class TintedStatusRelativeLayout(context: Context, attrs: AttributeSet? = null) 
         setWillNotDraw(false)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-            ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
-                val top = insets.systemWindowInsetTop
-                val left = insets.systemWindowInsetLeft
-                val right = insets.systemWindowInsetRight
-                val bottom = insets.systemWindowInsetBottom
-                if (setPaddingEnabled) {
-                    setPadding(left, top, right, bottom)
+            ViewCompat.setOnApplyWindowInsetsListener(this) lambda@ { view, insets ->
+                val consumed = applyWindowInsetsListener?.onApplyWindowInsets(view, insets) ?: insets
+                if (!consumed.isConsumed) {
+                    val top = consumed.systemWindowInsetTop
+                    val left = consumed.systemWindowInsetLeft
+                    val right = consumed.systemWindowInsetRight
+                    val bottom = consumed.systemWindowInsetBottom
+                    if (setPaddingEnabled) {
+                        setPadding(left, top, right, bottom)
+                    }
+                    statusBarHeight = top
+                    return@lambda consumed
+                } else {
+                    return@lambda consumed.consumeSystemWindowInsets()
                 }
-                setStatusBarHeight(top)
-                applyWindowInsetsListener?.onApplyWindowInsets(view, insets)
-                insets.consumeSystemWindowInsets()
             }
         }
     }
@@ -75,11 +83,6 @@ class TintedStatusRelativeLayout(context: Context, attrs: AttributeSet? = null) 
     override fun setStatusBarColor(color: Int) {
         colorPaint.color = 0xFF000000.toInt() or color
         colorPaint.alpha = Color.alpha(color)
-        invalidate()
-    }
-
-    fun setStatusBarHeight(height: Int) {
-        statusBarHeight = height
         invalidate()
     }
 

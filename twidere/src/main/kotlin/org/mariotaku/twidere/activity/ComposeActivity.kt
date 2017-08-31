@@ -115,6 +115,7 @@ import javax.inject.Inject
 import kotlin.collections.ArrayList
 import android.Manifest.permission as AndroidPermission
 
+@SuppressLint("RestrictedApi")
 class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener, OnLongClickListener,
         ActionMode.Callback, PermissionRequestCancelCallback, EditAltTextDialogFragment.EditAltTextCallback {
 
@@ -128,6 +129,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private lateinit var itemTouchHelper: ItemTouchHelper
     private lateinit var bottomMenuAnimator: ViewAnimator
+
     private val supportMenuInflater by lazy { SupportMenuInflater(this) }
 
     private val backTimeoutRunnable = Runnable { navigateBackPressed = false }
@@ -172,11 +174,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     // Listeners
     private var locationListener: LocationListener? = null
 
-    private val draftAction: String get() = draft?.action_type ?: when (intent.action) {
-        INTENT_ACTION_REPLY -> Draft.Action.REPLY
-        INTENT_ACTION_QUOTE -> Draft.Action.QUOTE
-        else -> Draft.Action.UPDATE_STATUS
-    }
+    private val draftAction: String
+        get() = draft?.action_type ?: when (intent.action) {
+            INTENT_ACTION_REPLY -> Draft.Action.REPLY
+            INTENT_ACTION_QUOTE -> Draft.Action.QUOTE
+            else -> Draft.Action.UPDATE_STATUS
+        }
 
     private val media: Array<ParcelableMediaUpdate>
         get() = mediaList.toTypedArray()
@@ -1317,39 +1320,39 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
         if (!attachLocation) {
             menu.setItemChecked(R.id.location_off, true)
-            menu.setMenuItemIcon(R.id.location_submenu, R.drawable.ic_action_location_off)
+            menu.setItemIcon(R.id.location_submenu, R.drawable.ic_action_location_off)
         } else if (attachPreciseLocation) {
             menu.setItemChecked(R.id.location_precise, true)
-            menu.setMenuItemIcon(R.id.location_submenu, R.drawable.ic_action_location)
+            menu.setItemIcon(R.id.location_submenu, R.drawable.ic_action_location)
         } else {
             menu.setItemChecked(R.id.location_coarse, true)
-            menu.setMenuItemIcon(R.id.location_submenu, R.drawable.ic_action_location)
+            menu.setItemIcon(R.id.location_submenu, R.drawable.ic_action_location)
         }
 
         when (statusVisibility) {
             StatusVisibility.UNLISTED -> {
                 menu.setItemChecked(R.id.visibility_unlisted, true)
-                menu.setMenuItemIcon(R.id.visibility_submenu, R.drawable.ic_action_web_lock)
+                menu.setItemIcon(R.id.visibility_submenu, R.drawable.ic_action_web_lock)
                 menu.setItemChecked(R.id.attachment_visibility_unlisted, true)
-                menu.setMenuItemIcon(R.id.attachment_visibility_submenu, R.drawable.ic_action_web_lock)
+                menu.setItemIcon(R.id.attachment_visibility_submenu, R.drawable.ic_action_web_lock)
             }
             StatusVisibility.PRIVATE -> {
                 menu.setItemChecked(R.id.visibility_private, true)
-                menu.setMenuItemIcon(R.id.visibility_submenu, R.drawable.ic_action_lock)
+                menu.setItemIcon(R.id.visibility_submenu, R.drawable.ic_action_lock)
                 menu.setItemChecked(R.id.attachment_visibility_private, true)
-                menu.setMenuItemIcon(R.id.attachment_visibility_submenu, R.drawable.ic_action_lock)
+                menu.setItemIcon(R.id.attachment_visibility_submenu, R.drawable.ic_action_lock)
             }
             StatusVisibility.DIRECT -> {
                 menu.setItemChecked(R.id.visibility_direct, true)
-                menu.setMenuItemIcon(R.id.visibility_submenu, R.drawable.ic_action_message)
+                menu.setItemIcon(R.id.visibility_submenu, R.drawable.ic_action_message)
                 menu.setItemChecked(R.id.attachment_visibility_direct, true)
-                menu.setMenuItemIcon(R.id.attachment_visibility_submenu, R.drawable.ic_action_message)
+                menu.setItemIcon(R.id.attachment_visibility_submenu, R.drawable.ic_action_message)
             }
             else -> { // Default to public
                 menu.setItemChecked(R.id.visibility_public, true)
-                menu.setMenuItemIcon(R.id.visibility_submenu, R.drawable.ic_action_web)
+                menu.setItemIcon(R.id.visibility_submenu, R.drawable.ic_action_web)
                 menu.setItemChecked(R.id.attachment_visibility_public, true)
-                menu.setMenuItemIcon(R.id.attachment_visibility_submenu, R.drawable.ic_action_web)
+                menu.setItemIcon(R.id.attachment_visibility_submenu, R.drawable.ic_action_web)
             }
         }
 
@@ -1473,13 +1476,13 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
         val update = try {
             getStatusUpdate(true)
-        } catch(e: NoAccountException) {
+        } catch (e: NoAccountException) {
             editText.error = getString(R.string.message_toast_no_account_selected)
             return
-        } catch(e: NoContentException) {
+        } catch (e: NoContentException) {
             editText.error = getString(R.string.error_message_no_content)
             return
-        } catch(e: StatusTooLongException) {
+        } catch (e: StatusTooLongException) {
             editText.error = getString(R.string.error_message_status_too_long)
             editText.setSelection(e.exceededStartIndex, editText.length())
             return
@@ -1602,7 +1605,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             val mentionColor = ThemeUtils.getTextColorSecondary(this)
             editable.clearSpans(MentionColorSpan::class.java)
             editable.setSpan(MentionColorSpan(mentionColor), 0, textAndMentions.replyStartIndex,
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             statusTextCount.textCount = summaryLength + validator.getTweetLength(textAndMentions.replyText)
         } else {
             hintLabel.visibility = View.VISIBLE
@@ -1675,7 +1678,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private fun saveToDrafts(): Uri? {
         val statusUpdate = try {
             getStatusUpdate(false)
-        } catch(e: ComposeException) {
+        } catch (e: ComposeException) {
             return null
         }
         val draft = UpdateStatusTask.createDraft(draftAction) {

@@ -64,6 +64,25 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
     private val refreshCompleteListener: RefreshCompleteListener?
         get() = parentFragment as? RefreshCompleteListener
 
+    val isProgressShowing: Boolean
+        get() = progressContainer.visibility == View.VISIBLE
+
+    override var refreshing: Boolean
+        get () = swipeLayout.isRefreshing
+        set(value) {
+            if (isProgressShowing) return
+            val currentRefreshing = swipeLayout.isRefreshing
+            if (!currentRefreshing) {
+                updateRefreshProgressOffset()
+            }
+            if (!value) {
+                refreshCompleteListener?.onRefreshComplete(this)
+            }
+            if (value == currentRefreshing) return
+            val layoutRefreshing = value && adapter.loadMoreIndicatorPosition != ILoadMoreSupportAdapter.NONE
+            swipeLayout.isRefreshing = layoutRefreshing
+        }
+
     override fun canScroll(dy: Float): Boolean {
         return drawerCallback.canScroll(dy)
     }
@@ -135,21 +154,6 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
     override fun topChanged(offset: Int) {
         drawerCallback.topChanged(offset)
     }
-
-    override var refreshing: Boolean
-        get () = swipeLayout.isRefreshing
-        set(value) {
-            val currentRefreshing = swipeLayout.isRefreshing
-            if (!currentRefreshing) {
-                updateRefreshProgressOffset()
-            }
-            if (!value) {
-                refreshCompleteListener?.onRefreshComplete(this)
-            }
-            if (value == currentRefreshing) return
-            val layoutRefreshing = value && adapter.loadMoreIndicatorPosition != ILoadMoreSupportAdapter.NONE
-            swipeLayout.isRefreshing = layoutRefreshing
-        }
 
     var refreshEnabled: Boolean
         get() = swipeLayout.isEnabled

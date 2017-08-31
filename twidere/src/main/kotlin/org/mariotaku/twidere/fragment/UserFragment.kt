@@ -81,7 +81,6 @@ import kotlinx.android.synthetic.main.header_user.*
 import kotlinx.android.synthetic.main.header_user.view.*
 import kotlinx.android.synthetic.main.layout_content_fragment_common.*
 import kotlinx.android.synthetic.main.layout_content_pages_common.*
-import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.then
 import nl.komponents.kovenant.ui.alwaysUi
@@ -802,7 +801,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         menu.setItemAvailability(R.id.blocked_users, isMyself)
         menu.setItemAvailability(R.id.block, !isMyself)
 
-        menu.setItemAvailability(R.id.add_to_home_screen,
+        menu.setItemAvailability(R.id.add_to_home_screen_submenu,
                 ShortcutManagerCompat.isRequestPinShortcutSupported(context))
 
         var canAddToList = false
@@ -1036,17 +1035,19 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 }
                 return true
             }
-            R.id.add_to_home_screen -> {
-                if (!ShortcutManagerCompat.isRequestPinShortcutSupported(context)) return true
-                val promise = showProgressDialog(FRAGMENT_TAG_ADD_USER_SHORTCUT_TO_HOME_SCREEN)
-                        .and(ShortcutCreator.user(context, user.account_key, user))
-                val weakThis = WeakReference(this)
-                promise.successUi { (_, shortcut) ->
-                    val fragment = weakThis.get() ?: return@successUi
-                    ShortcutManagerCompat.requestPinShortcut(fragment.context, shortcut, null)
-                }.alwaysUi {
-                    val fragment = weakThis.get() ?: return@alwaysUi
-                    fragment.dismissProgressDialog(FRAGMENT_TAG_ADD_USER_SHORTCUT_TO_HOME_SCREEN)
+            R.id.add_user_to_home_screen -> {
+                ShortcutCreator.performCreation(this) {
+                    ShortcutCreator.user(context, user.account_key, user)
+                }
+            }
+            R.id.add_statuses_to_home_screen -> {
+                ShortcutCreator.performCreation(this) {
+                    ShortcutCreator.userTimeline(context, user.account_key, user)
+                }
+            }
+            R.id.add_favorites_to_home_screen -> {
+                ShortcutCreator.performCreation(this) {
+                    ShortcutCreator.userFavorites(context, user.account_key, user)
                 }
             }
             else -> {
@@ -1860,6 +1861,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         private const val TAB_TYPE_STATUSES_WITH_REPLIES = "statuses_with_replies"
         private const val TAB_TYPE_MEDIA = "media"
         private const val TAB_TYPE_FAVORITES = "favorites"
-        private const val FRAGMENT_TAG_ADD_USER_SHORTCUT_TO_HOME_SCREEN = "add_user_shortcut_to_home_screen"
+        private const val FRAGMENT_TAG_ADD_SHORTCUT_TO_HOME_SCREEN = "add_shortcut_to_home_screen"
     }
 }

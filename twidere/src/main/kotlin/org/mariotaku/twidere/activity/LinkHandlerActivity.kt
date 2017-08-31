@@ -143,7 +143,8 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
             contentFragmentId = android.R.id.content
         } else {
             setContentView(R.layout.activity_link_handler)
-            toolbar?.let { toolbar ->
+            val toolbar = this.toolbar
+            if (toolbar != null) {
                 if (supportActionBar != null) {
                     toolbar.visibility = View.GONE
                     windowOverlay?.visibility = View.GONE
@@ -221,6 +222,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
         if (fragment is IToolBarSupportFragment) {
             return result
         }
+        contentView?.statusBarHeight = insets.systemWindowInsetTop - controlBarHeight
         return result.consumeSystemWindowInsets()
     }
 
@@ -341,11 +343,13 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
         get() {
             val fragment = currentVisibleFragment
             val actionBar = supportActionBar
+            var height = 0
             if (fragment is IToolBarSupportFragment) {
-                return fragment.controlBarHeight
+                fragment.controlBarHeight
             } else if (actionBar != null) {
-                return actionBar.height
+                height = actionBar.height
             }
+            if (height != 0) return height
             if (actionBarHeight != 0) return actionBarHeight
             actionBarHeight = ThemeUtils.getActionBarHeight(this)
             return actionBarHeight

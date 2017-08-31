@@ -14,7 +14,7 @@ buildscript {
 
 allprojects {
 
-    ext{
+    ext {
         projectGroupId = 'org.mariotaku.twidere'
         projectVersionCode = 385
         projectVersionName = '3.6.25'
@@ -23,8 +23,8 @@ allprojects {
     repositories {
         mavenLocal()
         jcenter()
-        maven { url 'https://jitpack.io' }
         maven { url 'https://maven.google.com' }
+        maven { url 'https://jitpack.io' }
     }
 
 }
@@ -32,7 +32,7 @@ allprojects {
 subprojects {
     buildscript {
         ext {
-            kotlinVersion = '1.1.4-2'
+            kotlinVersion = '1.1.4-3'
             pluginVersions = [
                     AndroidSvgDrawable: '3.0.0',
                     Fabric            : '1.22.1',
@@ -40,7 +40,7 @@ subprojects {
                     PlayServices      : '3.1.0',
             ]
             libVersions = [
-                    Kotlin               : '1.1.4-2',
+                    Kotlin               : "${kotlinVersion}",
                     SupportLib           : '26.0.1',
                     SupportTest          : '1.0.0',
                     MariotakuCommons     : '0.9.17',
@@ -68,7 +68,7 @@ subprojects {
                     KPreferences         : '0.9.7',
                     Kovenant             : '3.3.0',
                     ParcelablePlease     : '1.0.2',
-                    Chameleon            : '0.9.18',
+                    Chameleon            : '0.9.19-SNAPSHOT',
                     UniqR                : '0.9.4',
                     SQLiteQB             : '0.9.15',
                     Glide                : '3.7.0',

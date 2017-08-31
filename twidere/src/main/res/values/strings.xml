@@ -21,9 +21,12 @@
     <string name="action_add_gif">Add GIF</string>
     <string name="action_add_media">Add media</string>
     <string name="action_add_member">Add member</string>
+    <string name="action_add_name_to_home_screen">Add <xliff:g example="Name" id="name">%1$s</xliff:g> to home screen</string>
+    <string name="action_add_tab_to_home_screen">Add tab to home screen</string>
     <string name="action_add_tab">Add tab</string>
     <string name="action_add_to_filter">Add to filter</string>
     <string name="action_add_to_home_screen">Add to home screen</string>
+    <string name="action_add_to_home_screen_more">Add to home screen…</string>
     <string name="action_add_to_list">Add to list</string>
     <!-- [verb] Action for blocking user -->
     <string name="action_block">Block</string>
