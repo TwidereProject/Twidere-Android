@@ -1623,14 +1623,14 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             }
         }.successUi { result ->
             val fragment = weakThis.get() ?: return@successUi
-            fragment.executeAfterFragmentResumed { fragment ->
+            fragment.executeAfterFragmentResumed { f ->
                 val df = AddRemoveUserListDialogFragment()
                 df.arguments = Bundle {
                     this[EXTRA_ACCOUNT_KEY] = user.account_key
                     this[EXTRA_USER_KEY] = user.key
                     this[EXTRA_USER_LISTS] = result
                 }
-                df.show(fragment.childFragmentManager, "add_remove_list")
+                df.show(f.childFragmentManager, "add_remove_list")
             }
         }.failUi {
             val fragment = weakThis.get() ?: return@failUi
@@ -1785,10 +1785,10 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
             builder.setMultiChoiceItems(entries, states, null)
             val dialog = builder.create()
-            dialog.onShow { dialog ->
-                dialog.applyTheme()
-                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
-                    val checkedPositions = dialog.listView.checkedItemPositions
+            dialog.onShow { d ->
+                d.applyTheme()
+                d.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
+                    val checkedPositions = d.listView.checkedItemPositions
                     val weakActivity = WeakReference(activity)
                     (activity as IBaseActivity<*>).executeAfterFragmentResumed {
                         ProgressDialogFragment.show(it.supportFragmentManager, "update_lists_progress")
@@ -1814,8 +1814,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                         }
                     }.alwaysUi {
                         val activity = weakActivity.get() as? IBaseActivity<*> ?: return@alwaysUi
-                        activity.executeAfterFragmentResumed { activity ->
-                            val manager = activity.supportFragmentManager
+                        activity.executeAfterFragmentResumed { a ->
+                            val manager = a.supportFragmentManager
                             val df = manager.findFragmentByTag("update_lists_progress") as? DialogFragment
                             df?.dismiss()
                         }
@@ -1827,14 +1827,14 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                             for (i in 0 until successfulStates.size()) {
                                 val pos = successfulStates.keyAt(i)
                                 val checked = successfulStates.valueAt(i)
-                                dialog.listView.setItemChecked(pos, checked)
+                                d.listView.setItemChecked(pos, checked)
                                 states[pos] = checked
                             }
                         }
                         Toast.makeText(context, e.getErrorMessage(context), Toast.LENGTH_SHORT).show()
                     }
                 }
-                dialog.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener {
+                d.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener {
                     val df = CreateUserListDialogFragment()
                     df.arguments = Bundle {
                         this[EXTRA_ACCOUNT_KEY] = accountKey
