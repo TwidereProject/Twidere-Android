@@ -423,6 +423,17 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activity.shortcut.UserMediaTimelineTimelineShortcutCreatorActivity"
+            android:icon="@mipmap/ic_shortcut_gallery"
+            android:label="@string/title_media_timeline"
+            android:theme="@style/Theme.Twidere.NoDisplay">
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".activity.shortcut.UserShortcutCreatorActivity"
             android:icon="@mipmap/ic_shortcut_user"
             android:label="@string/title_user"
