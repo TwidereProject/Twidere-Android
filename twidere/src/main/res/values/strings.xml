@@ -22,8 +22,8 @@
     <string name="action_add_media">Add media</string>
     <string name="action_add_member">Add member</string>
     <string name="action_add_name_to_home_screen">Add <xliff:g example="Name" id="name">%1$s</xliff:g> to home screen</string>
-    <string name="action_add_tab_to_home_screen">Add tab to home screen</string>
     <string name="action_add_tab">Add tab</string>
+    <string name="action_add_tab_to_home_screen">Add tab to home screen</string>
     <string name="action_add_to_filter">Add to filter</string>
     <string name="action_add_to_home_screen">Add to home screen</string>
     <string name="action_add_to_home_screen_more">Add to home screen…</string>
@@ -896,6 +896,7 @@
     <string name="preference_title_multi_column_tab_width">Multi column tab width</string>
     <string name="preference_title_multi_column_tabs">Multi column tabs</string>
     <string name="preference_title_navbar_style">Navbar style</string>
+    <string name="preference_title_notification_channels">Channels</string>
     <string name="preference_title_notification_ringtone">Ringtone</string>
     <string name="preference_title_override_language">App language</string>
     <string name="preference_title_portrait">Portrait</string>

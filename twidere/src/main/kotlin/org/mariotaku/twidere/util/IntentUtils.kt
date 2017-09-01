@@ -96,6 +96,15 @@ object IntentUtils {
         return intent
     }
 
+    fun userMediaTimeline(accountKey: UserKey?, userKey: UserKey?, screenName: String?,
+            profileUrl: String? = null): Intent {
+        val uri = LinkCreator.getTwidereUserRelatedLink(AUTHORITY_USER_MEDIA_TIMELINE, accountKey,
+                userKey, screenName)
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        intent.putExtra(EXTRA_PROFILE_URL, profileUrl)
+        return intent
+    }
+
     fun userFavorites(accountKey: UserKey?, userKey: UserKey?, screenName: String?,
             profileUrl: String? = null): Intent {
         val uri = LinkCreator.getTwidereUserRelatedLink(AUTHORITY_USER_FAVORITES, accountKey,

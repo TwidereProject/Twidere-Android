@@ -101,10 +101,8 @@
                 android:title="@string/title_statuses"/>
             <item
                 android:id="@+id/add_media_to_home_screen"
-                android:enabled="@bool/debug"
                 android:icon="@drawable/ic_action_gallery"
-                android:title="@string/title_media_timeline"
-                android:visible="@bool/debug"/>
+                android:title="@string/title_media_timeline"/>
             <item
                 android:id="@+id/add_favorites_to_home_screen"
                 android:icon="@drawable/ic_action_star"

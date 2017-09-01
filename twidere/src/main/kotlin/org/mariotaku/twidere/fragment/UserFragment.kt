@@ -1054,6 +1054,11 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     ShortcutCreator.userFavorites(context, user.account_key, user)
                 }
             }
+            R.id.add_media_to_home_screen -> {
+                ShortcutCreator.performCreation(this) {
+                    ShortcutCreator.userMediaTimeline(context, user.account_key, user)
+                }
+            }
             else -> {
                 val intent = item.intent
                 if (intent?.resolveActivity(context.packageManager) != null) {

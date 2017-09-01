@@ -116,6 +116,20 @@ object ShortcutCreator {
         return Promise.of(builder.build())
     }
 
+    fun userMediaTimeline(context: Context, accountKey: UserKey?, user: ParcelableUser): Promise<ShortcutInfoCompat, Exception> {
+        val holder = DependencyHolder.get(context)
+        val preferences = holder.preferences
+        val userColorNameManager = holder.userColorNameManager
+
+        val launchIntent = IntentUtils.userMediaTimeline(accountKey, user.key,
+                user.screen_name, profileUrl = user.extras?.statusnet_profile_url)
+        val builder = ShortcutInfoCompat.Builder(context, "$accountKey:user-media-timeline:${user.key}")
+        builder.setIntent(launchIntent)
+        builder.setShortLabel(userColorNameManager.getDisplayName(user, preferences[nameFirstKey]))
+        builder.setIcon(IconCompat.createWithResource(context, R.mipmap.ic_shortcut_gallery))
+        return Promise.of(builder.build())
+    }
+
     inline fun performCreation(fragment: BaseFragment, createPromise: () -> Promise<ShortcutInfoCompat, Exception>) {
         if (!ShortcutManagerCompat.isRequestPinShortcutSupported(fragment.context)) return
         val promise = fragment.showProgressDialog("create_shortcut")
