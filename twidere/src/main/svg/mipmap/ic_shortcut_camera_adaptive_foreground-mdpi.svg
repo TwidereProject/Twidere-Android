@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="108px" height="108px" viewBox="0 0 108 108" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>ic_shortcut_camera_adaptive_foreground-mdpi</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="App-Icon-Adaptive" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Shortcut-/-Camera">
+            <g id="Foreground">
+                <g id="Group" transform="translate(34.000000, 36.000000)" fill="#4A90E2">
+                    <circle id="Oval" cx="20" cy="20" r="6.4"></circle>
+                    <path d="M14,0 L10.34,4 L4,4 C1.8,4 0,5.8 0,8 L0,32 C0,34.2 1.8,36 4,36 L36,36 C38.2,36 40,34.2 40,32 L40,8 C40,5.8 38.2,4 36,4 L29.66,4 L26,0 L14,0 L14,0 Z M20,30 C14.48,30 10,25.52 10,20 C10,14.48 14.48,10 20,10 C25.52,10 30,14.48 30,20 C30,25.52 25.52,30 20,30 L20,30 Z" id="Shape"></path>
+                </g>
+                <rect id="Guide" x="18" y="18" width="72" height="72"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

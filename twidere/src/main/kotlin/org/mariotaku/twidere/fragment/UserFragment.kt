@@ -1358,7 +1358,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         userProfileSwipeLayout.setProgressViewOffset(false, progressViewStart, progressViewEnd)
     }
 
-
     private fun getFriendship() {
         val user = user ?: return
         relationship = null
