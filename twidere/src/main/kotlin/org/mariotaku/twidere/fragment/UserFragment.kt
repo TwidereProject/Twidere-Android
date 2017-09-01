@@ -170,8 +170,10 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         private set
     private var account: AccountDetails? = null
     private var relationship: ParcelableRelationship? = null
-    private var getUserInfoLoaderInitialized: Boolean = false
-    private var getFriendShipLoaderInitialized: Boolean = false
+
+    private var systemWindowsInsets: Rect = Rect()
+    private var userInfoLoaderInitialized: Boolean = false
+    private var friendShipLoaderInitialized: Boolean = false
     private var bannerWidth: Int = 0
     private var cardBackgroundColor: Int = 0
     private var actionBarShadowColor: Int = 0
@@ -571,9 +573,9 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         args.putParcelable(EXTRA_USER_KEY, userKey)
         args.putString(EXTRA_SCREEN_NAME, screenName)
         args.putBoolean(EXTRA_OMIT_INTENT_EXTRA, omitIntentExtra)
-        if (!getUserInfoLoaderInitialized) {
+        if (!userInfoLoaderInitialized) {
             lm.initLoader(LOADER_ID_USER, args, userInfoLoaderCallbacks)
-            getUserInfoLoaderInitialized = true
+            userInfoLoaderInitialized = true
         } else {
             lm.restartLoader(LOADER_ID_USER, args, userInfoLoaderCallbacks)
         }
@@ -676,6 +678,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
 
         userFragmentView.windowInsetsListener = OnApplyWindowInsetsListener listener@ { _, insets ->
+            insets.getSystemWindowInsets(systemWindowsInsets)
             val top = insets.systemWindowInsetTop
             profileContentContainer.setPadding(0, top, 0, 0)
             profileBannerSpace.statusBarHeight = top
@@ -687,6 +690,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 }
                 profileBannerSpace.toolbarHeight = toolbarHeight
             }
+            updateRefreshProgressOffset()
             return@listener insets
         }
 
@@ -1342,6 +1346,19 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         userProfileSwipeLayout.isRefreshing = false
     }
 
+    private fun updateRefreshProgressOffset() {
+        val insets = this.systemWindowsInsets
+        if (insets.top == 0 || userProfileSwipeLayout == null || userProfileSwipeLayout.isRefreshing) {
+            return
+        }
+        val progressCircleDiameter = userProfileSwipeLayout.progressCircleDiameter
+        if (progressCircleDiameter == 0) return
+        val progressViewStart = 0 - progressCircleDiameter
+        val progressViewEnd = profileBannerSpace.toolbarHeight + resources.getDimensionPixelSize(R.dimen.element_spacing_normal)
+        userProfileSwipeLayout.setProgressViewOffset(false, progressViewStart, progressViewEnd)
+    }
+
+
     private fun getFriendship() {
         val user = user ?: return
         relationship = null
@@ -1350,9 +1367,9 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val args = Bundle()
         args.putParcelable(EXTRA_ACCOUNT_KEY, user.account_key)
         args.putParcelable(EXTRA_USER, user)
-        if (!getFriendShipLoaderInitialized) {
+        if (!friendShipLoaderInitialized) {
             lm.initLoader(LOADER_ID_FRIENDSHIP, args, friendshipLoaderCallbacks)
-            getFriendShipLoaderInitialized = true
+            friendShipLoaderInitialized = true
         } else {
             lm.restartLoader(LOADER_ID_FRIENDSHIP, args, friendshipLoaderCallbacks)
         }

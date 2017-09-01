@@ -308,19 +308,15 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
     }
 
     protected fun updateRefreshProgressOffset() {
-        val activity = activity
         val insets = this.systemWindowsInsets
-        if (activity !is IControlBarActivity || insets.top == 0 || swipeLayout == null || refreshing) {
+        if (insets.top == 0 || swipeLayout == null || swipeLayout.isRefreshing) {
             return
         }
         val progressCircleDiameter = swipeLayout.progressCircleDiameter
         if (progressCircleDiameter == 0) return
-        val density = resources.displayMetrics.density
-        val controlBarOffsetPixels = Math.round(activity.controlBarHeight * (1 - activity.controlBarOffset))
-        val swipeStart = insets.top - controlBarOffsetPixels - progressCircleDiameter
-        // 64: SwipeRefreshLayout.DEFAULT_CIRCLE_TARGET
-        val swipeDistance = Math.round(64 * density)
-        swipeLayout.setProgressViewOffset(false, swipeStart, swipeStart + swipeDistance)
+        val progressViewStart = 0 - progressCircleDiameter
+        val progressViewEnd = insets.top + resources.getDimensionPixelSize(R.dimen.element_spacing_normal)
+        swipeLayout.setProgressViewOffset(false, progressViewStart, progressViewEnd)
     }
 
     interface RefreshCompleteListener {
