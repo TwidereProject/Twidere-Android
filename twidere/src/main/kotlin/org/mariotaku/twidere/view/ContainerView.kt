@@ -14,31 +14,31 @@ open class ContainerView(context: Context, attrs: AttributeSet? = null) : FrameL
     private var attachedToWindow: Boolean = false
 
     var viewController: ViewController? = null
-        set(vc) {
-            field?.let { vc ->
-                if (vc.attached) {
-                    vc.attached = false
-                    vc.onDetached()
+        set(value) {
+            field?.let { oldVc ->
+                if (oldVc.attached) {
+                    oldVc.attached = false
+                    oldVc.onDetached()
                 }
-                val view = vc.view
-                vc.onDestroyView(view)
+                val view = oldVc.view
+                oldVc.onDestroyView(view)
                 this.removeView(view)
-                vc.onDestroy()
+                oldVc.onDestroy()
             }
-            field = vc
-            if (vc != null) {
-                if (vc.attached) {
+            field = value
+            if (value != null) {
+                if (value.attached) {
                     throw IllegalStateException("ViewController has already attached")
                 }
-                vc.context = context
-                val view = vc.onCreateView(this)
+                value.context = context
+                val view = value.onCreateView(this)
                 this.addView(view)
-                vc.view = view
-                vc.onCreate()
-                vc.onViewCreated(view)
+                value.view = view
+                value.onCreate()
+                value.onViewCreated(view)
                 if (attachedToWindow) {
-                    vc.attached = true
-                    vc.onAttached()
+                    value.attached = true
+                    value.onAttached()
                 }
             }
         }

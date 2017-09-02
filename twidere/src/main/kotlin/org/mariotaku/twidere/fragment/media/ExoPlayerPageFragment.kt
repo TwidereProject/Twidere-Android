@@ -56,6 +56,7 @@ import org.mariotaku.twidere.activity.MediaViewerActivity
 import org.mariotaku.twidere.annotation.CacheFileType
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_POSITION
 import org.mariotaku.twidere.extension.model.authorizationHeader
+import org.mariotaku.twidere.extension.model.getBestVideoUrlAndType
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.EXTRA_PAUSED_BY_USER
 import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.EXTRA_PLAY_AUDIO
@@ -331,8 +332,8 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
     }
 
     private fun ParcelableMedia.getDownloadUri(): Uri? {
-        val bestVideoUrlAndType = VideoPageFragment.getBestVideoUrlAndType(this, SUPPORTED_VIDEO_TYPES)
-        if (bestVideoUrlAndType != null && bestVideoUrlAndType.first != null) {
+        val bestVideoUrlAndType = this.getBestVideoUrlAndType(SUPPORTED_VIDEO_TYPES)
+        if (bestVideoUrlAndType != null) {
             return Uri.parse(bestVideoUrlAndType.first)
         }
         return arguments.getParcelable<Uri>(SubsampleImageViewerFragment.EXTRA_MEDIA_URI)
