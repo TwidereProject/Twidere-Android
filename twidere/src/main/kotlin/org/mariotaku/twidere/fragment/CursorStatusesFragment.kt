@@ -124,7 +124,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
             where = accountWhere
         }
         adapter.showAccountsColor = accountKeys.size > 1
-        val projection = Statuses.COLUMNS
+        val projection = statusColumnsLite
         val selectionArgs = Array(accountKeys.size) {
             accountKeys[it].toString()
         }
@@ -314,4 +314,8 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
     }
 
+    companion object {
+        private val statusColumnsLite = Statuses.COLUMNS - arrayOf(Statuses.MENTIONS_JSON,
+                Statuses.CARD)
+    }
 }
