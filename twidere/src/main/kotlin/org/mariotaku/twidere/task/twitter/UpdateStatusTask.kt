@@ -714,10 +714,10 @@ class UpdateStatusTask(
                             ContentLengthInputStream.ReadListener { length, position ->
                                 callback?.onUploadingProgressChanged(index, position, length)
                             })
-                    if (chucked) {
-                        resp = uploadMediaChucked(upload, body.body, mediaCategory, ownerIds)
+                    resp = if (chucked) {
+                        uploadMediaChucked(upload, body.body, mediaCategory, ownerIds)
                     } else {
-                        resp = upload.uploadMedia(body.body, ownerIds)
+                        upload.uploadMedia(body.body, ownerIds)
                     }
                 } catch (e: IOException) {
                     throw UploadException(e).apply {

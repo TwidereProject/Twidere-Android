@@ -1091,29 +1091,24 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         } else {
             hasAccountKeys = false
         }
-        if (Intent.ACTION_SEND == action) {
-            shouldSaveAccounts = false
-            shouldSaveVisibility = false
-            val stream = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
-            if (stream != null) {
-                val src = arrayOf(stream)
-                TaskStarter.execute(AddMediaTask(this, src, null, true, false))
+        when (action) {
+            Intent.ACTION_SEND, Intent.ACTION_SEND_MULTIPLE -> {
+                shouldSaveAccounts = false
+                shouldSaveVisibility = false
+                val stream = intent.getStreamExtra()
+                if (stream != null) {
+                    val src = stream.toTypedArray()
+                    TaskStarter.execute(AddMediaTask(this, src, null, true, false))
+                }
             }
-        } else if (Intent.ACTION_SEND_MULTIPLE == action) {
-            shouldSaveAccounts = false
-            shouldSaveVisibility = false
-            val extraStream = intent.getParcelableArrayListExtra<Uri>(Intent.EXTRA_STREAM)
-            if (extraStream != null) {
-                val src = extraStream.toTypedArray()
-                TaskStarter.execute(AddMediaTask(this, src, null, true, false))
-            }
-        } else {
-            shouldSaveAccounts = !hasAccountKeys
-            shouldSaveVisibility = !hasVisibility
-            val data = intent.data
-            if (data != null) {
-                val src = arrayOf(data)
-                TaskStarter.execute(AddMediaTask(this, src, null, true, false))
+            else -> {
+                shouldSaveAccounts = !hasAccountKeys
+                shouldSaveVisibility = !hasVisibility
+                val data = intent.data
+                if (data != null) {
+                    val src = arrayOf(data)
+                    TaskStarter.execute(AddMediaTask(this, src, null, true, false))
+                }
             }
         }
         val extraSubject = intent.getCharSequenceExtra(Intent.EXTRA_SUBJECT)
@@ -2222,6 +2217,13 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             it.visibility = visibility
         }
 
+        private fun Intent.getStreamExtra(): List<Uri>? {
+            val list = getParcelableArrayListExtra<Uri>(Intent.EXTRA_STREAM)
+            if (list != null) return list
+            val item = getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
+            if (item != null) return listOf(item)
+            return null
+        }
     }
 }
 

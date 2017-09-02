@@ -19,6 +19,8 @@
 
 package org.mariotaku.twidere.util.net
 
+import okhttp3.ConnectionSpec
+import okhttp3.internal.Internal
 import java.io.IOException
 import java.net.InetAddress
 import java.net.Socket
@@ -31,55 +33,54 @@ import javax.net.ssl.SSLSocketFactory
  */
 class TLSSocketFactory : SSLSocketFactory() {
 
-    private val internalSSLSocketFactory: SSLSocketFactory
+    private val delegate: SSLSocketFactory
 
     init {
-        val context = SSLContext.getInstance("TLS")
-        context.init(null, null, null)
-        internalSSLSocketFactory = context.socketFactory
+        val context = SSLContext.getInstance("TLS").apply {
+            init(null, null, null)
+        }
+        delegate = context.socketFactory
     }
 
     override fun getDefaultCipherSuites(): Array<String> {
-        return internalSSLSocketFactory.defaultCipherSuites
+        return delegate.defaultCipherSuites
     }
 
     override fun getSupportedCipherSuites(): Array<String> {
-        return internalSSLSocketFactory.supportedCipherSuites
+        return delegate.supportedCipherSuites
     }
 
     @Throws(IOException::class)
     override fun createSocket(s: Socket, host: String, port: Int, autoClose: Boolean): Socket {
-        return internalSSLSocketFactory.createSocket(s, host, port, autoClose).applyTLS()
+        return delegate.createSocket(s, host, port, autoClose).applyTLS()
     }
 
     @Throws(IOException::class)
     override fun createSocket(host: String, port: Int): Socket {
-        return internalSSLSocketFactory.createSocket(host, port).applyTLS()
+        return delegate.createSocket(host, port).applyTLS()
     }
 
     @Throws(IOException::class)
     override fun createSocket(host: String, port: Int, localHost: InetAddress, localPort: Int): Socket {
-        return internalSSLSocketFactory.createSocket(host, port, localHost, localPort).applyTLS()
+        return delegate.createSocket(host, port, localHost, localPort).applyTLS()
     }
 
     @Throws(IOException::class)
     override fun createSocket(host: InetAddress, port: Int): Socket {
-        return internalSSLSocketFactory.createSocket(host, port).applyTLS()
+        return delegate.createSocket(host, port).applyTLS()
     }
 
     @Throws(IOException::class)
     override fun createSocket(address: InetAddress, port: Int, localAddress: InetAddress, localPort: Int): Socket {
-        return internalSSLSocketFactory.createSocket(address, port, localAddress, localPort).applyTLS()
+        return delegate.createSocket(address, port, localAddress, localPort).applyTLS()
     }
 
     private fun Socket.applyTLS(): Socket {
-        if (this is SSLSocket) {
-            enabledProtocols = this.supportedProtocols.intersect(tlsProtocols).toTypedArray()
-        }
+        if (this !is SSLSocket) return this
+        this.enabledProtocols = this.supportedProtocols
+        this.enabledCipherSuites = this.enabledCipherSuites
+        Internal.instance.apply(ConnectionSpec.MODERN_TLS, this, false)
         return this
     }
 
-    companion object {
-        private val tlsProtocols = listOf("TLSv1.2", "TLSv1.1", "TLSv1")
-    }
 }

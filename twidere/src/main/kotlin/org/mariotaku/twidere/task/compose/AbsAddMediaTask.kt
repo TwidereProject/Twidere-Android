@@ -49,12 +49,14 @@ open class AbsAddMediaTask<Callback>(
             var st: InputStream? = null
             var os: OutputStream? = null
             try {
-                val sourceMimeType = resolver.getType(source)
+                val mimeTypeMap = MimeTypeMap.getSingleton()
+                val sourceMimeType = resolver.getType(source) ?: mimeTypeMap.getMimeTypeFromExtension(
+                        source.lastPathSegment.substringAfterLast('.', "tmp"))
                 val mediaType = types?.get(index) ?: sourceMimeType?.let {
                     return@let inferMediaType(it)
                 } ?: ParcelableMedia.Type.IMAGE
                 val extension = sourceMimeType?.let { mimeType ->
-                    MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType)
+                    mimeTypeMap.getExtensionFromMimeType(mimeType)
                 } ?: "tmp"
                 st = resolver.openInputStream(source) ?: throw FileNotFoundException("Unable to open $source")
                 val destination: Uri
