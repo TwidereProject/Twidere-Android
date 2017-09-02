@@ -1882,6 +1882,5 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         private const val TAB_TYPE_STATUSES_WITH_REPLIES = "statuses_with_replies"
         private const val TAB_TYPE_MEDIA = "media"
         private const val TAB_TYPE_FAVORITES = "favorites"
-        private const val FRAGMENT_TAG_ADD_SHORTCUT_TO_HOME_SCREEN = "add_shortcut_to_home_screen"
     }
 }

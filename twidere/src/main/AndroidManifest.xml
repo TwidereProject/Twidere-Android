@@ -445,6 +445,17 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activity.shortcut.UserListTimelineShortcutCreatorActivity"
+            android:icon="@mipmap/ic_shortcut_list"
+            android:label="@string/title_user_list"
+            android:theme="@style/Theme.Twidere.NoDisplay">
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".activity.RequestPermissionsActivity"
             android:label="@string/permissions_request"
             android:theme="@style/Theme.Twidere.Dialog">

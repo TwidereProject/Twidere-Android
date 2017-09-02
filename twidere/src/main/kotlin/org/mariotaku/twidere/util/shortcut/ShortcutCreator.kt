@@ -44,6 +44,7 @@ import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.showProgressDialog
 import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.model.ParcelableUser
+import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.dagger.DependencyHolder
@@ -127,6 +128,19 @@ object ShortcutCreator {
         builder.setIntent(launchIntent)
         builder.setShortLabel(userColorNameManager.getDisplayName(user, preferences[nameFirstKey]))
         builder.setIcon(IconCompat.createWithResource(context, R.mipmap.ic_shortcut_gallery))
+        return Promise.of(builder.build())
+    }
+
+    fun userListTimeline(context: Context, accountKey: UserKey?, list: ParcelableUserList): Promise<ShortcutInfoCompat, Exception> {
+        val holder = DependencyHolder.get(context)
+        val preferences = holder.preferences
+        val userColorNameManager = holder.userColorNameManager
+        val launchIntent = IntentUtils.userListTimeline(accountKey, list.id,
+                list.user_key, list.user_screen_name, list.name)
+        val builder = ShortcutInfoCompat.Builder(context, "$accountKey:user-list-timeline:${list.id}")
+        builder.setIntent(launchIntent)
+        builder.setShortLabel(userColorNameManager.getDisplayName(list, preferences[nameFirstKey]))
+        builder.setIcon(IconCompat.createWithResource(context, R.mipmap.ic_shortcut_list))
         return Promise.of(builder.build())
     }
 
