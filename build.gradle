@@ -105,10 +105,17 @@ subprojects {
                     exclude 'META-INF/ASL2.0'
                 }
 
-                if (android.hasProperty('buildTypes') && project.plugins.hasPlugin('com.android.application')) {
-                    android.buildTypes.each { buildType ->
-                        def file = rootProject.file('private/signing.properties')
-                        if (file.exists()) {
+                def file = rootProject.file('private/signing.properties')
+                if (project.plugins.hasPlugin('com.android.application') && file.exists()) {
+                    if (android.hasProperty('buildTypes')) {
+                        android.buildTypes.each { buildType ->
+                            def cfg = signingConfigs.maybeCreate(buildType.name)
+                            loadSigningConfig(cfg, file)
+                            buildType.signingConfig = cfg
+                        }
+                    }
+                    if (android.hasProperty('applicationVariants')) {
+                        android.applicationVariants.each { buildType ->
                             def cfg = signingConfigs.maybeCreate(buildType.name)
                             loadSigningConfig(cfg, file)
                             buildType.signingConfig = cfg
