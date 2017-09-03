@@ -36,6 +36,7 @@ import org.attoparser.ParseException
 import org.mariotaku.ktextension.dismissDialogFragment
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.extension.applyDefault
 import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator
@@ -285,12 +286,5 @@ class BrowserSignInActivity : BaseActivity() {
         private const val INJECT_CONTENT = "javascript:window.injector.processHTML('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');"
         private const val TAG_BROWSER_WINDOW = "browser_window"
 
-        @SuppressLint("SetJavaScriptEnabled")
-        private fun WebSettings.applyDefault() {
-            loadsImagesAutomatically = true
-            javaScriptEnabled = true
-            blockNetworkImage = false
-            saveFormData = true
-        }
     }
 }

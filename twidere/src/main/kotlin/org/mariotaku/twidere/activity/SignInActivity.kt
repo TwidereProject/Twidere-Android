@@ -574,9 +574,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val builder = AlertDialog.Builder(context)
             builder.setView(R.layout.dialog_expandable_list)
             val dialog = builder.create()
-            dialog.onShow { dialog ->
-                dialog.applyTheme()
-                val listView = dialog.expandableList
+            dialog.onShow {
+                it.applyTheme()
+                val listView = it.expandableList
                 val adapter = LoginTypeAdapter(context)
                 listView.setAdapter(adapter)
                 listView.setOnGroupClickListener { _, _, groupPosition, _ ->
@@ -822,7 +822,6 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val apiUser = twitter.verifyCredentials()
             var color = analyseUserProfileColor(apiUser)
             val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
-            val userId = apiUser.id
             val accountKey = apiUser.key
             val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
             val am = AccountManager.get(context)
@@ -913,7 +912,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                     verificationCallback, userAgent)
             val accessToken = authenticator.getOAuthAccessToken(username, password)
             val userId = accessToken.userId
-            return getOAuthSignInResponse(activity, accessToken, userId, Credentials.Type.OAUTH)
+            return getOAuthSignInResponse(activity, accessToken, Credentials.Type.OAUTH)
         }
 
         @Throws(MicroBlogException::class)
@@ -936,7 +935,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                         accountType = apiConfig.type, cls = MicroBlog::class.java)
                 return@run microBlog.verifyCredentials().id
             }
-            return getOAuthSignInResponse(activity, accessToken, userId, Credentials.Type.XAUTH)
+            return getOAuthSignInResponse(activity, accessToken, Credentials.Type.XAUTH)
         }
 
         @Throws(MicroBlogException::class, OAuthPasswordAuthenticator.AuthenticationException::class)
@@ -960,7 +959,6 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                 throw e
             }
 
-            val userId = apiUser.id!!
             var color = analyseUserProfileColor(apiUser)
             val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
             val accountKey = apiUser.key
@@ -990,7 +988,6 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val twitter = newMicroBlogInstance(activity, endpoint = endpoint, auth = auth,
                     accountType = apiConfig.type, cls = MicroBlog::class.java)
             val apiUser = twitter.verifyCredentials()
-            val userId = apiUser.id!!
             var color = analyseUserProfileColor(apiUser)
             val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
             val accountKey = apiUser.key
@@ -1010,7 +1007,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
 
         @Throws(MicroBlogException::class)
         private fun getOAuthSignInResponse(activity: SignInActivity, accessToken: OAuthToken,
-                userId: String, @Credentials.Type authType: String): SignInResponse {
+                @Credentials.Type authType: String): SignInResponse {
             val auth = apiConfig.getOAuthAuthorization(accessToken) ?:
                     throw MicroBlogException("Invalid OAuth credential")
             val endpoint = MicroBlogAPIFactory.getOAuthRestEndpoint(apiUrlFormat,

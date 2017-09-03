@@ -28,7 +28,7 @@ import android.support.v4.content.Loader
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.KeyEvent
-import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.commons.parcel.ParcelUtils
@@ -167,8 +167,8 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         loaderManager.restartLoader(0, loaderArgs, this)
     }
 
-    override fun onCreateAdapter(context: Context): ParcelableUsersAdapter {
-        val adapter = ParcelableUsersAdapter(context, Glide.with(this))
+    override fun onCreateAdapter(context: Context, requestManager: RequestManager): ParcelableUsersAdapter {
+        val adapter = ParcelableUsersAdapter(context, this.requestManager)
         adapter.simpleLayout = simpleLayout
         adapter.showFollow = showFollow
         val accountType = arguments.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)?.let { key ->

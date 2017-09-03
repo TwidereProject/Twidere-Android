@@ -33,7 +33,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.OnScrollListener
 import android.view.*
-import com.bumptech.glide.Glide
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.kpreferences.get
@@ -55,6 +54,7 @@ import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.readFromBottomKey
 import org.mariotaku.twidere.constant.rememberPositionKey
+import org.mariotaku.twidere.extension.model.activityStatus
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.*
@@ -62,7 +62,6 @@ import org.mariotaku.twidere.model.analyzer.Share
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.extension.model.activityStatus
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
@@ -104,7 +103,8 @@ abstract class AbsActivitiesFragment protected constructor() :
         registerForContextMenu(recyclerView)
         navigationHelper = RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter,
                 this)
-        pauseOnScrollListener = PauseRecyclerViewOnScrollListener(false, false, Glide.with(this))
+        pauseOnScrollListener = PauseRecyclerViewOnScrollListener(false, false,
+                requestManager)
 
         val loaderArgs = Bundle(arguments)
         loaderArgs.putBoolean(EXTRA_FROM_USER, true)
@@ -212,8 +212,8 @@ abstract class AbsActivitiesFragment protected constructor() :
         val readFromBottom = preferences[readFromBottomKey]
         val firstLoad = adapterData.isNullOrEmpty()
 
-        var lastReadId: Long = -1
-        var lastReadViewTop: Int = 0
+        var lastReadId = -1L
+        var lastReadViewTop = 0
         var loadMore = false
         var wasAtTop = false
 

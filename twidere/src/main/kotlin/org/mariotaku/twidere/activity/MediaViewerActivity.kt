@@ -48,7 +48,6 @@ import org.mariotaku.mediaviewer.library.*
 import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewerFragment.EXTRA_MEDIA_URI
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
-import org.mariotaku.twidere.activity.iface.IBaseActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarShowHideHelper
 import org.mariotaku.twidere.annotation.CacheFileType
 import org.mariotaku.twidere.extension.addSystemUiVisibility
@@ -97,13 +96,14 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         return@lazy intent.getNullableTypedArrayExtra<ParcelableMedia>(EXTRA_MEDIA) ?: emptyArray()
     }
 
-    private val currentFragment: MediaViewerFragment? get() {
-        val viewPager = findViewPager()
-        val adapter = viewPager.adapter
-        val currentItem = viewPager.currentItem
-        if (currentItem < 0 || currentItem >= adapter.count) return null
-        return adapter.instantiateItem(viewPager, currentItem) as? MediaViewerFragment
-    }
+    private val currentFragment: MediaViewerFragment?
+        get() {
+            val viewPager = findViewPager()
+            val adapter = viewPager.adapter
+            val currentItem = viewPager.currentItem
+            if (currentItem < 0 || currentItem >= adapter.count) return null
+            return adapter.instantiateItem(viewPager, currentItem) as? MediaViewerFragment
+        }
 
     override val shouldApplyWindowBackground: Boolean = false
 
@@ -120,6 +120,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
             }
             return 0f
         }
+        @SuppressLint("RestrictedApi")
         set(offset) {
             val actionBar = supportActionBar
             if (actionBar != null && !hideOffsetNotSupported) {
@@ -461,50 +462,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         val f = adapter.instantiateItem(viewPager, shareMediaPosition) as? MediaViewerFragment ?: return
         val fileInfo = f.cacheFileInfo() ?: return
         val destination = ShareProvider.getFilesDir(this) ?: return
-        val task = object : SaveFileTask(this@MediaViewerActivity, destination, fileInfo) {
-            private val PROGRESS_FRAGMENT_TAG = "progress"
-
-            override fun dismissProgress() {
-                val activity = context as IBaseActivity<*>
-                activity.executeAfterFragmentResumed { activity ->
-                    val fm = activity.supportFragmentManager
-                    val fragment = fm.findFragmentByTag(PROGRESS_FRAGMENT_TAG) as? DialogFragment
-                    fragment?.dismiss()
-                }
-            }
-
-            override fun showProgress() {
-                val activity = context as IBaseActivity<*>
-                activity.executeAfterFragmentResumed { activity ->
-                    val fragment = ProgressDialogFragment()
-                    fragment.isCancelable = false
-                    fragment.show(activity.supportFragmentManager, PROGRESS_FRAGMENT_TAG)
-                }
-            }
-
-            override fun onFileSaved(savedFile: File, mimeType: String?) {
-                val activity = context as MediaViewerActivity
-
-                val fileUri = ShareProvider.getUriForFile(activity, AUTHORITY_TWIDERE_SHARE,
-                        savedFile)
-
-                val intent = Intent(Intent.ACTION_SEND)
-                intent.setDataAndType(fileUri, mimeType)
-                intent.putExtra(Intent.EXTRA_STREAM, fileUri)
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    intent.addFlags(Intent.FLAG_GRANT_PREFIX_URI_PERMISSION)
-                }
-                activity.processShareIntent(intent)
-                startActivityForResult(Intent.createChooser(intent, activity.getString(R.string.action_share)),
-                        REQUEST_SHARE_MEDIA)
-            }
-
-            override fun onFileSaveFailed() {
-                val activity = context as MediaViewerActivity
-                Toast.makeText(activity, R.string.message_toast_error_occurred, Toast.LENGTH_SHORT).show()
-            }
-        }
+        val task = SaveMediaTask(this, destination, fileInfo)
         task.execute()
     }
 
@@ -550,6 +508,53 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         }
     }
 
+    class SaveMediaTask(activity: MediaViewerActivity, destination: File, fileInfo: FileInfo) :
+            SaveFileTask(activity, destination, fileInfo) {
+        private val PROGRESS_FRAGMENT_TAG = "progress"
+
+        override fun dismissProgress() {
+            val activity = context as? MediaViewerActivity ?: return
+
+            activity.executeAfterFragmentResumed {
+                val fm = it.supportFragmentManager
+                val fragment = fm.findFragmentByTag(PROGRESS_FRAGMENT_TAG) as? DialogFragment
+                fragment?.dismiss()
+            }
+        }
+
+        override fun showProgress() {
+            val activity = context as? MediaViewerActivity ?: return
+
+            activity.executeAfterFragmentResumed {
+                val fragment = ProgressDialogFragment()
+                fragment.isCancelable = false
+                fragment.show(it.supportFragmentManager, PROGRESS_FRAGMENT_TAG)
+            }
+        }
+
+        override fun onFileSaved(savedFile: File, mimeType: String?) {
+            val activity = context as? MediaViewerActivity ?: return
+
+            val fileUri = ShareProvider.getUriForFile(activity, AUTHORITY_TWIDERE_SHARE,
+                    savedFile)
+
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.setDataAndType(fileUri, mimeType)
+            intent.putExtra(Intent.EXTRA_STREAM, fileUri)
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                intent.addFlags(Intent.FLAG_GRANT_PREFIX_URI_PERMISSION)
+            }
+            activity.processShareIntent(intent)
+            activity.startActivityForResult(Intent.createChooser(intent, activity.getString(R.string.action_share)),
+                    REQUEST_SHARE_MEDIA)
+        }
+
+        override fun onFileSaveFailed() {
+            val activity = context as? MediaViewerActivity ?: return
+            Toast.makeText(activity, R.string.message_toast_error_occurred, Toast.LENGTH_SHORT).show()
+        }
+    }
     companion object {
 
         private val REQUEST_SHARE_MEDIA = 201

@@ -21,6 +21,7 @@ package org.mariotaku.twidere.fragment.users
 
 import android.content.Context
 import android.os.Bundle
+import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.adapter.ParcelableUsersAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
@@ -39,8 +40,8 @@ class StatusFavoritersListFragment : ParcelableUsersFragment() {
         return StatusFavoritersLoader(context, accountKey, statusId, adapter.getData(), false)
     }
 
-    override fun onCreateAdapter(context: Context): ParcelableUsersAdapter {
-        return super.onCreateAdapter(context).apply {
+    override fun onCreateAdapter(context: Context, requestManager: RequestManager): ParcelableUsersAdapter {
+        return super.onCreateAdapter(context, requestManager).apply {
             loadMoreSupportedPosition = ILoadMoreSupportAdapter.NONE
         }
     }

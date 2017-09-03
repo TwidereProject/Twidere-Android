@@ -88,7 +88,7 @@ class TintedStatusRelativeLayout(context: Context, attrs: AttributeSet? = null) 
 
     override fun dispatchDraw(canvas: Canvas) {
         super.dispatchDraw(canvas)
-        canvas.drawRect(0f, 0f, canvas.width.toFloat(), statusBarHeight.toFloat(), colorPaint)
+        canvas.drawRect(0f, 0f, width.toFloat(), statusBarHeight.toFloat(), colorPaint)
     }
 
     override fun isPostApplyTheme(): Boolean {

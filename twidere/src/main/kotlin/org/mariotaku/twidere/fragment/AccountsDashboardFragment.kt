@@ -51,7 +51,6 @@ import android.view.*
 import android.view.View.OnClickListener
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.header_drawer_account_selector.view.*
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.kpreferences.get
@@ -123,7 +122,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     @SuppressLint("RestrictedApi")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        accountsAdapter = AccountSelectorAdapter(layoutInflater, preferences, Glide.with(this)).also {
+        accountsAdapter = AccountSelectorAdapter(layoutInflater, preferences, requestManager).also {
             it.listener = this
         }
         accountsSelector.adapter = accountsAdapter
@@ -475,7 +474,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
                 clickedColors = clickedImageView.borderColors
                 val oldSelectedAccount = accountsAdapter.selectedAccount ?: return
                 val profileImageStyle = preferences[profileImageStyleKey]
-                Glide.with(this@AccountsDashboardFragment).loadProfileImage(context, oldSelectedAccount,
+                requestManager.loadProfileImage(context, oldSelectedAccount,
                         profileImageStyle, clickedImageView.cornerRadius, clickedImageView.cornerRadiusRatio)
                         .into(clickedImageView).onLoadStarted(profileDrawable)
                 //TODO complete border color
@@ -537,7 +536,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             ColorDrawable(Chameleon.getOverrideTheme(activity, activity).colorPrimary)
         }
 
-        Glide.with(this).loadProfileBanner(context, account.user, width).fallback(fallbackBanner)
+        requestManager.loadProfileBanner(context, account.user, width).fallback(fallbackBanner)
                 .into(bannerView)
     }
 
@@ -546,7 +545,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         val account = accountsAdapter.selectedAccount ?: return
         accountProfileNameView.spannable = account.user.name
         accountProfileScreenNameView.spannable = "@${account.user.screen_name}"
-        Glide.with(this).loadProfileImage(context, account, preferences[profileImageStyleKey],
+        requestManager.loadProfileImage(context, account, preferences[profileImageStyleKey],
                 accountProfileImageView.cornerRadius, accountProfileImageView.cornerRadiusRatio,
                 ProfileImageSize.REASONABLY_SMALL).placeholder(profileImageSnapshot).into(accountProfileImageView)
         //TODO complete border color

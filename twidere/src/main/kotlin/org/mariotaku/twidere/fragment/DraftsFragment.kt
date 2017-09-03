@@ -40,7 +40,6 @@ import android.widget.AbsListView.MultiChoiceModeListener
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ListView
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_drafts.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.setItemAvailability
@@ -72,7 +71,7 @@ class DraftsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, OnItemClickList
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
-        adapter = DraftsAdapter(activity, Glide.with(this)).apply {
+        adapter = DraftsAdapter(activity, requestManager).apply {
             textSize = preferences[textSizeKey].toFloat()
         }
 

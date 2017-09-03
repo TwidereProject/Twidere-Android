@@ -72,7 +72,7 @@ interface IBaseFragment<out F : Fragment> {
 
     fun executeAfterFragmentResumed(useHandler: Boolean = false, action: (F) -> Unit): Promise<Unit, Exception>
 
-    class ActionHelper<out F : Fragment>(private val fragment: F) {
+    class ActionHelper<F : Fragment> {
 
         private val handler: Handler = Handler(Looper.getMainLooper())
 
@@ -83,32 +83,31 @@ interface IBaseFragment<out F : Fragment> {
             fragmentResumed = false
         }
 
-        fun dispatchOnResumeFragments() {
+        fun dispatchOnResumeFragments(fragment: F) {
             fragmentResumed = true
-            executePending()
+            executePending(fragment)
         }
 
-        private fun executePending() {
+        private fun executePending(fragment: F) {
             if (!fragmentResumed) return
             var info: ExecuteInfo<F>?
             do {
-                val cur = actionQueue.poll()
-                cur?.let { cur ->
-                    if (cur.useHandler) {
-                        handler.post { cur.invoke(fragment) }
+                info = actionQueue.poll()
+                info?.let { i ->
+                    if (i.useHandler) {
+                        handler.post { i.invoke(fragment) }
                     } else {
-                        cur.invoke(fragment)
+                        i.invoke(fragment)
                     }
                 }
-                info = cur
             } while (info != null)
         }
 
-        fun executeAfterFragmentResumed(useHandler: Boolean = false, action: (F) -> Unit)
+        fun executeAfterFragmentResumed(fragment: F, useHandler: Boolean = false, action: (F) -> Unit)
                 : Promise<Unit, Exception> {
             val info = ExecuteInfo(action, useHandler)
             actionQueue.add(info)
-            executePending()
+            executePending(fragment)
             return info.promise
         }
 

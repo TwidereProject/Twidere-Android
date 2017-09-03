@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.fragment
 
 import android.content.Context
-import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.TwidereConstants.NOTIFICATION_ID_INTERACTIONS_TIMELINE
@@ -50,8 +50,8 @@ class InteractionsTimelineFragment : CursorActivitiesFragment() {
     override val timelineSyncTag: String?
         get() = getTimelineSyncTag(accountKeys)
 
-    override fun onCreateAdapter(context: Context): ParcelableActivitiesAdapter {
-        val adapter = ParcelableActivitiesAdapter(context, Glide.with(this))
+    override fun onCreateAdapter(context: Context, requestManager: RequestManager): ParcelableActivitiesAdapter {
+        val adapter = ParcelableActivitiesAdapter(context, requestManager)
         val extras: InteractionsTabExtras? = arguments.getParcelable(EXTRA_EXTRAS)
         if (extras != null) {
             adapter.followingOnly = extras.isMyFollowingOnly

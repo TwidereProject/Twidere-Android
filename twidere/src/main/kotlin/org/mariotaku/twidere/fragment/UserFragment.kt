@@ -73,7 +73,6 @@ import android.view.View.OnTouchListener
 import android.view.animation.AnimationUtils
 import android.widget.TextView
 import android.widget.Toast
-import com.bumptech.glide.Glide
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_user.*
 import kotlinx.android.synthetic.main.fragment_user.view.*
@@ -502,7 +501,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         }
         val defWidth = resources.displayMetrics.widthPixels
         val width = if (bannerWidth > 0) bannerWidth else defWidth
-        val requestManager = Glide.with(this)
         requestManager.loadProfileBanner(context, user, width).into(profileBanner)
         requestManager.loadOriginalProfileImage(context, user, profileImage.style,
                 profileImage.cornerRadius, profileImage.cornerRadiusRatio)

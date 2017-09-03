@@ -35,7 +35,6 @@ import android.text.SpannableStringBuilder
 import android.text.TextUtils
 import android.text.style.ReplacementSpan
 import android.view.*
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_messages_conversation_new.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
@@ -99,7 +98,7 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
-        usersAdapter = SelectableUsersAdapter(context, Glide.with(this))
+        usersAdapter = SelectableUsersAdapter(context, requestManager)
         recyclerView.adapter = usersAdapter
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 

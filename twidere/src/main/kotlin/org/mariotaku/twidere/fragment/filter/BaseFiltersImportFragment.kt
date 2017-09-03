@@ -14,7 +14,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.CheckBox
 import android.widget.Toast
-import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.dialog_block_mute_filter_user_confirm.*
 import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.task
@@ -168,7 +168,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
         val cursorLoader = loader as AbsRequestUsersLoader
         nextPagination = cursorLoader.nextPagination
         prevPagination = cursorLoader.prevPagination
-        activity.supportInvalidateOptionsMenu()
+        activity.invalidateOptionsMenu()
     }
 
     override fun onLoadMoreContents(@IndicatorPosition position: Long) {
@@ -182,8 +182,8 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
         loaderManager.restartLoader(0, loaderArgs, this)
     }
 
-    override fun onCreateAdapter(context: Context): SelectableUsersAdapter {
-        val adapter = SelectableUsersAdapter(context, Glide.with(this))
+    override fun onCreateAdapter(context: Context, requestManager: RequestManager): SelectableUsersAdapter {
+        val adapter = SelectableUsersAdapter(context, this.requestManager)
         adapter.itemCheckedListener = listener@ { _, _ ->
             if (!extraFeaturesService.isEnabled(ExtraFeaturesService.FEATURE_FILTERS_IMPORT)) {
                 ExtraFeaturesIntroductionDialogFragment.show(fragmentManager,
@@ -198,7 +198,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
             } else {
                 null
             }
-            activity.supportInvalidateOptionsMenu()
+            activity.invalidateOptionsMenu()
             return@listener true
         }
         return adapter
@@ -249,10 +249,10 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
             builder.setPositiveButton(android.R.string.ok, this)
             builder.setNegativeButton(android.R.string.cancel, null)
             val dialog = builder.create()
-            dialog.onShow { dialog ->
-                dialog.applyTheme()
-                val confirmMessageView = dialog.confirmMessage
-                val filterEverywhereHelp = dialog.filterEverywhereHelp
+            dialog.onShow {
+                it.applyTheme()
+                val confirmMessageView = it.confirmMessage
+                val filterEverywhereHelp = it.filterEverywhereHelp
                 filterEverywhereHelp.setOnClickListener {
                     MessageDialogFragment.show(childFragmentManager, title = getString(R.string.filter_everywhere),
                             message = getString(R.string.filter_everywhere_description), tag = "filter_everywhere_help")

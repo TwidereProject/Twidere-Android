@@ -65,7 +65,6 @@ import org.mariotaku.twidere.model.FiltersData
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.text.style.EmojiSpan
-import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.ParseUtils
 import org.mariotaku.twidere.util.ThemeUtils
 
@@ -279,8 +278,6 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val activity = activity
-            val context = activity
             val builder = AlertDialog.Builder(context)
             builder.setView(R.layout.dialog_auto_complete_textview)
 
@@ -304,7 +301,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
                     if (autoCompleteType == AUTO_COMPLETE_TYPE_SOURCES) {
                         userAutoCompleteAdapter = SourceAutoCompleteAdapter(activity)
                     } else {
-                        val adapter = ComposeAutoCompleteAdapter(activity, Glide.with(this))
+                        val adapter = ComposeAutoCompleteAdapter(activity, requestManager)
                         val am = AccountManager.get(activity)
                         adapter.account = AccountUtils.getDefaultAccountDetails(activity, am, false)
                         userAutoCompleteAdapter = adapter

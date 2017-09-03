@@ -35,6 +35,7 @@ import android.view.View
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
+import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.activity_main.*
 import nl.komponents.kovenant.Promise
 import org.mariotaku.chameleon.Chameleon
@@ -72,9 +73,19 @@ import javax.inject.Inject
 
 open class MainActivity : ChameleonActivity(), IBaseActivity<MainActivity> {
 
+    @Inject
+    lateinit var restHttpClient: RestHttpClient
+
+    @Inject
+    lateinit var preferences: SharedPreferences
+
+    @Inject
+    lateinit var jsonCache: JsonCache
+
     private val handler = Handler(Looper.getMainLooper())
     private val launchLaterRunnable: Runnable = Runnable { launchMain() }
-    private val actionHelper = IBaseActivity.ActionHelper(this)
+
+    private val actionHelper = IBaseActivity.ActionHelper<MainActivity>()
 
     private var isNightBackup: Int = TwilightManagerAccessor.UNSPECIFIED
 
@@ -86,14 +97,7 @@ open class MainActivity : ChameleonActivity(), IBaseActivity<MainActivity> {
         return@lazy ThemeUtils.getUserTheme(this, themePreferences)
     }
 
-    @Inject
-    lateinit var restHttpClient: RestHttpClient
-
-    @Inject
-    lateinit var preferences: SharedPreferences
-
-    @Inject
-    lateinit var jsonCache: JsonCache
+    private lateinit var requestManager: RequestManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         if (BuildConfig.DEBUG) {
@@ -107,6 +111,7 @@ open class MainActivity : ChameleonActivity(), IBaseActivity<MainActivity> {
         }
         super.onCreate(savedInstanceState)
         GeneralComponent.get(this).inject(this)
+        requestManager = Glide.with(this)
         setContentView(R.layout.activity_main)
 
         if (!preferences[promotionsEnabledKey]) {
@@ -168,6 +173,21 @@ open class MainActivity : ChameleonActivity(), IBaseActivity<MainActivity> {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        requestManager.onStart()
+    }
+
+    override fun onStop() {
+        requestManager.onStop()
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        requestManager.onDestroy()
+        super.onDestroy()
+    }
+
     override fun onPause() {
         actionHelper.dispatchOnPause()
         super.onPause()
@@ -180,11 +200,11 @@ open class MainActivity : ChameleonActivity(), IBaseActivity<MainActivity> {
 
     override fun onResumeFragments() {
         super.onResumeFragments()
-        actionHelper.dispatchOnResumeFragments()
+        actionHelper.dispatchOnResumeFragments(this)
     }
 
     override fun executeAfterFragmentResumed(useHandler: Boolean, action: (MainActivity) -> Unit): Promise<Unit, Exception> {
-        return actionHelper.executeAfterFragmentResumed(useHandler, action)
+        return actionHelper.executeAfterFragmentResumed(this, useHandler, action)
     }
 
     override fun getOverrideTheme(): Chameleon.Theme? {

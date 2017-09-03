@@ -28,7 +28,7 @@ import android.view.ContextMenu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.activity_premium_dashboard.*
 import org.mariotaku.abstask.library.TaskStarter
@@ -134,8 +134,8 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
         showContentOrError()
     }
 
-    override fun onCreateAdapter(context: Context): MessagesEntriesAdapter {
-        return MessagesEntriesAdapter(context, Glide.with(this))
+    override fun onCreateAdapter(context: Context, requestManager: RequestManager): MessagesEntriesAdapter {
+        return MessagesEntriesAdapter(context, this.requestManager)
     }
 
     override fun triggerRefresh(): Boolean {

@@ -272,7 +272,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
             val positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
 
             val iconsAdapter = TabIconsAdapter(context)
-            val accountsAdapter = AccountsSpinnerAdapter(context, requestManager = Glide.with(this))
+            val accountsAdapter = AccountsSpinnerAdapter(context, requestManager = requestManager)
             iconSpinner.adapter = iconsAdapter
             accountSpinner.adapter = accountsAdapter
 

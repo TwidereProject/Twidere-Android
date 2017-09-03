@@ -26,6 +26,7 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.ItemDecoration
 import android.view.*
+import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import kotlinx.android.synthetic.main.layout_content_fragment_common.*
 import org.mariotaku.twidere.R
@@ -186,7 +187,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
                 R.color.bg_refresh_progress_color_light, R.color.bg_refresh_progress_color_dark)
         swipeLayout.setOnRefreshListener(this)
         swipeLayout.setProgressBackgroundColorSchemeResource(colorRes)
-        adapter = onCreateAdapter(context)
+        adapter = onCreateAdapter(context, requestManager)
         layoutManager = onCreateLayoutManager(context)
         scrollListener = RecyclerViewScrollHandler(this, RecyclerViewScrollHandler.RecyclerViewCallback(recyclerView))
 
@@ -271,8 +272,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
         return false
     }
 
-    protected abstract fun onCreateAdapter(context: Context): A
-
+    protected abstract fun onCreateAdapter(context: Context, requestManager: RequestManager): A
 
     protected open fun onCreateItemDecoration(context: Context, recyclerView: RecyclerView,
             layoutManager: L): ItemDecoration? {

@@ -25,7 +25,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.app.hasRunningLoadersSafe
 import android.support.v4.content.Loader
 import android.support.v7.widget.StaggeredGridLayoutManager
-import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.adapter.StaggeredGridParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_FROM_USER
@@ -81,8 +81,8 @@ abstract class AbsMediaStatusesFragment : AbsContentRecyclerViewFragment<Stagger
         layoutManager.scrollToPositionWithOffset(position, offset)
     }
 
-    override final fun onCreateAdapter(context: Context): StaggeredGridParcelableStatusesAdapter {
-        return StaggeredGridParcelableStatusesAdapter(context, Glide.with(this))
+    override final fun onCreateAdapter(context: Context, requestManager: RequestManager): StaggeredGridParcelableStatusesAdapter {
+        return StaggeredGridParcelableStatusesAdapter(context, requestManager)
     }
 
     override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableStatus>?> {

@@ -503,7 +503,7 @@ class DetailStatusViewHolder(
     private class CountsUsersAdapter(
             private val fragment: StatusFragment,
             private val statusAdapter: StatusDetailsAdapter
-    ) : BaseRecyclerViewAdapter<RecyclerView.ViewHolder>(statusAdapter.context, Glide.with(fragment)) {
+    ) : BaseRecyclerViewAdapter<RecyclerView.ViewHolder>(statusAdapter.context, fragment.requestManager) {
 
         private val inflater = LayoutInflater.from(statusAdapter.context)
 

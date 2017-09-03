@@ -24,7 +24,7 @@ import android.os.Bundle
 import android.support.v4.app.hasRunningLoadersSafe
 import android.support.v4.content.Loader
 import android.text.TextUtils
-import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.squareup.otto.Subscribe
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
@@ -128,8 +128,8 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         return ParcelableStatusesBusCallback()
     }
 
-    override fun onCreateAdapter(context: Context): ListParcelableStatusesAdapter {
-        return ListParcelableStatusesAdapter(context, Glide.with(this))
+    override fun onCreateAdapter(context: Context, requestManager: RequestManager): ListParcelableStatusesAdapter {
+        return ListParcelableStatusesAdapter(context, this.requestManager)
     }
 
     override fun onStatusesLoaded(loader: Loader<List<ParcelableStatus>?>, data: List<ParcelableStatus>?) {

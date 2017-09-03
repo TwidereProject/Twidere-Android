@@ -94,7 +94,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         val am = AccountManager.get(this)
         val accounts = AccountUtils.getAllAccountDetails(am, AccountUtils.getAccounts(am), true).toList()
         val accountsSpinnerAdapter = AccountsSpinnerAdapter(this, R.layout.spinner_item_account_icon,
-                requestManager = Glide.with(this))
+                requestManager = requestManager)
         accountsSpinnerAdapter.setDropDownViewResource(R.layout.list_item_simple_user)
         accountsSpinnerAdapter.addAll(accounts)
         accountSpinner.adapter = accountsSpinnerAdapter
@@ -357,7 +357,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
 
         private val profileImageStyle = activity.preferences[profileImageStyleKey]
         private val profileImageSize = activity.getString(R.string.profile_image_size)
-        private val requestManager = Glide.with(activity)
+        private val requestManager = activity.requestManager
         private val inflater = LayoutInflater.from(activity)
         private val userColorNameManager = activity.userColorNameManager
         private val removedPositions = SortableIntList()

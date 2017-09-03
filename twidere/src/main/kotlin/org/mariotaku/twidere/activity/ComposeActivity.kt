@@ -216,7 +216,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         bottomMenuAnimator = ViewAnimator()
         bottomMenuAnimator.setupViews()
 
-        mediaPreviewAdapter = MediaPreviewAdapter(this, Glide.with(this))
+        mediaPreviewAdapter = MediaPreviewAdapter(this, requestManager)
         mediaPreviewAdapter.listener = object : MediaPreviewAdapter.Listener {
             override fun onEditClick(position: Int, holder: MediaPreviewViewHolder) {
                 attachedMediaPreview.showContextMenuForChild(holder.itemView)
@@ -872,7 +872,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             } else {
                 accountProfileImage.clearColorFilter()
                 accountProfileImage.scaleType = ImageView.ScaleType.CENTER_CROP
-                Glide.with(this).loadProfileImage(this, single, accountProfileImage.style)
+                requestManager.loadProfileImage(this, single, accountProfileImage.style)
                         .into(accountProfileImage)
             }
 
@@ -1947,7 +1947,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private class AccountIconsAdapter(
             private val activity: ComposeActivity
-    ) : BaseRecyclerViewAdapter<AccountIconViewHolder>(activity, Glide.with(activity)) {
+    ) : BaseRecyclerViewAdapter<AccountIconViewHolder>(activity, activity.requestManager) {
         private val inflater: LayoutInflater = activity.layoutInflater
         private val selection: MutableMap<UserKey, Boolean> = HashMap()
 

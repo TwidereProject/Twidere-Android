@@ -33,7 +33,7 @@ interface IBaseActivity<out A : FragmentActivity> {
 
     fun executeAfterFragmentResumed(useHandler: Boolean = false, action: (A) -> Unit): Promise<Unit, Exception>
 
-    class ActionHelper<out A : FragmentActivity>(private val activity: A) {
+    class ActionHelper<A : FragmentActivity> {
 
         private var fragmentResumed: Boolean = false
         private val actionQueue = LinkedList<ExecuteInfo<A>>()
@@ -43,33 +43,32 @@ interface IBaseActivity<out A : FragmentActivity> {
             fragmentResumed = false
         }
 
-        fun dispatchOnResumeFragments() {
+        fun dispatchOnResumeFragments(activity: A) {
             fragmentResumed = true
-            executePending()
+            executePending(activity)
         }
 
 
-        private fun executePending() {
+        private fun executePending(activity: A) {
             if (!fragmentResumed) return
             var info: ExecuteInfo<A>?
             do {
-                val cur = actionQueue.poll()
-                cur?.let { cur ->
-                    if (cur.useHandler) {
-                        handler.post { cur.invoke(activity) }
+                info = actionQueue.poll()
+                info?.let { i ->
+                    if (i.useHandler) {
+                        handler.post { i.invoke(activity) }
                     } else {
-                        cur.invoke(activity)
+                        i.invoke(activity)
                     }
                 }
-                info = cur
             } while (info != null)
         }
 
-        fun executeAfterFragmentResumed(useHandler: Boolean = false, action: (A) -> Unit)
+        fun executeAfterFragmentResumed(activity: A, useHandler: Boolean = false, action: (A) -> Unit)
                 : Promise<Unit, Exception> {
             val info = ExecuteInfo(action, useHandler)
             actionQueue.add(info)
-            executePending()
+            executePending(activity)
             return info.promise
         }
 

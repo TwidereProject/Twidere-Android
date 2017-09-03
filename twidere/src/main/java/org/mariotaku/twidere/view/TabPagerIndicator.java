@@ -374,7 +374,7 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
         @Override
         protected void onDraw(Canvas canvas) {
             if (mIsCurrent) {
-                final int width = canvas.getWidth(), height = canvas.getHeight();
+                final int width = getWidth(), height = getHeight();
                 canvas.drawRect(0, height - mStripHeight, width, height, mStripPaint);
             }
             super.onDraw(canvas);
