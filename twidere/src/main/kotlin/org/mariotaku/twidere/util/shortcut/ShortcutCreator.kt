@@ -132,14 +132,11 @@ object ShortcutCreator {
     }
 
     fun userListTimeline(context: Context, accountKey: UserKey?, list: ParcelableUserList): Promise<ShortcutInfoCompat, Exception> {
-        val holder = DependencyHolder.get(context)
-        val preferences = holder.preferences
-        val userColorNameManager = holder.userColorNameManager
         val launchIntent = IntentUtils.userListTimeline(accountKey, list.id,
                 list.user_key, list.user_screen_name, list.name)
         val builder = ShortcutInfoCompat.Builder(context, "$accountKey:user-list-timeline:${list.id}")
         builder.setIntent(launchIntent)
-        builder.setShortLabel(userColorNameManager.getDisplayName(list, preferences[nameFirstKey]))
+        builder.setShortLabel(list.name)
         builder.setIcon(IconCompat.createWithResource(context, R.mipmap.ic_shortcut_list))
         return Promise.of(builder.build())
     }

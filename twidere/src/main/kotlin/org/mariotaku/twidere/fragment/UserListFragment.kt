@@ -31,6 +31,7 @@ import android.os.Bundle
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.FixedAsyncTaskLoader
 import android.support.v4.content.Loader
+import android.support.v4.content.pm.ShortcutManagerCompat
 import android.support.v7.app.AlertDialog
 import android.text.TextUtils
 import android.util.Log
@@ -66,6 +67,7 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.UserListSubscriptionEvent
 import org.mariotaku.twidere.model.event.UserListUpdatedEvent
 import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.shortcut.ShortcutCreator
 
 class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
         LoaderCallbacks<SingleResponse<ParcelableUserList>>, SystemWindowInsetsCallback,
@@ -204,11 +206,13 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
             extensionsIntent.setExtrasClassLoader(TwidereApplication::class.java.classLoader)
             extensionsIntent.putExtra(EXTRA_USER_LIST, userList)
             MenuUtils.addIntentToMenu(activity, menu, extensionsIntent, MENU_GROUP_USER_LIST_EXTENSION)
+            menu.setItemAvailability(R.id.add_to_home_screen_submenu, ShortcutManagerCompat.isRequestPinShortcutSupported(context))
         } else {
             menu.setItemAvailability(R.id.edit, false)
             menu.setItemAvailability(R.id.follow, false)
             menu.setItemAvailability(R.id.add, false)
             menu.setItemAvailability(R.id.delete, false)
+            menu.setItemAvailability(R.id.add_to_home_screen_submenu, false)
         }
     }
 
@@ -258,6 +262,11 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
                 df.arguments = Bundle()
                 df.arguments.putParcelable(EXTRA_USER_LIST, userList)
                 df.show(childFragmentManager, "user_list_details")
+            }
+            R.id.add_statuses_to_home_screen -> {
+                ShortcutCreator.performCreation(this) {
+                    ShortcutCreator.userListTimeline(context, userList.account_key, userList)
+                }
             }
             else -> {
                 if (item.intent != null) {
