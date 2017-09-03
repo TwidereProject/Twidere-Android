@@ -35,7 +35,7 @@ class LaunchPromotionOfferViewController : PremiumDashboardActivity.ExtraFeature
     override fun onCreate() {
         super.onCreate()
         titleView.setText(R.string.title_promotions_reward)
-        messageView.text = context.getString(R.string.message_title_promotions_reward)
+        messageView.text = context.getString(R.string.message_promotions_reward)
         button1.setText(R.string.action_enable)
 
         button1.visibility = View.VISIBLE

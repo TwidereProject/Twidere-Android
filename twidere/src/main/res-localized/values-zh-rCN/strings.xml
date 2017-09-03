@@ -21,9 +21,12 @@
   <string name="action_add_gif">添加 GIF</string>
   <string name="action_add_media">添加媒体</string>
   <string name="action_add_member">添加成员</string>
+  <string name="action_add_name_to_home_screen">将 <xliff:g example="Name" id="name">%1$s</xliff:g> 添加到主屏幕</string>
   <string name="action_add_tab">添加标签页</string>
+  <string name="action_add_tab_to_home_screen">将标签添加到主屏幕</string>
   <string name="action_add_to_filter">添加到过滤器</string>
   <string name="action_add_to_home_screen">添加到主屏幕</string>
+  <string name="action_add_to_home_screen_more">添加到主屏幕...</string>
   <string name="action_add_to_list">添加到列表</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">阻止</string>
@@ -33,6 +36,7 @@
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">取消转推</string>
   <string name="action_center">居中</string>
+  <string name="action_change_language">更改语言</string>
   <string name="action_clear">清除</string>
   <string name="action_clear_messages">清除信息</string>
   <string name="action_comment">评论</string>
@@ -534,6 +538,7 @@
   <string name="message_permission_request_share_media">Twidere 需要存储权限来向一些应用分享媒体</string>
   <string name="message_pin_status_confirm">要置顶这条推文吗？原先置顶的推文会被替代。</string>
   <string name="message_please_wait">请稍等</string>
+  <string name="message_promotions_reward">启用推广就可以免费使用所有增强功能。我们承诺不会打扰您的使用体验！</string>
   <string name="message_status_reply_to_user_removed_explanation">Twitter 使推文作者总在回复中被提及，如果推文作者的提及被移除，Twidere 将会把这条回复以引用的形式发送，以保留上下文信息。</string>
   <string name="message_status_scheduling_connect_buffer_hint">连接到 Buffer ，即使您没有在线也可以定时发送推文</string>
   <string name="message_status_scheduling_connected_to_buffer">Twidere 已经连接到 Buffer</string>
@@ -543,7 +548,7 @@
   <string name="message_sync_disconnect_from_name_confirm">从 <xliff:g example="ownCloud" id="name">%s</xliff:g> 断开连接？</string>
   <string name="message_sync_last_synced_time">上次同步： <xliff:g example="2017/1/1 12:00" id="time">%s</xliff:g></string>
   <string name="message_tab_field_is_required">字段 “<xliff:g example="Field" id="name">%s</xliff:g>” 必填</string>
-  <string name="message_title_promotions_reward">启用推广就可以免费使用所有增强功能。我们承诺不会打扰您的使用体验！</string>
+  <string name="message_ticker_promotions_reward">启用推广就可以免费使用所有增强功能！</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
@@ -645,6 +650,8 @@
   <string name="none">无</string>
   <string name="notification_channel_description_content_interactions">互动，例如提及和转推</string>
   <string name="notification_channel_description_content_messages">重要的消息，例如私信</string>
+  <string name="notification_channel_descriptions_content_subscriptions">来自用户的推文通知</string>
+  <string name="notification_channel_descriptions_content_updates">状态更新，例如主页的新推文</string>
   <string name="notification_channel_name_app_notices">应用提醒</string>
   <string name="notification_channel_name_background_progresses">后台操作</string>
   <string name="notification_channel_name_content_interactions">互动</string>
@@ -745,6 +752,7 @@
   <string name="preference_title_multi_column_tab_width">多栏标签页宽度</string>
   <string name="preference_title_multi_column_tabs">多栏标签页</string>
   <string name="preference_title_navbar_style">导航栏样式</string>
+  <string name="preference_title_notification_channels">频道</string>
   <string name="preference_title_notification_ringtone">铃声</string>
   <string name="preference_title_override_language">应用程序语言</string>
   <string name="preference_title_portrait">纵向模式</string>

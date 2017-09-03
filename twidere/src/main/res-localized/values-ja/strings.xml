@@ -43,6 +43,7 @@
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">削除</string>
   <string name="action_delete_messages">メッセージを削除</string>
+  <string name="action_disable_promotions">広告を無効にする</string>
   <string name="action_dont_restart">再起動しない</string>
   <string name="action_dont_terminate">終了しない</string>
   <!-- [verb] Edit image/settings etc. -->
@@ -50,6 +51,9 @@
   <string name="action_edit_conversation_avatar">アイコンの編集</string>
   <string name="action_edit_conversation_name">名前の編集</string>
   <string name="action_edit_filter_rule">ルールの編集</string>
+  <string name="action_enable">有効にする</string>
+  <string name="action_enable_notifications">通知をオン</string>
+  <string name="action_enable_retweets">リツイートを有効にする</string>
   <string name="action_favorite">お気に入り</string>
   <string name="action_filter_import_from_blocked_users">ブロック済みユーザーをインポートする</string>
   <string name="action_filter_import_from_muted_users">ミュート済みユーザーをインポートする</string>
@@ -536,6 +540,8 @@
   <string name="message_permission_request_share_media">ストレージの権限は、Twidere がメディアを他のアプリに共有するために必要です。</string>
   <string name="message_pin_status_confirm">このツイートを固定してもよろしいですか？ 以前設定した固定ツイートは解除されます。</string>
   <string name="message_please_wait">しばらくお待ちください…</string>
+  <string name="message_promotions_reward">広告機能をオンにすれば、すべてのプレミアム機能が無料で使えます。
+ウルサイ通知などは一切ございません。</string>
   <string name="message_status_reply_to_user_removed_explanation">TwitterはツイートしたユーザーのIDを常に返信に記載します。ユーザーIDを取り除いた場合、Twidereはこの返信を引用として送信し、コンテキストを保持します。</string>
   <string name="message_status_scheduling_connect_buffer_hint">Buffer に接続すると、指定時刻のときにオフラインでも予約ツイートが行えるようになります。</string>
   <string name="message_status_scheduling_connected_to_buffer">Twidere は Buffer に接続できるようになりました</string>
@@ -545,6 +551,7 @@
   <string name="message_sync_disconnect_from_name_confirm"><xliff:g example="ownCloud" id="name">%s</xliff:g> から切断しますか？</string>
   <string name="message_sync_last_synced_time">最終同期: <xliff:g example="2017/1/1 12:00" id="time">%s</xliff:g></string>
   <string name="message_tab_field_is_required">フィールド \"<xliff:g example="Field" id="name">%s</xliff:g>\" が必要です</string>
+  <string name="message_ticker_promotions_reward">広告機能をオンにすれば、すべてのプレミアム機能が無料で使えます。</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
@@ -995,6 +1002,7 @@
   <string name="title_open_source_license">オープンソースライセンス</string>
   <string name="title_pin_status_confirm">ツイートの固定</string>
   <string name="title_premium_features_name">Twidere ∞</string>
+  <string name="title_promotions_reward">広告オン　特典</string>
   <string name="title_public_timeline">公開タイムライン</string>
   <string name="title_quick_action">クイック アクション</string>
   <string name="title_retweet_quote_confirm">フォロワーにリツイートしますか？</string>
