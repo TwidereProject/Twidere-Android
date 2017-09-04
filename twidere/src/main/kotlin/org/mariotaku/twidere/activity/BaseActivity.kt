@@ -51,6 +51,7 @@ import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonActivity
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.activityLabel
 import org.mariotaku.ktextension.getSystemWindowInsets
 import org.mariotaku.ktextension.systemWindowInsets
 import org.mariotaku.ktextension.unregisterReceiverSafe
@@ -64,6 +65,7 @@ import org.mariotaku.twidere.activity.iface.IThemedActivity
 import org.mariotaku.twidere.annotation.NavbarStyle
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.extension.defaultSharedPreferences
+import org.mariotaku.twidere.extension.firstLanguage
 import org.mariotaku.twidere.extension.overriding
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowInsetsCallback
 import org.mariotaku.twidere.model.DefaultFeatures
@@ -256,6 +258,7 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
         }
         onApplyNavigationStyle(themeNavigationStyle, themeColor)
         super.onCreate(savedInstanceState)
+        title = activityLabel
         requestManager = Glide.with(this)
         ActivitySupport.setTaskDescription(this, TaskDescriptionCompat(title.toString(), null,
                 ColorUtils.setAlphaComponent(overrideTheme.colorToolbar, 0xFF)))
@@ -348,12 +351,9 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
         actionHelper.dispatchOnResumeFragments(this)
     }
 
-    override fun attachBaseContext(newBase: Context?) {
-        if (newBase == null) {
-            super.attachBaseContext(null)
-            return
-        }
-        val locale = newBase.defaultSharedPreferences[overrideLanguageKey]
+    override fun attachBaseContext(newBase: Context) {
+        val locale = newBase.defaultSharedPreferences[overrideLanguageKey] ?: Resources.getSystem()
+                .firstLanguage
         if (locale == null) {
             super.attachBaseContext(newBase)
             return

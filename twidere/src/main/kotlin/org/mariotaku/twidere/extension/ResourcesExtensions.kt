@@ -31,3 +31,6 @@ fun Resources.setLocale(locale: Locale) {
     @Suppress("DEPRECATION")
     updateConfiguration(config, displayMetrics)
 }
+
+val Resources.firstLanguage: Locale?
+    get() = configuration.localesCompat.takeIf { !it.isEmpty }?.get(0)

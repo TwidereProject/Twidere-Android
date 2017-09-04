@@ -26,6 +26,7 @@ import android.content.*
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.content.res.Resources
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.net.ConnectivityManager
@@ -43,6 +44,7 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
 import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
 import org.mariotaku.ktextension.isCurrentThreadCompat
+import org.mariotaku.ktextension.localesCompat
 import org.mariotaku.mediaviewer.library.MediaDownloader
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.BuildConfig
@@ -52,6 +54,7 @@ import org.mariotaku.twidere.activity.AssistLauncherActivity
 import org.mariotaku.twidere.activity.MainActivity
 import org.mariotaku.twidere.activity.MainHondaJOJOActivity
 import org.mariotaku.twidere.constant.*
+import org.mariotaku.twidere.extension.firstLanguage
 import org.mariotaku.twidere.extension.model.loadRemoteSettings
 import org.mariotaku.twidere.extension.model.save
 import org.mariotaku.twidere.extension.setLocale
@@ -224,6 +227,9 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
                     stopService(streamingIntent)
                 }
             }
+            KEY_OVERRIDE_LANGUAGE -> {
+                applyLanguageSettings()
+            }
         }
         Analyzer.preferencesChanged(preferences)
     }
@@ -234,7 +240,8 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
     }
 
     private fun applyLanguageSettings() {
-        val locale = sharedPreferences[overrideLanguageKey] ?: return
+        val locale = sharedPreferences[overrideLanguageKey] ?: Resources.getSystem().
+                firstLanguage ?: return
         resources.setLocale(locale)
     }
 

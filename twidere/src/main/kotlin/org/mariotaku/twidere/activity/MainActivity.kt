@@ -42,7 +42,7 @@ import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonActivity
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
-import org.mariotaku.ktextension.componentIcon
+import org.mariotaku.ktextension.activityIcon
 import org.mariotaku.ktextension.contains
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.BuildConfig
@@ -121,7 +121,7 @@ open class MainActivity : ChameleonActivity(), IBaseActivity<MainActivity> {
         }
 
         main.visibility = View.VISIBLE
-        appIcon.setImageDrawable(componentIcon)
+        appIcon.setImageDrawable(activityIcon)
         skipPresentation.setOnClickListener {
             launchDirectly()
         }
