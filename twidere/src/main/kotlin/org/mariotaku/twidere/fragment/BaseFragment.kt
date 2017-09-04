@@ -100,8 +100,8 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
 
     private val actionHelper = IBaseFragment.ActionHelper<BaseFragment>()
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         requestManager = Glide.with(this)
     }
 

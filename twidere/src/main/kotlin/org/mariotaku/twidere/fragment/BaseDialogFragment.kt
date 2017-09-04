@@ -64,8 +64,8 @@ open class BaseDialogFragment : DialogFragment() {
     lateinit var requestManager: RequestManager
         private set
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         requestManager = Glide.with(this)
     }
 
