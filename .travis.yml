@@ -1,7 +1,7 @@
 language: android
 
 dist: trusty
-sudo: required
+sudo: false
 
 jdk: oraclejdk8
 
@@ -22,7 +22,7 @@ env:
   global:
     # COMPONENT_GOOGLE_REPO
     - secure: "OQ/wkORxY2qv4CmAdMxyW4ihRt5GRyxKxQRZpsdjMbwIKf3DlY6vBoNIEQ46sRRLAKOzkQ3LirodbWRCBlDN9WFw4XRsLTveqqtslMGeLf04peazXMIa6rJ22BCDGEmnzRNx6r3JRb9wEK1plNv4u4G9DgQ7ShzbwdZ8A5grlg8="
-    - GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=false -Dkotlin.incremental=false -Dkotlin.compiler.execution.strategy=in-process"
+    - GRADLE_OPTS: "-Dorg.gradle.parallel=false -Dkotlin.incremental=false -Dkotlin.compiler.execution.strategy=in-process"
 
 addons:
   apt:
