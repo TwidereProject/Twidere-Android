@@ -44,7 +44,7 @@ subprojects {
                     SupportLib           : '26.0.1',
                     SupportTest          : '1.0.0',
                     MariotakuCommons     : '0.9.17',
-                    RestFu               : '0.9.57',
+                    RestFu               : '0.9.60',
                     ObjectCursor         : '0.9.20',
                     PlayServices         : '11.2.0',
                     MapsUtils            : '0.5',
@@ -78,6 +78,7 @@ subprojects {
                     ExportablePreferences: '0.9.6',
                     ACRA                 : '4.9.2',
                     AbstractTask         : '0.9.5',
+                    Dagger               : '2.11',
             ]
         }
 

@@ -51,7 +51,10 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.TintTypedArray
 import android.util.SparseIntArray
-import android.view.*
+import android.view.Gravity
+import android.view.KeyEvent
+import android.view.MenuItem
+import android.view.View
 import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
 import android.view.ViewGroup.MarginLayoutParams
@@ -391,11 +394,6 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     override fun onSearchRequested(): Boolean {
         startActivity(Intent(this, QuickSearchBarActivity::class.java))
         return true
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        super.onCreateOptionsMenu(menu)
-        return false
     }
 
     override fun getSystemWindowInsets(caller: Fragment, insets: Rect): Boolean {

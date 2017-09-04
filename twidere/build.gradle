@@ -87,7 +87,7 @@ android {
         it.res.srcDirs += project.files("src/${it.name}/res-svg2png")
         it.java.srcDirs += "src/${it.name}/kotlin"
     }
-    
+
     testOptions {
         unitTests.returnDefaultValues = true
     }
@@ -104,7 +104,7 @@ dependencies {
 //    wearApp project(':twidere.wear')
     kapt "com.bluelinelabs:logansquare-compiler:${libVersions['LoganSquare']}"
     kapt "com.hannesdorfmann.parcelableplease:processor:${libVersions['ParcelablePlease']}"
-    kapt 'com.google.dagger:dagger-compiler:2.11'
+    kapt "com.google.dagger:dagger-compiler:${libVersions['Dagger']}"
     kapt "com.github.mariotaku.ObjectCursor:processor:${libVersions['ObjectCursor']}"
 
     implementation project(':twidere.component.common')
@@ -186,7 +186,7 @@ dependencies {
     implementation "com.github.mariotaku.RestFu:logansquare:${libVersions['RestFu']}"
     implementation "com.squareup.okhttp3:okhttp:${libVersions['OkHttp']}"
     implementation 'com.lnikkila:extendedtouchview:0.1.1'
-    implementation 'com.google.dagger:dagger:2.11'
+    implementation "com.google.dagger:dagger:${libVersions['Dagger']}"
     implementation 'org.attoparser:attoparser:2.0.4.RELEASE'
     implementation 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
     implementation 'net.ypresto.androidtranscoder:android-transcoder:0.2.0'

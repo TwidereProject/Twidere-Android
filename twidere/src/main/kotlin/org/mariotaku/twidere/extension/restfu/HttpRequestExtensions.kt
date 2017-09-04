@@ -19,13 +19,10 @@
 
 package org.mariotaku.twidere.extension.restfu
 
+import org.mariotaku.restfu.http.HttpRequest
 import org.mariotaku.restfu.http.MultiValueMap
 
-operator fun <T> MultiValueMap<T>.contains(key: String): Boolean {
-    return getFirst(key) != null
-}
-
-operator fun <T> MultiValueMap<T>.set(key: String, value: T) {
-    if (value in get(key)) return
-    add(key, value)
+fun HttpRequest.Builder.headers(config: MultiValueMap<String>.() -> Unit): HttpRequest.Builder {
+    headers(MultiValueMap<String>().apply { config(this) })
+    return this
 }
