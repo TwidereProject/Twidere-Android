@@ -10,13 +10,8 @@ android:
     - tools
     - tools # To fix https://github.com/travis-ci/travis-ci/issues/6040
     - platform-tools
-    - build-tools-26.0.0
+    - build-tools-26.0.1
     - android-26
-
-    # Additional components
-    - extra-google-google_play_services-41
-    - extra-google-m2repository-54
-    - extra-android-m2repository-47.0.0
 
   licenses:
     - 'android-sdk-preview-license-.+'
@@ -63,7 +58,7 @@ before_script:
   - ./travis/scripts/test_private_files.sh
 
 script:
-  - ./gradlew clean build --stacktrace --no-daemon
+  - ./gradlew clean build --stacktrace
 
 after_failure:
   - ./travis/scripts/upload_error_logs.sh
