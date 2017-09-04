@@ -63,6 +63,8 @@ import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.activity.iface.IThemedActivity
 import org.mariotaku.twidere.annotation.NavbarStyle
 import org.mariotaku.twidere.constant.*
+import org.mariotaku.twidere.extension.defaultSharedPreferences
+import org.mariotaku.twidere.extension.overriding
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowInsetsCallback
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.preference.iface.IDialogPreference
@@ -344,6 +346,19 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     override fun onResumeFragments() {
         super.onResumeFragments()
         actionHelper.dispatchOnResumeFragments(this)
+    }
+
+    override fun attachBaseContext(newBase: Context?) {
+        if (newBase == null) {
+            super.attachBaseContext(null)
+            return
+        }
+        val locale = newBase.defaultSharedPreferences[overrideLanguageKey]
+        if (locale == null) {
+            super.attachBaseContext(newBase)
+            return
+        }
+        super.attachBaseContext(newBase.overriding(locale))
     }
 
     override fun executeAfterFragmentResumed(useHandler: Boolean, action: (BaseActivity) -> Unit): Promise<Unit, Exception> {

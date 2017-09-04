@@ -43,12 +43,10 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
 import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
 import org.mariotaku.ktextension.isCurrentThreadCompat
-import org.mariotaku.ktextension.setLayoutDirectionCompat
 import org.mariotaku.mediaviewer.library.MediaDownloader
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants
-import org.mariotaku.twidere.Constants.KEY_USAGE_STATISTICS
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.AssistLauncherActivity
 import org.mariotaku.twidere.activity.MainActivity
@@ -56,6 +54,7 @@ import org.mariotaku.twidere.activity.MainHondaJOJOActivity
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.extension.model.loadRemoteSettings
 import org.mariotaku.twidere.extension.model.save
+import org.mariotaku.twidere.extension.setLocale
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.receiver.ConnectivityStateReceiver
 import org.mariotaku.twidere.service.StreamingService
@@ -82,7 +81,7 @@ import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeListener {
+class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
 
     @Inject
     lateinit internal var activityTracker: ActivityTracker
@@ -141,17 +140,16 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
             StrictModeUtils.detectAllVmPolicy()
         }
         super.onCreate()
-        EmojioneTranslator.init(this)
-        NotificationChannelsManager.initialize(this)
         applyLanguageSettings()
         startKovenant()
         initializeAsyncTask()
         initDebugMode()
         initBugReport()
+        EmojioneTranslator.init(this)
+        NotificationChannelsManager.initialize(this)
 
         updateEasterEggIcon()
 
-        migrateUsageStatisticsPreferences()
         GeneralComponent.get(this).inject(this)
 
         autoRefreshController.appStarted()
@@ -235,14 +233,9 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
         stopKovenant()
     }
 
-    @Suppress("DEPRECATION")
     private fun applyLanguageSettings() {
         val locale = sharedPreferences[overrideLanguageKey] ?: return
-        Locale.setDefault(locale)
-        val config = resources.configuration
-        config.locale = locale
-        config.setLayoutDirectionCompat(locale)
-        resources.updateConfiguration(config, resources.displayMetrics)
+        resources.setLocale(locale)
     }
 
     private fun loadDefaultFeatures() {
@@ -312,20 +305,6 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
         Analyzer.init(this)
     }
 
-    private fun migrateUsageStatisticsPreferences() {
-        val preferences = sharedPreferences
-        val hasUsageStatistics = preferences.contains(KEY_USAGE_STATISTICS)
-        if (hasUsageStatistics) return
-        if (preferences.contains(KEY_UCD_DATA_PROFILING) || preferences.contains(KEY_SPICE_DATA_PROFILING)) {
-            val prevUsageEnabled = preferences.getBoolean(KEY_UCD_DATA_PROFILING, false) || preferences.getBoolean(KEY_SPICE_DATA_PROFILING, false)
-            val editor = preferences.edit()
-            editor.putBoolean(KEY_USAGE_STATISTICS, prevUsageEnabled)
-            editor.remove(KEY_UCD_DATA_PROFILING)
-            editor.remove(KEY_SPICE_DATA_PROFILING)
-            editor.apply()
-        }
-    }
-
     private fun reloadDnsSettings() {
         (dns as? TwidereDns)?.reloadDnsSettings()
     }
@@ -351,8 +330,6 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
 
     companion object {
 
-        private val KEY_UCD_DATA_PROFILING = "ucd_data_profiling"
-        private val KEY_SPICE_DATA_PROFILING = "spice_data_profiling"
         private val KEY_KEYBOARD_SHORTCUT_INITIALIZED = "keyboard_shortcut_initialized"
         var instance: TwidereApplication? = null
             private set

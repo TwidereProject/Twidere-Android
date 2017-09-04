@@ -39,7 +39,7 @@
         android:key="override_language"
         android:title="@string/preference_title_override_language">
         <extra
-            android:name="should_terminate"
+            android:name="should_recreate"
             android:value="true"/>
     </org.mariotaku.twidere.preference.EntrySummaryListPreference>
 

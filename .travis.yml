@@ -1,7 +1,7 @@
 language: android
 
-dist: trusty
 sudo: false
+dist: trusty
 
 jdk: oraclejdk8
 
