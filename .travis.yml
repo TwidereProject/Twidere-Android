@@ -49,7 +49,7 @@ before_install:
 
 install:
   - ./travis/scripts/fetch_private_files.sh
-  - cat ./travis/configs/gradle.properties >> ./gradle.properties
+  - cat ./travis/configs/gradle.properties > ./gradle.properties
 
 before_script:
   # Validate if patches work
