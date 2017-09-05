@@ -56,6 +56,7 @@ before_script:
   - ./travis/scripts/patch_sources.sh
   # Validate if Google components fetched successfully
   - ./travis/scripts/test_private_files.sh
+  - ./gradlew twidere:tasks
 
 script:
   - ./gradlew clean build --stacktrace
