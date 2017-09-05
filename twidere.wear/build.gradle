@@ -20,6 +20,10 @@
 apply plugin: 'com.android.application'
 
 android {
+
+    compileSdkVersion globalCompileSdkVersion
+    buildToolsVersion globalBuildToolsVersion
+
     defaultConfig {
         applicationId "org.mariotaku.twidere"
         minSdkVersion 20

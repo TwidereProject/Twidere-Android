@@ -32,6 +32,9 @@ buildscript {
 
 android {
 
+    compileSdkVersion globalCompileSdkVersion
+    buildToolsVersion globalBuildToolsVersion
+
     defaultConfig {
         applicationId "org.mariotaku.twidere"
         minSdkVersion 14
@@ -68,13 +71,30 @@ android {
         }
     }
 
+    signingConfigs {
+        twidere {
+            def file = rootProject.file('private/signing.properties')
+            if (!file.exists()) return
+            Properties signingProp = new Properties()
+            signingProp.load(file.newInputStream())
+            storeFile = rootProject.file(signingProp.get('storeFile'))
+            storePassword = (String) signingProp.get('storePassword')
+            keyAlias = (String) signingProp.get('keyAlias')
+            keyPassword = (String) signingProp.get('keyPassword')
+        }
+    }
+
     buildTypes {
         debug {
+            signingConfig signingConfigs.twidere
+
             minifyEnabled false
             shrinkResources false
             resValue("bool", "debug", "true")
         }
         release {
+            signingConfig signingConfigs.twidere
+
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -90,6 +110,19 @@ android {
 
     testOptions {
         unitTests.returnDefaultValues = true
+    }
+
+    lintOptions {
+        abortOnError false
+        lintConfig rootProject.file('lint.xml')
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/README'
+        exclude 'META-INF/INDEX.LIST'
+        exclude 'LICENSE​-​junit​.​txt'
+        exclude 'sdk-version.​txt'
     }
 
 }

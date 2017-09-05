@@ -49,7 +49,7 @@ before_install:
 
 install:
   - ./travis/scripts/fetch_private_files.sh
-  - cat ./travis/configs/gradle.properties > ./gradle.properties
+  - cat ./travis/configs/gradle.properties >> ./gradle.properties
 
 before_script:
   # Validate if patches work
@@ -75,7 +75,7 @@ deploy:
       tags: true
   # Publish to Google Play store
   - provider: script
-    script: ./gradlew publishGoogleRelease
+    script: ./gradlew twidere:publishGoogleRelease
     on:
       repo: TwidereProject/Twidere-Android
       tags: true
