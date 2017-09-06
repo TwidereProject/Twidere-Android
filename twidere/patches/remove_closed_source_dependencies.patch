@@ -3,29 +3,18 @@ IDEA additional info:
 Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
---- twidere/build.gradle	(revision b337495c8a0c3aa9524f31b28123ca87dbf65ab5)
+--- twidere/build.gradle	(date 1504708582000)
 +++ twidere/build.gradle	(revision )
-@@ -7,7 +7,7 @@
- apply plugin: 'androidsvgdrawable'
- 
- // START Non-FOSS component
--apply plugin: 'com.github.triplet.play'
-+//apply plugin: 'com.github.triplet.play'
- // END Non-FOSS component
- 
- buildscript {
-@@ -24,8 +24,8 @@
+@@ -20,7 +20,7 @@
          }
  
          // START Non-FOSS component
--        classpath "com.github.triplet.gradle:play-publisher:${pluginVersions['PlayPublisher']}"
 -        classpath "com.google.gms:google-services:${pluginVersions['PlayServices']}"
-+//        classpath "com.github.triplet.gradle:play-publisher:${pluginVersions['PlayPublisher']}"
 +//        classpath "com.google.gms:google-services:${pluginVersions['PlayServices']}"
          // END Non-FOSS component
      }
  }
-@@ -53,9 +53,9 @@
+@@ -57,9 +57,9 @@
  
      productFlavors {
          // START Non-FOSS component
@@ -38,7 +27,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
          // END Non-FOSS component
          fdroid {
              dimension 'channel'
-@@ -102,14 +102,14 @@
+@@ -139,14 +139,14 @@
      implementation project(':twidere.component.nyan')
  
      // START Non-FOSS component
@@ -61,17 +50,3 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
      // END Non-FOSS component
  
      fdroidImplementation "org.osmdroid:osmdroid-android:${libVersions['OSMDroid']}"
-@@ -240,8 +240,8 @@
- }
- 
- // START Non-FOSS component
--play {
--    jsonFile = rootProject.file('private/google_play_publish.json')
--    track = 'beta'
--}
-+//play {
-+//    jsonFile = rootProject.file('private/google_play_publish.json')
-+//    track = 'beta'
-+//}
- // END Non-FOSS component
-\ No newline at end of file
