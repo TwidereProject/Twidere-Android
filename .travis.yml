@@ -56,10 +56,9 @@ before_script:
   - ./travis/scripts/patch_sources.sh
   # Validate if Google components fetched successfully
   - ./travis/scripts/test_private_files.sh
-  - ./gradlew twidere:tasks
 
 script:
-  - ./gradlew clean build --stacktrace
+  - ./gradlew clean build
 
 after_failure:
   - ./travis/scripts/upload_error_logs.sh
@@ -76,7 +75,11 @@ deploy:
       tags: true
   # Publish to Google Play store
   - provider: script
-    script: ./gradlew twidere:publishGoogleRelease
+    script:
+      - set -o allexport
+      - source ./twidere/src/google/.supplyrc
+      - fastlane supply run
+      - set +o allexport
     on:
       repo: TwidereProject/Twidere-Android
       tags: true

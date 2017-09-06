@@ -566,10 +566,6 @@
             android:theme="@style/Theme.Nyan"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".activity.UsageStatisticsActivity"
-            android:label="@string/usage_statistics"
-            android:theme="@style/Theme.Twidere"/>
-        <activity
             android:name=".activity.ImageCropperActivity"
             android:label="@string/title_crop_image"
             android:theme="@style/Theme.Twidere"
