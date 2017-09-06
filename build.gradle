@@ -42,7 +42,7 @@ subprojects {
             ]
             libVersions = [
                     Kotlin               : "${kotlinVersion}",
-                    SupportLib           : '26.0.1',
+                    SupportLib           : '26.0.2',
                     SupportTest          : '1.0.0',
                     MariotakuCommons     : '0.9.17',
                     RestFu               : '0.9.60',
