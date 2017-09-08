@@ -32,6 +32,7 @@
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">Retweet visszavonása</string>
   <string name="action_center">Középre</string>
+  <string name="action_change_language">Nyelv módosítása</string>
   <string name="action_clear">Törlés</string>
   <string name="action_clear_messages">Üzenetek törlése</string>
   <string name="action_comment">Megjegyzés</string>
@@ -50,6 +51,9 @@
   <string name="action_edit_conversation_avatar">Ikon szerkesztése</string>
   <string name="action_edit_conversation_name">Név szerkesztése</string>
   <string name="action_edit_filter_rule">Szabály szerkesztése</string>
+  <string name="action_enable">Engedélyezés</string>
+  <string name="action_enable_notifications">Értesítések engedélyezése</string>
+  <string name="action_enable_retweets">Retweetek engedélyezése</string>
   <string name="action_favorite">Kedvencnek jelöl</string>
   <string name="action_filter_import_from_blocked_users">Importálás a letiltott felhasználóktól</string>
   <string name="action_filter_import_from_muted_users">Importálás elnémított felhasználóktól</string>
@@ -634,6 +638,10 @@
   <string name="no_user_found">Nem található felhasználó</string>
   <string name="no_version_suffix">Nincs verzió utótag</string>
   <string name="none">Semmi</string>
+  <string name="notification_channel_name_content_interactions">Események</string>
+  <string name="notification_channel_name_content_messages">Üzenetek</string>
+  <string name="notification_channel_name_content_subscriptions">Feliratkozások</string>
+  <string name="notification_channel_name_content_updates">Frissítések</string>
   <string name="notification_direct_message"><xliff:g id="user">%s</xliff:g> privát üzenetet küldött neked.</string>
   <string name="notification_direct_message_multiple_messages"><xliff:g id="user">%1$s</xliff:g> <xliff:g id="messages_count">%2$d</xliff:g> privát üzenetet küldött neked.</string>
   <string name="notification_direct_message_multiple_users"><xliff:g id="user">%1$s</xliff:g> és még <xliff:g id="users_count">%2$d</xliff:g> felhasználó <xliff:g id="messages_count">%3$d</xliff:g> privát üzenetet küldött neked.</string>

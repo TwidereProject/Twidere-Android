@@ -650,6 +650,7 @@
   <string name="no_user_found">ユーザーが見つかりません。</string>
   <string name="no_version_suffix">バージョンサフィックスなし</string>
   <string name="none">なし</string>
+  <string name="notification_channel_name_content_interactions">みんなの反応</string>
   <string name="notification_direct_message"><xliff:g id="user">%s</xliff:g>からDMが届きました。</string>
   <string name="notification_direct_message_multiple_messages"><xliff:g id="user">%1$s</xliff:g>はあなたに<xliff:g id="messages_count">%2$d</xliff:g>通のDMを送信しました。</string>
   <string name="notification_direct_message_multiple_users"><xliff:g id="user">%1$s</xliff:g>と他<xliff:g id="users_count">%2$d</xliff:g>人があなたに<xliff:g id="messages_count">%3$d</xliff:g>通のDMを送信しました。</string>

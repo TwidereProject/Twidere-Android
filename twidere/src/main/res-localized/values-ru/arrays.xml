@@ -27,7 +27,7 @@
     <item>Wi-Fi</item>
   </string-array>
   <string-array name="entries_media_preview_style">
-    <item>Адаптировать</item>
+    <item>Обрезать</item>
     <item>Масштабировать</item>
     <item>Реальный размер</item>
   </string-array>
@@ -37,8 +37,8 @@
     <item>Личные сообщения</item>
   </string-array>
   <string-array name="entries_profile_image_style">
-    <item>Круг</item>
-    <item>Квадрат</item>
+    <item>Круглые</item>
+    <item>Квадратные</item>
   </string-array>
   <string-array name="entries_proxy_type">
     <item>HTTP</item>
@@ -56,9 +56,9 @@
     <item>4 часа</item>
   </string-array>
   <string-array name="entries_tab_column_width">
-    <item>Узкий</item>
-    <item>Нормальный</item>
-    <item>Широкий</item>
+    <item>Узкие</item>
+    <item>Обычные</item>
+    <item>Широкие</item>
   </string-array>
   <string-array name="entries_tab_display_option">
     <item>Иконка</item>
@@ -72,12 +72,12 @@
   </string-array>
   <string-array name="entries_theme_background">
     <item>По умолчанию</item>
-    <item>Просто белый/чёрный</item>
+    <item>Чисто белый/чёрный</item>
     <item>Прозрачный</item>
   </string-array>
   <string-array name="entries_quick_access_shortcut_types">
     <item>Пользователь</item>
-    <item>Хронология</item>
+    <item>Лента</item>
     <item>Избранное</item>
     <item>Список</item>
     <item>Список</item>

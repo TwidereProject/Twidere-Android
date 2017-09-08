@@ -12,32 +12,43 @@
   <string name="action_accept_permission_request">Принять</string>
   <!-- [verb] Add an item to a list/collection -->
   <string name="action_add">Добавить</string>
+  <string name="action_add_content_warning">Добавить предупреждение о содержании</string>
   <!-- [verb] Add a member to a message conversation -->
   <string name="action_add_conversation_participant">Добавить пользователя</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">Добавить правило</string>
   <string name="action_add_filters_subscription">Добавить описание</string>
   <string name="action_add_gif">Добавить GIF</string>
+  <string name="action_add_media">Добавить медиа-файл</string>
   <string name="action_add_member">Добавить пользователя</string>
+  <string name="action_add_name_to_home_screen">Добавить <xliff:g example="Name" id="name">%1$s</xliff:g> на домашний экран</string>
   <string name="action_add_tab">Добавить вкладку</string>
+  <string name="action_add_tab_to_home_screen">Добавить вкладку на домашний экран</string>
   <string name="action_add_to_filter">Добавить в фильтр</string>
+  <string name="action_add_to_home_screen">Добавить на домашний экран</string>
+  <string name="action_add_to_home_screen_more">Добавить на домашний экран&#8230;</string>
   <string name="action_add_to_list">Добавить в список</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Заблокировать</string>
+  <string name="action_buffer_disconnect">Отключиться от Buffer</string>
   <string name="action_buffer_settings">Настройки</string>
   <string name="action_buffer_update_now">Опубликовать сейчас</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">Отменить ретвит</string>
   <string name="action_center">Центр</string>
+  <string name="action_change_language">Изменить язык</string>
   <string name="action_clear">Очистить</string>
   <string name="action_clear_messages">Очистить сообщения</string>
+  <string name="action_comment">Комментарий</string>
   <string name="action_compose">Написать</string>
   <string name="action_compose_message_convert_to_status">Преобразовать в твит</string>
+  <string name="action_connect_to_buffer">Подключиться</string>
   <string name="action_conversation_info">Информация о диалоге</string>
   <string name="action_create_conversation">Создать диалог</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">Удалить</string>
   <string name="action_delete_messages">Удалить сообщения</string>
+  <string name="action_disable_promotions">Отключить рекламные акции</string>
   <string name="action_dont_restart">Не перезапускать</string>
   <string name="action_dont_terminate">Не выходить</string>
   <!-- [verb] Edit image/settings etc. -->
@@ -45,6 +56,9 @@
   <string name="action_edit_conversation_avatar">Изменить аватар</string>
   <string name="action_edit_conversation_name">Изменить имя</string>
   <string name="action_edit_filter_rule">Изменить правило</string>
+  <string name="action_enable">Включить</string>
+  <string name="action_enable_notifications">Включить уведомления</string>
+  <string name="action_enable_retweets">Включить ретвиты</string>
   <string name="action_favorite">В избранное</string>
   <string name="action_filter_import_from_blocked_users">Импортировать список заблокированных пользователей</string>
   <string name="action_filter_import_from_muted_users">Импортировать список приглушенных пользователей</string>
@@ -62,6 +76,7 @@
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">Мне нравится</string>
   <string name="action_location">Местоположение</string>
+  <string name="action_manage_in_buffer">Управл. в Buffer</string>
   <string name="action_mark_as_read">Пометить как прочитанное</string>
   <string name="action_mute">Игнорировать</string>
   <string name="action_mute_notifications">Отключить уведомления</string>
@@ -75,6 +90,7 @@
   <string name="action_quote">Цитировать</string>
   <string name="action_record_video">Записать видео</string>
   <string name="action_refresh">Обновления</string>
+  <string name="action_refresh_launch_presentations">Обновить домашние экраны</string>
   <string name="action_register">Регистрация</string>
   <string name="action_remove_conversation_avatar">Удалить аватар</string>
   <string name="action_reply">Ответить</string>
@@ -100,6 +116,9 @@
   <!-- [verb] Used for skip some settings -->
   <string name="action_skip">Пропустить</string>
   <string name="action_start">Начнем</string>
+  <string name="action_status_attachment">Приложение к твиту</string>
+  <string name="action_status_block_users">Заблокировать пользователей&#8230;</string>
+  <string name="action_status_mute_users">Заглушить пользователей&#8230;</string>
   <string name="action_status_pin">Прикрепить твит</string>
   <string name="action_status_schedule">Расписание твитов</string>
   <string name="action_status_unpin">Открепить твит</string>
