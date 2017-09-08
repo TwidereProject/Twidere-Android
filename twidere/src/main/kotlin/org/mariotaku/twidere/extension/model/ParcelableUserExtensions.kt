@@ -31,7 +31,7 @@ import org.mariotaku.twidere.util.Utils
 fun ParcelableUser.getBestProfileBanner(width: Int, height: Int = 0): String? {
     return profile_banner_url?.let {
         InternalTwitterContentUtils.getBestBannerUrl(it, width, height)
-    } ?: if (USER_TYPE_FANFOU_COM == key.host) {
+    } ?: if (USER_TYPE_FANFOU_COM == key?.host) {
         profile_background_url
     } else {
         null
@@ -60,11 +60,12 @@ fun ParcelableUser.applyTo(relationship: ParcelableRelationship) {
     }
 }
 
-val ParcelableUser.relationship: ParcelableRelationship get() = ParcelableRelationship().also {
-    it.account_key = this.account_key
-    it.user_key = this.key
-    this.applyTo(it)
-}
+val ParcelableUser.relationship: ParcelableRelationship
+    get() = ParcelableRelationship().also {
+        it.account_key = this.account_key
+        it.user_key = this.key
+        this.applyTo(it)
+    }
 
 val ParcelableUser.host: String
     get() {
@@ -77,18 +78,22 @@ val ParcelableUser.host: String
 val ParcelableUser.isFanfouUser: Boolean
     get() = USER_TYPE_FANFOU_COM == key.host
 
-inline val ParcelableUser.originalProfileImage: String? get() {
-    return extras?.profile_image_url_original?.takeIf(String::isNotEmpty)
-            ?: Utils.getOriginalTwitterProfileImage(profile_image_url)
-}
+inline val ParcelableUser.originalProfileImage: String?
+    get() {
+        return extras?.profile_image_url_original?.takeIf(String::isNotEmpty)
+                ?: Utils.getOriginalTwitterProfileImage(profile_image_url)
+    }
 
 inline val ParcelableUser.urlPreferred: String? get() = url_expanded?.takeIf(String::isNotEmpty) ?: url
 
-
-inline val ParcelableUser.acct: String get() = if (account_key.host == key.host) {
-    screen_name
-} else {
-    "$screen_name@${key.host}"
-}
+inline val ParcelableUser.acct: String
+    get() {
+        val key = this.key ?: return screen_name
+        return if (account_key?.host == key.host) {
+            screen_name
+        } else {
+            "$screen_name@${key.host}"
+        }
+    }
 
 inline val ParcelableUser.groups_count: Long get() = extras?.groups_count ?: -1

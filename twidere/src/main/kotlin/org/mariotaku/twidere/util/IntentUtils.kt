@@ -69,7 +69,7 @@ object IntentUtils {
 
     fun userProfile(user: ParcelableUser): Intent {
         val uri = LinkCreator.getTwidereUserLink(user.account_key, user.key, user.screen_name)
-        val intent = Intent(Intent.ACTION_VIEW, uri)
+        val intent = uri.intent()
         intent.setExtrasClassLoader(TwidereApplication::class.java.classLoader)
         intent.putExtra(EXTRA_USER, user)
         if (user.extras != null) {
@@ -81,7 +81,7 @@ object IntentUtils {
     fun userProfile(accountKey: UserKey?, userKey: UserKey?, screenName: String?,
             profileUrl: String? = null, accountHost: String? = accountKey?.host ?: userKey?.host): Intent {
         val uri = LinkCreator.getTwidereUserLink(accountKey, userKey, screenName)
-        val intent = Intent(Intent.ACTION_VIEW, uri)
+        val intent = uri.intent()
         intent.putExtra(EXTRA_PROFILE_URL, profileUrl)
         intent.putExtra(EXTRA_ACCOUNT_HOST, accountHost)
         return intent
@@ -100,7 +100,7 @@ object IntentUtils {
             profileUrl: String? = null): Intent {
         val uri = LinkCreator.getTwidereUserRelatedLink(AUTHORITY_USER_MEDIA_TIMELINE, accountKey,
                 userKey, screenName)
-        val intent = Intent(Intent.ACTION_VIEW, uri)
+        val intent = uri.intent()
         intent.putExtra(EXTRA_PROFILE_URL, profileUrl)
         return intent
     }
@@ -109,7 +109,7 @@ object IntentUtils {
             profileUrl: String? = null): Intent {
         val uri = LinkCreator.getTwidereUserRelatedLink(AUTHORITY_USER_FAVORITES, accountKey,
                 userKey, screenName)
-        val intent = Intent(Intent.ACTION_VIEW, uri)
+        val intent = uri.intent()
         intent.putExtra(EXTRA_PROFILE_URL, profileUrl)
         return intent
     }
@@ -118,25 +118,20 @@ object IntentUtils {
         if (items == null) return
         val extras = Bundle()
         extras.putParcelableArrayList(EXTRA_ITEMS, ArrayList(items))
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_ITEMS)
-        val intent = Intent(Intent.ACTION_VIEW, builder.build())
+        val builder = UriBuilder(AUTHORITY_ITEMS)
+        val intent = builder.intent()
         intent.putExtras(extras)
         context.startActivity(intent)
     }
 
     fun openUserMentions(context: Context, accountKey: UserKey?,
             screenName: String) {
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_USER_MENTIONS)
+        val builder = UriBuilder(AUTHORITY_USER_MENTIONS)
         if (accountKey != null) {
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
         }
         builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName)
-        val intent = Intent(Intent.ACTION_VIEW, builder.build())
-        context.startActivity(intent)
+        context.startActivity(builder.intent())
     }
 
     fun openMedia(context: Context, status: ParcelableStatus,
@@ -250,137 +245,107 @@ object IntentUtils {
     }
 
     fun messageConversation(accountKey: UserKey, conversationId: String): Intent {
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_MESSAGES)
+        val builder = UriBuilder(AUTHORITY_MESSAGES)
         builder.path(PATH_MESSAGES_CONVERSATION)
         builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
         builder.appendQueryParameter(QUERY_PARAM_CONVERSATION_ID, conversationId)
-        val intent = Intent(Intent.ACTION_VIEW, builder.build())
-        intent.`package` = BuildConfig.APPLICATION_ID
-        return intent
+        return builder.intent()
     }
 
     fun messageConversationInfo(accountKey: UserKey, conversationId: String): Intent {
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_MESSAGES)
+        val builder = UriBuilder(AUTHORITY_MESSAGES)
         builder.path(PATH_MESSAGES_CONVERSATION_INFO)
         builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
         builder.appendQueryParameter(QUERY_PARAM_CONVERSATION_ID, conversationId)
-        val intent = Intent(Intent.ACTION_VIEW, builder.build())
-        intent.`package` = BuildConfig.APPLICATION_ID
-        return intent
+        return builder.intent()
     }
 
     fun newMessageConversation(accountKey: UserKey): Intent {
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_MESSAGES)
+        val builder = UriBuilder(AUTHORITY_MESSAGES)
         builder.path(PATH_MESSAGES_CONVERSATION_NEW)
         builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
-        val intent = Intent(Intent.ACTION_VIEW, builder.build())
-        intent.`package` = BuildConfig.APPLICATION_ID
-        return intent
+        return builder.intent()
     }
 
     fun openIncomingFriendships(context: Context,
             accountKey: UserKey?) {
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_INCOMING_FRIENDSHIPS)
+        val builder = UriBuilder(AUTHORITY_INCOMING_FRIENDSHIPS)
         if (accountKey != null) {
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
         }
-        val intent = Intent(Intent.ACTION_VIEW, builder.build())
-        intent.`package` = BuildConfig.APPLICATION_ID
-        context.startActivity(intent)
+        context.startActivity(builder.intent())
     }
 
     fun openMap(context: Context, latitude: Double, longitude: Double) {
         if (!ParcelableLocationUtils.isValidLocation(latitude, longitude)) return
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_MAP)
+        val builder = UriBuilder(AUTHORITY_MAP)
         builder.appendQueryParameter(QUERY_PARAM_LAT, latitude.toString())
         builder.appendQueryParameter(QUERY_PARAM_LNG, longitude.toString())
-        val intent = Intent(Intent.ACTION_VIEW, builder.build())
-        intent.`package` = BuildConfig.APPLICATION_ID
-        context.startActivity(intent)
+        context.startActivity(builder.intent())
     }
 
     fun openMutesUsers(context: Context,
             accountKey: UserKey?) {
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_MUTES_USERS)
+        val builder = UriBuilder(AUTHORITY_MUTES_USERS)
         if (accountKey != null) {
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
         }
-        val intent = Intent(Intent.ACTION_VIEW, builder.build())
-        intent.`package` = BuildConfig.APPLICATION_ID
-        context.startActivity(intent)
+        context.startActivity(builder.intent())
     }
 
     fun openSavedSearches(context: Context, accountKey: UserKey?) {
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_SAVED_SEARCHES)
+        val builder = UriBuilder(AUTHORITY_SAVED_SEARCHES)
         if (accountKey != null) {
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
         }
-        val intent = Intent(Intent.ACTION_VIEW, builder.build())
-        intent.`package` = BuildConfig.APPLICATION_ID
-        context.startActivity(intent)
+        context.startActivity(builder.intent())
     }
 
     fun openSearch(context: Context, accountKey: UserKey?, query: String, type: String? = null) {
-        val intent = Intent(Intent.ACTION_VIEW)
-        // Some devices cannot process query parameter with hashes well, so add this intent extra
-        intent.putExtra(EXTRA_QUERY, query)
-        if (accountKey != null) {
-            intent.putExtra(EXTRA_ACCOUNT_KEY, accountKey)
-        }
-
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_SEARCH)
+        val builder = UriBuilder(AUTHORITY_SEARCH)
         if (accountKey != null) {
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
         }
         builder.appendQueryParameter(QUERY_PARAM_QUERY, query)
         if (!TextUtils.isEmpty(type)) {
             builder.appendQueryParameter(QUERY_PARAM_TYPE, type)
+        }
+
+        val intent = builder.intent()
+        // Some devices cannot process query parameter with hashes well, so add this intent extra
+        intent.putExtra(EXTRA_QUERY, query)
+
+        if (!TextUtils.isEmpty(type)) {
             intent.putExtra(EXTRA_TYPE, type)
         }
-        intent.data = builder.build()
 
+        if (accountKey != null) {
+            intent.putExtra(EXTRA_ACCOUNT_KEY, accountKey)
+        }
         context.startActivity(intent)
     }
 
     fun openMastodonSearch(context: Context, accountKey: UserKey?, query: String) {
-        val intent = Intent(Intent.ACTION_VIEW)
+        val builder = UriBuilder(AUTHORITY_MASTODON_SEARCH)
+
+        if (accountKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
+        }
+        builder.appendQueryParameter(QUERY_PARAM_QUERY, query)
+        val intent = builder.intent()
+
         // Some devices cannot process query parameter with hashes well, so add this intent extra
         intent.putExtra(EXTRA_QUERY, query)
         if (accountKey != null) {
             intent.putExtra(EXTRA_ACCOUNT_KEY, accountKey)
         }
 
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_MASTODON_SEARCH)
-        if (accountKey != null) {
-            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
-        }
-        builder.appendQueryParameter(QUERY_PARAM_QUERY, query)
-        intent.data = builder.build()
-
         context.startActivity(intent)
     }
 
     fun status(accountKey: UserKey?, statusId: String): Intent {
         val uri = LinkCreator.getTwidereStatusLink(accountKey, statusId)
-        return Intent(Intent.ACTION_VIEW, uri)
+        return Intent(Intent.ACTION_VIEW, uri).setPackage(BuildConfig.APPLICATION_ID)
     }
 
     fun openStatus(context: Context, accountKey: UserKey?, statusId: String) {
@@ -388,65 +353,44 @@ object IntentUtils {
     }
 
     fun openStatus(context: Context, status: ParcelableStatus, activityOptions: Bundle? = null) {
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_STATUS)
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, status.account_key.toString())
-        builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, status.id)
-        val intent = Intent(Intent.ACTION_VIEW, builder.build())
+        val intent = status(status.account_key, status.id)
         intent.setExtrasClassLoader(TwidereApplication::class.java.classLoader)
         intent.putExtra(EXTRA_STATUS, status)
         ActivityCompat.startActivity(context, intent, activityOptions)
     }
 
-    fun openStatusFavoriters(context: Context, accountKey: UserKey?,
-            statusId: String) {
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_STATUS_FAVORITERS)
+    fun openStatusFavoriters(context: Context, accountKey: UserKey?, statusId: String) {
+        val builder = UriBuilder(AUTHORITY_STATUS_FAVORITERS)
         if (accountKey != null) {
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
         }
         builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, statusId)
-        val intent = Intent(Intent.ACTION_VIEW, builder.build())
-        ActivityCompat.startActivity(context, intent, null)
+        ActivityCompat.startActivity(context, builder.intent(), null)
     }
 
-    fun openStatusRetweeters(context: Context, accountKey: UserKey?,
-            statusId: String) {
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_STATUS_RETWEETERS)
+    fun openStatusRetweeters(context: Context, accountKey: UserKey?, statusId: String) {
+        val builder = UriBuilder(AUTHORITY_STATUS_RETWEETERS)
         if (accountKey != null) {
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
         }
         builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, statusId)
-        val intent = Intent(Intent.ACTION_VIEW, builder.build())
-        ActivityCompat.startActivity(context, intent, null)
+        ActivityCompat.startActivity(context, builder.intent(), null)
     }
 
-    fun openTweetSearch(context: Context, accountKey: UserKey?,
-            query: String) {
+    fun openTweetSearch(context: Context, accountKey: UserKey?, query: String) {
         openSearch(context, accountKey, query, QUERY_PARAM_VALUE_TWEETS)
     }
 
     fun openUserBlocks(activity: Activity?, accountKey: UserKey) {
         if (activity == null) return
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_USER_BLOCKS)
+        val builder = UriBuilder(AUTHORITY_USER_BLOCKS)
         builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
-        val intent = Intent(Intent.ACTION_VIEW, builder.build())
-        activity.startActivity(intent)
+        activity.startActivity(builder.intent())
     }
 
-    fun openUserFavorites(context: Context,
-            accountKey: UserKey?,
-            userKey: UserKey?,
+    fun openUserFavorites(context: Context, accountKey: UserKey?, userKey: UserKey?,
             screenName: String?) {
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_USER_FAVORITES)
+        val builder = UriBuilder(AUTHORITY_USER_FAVORITES)
         if (accountKey != null) {
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
         }
@@ -456,8 +400,7 @@ object IntentUtils {
         if (screenName != null) {
             builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName)
         }
-        val intent = Intent(Intent.ACTION_VIEW, builder.build())
-        context.startActivity(intent)
+        context.startActivity(builder.intent())
 
     }
 
@@ -468,13 +411,9 @@ object IntentUtils {
         context.startActivity(Intent(Intent.ACTION_VIEW, intent))
     }
 
-    fun openUserFriends(context: Context,
-            accountKey: UserKey?,
-            userKey: UserKey?,
+    fun openUserFriends(context: Context, accountKey: UserKey?, userKey: UserKey?,
             screenName: String?) {
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_USER_FRIENDS)
+        val builder = UriBuilder(AUTHORITY_USER_FRIENDS)
         if (accountKey != null) {
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
         }
@@ -484,9 +423,7 @@ object IntentUtils {
         if (screenName != null) {
             builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName)
         }
-        val intent = Intent(Intent.ACTION_VIEW, builder.build())
-        context.startActivity(intent)
-
+        context.startActivity(builder.intent())
     }
 
     fun openUserListDetails(context: Context, accountKey: UserKey?, listId: String?,
@@ -496,14 +433,14 @@ object IntentUtils {
 
     fun userListDetails(accountKey: UserKey?, listId: String?, userKey: UserKey?,
             screenName: String?, listName: String?): Intent {
-        return Intent(Intent.ACTION_VIEW, getTwidereUserListRelatedLink(AUTHORITY_USER_LIST,
-                accountKey, listId, userKey, screenName, listName))
+        return getTwidereUserListRelatedLink(AUTHORITY_USER_LIST, accountKey, listId, userKey,
+                screenName, listName).intent()
     }
 
     fun userListTimeline(accountKey: UserKey?, listId: String?, userKey: UserKey?,
             screenName: String?, listName: String?): Intent {
-        return Intent(Intent.ACTION_VIEW, getTwidereUserListRelatedLink(AUTHORITY_USER_LIST_TIMELINE,
-                accountKey, listId, userKey, screenName, listName))
+        return getTwidereUserListRelatedLink(AUTHORITY_USER_LIST_TIMELINE, accountKey, listId,
+                userKey, screenName, listName).intent()
     }
 
     fun openUserListDetails(context: Context, userList: ParcelableUserList) {
@@ -513,35 +450,28 @@ object IntentUtils {
     fun userListDetails(userList: ParcelableUserList): Intent {
         val userKey = userList.user_key
         val listId = userList.id
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_USER_LIST)
+        val builder = UriBuilder(AUTHORITY_USER_LIST)
         builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, userList.account_key.toString())
         builder.appendQueryParameter(QUERY_PARAM_USER_KEY, userKey.toString())
         builder.appendQueryParameter(QUERY_PARAM_LIST_ID, listId)
-        val intent = Intent(Intent.ACTION_VIEW, builder.build())
+        val intent = builder.intent()
         intent.setExtrasClassLoader(TwidereApplication::class.java.classLoader)
         intent.putExtra(EXTRA_USER_LIST, userList)
         return intent
     }
 
     fun openGroupDetails(context: Context, group: ParcelableGroup) {
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_GROUP)
+        val builder = UriBuilder(AUTHORITY_GROUP)
         builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, group.account_key.toString())
         builder.appendQueryParameter(QUERY_PARAM_GROUP_ID, group.id)
         builder.appendQueryParameter(QUERY_PARAM_GROUP_NAME, group.nickname)
-        val intent = Intent(Intent.ACTION_VIEW, builder.build())
+        val intent = builder.intent()
         intent.setExtrasClassLoader(TwidereApplication::class.java.classLoader)
         intent.putExtra(EXTRA_GROUP, group)
         context.startActivity(intent)
     }
 
-    fun openUserLists(context: Context,
-            accountKey: UserKey?,
-            userKey: UserKey?,
-            screenName: String?) {
+    fun openUserLists(context: Context, accountKey: UserKey?, userKey: UserKey?, screenName: String?) {
         val builder = Uri.Builder()
         builder.scheme(SCHEME_TWIDERE)
         builder.authority(AUTHORITY_USER_LISTS)
@@ -554,16 +484,12 @@ object IntentUtils {
         if (screenName != null) {
             builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName)
         }
-        val intent = Intent(Intent.ACTION_VIEW, builder.build())
-        context.startActivity(intent)
+        context.startActivity(builder.intent())
     }
 
 
-    fun openUserGroups(context: Context, accountKey: UserKey?, userKey: UserKey?,
-            screenName: String?) {
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_USER_GROUPS)
+    fun openUserGroups(context: Context, accountKey: UserKey?, userKey: UserKey?, screenName: String?) {
+        val builder = UriBuilder(AUTHORITY_USER_GROUPS)
         if (accountKey != null) {
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
         }
@@ -573,104 +499,69 @@ object IntentUtils {
         if (screenName != null) {
             builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName)
         }
-        val intent = Intent(Intent.ACTION_VIEW, builder.build())
-        context.startActivity(intent)
+        context.startActivity(builder.intent())
     }
 
     fun openDirectMessages(context: Context, accountKey: UserKey?) {
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_MESSAGES)
+        val builder = UriBuilder(AUTHORITY_MESSAGES)
         if (accountKey != null) {
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
         }
-        val intent = Intent(Intent.ACTION_VIEW, builder.build())
-        context.startActivity(intent)
+        context.startActivity(builder.intent())
     }
 
     fun openInteractions(context: Context, accountKey: UserKey?) {
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_INTERACTIONS)
+        val builder = UriBuilder(AUTHORITY_INTERACTIONS)
         if (accountKey != null) {
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
         }
-        val intent = Intent(Intent.ACTION_VIEW, builder.build())
-        context.startActivity(intent)
+        context.startActivity(builder.intent())
     }
 
     fun openPublicTimeline(context: Context, accountKey: UserKey?) {
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_PUBLIC_TIMELINE)
+        val builder = UriBuilder(AUTHORITY_PUBLIC_TIMELINE)
         if (accountKey != null) {
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
         }
-        val intent = Intent(Intent.ACTION_VIEW, builder.build())
-        context.startActivity(intent)
+        context.startActivity(builder.intent())
     }
 
     fun openNetworkPublicTimeline(context: Context, accountKey: UserKey?) {
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_NETWORK_PUBLIC_TIMELINE)
+        val builder = UriBuilder(AUTHORITY_NETWORK_PUBLIC_TIMELINE)
         if (accountKey != null) {
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
         }
-        val intent = Intent(Intent.ACTION_VIEW, builder.build())
-        context.startActivity(intent)
+        context.startActivity(builder.intent())
     }
 
     fun openAccountsManager(context: Context) {
-        val intent = Intent()
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_ACCOUNTS)
-        intent.data = builder.build()
-        intent.`package` = BuildConfig.APPLICATION_ID
-        context.startActivity(intent)
+        val builder = UriBuilder(AUTHORITY_ACCOUNTS)
+        context.startActivity(builder.intent())
     }
 
     fun openDrafts(context: Context) {
-        val intent = Intent()
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_DRAFTS)
-        intent.data = builder.build()
-        intent.`package` = BuildConfig.APPLICATION_ID
-        context.startActivity(intent)
+        val builder = UriBuilder(AUTHORITY_DRAFTS)
+        context.startActivity(builder.intent())
     }
 
     fun settings(initialTag: String? = null): Intent {
-        val intent = Intent()
         val builder = Uri.Builder()
         builder.scheme(SCHEME_TWIDERE_SETTINGS)
         builder.authority(initialTag.orEmpty())
-        intent.data = builder.build()
-        intent.`package` = BuildConfig.APPLICATION_ID
-        return intent
+        return builder.intent()
     }
 
     fun openProfileEditor(context: Context, accountKey: UserKey?) {
-        val intent = Intent()
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_PROFILE_EDITOR)
+        val builder = UriBuilder(AUTHORITY_PROFILE_EDITOR)
         if (accountKey != null) {
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
         }
-        intent.data = builder.build()
-        intent.`package` = BuildConfig.APPLICATION_ID
-        context.startActivity(intent)
+        context.startActivity(builder.intent())
     }
 
     fun openFilters(context: Context, initialTab: String? = null) {
-        val intent = Intent()
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_FILTERS)
-        intent.data = builder.build()
-        intent.`package` = BuildConfig.APPLICATION_ID
+        val builder = UriBuilder(AUTHORITY_FILTERS)
+        val intent = builder.intent()
         intent.putExtra(EXTRA_INITIAL_TAB, initialTab)
         context.startActivity(intent)
     }
@@ -701,5 +592,17 @@ object IntentUtils {
         if (enable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT)
         }
+    }
+
+    private fun UriBuilder(authority: String): Uri.Builder {
+        return Uri.Builder().scheme(SCHEME_TWIDERE).authority(authority)
+    }
+
+    private fun Uri.intent(action: String = Intent.ACTION_VIEW): Intent {
+        return Intent(action, this).setPackage(BuildConfig.APPLICATION_ID)
+    }
+
+    private fun Uri.Builder.intent(action: String = Intent.ACTION_VIEW): Intent {
+        return build().intent(action)
     }
 }

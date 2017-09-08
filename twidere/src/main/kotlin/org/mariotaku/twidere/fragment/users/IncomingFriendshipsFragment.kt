@@ -57,12 +57,14 @@ class IncomingFriendshipsFragment : ParcelableUsersFragment(), IUsersAdapter.Req
 
     override fun onAcceptClicked(holder: UserViewHolder, position: Int) {
         val user = adapter.getUser(position) ?: return
-        twitterWrapper.acceptFriendshipAsync(user.account_key, user.key)
+        val accountKey = user.account_key ?: return
+        twitterWrapper.acceptFriendshipAsync(accountKey, user.key)
     }
 
     override fun onDenyClicked(holder: UserViewHolder, position: Int) {
         val user = adapter.getUser(position) ?: return
-        twitterWrapper.denyFriendshipAsync(user.account_key, user.key)
+        val accountKey = user.account_key ?: return
+        twitterWrapper.denyFriendshipAsync(accountKey, user.key)
     }
 
     @SuppressLint("SwitchIntDef")

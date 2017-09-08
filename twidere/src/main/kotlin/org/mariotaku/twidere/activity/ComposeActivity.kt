@@ -959,13 +959,14 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     @SuppressLint("SetTextI18n")
     private fun handleMentionIntent(user: ParcelableUser?): Boolean {
-        if (user == null || user.key == null) return false
-        val accountScreenName = DataStoreUtils.getAccountScreenName(this, user.account_key)
+        if (user?.key == null) return false
+        val accountKey = user.account_key ?: return false
+        val accountScreenName = DataStoreUtils.getAccountScreenName(this, accountKey)
         if (TextUtils.isEmpty(accountScreenName)) return false
         editText.setText("@${user.acct} ")
         val selectionEnd = editText.length()
         editText.setSelection(selectionEnd)
-        accountsAdapter.selectedAccountKeys = arrayOf(user.account_key)
+        accountsAdapter.selectedAccountKeys = arrayOf(accountKey)
         return true
     }
 

@@ -39,7 +39,8 @@ class DestroyFriendshipDialogFragment : BaseDialogFragment(), DialogInterface.On
     override fun onClick(dialog: DialogInterface, which: Int) {
         when (which) {
             DialogInterface.BUTTON_POSITIVE -> {
-                twitterWrapper.destroyFriendshipAsync(user.account_key, user.key)
+                val accountKey = user.account_key ?: return
+                twitterWrapper.destroyFriendshipAsync(accountKey, user.key)
             }
             else -> {
             }

@@ -209,24 +209,27 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
 
     override fun onFollowClicked(holder: UserViewHolder, position: Int) {
         val user = adapter.getUser(position) ?: return
-        if (twitterWrapper.isUpdatingRelationship(user.account_key, user.key)) return
+        val accountKey = user.account_key ?: return
+        if (twitterWrapper.isUpdatingRelationship(accountKey, user.key)) return
         if (user.is_following) {
             DestroyFriendshipDialogFragment.show(fragmentManager, user)
         } else {
-            twitterWrapper.createFriendshipAsync(user.account_key, user.key, user.screen_name)
+            twitterWrapper.createFriendshipAsync(accountKey, user.key, user.screen_name)
         }
     }
 
     override fun onUnblockClicked(holder: UserViewHolder, position: Int) {
         val user = adapter.getUser(position) ?: return
-        if (twitterWrapper.isUpdatingRelationship(user.account_key, user.key)) return
-        twitterWrapper.destroyBlockAsync(user.account_key, user.key)
+        val accountKey = user.account_key ?: return
+        if (twitterWrapper.isUpdatingRelationship(accountKey, user.key)) return
+        twitterWrapper.destroyBlockAsync(accountKey, user.key)
     }
 
     override fun onUnmuteClicked(holder: UserViewHolder, position: Int) {
         val user = adapter.getUser(position) ?: return
-        if (twitterWrapper.isUpdatingRelationship(user.account_key, user.key)) return
-        twitterWrapper.destroyMuteAsync(user.account_key, user.key)
+        val accountKey = user.account_key ?: return
+        if (twitterWrapper.isUpdatingRelationship(accountKey, user.key)) return
+        twitterWrapper.destroyMuteAsync(accountKey, user.key)
     }
 
 

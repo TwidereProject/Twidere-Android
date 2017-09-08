@@ -36,7 +36,7 @@ abstract class ComponentPickerPreference(context: Context, attrs: AttributeSet? 
 
     override fun getSummary(): CharSequence {
         if (isNoneValue(value)) return noneEntry
-        return entry
+        return entry ?: noneEntry
     }
 
     protected abstract val intentAction: String
