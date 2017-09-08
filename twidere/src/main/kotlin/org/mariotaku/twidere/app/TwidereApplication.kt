@@ -44,7 +44,6 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
 import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
 import org.mariotaku.ktextension.isCurrentThreadCompat
-import org.mariotaku.ktextension.localesCompat
 import org.mariotaku.mediaviewer.library.MediaDownloader
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.BuildConfig

@@ -182,6 +182,7 @@ class MessagesConversationAdapter(
         val messages = this.messages!!
         if (messages is ObjectCursor) {
             val cursor = messages.cursor
+            cursor.moveToPosition(position)
             val indices = messages.indices
             val timestamp = cursor.getLong(indices[Messages.MESSAGE_TIMESTAMP])
             if (timestamp > 0) return timestamp
