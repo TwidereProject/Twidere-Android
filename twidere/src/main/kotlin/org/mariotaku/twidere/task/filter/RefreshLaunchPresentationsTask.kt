@@ -22,6 +22,7 @@ package org.mariotaku.twidere.task.filter
 import android.content.Context
 import org.mariotaku.restfu.annotation.method.GET
 import org.mariotaku.restfu.http.HttpRequest
+import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.model.presentation.LaunchPresentation
 import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.util.JsonSerializer
@@ -33,10 +34,14 @@ import java.io.IOException
  */
 class RefreshLaunchPresentationsTask(context: Context) : BaseAbstractTask<Unit?, Boolean, (Boolean) -> Unit>(context) {
     override fun doLongOperation(params: Unit?): Boolean {
-        val request = HttpRequest.Builder()
-                .method(GET.METHOD)
-                .url("https://twidere.mariotaku.org/assets/data/launch_presentations.json")
-                .build()
+        val builder = HttpRequest.Builder()
+        builder.method(GET.METHOD)
+        if (BuildConfig.DEBUG) {
+            builder.url("https://twidere.mariotaku.org/assets/data/launch_presentations_debug.json")
+        } else {
+            builder.url("https://twidere.mariotaku.org/assets/data/launch_presentations.json")
+        }
+        val request = builder.build()
         try {
             val presentations = restHttpClient.newCall(request).execute().use {
                 if (!it.isSuccessful) return@use null

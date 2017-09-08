@@ -32,6 +32,7 @@ import android.support.annotation.StyleRes
 import android.support.v4.view.ViewCompat
 import android.support.v7.app.TwilightManagerAccessor
 import android.view.View
+import android.view.View.MeasureSpec
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
@@ -54,6 +55,7 @@ import org.mariotaku.twidere.constant.lastLaunchTimeKey
 import org.mariotaku.twidere.constant.promotionsEnabledKey
 import org.mariotaku.twidere.constant.themeColorKey
 import org.mariotaku.twidere.constant.themeKey
+import org.mariotaku.twidere.extension.model.displayingScore
 import org.mariotaku.twidere.extension.model.hasInvalidAccount
 import org.mariotaku.twidere.extension.model.shouldShow
 import org.mariotaku.twidere.model.presentation.LaunchPresentation
@@ -138,10 +140,10 @@ open class MainActivity : ChameleonActivity(), IBaseActivity<MainActivity> {
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(main) lambda@ { _, insets ->
-            main.setPadding(0, 0, 0, insets.systemWindowInsetBottom)
+            main.setPadding(0, 0, insets.systemWindowInsetRight,
+                    insets.systemWindowInsetBottom)
 
-            controlOverlay.setPadding(insets.systemWindowInsetLeft, insets.systemWindowInsetTop,
-                    insets.systemWindowInsetRight, 0)
+            controlOverlay.setPadding(0, insets.systemWindowInsetTop, 0, 0)
             return@lambda insets.consumeSystemWindowInsets()
         }
         ViewSupport.setOutlineProvider(skipPresentation, ViewOutlineProviderCompat.BACKGROUND)
@@ -163,10 +165,9 @@ open class MainActivity : ChameleonActivity(), IBaseActivity<MainActivity> {
         }
         val presentation = jsonCache.getList(RefreshLaunchPresentationsTask.JSON_CACHE_KEY,
                 LaunchPresentation::class.java)?.firstOrNull {
-            it.shouldShow()
+            it.shouldShow(this)
         }
-        if (presentation != null) {
-            displayPresentation(presentation)
+        if (presentation != null && displayPresentation(presentation)) {
             launchLater()
         } else {
             launchDirectly()
@@ -225,12 +226,24 @@ open class MainActivity : ChameleonActivity(), IBaseActivity<MainActivity> {
         isNightBackup = nightState
     }
 
-    private fun displayPresentation(presentation: LaunchPresentation) {
+    private fun displayPresentation(presentation: LaunchPresentation): Boolean {
         skipPresentation.visibility = View.VISIBLE
         controlOverlay.tag = presentation
-        Glide.with(this).load(presentation.images.first().url)
+
+        val dm = resources.displayMetrics
+        main.measure(MeasureSpec.makeMeasureSpec(dm.widthPixels,
+                MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(dm.heightPixels,
+                MeasureSpec.EXACTLY))
+
+        val width = presentationView.measuredWidth
+        val height = presentationView.measuredHeight
+        val images = presentation.images.sortedByDescending { it.displayingScore(dm.density, width, height) }
+        val image = images.firstOrNull() ?: return false
+
+        Glide.with(this).load(image.url)
                 .priority(Priority.HIGH)
                 .into(presentationView)
+        return true
     }
 
     private fun launchDirectly() {

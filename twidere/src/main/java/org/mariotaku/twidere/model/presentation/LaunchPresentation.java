@@ -143,8 +143,29 @@ public class LaunchPresentation {
         @JsonField(name = "url")
         String url;
 
+        @JsonField(name = "density")
+        float density;
+
+        @JsonField(name = "width")
+        int width;
+
+        @JsonField(name = "height")
+        int height;
+
         public String getUrl() {
             return url;
+        }
+
+        public float getDensity() {
+            return density;
+        }
+
+        public int getWidth() {
+            return width;
+        }
+
+        public int getHeight() {
+            return height;
         }
     }
 }

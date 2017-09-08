@@ -19,17 +19,16 @@
 
 package org.mariotaku.twidere.extension.model
 
+import android.content.Context
+import android.support.v4.os.LocaleListCompat
+import org.mariotaku.ktextension.localesCompat
 import org.mariotaku.twidere.model.presentation.LaunchPresentation
 import java.util.*
 
-/**
- * Created by mariotaku on 2017/8/20.
- */
-
-fun LaunchPresentation.shouldShow(): Boolean {
+fun LaunchPresentation.shouldShow(context: Context): Boolean {
     // Check language
-    val locale = Locale.getDefault()
-    if (locales != null && locales.none { it.matches(locale) }) {
+    val userLocales = context.resources.configuration.localesCompat
+    if (locales != null && locales.none { it.matchesAny(userLocales) }) {
         return false
     }
     // Check date/time
@@ -54,3 +53,33 @@ fun LaunchPresentation.Locale.matches(locale: Locale): Boolean {
     }
     return country == locale.country
 }
+
+fun LaunchPresentation.Locale.matchesAny(locales: LocaleListCompat): Boolean {
+    return (0 until locales.size()).any { matches(locales[it]) }
+}
+
+fun LaunchPresentation.Image.displayingScore(viewDensity: Float, viewWidth: Int,
+        viewHeight: Int): Int {
+    if (viewWidth == 0 || viewHeight == 0) return 0
+    var score = 0
+    // Compute size scores
+    score += when {
+        viewWidth == width && viewHeight <= height -> 100
+        viewHeight == height && viewWidth <= width -> 100
+        viewWidth < width && viewHeight < height -> {
+            val diffW = (width / viewWidth.toFloat() - 1).coerceAtMost(0.5f)
+            val diffH = (height / viewHeight.toFloat() - 1).coerceAtMost(0.5f)
+            100 - Math.round(diffH * 100) - Math.round(diffW * 100)
+        }
+        else -> {
+            val diffW = (width / viewWidth.toFloat() - 1).coerceAtMost(0.5f)
+            val diffH = (height / viewHeight.toFloat() - 1).coerceAtMost(0.5f)
+            100 - Math.round(diffH * 50) - Math.round(diffW * 50)
+        }
+    }
+    if (this.density != 0f) {
+        score += 100 - Math.round(Math.abs(this.density / viewDensity - 1).coerceAtMost(1f))
+    }
+    return score
+}
+

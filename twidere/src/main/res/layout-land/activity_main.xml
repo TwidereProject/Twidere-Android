@@ -30,17 +30,19 @@
         android:id="@+id/presentationView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/logoContainer"
+        android:layout_toLeftOf="@+id/logoContainer"
+        android:layout_toStartOf="@+id/logoContainer"
         android:scaleType="centerCrop"
         tools:ignore="ContentDescription"/>
 
     <LinearLayout
         android:id="@+id/logoContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:gravity="center"
-        android:minHeight="108dp"
+        android:minWidth="108dp"
         android:orientation="horizontal">
 
         <ImageView
@@ -50,32 +52,14 @@
             tools:ignore="ContentDescription"
             tools:src="@mipmap/ic_launcher"/>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/element_spacing_normal"
-            android:layout_marginStart="@dimen/element_spacing_normal"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/app_name"
-                android:textAppearance="?android:textAppearanceMedium"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/app_description"
-                android:textAppearance="?android:textAppearanceSmall"/>
-        </LinearLayout>
     </LinearLayout>
 
     <FrameLayout
         android:id="@+id/controlOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignBottom="@+id/presentationView">
+        android:layout_alignEnd="@+id/presentationView"
+        android:layout_alignRight="@+id/presentationView">
 
         <Button
             android:id="@+id/skipPresentation"
