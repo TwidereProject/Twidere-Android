@@ -26,6 +26,6 @@ operator fun <T> MultiValueMap<T>.contains(key: String): Boolean {
 }
 
 operator fun <T> MultiValueMap<T>.set(key: String, value: T) {
-    if (value in get(key)) return
+    if (get(key)?.contains(value) == true) return
     add(key, value)
 }
