@@ -75,11 +75,7 @@ deploy:
       tags: true
   # Publish to Google Play store
   - provider: script
-    script:
-      - set -o allexport
-      - source ./twidere/src/google/.supplyrc
-      - fastlane supply run
-      - set +o allexport
+    script: ./travis/scripts/google_play_deploy.sh
     on:
       repo: TwidereProject/Twidere-Android
       tags: true
