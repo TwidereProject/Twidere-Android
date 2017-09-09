@@ -1,2 +1,0 @@
-uritemplate
-python-magic

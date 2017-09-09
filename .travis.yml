@@ -48,6 +48,7 @@ before_install:
   - ./travis/scripts/decode_private_configs.sh
 
 install:
+  - gem install fastlane
   - ./travis/scripts/fetch_private_files.sh
   - cat ./travis/configs/gradle.properties > ./gradle.properties
 
