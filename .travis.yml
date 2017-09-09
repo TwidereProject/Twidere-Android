@@ -59,7 +59,7 @@ before_script:
   - ./travis/scripts/test_private_files.sh
 
 script:
-  - ./gradlew clean build
+  - ./gradlew build
 
 after_failure:
   - ./travis/scripts/upload_error_logs.sh
@@ -76,7 +76,7 @@ deploy:
       tags: true
   # Publish to Google Play store
   - provider: script
-    script: ./travis/scripts/google_play_deploy.sh
+    script: ./travis/scripts/google_play_deploy.sh ./twidere/src/google/.supplyrc
     on:
       repo: TwidereProject/Twidere-Android
       tags: true
