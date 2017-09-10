@@ -21,6 +21,7 @@ package org.mariotaku.twidere.fragment
 
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.TwidereConstants.NOTIFICATION_ID_HOME_TIMELINE
+import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_EXTRAS
 import org.mariotaku.twidere.model.ParameterizedExpression
@@ -49,6 +50,9 @@ class HomeTimelineFragment : CursorStatusesFragment() {
 
     override val timelineSyncTag: String?
         get() = getTimelineSyncTag(accountKeys)
+
+    override val filterScopes: Int
+        get() = FilterScope.HOME
 
     override fun updateRefreshState() {
         val twitter = twitterWrapper

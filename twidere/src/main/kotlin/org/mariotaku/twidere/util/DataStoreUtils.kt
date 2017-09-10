@@ -43,6 +43,7 @@ import org.mariotaku.sqliteqb.library.query.SQLSelectQuery
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.databaseItemLimitKey
 import org.mariotaku.twidere.extension.model.*
@@ -325,7 +326,7 @@ object DataStoreUtils {
 
     fun getStatusesCount(context: Context, preferences: SharedPreferences, uri: Uri,
             extraArgs: Bundle?, compareColumn: String, compare: Long, greaterThan: Boolean,
-            accountKeys: Array<UserKey>?): Int {
+            accountKeys: Array<UserKey>?, @FilterScope filterScopes: Int = FilterScope.ALL): Int {
         val keys = accountKeys ?: getActivatedAccountKeys(context)
 
         val expressions = ArrayList<Expression>()
@@ -342,7 +343,8 @@ object DataStoreUtils {
             expressions.add(Expression.lesserThan(compareColumn, compare))
         }
 
-        expressions.add(buildStatusFilterWhereClause(preferences, getTableNameByUri(uri)!!, null))
+        expressions.add(buildStatusFilterWhereClause(preferences, getTableNameByUri(uri)!!,
+                null, filterScopes))
 
         if (extraArgs != null) {
             val extras = extraArgs.getParcelable<Parcelable>(EXTRA_EXTRAS)
@@ -356,7 +358,8 @@ object DataStoreUtils {
     }
 
     fun getActivitiesCount(context: Context, uri: Uri, compareColumn: String,
-            compare: Long, greaterThan: Boolean, accountKeys: Array<UserKey>?): Int {
+            compare: Long, greaterThan: Boolean, accountKeys: Array<UserKey>?,
+            @FilterScope filterScopes: Int = FilterScope.ALL): Int {
         val keys = accountKeys ?: getActivatedAccountKeys(context)
         val selection = Expression.and(
                 Expression.inArgs(Column(Activities.ACCOUNT_KEY), keys.size),
@@ -365,7 +368,8 @@ object DataStoreUtils {
                 } else {
                     Expression.lesserThan(compareColumn, compare)
                 },
-                buildActivityFilterWhereClause(getTableNameByUri(uri)!!, null)
+                buildActivityFilterWhereClause(getTableNameByUri(uri)!!, null,
+                        filterScopes)
         )
         val whereArgs = arrayListOf<String>()
         keys.mapTo(whereArgs) { it.toString() }
@@ -375,12 +379,13 @@ object DataStoreUtils {
     fun getActivitiesCount(context: Context, uri: Uri,
             extraWhere: Expression?, extraWhereArgs: Array<String>?,
             sinceColumn: String, since: Long, followingOnly: Boolean,
-            accountKeys: Array<UserKey>?): Int {
+            accountKeys: Array<UserKey>?, @FilterScope filterScopes: Int = FilterScope.ALL): Int {
         val keys = (accountKeys ?: getActivatedAccountKeys(context)).mapToArray { it.toString() }
         val expressions = ArrayList<Expression>()
         expressions.add(Expression.inArgs(Column(Activities.ACCOUNT_KEY), keys.size))
         expressions.add(Expression.greaterThan(sinceColumn, since))
-        expressions.add(buildActivityFilterWhereClause(getTableNameByUri(uri)!!, null))
+        expressions.add(buildActivityFilterWhereClause(getTableNameByUri(uri)!!, null,
+                filterScopes))
         if (extraWhere != null) {
             expressions.add(extraWhere)
         }
@@ -457,15 +462,56 @@ object DataStoreUtils {
         return getTableNameById(getTableId(uri))
     }
 
-    fun buildActivityFilterWhereClause(table: String, extraSelection: Expression?): Expression {
+    fun buildActivityFilterWhereClause(table: String, extraSelection: Expression?,
+            @FilterScope filterScopes: Int = FilterScope.ALL): Expression {
         val filteredUsersQuery = SQLQueryBuilder
                 .select(Column(Table(Filters.Users.TABLE_NAME), Filters.Users.USER_KEY))
                 .from(Tables(Filters.Users.TABLE_NAME))
+                .where(Expression.or(
+                        Expression.equals(Column(Table(Filters.Users.TABLE_NAME), Filters.Users.SCOPE), 0),
+                        Expression.notEquals("${Filters.Users.TABLE_NAME}.${Filters.Users.SCOPE} & $filterScopes", 0)
+                ))
                 .build()
         val filteredUsersWhere = Expression.or(
                 Expression.`in`(Column(Table(table), Activities.USER_KEY), filteredUsersQuery),
                 Expression.`in`(Column(Table(table), Activities.RETWEETED_BY_USER_KEY), filteredUsersQuery),
                 Expression.`in`(Column(Table(table), Activities.QUOTED_USER_KEY), filteredUsersQuery)
+        )
+        val filteredSourcesWhere = Expression.and(
+                Expression.or(
+                        Expression.equals(Column(Table(Filters.Sources.TABLE_NAME), Filters.Sources.SCOPE), 0),
+                        Expression.notEquals("${Filters.Sources.TABLE_NAME}.${Filters.Sources.SCOPE} & $filterScopes", 0)
+                ),
+                Expression.or(
+                        Expression.likeRaw(Column(Table(table), Activities.SOURCE),
+                                "'%>'||${Filters.Sources.TABLE_NAME}.${Filters.Sources.VALUE}||'</a>%'"),
+                        Expression.likeRaw(Column(Table(table), Activities.QUOTED_SOURCE),
+                                "'%>'||${Filters.Sources.TABLE_NAME}.${Filters.Sources.VALUE}||'</a>%'")
+                )
+        )
+        val filteredKeywordsWhere = Expression.and(
+                Expression.or(
+                        Expression.equals(Column(Table(Filters.Keywords.TABLE_NAME), Filters.Keywords.SCOPE), 0),
+                        Expression.notEquals("${Filters.Keywords.TABLE_NAME}.${Filters.Keywords.SCOPE} & $filterScopes", 0)
+                ),
+                Expression.or(
+                        Expression.likeRaw(Column(Table(table), Activities.TEXT_PLAIN),
+                                "'%'||${Filters.Keywords.TABLE_NAME}.${Filters.Keywords.VALUE}||'%'"),
+                        Expression.likeRaw(Column(Table(table), Activities.QUOTED_TEXT_PLAIN),
+                                "'%'||${Filters.Keywords.TABLE_NAME}.${Filters.Keywords.VALUE}||'%'")
+                )
+        )
+        val filteredLinksWhere = Expression.and(
+                Expression.or(
+                        Expression.equals(Column(Table(Filters.Links.TABLE_NAME), Filters.Links.SCOPE), 0),
+                        Expression.notEquals("${Filters.Links.TABLE_NAME}.${Filters.Links.SCOPE} & $filterScopes", 0)
+                ),
+                Expression.or(
+                        Expression.likeRaw(Column(Table(table), Activities.SPANS),
+                                "'%'||${Filters.Links.TABLE_NAME}.${Filters.Links.VALUE}||'%'"),
+                        Expression.likeRaw(Column(Table(table), Activities.QUOTED_SPANS),
+                                "'%'||${Filters.Links.TABLE_NAME}.${Filters.Links.VALUE}||'%'")
+                )
         )
         val filteredIdsQueryBuilder = SQLQueryBuilder
                 .select(Column(Table(table), Activities._ID))
@@ -474,30 +520,15 @@ object DataStoreUtils {
                 .union()
                 .select(Columns(Column(Table(table), Activities._ID)))
                 .from(Tables(table, Filters.Sources.TABLE_NAME))
-                .where(Expression.or(
-                        Expression.likeRaw(Column(Table(table), Activities.SOURCE),
-                                "'%>'||${Filters.Sources.TABLE_NAME}.${Filters.Sources.VALUE}||'</a>%'"),
-                        Expression.likeRaw(Column(Table(table), Activities.QUOTED_SOURCE),
-                                "'%>'||${Filters.Sources.TABLE_NAME}.${Filters.Sources.VALUE}||'</a>%'")
-                ))
+                .where(filteredSourcesWhere)
                 .union()
                 .select(Columns(Column(Table(table), Activities._ID)))
                 .from(Tables(table, Filters.Keywords.TABLE_NAME))
-                .where(Expression.or(
-                        Expression.likeRaw(Column(Table(table), Activities.TEXT_PLAIN),
-                                "'%'||${Filters.Keywords.TABLE_NAME}.${Filters.Keywords.VALUE}||'%'"),
-                        Expression.likeRaw(Column(Table(table), Activities.QUOTED_TEXT_PLAIN),
-                                "'%'||${Filters.Keywords.TABLE_NAME}.${Filters.Keywords.VALUE}||'%'")
-                ))
+                .where(filteredKeywordsWhere)
                 .union()
                 .select(Columns(Column(Table(table), Activities._ID)))
                 .from(Tables(table, Filters.Links.TABLE_NAME))
-                .where(Expression.or(
-                        Expression.likeRaw(Column(Table(table), Activities.SPANS),
-                                "'%'||${Filters.Links.TABLE_NAME}.${Filters.Links.VALUE}||'%'"),
-                        Expression.likeRaw(Column(Table(table), Activities.QUOTED_SPANS),
-                                "'%'||${Filters.Links.TABLE_NAME}.${Filters.Links.VALUE}||'%'")
-                ))
+                .where(filteredLinksWhere)
         val filterExpression = Expression.or(
                 Expression.notIn(Column(Table(table), Activities._ID), filteredIdsQueryBuilder.build()),
                 Expression.equals(Column(Table(table), Activities.IS_GAP), 1)
@@ -802,7 +833,7 @@ object DataStoreUtils {
     }
 
     fun getInteractionsCount(context: Context, extraArgs: Bundle?, accountKeys: Array<UserKey>,
-            since: Long, sinceColumn: String): Int {
+            since: Long, sinceColumn: String, @FilterScope filterScopes: Int = FilterScope.ALL): Int {
         var extraWhere: Expression? = null
         var extraWhereArgs: Array<String>? = null
         var followingOnly = false
@@ -819,7 +850,7 @@ object DataStoreUtils {
             }
         }
         return getActivitiesCount(context, Activities.AboutMe.CONTENT_URI, extraWhere, extraWhereArgs,
-                sinceColumn, since, followingOnly, accountKeys)
+                sinceColumn, since, followingOnly, accountKeys, filterScopes)
     }
 
     fun addToFilter(context: Context, users: Collection<ParcelableUser>, filterAnywhere: Boolean) {

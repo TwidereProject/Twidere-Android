@@ -38,6 +38,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
+import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_FROM_USER
 import org.mariotaku.twidere.loader.ExtendedObjectCursorLoader
 import org.mariotaku.twidere.model.ParameterizedExpression
@@ -75,6 +76,8 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
     abstract val isFilterEnabled: Boolean
     abstract val notificationType: Int
     abstract val contentUri: Uri
+    @FilterScope
+    abstract val filterScopes: Int
 
     private var contentObserver: ContentObserver? = null
     private val accountListener: OnAccountsUpdateListener = OnAccountsUpdateListener {
@@ -208,7 +211,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
     protected fun getFiltersWhere(table: String): Expression? {
         if (!isFilterEnabled) return null
-        return buildStatusFilterWhereClause(preferences, table, null)
+        return buildStatusFilterWhereClause(preferences, table, null, filterScopes)
     }
 
     protected open fun processWhere(where: Expression, whereArgs: Array<String>): ParameterizedExpression {
@@ -316,6 +319,6 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
     companion object {
         private val statusColumnsLite = Statuses.COLUMNS - arrayOf(Statuses.MENTIONS_JSON,
-                Statuses.CARD)
+                Statuses.CARD, Statuses.FILTER_FLAGS)
     }
 }

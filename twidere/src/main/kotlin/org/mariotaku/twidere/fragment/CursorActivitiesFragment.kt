@@ -37,6 +37,7 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
+import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_FROM_USER
 import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.loader.ExtendedObjectCursorLoader
@@ -67,6 +68,9 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
     protected abstract val notificationType: Int
 
     protected abstract val isFilterEnabled: Boolean
+
+    @FilterScope
+    protected abstract val filterScopes: Int
 
     private var contentObserver: ContentObserver? = null
 
@@ -213,7 +217,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
 
     protected fun getFiltersWhere(table: String): Expression? {
         if (!isFilterEnabled) return null
-        return DataStoreUtils.buildActivityFilterWhereClause(table, null)
+        return DataStoreUtils.buildActivityFilterWhereClause(table, null, filterScopes)
     }
 
     protected open fun processWhere(where: Expression, whereArgs: Array<String>): ParameterizedExpression {

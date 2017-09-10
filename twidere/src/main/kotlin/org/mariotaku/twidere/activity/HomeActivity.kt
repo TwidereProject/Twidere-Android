@@ -76,6 +76,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarShowHideHelper
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.annotation.CustomTabType
+import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.annotation.NavbarStyle
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.*
@@ -946,7 +947,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                         }.fold(0L, Math::max)
                         val count = DataStoreUtils.getStatusesCount(context, preferences,
                                 Statuses.CONTENT_URI, spec.args, Statuses.TIMESTAMP, position,
-                                true, accountKeys)
+                                true, accountKeys, FilterScope.HOME)
                         result.put(i, count)
                         publishProgress(TabBadge(i, count))
                     }
