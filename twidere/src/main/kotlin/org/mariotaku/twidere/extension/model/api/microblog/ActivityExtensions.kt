@@ -32,18 +32,19 @@ import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
 
-inline val Activity.activityStatus: Status? get() = when (action) {
-    Action.MENTION -> {
-        targetObjectStatuses?.firstOrNull()
+inline val Activity.activityStatus: Status?
+    get() = when (action) {
+        Action.MENTION -> {
+            targetObjectStatuses?.firstOrNull()
+        }
+        Action.REPLY -> {
+            targetStatuses?.firstOrNull()
+        }
+        Action.QUOTE -> {
+            targetStatuses?.firstOrNull()
+        }
+        else -> null
     }
-    Action.REPLY -> {
-        targetStatuses?.firstOrNull()
-    }
-    Action.QUOTE -> {
-        targetStatuses?.firstOrNull()
-    }
-    else -> null
-}
 
 fun Activity.toParcelable(details: AccountDetails, isGap: Boolean = false,
         profileImageSize: String = "normal"): ParcelableActivity {
@@ -136,7 +137,7 @@ fun Activity.toParcelable(accountKey: UserKey, accountType: String, isGap: Boole
                 }
             }
         }
-        result.user_key = result.sources?.firstOrNull()?.key ?: UserKey("multiple", null)
+        result.user_key = result.sources?.singleOrNull()?.key ?: UserKey("multiple", null)
     } else {
         status.applyTo(accountKey, accountType, profileImageSize, result)
         result.summary_line = arrayOf(result.toSummaryLine())

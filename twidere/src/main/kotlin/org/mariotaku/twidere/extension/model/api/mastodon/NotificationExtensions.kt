@@ -49,7 +49,7 @@ fun Notification.toParcelable(accountKey: UserKey, relationships: Map<String, Re
     result.max_sort_position = result.timestamp
 
     result.sources = toSources(accountKey, relationships)
-    result.user_key = result.sources?.firstOrNull()?.key ?: UserKey("multiple", null)
+    result.user_key = result.sources?.singleOrNull()?.key ?: UserKey("multiple", null)
 
     val status = this.status
     when (type) {
