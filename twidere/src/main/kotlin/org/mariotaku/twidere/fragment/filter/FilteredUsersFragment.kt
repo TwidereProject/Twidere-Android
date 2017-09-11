@@ -20,7 +20,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.fragment_content_listview.*
 import org.mariotaku.kpreferences.KPreferences
-import org.mariotaku.ktextension.setItemAvailability
+import org.mariotaku.ktextension.setGroupAvailability
 import org.mariotaku.ktextension.spannable
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.twidere.R
@@ -100,8 +100,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         val isFeaturesSupported = extraFeaturesService.isSupported()
-        menu.setItemAvailability(R.id.add_user_single, !isFeaturesSupported)
-        menu.setItemAvailability(R.id.add_user_submenu, isFeaturesSupported)
+        menu.setGroupAvailability(R.id.import_export, isFeaturesSupported)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -109,7 +108,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
         intent.putExtra(EXTRA_SINGLE_SELECTION, true)
         intent.putExtra(EXTRA_SELECT_ONLY_ITEM_AUTOMATICALLY, true)
         val requestCode = when (item.itemId) {
-            R.id.add_user_single, R.id.add_user -> REQUEST_ADD_USER_SELECT_ACCOUNT
+            R.id.add_user -> REQUEST_ADD_USER_SELECT_ACCOUNT
             R.id.import_from_blocked_users -> {
                 REQUEST_IMPORT_BLOCKS_SELECT_ACCOUNT
             }

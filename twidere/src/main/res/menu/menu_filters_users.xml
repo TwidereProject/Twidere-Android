@@ -5,27 +5,18 @@
       tools:ignore="AlwaysShowAction">
 
     <item
-        android:id="@+id/add_user_single"
+        android:id="@+id/add_user"
         android:icon="@drawable/ic_action_add"
         android:title="@string/select_user"
         app:showAsAction="always"/>
-    <item
-        android:id="@+id/add_user_submenu"
-        android:icon="@drawable/ic_action_add"
-        android:title="@string/action_add"
-        app:showAsAction="always">
-        <menu>
-            <item
-                android:id="@+id/add_user"
-                android:title="@string/select_user"/>
-            <item
-                android:id="@+id/import_from_blocked_users"
-                android:title="@string/action_filter_import_from_blocked_users"/>
-            <item
-                android:id="@+id/import_from_muted_users"
-                android:title="@string/action_filter_import_from_muted_users"/>
-        </menu>
 
-    </item>
+    <group android:id="@+id/import_export">
+        <item
+            android:id="@+id/import_from_blocked_users"
+            android:title="@string/action_filter_import_from_blocked_users"/>
+        <item
+            android:id="@+id/import_from_muted_users"
+            android:title="@string/action_filter_import_from_muted_users"/>
+    </group>
 
 </menu>
