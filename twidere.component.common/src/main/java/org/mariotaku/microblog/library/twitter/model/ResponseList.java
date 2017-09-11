@@ -18,7 +18,8 @@
 
 package org.mariotaku.microblog.library.twitter.model;
 
-import org.mariotaku.microblog.library.annotation.NoObfuscate;
+import android.support.annotation.Keep;
+
 import org.mariotaku.microblog.library.twitter.util.InternalParseUtil;
 import org.mariotaku.restfu.http.HttpResponse;
 
@@ -29,7 +30,7 @@ import java.util.List;
  * Response list
  * Created by mariotaku on 15/5/7.
  */
-@NoObfuscate
+@Keep
 public class ResponseList<T> extends ArrayList<T> implements TwitterResponse {
 
     private int accessLevel;

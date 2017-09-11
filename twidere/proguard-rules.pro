@@ -48,9 +48,6 @@
 -keep class * extends com.bluelinelabs.logansquare.JsonMapper
 -keep @com.bluelinelabs.logansquare.annotation.JsonObject class *
 
--keep class org.mariotaku.twidere.api.twitter.annotation.NoObfuscate
--keep @org.mariotaku.twidere.api.twitter.annotation.NoObfuscate class *
-
 # https://github.com/mariotaku/RestFu
 -keep class org.mariotaku.restfu.annotation.** { *; }
 
