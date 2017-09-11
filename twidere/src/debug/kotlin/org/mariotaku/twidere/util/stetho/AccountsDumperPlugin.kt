@@ -37,13 +37,13 @@ import org.apache.commons.cli.*
 import org.json.JSONArray
 import org.json.JSONObject
 import org.mariotaku.ktextension.subArray
+import org.mariotaku.twidere.exception.NoAccountException
 import org.mariotaku.twidere.extension.model.updateDetails
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.JsonSerializer
-import org.mariotaku.twidere.util.Utils
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.ByteBuffer
@@ -174,7 +174,7 @@ class AccountsDumperPlugin(val context: Context) : DumperPlugin {
             val am = AccountManager.get(context)
             val docContext = try {
                 am.docContext(args[0])
-            } catch (e: Utils.NoAccountException) {
+            } catch (e: NoAccountException) {
                 throw DumpException("Account not found")
             }
             if (args.size == 1) {
@@ -196,7 +196,7 @@ class AccountsDumperPlugin(val context: Context) : DumperPlugin {
             val am = AccountManager.get(context)
             val docContext = try {
                 am.docContext(args[0])
-            } catch (e: Utils.NoAccountException) {
+            } catch (e: NoAccountException) {
                 throw DumpException("Account not found")
             }
             val value = args[2]
@@ -219,7 +219,7 @@ class AccountsDumperPlugin(val context: Context) : DumperPlugin {
             val am = AccountManager.get(context)
             val docContext = try {
                 am.docContext(args[0])
-            } catch (e: Utils.NoAccountException) {
+            } catch (e: NoAccountException) {
                 throw DumpException("Account not found")
             }
             val value = args[2]
@@ -308,7 +308,7 @@ class AccountsDumperPlugin(val context: Context) : DumperPlugin {
 
         private fun AccountManager.docContext(forKey: String): DocumentContext {
             val accountKey = UserKey.valueOf(forKey)
-            val details = AccountUtils.getAccountDetails(this, accountKey, true) ?: throw Utils.NoAccountException()
+            val details = AccountUtils.getAccountDetails(this, accountKey, true) ?: throw NoAccountException()
             val configuration = Configuration.builder()
                     .jsonProvider(JsonOrgJsonProvider())
                     .mappingProvider(AsIsMappingProvider())

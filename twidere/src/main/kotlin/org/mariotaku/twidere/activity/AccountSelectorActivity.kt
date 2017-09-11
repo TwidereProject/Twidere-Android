@@ -95,7 +95,7 @@ class AccountSelectorActivity : BaseActivity(), OnItemClickListener {
             val oauthOnly = isOAuthOnly
             val accountHost = accountHost
             val accountType = accountType
-            addAll(allAccountDetails.filter {
+            val matchedAccounts = allAccountDetails.filter {
                 if (extraKeys != null) {
                     return@filter extraKeys.contains(it.key)
                 }
@@ -104,14 +104,15 @@ class AccountSelectorActivity : BaseActivity(), OnItemClickListener {
                 }
                 if (USER_TYPE_TWITTER_COM == accountHost) {
                     if (it.key.host != null && it.type != AccountType.TWITTER) return@filter false
-                } else if (accountHost != null) {
+                } else if (accountHost != null && accountType == AccountType.MASTODON) {
                     if (accountHost != it.key.host) return@filter false
                 }
                 if (accountType != null) {
                     if (accountType != it.type) return@filter false
                 }
                 return@filter true
-            })
+            }
+            addAll(matchedAccounts)
         }
         accountsList.choiceMode = if (isSingleSelection) ListView.CHOICE_MODE_NONE else ListView.CHOICE_MODE_MULTIPLE
         if (isSingleSelection) {

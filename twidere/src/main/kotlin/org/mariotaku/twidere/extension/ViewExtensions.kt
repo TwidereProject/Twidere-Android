@@ -80,6 +80,9 @@ fun View.hideIfEmpty(dependency: TextView, hideVisibility: Int = View.GONE) {
     }
 }
 
+fun View.setVisible(visible: Boolean, hiddenVisibility: Int = View.GONE) {
+    visibility = if (visible) View.VISIBLE else hiddenVisibility
+}
 private fun offsetToRoot(view: View, rect: Rect) {
     var parent = view.parent as? View
     while (parent != null) {

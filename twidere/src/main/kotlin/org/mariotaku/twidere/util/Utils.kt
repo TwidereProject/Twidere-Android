@@ -94,8 +94,6 @@ import java.util.regex.Pattern
 
 object Utils {
 
-    class NoAccountException(var accountHost: String? = null) : Exception()
-
     private val PATTERN_XML_RESOURCE_IDENTIFIER = Pattern.compile("res/xml/([\\w_]+)\\.xml")
     private val PATTERN_RESOURCE_IDENTIFIER = Pattern.compile("@([\\w_]+)/([\\w_]+)")
 
