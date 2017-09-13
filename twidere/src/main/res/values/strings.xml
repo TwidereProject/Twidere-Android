@@ -59,6 +59,7 @@
     <string name="action_enable">Enable</string>
     <string name="action_enable_notifications">Enable notifications</string>
     <string name="action_enable_retweets">Enable retweets</string>
+    <string name="action_export_to_muted_users">Export to muted users</string>
     <string name="action_favorite">Favorite</string>
     <string name="action_filter_import_from_blocked_users">Import from blocked users</string>
     <string name="action_filter_import_from_muted_users">Import from muted users</string>

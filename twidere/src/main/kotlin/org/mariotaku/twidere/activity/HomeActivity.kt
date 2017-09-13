@@ -957,8 +957,9 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                             val tag = Utils.getReadPositionTagWithAccount(ReadPositionTag.ACTIVITIES_ABOUT_ME, it)
                             readStateManager.getPosition(tag)
                         }.fold(0L, Math::max)
-                        val count = DataStoreUtils.getInteractionsCount(context, spec.args,
-                                accountKeys, position, Activities.TIMESTAMP)
+                        val count = DataStoreUtils.getInteractionsCount(context, preferences,
+                                spec.args, accountKeys, position, Activities.TIMESTAMP,
+                                FilterScope.INTERACTIONS)
                         result.put(i, count)
                         publishProgress(TabBadge(i, count))
                     }

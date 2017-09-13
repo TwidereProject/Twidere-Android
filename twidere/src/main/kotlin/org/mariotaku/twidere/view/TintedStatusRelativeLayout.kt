@@ -35,28 +35,41 @@ import org.mariotaku.chameleon.internal.SupportMethods
 import org.mariotaku.twidere.R
 import android.support.v4.view.OnApplyWindowInsetsListener as OnApplyWindowInsetsListenerCompat
 
-/**
- * Created by mariotaku on 14/11/26.
- */
 class TintedStatusRelativeLayout(context: Context, attrs: AttributeSet? = null) :
         ExtendedRelativeLayout(context, attrs), TintedStatusLayout, ChameleonView,
         ChameleonView.StatusBarThemeable {
 
     override var setPaddingEnabled: Boolean = false
 
-    private val colorPaint: Paint
-    var statusBarHeight: Int = 0
+    override var statusBarColor: Int = Color.TRANSPARENT
+        set(value) {
+            field = value
+            updatePaint()
+            invalidate()
+        }
+
+    override var statusBarAlpha: Float = 1f
+        set(value) {
+            field = value
+            updatePaint()
+            invalidate()
+        }
+
+    override var statusBarHeight: Int = 0
         set(value) {
             field = value
             invalidate()
         }
+
+    private val statusBarPaint: Paint
+
     var applyWindowInsetsListener: OnApplyWindowInsetsListenerCompat? = null
 
     init {
         val a = context.obtainStyledAttributes(attrs, R.styleable.TintedStatusLayout)
         setPaddingEnabled = a.getBoolean(R.styleable.TintedStatusLayout_setPadding, false)
         a.recycle()
-        colorPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+        statusBarPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         setWillNotDraw(false)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -80,15 +93,9 @@ class TintedStatusRelativeLayout(context: Context, attrs: AttributeSet? = null) 
     }
 
 
-    override fun setStatusBarColor(color: Int) {
-        colorPaint.color = 0xFF000000.toInt() or color
-        colorPaint.alpha = Color.alpha(color)
-        invalidate()
-    }
-
     override fun dispatchDraw(canvas: Canvas) {
         super.dispatchDraw(canvas)
-        canvas.drawRect(0f, 0f, width.toFloat(), statusBarHeight.toFloat(), colorPaint)
+        canvas.drawRect(0f, 0f, width.toFloat(), statusBarHeight.toFloat(), statusBarPaint)
     }
 
     override fun isPostApplyTheme(): Boolean {
@@ -105,7 +112,7 @@ class TintedStatusRelativeLayout(context: Context, attrs: AttributeSet? = null) 
     override fun applyAppearance(appearance: ChameleonView.Appearance) {
         val a = appearance as Appearance
         val statusBarColor = a.statusBarColor
-        setStatusBarColor(statusBarColor)
+        this.statusBarColor = statusBarColor
         val activity = ChameleonUtils.getActivity(context)
         if (activity != null) {
             val window = activity.window
@@ -116,6 +123,11 @@ class TintedStatusRelativeLayout(context: Context, attrs: AttributeSet? = null) 
 
     override fun isStatusBarColorHandled(): Boolean {
         return true
+    }
+
+    private fun updatePaint() {
+        statusBarPaint.color = statusBarColor
+        statusBarPaint.alpha = (Color.alpha(statusBarColor) * statusBarAlpha).toInt()
     }
 
     class Appearance : ChameleonView.Appearance {

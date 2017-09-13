@@ -27,6 +27,7 @@ import org.mariotaku.twidere.extension.model.api.applyTo
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.toLite
 import org.mariotaku.twidere.extension.model.toSummaryLine
+import org.mariotaku.twidere.extension.model.updateFilterInfo
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.ParcelableUserList
@@ -150,6 +151,9 @@ fun Activity.toParcelable(accountKey: UserKey, accountType: String, isGap: Boole
         return@fold folded || (item.isFollowing == true)
     } ?: false
     result.is_gap = isGap
+
+    result.updateFilterInfo()
+
     return result
 }
 

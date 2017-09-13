@@ -16,6 +16,7 @@ import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
+import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.util.DataStoreUtils
@@ -83,7 +84,27 @@ class CreateUserMuteTask(
         val message = context.getString(R.string.muted_user, manager.getDisplayName(user,
                 nameFirst))
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
 
+
+    companion object {
+        fun muteUsers(context: Context, account: AccountDetails, userKeys: Array<UserKey>) {
+            when (account.type) {
+                AccountType.TWITTER -> {
+                    val twitter = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                    userKeys.forEach { userKey ->
+                        twitter.createMute(userKey.id).toParcelable(account)
+                    }
+                }
+                AccountType.MASTODON -> {
+                    val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
+                    userKeys.forEach { userKey ->
+                        mastodon.muteUser(userKey.id)
+                    }
+                }
+                else -> throw APINotSupportedException(account.type)
+            }
+        }
     }
 
 }

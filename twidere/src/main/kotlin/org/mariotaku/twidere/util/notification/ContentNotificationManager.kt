@@ -88,7 +88,7 @@ class ContentNotificationManager(
                 Expression.notEquals(Statuses.IS_GAP, 1)
         )
         val selectionArgs = arrayOf(accountKey.toString())
-        val filteredSelection = buildStatusFilterWhereClause(preferences, Statuses.TABLE_NAME,
+        val filteredSelection = DataStoreUtils.buildStatusFilterWhereClause(preferences, Statuses.TABLE_NAME,
                 selection, FilterScope.HOME)
         val userProjection = arrayOf(Statuses.USER_KEY, Statuses.USER_NAME, Statuses.USER_SCREEN_NAME)
         val statusProjection = arrayOf(Statuses.POSITION_KEY)
@@ -177,8 +177,8 @@ class ContentNotificationManager(
         )
         val selectionArgs = arrayOf(accountKey.toString())
 
-        val filteredSelection = DataStoreUtils.buildActivityFilterWhereClause(Activities.AboutMe.TABLE_NAME,
-                selection, FilterScope.INTERACTIONS)
+        val filteredSelection = DataStoreUtils.buildStatusFilterWhereClause(preferences,
+                Activities.AboutMe.TABLE_NAME, selection, FilterScope.INTERACTIONS)
         val builder = NotificationChannelSpec.contentInteractions.accountNotificationBuilder(context,
                 accountKey)
         val pebbleNotificationStringBuilder = StringBuilder()

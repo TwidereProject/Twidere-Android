@@ -4,139 +4,46 @@ import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
-import android.content.SharedPreferences
 import android.database.Cursor
 import android.net.Uri
 import android.provider.BaseColumns
 import android.support.annotation.WorkerThread
 import android.support.v4.util.LongSparseArray
-import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.toStringArray
-import org.mariotaku.ktextension.useCursor
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.sqliteqb.library.*
 import org.mariotaku.sqliteqb.library.Columns.Column
-import org.mariotaku.twidere.annotation.FilterScope
-import org.mariotaku.twidere.constant.filterPossibilitySensitiveStatusesKey
-import org.mariotaku.twidere.constant.filterUnavailableQuoteStatusesKey
 import org.mariotaku.twidere.extension.model.component1
 import org.mariotaku.twidere.extension.queryReference
 import org.mariotaku.twidere.extension.rawQuery
 import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.ParcelableStatus.FilterFlags
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.util.DataStoreUtils.ACTIVITIES_URIS
 import java.io.IOException
 
-fun buildStatusFilterWhereClause(preferences: SharedPreferences, table: String,
-        extraSelection: Expression?, @FilterScope filterScopes: Int = FilterScope.ALL): Expression {
-    val filteredUsersQuery = SQLQueryBuilder
-            .select(Column(Table(Filters.Users.TABLE_NAME), Filters.Users.USER_KEY))
-            .from(Tables(Filters.Users.TABLE_NAME))
-            .where(Expression.or(
-                    Expression.equals(Column(Table(Filters.Users.TABLE_NAME), Filters.Users.SCOPE), 0),
-                    Expression.notEquals("${Filters.Users.TABLE_NAME}.${Filters.Users.SCOPE} & $filterScopes", 0)
-            ))
-            .build()
-    val filteredUsersWhere = Expression.or(
-            Expression.`in`(Column(Table(table), Statuses.USER_KEY), filteredUsersQuery),
-            Expression.`in`(Column(Table(table), Statuses.RETWEETED_BY_USER_KEY), filteredUsersQuery),
-            Expression.`in`(Column(Table(table), Statuses.QUOTED_USER_KEY), filteredUsersQuery)
-    )
-    val filteredSourcesWhere = Expression.and(
-            Expression.or(
-                    Expression.equals(Column(Table(Filters.Sources.TABLE_NAME), Filters.Sources.SCOPE), 0),
-                    Expression.notEquals("${Filters.Sources.TABLE_NAME}.${Filters.Sources.SCOPE} & $filterScopes", 0)
-            ),
-            Expression.or(
-                    Expression.likeRaw(Column(Table(table), Statuses.SOURCE),
-                            "'%>'||${Filters.Sources.TABLE_NAME}.${Filters.Sources.VALUE}||'</a>%'"),
-                    Expression.likeRaw(Column(Table(table), Statuses.QUOTED_SOURCE),
-                            "'%>'||${Filters.Sources.TABLE_NAME}.${Filters.Sources.VALUE}||'</a>%'")
-            )
-    )
-    val filteredKeywordsWhere = Expression.and(
-            Expression.or(
-                    Expression.equals(Column(Table(Filters.Keywords.TABLE_NAME), Filters.Keywords.SCOPE), 0),
-                    Expression.notEquals("${Filters.Keywords.TABLE_NAME}.${Filters.Keywords.SCOPE} & $filterScopes", 0)
-            ),
-            Expression.or(Expression.likeRaw(Column(Table(table), Statuses.TEXT_PLAIN),
-                    "'%'||${Filters.Keywords.TABLE_NAME}.${Filters.Keywords.VALUE}||'%'"),
-                    Expression.likeRaw(Column(Table(table), Statuses.QUOTED_TEXT_PLAIN),
-                            "'%'||${Filters.Keywords.TABLE_NAME}.${Filters.Keywords.VALUE}||'%'"))
-    )
-    val filteredLinksWhere = Expression.and(
-            Expression.or(
-                    Expression.equals(Column(Table(Filters.Links.TABLE_NAME), Filters.Links.SCOPE), 0),
-                    Expression.notEquals("${Filters.Links.TABLE_NAME}.${Filters.Links.SCOPE} & $filterScopes", 0)
-            ),
-            Expression.or(
-                    Expression.likeRaw(Column(Table(table), Statuses.SPANS),
-                            "'%'||${Filters.Links.TABLE_NAME}.${Filters.Links.VALUE}||'%'"),
-                    Expression.likeRaw(Column(Table(table), Statuses.QUOTED_SPANS),
-                            "'%'||${Filters.Links.TABLE_NAME}.${Filters.Links.VALUE}||'%'")
-            )
-    )
-    val filteredIdsQueryBuilder = SQLQueryBuilder
-            .select(Column(Table(table), Statuses._ID))
-            .from(Tables(table))
-            .where(filteredUsersWhere)
-            .union()
-            .select(Columns(Column(Table(table), Statuses._ID)))
-            .from(Tables(table, Filters.Sources.TABLE_NAME))
-            .where(filteredSourcesWhere)
-            .union()
-            .select(Columns(Column(Table(table), Statuses._ID)))
-            .from(Tables(table, Filters.Keywords.TABLE_NAME))
-            .where(filteredKeywordsWhere)
-            .union()
-            .select(Columns(Column(Table(table), Statuses._ID)))
-            .from(Tables(table, Filters.Links.TABLE_NAME))
-            .where(filteredLinksWhere)
-    var filterFlags: Long = 0
-    if (preferences[filterUnavailableQuoteStatusesKey]) {
-        filterFlags = filterFlags or FilterFlags.QUOTE_NOT_AVAILABLE
-    }
-    if (preferences[filterPossibilitySensitiveStatusesKey]) {
-        filterFlags = filterFlags or FilterFlags.POSSIBLY_SENSITIVE
-    }
-
-    val filterExpression = Expression.or(
-            Expression.and(
-                    Expression("(${Statuses.FILTER_FLAGS} & $filterFlags) == 0"),
-                    Expression.notIn(Column(Table(table), Statuses._ID), filteredIdsQueryBuilder.build())
-            ),
-            Expression.equals(Column(Table(table), Statuses.IS_GAP), 1)
-    )
-    if (extraSelection != null) {
-        return Expression.and(filterExpression, extraSelection)
-    }
-    return filterExpression
-}
 
 @SuppressLint("Recycle")
-fun deleteDrafts(context: Context, draftIds: LongArray): Int {
+fun Context.deleteDrafts(draftIds: LongArray): Int {
     val where = Expression.inArgs(Drafts._ID, draftIds.size).sql
     val whereArgs = draftIds.mapToArray(Long::toString)
 
-    context.contentResolver.query(Drafts.CONTENT_URI, Drafts.COLUMNS, where, whereArgs,
-            null).useCursor { cursor ->
+    contentResolver.queryReference(Drafts.CONTENT_URI, Drafts.COLUMNS, where, whereArgs, null).use { (cursor) ->
         val indices = ObjectCursor.indicesFrom(cursor, Draft::class.java)
         cursor.moveToFirst()
         while (!cursor.isAfterLast) {
             val draft = indices.newObject(cursor)
             draft.media?.forEach { item ->
-                Utils.deleteMedia(context, Uri.parse(item.uri))
+                Utils.deleteMedia(this, Uri.parse(item.uri))
             }
             cursor.moveToNext()
         }
     }
-    return context.contentResolver.delete(Drafts.CONTENT_URI, where, whereArgs)
+    return contentResolver.delete(Drafts.CONTENT_URI, where, whereArgs)
 }
 
 fun ContentResolver.deleteAccountData(accountKey: UserKey) {

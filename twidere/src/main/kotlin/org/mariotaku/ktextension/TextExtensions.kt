@@ -17,20 +17,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.view
+package org.mariotaku.ktextension
 
-import org.mariotaku.twidere.view.iface.IExtendedView
-
-/**
- * Created by mariotaku on 15/4/27.
- */
-interface TintedStatusLayout : IExtendedView {
-    var statusBarColor: Int
-
-    var statusBarAlpha: Float
-
-    var statusBarHeight: Int
-
-    var setPaddingEnabled: Boolean
-
+fun CharSequence.appendTo(sb: StringBuilder) {
+    sb.append(this)
 }

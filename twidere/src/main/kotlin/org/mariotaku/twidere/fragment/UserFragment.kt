@@ -1502,7 +1502,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val statusBarColor = sArgbEvaluator.evaluate(factor, 0xA0000000.toInt(),
                 ChameleonUtils.darkenColor(primaryColorDark)) as Int
         val window = activity.window
-        userFragmentView.setStatusBarColor(statusBarColor)
+        userFragmentView.statusBarColor = statusBarColor
         WindowSupport.setLightStatusBar(window, ThemeUtils.isLightColor(statusBarColor))
         val stackedTabColor = primaryColor
 

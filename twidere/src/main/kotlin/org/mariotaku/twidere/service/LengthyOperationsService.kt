@@ -166,7 +166,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
     private fun handleDiscardDraftIntent(intent: Intent) {
         val data = intent.data ?: return
         task {
-            if (deleteDrafts(this, longArrayOf(data.lastPathSegment.toLongOr(-1L))) < 1) {
+            if (deleteDrafts(longArrayOf(data.lastPathSegment.toLongOr(-1L))) < 1) {
                 throw IOException()
             }
             return@task data

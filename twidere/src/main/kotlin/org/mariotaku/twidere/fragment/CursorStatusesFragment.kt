@@ -53,7 +53,6 @@ import org.mariotaku.twidere.task.twitter.GetStatusesTask
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.ErrorInfoStore
 import org.mariotaku.twidere.util.Utils
-import org.mariotaku.twidere.util.buildStatusFilterWhereClause
 
 /**
  * Created by mariotaku on 14/12/3.
@@ -211,7 +210,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
     protected fun getFiltersWhere(table: String): Expression? {
         if (!isFilterEnabled) return null
-        return buildStatusFilterWhereClause(preferences, table, null, filterScopes)
+        return DataStoreUtils.buildStatusFilterWhereClause(preferences, table, null, filterScopes)
     }
 
     protected open fun processWhere(where: Expression, whereArgs: Array<String>): ParameterizedExpression {
@@ -319,6 +318,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
     companion object {
         private val statusColumnsLite = Statuses.COLUMNS - arrayOf(Statuses.MENTIONS_JSON,
-                Statuses.CARD, Statuses.FILTER_FLAGS)
+                Statuses.CARD, Statuses.FILTER_FLAGS, Statuses.FILTER_USERS, Statuses.FILTER_LINKS,
+                Statuses.FILTER_SOURCES, Statuses.FILTER_NAMES, Statuses.FILTER_TEXTS)
     }
 }

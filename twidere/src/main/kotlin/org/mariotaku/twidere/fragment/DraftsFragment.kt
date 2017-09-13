@@ -295,7 +295,7 @@ class DraftsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, OnItemClickList
 
         override fun doInBackground(vararg params: Any) {
             val activity = activityRef.get() ?: return
-            deleteDrafts(activity, ids)
+            activity.deleteDrafts(ids)
             ids.forEach { id ->
                 val uri = Drafts.CONTENT_URI_NOTIFICATIONS.withAppendedPath(id.toString())
                 activity.contentResolver.delete(uri, null, null)
@@ -304,8 +304,8 @@ class DraftsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, OnItemClickList
 
         override fun onPreExecute() {
             val activity = activityRef.get() ?: return
-            (activity as IBaseActivity<*>).executeAfterFragmentResumed { activity ->
-                val f = ProgressDialogFragment.show(activity.supportFragmentManager, FRAGMENT_TAG_DELETING_DRAFTS)
+            (activity as IBaseActivity<*>).executeAfterFragmentResumed {
+                val f = ProgressDialogFragment.show(it.supportFragmentManager, FRAGMENT_TAG_DELETING_DRAFTS)
                 f.isCancelable = false
             }
         }

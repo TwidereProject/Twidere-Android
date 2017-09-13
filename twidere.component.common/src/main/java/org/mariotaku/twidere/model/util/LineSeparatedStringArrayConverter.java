@@ -19,25 +19,29 @@
 package org.mariotaku.twidere.model.util;
 
 import org.mariotaku.commons.objectcursor.AbsArrayCursorFieldConverter;
-import org.mariotaku.twidere.model.UserKey;
 
 /**
- * Created by mariotaku on 16/3/7.
+ * Created by mariotaku on 2017/9/12.
  */
-public class UserKeysCursorFieldConverter extends AbsArrayCursorFieldConverter<UserKey> {
 
+public class LineSeparatedStringArrayConverter extends AbsArrayCursorFieldConverter<String> {
     @Override
-    protected UserKey[] newArray(int size) {
-        return new UserKey[size];
+    protected String[] newArray(int size) {
+        return new String[size];
     }
 
     @Override
-    protected UserKey parseItem(String s) {
-        return UserKey.valueOf(s);
+    protected String convertToString(String item) {
+        return item;
     }
 
     @Override
-    protected String convertToString(UserKey item) {
-        return item.toString();
+    protected String parseItem(String str) {
+        return str;
+    }
+
+    @Override
+    protected char separatorChar() {
+        return '\n';
     }
 }

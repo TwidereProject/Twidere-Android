@@ -34,8 +34,10 @@ import org.mariotaku.commons.objectcursor.LoganSquareCursorFieldConverter;
 import org.mariotaku.library.objectcursor.annotation.AfterCursorObjectCreated;
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
+import org.mariotaku.twidere.model.util.LineSeparatedStringArrayConverter;
 import org.mariotaku.twidere.model.util.UserKeyConverter;
 import org.mariotaku.twidere.model.util.UserKeyCursorFieldConverter;
+import org.mariotaku.twidere.model.util.UserKeysCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 
@@ -327,6 +329,21 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @FilterFlags
     @CursorField(Statuses.FILTER_FLAGS)
     public long filter_flags;
+
+    @CursorField(value = Statuses.FILTER_USERS, converter = UserKeysCursorFieldConverter.class)
+    public UserKey[] filter_users;
+
+    @CursorField(value = Statuses.FILTER_SOURCES, converter = LineSeparatedStringArrayConverter.class)
+    public String[] filter_sources;
+
+    @CursorField(value = Statuses.FILTER_LINKS, converter = LineSeparatedStringArrayConverter.class)
+    public String[] filter_links;
+
+    @CursorField(value = Statuses.FILTER_NAMES, converter = LineSeparatedStringArrayConverter.class)
+    public String[] filter_names;
+
+    @CursorField(value = Statuses.FILTER_TEXTS)
+    public String filter_texts;
 
     public transient boolean is_pinned_status;
     public transient boolean is_filtered;

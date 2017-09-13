@@ -26,15 +26,21 @@ import java.lang.annotation.RetentionPolicy;
 
 @IntDef(value = {FilterScope.HOME, FilterScope.INTERACTIONS, FilterScope.MESSAGES,
         FilterScope.SEARCH_RESULT, FilterScope.LIST_GROUP_TIMELINE, FilterScope.FAVORITES,
-        FilterScope.ALL}, flag = true)
+        FilterScope.ALL, FilterScope.FLAG_MATCH_NAME}, flag = true)
 @Retention(RetentionPolicy.SOURCE)
 public @interface FilterScope {
     int HOME = 0x1;
     int INTERACTIONS = 0x2;
     int MESSAGES = 0x4;
     int SEARCH_RESULT = 0x8;
-    int LIST_GROUP_TIMELINE = 0x16;
-    int FAVORITES = 0x32;
+    int LIST_GROUP_TIMELINE = 0x10;
+    int FAVORITES = 0x20;
+
+    int FLAG_MATCH_NAME = 0x80000000;
+    int FLAG_MATCH_TEXT = 0x40000000;
+
+    int MASK_FLAG = 0xFF000000;
+    int MASK_SCOPE = 0x00FFFFFF;
 
     // Contains all flags
     int ALL = 0xFFFFFFFF;

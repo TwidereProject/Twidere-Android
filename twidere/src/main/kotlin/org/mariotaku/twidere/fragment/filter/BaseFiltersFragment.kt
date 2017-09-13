@@ -45,7 +45,6 @@ import android.widget.AbsListView.MultiChoiceModeListener
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.dialog_auto_complete_textview.*
 import kotlinx.android.synthetic.main.fragment_content_listview.*
 import org.mariotaku.ktextension.setGroupAvailability
@@ -108,8 +107,8 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
-        if (!isVisibleToUser && actionMode != null) {
-            actionMode!!.finish()
+        if (!isVisibleToUser) {
+            actionMode?.finish()
         }
     }
 
@@ -121,6 +120,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
         actionMode = mode
         setControlVisible(true)
         mode.menuInflater.inflate(R.menu.action_multi_select_items, menu)
+        mode.menuInflater.inflate(R.menu.action_multi_select_filtered_users, menu)
         menu.setGroupAvailability(R.id.selection_group, true)
         return true
     }
@@ -128,6 +128,15 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
     override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
         updateTitle(mode)
         listView.updateSelectionItems(menu)
+        val checkedPos = listView.checkedItemPositions
+        val adapter = this.adapter
+        val hasUneditableItem = (0 until checkedPos.size()).any { i ->
+            if (checkedPos.valueAt(i) && adapter is IFilterAdapter) {
+                return@any adapter.isReadOnly(checkedPos.keyAt(i))
+            }
+            return@any false
+        }
+        menu.setGroupAvailability(R.id.edit_group, !hasUneditableItem)
         return true
     }
 
@@ -158,12 +167,6 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
     }
 
     override fun onItemCheckedStateChanged(mode: ActionMode, position: Int, id: Long, checked: Boolean) {
-        val adapter = this.adapter
-        if (adapter is SelectableItemAdapter) {
-            if (!adapter.isSelectable(position) && checked) {
-                listView.setItemChecked(position, false)
-            }
-        }
         updateTitle(mode)
         mode.invalidate()
     }
@@ -188,7 +191,8 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor?> {
-        return CursorLoader(activity, contentUri, contentColumns, null, null, sortOrder)
+        val selection = Expression.isNull(Columns.Column(Filters.USER_KEY))
+        return CursorLoader(activity, contentUri, contentColumns, selection.sql, null, sortOrder)
     }
 
     override fun onLoadFinished(loader: Loader<Cursor?>, data: Cursor?) {
@@ -321,15 +325,15 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
 
     }
 
-    interface SelectableItemAdapter {
-        fun isSelectable(position: Int): Boolean
+    interface IFilterAdapter {
+        fun isReadOnly(position: Int): Boolean
     }
 
 
     private class FilterListAdapter(
             context: Context
     ) : SimpleCursorAdapter(context, R.layout.simple_list_item_activated_1, null,
-            emptyArray(), intArrayOf(), 0), SelectableItemAdapter {
+            emptyArray(), intArrayOf(), 0), IFilterAdapter {
 
         private var indices: ObjectCursor.CursorIndices<FiltersData.BaseItem>? = null
         private val secondaryTextColor = ThemeUtils.getTextColorSecondary(context)
@@ -357,18 +361,20 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
         }
 
 
-        override fun isSelectable(position: Int): Boolean {
+        override fun isReadOnly(position: Int): Boolean {
             val cursor = this.cursor ?: return false
+            val indices = this.indices ?: return false
             if (cursor.moveToPosition(position)) {
-                return cursor.getLong(indices!![Filters.SOURCE]) < 0
+                return cursor.getLong(indices[Filters.SOURCE]) >= 0
             }
             return false
         }
 
         fun getFilterItem(position: Int): FiltersData.BaseItem? {
             val cursor = this.cursor ?: return null
+            val indices = this.indices ?: return null
             if (cursor.moveToPosition(position)) {
-                return indices!!.newObject(cursor)
+                return indices.newObject(cursor)
             }
             return null
         }
@@ -382,6 +388,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
         internal const val REQUEST_ADD_USER_SELECT_ACCOUNT = 201
         internal const val REQUEST_IMPORT_BLOCKS_SELECT_ACCOUNT = 202
         internal const val REQUEST_IMPORT_MUTES_SELECT_ACCOUNT = 203
+        internal const val REQUEST_EXPORT_MUTES_SELECT_ACCOUNT = 204
 
     }
 }

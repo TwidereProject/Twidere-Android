@@ -29,7 +29,6 @@ import android.support.annotation.RequiresApi
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
-import android.support.v4.graphics.ColorUtils
 import android.support.v4.view.ViewCompat
 import android.support.v4.view.ViewPager
 import android.support.v4.view.WindowInsetsCompat
@@ -127,6 +126,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
                 if (actionBar is WindowDecorActionBar) {
                     val toolbar = actionBar.decorToolbar.viewGroup
                     toolbar.alpha = offset
+                    activityLayout.statusBarAlpha = offset
                 }
                 try {
                     actionBar.hideOffset = Math.round(controlBarHeight * (1f - offset))
@@ -152,10 +152,10 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         swipeContainer.listener = this
         swipeContainer.backgroundAlpha = 1f
         WindowSupport.setStatusBarColor(window, Color.TRANSPARENT)
-        activityLayout.setStatusBarColor(overrideTheme.colorToolbar)
+        activityLayout.statusBarColor = overrideTheme.colorToolbar
         ViewCompat.setOnApplyWindowInsetsListener(activityLayout) { view, insets ->
             val statusBarHeight = insets.systemWindowInsetTop - ThemeUtils.getActionBarHeight(this)
-            activityLayout.setStatusBarHeight(statusBarHeight)
+            activityLayout.statusBarHeight = statusBarHeight
             onApplyWindowInsets(view, insets)
         }
     }
@@ -299,8 +299,10 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             if (visible) {
                 window.decorView.removeSystemUiVisibility(FLAG_SYSTEM_UI_HIDE_BARS)
+                activityLayout.statusBarAlpha = 1f
             } else {
                 window.decorView.addSystemUiVisibility(FLAG_SYSTEM_UI_HIDE_BARS)
+                activityLayout.statusBarAlpha = 0f
             }
         } else {
             setControlBarVisibleAnimate(visible)
@@ -380,7 +382,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         swipeContainer.backgroundAlpha = offsetFactor
         val colorToolbar = overrideTheme.colorToolbar
         val alpha = Math.round(Color.alpha(colorToolbar) * offsetFactor).coerceIn(0..255)
-        activityLayout.setStatusBarColor(ColorUtils.setAlphaComponent(colorToolbar, alpha))
+        activityLayout.statusBarAlpha = alpha / 255f
     }
 
     override fun onSwipeStateChanged(state: Int) {
@@ -555,6 +557,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
             Toast.makeText(activity, R.string.message_toast_error_occurred, Toast.LENGTH_SHORT).show()
         }
     }
+
     companion object {
 
         private val REQUEST_SHARE_MEDIA = 201

@@ -731,6 +731,11 @@ public interface TwidereDataStore {
         String ACCOUNT_COLOR = "account_color";
 
         String FILTER_FLAGS = "filter_flags";
+        String FILTER_USERS = "filter_users";
+        String FILTER_LINKS = "filter_links";
+        String FILTER_SOURCES = "filter_sources";
+        String FILTER_NAMES = "filter_names";
+        String FILTER_TEXTS = "filter_texts";
 
         String DEFAULT_SORT_ORDER = TIMESTAMP + " DESC, " + SORT_ID + " DESC, " + ID
                 + " DESC";

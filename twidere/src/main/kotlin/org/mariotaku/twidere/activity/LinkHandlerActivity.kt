@@ -175,8 +175,11 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
         setTitle(linkId, uri)
         finishOnly = uri.getQueryParameter(QUERY_PARAM_FINISH_ONLY)?.toBoolean() == true
 
-        supportActionBar?.setBackgroundDrawable(ActionBarColorDrawable.create(overrideTheme.colorToolbar,
+        val theme = overrideTheme
+
+        supportActionBar?.setBackgroundDrawable(ActionBarColorDrawable.create(theme.colorToolbar,
                 true))
+        contentView?.statusBarColor = theme.statusBarColor
         if (fragment is IToolBarSupportFragment) {
             ThemeUtils.setCompatContentViewOverlay(window, EmptyDrawable())
         }

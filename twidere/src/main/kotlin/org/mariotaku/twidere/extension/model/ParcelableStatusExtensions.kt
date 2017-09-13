@@ -1,9 +1,11 @@
 package org.mariotaku.twidere.extension.model
 
 import org.mariotaku.ktextension.addAllTo
+import org.mariotaku.ktextension.addTo
 import org.mariotaku.microblog.library.mastodon.annotation.StatusVisibility
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
 import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.util.HtmlEscapeHelper
 import org.mariotaku.twidere.util.UriUtils
 import org.mariotaku.twidere.util.Utils
 
@@ -47,23 +49,26 @@ val ParcelableStatus.replyMentions: Array<ParcelableUserMention>
         return result.toTypedArray()
     }
 
-inline val ParcelableStatus.user_acct: String get() = if (account_key.host == user_key.host) {
-    user_screen_name
-} else {
-    "$user_screen_name@${user_key.host}"
-}
+inline val ParcelableStatus.user_acct: String
+    get() = if (account_key.host == user_key.host) {
+        user_screen_name
+    } else {
+        "$user_screen_name@${user_key.host}"
+    }
 
-inline val ParcelableStatus.retweeted_by_user_acct: String? get() = if (account_key.host == retweeted_by_user_key?.host) {
-    retweeted_by_user_screen_name
-} else {
-    "$retweeted_by_user_screen_name@${retweeted_by_user_key?.host}"
-}
+inline val ParcelableStatus.retweeted_by_user_acct: String?
+    get() = if (account_key.host == retweeted_by_user_key?.host) {
+        retweeted_by_user_screen_name
+    } else {
+        "$retweeted_by_user_screen_name@${retweeted_by_user_key?.host}"
+    }
 
-inline val ParcelableStatus.quoted_user_acct: String? get() = if (account_key.host == quoted_user_key?.host) {
-    quoted_user_screen_name
-} else {
-    "$quoted_user_screen_name@${quoted_user_key?.host}"
-}
+inline val ParcelableStatus.quoted_user_acct: String?
+    get() = if (account_key.host == quoted_user_key?.host) {
+        quoted_user_screen_name
+    } else {
+        "$quoted_user_screen_name@${quoted_user_key?.host}"
+    }
 
 inline val ParcelableStatus.is_my_retweet: Boolean
     get() = Utils.isMyRetweet(account_key, retweeted_by_user_key, my_retweet_id)
@@ -122,6 +127,47 @@ fun ParcelableStatus.addFilterFlag(@ParcelableStatus.FilterFlags flags: Long) {
     filter_flags = filter_flags or flags
 }
 
+fun ParcelableStatus.updateFilterInfo() {
+    val links = mutableSetOf<String>()
+    spans?.mapNotNullTo(links) { span ->
+        if (span.type != SpanItem.SpanType.LINK) return@mapNotNullTo null
+        return@mapNotNullTo span.link
+    }
+    quoted_spans?.mapNotNullTo(links) { span ->
+        if (span.type != SpanItem.SpanType.LINK) return@mapNotNullTo null
+        return@mapNotNullTo span.link
+    }
+    filter_links = links.toTypedArray()
+
+    val sources = mutableSetOf<String>()
+    source?.let(HtmlEscapeHelper::toPlainText)?.addTo(sources)
+    quoted_source?.let(HtmlEscapeHelper::toPlainText)?.addTo(sources)
+    filter_sources = sources.toTypedArray()
+
+    val users = mutableSetOf<UserKey>()
+    user_key.addTo(users)
+    quoted_user_key?.addTo(users)
+    retweeted_by_user_key?.addTo(users)
+    filter_users = users.toTypedArray()
+
+    val names = mutableSetOf<String>()
+    user_name.addTo(names)
+    quoted_user_name?.addTo(names)
+    retweeted_by_user_name?.addTo(names)
+    filter_names = names.toTypedArray()
+
+    val texts = StringBuilder()
+    text_unescaped?.appendNewLineTo(texts)
+    quoted_text_unescaped?.appendNewLineTo(texts)
+    media?.forEach { item ->
+        item.alt_text?.appendNewLineTo(texts)
+    }
+    quoted_media?.forEach { item ->
+        item.alt_text?.appendNewLineTo(texts)
+    }
+    filter_texts = texts.toString()
+}
+
 fun ParcelableStatus.updateExtraInformation(details: AccountDetails) {
     account_color = details.color
 }
@@ -150,4 +196,9 @@ private fun parcelableUserMention(key: UserKey, name: String, screenName: String
     it.key = key
     it.name = name
     it.screen_name = screenName
+}
+
+private fun CharSequence.appendNewLineTo(sb: StringBuilder) {
+    sb.append(this)
+    sb.append('\n')
 }

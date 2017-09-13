@@ -217,7 +217,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
 
     protected fun getFiltersWhere(table: String): Expression? {
         if (!isFilterEnabled) return null
-        return DataStoreUtils.buildActivityFilterWhereClause(table, null, filterScopes)
+        return DataStoreUtils.buildStatusFilterWhereClause(preferences, table, null, filterScopes)
     }
 
     protected open fun processWhere(where: Expression, whereArgs: Array<String>): ParameterizedExpression {
@@ -352,7 +352,9 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
 
     companion object {
         val activityColumnsLite = Activities.COLUMNS - arrayOf(Activities.SOURCES, Activities.TARGETS,
-                Activities.TARGET_OBJECTS)
+                Activities.TARGET_OBJECTS, Activities.MENTIONS_JSON, Activities.CARD,
+                Activities.FILTER_FLAGS, Activities.FILTER_USERS, Activities.FILTER_LINKS,
+                Activities.FILTER_SOURCES, Activities.FILTER_NAMES, Activities.FILTER_TEXTS)
 
     }
 }
