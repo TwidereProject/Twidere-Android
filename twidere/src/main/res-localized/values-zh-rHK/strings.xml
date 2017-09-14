@@ -313,12 +313,12 @@
   <string name="external_group_host_format"><xliff:g id="host">%s</xliff:g> 的外部群組</string>
   <string name="external_user_host_format"><xliff:g id="host">%s</xliff:g> 的外部使用者</string>
   <string name="extra_configurations">額外設定</string>
-  <string name="extra_feature_description_filters_import">從被封鎖/靜音的使用者導入過濾列表</string>
+  <string name="extra_feature_description_advanced_filters">從被封鎖/靜音的使用者導入過濾列表</string>
   <string name="extra_feature_description_filters_subscription">訂閱到過濾器列表，並且自動同步</string>
   <string name="extra_feature_description_schedule_status">定期發推 (稍候傳送)</string>
   <string name="extra_feature_description_share_gif">在推文中分享 GIF</string>
   <string name="extra_feature_description_sync_data">透過 Dropbox 或 Google Drive 等同步資料</string>
-  <string name="extra_feature_title_filters_import">過濾器匯入</string>
+  <string name="extra_feature_title_advanced_filters">過濾器匯入</string>
   <string name="extra_feature_title_filters_subscription">過濾器訂閱</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">支持 Twidere 並且得到強化功能</string>

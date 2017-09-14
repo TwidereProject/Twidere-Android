@@ -29,6 +29,7 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.onShow
+import org.mariotaku.twidere.extension.util.isAdvancedFiltersEnabled
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
@@ -105,9 +106,9 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
                     Toast.makeText(context, R.string.message_toast_no_user_selected, Toast.LENGTH_SHORT).show()
                     return true
                 }
-                if (!extraFeaturesService.isEnabled(ExtraFeaturesService.FEATURE_FILTERS_IMPORT)) {
+                if (!extraFeaturesService.isAdvancedFiltersEnabled) {
                     ExtraFeaturesIntroductionDialogFragment.show(fragmentManager,
-                            feature = ExtraFeaturesService.FEATURE_FILTERS_IMPORT,
+                            feature = ExtraFeaturesService.FEATURE_ADVANCED_FILTERS,
                             requestCode = REQUEST_PURCHASE_EXTRA_FEATURES)
                     return true
                 }
@@ -185,9 +186,9 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
     override fun onCreateAdapter(context: Context, requestManager: RequestManager): SelectableUsersAdapter {
         val adapter = SelectableUsersAdapter(context, this.requestManager)
         adapter.itemCheckedListener = listener@ { _, _ ->
-            if (!extraFeaturesService.isEnabled(ExtraFeaturesService.FEATURE_FILTERS_IMPORT)) {
+            if (!extraFeaturesService.isAdvancedFiltersEnabled) {
                 ExtraFeaturesIntroductionDialogFragment.show(fragmentManager,
-                        feature = ExtraFeaturesService.FEATURE_FILTERS_IMPORT,
+                        feature = ExtraFeaturesService.FEATURE_ADVANCED_FILTERS,
                         requestCode = REQUEST_PURCHASE_EXTRA_FEATURES)
                 return@listener false
             }

@@ -296,12 +296,12 @@
   <string name="external_group_host_format">Grupu esternu en <xliff:g id="host">%s</xliff:g></string>
   <string name="external_user_host_format">Usuariu esternu en <xliff:g id="host">%s</xliff:g></string>
   <string name="extra_configurations">Configuraciones estra</string>
-  <string name="extra_feature_description_filters_import">Importa\'l llistáu de peñeres de bloqueos/silenciaos</string>
+  <string name="extra_feature_description_advanced_filters">Importa\'l llistáu de peñeres de bloqueos/silenciaos</string>
   <string name="extra_feature_description_filters_subscription">Soscríbite a peñeres de silenciu y sincronízales automáticamentes</string>
   <string name="extra_feature_description_schedule_status">Planificar tuit (unviar más sero)</string>
   <string name="extra_feature_description_share_gif">Compartir GIF en tuit</string>
   <string name="extra_feature_description_sync_data">Sincroniza datos con Dropbox, Google Drive… etc</string>
-  <string name="extra_feature_title_filters_import">Importación de peñeres</string>
+  <string name="extra_feature_title_advanced_filters">Importación de peñeres</string>
   <string name="extra_feature_title_filters_subscription">Soscripción de peñeres</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">Sofita Twidere pa consiguir carauterístiques ameyoraes</string>

@@ -270,7 +270,7 @@
   <string name="extra_feature_description_filters_subscription">Inscreva-se para silenciar os filtros e sincronizar automaticamente</string>
   <string name="extra_feature_description_schedule_status">Agendar Tweet(enviar depois)</string>
   <string name="extra_feature_description_sync_data">Dados de sincronização com o Dropbox, Google Drive etc</string>
-  <string name="extra_feature_title_filters_import">Importar Filtros</string>
+  <string name="extra_feature_title_advanced_filters">Importar Filtros</string>
   <string name="extra_feature_title_filters_subscription">Assinatura de filtros</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">Suporte Twidere e obter recursos avançados</string>

@@ -19,12 +19,7 @@
 
 package org.mariotaku.twidere.fragment.filter
 
-import android.accounts.AccountManager
-import android.app.Dialog
-import android.content.ContentValues
 import android.content.Context
-import android.content.DialogInterface
-import android.content.DialogInterface.OnClickListener
 import android.database.Cursor
 import android.graphics.PorterDuff
 import android.net.Uri
@@ -35,36 +30,31 @@ import android.support.v4.content.CursorLoader
 import android.support.v4.content.Loader
 import android.support.v4.view.ViewCompat
 import android.support.v4.widget.SimpleCursorAdapter
-import android.support.v7.app.AlertDialog
 import android.text.SpannableStringBuilder
 import android.text.Spanned
-import android.text.TextUtils
 import android.view.*
 import android.widget.AbsListView
 import android.widget.AbsListView.MultiChoiceModeListener
 import android.widget.ListView
 import android.widget.TextView
-import android.widget.Toast
-import kotlinx.android.synthetic.main.dialog_auto_complete_textview.*
 import kotlinx.android.synthetic.main.fragment_content_listview.*
+import org.mariotaku.ktextension.Bundle
+import org.mariotaku.ktextension.set
 import org.mariotaku.ktextension.setGroupAvailability
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.sqliteqb.library.Columns
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.TwidereConstants.EXTRA_ID
-import org.mariotaku.twidere.TwidereConstants.EXTRA_URI
+import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
-import org.mariotaku.twidere.adapter.ComposeAutoCompleteAdapter
-import org.mariotaku.twidere.adapter.SourceAutoCompleteAdapter
-import org.mariotaku.twidere.extension.*
+import org.mariotaku.twidere.extension.invertSelection
+import org.mariotaku.twidere.extension.selectAll
+import org.mariotaku.twidere.extension.selectNone
+import org.mariotaku.twidere.extension.updateSelectionItems
 import org.mariotaku.twidere.fragment.AbsContentListViewFragment
-import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.FiltersData
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.text.style.EmojiSpan
-import org.mariotaku.twidere.util.ParseUtils
 import org.mariotaku.twidere.util.ThemeUtils
 
 
@@ -82,7 +72,6 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
     protected abstract val contentUri: Uri
     protected abstract val contentColumns: Array<String>
     protected open val sortOrder: String? = "${Filters.SOURCE} >= 0"
-    protected open val autoCompleteType: Int = 0
     protected open val supportsEdit: Boolean = true
 
     private val isQuickReturnEnabled: Boolean
@@ -97,7 +86,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
             val adapter = this.adapter as FilterListAdapter
             val item = adapter.getFilterItem(pos) ?: return@setOnItemClickListener
             if (item.source >= 0) return@setOnItemClickListener
-            addOrEditItem(item.id, item.value)
+            addOrEditItem(item.id, item.value, item.scope)
         }
         listView.setMultiChoiceModeListener(this)
         loaderManager.initLoader(0, null, this)
@@ -233,14 +222,14 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
         context.contentResolver.delete(contentUri, where.sql, Array(ids.size) { ids[it].toString() })
     }
 
-    protected open fun addOrEditItem(id: Long = -1, value: String? = null) {
-        val args = Bundle()
-        args.putParcelable(EXTRA_URI, contentUri)
-        args.putInt(EXTRA_AUTO_COMPLETE_TYPE, autoCompleteType)
-        args.putLong(EXTRA_ID, id)
-        args.putString(EXTRA_VALUE, value)
+    protected open fun addOrEditItem(id: Long = -1, value: String? = null, scope: Int = 0) {
         val dialog = AddEditItemFragment()
-        dialog.arguments = args
+        dialog.arguments = Bundle {
+            this[EXTRA_URI] = contentUri
+            this[EXTRA_ID] = id
+            this[EXTRA_VALUE] = value
+            this[EXTRA_SCOPE] = scope
+        }
         dialog.show(fragmentManager, "add_rule")
     }
 
@@ -249,80 +238,6 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
         if (listView == null || mode == null || activity == null) return
         val count = listView!!.checkedItemCount
         mode.title = resources.getQuantityString(R.plurals.Nitems_selected, count, count)
-    }
-
-    class AddEditItemFragment : BaseDialogFragment(), OnClickListener {
-
-        override fun onClick(dialog: DialogInterface, which: Int) {
-            when (which) {
-                DialogInterface.BUTTON_POSITIVE -> {
-                    val text = text
-                    if (TextUtils.isEmpty(text)) return
-                    val values = ContentValues()
-                    values.put(Filters.VALUE, text)
-                    val uri: Uri = arguments.getParcelable(EXTRA_URI)
-                    val id = arguments.getLong(EXTRA_ID, -1)
-                    val resolver = context.contentResolver
-                    if (id >= 0) {
-                        val valueWhere = Expression.equalsArgs(Filters.VALUE).sql
-                        val valueWhereArgs = arrayOf(text)
-                        if (resolver.queryCount(uri, valueWhere, valueWhereArgs) == 0) {
-                            val idWhere = Expression.equals(Filters._ID, id).sql
-                            resolver.update(uri, values, idWhere, null)
-                        } else {
-                            Toast.makeText(context, R.string.message_toast_duplicate_filter_rule,
-                                    Toast.LENGTH_SHORT).show()
-                        }
-                    } else {
-                        resolver.insert(uri, values)
-                    }
-                }
-            }
-
-        }
-
-        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context)
-            builder.setView(R.layout.dialog_auto_complete_textview)
-
-            if (arguments.getLong(EXTRA_ID, -1) >= 0) {
-                builder.setTitle(R.string.action_edit_filter_rule)
-            } else {
-                builder.setTitle(R.string.action_add_filter_rule)
-            }
-            builder.setPositiveButton(android.R.string.ok, this)
-            builder.setNegativeButton(android.R.string.cancel, this)
-            val dialog = builder.create()
-            dialog.onShow {
-                it.applyTheme()
-                val editText = it.editText
-                if (savedInstanceState == null) {
-                    editText.setText(arguments.getString(EXTRA_VALUE))
-                }
-                val autoCompleteType = arguments.getInt(EXTRA_AUTO_COMPLETE_TYPE, 0)
-                if (autoCompleteType != 0) {
-                    val userAutoCompleteAdapter: SimpleCursorAdapter
-                    if (autoCompleteType == AUTO_COMPLETE_TYPE_SOURCES) {
-                        userAutoCompleteAdapter = SourceAutoCompleteAdapter(activity)
-                    } else {
-                        val adapter = ComposeAutoCompleteAdapter(activity, requestManager)
-                        val am = AccountManager.get(activity)
-                        adapter.account = AccountUtils.getDefaultAccountDetails(activity, am, false)
-                        userAutoCompleteAdapter = adapter
-                    }
-                    editText.setAdapter(userAutoCompleteAdapter)
-                    editText.threshold = 1
-                }
-            }
-            return dialog
-        }
-
-        private val text: String
-            get() {
-                val alertDialog = dialog as AlertDialog
-                return ParseUtils.parseString(alertDialog.editText.text)
-            }
-
     }
 
     interface IFilterAdapter {
@@ -382,9 +297,6 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
 
     companion object {
 
-        internal const val EXTRA_AUTO_COMPLETE_TYPE = "auto_complete_type"
-        internal const val EXTRA_VALUE = "value"
-        internal const val AUTO_COMPLETE_TYPE_SOURCES = 2
         internal const val REQUEST_ADD_USER_SELECT_ACCOUNT = 201
         internal const val REQUEST_IMPORT_BLOCKS_SELECT_ACCOUNT = 202
         internal const val REQUEST_IMPORT_MUTES_SELECT_ACCOUNT = 203

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~             Twidere - Twitter client for Android
+  ~
+  ~  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <android.support.v7.widget.AppCompatAutoCompleteTextView
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:completionThreshold="1"
+        android:maxLines="1"
+        app:backgroundTint="?colorAccent"/>
+
+    <TextView
+        style="?android:listSeparatorTextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_filter_for"
+        android:textColor="?colorAccent"/>
+
+    <CheckBox
+        android:id="@+id/targetText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_filter_target_text"/>
+
+    <CheckBox
+        android:id="@+id/targetName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_filter_target_name"/>
+
+    <TextView
+        style="?android:listSeparatorTextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_filter_apply_to"
+        android:textColor="?colorAccent"/>
+
+    <CheckBox
+        android:id="@+id/scopeHome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_filter_scope_home"/>
+
+    <CheckBox
+        android:id="@+id/scopeInteractions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_filter_scope_interactions"/>
+
+    <CheckBox
+        android:id="@+id/scopeMessages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_filter_scope_messages"/>
+
+    <CheckBox
+        android:id="@+id/scopeSearchResults"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_filter_scope_search_results"/>
+
+    <CheckBox
+        android:id="@+id/scopeOther"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_filter_scope_search_other"/>
+</LinearLayout>

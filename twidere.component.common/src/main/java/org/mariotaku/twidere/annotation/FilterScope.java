@@ -25,22 +25,32 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @IntDef(value = {FilterScope.HOME, FilterScope.INTERACTIONS, FilterScope.MESSAGES,
-        FilterScope.SEARCH_RESULT, FilterScope.LIST_GROUP_TIMELINE, FilterScope.FAVORITES,
-        FilterScope.ALL, FilterScope.FLAG_MATCH_NAME}, flag = true)
+        FilterScope.SEARCH_RESULTS, FilterScope.LIST_GROUP_TIMELINE, FilterScope.FAVORITES,
+        FilterScope.USER_TIMELINE, FilterScope.PUBLIC_TIMELINE, FilterScope.ALL,
+        FilterScope.FLAG_MATCH_NAME, FilterScope.FLAG_MATCH_TEXT, FilterScope.UGC_TIMELINE}, flag = true)
 @Retention(RetentionPolicy.SOURCE)
 public @interface FilterScope {
     int HOME = 0x1;
     int INTERACTIONS = 0x2;
     int MESSAGES = 0x4;
-    int SEARCH_RESULT = 0x8;
+    int SEARCH_RESULTS = 0x8;
     int LIST_GROUP_TIMELINE = 0x10;
     int FAVORITES = 0x20;
+    int USER_TIMELINE = 0x40;
+    int PUBLIC_TIMELINE = 0x80;
+
+    int UGC_TIMELINE = LIST_GROUP_TIMELINE | FAVORITES | USER_TIMELINE | PUBLIC_TIMELINE;
 
     int FLAG_MATCH_NAME = 0x80000000;
     int FLAG_MATCH_TEXT = 0x40000000;
 
     int MASK_FLAG = 0xFF000000;
     int MASK_SCOPE = 0x00FFFFFF;
+
+    int VALID_MASKS_USERS = MASK_SCOPE;
+    int VALID_MASKS_KEYWORDS = MASK_SCOPE | MASK_FLAG;
+    int VALID_MASKS_SOURCES = MASK_SCOPE & ~MESSAGES;
+    int VALID_MASKS_LINKS = MASK_SCOPE;
 
     // Contains all flags
     int ALL = 0xFFFFFFFF;

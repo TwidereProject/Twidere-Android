@@ -305,12 +305,12 @@
   <string name="external_group_host_format">Külső csoport innen: <xliff:g id="host">%s</xliff:g></string>
   <string name="external_user_host_format">Külső felhasználó innen: <xliff:g id="host">%s</xliff:g></string>
   <string name="extra_configurations">Egyéb beállítások</string>
-  <string name="extra_feature_description_filters_import">Blokkolt/elnémított szűrők importálása</string>
+  <string name="extra_feature_description_advanced_filters">Blokkolt/elnémított szűrők importálása</string>
   <string name="extra_feature_description_filters_subscription">Feliratkozás elnémító szűrőkre és automatikus szinkronizációra</string>
   <string name="extra_feature_description_schedule_status">Tweet ütemezése (küldés később)</string>
   <string name="extra_feature_description_share_gif">GIF megosztása tweetben</string>
   <string name="extra_feature_description_sync_data">Szinkronizálás a Dropbox, Google Drive stb. szolgáltatásokkal</string>
-  <string name="extra_feature_title_filters_import">Szűrők importálása</string>
+  <string name="extra_feature_title_advanced_filters">Szűrők importálása</string>
   <string name="extra_feature_title_filters_subscription">Feliratkozás szűrőkre</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">Támogassa Twidere alkalmazást, és jusson hozzá a bővített funkciókhoz</string>

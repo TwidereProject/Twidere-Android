@@ -376,13 +376,11 @@
     <string name="external_user_host_format">External user at <xliff:g id="host">%s</xliff:g></string>
 
     <string name="extra_configurations">Extra configurations</string>
-    <string name="extra_feature_description_filters_import">Import filter list from blocks/mutes</string>
-    <string name="extra_feature_description_filters_subscription">Subscribe to mute filters and sync automatically</string>
+    <string name="extra_feature_description_advanced_filters">Filter subscription, advanced rules etc</string>
     <string name="extra_feature_description_schedule_status">Schedule tweet (send later)</string>
     <string name="extra_feature_description_share_gif">Share GIF in tweet</string>
     <string name="extra_feature_description_sync_data">Sync data with Dropbox, Google Drive etc</string>
-    <string name="extra_feature_title_filters_import">Filters import</string>
-    <string name="extra_feature_title_filters_subscription">Filters subscription</string>
+    <string name="extra_feature_title_advanced_filters">Advanced filters</string>
     <!-- Enhanced (paid) features description -->
     <string name="extra_features_description">Support Twidere and get enhanced features</string>
     <string name="extra_features_pack_description">Or buy features pack to get all features (including features in future releases)</string>
@@ -518,6 +516,15 @@
     <string name="label_data_provider">Twidere database provider</string>
     <string name="label_feedback_content">Content</string>
     <string name="label_feedback_title">Title</string>
+    <string name="label_filter_apply_to">Apply to…</string>
+    <string name="label_filter_for">For…</string>
+    <string name="label_filter_scope_home">Home</string>
+    <string name="label_filter_scope_interactions">Interactions</string>
+    <string name="label_filter_scope_messages">Messages</string>
+    <string name="label_filter_scope_search_other">Other</string>
+    <string name="label_filter_scope_search_results">Search results</string>
+    <string name="label_filter_target_name">Name</string>
+    <string name="label_filter_target_text">Text</string>
     <string name="label_filters_subscription">Subscription</string>
     <string name="label_follow_request_sent">Follow request sent</string>
     <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> via <xliff:g example="api" id="source">%2$s</xliff:g></string>

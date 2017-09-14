@@ -300,12 +300,12 @@
   <string name="external_group_host_format"><xliff:g id="host">%s</xliff:g>의 외부 그룹</string>
   <string name="external_user_host_format"><xliff:g id="host">%s</xliff:g>의 외부 사용자</string>
   <string name="extra_configurations">추가 설정</string>
-  <string name="extra_feature_description_filters_import">블락/뮤트에서 필터 리스트 가져오기</string>
+  <string name="extra_feature_description_advanced_filters">블락/뮤트에서 필터 리스트 가져오기</string>
   <string name="extra_feature_description_filters_subscription">뮤트 필터를 구독하고 자동으로 동기화</string>
   <string name="extra_feature_description_schedule_status">트윗 예약 (나중에 보내기)</string>
   <string name="extra_feature_description_share_gif">트윗에 GIF 공유</string>
   <string name="extra_feature_description_sync_data">데이터를 Dropbox, Google Drive 등에 동기화하기</string>
-  <string name="extra_feature_title_filters_import">필터 가져오기</string>
+  <string name="extra_feature_title_advanced_filters">필터 가져오기</string>
   <string name="extra_feature_title_filters_subscription">필터 구독</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">Twidere를 지원하시고 확장 기능을 받으세요.</string>

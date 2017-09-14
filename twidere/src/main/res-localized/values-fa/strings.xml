@@ -297,12 +297,12 @@
   <string name="external_group_host_format">گروه خارجی در <xliff:g id="host">%s</xliff:g></string>
   <string name="external_user_host_format">کاربر خارجی در <xliff:g id="host">%s</xliff:g></string>
   <string name="extra_configurations">پیکربندی‌های اضافی</string>
-  <string name="extra_feature_description_filters_import">درون‌ریزی فهرست‌های پالایه از انسداد/خموشی‌ها</string>
+  <string name="extra_feature_description_advanced_filters">درون‌ریزی فهرست‌های پالایه از انسداد/خموشی‌ها</string>
   <string name="extra_feature_description_filters_subscription">اشتراک در پالایه‌های خموشی و هم‌گام سازی خودکار</string>
   <string name="extra_feature_description_schedule_status">زمان‌بندی توییت (ارسال بعداً)</string>
   <string name="extra_feature_description_share_gif">هم رسانی جیف در توییت</string>
   <string name="extra_feature_description_sync_data">هم‌گام سازی داده با دراپ‌باکس، گوگل‌درایو و…</string>
-  <string name="extra_feature_title_filters_import">درون‌ریزی پالایه‌ها</string>
+  <string name="extra_feature_title_advanced_filters">درون‌ریزی پالایه‌ها</string>
   <string name="extra_feature_title_filters_subscription">اشتراک پالایه‌ها</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">حمایت از توییدر و گرفتن ویژگی‌های بهبودیافته</string>

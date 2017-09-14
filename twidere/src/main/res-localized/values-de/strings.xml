@@ -301,12 +301,12 @@
   <string name="external_group_host_format">Externe Gruppe bei <xliff:g id="host">%s</xliff:g></string>
   <string name="external_user_host_format">Externer Benutzer bei <xliff:g id="host">%s</xliff:g></string>
   <string name="extra_configurations">Erweiterte Einstellungen</string>
-  <string name="extra_feature_description_filters_import">Importiere Filterliste von blockierten/stummgeschalteten</string>
+  <string name="extra_feature_description_advanced_filters">Importiere Filterliste von blockierten/stummgeschalteten</string>
   <string name="extra_feature_description_filters_subscription">Abonniere Stummschaltfilter und Synchronisation automatisch</string>
   <string name="extra_feature_description_schedule_status">Tweet planen (später senden)</string>
   <string name="extra_feature_description_share_gif">GIF in Tweet teilen</string>
   <string name="extra_feature_description_sync_data">Synchronisieren von Daten mit Dropbox, Google Drive etc.</string>
-  <string name="extra_feature_title_filters_import">Filterimport</string>
+  <string name="extra_feature_title_advanced_filters">Filterimport</string>
   <string name="extra_feature_title_filters_subscription">Filterabonnement</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">Unterstütze Twidere und erhalte erweiterte Funktionen</string>

@@ -79,6 +79,7 @@ subprojects {
                     ACRA                 : '4.9.2',
                     AbstractTask         : '0.9.5',
                     Dagger               : '2.11',
+                    ExpandableLayout     : '1.6.0',
             ]
 
         }
