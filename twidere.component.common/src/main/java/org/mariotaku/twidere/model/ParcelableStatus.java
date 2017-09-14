@@ -345,6 +345,9 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @CursorField(value = Statuses.FILTER_TEXTS)
     public String filter_texts;
 
+    @CursorField(value = Statuses.FILTER_DESCRIPTIONS)
+    public String filter_descriptions;
+
     public transient boolean is_pinned_status;
     public transient boolean is_filtered;
 

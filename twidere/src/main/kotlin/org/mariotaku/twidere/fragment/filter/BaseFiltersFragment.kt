@@ -47,6 +47,7 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
+import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.extension.invertSelection
 import org.mariotaku.twidere.extension.selectAll
 import org.mariotaku.twidere.extension.selectNone
@@ -222,7 +223,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
         context.contentResolver.delete(contentUri, where.sql, Array(ids.size) { ids[it].toString() })
     }
 
-    protected open fun addOrEditItem(id: Long = -1, value: String? = null, scope: Int = 0) {
+    protected open fun addOrEditItem(id: Long = -1, value: String? = null, scope: Int = FilterScope.DEFAULT) {
         val dialog = AddEditItemFragment()
         dialog.arguments = Bundle {
             this[EXTRA_URI] = contentUri

@@ -500,6 +500,7 @@
 
     <string name="label_account">Account</string>
     <string name="label_account_type">Account type</string>
+    <string name="label_advanced">Advanced</string>
     <string name="label_auth_type">Auth type</string>
     <string name="label_background_operation_service">Background operation service</string>
     <string name="label_buffer_accounts">Buffer accounts</string>
@@ -523,6 +524,7 @@
     <string name="label_filter_scope_messages">Messages</string>
     <string name="label_filter_scope_search_other">Other</string>
     <string name="label_filter_scope_search_results">Search results</string>
+    <string name="label_filter_target_description">Description</string>
     <string name="label_filter_target_name">Name</string>
     <string name="label_filter_target_text">Text</string>
     <string name="label_filters_subscription">Subscription</string>

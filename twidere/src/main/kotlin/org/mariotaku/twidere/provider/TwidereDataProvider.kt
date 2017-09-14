@@ -230,8 +230,9 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                 }
             }
             if (table == null) return null
+            val limit = uri.getQueryParameter(QUERY_PARAM_LIMIT)
             val c = databaseWrapper.query(table, projection, selection, selectionArgs,
-                    null, null, sortOrder)
+                    null, null, sortOrder, limit)
             c?.setNotificationUri(context.contentResolver, uri)
             return c
         } catch (e: SQLException) {

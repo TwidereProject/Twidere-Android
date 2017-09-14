@@ -26,8 +26,9 @@ import java.lang.annotation.RetentionPolicy;
 
 @IntDef(value = {FilterScope.HOME, FilterScope.INTERACTIONS, FilterScope.MESSAGES,
         FilterScope.SEARCH_RESULTS, FilterScope.LIST_GROUP_TIMELINE, FilterScope.FAVORITES,
-        FilterScope.USER_TIMELINE, FilterScope.PUBLIC_TIMELINE, FilterScope.ALL,
-        FilterScope.FLAG_MATCH_NAME, FilterScope.FLAG_MATCH_TEXT, FilterScope.UGC_TIMELINE}, flag = true)
+        FilterScope.USER_TIMELINE, FilterScope.PUBLIC_TIMELINE, FilterScope.UGC_TIMELINE,
+        FilterScope.FLAG_MATCH_NAME, FilterScope.FLAG_MATCH_TEXT, FilterScope.FLAG_MATCH_DESCRIPTION,
+        FilterScope.ALL, FilterScope.DEFAULT}, flag = true)
 @Retention(RetentionPolicy.SOURCE)
 public @interface FilterScope {
     int HOME = 0x1;
@@ -43,6 +44,7 @@ public @interface FilterScope {
 
     int FLAG_MATCH_NAME = 0x80000000;
     int FLAG_MATCH_TEXT = 0x40000000;
+    int FLAG_MATCH_DESCRIPTION = 0x20000000;
 
     int MASK_FLAG = 0xFF000000;
     int MASK_SCOPE = 0x00FFFFFF;
@@ -54,4 +56,6 @@ public @interface FilterScope {
 
     // Contains all flags
     int ALL = 0xFFFFFFFF;
+    @SuppressWarnings("PointlessBitwiseExpression")
+    int DEFAULT = ALL & ~FLAG_MATCH_NAME;
 }

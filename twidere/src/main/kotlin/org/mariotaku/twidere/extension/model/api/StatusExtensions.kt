@@ -42,6 +42,7 @@ import org.mariotaku.twidere.text.AcctMentionSpan
 import org.mariotaku.twidere.text.HashtagSpan
 import org.mariotaku.twidere.util.HtmlBuilder
 import org.mariotaku.twidere.util.HtmlSpanBuilder
+import org.mariotaku.twidere.util.InternalTwitterContentUtils
 import org.mariotaku.twidere.util.InternalTwitterContentUtils.getMediaUrl
 import org.mariotaku.twidere.util.InternalTwitterContentUtils.getStartEndForEntity
 
@@ -200,7 +201,9 @@ fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: S
         result.addFilterFlag(ParcelableStatus.FilterFlags.HAS_MEDIA)
     }
 
-    result.updateFilterInfo()
+    result.updateFilterInfo(arrayOf(userDescriptionUnescaped, retweetedStatus?.userDescriptionUnescaped,
+            quotedStatus?.userDescriptionUnescaped, this.user.location, retweetedStatus?.user?.location,
+            quotedStatus?.user?.location))
 }
 
 
@@ -268,6 +271,9 @@ private fun String.twitterUnescaped(): String {
     return twitterRawTextTranslator.translate(this)
 }
 
+private val Status.userDescriptionUnescaped: String?
+    get() = user?.let { InternalTwitterContentUtils.formatUserDescription(it)?.first }
+
 /**
  * @param spans Ordered spans
  * *
@@ -279,35 +285,39 @@ internal fun findByOrigRange(spans: Array<SpanItem>, start: Int, end: Int): List
     return spans.filter { it.orig_start >= start && it.orig_end <= end }
 }
 
-internal inline val CharSequence.spanItems get() = (this as? Spanned)?.let { text ->
-    text.getSpans(0, length, URLSpan::class.java).mapToArray {
-        val item = it.toSpanItem(text)
-        when (it) {
-            is AcctMentionSpan -> item.type = SpanItem.SpanType.ACCT_MENTION
-            is HashtagSpan -> item.type = SpanItem.SpanType.HASHTAG
+internal inline val CharSequence.spanItems
+    get() = (this as? Spanned)?.let { text ->
+        text.getSpans(0, length, URLSpan::class.java).mapToArray {
+            val item = it.toSpanItem(text)
+            when (it) {
+                is AcctMentionSpan -> item.type = SpanItem.SpanType.ACCT_MENTION
+                is HashtagSpan -> item.type = SpanItem.SpanType.HASHTAG
+            }
+            return@mapToArray item
         }
-        return@mapToArray item
     }
-}
 
 internal inline val String.isHtml get() = contains('<') && contains('>')
 
-private inline val Status.inReplyToName get() = userMentionEntities?.firstOrNull {
-    inReplyToUserId == it.id
-}?.name ?: attentions?.firstOrNull {
-    inReplyToUserId == it.id
-}?.fullName ?: inReplyToScreenName
+private inline val Status.inReplyToName
+    get() = userMentionEntities?.firstOrNull {
+        inReplyToUserId == it.id
+    }?.name ?: attentions?.firstOrNull {
+        inReplyToUserId == it.id
+    }?.fullName ?: inReplyToScreenName
 
 
-private inline val Status.placeFullName get() = place?.fullName ?: location?.takeIf {
-    ParcelableLocation.valueOf(location) == null
-}
-
-private inline val Status.inferredExternalUrl get() = externalUrl ?: uri?.let { uri ->
-    noticeUriRegex.matchEntire(uri)?.let { result: MatchResult ->
-        "https://${result.groups[1]?.value}/notice/${result.groups[3]?.value}"
+private inline val Status.placeFullName
+    get() = place?.fullName ?: location?.takeIf {
+        ParcelableLocation.valueOf(location) == null
     }
-}
+
+private inline val Status.inferredExternalUrl
+    get() = externalUrl ?: uri?.let { uri ->
+        noticeUriRegex.matchEntire(uri)?.let { result: MatchResult ->
+            "https://${result.groups[1]?.value}/notice/${result.groups[3]?.value}"
+        }
+    }
 
 private val Status.parcelableLocation: ParcelableLocation?
     get() {

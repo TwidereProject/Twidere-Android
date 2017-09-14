@@ -25,6 +25,7 @@ import org.mariotaku.microblog.library.mastodon.model.Relationship
 import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.twidere.extension.model.toLite
 import org.mariotaku.twidere.extension.model.toSummaryLine
+import org.mariotaku.twidere.extension.model.updateActivityFilterInfo
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.ParcelableUser
@@ -91,6 +92,8 @@ fun Notification.toParcelable(accountKey: UserKey, relationships: Map<String, Re
 
     result.sources_lite = result.sources?.mapToArray { it.toLite() }
     result.source_keys = result.sources_lite?.mapToArray { it.key }
+
+    result.updateActivityFilterInfo()
 
     return result
 }

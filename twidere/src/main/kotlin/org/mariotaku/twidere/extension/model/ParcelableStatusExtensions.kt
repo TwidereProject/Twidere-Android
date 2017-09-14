@@ -127,7 +127,7 @@ fun ParcelableStatus.addFilterFlag(@ParcelableStatus.FilterFlags flags: Long) {
     filter_flags = filter_flags or flags
 }
 
-fun ParcelableStatus.updateFilterInfo() {
+fun ParcelableStatus.updateFilterInfo(descriptions: Array<String?>?) {
     val links = mutableSetOf<String>()
     spans?.mapNotNullTo(links) { span ->
         if (span.type != SpanItem.SpanType.LINK) return@mapNotNullTo null
@@ -166,6 +166,8 @@ fun ParcelableStatus.updateFilterInfo() {
         item.alt_text?.appendNewLineTo(texts)
     }
     filter_texts = texts.toString()
+
+    filter_descriptions = descriptions?.filterNotNull()?.joinToString("\n")
 }
 
 fun ParcelableStatus.updateExtraInformation(details: AccountDetails) {

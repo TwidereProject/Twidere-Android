@@ -319,6 +319,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
     companion object {
         private val statusColumnsLite = Statuses.COLUMNS - arrayOf(Statuses.MENTIONS_JSON,
                 Statuses.CARD, Statuses.FILTER_FLAGS, Statuses.FILTER_USERS, Statuses.FILTER_LINKS,
-                Statuses.FILTER_SOURCES, Statuses.FILTER_NAMES, Statuses.FILTER_TEXTS)
+                Statuses.FILTER_SOURCES, Statuses.FILTER_NAMES, Statuses.FILTER_TEXTS,
+                Statuses.FILTER_DESCRIPTIONS)
     }
 }

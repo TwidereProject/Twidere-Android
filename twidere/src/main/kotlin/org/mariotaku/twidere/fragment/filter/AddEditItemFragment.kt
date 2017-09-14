@@ -28,6 +28,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.support.v7.app.AlertDialog
 import android.view.View
+import android.view.WindowManager
 import android.widget.CheckBox
 import android.widget.Toast
 import kotlinx.android.synthetic.main.dialog_filter_rule_editor.*
@@ -43,7 +44,8 @@ import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.extension.applyOnShow
 import org.mariotaku.twidere.extension.applyTheme
-import org.mariotaku.twidere.extension.queryCount
+import org.mariotaku.twidere.extension.queryLong
+import org.mariotaku.twidere.extension.setVisible
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
@@ -60,7 +62,7 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
         get() = arguments.getString(EXTRA_VALUE)
 
     private val defaultScope: FilterScopes
-        get() = FilterScopes(filterMasks, arguments.getInt(EXTRA_SCOPE, filterMasks))
+        get() = FilterScopes(filterMasks, arguments.getInt(EXTRA_SCOPE, FilterScope.DEFAULT))
 
     private val filterMasks: Int
         get() = when (contentUri) {
@@ -78,9 +80,16 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
         }
 
     private var Dialog.scope: FilterScopes?
-        get() = defaultScope.also { applyScopes(it) }
+        get() = defaultScope.also { saveScopes(it) }
         set(value) {
             loadScopes(value ?: defaultScope)
+        }
+
+    private var Dialog.advancedExpanded: Boolean
+        get() = advancedContainer.visibility == View.VISIBLE
+        set(value) {
+            advancedContainer.setVisible(value)
+            advancedCollapseIndicator.rotation = if (value) 90f else 0f
         }
 
     override fun onClick(dialog: DialogInterface, which: Int) {
@@ -100,12 +109,14 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
                 if (id >= 0) {
                     val valueWhere = Expression.equalsArgs(Filters.VALUE).sql
                     val valueWhereArgs = arrayOf(value)
-                    if (resolver.queryCount(uri, valueWhere, valueWhereArgs) == 0) {
-                        val idWhere = Expression.equals(Filters._ID, id).sql
-                        resolver.update(uri, values, idWhere, null)
-                    } else {
+                    val matchedId = resolver.queryLong(uri, Filters._ID, valueWhere, valueWhereArgs,
+                            -1)
+                    if (matchedId != -1L && matchedId != id) {
                         Toast.makeText(context, R.string.message_toast_duplicate_filter_rule,
                                 Toast.LENGTH_SHORT).show()
+                    } else {
+                        val idWhere = Expression.equals(Filters._ID, id).sql
+                        resolver.update(uri, values, idWhere, null)
                     }
                 } else {
                     resolver.insert(uri, values)
@@ -129,6 +140,7 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
         val dialog = builder.create()
         dialog.applyOnShow {
             applyTheme()
+            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
             editText.setAdapter(when (contentUri) {
                 Filters.Sources.CONTENT_URI -> SourceAutoCompleteAdapter(activity)
                 Filters.Users.CONTENT_URI -> ComposeAutoCompleteAdapter(activity, requestManager).apply {
@@ -138,6 +150,10 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
                 else -> null
             })
             editText.threshold = 1
+            advancedToggle.setOnClickListener {
+                advancedExpanded = !advancedExpanded
+            }
+            advancedExpanded = false
 
             if (savedInstanceState == null) {
                 value = defaultValue
@@ -156,19 +172,21 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
         outState.putParcelable(EXTRA_SCOPE, dialog.scope)
     }
 
-    private fun Dialog.applyScopes(scopes: FilterScopes) {
-        targetText.applyScope(scopes, FilterScope.FLAG_MATCH_TEXT)
-        targetName.applyScope(scopes, FilterScope.FLAG_MATCH_NAME)
-        scopeHome.applyScope(scopes, FilterScope.HOME)
-        scopeInteractions.applyScope(scopes, FilterScope.INTERACTIONS)
-        scopeMessages.applyScope(scopes, FilterScope.MESSAGES)
-        scopeSearchResults.applyScope(scopes, FilterScope.SEARCH_RESULTS)
-        scopeOther.applyScope(scopes, FilterScope.UGC_TIMELINE)
+    private fun Dialog.saveScopes(scopes: FilterScopes) {
+        targetText.saveScope(scopes, FilterScope.FLAG_MATCH_TEXT)
+        targetName.saveScope(scopes, FilterScope.FLAG_MATCH_NAME)
+        targetDescription.saveScope(scopes, FilterScope.FLAG_MATCH_DESCRIPTION)
+        scopeHome.saveScope(scopes, FilterScope.HOME)
+        scopeInteractions.saveScope(scopes, FilterScope.INTERACTIONS)
+        scopeMessages.saveScope(scopes, FilterScope.MESSAGES)
+        scopeSearchResults.saveScope(scopes, FilterScope.SEARCH_RESULTS)
+        scopeOther.saveScope(scopes, FilterScope.UGC_TIMELINE)
     }
 
     private fun Dialog.loadScopes(scopes: FilterScopes) {
         targetText.loadScope(scopes, FilterScope.FLAG_MATCH_TEXT)
         targetName.loadScope(scopes, FilterScope.FLAG_MATCH_NAME)
+        targetDescription.loadScope(scopes, FilterScope.FLAG_MATCH_DESCRIPTION)
         scopeHome.loadScope(scopes, FilterScope.HOME)
         scopeInteractions.loadScope(scopes, FilterScope.INTERACTIONS)
         scopeMessages.loadScope(scopes, FilterScope.MESSAGES)
@@ -176,7 +194,7 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
         scopeOther.loadScope(scopes, FilterScope.UGC_TIMELINE)
     }
 
-    private fun CheckBox.applyScope(scopes: FilterScopes, scope: Int) {
+    private fun CheckBox.saveScope(scopes: FilterScopes, scope: Int) {
         if (!isEnabled || visibility != View.VISIBLE) return
         scopes[scope] = isChecked
     }

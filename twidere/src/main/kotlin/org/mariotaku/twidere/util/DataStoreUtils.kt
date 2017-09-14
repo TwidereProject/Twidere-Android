@@ -496,6 +496,11 @@ object DataStoreUtils {
                         Expression.notEquals("${Filters.Keywords.TABLE_NAME}.${Filters.Keywords.SCOPE} & ${FilterScope.FLAG_MATCH_NAME}", 0),
                         ScopeMatchesExpression(Filters.Keywords.TABLE_NAME, Filters.Keywords.SCOPE),
                         ContainsExpression(Statuses.FILTER_NAMES, Filters.Keywords.TABLE_NAME, Filters.Keywords.VALUE)
+                ),
+                Expression.and(
+                        Expression.notEquals("${Filters.Keywords.TABLE_NAME}.${Filters.Keywords.SCOPE} & ${FilterScope.FLAG_MATCH_DESCRIPTION}", 0),
+                        ScopeMatchesExpression(Filters.Keywords.TABLE_NAME, Filters.Keywords.SCOPE),
+                        ContainsExpression(Statuses.FILTER_DESCRIPTIONS, Filters.Keywords.TABLE_NAME, Filters.Keywords.VALUE)
                 )
         )
         val filteredLinksWhere = Expression.and(

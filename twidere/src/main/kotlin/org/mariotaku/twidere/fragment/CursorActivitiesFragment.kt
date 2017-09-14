@@ -44,6 +44,7 @@ import org.mariotaku.twidere.loader.ExtendedObjectCursorLoader
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.event.*
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
+import org.mariotaku.twidere.provider.TwidereDataStore
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.task.twitter.GetStatusesTask
@@ -354,7 +355,8 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
         val activityColumnsLite = Activities.COLUMNS - arrayOf(Activities.SOURCES, Activities.TARGETS,
                 Activities.TARGET_OBJECTS, Activities.MENTIONS_JSON, Activities.CARD,
                 Activities.FILTER_FLAGS, Activities.FILTER_USERS, Activities.FILTER_LINKS,
-                Activities.FILTER_SOURCES, Activities.FILTER_NAMES, Activities.FILTER_TEXTS)
+                Activities.FILTER_SOURCES, Activities.FILTER_NAMES, Activities.FILTER_TEXTS,
+                Activities.FILTER_DESCRIPTIONS)
 
     }
 }

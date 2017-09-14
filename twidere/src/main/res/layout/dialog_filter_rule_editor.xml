@@ -17,76 +17,133 @@
   ~  You should have received a copy of the GNU General Public License
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp">
+    android:layout_height="wrap_content">
 
-    <android.support.v7.widget.AppCompatAutoCompleteTextView
-        android:id="@+id/editText"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:completionThreshold="1"
-        android:maxLines="1"
-        app:backgroundTint="?colorAccent"/>
+        android:orientation="vertical"
+        android:padding="8dp">
 
-    <TextView
-        style="?android:listSeparatorTextViewStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/label_filter_for"
-        android:textColor="?colorAccent"/>
+        <android.support.v7.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:completionThreshold="1"
+            android:maxLines="1"
+            app:backgroundTint="?colorAccent"/>
 
-    <CheckBox
-        android:id="@+id/targetText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/label_filter_target_text"/>
+        <LinearLayout
+            android:id="@+id/advancedToggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/element_spacing_normal"
+            android:background="?selectableItemBackground"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/element_spacing_normal">
 
-    <CheckBox
-        android:id="@+id/targetName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/label_filter_target_name"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/label_advanced"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="?android:textColorPrimary"/>
 
-    <TextView
-        style="?android:listSeparatorTextViewStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/label_filter_apply_to"
-        android:textColor="?colorAccent"/>
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/advancedCollapseIndicator"
+                android:layout_width="@dimen/element_size_small"
+                android:layout_height="@dimen/element_size_small"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/ic_indicator_arrow_next"
+                app:tint="?android:textColorSecondary"/>
+        </LinearLayout>
 
-    <CheckBox
-        android:id="@+id/scopeHome"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/label_filter_scope_home"/>
+        <LinearLayout
+            android:id="@+id/advancedContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/element_spacing_normal"
+            android:orientation="vertical">
 
-    <CheckBox
-        android:id="@+id/scopeInteractions"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/label_filter_scope_interactions"/>
+            <TextView
+                style="?android:listSeparatorTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/element_spacing_small"
+                android:text="@string/label_filter_for"
+                android:textAllCaps="true"
+                android:textColor="?colorAccent"/>
 
-    <CheckBox
-        android:id="@+id/scopeMessages"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/label_filter_scope_messages"/>
+            <CheckBox
+                android:id="@+id/targetText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/element_spacing_small"
+                android:text="@string/label_filter_target_text"/>
 
-    <CheckBox
-        android:id="@+id/scopeSearchResults"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/label_filter_scope_search_results"/>
+            <CheckBox
+                android:id="@+id/targetName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/element_spacing_small"
+                android:text="@string/label_filter_target_name"/>
 
-    <CheckBox
-        android:id="@+id/scopeOther"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/label_filter_scope_search_other"/>
-</LinearLayout>
+            <CheckBox
+                android:id="@+id/targetDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/element_spacing_small"
+                android:text="@string/label_filter_target_description"/>
+
+            <TextView
+                style="?android:listSeparatorTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/element_spacing_small"
+                android:text="@string/label_filter_apply_to"
+                android:textAllCaps="true"
+                android:textColor="?colorAccent"/>
+
+            <CheckBox
+                android:id="@+id/scopeHome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/element_spacing_small"
+                android:text="@string/label_filter_scope_home"/>
+
+            <CheckBox
+                android:id="@+id/scopeInteractions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/element_spacing_small"
+                android:text="@string/label_filter_scope_interactions"/>
+
+            <CheckBox
+                android:id="@+id/scopeMessages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/element_spacing_small"
+                android:text="@string/label_filter_scope_messages"/>
+
+            <CheckBox
+                android:id="@+id/scopeSearchResults"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/element_spacing_small"
+                android:text="@string/label_filter_scope_search_results"/>
+
+            <CheckBox
+                android:id="@+id/scopeOther"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/element_spacing_small"
+                android:text="@string/label_filter_scope_search_other"/>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
