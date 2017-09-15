@@ -17,19 +17,26 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package android.support.v7.widget
+package org.mariotaku.twidere.menu
 
 import android.content.Context
-import android.support.v7.view.menu.TwidereActionMenuItemView
-import android.util.AttributeSet
-import android.view.View
+import android.support.v4.view.ActionProvider
+import android.support.v4.view.MenuItemCompat
+import android.support.v7.widget.ActionMenuView
+import android.view.MenuItem
+import org.mariotaku.twidere.extension.view.findItemView
 
 /**
- * Created by mariotaku on 16/3/18.
+ * Created by mariotaku on 2017/9/15.
  */
-class TwidereActionMenuView(context: Context, attrs: AttributeSet? = null) : ActionMenuView(context, attrs) {
+class RetweetItemProvider(context: Context) : ActionProvider(context) {
+    var longClickListener: (() -> Boolean)? = null
 
-    fun createActionMenuView(context: Context, attrs: AttributeSet): View {
-        return TwidereActionMenuItemView(context, attrs)
+    override fun onCreateActionView() = null
+
+    fun init(menuBar: ActionMenuView, item: MenuItem) {
+        assert(MenuItemCompat.getActionProvider(item) === this)
+        val menuView = menuBar.findItemView(item)
+        menuView?.setOnLongClickListener { longClickListener?.invoke() == true }
     }
 }

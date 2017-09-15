@@ -24,7 +24,6 @@ import android.content.SharedPreferences
 import android.graphics.Rect
 import android.support.annotation.UiThread
 import android.support.v4.content.ContextCompat
-import android.support.v4.view.MenuItemCompat
 import android.support.v4.view.ViewCompat
 import android.support.v7.widget.ActionMenuView
 import android.support.v7.widget.LinearLayoutManager
@@ -39,13 +38,13 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.adapter_item_status_count_label.view.*
 import kotlinx.android.synthetic.main.header_status.view.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.applyFontFamily
 import org.mariotaku.ktextension.hideIfEmpty
 import org.mariotaku.ktextension.spannable
+import org.mariotaku.ktextension.supportActionProvider
 import org.mariotaku.microblog.library.twitter.model.TranslationResult
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
@@ -56,8 +55,10 @@ import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.*
+import org.mariotaku.twidere.fragment.AbsStatusesFragment
 import org.mariotaku.twidere.fragment.status.StatusFragment
 import org.mariotaku.twidere.menu.FavoriteItemProvider
+import org.mariotaku.twidere.menu.RetweetItemProvider
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
@@ -429,19 +430,37 @@ class DetailStatusViewHolder(
         val inflater = activity.menuInflater
         val menu = itemView.menuBar.menu
         inflater.inflate(R.menu.menu_detail_status, menu)
+
         val favoriteItem = menu.findItem(R.id.favorite)
-        val provider = MenuItemCompat.getActionProvider(favoriteItem)
-        if (provider is FavoriteItemProvider) {
+        val favoriteProvider = favoriteItem?.supportActionProvider
+        if (favoriteProvider is FavoriteItemProvider) {
             val defaultColor = ThemeUtils.getActionIconColor(activity)
-            provider.setDefaultColor(defaultColor)
+            favoriteProvider.defaultColor = defaultColor
             val favoriteHighlight = ContextCompat.getColor(activity, R.color.highlight_favorite)
             val likeHighlight = ContextCompat.getColor(activity, R.color.highlight_like)
             val useStar = adapter.useStarsForLikes
-            provider.setActivatedColor(if (useStar) favoriteHighlight else likeHighlight)
-            provider.setIcon(if (useStar) R.drawable.ic_action_star else R.drawable.ic_action_heart)
-            provider.setUseStar(useStar)
-            provider.init(itemView.menuBar, favoriteItem)
+            favoriteProvider.activatedColor = if (useStar) favoriteHighlight else likeHighlight
+            favoriteProvider.icon = if (useStar) R.drawable.ic_action_star else R.drawable.ic_action_heart
+            favoriteProvider.useStar = useStar
+            favoriteProvider.longClickListener = {
+                val status = adapter.getStatus(layoutPosition)
+                val itemId = adapter.getItemId(layoutPosition)
+                AbsStatusesFragment.handleActionLongClick(fragment, status, itemId, R.id.favorite)
+            }
+            favoriteProvider.init(itemView.menuBar, favoriteItem)
         }
+
+        val retweetItem = menu.findItem(R.id.retweet)
+        val retweetProvider = retweetItem?.supportActionProvider
+        if (retweetProvider is RetweetItemProvider) {
+            retweetProvider.longClickListener = {
+                val status = adapter.getStatus(layoutPosition)
+                val itemId = adapter.getItemId(layoutPosition)
+                AbsStatusesFragment.handleActionLongClick(fragment, status, itemId, R.id.retweet)
+            }
+            retweetProvider.init(itemView.menuBar, retweetItem)
+        }
+
         ThemeUtils.wrapMenuIcon(itemView.menuBar, excludeGroups = Constants.MENU_GROUP_STATUS_SHARE)
         itemView.mediaPreviewLoad.setOnClickListener(this)
         itemView.profileContainer.setOnClickListener(this)
@@ -756,5 +775,11 @@ class DetailStatusViewHolder(
                 outRect.set(0, 0, spacing, 0)
             }
         }
+    }
+
+    companion object {
+
+        const val REQUEST_FAVORITE_SELECT_ACCOUNT = 101
+        const val REQUEST_RETWEET_SELECT_ACCOUNT = 102
     }
 }

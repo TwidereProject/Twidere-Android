@@ -22,7 +22,7 @@ package org.mariotaku.twidere.graphic;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
 import android.support.v7.graphics.drawable.DrawableWrapper;
-import android.support.v7.widget.android.support.v7.view.menu.TwidereActionMenuItemView;
+import android.support.v7.view.menu.TwidereActionMenuItemView;
 import android.view.MenuItem;
 
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;

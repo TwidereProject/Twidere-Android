@@ -17,19 +17,16 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package android.support.v7.widget
+package org.mariotaku.twidere.extension.view
 
-import android.content.Context
-import android.support.v7.view.menu.TwidereActionMenuItemView
-import android.util.AttributeSet
+import android.annotation.SuppressLint
+import android.support.v7.view.menu.MenuView
+import android.support.v7.widget.ActionMenuView
+import android.view.MenuItem
 import android.view.View
+import org.mariotaku.twidere.extension.children
 
-/**
- * Created by mariotaku on 16/3/18.
- */
-class TwidereActionMenuView(context: Context, attrs: AttributeSet? = null) : ActionMenuView(context, attrs) {
-
-    fun createActionMenuView(context: Context, attrs: AttributeSet): View {
-        return TwidereActionMenuItemView(context, attrs)
-    }
+@SuppressLint("RestrictedApi")
+fun ActionMenuView.findItemView(byItem: MenuItem): View? {
+    return children.firstOrNull { it is MenuView.ItemView && it.itemData === byItem }
 }
