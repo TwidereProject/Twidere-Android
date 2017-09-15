@@ -426,7 +426,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
     }
 
     override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
-        val status = adapter.getStatus(position)
+        val status = getFullStatus(position) ?: return
         IntentUtils.openStatus(activity, status, null)
     }
 
@@ -500,6 +500,10 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         currentReadPositionTag?.let {
             readStateManager.setPosition(it, readPosition, true)
         }
+    }
+
+    protected open fun getFullStatus(position: Int): ParcelableStatus? {
+        return adapter.getStatus(position)
     }
 
     protected abstract fun hasMoreData(loader: Loader<List<ParcelableStatus>?>,

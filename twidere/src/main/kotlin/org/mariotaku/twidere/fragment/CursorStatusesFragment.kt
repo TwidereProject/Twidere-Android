@@ -40,6 +40,7 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_FROM_USER
+import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.loader.ExtendedObjectCursorLoader
 import org.mariotaku.twidere.model.ParameterizedExpression
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -206,6 +207,13 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
         if (position == 0) {
             clearNotifications()
         }
+    }
+
+    override fun getFullStatus(position: Int): ParcelableStatus? {
+        val _id = adapter.getRowId(position)
+        val where = Expression.equals(Statuses._ID, _id).sql
+        return context.contentResolver.queryOne(contentUri, Statuses.COLUMNS, where, null, null,
+                ParcelableStatus::class.java)
     }
 
     protected fun getFiltersWhere(table: String): Expression? {
