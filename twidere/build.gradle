@@ -66,29 +66,36 @@ android {
         }
     }
 
+    def file = rootProject.file('private/signing.properties')
+    def hasSigningProps = file.exists()
+
     signingConfigs {
-        twidere {
-            def file = rootProject.file('private/signing.properties')
-            if (!file.exists()) return
-            Properties signingProp = new Properties()
-            signingProp.load(file.newInputStream())
-            storeFile = rootProject.file(signingProp.get('storeFile'))
-            storePassword = (String) signingProp.get('storePassword')
-            keyAlias = (String) signingProp.get('keyAlias')
-            keyPassword = (String) signingProp.get('keyPassword')
+        if (hasSigningProps) {
+            twidere {
+                Properties signingProp = new Properties()
+                signingProp.load(file.newInputStream())
+                storeFile = rootProject.file(signingProp.get('storeFile'))
+                storePassword = (String) signingProp.get('storePassword')
+                keyAlias = (String) signingProp.get('keyAlias')
+                keyPassword = (String) signingProp.get('keyPassword')
+            }
         }
     }
 
     buildTypes {
         debug {
-            signingConfig signingConfigs.twidere
+            if (hasSigningProps) {
+                signingConfig signingConfigs.twidere
+            }
 
             minifyEnabled false
             shrinkResources false
             resValue("bool", "debug", "true")
         }
         release {
-            signingConfig signingConfigs.twidere
+            if (hasSigningProps) {
+                signingConfig signingConfigs.twidere
+            }
 
             minifyEnabled false
             shrinkResources false
