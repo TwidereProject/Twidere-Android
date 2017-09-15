@@ -67,6 +67,7 @@ class AccountViewHolder(
         adapter.requestManager.loadProfileImage(adapter.context, details, adapter.profileImageStyle,
                 profileImage.cornerRadius, profileImage.cornerRadiusRatio).into(profileImage)
         accountType.setImageResource(AccountUtils.getAccountTypeIcon(details.type))
+        toggle.setOnCheckedChangeListener(null)
         toggle.isChecked = details.activated
         toggle.setOnCheckedChangeListener(adapter.checkedChangeListener)
         toggle.tag = layoutPosition
