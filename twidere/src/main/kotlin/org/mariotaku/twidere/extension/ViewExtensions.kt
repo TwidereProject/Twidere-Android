@@ -23,6 +23,7 @@ import android.graphics.Rect
 import android.graphics.RectF
 import android.support.annotation.UiThread
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import org.mariotaku.ktextension.empty
 
@@ -83,6 +84,10 @@ fun View.hideIfEmpty(dependency: TextView, hideVisibility: Int = View.GONE) {
 fun View.setVisible(visible: Boolean, hiddenVisibility: Int = View.GONE) {
     visibility = if (visible) View.VISIBLE else hiddenVisibility
 }
+
+val ViewGroup.children: List<View>
+    get() = (0 until childCount).map { getChildAt(it) }
+
 private fun offsetToRoot(view: View, rect: Rect) {
     var parent = view.parent as? View
     while (parent != null) {

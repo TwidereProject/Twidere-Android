@@ -334,9 +334,9 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
 
     companion object {
         const val ACTION_ADD_URL_SUBSCRIPTION = "${INTENT_PACKAGE_PREFIX}ADD_URL_FILTERS_SUBSCRIPTION"
-        const val REQUEST_ADD_URL_SUBSCRIPTION_PURCHASE = 101
         const val EXTRA_ADD_SUBSCRIPTION_URL = "add_subscription.url"
         const val EXTRA_ADD_SUBSCRIPTION_NAME = "add_subscription.name"
+        private const val REQUEST_ADD_URL_SUBSCRIPTION_PURCHASE = 101
         private const val FRAGMENT_TAG_RREFRESH_FILTERS = "refresh_filters"
     }
 }
