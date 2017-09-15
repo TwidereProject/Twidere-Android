@@ -37,6 +37,10 @@ public class CursorReference<C extends Cursor> implements Closeable {
         return cursor;
     }
 
+    public C component1() {
+        return get();
+    }
+
     @Override
     public void close() throws IOException {
         if (cursor == null) return;

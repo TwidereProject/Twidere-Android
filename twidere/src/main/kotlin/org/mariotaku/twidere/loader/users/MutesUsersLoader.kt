@@ -25,6 +25,7 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.extension.model.api.mastodon.mapToPaginated
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.microblog.mapToPaginated
@@ -43,7 +44,7 @@ class MutesUsersLoader(
         fromUser: Boolean
 ) : AbsRequestUsersLoader(context, accountKey, data, fromUser) {
 
-    private val filteredUsers by lazy { DataStoreUtils.getFilteredUserKeys(context) }
+    private val filteredUsers by lazy { DataStoreUtils.getFilteredUserKeys(context, FilterScope.ALL) }
 
     @Throws(MicroBlogException::class)
     override fun getUsers(details: AccountDetails, paging: Paging): PaginatedList<ParcelableUser> {

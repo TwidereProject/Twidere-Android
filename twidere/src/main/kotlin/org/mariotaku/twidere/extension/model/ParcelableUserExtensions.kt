@@ -45,6 +45,9 @@ fun ParcelableUser.toLite(): ParcelableLiteUser {
     result.screen_name = screen_name
     result.name = name
     result.profile_image_url = profile_image_url
+    result.description_unescaped = description_unescaped
+    result.location = location
+    result.url_expanded = url_expanded
     result.is_following = is_following
     return result
 }

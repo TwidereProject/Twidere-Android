@@ -14,7 +14,6 @@ import org.mariotaku.ktextension.toStringArray
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.sqliteqb.library.*
 import org.mariotaku.sqliteqb.library.Columns.Column
-import org.mariotaku.twidere.extension.model.component1
 import org.mariotaku.twidere.extension.queryReference
 import org.mariotaku.twidere.extension.rawQuery
 import org.mariotaku.twidere.model.Draft

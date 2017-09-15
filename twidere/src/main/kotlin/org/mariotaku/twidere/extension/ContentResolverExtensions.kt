@@ -27,7 +27,6 @@ import org.mariotaku.ktextension.map
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.sqliteqb.library.SQLFunctions
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_LIMIT
-import org.mariotaku.twidere.extension.model.component1
 import org.mariotaku.twidere.model.CursorReference
 import org.mariotaku.twidere.util.TwidereQueryBuilder
 import org.mariotaku.twidere.util.content.ContentResolverUtils

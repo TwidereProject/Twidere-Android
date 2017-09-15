@@ -25,6 +25,7 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.extension.model.api.mastodon.mapToPaginated
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.microblog.mapToPaginated
@@ -70,7 +71,7 @@ class UserBlocksLoader(
     }
 
     override fun onLoadInBackground(): List<ParcelableUser> {
-        filteredUsers = DataStoreUtils.getFilteredUserKeys(context)
+        filteredUsers = DataStoreUtils.getFilteredUserKeys(context, FilterScope.ALL)
         return super.onLoadInBackground()
     }
 

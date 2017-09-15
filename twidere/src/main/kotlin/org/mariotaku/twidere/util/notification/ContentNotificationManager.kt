@@ -198,7 +198,9 @@ class ContentNotificationManager(
 
 
         var newMaxPositionKey = -1L
-        val filteredUserKeys = DataStoreUtils.getFilteredUserKeys(context)
+        val filteredUserKeys = DataStoreUtils.getFilteredUserKeys(context, FilterScope.INTERACTIONS)
+        val filteredNameKeywords = DataStoreUtils.getFilteredKeywords(context, FilterScope.INTERACTIONS or FilterScope.TARGET_NAME)
+        val filteredDescriptionKeywords = DataStoreUtils.getFilteredKeywords(context, FilterScope.INTERACTIONS or FilterScope.TARGET_DESCRIPTION)
 
 
         val (remaining, consumed) = cr.queryReference(Activities.AboutMe.CONTENT_URI, Activities.COLUMNS,
@@ -221,7 +223,8 @@ class ContentNotificationManager(
                     return@forEachRow false
                 }
                 val sources = ParcelableActivityUtils.filterSources(activity.sources_lite,
-                        filteredUserKeys, pref.isNotificationFollowingOnly) ?: activity.sources_lite
+                        filteredUserKeys, filteredNameKeywords, filteredDescriptionKeywords,
+                        pref.isNotificationFollowingOnly) ?: activity.sources_lite
                         ?: return@forEachRow false
 
                 if (sources.isEmpty()) return@forEachRow false

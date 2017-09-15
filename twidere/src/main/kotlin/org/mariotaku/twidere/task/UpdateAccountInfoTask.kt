@@ -11,7 +11,6 @@ import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.TwidereConstants.ACCOUNT_TYPE
-import org.mariotaku.twidere.extension.model.component1
 import org.mariotaku.twidere.extension.model.setAccountKey
 import org.mariotaku.twidere.extension.model.setAccountUser
 import org.mariotaku.twidere.extension.queryReference

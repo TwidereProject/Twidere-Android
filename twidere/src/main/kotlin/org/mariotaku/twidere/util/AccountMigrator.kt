@@ -9,7 +9,6 @@ import org.mariotaku.ktextension.toHexColor
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AuthTypeInt
-import org.mariotaku.twidere.extension.model.component1
 import org.mariotaku.twidere.model.ParcelableCredentials
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey

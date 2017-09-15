@@ -59,6 +59,18 @@ public class ParcelableLiteUser implements Parcelable {
     @CursorField(CachedUsers.PROFILE_IMAGE_URL)
     public String profile_image_url;
 
+    @JsonField(name = "description_unescaped")
+    @CursorField(CachedUsers.DESCRIPTION_UNESCAPED)
+    public String description_unescaped;
+
+    @JsonField(name = "url_expanded")
+    @CursorField(CachedUsers.URL_EXPANDED)
+    public String url_expanded;
+
+    @JsonField(name = "location")
+    @CursorField(CachedUsers.LOCATION)
+    public String location;
+
     @JsonField(name = "is_following")
     @CursorField(CachedUsers.IS_FOLLOWING)
     public boolean is_following;
