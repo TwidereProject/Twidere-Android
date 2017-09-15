@@ -386,12 +386,12 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
     }
 
     override fun onItemActionClick(holder: RecyclerView.ViewHolder, id: Int, position: Int) {
-        val status = adapter.getStatus(position)
+        val status = getFullStatus(position) ?: return
         handleActionClick(this@AbsStatusesFragment, id, status, holder as StatusViewHolder)
     }
 
     override fun onItemActionLongClick(holder: RecyclerView.ViewHolder, id: Int, position: Int): Boolean {
-        val status = adapter.getStatus(position)
+        val status = getFullStatus(position) ?: return false
         return handleActionLongClick(this, status, adapter.getItemId(position), id)
     }
 
@@ -655,7 +655,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
                     val status = extras.getParcelable<ParcelableStatus>(EXTRA_STATUS)
                     if (status.account_key.host != accountKey.host) {
                         val composeIntent = Intent(fragment.context, ComposeActivity::class.java)
-                        composeIntent.putExtra(Intent.EXTRA_TEXT, "${status.text_plain } ${LinkCreator.getStatusWebLink(status)}")
+                        composeIntent.putExtra(Intent.EXTRA_TEXT, "${status.text_plain} ${LinkCreator.getStatusWebLink(status)}")
                         composeIntent.putExtra(EXTRA_ACCOUNT_KEY, accountKey)
                         composeIntent.putExtra(EXTRA_SELECTION, 0)
                         fragment.startActivity(composeIntent)

@@ -374,7 +374,7 @@ abstract class AbsActivitiesFragment protected constructor() :
     }
 
     protected open fun getActivityStatus(position: Int): ParcelableStatus? {
-        return adapter.getActivity(position).activityStatus
+        return getFullActivity(position)?.activityStatus
     }
 
     override fun onStart() {
