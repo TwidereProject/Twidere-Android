@@ -72,6 +72,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/labelTarget"
                 style="?android:listSeparatorTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -102,6 +103,7 @@
                 android:text="@string/label_filter_target_description"/>
 
             <TextView
+                android:id="@+id/labelScope"
                 style="?android:listSeparatorTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

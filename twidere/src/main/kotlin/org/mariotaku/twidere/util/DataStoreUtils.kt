@@ -486,19 +486,19 @@ object DataStoreUtils {
         val filteredTextKeywordsWhere = Expression.or(
                 Expression.and(
                         Expression.or(
-                                Expression.equals("${Filters.Keywords.TABLE_NAME}.${Filters.Keywords.SCOPE} & ${FilterScope.MASK_FLAG}", 0),
-                                Expression.notEquals("${Filters.Keywords.TABLE_NAME}.${Filters.Keywords.SCOPE} & ${FilterScope.FLAG_MATCH_TEXT}", 0)
+                                Expression.equals("${Filters.Keywords.TABLE_NAME}.${Filters.Keywords.SCOPE} & ${FilterScope.MASK_TARGET}", 0),
+                                Expression.notEquals("${Filters.Keywords.TABLE_NAME}.${Filters.Keywords.SCOPE} & ${FilterScope.TARGET_TEXT}", 0)
                         ),
                         ScopeMatchesExpression(Filters.Keywords.TABLE_NAME, Filters.Keywords.SCOPE),
                         ContainsExpression(Statuses.FILTER_TEXTS, Filters.Keywords.TABLE_NAME, Filters.Keywords.VALUE)
                 ),
                 Expression.and(
-                        Expression.notEquals("${Filters.Keywords.TABLE_NAME}.${Filters.Keywords.SCOPE} & ${FilterScope.FLAG_MATCH_NAME}", 0),
+                        Expression.notEquals("${Filters.Keywords.TABLE_NAME}.${Filters.Keywords.SCOPE} & ${FilterScope.TARGET_NAME}", 0),
                         ScopeMatchesExpression(Filters.Keywords.TABLE_NAME, Filters.Keywords.SCOPE),
                         ContainsExpression(Statuses.FILTER_NAMES, Filters.Keywords.TABLE_NAME, Filters.Keywords.VALUE)
                 ),
                 Expression.and(
-                        Expression.notEquals("${Filters.Keywords.TABLE_NAME}.${Filters.Keywords.SCOPE} & ${FilterScope.FLAG_MATCH_DESCRIPTION}", 0),
+                        Expression.notEquals("${Filters.Keywords.TABLE_NAME}.${Filters.Keywords.SCOPE} & ${FilterScope.TARGET_DESCRIPTION}", 0),
                         ScopeMatchesExpression(Filters.Keywords.TABLE_NAME, Filters.Keywords.SCOPE),
                         ContainsExpression(Statuses.FILTER_DESCRIPTIONS, Filters.Keywords.TABLE_NAME, Filters.Keywords.VALUE)
                 )

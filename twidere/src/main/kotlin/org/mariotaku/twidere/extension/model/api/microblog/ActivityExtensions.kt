@@ -138,7 +138,10 @@ fun Activity.toParcelable(accountKey: UserKey, accountType: String, isGap: Boole
                 }
             }
         }
-        result.user_key = result.sources?.singleOrNull()?.key ?: UserKey("multiple", null)
+        val singleSource = result.sources?.singleOrNull()
+        result.user_key = singleSource?.key ?: UserKey("multiple", null)
+        result.user_name = singleSource?.name
+        result.user_screen_name = singleSource?.screen_name
     } else {
         status.applyTo(accountKey, accountType, profileImageSize, result)
         result.summary_line = arrayOf(result.toSummaryLine())

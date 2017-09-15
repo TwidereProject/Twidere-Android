@@ -34,6 +34,8 @@ import org.mariotaku.twidere.model.util.UserKeysConverter;
 import org.mariotaku.twidere.model.util.UserKeysCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 
+import java.util.Arrays;
+
 @ParcelablePlease
 @JsonObject
 @CursorObject(valuesCreator = true, tableInfo = true)
@@ -134,6 +136,94 @@ public class ParcelableActivity extends ParcelableStatus implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         ParcelableActivityParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    @Override
+    public String toString() {
+        return "ParcelableActivity{" +
+                "action='" + action + '\'' +
+                ", max_sort_position=" + max_sort_position +
+                ", min_sort_position=" + min_sort_position +
+                ", max_position='" + max_position + '\'' +
+                ", min_position='" + min_position + '\'' +
+                ", source_keys=" + Arrays.toString(source_keys) +
+                ", _id=" + _id +
+                ", sources=" + Arrays.toString(sources) +
+                ", id='" + id + '\'' +
+                ", targets=" + targets +
+                ", account_key=" + account_key +
+                ", target_objects=" + target_objects +
+                ", sort_id=" + sort_id +
+                ", position_key=" + position_key +
+                ", sources_lite=" + Arrays.toString(sources_lite) +
+                ", timestamp=" + timestamp +
+                ", summary_line=" + Arrays.toString(summary_line) +
+                ", has_following_source=" + has_following_source +
+                ", user_key=" + user_key +
+                ", after_filtered_sources=" + Arrays.toString(after_filtered_sources) +
+                ", retweet_id='" + retweet_id + '\'' +
+                ", retweeted_by_user_key=" + retweeted_by_user_key +
+                ", retweet_timestamp=" + retweet_timestamp +
+                ", retweet_count=" + retweet_count +
+                ", favorite_count=" + favorite_count +
+                ", reply_count=" + reply_count +
+                ", in_reply_to_status_id='" + in_reply_to_status_id + '\'' +
+                ", in_reply_to_user_key=" + in_reply_to_user_key +
+                ", my_retweet_id='" + my_retweet_id + '\'' +
+                ", quoted_id='" + quoted_id + '\'' +
+                ", quoted_timestamp=" + quoted_timestamp +
+                ", quoted_user_key=" + quoted_user_key +
+                ", is_gap=" + is_gap +
+                ", is_retweet=" + is_retweet +
+                ", retweeted=" + retweeted +
+                ", is_favorite=" + is_favorite +
+                ", is_possibly_sensitive=" + is_possibly_sensitive +
+                ", user_is_following=" + user_is_following +
+                ", user_is_protected=" + user_is_protected +
+                ", user_is_verified=" + user_is_verified +
+                ", is_quote=" + is_quote +
+                ", quoted_user_is_protected=" + quoted_user_is_protected +
+                ", quoted_user_is_verified=" + quoted_user_is_verified +
+                ", retweeted_by_user_name='" + retweeted_by_user_name + '\'' +
+                ", retweeted_by_user_screen_name='" + retweeted_by_user_screen_name + '\'' +
+                ", retweeted_by_user_profile_image='" + retweeted_by_user_profile_image + '\'' +
+                ", text_plain='" + text_plain + '\'' +
+                ", lang='" + lang + '\'' +
+                ", user_name='" + user_name + '\'' +
+                ", user_screen_name='" + user_screen_name + '\'' +
+                ", in_reply_to_name='" + in_reply_to_name + '\'' +
+                ", in_reply_to_screen_name='" + in_reply_to_screen_name + '\'' +
+                ", source='" + source + '\'' +
+                ", user_profile_image_url='" + user_profile_image_url + '\'' +
+                ", text_unescaped='" + text_unescaped + '\'' +
+                ", card_name='" + card_name + '\'' +
+                ", quoted_text_plain='" + quoted_text_plain + '\'' +
+                ", quoted_text_unescaped='" + quoted_text_unescaped + '\'' +
+                ", quoted_source='" + quoted_source + '\'' +
+                ", quoted_user_name='" + quoted_user_name + '\'' +
+                ", quoted_user_screen_name='" + quoted_user_screen_name + '\'' +
+                ", quoted_user_profile_image='" + quoted_user_profile_image + '\'' +
+                ", location=" + location +
+                ", place_full_name='" + place_full_name + '\'' +
+                ", mentions=" + Arrays.toString(mentions) +
+                ", media=" + Arrays.toString(media) +
+                ", quoted_media=" + Arrays.toString(quoted_media) +
+                ", card=" + card +
+                ", extras=" + extras +
+                ", spans=" + Arrays.toString(spans) +
+                ", quoted_spans=" + Arrays.toString(quoted_spans) +
+                ", account_color=" + account_color +
+                ", inserted_date=" + inserted_date +
+                ", filter_flags=" + filter_flags +
+                ", filter_users=" + Arrays.toString(filter_users) +
+                ", filter_sources=" + Arrays.toString(filter_sources) +
+                ", filter_links=" + Arrays.toString(filter_links) +
+                ", filter_names=" + Arrays.toString(filter_names) +
+                ", filter_texts='" + filter_texts + '\'' +
+                ", filter_descriptions='" + filter_descriptions + '\'' +
+                ", is_pinned_status=" + is_pinned_status +
+                ", is_filtered=" + is_filtered +
+                '}';
     }
 
     @ParcelablePlease

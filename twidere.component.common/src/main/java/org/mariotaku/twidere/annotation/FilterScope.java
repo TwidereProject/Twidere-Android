@@ -27,7 +27,7 @@ import java.lang.annotation.RetentionPolicy;
 @IntDef(value = {FilterScope.HOME, FilterScope.INTERACTIONS, FilterScope.MESSAGES,
         FilterScope.SEARCH_RESULTS, FilterScope.LIST_GROUP_TIMELINE, FilterScope.FAVORITES,
         FilterScope.USER_TIMELINE, FilterScope.PUBLIC_TIMELINE, FilterScope.UGC_TIMELINE,
-        FilterScope.FLAG_MATCH_NAME, FilterScope.FLAG_MATCH_TEXT, FilterScope.FLAG_MATCH_DESCRIPTION,
+        FilterScope.TARGET_NAME, FilterScope.TARGET_TEXT, FilterScope.TARGET_DESCRIPTION,
         FilterScope.ALL, FilterScope.DEFAULT}, flag = true)
 @Retention(RetentionPolicy.SOURCE)
 public @interface FilterScope {
@@ -42,20 +42,20 @@ public @interface FilterScope {
 
     int UGC_TIMELINE = LIST_GROUP_TIMELINE | FAVORITES | USER_TIMELINE | PUBLIC_TIMELINE;
 
-    int FLAG_MATCH_NAME = 0x80000000;
-    int FLAG_MATCH_TEXT = 0x40000000;
-    int FLAG_MATCH_DESCRIPTION = 0x20000000;
+    int TARGET_NAME = 0x80000000;
+    int TARGET_TEXT = 0x40000000;
+    int TARGET_DESCRIPTION = 0x20000000;
 
-    int MASK_FLAG = 0xFF000000;
+    int MASK_TARGET = 0xFF000000;
     int MASK_SCOPE = 0x00FFFFFF;
 
     int VALID_MASKS_USERS = MASK_SCOPE;
-    int VALID_MASKS_KEYWORDS = MASK_SCOPE | MASK_FLAG;
+    int VALID_MASKS_KEYWORDS = MASK_SCOPE | MASK_TARGET;
     int VALID_MASKS_SOURCES = MASK_SCOPE & ~MESSAGES;
     int VALID_MASKS_LINKS = MASK_SCOPE;
 
     // Contains all flags
     int ALL = 0xFFFFFFFF;
     @SuppressWarnings("PointlessBitwiseExpression")
-    int DEFAULT = ALL & ~(FLAG_MATCH_NAME | FLAG_MATCH_DESCRIPTION);
+    int DEFAULT = ALL & ~(TARGET_NAME | TARGET_DESCRIPTION);
 }

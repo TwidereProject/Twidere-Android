@@ -68,9 +68,9 @@ fun ParcelableActivity.prependTargetObjects(from: ParcelableActivity) {
 }
 
 fun ParcelableActivity.updateActivityFilterInfo() {
-    updateFilterInfo(sources?.flatMap {
-        listOf(it.description_unescaped, it.location)
-    }?.toTypedArray())
+    updateFilterInfo(sources?.singleOrNull()?.let {
+        listOf(it.description_unescaped, it.location, it.url_expanded)
+    })
 }
 
 inline val ParcelableActivity.RelatedObject.size

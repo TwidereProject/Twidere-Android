@@ -190,9 +190,9 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
     }
 
     private fun Dialog.saveScopes(scopes: FilterScopes) {
-        targetText.saveScope(scopes, FilterScope.FLAG_MATCH_TEXT)
-        targetName.saveScope(scopes, FilterScope.FLAG_MATCH_NAME)
-        targetDescription.saveScope(scopes, FilterScope.FLAG_MATCH_DESCRIPTION)
+        targetText.saveScope(scopes, FilterScope.TARGET_TEXT)
+        targetName.saveScope(scopes, FilterScope.TARGET_NAME)
+        targetDescription.saveScope(scopes, FilterScope.TARGET_DESCRIPTION)
         scopeHome.saveScope(scopes, FilterScope.HOME)
         scopeInteractions.saveScope(scopes, FilterScope.INTERACTIONS)
         scopeMessages.saveScope(scopes, FilterScope.MESSAGES)
@@ -201,9 +201,12 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
     }
 
     private fun Dialog.loadScopes(scopes: FilterScopes) {
-        targetText.loadScope(scopes, FilterScope.FLAG_MATCH_TEXT)
-        targetName.loadScope(scopes, FilterScope.FLAG_MATCH_NAME)
-        targetDescription.loadScope(scopes, FilterScope.FLAG_MATCH_DESCRIPTION)
+        labelTarget.setVisible(scopes.hasMask(FilterScope.MASK_TARGET))
+        targetText.loadScope(scopes, FilterScope.TARGET_TEXT)
+        targetName.loadScope(scopes, FilterScope.TARGET_NAME)
+        targetDescription.loadScope(scopes, FilterScope.TARGET_DESCRIPTION)
+
+        labelScope.setVisible(scopes.hasMask(FilterScope.MASK_SCOPE))
         scopeHome.loadScope(scopes, FilterScope.HOME)
         scopeInteractions.loadScope(scopes, FilterScope.INTERACTIONS)
         scopeMessages.loadScope(scopes, FilterScope.MESSAGES)
@@ -266,6 +269,8 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
         override fun describeContents(): Int {
             return 0
         }
+
+        fun hasMask(mask: Int): Boolean = masks and mask != 0
 
         companion object CREATOR : Parcelable.Creator<FilterScopes> {
             override fun createFromParcel(parcel: Parcel): FilterScopes {

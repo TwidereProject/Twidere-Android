@@ -125,7 +125,8 @@ fun Status.applyTo(accountKey: UserKey, result: ParcelableStatus) {
 
     result.extras = extras
 
-    result.updateFilterInfo(arrayOf(accountDescriptionUnescaped, reblog?.accountDescriptionUnescaped))
+    result.updateFilterInfo(setOf(accountDescriptionUnescaped, reblog?.accountDescriptionUnescaped,
+            accountUrl, reblog?.accountUrl))
 }
 
 private fun calculateDisplayTextRange(text: String, spans: Array<SpanItem>?, media: Array<ParcelableMedia>?): IntArray? {
@@ -144,6 +145,9 @@ private val Status.accountDescriptionUnescaped: String?
             HtmlEscapeHelper.unescape(note)
         }
     }
+
+private val Status.accountUrl: String?
+    get() = account?.url
 
 object MastodonSpanProcessor : HtmlSpanBuilder.SpanProcessor {
 

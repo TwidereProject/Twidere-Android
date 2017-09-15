@@ -449,11 +449,17 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                 ", extras=" + extras +
                 ", spans=" + Arrays.toString(spans) +
                 ", quoted_spans=" + Arrays.toString(quoted_spans) +
-                ", is_filtered=" + is_filtered +
                 ", account_color=" + account_color +
                 ", inserted_date=" + inserted_date +
-                ", is_pinned_status=" + is_pinned_status +
                 ", filter_flags=" + filter_flags +
+                ", filter_users=" + Arrays.toString(filter_users) +
+                ", filter_sources=" + Arrays.toString(filter_sources) +
+                ", filter_links=" + Arrays.toString(filter_links) +
+                ", filter_names=" + Arrays.toString(filter_names) +
+                ", filter_texts='" + filter_texts + '\'' +
+                ", filter_descriptions='" + filter_descriptions + '\'' +
+                ", is_pinned_status=" + is_pinned_status +
+                ", is_filtered=" + is_filtered +
                 '}';
     }
 

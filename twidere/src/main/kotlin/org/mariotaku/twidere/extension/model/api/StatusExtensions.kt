@@ -201,9 +201,10 @@ fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: S
         result.addFilterFlag(ParcelableStatus.FilterFlags.HAS_MEDIA)
     }
 
-    result.updateFilterInfo(arrayOf(userDescriptionUnescaped, retweetedStatus?.userDescriptionUnescaped,
+    result.updateFilterInfo(setOf(userDescriptionUnescaped, retweetedStatus?.userDescriptionUnescaped,
             quotedStatus?.userDescriptionUnescaped, this.user.location, retweetedStatus?.user?.location,
-            quotedStatus?.user?.location))
+            quotedStatus?.user?.location, userUrlExpanded, retweetedStatus?.userUrlExpanded,
+            quotedStatus?.userUrlExpanded))
 }
 
 
@@ -273,6 +274,9 @@ private fun String.twitterUnescaped(): String {
 
 private val Status.userDescriptionUnescaped: String?
     get() = user?.let { InternalTwitterContentUtils.formatUserDescription(it)?.first }
+
+private val Status.userUrlExpanded: String?
+    get() = user?.urlEntities?.firstOrNull()?.expandedUrl
 
 /**
  * @param spans Ordered spans
