@@ -158,6 +158,9 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
             activityLayout.statusBarHeight = statusBarHeight
             onApplyWindowInsets(view, insets)
         }
+        window.decorView.setOnSystemUiVisibilityChangeListener { visibility ->
+            activityLayout.statusBarAlpha = if (View.SYSTEM_UI_FLAG_FULLSCREEN in visibility) 0f else 1f
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -299,10 +302,8 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             if (visible) {
                 window.decorView.removeSystemUiVisibility(FLAG_SYSTEM_UI_HIDE_BARS)
-                activityLayout.statusBarAlpha = 1f
             } else {
                 window.decorView.addSystemUiVisibility(FLAG_SYSTEM_UI_HIDE_BARS)
-                activityLayout.statusBarAlpha = 0f
             }
         } else {
             setControlBarVisibleAnimate(visible)
