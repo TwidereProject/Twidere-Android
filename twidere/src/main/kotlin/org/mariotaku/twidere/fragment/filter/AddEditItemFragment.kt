@@ -24,8 +24,6 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.net.Uri
 import android.os.Bundle
-import android.os.Parcel
-import android.os.Parcelable
 import android.support.v7.app.AlertDialog
 import android.view.View
 import android.view.WindowManager
@@ -33,7 +31,6 @@ import android.widget.CheckBox
 import android.widget.Toast
 import kotlinx.android.synthetic.main.dialog_filter_rule_editor.*
 import org.mariotaku.ktextension.ContentValues
-import org.mariotaku.ktextension.contains
 import org.mariotaku.ktextension.set
 import org.mariotaku.ktextension.string
 import org.mariotaku.sqliteqb.library.Expression
@@ -46,6 +43,7 @@ import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.util.isAdvancedFiltersEnabled
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
+import org.mariotaku.twidere.model.filter.FilterScopesHolder
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
@@ -61,8 +59,8 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
     private val defaultValue: String?
         get() = arguments.getString(EXTRA_VALUE)
 
-    private val defaultScope: FilterScopes
-        get() = FilterScopes(filterMasks, arguments.getInt(EXTRA_SCOPE, FilterScope.DEFAULT))
+    private val defaultScopes: FilterScopesHolder
+        get() = FilterScopesHolder(filterMasks, arguments.getInt(EXTRA_SCOPE, FilterScope.DEFAULT))
 
     private val filterMasks: Int
         get() = when (contentUri) {
@@ -82,14 +80,14 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
             editText.string = value
         }
 
-    private var Dialog.scope: FilterScopes?
-        get() = defaultScope.also {
+    private var Dialog.scopes: FilterScopesHolder?
+        get() = defaultScopes.also {
             if (extraFeaturesService.isAdvancedFiltersEnabled) {
                 saveScopes(it)
             }
         }
         set(value) {
-            loadScopes(value ?: defaultScope)
+            loadScopes(value ?: defaultScopes)
         }
 
     private var Dialog.advancedExpanded: Boolean
@@ -103,7 +101,7 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
         dialog as AlertDialog
         when (which) {
             DialogInterface.BUTTON_POSITIVE -> {
-                val scope = dialog.scope ?: return
+                val scope = dialog.scopes ?: return
                 if (!canEditValue) {
                     saveScopeOnly(scope)
                 } else {
@@ -160,12 +158,12 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
 
             if (savedInstanceState == null) {
                 value = defaultValue
-                scope = defaultScope
+                scopes = defaultScopes
                 advancedExpanded = false
                 editText.setSelection(editText.length().coerceAtLeast(0))
             } else {
                 value = savedInstanceState.getString(EXTRA_VALUE)
-                scope = savedInstanceState.getParcelable(EXTRA_SCOPE)
+                scopes = savedInstanceState.getParcelable(EXTRA_SCOPE)
             }
         }
         return dialog
@@ -174,10 +172,10 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(EXTRA_VALUE, dialog.value)
-        outState.putParcelable(EXTRA_SCOPE, dialog.scope)
+        outState.putParcelable(EXTRA_SCOPE, dialog.scopes)
     }
 
-    private fun Dialog.saveScopes(scopes: FilterScopes) {
+    private fun Dialog.saveScopes(scopes: FilterScopesHolder) {
         targetText.saveScope(scopes, FilterScope.TARGET_TEXT)
         targetName.saveScope(scopes, FilterScope.TARGET_NAME)
         targetDescription.saveScope(scopes, FilterScope.TARGET_DESCRIPTION)
@@ -188,7 +186,7 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
         scopeOther.saveScope(scopes, FilterScope.UGC_TIMELINE)
     }
 
-    private fun Dialog.loadScopes(scopes: FilterScopes) {
+    private fun Dialog.loadScopes(scopes: FilterScopesHolder) {
         labelTarget.setVisible(scopes.hasMask(FilterScope.MASK_TARGET))
         targetText.loadScope(scopes, FilterScope.TARGET_TEXT)
         targetName.loadScope(scopes, FilterScope.TARGET_NAME)
@@ -202,12 +200,12 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
         scopeOther.loadScope(scopes, FilterScope.UGC_TIMELINE)
     }
 
-    private fun CheckBox.saveScope(scopes: FilterScopes, scope: Int) {
+    private fun CheckBox.saveScope(scopes: FilterScopesHolder, scope: Int) {
         if (!isEnabled || visibility != View.VISIBLE) return
         scopes[scope] = isChecked
     }
 
-    private fun CheckBox.loadScope(scopes: FilterScopes, scope: Int) {
+    private fun CheckBox.loadScope(scopes: FilterScopesHolder, scope: Int) {
         if (scope in scopes) {
             isEnabled = true
             visibility = View.VISIBLE
@@ -219,7 +217,7 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
         isChecked = scopes[scope]
     }
 
-    private fun saveScopeOnly(scopes: FilterScopes) {
+    private fun saveScopeOnly(scopes: FilterScopesHolder) {
         val resolver = context.contentResolver
         val contentUri = contentUri
         val rowId = rowId
@@ -233,7 +231,7 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
         resolver.update(contentUri, values, idWhere, null)
     }
 
-    private fun saveItem(value: String, scopes: FilterScopes) {
+    private fun saveItem(value: String, scopes: FilterScopesHolder) {
         val resolver = context.contentResolver
         val uri = contentUri
         val rowId = rowId
@@ -256,59 +254,6 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
         } else {
             resolver.insert(uri, values)
         }
-    }
-
-    class FilterScopes(val masks: Int, value: Int = 0) : Parcelable {
-
-        var value: Int = 0
-            get() = field and masks
-            private set(v) {
-                field = v and masks
-            }
-
-        constructor(parcel: Parcel) : this(parcel.readInt(), parcel.readInt())
-
-        init {
-            this.value = value
-        }
-
-        operator fun set(scope: Int, enabled: Boolean) {
-            value = if (enabled) {
-                value or scope
-            } else {
-                value and scope.inv()
-            }
-        }
-
-        operator fun get(scope: Int): Boolean {
-            return scope in value
-        }
-
-        operator fun contains(scope: Int): Boolean {
-            return scope in masks
-        }
-
-        override fun writeToParcel(parcel: Parcel, flags: Int) {
-            parcel.writeInt(masks)
-            parcel.writeInt(value)
-        }
-
-        override fun describeContents(): Int {
-            return 0
-        }
-
-        fun hasMask(mask: Int): Boolean = masks and mask != 0
-
-        companion object CREATOR : Parcelable.Creator<FilterScopes> {
-            override fun createFromParcel(parcel: Parcel): FilterScopes {
-                return FilterScopes(parcel)
-            }
-
-            override fun newArray(size: Int): Array<FilterScopes?> {
-                return arrayOfNulls(size)
-            }
-        }
-
     }
 
     companion object {
