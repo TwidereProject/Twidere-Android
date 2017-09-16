@@ -73,6 +73,9 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
             else -> 0
         }
 
+    private val canEditValue: Boolean
+        get() = contentUri != Filters.Users.CONTENT_URI
+
     private var Dialog.value: String?
         get() = editText.string?.takeIf(String::isNotEmpty)
         set(value) {
@@ -100,30 +103,12 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
         dialog as AlertDialog
         when (which) {
             DialogInterface.BUTTON_POSITIVE -> {
-                val value = dialog.value ?: return
                 val scope = dialog.scope ?: return
-
-                val values = ContentValues {
-                    this[Filters.VALUE] = value
-                    this[Filters.SCOPE] = scope.value
-                }
-                val uri = contentUri
-                val id = rowId
-                val resolver = context.contentResolver
-                if (id >= 0) {
-                    val valueWhere = Expression.equalsArgs(Filters.VALUE).sql
-                    val valueWhereArgs = arrayOf(value)
-                    val matchedId = resolver.queryLong(uri, Filters._ID, valueWhere, valueWhereArgs,
-                            -1)
-                    if (matchedId != -1L && matchedId != id) {
-                        Toast.makeText(context, R.string.message_toast_duplicate_filter_rule,
-                                Toast.LENGTH_SHORT).show()
-                    } else {
-                        val idWhere = Expression.equals(Filters._ID, id).sql
-                        resolver.update(uri, values, idWhere, null)
-                    }
+                if (!canEditValue) {
+                    saveScopeOnly(scope)
                 } else {
-                    resolver.insert(uri, values)
+                    val value = dialog.value ?: return
+                    saveItem(value, scope)
                 }
             }
         }
@@ -154,6 +139,9 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
                 else -> null
             })
             editText.threshold = 1
+            val canEdit = canEditValue
+            editText.isEnabled = canEdit
+            editText.setTextIsSelectable(canEdit)
             advancedToggle.setOnClickListener {
                 advancedExpanded = !advancedExpanded
             }
@@ -229,6 +217,45 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
             return
         }
         isChecked = scopes[scope]
+    }
+
+    private fun saveScopeOnly(scopes: FilterScopes) {
+        val resolver = context.contentResolver
+        val contentUri = contentUri
+        val rowId = rowId
+
+        if (rowId < 0) return
+
+        val values = ContentValues {
+            this[Filters.SCOPE] = scopes.value
+        }
+        val idWhere = Expression.equals(Filters._ID, rowId).sql
+        resolver.update(contentUri, values, idWhere, null)
+    }
+
+    private fun saveItem(value: String, scopes: FilterScopes) {
+        val resolver = context.contentResolver
+        val uri = contentUri
+        val rowId = rowId
+        val values = ContentValues {
+            this[Filters.VALUE] = value
+            this[Filters.SCOPE] = scopes.value
+        }
+        if (rowId >= 0) {
+            val valueWhere = Expression.equalsArgs(Filters.VALUE).sql
+            val valueWhereArgs = arrayOf(value)
+            val matchedId = resolver.queryLong(uri, Filters._ID, valueWhere, valueWhereArgs,
+                    -1)
+            if (matchedId != -1L && matchedId != rowId) {
+                Toast.makeText(context, R.string.message_toast_duplicate_filter_rule,
+                        Toast.LENGTH_SHORT).show()
+            } else {
+                val idWhere = Expression.equals(Filters._ID, rowId).sql
+                resolver.update(uri, values, idWhere, null)
+            }
+        } else {
+            resolver.insert(uri, values)
+        }
     }
 
     class FilterScopes(val masks: Int, value: Int = 0) : Parcelable {

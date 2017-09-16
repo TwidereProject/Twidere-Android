@@ -69,7 +69,7 @@
             android:ems="10"
             android:inputType="textUri"
             android:maxLines="1"
-            app:backgroundTint="?colorAccent"
+            app:backgroundTint="?colorControlStateful"
             tools:text="https://api.twitter.com/"/>
 
         <org.mariotaku.twidere.view.FixedTextView

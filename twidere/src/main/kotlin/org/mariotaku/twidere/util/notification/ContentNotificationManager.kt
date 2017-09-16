@@ -205,8 +205,8 @@ class ContentNotificationManager(
 
         val (remaining, consumed) = cr.queryReference(Activities.AboutMe.CONTENT_URI, Activities.COLUMNS,
                 filteredSelection.sql, selectionArgs,
-                OrderBy(Activities.TIMESTAMP, false).sql).use { (cur) ->
-            if (cur == null || cur.isEmpty) return@use Pair(-1, -1)
+                OrderBy(Activities.TIMESTAMP, false).sql)?.use { (cur) ->
+            if (cur.isEmpty) return@use Pair(-1, -1)
             val ci = ObjectCursor.indicesFrom(cur, ParcelableActivity::class.java)
             var con = 0
             val rem = cur.forEachRow(5) { c, _ ->
@@ -248,7 +248,7 @@ class ContentNotificationManager(
                 return@forEachRow true
             }
             return@use Pair(rem, con)
-        }
+        } ?: Pair(-1, -1)
         if (remaining < 0) return
         if (remaining > 0) {
             style.addLine(resources.getString(R.string.and_N_more, remaining))

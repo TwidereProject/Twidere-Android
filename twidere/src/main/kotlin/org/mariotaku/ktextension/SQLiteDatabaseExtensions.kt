@@ -19,10 +19,11 @@
 
 package org.mariotaku.ktextension
 
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import org.mariotaku.twidere.model.CursorReference
 
 fun SQLiteDatabase.queryReference(table: String, columns: Array<String>? = null,
         selection: String? = null, selectionArgs: Array<String>? = null, groupBy: String? = null,
-        having: String? = null, orderBy: String? = null) =
-        CursorReference(query(table, columns, selection, selectionArgs, groupBy, having, orderBy))
+        having: String? = null, orderBy: String? = null): CursorReference<Cursor>? =
+        CursorReference.get(query(table, columns, selection, selectionArgs, groupBy, having, orderBy))

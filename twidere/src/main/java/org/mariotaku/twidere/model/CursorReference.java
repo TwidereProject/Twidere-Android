@@ -21,29 +21,37 @@ package org.mariotaku.twidere.model;
 
 
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 
 import java.io.Closeable;
 import java.io.IOException;
 
 public class CursorReference<C extends Cursor> implements Closeable {
 
+    @NonNull
     private final C cursor;
 
-    public CursorReference(C cursor) {
+    private CursorReference(@NonNull C cursor) {
         this.cursor = cursor;
     }
 
+    @NonNull
     public C get() {
         return cursor;
     }
 
+    @SuppressWarnings("unused")
+    @NonNull
     public C component1() {
         return get();
     }
 
     @Override
     public void close() throws IOException {
-        if (cursor == null) return;
         cursor.close();
+    }
+
+    public static <Cur extends Cursor> CursorReference<Cur> get(Cur cursor) {
+        return new CursorReference<>(cursor);
     }
 }

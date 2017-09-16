@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:completionThreshold="1"
             android:maxLines="1"
-            app:backgroundTint="?colorAccent"/>
+            app:backgroundTint="?colorControlStateful"/>
 
         <LinearLayout
             android:id="@+id/advancedToggle"

@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:inputType="text|textPersonName"
         android:maxLines="1"
-        app:backgroundTint="?colorAccent"
+        app:backgroundTint="?colorControlStateful"
         tools:text="Nickname"/>
 
 </FrameLayout>

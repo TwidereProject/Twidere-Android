@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.fragment_content_listview.*
 import nl.komponents.kovenant.then
 import nl.komponents.kovenant.ui.alwaysUi
 import org.mariotaku.kpreferences.KPreferences
+import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.twidere.R
@@ -140,6 +141,12 @@ class FilteredUsersFragment : BaseFiltersFragment() {
         return true
     }
 
+    override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
+        super.onCreateActionMode(mode, menu)
+        mode.menuInflater.inflate(R.menu.action_multi_select_filtered_users, menu)
+        return true
+    }
+
     override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
         val result = super.onPrepareActionMode(mode, menu)
         val isFeaturesSupported = extraFeaturesService.isSupported()
@@ -161,8 +168,18 @@ class FilteredUsersFragment : BaseFiltersFragment() {
         return FilterUsersListAdapter(context)
     }
 
+    override fun onItemClick(position: Int) {
+        val adapter = this.adapter as FilterUsersListAdapter
+        val item = adapter.getFilterItem(position) ?: return
+        if (item.source >= 0) return
+        addOrEditItem(item.id, userColorNameManager.getDisplayName(item,
+                preferences[nameFirstKey]), item.scope)
+    }
+
     override fun addOrEditItem(id: Long, value: String?, scope: Int) {
         // No-op
+        if (id < 0) return
+        super.addOrEditItem(id, value, scope)
     }
 
     override fun performDeletion() {
@@ -286,6 +303,15 @@ class FilteredUsersFragment : BaseFiltersFragment() {
             val indices = this.indices ?: return null
             if (cursor.moveToPosition(position)) {
                 return cursor.getString(indices[Filters.Users.USER_KEY])?.let(UserKey::valueOf)
+            }
+            return null
+        }
+
+        fun getFilterItem(position: Int): FiltersData.UserItem? {
+            val cursor = this.cursor ?: return null
+            val indices = this.indices ?: return null
+            if (cursor.moveToPosition(position)) {
+                return indices.newObject(cursor)
             }
             return null
         }

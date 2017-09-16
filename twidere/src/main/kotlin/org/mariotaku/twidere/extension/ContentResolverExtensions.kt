@@ -33,7 +33,7 @@ import org.mariotaku.twidere.util.content.ContentResolverUtils
 
 fun ContentResolver.query(uri: Uri, projection: Array<String>? = null,
         selection: String? = null, selectionArgs: Array<String>? = null, sortOrder: String? = null,
-        limit: String? = null): Cursor {
+        limit: String? = null): Cursor? {
     return if (limit != null) {
         query(uri.buildUpon().appendQueryParameter(QUERY_PARAM_LIMIT, limit.toString()).build(),
                 projection, selection, selectionArgs, sortOrder)
@@ -44,8 +44,8 @@ fun ContentResolver.query(uri: Uri, projection: Array<String>? = null,
 
 fun ContentResolver.queryReference(uri: Uri, projection: Array<String>? = null,
         selection: String? = null, selectionArgs: Array<String>? = null, sortOrder: String? = null,
-        limit: String? = null): CursorReference<Cursor> {
-    return CursorReference(query(uri, projection, selection, selectionArgs, sortOrder, limit))
+        limit: String? = null): CursorReference<Cursor>? {
+    return CursorReference.get(query(uri, projection, selection, selectionArgs, sortOrder, limit))
 }
 
 @SuppressLint("Recycle")
@@ -54,10 +54,16 @@ fun ContentResolver.rawQuery(sql: String, selectionArgs: Array<String>?, notifyU
     return query(rawUri, null, null, selectionArgs, null)
 }
 
+@SuppressLint("Recycle")
+fun ContentResolver.rawQueryReference(sql: String, selectionArgs: Array<String>?, notifyUri: Uri? = null): CursorReference<Cursor>? {
+    val rawUri = TwidereQueryBuilder.rawQuery(sql, notifyUri)
+    return queryReference(rawUri, null, null, selectionArgs, null)
+}
+
 
 fun <T> ContentResolver.queryOne(uri: Uri, projection: Array<String>?, selection: String?,
         selectionArgs: Array<String>?, sortOrder: String? = null, cls: Class<T>): T? {
-    return queryReference(uri, projection, selection, selectionArgs, sortOrder, "1").use { (cur) ->
+    return queryReference(uri, projection, selection, selectionArgs, sortOrder, "1")?.use { (cur) ->
         if (!cur.moveToFirst()) return@use null
         val indices = ObjectCursor.indicesFrom(cur, cls)
         return@use indices.newObject(cur)
@@ -66,29 +72,29 @@ fun <T> ContentResolver.queryOne(uri: Uri, projection: Array<String>?, selection
 
 fun <T> ContentResolver.queryAll(uri: Uri, projection: Array<String>?, selection: String?,
         selectionArgs: Array<String>?, sortOrder: String? = null, cls: Class<T>): List<T> {
-    return queryReference(uri, projection, selection, selectionArgs, sortOrder).use { (cur) ->
+    return queryReference(uri, projection, selection, selectionArgs, sortOrder)?.use { (cur) ->
         return@use cur.map(ObjectCursor.indicesFrom(cur, cls))
-    }
+    } ?: emptyList()
 }
 
 fun ContentResolver.queryCount(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
     val projection = arrayOf(SQLFunctions.COUNT())
-    return queryReference(uri, projection, selection, selectionArgs, null).use { (cur) ->
+    return queryReference(uri, projection, selection, selectionArgs, null)?.use { (cur) ->
         if (cur.moveToFirst()) {
             return@use cur.getInt(0)
         }
         return@use -1
-    }
+    } ?: -1
 }
 
 fun ContentResolver.queryLong(uri: Uri, field: String, selection: String?, selectionArgs: Array<String>?, def: Long = -1): Long {
     val projection = arrayOf(field)
-    return queryReference(uri, projection, selection, selectionArgs, null, "1").use { (cur) ->
+    return queryReference(uri, projection, selection, selectionArgs, null, "1")?.use { (cur) ->
         if (cur.moveToFirst()) {
             return@use cur.getLong(0)
         }
         return@use def
-    }
+    } ?: def
 }
 
 fun <T : Any> ContentResolver.insert(uri: Uri, obj: T, cls: Class<T> = obj.javaClass): Uri? {

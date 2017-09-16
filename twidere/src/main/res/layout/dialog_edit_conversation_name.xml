@@ -32,6 +32,6 @@
         android:layout_height="wrap_content"
         android:hint="@string/hint_conversation_name"
         android:maxLines="1"
-        app:backgroundTint="?colorAccent"/>
+        app:backgroundTint="?colorControlStateful"/>
 
 </LinearLayout>

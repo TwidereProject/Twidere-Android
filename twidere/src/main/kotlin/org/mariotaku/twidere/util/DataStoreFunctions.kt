@@ -31,7 +31,7 @@ fun Context.deleteDrafts(draftIds: LongArray): Int {
     val where = Expression.inArgs(Drafts._ID, draftIds.size).sql
     val whereArgs = draftIds.mapToArray(Long::toString)
 
-    contentResolver.queryReference(Drafts.CONTENT_URI, Drafts.COLUMNS, where, whereArgs, null).use { (cursor) ->
+    contentResolver.queryReference(Drafts.CONTENT_URI, Drafts.COLUMNS, where, whereArgs, null)?.use { (cursor) ->
         val indices = ObjectCursor.indicesFrom(cursor, Draft::class.java)
         cursor.moveToFirst()
         while (!cursor.isAfterLast) {
@@ -126,8 +126,7 @@ fun <T> ContentResolver.updateItems(uri: Uri, columns: Array<String>?, where: St
         whereArgs: Array<String>?, cls: Class<T>, action: (T) -> T) {
     val values = LongSparseArray<ContentValues>()
 
-    queryReference(uri, columns, where, whereArgs, null).use { (c) ->
-        if (c == null) return
+    queryReference(uri, columns, where, whereArgs, null)?.use { (c) ->
         val ci = ObjectCursor.indicesFrom(c, cls)
         val vc = ObjectCursor.valuesCreatorFrom(cls)
         c.moveToFirst()

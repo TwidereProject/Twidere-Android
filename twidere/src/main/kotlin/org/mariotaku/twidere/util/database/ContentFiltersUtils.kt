@@ -21,39 +21,24 @@ package org.mariotaku.twidere.util.database
 
 import android.content.ContentResolver
 import org.mariotaku.twidere.annotation.FilterScope
-import org.mariotaku.twidere.extension.rawQuery
+import org.mariotaku.twidere.extension.rawQueryReference
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters.*
-
-/**
- * Created by mariotaku on 2017/2/16.
- */
 
 object ContentFiltersUtils {
 
     fun isFiltered(cr: ContentResolver, status: ParcelableStatus, filterRts: Boolean,
             @FilterScope scope: Int, allowedKeywords: Array<String>? = null): Boolean {
-        return isFiltered(cr, status.filter_users, status.filter_texts,
+        val query = isFilteredQuery(status.filter_users, status.filter_texts,
                 status.filter_sources, status.filter_links, status.filter_names,
                 status.filter_descriptions, filterRts, scope, allowedKeywords)
+        return cr.rawQueryReference(query.first, query.second)?.use { (cur) ->
+            cur.moveToFirst() && cur.getInt(0) != 0
+        } ?: false
     }
 
-    fun isFiltered(cr: ContentResolver, users: Array<UserKey>?, texts: String?, sources: Array<String>?,
-            links: Array<String>?, names: Array<String>?, descriptions: String?, filterRts: Boolean,
-            @FilterScope scope: Int, allowedKeywords: Array<String>? = null): Boolean {
-        val query = isFilteredQuery(users, texts, sources, links, names, descriptions, true,
-                scope, allowedKeywords)
-        val cur = cr.rawQuery(query.first, query.second) ?: return false
-        @Suppress("ConvertTryFinallyToUseCall")
-        try {
-            return cur.moveToFirst() && cur.getInt(0) != 0
-        } finally {
-            cur.close()
-        }
-    }
-
-    fun isFilteredQuery(users: Array<UserKey>?, texts: String?, sources: Array<String>?,
+    private fun isFilteredQuery(users: Array<UserKey>?, texts: String?, sources: Array<String>?,
             links: Array<String>?, names: Array<String>?, descriptions: String?,
             filterRts: Boolean, @FilterScope scope: Int, allowedKeywords: Array<String>? = null): Pair<String, Array<String>> {
         val selectionArgs = mutableListOf<String>()

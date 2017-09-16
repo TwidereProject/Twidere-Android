@@ -286,12 +286,12 @@ object DataStoreUtils {
                 Expression.notEquals("${Filters.Users.SCOPE} & $scope", 0)
         )
         return resolver.queryReference(Filters.Users.CONTENT_URI, projection, where.sql,
-                null, null).use { (cur) ->
+                null, null)?.use { (cur) ->
             return@use Array(cur.count) { i ->
                 cur.moveToPosition(i)
                 UserKey.valueOf(cur.getString(0))
             }
-        }
+        } ?: emptyArray()
     }
 
     fun getFilteredKeywords(context: Context, @FilterScope scope: Int): Array<String> {
@@ -302,12 +302,12 @@ object DataStoreUtils {
                 Expression.notEquals("${Filters.SCOPE} & $scope", 0)
         )
         return resolver.queryReference(Filters.Keywords.CONTENT_URI, projection, where.sql,
-                null, null).use { (cur) ->
+                null, null)?.use { (cur) ->
             return@use Array(cur.count) { i ->
                 cur.moveToPosition(i)
                 cur.getString(0)
             }
-        }
+        } ?: emptyArray()
     }
 
     fun getAccountDisplayName(context: Context, accountKey: UserKey, nameFirst: Boolean): String? {
@@ -418,8 +418,7 @@ object DataStoreUtils {
         val resolver = context.contentResolver
         if (followingOnly) {
             val projection = arrayOf(Activities.SOURCES)
-            return resolver.queryReference(uri, projection, selection.sql, selectionArgs, null).use { (cur) ->
-                if (cur == null) return@use 0
+            return resolver.queryReference(uri, projection, selection.sql, selectionArgs, null)?.use { (cur) ->
                 var total = 0
                 cur.moveToFirst()
                 while (!cur.isAfterLast) {
@@ -443,7 +442,7 @@ object DataStoreUtils {
                     cur.moveToNext()
                 }
                 return@use total
-            }
+            } ?: 0
         }
         return resolver.queryCount(uri, selection.sql, selectionArgs)
     }

@@ -60,8 +60,7 @@ class UpdateAccountInfoTask(
 
     private fun updateTabs(resolver: ContentResolver, accountKey: UserKey) {
         resolver.queryReference(Tabs.CONTENT_URI, Tabs.COLUMNS, null, null,
-                null).use { (tabsCursor) ->
-            if (tabsCursor == null) return
+                null)?.use { (tabsCursor) ->
             val indices = ObjectCursor.indicesFrom(tabsCursor, Tab::class.java)
             val creator = ObjectCursor.valuesCreatorFrom(Tab::class.java)
             tabsCursor.moveToFirst()

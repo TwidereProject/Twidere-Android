@@ -33,7 +33,7 @@
         android:layout_weight="0"
         android:hint="@string/hint_message_select_user"
         android:minLines="1"
-        app:backgroundTint="?colorAccent"/>
+        app:backgroundTint="?colorControlStateful"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
