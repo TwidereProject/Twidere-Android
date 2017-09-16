@@ -288,7 +288,7 @@
         </activity>
         <activity
             android:name=".activity.SettingsActivity"
-            android:label="@string/settings"
+            android:label="@string/action_settings"
             android:parentActivityName=".activity.HomeActivity"
             android:theme="@style/Theme.Twidere"
             android:windowSoftInputMode="adjustResize">

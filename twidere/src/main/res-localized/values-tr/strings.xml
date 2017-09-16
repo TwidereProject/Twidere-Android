@@ -634,7 +634,7 @@
   <string name="sent_follow_request_to_user"><xliff:g id="user">%s</xliff:g> kişisine takip isteği gönderildi.</string>
   <string name="server_address">Sunucu adresi</string>
   <string name="set_consumer_key_secret_message">Twidere token\'i sınırı geçiyorsa, https://apps.twitter.com/ adresinden bir uygulama oluşturabilir ve consumer key ve secret kısımlarına yapıştırın.\nEğer, varsayılan anahtar kullanmaya devam ederseniz oturum açmanız mümkün olmayabilir.</string>
-  <string name="settings">Ayarlar</string>
+  <string name="action_settings">Ayarlar</string>
   <string name="settings_interface">Arayüz</string>
   <string name="settings_notifications">Bildirimler</string>
   <string name="settings_refresh">Yenile</string>

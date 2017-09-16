@@ -314,7 +314,7 @@
   <string name="send_crash_report">Odeslat hlášení o pádu Twidere</string>
   <string name="send_direct_message">Poslat DM</string>
   <string name="server_address">Adresa serveru</string>
-  <string name="settings">Nastavení</string>
+  <string name="action_settings">Nastavení</string>
   <string name="settings_interface">Rozhraní</string>
   <string name="settings_notifications">Oznámení</string>
   <string name="settings_refresh">Aktualizovat</string>

@@ -852,7 +852,7 @@
   <string name="sent_follow_request_to_user">Enviar una petición de Seguir a <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Dirección del servidor</string>
   <string name="set_consumer_key_secret_message">Twidere está alcanzando el limite de token, ud necesita crear una aplicación en https://apps.twitter.com/ y pegar la llave de consumidor y el secreto debajo.\n si ud continua usando la llave por defecto, no podrá acceder.</string>
-  <string name="settings">Configuración</string>
+  <string name="action_settings">Configuración</string>
   <string name="settings_interface">Interfaz</string>
   <string name="settings_notifications">Notificaciones</string>
   <string name="settings_refresh">Actualizar</string>

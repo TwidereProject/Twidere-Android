@@ -887,7 +887,7 @@
   <string name="sent_follow_request_to_user">フォローリクエストを<xliff:g id="user">%s</xliff:g>に送信済み</string>
   <string name="server_address">サーバーのアドレス</string>
   <string name="set_consumer_key_secret_message">Twidere はトークン規制が迫っているので、 https://apps.twitter.com/ でアプリを作成し、コンシューマーキーとシークレットを下に貼り付けて規制を回避してください。\nもしこのまま Twidere のキーを使い続けると、サインインできないかもしれません。</string>
-  <string name="settings">設定</string>
+  <string name="action_settings">設定</string>
   <string name="settings_interface">インターフェース</string>
   <string name="settings_notifications">通知</string>
   <string name="settings_refresh">更新</string>

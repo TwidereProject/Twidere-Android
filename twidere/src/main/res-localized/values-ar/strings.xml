@@ -504,7 +504,7 @@
   <string name="sensitive_content_warning">يحتمل أن تحتوي هذه التغريدة على محتوى حساس, هل أُكمل؟</string>
   <string name="sent_follow_request_to_user">أرسل طلب المتابعة إلى <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">عنوان السيرفر</string>
-  <string name="settings">الاعدادات</string>
+  <string name="action_settings">الاعدادات</string>
   <string name="settings_interface">الواجهة</string>
   <string name="settings_notifications">الإخطارات</string>
   <string name="settings_refresh">تحديث</string>

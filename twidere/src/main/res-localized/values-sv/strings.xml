@@ -804,7 +804,7 @@
   <string name="sensitive_content_warning">Det här tweetet kan innehålla stötande material, vill du fortsätta?</string>
   <string name="sent_follow_request_to_user">Skicka förföljarförfrågan till <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Serveradress</string>
-  <string name="settings">Inställningar</string>
+  <string name="action_settings">Inställningar</string>
   <string name="settings_interface">Gränssnitt</string>
   <string name="settings_notifications">Notifieringar</string>
   <string name="settings_refresh">Uppdatera</string>

@@ -36,7 +36,7 @@ class FiltersFragment : AbsToolbarTabPagesFragment() {
         adapter.add(cls = FilteredKeywordsFragment::class.java, name = getString(R.string.filter_type_keywords), tag = "keywords")
         adapter.add(cls = FilteredSourcesFragment::class.java, name = getString(R.string.filter_type_sources), tag = "sources")
         adapter.add(cls = FilteredLinksFragment::class.java, name = getString(R.string.filter_type_links), tag = "links")
-        adapter.add(cls = FilterSettingsFragment::class.java, name = getString(R.string.settings), tag = "settings")
+        adapter.add(cls = FilterSettingsFragment::class.java, name = getString(R.string.action_settings), tag = "settings")
     }
 
 }

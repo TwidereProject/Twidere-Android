@@ -478,7 +478,7 @@
   <string name="sent_follow_request_to_user">Zahtjev za slijeđenjem poslan za <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Server adresa</string>
   <string name="set_consumer_key_secret_message">Twidere se približava limitu tokena, morat ćete stvoriti aplikaciju na https://apps.twitter.com/ i zalijepiti korisnički ključ i tajnu dolje.\nAko nastavite koristiti zadani ključ, možda se nećete moći prijaviti.</string>
-  <string name="settings">Postavke</string>
+  <string name="action_settings">Postavke</string>
   <string name="settings_interface">Sučelje</string>
   <string name="settings_notifications">Obavijesti</string>
   <string name="settings_refresh">Osvježi</string>

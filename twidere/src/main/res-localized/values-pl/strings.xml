@@ -556,7 +556,7 @@
   <string name="sensitive_content_warning">Ten tweet być może zawiera wrażliwą zawartość, kontynuować?</string>
   <string name="sent_follow_request_to_user">Wysłano żądania obserwacji do <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Adres serwera</string>
-  <string name="settings">Ustawienia</string>
+  <string name="action_settings">Ustawienia</string>
   <string name="settings_interface">Interfejs</string>
   <string name="settings_notifications">Powiadomienia</string>
   <string name="settings_refresh">Odśwież</string>

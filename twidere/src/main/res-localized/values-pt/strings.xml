@@ -642,7 +642,7 @@
   <string name="sent_follow_request_to_user">Solicitação de seguidor enviada para <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Endereço do servidor</string>
   <string name="set_consumer_key_secret_message">Os tokens de autorização gerados pelo Twidere estão se esgotando, pode ser necessário que você crie um aplicativo em https://apps.twitter.com/ e cole seu \"consumer key\" e senha abaixo.\nSe, ao invés disso, você usar a \"key default\" do Twidere, você pode não conseguir entrar.</string>
-  <string name="settings">Configurações</string>
+  <string name="action_settings">Configurações</string>
   <string name="settings_interface">Interface</string>
   <string name="settings_notifications">Notificações</string>
   <string name="settings_refresh">Atualizar</string>

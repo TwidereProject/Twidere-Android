@@ -852,7 +852,7 @@
   <string name="sent_follow_request_to_user">Follower-Anfrage an <xliff:g id="user">%s</xliff:g> senden.</string>
   <string name="server_address">Server-Adresse</string>
   <string name="set_consumer_key_secret_message">Twidere hat das token limit erreicht. Du musst eine App unter https://apps.twitter.com/ erstellen und den Benutzerschlüssel und das Geheimnis unten einfügen.\nWenn du weiterhin den Standardschlüssel verwendest, kannst du dich möglicherweise nicht mehr einloggen.</string>
-  <string name="settings">Einstellungen</string>
+  <string name="action_settings">Einstellungen</string>
   <string name="settings_interface">Oberfläche</string>
   <string name="settings_notifications">Benachrichtigungen</string>
   <string name="settings_refresh">Aktualisieren</string>

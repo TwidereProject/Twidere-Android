@@ -694,7 +694,7 @@
   <string name="sent_follow_request_to_user">Послать запрос на подписку <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Адрес сервера</string>
   <string name="set_consumer_key_secret_message">Twidere достигла лимит токенов, вы должны создать токен на https://apps.twitter.com/ и вставить персональный ключ в секретную секцию.\nЕсли вы продолжите использовать стандартный ключ, то вы не сможете войти.</string>
-  <string name="settings">Настройки</string>
+  <string name="action_settings">Настройки</string>
   <string name="settings_interface">Интерфейс</string>
   <string name="settings_notifications">Уведомления</string>
   <string name="settings_refresh">Обновления</string>

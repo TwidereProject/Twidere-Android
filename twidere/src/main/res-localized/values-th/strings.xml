@@ -850,7 +850,7 @@
   <string name="sent_follow_request_to_user">ส่งคำขอติดตามถึง <xliff:g id="user">%s</xliff:g></string>
   <string name="server_address">ที่อยู่เซิร์ฟเวอร์</string>
   <string name="set_consumer_key_secret_message">Twidere กำลังประสบปัญหา Token เต็ม คุณจะต้องสร้างแอพที่ https://apps.twitter.com/ และวาง consumer key และ secret ด้านล่าง\nถ้าคุณเข้าใช้ด้วยคีย์เริ่มต้น คุณอาจไม่สามารถลงชื่อเข้าใช้ได้</string>
-  <string name="settings">ตั้งค่า</string>
+  <string name="action_settings">ตั้งค่า</string>
   <string name="settings_interface">อินเตอร์เฟส</string>
   <string name="settings_notifications">การแจ้งเตือน</string>
   <string name="settings_refresh">โหลดใหม่</string>

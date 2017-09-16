@@ -833,7 +833,7 @@
   <string name="sent_follow_request_to_user">درخواست دنبال کردن به <xliff:g id="user">%s</xliff:g> فرستاده شد.</string>
   <string name="server_address">نشانی کارساز</string>
   <string name="set_consumer_key_secret_message">توییدر به کران ژتون رسیده است. باید در https://apps.twitter.com/ کاره‌ای ساختع و کلید و رمز مصرف‌کننده را در زیر بچسبانید.\nاگر به استفاده از کلید پیش‌گزیده ادامه دهید، ممکن است قادر به ورود نباشید.</string>
-  <string name="settings">تنظیمات</string>
+  <string name="action_settings">تنظیمات</string>
   <string name="settings_interface">رابط</string>
   <string name="settings_notifications">آگاهی‌ها</string>
   <string name="settings_refresh">تازه‌سازی</string>

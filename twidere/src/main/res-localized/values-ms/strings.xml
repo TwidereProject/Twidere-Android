@@ -148,7 +148,7 @@
   <string name="search_type_users">Pengguna</string>
   <string name="select_account">Pilih akaun</string>
   <string name="select_user">Pilih pengguna</string>
-  <string name="settings">Tetapan</string>
+  <string name="action_settings">Tetapan</string>
   <string name="settings_notifications">Pemberitahuan</string>
   <string name="share_format">Format kongsi</string>
   <string name="show_absolute_time">Tunjukkan masa mutlak</string>

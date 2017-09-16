@@ -829,7 +829,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="sent_follow_request_to_user">Unvióse la solicitú de siguimientu a <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Direición del sirvidor</string>
   <string name="set_consumer_key_secret_message">Twidere ta algamando la llende de pases y tendrás de crear un pase nuevu en https://apps.twitter.com/. Dempués apega la clave y secretu de consumidor embaxo.\nSi sigues usando la clave por defeutu, quiciabes nun seyas a aniciar sesión.</string>
-  <string name="settings">Axustes</string>
+  <string name="action_settings">Axustes</string>
   <string name="settings_interface">Interfaz</string>
   <string name="settings_notifications">Avisos</string>
   <string name="settings_refresh">Refrescu</string>

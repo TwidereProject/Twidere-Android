@@ -57,7 +57,7 @@
   <!-- Previous item (tweet, user etc.) -->
   <!-- Normally you don't need to translate this -->
   <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
-  <string name="settings">Thiết lập</string>
+  <string name="action_settings">Thiết lập</string>
   <string name="sign_up">Đăng ký</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <!-- Dark theme -->

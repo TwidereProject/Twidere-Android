@@ -52,6 +52,6 @@
         android:textAppearance="?android:textAppearanceMedium"
         android:textColor="?android:textColorPrimary"
         android:textSize="16sp"
-        tools:text="@string/settings"/>
+        tools:text="@string/action_settings"/>
 
 </LinearLayout>

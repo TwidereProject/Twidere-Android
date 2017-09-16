@@ -4,7 +4,7 @@
     <item
         android:id="@id/settings"
         android:icon="@drawable/ic_action_settings"
-        android:title="@string/settings"/>
+        android:title="@string/action_settings"/>
     <item
         android:id="@id/revoke"
         android:icon="@drawable/ic_action_cancel"

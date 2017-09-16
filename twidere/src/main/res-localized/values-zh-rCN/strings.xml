@@ -912,7 +912,7 @@
   <string name="sent_follow_request_to_user">向<xliff:g id="user">%s</xliff:g> 发送了关注请求</string>
   <string name="server_address">服务器地址</string>
   <string name="set_consumer_key_secret_message">Twidere 的令牌将要用完了。您需要在 https://apps.twitter.com/ 创建一个应用并把 consumer key and secret 粘贴在下面。\n如果您继续使用默认的 key ，可能会没法登录。</string>
-  <string name="settings">设置</string>
+  <string name="action_settings">设置</string>
   <string name="settings_interface">界面</string>
   <string name="settings_notifications">通知</string>
   <string name="settings_refresh">刷新</string>

@@ -874,7 +874,7 @@
   <string name="sent_follow_request_to_user">Követési kérelem elküldve ide: <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Szerver címe</string>
   <string name="set_consumer_key_secret_message">Twidere lassan eléri a token korlátozást, létre kell majd hoznod egy alkalmazást a https://apps.twitter.com/ webhelyen és be kell illeszteni a lenti felhasználó kulcsot és jelszót.\nHa folytatod az alapértelmezett kulcs használatát, lehetséges, hogy nem tudsz majd bejelentkezni.</string>
-  <string name="settings">Beállítások</string>
+  <string name="action_settings">Beállítások</string>
   <string name="settings_interface">Felhasználói felület</string>
   <string name="settings_notifications">Értesítések</string>
   <string name="settings_refresh">Frissít</string>
