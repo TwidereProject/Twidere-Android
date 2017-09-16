@@ -607,7 +607,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="no_status_content_text">Ensin conteníu</string>
   <string name="no_tab">Ensin llingüetes</string>
   <string name="no_tab_hint">Ensin llingüetes</string>
-  <string name="no_thanks">Non, gracies</string>
+  <string name="action_no_thanks">Non, gracies</string>
   <string name="no_user_found">Nun s\'alcontró usuariu dalu</string>
   <string name="no_version_suffix">Ensin sufixu de versión</string>
   <string name="none">Dengún</string>

@@ -590,7 +590,7 @@
   <string name="no_status_content_text">Inget innehåll</string>
   <string name="no_tab">Ingen flik</string>
   <string name="no_tab_hint">Ingen flik</string>
-  <string name="no_thanks">Nej tack</string>
+  <string name="action_no_thanks">Nej tack</string>
   <string name="no_user_found">Ingen användare hittat</string>
   <string name="no_version_suffix">Ingen versionssuffix</string>
   <string name="none">Ingen</string>

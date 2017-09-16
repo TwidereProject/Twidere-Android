@@ -455,7 +455,7 @@
   <string name="no_status_content_text">İçerik yok</string>
   <string name="no_tab">Sekme yok</string>
   <string name="no_tab_hint">Sekme yok</string>
-  <string name="no_thanks">Hayır, teşekkürler</string>
+  <string name="action_no_thanks">Hayır, teşekkürler</string>
   <string name="no_user_found">Kullanıcı bulunamadı</string>
   <string name="no_version_suffix">Düzeltme yok</string>
   <string name="none">Hiçbiri</string>

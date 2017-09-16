@@ -643,7 +643,7 @@
   <string name="no_status_content_text">沒有內容</string>
   <string name="no_tab">沒有標籤頁</string>
   <string name="no_tab_hint">沒有標籤頁</string>
-  <string name="no_thanks">不用了，謝謝</string>
+  <string name="action_no_thanks">不用了，謝謝</string>
   <string name="no_user_found">沒有找到使用者</string>
   <string name="no_version_suffix">沒有版本後綴</string>
   <string name="none">無</string>

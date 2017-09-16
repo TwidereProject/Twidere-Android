@@ -462,7 +462,7 @@
   <string name="no_status_content_text">Nenhum conteúdo</string>
   <string name="no_tab">Sem abas</string>
   <string name="no_tab_hint">Sem abas</string>
-  <string name="no_thanks">Não, obrigado</string>
+  <string name="action_no_thanks">Não, obrigado</string>
   <string name="no_user_found">Nenhum usuário encontrado</string>
   <string name="no_version_suffix">Sem sufixo de versão</string>
   <string name="none">Nenhum</string>

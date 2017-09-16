@@ -390,7 +390,7 @@
   <string name="no_status_content_text">Geen inhoud</string>
   <string name="no_tab">Geen tabblad</string>
   <string name="no_tab_hint">Geen tab</string>
-  <string name="no_thanks">Nee, bedankt</string>
+  <string name="action_no_thanks">Nee, bedankt</string>
   <string name="no_user_found">Geen gebruiker gevonden</string>
   <string name="no_version_suffix">Geen versie-achtervoegsel</string>
   <string name="none">Geen</string>

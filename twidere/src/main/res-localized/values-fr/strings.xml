@@ -626,7 +626,7 @@
   <string name="no_status_content_text">Aucun contenu</string>
   <string name="no_tab">Aucun onglet</string>
   <string name="no_tab_hint">Aucun onglet</string>
-  <string name="no_thanks">Non, merci</string>
+  <string name="action_no_thanks">Non, merci</string>
   <string name="no_user_found">Aucun utilisateur trouvé</string>
   <string name="no_version_suffix">Pas de suffixe de version</string>
   <string name="none">Aucun</string>

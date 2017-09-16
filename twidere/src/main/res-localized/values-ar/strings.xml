@@ -365,7 +365,7 @@
   <string name="no_status_content_text">لا محتوى</string>
   <string name="no_tab">ولا تبويبة</string>
   <string name="no_tab_hint">ولا تبويبة</string>
-  <string name="no_thanks">لا، شكرا</string>
+  <string name="action_no_thanks">لا، شكرا</string>
   <string name="no_user_found">لم أجد مستخدمًا</string>
   <string name="none">لا شيء</string>
   <string name="notification_direct_message"><xliff:g id="user">%s</xliff:g> راسلك مباشرة.</string>

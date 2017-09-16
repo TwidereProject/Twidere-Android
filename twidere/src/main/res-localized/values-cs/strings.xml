@@ -221,7 +221,7 @@
   <string name="no_location">Poloha není k dispozici</string>
   <string name="no_rule">Žádné pravidlo</string>
   <string name="no_status_content_text">Žádný obsah</string>
-  <string name="no_thanks">Ne, děkuji</string>
+  <string name="action_no_thanks">Ne, děkuji</string>
   <string name="no_user_found">Nenalezen žádný uživatel</string>
   <string name="notification_light_color">Světlá barva</string>
   <!-- Notification method, flashing LED light -->

@@ -376,7 +376,7 @@
   <string name="no_status_content_text">Ei sisältöä</string>
   <string name="no_tab">Ei välilehteä</string>
   <string name="no_tab_hint">Ei välilehteä</string>
-  <string name="no_thanks">Ei kiitos</string>
+  <string name="action_no_thanks">Ei kiitos</string>
   <string name="no_user_found">Käyttäjää ei löytynyt</string>
   <string name="no_version_suffix">Ei versiojälkiliitettä</string>
   <string name="none">Ei mitään</string>

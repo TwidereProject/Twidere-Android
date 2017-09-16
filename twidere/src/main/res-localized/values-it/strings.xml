@@ -378,7 +378,7 @@
   <string name="no_status_content_text">Nessun contenuto</string>
   <string name="no_tab">Nessun tab</string>
   <string name="no_tab_hint">Nessun tab</string>
-  <string name="no_thanks">No, grazie</string>
+  <string name="action_no_thanks">No, grazie</string>
   <string name="no_user_found">Nessun utente trovato</string>
   <string name="no_version_suffix">Nessuna versione supportata</string>
   <string name="none">Nessuno</string>

@@ -497,7 +497,7 @@
   <string name="no_status_content_text">Tidak ada konten</string>
   <string name="no_tab">Tidak terdapat tab</string>
   <string name="no_tab_hint">Tidak ada tab</string>
-  <string name="no_thanks">Tidak, terima kasih</string>
+  <string name="action_no_thanks">Tidak, terima kasih</string>
   <string name="no_user_found">Tidak menemukan pengguna</string>
   <string name="no_version_suffix">Tidak ada akhiran versi</string>
   <string name="none">Tidak ada</string>

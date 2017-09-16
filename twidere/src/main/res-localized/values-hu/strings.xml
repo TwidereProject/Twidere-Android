@@ -644,7 +644,7 @@
   <string name="no_status_content_text">Nincs tartalom</string>
   <string name="no_tab">Nincs fül</string>
   <string name="no_tab_hint">Nincs fül</string>
-  <string name="no_thanks">Köszönöm, nem</string>
+  <string name="action_no_thanks">Köszönöm, nem</string>
   <string name="no_user_found">Nem található felhasználó</string>
   <string name="no_version_suffix">Nincs verzió utótag</string>
   <string name="none">Semmi</string>

@@ -83,6 +83,7 @@
     <string name="action_mute_notifications">Mute notifications</string>
     <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, saved at <xliff:g id="time">%2$s</xliff:g></string>
     <string name="action_next_step">Next</string>
+    <string name="action_no_thanks">No, thanks</string>
     <string name="action_open_in_browser">Open in browser</string>
     <string name="action_pick_color">Pick color</string>
     <string name="action_purchase">Purchase</string>
@@ -779,7 +780,6 @@
     <string name="no_status_content_text">No content</string>
     <string name="no_tab">No tab</string>
     <string name="no_tab_hint">No tab</string>
-    <string name="no_thanks">No, thanks</string>
     <string name="no_user_found">No user found</string>
     <string name="no_version_suffix">No version suffix</string>
 

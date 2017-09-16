@@ -611,7 +611,7 @@
   <string name="no_status_content_text">بدون محتوا</string>
   <string name="no_tab">بدون زبانه</string>
   <string name="no_tab_hint">بدون زبانه</string>
-  <string name="no_thanks">نه، ممنون</string>
+  <string name="action_no_thanks">نه، ممنون</string>
   <string name="no_user_found">هیچ کاربری پیدا نشد</string>
   <string name="no_version_suffix">بدون پسوند نگارش</string>
   <string name="none">هیچ‌کدام</string>

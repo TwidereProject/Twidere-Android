@@ -391,7 +391,7 @@
   <string name="no_status_content_text">Немає вмісту</string>
   <string name="no_tab">Вкладки відсутні</string>
   <string name="no_tab_hint">Нема вкладок</string>
-  <string name="no_thanks">Ні, дякую</string>
+  <string name="action_no_thanks">Ні, дякую</string>
   <string name="no_user_found">Користувача не знайдено</string>
   <string name="no_version_suffix">Без суфіксу версії</string>
   <string name="none">Нічого</string>

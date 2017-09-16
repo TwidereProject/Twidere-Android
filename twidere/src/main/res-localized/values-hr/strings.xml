@@ -325,7 +325,7 @@
   <string name="no_status_content_text">Nema sadržaja</string>
   <string name="no_tab">Nema tabova</string>
   <string name="no_tab_hint">Nema tabova</string>
-  <string name="no_thanks">Ne, hvala</string>
+  <string name="action_no_thanks">Ne, hvala</string>
   <string name="no_user_found">Korisnik nije pronađen</string>
   <string name="no_version_suffix">Nema sufiksa verzije</string>
   <string name="none">Ništa</string>

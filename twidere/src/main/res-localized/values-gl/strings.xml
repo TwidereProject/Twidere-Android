@@ -640,7 +640,7 @@
   <string name="no_status_content_text">Sen contido</string>
   <string name="no_tab">Sen lapelas</string>
   <string name="no_tab_hint">Sen lapelas</string>
-  <string name="no_thanks">Non, grazas</string>
+  <string name="action_no_thanks">Non, grazas</string>
   <string name="no_user_found">Non se atopou o usuario</string>
   <string name="no_version_suffix">Sen sufixo de versión</string>
   <string name="none">Ningún</string>

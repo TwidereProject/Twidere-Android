@@ -650,7 +650,7 @@
   <string name="no_status_content_text">コンテンツなし</string>
   <string name="no_tab">タブ無し</string>
   <string name="no_tab_hint">タブ無し</string>
-  <string name="no_thanks">いいえ、結構です</string>
+  <string name="action_no_thanks">いいえ、結構です</string>
   <string name="no_user_found">ユーザーが見つかりません。</string>
   <string name="no_version_suffix">バージョンサフィックスなし</string>
   <string name="none">なし</string>

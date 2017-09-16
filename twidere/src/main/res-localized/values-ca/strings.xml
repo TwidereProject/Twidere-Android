@@ -385,7 +385,7 @@
   <string name="no_status_content_text">Sense contingut</string>
   <string name="no_tab">No hi ha pestanyes</string>
   <string name="no_tab_hint">No hi ha pestanyes</string>
-  <string name="no_thanks">No, gràcies</string>
+  <string name="action_no_thanks">No, gràcies</string>
   <string name="no_user_found">No s\'ha trobat cap usuari</string>
   <string name="no_version_suffix">Versió sense sufix</string>
   <string name="none">Cap</string>

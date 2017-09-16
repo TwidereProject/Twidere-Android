@@ -23,11 +23,13 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import org.mariotaku.abstask.library.TaskStarter
+import org.mariotaku.kpreferences.set
 import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.NotificationType
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.IntentConstants.BROADCAST_NOTIFICATION_DELETED
+import org.mariotaku.twidere.constant.promotionsEnabledKey
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.task.twitter.message.BatchMarkMessageReadTask
 import org.mariotaku.twidere.util.Utils
@@ -39,38 +41,55 @@ import org.mariotaku.twidere.util.dagger.DependencyHolder
 class NotificationReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        val action = intent.action ?: return
-        when (action) {
+        when (intent.action) {
             BROADCAST_NOTIFICATION_DELETED -> {
-                val uri = intent.data ?: return
-                val holder = DependencyHolder.get(context)
-                @NotificationType
-                val notificationType = uri.getQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE)
-                val accountKey = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY)?.let(UserKey::valueOf)
-                val paramReadPosition = uri.getQueryParameter(QUERY_PARAM_READ_POSITION)
-                when (notificationType) {
-                    NotificationType.HOME_TIMELINE -> {
-                        val positionTag = Utils.getReadPositionTagWithAccount(ReadPositionTag.HOME_TIMELINE,
-                                accountKey)
-                        val manager = holder.readStateManager
-                        manager.setPosition(positionTag, paramReadPosition.toLongOr(-1L))
-                    }
-                    NotificationType.INTERACTIONS -> {
-                        val positionTag = Utils.getReadPositionTagWithAccount(ReadPositionTag.ACTIVITIES_ABOUT_ME,
-                                accountKey)
-                        val manager = holder.readStateManager
-                        manager.setPosition(positionTag, paramReadPosition.toLongOr(-1L))
-                    }
-                    NotificationType.DIRECT_MESSAGES -> {
-                        if (accountKey == null) return
-                        val appContext = context.applicationContext
-                        val task = BatchMarkMessageReadTask(appContext, accountKey,
-                                paramReadPosition.toLongOr(-1L))
-                        TaskStarter.execute(task)
-                    }
-                }
+                handleNotificationDeleted(intent, context)
+            }
+            BROADCAST_PROMOTIONS_ACCEPTED -> {
+                setPromotionsEnabled(context, intent, true)
+            }
+            BROADCAST_PROMOTIONS_DENIED -> {
+                setPromotionsEnabled(context, intent, false)
             }
         }
     }
 
+    private fun handleNotificationDeleted(intent: Intent, context: Context) {
+        val uri = intent.data ?: return
+        val holder = DependencyHolder.get(context)
+        @NotificationType
+        val notificationType = uri.getQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE)
+        val accountKey = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY)?.let(UserKey::valueOf)
+        val paramReadPosition = uri.getQueryParameter(QUERY_PARAM_READ_POSITION)
+        when (notificationType) {
+            NotificationType.HOME_TIMELINE -> {
+                val positionTag = Utils.getReadPositionTagWithAccount(ReadPositionTag.HOME_TIMELINE,
+                        accountKey)
+                val manager = holder.readStateManager
+                manager.setPosition(positionTag, paramReadPosition.toLongOr(-1L))
+            }
+            NotificationType.INTERACTIONS -> {
+                val positionTag = Utils.getReadPositionTagWithAccount(ReadPositionTag.ACTIVITIES_ABOUT_ME,
+                        accountKey)
+                val manager = holder.readStateManager
+                manager.setPosition(positionTag, paramReadPosition.toLongOr(-1L))
+            }
+            NotificationType.DIRECT_MESSAGES -> {
+                if (accountKey == null) return
+                val appContext = context.applicationContext
+                val task = BatchMarkMessageReadTask(appContext, accountKey,
+                        paramReadPosition.toLongOr(-1L))
+                TaskStarter.execute(task)
+            }
+        }
+    }
+
+    private fun setPromotionsEnabled(context: Context, intent: Intent, enabled: Boolean) {
+        val holder = DependencyHolder.get(context)
+        holder.preferences[promotionsEnabledKey] = enabled
+        val notificationId = intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1)
+        if (notificationId != -1) {
+            holder.notificationManager.cancel(notificationId)
+        }
+    }
 }

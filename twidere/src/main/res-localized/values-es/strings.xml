@@ -626,7 +626,7 @@
   <string name="no_status_content_text">Sin contenido</string>
   <string name="no_tab">Sin pestaña</string>
   <string name="no_tab_hint">Sin pestañas</string>
-  <string name="no_thanks">No, gracias</string>
+  <string name="action_no_thanks">No, gracias</string>
   <string name="no_user_found">Ningún usuario encontrado</string>
   <string name="no_version_suffix">Sin versión de sufijo</string>
   <string name="none">Ninguno</string>

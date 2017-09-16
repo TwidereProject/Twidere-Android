@@ -626,7 +626,7 @@
   <string name="no_status_content_text">ไม่มีเนื้อหา</string>
   <string name="no_tab">ไม่มีแถบ</string>
   <string name="no_tab_hint">ไม่มีแถบ</string>
-  <string name="no_thanks">ไม่, ขอบคุณ</string>
+  <string name="action_no_thanks">ไม่, ขอบคุณ</string>
   <string name="no_user_found">ไม่พบผู้ใช้</string>
   <string name="no_version_suffix">ไม่มีเลขเวอร์ชั่นต่อท้าย</string>
   <string name="none">ไม่มี</string>

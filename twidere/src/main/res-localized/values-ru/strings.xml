@@ -505,7 +505,7 @@
   <string name="no_status_content_text">Нет содержимого</string>
   <string name="no_tab">Нет вкладок</string>
   <string name="no_tab_hint">Нет вкладок</string>
-  <string name="no_thanks">Нет, спасибо</string>
+  <string name="action_no_thanks">Нет, спасибо</string>
   <string name="no_user_found">Пользователь не найден</string>
   <string name="no_version_suffix">Нет суффикса версии</string>
   <string name="none">Никак</string>

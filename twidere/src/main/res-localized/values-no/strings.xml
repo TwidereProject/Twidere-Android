@@ -340,7 +340,7 @@
   <string name="no_status_content_text">Ingen innhold</string>
   <string name="no_tab">Ingen faner</string>
   <string name="no_tab_hint">Ingen faner</string>
-  <string name="no_thanks">Nei, takk</string>
+  <string name="action_no_thanks">Nei, takk</string>
   <string name="no_user_found">Fant ingen bruker</string>
   <string name="no_version_suffix">Ingen versjonssuffiks</string>
   <string name="none">Ingen</string>
