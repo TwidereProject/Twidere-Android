@@ -20,11 +20,7 @@ package org.mariotaku.twidere.model.util;
 
 import org.mariotaku.commons.objectcursor.AbsArrayCursorFieldConverter;
 
-/**
- * Created by mariotaku on 2017/9/12.
- */
-
-public class LineSeparatedStringArrayConverter extends AbsArrayCursorFieldConverter<String> {
+public class FilterStringsFieldConverter extends AbsArrayCursorFieldConverter<String> {
     @Override
     protected String[] newArray(int size) {
         return new String[size];
@@ -32,12 +28,16 @@ public class LineSeparatedStringArrayConverter extends AbsArrayCursorFieldConver
 
     @Override
     protected String convertToString(String item) {
-        return item;
+        if (item == null || item.isEmpty()) return "";
+        return '\\' + item + '\\';
     }
 
     @Override
     protected String parseItem(String str) {
-        return str;
+        if (str == null || str.isEmpty()) return null;
+        final int len = str.length();
+        if (str.charAt(0) != '\\' || str.charAt(len - 1) != '\\') return str;
+        return str.substring(1, len - 1);
     }
 
     @Override

@@ -22,7 +22,6 @@ package org.mariotaku.twidere.loader.statuses
 import android.accounts.AccountManager
 import android.content.Context
 import android.content.SharedPreferences
-import android.database.sqlite.SQLiteDatabase
 import android.support.annotation.WorkerThread
 import org.mariotaku.kpreferences.get
 import org.mariotaku.microblog.library.MicroBlogException
@@ -30,7 +29,6 @@ import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
-import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.extension.model.api.applyLoadLimit
 import org.mariotaku.twidere.loader.iface.IPaginationLoader
@@ -170,8 +168,7 @@ abstract class AbsRequestStatusesLoader(
             data.addAll(statuses)
         }
 
-        val db = TwidereApplication.getInstance(context).sqLiteDatabase
-        data.forEach { it.is_filtered = shouldFilterStatus(db, it) }
+        data.forEach { it.is_filtered = shouldFilterStatus(it) }
 
         if (comparator != null) {
             data.sortWith(comparator!!)
@@ -188,8 +185,7 @@ abstract class AbsRequestStatusesLoader(
     }
 
     @WorkerThread
-    protected abstract fun shouldFilterStatus(database: SQLiteDatabase, status: ParcelableStatus): Boolean
-
+    protected abstract fun shouldFilterStatus(status: ParcelableStatus): Boolean
 
     protected open fun processPaging(paging: Paging, details: AccountDetails, loadItemLimit: Int) {
         paging.applyLoadLimit(details, loadItemLimit)

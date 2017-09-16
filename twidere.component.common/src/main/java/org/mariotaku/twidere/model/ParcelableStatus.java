@@ -34,10 +34,10 @@ import org.mariotaku.commons.objectcursor.LoganSquareCursorFieldConverter;
 import org.mariotaku.library.objectcursor.annotation.AfterCursorObjectCreated;
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
-import org.mariotaku.twidere.model.util.LineSeparatedStringArrayConverter;
+import org.mariotaku.twidere.model.util.FilterStringsFieldConverter;
+import org.mariotaku.twidere.model.util.FilterUserKeysFieldConverter;
 import org.mariotaku.twidere.model.util.UserKeyConverter;
 import org.mariotaku.twidere.model.util.UserKeyCursorFieldConverter;
-import org.mariotaku.twidere.model.util.UserKeysCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 
@@ -330,16 +330,16 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @CursorField(Statuses.FILTER_FLAGS)
     public long filter_flags;
 
-    @CursorField(value = Statuses.FILTER_USERS, converter = UserKeysCursorFieldConverter.class)
+    @CursorField(value = Statuses.FILTER_USERS, converter = FilterUserKeysFieldConverter.class)
     public UserKey[] filter_users;
 
-    @CursorField(value = Statuses.FILTER_SOURCES, converter = LineSeparatedStringArrayConverter.class)
+    @CursorField(value = Statuses.FILTER_SOURCES, converter = FilterStringsFieldConverter.class)
     public String[] filter_sources;
 
-    @CursorField(value = Statuses.FILTER_LINKS, converter = LineSeparatedStringArrayConverter.class)
+    @CursorField(value = Statuses.FILTER_LINKS, converter = FilterStringsFieldConverter.class)
     public String[] filter_links;
 
-    @CursorField(value = Statuses.FILTER_NAMES, converter = LineSeparatedStringArrayConverter.class)
+    @CursorField(value = Statuses.FILTER_NAMES, converter = FilterStringsFieldConverter.class)
     public String[] filter_names;
 
     @CursorField(value = Statuses.FILTER_TEXTS)

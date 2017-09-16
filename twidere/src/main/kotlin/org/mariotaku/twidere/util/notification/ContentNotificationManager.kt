@@ -62,7 +62,7 @@ import org.mariotaku.twidere.receiver.NotificationReceiver
 import org.mariotaku.twidere.service.LengthyOperationsService
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.Utils
-import org.mariotaku.twidere.util.database.FilterQueryBuilder
+import org.mariotaku.twidere.util.database.ContentFiltersUtils
 import org.oshkimaadziig.george.androidutils.SpanFormatter
 
 class ContentNotificationManager(
@@ -219,7 +219,7 @@ class ContentNotificationManager(
                 if (pref.isNotificationMentionsOnly && activity.action !in Activity.Action.MENTION_ACTIONS) {
                     return@forEachRow false
                 }
-                if (FilterQueryBuilder.isFiltered(cr, activity)) {
+                if (ContentFiltersUtils.isFiltered(cr, activity, true, FilterScope.INTERACTIONS)) {
                     return@forEachRow false
                 }
                 val sources = ParcelableActivityUtils.filterSources(activity.sources_lite,

@@ -493,13 +493,19 @@ object DataStoreUtils {
         fun ContainsExpression(dataField: String, filterTable: String, filterField: String) =
                 Expression.likeRaw(Column(Table(table), dataField), "'%'||$filterTable.$filterField||'%'")
 
+        fun LineContainsExpression(dataField: String, filterTable: String, filterField: String) =
+                Expression.likeRaw(Column(Table(table), dataField), "'\\%'||$filterTable.$filterField||'%\\'")
+
+        fun LineMatchExpression(dataField: String, filterTable: String, filterField: String) =
+                Expression.likeRaw(Column(Table(table), dataField), "'%\\'||$filterTable.$filterField||'\\%'")
+
         val filteredUsersWhere = Expression.and(
                 ScopeMatchesExpression(Filters.Users.TABLE_NAME, Filters.Users.SCOPE),
-                ContainsExpression(Statuses.FILTER_USERS, Filters.Users.TABLE_NAME, Filters.Users.USER_KEY)
+                LineMatchExpression(Statuses.FILTER_USERS, Filters.Users.TABLE_NAME, Filters.Users.USER_KEY)
         )
         val filteredSourcesWhere = Expression.and(
                 ScopeMatchesExpression(Filters.Sources.TABLE_NAME, Filters.Sources.SCOPE),
-                ContainsExpression(Statuses.FILTER_SOURCES, Filters.Sources.TABLE_NAME, Filters.Sources.VALUE)
+                LineMatchExpression(Statuses.FILTER_SOURCES, Filters.Sources.TABLE_NAME, Filters.Sources.VALUE)
         )
         val filteredTextKeywordsWhere = Expression.or(
                 Expression.and(
@@ -513,7 +519,7 @@ object DataStoreUtils {
                 Expression.and(
                         Expression.notEquals("${Filters.Keywords.TABLE_NAME}.${Filters.Keywords.SCOPE} & ${FilterScope.TARGET_NAME}", 0),
                         ScopeMatchesExpression(Filters.Keywords.TABLE_NAME, Filters.Keywords.SCOPE),
-                        ContainsExpression(Statuses.FILTER_NAMES, Filters.Keywords.TABLE_NAME, Filters.Keywords.VALUE)
+                        LineMatchExpression(Statuses.FILTER_NAMES, Filters.Keywords.TABLE_NAME, Filters.Keywords.VALUE)
                 ),
                 Expression.and(
                         Expression.notEquals("${Filters.Keywords.TABLE_NAME}.${Filters.Keywords.SCOPE} & ${FilterScope.TARGET_DESCRIPTION}", 0),
@@ -523,7 +529,7 @@ object DataStoreUtils {
         )
         val filteredLinksWhere = Expression.and(
                 ScopeMatchesExpression(Filters.Links.TABLE_NAME, Filters.Links.SCOPE),
-                ContainsExpression(Statuses.FILTER_LINKS, Filters.Links.TABLE_NAME, Filters.Links.VALUE)
+                LineContainsExpression(Statuses.FILTER_LINKS, Filters.Links.TABLE_NAME, Filters.Links.VALUE)
         )
         val filteredIdsQueryBuilder = SQLQueryBuilder
                 .select(Column(Table(table), Statuses._ID))

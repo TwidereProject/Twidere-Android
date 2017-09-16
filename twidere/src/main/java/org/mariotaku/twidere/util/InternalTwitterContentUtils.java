@@ -1,8 +1,6 @@
 package org.mariotaku.twidere.util;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -18,10 +16,7 @@ import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.extension.model.api.StatusExtensionsKt;
 import org.mariotaku.twidere.model.ConsumerKeyType;
-import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.SpanItem;
-import org.mariotaku.twidere.model.UserKey;
-import org.mariotaku.twidere.util.database.FilterQueryBuilder;
 
 import java.nio.charset.Charset;
 import java.util.zip.CRC32;
@@ -36,44 +31,6 @@ public class InternalTwitterContentUtils {
     private static final CharSequenceTranslator UNESCAPE_TWITTER_RAW_TEXT = new LookupTranslator(EntityArrays.BASIC_UNESCAPE);
 
     private InternalTwitterContentUtils() {
-    }
-
-    public static boolean isFiltered(final SQLiteDatabase database, final UserKey userKey,
-            final String textPlain, final String quotedTextPlain,
-            final SpanItem[] spans, final SpanItem[] quotedSpans,
-            final String source, final String quotedSource,
-            final UserKey retweetedByKey, final UserKey quotedUserKey) {
-        return isFiltered(database, userKey, textPlain, quotedTextPlain, spans, quotedSpans, source,
-                quotedSource, retweetedByKey, quotedUserKey, true);
-    }
-
-
-    public static boolean isFiltered(final SQLiteDatabase database, final UserKey userKey,
-            final String textPlain, final String quotedTextPlain,
-            final SpanItem[] spans, final SpanItem[] quotedSpans,
-            final String source, final String quotedSource,
-            final UserKey retweetedByKey, final UserKey quotedUserKey,
-            final boolean filterRts) {
-        if (textPlain == null && spans == null && userKey == null && source == null)
-            return false;
-
-        final Pair<String, String[]> query = FilterQueryBuilder.INSTANCE.isFilteredQuery(userKey,
-                textPlain, quotedTextPlain, spans, quotedSpans, source, quotedSource, retweetedByKey,
-                quotedUserKey, filterRts);
-        final Cursor cur = database.rawQuery(query.getFirst(), query.getSecond());
-        if (cur == null) return false;
-        try {
-            return cur.moveToFirst() && cur.getInt(0) != 0;
-        } finally {
-            cur.close();
-        }
-    }
-
-    public static boolean isFiltered(@NonNull final SQLiteDatabase database,
-            @NonNull final ParcelableStatus status, final boolean filterRTs) {
-        return isFiltered(database, status.user_key, status.text_plain, status.quoted_text_plain,
-                status.spans, status.quoted_spans, status.source, status.quoted_source,
-                status.retweeted_by_user_key, status.quoted_user_key, filterRTs);
     }
 
     @NonNull

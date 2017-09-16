@@ -33,6 +33,7 @@ import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.exception.MalformedResponseException
 import org.mariotaku.twidere.extension.model.addFilterFlag
 import org.mariotaku.twidere.extension.model.toParcelable
+import org.mariotaku.twidere.extension.model.updateContentFilterInfo
 import org.mariotaku.twidere.extension.model.updateFilterInfo
 import org.mariotaku.twidere.extension.toSpanItem
 import org.mariotaku.twidere.model.*
@@ -46,19 +47,23 @@ import org.mariotaku.twidere.util.InternalTwitterContentUtils
 import org.mariotaku.twidere.util.InternalTwitterContentUtils.getMediaUrl
 import org.mariotaku.twidere.util.InternalTwitterContentUtils.getStartEndForEntity
 
-fun Status.toParcelable(details: AccountDetails, profileImageSize: String = "normal"): ParcelableStatus {
-    return toParcelable(details.key, details.type, profileImageSize).apply {
+fun Status.toParcelable(details: AccountDetails, profileImageSize: String = "normal",
+        updateFilterInfoAction: (Status, ParcelableStatus) -> Unit = ::updateFilterInfoDefault): ParcelableStatus {
+    return toParcelable(details.key, details.type, profileImageSize, updateFilterInfoAction).apply {
         account_color = details.color
     }
 }
 
-fun Status.toParcelable(accountKey: UserKey, accountType: String, profileImageSize: String = "normal"): ParcelableStatus {
+fun Status.toParcelable(accountKey: UserKey, accountType: String, profileImageSize: String = "normal",
+        updateFilterInfoAction: (Status, ParcelableStatus) -> Unit = ::updateFilterInfoDefault): ParcelableStatus {
     val result = ParcelableStatus()
-    applyTo(accountKey, accountType, profileImageSize, result)
+    applyTo(accountKey, accountType, profileImageSize, result, updateFilterInfoAction)
     return result
 }
 
-fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: String = "normal", result: ParcelableStatus) {
+fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: String = "normal",
+        result: ParcelableStatus,
+        updateFilterInfoAction: (Status, ParcelableStatus) -> Unit = ::updateFilterInfoDefault) {
     val extras = ParcelableStatus.Extras()
     result.account_key = accountKey
     result.id = id
@@ -201,10 +206,7 @@ fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: S
         result.addFilterFlag(ParcelableStatus.FilterFlags.HAS_MEDIA)
     }
 
-    result.updateFilterInfo(setOf(userDescriptionUnescaped, retweetedStatus?.userDescriptionUnescaped,
-            quotedStatus?.userDescriptionUnescaped, this.user.location, retweetedStatus?.user?.location,
-            quotedStatus?.user?.location, userUrlExpanded, retweetedStatus?.userUrlExpanded,
-            quotedStatus?.userUrlExpanded))
+    updateFilterInfoAction(this, result)
 }
 
 
@@ -228,7 +230,6 @@ fun Status.formattedTextWithIndices(): StatusTextWithIndices {
     return textWithIndices
 }
 
-
 fun CodePointArray.findResultRangeLength(spans: Array<SpanItem>, origStart: Int, origEnd: Int): Int {
     val findResult = findByOrigRange(spans, origStart, origEnd)
     if (findResult.isEmpty()) {
@@ -240,7 +241,6 @@ fun CodePointArray.findResultRangeLength(spans: Array<SpanItem>, origStart: Int,
         return charCount(origStart, origEnd)
     return charCount(origStart, first.orig_start) + (last.end - first.start) + charCount(first.orig_end, origEnd)
 }
-
 
 fun HtmlBuilder.addEntities(entities: EntitySupport) {
     // Format media.
@@ -268,15 +268,61 @@ fun HtmlBuilder.addEntities(entities: EntitySupport) {
     }
 }
 
+
+fun updateFilterInfoDefault(status: Status, result: ParcelableStatus) {
+    result.updateFilterInfo(setOf(
+            status.userDescriptionUnescaped,
+            status.userUrlExpanded,
+            status.userLocation,
+            status.retweetedStatus?.userDescriptionUnescaped,
+            status.retweetedStatus?.userLocation,
+            status.retweetedStatus?.userUrlExpanded,
+            status.quotedStatus?.userDescriptionUnescaped,
+            status.quotedStatus?.userLocation,
+            status.quotedStatus?.userUrlExpanded
+    ))
+}
+
+/**
+ * Ignores status user info
+ */
+fun updateFilterInfoForUserTimeline(status: Status, result: ParcelableStatus) {
+    result.updateContentFilterInfo()
+
+    if (result.is_retweet) {
+        result.filter_users = setOf(result.user_key, result.quoted_user_key).filterNotNull().toTypedArray()
+        result.filter_names = setOf(result.user_name, result.quoted_user_name).filterNotNull().toTypedArray()
+        result.filter_descriptions = setOf(
+                status.retweetedStatus?.userDescriptionUnescaped,
+                status.retweetedStatus?.userUrlExpanded,
+                status.retweetedStatus?.userLocation,
+                status.quotedStatus?.userDescriptionUnescaped,
+                status.quotedStatus?.userLocation,
+                status.quotedStatus?.userUrlExpanded
+        ).filterNotNull().joinToString("\n")
+    } else {
+        result.filter_users = setOf(result.quoted_user_key).filterNotNull().toTypedArray()
+        result.filter_names = setOf(result.quoted_user_name).filterNotNull().toTypedArray()
+        result.filter_descriptions = setOf(
+                status.quotedStatus?.userDescriptionUnescaped,
+                status.quotedStatus?.userLocation,
+                status.quotedStatus?.userUrlExpanded
+        ).filterNotNull().joinToString("\n")
+    }
+}
+
 private fun String.twitterUnescaped(): String {
     return twitterRawTextTranslator.translate(this)
 }
 
-private val Status.userDescriptionUnescaped: String?
+private inline val Status.userDescriptionUnescaped: String?
     get() = user?.let { InternalTwitterContentUtils.formatUserDescription(it)?.first }
 
-private val Status.userUrlExpanded: String?
+private inline val Status.userUrlExpanded: String?
     get() = user?.urlEntities?.firstOrNull()?.expandedUrl
+
+private inline val Status.userLocation: String?
+    get() = user?.location
 
 /**
  * @param spans Ordered spans

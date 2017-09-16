@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.loader.statuses
 
 import android.content.Context
-import android.database.sqlite.SQLiteDatabase
 import android.support.annotation.WorkerThread
 import org.mariotaku.ktextension.isNullOrEmpty
 import org.mariotaku.microblog.library.MicroBlog
@@ -30,6 +29,7 @@ import org.mariotaku.microblog.library.twitter.model.SearchQuery
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.microblog.library.twitter.model.UniversalSearchQuery
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.model.official
@@ -37,7 +37,7 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.PaginatedList
-import org.mariotaku.twidere.util.InternalTwitterContentUtils
+import org.mariotaku.twidere.util.database.ContentFiltersUtils
 
 open class MediaStatusesSearchLoader(
         context: Context,
@@ -60,9 +60,11 @@ open class MediaStatusesSearchLoader(
     }
 
     @WorkerThread
-    override fun shouldFilterStatus(database: SQLiteDatabase, status: ParcelableStatus): Boolean {
+    override fun shouldFilterStatus(status: ParcelableStatus): Boolean {
         if (status.media.isNullOrEmpty()) return true
-        return InternalTwitterContentUtils.isFiltered(database, status, true)
+        val allowed = query?.split(' ')?.toTypedArray()
+        return ContentFiltersUtils.isFiltered(context.contentResolver, status, true,
+                FilterScope.SEARCH_RESULTS, allowed)
     }
 
     override fun processPaging(paging: Paging, details: AccountDetails, loadItemLimit: Int) {
