@@ -301,13 +301,9 @@
   <string name="external_group_host_format">Groupe externe venant de <xliff:g id="host">%s</xliff:g></string>
   <string name="external_user_host_format">Utilisateur externe venant de <xliff:g id="host">%s</xliff:g></string>
   <string name="extra_configurations">Configurations supplémentaires</string>
-  <string name="extra_feature_description_advanced_filters">Importer la liste de filtres depuis les blocages et \"mutes\"</string>
-  <string name="extra_feature_description_filters_subscription">S\'abonner aux filtres de mise en sourdine et les synchroniser automatiquement</string>
   <string name="extra_feature_description_schedule_status">Tweet programmé (envoyé plus tard)</string>
   <string name="extra_feature_description_share_gif">Partager un GIF dans le tweet</string>
   <string name="extra_feature_description_sync_data">Synchronisation des données avec Dropbox, Google Drive, etc</string>
-  <string name="extra_feature_title_advanced_filters">Importer des filtres</string>
-  <string name="extra_feature_title_filters_subscription">Abonnement à des filtres</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">Soutenez Twidere et accédez à des fonctionnalités avancées</string>
   <string name="extra_features_pack_description">Ou achetez le «feature pack» pour bénéficier de toutes les fonctionnalités (y compris les fonctionnalités prévues dans les future versions)</string>

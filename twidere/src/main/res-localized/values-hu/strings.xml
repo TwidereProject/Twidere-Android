@@ -22,7 +22,10 @@
   <string name="action_add_media">Média hozzáadása</string>
   <string name="action_add_member">Tag hozzáadása</string>
   <string name="action_add_tab">Fül hozzáadása</string>
+  <string name="action_add_tab_to_home_screen">Lap hozzáadása a főképernyőhöz</string>
   <string name="action_add_to_filter">Hozzáadás szűrőhöz</string>
+  <string name="action_add_to_home_screen">Hozzáadás a főképernyőhöz</string>
+  <string name="action_add_to_home_screen_more">Hozzáadás a főképernyőhöz&#8230;</string>
   <string name="action_add_to_list">Hozzáadás listához</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Blokkol</string>
@@ -44,6 +47,7 @@
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">Törlés</string>
   <string name="action_delete_messages">Üzenetek törlése</string>
+  <string name="action_disable_promotions">Hirdetések tiltása</string>
   <string name="action_dont_restart">Ne induljon újra</string>
   <string name="action_dont_terminate">Ne lépjen ki</string>
   <!-- [verb] Edit image/settings etc. -->
@@ -292,6 +296,7 @@
   <string name="error_message_status_too_long">Tweet túl hosszú.</string>
   <string name="error_message_tweet_shorten_failed">Tweet rövidítés sikertelen.</string>
   <string name="error_message_tweet_shortener_not_found">Tweet rövidítő nem található, talán el lett távolítva.</string>
+  <string name="error_message_video_upload_not_supported">Videó feltöltés nem támogatott</string>
   <string name="error_no_access_for_credentials">Az alkalmazásod nem képes elérni ezt az erőforrást.</string>
   <string name="error_no_dm_permission">A privát üzenetek nincsenek engedélyezve, ellenőrizd a Twitter alkalmazásod beállításait!</string>
   <string name="error_title_device_incompatible">Inkompatibilis eszköz</string>
@@ -305,13 +310,10 @@
   <string name="external_group_host_format">Külső csoport innen: <xliff:g id="host">%s</xliff:g></string>
   <string name="external_user_host_format">Külső felhasználó innen: <xliff:g id="host">%s</xliff:g></string>
   <string name="extra_configurations">Egyéb beállítások</string>
-  <string name="extra_feature_description_advanced_filters">Blokkolt/elnémított szűrők importálása</string>
-  <string name="extra_feature_description_filters_subscription">Feliratkozás elnémító szűrőkre és automatikus szinkronizációra</string>
   <string name="extra_feature_description_schedule_status">Tweet ütemezése (küldés később)</string>
   <string name="extra_feature_description_share_gif">GIF megosztása tweetben</string>
   <string name="extra_feature_description_sync_data">Szinkronizálás a Dropbox, Google Drive stb. szolgáltatásokkal</string>
-  <string name="extra_feature_title_advanced_filters">Szűrők importálása</string>
-  <string name="extra_feature_title_filters_subscription">Feliratkozás szűrőkre</string>
+  <string name="extra_feature_title_advanced_filters">Speciális szűrők</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">Támogassa Twidere alkalmazást, és jusson hozzá a bővített funkciókhoz</string>
   <string name="extra_features_pack_description">Vagy vedd meg a funkciók csomagot, hogy hozzájuss az összes funkcióhoz (beleértve a jövőbeli verziókat is)</string>
@@ -395,6 +397,7 @@
   <string name="keyword_filter_name">Kulcsszó: <xliff:g id="name">%s</xliff:g></string>
   <string name="label_account">Fiók</string>
   <string name="label_account_type">Fiók típusa</string>
+  <string name="label_advanced">Speciális</string>
   <string name="label_auth_type">Hitelesítés típus</string>
   <string name="label_background_operation_service">Háttér szolgáltatás</string>
   <string name="label_buffer_accounts">Buffer fiókok</string>
@@ -411,6 +414,13 @@
   <string name="label_data_provider">Twidere adatbázis szolgáltató</string>
   <string name="label_feedback_content">Tartalom</string>
   <string name="label_feedback_title">Cím</string>
+  <string name="label_filter_scope_interactions">Interakciók</string>
+  <string name="label_filter_scope_messages">Üzenetek</string>
+  <string name="label_filter_scope_search_other">Egyéb</string>
+  <string name="label_filter_scope_search_results">Keresési eredmények</string>
+  <string name="label_filter_target_description">Leírás</string>
+  <string name="label_filter_target_name">Név</string>
+  <string name="label_filter_target_text">Szöveg</string>
   <string name="label_filters_subscription">Feliratkozás</string>
   <string name="label_follow_request_sent">Követési kérelem elküldve</string>
   <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> ezen keresztül: <xliff:g example="api" id="source">%2$s</xliff:g></string>

@@ -301,13 +301,9 @@
   <string name="external_group_host_format">กลุ่มภายนอกที่ <xliff:g id="host">%s</xliff:g></string>
   <string name="external_user_host_format">ผู้ใช้ภายนอกที่ <xliff:g id="host">%s</xliff:g></string>
   <string name="extra_configurations">การตั้งค่าเพิ่มเติม</string>
-  <string name="extra_feature_description_advanced_filters">นำเข้ารายการตัวกรองจากบล็อก/ปิดเสียง</string>
-  <string name="extra_feature_description_filters_subscription">สมัครสมาชิกเพื่อปิดการกรอง และซิงค์โดยอัตโนมัติ</string>
   <string name="extra_feature_description_schedule_status">ตั้งเวลาทวีต (ส่งในภายหลัง)</string>
   <string name="extra_feature_description_share_gif">แชร์ GIF ในทวีต</string>
   <string name="extra_feature_description_sync_data">ซิงค์ข้อมูลกับ Dropbox, Google ไดรฟ์ ฯลฯ</string>
-  <string name="extra_feature_title_advanced_filters">นำเข้าตัวกรอง</string>
-  <string name="extra_feature_title_filters_subscription">การใช้งานตัวกรอง</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">สนับสนุน Twidere และรับคุณลักษณะขั้นสูง</string>
   <string name="extra_features_pack_description">หรือซื้อชุดฟังก์ชั่นจะได้รับคุณสมบัติทั้งหมด (รวมทั้งคุณสมบัติในอนาคต)</string>

@@ -21,8 +21,12 @@
   <string name="action_add_gif">GIF画像を追加</string>
   <string name="action_add_media">メディアを追加</string>
   <string name="action_add_member">メンバーを追加</string>
+  <string name="action_add_name_to_home_screen">ホーム画面に <xliff:g example="Name" id="name">%1$s</xliff:g> を追加</string>
   <string name="action_add_tab">タブを追加</string>
+  <string name="action_add_tab_to_home_screen">ホーム画面にタブを追加</string>
   <string name="action_add_to_filter">フィルターに追加</string>
+  <string name="action_add_to_home_screen">ホーム画面に追加</string>
+  <string name="action_add_to_home_screen_more">ホーム画面に追加...</string>
   <string name="action_add_to_list">リストに追加</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">ブロック</string>
@@ -32,6 +36,7 @@
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">リツイートの取り消し</string>
   <string name="action_center">中央</string>
+  <string name="action_change_language">言語を変更</string>
   <string name="action_clear">クリア</string>
   <string name="action_clear_messages">メッセージをクリア</string>
   <string name="action_comment">コメント</string>
@@ -85,6 +90,7 @@
   <string name="action_quote">引用</string>
   <string name="action_record_video">動画撮影</string>
   <string name="action_refresh">更新</string>
+  <string name="action_refresh_launch_presentations">起動画面をリフレッシュ</string>
   <string name="action_register">新規登録</string>
   <string name="action_remove_conversation_avatar">アイコンを削除</string>
   <string name="action_reply">返信</string>
@@ -292,6 +298,7 @@
   <string name="error_message_status_too_long">ツイートのテキストが長過ぎます。</string>
   <string name="error_message_tweet_shorten_failed">ツイートを短縮できません。</string>
   <string name="error_message_tweet_shortener_not_found">ツイート短縮サービスが見つかりません。</string>
+  <string name="error_message_video_upload_not_supported">動画のアップロードはサポートされていません</string>
   <string name="error_no_access_for_credentials">アプリケーションが該当リソースにアクセスできません。</string>
   <string name="error_no_dm_permission">ダイレクトメッセージへのアクセス許可がありません。Twitter 設定のアプリ連携を確認してください。</string>
   <string name="error_title_device_incompatible">デバイスには互換性がありません。</string>
@@ -305,13 +312,9 @@
   <string name="external_group_host_format"><xliff:g id="host">%s</xliff:g> の外部グループ</string>
   <string name="external_user_host_format"><xliff:g id="host">%s</xliff:g>の外部ユーザー</string>
   <string name="extra_configurations">追加設定</string>
-  <string name="extra_feature_description_advanced_filters">ブロック/ミュート 一覧からフィルターリストをインポート</string>
-  <string name="extra_feature_description_filters_subscription">ミュートフィルターを購読、かつ自動同期</string>
   <string name="extra_feature_description_schedule_status">予約ツイート (あとで送る)</string>
   <string name="extra_feature_description_share_gif">ツイートでGIF動画を共有</string>
   <string name="extra_feature_description_sync_data">データを Dropbox や Google ドライブなどで同期</string>
-  <string name="extra_feature_title_advanced_filters">フィルターをインポート</string>
-  <string name="extra_feature_title_filters_subscription">フィルターを購読</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">Twidere を支援して追加機能を取得</string>
   <string name="extra_features_pack_description">または、追加機能パックを購入して、すべての機能 (将来追加される機能を含む) を手に入れましょう。</string>
@@ -574,6 +577,7 @@
   <string name="message_toast_login_verification_failed">ログイン認証に失敗しました</string>
   <!-- Toast message for network errors -->
   <string name="message_toast_network_error">ネットワークエラー</string>
+  <string name="message_toast_network_error_with_message">ネットワークエラー: <xliff:g id="message">%s</xliff:g></string>
   <string name="message_toast_no_account">アカウント無し</string>
   <string name="message_toast_no_account_permission">アカウントの権限が必要です</string>
   <string name="message_toast_no_account_selected">アカウントが選択されていません</string>
@@ -650,7 +654,15 @@
   <string name="no_user_found">ユーザーが見つかりません。</string>
   <string name="no_version_suffix">バージョンサフィックスなし</string>
   <string name="none">なし</string>
+  <string name="notification_channel_description_content_messages">DMのような重要なメッセージ</string>
+  <string name="notification_channel_descriptions_content_subscriptions">ユーザーのツイート通知</string>
+  <string name="notification_channel_name_app_notices">アプリの通知</string>
+  <string name="notification_channel_name_background_progresses">バックグラウンド操作</string>
   <string name="notification_channel_name_content_interactions">みんなの反応</string>
+  <string name="notification_channel_name_content_messages">メッセージ</string>
+  <string name="notification_channel_name_content_subscriptions">予約購読</string>
+  <string name="notification_channel_name_content_updates">アップデート</string>
+  <string name="notification_channel_name_service_statuses">サービスの状態</string>
   <string name="notification_direct_message"><xliff:g id="user">%s</xliff:g>からDMが届きました。</string>
   <string name="notification_direct_message_multiple_messages"><xliff:g id="user">%1$s</xliff:g>はあなたに<xliff:g id="messages_count">%2$d</xliff:g>通のDMを送信しました。</string>
   <string name="notification_direct_message_multiple_users"><xliff:g id="user">%1$s</xliff:g>と他<xliff:g id="users_count">%2$d</xliff:g>人があなたに<xliff:g id="messages_count">%3$d</xliff:g>通のDMを送信しました。</string>
@@ -743,6 +755,8 @@
   <string name="preference_title_media_preload_non_metered_network">無料のネットワークでのみ先読み</string>
   <string name="preference_title_multi_column_tab_width">複数カラムの幅</string>
   <string name="preference_title_multi_column_tabs">多列タブ</string>
+  <string name="preference_title_navbar_style">ナビバーのスタイル</string>
+  <string name="preference_title_notification_channels">チャンネル</string>
   <string name="preference_title_notification_ringtone">通知音</string>
   <string name="preference_title_override_language">アプリの言語</string>
   <string name="preference_title_portrait">ポートレイト</string>

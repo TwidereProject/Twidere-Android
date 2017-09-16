@@ -301,13 +301,9 @@
   <string name="external_group_host_format">Grupo externo en <xliff:g id="host">%s</xliff:g></string>
   <string name="external_user_host_format">Usuario externo en <xliff:g id="host">%s</xliff:g></string>
   <string name="extra_configurations">Configuraciones Extra</string>
-  <string name="extra_feature_description_advanced_filters">Importar lista de filtros de bloqueados/silenciados</string>
-  <string name="extra_feature_description_filters_subscription">Suscripción a filtros y sincronización automática</string>
   <string name="extra_feature_description_schedule_status">Planifica tu tweet (envíalo más tarde)</string>
   <string name="extra_feature_description_share_gif">Compartir GIF en tweet</string>
   <string name="extra_feature_description_sync_data">Sincronizar datos con Dropbox, Google Drive etc</string>
-  <string name="extra_feature_title_advanced_filters">Importar filtros</string>
-  <string name="extra_feature_title_filters_subscription">Suscripción a filtros</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">Apoyar Twidere y obtener características mejoradas</string>
   <string name="extra_features_pack_description">O compra el pack de características para desbloquearlo (incluyendo características futuras)</string>

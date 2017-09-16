@@ -59,6 +59,7 @@
   <string name="action_enable">启用</string>
   <string name="action_enable_notifications">启用通知</string>
   <string name="action_enable_retweets">启用转推</string>
+  <string name="action_export_to_muted_users">导出到已隐藏的用户</string>
   <string name="action_favorite">收藏</string>
   <string name="action_filter_import_from_blocked_users">从被阻止的用户导入</string>
   <string name="action_filter_import_from_muted_users">从被隐藏的用户导入</string>
@@ -312,13 +313,11 @@
   <string name="external_group_host_format"><xliff:g id="host">%s</xliff:g> 的外部群组</string>
   <string name="external_user_host_format"><xliff:g id="host">%s</xliff:g> 的外部用户</string>
   <string name="extra_configurations">额外设置</string>
-  <string name="extra_feature_description_advanced_filters">从被隐藏/阻止的用户导入过滤列表</string>
-  <string name="extra_feature_description_filters_subscription">订阅到过滤器，并且自动同步</string>
+  <string name="extra_feature_description_advanced_filters">过滤器订阅、高级规则等</string>
   <string name="extra_feature_description_schedule_status">推文排期（稍后发送）</string>
   <string name="extra_feature_description_share_gif">在推文中分享 GIF</string>
   <string name="extra_feature_description_sync_data">与 Dropbox、Google 云端硬盘等同步数据</string>
-  <string name="extra_feature_title_advanced_filters">过滤器导入</string>
-  <string name="extra_feature_title_filters_subscription">过滤器订阅</string>
+  <string name="extra_feature_title_advanced_filters">高级过滤器</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">支持 Twidere 并获得增强功能</string>
   <string name="extra_features_pack_description">或购买功能包，以获取所有功能 （包括将来的版本中的功能）</string>
@@ -402,6 +401,7 @@
   <string name="keyword_filter_name">关键词：<xliff:g id="name">%s</xliff:g></string>
   <string name="label_account">帐号</string>
   <string name="label_account_type">帐号类型</string>
+  <string name="label_advanced">高级</string>
   <string name="label_auth_type">验证方式</string>
   <string name="label_background_operation_service">后台操作服务</string>
   <string name="label_buffer_accounts">Buffer 帐号</string>
@@ -418,6 +418,16 @@
   <string name="label_data_provider">Twidere 数据库存储</string>
   <string name="label_feedback_content">内容</string>
   <string name="label_feedback_title">标题</string>
+  <string name="label_filter_apply_to">应用在&#8230;</string>
+  <string name="label_filter_for">针对&#8230;</string>
+  <string name="label_filter_scope_home">主页</string>
+  <string name="label_filter_scope_interactions">互动</string>
+  <string name="label_filter_scope_messages">私信</string>
+  <string name="label_filter_scope_search_other">其他</string>
+  <string name="label_filter_scope_search_results">搜索结果</string>
+  <string name="label_filter_target_description">介绍</string>
+  <string name="label_filter_target_name">名字</string>
+  <string name="label_filter_target_text">文本</string>
   <string name="label_filters_subscription">订阅</string>
   <string name="label_follow_request_sent">已发送关注请求</string>
   <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> 通过 <xliff:g example="api" id="source">%2$s</xliff:g></string>

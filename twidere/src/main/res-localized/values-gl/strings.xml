@@ -21,9 +21,12 @@
   <string name="action_add_gif">Engadir GIF</string>
   <string name="action_add_media">Engadir multimedia</string>
   <string name="action_add_member">Engadir membro</string>
+  <string name="action_add_name_to_home_screen">Engadir <xliff:g example="Name" id="name">%1$s</xliff:g> á pantalla de inicio</string>
   <string name="action_add_tab">Engadir lapela</string>
+  <string name="action_add_tab_to_home_screen">Engadir lapela á pantalla de inicio</string>
   <string name="action_add_to_filter">Engadir a filtro</string>
   <string name="action_add_to_home_screen">Engadir á pantalla inicio</string>
+  <string name="action_add_to_home_screen_more">Engadir á pantalla de inicio&#8230;</string>
   <string name="action_add_to_list">Engadir á lista</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Bloquear</string>
@@ -33,6 +36,7 @@
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">Cancelar rechouchío</string>
   <string name="action_center">Centro</string>
+  <string name="action_change_language">Cambiar idioma</string>
   <string name="action_clear">Limpar</string>
   <string name="action_clear_messages">Limpar mensaxes</string>
   <string name="action_comment">Comentar</string>
@@ -308,13 +312,9 @@
   <string name="external_group_host_format">Grupo externo en <xliff:g id="host">%s</xliff:g></string>
   <string name="external_user_host_format">Usuario externo en <xliff:g id="host">%s</xliff:g></string>
   <string name="extra_configurations">Axustes extra</string>
-  <string name="extra_feature_description_advanced_filters">Importar filtro de lista de bloqueados/silenciados</string>
-  <string name="extra_feature_description_filters_subscription">Subscribir a filtros silenciados e sincronizar automaticamente</string>
   <string name="extra_feature_description_schedule_status">Programar chío (enviar máis tarde)</string>
   <string name="extra_feature_description_share_gif">Compartir GIF nun chío</string>
   <string name="extra_feature_description_sync_data">Sincroniza datos con Dropbox, Google Drive, etc</string>
-  <string name="extra_feature_title_advanced_filters">Importación de filtros</string>
-  <string name="extra_feature_title_filters_subscription">Subscrición de filtros</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">Apoia Twidere e consegue características avanzadas</string>
   <string name="extra_features_pack_description">Ou compra o paquete de características para conseguilas todas (incluídas as de futuros lanzamentos)</string>
@@ -534,6 +534,7 @@
   <string name="message_permission_request_share_media">Twidere precisa permiso de almacenamento para compartir multimedia.</string>
   <string name="message_pin_status_confirm">Salientar este chío? Mudará calquera outro salientado previamente.</string>
   <string name="message_please_wait">Agarda, por favor.</string>
+  <string name="message_promotions_reward">Activar promocións para usar todas as características de balde, prometemos non molestar!</string>
   <string name="message_status_reply_to_user_removed_explanation">Twitter sempre fai mención do chío nunha resposta. Se o chío foi eliminado, Twidere enviará esta resposta como cita para conservar o contexto.</string>
   <string name="message_status_scheduling_connect_buffer_hint">Conectar ao buffer para programar chíos mesmo en offline</string>
   <string name="message_status_scheduling_connected_to_buffer">Twidere está conectado ao buffer</string>
@@ -543,6 +544,7 @@
   <string name="message_sync_disconnect_from_name_confirm">Desconectado de <xliff:g example="ownCloud" id="name">%s</xliff:g>?</string>
   <string name="message_sync_last_synced_time">Última sincronización: <xliff:g example="2017/1/1 12:00" id="time">%s</xliff:g></string>
   <string name="message_tab_field_is_required">O campo \"<xliff:g example="Field" id="name">%s</xliff:g>\" é obrigatorio</string>
+  <string name="message_ticker_promotions_reward">Activar promocións para usar todas as características de balde!</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
@@ -644,6 +646,8 @@
   <string name="none">Ningún</string>
   <string name="notification_channel_description_content_interactions">Interaccións como mencións e rechouchíos</string>
   <string name="notification_channel_description_content_messages">Mensaxes importantes como MDs</string>
+  <string name="notification_channel_descriptions_content_subscriptions">Notificacións de chío de usuario</string>
+  <string name="notification_channel_descriptions_content_updates">Actualizacións como novos chíos na liña de tempo</string>
   <string name="notification_channel_name_app_notices">Novas da aplicación</string>
   <string name="notification_channel_name_background_progresses">Operacións en segundo plano</string>
   <string name="notification_channel_name_content_interactions">Interaccións</string>
@@ -744,6 +748,7 @@
   <string name="preference_title_multi_column_tab_width">Largo das lapelas en varias columnas</string>
   <string name="preference_title_multi_column_tabs">Lapelas en varias columnas</string>
   <string name="preference_title_navbar_style">Estilo da barra de navegación</string>
+  <string name="preference_title_notification_channels">Canais</string>
   <string name="preference_title_notification_ringtone">Son de aviso</string>
   <string name="preference_title_override_language">Idioma da aplicación</string>
   <string name="preference_title_portrait">Vertical</string>

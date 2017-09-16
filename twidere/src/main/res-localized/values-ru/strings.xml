@@ -274,7 +274,6 @@
   <string name="external_group_host_format">Внешняя группа на <xliff:g id="host">%s</xliff:g></string>
   <string name="external_user_host_format">Внешний пользователь на <xliff:g id="host">%s</xliff:g></string>
   <string name="extra_configurations">Дополнительные настройки</string>
-  <string name="extra_feature_description_advanced_filters">Импортировать список блокированных/заглушенных</string>
   <string name="extra_feature_description_schedule_status">Расписание твитов</string>
   <string name="extra_feature_description_sync_data">Синхронизация с Dropbox, Google Drive и др.</string>
   <!-- Enhanced (paid) features description -->
