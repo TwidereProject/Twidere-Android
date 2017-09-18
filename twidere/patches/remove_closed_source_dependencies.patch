@@ -3,7 +3,7 @@ IDEA additional info:
 Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
---- twidere/build.gradle	(date 1504708582000)
+--- twidere/build.gradle	(revision 0bb81b5b1599891f940a365eeba099ebec16260f)
 +++ twidere/build.gradle	(revision )
 @@ -20,7 +20,7 @@
          }
@@ -27,12 +27,13 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
          // END Non-FOSS component
          fdroid {
              dimension 'channel'
-@@ -139,14 +139,14 @@
+@@ -146,15 +146,15 @@
      implementation project(':twidere.component.nyan')
  
      // START Non-FOSS component
 -    googleImplementation "com.google.android.gms:play-services-maps:${libVersions['PlayServices']}"
 -    googleImplementation "com.google.android.gms:play-services-auth:${libVersions['PlayServices']}"
+-    googleImplementation "com.google.android.gms:play-services-ads:${libVersions['PlayServices']}"
 -    googleImplementation "com.google.maps.android:android-maps-utils:${libVersions['MapsUtils']}"
 -    googleImplementation "com.anjlab.android.iab.v3:library:${libVersions['IABv3']}"
 -    googleImplementation "com.dropbox.core:dropbox-core-sdk:${libVersions['DropboxCoreSdk']}"
@@ -41,6 +42,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 -    }
 +//    googleImplementation "com.google.android.gms:play-services-maps:${libVersions['PlayServices']}"
 +//    googleImplementation "com.google.android.gms:play-services-auth:${libVersions['PlayServices']}"
++//    googleImplementation "com.google.android.gms:play-services-ads:${libVersions['PlayServices']}"
 +//    googleImplementation "com.google.maps.android:android-maps-utils:${libVersions['MapsUtils']}"
 +//    googleImplementation "com.anjlab.android.iab.v3:library:${libVersions['IABv3']}"
 +//    googleImplementation "com.dropbox.core:dropbox-core-sdk:${libVersions['DropboxCoreSdk']}"
