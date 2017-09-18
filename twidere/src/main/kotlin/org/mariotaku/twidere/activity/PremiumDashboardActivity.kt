@@ -114,7 +114,9 @@ class PremiumDashboardActivity : BaseActivity() {
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         super.onPrepareOptionsMenu(menu)
-        menu.setItemAvailability(R.id.disable_promotions, preferences[promotionsEnabledKey])
+        val promotionsEnabled = preferences[promotionsEnabledKey]
+        menu.setItemAvailability(R.id.enable_promotions, BuildConfig.DEBUG && !promotionsEnabled)
+        menu.setItemAvailability(R.id.disable_promotions, promotionsEnabled)
         return true
     }
 
