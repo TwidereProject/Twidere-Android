@@ -57,6 +57,7 @@ import org.mariotaku.twidere.annotation.CacheFileType
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_POSITION
 import org.mariotaku.twidere.extension.model.authorizationHeader
 import org.mariotaku.twidere.extension.model.getBestVideoUrlAndType
+import org.mariotaku.twidere.extension.setVisible
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.EXTRA_PAUSED_BY_USER
 import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.EXTRA_PLAY_AUDIO
@@ -73,6 +74,7 @@ import org.mariotaku.twidere.provider.CacheProvider
 import org.mariotaku.twidere.task.SaveFileTask
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.media.TwidereMediaDownloader
+import org.mariotaku.twidere.util.promotion.PromotionService
 import java.io.InputStream
 import javax.inject.Inject
 
@@ -92,6 +94,9 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
 
     @Inject
     internal lateinit var okHttpClient: OkHttpClient
+
+    @Inject
+    internal lateinit var promotionService: PromotionService
 
     private lateinit var mainHandler: Handler
 
@@ -135,16 +140,22 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
                     hideProgress()
                     val activity = activity as? MediaViewerActivity
                     activity?.setBarVisibility(true)
+
+                    adContainer.setVisible(true)
                 }
                 ExoPlayer.STATE_READY -> {
                     playbackCompleted = playWhenReady
                     playerHasError = false
                     playerView.keepScreenOn = playWhenReady
                     hideProgress()
+
+                    adContainer.setVisible(!playWhenReady)
                 }
                 ExoPlayer.STATE_IDLE -> {
                     playerView.keepScreenOn = false
                     hideProgress()
+
+                    adContainer.setVisible(true)
                 }
             }
         }
@@ -204,6 +215,8 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
             return@setOnTouchListener true
         }
         updateVolume()
+
+        promotionService.loadBanner(adContainer)
     }
 
     override fun onAttach(context: Context) {
@@ -252,6 +265,11 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
 
     override fun onCreateMediaView(inflater: LayoutInflater, parent: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.layout_media_viewer_exo_player_view, parent, false)
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        promotionService.setupBanner(adContainer, PromotionService.BannerType.MEDIA_PAUSE)
     }
 
     override fun onApplySystemWindowInsets(insets: Rect) {

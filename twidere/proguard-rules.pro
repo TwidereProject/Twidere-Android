@@ -69,6 +69,7 @@
 
 # Extra feature service
 -keep class * extends org.mariotaku.twidere.util.premium.ExtraFeaturesService
+-keep class * extends org.mariotaku.twidere.util.promotion.PromotionService
 
 # Extra feature component factories
 -keep class * extends org.mariotaku.twidere.util.gifshare.GifShareProvider.Factory

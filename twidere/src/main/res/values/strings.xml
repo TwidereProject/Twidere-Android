@@ -58,6 +58,7 @@
     <string name="action_edit_filter_rule">Edit rule</string>
     <string name="action_enable">Enable</string>
     <string name="action_enable_notifications">Enable notifications</string>
+    <string name="action_enable_promotions">Enable promotions</string>
     <string name="action_enable_retweets">Enable retweets</string>
     <string name="action_export_to_muted_users">Export to muted users</string>
     <string name="action_favorite">Favorite</string>

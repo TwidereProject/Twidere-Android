@@ -7,10 +7,6 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.view.ContainerView
 import java.util.*
 
-/**
- * Created by mariotaku on 2016/12/25.
- */
-
 abstract class ExtraFeaturesService {
     protected lateinit var context: Context
 

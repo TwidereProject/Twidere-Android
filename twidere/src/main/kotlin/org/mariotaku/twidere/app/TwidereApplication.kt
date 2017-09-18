@@ -73,6 +73,7 @@ import org.mariotaku.twidere.util.net.TwidereDns
 import org.mariotaku.twidere.util.notification.ContentNotificationManager
 import org.mariotaku.twidere.util.notification.NotificationChannelsManager
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
+import org.mariotaku.twidere.util.promotion.PromotionService
 import org.mariotaku.twidere.util.refresh.AutoRefreshController
 import org.mariotaku.twidere.util.sync.DataSyncProvider
 import org.mariotaku.twidere.util.sync.SyncController
@@ -105,6 +106,8 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
     lateinit internal var syncController: SyncController
     @Inject
     lateinit internal var extraFeaturesService: ExtraFeaturesService
+    @Inject
+    lateinit internal var promotionService: PromotionService
     @Inject
     lateinit internal var mediaPreloader: MediaPreloader
     @Inject
@@ -157,6 +160,7 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
         autoRefreshController.appStarted()
         syncController.appStarted()
         extraFeaturesService.appStarted()
+        promotionService.appStarted()
 
         registerActivityLifecycleCallbacks(activityTracker)
         registerReceiver(ConnectivityStateReceiver(), IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
@@ -172,7 +176,6 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
             NotificationChannelsManager.updateAccountChannelsAndGroups(this)
         }, updateImmediately = true)
     }
-
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
         applyLanguageSettings()

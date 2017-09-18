@@ -8,6 +8,11 @@
         android:visible="@bool/debug"
         app:showAsAction="never"/>
     <item
+        android:id="@+id/enable_promotions"
+        android:enabled="@bool/debug"
+        android:title="@string/action_enable_promotions"
+        android:visible="@bool/debug"/>
+    <item
         android:id="@+id/disable_promotions"
         android:title="@string/action_disable_promotions"/>
 </menu>

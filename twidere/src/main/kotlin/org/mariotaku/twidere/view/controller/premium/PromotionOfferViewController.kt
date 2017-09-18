@@ -27,10 +27,7 @@ import org.mariotaku.twidere.activity.PremiumDashboardActivity
 import org.mariotaku.twidere.constant.promotionsEnabledKey
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 
-/**
- * Created by mariotaku on 2017/8/24.
- */
-class LaunchPromotionOfferViewController : PremiumDashboardActivity.ExtraFeatureViewController() {
+class PromotionOfferViewController : PremiumDashboardActivity.ExtraFeatureViewController() {
 
     override fun onCreate() {
         super.onCreate()

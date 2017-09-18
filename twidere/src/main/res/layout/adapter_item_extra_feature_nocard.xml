@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!--
   ~             Twidere - Twitter client for Android
   ~
@@ -18,25 +17,10 @@
   ~  You should have received a copy of the GNU General Public License
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<FrameLayout
+
+<org.mariotaku.twidere.view.ContainerView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/containerView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_centerInParent="true">
-
-    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-        android:id="@+id/playerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:controller_layout_id="@layout/layout_media_viewer_video_controller_exo"
-        app:resize_mode="fit"
-        app:surface_type="texture_view"/>
-
-    <FrameLayout
-        android:id="@+id/adContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
-
-</FrameLayout>
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/element_spacing_small"/>

@@ -15,7 +15,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.activity_premium_dashboard.*
-import kotlinx.android.synthetic.main.card_item_extra_feature.view.*
+import kotlinx.android.synthetic.main.adapter_item_extra_feature_normal.view.*
 import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.alwaysUi
@@ -34,6 +34,7 @@ import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
+import org.mariotaku.twidere.util.promotion.PromotionService
 import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
 import org.mariotaku.twidere.view.ContainerView
 import java.lang.ref.WeakReference
@@ -47,6 +48,7 @@ class PremiumDashboardActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_premium_dashboard)
+
         adapter = ControllersAdapter(this, requestManager)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -62,7 +64,7 @@ class PremiumDashboardActivity : BaseActivity() {
         val lm = recyclerView.layoutManager as LinearLayoutManager
         for (pos in lm.findFirstVisibleItemPosition()..lm.findLastVisibleItemPosition()) {
             val holder = recyclerView.findViewHolderForLayoutPosition(pos) as? ControllerViewHolder ?: return
-            val controller = holder.controller as? ExtraFeatureViewController ?: return
+            val controller = holder.controller as? BaseItemViewController ?: return
             controller.onPause()
         }
     }
@@ -72,7 +74,7 @@ class PremiumDashboardActivity : BaseActivity() {
         val lm = recyclerView.layoutManager as LinearLayoutManager
         for (pos in lm.findFirstVisibleItemPosition()..lm.findLastVisibleItemPosition()) {
             val holder = recyclerView.findViewHolderForLayoutPosition(pos) as? ControllerViewHolder ?: return
-            val controller = holder.controller as? ExtraFeatureViewController ?: return
+            val controller = holder.controller as? BaseItemViewController ?: return
             controller.onResume()
         }
     }
@@ -97,7 +99,7 @@ class PremiumDashboardActivity : BaseActivity() {
                 val position = ((requestCode and 0xFF00) shr 8) - 1
                 if (position >= 0) {
                     val holder = recyclerView.findViewHolderForLayoutPosition(position) as? ControllerViewHolder ?: return
-                    val controller = holder.controller as? ExtraFeatureViewController ?: return
+                    val controller = holder.controller as? BaseItemViewController ?: return
                     controller.onActivityResult(requestCode and 0xFF, resultCode, data)
                 }
             }
@@ -150,6 +152,10 @@ class PremiumDashboardActivity : BaseActivity() {
                     }
                 }
             }
+            R.id.enable_promotions -> {
+                preferences[promotionsEnabledKey] = true
+                recreate()
+            }
             R.id.disable_promotions -> {
                 preferences[promotionsEnabledKey] = false
                 recreate()
@@ -173,11 +179,7 @@ class PremiumDashboardActivity : BaseActivity() {
 
     }
 
-    open class ExtraFeatureViewController : ContainerView.ViewController() {
-        protected val titleView: TextView by lazy { view.findViewById<TextView>(R.id.title) }
-        protected val messageView: TextView by lazy { view.findViewById<TextView>(R.id.message) }
-        protected val button1: Button by lazy { view.findViewById<Button>(R.id.button1) }
-        protected val button2: Button  by lazy { view.findViewById<Button>(R.id.button2) }
+    abstract class BaseItemViewController : ContainerView.ViewController() {
 
         @Inject
         protected lateinit var extraFeaturesService: ExtraFeaturesService
@@ -186,10 +188,15 @@ class PremiumDashboardActivity : BaseActivity() {
         protected lateinit var preferences: SharedPreferences
 
         @Inject
-        protected lateinit var mScheduleProviderFactory: StatusScheduleProvider.Factory
+        protected lateinit var scheduleProviderFactory: StatusScheduleProvider.Factory
+
+        @Inject
+        protected lateinit var promotionService: PromotionService
 
         var position: Int = RecyclerView.NO_POSITION
             internal set
+
+        open val useCardBackground: Boolean = true
 
         protected val activity: PremiumDashboardActivity get() = context as PremiumDashboardActivity
 
@@ -198,15 +205,25 @@ class PremiumDashboardActivity : BaseActivity() {
             GeneralComponent.get(context).inject(this)
         }
 
+        open fun onPause() {}
+
+        open fun onResume() {}
+
+        open fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {}
+
+    }
+
+    open class ExtraFeatureViewController : BaseItemViewController() {
+        protected val titleView: TextView by lazy { view.findViewById<TextView>(R.id.title) }
+        protected val messageView: TextView by lazy { view.findViewById<TextView>(R.id.message) }
+        protected val button1: Button by lazy { view.findViewById<Button>(R.id.button1) }
+        protected val button2: Button  by lazy { view.findViewById<Button>(R.id.button2) }
+
+
         override fun onCreateView(parent: ContainerView): View {
             return LayoutInflater.from(parent.context).inflate(R.layout.layout_controller_extra_feature,
                     parent, false)
         }
-
-        open fun onPause() {}
-        open fun onResume() {}
-
-        open fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {}
 
     }
 
@@ -214,6 +231,10 @@ class PremiumDashboardActivity : BaseActivity() {
             context: Context,
             requestManager: RequestManager
     ) : BaseRecyclerViewAdapter<ControllerViewHolder>(context, requestManager) {
+
+        init {
+            setHasStableIds(true)
+        }
 
         var controllers: List<Class<out ContainerView.ViewController>>? = null
             set(value) {
@@ -227,16 +248,36 @@ class PremiumDashboardActivity : BaseActivity() {
 
         override fun onBindViewHolder(holder: ControllerViewHolder, position: Int) {
             val controller = controllers!![position].newInstance()
-            if (controller is ExtraFeatureViewController) {
+            if (controller is BaseItemViewController) {
                 controller.position = holder.layoutPosition
             }
             holder.controller = controller
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ControllerViewHolder {
-            return ControllerViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.card_item_extra_feature,
-                    parent, false))
+            return ControllerViewHolder(LayoutInflater.from(parent.context).inflate(when (viewType) {
+                VIEW_TYPE_NO_CARD -> R.layout.adapter_item_extra_feature_nocard
+                else -> R.layout.adapter_item_extra_feature_normal
+            }, parent, false))
         }
 
+        override fun getItemViewType(position: Int): Int {
+            val controller = controllers!![position].newInstance()
+            if (controller is BaseItemViewController) {
+                if (!controller.useCardBackground) {
+                    return VIEW_TYPE_NO_CARD
+                }
+            }
+            return VIEW_TYPE_NORMAL
+        }
+
+        override fun getItemId(position: Int): Long {
+            return System.identityHashCode(controllers!![position]).toLong()
+        }
+
+        companion object {
+            private const val VIEW_TYPE_NORMAL = 1
+            private const val VIEW_TYPE_NO_CARD = 2
+        }
     }
 }

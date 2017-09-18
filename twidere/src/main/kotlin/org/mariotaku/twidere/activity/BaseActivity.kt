@@ -75,6 +75,7 @@ import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallb
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.gifshare.GifShareProvider
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
+import org.mariotaku.twidere.util.promotion.PromotionService
 import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
 import org.mariotaku.twidere.util.support.ActivitySupport
 import org.mariotaku.twidere.util.support.ActivitySupport.TaskDescriptionCompat
@@ -125,6 +126,8 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     lateinit var mastodonApplicationRegistry: MastodonApplicationRegistry
     @Inject
     lateinit var taskServiceRunner: TaskServiceRunner
+    @Inject
+    lateinit var promotionService: PromotionService
 
     lateinit var requestManager: RequestManager
         private set

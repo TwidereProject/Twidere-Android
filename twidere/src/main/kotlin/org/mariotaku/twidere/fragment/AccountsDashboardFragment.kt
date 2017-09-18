@@ -99,11 +99,11 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
 
     private lateinit var accountsAdapter: AccountSelectorAdapter
 
+    private val navigationView by lazy { view as NavigationView }
+    private val accountsHeader by lazy { navigationView.getHeaderView(0) }
     private val hasNextAccountIndicator by lazy { accountsHeader.hasNextAccountIndicator }
     private val hasPrevAccountIndicator by lazy { accountsHeader.hasPrevAccountIndicator }
     private val accountsSelector by lazy { accountsHeader.otherAccountsList }
-    private val navigationView by lazy { view as NavigationView }
-    private val accountsHeader by lazy { navigationView.getHeaderView(0) }
     private val accountProfileBanner by lazy { accountsHeader.accountProfileBanner }
     private val floatingProfileImageSnapshot by lazy { accountsHeader.floatingProfileImageSnapshot }
     private val accountProfileImageView by lazy { accountsHeader.profileImage }
@@ -206,7 +206,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         super.onStop()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_accounts_dashboard, container, false)
     }
 
