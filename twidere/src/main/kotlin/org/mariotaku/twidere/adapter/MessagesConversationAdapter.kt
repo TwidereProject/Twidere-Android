@@ -225,9 +225,9 @@ class MessagesConversationAdapter(
         private const val ITEM_LOAD_OLDER_INDICATOR = 4
 
         private fun Context.getIncomingMessageColor(): ColorStateList {
-            val foregroundColor = ThemeUtils.getColorForeground(this)
+            val defaultBubbleColor = ThemeUtils.getColorFromAttribute(this, R.attr.messageBubbleColor)
             val themeColor = Chameleon.getOverrideTheme(this, ChameleonUtils.getActivity(this)).colorAccent
-            val normalColor = ThemeUtils.getOptimalAccentColor(themeColor, foregroundColor)
+            val normalColor = ColorUtils.compositeColors(ColorUtils.setAlphaComponent(themeColor, 0x33), defaultBubbleColor)
             val pressedColor = if (ColorUtils.calculateLuminance(normalColor) < 0.1) {
                 ColorUtils.compositeColors(0x20FFFFFF, normalColor)
             } else {
