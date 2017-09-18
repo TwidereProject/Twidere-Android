@@ -50,16 +50,23 @@ import org.mariotaku.twidere.activity.MediaViewerActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_POSITION
 import org.mariotaku.twidere.extension.model.getBestVideoUrlAndType
+import org.mariotaku.twidere.extension.setVisible
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.media.MediaExtra
+import org.mariotaku.twidere.util.promotion.PromotionService
 import java.util.*
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<VideoPageFragment>,
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener,
         View.OnClickListener, IControlBarActivity.ControlBarOffsetListener {
+
+    @Inject
+    lateinit var promotionService: PromotionService
 
     private var mediaPlayer: MediaPlayer? = null
     private var mediaPlayerError: Int = 0
@@ -134,6 +141,8 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         startLoading(false)
         setMediaViewVisible(false)
         updateVolume()
+
+        promotionService.loadBanner(adContainer)
     }
 
     override fun onPause() {
@@ -142,8 +151,9 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         super.onPause()
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
+        GeneralComponent.get(context).inject(this)
         if (context is IControlBarActivity) {
             context.registerControlBarOffsetListener(this)
         }
@@ -167,6 +177,11 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         requestApplyInsets()
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        promotionService.setupBanner(adContainer, PromotionService.BannerType.MEDIA_PAUSE)
     }
 
     override fun getDownloadExtra(): Any? {
@@ -308,6 +323,7 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         val playing = videoView.isPlaying
         playPauseButton.contentDescription = getString(if (playing) R.string.pause else R.string.play)
         playPauseButton.setImageResource(if (playing) R.drawable.ic_action_pause else R.drawable.ic_action_play_arrow)
+        adContainer.setVisible(!playing)
     }
 
     private fun pauseVideo(): Boolean {

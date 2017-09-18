@@ -29,16 +29,23 @@
         android:id="@+id/videoContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true">
+        android:layout_centerInParent="true"
+        android:background="@android:color/black">
 
         <com.sprylab.android.widget.TextureVideoView
             android:id="@+id/videoView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:background="@android:color/black"/>
+            android:layout_gravity="center"/>
 
     </com.commonsware.cwac.layouts.AspectLockedFrameLayout>
 
     <include layout="@layout/layout_media_viewer_video_overlay"/>
+
+    <FrameLayout
+        android:id="@+id/adContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
 </RelativeLayout>

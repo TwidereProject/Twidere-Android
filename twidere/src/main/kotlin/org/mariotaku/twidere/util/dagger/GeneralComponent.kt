@@ -31,6 +31,7 @@ import org.mariotaku.twidere.fragment.BasePreferenceFragment
 import org.mariotaku.twidere.fragment.ThemedPreferenceDialogFragmentCompat
 import org.mariotaku.twidere.fragment.filter.FilteredUsersFragment
 import org.mariotaku.twidere.fragment.media.ExoPlayerPageFragment
+import org.mariotaku.twidere.fragment.media.VideoPageFragment
 import org.mariotaku.twidere.loader.CacheUserSearchLoader
 import org.mariotaku.twidere.loader.DefaultAPIConfigLoader
 import org.mariotaku.twidere.loader.ParcelableStatusLoader
@@ -149,7 +150,10 @@ interface GeneralComponent {
 
     fun inject(activity: MainActivity)
 
+    fun inject(fragment: VideoPageFragment)
+
     companion object {
+
         private var instance: GeneralComponent? = null
 
         fun get(context: Context): GeneralComponent {
