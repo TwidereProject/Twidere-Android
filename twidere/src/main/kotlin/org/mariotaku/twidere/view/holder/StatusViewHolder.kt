@@ -605,14 +605,12 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
     private fun TextView.displayMediaLabel(cardName: String?, media: Array<ParcelableMedia?>?,
             location: ParcelableLocation?, placeFullName: String?, sensitive: Boolean): Boolean {
         var result = false
-        if (sensitive) {
-            setLabelIcon(R.drawable.ic_label_warning)
-            setText(R.string.label_sensitive_content)
-            result = true
-        } else if (media != null && media.isNotEmpty()) {
-            val type = media.type
-            when {
-                type in videoTypes -> {
+        if (media != null && media.isNotEmpty()) {
+            if (sensitive) {
+                setLabelIcon(R.drawable.ic_label_warning)
+                setText(R.string.label_sensitive_content)
+            } else when {
+                media.type in videoTypes -> {
                     setLabelIcon(R.drawable.ic_label_video)
                     setText(R.string.label_video)
                 }
