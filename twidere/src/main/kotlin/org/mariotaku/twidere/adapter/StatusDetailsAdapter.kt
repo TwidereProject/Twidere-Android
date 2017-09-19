@@ -38,6 +38,7 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.extension.model.originalId
+import org.mariotaku.twidere.extension.model.retweet_sort_id
 import org.mariotaku.twidere.fragment.status.StatusFragment
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler
@@ -207,13 +208,12 @@ class StatusDetailsAdapter(
             setTypeCount(ITEM_IDX_REPLY, 0)
             replyStart = -1
         } else {
-            var sortId = status.sort_id
-
-            if (status.is_retweet) {
-                sortId = data.find {
-                    it.id == status.retweet_id
-                }?.sort_id ?: status.retweet_timestamp
+            val sortId = if (status.is_retweet) {
+                status.retweet_sort_id
+            } else {
+                status.sort_id
             }
+
             var conversationCount = 0
             var replyCount = 0
             var replyStart = -1

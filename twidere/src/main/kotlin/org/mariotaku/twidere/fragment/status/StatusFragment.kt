@@ -142,8 +142,6 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
             return ConversationLoader(activity, status, adapter.getData(), true, loadingMore).apply {
                 pagination = args.toPagination()
-                // Setting comparator to null lets statuses sort ascending
-                comparator = null
             }
         }
 

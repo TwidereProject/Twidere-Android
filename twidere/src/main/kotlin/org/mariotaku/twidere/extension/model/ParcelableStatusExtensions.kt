@@ -1,6 +1,7 @@
 package org.mariotaku.twidere.extension.model
 
 import org.mariotaku.ktextension.addAllTo
+import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.microblog.library.mastodon.annotation.StatusVisibility
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
 import org.mariotaku.twidere.model.*
@@ -103,6 +104,12 @@ val ParcelableStatus.quoted: ParcelableStatus?
         return obj
     }
 
+val ParcelableStatus.retweet_sort_id: Long
+    get() {
+        if (!is_retweet) return -1
+        return retweet_id.toLongOr(timestamp)
+    }
+
 fun ParcelableStatus.toSummaryLine(): ParcelableActivity.SummaryLine {
     val result = ParcelableActivity.SummaryLine()
     result.key = user_key
@@ -133,13 +140,14 @@ fun ParcelableStatus.extractFanfouHashtags(): List<String> {
 fun ParcelableStatus.makeOriginal() {
     if (!is_retweet) return
     id = retweet_id
-    is_retweet = false
     retweeted_by_user_key = null
     retweeted_by_user_name = null
     retweeted_by_user_screen_name = null
     retweeted_by_user_profile_image = null
     retweet_timestamp = -1
     retweet_id = null
+    is_retweet = false
+    sort_id = id.toLongOr(timestamp)
 }
 
 fun ParcelableStatus.addFilterFlag(@ParcelableStatus.FilterFlags flags: Long) {

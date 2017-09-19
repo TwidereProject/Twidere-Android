@@ -48,7 +48,6 @@ import org.mariotaku.twidere.util.cache.JsonCache
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import java.io.IOException
 import java.util.*
-import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 
@@ -62,7 +61,7 @@ abstract class AbsRequestStatusesLoader(
         protected val loadingMore: Boolean
 ) : ParcelableStatusesLoader(context, adapterData, tabPosition, fromUser), IPaginationLoader {
     // Statuses sorted descending by default
-    var comparator: Comparator<ParcelableStatus>? = ParcelableStatus.REVERSE_COMPARATOR
+    open val comparator: Comparator<ParcelableStatus>? = ParcelableStatus.REVERSE_COMPARATOR
 
     var exception: MicroBlogException?
         get() = exceptionRef.get()
@@ -105,6 +104,7 @@ abstract class AbsRequestStatusesLoader(
     @SuppressWarnings("unchecked")
     override final fun loadInBackground(): ListResponse<ParcelableStatus> {
         val context = context
+        val comparator = this.comparator
         val accountKey = accountKey ?: return ListResponse.getListInstance<ParcelableStatus>(MicroBlogException("No Account"))
         val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?:
                 return ListResponse.getListInstance<ParcelableStatus>(MicroBlogException("No Account"))
@@ -114,11 +114,11 @@ abstract class AbsRequestStatusesLoader(
             if (cached != null) {
                 data.addAll(cached)
                 if (comparator != null) {
-                    Collections.sort(data, comparator)
+                    data.sortWith(comparator)
                 } else {
-                    Collections.sort(data)
+                    data.sort()
                 }
-                return ListResponse.getListInstance(CopyOnWriteArrayList(data))
+                return ListResponse.getListInstance(data)
             }
         }
         if (!fromUser) return ListResponse.getListInstance(data)
@@ -171,12 +171,12 @@ abstract class AbsRequestStatusesLoader(
         data.forEach { it.is_filtered = shouldFilterStatus(it) }
 
         if (comparator != null) {
-            data.sortWith(comparator!!)
+            data.sortWith(comparator)
         } else {
             data.sort()
         }
         saveCachedData(data)
-        return ListResponse.getListInstance(CopyOnWriteArrayList(data))
+        return ListResponse.getListInstance(data)
     }
 
     override final fun onStartLoading() {
