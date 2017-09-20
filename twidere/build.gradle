@@ -123,8 +123,9 @@ android {
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/README'
         exclude 'META-INF/INDEX.LIST'
-        exclude 'LICENSE​-​junit​.​txt'
-        exclude 'sdk-version.​txt'
+        exclude '/LICENSE​-​junit​.​txt'
+        exclude '/sdk-version.​txt'
+        exclude '/generated-sources'
     }
 
 }
