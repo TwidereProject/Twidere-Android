@@ -56,6 +56,7 @@ import org.mariotaku.twidere.activity.MediaViewerActivity
 import org.mariotaku.twidere.annotation.CacheFileType
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_POSITION
 import org.mariotaku.twidere.extension.model.authorizationHeader
+import org.mariotaku.twidere.extension.model.bannerExtras
 import org.mariotaku.twidere.extension.model.getBestVideoUrlAndType
 import org.mariotaku.twidere.extension.setVisible
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
@@ -216,7 +217,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         }
         updateVolume()
 
-        promotionService.loadBanner(adContainer)
+        promotionService.loadBanner(adContainer, media?.bannerExtras)
     }
 
     override fun onAttach(context: Context) {

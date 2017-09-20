@@ -2,6 +2,7 @@ package org.mariotaku.twidere.extension.model
 
 import android.annotation.SuppressLint
 import org.mariotaku.twidere.model.ParcelableMedia
+import org.mariotaku.twidere.util.promotion.PromotionService
 
 /**
  * Created by mariotaku on 2017/1/7.
@@ -42,4 +43,10 @@ val ParcelableMedia.aspect_ratio: Double
     get() {
         if (this.height <= 0 || this.width <= 0) return Double.NaN
         return this.width / this.height.toDouble()
+    }
+
+val ParcelableMedia.bannerExtras: PromotionService.BannerExtras?
+    get() {
+        val contentUrl = this.page_url ?: this.url ?: return null
+        return PromotionService.BannerExtras(contentUrl)
     }

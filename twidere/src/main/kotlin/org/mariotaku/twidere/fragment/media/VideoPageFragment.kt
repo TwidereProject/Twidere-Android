@@ -49,6 +49,7 @@ import org.mariotaku.twidere.TwidereConstants.EXTRA_MEDIA
 import org.mariotaku.twidere.activity.MediaViewerActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_POSITION
+import org.mariotaku.twidere.extension.model.bannerExtras
 import org.mariotaku.twidere.extension.model.getBestVideoUrlAndType
 import org.mariotaku.twidere.extension.setVisible
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
@@ -142,7 +143,7 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         setMediaViewVisible(false)
         updateVolume()
 
-        promotionService.loadBanner(adContainer)
+        promotionService.loadBanner(adContainer, media?.bannerExtras)
     }
 
     override fun onPause() {

@@ -144,19 +144,16 @@ object ParcelableMediaUtils {
     }
 
     fun hasPlayIcon(@ParcelableMedia.Type type: Int): Boolean {
-        when (type) {
+        return when (type) {
             ParcelableMedia.Type.VIDEO, ParcelableMedia.Type.ANIMATED_GIF,
-            ParcelableMedia.Type.CARD_ANIMATED_GIF, ParcelableMedia.Type.EXTERNAL_PLAYER -> return true
-            else -> return false
+            ParcelableMedia.Type.CARD_ANIMATED_GIF, ParcelableMedia.Type.EXTERNAL_PLAYER -> true
+            else -> false
         }
     }
 
     fun findByUrl(media: Array<ParcelableMedia>?, url: String?): ParcelableMedia? {
         if (media == null || url == null) return null
-        for (item in media) {
-            if (url == item.url) return item
-        }
-        return null
+        return media.firstOrNull { url == it.url }
     }
 
     fun getPrimaryMedia(status: ParcelableStatus): Array<ParcelableMedia>? {
@@ -173,4 +170,5 @@ object ParcelableMediaUtils {
         status.quoted_media?.addAllTo(result)
         return result.toTypedArray()
     }
+
 }
