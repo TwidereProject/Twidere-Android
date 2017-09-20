@@ -83,7 +83,6 @@ import org.mariotaku.twidere.fragment.AbsStatusesFragment
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.Companion.handleActionClick
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BaseFragment
-import org.mariotaku.twidere.fragment.status.TranslationDestinationDialogFragment
 import org.mariotaku.twidere.loader.ParcelableStatusLoader
 import org.mariotaku.twidere.loader.statuses.ConversationLoader
 import org.mariotaku.twidere.model.*
@@ -516,13 +515,6 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         restoreReadPosition(readPosition)
     }
 
-    private fun scrollToCurrent() {
-        if (adapter.status != null) {
-            val position = adapter.getFirstPositionOfItem(StatusDetailsAdapter.ITEM_IDX_STATUS)
-            recyclerView.smoothScrollToPosition(position)
-        }
-    }
-
     private fun displayTranslation(translation: TranslationResult) {
         adapter.translationResult = translation
     }
@@ -853,14 +845,11 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                         return Math.max((firstPosition - skippedCount) * 100 - top * 100 / height, 0)
                     }
                 } else {
-                    val index: Int
                     val count = validScrollItemCount
-                    if (firstPosition == 0) {
-                        index = 0
-                    } else if (firstPosition + childCount == count) {
-                        index = count
-                    } else {
-                        index = firstPosition + childCount / 2
+                    val index = when {
+                        firstPosition == 0 -> 0
+                        firstPosition + childCount == count -> count
+                        else -> firstPosition + childCount / 2
                     }
                     return (firstPosition + childCount * (index / count.toFloat())).toInt()
                 }
@@ -869,13 +858,11 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         }
 
         override fun computeVerticalScrollRange(state: RecyclerView.State?): Int {
-            val result: Int
-            if (isSmoothScrollbarEnabled) {
-                result = Math.max(validScrollItemCount * 100, 0)
+            return if (isSmoothScrollbarEnabled) {
+                Math.max(validScrollItemCount * 100, 0)
             } else {
-                result = validScrollItemCount
+                validScrollItemCount
             }
-            return result
         }
 
         private val skippedScrollItemCount: Int

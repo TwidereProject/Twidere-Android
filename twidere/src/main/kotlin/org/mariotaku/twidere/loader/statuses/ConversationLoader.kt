@@ -68,11 +68,11 @@ class ConversationLoader(
 
     @Throws(MicroBlogException::class)
     override fun getStatuses(account: AccountDetails, paging: Paging): PaginatedList<ParcelableStatus> {
-        when (account.type) {
-            AccountType.MASTODON -> return getMastodonStatuses(account, paging).mapTo(PaginatedArrayList()) {
+        return when (account.type) {
+            AccountType.MASTODON -> getMastodonStatuses(account, paging).mapTo(PaginatedArrayList()) {
                 it.toParcelable(account)
             }
-            else -> return getMicroBlogStatuses(account, paging)
+            else -> getMicroBlogStatuses(account, paging)
         }
     }
 
@@ -91,11 +91,11 @@ class ConversationLoader(
             AccountType.TWITTER -> {
                 val isOfficial = account.isOfficial(context)
                 canLoadAllReplies = isOfficial
-//                if (isOfficial) {
-//                    return microBlog.showConversation(status.id, paging).mapMicroBlogToPaginated {
-//                        it.toParcelable(account, profileImageSize)
-//                    }
-//                }
+                if (isOfficial) {
+                    return microBlog.showConversation(status.id, paging).mapMicroBlogToPaginated {
+                        it.toParcelable(account, profileImageSize)
+                    }
+                }
                 return showConversationCompat(microBlog, account, status, true)
             }
             AccountType.STATUSNET -> {
