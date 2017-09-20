@@ -1,6 +1,5 @@
 package org.mariotaku.twidere.fragment.filter
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
@@ -221,14 +220,13 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
         actionMode = null
     }
 
-    @SuppressLint("Recycle")
     private fun performDeletion() {
         val ids = listView.checkedItemIds
         val resolver = context.contentResolver
         val where = Expression.inArgs(Filters.Subscriptions._ID, ids.size).sql
         val whereArgs = ids.toStringArray()
-        resolver.query(Filters.Subscriptions.CONTENT_URI, Filters.Subscriptions.COLUMNS, where,
-                whereArgs, null)?.useCursor { cursor ->
+        resolver.queryReference(Filters.Subscriptions.CONTENT_URI, Filters.Subscriptions.COLUMNS, where,
+                whereArgs, null)?.use { (cursor) ->
             val indices = ObjectCursor.indicesFrom(cursor, FiltersSubscription::class.java)
             cursor.moveToFirst()
             while (!cursor.isAfterLast) {

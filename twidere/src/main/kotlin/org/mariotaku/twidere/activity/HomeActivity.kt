@@ -70,7 +70,10 @@ import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.contains
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
-import org.mariotaku.ktextension.*
+import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
+import org.mariotaku.ktextension.coerceInOr
+import org.mariotaku.ktextension.contains
+import org.mariotaku.ktextension.removeOnAccountsUpdatedListenerSafe
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
@@ -985,9 +988,9 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                             TwidereQueryBuilder.mapConversationsProjection(it)
                         }.toTypedArray()
                         val unreadHaving = Expression.greaterThan(Conversations.UNREAD_COUNT, 0)
-                        val count = context.contentResolver.getUnreadMessagesEntriesCursor(projection,
-                                accountKeys, extraHaving = unreadHaving)?.useCursor { cur ->
-                            return@useCursor cur.count
+                        val count = context.contentResolver.getUnreadMessagesEntriesCursorReference(projection,
+                                accountKeys, extraHaving = unreadHaving)?.use { (cur) ->
+                            return@use cur.count
                         } ?: -1
                         result.put(i, count)
                         publishProgress(TabBadge(i, count))

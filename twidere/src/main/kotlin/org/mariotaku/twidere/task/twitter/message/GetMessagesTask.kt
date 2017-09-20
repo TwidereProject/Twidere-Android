@@ -20,14 +20,12 @@
 package org.mariotaku.twidere.task.twitter.message
 
 import android.accounts.AccountManager
-import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import org.mariotaku.commons.logansquare.LoganSquareMapperFinder
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.toIntOr
 import org.mariotaku.ktextension.toLongOr
-import org.mariotaku.ktextension.useCursor
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
@@ -41,6 +39,7 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.queryCount
+import org.mariotaku.twidere.extension.queryReference
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
 import org.mariotaku.twidere.model.event.GetMessagesTaskEvent
@@ -499,15 +498,14 @@ class GetMessagesTask(
             }
         }
 
-        @SuppressLint("Recycle")
         internal fun MutableMap<String, ParcelableMessageConversation>.addLocalConversations(context: Context,
                 accountKey: UserKey, conversationIds: Set<String>) {
             val newIds = conversationIds.filterNot { it in this.keys }
             val where = Expression.and(Expression.inArgs(Conversations.CONVERSATION_ID, newIds.size),
                     Expression.equalsArgs(Conversations.ACCOUNT_KEY)).sql
             val whereArgs = newIds.toTypedArray() + accountKey.toString()
-            return context.contentResolver.query(Conversations.CONTENT_URI, Conversations.COLUMNS,
-                    where, whereArgs, null).useCursor { cur ->
+            context.contentResolver.queryReference(Conversations.CONTENT_URI, Conversations.COLUMNS,
+                    where, whereArgs, null)?.use { (cur) ->
                 val indices = ObjectCursor.indicesFrom(cur, ParcelableMessageConversation::class.java)
                 cur.moveToFirst()
                 while (!cur.isAfterLast) {

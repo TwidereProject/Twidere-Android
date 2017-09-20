@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.util
 
 import android.accounts.AccountManager
-import android.annotation.SuppressLint
 import android.content.*
 import android.database.Cursor
 import android.net.Uri
@@ -31,7 +30,6 @@ import android.support.annotation.WorkerThread
 import android.text.TextUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.mapToArray
-import org.mariotaku.ktextension.useCursor
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
@@ -54,7 +52,7 @@ import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.queryCount
 import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.extension.queryReference
-import org.mariotaku.twidere.extension.rawQuery
+import org.mariotaku.twidere.extension.rawQueryReference
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.tab.extra.HomeTabExtras
 import org.mariotaku.twidere.model.tab.extra.InteractionsTabExtras
@@ -740,7 +738,6 @@ object DataStoreUtils {
         })
     }
 
-    @SuppressLint("Recycle")
     private fun <T, I> getFieldsArray(
             context: Context, uri: Uri,
             keys: Array<UserKey?>, keyField: String,
@@ -769,7 +766,7 @@ object DataStoreUtils {
         if (sortExpression != null) {
             builder.orderBy(sortExpression)
         }
-        resolver.rawQuery(builder.buildSQL(), bindingArgs)?.useCursor { cur ->
+        resolver.rawQueryReference(builder.buildSQL(), bindingArgs)?.use { (cur) ->
             cur.moveToFirst()
             val colIdx = creator.newIndex(cur)
             while (!cur.isAfterLast) {

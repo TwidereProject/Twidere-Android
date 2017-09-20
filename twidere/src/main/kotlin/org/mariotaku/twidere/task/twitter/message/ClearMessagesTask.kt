@@ -21,11 +21,11 @@ package org.mariotaku.twidere.task.twitter.message
 
 import android.accounts.AccountManager
 import android.content.Context
-import org.mariotaku.ktextension.useCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.extension.queryReference
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
@@ -53,8 +53,8 @@ class ClearMessagesTask(
         val messagesWhereArgs = arrayOf(accountKey.toString(), conversationId)
         val projection = arrayOf(Messages.MESSAGE_ID)
         val messageIds = mutableListOf<String>()
-        context.contentResolver.query(Messages.CONTENT_URI, projection, messagesWhere,
-                messagesWhereArgs, null)?.useCursor { cur ->
+        context.contentResolver.queryReference(Messages.CONTENT_URI, projection, messagesWhere,
+                messagesWhereArgs, null)?.use { (cur) ->
             cur.moveToFirst()
             while (!cur.isAfterLast) {
                 val messageId = cur.getString(0)

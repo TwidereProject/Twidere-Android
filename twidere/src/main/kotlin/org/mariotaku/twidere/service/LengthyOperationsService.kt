@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.service
 
 import android.accounts.AccountManager
-import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.Service
 import android.content.Context
@@ -40,8 +39,6 @@ import org.mariotaku.abstask.library.ManualTaskStarter
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.getNullableTypedArrayExtra
 import org.mariotaku.ktextension.toLongOr
-import org.mariotaku.ktextension.useCursor
-import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.TwitterUpload
 import org.mariotaku.microblog.library.twitter.model.MediaUploadResponse
@@ -55,6 +52,7 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.constant.refreshAfterTweetKey
 import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.extension.model.notificationBuilder
+import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtras
@@ -119,12 +117,8 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
         val draftId = uri.lastPathSegment.toLongOr(-1L)
         if (draftId == -1L) return
         val where = Expression.equals(Drafts._ID, draftId)
-        @SuppressLint("Recycle")
-        val draft: Draft = contentResolver.query(Drafts.CONTENT_URI, Drafts.COLUMNS, where.sql, null, null)?.useCursor {
-            val i = ObjectCursor.indicesFrom(it, Draft::class.java)
-            if (!it.moveToFirst()) return@useCursor null
-            return@useCursor i.newObject(it)
-        } ?: return
+        val draft: Draft = contentResolver.queryOne(Drafts.CONTENT_URI, Drafts.COLUMNS, where.sql,
+                null, null, cls = Draft::class.java) ?: return
 
         contentResolver.delete(Drafts.CONTENT_URI, where.sql, null)
         if (TextUtils.isEmpty(draft.action_type)) {
@@ -162,7 +156,6 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
         }
     }
 
-    @SuppressLint("Recycle")
     private fun handleDiscardDraftIntent(intent: Intent) {
         val data = intent.data ?: return
         task {
