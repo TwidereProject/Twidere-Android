@@ -120,13 +120,18 @@ android {
     }
 
     packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/README'
         exclude 'META-INF/INDEX.LIST'
-        exclude 'META-INF/maven'
-        exclude 'generated-sources/'
-        exclude 'LICENSE​-​junit​.​txt'
+        exclude 'META-INF/maven/**'
+        exclude 'META-INF/*.kotlin_module'
+        exclude 'kotlin/*.kotlin_builtins'
+        exclude 'org/osmdroid/**.png'
+        exclude 'generated-sources/**'
         exclude 'sdk-version.​txt'
+        exclude 'build-data.properties'
     }
 
 }
