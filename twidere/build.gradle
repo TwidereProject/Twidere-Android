@@ -127,9 +127,11 @@ android {
         exclude 'META-INF/INDEX.LIST'
         exclude 'META-INF/maven/**'
         exclude 'META-INF/*.kotlin_module'
-        exclude 'kotlin/*.kotlin_builtins'
+        exclude 'kotlin/**.kotlin_builtins'
         exclude 'org/osmdroid/**.png'
+        exclude 'javax/annotation/**.java'
         exclude 'generated-sources/**'
+        exclude 'jsr305_annotations/**'
         exclude 'sdk-version.​txt'
         exclude 'build-data.properties'
     }
@@ -155,7 +157,6 @@ dependencies {
     // START Non-FOSS component
     googleImplementation "com.google.android.gms:play-services-maps:${libVersions['PlayServices']}"
     googleImplementation "com.google.android.gms:play-services-auth:${libVersions['PlayServices']}"
-    googleImplementation "com.google.android.gms:play-services-ads:${libVersions['PlayServices']}"
     googleImplementation "com.google.maps.android:android-maps-utils:${libVersions['MapsUtils']}"
     googleImplementation "com.anjlab.android.iab.v3:library:${libVersions['IABv3']}"
     googleImplementation "com.dropbox.core:dropbox-core-sdk:${libVersions['DropboxCoreSdk']}"

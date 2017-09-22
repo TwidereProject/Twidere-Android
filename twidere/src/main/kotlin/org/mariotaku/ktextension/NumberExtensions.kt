@@ -44,3 +44,16 @@ fun Number.toLocalizedString(locale: Locale = Locale.getDefault()): String {
     val nf = NumberFormat.getInstance(locale)
     return nf.format(this)
 }
+
+val Int.nextPowerOf2: Int
+    get() {
+        var n = this
+        if (n <= 0 || n > 1 shl 30) throw IllegalArgumentException("n is invalid: " + n)
+        n -= 1
+        n = n or (n shr 16)
+        n = n or (n shr 8)
+        n = n or (n shr 4)
+        n = n or (n shr 2)
+        n = n or (n shr 1)
+        return n + 1
+    }

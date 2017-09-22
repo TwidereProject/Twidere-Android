@@ -27,6 +27,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import kotlin.ranges.RangesKt;
+
 /**
  * Created by mariotaku on 15/1/8.
  */
@@ -94,9 +96,9 @@ public class TwidereColorUtils {
 
 
     public static int YIQToColor(int alpha, int[] yiq) {
-        final int r = TwidereMathUtils.clamp((yiq[0] * 1000 + yiq[1] * 956 + yiq[2] * 620) / 1000, 0, 255);
-        final int g = TwidereMathUtils.clamp((yiq[0] * 1000 - yiq[1] * 272 - yiq[2] * 647) / 1000, 0, 255);
-        final int b = TwidereMathUtils.clamp((yiq[0] * 1000 - yiq[1] * 1108 + yiq[2] * 1705) / 1000, 0, 255);
+        final int r = RangesKt.coerceIn((yiq[0] * 1000 + yiq[1] * 956 + yiq[2] * 620) / 1000, 0, 255);
+        final int g = RangesKt.coerceIn((yiq[0] * 1000 - yiq[1] * 272 - yiq[2] * 647) / 1000, 0, 255);
+        final int b = RangesKt.coerceIn((yiq[0] * 1000 - yiq[1] * 1108 + yiq[2] * 1705) / 1000, 0, 255);
         return Color.argb(alpha, r, g, b);
     }
 
