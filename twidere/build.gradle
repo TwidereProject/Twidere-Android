@@ -297,3 +297,5 @@ task svgToMipmap(type: SvgDrawableTask) {
 
     outputType = 'mipmap'
 }
+
+apply plugin: 'com.google.gms.google-services'

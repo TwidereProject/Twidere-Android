@@ -38,7 +38,7 @@ subprojects {
             kotlinVersion = '1.1.4-3'
             pluginVersions = [
                     AndroidSvgDrawable: '3.0.0',
-                    PlayServices      : '3.1.0',
+                    PlayServices      : '3.1.1',
             ]
             libVersions = [
                     Kotlin               : "${kotlinVersion}",
@@ -47,7 +47,7 @@ subprojects {
                     MariotakuCommons     : '0.9.20',
                     RestFu               : '0.9.60',
                     ObjectCursor         : '0.9.21',
-                    PlayServices         : '11.2.2',
+                    PlayServices         : '11.4.0',
                     MapsUtils            : '0.5',
                     DropboxCoreSdk       : '3.0.3',
                     GoogleDriveApi       : 'v3-rev81-1.22.0',
