@@ -88,6 +88,7 @@ android {
                 signingConfig signingConfigs.twidere
             }
 
+            multiDexEnabled true
             minifyEnabled false
             shrinkResources false
             resValue("bool", "debug", "true")
@@ -97,6 +98,7 @@ android {
                 signingConfig signingConfigs.twidere
             }
 
+            multiDexEnabled true
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -171,7 +173,7 @@ dependencies {
 
     debugImplementation "com.facebook.stetho:stetho:${libVersions['Stetho']}"
     debugImplementation "com.facebook.stetho:stetho-okhttp3:${libVersions['Stetho']}"
-    debugImplementation "com.facebook.stetho:stetho-js-rhino:${libVersions['Stetho']}"
+    debugImplementation "com.github.mariotaku:StethoBeanShellREPL:${libVersions['StethoBeanShellREPL']}"
     debugImplementation "com.squareup.leakcanary:leakcanary-android:${libVersions['LeakCanary']}"
     debugImplementation('com.jayway.jsonpath:json-path:2.2.0') {
         exclude group: 'net.minidev', module: 'json-smart'
