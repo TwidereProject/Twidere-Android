@@ -22,11 +22,10 @@ package org.mariotaku.twidere.model;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Single-file Cron expression parser
@@ -128,7 +127,7 @@ public class CronExpression {
             }
             throw new ParseException("Unknown pre-defined value " + substr, 1);
         }
-        final String[] segments = StringUtils.split(string, ' ');
+        final String[] segments = split(string, ' ');
         if (segments.length > 6) {
             throw new ParseException("Unrecognized segments " + string, -1);
         }
@@ -239,7 +238,7 @@ public class CronExpression {
 
         public static Field parse(String text, FieldType fieldType) throws ParseException {
             final Range allowedRange = fieldType.allowedRange;
-            final String[] rangeStrings = StringUtils.split(text, ',');
+            final String[] rangeStrings = split(text, ',');
             final Range[] ranges = new Range[rangeStrings.length];
             final String[] textRepresentations = fieldType.textRepresentations;
             for (int i = 0, l = rangeStrings.length; i < l; i++) {
@@ -396,8 +395,8 @@ public class CronExpression {
         private static int parseNumber(String input, Range allowedRange,
                 @Nullable String[] textRepresentations) throws ParseException {
             if (textRepresentations != null) {
-                int textRepresentationIndex = ArrayUtils.indexOf(textRepresentations, input);
-                if (textRepresentationIndex != ArrayUtils.INDEX_NOT_FOUND) {
+                int textRepresentationIndex = indexOf(textRepresentations, input);
+                if (textRepresentationIndex != -1) {
                     return allowedRange.valueAt(textRepresentationIndex);
                 }
             }
@@ -412,6 +411,43 @@ public class CronExpression {
             if (endInclusive == start) return Integer.toString(start);
             return start + "-" + endInclusive;
         }
+    }
+
+    private static <T> int indexOf(@NonNull final T[] array, @NonNull final T objectToFind) {
+        int length = array.length;
+        for (int i = 0; i < length; i++) {
+            if (objectToFind.equals(array[i])) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private static String[] split(@NonNull final String str, final char separatorChar) {
+        // Performance tuned for 2.0 (JDK1.4)
+        final int len = str.length();
+        if (len == 0) {
+            return new String[0];
+        }
+        final List<String> list = new ArrayList<>();
+        int i = 0, start = 0;
+        boolean match = false;
+        while (i < len) {
+            if (str.charAt(i) == separatorChar) {
+                if (match) {
+                    list.add(str.substring(start, i));
+                    match = false;
+                }
+                start = ++i;
+                continue;
+            }
+            match = true;
+            i++;
+        }
+        if (match) {
+            list.add(str.substring(start, i));
+        }
+        return list.toArray(new String[list.size()]);
     }
 
 }

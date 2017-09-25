@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
-import org.apache.commons.text.WordUtils;
 import org.mariotaku.kpreferences.SharedPreferencesExtensionsKt;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.constant.PreferenceKeysKt;
@@ -14,6 +13,8 @@ import org.mariotaku.twidere.util.dagger.DependencyHolder;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import kotlin.text.StringsKt;
 
 /**
  * Created by mariotaku on 2016/11/27.
@@ -217,7 +218,7 @@ public abstract class DrawableHolder {
         private Builtin(String key, int resId) {
             this.key = key;
             this.resId = resId;
-            setName(WordUtils.capitalize(key));
+            setName(StringsKt.capitalize(key));
         }
 
         @Override
