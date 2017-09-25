@@ -134,6 +134,8 @@ android {
         exclude 'javax/annotation/**.java'
         exclude 'generated-sources/**'
         exclude 'jsr305_annotations/**'
+        exclude 'error_prone/**'
+        exclude 'third_party/java_src/**'
         exclude 'sdk-version.​txt'
         exclude 'build-data.properties'
     }
