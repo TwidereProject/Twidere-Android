@@ -25,9 +25,6 @@ import android.net.Uri
 import android.widget.Toast
 import com.squareup.otto.Bus
 import com.squareup.otto.Subscribe
-import org.apache.commons.collections.primitives.ArrayIntList
-import org.apache.commons.collections.primitives.ArrayLongList
-import org.apache.commons.collections.primitives.IntList
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.mapToArray
@@ -70,10 +67,10 @@ class AsyncTwitterWrapper(
     private val resolver = context.contentResolver
 
 
-    var destroyingStatusIds: IntList = ArrayIntList()
-    private val updatingRelationshipIds = ArrayIntList()
+    var destroyingStatusIds = ArrayList<Int>()
+    private val updatingRelationshipIds = ArrayList<Int>()
 
-    private val sendingDraftIds = ArrayLongList()
+    private val sendingDraftIds = ArrayList<Long>()
 
     private val getMessageTasks = CompactHashSet<Uri>()
     private val getStatusTasks = CompactHashSet<Uri>()
@@ -256,7 +253,7 @@ class AsyncTwitterWrapper(
     }
 
     fun getSendingDraftIds(): LongArray {
-        return sendingDraftIds.toArray()
+        return sendingDraftIds.toLongArray()
     }
 
     fun isDestroyingStatus(accountKey: UserKey?, statusId: String?): Boolean {
@@ -313,7 +310,7 @@ class AsyncTwitterWrapper(
 
     fun removeSendingDraftId(id: Long) {
         synchronized(sendingDraftIds) {
-            sendingDraftIds.removeElement(id)
+            sendingDraftIds.remove(id)
             resolver.notifyChange(Drafts.CONTENT_URI_UNSENT, null)
         }
     }
@@ -399,7 +396,7 @@ class AsyncTwitterWrapper(
     }
 
     fun removeUpdatingRelationshipId(accountKey: UserKey, userKey: UserKey) {
-        updatingRelationshipIds.removeElement(ParcelableUser.calculateHashCode(accountKey, userKey))
+        updatingRelationshipIds.remove(ParcelableUser.calculateHashCode(accountKey, userKey))
     }
 
     fun isUpdatingRelationship(accountKey: UserKey, userKey: UserKey): Boolean {

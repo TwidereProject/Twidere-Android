@@ -2,7 +2,6 @@ package org.mariotaku.twidere.task
 
 import android.content.Context
 import android.widget.Toast
-import org.apache.commons.collections.primitives.ArrayIntList
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.mastodon.Mastodon
@@ -69,7 +68,7 @@ class DestroyFavoriteTask(
     }
 
     override fun afterExecute(callback: Any?, result: ParcelableStatus?, exception: MicroBlogException?) {
-        destroyingFavoriteIds.removeElement(AsyncTwitterWrapper.calculateHashCode(accountKey, statusId))
+        destroyingFavoriteIds.remove(AsyncTwitterWrapper.calculateHashCode(accountKey, statusId))
         val taskEvent = FavoriteTaskEvent(FavoriteTaskEvent.Action.DESTROY, accountKey, statusId)
         taskEvent.isFinished = true
         if (result != null) {
@@ -86,7 +85,7 @@ class DestroyFavoriteTask(
     }
 
     companion object {
-        private val destroyingFavoriteIds = ArrayIntList()
+        private val destroyingFavoriteIds = ArrayList<Int>()
 
         fun isDestroyingFavorite(accountKey: UserKey?, statusId: String?): Boolean {
             return destroyingFavoriteIds.contains(calculateHashCode(accountKey, statusId))
