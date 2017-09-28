@@ -32,6 +32,7 @@ import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.getComponentLabel
 import org.mariotaku.twidere.extension.model.instantiateComponent
 import org.mariotaku.twidere.extension.model.setupUrl
+import org.mariotaku.twidere.extension.util.isAdvancedFiltersEnabled
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
@@ -78,9 +79,9 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
         if (savedInstanceState == null) {
             when (arguments?.getString(EXTRA_ACTION)) {
                 ACTION_ADD_URL_SUBSCRIPTION -> {
-                    if (!extraFeaturesService.isEnabled(ExtraFeaturesService.FEATURE_FILTERS_SUBSCRIPTION)) {
+                    if (!extraFeaturesService.isAdvancedFiltersEnabled) {
                         val df = ExtraFeaturesIntroductionDialogFragment.create(
-                                ExtraFeaturesService.FEATURE_FILTERS_SUBSCRIPTION)
+                                ExtraFeaturesService.FEATURE_ADVANCED_FILTERS)
                         df.setTargetFragment(this, REQUEST_ADD_URL_SUBSCRIPTION_PURCHASE)
                         df.show(fragmentManager, ExtraFeaturesIntroductionDialogFragment.FRAGMENT_TAG)
                     } else {
@@ -88,9 +89,9 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
                     }
                 }
                 else -> {
-                    if (!extraFeaturesService.isEnabled(ExtraFeaturesService.FEATURE_FILTERS_SUBSCRIPTION)) {
+                    if (!extraFeaturesService.isAdvancedFiltersEnabled) {
                         val df = ExtraFeaturesIntroductionDialogFragment.create(
-                                ExtraFeaturesService.FEATURE_FILTERS_SUBSCRIPTION)
+                                ExtraFeaturesService.FEATURE_ADVANCED_FILTERS)
                         df.setTargetFragment(this, REQUEST_PURCHASE_EXTRA_FEATURES)
                         df.show(fragmentManager, ExtraFeaturesIntroductionDialogFragment.FRAGMENT_TAG)
                     }
@@ -333,9 +334,9 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
 
     companion object {
         const val ACTION_ADD_URL_SUBSCRIPTION = "${INTENT_PACKAGE_PREFIX}ADD_URL_FILTERS_SUBSCRIPTION"
-        const val REQUEST_ADD_URL_SUBSCRIPTION_PURCHASE = 101
         const val EXTRA_ADD_SUBSCRIPTION_URL = "add_subscription.url"
         const val EXTRA_ADD_SUBSCRIPTION_NAME = "add_subscription.name"
+        private const val REQUEST_ADD_URL_SUBSCRIPTION_PURCHASE = 101
         private const val FRAGMENT_TAG_RREFRESH_FILTERS = "refresh_filters"
     }
 }

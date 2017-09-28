@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="108px" height="108px" viewBox="0 0 108 108" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>ic_shortcut_user_adaptive_foreground-mdpi</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="App-Icon-Adaptive" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Shortcut-/-User">
+            <g id="Foreground">
+                <g id="Group" transform="translate(18.000000, 18.000000)">
+                    <path d="M36,36 C40.9725,36 45,31.9725 45,27 C45,22.0275 40.9725,18 36,18 C31.0275,18 27,22.0275 27,27 C27,31.9725 31.0275,36 36,36 L36,36 Z M36,40.5 C29.9925,40.5 18,43.515 18,49.5 L18,54 L54,54 L54,49.5 C54,43.515 42.0075,40.5 36,40.5 L36,40.5 Z" id="Shape" fill="#2196F3"></path>
+                    <rect id="Rectangle" x="0" y="0" width="72" height="72"></rect>
+                </g>
+                <rect id="Guide" x="18" y="18" width="72" height="72"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

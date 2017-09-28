@@ -4,6 +4,7 @@ import android.accounts.Account
 import android.accounts.AccountManager
 import android.database.sqlite.SQLiteDatabase
 import org.mariotaku.ktextension.HexColorFormat
+import org.mariotaku.ktextension.queryReference
 import org.mariotaku.ktextension.toHexColor
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.twidere.TwidereConstants.*
@@ -24,8 +25,8 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Accounts
  */
 @Suppress("deprecation")
 fun migrateAccounts(am: AccountManager, db: SQLiteDatabase) {
-    val cur = db.query(Accounts.TABLE_NAME, Accounts.COLUMNS, null, null, null, null, null) ?: return
-    try {
+    db.queryReference(Accounts.TABLE_NAME, Accounts.COLUMNS, null, null,
+            null, null, null)?.use { (cur) ->
         val indices = ObjectCursor.indicesFrom(cur, ParcelableCredentials::class.java)
         cur.moveToFirst()
         while (!cur.isAfterLast) {
@@ -54,8 +55,6 @@ fun migrateAccounts(am: AccountManager, db: SQLiteDatabase) {
             am.setAuthToken(account, ACCOUNT_AUTH_TOKEN_TYPE, JsonSerializer.serialize(credentials.toCredentials()))
             cur.moveToNext()
         }
-    } finally {
-        cur.close()
     }
 }
 
@@ -92,12 +91,14 @@ private fun ParcelableCredentials.toCredentials(): Credentials {
         return result
     }
 
-    when (auth_type) {
-        AuthTypeInt.OAUTH, AuthTypeInt.XAUTH -> return toOAuthCredentials()
-        AuthTypeInt.BASIC -> return toBasicCredentials()
-        AuthTypeInt.TWIP_O_MODE -> return toEmptyCredentials()
+    return when (auth_type) {
+        AuthTypeInt.OAUTH, AuthTypeInt.XAUTH -> toOAuthCredentials()
+        AuthTypeInt.BASIC -> toBasicCredentials()
+        AuthTypeInt.TWIP_O_MODE -> toEmptyCredentials()
+        AuthTypeInt.OAUTH2 -> throw UnsupportedOperationException("OAuth 2 credentials are not supported")
+        else -> throw UnsupportedOperationException()
     }
-    throw UnsupportedOperationException()
+
 }
 
 @Credentials.Type

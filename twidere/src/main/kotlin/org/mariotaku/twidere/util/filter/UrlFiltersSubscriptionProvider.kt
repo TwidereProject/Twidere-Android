@@ -2,8 +2,6 @@ package org.mariotaku.twidere.util.filter
 
 import android.content.Context
 import android.net.Uri
-import com.bluelinelabs.logansquare.annotation.JsonField
-import com.bluelinelabs.logansquare.annotation.JsonObject
 import org.mariotaku.restfu.annotation.method.GET
 import org.mariotaku.restfu.http.HttpRequest
 import org.mariotaku.restfu.http.MultiValueMap
@@ -12,6 +10,7 @@ import org.mariotaku.restfu.http.mime.Body
 import org.mariotaku.twidere.extension.model.parse
 import org.mariotaku.twidere.extension.newPullParser
 import org.mariotaku.twidere.model.FiltersData
+import org.mariotaku.twidere.model.filter.UrlFiltersSubscriptionProviderArguments
 import org.mariotaku.twidere.util.ETagCache
 import org.mariotaku.twidere.util.JsonSerializer
 import org.mariotaku.twidere.util.dagger.GeneralComponent
@@ -22,7 +21,10 @@ import javax.inject.Inject
  * Created by mariotaku on 2017/1/9.
  */
 
-class UrlFiltersSubscriptionProvider(context: Context, val arguments: Arguments) : LocalFiltersSubscriptionProvider(context) {
+class UrlFiltersSubscriptionProvider(
+        context: Context,
+        val arguments: UrlFiltersSubscriptionProviderArguments
+) : LocalFiltersSubscriptionProvider(context) {
     @Inject
     internal lateinit var restHttpClient: RestHttpClient
     @Inject
@@ -110,9 +112,4 @@ class UrlFiltersSubscriptionProvider(context: Context, val arguments: Arguments)
         }
     }
 
-    @JsonObject
-    class Arguments {
-        @JsonField(name = arrayOf("url"))
-        lateinit var url: String
-    }
 }

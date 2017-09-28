@@ -97,6 +97,10 @@ class UserColorNameManager(context: Context) {
         return getDisplayName(status.user_key, status.user_name, status.user_screen_name, nameFirst)
     }
 
+    fun getDisplayName(user: FiltersData.UserItem, nameFirst: Boolean): String {
+        return getDisplayName(user.userKey, user.name, user.screenName, nameFirst)
+    }
+
     fun getDisplayName(userKey: UserKey, name: String, screenName: String, nameFirst: Boolean): String {
         return getDisplayName(userKey.toString(), name, screenName, nameFirst)
     }

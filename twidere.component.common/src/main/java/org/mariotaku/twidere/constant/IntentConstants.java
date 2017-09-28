@@ -69,6 +69,8 @@ public interface IntentConstants {
     String INTENT_ACTION_PEBBLE_NOTIFICATION = "com.getpebble.action.SEND_NOTIFICATION";
 
     String BROADCAST_NOTIFICATION_DELETED = INTENT_PACKAGE_PREFIX + "NOTIFICATION_DELETED";
+    String BROADCAST_PROMOTIONS_ACCEPTED = INTENT_PACKAGE_PREFIX + "PROMOTIONS_ACCEPTED";
+    String BROADCAST_PROMOTIONS_DENIED = INTENT_PACKAGE_PREFIX + "PROMOTIONS_DENIED";
 
     String EXTRA_LATITUDE = "latitude";
     String EXTRA_LONGITUDE = "longitude";
@@ -105,6 +107,8 @@ public interface IntentConstants {
     String EXTRA_TEXT = "text";
     String EXTRA_TITLE = "title";
     String EXTRA_TYPE = "type";
+    String EXTRA_VALUE = "value";
+    String EXTRA_SCOPE = "scope";
     //	public static final String EXTRA_SUCCEED = "succeed";
     String EXTRA_IDS = "ids";
     String EXTRA_REFRESH_IDS = "refresh_ids";
@@ -207,7 +211,7 @@ public interface IntentConstants {
     String EXTRA_QUOTE_ORIGINAL_STATUS = "quote_original_status";
     String EXTRA_CARD = "card";
     String EXTRA_IS_POSSIBLY_SENSITIVE = "is_possibly_sensitive";
-    String EXTRA_REFERRAL = "referral";
+    String EXTRA_IS_ACCOUNT_PROFILE = "account";
     String EXTRA_LOADING_MORE = "loading_more";
     String EXTRA_PINNED_STATUS_IDS = "pinned_status_ids";
     String EXTRA_SHOULD_INIT_LOADER = "should_init_loader";

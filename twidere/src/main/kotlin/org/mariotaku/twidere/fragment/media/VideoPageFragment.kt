@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.fragment.media
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Rect
@@ -27,11 +26,9 @@ import android.graphics.drawable.ColorDrawable
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
-import android.util.Pair
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,16 +49,25 @@ import org.mariotaku.twidere.TwidereConstants.EXTRA_MEDIA
 import org.mariotaku.twidere.activity.MediaViewerActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_POSITION
+import org.mariotaku.twidere.extension.model.bannerExtras
+import org.mariotaku.twidere.extension.model.getBestVideoUrlAndType
+import org.mariotaku.twidere.extension.setVisible
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.media.MediaExtra
+import org.mariotaku.twidere.util.promotion.PromotionService
 import java.util.*
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<VideoPageFragment>,
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener,
         View.OnClickListener, IControlBarActivity.ControlBarOffsetListener {
+
+    @Inject
+    lateinit var promotionService: PromotionService
 
     private var mediaPlayer: MediaPlayer? = null
     private var mediaPlayerError: Int = 0
@@ -136,6 +142,8 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         startLoading(false)
         setMediaViewVisible(false)
         updateVolume()
+
+        promotionService.loadBanner(adContainer, media?.bannerExtras)
     }
 
     override fun onPause() {
@@ -144,8 +152,9 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         super.onPause()
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
+        GeneralComponent.get(context).inject(this)
         if (context is IControlBarActivity) {
             context.registerControlBarOffsetListener(this)
         }
@@ -171,10 +180,15 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         requestApplyInsets()
     }
 
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        promotionService.setupBanner(adContainer, PromotionService.BannerType.MEDIA_PAUSE)
+    }
+
     override fun getDownloadExtra(): Any? {
         val extra = MediaExtra()
         extra.isUseThumbor = false
-        val fallbackUrlAndType = getBestVideoUrlAndType(media, FALLBACK_VIDEO_TYPES)
+        val fallbackUrlAndType = media?.getBestVideoUrlAndType(FALLBACK_VIDEO_TYPES)
         if (fallbackUrlAndType != null) {
             extra.fallbackUrl = fallbackUrlAndType.first
         }
@@ -186,8 +200,8 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
     }
 
     override fun getDownloadUri(): Uri? {
-        val bestVideoUrlAndType = getBestVideoUrlAndType(media, SUPPORTED_VIDEO_TYPES)
-        if (bestVideoUrlAndType != null && bestVideoUrlAndType.first != null) {
+        val bestVideoUrlAndType = media?.getBestVideoUrlAndType(SUPPORTED_VIDEO_TYPES)
+        if (bestVideoUrlAndType != null) {
             return Uri.parse(bestVideoUrlAndType.first)
         }
         return arguments.getParcelable<Uri>(SubsampleImageViewerFragment.EXTRA_MEDIA_URI)
@@ -310,6 +324,7 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         val playing = videoView.isPlaying
         playPauseButton.contentDescription = getString(if (playing) R.string.pause else R.string.play)
         playPauseButton.setImageResource(if (playing) R.drawable.ic_action_pause else R.drawable.ic_action_play_arrow)
+        adContainer.setVisible(!playing)
     }
 
     private fun pauseVideo(): Boolean {
@@ -384,7 +399,7 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         const val EXTRA_DEFAULT_MUTE = "default_mute"
         internal const val EXTRA_PAUSED_BY_USER = "paused_by_user"
         internal const val EXTRA_PLAY_AUDIO = "play_audio"
-        internal val SUPPORTED_VIDEO_TYPES: Array<String>
+        internal val SUPPORTED_VIDEO_TYPES: Array<String> = arrayOf("video/webm", "video/mp4")
         internal val FALLBACK_VIDEO_TYPES: Array<String> = arrayOf("video/mp4")
 
         internal val MediaViewerFragment.isLoopEnabled: Boolean
@@ -398,35 +413,5 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         internal val MediaViewerFragment.accountKey: UserKey
             get() = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
 
-        init {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                SUPPORTED_VIDEO_TYPES = arrayOf("video/mp4")
-            } else {
-                SUPPORTED_VIDEO_TYPES = arrayOf("video/webm", "video/mp4")
-            }
-        }
-
-
-        @SuppressLint("SwitchIntDef")
-        internal fun getBestVideoUrlAndType(media: ParcelableMedia?, supportedTypes: Array<String>): Pair<String, String>? {
-            if (media == null) return null
-            when (media.type) {
-                ParcelableMedia.Type.VIDEO, ParcelableMedia.Type.ANIMATED_GIF -> {
-                    if (media.video_info == null) {
-                        return Pair.create<String, String>(media.media_url, null)
-                    }
-                    val firstMatch = media.video_info.variants.filter { variant ->
-                        supportedTypes.any { it.equals(variant.content_type, ignoreCase = true) }
-                    }.sortedByDescending(ParcelableMedia.VideoInfo.Variant::bitrate).firstOrNull() ?: return null
-                    return Pair.create(firstMatch.url, firstMatch.content_type)
-                }
-                ParcelableMedia.Type.CARD_ANIMATED_GIF -> {
-                    return Pair.create<String, String>(media.media_url, "video/mp4")
-                }
-                else -> {
-                    return null
-                }
-            }
-        }
     }
 }

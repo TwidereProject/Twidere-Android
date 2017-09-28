@@ -134,8 +134,8 @@ object LinkCreator {
         when (user.user_type) {
             AccountType.FANFOU -> return getFanfouUserLink(user.key.id)
             AccountType.MASTODON -> {
-                val host = user.key.host ?: user.account_key.host
-                return getMastodonUserLink(host!!, user.screen_name)
+                val host = (user.key.host ?: user.account_key?.host)!! // Let it crash
+                return getMastodonUserLink(host, user.screen_name)
             }
         }
         return getTwitterUserLink(user.screen_name)

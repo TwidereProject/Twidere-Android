@@ -21,7 +21,6 @@ package org.mariotaku.twidere.fragment.users
 
 import android.content.Context
 import android.os.Bundle
-import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.fragment.ParcelableUsersFragment
 import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
@@ -30,8 +29,6 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.Pagination
 
 class SearchUsersFragment : ParcelableUsersFragment() {
-
-    override val userReferral: String? = Referral.SEARCH_RESULT
 
     override fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean):
             AbsRequestUsersLoader {

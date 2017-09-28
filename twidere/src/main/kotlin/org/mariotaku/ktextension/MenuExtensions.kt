@@ -23,6 +23,8 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.annotation.DrawableRes
 import android.support.v4.content.ContextCompat
+import android.support.v4.view.ActionProvider
+import android.support.v4.view.MenuItemCompat
 import android.view.Menu
 import android.view.MenuItem
 import android.view.SubMenu
@@ -47,19 +49,23 @@ fun Menu.setItemChecked(id: Int, checked: Boolean) {
     findItem(id)?.isChecked = checked
 }
 
-fun Menu.setMenuItemIcon(id: Int, icon: Int) {
+fun Menu.setItemIcon(id: Int, icon: Int) {
     findItem(id)?.setIcon(icon)
 }
 
-fun Menu.setMenuItemIcon(id: Int, icon: Drawable) {
+fun Menu.setItemIcon(id: Int, icon: Drawable) {
     findItem(id)?.icon = icon
 }
 
-fun Menu.setMenuItemTitle(id: Int, title: Int) {
+fun Menu.setItemTitle(id: Int, title: Int) {
     findItem(id)?.setTitle(title)
 }
 
-fun Menu.setMenuItemShowAsActionFlags(id: Int, flags: Int) {
+fun Menu.setItemTitle(id: Int, title: CharSequence?) {
+    findItem(id)?.title = title
+}
+
+fun Menu.setItemShowAsActionFlags(id: Int, flags: Int) {
     val item = findItem(id) ?: return
     item.setShowAsActionFlags(flags)
 }
@@ -77,3 +83,9 @@ fun MenuItem.setActionIcon(context: Context, @DrawableRes iconRes: Int) {
         setIcon(iconRes)
     }
 }
+
+var MenuItem.supportActionProvider: ActionProvider?
+    get() = MenuItemCompat.getActionProvider(this)
+    set(value) {
+        MenuItemCompat.setActionProvider(this, value)
+    }

@@ -50,7 +50,7 @@ fun AccountDetails.getMediaSizeLimit(@MediaCategory mediaCategory: String? = nul
             return UpdateStatusTask.SizeLimit(imageLimit, videoLimit)
         }
         AccountType.FANFOU -> {
-            val imageLimit = AccountExtras.ImageLimit.ofSize(2048, 1536)
+            val imageLimit = AccountExtras.ImageLimit.ofSize(5 * 1024 * 1024)
             val videoLimit = AccountExtras.VideoLimit.unsupported()
             return UpdateStatusTask.SizeLimit(imageLimit, videoLimit)
         }

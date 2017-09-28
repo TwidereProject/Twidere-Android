@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>ic_stat_gift-mdpi</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Notification-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic_stat_gift-mdpi">
+            <path d="M20,6 L17.82,6 C17.93,5.69 18,5.35 18,5 C18,3.34 16.66,2 15,2 C13.95,2 13.04,2.54 12.5,3.35 L12,4.02 L11.5,3.34 C10.96,2.54 10.05,2 9,2 C7.34,2 6,3.34 6,5 C6,5.35 6.07,5.69 6.18,6 L4,6 C2.89,6 2.01,6.89 2.01,8 L2,19 C2,20.11 2.89,21 4,21 L20,21 C21.11,21 22,20.11 22,19 L22,8 C22,6.89 21.11,6 20,6 Z M15,4 C15.55,4 16,4.45 16,5 C16,5.55 15.55,6 15,6 C14.45,6 14,5.55 14,5 C14,4.45 14.45,4 15,4 Z M9,4 C9.55,4 10,4.45 10,5 C10,5.55 9.55,6 9,6 C8.45,6 8,5.55 8,5 C8,4.45 8.45,4 9,4 Z M20,19 L4,19 L4,15 L20,15 L20,19 Z M20,13 L4,13 L4,8 L9.08,8 L7,10.83 L8.62,12 L11,8.76 L12,7.4 L13,8.76 L15.38,12 L17,10.83 L14.92,8 L20,8 L20,13 Z" id="Shape" fill="#FFFFFF" fill-rule="nonzero"></path>
+            <polygon id="Shape" points="0 0 24 0 24 24 0 24"></polygon>
+        </g>
+    </g>
+</svg>

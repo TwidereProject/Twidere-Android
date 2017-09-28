@@ -28,7 +28,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.v4.content.Loader
 import android.widget.Toast
-import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.ktextension.*
@@ -38,7 +38,9 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
+import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_FROM_USER
+import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.loader.ExtendedObjectCursorLoader
 import org.mariotaku.twidere.model.ParameterizedExpression
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -52,7 +54,6 @@ import org.mariotaku.twidere.task.twitter.GetStatusesTask
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.ErrorInfoStore
 import org.mariotaku.twidere.util.Utils
-import org.mariotaku.twidere.util.buildStatusFilterWhereClause
 
 /**
  * Created by mariotaku on 14/12/3.
@@ -75,6 +76,8 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
     abstract val isFilterEnabled: Boolean
     abstract val notificationType: Int
     abstract val contentUri: Uri
+    @FilterScope
+    abstract val filterScopes: Int
 
     private var contentObserver: ContentObserver? = null
     private val accountListener: OnAccountsUpdateListener = OnAccountsUpdateListener {
@@ -124,7 +127,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
             where = accountWhere
         }
         adapter.showAccountsColor = accountKeys.size > 1
-        val projection = Statuses.COLUMNS
+        val projection = statusColumnsLite
         val selectionArgs = Array(accountKeys.size) {
             accountKeys[it].toString()
         }
@@ -144,8 +147,8 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
         return data.isNotNullOrEmpty()
     }
 
-    override fun onCreateAdapter(context: Context): ListParcelableStatusesAdapter {
-        return ListParcelableStatusesAdapter(context, Glide.with(this))
+    override fun onCreateAdapter(context: Context, requestManager: RequestManager): ListParcelableStatusesAdapter {
+        return ListParcelableStatusesAdapter(context, requestManager)
     }
 
     override fun onLoaderReset(loader: Loader<List<ParcelableStatus>?>) {
@@ -206,9 +209,16 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
         }
     }
 
+    override fun getFullStatus(position: Int): ParcelableStatus? {
+        val _id = adapter.getRowId(position)
+        val where = Expression.equals(Statuses._ID, _id).sql
+        return context.contentResolver.queryOne(contentUri, Statuses.COLUMNS, where, null, null,
+                ParcelableStatus::class.java)
+    }
+
     protected fun getFiltersWhere(table: String): Expression? {
         if (!isFilterEnabled) return null
-        return buildStatusFilterWhereClause(preferences, table, null)
+        return DataStoreUtils.buildStatusFilterWhereClause(preferences, table, null, filterScopes)
     }
 
     protected open fun processWhere(where: Expression, whereArgs: Array<String>): ParameterizedExpression {
@@ -314,4 +324,10 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
     }
 
+    companion object {
+        private val statusColumnsLite = Statuses.COLUMNS - arrayOf(Statuses.MENTIONS_JSON,
+                Statuses.CARD, Statuses.FILTER_FLAGS, Statuses.FILTER_USERS, Statuses.FILTER_LINKS,
+                Statuses.FILTER_SOURCES, Statuses.FILTER_NAMES, Statuses.FILTER_TEXTS,
+                Statuses.FILTER_DESCRIPTIONS)
+    }
 }

@@ -5,7 +5,7 @@
     <item
         android:id="@+id/add"
         android:icon="@drawable/ic_action_add"
-        app:showAsAction="always"
-        android:title="@string/add_host_mapping"/>
+        android:title="@string/add_host_mapping"
+        app:showAsAction="always"/>
 
 </menu>

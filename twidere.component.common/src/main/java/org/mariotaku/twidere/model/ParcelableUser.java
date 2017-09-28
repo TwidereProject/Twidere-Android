@@ -49,6 +49,7 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
 
     @ParcelableThisPlease
     @JsonField(name = "account_id", typeConverter = UserKeyConverter.class)
+    @Nullable
     public UserKey account_key;
 
     @ParcelableThisPlease

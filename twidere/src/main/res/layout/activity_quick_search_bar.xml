@@ -18,15 +18,17 @@
   -->
 
 <org.mariotaku.twidere.view.ExtendedRelativeLayout
-    android:id="@+id/mainContent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainContent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/element_spacing_normal">
 
+
     <android.support.v7.widget.CardView
+        android:id="@+id/searchContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -98,5 +100,13 @@
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
+
+    <!-- Make sure ad won't overlap search box -->
+    <FrameLayout
+        android:id="@+id/adContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/searchContainer"/>
 
 </org.mariotaku.twidere.view.ExtendedRelativeLayout>

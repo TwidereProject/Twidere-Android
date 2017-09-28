@@ -25,12 +25,12 @@ import org.mariotaku.twidere.view.iface.IExtendedView
  * Created by mariotaku on 15/4/27.
  */
 interface TintedStatusLayout : IExtendedView {
-    fun setStatusBarColor(color: Int)
+    var statusBarColor: Int
+
+    var statusBarAlpha: Float
+
+    var statusBarHeight: Int
 
     var setPaddingEnabled: Boolean
 
-
-    interface WindowInsetsListener {
-        fun onApplyWindowInsets(left: Int, top: Int, right: Int, bottom: Int)
-    }
 }

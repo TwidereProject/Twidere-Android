@@ -142,8 +142,11 @@
     <declare-styleable name="PremiumEntryPreference">
         <attr name="requiredFeature" format="string"/>
     </declare-styleable>
+    <declare-styleable name="ProfileBannerSpace">
+        <attr name="bannerAspectRatio"/>
+    </declare-styleable>
     <declare-styleable name="ProfileBannerImageView">
-        <attr name="bannerAspectRatio" format="fraction"/>
+        <attr name="bannerAspectRatio"/>
     </declare-styleable>
     <declare-styleable name="AppBarChildBehavior">
         <attr name="behavior_appBarId" format="reference"/>
@@ -225,4 +228,5 @@
         <flag name="bold" value="1"/>
         <flag name="italic" value="2"/>
     </attr>
+    <attr name="bannerAspectRatio" format="fraction"/>
 </resources>

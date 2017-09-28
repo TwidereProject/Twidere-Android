@@ -26,6 +26,7 @@ import com.twitter.Extractor
 import com.twitter.Validator
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.util.notification.ContentNotificationManager
 import javax.inject.Inject
 
 abstract class BaseService : Service() {

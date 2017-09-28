@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
-    style="?actionButtonStyle"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    style="?actionButtonStyle"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:layout_gravity="center"
@@ -10,8 +10,8 @@
     android:focusable="true">
 
     <ImageView
-        android:id="@+id/icon"
         xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/icon"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"

@@ -52,6 +52,9 @@ abstract class AbsContentListViewFragment<A : ListAdapter> : BaseFragment(),
     protected open val overrideDivider: Drawable?
         get() = ThemeUtils.getDrawableFromThemeAttribute(context, android.R.attr.listDivider)
 
+    protected val isProgressShowing: Boolean
+        get() = progressContainer.visibility == View.VISIBLE
+
     override lateinit var adapter: A
 
 

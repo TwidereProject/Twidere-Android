@@ -63,11 +63,6 @@ public class ParcelableMedia implements Parcelable {
     @JsonField(name = "height")
     @ParcelableThisPlease
     public int height;
-    @JsonField(name = "video_info")
-    @ParcelableThisPlease
-    public VideoInfo video_info;
-    @ParcelableNoThanks
-    public ParcelableCardEntity card;
     @JsonField(name = "page_url")
     public String page_url;
     @ParcelableThisPlease
@@ -76,6 +71,15 @@ public class ParcelableMedia implements Parcelable {
     @ParcelableThisPlease
     @JsonField(name = "alt_text")
     public String alt_text;
+
+    @JsonField(name = "video_info")
+    @ParcelableThisPlease
+    @Nullable
+    public VideoInfo video_info;
+
+    @ParcelableNoThanks
+    @Nullable
+    public ParcelableCardEntity card;
 
     public static final Creator<ParcelableMedia> CREATOR = new Creator<ParcelableMedia>() {
         @Override

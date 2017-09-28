@@ -33,7 +33,6 @@ import android.text.TextUtils.isEmpty
 import android.view.*
 import android.view.View.OnClickListener
 import android.widget.Toast
-import com.bumptech.glide.Glide
 import com.twitter.Validator
 import kotlinx.android.synthetic.main.fragment_user_profile_editor.*
 import nl.komponents.kovenant.combine.and
@@ -278,7 +277,6 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
             editLocation.setText(user.location)
             editUrl.setText(if (isEmpty(user.url_expanded)) user.url else user.url_expanded)
 
-            val requestManager = Glide.with(this)
             requestManager.loadProfileImage(context, user, 0).into(profileImage)
             requestManager.loadProfileBanner(context, user, resources.displayMetrics.widthPixels)
                     .into(profileBanner)

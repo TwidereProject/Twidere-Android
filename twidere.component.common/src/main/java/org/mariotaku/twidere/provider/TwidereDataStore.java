@@ -498,11 +498,7 @@ public interface TwidereDataStore {
 
         String USER_KEY = "user_key";
 
-        String ENABLE_IN_HOME_TIMELINE = "enable_in_home_timeline";
-
-        String ENABLE_IN_MENTIONS = "enable_in_mentions";
-
-        String ENABLE_FOR_RETWEETS = "enable_for_retweets";
+        String SCOPE = "scope";
 
         String[] COLUMNS = FiltersData$BaseItemTableInfo.COLUMNS;
 
@@ -543,6 +539,7 @@ public interface TwidereDataStore {
             String NAME = "name";
             String SCREEN_NAME = "screen_name";
             String SOURCE = "source";
+            String SCOPE = "scope";
 
             String[] COLUMNS = FiltersData$UserItemTableInfo.COLUMNS;
 
@@ -733,13 +730,13 @@ public interface TwidereDataStore {
 
         String ACCOUNT_COLOR = "account_color";
 
-        String USER_NICKNAME = "user_nickname";
-
-        String QUOTED_USER_NICKNAME = "quoted_user_nickname";
-        String RETWEET_USER_NICKNAME = "retweet_user_nickname";
-        String IN_REPLY_TO_USER_NICKNAME = "in_reply_to_user_nickname";
-
         String FILTER_FLAGS = "filter_flags";
+        String FILTER_USERS = "filter_users";
+        String FILTER_LINKS = "filter_links";
+        String FILTER_SOURCES = "filter_sources";
+        String FILTER_NAMES = "filter_names";
+        String FILTER_TEXTS = "filter_texts";
+        String FILTER_DESCRIPTIONS = "filter_descriptions";
 
         String DEFAULT_SORT_ORDER = TIMESTAMP + " DESC, " + SORT_ID + " DESC, " + ID
                 + " DESC";

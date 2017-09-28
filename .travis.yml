@@ -1,6 +1,7 @@
 language: android
 
-sudo: required
+sudo: false
+dist: trusty
 
 jdk: oraclejdk8
 
@@ -9,13 +10,8 @@ android:
     - tools
     - tools # To fix https://github.com/travis-ci/travis-ci/issues/6040
     - platform-tools
-    - build-tools-26.0.0
+    - build-tools-26.0.1
     - android-26
-
-    # Additional components
-    - extra-google-google_play_services-41
-    - extra-google-m2repository-54
-    - extra-android-m2repository-47.0.0
 
   licenses:
     - 'android-sdk-preview-license-.+'
@@ -36,6 +32,7 @@ addons:
       - patch
       - openssh-client
       - git
+      - ruby
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -52,7 +49,9 @@ before_install:
   - ./travis/scripts/decode_private_configs.sh
 
 install:
+  - rvm default exec gem install fastlane
   - ./travis/scripts/fetch_private_files.sh
+  - cat ./travis/configs/gradle.properties > ./gradle.properties
 
 before_script:
   # Validate if patches work
@@ -61,7 +60,7 @@ before_script:
   - ./travis/scripts/test_private_files.sh
 
 script:
-  - ./gradlew clean build
+  - ./gradlew build
 
 after_failure:
   - ./travis/scripts/upload_error_logs.sh
@@ -73,18 +72,21 @@ deploy:
       secure: "WKtKwda3hegqO9QVujdonNoL2ESJUR80WHNq/13wDsbCABo/GNnuqHNYZmml3wAifEKKeCEYfNZRUuHQ8eHs54Lj5BlGRX5i+1LrGhhgnVFQgmrhIv4RJuVQ663kDEh+Jwo4vowJ2mxNDvLvOhfZwxjULPDiknqy6u5PyW3id5M="
     file_glob: true
     file: '**/*-release.apk'
+    skip_cleanup: true
     on:
       repo: TwidereProject/Twidere-Android
       tags: true
   # Publish to Google Play store
   - provider: script
-    script: ./gradlew publishGoogleRelease
+    script: ./travis/scripts/google_play_deploy.sh ./twidere/src/google/.supplyrc
+    skip_cleanup: true
     on:
       repo: TwidereProject/Twidere-Android
       tags: true
   # Upload common component library to Bintray
   - provider: script
     script: ./gradlew twidere.component.common:bintrayUpload
+    skip_cleanup: true
     on:
       repo: TwidereProject/Twidere-Android
       tags: true

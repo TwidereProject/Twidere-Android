@@ -176,7 +176,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Supporto per Emojis</string>
   <string name="empty_content">Contenuto vuoto</string>
-  <string name="enable_retweets">Abilita retweet</string>
   <string name="enable_streaming">Attiva streaming</string>
   <string name="error_message">Errore: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_device_incompatible">Questo dispositivo non è compatibile con Twidere, è consigliato l\'aggiornamento all\'ultima versione di Android OS.\nPuoi mandare le informazioni presenti qui sotto per aiutarmi a segnalare il problema al produttore del dispositivo.</string>
@@ -379,7 +378,7 @@
   <string name="no_status_content_text">Nessun contenuto</string>
   <string name="no_tab">Nessun tab</string>
   <string name="no_tab_hint">Nessun tab</string>
-  <string name="no_thanks">No, grazie</string>
+  <string name="action_no_thanks">No, grazie</string>
   <string name="no_user_found">Nessun utente trovato</string>
   <string name="no_version_suffix">Nessuna versione supportata</string>
   <string name="none">Nessuno</string>
@@ -471,7 +470,7 @@
   <string name="projects_we_took_part">Progetti di cui siamo parte</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="proxy">Proxy</string>
   <string name="proxy_host">Host proxy</string>
   <string name="proxy_password">Proxy password</string>
@@ -549,7 +548,7 @@
   <string name="sent_follow_request_to_user">Richiesta di follow inviata a <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Indirizzo del server</string>
   <string name="set_consumer_key_secret_message">Twidere sta per raggiungere il limite di token, dovrai creare un\'app in https://apps.twitter.com/ e incollare la chiave e segreto qui sotto.\nSe continui a usare la chiave predefinita, potresti non riuscire ad accedere.</string>
-  <string name="settings">Impostazioni</string>
+  <string name="action_settings">Impostazioni</string>
   <string name="settings_interface">Interfaccia</string>
   <string name="settings_notifications">Notifiche</string>
   <string name="settings_refresh">Aggiorna</string>

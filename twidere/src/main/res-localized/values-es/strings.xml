@@ -272,8 +272,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Soporte para emojis</string>
   <string name="empty_content">Contenido vacío</string>
-  <string name="enable_notifications">Activar notificaciones</string>
-  <string name="enable_retweets">Habilitar retweets</string>
   <string name="enable_streaming">Habilitar streaming</string>
   <string name="error_info_oauth_timestamp_error">Por favor, verifique los ajustes de fecha y hora del sistema.</string>
   <string name="error_message">Error: <xliff:g id="message">%s</xliff:g></string>
@@ -303,13 +301,9 @@
   <string name="external_group_host_format">Grupo externo en <xliff:g id="host">%s</xliff:g></string>
   <string name="external_user_host_format">Usuario externo en <xliff:g id="host">%s</xliff:g></string>
   <string name="extra_configurations">Configuraciones Extra</string>
-  <string name="extra_feature_description_filters_import">Importar lista de filtros de bloqueados/silenciados</string>
-  <string name="extra_feature_description_filters_subscription">Suscripción a filtros y sincronización automática</string>
   <string name="extra_feature_description_schedule_status">Planifica tu tweet (envíalo más tarde)</string>
   <string name="extra_feature_description_share_gif">Compartir GIF en tweet</string>
   <string name="extra_feature_description_sync_data">Sincronizar datos con Dropbox, Google Drive etc</string>
-  <string name="extra_feature_title_filters_import">Importar filtros</string>
-  <string name="extra_feature_title_filters_subscription">Suscripción a filtros</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">Apoyar Twidere y obtener características mejoradas</string>
   <string name="extra_features_pack_description">O compra el pack de características para desbloquearlo (incluyendo características futuras)</string>
@@ -632,7 +626,7 @@
   <string name="no_status_content_text">Sin contenido</string>
   <string name="no_tab">Sin pestaña</string>
   <string name="no_tab_hint">Sin pestañas</string>
-  <string name="no_thanks">No, gracias</string>
+  <string name="action_no_thanks">No, gracias</string>
   <string name="no_user_found">Ningún usuario encontrado</string>
   <string name="no_version_suffix">Sin versión de sufijo</string>
   <string name="none">Ninguno</string>
@@ -768,7 +762,7 @@
   <string name="projects_we_took_part">Proyectos en los que participamos</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="provider_fanfou">Fanfou</string>
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>
@@ -857,7 +851,7 @@
   <string name="sent_follow_request_to_user">Enviar una petición de Seguir a <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Dirección del servidor</string>
   <string name="set_consumer_key_secret_message">Twidere está alcanzando el limite de token, ud necesita crear una aplicación en https://apps.twitter.com/ y pegar la llave de consumidor y el secreto debajo.\n si ud continua usando la llave por defecto, no podrá acceder.</string>
-  <string name="settings">Configuración</string>
+  <string name="action_settings">Configuración</string>
   <string name="settings_interface">Interfaz</string>
   <string name="settings_notifications">Notificaciones</string>
   <string name="settings_refresh">Actualizar</string>

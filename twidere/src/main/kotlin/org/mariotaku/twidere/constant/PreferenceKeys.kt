@@ -84,6 +84,9 @@ val homeRefreshDirectMessagesKey = KBooleanKey(KEY_HOME_REFRESH_DIRECT_MESSAGES,
 val homeRefreshSavedSearchesKey = KBooleanKey(KEY_HOME_REFRESH_SAVED_SEARCHES, true)
 val composeStatusVisibilityKey = KNullableStringKey("compose_status_visibility", null)
 val navbarStyleKey = KStringKey(KEY_NAVBAR_STYLE, NavbarStyle.DEFAULT)
+val lastLaunchTimeKey = KLongKey("last_launch_time", -1)
+val promotionsEnabledKey = KBooleanKey("promotions_enabled", false)
+val translationDestinationKey = KNullableStringKey(KEY_TRANSLATION_DESTINATION, null)
 
 object cacheSizeLimitKey : KSimpleKey<Int>(KEY_CACHE_SIZE_LIMIT, 300) {
     override fun read(preferences: SharedPreferences) = preferences.getInt(key, def).coerceIn(100,
@@ -96,7 +99,7 @@ object cacheSizeLimitKey : KSimpleKey<Int>(KEY_CACHE_SIZE_LIMIT, 300) {
 
 }
 
-object overrideLanguageKey : KSimpleKey<Locale?>("override_language", null) {
+object overrideLanguageKey : KSimpleKey<Locale?>(KEY_OVERRIDE_LANGUAGE, null) {
     override fun read(preferences: SharedPreferences): Locale? {
         return preferences.getString(key, null)?.takeIf(String::isNotEmpty)?.replace('-', '_')
                 ?.let(LocaleUtils::toLocale)
@@ -265,7 +268,7 @@ object composeAccountsKey : KSimpleKey<Array<UserKey>?>(KEY_COMPOSE_ACCOUNTS, nu
 
 }
 
-object defaultAccountKey: KSimpleKey<UserKey?>(KEY_DEFAULT_ACCOUNT_KEY, null) {
+object defaultAccountKey : KSimpleKey<UserKey?>(KEY_DEFAULT_ACCOUNT_KEY, null) {
     override fun read(preferences: SharedPreferences): UserKey? {
         return preferences.getString(key, null)?.let(UserKey::valueOf)
     }

@@ -110,7 +110,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/no_thanks"/>
+            android:text="@string/action_no_thanks"/>
     </LinearLayout>
 
 </LinearLayout>

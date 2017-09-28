@@ -18,23 +18,23 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+      xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@id/refresh"
         android:icon="@drawable/ic_action_refresh"
         android:title="@string/action_refresh"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@id/share"
         android:icon="@drawable/ic_action_share"
         android:title="@string/action_share"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@id/save"
         android:icon="@drawable/ic_action_save"
-        android:title="@string/save_to_gallery" />
+        android:title="@string/save_to_gallery"/>
     <item
         android:id="@id/open_in_browser"
         android:icon="@drawable/ic_action_web"
-        android:title="@string/action_open_in_browser" />
+        android:title="@string/action_open_in_browser"/>
 </menu>

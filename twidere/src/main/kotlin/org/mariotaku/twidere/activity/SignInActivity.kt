@@ -51,7 +51,10 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import kotlinx.android.synthetic.main.dialog_expandable_list.*
 import kotlinx.android.synthetic.main.dialog_login_verification_code.*
+import nl.komponents.kovenant.CancelException
+import nl.komponents.kovenant.Deferred
 import nl.komponents.kovenant.combine.and
+import nl.komponents.kovenant.deferred
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.alwaysUi
 import nl.komponents.kovenant.ui.failUi
@@ -409,7 +412,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             result.addAccount(am, preferences[randomizeAccountNameKey])
             Analyzer.log(SignIn(true, accountType = result.type,
                     credentialsType = apiConfig.credentialsType,
-                    officialKey = result.extras?.official ?: false))
+                    officialKey = result.extras?.official == true))
             finishSignIn()
         }
     }
@@ -459,6 +462,10 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             fragment.isCancelable = false
             fragment.show(ft, FRAGMENT_TAG_SIGN_IN_PROGRESS)
         }
+    }
+
+    internal fun dismissSignInProgressDialog() {
+        dismissDialogFragment(FRAGMENT_TAG_SIGN_IN_PROGRESS)
     }
 
     private fun showLoginTypeChooser() {
@@ -567,9 +574,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val builder = AlertDialog.Builder(context)
             builder.setView(R.layout.dialog_expandable_list)
             val dialog = builder.create()
-            dialog.onShow { dialog ->
-                dialog.applyTheme()
-                val listView = dialog.expandableList
+            dialog.onShow {
+                it.applyTheme()
+                val listView = it.expandableList
                 val adapter = LoginTypeAdapter(context)
                 listView.setAdapter(adapter)
                 listView.setOnGroupClickListener { _, _, groupPosition, _ ->
@@ -681,7 +688,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
 
     internal class InputLoginVerificationDialogFragment : BaseDialogFragment() {
 
-        var callback: SignInTask.InputLoginVerificationCallback? = null
+        var deferred: Deferred<String?, Exception>? = null
         var challengeType: String? = null
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -696,15 +703,15 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         }
 
         override fun onCancel(dialog: DialogInterface?) {
-            callback?.challengeResponse = null
+            deferred?.reject(CancelException())
         }
 
         private fun performVerification(dialog: Dialog) {
-            callback?.challengeResponse = dialog.editVerificationCode.string
+            deferred?.resolve(dialog.editVerificationCode.string)
         }
 
         private fun cancelVerification(dialog: Dialog) {
-            callback?.challengeResponse = null
+            deferred?.reject(CancelException())
         }
 
         private fun onDialogShow(dialog: Dialog) {
@@ -815,7 +822,6 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val apiUser = twitter.verifyCredentials()
             var color = analyseUserProfileColor(apiUser)
             val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
-            val userId = apiUser.id
             val accountKey = apiUser.key
             val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
             val am = AccountManager.get(context)
@@ -906,7 +912,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                     verificationCallback, userAgent)
             val accessToken = authenticator.getOAuthAccessToken(username, password)
             val userId = accessToken.userId
-            return getOAuthSignInResponse(activity, accessToken, userId, Credentials.Type.OAUTH)
+            return getOAuthSignInResponse(activity, accessToken, Credentials.Type.OAUTH)
         }
 
         @Throws(MicroBlogException::class)
@@ -929,7 +935,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                         accountType = apiConfig.type, cls = MicroBlog::class.java)
                 return@run microBlog.verifyCredentials().id
             }
-            return getOAuthSignInResponse(activity, accessToken, userId, Credentials.Type.XAUTH)
+            return getOAuthSignInResponse(activity, accessToken, Credentials.Type.XAUTH)
         }
 
         @Throws(MicroBlogException::class, OAuthPasswordAuthenticator.AuthenticationException::class)
@@ -953,7 +959,6 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                 throw e
             }
 
-            val userId = apiUser.id!!
             var color = analyseUserProfileColor(apiUser)
             val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
             val accountKey = apiUser.key
@@ -983,7 +988,6 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val twitter = newMicroBlogInstance(activity, endpoint = endpoint, auth = auth,
                     accountType = apiConfig.type, cls = MicroBlog::class.java)
             val apiUser = twitter.verifyCredentials()
-            val userId = apiUser.id!!
             var color = analyseUserProfileColor(apiUser)
             val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
             val accountKey = apiUser.key
@@ -1003,7 +1007,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
 
         @Throws(MicroBlogException::class)
         private fun getOAuthSignInResponse(activity: SignInActivity, accessToken: OAuthToken,
-                userId: String, @Credentials.Type authType: String): SignInResponse {
+                @Credentials.Type authType: String): SignInResponse {
             val auth = apiConfig.getOAuthAuthorization(accessToken) ?:
                     throw MicroBlogException("Invalid OAuth credential")
             val endpoint = MicroBlogAPIFactory.getOAuthRestEndpoint(apiUrlFormat,
@@ -1040,46 +1044,35 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
 
         internal inner class InputLoginVerificationCallback : OAuthPasswordAuthenticator.LoginVerificationCallback {
 
-            var isChallengeFinished: Boolean = false
-
-            var challengeResponse: String? = null
-                set(value) {
-                    isChallengeFinished = true
-                    field = value
-                }
-
             override fun getLoginVerification(challengeType: String): String? {
                 // Dismiss current progress dialog
                 publishProgress(Runnable {
-                    activityRef.get()?.dismissDialogFragment(SignInActivity.FRAGMENT_TAG_SIGN_IN_PROGRESS)
+                    activityRef.get()?.dismissSignInProgressDialog()
                 })
+                val deferred = deferred<String?, Exception>()
                 // Show verification input dialog and wait for user input
                 publishProgress(Runnable {
                     val activity = activityRef.get() ?: return@Runnable
-                    activity.executeAfterFragmentResumed { activity ->
-                        val sia = activity as SignInActivity
+                    activity.executeAfterFragmentResumed {
+                        val sia = it as SignInActivity
                         val df = InputLoginVerificationDialogFragment()
                         df.isCancelable = false
-                        df.callback = this@InputLoginVerificationCallback
+                        df.deferred = deferred
                         df.challengeType = challengeType
                         df.show(sia.supportFragmentManager, "login_challenge_$challengeType")
                     }
                 })
-                while (!isChallengeFinished) {
-                    // Wait for 50ms
-                    try {
-                        Thread.sleep(50)
-                    } catch (e: InterruptedException) {
-                        // Ignore
-                    }
 
+                return try {
+                    deferred.promise.get()
+                } catch (e: CancelException) {
+                    throw MicroBlogException(e)
+                } finally {
+                    // Show progress dialog
+                    publishProgress(Runnable {
+                        activityRef.get()?.showSignInProgressDialog()
+                    })
                 }
-                // Show progress dialog
-                publishProgress(Runnable {
-                    val activity = activityRef.get() ?: return@Runnable
-                    activity.showSignInProgressDialog()
-                })
-                return challengeResponse
             }
 
         }
@@ -1253,6 +1246,6 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                 else -> null
             }
 
-        }
+    }
 
 }

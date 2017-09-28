@@ -4,10 +4,10 @@ import android.content.ComponentName
 import android.content.Context
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.model.FiltersSubscription
+import org.mariotaku.twidere.model.filter.UrlFiltersSubscriptionProviderArguments
 import org.mariotaku.twidere.util.JsonSerializer
 import org.mariotaku.twidere.util.filter.FiltersSubscriptionProvider
 import org.mariotaku.twidere.util.filter.LocalFiltersSubscriptionProvider
-import org.mariotaku.twidere.util.filter.UrlFiltersSubscriptionProvider
 
 /**
  * Created by mariotaku on 2017/1/9.
@@ -38,7 +38,7 @@ fun FiltersSubscription.getComponentLabel(context: Context): CharSequence {
 
 fun FiltersSubscription.setupUrl(url: String) {
     this.component = ":url"
-    this.arguments = JsonSerializer.serialize(UrlFiltersSubscriptionProvider.Arguments().apply {
+    this.arguments = JsonSerializer.serialize(UrlFiltersSubscriptionProviderArguments().apply {
         this.url = url
     })
 }

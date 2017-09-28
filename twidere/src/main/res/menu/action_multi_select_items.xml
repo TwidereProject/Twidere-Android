@@ -4,12 +4,14 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:ignore="AppCompatResource">
 
-    <item
-        android:id="@id/delete"
-        android:icon="@drawable/ic_action_delete"
-        android:title="@string/action_delete"
-        app:showAsAction="always"
-        tools:ignore="AlwaysShowAction"/>
+    <group android:id="@+id/edit_group">
+        <item
+            android:id="@id/delete"
+            android:icon="@drawable/ic_action_delete"
+            android:title="@string/action_delete"
+            app:showAsAction="always"
+            tools:ignore="AlwaysShowAction"/>
+    </group>
     <group
         android:id="@+id/selection_group"
         android:enabled="false"

@@ -28,7 +28,7 @@ import android.support.v4.content.Loader
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.KeyEvent
-import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.commons.parcel.ParcelUtils
@@ -40,7 +40,6 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.UserClickListener
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.model.getAccountType
@@ -71,10 +70,6 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         set(value) {
             super.refreshing = value
         }
-
-    protected open val userReferral: String?
-        @Referral
-        get() = null
 
     protected open val simpleLayout: Boolean
         get() = arguments.getBoolean(EXTRA_SIMPLE_LAYOUT)
@@ -172,8 +167,8 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         loaderManager.restartLoader(0, loaderArgs, this)
     }
 
-    override fun onCreateAdapter(context: Context): ParcelableUsersAdapter {
-        val adapter = ParcelableUsersAdapter(context, Glide.with(this))
+    override fun onCreateAdapter(context: Context, requestManager: RequestManager): ParcelableUsersAdapter {
+        val adapter = ParcelableUsersAdapter(context, this.requestManager)
         adapter.simpleLayout = simpleLayout
         adapter.showFollow = showFollow
         val accountType = arguments.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)?.let { key ->
@@ -209,29 +204,32 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
 
     override fun onUserClick(holder: UserViewHolder, position: Int) {
         val user = adapter.getUser(position) ?: return
-        IntentUtils.openUserProfile(activity, user, preferences[newDocumentApiKey], userReferral)
+        IntentUtils.openUserProfile(activity, user, preferences[newDocumentApiKey])
     }
 
     override fun onFollowClicked(holder: UserViewHolder, position: Int) {
         val user = adapter.getUser(position) ?: return
-        if (twitterWrapper.isUpdatingRelationship(user.account_key, user.key)) return
+        val accountKey = user.account_key ?: return
+        if (twitterWrapper.isUpdatingRelationship(accountKey, user.key)) return
         if (user.is_following) {
             DestroyFriendshipDialogFragment.show(fragmentManager, user)
         } else {
-            twitterWrapper.createFriendshipAsync(user.account_key, user.key, user.screen_name)
+            twitterWrapper.createFriendshipAsync(accountKey, user.key, user.screen_name)
         }
     }
 
     override fun onUnblockClicked(holder: UserViewHolder, position: Int) {
         val user = adapter.getUser(position) ?: return
-        if (twitterWrapper.isUpdatingRelationship(user.account_key, user.key)) return
-        twitterWrapper.destroyBlockAsync(user.account_key, user.key)
+        val accountKey = user.account_key ?: return
+        if (twitterWrapper.isUpdatingRelationship(accountKey, user.key)) return
+        twitterWrapper.destroyBlockAsync(accountKey, user.key)
     }
 
     override fun onUnmuteClicked(holder: UserViewHolder, position: Int) {
         val user = adapter.getUser(position) ?: return
-        if (twitterWrapper.isUpdatingRelationship(user.account_key, user.key)) return
-        twitterWrapper.destroyMuteAsync(user.account_key, user.key)
+        val accountKey = user.account_key ?: return
+        if (twitterWrapper.isUpdatingRelationship(accountKey, user.key)) return
+        twitterWrapper.destroyMuteAsync(accountKey, user.key)
     }
 
 

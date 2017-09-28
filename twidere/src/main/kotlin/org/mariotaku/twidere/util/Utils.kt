@@ -94,8 +94,6 @@ import java.util.regex.Pattern
 
 object Utils {
 
-    class NoAccountException(var accountHost: String? = null) : Exception()
-
     private val PATTERN_XML_RESOURCE_IDENTIFIER = Pattern.compile("res/xml/([\\w_]+)\\.xml")
     private val PATTERN_RESOURCE_IDENTIFIER = Pattern.compile("@([\\w_]+)/([\\w_]+)")
 
@@ -245,7 +243,7 @@ object Utils {
         if (projection == null) return AllColumns()
         val length = projection.size
         val columns = arrayOfNulls<Column>(length)
-        for (i in 0..length - 1) {
+        for (i in 0 until length) {
             columns[i] = Column(projection[i])
         }
         return Columns(*columns)

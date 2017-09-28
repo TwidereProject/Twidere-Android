@@ -28,7 +28,7 @@
   </string-array>
   <string-array name="entries_media_preview_style">
     <item>قص</item>
-    <item>Scale</item>
+    <item>مقياس</item>
     <item>الحجم الحقيقي</item>
   </string-array>
   <string-array name="entries_notification_content">
@@ -42,7 +42,7 @@
   </string-array>
   <string-array name="entries_proxy_type">
     <item>HTTP</item>
-    <item>Reverse proxy</item>
+    <item>الخادم العكسى للوكيل</item>
     <!--<item>SOCKS</item>-->
   </string-array>
   <string-array name="entries_refresh_interval">
@@ -51,7 +51,7 @@
     <item>10 دقائق</item>
     <item>15 دقيقة</item>
     <item>30 دقيقة</item>
-    <item>ساعة</item>
+    <item>ساعة واحدة</item>
     <item>ساعتان</item>
     <item>4 ساعات</item>
   </string-array>
@@ -76,10 +76,14 @@
     <item>شفاف</item>
   </string-array>
   <string-array name="entries_quick_access_shortcut_types">
-    <item>مستخدم</item>
+    <item>المستخدم</item>
     <item>الخط الزمني للمستخدم</item>
     <item>مفضلات المستخدم</item>
     <item>لائحة</item>
     <item>الخط الزمني للقائمة</item>
+  </string-array>
+  <string-array name="entries_user_timeline_filter">
+    <item>الردود</item>
+    <item>اعادة المشاركة</item>
   </string-array>
 </resources>

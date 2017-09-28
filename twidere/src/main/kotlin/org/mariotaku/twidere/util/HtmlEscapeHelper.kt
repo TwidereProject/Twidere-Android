@@ -19,8 +19,8 @@
 
 package org.mariotaku.twidere.util
 
-import org.apache.commons.lang3.StringEscapeUtils
-import org.apache.commons.lang3.text.translate.*
+import org.apache.commons.text.StringEscapeUtils
+import org.apache.commons.text.translate.*
 import java.io.IOException
 import java.io.Writer
 
@@ -30,13 +30,13 @@ object HtmlEscapeHelper {
             StringEscapeUtils.ESCAPE_HTML4,
             UnicodeControlCharacterToHtmlTranslator()
     )
-    val ESCAPE_BASIC = LookupTranslator(*EntityArrays.BASIC_ESCAPE())
+    val ESCAPE_BASIC = LookupTranslator(EntityArrays.BASIC_ESCAPE)
 
     val UNESCAPE_HTML = AggregateTranslator(
-            LookupTranslator(*EntityArrays.BASIC_UNESCAPE()),
-            LookupTranslator(*EntityArrays.ISO8859_1_UNESCAPE()),
-            LookupTranslator(*EntityArrays.HTML40_EXTENDED_UNESCAPE()),
-            LookupTranslator(*EntityArrays.APOS_UNESCAPE()),
+            LookupTranslator(EntityArrays.BASIC_UNESCAPE),
+            LookupTranslator(EntityArrays.ISO8859_1_UNESCAPE),
+            LookupTranslator(EntityArrays.HTML40_EXTENDED_UNESCAPE),
+            LookupTranslator(EntityArrays.APOS_UNESCAPE),
             IgnoreErrorNumericEntityUnescaper()
     )
 

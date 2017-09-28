@@ -22,6 +22,7 @@ import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.filter.RefreshFiltersSubscriptionsTask
+import org.mariotaku.twidere.task.filter.RefreshLaunchPresentationsTask
 import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
 import org.mariotaku.twidere.task.twitter.GetHomeTimelineTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
@@ -41,7 +42,8 @@ class TaskServiceRunner(
         Log.d(LOGTAG, "TaskServiceRunner run task $action")
         when (action) {
             ACTION_REFRESH_HOME_TIMELINE, ACTION_REFRESH_NOTIFICATIONS,
-            ACTION_REFRESH_DIRECT_MESSAGES, ACTION_REFRESH_FILTERS_SUBSCRIPTIONS -> {
+            ACTION_REFRESH_DIRECT_MESSAGES, ACTION_REFRESH_FILTERS_SUBSCRIPTIONS,
+            ACTION_REFRESH_LAUNCH_PRESENTATIONS -> {
                 val task = createRefreshTask(action) ?: return false
                 task.callback = callback
                 TaskStarter.execute(task)
@@ -55,7 +57,7 @@ class TaskServiceRunner(
         return false
     }
 
-    fun createRefreshTask(@Action action: String): AbstractTask<*, *, (Boolean) -> Unit>? {
+    private fun createRefreshTask(@Action action: String): AbstractTask<*, *, (Boolean) -> Unit>? {
         if (!Utils.isBatteryOkay(context) && preferences[stopAutoRefreshWhenBatteryLowKey]) {
             // Low battery, don't refresh
             return null
@@ -97,13 +99,16 @@ class TaskServiceRunner(
             ACTION_REFRESH_FILTERS_SUBSCRIPTIONS -> {
                 return RefreshFiltersSubscriptionsTask(context)
             }
+            ACTION_REFRESH_LAUNCH_PRESENTATIONS -> {
+                return RefreshLaunchPresentationsTask(context)
+            }
         }
         return null
     }
 
     @StringDef(ACTION_REFRESH_HOME_TIMELINE, ACTION_REFRESH_NOTIFICATIONS, ACTION_REFRESH_DIRECT_MESSAGES,
-            ACTION_REFRESH_FILTERS_SUBSCRIPTIONS, ACTION_SYNC_DRAFTS, ACTION_SYNC_FILTERS,
-            ACTION_SYNC_USER_NICKNAMES, ACTION_SYNC_USER_COLORS)
+            ACTION_REFRESH_FILTERS_SUBSCRIPTIONS, ACTION_REFRESH_LAUNCH_PRESENTATIONS,
+            ACTION_SYNC_DRAFTS, ACTION_SYNC_FILTERS, ACTION_SYNC_USER_NICKNAMES, ACTION_SYNC_USER_COLORS)
     @Retention(AnnotationRetention.SOURCE)
     annotation class Action
 
@@ -138,6 +143,8 @@ class TaskServiceRunner(
         const val ACTION_REFRESH_DIRECT_MESSAGES = INTENT_PACKAGE_PREFIX + "REFRESH_DIRECT_MESSAGES"
         @Action
         const val ACTION_REFRESH_FILTERS_SUBSCRIPTIONS = INTENT_PACKAGE_PREFIX + "REFRESH_FILTERS_SUBSCRIPTIONS"
+        @Action
+        const val ACTION_REFRESH_LAUNCH_PRESENTATIONS = INTENT_PACKAGE_PREFIX + "REFRESH_LAUNCH_PRESENTATIONS"
         @Action
         const val ACTION_SYNC_DRAFTS = INTENT_PACKAGE_PREFIX + "SYNC_DRAFTS"
         @Action

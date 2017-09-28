@@ -43,7 +43,7 @@ class UserMentionsLoader(
     override fun processQuery(details: AccountDetails, query: String): String {
         val screenName = query.substringAfter("@")
         if (details.type == AccountType.TWITTER) {
-            if (details.extras?.official ?: false) {
+            if (details.extras?.official == true) {
                 return smQuery("to:$screenName", pagination)
             }
             return "to:$screenName exclude:retweets"

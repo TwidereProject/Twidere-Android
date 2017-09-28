@@ -15,11 +15,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
-import org.apache.commons.lang3.ArrayUtils;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import kotlin.collections.ArraysKt;
 
 /**
  * Created by mariotaku on 16/4/4.
@@ -62,8 +62,8 @@ public class ShareProvider extends ContentProvider {
     }
 
     private void writeValue(String[] columns, Object[] values, String column, Object value) {
-        int idx = ArrayUtils.indexOf(columns, column);
-        if (idx != ArrayUtils.INDEX_NOT_FOUND) {
+        int idx = ArraysKt.indexOf(columns, column);
+        if (idx >= 0) {
             values[idx] = value;
         }
     }

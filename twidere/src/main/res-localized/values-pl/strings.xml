@@ -405,7 +405,7 @@
   <string name="no_status_content_text">Brak zawartości</string>
   <string name="no_tab">Brak kart</string>
   <string name="no_tab_hint">Brak kart</string>
-  <string name="no_thanks">Nie, dziękuję</string>
+  <string name="action_no_thanks">Nie, dziękuję</string>
   <string name="no_version_suffix">Brak przyrostka wersji</string>
   <string name="none">Brak</string>
   <string name="notification_direct_message"><xliff:g id="user">%s</xliff:g> wysłał/a Ci wiadomość.</string>
@@ -484,7 +484,7 @@
   <string name="projects_we_took_part">Projekty, w których braliśmy udział</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="provider_fanfou">Fanfou</string>
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>
@@ -556,7 +556,7 @@
   <string name="sensitive_content_warning">Ten tweet być może zawiera wrażliwą zawartość, kontynuować?</string>
   <string name="sent_follow_request_to_user">Wysłano żądania obserwacji do <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Adres serwera</string>
-  <string name="settings">Ustawienia</string>
+  <string name="action_settings">Ustawienia</string>
   <string name="settings_interface">Interfejs</string>
   <string name="settings_notifications">Powiadomienia</string>
   <string name="settings_refresh">Odśwież</string>

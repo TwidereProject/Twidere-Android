@@ -33,13 +33,15 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.*
 import org.mariotaku.twidere.extension.model.getEndpoint
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.extension.restfu.headers
+import org.mariotaku.twidere.extension.restfu.set
 import org.mariotaku.twidere.model.account.cred.OAuthCredentials
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import org.mariotaku.twidere.util.dagger.DependencyHolder
+import org.mariotaku.twidere.util.net.SystemDnsFetcher
 import org.mariotaku.twidere.util.net.TwidereDns
-import org.xbill.DNS.ResolverConfig
 import java.io.IOException
 import java.io.OutputStream
 import java.lang.ref.WeakReference
@@ -94,15 +96,11 @@ class NetworkDiagnosticsFragment : BaseFragment() {
     internal class DiagnosticsTask(fragment: NetworkDiagnosticsFragment) : AsyncTask<Any, LogText, Unit>() {
 
         private val fragmentRef = WeakReference(fragment)
-
-        private val context = fragment.activity.applicationContext
-        private val connectivityManager: ConnectivityManager
-
-        init {
-            connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        }
+        private val contextRef = WeakReference(fragment.activity.applicationContext)
 
         override fun doInBackground(vararg params: Any) {
+            val context = contextRef.get() ?: return
+            val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             logPrintln("**** NOTICE ****", LogText.State.WARNING)
             logPrintln()
             logPrintln("Text below may have personal information, BE CAREFUL TO MAKE IT PUBLIC",
@@ -119,12 +117,8 @@ class NetworkDiagnosticsFragment : BaseFragment() {
             logPrintln(("System DNS servers"))
 
 
-            val servers = ResolverConfig.getCurrentConfig().servers()
-            if (servers != null) {
-                logPrintln(Arrays.toString(servers))
-            } else {
-                logPrintln("null")
-            }
+            val servers = SystemDnsFetcher.get(context)
+            logPrintln(servers?.toString() ?: "null")
             logPrintln()
 
             for (accountKey in DataStoreUtils.getAccountKeys(context)) {
@@ -171,11 +165,14 @@ class NetworkDiagnosticsFragment : BaseFragment() {
                     val builder = HttpRequest.Builder()
                     builder.method(GET.METHOD)
                     builder.url(baseUrl)
+                    builder.headers {
+                        this["Accept"] = "*/*"
+                    }
                     val start = SystemClock.uptimeMillis()
                     response = client.newCall(builder.build()).execute()
                     logPrint(" OK (${SystemClock.uptimeMillis() - start} ms)")
                 } catch (e: IOException) {
-                    logPrint("ERROR: ${e.message}", LogText.State.ERROR)
+                    logPrint(" ERROR: ${e.message}", LogText.State.ERROR)
                 }
 
                 logPrintln()
@@ -245,7 +242,7 @@ class NetworkDiagnosticsFragment : BaseFragment() {
             logPrintln(context.resources.configuration.toString())
             logPrintln()
             logPrintln(("Active network info: "))
-            logPrintln((connectivityManager.activeNetworkInfo.toString()))
+            logPrintln((cm.activeNetworkInfo.toString()))
         }
 
         override fun onProgressUpdate(vararg values: LogText) {
@@ -293,9 +290,9 @@ class NetworkDiagnosticsFragment : BaseFragment() {
             try {
                 val start = SystemClock.uptimeMillis()
                 test()
-                logPrint("OK (${SystemClock.uptimeMillis() - start} ms)", LogText.State.OK)
+                logPrint(" OK (${SystemClock.uptimeMillis() - start} ms)", LogText.State.OK)
             } catch (e: Exception) {
-                logPrint("ERROR: ${e.message}", LogText.State.ERROR)
+                logPrint(" ERROR: ${e.message}", LogText.State.ERROR)
             }
 
             logPrintln()

@@ -121,7 +121,7 @@ class CardPollViewController : ContainerView.ViewController() {
         val hasChoice = selectedChoice != -1
         val isMyPoll = status.account_key == status.user_key
         val showResult = countsAreFinal || isMyPoll || hasChoice
-        for (i in 0..choicesCount - 1) {
+        for (i in 0 until choicesCount) {
             val choiceIndex = i + 1
             votesSum += card.getAsInteger("choice${choiceIndex}_count", 0)
         }
@@ -178,7 +178,7 @@ class CardPollViewController : ContainerView.ViewController() {
 
         val color = ContextCompat.getColor(context, R.color.material_light_blue_a200)
         val radius = context.resources.getDimension(R.dimen.element_spacing_small)
-        for (i in 0..choicesCount - 1) {
+        for (i in 0 until choicesCount) {
             val pollItem = view.pollContainer.getChildAt(i)
 
             val choicePercentView: TextView = pollItem.findViewById(R.id.choice_percent)

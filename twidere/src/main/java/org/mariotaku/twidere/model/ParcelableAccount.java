@@ -28,6 +28,7 @@ import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.model.util.UserKeyCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 
+@SuppressWarnings("DeprecatedIsStillUsed")
 @CursorObject
 @Deprecated
 public class ParcelableAccount {

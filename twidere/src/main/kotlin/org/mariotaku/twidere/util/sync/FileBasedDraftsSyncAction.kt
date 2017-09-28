@@ -43,6 +43,7 @@ abstract class FileBasedDraftsSyncAction<RemoteFileInfo>(val context: Context) :
 
         val localDrafts = run {
             val cur = context.contentResolver.query(Drafts.CONTENT_URI, Drafts.COLUMNS, null, null, null)!!
+            @Suppress("ConvertTryFinallyToUseCall")
             try {
                 val indices = ObjectCursor.indicesFrom(cur, Draft::class.java)
                 return@run cur.map(indices)
@@ -157,6 +158,7 @@ abstract class FileBasedDraftsSyncAction<RemoteFileInfo>(val context: Context) :
 
         snapshotsListFile.writer().use { writer ->
             val cur = context.contentResolver.query(Drafts.CONTENT_URI, Drafts.COLUMNS, null, null, null)!!
+            @Suppress("ConvertTryFinallyToUseCall")
             try {
                 val indices = ObjectCursor.indicesFrom(cur, Draft::class.java)
                 cur.map(indices).map { it.unique_id_non_null }.forEach { line ->

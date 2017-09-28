@@ -243,7 +243,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Suporte de Emoji</string>
   <string name="empty_content">Nenhum conteúdo</string>
-  <string name="enable_retweets">Ativar retweets</string>
   <string name="enable_streaming">Habilitar atualização em tempo real</string>
   <string name="error_message">Erro: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_device_incompatible">Este dispositivo não é compatível com Twidere, atualize para o Android mais recente. \nVocê pode enviar as informações abaixo para ajudar-me a relatar esse problema para o fabricante do dispositivo.</string>
@@ -268,11 +267,8 @@
   <string name="external_group_host_format">Grupo externo em <xliff:g id="host">%s </xliff:g></string>
   <string name="external_user_host_format">Usuário externo em <xliff:g id="host">%s </xliff:g></string>
   <string name="extra_configurations">Configurações extras</string>
-  <string name="extra_feature_description_filters_subscription">Inscreva-se para silenciar os filtros e sincronizar automaticamente</string>
   <string name="extra_feature_description_schedule_status">Agendar Tweet(enviar depois)</string>
   <string name="extra_feature_description_sync_data">Dados de sincronização com o Dropbox, Google Drive etc</string>
-  <string name="extra_feature_title_filters_import">Importar Filtros</string>
-  <string name="extra_feature_title_filters_subscription">Assinatura de filtros</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">Suporte Twidere e obter recursos avançados</string>
   <string name="extra_features_pack_description">Ou comprar o pacote de recursos para obter todos os recursos (incluindo recursos em versões futuras)</string>
@@ -466,7 +462,7 @@
   <string name="no_status_content_text">Nenhum conteúdo</string>
   <string name="no_tab">Sem abas</string>
   <string name="no_tab_hint">Sem abas</string>
-  <string name="no_thanks">Não, obrigado</string>
+  <string name="action_no_thanks">Não, obrigado</string>
   <string name="no_user_found">Nenhum usuário encontrado</string>
   <string name="no_version_suffix">Sem sufixo de versão</string>
   <string name="none">Nenhum</string>
@@ -561,7 +557,7 @@
   <string name="projects_we_took_part">Projetos que participamos</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="provider_fanfou">Fanfou</string>
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>
@@ -645,7 +641,7 @@
   <string name="sent_follow_request_to_user">Solicitação de seguidor enviada para <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Endereço do servidor</string>
   <string name="set_consumer_key_secret_message">Os tokens de autorização gerados pelo Twidere estão se esgotando, pode ser necessário que você crie um aplicativo em https://apps.twitter.com/ e cole seu \"consumer key\" e senha abaixo.\nSe, ao invés disso, você usar a \"key default\" do Twidere, você pode não conseguir entrar.</string>
-  <string name="settings">Configurações</string>
+  <string name="action_settings">Configurações</string>
   <string name="settings_interface">Interface</string>
   <string name="settings_notifications">Notificações</string>
   <string name="settings_refresh">Atualizar</string>

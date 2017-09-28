@@ -22,6 +22,7 @@ package org.mariotaku.twidere.activity
 import android.accounts.AccountManager
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.ActivityNotFoundException
@@ -114,6 +115,7 @@ import javax.inject.Inject
 import kotlin.collections.ArrayList
 import android.Manifest.permission as AndroidPermission
 
+@SuppressLint("RestrictedApi")
 class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener, OnLongClickListener,
         ActionMode.Callback, PermissionRequestCancelCallback, EditAltTextDialogFragment.EditAltTextCallback {
 
@@ -127,6 +129,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private lateinit var itemTouchHelper: ItemTouchHelper
     private lateinit var bottomMenuAnimator: ViewAnimator
+
     private val supportMenuInflater by lazy { SupportMenuInflater(this) }
 
     private val backTimeoutRunnable = Runnable { navigateBackPressed = false }
@@ -171,11 +174,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     // Listeners
     private var locationListener: LocationListener? = null
 
-    private val draftAction: String get() = draft?.action_type ?: when (intent.action) {
-        INTENT_ACTION_REPLY -> Draft.Action.REPLY
-        INTENT_ACTION_QUOTE -> Draft.Action.QUOTE
-        else -> Draft.Action.UPDATE_STATUS
-    }
+    private val draftAction: String
+        get() = draft?.action_type ?: when (intent.action) {
+            INTENT_ACTION_REPLY -> Draft.Action.REPLY
+            INTENT_ACTION_QUOTE -> Draft.Action.QUOTE
+            else -> Draft.Action.UPDATE_STATUS
+        }
 
     private val media: Array<ParcelableMediaUpdate>
         get() = mediaList.toTypedArray()
@@ -212,7 +216,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         bottomMenuAnimator = ViewAnimator()
         bottomMenuAnimator.setupViews()
 
-        mediaPreviewAdapter = MediaPreviewAdapter(this, Glide.with(this))
+        mediaPreviewAdapter = MediaPreviewAdapter(this, requestManager)
         mediaPreviewAdapter.listener = object : MediaPreviewAdapter.Listener {
             override fun onEditClick(position: Int, holder: MediaPreviewViewHolder) {
                 attachedMediaPreview.showContextMenuForChild(holder.itemView)
@@ -868,7 +872,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             } else {
                 accountProfileImage.clearColorFilter()
                 accountProfileImage.scaleType = ImageView.ScaleType.CENTER_CROP
-                Glide.with(this).loadProfileImage(this, single, accountProfileImage.style)
+                requestManager.loadProfileImage(this, single, accountProfileImage.style)
                         .into(accountProfileImage)
             }
 
@@ -953,14 +957,16 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         return false
     }
 
+    @SuppressLint("SetTextI18n")
     private fun handleMentionIntent(user: ParcelableUser?): Boolean {
-        if (user == null || user.key == null) return false
-        val accountScreenName = DataStoreUtils.getAccountScreenName(this, user.account_key)
+        if (user?.key == null) return false
+        val accountKey = user.account_key ?: return false
+        val accountScreenName = DataStoreUtils.getAccountScreenName(this, accountKey)
         if (TextUtils.isEmpty(accountScreenName)) return false
         editText.setText("@${user.acct} ")
         val selectionEnd = editText.length()
         editText.setSelection(selectionEnd)
-        accountsAdapter.selectedAccountKeys = arrayOf(user.account_key)
+        accountsAdapter.selectedAccountKeys = arrayOf(accountKey)
         return true
     }
 
@@ -1086,29 +1092,24 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         } else {
             hasAccountKeys = false
         }
-        if (Intent.ACTION_SEND == action) {
-            shouldSaveAccounts = false
-            shouldSaveVisibility = false
-            val stream = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
-            if (stream != null) {
-                val src = arrayOf(stream)
-                TaskStarter.execute(AddMediaTask(this, src, null, true, false))
+        when (action) {
+            Intent.ACTION_SEND, Intent.ACTION_SEND_MULTIPLE -> {
+                shouldSaveAccounts = false
+                shouldSaveVisibility = false
+                val stream = intent.getStreamExtra()
+                if (stream != null) {
+                    val src = stream.toTypedArray()
+                    TaskStarter.execute(AddMediaTask(this, src, null, true, false))
+                }
             }
-        } else if (Intent.ACTION_SEND_MULTIPLE == action) {
-            shouldSaveAccounts = false
-            shouldSaveVisibility = false
-            val extraStream = intent.getParcelableArrayListExtra<Uri>(Intent.EXTRA_STREAM)
-            if (extraStream != null) {
-                val src = extraStream.toTypedArray()
-                TaskStarter.execute(AddMediaTask(this, src, null, true, false))
-            }
-        } else {
-            shouldSaveAccounts = !hasAccountKeys
-            shouldSaveVisibility = !hasVisibility
-            val data = intent.data
-            if (data != null) {
-                val src = arrayOf(data)
-                TaskStarter.execute(AddMediaTask(this, src, null, true, false))
+            else -> {
+                shouldSaveAccounts = !hasAccountKeys
+                shouldSaveVisibility = !hasVisibility
+                val data = intent.data
+                if (data != null) {
+                    val src = arrayOf(data)
+                    TaskStarter.execute(AddMediaTask(this, src, null, true, false))
+                }
             }
         }
         val extraSubject = intent.getCharSequenceExtra(Intent.EXTRA_SUBJECT)
@@ -1315,39 +1316,39 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
         if (!attachLocation) {
             menu.setItemChecked(R.id.location_off, true)
-            menu.setMenuItemIcon(R.id.location_submenu, R.drawable.ic_action_location_off)
+            menu.setItemIcon(R.id.location_submenu, R.drawable.ic_action_location_off)
         } else if (attachPreciseLocation) {
             menu.setItemChecked(R.id.location_precise, true)
-            menu.setMenuItemIcon(R.id.location_submenu, R.drawable.ic_action_location)
+            menu.setItemIcon(R.id.location_submenu, R.drawable.ic_action_location)
         } else {
             menu.setItemChecked(R.id.location_coarse, true)
-            menu.setMenuItemIcon(R.id.location_submenu, R.drawable.ic_action_location)
+            menu.setItemIcon(R.id.location_submenu, R.drawable.ic_action_location)
         }
 
         when (statusVisibility) {
             StatusVisibility.UNLISTED -> {
                 menu.setItemChecked(R.id.visibility_unlisted, true)
-                menu.setMenuItemIcon(R.id.visibility_submenu, R.drawable.ic_action_web_lock)
+                menu.setItemIcon(R.id.visibility_submenu, R.drawable.ic_action_web_lock)
                 menu.setItemChecked(R.id.attachment_visibility_unlisted, true)
-                menu.setMenuItemIcon(R.id.attachment_visibility_submenu, R.drawable.ic_action_web_lock)
+                menu.setItemIcon(R.id.attachment_visibility_submenu, R.drawable.ic_action_web_lock)
             }
             StatusVisibility.PRIVATE -> {
                 menu.setItemChecked(R.id.visibility_private, true)
-                menu.setMenuItemIcon(R.id.visibility_submenu, R.drawable.ic_action_lock)
+                menu.setItemIcon(R.id.visibility_submenu, R.drawable.ic_action_lock)
                 menu.setItemChecked(R.id.attachment_visibility_private, true)
-                menu.setMenuItemIcon(R.id.attachment_visibility_submenu, R.drawable.ic_action_lock)
+                menu.setItemIcon(R.id.attachment_visibility_submenu, R.drawable.ic_action_lock)
             }
             StatusVisibility.DIRECT -> {
                 menu.setItemChecked(R.id.visibility_direct, true)
-                menu.setMenuItemIcon(R.id.visibility_submenu, R.drawable.ic_action_message)
+                menu.setItemIcon(R.id.visibility_submenu, R.drawable.ic_action_message)
                 menu.setItemChecked(R.id.attachment_visibility_direct, true)
-                menu.setMenuItemIcon(R.id.attachment_visibility_submenu, R.drawable.ic_action_message)
+                menu.setItemIcon(R.id.attachment_visibility_submenu, R.drawable.ic_action_message)
             }
             else -> { // Default to public
                 menu.setItemChecked(R.id.visibility_public, true)
-                menu.setMenuItemIcon(R.id.visibility_submenu, R.drawable.ic_action_web)
+                menu.setItemIcon(R.id.visibility_submenu, R.drawable.ic_action_web)
                 menu.setItemChecked(R.id.attachment_visibility_public, true)
-                menu.setMenuItemIcon(R.id.attachment_visibility_submenu, R.drawable.ic_action_web)
+                menu.setItemIcon(R.id.attachment_visibility_submenu, R.drawable.ic_action_web)
             }
         }
 
@@ -1471,13 +1472,13 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
         val update = try {
             getStatusUpdate(true)
-        } catch(e: NoAccountException) {
+        } catch (e: NoAccountException) {
             editText.error = getString(R.string.message_toast_no_account_selected)
             return
-        } catch(e: NoContentException) {
+        } catch (e: NoContentException) {
             editText.error = getString(R.string.error_message_no_content)
             return
-        } catch(e: StatusTooLongException) {
+        } catch (e: StatusTooLongException) {
             editText.error = getString(R.string.error_message_status_too_long)
             editText.setSelection(e.exceededStartIndex, editText.length())
             return
@@ -1600,7 +1601,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             val mentionColor = ThemeUtils.getTextColorSecondary(this)
             editable.clearSpans(MentionColorSpan::class.java)
             editable.setSpan(MentionColorSpan(mentionColor), 0, textAndMentions.replyStartIndex,
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             statusTextCount.textCount = summaryLength + validator.getTweetLength(textAndMentions.replyText)
         } else {
             hintLabel.visibility = View.VISIBLE
@@ -1673,7 +1674,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private fun saveToDrafts(): Uri? {
         val statusUpdate = try {
             getStatusUpdate(false)
-        } catch(e: ComposeException) {
+        } catch (e: ComposeException) {
             return null
         }
         val draft = UpdateStatusTask.createDraft(draftAction) {
@@ -1947,7 +1948,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private class AccountIconsAdapter(
             private val activity: ComposeActivity
-    ) : BaseRecyclerViewAdapter<AccountIconViewHolder>(activity, Glide.with(activity)) {
+    ) : BaseRecyclerViewAdapter<AccountIconViewHolder>(activity, activity.requestManager) {
         private val inflater: LayoutInflater = activity.layoutInflater
         private val selection: MutableMap<UserKey, Boolean> = HashMap()
 
@@ -2051,7 +2052,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private class DeleteMediaTask(
             activity: ComposeActivity,
-            val media: Array<ParcelableMediaUpdate>
+            media: Array<ParcelableMediaUpdate>
     ) : AbsDeleteMediaTask<((BooleanArray) -> Unit)?>(activity, media.mapToArray { Uri.parse(it.uri) }) {
 
         override fun beforeExecute() {
@@ -2217,6 +2218,13 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             it.visibility = visibility
         }
 
+        private fun Intent.getStreamExtra(): List<Uri>? {
+            val list = getParcelableArrayListExtra<Uri>(Intent.EXTRA_STREAM)
+            if (list != null) return list
+            val item = getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
+            if (item != null) return listOf(item)
+            return null
+        }
     }
 }
 

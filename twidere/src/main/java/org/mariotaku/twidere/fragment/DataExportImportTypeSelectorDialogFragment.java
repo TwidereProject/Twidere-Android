@@ -86,7 +86,7 @@ public final class DataExportImportTypeSelectorDialogFragment extends BaseDialog
         final int flags = getEnabledFlags();
         mListView = new ListView(context);
         final TypeAdapter adapter = new TypeAdapter(context, flags);
-        adapter.add(new Type(R.string.settings, DataImportExportUtils.FLAG_PREFERENCES));
+        adapter.add(new Type(R.string.action_settings, DataImportExportUtils.FLAG_PREFERENCES));
         adapter.add(new Type(R.string.title_nicknames, DataImportExportUtils.FLAG_NICKNAMES));
         adapter.add(new Type(R.string.title_user_colors, DataImportExportUtils.FLAG_USER_COLORS));
         adapter.add(new Type(R.string.custom_host_mapping, DataImportExportUtils.FLAG_HOST_MAPPING));
@@ -200,7 +200,7 @@ public final class DataExportImportTypeSelectorDialogFragment extends BaseDialog
         @Override
         public View getView(final int position, @Nullable final View convertView, final ViewGroup parent) {
             final View view = super.getView(position, convertView, parent);
-            final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
+            final TextView text1 = view.findViewById(android.R.id.text1);
             text1.setText(getItem(position).title);
             view.setEnabled(isEnabled(position));
             return view;

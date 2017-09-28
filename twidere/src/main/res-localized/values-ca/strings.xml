@@ -180,7 +180,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Suport d\'emojis</string>
   <string name="empty_content">No hi ha contingut</string>
-  <string name="enable_retweets">Activa les repiulades</string>
   <string name="enable_streaming">Habilitar l\'streaming</string>
   <string name="error_message">Error: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_device_incompatible">Aquest dispositiu no és compatible amb Twidere, recomanem actualitzar a l\'última versió d\'Android OS. \nPodeu enviar-me informació a continuació per ajudar-me a informar d\'aquest problema al fabricant del dispositiu.</string>
@@ -386,7 +385,7 @@
   <string name="no_status_content_text">Sense contingut</string>
   <string name="no_tab">No hi ha pestanyes</string>
   <string name="no_tab_hint">No hi ha pestanyes</string>
-  <string name="no_thanks">No, gràcies</string>
+  <string name="action_no_thanks">No, gràcies</string>
   <string name="no_user_found">No s\'ha trobat cap usuari</string>
   <string name="no_version_suffix">Versió sense sufix</string>
   <string name="none">Cap</string>
@@ -479,7 +478,7 @@
   <string name="projects_we_took_part">Projectes dels quals formem part</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="provider_fanfou">Fanfou</string>
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>
@@ -563,7 +562,7 @@
   <string name="sent_follow_request_to_user">S\'ha soŀlicitat a <xliff:g id="user">%s</xliff:g> que us segueixi.</string>
   <string name="server_address">Direcció del servidor</string>
   <string name="set_consumer_key_secret_message">Twidere està arribant al límit d\'usuaris permesos per Twitter. Potser haureu de crear una app a https://apps.twitter.com/ i copiar les claus secreta i de consumidor.\nSi continueu fent servir la predefinida, us podeu quedar sense accés.</string>
-  <string name="settings">Paràmetres</string>
+  <string name="action_settings">Paràmetres</string>
   <string name="settings_interface">Interfície</string>
   <string name="settings_notifications">Notificacions</string>
   <string name="settings_refresh">Actualitza</string>

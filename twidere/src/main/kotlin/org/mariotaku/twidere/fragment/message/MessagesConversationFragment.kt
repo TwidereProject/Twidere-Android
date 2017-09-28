@@ -38,7 +38,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.*
-import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.activity_premium_dashboard.*
 import kotlinx.android.synthetic.main.fragment_messages_conversation.*
@@ -142,7 +142,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
                 return recyclerView.showContextMenuForChild(holder.itemView)
             }
         }
-        mediaPreviewAdapter = MediaPreviewAdapter(context, Glide.with(this))
+        mediaPreviewAdapter = MediaPreviewAdapter(context, requestManager)
 
         mediaPreviewAdapter.listener = object : MediaPreviewAdapter.Listener {
             override fun onRemoveClick(position: Int, holder: MediaPreviewViewHolder) {
@@ -300,8 +300,8 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         adapter.setData(null, null)
     }
 
-    override fun onCreateAdapter(context: Context): MessagesConversationAdapter {
-        return MessagesConversationAdapter(context, Glide.with(this))
+    override fun onCreateAdapter(context: Context, requestManager: RequestManager): MessagesConversationAdapter {
+        return MessagesConversationAdapter(context, this.requestManager)
     }
 
     override fun onCreateLayoutManager(context: Context): LinearLayoutManager {
@@ -447,9 +447,9 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
     private fun openMediaPicker() {
         val builder = ThemedMediaPickerActivity.withThemed(context)
         builder.pickSources(arrayOf(MediaPickerActivity.SOURCE_CAMERA,
-                        MediaPickerActivity.SOURCE_CAMCORDER,
-                        MediaPickerActivity.SOURCE_GALLERY,
-                        MediaPickerActivity.SOURCE_CLIPBOARD))
+                MediaPickerActivity.SOURCE_CAMCORDER,
+                MediaPickerActivity.SOURCE_GALLERY,
+                MediaPickerActivity.SOURCE_CLIPBOARD))
         if (gifShareProvider != null) {
             builder.addEntry(getString(R.string.action_add_gif), "gif", RESULT_SEARCH_GIF)
         }
@@ -518,7 +518,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(conversationTitle, null,
                 null, stateIcon, null)
 
-        Glide.with(this).loadProfileImage(context, conversation, preferences[profileImageStyleKey])
+        requestManager.loadProfileImage(context, conversation, preferences[profileImageStyleKey])
                 .into(conversationAvatar)
     }
 

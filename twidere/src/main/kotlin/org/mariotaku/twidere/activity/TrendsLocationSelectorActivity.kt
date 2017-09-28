@@ -69,20 +69,20 @@ class TrendsLocationSelectorActivity : BaseActivity() {
             return@task map.pack()
         }.successUi { result ->
             val activity = weakThis.get() ?: return@successUi
-            activity.executeAfterFragmentResumed { activity ->
+            activity.executeAfterFragmentResumed {
                 val df = TrendsLocationDialogFragment()
                 df.arguments = Bundle {
                     this[EXTRA_DATA] = result
                 }
-                df.show(activity.supportFragmentManager, "trends_location_selector")
+                df.show(it.supportFragmentManager, "trends_location_selector")
             }
         }.failUi {
             val activity = weakThis.get() ?: return@failUi
             activity.finish()
         }.alwaysUi {
             val activity = weakThis.get() ?: return@alwaysUi
-            activity.executeAfterFragmentResumed { activity ->
-                val fm = activity.supportFragmentManager
+            activity.executeAfterFragmentResumed {
+                val fm = it.supportFragmentManager
                 val df = fm.findFragmentByTag(PROGRESS_FRAGMENT_TAG) as? DialogFragment
                 df?.dismiss()
             }
@@ -98,9 +98,9 @@ class TrendsLocationSelectorActivity : BaseActivity() {
             selectorBuilder.setView(R.layout.dialog_expandable_list)
             selectorBuilder.setNegativeButton(android.R.string.cancel, null)
             val dialog = selectorBuilder.create()
-            dialog.onShow { dialog ->
-                dialog.applyTheme()
-                val listView = dialog.expandableList
+            dialog.onShow {
+                it.applyTheme()
+                val listView = it.expandableList
                 val adapter = ExpandableTrendLocationsListAdapter(context)
                 adapter.data = list
                 listView.setAdapter(adapter)
@@ -111,7 +111,7 @@ class TrendsLocationSelectorActivity : BaseActivity() {
                         dismiss()
                         return@OnGroupClickListener true
                     }
-                    false
+                    return@OnGroupClickListener false
                 })
                 listView.setOnChildClickListener { _, _, groupPosition, childPosition, _ ->
                     val child = adapter.getChild(groupPosition, childPosition)

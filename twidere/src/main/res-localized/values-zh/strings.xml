@@ -21,8 +21,12 @@
   <string name="action_add_gif">添加 GIF</string>
   <string name="action_add_media">添加多媒體</string>
   <string name="action_add_member">新增成員</string>
+  <string name="action_add_name_to_home_screen">將 <xliff:g example="Name" id="name">%1$s</xliff:g> 添加到主螢幕</string>
   <string name="action_add_tab">新增標籤頁</string>
+  <string name="action_add_tab_to_home_screen">將標籤頁添加到主螢幕</string>
   <string name="action_add_to_filter">新增到過濾器</string>
+  <string name="action_add_to_home_screen">添加到主螢幕..</string>
+  <string name="action_add_to_home_screen_more">添加到主螢幕...</string>
   <string name="action_add_to_list">新增到列表</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">封鎖</string>
@@ -32,6 +36,7 @@
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">取消轉推</string>
   <string name="action_center">置中</string>
+  <string name="action_change_language">更改語言</string>
   <string name="action_clear">清除</string>
   <string name="action_clear_messages">清空訊息</string>
   <string name="action_comment">評論</string>
@@ -43,6 +48,7 @@
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">刪除</string>
   <string name="action_delete_messages">刪除訊息</string>
+  <string name="action_disable_promotions">禁用推廣</string>
   <string name="action_dont_restart">不重啟</string>
   <string name="action_dont_terminate">不退出</string>
   <!-- [verb] Edit image/settings etc. -->
@@ -50,6 +56,9 @@
   <string name="action_edit_conversation_avatar">編輯圖示</string>
   <string name="action_edit_conversation_name">編輯名稱</string>
   <string name="action_edit_filter_rule">編輯規則</string>
+  <string name="action_enable">啟用</string>
+  <string name="action_enable_notifications">啟用通知</string>
+  <string name="action_enable_retweets">啓用轉推</string>
   <string name="action_favorite">收藏</string>
   <string name="action_filter_import_from_blocked_users">從被封鎖的使用者匯入</string>
   <string name="action_filter_import_from_muted_users">從被靜音的使用者匯入</string>
@@ -81,6 +90,7 @@
   <string name="action_quote">引用</string>
   <string name="action_record_video">錄影</string>
   <string name="action_refresh">更新</string>
+  <string name="action_refresh_launch_presentations">刷新啟動畫面</string>
   <string name="action_register">註冊</string>
   <string name="action_remove_conversation_avatar">刪除圖示</string>
   <string name="action_reply">回覆</string>
@@ -272,8 +282,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">支援表情符號</string>
   <string name="empty_content">空內容</string>
-  <string name="enable_notifications">啟用通知</string>
-  <string name="enable_retweets">啟用轉推</string>
   <string name="enable_streaming">啟用實時流</string>
   <string name="error_info_oauth_timestamp_error">請檢查您的系統日期與時間設定。</string>
   <string name="error_message">發生問題：<xliff:g id="message">%s</xliff:g></string>
@@ -291,6 +299,7 @@
   <string name="error_message_status_too_long">推文太長</string>
   <string name="error_message_tweet_shorten_failed">推文縮短失敗</string>
   <string name="error_message_tweet_shortener_not_found">未找到推文縮短擴展，它可能已經被移除</string>
+  <string name="error_message_video_upload_not_supported">不支援上傳影片</string>
   <string name="error_no_access_for_credentials">您的應用程式無法使用這個資源。</string>
   <string name="error_no_dm_permission">沒有私訊權限，請檢查您 Twitter 應用程式權限設定。</string>
   <string name="error_title_device_incompatible">不相容的裝置</string>
@@ -304,13 +313,9 @@
   <string name="external_group_host_format"><xliff:g id="host">%s</xliff:g> 的外部群組</string>
   <string name="external_user_host_format"><xliff:g id="host">%s</xliff:g> 的外部使用者</string>
   <string name="extra_configurations">額外設定</string>
-  <string name="extra_feature_description_filters_import">從被封鎖/靜音的使用者導入過濾列表</string>
-  <string name="extra_feature_description_filters_subscription">訂閱到過濾器列表，並且自動同步</string>
   <string name="extra_feature_description_schedule_status">定期發推 (稍候傳送)</string>
   <string name="extra_feature_description_share_gif">在推文中分享 GIF</string>
   <string name="extra_feature_description_sync_data">透過 Dropbox 或 Google Drive 等同步資料</string>
-  <string name="extra_feature_title_filters_import">過濾器匯入</string>
-  <string name="extra_feature_title_filters_subscription">過濾器訂閱</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">支持 Twidere 並且得到強化功能</string>
   <string name="extra_features_pack_description">或是購買功能包大補帖 (包含之後新增功能)</string>
@@ -530,6 +535,7 @@
   <string name="message_permission_request_share_media">Twidere 需要 storage 權限來分享多媒體給其他應用程式。</string>
   <string name="message_pin_status_confirm">要置頂這條推文嗎？原先置頂的推文會被替代。</string>
   <string name="message_please_wait">請稍等</string>
+  <string name="message_promotions_reward">啓用推廣就可以免費使用所有增強功能。我們承諾不會打擾您的使用體驗！</string>
   <string name="message_status_reply_to_user_removed_explanation">Twitter 使推文作者總在回覆中被提及，如果推文作者的提及被移除，Twidere 將會把這條回覆以引用的形式發送，以保留上下文訊息。</string>
   <string name="message_status_scheduling_connect_buffer_hint">連接到 Buffer ，即使您沒有在線也可以定時發送推文</string>
   <string name="message_status_scheduling_connected_to_buffer">Twidere 已經連接到 Buffer</string>
@@ -541,6 +547,7 @@
   <string name="message_sync_last_synced_time">上一次同步時間: <xliff:g example="2017/1/1 12:00" id="time">%s</xliff:g>
     </string>
   <string name="message_tab_field_is_required">欄位 \"<xliff:g example="Field" id="name">%s</xliff:g>\" 是必須填寫的</string>
+  <string name="message_ticker_promotions_reward">啓用推廣就可以免費使用所有增強功能！</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
@@ -563,6 +570,7 @@
   <string name="message_toast_login_verification_failed">登入驗證失敗</string>
   <!-- Toast message for network errors -->
   <string name="message_toast_network_error">網路錯誤</string>
+  <string name="message_toast_network_error_with_message">網絡錯誤：<xliff:g id="message">%s</xliff:g></string>
   <string name="message_toast_no_account">沒有帳號</string>
   <string name="message_toast_no_account_permission">需要帳號權限</string>
   <string name="message_toast_no_account_selected">沒有選擇帳號</string>
@@ -635,10 +643,21 @@
   <string name="no_status_content_text">沒有內容</string>
   <string name="no_tab">沒有標籤頁</string>
   <string name="no_tab_hint">沒有標籤頁</string>
-  <string name="no_thanks">不用了，謝謝</string>
+  <string name="action_no_thanks">不用了，謝謝</string>
   <string name="no_user_found">沒有找到使用者</string>
   <string name="no_version_suffix">沒有版本後綴</string>
   <string name="none">無</string>
+  <string name="notification_channel_description_content_interactions">互動，例如提及和轉推</string>
+  <string name="notification_channel_description_content_messages">重要的訊息，比如私訊</string>
+  <string name="notification_channel_descriptions_content_subscriptions">來自使用者的推文通知</string>
+  <string name="notification_channel_descriptions_content_updates">狀態更新，例如主頁的新推文</string>
+  <string name="notification_channel_name_app_notices">應用程式提醒</string>
+  <string name="notification_channel_name_background_progresses">後台操作</string>
+  <string name="notification_channel_name_content_interactions">互動</string>
+  <string name="notification_channel_name_content_messages">私訊</string>
+  <string name="notification_channel_name_content_subscriptions">訂閱</string>
+  <string name="notification_channel_name_content_updates">更新</string>
+  <string name="notification_channel_name_service_statuses">服務狀態</string>
   <string name="notification_direct_message"><xliff:g id="user">%s</xliff:g> 向您發送了一條私訊</string>
   <string name="notification_direct_message_multiple_messages"><xliff:g id="user">%1$s</xliff:g> 向您發送了<xliff:g id="messages_count">%2$d</xliff:g>條私訊</string>
   <string name="notification_direct_message_multiple_users"><xliff:g id="user">%1$s</xliff:g> 和其他<xliff:g id="users_count">%2$d</xliff:g>人向您發送了<xliff:g id="messages_count">%3$d</xliff:g>條私訊</string>
@@ -731,6 +750,8 @@
   <string name="preference_title_media_preload_non_metered_network">在免費網路下使用預載入</string>
   <string name="preference_title_multi_column_tab_width">多列標籤頁寬度</string>
   <string name="preference_title_multi_column_tabs">多列標籤頁</string>
+  <string name="preference_title_navbar_style">導航欄樣式</string>
+  <string name="preference_title_notification_channels">頻道</string>
   <string name="preference_title_notification_ringtone">鈴聲</string>
   <string name="preference_title_override_language">應用程式語言</string>
   <string name="preference_title_portrait">縱向模式</string>
@@ -771,7 +792,7 @@
   <string name="projects_we_took_part">我們參與的項目</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="provider_fanfou">飯否</string>
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>
@@ -860,7 +881,7 @@
   <string name="sent_follow_request_to_user">向 <xliff:g id="user">%s</xliff:g> 送出了關注請求</string>
   <string name="server_address">伺服器位址</string>
   <string name="set_consumer_key_secret_message">Twidere 的令牌將要用完了。您需要在 https://apps.twitter.com/ 創建一個應用程式，並把 consumer key 與 consumer secret 粘貼在下面。\n如果您繼續使用預設的key，可能會沒法登入。</string>
-  <string name="settings">設定</string>
+  <string name="action_settings">設定</string>
   <string name="settings_interface">界面</string>
   <string name="settings_notifications">通知</string>
   <string name="settings_refresh">更新</string>
@@ -990,6 +1011,7 @@
   <string name="title_open_source_license">開放原始碼許可</string>
   <string name="title_pin_status_confirm">置頂推文</string>
   <string name="title_premium_features_name">Twidere ∞</string>
+  <string name="title_promotions_reward">推廣獎勵</string>
   <string name="title_public_timeline">公共時間軸</string>
   <string name="title_quick_action">快速操作</string>
   <string name="title_retweet_quote_confirm">轉推給您的關注者嗎？</string>

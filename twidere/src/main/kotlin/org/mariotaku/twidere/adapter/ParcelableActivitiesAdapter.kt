@@ -41,7 +41,6 @@ import org.mariotaku.twidere.adapter.iface.IActivitiesAdapter
 import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
-import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.exception.UnsupportedCountIndexException
 import org.mariotaku.twidere.extension.model.activityStatus
@@ -132,6 +131,8 @@ class ParcelableActivitiesAdapter(
     private var data: List<ParcelableActivity>? = null
     private var activityAdapterListener: ActivityAdapterListener? = null
     private var filteredUserKeys: Array<UserKey>? = null
+    private var filteredUserNames: Array<String>? = null
+    private var filteredUserDescriptions: Array<String>? = null
     private val gapLoadingIds: MutableSet<ObjectId> = HashSet()
     private val reuseActivity = ParcelableActivity()
     private var infoCache: Array<ActivityInfo?>? = null
@@ -174,6 +175,8 @@ class ParcelableActivitiesAdapter(
     override fun setData(data: List<ParcelableActivity>?) {
         if (data is CursorActivitiesFragment.CursorActivitiesLoader.ActivityCursor) {
             filteredUserKeys = data.filteredUserIds
+            filteredUserNames = data.filteredUserNames
+            filteredUserDescriptions = data.filteredUserDescriptions
         }
         this.data = data
         this.infoCache = if (data != null) arrayOfNulls(data.size) else null
@@ -362,7 +365,7 @@ class ParcelableActivitiesAdapter(
         }, readStatusValueAction = lambda2@ { activity ->
             if (activity.after_filtered_sources != null) return@lambda2 activity.after_filtered_sources
             val sources = ParcelableActivityUtils.filterSources(activity.sources_lite,
-                    filteredUserKeys, followingOnly)
+                    filteredUserKeys, filteredUserNames, filteredUserDescriptions, followingOnly)
             activity.after_filtered_sources = sources
             return@lambda2 sources
         }, defValue = null, raw = raw)
@@ -390,7 +393,7 @@ class ParcelableActivitiesAdapter(
                     JsonSerializer.parseArray(it, ParcelableLiteUser::class.java)
                 }
                 val filteredSources = ParcelableActivityUtils.filterSources(sources, filteredUserKeys,
-                        followingOnly)
+                        filteredUserNames, filteredUserDescriptions, followingOnly)
                 val newInfo = ActivityInfo(_id, timestamp, gap, action, filteredSources)
                 infoCache?.set(dataPosition, newInfo)
                 return@run newInfo
@@ -469,7 +472,7 @@ class ParcelableActivitiesAdapter(
             val status = adapter.getActivity(position).activityStatus ?: return
             IntentUtils.openUserProfile(adapter.context, status.account_key, status.user_key,
                     status.user_screen_name, status.extras?.user_statusnet_profile_url,
-                    adapter.preferences[newDocumentApiKey], Referral.TIMELINE_STATUS, null)
+                    adapter.preferences[newDocumentApiKey], null)
         }
 
         override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
@@ -505,7 +508,31 @@ class ParcelableActivitiesAdapter(
             val gap: Boolean,
             val action: String,
             val filteredSources: Array<ParcelableLiteUser>?
-    )
+    ) {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as ActivityInfo
+
+            if (_id != other._id) return false
+            if (timestamp != other.timestamp) return false
+            if (gap != other.gap) return false
+            if (action != other.action) return false
+            if (!Arrays.equals(filteredSources, other.filteredSources)) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = _id.hashCode()
+            result = 31 * result + timestamp.hashCode()
+            result = 31 * result + gap.hashCode()
+            result = 31 * result + action.hashCode()
+            result = 31 * result + (filteredSources?.let { Arrays.hashCode(it) } ?: 0)
+            return result
+        }
+    }
 
     companion object {
         const val ITEM_VIEW_TYPE_STUB = 0

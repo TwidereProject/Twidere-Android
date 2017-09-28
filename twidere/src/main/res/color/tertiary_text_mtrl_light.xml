@@ -19,10 +19,10 @@
   -->
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_enabled="false" android:color="#b0b0b0"/>
-    <item android:state_window_focused="false" android:color="#808080"/>
-    <item android:state_pressed="true" android:color="#808080"/>
-    <item android:state_selected="true" android:color="#808080"/>
+    <item android:color="#b0b0b0" android:state_enabled="false"/>
+    <item android:color="#808080" android:state_window_focused="false"/>
+    <item android:color="#808080" android:state_pressed="true"/>
+    <item android:color="#808080" android:state_selected="true"/>
     <item android:color="#969696"/> <!-- not selected -->
 </selector>
 

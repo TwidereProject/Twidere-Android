@@ -38,7 +38,7 @@
         style="?android:progressBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"/>
 
     <ImageView
         android:id="@+id/videoIndicator"
@@ -58,7 +58,6 @@
         android:layout_marginRight="@dimen/element_spacing_minus_mlarge"
         android:layout_marginTop="@dimen/element_spacing_minus_mlarge"
         android:background="?selectableItemBackgroundBorderless"
-        android:clickable="true"
         android:contentDescription="@string/remove"
         app:touchHeight="@dimen/element_size_normal"
         app:touchWidth="@dimen/element_size_normal">
@@ -82,7 +81,6 @@
         android:layout_marginEnd="@dimen/element_spacing_minus_mlarge"
         android:layout_marginRight="@dimen/element_spacing_minus_mlarge"
         android:background="?selectableItemBackgroundBorderless"
-        android:clickable="true"
         android:contentDescription="@string/action_edit"
         app:touchHeight="@dimen/element_size_normal"
         app:touchWidth="@dimen/element_size_normal">

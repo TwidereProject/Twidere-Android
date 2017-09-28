@@ -20,7 +20,7 @@ class ItemCounts(counts: Int) {
     }
 
     fun getItemStartPosition(countIndex: Int): Int {
-        return (0..countIndex - 1).sumBy { data[it] }
+        return (0 until countIndex).sumBy { data[it] }
     }
 
     val itemCount: Int get() = data.sum()

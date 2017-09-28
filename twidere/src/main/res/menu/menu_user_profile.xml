@@ -46,12 +46,12 @@
         android:checkable="true"
         android:checked="false"
         android:icon="@drawable/ic_action_notification"
-        android:title="@string/enable_notifications"/>
+        android:title="@string/action_enable_notifications"/>
     <item
         android:id="@id/enable_retweets"
         android:checkable="true"
         android:icon="@drawable/ic_action_retweet"
-        android:title="@string/enable_retweets"/>
+        android:title="@string/action_enable_retweets"/>
     <item
         android:id="@id/add_to_filter"
         android:checkable="true"
@@ -86,5 +86,27 @@
         android:id="@id/open_in_browser"
         android:icon="@drawable/ic_action_web"
         android:title="@string/action_open_in_browser"/>
-
+    <item
+        android:id="@+id/add_to_home_screen_submenu"
+        android:icon="@drawable/ic_action_home"
+        android:title="@string/action_add_to_home_screen_more">
+        <menu>
+            <item
+                android:id="@+id/add_user_to_home_screen"
+                android:icon="@drawable/ic_action_user"
+                android:title="@string/title_user"/>
+            <item
+                android:id="@+id/add_statuses_to_home_screen"
+                android:icon="@drawable/ic_action_quote"
+                android:title="@string/title_statuses"/>
+            <item
+                android:id="@+id/add_media_to_home_screen"
+                android:icon="@drawable/ic_action_gallery"
+                android:title="@string/title_media_timeline"/>
+            <item
+                android:id="@+id/add_favorites_to_home_screen"
+                android:icon="@drawable/ic_action_star"
+                android:title="@string/title_favorites"/>
+        </menu>
+    </item>
 </menu>

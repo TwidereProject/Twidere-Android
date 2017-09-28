@@ -49,6 +49,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarShowHideHelper
 import org.mariotaku.twidere.constant.*
+import org.mariotaku.twidere.exception.NoAccountException
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.fragment.filter.FiltersFragment
 import org.mariotaku.twidere.fragment.filter.FiltersImportBlocksFragment
@@ -65,6 +66,7 @@ import org.mariotaku.twidere.fragment.message.MessagesConversationFragment
 import org.mariotaku.twidere.fragment.message.MessagesEntriesFragment
 import org.mariotaku.twidere.fragment.search.MastodonSearchFragment
 import org.mariotaku.twidere.fragment.search.SearchFragment
+import org.mariotaku.twidere.fragment.status.StatusFragment
 import org.mariotaku.twidere.fragment.statuses.*
 import org.mariotaku.twidere.fragment.users.*
 import org.mariotaku.twidere.graphic.ActionBarColorDrawable
@@ -97,7 +99,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
         multiSelectHandler.dispatchOnCreate()
 
         fragmentLifecycleCallbacks = object : FragmentManager.FragmentLifecycleCallbacks() {
-            override fun onFragmentViewCreated(fm: FragmentManager, f: Fragment, v: View, savedInstanceState: Bundle?) {
+            override fun onFragmentViewCreated(fm: FragmentManager, f: Fragment, v: View, savedState: Bundle?) {
                 if (f is IToolBarSupportFragment) {
                     setSupportActionBar(f.toolbar)
                 }
@@ -118,13 +120,16 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
                 finish()
                 return
             }
-        } catch (e: Utils.NoAccountException) {
+        } catch (e: NoAccountException) {
             val selectIntent = Intent(this, AccountSelectorActivity::class.java)
             val accountHost: String? = intent.getStringExtra(EXTRA_ACCOUNT_HOST) ?:
                     uri.getQueryParameter(QUERY_PARAM_ACCOUNT_HOST) ?: e.accountHost
+            val accountType: String? = intent.getStringExtra(EXTRA_ACCOUNT_TYPE) ?:
+                    uri.getQueryParameter(QUERY_PARAM_ACCOUNT_TYPE) ?: e.accountType
             selectIntent.putExtra(EXTRA_SINGLE_SELECTION, true)
             selectIntent.putExtra(EXTRA_SELECT_ONLY_ITEM_AUTOMATICALLY, true)
             selectIntent.putExtra(EXTRA_ACCOUNT_HOST, accountHost)
+            selectIntent.putExtra(EXTRA_ACCOUNT_TYPE, accountType)
             selectIntent.putExtra(EXTRA_START_INTENT, intent)
             startActivity(selectIntent)
             finish()
@@ -142,7 +147,8 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
             contentFragmentId = android.R.id.content
         } else {
             setContentView(R.layout.activity_link_handler)
-            toolbar?.let { toolbar ->
+            val toolbar = this.toolbar
+            if (toolbar != null) {
                 if (supportActionBar != null) {
                     toolbar.visibility = View.GONE
                     windowOverlay?.visibility = View.GONE
@@ -167,10 +173,13 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
             ft.commit()
         }
         setTitle(linkId, uri)
-        finishOnly = uri.getQueryParameter(QUERY_PARAM_FINISH_ONLY)?.toBoolean() ?: false
+        finishOnly = uri.getQueryParameter(QUERY_PARAM_FINISH_ONLY)?.toBoolean() == true
 
-        supportActionBar?.setBackgroundDrawable(ActionBarColorDrawable.create(overrideTheme.colorToolbar,
+        val theme = overrideTheme
+
+        supportActionBar?.setBackgroundDrawable(ActionBarColorDrawable.create(theme.colorToolbar,
                 true))
+        contentView?.statusBarColor = theme.statusBarColor
         if (fragment is IToolBarSupportFragment) {
             ThemeUtils.setCompatContentViewOverlay(window, EmptyDrawable())
         }
@@ -220,6 +229,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
         if (fragment is IToolBarSupportFragment) {
             return result
         }
+        contentView?.statusBarHeight = insets.systemWindowInsetTop - controlBarHeight
         return result.consumeSystemWindowInsets()
     }
 
@@ -340,11 +350,13 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
         get() {
             val fragment = currentVisibleFragment
             val actionBar = supportActionBar
+            var height = 0
             if (fragment is IToolBarSupportFragment) {
-                return fragment.controlBarHeight
+                fragment.controlBarHeight
             } else if (actionBar != null) {
-                return actionBar.height
+                height = actionBar.height
             }
+            if (height != 0) return height
             if (actionBarHeight != 0) return actionBarHeight
             actionBarHeight = ThemeUtils.getActionBarHeight(this)
             return actionBarHeight
@@ -541,7 +553,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
         fab.contentDescription = info.title
     }
 
-    @Throws(Utils.NoAccountException::class)
+    @Throws(NoAccountException::class)
     private fun createFragmentForIntent(context: Context, linkId: Int, intent: Intent): Fragment? {
         intent.setExtrasClassLoader(classLoader)
         val extras = intent.extras
@@ -559,6 +571,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
 
         }
         var userHost: String? = null
+        var accountType: String? = null
         var accountRequired = true
         when (linkId) {
             LINK_ID_ACCOUNTS -> {
@@ -611,8 +624,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
                 if (paramUserKey != null) {
                     userHost = paramUserKey.host
                 }
-
-                args.putString(EXTRA_REFERRAL, intent.getStringExtra(EXTRA_REFERRAL))
+                accountType = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_TYPE)
             }
             LINK_ID_USER_LIST_MEMBERSHIPS -> {
                 fragment = UserListMembershipsFragment()
@@ -905,8 +917,9 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
         }
 
         if (accountRequired && accountKey == null) {
-            val exception = Utils.NoAccountException()
+            val exception = NoAccountException()
             exception.accountHost = userHost
+            exception.accountType = accountType
             throw exception
         }
         args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey)
@@ -915,8 +928,8 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
     }
 
     interface HideUiOnScroll
-    
-    private fun Uri.getUserKeyQueryParameter() : UserKey? {
+
+    private fun Uri.getUserKeyQueryParameter(): UserKey? {
         val value = getQueryParameter(QUERY_PARAM_USER_KEY) ?: getQueryParameter(QUERY_PARAM_USER_ID)
         return value?.let(UserKey::valueOf)
     }

@@ -23,6 +23,9 @@
     <item>Gallerij</item>
     <item>Klembord</item>
   </string-array>
+  <string-array name="entries_media_preload">
+    <item>WLAN</item>
+  </string-array>
   <string-array name="entries_media_preview_style">
     <item>Bijsnijden</item>
     <item>Schalen</item>
@@ -37,6 +40,11 @@
     <item>Rond</item>
     <item>Vierkant</item>
   </string-array>
+  <string-array name="entries_proxy_type">
+    <item>HTTP</item>
+    <item>Reverse proxy</item>
+    <!--<item>SOCKS</item>-->
+  </string-array>
   <string-array name="entries_refresh_interval">
     <item>3 minuten</item>
     <item>5 minuten</item>
@@ -46,6 +54,11 @@
     <item>1 uur</item>
     <item>2 uur</item>
     <item>4 uur</item>
+  </string-array>
+  <string-array name="entries_tab_column_width">
+    <item>Smal</item>
+    <item>Normal</item>
+    <item>Wide</item>
   </string-array>
   <string-array name="entries_tab_display_option">
     <item>Icoon</item>

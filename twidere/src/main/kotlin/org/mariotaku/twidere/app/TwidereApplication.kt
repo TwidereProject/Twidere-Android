@@ -19,11 +19,14 @@
 
 package org.mariotaku.twidere.app
 
+import android.accounts.AccountManager
+import android.accounts.OnAccountsUpdateListener
 import android.app.Application
 import android.content.*
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.content.res.Resources
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.net.ConnectivityManager
@@ -39,8 +42,8 @@ import org.mariotaku.commons.logansquare.LoganSquareMapperFinder
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
+import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
 import org.mariotaku.ktextension.isCurrentThreadCompat
-import org.mariotaku.ktextension.setLayoutDirectionCompat
 import org.mariotaku.mediaviewer.library.MediaDownloader
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.BuildConfig
@@ -50,20 +53,27 @@ import org.mariotaku.twidere.activity.AssistLauncherActivity
 import org.mariotaku.twidere.activity.MainActivity
 import org.mariotaku.twidere.activity.MainHondaJOJOActivity
 import org.mariotaku.twidere.constant.*
+import org.mariotaku.twidere.extension.firstLanguage
 import org.mariotaku.twidere.extension.model.loadRemoteSettings
 import org.mariotaku.twidere.extension.model.save
+import org.mariotaku.twidere.extension.setLocale
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.receiver.ConnectivityStateReceiver
 import org.mariotaku.twidere.service.StreamingService
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
+import org.mariotaku.twidere.util.dagger.ApplicationModule
 import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.util.emoji.EmojioneTranslator
 import org.mariotaku.twidere.util.kovenant.startKovenant
 import org.mariotaku.twidere.util.kovenant.stopKovenant
 import org.mariotaku.twidere.util.media.MediaPreloader
 import org.mariotaku.twidere.util.media.ThumborWrapper
 import org.mariotaku.twidere.util.net.TwidereDns
+import org.mariotaku.twidere.util.notification.ContentNotificationManager
+import org.mariotaku.twidere.util.notification.NotificationChannelsManager
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
+import org.mariotaku.twidere.util.promotion.PromotionService
 import org.mariotaku.twidere.util.refresh.AutoRefreshController
 import org.mariotaku.twidere.util.sync.DataSyncProvider
 import org.mariotaku.twidere.util.sync.SyncController
@@ -74,7 +84,7 @@ import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeListener {
+class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
 
     @Inject
     lateinit internal var activityTracker: ActivityTracker
@@ -97,6 +107,8 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
     @Inject
     lateinit internal var extraFeaturesService: ExtraFeaturesService
     @Inject
+    lateinit internal var promotionService: PromotionService
+    @Inject
     lateinit internal var mediaPreloader: MediaPreloader
     @Inject
     lateinit internal var contentNotificationManager: ContentNotificationManager
@@ -110,6 +122,10 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
 
     val sqLiteOpenHelper: SQLiteOpenHelper by lazy {
         TwidereSQLiteOpenHelper(this, Constants.DATABASES_NAME, Constants.DATABASES_VERSION)
+    }
+
+    val applicationModule: ApplicationModule by lazy {
+        ApplicationModule(this)
     }
 
     private val sharedPreferences: SharedPreferences by lazy {
@@ -134,6 +150,8 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
         initializeAsyncTask()
         initDebugMode()
         initBugReport()
+        EmojioneTranslator.init(this)
+        NotificationChannelsManager.initialize(this)
 
         updateEasterEggIcon()
 
@@ -142,6 +160,7 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
         autoRefreshController.appStarted()
         syncController.appStarted()
         extraFeaturesService.appStarted()
+        promotionService.appStarted()
 
         registerActivityLifecycleCallbacks(activityTracker)
         registerReceiver(ConnectivityStateReceiver(), IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
@@ -152,6 +171,10 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
 
         Analyzer.preferencesChanged(sharedPreferences)
         DataSyncProvider.Factory.notifyUpdate(this)
+
+        AccountManager.get(this).addOnAccountsUpdatedListenerSafe(OnAccountsUpdateListener {
+            NotificationChannelsManager.updateAccountChannelsAndGroups(this)
+        }, updateImmediately = true)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
@@ -206,6 +229,9 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
                     stopService(streamingIntent)
                 }
             }
+            KEY_OVERRIDE_LANGUAGE -> {
+                applyLanguageSettings()
+            }
         }
         Analyzer.preferencesChanged(preferences)
     }
@@ -215,14 +241,10 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
         stopKovenant()
     }
 
-    @Suppress("DEPRECATION")
     private fun applyLanguageSettings() {
-        val locale = sharedPreferences[overrideLanguageKey] ?: return
-        Locale.setDefault(locale)
-        val config = resources.configuration
-        config.locale = locale
-        config.setLayoutDirectionCompat(locale)
-        resources.updateConfiguration(config, resources.displayMetrics)
+        val locale = sharedPreferences[overrideLanguageKey] ?: Resources.getSystem().
+                firstLanguage ?: return
+        resources.setLocale(locale)
     }
 
     private fun loadDefaultFeatures() {
@@ -317,8 +339,6 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
 
     companion object {
 
-        private val KEY_UCD_DATA_PROFILING = "ucd_data_profiling"
-        private val KEY_SPICE_DATA_PROFILING = "spice_data_profiling"
         private val KEY_KEYBOARD_SHORTCUT_INITIALIZED = "keyboard_shortcut_initialized"
         var instance: TwidereApplication? = null
             private set

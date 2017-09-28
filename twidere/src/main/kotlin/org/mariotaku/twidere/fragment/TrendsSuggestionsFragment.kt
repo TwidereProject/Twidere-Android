@@ -79,7 +79,7 @@ class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), L
         val uri = CachedTrends.Local.CONTENT_URI
         val loaderWhere = Expression.and(Expression.equalsArgs(CachedTrends.ACCOUNT_KEY),
                 Expression.equalsArgs(CachedTrends.WOEID)).sql
-        val loaderWhereArgs = arrayOf(accountKey?.toString()?.orEmpty(), woeId.toString())
+        val loaderWhereArgs = arrayOf(accountKey?.toString().orEmpty(), woeId.toString())
         return CursorLoader(activity, uri, CachedTrends.COLUMNS, loaderWhere, loaderWhereArgs, CachedTrends.TREND_ORDER)
     }
 

@@ -24,6 +24,8 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.text.BidiFormatter
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.squareup.otto.Bus
 import com.twitter.Validator
 import nl.komponents.kovenant.Promise
@@ -35,6 +37,7 @@ import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.gifshare.GifShareProvider
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
+import org.mariotaku.twidere.util.promotion.PromotionService
 import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
 import org.mariotaku.twidere.util.sync.SyncPreferences
 import org.mariotaku.twidere.util.sync.TimelineSyncManager
@@ -83,6 +86,11 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     lateinit var syncPreferences: SyncPreferences
     @Inject
     lateinit var externalThemeManager: ExternalThemeManager
+    @Inject
+    lateinit var promotionService: PromotionService
+
+    lateinit var requestManager: RequestManager
+        private set
 
     protected val statusScheduleProvider: StatusScheduleProvider?
         get() = statusScheduleProviderFactory.newInstance(context)
@@ -93,26 +101,26 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     protected val gifShareProvider: GifShareProvider?
         get() = gifShareProviderFactory.newInstance(context)
 
-    private val actionHelper = IBaseFragment.ActionHelper(this)
+    private val actionHelper = IBaseFragment.ActionHelper<BaseFragment>()
 
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        requestApplyInsets()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requestManager = Glide.with(this)
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        GeneralComponent.get(context).inject(this)
+    override fun onStart() {
+        super.onStart()
+        requestManager.onStart()
     }
 
-    override fun executeAfterFragmentResumed(useHandler: Boolean, action: (BaseFragment) -> Unit)
-            : Promise<Unit, Exception> {
-        return actionHelper.executeAfterFragmentResumed(useHandler, action)
+    override fun onStop() {
+        requestManager.onStop()
+        super.onStop()
     }
 
     override fun onResume() {
         super.onResume()
-        actionHelper.dispatchOnResumeFragments()
+        actionHelper.dispatchOnResumeFragments(this)
     }
 
     override fun onPause() {
@@ -121,9 +129,25 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     }
 
     override fun onDestroy() {
+        requestManager.onDestroy()
         extraFeaturesService.release()
         super.onDestroy()
         DebugModeUtils.watchReferenceLeak(this)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        GeneralComponent.get(context).inject(this)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        requestApplyInsets()
+    }
+
+    override fun executeAfterFragmentResumed(useHandler: Boolean, action: (BaseFragment) -> Unit)
+            : Promise<Unit, Exception> {
+        return actionHelper.executeAfterFragmentResumed(this, useHandler, action)
     }
 
 }

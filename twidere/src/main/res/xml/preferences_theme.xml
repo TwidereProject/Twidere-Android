@@ -25,7 +25,7 @@
         android:order="22"
         android:title="@string/background">
         <extra
-            android:name="should_recreate"
+            android:name="should_restart"
             android:value="true"/>
         <extra
             android:name="recreate_activity"

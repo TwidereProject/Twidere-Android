@@ -43,12 +43,15 @@ import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonActivity
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.activityLabel
 import org.mariotaku.ktextension.getSystemWindowInsets
 import org.mariotaku.ktextension.systemWindowInsets
 import org.mariotaku.ktextension.unregisterReceiverSafe
@@ -61,6 +64,9 @@ import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.activity.iface.IThemedActivity
 import org.mariotaku.twidere.annotation.NavbarStyle
 import org.mariotaku.twidere.constant.*
+import org.mariotaku.twidere.extension.defaultSharedPreferences
+import org.mariotaku.twidere.extension.firstLanguage
+import org.mariotaku.twidere.extension.overriding
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowInsetsCallback
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.preference.iface.IDialogPreference
@@ -69,6 +75,7 @@ import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallb
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.gifshare.GifShareProvider
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
+import org.mariotaku.twidere.util.promotion.PromotionService
 import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
 import org.mariotaku.twidere.util.support.ActivitySupport
 import org.mariotaku.twidere.util.support.ActivitySupport.TaskDescriptionCompat
@@ -117,6 +124,13 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     lateinit var restHttpClient: RestHttpClient
     @Inject
     lateinit var mastodonApplicationRegistry: MastodonApplicationRegistry
+    @Inject
+    lateinit var taskServiceRunner: TaskServiceRunner
+    @Inject
+    lateinit var promotionService: PromotionService
+
+    lateinit var requestManager: RequestManager
+        private set
 
     protected val statusScheduleProvider: StatusScheduleProvider?
         get() = statusScheduleProviderFactory.newInstance(this)
@@ -145,9 +159,12 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     override val themeBackgroundOption: String
         get() = themePreferences[themeBackgroundOptionKey]
 
+    open val themeNavigationStyle: String
+        get() = themePreferences[navbarStyleKey]
+
     private var isNightBackup: Int = TwilightManagerAccessor.UNSPECIFIED
 
-    private val actionHelper = IBaseActivity.ActionHelper(this)
+    private val actionHelper = IBaseActivity.ActionHelper<BaseActivity>()
 
     private val themePreferences by lazy {
         getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
@@ -237,17 +254,33 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
             StrictModeUtils.detectAllVmPolicy()
             StrictModeUtils.detectAllThreadPolicy()
         }
-        val prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-        val themeColor = prefs[themeColorKey]
-        val themeResource = getThemeResource(prefs, prefs[themeKey], themeColor)
+        val themeColor = themePreferences[themeColorKey]
+        val themeResource = getThemeResource(themePreferences, themePreferences[themeKey], themeColor)
         if (themeResource != 0) {
             setTheme(themeResource)
         }
-        onApplyNavigationStyle(prefs[navbarStyleKey], themeColor)
+        onApplyNavigationStyle(themeNavigationStyle, themeColor)
         super.onCreate(savedInstanceState)
+        title = activityLabel
+        requestManager = Glide.with(this)
         ActivitySupport.setTaskDescription(this, TaskDescriptionCompat(title.toString(), null,
                 ColorUtils.setAlphaComponent(overrideTheme.colorToolbar, 0xFF)))
         GeneralComponent.get(this).inject(this)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        requestManager.onStart()
+    }
+
+    override fun onStop() {
+        requestManager.onStop()
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        requestManager.onDestroy()
+        super.onDestroy()
     }
 
     override fun onResume() {
@@ -318,11 +351,21 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
 
     override fun onResumeFragments() {
         super.onResumeFragments()
-        actionHelper.dispatchOnResumeFragments()
+        actionHelper.dispatchOnResumeFragments(this)
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        val locale = newBase.defaultSharedPreferences[overrideLanguageKey] ?: Resources.getSystem()
+                .firstLanguage
+        if (locale == null) {
+            super.attachBaseContext(newBase)
+            return
+        }
+        super.attachBaseContext(newBase.overriding(locale))
     }
 
     override fun executeAfterFragmentResumed(useHandler: Boolean, action: (BaseActivity) -> Unit): Promise<Unit, Exception> {
-        return actionHelper.executeAfterFragmentResumed(useHandler, action)
+        return actionHelper.executeAfterFragmentResumed(this, useHandler, action)
     }
 
 

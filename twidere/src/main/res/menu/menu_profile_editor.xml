@@ -22,7 +22,7 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@id/save"
-        app:showAsAction="always"
+        android:icon="@drawable/ic_action_confirm"
         android:title="@string/action_save"
-        android:icon="@drawable/ic_action_confirm"/>
+        app:showAsAction="always"/>
 </menu>

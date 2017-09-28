@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.preference
 
 import android.accounts.AccountManager
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
@@ -93,7 +94,7 @@ abstract class AccountsListPreference(context: Context, attrs: AttributeSet? = n
             switchPreference = context.getSharedPreferences(switchPreferenceName, Context.MODE_PRIVATE)
             switchPreference.registerOnSharedPreferenceChangeListener(this)
             title = account.user.name
-            summary = String.format("@%s", account.user.screen_name)
+            summary = "@${account.user.screen_name}"
             widgetLayoutResource = R.layout.layout_preference_switch_indicator
         }
 
@@ -102,17 +103,17 @@ abstract class AccountsListPreference(context: Context, attrs: AttributeSet? = n
         }
 
 
+        @SuppressLint("RestrictedApi")
         override fun onBindViewHolder(holder: PreferenceViewHolder) {
             super.onBindViewHolder(holder)
             val iconView = holder.findViewById(android.R.id.icon)
             if (iconView is PreferenceImageView) {
-                val imageView = iconView
                 val maxSize = context.resources.getDimensionPixelSize(R.dimen.element_size_normal)
-                imageView.minimumWidth = maxSize
-                imageView.minimumHeight = maxSize
-                imageView.maxWidth = maxSize
-                imageView.maxHeight = maxSize
-                imageView.scaleType = ImageView.ScaleType.CENTER_CROP
+                iconView.minimumWidth = maxSize
+                iconView.minimumHeight = maxSize
+                iconView.maxWidth = maxSize
+                iconView.maxHeight = maxSize
+                iconView.scaleType = ImageView.ScaleType.CENTER_CROP
             }
             val titleView = holder.findViewById(android.R.id.title)
             if (titleView is TextView) {

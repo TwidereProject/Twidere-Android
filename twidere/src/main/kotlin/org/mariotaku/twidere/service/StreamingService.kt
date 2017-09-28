@@ -35,7 +35,9 @@ import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.key
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.queryCount
 import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.model.notification.NotificationChannelSpec
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.*
@@ -172,7 +174,7 @@ class StreamingService : BaseService() {
         val contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         val contentTitle = getString(R.string.app_name)
         val contentText = getString(R.string.timeline_streaming_running)
-        val builder = NotificationCompat.Builder(this)
+        val builder = NotificationChannelSpec.serviceStatuses.notificationBuilder(this)
         builder.setOngoing(true)
         builder.setSmallIcon(R.drawable.ic_stat_streaming)
         builder.setContentTitle(contentTitle)
@@ -388,7 +390,7 @@ class StreamingService : BaseService() {
                         Expression.equalsArgs(CachedRelationships.USER_KEY),
                         Expression.equals(CachedRelationships.NOTIFICATIONS_ENABLED, 1)).sql
                 val whereArgs = arrayOf(account.key.toString(), userKey.toString())
-                if (DataStoreUtils.queryCount(context.contentResolver, CachedRelationships.CONTENT_URI,
+                if (context.contentResolver.queryCount(CachedRelationships.CONTENT_URI,
                         where, whereArgs) <= 0) return
 
                 contentNotificationManager.showUserNotification(account.key, status, userKey)
@@ -403,7 +405,7 @@ class StreamingService : BaseService() {
             }
 
             override fun onDisconnectNotice(code: Int, reason: String?): Boolean {
-                disconnect();
+                disconnect()
                 return true
             }
 

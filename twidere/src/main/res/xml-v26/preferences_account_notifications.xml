@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--suppress AndroidElementNotAllowed -->
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:title="@string/notifications">
+
+    <org.mariotaku.twidere.preference.notification.AccountNotificationChannelsPreference
+        android:key="notification_channels"
+        android:title="@string/preference_title_notification_channels"/>
+
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
+        android:key="cat_other_settings"
+        android:title="@string/other_settings">
+        <org.mariotaku.twidere.preference.ColorPickerPreference
+            android:key="notification_light_color"
+            android:title="@string/notification_light_color"
+            app:defaultColor="@color/branding_color"/>
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="notification_following_only"
+            android:summary="@string/following_only_summary"
+            android:title="@string/following_only"/>
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="notification_mentions_only"
+            android:title="@string/mentions_only"/>
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
+
+</PreferenceScreen>

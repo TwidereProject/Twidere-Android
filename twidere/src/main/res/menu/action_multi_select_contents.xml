@@ -4,20 +4,20 @@
 
     <item
         android:id="@id/select_account"
-        android:actionProviderClass="org.mariotaku.twidere.menu.AccountActionProvider"
         android:icon="@drawable/ic_action_user"
-        app:showAsAction="always"
-        android:title="@string/select_account"/>
+        android:title="@string/select_account"
+        app:actionProviderClass="org.mariotaku.twidere.menu.AccountActionProvider"
+        app:showAsAction="always"/>
     <item
         android:id="@id/reply"
         android:icon="@drawable/ic_action_reply"
-        app:showAsAction="always"
-        android:title="@string/action_reply"/>
+        android:title="@string/action_reply"
+        app:showAsAction="always"/>
     <item
         android:id="@+id/mute_submenu"
         android:icon="@drawable/ic_action_speaker_muted"
-        app:showAsAction="ifRoom"
-        android:title="@string/action_add_to_filter">
+        android:title="@string/action_add_to_filter"
+        app:showAsAction="ifRoom">
         <menu>
             <item
                 android:id="@id/mute_user"
@@ -31,8 +31,8 @@
     <item
         android:id="@+id/block_submenu"
         android:icon="@drawable/ic_action_block"
-        app:showAsAction="ifRoom"
-        android:title="@string/action_block">
+        android:title="@string/action_block"
+        app:showAsAction="ifRoom">
         <menu>
             <item
                 android:id="@id/block"
@@ -46,8 +46,8 @@
     <item
         android:id="@+id/report_spam_submenu"
         android:icon="@drawable/ic_action_warning"
-        app:showAsAction="ifRoom"
-        android:title="@string/report_for_spam">
+        android:title="@string/report_for_spam"
+        app:showAsAction="ifRoom">
         <menu>
             <item
                 android:id="@id/report_spam"

@@ -25,8 +25,6 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
-import org.mariotaku.microblog.library.twitter.model.DMResponse;
-
 /**
  * Created by mariotaku on 2017/2/13.
  */

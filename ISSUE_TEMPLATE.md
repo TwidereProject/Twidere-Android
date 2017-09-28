@@ -35,7 +35,7 @@ App settings:
 
 - [ ] Custom API
 - [ ] Custom consumer key/secrets
-- [ ] Official keys
+- [ ] [Official keys](https://gist.github.com/mariotaku/5465786)
 - [ ] Using [Thumbor](https://github.com/thumbor/thumbor)
 - [ ] Connected through proxy
 - [ ] Media preview enabled

@@ -20,6 +20,7 @@ package org.mariotaku.microblog.library.twitter.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
@@ -100,17 +101,18 @@ public class GeoLocation implements ValueMap, Parcelable {
     }
 
     @Override
-    public boolean has(String key) {
+    public boolean has(@NonNull String key) {
         return "lat".equals(key) || "long".equals(key);
     }
 
     @Override
-    public Object get(String key) {
+    public Object get(@NonNull String key) {
         if ("lat".equals(key)) return latitude;
         if ("long".equals(key)) return longitude;
         return null;
     }
 
+    @NonNull
     @Override
     public String[] keys() {
         return new String[]{"lat", "long"};

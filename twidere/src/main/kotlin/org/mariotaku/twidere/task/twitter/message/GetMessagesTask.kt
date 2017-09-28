@@ -40,6 +40,7 @@ import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_SHOW_NOTIFICATION
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.queryCount
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
 import org.mariotaku.twidere.model.event.GetMessagesTaskEvent
@@ -138,9 +139,8 @@ class GetMessagesTask(
         val sincePagination = param.pagination?.get(accountsCount + index) as? SinceMaxPagination
 
         val firstFetch by lazy {
-            val noConversationsBefore = DataStoreUtils.queryCount(context.contentResolver,
-                    Conversations.CONTENT_URI, Expression.equalsArgs(Conversations.ACCOUNT_KEY).sql,
-                    arrayOf(accountKey.toString())) <= 0
+            val noConversationsBefore = context.contentResolver.queryCount(Conversations.CONTENT_URI,
+                    Expression.equalsArgs(Conversations.ACCOUNT_KEY).sql, arrayOf(accountKey.toString())) <= 0
             return@lazy noConversationsBefore
         }
 

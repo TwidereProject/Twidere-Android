@@ -25,8 +25,9 @@ import org.mariotaku.twidere.util.HtmlEscapeHelper
 /**
  * Created by mariotaku on 2017/4/19.
  */
-val Application.sourceHtml: String get() {
-    val name = this.name ?: return ""
-    val website = this.website ?: return name.let(HtmlEscapeHelper::escape).orEmpty()
-    return "<a href='${HtmlEscapeHelper.escape(website)}'>${HtmlEscapeHelper.escape(name)}</a>"
-}
+val Application.sourceHtml: String
+    get() {
+        val name = this.name ?: return ""
+        val website = this.website ?: return name.let(HtmlEscapeHelper::escape)
+        return "<a href='${HtmlEscapeHelper.escape(website)}'>${HtmlEscapeHelper.escape(name)}</a>"
+    }

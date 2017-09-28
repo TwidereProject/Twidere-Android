@@ -37,6 +37,7 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
+import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_FROM_USER
 import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.loader.ExtendedObjectCursorLoader
@@ -67,6 +68,9 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
     protected abstract val notificationType: Int
 
     protected abstract val isFilterEnabled: Boolean
+
+    @FilterScope
+    protected abstract val filterScopes: Int
 
     private var contentObserver: ContentObserver? = null
 
@@ -123,7 +127,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
         adapter.showAccountsColor = accountKeys.size > 1
         val projection = activityColumnsLite
         return CursorActivitiesLoader(context, uri, projection, selection, expression.parameters,
-                sortOrder, fromUser).apply {
+                sortOrder, fromUser, filterScopes).apply {
             isUseCache = false
         }
     }
@@ -213,7 +217,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
 
     protected fun getFiltersWhere(table: String): Expression? {
         if (!isFilterEnabled) return null
-        return DataStoreUtils.buildActivityFilterWhereClause(table, null)
+        return DataStoreUtils.buildStatusFilterWhereClause(preferences, table, null, filterScopes)
     }
 
     protected open fun processWhere(where: Expression, whereArgs: Array<String>): ParameterizedExpression {
@@ -333,21 +337,32 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
 
     class CursorActivitiesLoader(context: Context, uri: Uri, projection: Array<String>,
             selection: String, selectionArgs: Array<String>,
-            sortOrder: String, fromUser: Boolean
+            sortOrder: String, fromUser: Boolean, @FilterScope val filterScope: Int
     ) : ExtendedObjectCursorLoader<ParcelableActivity>(context, ParcelableActivity::class.java, uri,
             projection, selection, selectionArgs, sortOrder, fromUser) {
 
         override fun createObjectCursor(cursor: Cursor, indices: ObjectCursor.CursorIndices<ParcelableActivity>): ObjectCursor<ParcelableActivity> {
-            val filteredUserKeys = DataStoreUtils.getFilteredUserKeys(context)
-            return ActivityCursor(cursor, indices, filteredUserKeys)
+            val filteredUserKeys = DataStoreUtils.getFilteredUserKeys(context, filterScope)
+            val filteredNameKeywords = DataStoreUtils.getFilteredKeywords(context, filterScope or FilterScope.TARGET_NAME)
+            val filteredDescriptionKeywords = DataStoreUtils.getFilteredKeywords(context, filterScope or FilterScope.TARGET_DESCRIPTION)
+            return ActivityCursor(cursor, indices, filteredUserKeys, filteredNameKeywords, filteredDescriptionKeywords)
         }
 
-        class ActivityCursor(cursor: Cursor, indies: ObjectCursor.CursorIndices<ParcelableActivity>,
-                val filteredUserIds: Array<UserKey>) : ObjectCursor<ParcelableActivity>(cursor, indies)
+        class ActivityCursor(
+                cursor: Cursor,
+                indies: ObjectCursor.CursorIndices<ParcelableActivity>,
+                val filteredUserIds: Array<UserKey>,
+                val filteredUserNames: Array<String>,
+                val filteredUserDescriptions: Array<String>
+        ) : ObjectCursor<ParcelableActivity>(cursor, indies)
     }
 
     companion object {
-        val activityColumnsLite = Activities.COLUMNS - arrayOf(Activities.SOURCES,Activities.TARGETS,
-                Activities.TARGET_OBJECTS)
+        val activityColumnsLite = Activities.COLUMNS - arrayOf(Activities.SOURCES, Activities.TARGETS,
+                Activities.TARGET_OBJECTS, Activities.MENTIONS_JSON, Activities.CARD,
+                Activities.FILTER_FLAGS, Activities.FILTER_USERS, Activities.FILTER_LINKS,
+                Activities.FILTER_SOURCES, Activities.FILTER_NAMES, Activities.FILTER_TEXTS,
+                Activities.FILTER_DESCRIPTIONS)
+
     }
 }

@@ -22,7 +22,7 @@
         <item name="android:adjustViewBounds">false</item>
         <item name="sivBorderWidth">1dp</item>
         <item name="sivCornerRadiusRatio">10%p</item>
-        <item name="sivBackgroundColor">?android:colorBackground</item>
+        <item name="sivBackgroundColor">@color/background_color_profile_image_dark</item>
         <item name="sivShape">circle</item>
     </style>
 
@@ -31,7 +31,7 @@
         <item name="android:adjustViewBounds">false</item>
         <item name="sivBorderWidth">1dp</item>
         <item name="sivCornerRadiusRatio">10%p</item>
-        <item name="sivBackgroundColor">?android:colorBackground</item>
+        <item name="sivBackgroundColor">@color/background_color_profile_image_light</item>
         <item name="sivShape">circle</item>
     </style>
 
@@ -42,7 +42,7 @@
         <item name="android:paddingBottom">3dp</item>
         <item name="sivElevation">@dimen/elevation_card</item>
         <item name="sivBorderWidth">2dp</item>
-        <item name="sivBackgroundColor">?android:colorBackground</item>
+        <item name="sivBackgroundColor">@color/background_color_profile_image_dark</item>
         <item name="sivShape">circle</item>
     </style>
 
@@ -53,7 +53,7 @@
         <item name="android:paddingBottom">3dp</item>
         <item name="sivElevation">@dimen/elevation_card</item>
         <item name="sivBorderWidth">2dp</item>
-        <item name="sivBackgroundColor">?android:colorBackground</item>
+        <item name="sivBackgroundColor">@color/background_color_profile_image_light</item>
         <item name="sivShape">circle</item>
     </style>
 

@@ -23,6 +23,6 @@
     <item
         android:id="@id/add_account"
         android:icon="@drawable/ic_action_add"
-        app:showAsAction="ifRoom"
-        android:title="@string/add_account"/>
+        android:title="@string/add_account"
+        app:showAsAction="ifRoom"/>
 </menu>

@@ -279,7 +279,7 @@
   <string name="project_account">חשבון הפרוייקט</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">טווידר</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="proxy">פרוקסי</string>
   <string name="proxy_host">שרת פרוקסי</string>
   <string name="proxy_password">סיסמא לפרוקסי</string>
@@ -329,7 +329,7 @@
   <string name="send_follow_request">שלח בקשה לעקוב</string>
   <string name="sensitive_content_warning">ציוץ זה עלול להכיל תוכן רגיש, להמשיך?</string>
   <string name="sent_follow_request_to_user">נשלחה בקשה לעקוב אחרי <xliff:g id="user">%s</xliff:g>.</string>
-  <string name="settings">הגדרות</string>
+  <string name="action_settings">הגדרות</string>
   <string name="settings_notifications">התראות</string>
   <string name="settings_refresh">רענן</string>
   <string name="share_format">תבנית שיתוף</string>

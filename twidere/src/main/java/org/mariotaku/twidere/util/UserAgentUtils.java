@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.util;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
@@ -31,7 +32,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import java.lang.reflect.Constructor;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
@@ -76,6 +76,7 @@ public class UserAgentUtils {
         }
     }
 
+    @SuppressLint("WrongThread")
     @WorkerThread
     @Nullable
     public static String getDefaultUserAgentStringSafe(final Context context) {
@@ -84,12 +85,7 @@ public class UserAgentUtils {
             return getDefaultUserAgentString(context);
         }
         final Handler handler = new Handler(Looper.getMainLooper());
-        FutureTask<String> task = new FutureTask<>(new Callable<String>() {
-            @Override
-            public String call() throws Exception {
-                return getDefaultUserAgentString(context);
-            }
-        });
+        FutureTask<String> task = new FutureTask<>(() -> getDefaultUserAgentString(context));
         try {
             handler.post(task);
             return task.get(1, TimeUnit.SECONDS);

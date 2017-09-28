@@ -1,7 +1,9 @@
 package org.mariotaku.twidere.view.viewer
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.support.annotation.FloatRange
+import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v4.view.ViewCompat
 import android.support.v4.widget.ViewDragHelper
 import android.util.AttributeSet
@@ -97,6 +99,7 @@ class MediaSwipeCloseContainer(context: Context, attrs: AttributeSet? = null) : 
         return super.onInterceptTouchEvent(ev)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         dragHelper.processTouchEvent(event)
         return true
@@ -120,7 +123,7 @@ class MediaSwipeCloseContainer(context: Context, attrs: AttributeSet? = null) : 
 
 
     var backgroundAlpha: Float
-        get() = (background?.alpha ?: 0) / 255f
+        get() = (background?.let(DrawableCompat::getAlpha) ?: 0) / 255f
         set(@FloatRange(from = 0.0, to = 1.0) value) {
             background?.alpha = Math.round(value * 0xFF)
         }

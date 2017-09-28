@@ -39,6 +39,7 @@
 
         <item name="colorToolbar">?colorPrimary</item>
         <item name="isToolbarColored">true</item>
+        <item name="colorControlStateful">?colorControlNormal</item>
 
         <item name="actionBarTheme">@style/Theme.Twidere.Light.ActionBar</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
@@ -71,6 +72,7 @@
 
         <item name="colorToolbar">?colorPrimary</item>
         <item name="isToolbarColored">true</item>
+        <item name="colorControlStateful">?colorControlNormal</item>
 
         <item name="actionBarTheme">@null</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
@@ -125,4 +127,7 @@
         <item name="android:windowActionBarOverlay">false</item>
         <item name="android:windowActionModeOverlay">false</item>
     </style>
+
+    <style name="Theme.Twidere.Light.Launcher" parent="Theme.Twidere.Light.NoActionBar"/>
+
 </resources>

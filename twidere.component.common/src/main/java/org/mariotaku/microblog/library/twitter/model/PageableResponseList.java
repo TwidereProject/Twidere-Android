@@ -18,13 +18,13 @@
 
 package org.mariotaku.microblog.library.twitter.model;
 
-import org.mariotaku.microblog.library.annotation.NoObfuscate;
+import android.support.annotation.Keep;
 
 /**
  * Response list supports cursor pagination
  * Created by mariotaku on 15/5/7.
  */
-@NoObfuscate
+@Keep
 public class PageableResponseList<T> extends ResponseList<T> implements TwitterResponse, CursorSupport {
 
     long previousCursor;

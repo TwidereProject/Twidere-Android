@@ -12,22 +12,31 @@ import org.mariotaku.twidere.model.UserKey
 object ParcelableActivityUtils {
 
     /**
-     * @param activity        Activity for processing
+     * @param sources Source users
      * *
-     * @param filtered Those ids will be removed from source_ids.
+     * @param filteredKeys Those ids will be removed from source_ids.
      * *
-     * @param followingOnly   Limit following users in sources
+     * @param followingOnly Limit following users in sources
      * *
      * @return true if source ids changed, false otherwise
      */
-    fun filterSources(sources: Array<ParcelableLiteUser>?, filtered: Array<UserKey>?,
+    fun filterSources(sources: Array<ParcelableLiteUser>?, filteredKeys: Array<UserKey>?,
+            filteredNames: Array<String>?, filteredDescription: Array<String>?,
             followingOnly: Boolean): Array<ParcelableLiteUser>? {
         return sources?.filterNot { user ->
-            if (filtered != null && user.key in filtered) {
+            if (followingOnly && !user.is_following) {
                 return@filterNot true
             }
 
-            if (followingOnly && !user.is_following) {
+            if (filteredKeys != null && user.key in filteredKeys) {
+                return@filterNot true
+            }
+
+            if (filteredNames != null && filteredNames.matchedName(user)) {
+                return@filterNot true
+            }
+
+            if (filteredDescription != null && filteredDescription.matchedDescription(user)) {
                 return@filterNot true
             }
 
@@ -35,5 +44,15 @@ object ParcelableActivityUtils {
         }?.toTypedArray()
     }
 
+    private fun Array<String>.matchedName(user: ParcelableLiteUser): Boolean {
+        return any { rule -> user.name?.contains(rule, true) == true }
+    }
 
+    private fun Array<String>.matchedDescription(user: ParcelableLiteUser): Boolean {
+        return any { rule ->
+            user.description_unescaped?.contains(rule, true) == true ||
+                    user.url_expanded?.contains(rule, true) == true ||
+                    user.location?.contains(rule, true) == true
+        }
+    }
 }

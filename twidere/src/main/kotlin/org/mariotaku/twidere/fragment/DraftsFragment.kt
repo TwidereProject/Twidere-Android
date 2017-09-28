@@ -40,7 +40,6 @@ import android.widget.AbsListView.MultiChoiceModeListener
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ListView
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_drafts.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.setItemAvailability
@@ -72,7 +71,7 @@ class DraftsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, OnItemClickList
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
-        adapter = DraftsAdapter(activity, Glide.with(this)).apply {
+        adapter = DraftsAdapter(activity, requestManager).apply {
             textSize = preferences[textSizeKey].toFloat()
         }
 
@@ -296,7 +295,7 @@ class DraftsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, OnItemClickList
 
         override fun doInBackground(vararg params: Any) {
             val activity = activityRef.get() ?: return
-            deleteDrafts(activity, ids)
+            activity.deleteDrafts(ids)
             ids.forEach { id ->
                 val uri = Drafts.CONTENT_URI_NOTIFICATIONS.withAppendedPath(id.toString())
                 activity.contentResolver.delete(uri, null, null)
@@ -305,8 +304,8 @@ class DraftsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, OnItemClickList
 
         override fun onPreExecute() {
             val activity = activityRef.get() ?: return
-            (activity as IBaseActivity<*>).executeAfterFragmentResumed { activity ->
-                val f = ProgressDialogFragment.show(activity.supportFragmentManager, FRAGMENT_TAG_DELETING_DRAFTS)
+            (activity as IBaseActivity<*>).executeAfterFragmentResumed {
+                val f = ProgressDialogFragment.show(it.supportFragmentManager, FRAGMENT_TAG_DELETING_DRAFTS)
                 f.isCancelable = false
             }
         }

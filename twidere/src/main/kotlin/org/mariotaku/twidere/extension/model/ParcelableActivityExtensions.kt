@@ -30,10 +30,11 @@ val ParcelableActivity.activityStatus: ParcelableActivity?
         else -> null
     }
 
-val ParcelableActivity.reachedCountLimit: Boolean get() {
-    return sources.reachedCountLimit() || targets.reachedCountLimit() ||
-            target_objects.reachedCountLimit()
-}
+val ParcelableActivity.reachedCountLimit: Boolean
+    get() {
+        return sources.reachedCountLimit() || targets.reachedCountLimit() ||
+                target_objects.reachedCountLimit()
+    }
 
 fun ParcelableActivity.isSameSources(another: ParcelableActivity): Boolean {
     return Arrays.equals(sources, another.sources)
@@ -66,12 +67,19 @@ fun ParcelableActivity.prependTargetObjects(from: ParcelableActivity) {
             .prepend(from.target_objects)
 }
 
-inline val ParcelableActivity.RelatedObject.size get() = when {
-    statuses != null -> statuses.size
-    users != null -> users.size
-    user_lists != null -> user_lists.size
-    else -> 0
+fun ParcelableActivity.updateActivityFilterInfo() {
+    updateFilterInfo(sources?.singleOrNull()?.let {
+        listOf(it.description_unescaped, it.location, it.url_expanded)
+    })
 }
+
+inline val ParcelableActivity.RelatedObject.size
+    get() = when {
+        statuses != null -> statuses.size
+        users != null -> users.size
+        user_lists != null -> user_lists.size
+        else -> 0
+    }
 
 fun ParcelableActivity.RelatedObject?.isNullOrEmpty(): Boolean {
     if (this == null) return true

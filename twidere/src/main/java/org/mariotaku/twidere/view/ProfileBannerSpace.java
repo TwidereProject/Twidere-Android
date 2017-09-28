@@ -21,8 +21,8 @@ public class ProfileBannerSpace extends View {
      */
     public ProfileBannerSpace(final Context context, @Nullable final AttributeSet attrs) {
         super(context, attrs);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ProfileBannerImageView);
-        setBannerAspectRatio(a.getFraction(R.styleable.ProfileBannerImageView_bannerAspectRatio, 1, 1, 2f));
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ProfileBannerSpace);
+        setBannerAspectRatio(a.getFraction(R.styleable.ProfileBannerSpace_bannerAspectRatio, 1, 1, 2f));
         a.recycle();
     }
 

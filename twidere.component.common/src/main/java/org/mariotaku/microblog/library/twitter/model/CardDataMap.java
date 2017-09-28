@@ -18,6 +18,8 @@
 
 package org.mariotaku.microblog.library.twitter.model;
 
+import android.support.annotation.NonNull;
+
 import com.bluelinelabs.logansquare.LoganSquare;
 import com.fasterxml.jackson.core.JsonGenerator;
 
@@ -49,15 +51,16 @@ public class CardDataMap implements ValueMap {
     }
 
     @Override
-    public boolean has(String key) {
+    public boolean has(@NonNull String key) {
         return map.containsKey(key);
     }
 
     @Override
-    public Object get(String key) {
+    public Object get(@NonNull String key) {
         return map.get(key);
     }
 
+    @NonNull
     @Override
     public String[] keys() {
         final Set<String> keySet = map.keySet();
@@ -72,8 +75,9 @@ public class CardDataMap implements ValueMap {
     }
 
     public static class BodyConverter implements RestConverter<CardDataMap, Body, MicroBlogException> {
+        @NonNull
         @Override
-        public Body convert(CardDataMap obj) throws ConvertException, IOException, MicroBlogException {
+        public Body convert(@NonNull CardDataMap obj) throws ConvertException, IOException, MicroBlogException {
             final StringWriter sw = new StringWriter();
             final JsonGenerator generator = LoganSquare.JSON_FACTORY.createGenerator(sw);
             generator.writeStartObject();

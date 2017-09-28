@@ -369,10 +369,6 @@ abstract class ParcelableStatusesAdapter(
         gapLoadingIds.remove(id)
     }
 
-    fun isStatus(position: Int, raw: Boolean = false): Boolean {
-        return position < getStatusCount(raw)
-    }
-
     override fun getItemCount(): Int {
         return itemCounts.itemCount
     }
@@ -384,6 +380,18 @@ abstract class ParcelableStatusesAdapter(
             }
         }
         return null
+    }
+
+    fun isStatus(position: Int, raw: Boolean = false): Boolean {
+        return position < getStatusCount(raw)
+    }
+
+    fun getRowId(adapterPosition: Int, raw: Boolean = false): Long {
+        return getFieldValue(adapterPosition, readInfoValueAction = {
+            it._id
+        }, readStatusValueAction = { status ->
+            status.hashCode().toLong()
+        }, defValue = -1L, raw = raw)
     }
 
     fun findPositionByPositionKey(positionKey: Long, raw: Boolean = false): Int {

@@ -179,7 +179,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Emoji-tuki</string>
   <string name="empty_content">Tyhjennä sisältö</string>
-  <string name="enable_retweets">Ota uudelleentwiitit käyttöön</string>
   <string name="enable_streaming">Ota striimaus käyttöön</string>
   <string name="error_message">Virhe: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_media_upload_failed">Median lähettäminen epäonnistui.</string>
@@ -377,7 +376,7 @@
   <string name="no_status_content_text">Ei sisältöä</string>
   <string name="no_tab">Ei välilehteä</string>
   <string name="no_tab_hint">Ei välilehteä</string>
-  <string name="no_thanks">Ei kiitos</string>
+  <string name="action_no_thanks">Ei kiitos</string>
   <string name="no_user_found">Käyttäjää ei löytynyt</string>
   <string name="no_version_suffix">Ei versiojälkiliitettä</string>
   <string name="none">Ei mitään</string>
@@ -470,7 +469,7 @@
   <string name="projects_we_took_part">Projektit joihin otimme osaa</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="provider_fanfou">Fanfou</string>
   <string name="provider_quitter_se">Quitter.se</string>
   <string name="proxy">Välityspalvelin</string>
@@ -550,7 +549,7 @@
   <string name="sent_follow_request_to_user">Seurauspyyntö lähetetty käyttäjälle <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Palvelinosoite</string>
   <string name="set_consumer_key_secret_message">Twidere on ylittämässä sallitun käyttäjämäärän. Sinun täytyy luoda sovellus osoitteessa https://apps.twitter.com/ ja liittää alle kuluttaja-avain ja -salaus.\nJos jatkat oletusavaimen käyttöä, et välttämättä pääse enää kirjautumaan sisälle.</string>
-  <string name="settings">Asetukset</string>
+  <string name="action_settings">Asetukset</string>
   <string name="settings_interface">Käyttöliittymä</string>
   <string name="settings_notifications">Ilmoitukset</string>
   <string name="settings_refresh">Päivitys</string>

@@ -268,8 +268,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">پشتیبانی اموجی</string>
   <string name="empty_content">محتوای خالی</string>
-  <string name="enable_notifications">فعّال کردن آگاهی‌ها</string>
-  <string name="enable_retweets">فعّال کردن بازتوییت‌ها</string>
   <string name="enable_streaming">فعّال کردن جریان</string>
   <string name="error_info_oauth_timestamp_error">لطفاً تنظیمات تاریخ و زمان سامانه‌تان را بررسی کنید.</string>
   <string name="error_message">خطا: <xliff:g id="message">%s</xliff:g></string>
@@ -299,13 +297,9 @@
   <string name="external_group_host_format">گروه خارجی در <xliff:g id="host">%s</xliff:g></string>
   <string name="external_user_host_format">کاربر خارجی در <xliff:g id="host">%s</xliff:g></string>
   <string name="extra_configurations">پیکربندی‌های اضافی</string>
-  <string name="extra_feature_description_filters_import">درون‌ریزی فهرست‌های پالایه از انسداد/خموشی‌ها</string>
-  <string name="extra_feature_description_filters_subscription">اشتراک در پالایه‌های خموشی و هم‌گام سازی خودکار</string>
   <string name="extra_feature_description_schedule_status">زمان‌بندی توییت (ارسال بعداً)</string>
   <string name="extra_feature_description_share_gif">هم رسانی جیف در توییت</string>
   <string name="extra_feature_description_sync_data">هم‌گام سازی داده با دراپ‌باکس، گوگل‌درایو و…</string>
-  <string name="extra_feature_title_filters_import">درون‌ریزی پالایه‌ها</string>
-  <string name="extra_feature_title_filters_subscription">اشتراک پالایه‌ها</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">حمایت از توییدر و گرفتن ویژگی‌های بهبودیافته</string>
   <string name="extra_features_pack_description">با خرید بستهٔ ویژگی‌ها برای گرفتن تمام ویژگی‌ها (شامل ویژگی‌ها در ارائه‌های آینده)</string>
@@ -617,7 +611,7 @@
   <string name="no_status_content_text">بدون محتوا</string>
   <string name="no_tab">بدون زبانه</string>
   <string name="no_tab_hint">بدون زبانه</string>
-  <string name="no_thanks">نه، ممنون</string>
+  <string name="action_no_thanks">نه، ممنون</string>
   <string name="no_user_found">هیچ کاربری پیدا نشد</string>
   <string name="no_version_suffix">بدون پسوند نگارش</string>
   <string name="none">هیچ‌کدام</string>
@@ -751,7 +745,7 @@
   <string name="projects_we_took_part">پروژه‌هایی که در آن‌ها مشارکت داریم</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">توییدر</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="provider_fanfou">فن‌فو</string>
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>
@@ -838,7 +832,7 @@
   <string name="sent_follow_request_to_user">درخواست دنبال کردن به <xliff:g id="user">%s</xliff:g> فرستاده شد.</string>
   <string name="server_address">نشانی کارساز</string>
   <string name="set_consumer_key_secret_message">توییدر به کران ژتون رسیده است. باید در https://apps.twitter.com/ کاره‌ای ساختع و کلید و رمز مصرف‌کننده را در زیر بچسبانید.\nاگر به استفاده از کلید پیش‌گزیده ادامه دهید، ممکن است قادر به ورود نباشید.</string>
-  <string name="settings">تنظیمات</string>
+  <string name="action_settings">تنظیمات</string>
   <string name="settings_interface">رابط</string>
   <string name="settings_notifications">آگاهی‌ها</string>
   <string name="settings_refresh">تازه‌سازی</string>

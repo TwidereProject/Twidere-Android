@@ -43,7 +43,8 @@ class ReportUserSpamDialogFragment : AbsUserMuteBlockDialogFragment() {
     }
 
     override fun performUserAction(user: ParcelableUser, filterEverywhere: Boolean) {
-        twitterWrapper.reportSpamAsync(user.account_key, user.key)
+        val accountKey = user.account_key ?: return
+        twitterWrapper.reportSpamAsync(accountKey, user.key)
     }
 
     companion object {

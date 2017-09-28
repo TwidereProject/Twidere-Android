@@ -34,3 +34,13 @@ operator fun Any.get(field: Field): Any? {
         field.isAccessible = accessible
     }
 }
+
+operator fun Any.set(field: Field, any: Any?) {
+    val accessible = field.isAccessible
+    try {
+        field.isAccessible = true
+        field[this] = any
+    } finally {
+        field.isAccessible = accessible
+    }
+}

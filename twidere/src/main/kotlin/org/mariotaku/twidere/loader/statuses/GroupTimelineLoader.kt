@@ -20,13 +20,13 @@
 package org.mariotaku.twidere.loader.statuses
 
 import android.content.Context
-import android.database.sqlite.SQLiteDatabase
 import android.support.annotation.WorkerThread
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
@@ -34,7 +34,7 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.PaginatedList
-import org.mariotaku.twidere.util.InternalTwitterContentUtils
+import org.mariotaku.twidere.util.database.ContentFiltersUtils
 
 class GroupTimelineLoader(
         context: Context,
@@ -57,18 +57,19 @@ class GroupTimelineLoader(
         }
     }
     @WorkerThread
-    override fun shouldFilterStatus(database: SQLiteDatabase, status: ParcelableStatus): Boolean {
-        return InternalTwitterContentUtils.isFiltered(database, status, true)
+    override fun shouldFilterStatus(status: ParcelableStatus): Boolean {
+        return ContentFiltersUtils.isFiltered(context.contentResolver, status, true,
+                FilterScope.LIST_GROUP_TIMELINE)
     }
 
     private fun getMicroBlogStatuses(account: AccountDetails, paging: Paging): List<Status> {
         val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
-        when {
+        return when {
             groupId != null -> {
-                return microBlog.getGroupStatuses(groupId, paging)
+                microBlog.getGroupStatuses(groupId, paging)
             }
             groupName != null -> {
-                return microBlog.getGroupStatusesByName(groupName, paging)
+                microBlog.getGroupStatusesByName(groupName, paging)
             }
             else -> {
                 throw MicroBlogException("No group name or id given")

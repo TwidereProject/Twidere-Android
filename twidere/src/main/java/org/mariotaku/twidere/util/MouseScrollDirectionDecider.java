@@ -22,7 +22,6 @@ package org.mariotaku.twidere.util;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.support.v4.view.MotionEventCompat;
 import android.view.InputDevice;
 import android.view.MotionEvent;
 import android.view.View;
@@ -75,7 +74,7 @@ public class MouseScrollDirectionDecider {
         if ((event.getSource() & InputDevice.SOURCE_CLASS_POINTER) == 0) {
             return false;
         }
-        if (event.getAction() != MotionEventCompat.ACTION_SCROLL) return false;
+        if (event.getAction() != MotionEvent.ACTION_SCROLL) return false;
         verticalScroll = event.getAxisValue(MotionEvent.AXIS_VSCROLL);
         horizontalScroll = event.getAxisValue(MotionEvent.AXIS_HSCROLL);
         verticalView.onGenericMotionEvent(event);

@@ -17,7 +17,6 @@ import android.view.*
 import android.view.ContextMenu.ContextMenuInfo
 import android.widget.AdapterView
 import android.widget.AdapterView.AdapterContextMenuInfo
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.layout_draggable_list_with_empty_view.*
 import nl.komponents.kovenant.task
 import org.mariotaku.kpreferences.get
@@ -30,7 +29,6 @@ import org.mariotaku.twidere.TwidereConstants.ACCOUNT_AUTH_TOKEN_TYPE
 import org.mariotaku.twidere.TwidereConstants.ACCOUNT_TYPE
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity
 import org.mariotaku.twidere.adapter.AccountDetailsAdapter
-import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.applyTheme
@@ -62,7 +60,7 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
         val am = AccountManager.get(context)
-        adapter = AccountDetailsAdapter(context, Glide.with(this)).apply {
+        adapter = AccountDetailsAdapter(context, requestManager).apply {
             sortEnabled = true
             switchEnabled = true
             accountToggleListener = { pos, checked ->
@@ -154,7 +152,7 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
     override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         val account = adapter.getItem(position)
         IntentUtils.openUserProfile(context, account.user, preferences[newDocumentApiKey],
-                Referral.SELF_PROFILE, null)
+                null)
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<AccountDetails>> {

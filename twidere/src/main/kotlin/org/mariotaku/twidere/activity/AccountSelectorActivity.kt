@@ -28,7 +28,6 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ListView
 import android.widget.Toast
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_account_selector.*
 import org.mariotaku.ktextension.getNullableTypedArrayExtra
 import org.mariotaku.twidere.R
@@ -87,7 +86,7 @@ class AccountSelectorActivity : BaseActivity(), OnItemClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_account_selector)
         DataStoreUtils.prepareDatabase(this)
-        adapter = AccountDetailsAdapter(this, Glide.with(this)).apply {
+        adapter = AccountDetailsAdapter(this, requestManager).apply {
             switchEnabled = !isSingleSelection
             sortEnabled = false
             val am = AccountManager.get(context)
@@ -96,7 +95,7 @@ class AccountSelectorActivity : BaseActivity(), OnItemClickListener {
             val oauthOnly = isOAuthOnly
             val accountHost = accountHost
             val accountType = accountType
-            addAll(allAccountDetails.filter {
+            val matchedAccounts = allAccountDetails.filter {
                 if (extraKeys != null) {
                     return@filter extraKeys.contains(it.key)
                 }
@@ -105,14 +104,15 @@ class AccountSelectorActivity : BaseActivity(), OnItemClickListener {
                 }
                 if (USER_TYPE_TWITTER_COM == accountHost) {
                     if (it.key.host != null && it.type != AccountType.TWITTER) return@filter false
-                } else if (accountHost != null) {
+                } else if (accountHost != null && accountType == AccountType.MASTODON) {
                     if (accountHost != it.key.host) return@filter false
                 }
                 if (accountType != null) {
                     if (accountType != it.type) return@filter false
                 }
                 return@filter true
-            })
+            }
+            addAll(matchedAccounts)
         }
         accountsList.choiceMode = if (isSingleSelection) ListView.CHOICE_MODE_NONE else ListView.CHOICE_MODE_MULTIPLE
         if (isSingleSelection) {

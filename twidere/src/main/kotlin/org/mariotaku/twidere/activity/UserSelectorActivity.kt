@@ -29,7 +29,6 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ListView
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_user_selector.*
 import kotlinx.android.synthetic.main.layout_list_with_empty_view.*
 import org.mariotaku.ktextension.Bundle
@@ -90,7 +89,7 @@ class UserSelectorActivity : BaseActivity(), OnItemClickListener, LoaderManager.
         if (savedInstanceState == null) {
             editScreenName.setText(intent.getStringExtra(EXTRA_SCREEN_NAME))
         }
-        adapter = SimpleParcelableUsersAdapter(this, requestManager = Glide.with(this))
+        adapter = SimpleParcelableUsersAdapter(this, requestManager = requestManager)
         listView.adapter = adapter
         listView.onItemClickListener = this
 

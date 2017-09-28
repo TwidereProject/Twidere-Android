@@ -47,9 +47,6 @@
             android:summary="@string/preference_summary_trends_location"
             android:title="@string/preference_title_trends_location"/>
 
-        <org.mariotaku.twidere.preference.TranslationDestinationPreference
-            android:key="translation_destination"
-            android:title="@string/translation_destination"/>
         <org.mariotaku.twidere.preference.ComponentStatePreference
             android:name="org.mariotaku.twidere.activity.WebLinkHandlerActivity"
             android:key="twitter_link_handler"

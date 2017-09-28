@@ -43,7 +43,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.AdapterView.OnItemSelectedListener
-import com.bumptech.glide.Glide
 import jopt.csp.util.SortableIntList
 import kotlinx.android.synthetic.main.activity_quick_search_bar.*
 import org.mariotaku.kpreferences.get
@@ -54,7 +53,6 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_QUERY
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.ACTION_NAVIGATION_BACK
@@ -72,6 +70,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Suggestions
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.EditTextEnterHandler.EnterListener
 import org.mariotaku.twidere.util.content.ContentResolverUtils
+import org.mariotaku.twidere.util.promotion.PromotionService
 import org.mariotaku.twidere.view.ProfileImageView
 
 /**
@@ -92,10 +91,15 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         }
 
         setContentView(R.layout.activity_quick_search_bar)
+
+        promotionService.setupBanner(adContainer, PromotionService.BannerType.QUICK_SEARCH,
+                FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM))
+
         val am = AccountManager.get(this)
         val accounts = AccountUtils.getAllAccountDetails(am, AccountUtils.getAccounts(am), true).toList()
         val accountsSpinnerAdapter = AccountsSpinnerAdapter(this, R.layout.spinner_item_account_icon,
-                requestManager = Glide.with(this))
+                requestManager = requestManager)
         accountsSpinnerAdapter.setDropDownViewResource(R.layout.list_item_simple_user)
         accountsSpinnerAdapter.addAll(accounts)
         accountSpinner.adapter = accountsSpinnerAdapter
@@ -112,6 +116,9 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
             }
         }
         ViewCompat.setOnApplyWindowInsetsListener(mainContent, this)
+        mainContent.setOnClickListener {
+            finish()
+        }
         suggestionsList.adapter = SuggestionsAdapter(this)
         suggestionsList.onItemClickListener = this
 
@@ -154,6 +161,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         supportLoaderManager.initLoader(0, null, this)
 
         updateSubmitButton()
+        promotionService.loadBanner(adContainer)
     }
 
     override fun canDismiss(position: Int): Boolean {
@@ -272,12 +280,12 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
             SuggestionsAdapter.VIEW_TYPE_USER_SUGGESTION_ITEM -> {
                 IntentUtils.openUserProfile(this, details.key,
                         UserKey.valueOf(item.extra_id!!), item.summary, null,
-                        preferences[newDocumentApiKey], Referral.DIRECT, null)
+                        preferences[newDocumentApiKey], null)
                 finish()
             }
             SuggestionsAdapter.VIEW_TYPE_USER_SCREEN_NAME -> {
                 IntentUtils.openUserProfile(this, details.key, null, item.title,
-                        null, preferences[newDocumentApiKey], Referral.DIRECT, null)
+                        null, preferences[newDocumentApiKey], null)
                 finish()
             }
             SuggestionsAdapter.VIEW_TYPE_SAVED_SEARCH, SuggestionsAdapter.VIEW_TYPE_SEARCH_HISTORY -> {
@@ -358,7 +366,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
 
         private val profileImageStyle = activity.preferences[profileImageStyleKey]
         private val profileImageSize = activity.getString(R.string.profile_image_size)
-        private val requestManager = Glide.with(activity)
+        private val requestManager = activity.requestManager
         private val inflater = LayoutInflater.from(activity)
         private val userColorNameManager = activity.userColorNameManager
         private val removedPositions = SortableIntList()

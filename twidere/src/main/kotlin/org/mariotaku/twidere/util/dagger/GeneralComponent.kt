@@ -22,10 +22,7 @@ package org.mariotaku.twidere.util.dagger
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import dagger.Component
-import org.mariotaku.twidere.activity.BaseActivity
-import org.mariotaku.twidere.activity.ComposeActivity
-import org.mariotaku.twidere.activity.MediaViewerActivity
-import org.mariotaku.twidere.activity.PremiumDashboardActivity
+import org.mariotaku.twidere.activity.*
 import org.mariotaku.twidere.adapter.*
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.fragment.BaseDialogFragment
@@ -34,6 +31,7 @@ import org.mariotaku.twidere.fragment.BasePreferenceFragment
 import org.mariotaku.twidere.fragment.ThemedPreferenceDialogFragmentCompat
 import org.mariotaku.twidere.fragment.filter.FilteredUsersFragment
 import org.mariotaku.twidere.fragment.media.ExoPlayerPageFragment
+import org.mariotaku.twidere.fragment.media.VideoPageFragment
 import org.mariotaku.twidere.loader.CacheUserSearchLoader
 import org.mariotaku.twidere.loader.DefaultAPIConfigLoader
 import org.mariotaku.twidere.loader.ParcelableStatusLoader
@@ -142,7 +140,7 @@ interface GeneralComponent {
 
     fun inject(loader: BaseUserListsLoader)
 
-    fun inject(controller: PremiumDashboardActivity.ExtraFeatureViewController)
+    fun inject(controller: PremiumDashboardActivity.BaseItemViewController)
 
     fun inject(fragment: ExoPlayerPageFragment)
 
@@ -150,9 +148,14 @@ interface GeneralComponent {
 
     fun inject(service: BaseService)
 
+    fun inject(activity: MainActivity)
+
+    fun inject(fragment: VideoPageFragment)
+
     companion object {
 
         private var instance: GeneralComponent? = null
+
         fun get(context: Context): GeneralComponent {
             return instance ?: run {
                 val helper = DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build()

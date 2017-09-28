@@ -120,14 +120,15 @@ class UserViewHolder(
             profileImageView.visibility = View.GONE
         }
 
-        if (user.account_key != null && twitter.isUpdatingRelationship(user.account_key, user.key)) {
+        val accountKey = user.account_key
+        if (accountKey != null && twitter.isUpdatingRelationship(accountKey, user.key)) {
             processingRequestProgress.visibility = View.VISIBLE
             actionsContainer.visibility = View.GONE
         } else {
             processingRequestProgress.visibility = View.GONE
             actionsContainer.visibility = View.VISIBLE
         }
-        if (user.account_key != null && user.key.hasSameHost(user.account_key)) {
+        if (accountKey != null && user.key.hasSameHost(accountKey)) {
             externalIndicator.visibility = View.GONE
         } else {
             externalIndicator.visibility = View.VISIBLE
@@ -137,7 +138,7 @@ class UserViewHolder(
         followButton.setImageResource(if (user.is_following) R.drawable.ic_action_confirm else R.drawable.ic_action_add)
         followButton.isActivated = user.is_following
 
-        val isMySelf = user.account_key == user.key
+        val isMySelf = accountKey == user.key
 
         if (requestClickListener != null && !isMySelf) {
             acceptRequestButton.visibility = View.VISIBLE

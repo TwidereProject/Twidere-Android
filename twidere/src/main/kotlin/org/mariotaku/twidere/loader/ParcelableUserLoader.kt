@@ -37,7 +37,6 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.extension.api.tryShowUser
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
@@ -121,6 +120,7 @@ class ParcelableUserLoader(
             }
             resolver.query(CachedUsers.CONTENT_URI, CachedUsers.COLUMNS, where.sql,
                     whereArgs, null)?.let { cur ->
+                @Suppress("ConvertTryFinallyToUseCall")
                 try {
                     cur.moveToFirst()
                     val indices = ObjectCursor.indicesFrom(cur, ParcelableUser::class.java)
@@ -174,7 +174,7 @@ class ParcelableUserLoader(
     private fun showMicroBlogUser(details: AccountDetails): ParcelableUser {
         val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
         val profileUrl = extras?.getString(EXTRA_PROFILE_URL)
-        val response = if (extras != null && Referral.SELF_PROFILE == extras.getString(EXTRA_REFERRAL)) {
+        val response = if (extras != null && extras.getBoolean(EXTRA_IS_ACCOUNT_PROFILE)) {
             microBlog.verifyCredentials()
         } else if (details.type == AccountType.STATUSNET && userKey != null && profileUrl != null
                 && details.key.host != userKey.host) {

@@ -17,7 +17,8 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<org.mariotaku.twidere.view.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<org.mariotaku.twidere.view.SquareRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -28,7 +29,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentTop="true"
         android:layout_centerInParent="true"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"/>
 
     <ProgressBar
         android:id="@+id/media_preview_progress"
@@ -40,6 +41,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
         android:layout_centerInParent="true"
-        android:layout_margin="16dp" />
+        android:layout_margin="16dp"/>
 
 </org.mariotaku.twidere.view.SquareRelativeLayout>

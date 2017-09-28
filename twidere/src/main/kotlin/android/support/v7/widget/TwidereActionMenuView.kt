@@ -20,7 +20,7 @@
 package android.support.v7.widget
 
 import android.content.Context
-import android.support.v7.widget.android.support.v7.view.menu.TwidereActionMenuItemView
+import android.support.v7.view.menu.TwidereActionMenuItemView
 import android.util.AttributeSet
 import android.view.View
 

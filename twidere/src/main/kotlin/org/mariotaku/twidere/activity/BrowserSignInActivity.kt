@@ -36,6 +36,7 @@ import org.attoparser.ParseException
 import org.mariotaku.ktextension.dismissDialogFragment
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.extension.applyDefault
 import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator
@@ -60,13 +61,14 @@ class BrowserSignInActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_browser_sign_in)
-        webView.setWebChromeClient(AuthorizationWebChromeClient(this))
-        webView.setWebViewClient(AuthorizationWebViewClient(this))
+        webView.webChromeClient = AuthorizationWebChromeClient(this)
+        webView.webViewClient = AuthorizationWebViewClient(this)
         webView.isVerticalScrollBarEnabled = false
         webView.addJavascriptInterface(InjectorJavaScriptInterface(this), "injector")
-        val webSettings = webView.settings
-        webSettings.applyDefault()
-        webSettings.setSupportMultipleWindows(true)
+        webView.settings.apply {
+            applyDefault()
+            setSupportMultipleWindows(true)
+        }
 
         webView.loadUrl(intent.dataString)
     }
@@ -284,12 +286,5 @@ class BrowserSignInActivity : BaseActivity() {
         private const val INJECT_CONTENT = "javascript:window.injector.processHTML('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');"
         private const val TAG_BROWSER_WINDOW = "browser_window"
 
-        @SuppressLint("SetJavaScriptEnabled")
-        private fun WebSettings.applyDefault() {
-            loadsImagesAutomatically = true
-            javaScriptEnabled = true
-            blockNetworkImage = false
-            saveFormData = true
-        }
     }
 }

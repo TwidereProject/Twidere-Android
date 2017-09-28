@@ -26,7 +26,9 @@ import org.mariotaku.ktextension.isNotNullOrEmpty
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.microblog.library.mastodon.model.Status
 import org.mariotaku.twidere.extension.model.addFilterFlag
+import org.mariotaku.twidere.extension.model.api.isHtml
 import org.mariotaku.twidere.extension.model.api.spanItems
+import org.mariotaku.twidere.extension.model.updateFilterInfo
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.text.AcctMentionSpan
 import org.mariotaku.twidere.text.HashtagSpan
@@ -39,6 +41,7 @@ fun Status.toParcelable(details: AccountDetails): ParcelableStatus {
         account_color = details.color
     }
 }
+
 fun Status.toParcelable(accountKey: UserKey): ParcelableStatus {
     val result = ParcelableStatus()
     applyTo(accountKey, result)
@@ -121,6 +124,9 @@ fun Status.applyTo(accountKey: UserKey, result: ParcelableStatus) {
     }
 
     result.extras = extras
+
+    result.updateFilterInfo(setOf(accountDescriptionUnescaped, reblog?.accountDescriptionUnescaped,
+            accountUrl, reblog?.accountUrl))
 }
 
 private fun calculateDisplayTextRange(text: String, spans: Array<SpanItem>?, media: Array<ParcelableMedia>?): IntArray? {
@@ -129,6 +135,19 @@ private fun calculateDisplayTextRange(text: String, spans: Array<SpanItem>?, med
     if (lastMatch.end < text.length) return null
     return intArrayOf(0, lastMatch.start)
 }
+
+private val Status.accountDescriptionUnescaped: String?
+    get() {
+        val note = account?.note ?: return null
+        return if (note.isHtml) {
+            HtmlSpanBuilder.fromHtml(note, note, MastodonSpanProcessor).toString()
+        } else {
+            HtmlEscapeHelper.unescape(note)
+        }
+    }
+
+private val Status.accountUrl: String?
+    get() = account?.url
 
 object MastodonSpanProcessor : HtmlSpanBuilder.SpanProcessor {
 

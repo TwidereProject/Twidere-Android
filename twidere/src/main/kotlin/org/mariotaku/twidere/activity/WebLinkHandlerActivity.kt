@@ -304,8 +304,8 @@ class WebLinkHandlerActivity : Activity() {
             "user", "follow" -> {
                 val userKey = uri.getQueryParameter("user_id")?.let { UserKey(it, "twitter.com") }
                 val screenName = uri.getQueryParameter("screen_name")
-                return Pair(IntentUtils.userProfile(null, userKey, screenName,
-                        accountHost = USER_TYPE_TWITTER_COM), true)
+                return Pair(IntentUtils.userProfile(accountKey = null, userKey = userKey,
+                        screenName = screenName, accountHost = USER_TYPE_TWITTER_COM), true)
             }
         }
         return Pair(null, false)

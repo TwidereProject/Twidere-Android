@@ -42,7 +42,6 @@ import android.support.v7.widget.Toolbar
 import android.view.*
 import android.widget.CompoundButton
 import android.widget.EditText
-import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.activity_home_content.view.*
 import kotlinx.android.synthetic.main.fragment_messages_conversation_info.*
@@ -71,6 +70,7 @@ import org.mariotaku.twidere.activity.UserSelectorActivity
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.annotation.ImageShapeStyle
 import org.mariotaku.twidere.annotation.ProfileImageSize
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.IntentConstants.*
@@ -132,7 +132,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         }
         val theme = Chameleon.getOverrideTheme(context, activity)
 
-        adapter = ConversationInfoAdapter(context, Glide.with(this))
+        adapter = ConversationInfoAdapter(context, requestManager)
         adapter.listener = object : ConversationInfoAdapter.Listener {
             override fun onUserClick(position: Int) {
                 val user = adapter.getUser(position) ?: return
@@ -266,10 +266,10 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         val name = data.getTitle(context, userColorNameManager, preferences[nameFirstKey]).first
         val summary = data.getSubtitle(context)
 
-        val requestManager = Glide.with(this)
-        val profileImageStyle = preferences[profileImageStyleKey]
+        @ImageShapeStyle val profileImageStyle = preferences[profileImageStyleKey]
         requestManager.loadProfileImage(context, data, profileImageStyle).into(conversationAvatar)
-        requestManager.loadProfileImage(context, data, profileImageStyle, size = ProfileImageSize.REASONABLY_SMALL).into(appBarIcon)
+        requestManager.loadProfileImage(context, data, profileImageStyle, 0f,
+                0f, ProfileImageSize.REASONABLY_SMALL).into(appBarIcon)
         appBarTitle.spannable = name
         conversationTitle.spannable = name
         if (summary != null) {

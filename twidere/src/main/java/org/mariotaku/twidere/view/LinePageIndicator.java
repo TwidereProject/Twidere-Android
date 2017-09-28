@@ -15,6 +15,7 @@
  */
 package org.mariotaku.twidere.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -25,7 +26,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -212,12 +212,13 @@ public class LinePageIndicator extends View implements PagerIndicator {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
-    public boolean onTouchEvent(@NonNull final android.view.MotionEvent ev) {
+    public boolean onTouchEvent(@NonNull final MotionEvent ev) {
         if (super.onTouchEvent(ev)) return true;
         if (mViewPager == null || mViewPager.getAdapter().getCount() == 0) return false;
 
-        final int action = ev.getAction() & MotionEventCompat.ACTION_MASK;
+        final int action = ev.getAction() & MotionEvent.ACTION_MASK;
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 mActivePointerId = ev.getPointerId(0);
@@ -273,21 +274,21 @@ public class LinePageIndicator extends View implements PagerIndicator {
                 }
                 break;
 
-            case MotionEventCompat.ACTION_POINTER_DOWN: {
-                final int index = MotionEventCompat.getActionIndex(ev);
+            case MotionEvent.ACTION_POINTER_DOWN: {
+                final int index = ev.getActionIndex();
                 mLastMotionX = ev.getX(index);
                 mActivePointerId = ev.getPointerId(index);
                 break;
             }
 
-            case MotionEventCompat.ACTION_POINTER_UP:
-                final int pointerIndex = MotionEventCompat.getActionIndex(ev);
+            case MotionEvent.ACTION_POINTER_UP:
+                final int pointerIndex = ev.getActionIndex();
                 final int pointerId = ev.getPointerId(pointerIndex);
                 if (pointerId == mActivePointerId) {
                     final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
                     mActivePointerId = ev.getPointerId(newPointerIndex);
                 }
-                mLastMotionX = MotionEventCompat.getX(ev, ev.findPointerIndex(mActivePointerId));
+                mLastMotionX = ev.getX(ev.findPointerIndex(mActivePointerId));
                 break;
         }
 

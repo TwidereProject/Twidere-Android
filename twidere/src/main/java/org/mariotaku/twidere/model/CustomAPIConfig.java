@@ -12,7 +12,6 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
-import org.mariotaku.restfu.RestFuUtils;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.model.account.cred.Credentials;
@@ -236,14 +235,10 @@ public final class CustomAPIConfig implements Parcelable {
     @NonNull
     public static List<CustomAPIConfig> listDefault(@NonNull Context context) {
         final AssetManager assets = context.getAssets();
-        InputStream is = null;
-        try {
-            is = assets.open("data/default_api_configs.json");
+        try (InputStream is = assets.open("data/default_api_configs.json")) {
             return JsonSerializer.parseList(is, CustomAPIConfig.class);
         } catch (IOException e) {
             return listBuiltin(context);
-        } finally {
-            RestFuUtils.closeSilently(is);
         }
     }
 

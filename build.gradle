@@ -1,15 +1,12 @@
-apply plugin: 'com.github.ben-manes.versions'
-
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
         jcenter()
         maven { url 'https://plugins.gradle.org/m2/' }
+        maven { url 'https://maven.google.com' }
     }
     dependencies {
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
-        classpath 'com.android.tools.build:gradle:2.3.3'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'com.android.tools.build:gradle:3.0.0-beta6'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -17,17 +14,20 @@ buildscript {
 
 allprojects {
 
-    ext{
+    ext {
         projectGroupId = 'org.mariotaku.twidere'
-        projectVersionCode = 384
-        projectVersionName = '3.6.24'
+        projectVersionCode = 390
+        projectVersionName = '3.6.30'
+
+        globalCompileSdkVersion = 26
+        globalBuildToolsVersion = '26.0.1'
     }
 
     repositories {
         mavenLocal()
         jcenter()
-        maven { url 'https://jitpack.io' }
         maven { url 'https://maven.google.com' }
+        maven { url 'https://jitpack.io' }
     }
 
 }
@@ -35,24 +35,22 @@ allprojects {
 subprojects {
     buildscript {
         ext {
-            kotlinVersion = '1.1.3-2'
+            kotlinVersion = '1.1.4-3'
             pluginVersions = [
                     AndroidSvgDrawable: '3.0.0',
-                    Fabric            : '1.22.1',
-                    PlayPublisher     : '1.1.5',
                     PlayServices      : '3.1.0',
             ]
             libVersions = [
-                    Kotlin               : '1.1.3-2',
-                    SupportLib           : '26.0.1',
-                    MariotakuCommons     : '0.9.15',
-                    RestFu               : '0.9.57',
+                    Kotlin               : "${kotlinVersion}",
+                    SupportLib           : '26.1.0',
+                    SupportTest          : '1.0.0',
+                    MariotakuCommons     : '0.9.19',
+                    RestFu               : '0.9.60',
                     ObjectCursor         : '0.9.20',
-                    PlayServices         : '11.0.4',
-                    MapsUtils            : '0.4.4',
-                    Crashlyrics          : '2.6.8',
+                    PlayServices         : '11.2.2',
+                    MapsUtils            : '0.5',
                     DropboxCoreSdk       : '3.0.3',
-                    GoogleDriveApi       : 'v3-rev61-1.22.0',
+                    GoogleDriveApi       : 'v3-rev81-1.22.0',
                     Exoplayer            : 'r2.2.0',
                     Toro                 : '2.1.0',
                     LoganSquare          : '1.3.7',
@@ -62,7 +60,7 @@ subprojects {
                     Stetho               : '1.5.0',
                     OSMDroid             : '5.6.4',
                     LeakCanary           : '1.5.1',
-                    TwitterText          : '1.14.3',
+                    TwitterText          : '1.14.7',
                     MediaViewerLibrary   : '0.9.23',
                     MultiValueSwitch     : '0.9.8',
                     PickNCrop            : '0.9.27',
@@ -70,65 +68,21 @@ subprojects {
                     KPreferences         : '0.9.7',
                     Kovenant             : '3.3.0',
                     ParcelablePlease     : '1.0.2',
-                    Chameleon            : '0.9.18',
+                    Chameleon            : '0.9.22',
                     UniqR                : '0.9.4',
                     SQLiteQB             : '0.9.15',
                     Glide                : '3.7.0',
                     GlideOkHttp3         : '1.4.0',
-                    GlideTransformations : '2.0.1',
-                    AndroidImageCropper  : '2.4.0',
+                    GlideTransformations : '2.0.2',
+                    AndroidImageCropper  : '2.4.6',
                     ExportablePreferences: '0.9.6',
                     ACRA                 : '4.9.2',
                     AbstractTask         : '0.9.5',
+                    Dagger               : '2.11',
             ]
-        }
 
-    }
-    afterEvaluate { project ->
-
-        if (project.hasProperty('android')) {
-            android {
-                compileSdkVersion 26
-                buildToolsVersion '26.0.0'
-
-                lintOptions {
-                    abortOnError false
-                    lintConfig rootProject.file('lint.xml')
-                }
-
-                packagingOptions {
-                    exclude 'META-INF/DEPENDENCIES'
-                    exclude 'META-INF/LICENSE'
-                    exclude 'META-INF/LICENSE.txt'
-                    exclude 'META-INF/license.txt'
-                    exclude 'META-INF/NOTICE'
-                    exclude 'META-INF/NOTICE.txt'
-                    exclude 'META-INF/notice.txt'
-                    exclude 'META-INF/ASL2.0'
-                }
-
-                if (android.hasProperty('buildTypes') && project.plugins.hasPlugin('com.android.application')) {
-                    android.buildTypes.each { buildType ->
-                        def file = rootProject.file('private/signing.properties')
-                        if (file.exists()) {
-                            def cfg = signingConfigs.maybeCreate(buildType.name)
-                            loadSigningConfig(cfg, file)
-                            buildType.signingConfig = cfg
-                        }
-                    }
-                }
-            }
         }
 
     }
 
-}
-
-def loadSigningConfig(def cfg, def file) {
-    Properties signingProp = new Properties()
-    signingProp.load(file.newInputStream())
-    cfg.setStoreFile(rootProject.file(signingProp.get('storeFile')))
-    cfg.setStorePassword((String) signingProp.get('storePassword'))
-    cfg.setKeyAlias((String) signingProp.get('keyAlias'))
-    cfg.setKeyPassword((String) signingProp.get('keyPassword'))
 }

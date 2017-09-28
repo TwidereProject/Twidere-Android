@@ -156,7 +156,6 @@
   <string name="edit_tabs">Uredi tabove</string>
   <string name="ellipsis">&#8230;</string>
   <string name="empty_content">Prazan sadržaj</string>
-  <string name="enable_retweets">Omogući retweetove</string>
   <string name="enable_streaming">Omogući streaming</string>
   <string name="error_message">Greška: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_message_too_long">Poruka preduga.</string>
@@ -326,7 +325,7 @@
   <string name="no_status_content_text">Nema sadržaja</string>
   <string name="no_tab">Nema tabova</string>
   <string name="no_tab_hint">Nema tabova</string>
-  <string name="no_thanks">Ne, hvala</string>
+  <string name="action_no_thanks">Ne, hvala</string>
   <string name="no_user_found">Korisnik nije pronađen</string>
   <string name="no_version_suffix">Nema sufiksa verzije</string>
   <string name="none">Ništa</string>
@@ -409,7 +408,7 @@
   <string name="project_account">Račun projekta</string>
   <string name="projects_we_took_part">Projekti u kojima smo sudjelovali</string>
   <!-- Normally you don't need to translate this -->
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="proxy">Proxy</string>
   <string name="proxy_host">Proxy Host</string>
   <string name="proxy_port">Proxy Port</string>
@@ -478,7 +477,7 @@
   <string name="sent_follow_request_to_user">Zahtjev za slijeđenjem poslan za <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Server adresa</string>
   <string name="set_consumer_key_secret_message">Twidere se približava limitu tokena, morat ćete stvoriti aplikaciju na https://apps.twitter.com/ i zalijepiti korisnički ključ i tajnu dolje.\nAko nastavite koristiti zadani ključ, možda se nećete moći prijaviti.</string>
-  <string name="settings">Postavke</string>
+  <string name="action_settings">Postavke</string>
   <string name="settings_interface">Sučelje</string>
   <string name="settings_notifications">Obavijesti</string>
   <string name="settings_refresh">Osvježi</string>

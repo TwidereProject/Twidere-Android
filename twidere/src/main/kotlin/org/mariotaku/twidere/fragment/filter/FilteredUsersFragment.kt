@@ -1,5 +1,6 @@
 package org.mariotaku.twidere.fragment.filter
 
+import android.accounts.AccountManager
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -9,19 +10,20 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.CursorLoader
+import android.support.v4.content.Loader
 import android.support.v4.widget.SimpleCursorAdapter
 import android.text.SpannableStringBuilder
 import android.text.Spanned
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.fragment_content_listview.*
+import nl.komponents.kovenant.then
+import nl.komponents.kovenant.ui.alwaysUi
 import org.mariotaku.kpreferences.KPreferences
-import org.mariotaku.ktextension.setItemAvailability
-import org.mariotaku.ktextension.spannable
+import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.*
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
@@ -30,14 +32,20 @@ import org.mariotaku.twidere.activity.LinkHandlerActivity
 import org.mariotaku.twidere.activity.UserSelectorActivity
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_HOST
 import org.mariotaku.twidere.constant.nameFirstKey
+import org.mariotaku.twidere.exception.AccountNotFoundException
+import org.mariotaku.twidere.extension.dismissProgressDialog
+import org.mariotaku.twidere.extension.showProgressDialog
 import org.mariotaku.twidere.fragment.AddUserFilterDialogFragment
 import org.mariotaku.twidere.model.FiltersData
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
+import org.mariotaku.twidere.task.CreateUserMuteTask
 import org.mariotaku.twidere.text.style.EmojiSpan
 import org.mariotaku.twidere.util.Analyzer
+import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.content.ContentResolverUtils
@@ -67,14 +75,14 @@ class FilteredUsersFragment : BaseFiltersFragment() {
             REQUEST_IMPORT_BLOCKS_SELECT_ACCOUNT -> {
                 if (resultCode != FragmentActivity.RESULT_OK || data == null) return
                 val intent = Intent(context, LinkHandlerActivity::class.java)
-                intent.data = Uri.Builder().scheme(SCHEME_TWIDERE).authority(AUTHORITY_FILTERS).path(PATH_FILTERS_IMPORT_BLOCKS).build()
+                intent.data = IntentUtils.UriBuilder(AUTHORITY_FILTERS).path(PATH_FILTERS_IMPORT_BLOCKS).build()
                 intent.putExtra(EXTRA_ACCOUNT_KEY, data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY))
                 startActivity(intent)
             }
             REQUEST_IMPORT_MUTES_SELECT_ACCOUNT -> {
                 if (resultCode != FragmentActivity.RESULT_OK || data == null) return
                 val intent = Intent(context, LinkHandlerActivity::class.java)
-                intent.data = Uri.Builder().scheme(SCHEME_TWIDERE).authority(AUTHORITY_FILTERS).path(PATH_FILTERS_IMPORT_MUTES).build()
+                intent.data = IntentUtils.UriBuilder(AUTHORITY_FILTERS).path(PATH_FILTERS_IMPORT_MUTES).build()
                 intent.putExtra(EXTRA_ACCOUNT_KEY, data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY))
                 startActivity(intent)
             }
@@ -85,12 +93,22 @@ class FilteredUsersFragment : BaseFiltersFragment() {
                 intent.putExtra(EXTRA_ACCOUNT_KEY, data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY))
                 startActivityForResult(intent, REQUEST_SELECT_USER)
             }
+            REQUEST_EXPORT_MUTES_SELECT_ACCOUNT -> {
+                if (resultCode != FragmentActivity.RESULT_OK || data == null) return
+                val accountKey = data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
+                val userKeys = data.getBundleExtra(EXTRA_EXTRAS)?.getNullableTypedArray<UserKey>(EXTRA_ITEMS) ?: return
+                exportToMutedUsers(accountKey, userKeys)
+            }
             REQUEST_PURCHASE_EXTRA_FEATURES -> {
                 if (resultCode == Activity.RESULT_OK) {
                     Analyzer.log(PurchaseFinished.create(data!!))
                 }
             }
         }
+    }
+
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor?> {
+        return CursorLoader(activity, contentUri, contentColumns, null, null, sortOrder)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -100,8 +118,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         val isFeaturesSupported = extraFeaturesService.isSupported()
-        menu.setItemAvailability(R.id.add_user_single, !isFeaturesSupported)
-        menu.setItemAvailability(R.id.add_user_submenu, isFeaturesSupported)
+        menu.setGroupAvailability(R.id.import_export, isFeaturesSupported)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -109,7 +126,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
         intent.putExtra(EXTRA_SINGLE_SELECTION, true)
         intent.putExtra(EXTRA_SELECT_ONLY_ITEM_AUTOMATICALLY, true)
         val requestCode = when (item.itemId) {
-            R.id.add_user_single, R.id.add_user -> REQUEST_ADD_USER_SELECT_ACCOUNT
+            R.id.add_user -> REQUEST_ADD_USER_SELECT_ACCOUNT
             R.id.import_from_blocked_users -> {
                 REQUEST_IMPORT_BLOCKS_SELECT_ACCOUNT
             }
@@ -124,12 +141,45 @@ class FilteredUsersFragment : BaseFiltersFragment() {
         return true
     }
 
+    override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
+        super.onCreateActionMode(mode, menu)
+        mode.menuInflater.inflate(R.menu.action_multi_select_filtered_users, menu)
+        return true
+    }
+
+    override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
+        val result = super.onPrepareActionMode(mode, menu)
+        val isFeaturesSupported = extraFeaturesService.isSupported()
+        menu.setGroupAvailability(R.id.import_export, isFeaturesSupported)
+        return result && menu.hasVisibleItems()
+    }
+
+    override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.export_to_muted_users -> {
+                requestExportToMutes()
+                return true
+            }
+        }
+        return super.onActionItemClicked(mode, item)
+    }
+
     override fun onCreateAdapter(context: Context): SimpleCursorAdapter {
         return FilterUsersListAdapter(context)
     }
 
-    override fun addOrEditItem(id: Long, value: String?) {
+    override fun onItemClick(position: Int) {
+        val adapter = this.adapter as FilterUsersListAdapter
+        val item = adapter.getFilterItem(position) ?: return
+        if (item.source >= 0) return
+        addOrEditItem(item.id, userColorNameManager.getDisplayName(item,
+                preferences[nameFirstKey]), item.scope)
+    }
+
+    override fun addOrEditItem(id: Long, value: String?, scope: Int) {
         // No-op
+        if (id < 0) return
+        super.addOrEditItem(id, value, scope)
     }
 
     override fun performDeletion() {
@@ -145,10 +195,41 @@ class FilteredUsersFragment : BaseFiltersFragment() {
                 Filters.USER_KEY, false, keys, null, null)
     }
 
+    private fun requestExportToMutes() {
+        val adapter = this.adapter as? FilterUsersListAdapter ?: return
+        val checkedPos = listView.checkedItemPositions
+        val userKeys = (0 until checkedPos.size()).mapNotNull { i ->
+            if (checkedPos.valueAt(i)) {
+                return@mapNotNull adapter.getUserKey(checkedPos.keyAt(i))
+            }
+            return@mapNotNull null
+        }.toTypedArray()
+        val intent = Intent(context, AccountSelectorActivity::class.java)
+        intent.putExtra(EXTRA_SINGLE_SELECTION, true)
+        intent.putExtra(EXTRA_SELECT_ONLY_ITEM_AUTOMATICALLY, true)
+        intent.putExtra(EXTRA_EXTRAS, Bundle {
+            this[EXTRA_ITEMS] = userKeys
+        })
+        startActivityForResult(intent, REQUEST_EXPORT_MUTES_SELECT_ACCOUNT)
+    }
+
+    private fun exportToMutedUsers(accountKey: UserKey, items: Array<UserKey>) {
+        val weakThis = this.weak()
+        showProgressDialog("export_to_muted").then {
+            val fragment = weakThis.get() ?: throw InterruptedException()
+            val am = AccountManager.get(fragment.context)
+            val account = AccountUtils.getAccountDetails(am, accountKey, true) ?:
+                    throw AccountNotFoundException()
+            CreateUserMuteTask.muteUsers(fragment.context, account, items)
+        }.alwaysUi {
+            weakThis.get()?.dismissProgressDialog("export_to_muted")
+        }
+    }
+
     class FilterUsersListAdapter(
             context: Context
     ) : SimpleCursorAdapter(context, R.layout.list_item_two_line, null,
-            emptyArray(), IntArray(0), 0), SelectableItemAdapter {
+            emptyArray(), IntArray(0), 0), IFilterAdapter {
 
         @Inject
         lateinit var userColorNameManager: UserColorNameManager
@@ -199,18 +280,38 @@ class FilteredUsersFragment : BaseFiltersFragment() {
             return super.swapCursor(c)
         }
 
-        override fun isSelectable(position: Int): Boolean {
+        override fun isReadOnly(position: Int): Boolean {
             val cursor = this.cursor ?: return false
+            val indices = this.indices ?: return false
             if (cursor.moveToPosition(position)) {
-                return cursor.getLong(indices!![Filters.Users.SOURCE]) < 0
+                return cursor.getLong(indices[Filters.Users.SOURCE]) >= 0
             }
             return false
         }
 
         fun getUserKeyString(position: Int): String? {
             val cursor = this.cursor ?: return null
+            val indices = this.indices ?: return null
             if (cursor.moveToPosition(position)) {
-                return cursor.getString(indices!![Filters.Users.USER_KEY])
+                return cursor.getString(indices[Filters.Users.USER_KEY])
+            }
+            return null
+        }
+
+        fun getUserKey(position: Int): UserKey? {
+            val cursor = this.cursor ?: return null
+            val indices = this.indices ?: return null
+            if (cursor.moveToPosition(position)) {
+                return cursor.getString(indices[Filters.Users.USER_KEY])?.let(UserKey::valueOf)
+            }
+            return null
+        }
+
+        fun getFilterItem(position: Int): FiltersData.UserItem? {
+            val cursor = this.cursor ?: return null
+            val indices = this.indices ?: return null
+            if (cursor.moveToPosition(position)) {
+                return indices.newObject(cursor)
             }
             return null
         }

@@ -14,7 +14,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.CheckBox
 import android.widget.Toast
-import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.dialog_block_mute_filter_user_confirm.*
 import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.task
@@ -29,6 +29,7 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.onShow
+import org.mariotaku.twidere.extension.util.isAdvancedFiltersEnabled
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
@@ -105,9 +106,9 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
                     Toast.makeText(context, R.string.message_toast_no_user_selected, Toast.LENGTH_SHORT).show()
                     return true
                 }
-                if (!extraFeaturesService.isEnabled(ExtraFeaturesService.FEATURE_FILTERS_IMPORT)) {
+                if (!extraFeaturesService.isAdvancedFiltersEnabled) {
                     ExtraFeaturesIntroductionDialogFragment.show(fragmentManager,
-                            feature = ExtraFeaturesService.FEATURE_FILTERS_IMPORT,
+                            feature = ExtraFeaturesService.FEATURE_ADVANCED_FILTERS,
                             requestCode = REQUEST_PURCHASE_EXTRA_FEATURES)
                     return true
                 }
@@ -168,7 +169,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
         val cursorLoader = loader as AbsRequestUsersLoader
         nextPagination = cursorLoader.nextPagination
         prevPagination = cursorLoader.prevPagination
-        activity.supportInvalidateOptionsMenu()
+        activity.invalidateOptionsMenu()
     }
 
     override fun onLoadMoreContents(@IndicatorPosition position: Long) {
@@ -182,12 +183,12 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
         loaderManager.restartLoader(0, loaderArgs, this)
     }
 
-    override fun onCreateAdapter(context: Context): SelectableUsersAdapter {
-        val adapter = SelectableUsersAdapter(context, Glide.with(this))
-        adapter.itemCheckedListener = listener@ { position, value ->
-            if (!extraFeaturesService.isEnabled(ExtraFeaturesService.FEATURE_FILTERS_IMPORT)) {
+    override fun onCreateAdapter(context: Context, requestManager: RequestManager): SelectableUsersAdapter {
+        val adapter = SelectableUsersAdapter(context, this.requestManager)
+        adapter.itemCheckedListener = listener@ { _, _ ->
+            if (!extraFeaturesService.isAdvancedFiltersEnabled) {
                 ExtraFeaturesIntroductionDialogFragment.show(fragmentManager,
-                        feature = ExtraFeaturesService.FEATURE_FILTERS_IMPORT,
+                        feature = ExtraFeaturesService.FEATURE_ADVANCED_FILTERS,
                         requestCode = REQUEST_PURCHASE_EXTRA_FEATURES)
                 return@listener false
             }
@@ -198,7 +199,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
             } else {
                 null
             }
-            activity.supportInvalidateOptionsMenu()
+            activity.invalidateOptionsMenu()
             return@listener true
         }
         return adapter
@@ -249,10 +250,10 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
             builder.setPositiveButton(android.R.string.ok, this)
             builder.setNegativeButton(android.R.string.cancel, null)
             val dialog = builder.create()
-            dialog.onShow { dialog ->
-                dialog.applyTheme()
-                val confirmMessageView = dialog.confirmMessage
-                val filterEverywhereHelp = dialog.filterEverywhereHelp
+            dialog.onShow {
+                it.applyTheme()
+                val confirmMessageView = it.confirmMessage
+                val filterEverywhereHelp = it.filterEverywhereHelp
                 filterEverywhereHelp.setOnClickListener {
                     MessageDialogFragment.show(childFragmentManager, title = getString(R.string.filter_everywhere),
                             message = getString(R.string.filter_everywhere_description), tag = "filter_everywhere_help")

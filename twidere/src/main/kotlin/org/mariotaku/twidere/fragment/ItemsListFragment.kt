@@ -12,13 +12,12 @@ import android.view.ContextMenu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.VariousItemsAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter
-import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ITEMS
 import org.mariotaku.twidere.constant.displaySensitiveContentsKey
@@ -62,8 +61,8 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
         }
     }
 
-    override fun onCreateAdapter(context: Context): VariousItemsAdapter {
-        val adapter = VariousItemsAdapter(context, Glide.with(this))
+    override fun onCreateAdapter(context: Context, requestManager: RequestManager): VariousItemsAdapter {
+        val adapter = VariousItemsAdapter(context, requestManager)
         val dummyItemAdapter = adapter.dummyAdapter
         dummyItemAdapter.statusClickListener = object : IStatusViewHolder.StatusClickListener {
             override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
@@ -111,7 +110,7 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
             override fun onUserClick(holder: UserViewHolder, position: Int) {
                 val user = dummyItemAdapter.getUser(position) ?: return
                 IntentUtils.openUserProfile(context, user, preferences[newDocumentApiKey],
-                        Referral.TIMELINE_STATUS, null)
+                        null)
             }
         }
         adapter.hashtagClickListener = { position ->

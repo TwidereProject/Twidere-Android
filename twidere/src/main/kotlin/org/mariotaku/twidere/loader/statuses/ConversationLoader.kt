@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.loader.statuses
 
 import android.content.Context
-import android.database.sqlite.SQLiteDatabase
 import android.support.annotation.WorkerThread
 import org.attoparser.config.ParseConfiguration
 import org.attoparser.dom.DOMMarkupParser
@@ -48,7 +47,7 @@ import org.mariotaku.twidere.model.pagination.PaginatedArrayList
 import org.mariotaku.twidere.model.pagination.PaginatedList
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
-import org.mariotaku.twidere.util.InternalTwitterContentUtils
+import org.mariotaku.twidere.util.database.ContentFiltersUtils
 import java.text.ParseException
 import java.util.*
 
@@ -60,18 +59,20 @@ class ConversationLoader(
         loadingMore: Boolean
 ) : AbsRequestStatusesLoader(context, status.account_key, adapterData, null, -1, fromUser, loadingMore) {
 
-    private val status = ParcelUtils.clone(status).apply { makeOriginal() }
+    override val comparator: Comparator<ParcelableStatus>? = null
 
     var canLoadAllReplies: Boolean = false
         private set
 
+    private val status = ParcelUtils.clone(status).apply { makeOriginal() }
+
     @Throws(MicroBlogException::class)
     override fun getStatuses(account: AccountDetails, paging: Paging): PaginatedList<ParcelableStatus> {
-        when (account.type) {
-            AccountType.MASTODON -> return getMastodonStatuses(account, paging).mapTo(PaginatedArrayList()) {
+        return when (account.type) {
+            AccountType.MASTODON -> getMastodonStatuses(account, paging).mapTo(PaginatedArrayList()) {
                 it.toParcelable(account)
             }
-            else -> return getMicroBlogStatuses(account, paging)
+            else -> getMicroBlogStatuses(account, paging)
         }
     }
 
@@ -120,8 +121,8 @@ class ConversationLoader(
     }
 
     @WorkerThread
-    override fun shouldFilterStatus(database: SQLiteDatabase, status: ParcelableStatus): Boolean {
-        return InternalTwitterContentUtils.isFiltered(database, status, false)
+    override fun shouldFilterStatus(status: ParcelableStatus): Boolean {
+        return ContentFiltersUtils.isFiltered(context.contentResolver, status, false, 0)
     }
 
     @Throws(MicroBlogException::class)

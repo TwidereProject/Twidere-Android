@@ -1,5 +1,6 @@
 package org.mariotaku.twidere.preference
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.support.v7.preference.Preference
@@ -15,6 +16,7 @@ class HiddenSettingEntryPreference(
         attrs: AttributeSet? = null
 ) : TintedPreferenceCategory(context, attrs) {
 
+    @SuppressLint("RestrictedApi")
     override fun onAttachedToHierarchy(preferenceManager: PreferenceManager?, id: Long) {
         super.onAttachedToHierarchy(preferenceManager, id)
         removeAll()

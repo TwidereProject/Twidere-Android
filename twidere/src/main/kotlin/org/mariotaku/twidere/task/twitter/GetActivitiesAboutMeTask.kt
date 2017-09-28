@@ -30,6 +30,7 @@ import org.mariotaku.microblog.library.twitter.model.InternalActivityCreator
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.extension.api.batchGetRelationships
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
@@ -51,12 +52,9 @@ import org.mariotaku.twidere.util.sync.TimelineSyncManager
  */
 class GetActivitiesAboutMeTask(context: Context) : GetActivitiesTask(context) {
 
-    override val errorInfoKey: String
-        get() = ErrorInfoStore.KEY_INTERACTIONS
-
-    override val contentUri: Uri
-        get() = Activities.AboutMe.CONTENT_URI
-
+    override val errorInfoKey: String = ErrorInfoStore.KEY_INTERACTIONS
+    override val filterScopes: Int = FilterScope.INTERACTIONS
+    override val contentUri: Uri = Activities.AboutMe.CONTENT_URI
 
     private val profileImageSize = context.getString(R.string.profile_image_size)
 

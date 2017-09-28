@@ -54,13 +54,23 @@ abstract class BasePreferenceFragment : PreferenceFragmentCompat(), IBaseFragmen
     @Inject
     lateinit var bus: Bus
 
-    private val actionHelper = IBaseFragment.ActionHelper(this)
+    private val actionHelper = IBaseFragment.ActionHelper<BasePreferenceFragment>()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         if (savedInstanceState != null) {
             ringtonePreferenceKey = savedInstanceState.getString(EXTRA_RINGTONE_PREFERENCE_KEY)
         }
         super.onActivityCreated(savedInstanceState)
+    }
+
+    override fun onPause() {
+        actionHelper.dispatchOnPause()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        actionHelper.dispatchOnResumeFragments(this)
     }
 
     override fun onAttach(context: Context) {
@@ -122,7 +132,7 @@ abstract class BasePreferenceFragment : PreferenceFragmentCompat(), IBaseFragmen
 
     override fun executeAfterFragmentResumed(useHandler: Boolean, action: (BasePreferenceFragment) -> Unit)
             : Promise<Unit, Exception> {
-        return actionHelper.executeAfterFragmentResumed(useHandler, action)
+        return actionHelper.executeAfterFragmentResumed(this, useHandler, action)
     }
 
     override fun onApplySystemWindowInsets(insets: Rect) {

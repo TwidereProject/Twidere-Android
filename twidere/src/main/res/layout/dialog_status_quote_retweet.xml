@@ -54,7 +54,7 @@
                 android:hint="@string/comment_hint"
                 android:inputType="textMultiLine|textLongMessage|textCapSentences"
                 android:visibility="visible"
-                app:backgroundTint="?colorAccent">
+                app:backgroundTint="?colorControlStateful">
 
                 <requestFocus/>
             </org.mariotaku.twidere.view.ComposeEditText>

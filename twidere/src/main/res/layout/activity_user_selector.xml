@@ -44,7 +44,7 @@
             android:ems="10"
             android:hint="@string/search_hint_users"
             android:maxLines="1"
-            app:backgroundTint="?colorAccent"/>
+            app:backgroundTint="?colorControlStateful"/>
 
         <org.mariotaku.twidere.view.IconActionButton
             android:id="@+id/screenNameConfirm"

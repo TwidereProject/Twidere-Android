@@ -9,27 +9,32 @@ import org.apache.james.mime4j.dom.address.Mailbox
 import org.apache.james.mime4j.dom.field.*
 import org.apache.james.mime4j.message.*
 import org.apache.james.mime4j.parser.MimeStreamParser
+import org.apache.james.mime4j.storage.Storage
 import org.apache.james.mime4j.storage.StorageBodyFactory
+import org.apache.james.mime4j.storage.TempFileStorageProvider
 import org.apache.james.mime4j.stream.BodyDescriptor
 import org.apache.james.mime4j.stream.MimeConfig
 import org.apache.james.mime4j.stream.RawField
 import org.apache.james.mime4j.util.MimeUtil
 import org.mariotaku.ktextension.mapToArray
-import org.mariotaku.ktextension.toIntOr
 import org.mariotaku.ktextension.toString
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.extension.mime4j.getBooleanParameter
+import org.mariotaku.twidere.extension.mime4j.getIntParameter
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.Draft.Action
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtras
 import org.mariotaku.twidere.model.draft.UpdateStatusActionExtras
 import org.mariotaku.twidere.util.JsonSerializer
 import org.mariotaku.twidere.util.collection.NonEmptyHashMap
+import org.mariotaku.twidere.util.sync.mkdirIfNotExists
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.charset.Charset
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 val Draft.filename: String get() = "$unique_id_non_null.eml"
@@ -38,7 +43,9 @@ val Draft.unique_id_non_null: String
     get() = unique_id ?: UUID.nameUUIDFromBytes(("$_id:$timestamp").toByteArray()).toString()
 
 fun Draft.writeMimeMessageTo(context: Context, st: OutputStream) {
-    val bodyFactory = StorageBodyFactory()
+    val cacheDir = File(context.cacheDir, "mime_cache").apply { mkdirIfNotExists() }
+    val bodyFactory = StorageBodyFactory(TempFileStorageProvider("draft_media_", null,
+            cacheDir), null)
     val storageProvider = bodyFactory.storageProvider
     val contentResolver = context.contentResolver
 
@@ -74,23 +81,32 @@ fun Draft.writeMimeMessageTo(context: Context, st: OutputStream) {
             this.filename = "twidere.action.extras.json"
         })
     }
-    this.media?.forEach { mediaItem ->
-        multipart.addBodyPart(BodyPart().apply {
-            val uri = Uri.parse(mediaItem.uri)
-            val mimeType = mediaItem.getMimeType(contentResolver) ?: "application/octet-stream"
-            val parameters = NonEmptyHashMap<String, String?>()
-            parameters["alt_text"] = mediaItem.alt_text
-            parameters["media_type"] = mediaItem.type.toString()
-            val storage = contentResolver.openInputStream(uri).use { storageProvider.store(it) }
-            this.filename = uri.lastPathSegment
-            this.contentTransferEncoding = MimeUtil.ENC_BASE64
-            this.setBody(bodyFactory.binaryBody(storage), mimeType, parameters)
-        })
-    }
 
-    message.setMultipart(multipart)
-    writer.writeMessage(message, st)
-    st.flush()
+    val storageList = ArrayList<Storage>()
+    try {
+        this.media?.forEach { mediaItem ->
+            multipart.addBodyPart(BodyPart().apply {
+                val uri = Uri.parse(mediaItem.uri)
+                val mimeType = mediaItem.getMimeType(contentResolver) ?: "application/octet-stream"
+                val parameters = NonEmptyHashMap<String, String?>()
+                parameters["alt_text"] = mediaItem.alt_text
+                parameters["media_type"] = mediaItem.type.toString()
+                parameters["delete_on_success"] = mediaItem.delete_on_success.toString()
+                parameters["delete_always"] = mediaItem.delete_always.toString()
+                val storage = contentResolver.openInputStream(uri).use { storageProvider.store(it) }
+                this.filename = uri.lastPathSegment
+                this.contentTransferEncoding = MimeUtil.ENC_BASE64
+                this.setBody(bodyFactory.binaryBody(storage), mimeType, parameters)
+                storageList.add(storage)
+            })
+        }
+
+        message.setMultipart(multipart)
+        writer.writeMessage(message, st)
+        st.flush()
+    } finally {
+        storageList.forEach(Storage::delete)
+    }
 }
 
 fun Draft.readMimeMessageFrom(context: Context, st: InputStream): Boolean {
@@ -137,6 +153,14 @@ fun Draft.applyUpdateStatus(statusUpdate: ParcelableStatusUpdate) {
     this.media = statusUpdate.media
     this.timestamp = System.currentTimeMillis()
     this.action_extras = statusUpdate.draft_extras
+}
+
+fun draftActionTypeString(@Draft.Action action: String?): String {
+    return when (action) {
+        Draft.Action.QUOTE -> "quote"
+        Draft.Action.REPLY -> "reply"
+        else -> "tweet"
+    }
 }
 
 private class DraftContentHandler(private val context: Context, private val draft: Draft) : SimpleContentHandler() {
@@ -204,6 +228,7 @@ private class DraftContentHandler(private val context: Context, private val draf
     }
 }
 
+
 private class BodyPartHandler(private val context: Context, private val draft: Draft) : SimpleContentHandler() {
     internal lateinit var header: Header
     internal var media: ParcelableMediaUpdate? = null
@@ -238,9 +263,15 @@ private class BodyPartHandler(private val context: Context, private val draft: D
                     val filename = contentDisposition.filename ?: return
                     val mediaFile = File(context.filesDir, filename)
                     media = ParcelableMediaUpdate().apply {
-                        bd.transferEncoding
-                        this.type = contentType?.getParameter("media_type").toIntOr(ParcelableMedia.Type.UNKNOWN)
-                        this.alt_text = contentType?.getParameter("alt_text")
+                        if (contentType != null) {
+                            this.type = contentType.getIntParameter("media_type",
+                                    ParcelableMedia.Type.UNKNOWN)
+                            this.alt_text = contentType.getParameter("alt_text")
+                            this.delete_on_success = contentType.getBooleanParameter("delete_on_success")
+                            this.delete_always = contentType.getBooleanParameter("delete_always")
+                        } else {
+                            this.type = ParcelableMedia.Type.UNKNOWN
+                        }
                         FileOutputStream(mediaFile).use {
                             st.copyTo(it)
                             it.flush()
@@ -252,14 +283,5 @@ private class BodyPartHandler(private val context: Context, private val draft: D
         } else if (bd.mimeType == "text/plain" && draft.text == null) {
             draft.text = st.toString(Charset.forName(bd.charset))
         }
-    }
-}
-
-
-fun draftActionTypeString(@Draft.Action action: String?): String {
-    return when (action) {
-        Draft.Action.QUOTE -> "quote"
-        Draft.Action.REPLY -> "reply"
-        else -> "tweet"
     }
 }

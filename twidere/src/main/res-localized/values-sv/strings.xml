@@ -3,6 +3,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="account_options">Kontoalternativ</string>
   <string name="account_type_fanfou">Fanfou</string>
+  <string name="account_type_mastodon">Mastodon</string>
   <string name="account_type_statusnet">StatusNet</string>
   <string name="account_type_twitter">Twitter</string>
   <!-- [verb] Accept a friend request (follow request) -->
@@ -262,8 +263,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Emoji-stöd</string>
   <string name="empty_content">Tomt innehåll</string>
-  <string name="enable_notifications">Aktivera notifieringar</string>
-  <string name="enable_retweets">Aktivera retweets</string>
   <string name="enable_streaming">Aktivera direktuppspelning</string>
   <string name="error_info_oauth_timestamp_error">Var god kontrollera dina systeminställningar för tid- och datum.</string>
   <string name="error_message">Fel: <xliff:g id="message">%s</xliff:g></string>
@@ -293,13 +292,9 @@
   <string name="external_group_host_format">Extern grupp på <xliff:g id="host">%s</xliff:g></string>
   <string name="external_user_host_format">Extern användare på <xliff:g id="host">%s</xliff:g></string>
   <string name="extra_configurations">Extra inställningar</string>
-  <string name="extra_feature_description_filters_import">Importera filterlista från blockeringar/tystningar</string>
-  <string name="extra_feature_description_filters_subscription">Prenumerera på mute-filter och synkronisera automatiskt</string>
   <string name="extra_feature_description_schedule_status">Schemalägg tweet (Skicka senare)</string>
   <string name="extra_feature_description_share_gif">Dela GIF i tweet</string>
   <string name="extra_feature_description_sync_data">Synkronisera data med exempelvis Dropbox eller Google Drive</string>
-  <string name="extra_feature_title_filters_import">Import-filter</string>
-  <string name="extra_feature_title_filters_subscription">Prenumerations-filter</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">Stöd Twidere och få extrafunktioner</string>
   <string name="extra_features_pack_description">Eller köp funktionspaket för att få alla funktioner (inklusive funktioner i framtida släpp)</string>
@@ -595,7 +590,7 @@
   <string name="no_status_content_text">Inget innehåll</string>
   <string name="no_tab">Ingen flik</string>
   <string name="no_tab_hint">Ingen flik</string>
-  <string name="no_thanks">Nej tack</string>
+  <string name="action_no_thanks">Nej tack</string>
   <string name="no_user_found">Ingen användare hittat</string>
   <string name="no_version_suffix">Ingen versionssuffix</string>
   <string name="none">Ingen</string>
@@ -725,7 +720,7 @@
   <string name="projects_we_took_part">Projekt vi deltog</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="provider_fanfou">Fanfou</string>
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>
@@ -808,7 +803,7 @@
   <string name="sensitive_content_warning">Det här tweetet kan innehålla stötande material, vill du fortsätta?</string>
   <string name="sent_follow_request_to_user">Skicka förföljarförfrågan till <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Serveradress</string>
-  <string name="settings">Inställningar</string>
+  <string name="action_settings">Inställningar</string>
   <string name="settings_interface">Gränssnitt</string>
   <string name="settings_notifications">Notifieringar</string>
   <string name="settings_refresh">Uppdatera</string>

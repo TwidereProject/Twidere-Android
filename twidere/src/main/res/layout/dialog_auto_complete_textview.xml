@@ -31,6 +31,6 @@
         android:layout_height="wrap_content"
         android:completionThreshold="1"
         android:maxLines="1"
-        app:backgroundTint="?colorAccent"/>
+        app:backgroundTint="?colorControlStateful"/>
 
 </FrameLayout>

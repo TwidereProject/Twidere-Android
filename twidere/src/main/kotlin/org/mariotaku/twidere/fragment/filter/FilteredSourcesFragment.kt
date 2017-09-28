@@ -9,6 +9,4 @@ class FilteredSourcesFragment : BaseFiltersFragment() {
 
     override val contentUri: Uri = Filters.Sources.CONTENT_URI
 
-    override val autoCompleteType: Int = AUTO_COMPLETE_TYPE_SOURCES
-
 }

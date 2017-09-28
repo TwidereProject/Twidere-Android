@@ -5,7 +5,7 @@
     tools:targetApi="n_mr1">
     <shortcut
         android:enabled="true"
-        android:icon="@drawable/ic_app_shortcut_compose"
+        android:icon="@mipmap/ic_shortcut_compose"
         android:shortcutId="compose"
         android:shortcutLongLabel="@string/action_compose"
         android:shortcutShortLabel="@string/action_compose">
@@ -16,7 +16,7 @@
     </shortcut>
     <shortcut
         android:enabled="true"
-        android:icon="@drawable/ic_app_shortcut_camera"
+        android:icon="@mipmap/ic_shortcut_camera"
         android:shortcutId="compose-take-photo"
         android:shortcutLongLabel="@string/action_take_photo"
         android:shortcutShortLabel="@string/action_take_photo">

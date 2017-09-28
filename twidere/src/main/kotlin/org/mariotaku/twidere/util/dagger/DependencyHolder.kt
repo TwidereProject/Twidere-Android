@@ -28,12 +28,10 @@ import okhttp3.Dns
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.model.DefaultFeatures
-import org.mariotaku.twidere.util.ActivityTracker
-import org.mariotaku.twidere.util.ExternalThemeManager
-import org.mariotaku.twidere.util.ReadStateManager
-import org.mariotaku.twidere.util.UserColorNameManager
+import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.media.MediaPreloader
 import org.mariotaku.twidere.util.media.ThumborWrapper
+import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.sync.TimelineSyncManager
 import javax.inject.Inject
 
@@ -85,6 +83,13 @@ class DependencyHolder internal constructor(context: Context) {
         internal set
     @Inject
     lateinit var timelineSyncManagerFactory: TimelineSyncManager.Factory
+        internal set
+
+    @Inject
+    lateinit var extraFeaturesService: ExtraFeaturesService
+        internal set
+    @Inject
+    lateinit var notificationManager: NotificationManagerWrapper
         internal set
 
     init {

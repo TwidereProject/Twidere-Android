@@ -21,8 +21,8 @@ package org.mariotaku.twidere.extension.model.api
 
 import android.text.Spanned
 import android.text.style.URLSpan
-import org.apache.commons.lang3.text.translate.EntityArrays
-import org.apache.commons.lang3.text.translate.LookupTranslator
+import org.apache.commons.text.translate.EntityArrays
+import org.apache.commons.text.translate.LookupTranslator
 import org.mariotaku.commons.text.CodePointArray
 import org.mariotaku.ktextension.isNotNullOrEmpty
 import org.mariotaku.ktextension.mapToArray
@@ -33,6 +33,8 @@ import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.exception.MalformedResponseException
 import org.mariotaku.twidere.extension.model.addFilterFlag
 import org.mariotaku.twidere.extension.model.toParcelable
+import org.mariotaku.twidere.extension.model.updateContentFilterInfo
+import org.mariotaku.twidere.extension.model.updateFilterInfo
 import org.mariotaku.twidere.extension.toSpanItem
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
@@ -41,22 +43,27 @@ import org.mariotaku.twidere.text.AcctMentionSpan
 import org.mariotaku.twidere.text.HashtagSpan
 import org.mariotaku.twidere.util.HtmlBuilder
 import org.mariotaku.twidere.util.HtmlSpanBuilder
+import org.mariotaku.twidere.util.InternalTwitterContentUtils
 import org.mariotaku.twidere.util.InternalTwitterContentUtils.getMediaUrl
 import org.mariotaku.twidere.util.InternalTwitterContentUtils.getStartEndForEntity
 
-fun Status.toParcelable(details: AccountDetails, profileImageSize: String = "normal"): ParcelableStatus {
-    return toParcelable(details.key, details.type, profileImageSize).apply {
+fun Status.toParcelable(details: AccountDetails, profileImageSize: String = "normal",
+        updateFilterInfoAction: (Status, ParcelableStatus) -> Unit = ::updateFilterInfoDefault): ParcelableStatus {
+    return toParcelable(details.key, details.type, profileImageSize, updateFilterInfoAction).apply {
         account_color = details.color
     }
 }
 
-fun Status.toParcelable(accountKey: UserKey, accountType: String, profileImageSize: String = "normal"): ParcelableStatus {
+fun Status.toParcelable(accountKey: UserKey, accountType: String, profileImageSize: String = "normal",
+        updateFilterInfoAction: (Status, ParcelableStatus) -> Unit = ::updateFilterInfoDefault): ParcelableStatus {
     val result = ParcelableStatus()
-    applyTo(accountKey, accountType, profileImageSize, result)
+    applyTo(accountKey, accountType, profileImageSize, result, updateFilterInfoAction)
     return result
 }
 
-fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: String = "normal", result: ParcelableStatus) {
+fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: String = "normal",
+        result: ParcelableStatus,
+        updateFilterInfoAction: (Status, ParcelableStatus) -> Unit = ::updateFilterInfoDefault) {
     val extras = ParcelableStatus.Extras()
     result.account_key = accountKey
     result.id = id
@@ -198,6 +205,8 @@ fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: S
     if (result.media.isNotNullOrEmpty() || result.quoted_media.isNotNullOrEmpty()) {
         result.addFilterFlag(ParcelableStatus.FilterFlags.HAS_MEDIA)
     }
+
+    updateFilterInfoAction(this, result)
 }
 
 
@@ -221,7 +230,6 @@ fun Status.formattedTextWithIndices(): StatusTextWithIndices {
     return textWithIndices
 }
 
-
 fun CodePointArray.findResultRangeLength(spans: Array<SpanItem>, origStart: Int, origEnd: Int): Int {
     val findResult = findByOrigRange(spans, origStart, origEnd)
     if (findResult.isEmpty()) {
@@ -233,7 +241,6 @@ fun CodePointArray.findResultRangeLength(spans: Array<SpanItem>, origStart: Int,
         return charCount(origStart, origEnd)
     return charCount(origStart, first.orig_start) + (last.end - first.start) + charCount(first.orig_end, origEnd)
 }
-
 
 fun HtmlBuilder.addEntities(entities: EntitySupport) {
     // Format media.
@@ -261,9 +268,61 @@ fun HtmlBuilder.addEntities(entities: EntitySupport) {
     }
 }
 
+
+fun updateFilterInfoDefault(status: Status, result: ParcelableStatus) {
+    result.updateFilterInfo(setOf(
+            status.userDescriptionUnescaped,
+            status.userUrlExpanded,
+            status.userLocation,
+            status.retweetedStatus?.userDescriptionUnescaped,
+            status.retweetedStatus?.userLocation,
+            status.retweetedStatus?.userUrlExpanded,
+            status.quotedStatus?.userDescriptionUnescaped,
+            status.quotedStatus?.userLocation,
+            status.quotedStatus?.userUrlExpanded
+    ))
+}
+
+/**
+ * Ignores status user info
+ */
+fun updateFilterInfoForUserTimeline(status: Status, result: ParcelableStatus) {
+    result.updateContentFilterInfo()
+
+    if (result.is_retweet) {
+        result.filter_users = setOf(result.user_key, result.quoted_user_key).filterNotNull().toTypedArray()
+        result.filter_names = setOf(result.user_name, result.quoted_user_name).filterNotNull().toTypedArray()
+        result.filter_descriptions = setOf(
+                status.retweetedStatus?.userDescriptionUnescaped,
+                status.retweetedStatus?.userUrlExpanded,
+                status.retweetedStatus?.userLocation,
+                status.quotedStatus?.userDescriptionUnescaped,
+                status.quotedStatus?.userLocation,
+                status.quotedStatus?.userUrlExpanded
+        ).filterNotNull().joinToString("\n")
+    } else {
+        result.filter_users = setOf(result.quoted_user_key).filterNotNull().toTypedArray()
+        result.filter_names = setOf(result.quoted_user_name).filterNotNull().toTypedArray()
+        result.filter_descriptions = setOf(
+                status.quotedStatus?.userDescriptionUnescaped,
+                status.quotedStatus?.userLocation,
+                status.quotedStatus?.userUrlExpanded
+        ).filterNotNull().joinToString("\n")
+    }
+}
+
 private fun String.twitterUnescaped(): String {
     return twitterRawTextTranslator.translate(this)
 }
+
+private inline val Status.userDescriptionUnescaped: String?
+    get() = user?.let { InternalTwitterContentUtils.formatUserDescription(it)?.first }
+
+private inline val Status.userUrlExpanded: String?
+    get() = user?.urlEntities?.firstOrNull()?.expandedUrl
+
+private inline val Status.userLocation: String?
+    get() = user?.location
 
 /**
  * @param spans Ordered spans
@@ -276,35 +335,39 @@ internal fun findByOrigRange(spans: Array<SpanItem>, start: Int, end: Int): List
     return spans.filter { it.orig_start >= start && it.orig_end <= end }
 }
 
-internal inline val CharSequence.spanItems get() = (this as? Spanned)?.let { text ->
-    text.getSpans(0, length, URLSpan::class.java).mapToArray {
-        val item = it.toSpanItem(text)
-        when (it) {
-            is AcctMentionSpan -> item.type = SpanItem.SpanType.ACCT_MENTION
-            is HashtagSpan -> item.type = SpanItem.SpanType.HASHTAG
+internal inline val CharSequence.spanItems
+    get() = (this as? Spanned)?.let { text ->
+        text.getSpans(0, length, URLSpan::class.java).mapToArray {
+            val item = it.toSpanItem(text)
+            when (it) {
+                is AcctMentionSpan -> item.type = SpanItem.SpanType.ACCT_MENTION
+                is HashtagSpan -> item.type = SpanItem.SpanType.HASHTAG
+            }
+            return@mapToArray item
         }
-        return@mapToArray item
     }
-}
 
 internal inline val String.isHtml get() = contains('<') && contains('>')
 
-private inline val Status.inReplyToName get() = userMentionEntities?.firstOrNull {
-    inReplyToUserId == it.id
-}?.name ?: attentions?.firstOrNull {
-    inReplyToUserId == it.id
-}?.fullName ?: inReplyToScreenName
+private inline val Status.inReplyToName
+    get() = userMentionEntities?.firstOrNull {
+        inReplyToUserId == it.id
+    }?.name ?: attentions?.firstOrNull {
+        inReplyToUserId == it.id
+    }?.fullName ?: inReplyToScreenName
 
 
-private inline val Status.placeFullName get() = place?.fullName ?: location?.takeIf {
-    ParcelableLocation.valueOf(location) == null
-}
-
-private inline val Status.inferredExternalUrl get() = externalUrl ?: uri?.let { uri ->
-    noticeUriRegex.matchEntire(uri)?.let { result: MatchResult ->
-        "https://${result.groups[1]?.value}/notice/${result.groups[3]?.value}"
+private inline val Status.placeFullName
+    get() = place?.fullName ?: location?.takeIf {
+        ParcelableLocation.valueOf(location) == null
     }
-}
+
+private inline val Status.inferredExternalUrl
+    get() = externalUrl ?: uri?.let { uri ->
+        noticeUriRegex.matchEntire(uri)?.let { result: MatchResult ->
+            "https://${result.groups[1]?.value}/notice/${result.groups[3]?.value}"
+        }
+    }
 
 private val Status.parcelableLocation: ParcelableLocation?
     get() {
@@ -340,7 +403,7 @@ private fun Status.getInReplyToUserKey(accountKey: UserKey): UserKey? {
 
 private val noticeUriRegex = Regex("tag:([\\w\\d.]+),(\\d{4}-\\d{2}-\\d{2}):noticeId=(\\d+):objectType=(\\w+)")
 
-private object twitterRawTextTranslator : LookupTranslator(*EntityArrays.BASIC_UNESCAPE())
+private object twitterRawTextTranslator : LookupTranslator(EntityArrays.BASIC_UNESCAPE)
 
 class StatusTextWithIndices {
     var text: String? = null

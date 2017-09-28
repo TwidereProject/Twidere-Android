@@ -268,8 +268,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Sofitu de fustaxes</string>
   <string name="empty_content">Conteníu baleru</string>
-  <string name="enable_notifications">Habilitar avisos</string>
-  <string name="enable_retweets">Habilitar retuits</string>
   <string name="enable_streaming">Habilitar tuits en tiempu real</string>
   <string name="error_info_oauth_timestamp_error">Comprueba los axustes de data y hora del to sistema, por favor.</string>
   <string name="error_message">Fallu: <xliff:g id="message">%s</xliff:g></string>
@@ -298,13 +296,9 @@
   <string name="external_group_host_format">Grupu esternu en <xliff:g id="host">%s</xliff:g></string>
   <string name="external_user_host_format">Usuariu esternu en <xliff:g id="host">%s</xliff:g></string>
   <string name="extra_configurations">Configuraciones estra</string>
-  <string name="extra_feature_description_filters_import">Importa\'l llistáu de peñeres de bloqueos/silenciaos</string>
-  <string name="extra_feature_description_filters_subscription">Soscríbite a peñeres de silenciu y sincronízales automáticamentes</string>
   <string name="extra_feature_description_schedule_status">Planificar tuit (unviar más sero)</string>
   <string name="extra_feature_description_share_gif">Compartir GIF en tuit</string>
   <string name="extra_feature_description_sync_data">Sincroniza datos con Dropbox, Google Drive… etc</string>
-  <string name="extra_feature_title_filters_import">Importación de peñeres</string>
-  <string name="extra_feature_title_filters_subscription">Soscripción de peñeres</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">Sofita Twidere pa consiguir carauterístiques ameyoraes</string>
   <string name="extra_features_pack_description">O merca\'l paquete pa consiguir toles carauterístiques (incluyendo les futures)</string>
@@ -406,6 +400,7 @@
   <string name="label_follow_request_sent">Unvióse la solicitú de siguimientu</string>
   <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> per <xliff:g example="api" id="source">%2$s</xliff:g></string>
   <string name="label_location_your_coarse_location">El to allugamientu aproximáu</string>
+  <string name="label_mastodon_host">Sitiu Mastodon</string>
   <string name="label_media">Mediu</string>
   <string name="label_original_status">Tuit orixinal</string>
   <string name="label_password">Contraseña</string>
@@ -508,6 +503,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="message_permission_request_compose_location">Twidere precisa\'l permisu d\'allugamientu p\'amestar l\'allugamientu a los tuits.</string>
   <string name="message_permission_request_save_media">Twidere precisa\'l permisu d\'almacenamientu pa guardar medios.</string>
   <string name="message_permission_request_share_media">Twidere precisa\'l permisu d\'almacenamientu pa compartir medios con delles aplicaciones.</string>
+  <string name="message_pin_status_confirm">¿Fixar esti tuit? Tocaráse\'l fixáu enantes.</string>
   <string name="message_please_wait">Espera, por favor.</string>
   <string name="message_status_scheduling_connect_buffer_hint">Coneuta con Buffer pa planificar tuits, tamién fuera de llinia</string>
   <string name="message_status_scheduling_connected_to_buffer">Agora Twidere ta coneutáu con Buffer</string>
@@ -533,6 +529,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="message_toast_extra_features_not_purchased">Nun se mercaron les ameyores</string>
   <string name="message_toast_filters_import_hint">Primi «+» pa importar</string>
   <string name="message_toast_internal_storage_install_required">Nun se sofita la instalación na tarxeta SD, quiciabes se pierdan les cuentes dempués de reaniciar.</string>
+  <string name="message_toast_invalid_mastodon_host">Agospiu non válidu de Mastodon</string>
   <string name="message_toast_link_copied_to_clipboard">Copióse l\'enllaz al cartafueyu</string>
   <string name="message_toast_livewp_daydream_enabled_message">Equí hai un regalu pequeñu pa ti, alcuéntralu nos axustes del sistema :)</string>
   <string name="message_toast_login_verification_failed">Falló la verificación del aniciu de sesión</string>
@@ -610,7 +607,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="no_status_content_text">Ensin conteníu</string>
   <string name="no_tab">Ensin llingüetes</string>
   <string name="no_tab_hint">Ensin llingüetes</string>
-  <string name="no_thanks">Non, gracies</string>
+  <string name="action_no_thanks">Non, gracies</string>
   <string name="no_user_found">Nun s\'alcontró usuariu dalu</string>
   <string name="no_version_suffix">Ensin sufixu de versión</string>
   <string name="none">Dengún</string>
@@ -743,7 +740,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="projects_we_took_part">Proyeutos nos que participamos</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="provider_fanfou">Fanfou</string>
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>
@@ -812,6 +809,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="search_hint_users">Guetar usuarios</string>
   <string name="search_statuses">Guetar tuits</string>
   <string name="search_type_local">Llocal</string>
+  <string name="search_type_media">Medios</string>
   <string name="search_type_statuses">Tuits</string>
   <string name="search_type_users">Usuarios</string>
   <string name="security_key">Clave de seguranza</string>
@@ -830,7 +828,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="sent_follow_request_to_user">Unvióse la solicitú de siguimientu a <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Direición del sirvidor</string>
   <string name="set_consumer_key_secret_message">Twidere ta algamando la llende de pases y tendrás de crear un pase nuevu en https://apps.twitter.com/. Dempués apega la clave y secretu de consumidor embaxo.\nSi sigues usando la clave por defeutu, quiciabes nun seyas a aniciar sesión.</string>
-  <string name="settings">Axustes</string>
+  <string name="action_settings">Axustes</string>
   <string name="settings_interface">Interfaz</string>
   <string name="settings_notifications">Avisos</string>
   <string name="settings_refresh">Refrescu</string>

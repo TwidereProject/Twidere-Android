@@ -40,7 +40,8 @@ class AddUserFilterDialogFragment : AbsUserMuteBlockDialogFragment() {
 
     override fun performUserAction(user: ParcelableUser, filterEverywhere: Boolean) {
         DataStoreUtils.addToFilter(context, listOf(user), filterEverywhere)
-        bus.post(FriendshipTaskEvent(FriendshipTaskEvent.Action.FILTER, user.account_key, user.key).apply {
+        val accountKey = user.account_key ?: return
+        bus.post(FriendshipTaskEvent(FriendshipTaskEvent.Action.FILTER, accountKey, user.key).apply {
             isFinished = true
             isSucceeded = true
         })

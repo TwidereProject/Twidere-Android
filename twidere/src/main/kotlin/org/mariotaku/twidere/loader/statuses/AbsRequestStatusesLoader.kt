@@ -22,7 +22,6 @@ package org.mariotaku.twidere.loader.statuses
 import android.accounts.AccountManager
 import android.content.Context
 import android.content.SharedPreferences
-import android.database.sqlite.SQLiteDatabase
 import android.support.annotation.WorkerThread
 import org.mariotaku.kpreferences.get
 import org.mariotaku.microblog.library.MicroBlogException
@@ -30,7 +29,6 @@ import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
-import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.extension.model.api.applyLoadLimit
 import org.mariotaku.twidere.loader.iface.IPaginationLoader
@@ -50,7 +48,6 @@ import org.mariotaku.twidere.util.cache.JsonCache
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import java.io.IOException
 import java.util.*
-import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 
@@ -64,7 +61,7 @@ abstract class AbsRequestStatusesLoader(
         protected val loadingMore: Boolean
 ) : ParcelableStatusesLoader(context, adapterData, tabPosition, fromUser), IPaginationLoader {
     // Statuses sorted descending by default
-    var comparator: Comparator<ParcelableStatus>? = ParcelableStatus.REVERSE_COMPARATOR
+    open val comparator: Comparator<ParcelableStatus>? = ParcelableStatus.REVERSE_COMPARATOR
 
     var exception: MicroBlogException?
         get() = exceptionRef.get()
@@ -107,6 +104,7 @@ abstract class AbsRequestStatusesLoader(
     @SuppressWarnings("unchecked")
     override final fun loadInBackground(): ListResponse<ParcelableStatus> {
         val context = context
+        val comparator = this.comparator
         val accountKey = accountKey ?: return ListResponse.getListInstance<ParcelableStatus>(MicroBlogException("No Account"))
         val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?:
                 return ListResponse.getListInstance<ParcelableStatus>(MicroBlogException("No Account"))
@@ -116,11 +114,11 @@ abstract class AbsRequestStatusesLoader(
             if (cached != null) {
                 data.addAll(cached)
                 if (comparator != null) {
-                    Collections.sort(data, comparator)
+                    data.sortWith(comparator)
                 } else {
-                    Collections.sort(data)
+                    data.sort()
                 }
-                return ListResponse.getListInstance(CopyOnWriteArrayList(data))
+                return ListResponse.getListInstance(data)
             }
         }
         if (!fromUser) return ListResponse.getListInstance(data)
@@ -170,16 +168,15 @@ abstract class AbsRequestStatusesLoader(
             data.addAll(statuses)
         }
 
-        val db = TwidereApplication.getInstance(context).sqLiteDatabase
-        data.forEach { it.is_filtered = shouldFilterStatus(db, it) }
+        data.forEach { it.is_filtered = shouldFilterStatus(it) }
 
         if (comparator != null) {
-            data.sortWith(comparator!!)
+            data.sortWith(comparator)
         } else {
             data.sort()
         }
         saveCachedData(data)
-        return ListResponse.getListInstance(CopyOnWriteArrayList(data))
+        return ListResponse.getListInstance(data)
     }
 
     override final fun onStartLoading() {
@@ -188,8 +185,7 @@ abstract class AbsRequestStatusesLoader(
     }
 
     @WorkerThread
-    protected abstract fun shouldFilterStatus(database: SQLiteDatabase, status: ParcelableStatus): Boolean
-
+    protected abstract fun shouldFilterStatus(status: ParcelableStatus): Boolean
 
     protected open fun processPaging(paging: Paging, details: AccountDetails, loadItemLimit: Int) {
         paging.applyLoadLimit(details, loadItemLimit)

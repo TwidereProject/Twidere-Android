@@ -209,13 +209,13 @@ public class SeekBarDialogPreference extends DialogPreference implements IDialog
             super.onBindDialogView(view);
             final SeekBarDialogPreference preference = (SeekBarDialogPreference) getPreference();
             final CharSequence message = preference.getDialogMessage();
-            final TextView dialogMessageText = (TextView) view.findViewById(R.id.text_dialog_message);
+            final TextView dialogMessageText = view.findViewById(R.id.text_dialog_message);
             dialogMessageText.setText(message);
             dialogMessageText.setVisibility(TextUtils.isEmpty(message) ? View.GONE : View.VISIBLE);
 
-            mProgressText = (TextView) view.findViewById(R.id.text_progress);
+            mProgressText = view.findViewById(R.id.text_progress);
 
-            mSeekBar = (SeekBar) view.findViewById(R.id.seek_bar);
+            mSeekBar = view.findViewById(R.id.seek_bar);
             mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(final SeekBar seekBar, final int progress, final boolean fromUser) {

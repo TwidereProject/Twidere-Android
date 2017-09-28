@@ -24,7 +24,6 @@ import android.net.Uri
 import android.webkit.MimeTypeMap
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.commons.io.StreamUtils
-import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableMediaUpdate
 import org.mariotaku.twidere.util.DebugLog
@@ -50,12 +49,14 @@ open class AbsAddMediaTask<Callback>(
             var st: InputStream? = null
             var os: OutputStream? = null
             try {
-                val sourceMimeType = resolver.getType(source)
+                val mimeTypeMap = MimeTypeMap.getSingleton()
+                val sourceMimeType = resolver.getType(source) ?: mimeTypeMap.getMimeTypeFromExtension(
+                        source.lastPathSegment.substringAfterLast('.', "tmp"))
                 val mediaType = types?.get(index) ?: sourceMimeType?.let {
                     return@let inferMediaType(it)
                 } ?: ParcelableMedia.Type.IMAGE
                 val extension = sourceMimeType?.let { mimeType ->
-                    MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType)
+                    mimeTypeMap.getExtensionFromMimeType(mimeType)
                 } ?: "tmp"
                 st = resolver.openInputStream(source) ?: throw FileNotFoundException("Unable to open $source")
                 val destination: Uri
@@ -69,9 +70,12 @@ open class AbsAddMediaTask<Callback>(
                 } else {
                     destination = source
                 }
-                return@mapIndexedNotNull ParcelableMediaUpdate(destination.toString(), mediaType)
+                // File is copied locally, so delete on success
+                return@mapIndexedNotNull ParcelableMediaUpdate(destination.toString(), mediaType).apply {
+                    delete_on_success = true
+                }
             } catch (e: IOException) {
-                DebugLog.w(Constants.LOGTAG, tr = e)
+                DebugLog.w(tr = e)
                 return@mapIndexedNotNull null
             } finally {
                 os?.close()

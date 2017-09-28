@@ -12,6 +12,7 @@ import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_NOTIFY_CHANGE
+import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.extension.model.getMaxId
@@ -45,6 +46,9 @@ abstract class GetActivitiesTask(
 
     protected abstract val errorInfoKey: String
 
+    @FilterScope
+    protected abstract val filterScopes: Int
+
     protected abstract val contentUri: Uri
 
     override fun doLongOperation(param: RefreshTaskParam): List<Pair<GetTimelineResult<ParcelableActivity>?, Exception?>> {
@@ -60,7 +64,7 @@ abstract class GetActivitiesTask(
             val maxId = param.getMaxId(i)
             val maxSortId = param.getMaxSortId(i)
             if (maxId != null) {
-                    paging.maxId(maxId)
+                paging.maxId(maxId)
             }
             val sinceId = param.getSinceId(i)
             if (sinceId != null) {
@@ -157,8 +161,8 @@ abstract class GetActivitiesTask(
         }
         var olderCount = -1
         if (minPositionKey > 0) {
-            olderCount = DataStoreUtils.getActivitiesCount(context, contentUri, Activities.POSITION_KEY,
-                    minPositionKey, false, arrayOf(details.key))
+            olderCount = DataStoreUtils.getActivitiesCount(context, preferences, contentUri,
+                    Activities.POSITION_KEY, minPositionKey, false, arrayOf(details.key), filterScopes)
         }
         val writeUri = UriUtils.appendQueryParameters(contentUri, QUERY_PARAM_NOTIFY_CHANGE, notify)
         if (deleteBound[0] > 0 && deleteBound[1] > 0) {

@@ -94,10 +94,18 @@ public interface AccountExtras extends Parcelable {
         }
 
         @NonNull
-        public static ImageLimit ofSize(int width, int height) {
+        public static ImageLimit ofGeometry(int width, int height) {
             final ImageLimit limit = new ImageLimit();
             limit.setMaxWidth(width);
             limit.setMaxHeight(height);
+            return limit;
+        }
+
+        @NonNull
+        public static ImageLimit ofSize(int size) {
+            final ImageLimit limit = new ImageLimit();
+            limit.setMaxSizeSync(size);
+            limit.setMaxSizeAsync(size);
             return limit;
         }
 

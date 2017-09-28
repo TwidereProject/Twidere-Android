@@ -34,6 +34,7 @@
   <string name="action_center">Mitte</string>
   <string name="action_clear">Löschen</string>
   <string name="action_clear_messages">Nachrichten leeren</string>
+  <string name="action_comment">Kommentieren</string>
   <string name="action_compose">Neuer Tweet</string>
   <string name="action_compose_message_convert_to_status">In Tweet umwandeln</string>
   <string name="action_connect_to_buffer">Verbinden</string>
@@ -55,6 +56,7 @@
   <string name="action_filter_subscriptions_card_manage">Abonnements verwalten</string>
   <string name="action_finish">Fertig</string>
   <string name="action_follow">Folgen</string>
+  <string name="action_format_search_update_status">Tweet <xliff:g id="text">%1$s</xliff:g></string>
   <!-- [verb] Perform import action -->
   <string name="action_import">Importieren</string>
   <string name="action_import_from">Importiere aus&#8230;</string>
@@ -134,8 +136,8 @@
   <string name="activities_about_me">Meine Aktivitäten</string>
   <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> favorisierte</string>
   <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> und <xliff:g id="other">%2$s</xliff:g> favorisierten</string>
-  <string name="activity_about_me_favorited_media_tagged"><xliff:g id="user">%s</xliff:g> favorisierte einen Tweet, in dem du getaggt bist</string>
-  <string name="activity_about_me_favorited_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> und <xliff:g id="other">%2$s</xliff:g> favorisierten einen Tweet, in dem du getaggt bist</string>
+  <string name="activity_about_me_favorited_media_tagged"><xliff:g id="user">%s</xliff:g> favorisierte einen Tweet, in dem du markiert bist</string>
+  <string name="activity_about_me_favorited_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> und <xliff:g id="other">%2$s</xliff:g> favorisierten einen Tweet, in dem du markiert bist</string>
   <string name="activity_about_me_favorited_mention"><xliff:g id="user">%s</xliff:g> favorisierte einen Tweet, in dem du erwähnt wurdest</string>
   <string name="activity_about_me_favorited_mention_multi"><xliff:g id="user">%1$s</xliff:g> und <xliff:g id="other">%2$s</xliff:g> favorisierten einen Tweet, in dem du erwähnt wurdest</string>
   <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g> favorisierte deinen Tweet</string>
@@ -144,21 +146,21 @@
   <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g> und <xliff:g id="other">%2$s</xliff:g> folgen dir</string>
   <string name="activity_about_me_like"><xliff:g id="user">%s</xliff:g> gefällt</string>
   <string name="activity_about_me_like_multi"><xliff:g id="user">%1$s</xliff:g> und <xliff:g id="other">%2$s</xliff:g> gefällt</string>
-  <string name="activity_about_me_liked_media_tagged"><xliff:g id="user">%s</xliff:g> gefällt ein Tweet, in dem du getaggt bist</string>
-  <string name="activity_about_me_liked_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> und <xliff:g id="other">%2$s</xliff:g> gefällt ein Tweet, in dem du getaggt bist</string>
+  <string name="activity_about_me_liked_media_tagged"><xliff:g id="user">%s</xliff:g> gefällt ein Tweet, in dem du markiert wurdest</string>
+  <string name="activity_about_me_liked_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> und <xliff:g id="other">%2$s</xliff:g> gefällt ein Tweet, in dem du markiert wurdest</string>
   <string name="activity_about_me_liked_mention"><xliff:g id="user">%s</xliff:g> gefällt ein Tweet, in dem du erwähnt wurdest</string>
   <string name="activity_about_me_liked_mention_multi"><xliff:g id="user">%1$s</xliff:g> und <xliff:g id="other">%2$s</xliff:g> gefällt ein Tweet, in dem du erwähnt wurdest</string>
   <string name="activity_about_me_liked_retweet"><xliff:g id="user">%s</xliff:g> gefällt dein Retweet</string>
   <string name="activity_about_me_liked_retweet_multi"><xliff:g id="user">%1$s</xliff:g> und <xliff:g id="other">%2$s</xliff:g> gefällt dein Retweet</string>
-  <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> hat Dich zur Liste hinzugefügt</string>
+  <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> hat dich zur Liste hinzugefügt</string>
   <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> und <xliff:g id="other">%2$s</xliff:g> haben dich zu ihren Listen hinzugefügt</string>
   <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> hat dich zur Liste "<xliff:g id="list">%2$s</xliff:g>\" hinzugefügt</string>
-  <string name="activity_about_me_media_tagged"><xliff:g id="user">%s</xliff:g> hat dich getaggt</string>
-  <string name="activity_about_me_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> und <xliff:g id="other">%2$s</xliff:g> haben dich getaggt</string>
+  <string name="activity_about_me_media_tagged"><xliff:g id="user">%s</xliff:g> hat dich markiert</string>
+  <string name="activity_about_me_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> und <xliff:g id="other">%2$s</xliff:g> haben dich markiert</string>
   <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g> retweetete</string>
   <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s</xliff:g> und <xliff:g id="other">%2$s</xliff:g> retweeteten</string>
-  <string name="activity_about_me_retweeted_media_tagged"><xliff:g id="user">%s</xliff:g> retweetete einen Tweet, in dem du getaggt wurdest</string>
-  <string name="activity_about_me_retweeted_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> und <xliff:g id="other">%2$s</xliff:g> retweeteten einen Tweet, in dem du getaggt wurdest</string>
+  <string name="activity_about_me_retweeted_media_tagged"><xliff:g id="user">%s</xliff:g> retweetete einen Tweet, in dem du markiert wurdest</string>
+  <string name="activity_about_me_retweeted_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> und <xliff:g id="other">%2$s</xliff:g> retweeteten einen Tweet, in dem du markiert wurdest</string>
   <string name="activity_about_me_retweeted_mention"><xliff:g id="user">%s</xliff:g> retweetete einen Tweet, in dem du erwähnt wurdest</string>
   <string name="activity_about_me_retweeted_mention_multi"><xliff:g id="user">%1$s</xliff:g> und <xliff:g id="other">%2$s</xliff:g> retweeteten einen Tweet, in dem du erwähnt wurdest</string>
   <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g> retweetete deinen Retweet</string>
@@ -270,13 +272,11 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Emoji-Unterstützung</string>
   <string name="empty_content">Leerer Inhalt</string>
-  <string name="enable_notifications">Benachrichtigungen aktivieren</string>
-  <string name="enable_retweets">Retweets erlauben</string>
   <string name="enable_streaming">Streaming freischalten</string>
   <string name="error_info_oauth_timestamp_error">Bitte überprüfe dein Systemdatum und die Zeiteinstellungen.</string>
   <string name="error_message">Fehler: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_device_incompatible">Dieses Gerät ist nicht mit Twidere kompatibel, es wird empfohlen, es auf das neueste Android zu aktualisieren.\nDu kannst unten Informationen senden, um mir dabei zu helfen, dieses Problem dem Gerätehersteller zu berichten.</string>
-  <string name="error_message_media_message_attachment_not_supported">Anhängen von Medien an Direktnachrichten wird nicht unterstützt</string>
+  <string name="error_message_media_message_attachment_not_supported">Das Anhängen von Medien an Direktnachrichten wird nicht unterstützt</string>
   <string name="error_message_media_message_too_many">Zu viele Medien</string>
   <string name="error_message_media_upload_failed">Medienupload fehlgeschlagen.</string>
   <string name="error_message_media_uploader_not_found">Medien-Uploader nicht gefunden, vielleicht wurde er deinstalliert.</string>
@@ -301,13 +301,9 @@
   <string name="external_group_host_format">Externe Gruppe bei <xliff:g id="host">%s</xliff:g></string>
   <string name="external_user_host_format">Externer Benutzer bei <xliff:g id="host">%s</xliff:g></string>
   <string name="extra_configurations">Erweiterte Einstellungen</string>
-  <string name="extra_feature_description_filters_import">Importiere Filterliste von blockierten/stummgeschalteten</string>
-  <string name="extra_feature_description_filters_subscription">Abonniere Stummschaltfilter und Synchronisation automatisch</string>
   <string name="extra_feature_description_schedule_status">Tweet planen (später senden)</string>
   <string name="extra_feature_description_share_gif">GIF in Tweet teilen</string>
   <string name="extra_feature_description_sync_data">Synchronisieren von Daten mit Dropbox, Google Drive etc.</string>
-  <string name="extra_feature_title_filters_import">Filterimport</string>
-  <string name="extra_feature_title_filters_subscription">Filterabonnement</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">Unterstütze Twidere und erhalte erweiterte Funktionen</string>
   <string name="extra_features_pack_description">Oder kaufe das Featurepack, um alle Funktionen zu bekommen (auch in zukünftigen Versionen)</string>
@@ -412,7 +408,7 @@
   <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> via <xliff:g example="api" id="source">%2$s</xliff:g></string>
   <string name="label_location_coarse">Grob (Stadt)</string>
   <string name="label_location_no_location">Ohne</string>
-  <string name="label_location_precise">Genau (Koordinate)</string>
+  <string name="label_location_precise">Genau (Koordinaten)</string>
   <string name="label_location_your_coarse_location">Deine ungefähre Position</string>
   <string name="label_mastodon_host">Mastodon-Webseite</string>
   <string name="label_media">Medien</string>
@@ -427,8 +423,8 @@
   <string name="label_quote_name_text">Zitat <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="label_refresh_and_sync_service">Aktualisierungs- &amp; Synchronisierungsdienst</string>
   <string name="label_refresh_service">Dienst aktualisieren</string>
-  <string name="label_reply_name">Antworte <xliff:g id="user_name">%s</xliff:g></string>
-  <string name="label_reply_name_text">Antwort auf <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
+  <string name="label_reply_name"><xliff:g id="user_name">%s</xliff:g> antworten</string>
+  <string name="label_reply_name_text"><xliff:g id="name">%1$s</xliff:g> antworten: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="label_schedule_time_buffer_default">Buffer-Standard</string>
   <string name="label_send_at">Absenden um</string>
   <string name="label_sensitive_content">Sensibler Inhalt</string>
@@ -477,6 +473,7 @@
   <string name="login_challenge_retype_email_hint">Mit deinem Twitter-Konto verbundene E-Mail-Adresse neu tippen.</string>
   <string name="login_challenge_retype_phone_hint">Mit deinem Twitter-Konto verbundene Telefonnummer neu tippen.</string>
   <string name="login_type_default">Standard</string>
+  <string name="login_type_user_settings">Benutzereinstellungen</string>
   <string name="login_verification">Login-Verifizierung</string>
   <string name="login_verification_pin_hint">Schau in deinem Telefon nach einer PIN und gebe sie ein, um dich einzuloggen.</string>
   <string name="login_verification_push_hint">Akzeptiere die Login-Verifizierungsanfrage der Twitter-App und tippe auf OK, wenn du die Anfrage bestätigt hast.</string>
@@ -496,6 +493,7 @@
   <string name="message_account_delete_confirm">Dieses Konto wird aus Twidere gelöscht.</string>
   <string name="message_api_data_corrupted">API-Daten beschädigt.</string>
   <string name="message_api_url_format_help">[DOMAIN]: Twitter API Domäne.\nBeispiel: https://[DOMAIN].twitter.com/ wird ersetzt durch https://api.twitter.com/.</string>
+  <string name="message_app_crashed">Twidere ist abgestürzt. Sende einen Fehlerbericht um mir zu helfen dieses Problem zu lösen.</string>
   <string name="message_auto_refresh_confirm">Aktiviere die automatische Aktualisierung um neue Tweets automatisch zu erhalten?</string>
   <string name="message_blocked_user"><xliff:g id="user">%s</xliff:g> blockiert.</string>
   <string name="message_buffer_delete_schedule_confirm">Diesen Zeitplan wirklich löschen?</string>
@@ -549,6 +547,7 @@
   <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_extra_features_not_purchased">Erweiterte Funktionen nicht gekauft</string>
   <string name="message_toast_filters_import_hint">Drücke \"+\" zum importieren</string>
+  <string name="message_toast_internal_storage_install_required">Installation auf SD-Karte wird nicht unterstützt, Konten können nach einem Neustart verloren gehen.</string>
   <string name="message_toast_invalid_mastodon_host">Ungültiger Mastodon-Host</string>
   <string name="message_toast_link_copied_to_clipboard">Link in die Zwischenablage kopiert</string>
   <string name="message_toast_livewp_daydream_enabled_message">Ich hab ein kleines Geschenk für dich in den Systemeinstellungen versteckt :)</string>
@@ -575,7 +574,7 @@
   <string name="message_toast_search_name_saved">Suche \"<xliff:g id="name">%1$s</xliff:g>\" gespeichert</string>
   <string name="message_toast_search_saved">Suche gespeichert.</string>
   <string name="message_toast_select_file_no_storage_permission">Speicherberechtigung notwendig um Dateien auszuwählen.</string>
-  <string name="message_toast_share_media_no_storage_permission">Die Anwendung erfordert die Speicherberechtigung, um Medien zu teilen.</string>
+  <string name="message_toast_share_media_no_storage_permission">Einige Anwendungen benötigen Zugriff auf den Speicher um Medien zu teilen</string>
   <string name="message_toast_ssl_tls_error">TLS Fehler, bitte überprüfe die Systemzeit und deine Proxy Einstellungen</string>
   <string name="message_toast_status_deleted">Tweet gelöscht.</string>
   <string name="message_toast_status_favorited">Tweet favorisiert.</string>
@@ -627,7 +626,7 @@
   <string name="no_status_content_text">Kein Inhalt</string>
   <string name="no_tab">Kein Tab</string>
   <string name="no_tab_hint">Kein Tab</string>
-  <string name="no_thanks">Nein, danke</string>
+  <string name="action_no_thanks">Nein, danke</string>
   <string name="no_user_found">Kein Benutzer gefunden</string>
   <string name="no_version_suffix">Kein Versionszusatz</string>
   <string name="none">Nichts</string>
@@ -647,7 +646,7 @@
   <string name="notification_status_multiple">Neuer Tweet von <xliff:g id="user">%1$s</xliff:g> und <xliff:g id="count">%2$d</xliff:g> weiteren</string>
   <string name="notification_title_new_retweet_by_user"><xliff:g id="user">%1$s</xliff:g> retweetete</string>
   <string name="notification_title_new_status_by_user">Neuer Tweet von <xliff:g id="user">%1$s</xliff:g></string>
-  <string name="notification_type_home">Startseite</string>
+  <string name="notification_type_home">Home</string>
   <string name="notification_type_interactions">Interaktionen</string>
   <string name="notification_type_messages">Nachrichten</string>
   <string name="notifications">Benachrichtigungen</string>
@@ -696,8 +695,8 @@
   <string name="preference_randomize_account_rename_accounts_confirm">Bestehende Konten umbenennen?</string>
   <string name="preference_summary_auto_refresh_compatibility_mode">Aktivieren für schnellere Aktualisierungsintervalle, erhöht bei Android 5.0+ den Stromverbrauch</string>
   <string name="preference_summary_auto_refresh_power_saving">Keine automatische Aktualisierung bei geringem Akkustand</string>
-  <string name="preference_summary_background_streaming">Home statt Zurück drücken, um Streaming aktiv zu lassen</string>
-  <string name="preference_summary_chrome_custom_tab">Links in Chrome Custom Tabs öffnen</string>
+  <string name="preference_summary_background_streaming">\'Home\' statt \'Zurück\' drücken, um Streaming aktiv zu lassen</string>
+  <string name="preference_summary_chrome_custom_tab">Links im In-App Browser öffnen</string>
   <string name="preference_summary_database_item_limit">Anzahl der Objekte, die maximal pro Konto gespeichert werden. Ein niedrigerer Wert spart Speicherplatz und erhöht die Ladegeschwindigkeit.</string>
   <string name="preference_summary_favorite_confirmation">Eine Bestätigung vor dem Favorisieren eines Tweets anzeigen</string>
   <string name="preference_summary_like_confirmation">Eine Bestätigung vor dem Liken eines Tweets anzeigen</string>
@@ -728,11 +727,12 @@
   <string name="preference_title_portrait">Hochformat</string>
   <string name="preference_title_storage">Speicher</string>
   <string name="preference_title_streaming_content">Streaming-Inhalte</string>
-  <string name="preference_title_streaming_enabled">Streaming freischalten</string>
+  <string name="preference_title_streaming_enabled">Streaming aktivieren</string>
   <string name="preference_title_streaming_non_metered_network">Streamen in unbeschränkten Netzen</string>
   <string name="preference_title_streaming_power_saving">Stromsparmodus</string>
   <string name="preference_title_tablet_mode">Tablet-Modus</string>
   <string name="preference_title_text_size">Textgröße</string>
+  <string name="preference_title_timeline_positions">Timeline-Positionen</string>
   <string name="preference_title_translate">Übersetzen</string>
   <string name="preference_title_trends_location">Standort für Trends</string>
   <string name="preload_wifi_only">Vorausladen nur mit WLAN</string>
@@ -762,7 +762,7 @@
   <string name="projects_we_took_part">Projekte an denen wir teilgenommen haben</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="provider_fanfou">Fanfou</string>
   <string name="provider_gnusocial_de">GNUSocial.de</string>
   <string name="provider_gnusocial_net">GNUSocial.net</string>
@@ -794,7 +794,7 @@
   <string name="refresh_interval">Aktualisierungsintervall</string>
   <string name="refresh_on_start">Beim Start aktualisieren</string>
   <string name="refresh_on_start_summary">Zeitleiste und Erwähnungen beim Start aktualisieren.</string>
-  <string name="refresh_type_home">Startseite</string>
+  <string name="refresh_type_home">Home</string>
   <string name="refresh_type_interactions">Interaktionen</string>
   <string name="refresh_type_messages">Nachrichten</string>
   <string name="refresh_type_trends">Trends</string>
@@ -830,6 +830,7 @@
   <string name="search_hint">Tweets oder Benutzer suchen</string>
   <string name="search_hint_users">Benutzer suchen</string>
   <string name="search_statuses">Tweets suchen</string>
+  <string name="search_type_federated">Dezentral</string>
   <string name="search_type_local">Lokal</string>
   <string name="search_type_media">Medien</string>
   <string name="search_type_statuses">Tweets</string>
@@ -850,7 +851,7 @@
   <string name="sent_follow_request_to_user">Follower-Anfrage an <xliff:g id="user">%s</xliff:g> senden.</string>
   <string name="server_address">Server-Adresse</string>
   <string name="set_consumer_key_secret_message">Twidere hat das token limit erreicht. Du musst eine App unter https://apps.twitter.com/ erstellen und den Benutzerschlüssel und das Geheimnis unten einfügen.\nWenn du weiterhin den Standardschlüssel verwendest, kannst du dich möglicherweise nicht mehr einloggen.</string>
-  <string name="settings">Einstellungen</string>
+  <string name="action_settings">Einstellungen</string>
   <string name="settings_interface">Oberfläche</string>
   <string name="settings_notifications">Benachrichtigungen</string>
   <string name="settings_refresh">Aktualisieren</string>
@@ -893,15 +894,16 @@
   <string name="status_shortener_default">Nichts (Senden abbrechen)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Retweet</string>
-  <string name="stream_summary_notification_users">Nutzer schaltenten Benachrichtigungen an, jedoch nicht 100% zuverlässig.</string>
-  <string name="stream_type_home">Startseite</string>
+  <string name="stream_summary_notification_users">Nutzer schalteten Benachrichtigungen an, nicht 100% zuverlässig.</string>
+  <string name="stream_type_home">Home</string>
   <string name="stream_type_interactions">Interaktionen</string>
   <string name="stream_type_messages">Nachrichten</string>
-  <string name="stream_type_notification_users">Nutzer mit Benachrichtigungen</string>
+  <string name="stream_type_notification_users">Nutzer mit aktivierten Benachrichtigungen</string>
   <string name="streaming">Streaming</string>
   <string name="style">Stil</string>
   <string name="subscribed_to_list">Liste \"<xliff:g id="list">%s</xliff:g>\" abonniert.</string>
   <string name="summary_interactions_account_not_supported">Account wird nicht unterstützt</string>
+  <string name="summary_interactions_streaming_required">Volle Interaktionen nur bei aktiviertem Streaming verfügbar</string>
   <string name="swipe_down_to_refresh">Ziehen zum Aktualisieren</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="sync_provider_name_google_drive">Google Drive</string>
@@ -1007,6 +1009,7 @@
   <string name="title_user_list_ownerships">Erstellt</string>
   <string name="title_user_list_subscriptions">Abonnements</string>
   <string name="title_user_timeline_filter">Timeline-Filter</string>
+  <string name="title_userlist_subscribers">Abonnenten</string>
   <string name="title_users_favorited_this">Benutzer haben dies favorisiert</string>
   <string name="title_users_liked_this">Benutzern gefällt dies</string>
   <string name="title_users_retweeted_this">Benutzer retweeteten dies</string>

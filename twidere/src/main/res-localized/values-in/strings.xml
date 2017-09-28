@@ -244,7 +244,6 @@
   <string name="ellipsis">...</string>
   <string name="emoji_support">Dukungan emoji</string>
   <string name="empty_content">Konten kosong</string>
-  <string name="enable_retweets">Aktifkan retweets</string>
   <string name="enable_streaming">Aktifkan Streaming</string>
   <string name="error_info_oauth_timestamp_error">Mohon cek tanggal sistem Anda &amp; pengaturan waktu.</string>
   <string name="error_message">Kesalahan: <xliff:g id="message">%s</xliff:g></string>
@@ -270,7 +269,6 @@
   <string name="external_group_host_format">Grup eksternal di <xliff:g id="host">%s</xliff:g></string>
   <string name="external_user_host_format">Pengguna eksternal di <xliff:g id="host">%s</xliff:g></string>
   <string name="extra_configurations">Pengaturan Ekstra</string>
-  <string name="extra_feature_description_filters_import">Mengimpor daftar penyaringan dari blok/didiamkan</string>
   <string name="extra_feature_description_schedule_status">Jadwalkan tweer (kirim nanti)</string>
   <string name="extra_feature_description_sync_data">Sinkronisasi data dengan Dropbox, Google Drive, dll</string>
   <!-- Enhanced (paid) features description -->
@@ -288,7 +286,7 @@
   <string name="filter_type_links">Tautan</string>
   <string name="filter_type_sources">Sumber</string>
   <string name="filter_type_users">Pengguna</string>
-  <string name="filter_user_confirm_message">Tambahkan <xliff:g example="Username" id="name"/> pada penyaringan?</string>
+  <string name="filter_user_confirm_message">Tambahkan <xliff:g example="Username" id="name">%1$s</xliff:g> pada penyaringan?</string>
   <string name="follow_request_sent">Permintaan mengikuti terkirim</string>
   <string name="followed_user"><xliff:g id="user">%s</xliff:g> diikuti.</string>
   <string name="following_only">Pengikut Anda saja</string>
@@ -499,7 +497,7 @@
   <string name="no_status_content_text">Tidak ada konten</string>
   <string name="no_tab">Tidak terdapat tab</string>
   <string name="no_tab_hint">Tidak ada tab</string>
-  <string name="no_thanks">Tidak, terima kasih</string>
+  <string name="action_no_thanks">Tidak, terima kasih</string>
   <string name="no_user_found">Tidak menemukan pengguna</string>
   <string name="no_version_suffix">Tidak ada akhiran versi</string>
   <string name="none">Tidak ada</string>
@@ -602,7 +600,7 @@
   <string name="projects_we_took_part">Proyek kami mengambil bagian</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="provider_fanfou">Fanfou</string>
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>
@@ -689,7 +687,7 @@
   <string name="sent_follow_request_to_user">Mengirim permintaan mengikuti ke <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Alamat server</string>
   <string name="set_consumer_key_secret_message">Twidere mencapai batas token, Anda harus membuat sebuah aplikasi di https://apps.twitter.com/ kemudian menempelkan consumer key dan consumer secret dibawah ini.\nJika Anda tetap menggunakan kunci bawaan, Anda mungkin tidak dapat masuk.</string>
-  <string name="settings">Pengaturan</string>
+  <string name="action_settings">Pengaturan</string>
   <string name="settings_interface">Antarmuka</string>
   <string name="settings_notifications">Notifikasi</string>
   <string name="settings_refresh">Segarkan</string>

@@ -22,9 +22,13 @@
 apply plugin: 'com.android.library'
 
 android {
+
+    compileSdkVersion globalCompileSdkVersion
+    buildToolsVersion globalBuildToolsVersion
+
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
     }
@@ -37,5 +41,5 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:support-compat:${libVersions['SupportLib']}"
+    implementation "com.android.support:support-compat:${libVersions['SupportLib']}"
 }

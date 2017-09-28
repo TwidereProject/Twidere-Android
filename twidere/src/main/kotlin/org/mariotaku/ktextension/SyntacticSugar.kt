@@ -1,5 +1,7 @@
 package org.mariotaku.ktextension
 
+import java.lang.ref.WeakReference
+
 /**
  * Created by mariotaku on 16/8/17.
  */
@@ -16,3 +18,5 @@ fun rangeOfSize(start: Int, size: Int): IntRange {
 fun LongArray.toStringArray(): Array<String> {
     return Array(this.size) { idx -> this[idx].toString() }
 }
+
+fun <T> T.weak(): WeakReference<T> = WeakReference(this)

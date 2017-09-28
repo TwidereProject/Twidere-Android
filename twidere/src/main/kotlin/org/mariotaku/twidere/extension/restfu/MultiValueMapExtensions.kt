@@ -21,10 +21,11 @@ package org.mariotaku.twidere.extension.restfu
 
 import org.mariotaku.restfu.http.MultiValueMap
 
-/**
- * Created by mariotaku on 2017/4/29.
- */
-
 operator fun <T> MultiValueMap<T>.contains(key: String): Boolean {
     return getFirst(key) != null
+}
+
+operator fun <T> MultiValueMap<T>.set(key: String, value: T) {
+    if (get(key)?.contains(value) == true) return
+    add(key, value)
 }

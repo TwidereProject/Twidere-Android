@@ -43,7 +43,8 @@ class CreateUserMuteDialogFragment : AbsUserMuteBlockDialogFragment() {
     }
 
     override fun performUserAction(user: ParcelableUser, filterEverywhere: Boolean) {
-        twitterWrapper.createMuteAsync(user.account_key, user.key, filterEverywhere)
+        val accountKey = user.account_key ?: return
+        twitterWrapper.createMuteAsync(accountKey, user.key, filterEverywhere)
     }
 
     companion object {

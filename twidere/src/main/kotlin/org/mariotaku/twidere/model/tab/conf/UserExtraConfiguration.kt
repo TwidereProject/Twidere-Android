@@ -6,7 +6,6 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.layout_extra_config_user.view.*
 import kotlinx.android.synthetic.main.list_item_simple_user.view.*
 import org.mariotaku.twidere.R
@@ -51,7 +50,7 @@ class UserExtraConfiguration(key: String) : TabConfiguration.ExtraConfiguration(
             fragment.startExtraConfigurationActivityForResult(this@UserExtraConfiguration, intent, 1)
         }
         hintView = view.selectUserHint
-        val adapter = DummyItemAdapter(context, requestManager = Glide.with(fragment))
+        val adapter = DummyItemAdapter(context, requestManager = fragment.requestManager)
         adapter.updateOptions()
         viewHolder = SimpleUserViewHolder(view.listItem, adapter)
 

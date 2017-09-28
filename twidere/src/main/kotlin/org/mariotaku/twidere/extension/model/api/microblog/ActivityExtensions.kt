@@ -27,23 +27,25 @@ import org.mariotaku.twidere.extension.model.api.applyTo
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.toLite
 import org.mariotaku.twidere.extension.model.toSummaryLine
+import org.mariotaku.twidere.extension.model.updateActivityFilterInfo
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
 
-inline val Activity.activityStatus: Status? get() = when (action) {
-    Action.MENTION -> {
-        targetObjectStatuses?.firstOrNull()
+inline val Activity.activityStatus: Status?
+    get() = when (action) {
+        Action.MENTION -> {
+            targetObjectStatuses?.firstOrNull()
+        }
+        Action.REPLY -> {
+            targetStatuses?.firstOrNull()
+        }
+        Action.QUOTE -> {
+            targetStatuses?.firstOrNull()
+        }
+        else -> null
     }
-    Action.REPLY -> {
-        targetStatuses?.firstOrNull()
-    }
-    Action.QUOTE -> {
-        targetStatuses?.firstOrNull()
-    }
-    else -> null
-}
 
 fun Activity.toParcelable(details: AccountDetails, isGap: Boolean = false,
         profileImageSize: String = "normal"): ParcelableActivity {
@@ -136,7 +138,10 @@ fun Activity.toParcelable(accountKey: UserKey, accountType: String, isGap: Boole
                 }
             }
         }
-        result.user_key = result.sources?.firstOrNull()?.key ?: UserKey("multiple", null)
+        val singleSource = result.sources?.singleOrNull()
+        result.user_key = singleSource?.key ?: UserKey("multiple", null)
+        result.user_name = singleSource?.name
+        result.user_screen_name = singleSource?.screen_name
     } else {
         status.applyTo(accountKey, accountType, profileImageSize, result)
         result.summary_line = arrayOf(result.toSummaryLine())
@@ -149,6 +154,9 @@ fun Activity.toParcelable(accountKey: UserKey, accountType: String, isGap: Boole
         return@fold folded || (item.isFollowing == true)
     } ?: false
     result.is_gap = isGap
+
+    result.updateActivityFilterInfo()
+
     return result
 }
 

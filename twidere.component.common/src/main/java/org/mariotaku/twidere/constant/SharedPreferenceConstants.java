@@ -284,6 +284,8 @@ public interface SharedPreferenceConstants {
     String KEY_STREAMING_POWER_SAVING = "streaming_power_saving";
     @ExportablePreference(STRING)
     String KEY_NAVBAR_STYLE = "navbar_style";
+    @ExportablePreference(STRING)
+    String KEY_OVERRIDE_LANGUAGE = "override_language";
 
     // Internal preferences
 

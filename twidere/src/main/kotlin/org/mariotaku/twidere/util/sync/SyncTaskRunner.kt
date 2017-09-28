@@ -2,10 +2,12 @@ package org.mariotaku.twidere.util.sync
 
 import android.content.Context
 import com.squareup.otto.Bus
+import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.task
 import org.mariotaku.twidere.util.TaskServiceRunner
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.dagger.GeneralComponent
+import java.lang.Exception
 import java.util.*
 import javax.inject.Inject
 
@@ -46,11 +48,9 @@ abstract class SyncTaskRunner(val context: Context) {
     }
 
 
-    fun cleanupSyncCache() {
-        task {
-            context.syncDataDir.listFiles { file, _ -> file.isFile }?.forEach { file ->
-                file.delete()
-            }
+    fun cleanupSyncCache(): Promise<Boolean, Exception> {
+        return task {
+            context.syncDataDir.deleteRecursively()
         }
     }
 

@@ -21,10 +21,10 @@ package org.mariotaku.twidere.model.pagination;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
-import org.jetbrains.annotations.Nullable;
 import org.mariotaku.microblog.library.twitter.model.Paging;
 
 /**

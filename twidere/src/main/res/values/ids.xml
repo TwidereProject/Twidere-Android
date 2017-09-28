@@ -84,4 +84,5 @@
     <item name="messages" type="id"/>
     <item name="interactions" type="id"/>
     <item name="premium_features" type="id"/>
+    <item name="add_to_home_screen" type="id"/>
 </resources>

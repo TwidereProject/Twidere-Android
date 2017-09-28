@@ -36,7 +36,7 @@
         app:met_baseColor="?android:textColorPrimary"
         app:met_floatingLabel="normal"
         app:met_floatingLabelText="@string/title_subscription_name"
-        app:met_primaryColor="?colorAccent"/>
+        app:met_primaryColor="?colorControlStateful"/>
 
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/url"
@@ -49,6 +49,6 @@
         app:met_baseColor="?android:textColorPrimary"
         app:met_floatingLabel="normal"
         app:met_floatingLabelText="@string/title_subscription_url"
-        app:met_primaryColor="?colorAccent"/>
+        app:met_primaryColor="?colorControlStateful"/>
 
 </LinearLayout>

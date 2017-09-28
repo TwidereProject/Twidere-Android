@@ -20,11 +20,9 @@
 package org.mariotaku.twidere.task.twitter.message
 
 import android.accounts.AccountManager
-import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
-import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.sqliteqb.library.Expression
@@ -33,6 +31,7 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.model.timestamp
+import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableMessage
 import org.mariotaku.twidere.model.ParcelableMessageConversation
@@ -119,18 +118,8 @@ class MarkMessageReadTask(
             val where = Expression.and(Expression.equalsArgs(Messages.ACCOUNT_KEY),
                     Expression.equalsArgs(Messages.CONVERSATION_ID)).sql
             val whereArgs = arrayOf(accountKey.toString(), conversationId)
-            @SuppressLint("Recycle")
-            val cur = query(Messages.CONTENT_URI, Messages.COLUMNS,
-                    where, whereArgs, OrderBy(Messages.LOCAL_TIMESTAMP, false).sql) ?: return null
-            try {
-                if (cur.moveToFirst()) {
-                    val indices = ObjectCursor.indicesFrom(cur, ParcelableMessage::class.java)
-                    return indices.newObject(cur)
-                }
-            } finally {
-                cur.close()
-            }
-            return null
+            return queryOne(Messages.CONTENT_URI, Messages.COLUMNS, where, whereArgs,
+                    OrderBy(Messages.LOCAL_TIMESTAMP, false).sql, ParcelableMessage::class.java)
         }
 
         private val TwitterOfficialConversationExtras.maxReadEvent: Pair<String, Long>?

@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?selectableItemBackground"
-        android:duplicateParentState="true" />
+        android:duplicateParentState="true"/>
 
     <ImageView
         android:id="@android:id/icon"
@@ -32,6 +32,6 @@
         android:layout_gravity="center"
         android:layout_margin="@dimen/element_spacing_normal"
         android:contentDescription="@string/action_compose"
-        android:scaleType="centerInside" />
+        android:scaleType="centerInside"/>
 
 </merge>

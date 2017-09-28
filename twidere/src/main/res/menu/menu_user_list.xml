@@ -1,35 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+      xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@id/info"
         android:icon="@drawable/ic_action_info"
         android:title="@string/user_list_details"
-        app:showAsAction="ifRoom"
-        android:visible="false" />
+        android:visible="false"
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@id/follow"
         android:enabled="false"
-        app:showAsAction="ifRoom"
         android:icon="@drawable/ic_action_add"
-        android:title="@string/action_subscribe" />
+        android:title="@string/action_subscribe"
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@id/edit"
         android:icon="@drawable/ic_action_edit"
         android:title="@string/title_edit_details"
-        android:visible="false" />
+        android:visible="false"/>
     <item
         android:id="@id/add"
         android:icon="@drawable/ic_action_add"
-        android:title="@string/action_add_member" />
+        android:title="@string/action_add_member"/>
     <item
         android:id="@id/delete"
         android:icon="@drawable/ic_action_delete"
-        android:title="@string/action_delete" />
+        android:title="@string/action_delete"/>
     <item
         android:id="@id/open_with_account"
         android:icon="@drawable/ic_action_accounts"
-        android:title="@string/open_with_account" />
+        android:title="@string/open_with_account"/>
+    <item
+        android:id="@+id/add_to_home_screen_submenu"
+        android:icon="@drawable/ic_action_home"
+        android:title="@string/action_add_to_home_screen_more">
+        <menu>
+            <item
+                android:id="@+id/add_statuses_to_home_screen"
+                android:icon="@drawable/ic_action_list"
+                android:title="@string/list_timeline"/>
+        </menu>
+    </item>
 
 </menu>

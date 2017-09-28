@@ -21,9 +21,9 @@
 
 <!-- Layout of a header item in PreferenceActivity. -->
 <org.mariotaku.twidere.view.FixedTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/title"
     style="?android:listSeparatorTextViewStyle"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:maxLines="1"

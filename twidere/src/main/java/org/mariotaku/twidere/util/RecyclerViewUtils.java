@@ -49,10 +49,13 @@ public class RecyclerViewUtils {
             focusFallback(layoutManager);
         } else {
             final View view;
-            if (direction > 0 && currentFocus == layoutManager.findLastVisibleItemPosition()) {
-                view = recyclerView.focusSearch(recyclerView.getFocusedChild(), View.FOCUS_DOWN);
+            final View focusedChild = recyclerView.getFocusedChild();
+            if (focusedChild == null) {
+                view = null;
+            } else if (direction > 0 && currentFocus == layoutManager.findLastVisibleItemPosition()) {
+                view = recyclerView.focusSearch(focusedChild, View.FOCUS_DOWN);
             } else if (direction < 0 && currentFocus == layoutManager.findFirstVisibleItemPosition()) {
-                view = recyclerView.focusSearch(recyclerView.getFocusedChild(), View.FOCUS_UP);
+                view = recyclerView.focusSearch(focusedChild, View.FOCUS_UP);
             } else {
                 view = null;
             }

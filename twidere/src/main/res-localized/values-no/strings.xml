@@ -167,7 +167,6 @@
   <string name="edit_tabs">Rediger faner</string>
   <string name="ellipsis">&#8230;</string>
   <string name="empty_content">Tomt innhold</string>
-  <string name="enable_retweets">Aktiver retweets</string>
   <string name="enable_streaming">Aktiver strømming</string>
   <string name="error_message">Feil: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_message_too_long">Melding for lang.</string>
@@ -341,7 +340,7 @@
   <string name="no_status_content_text">Ingen innhold</string>
   <string name="no_tab">Ingen faner</string>
   <string name="no_tab_hint">Ingen faner</string>
-  <string name="no_thanks">Nei, takk</string>
+  <string name="action_no_thanks">Nei, takk</string>
   <string name="no_user_found">Fant ingen bruker</string>
   <string name="no_version_suffix">Ingen versjonssuffiks</string>
   <string name="none">Ingen</string>
@@ -429,7 +428,7 @@
   <string name="projects_we_took_part">Prosjekter vi tok del i</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="proxy">Proxy</string>
   <string name="proxy_host">Proxy-tjener</string>
   <string name="proxy_port">Proxy-port</string>
@@ -498,7 +497,7 @@
   <string name="sent_follow_request_to_user">Sendte følgeforespørsel til <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Tjeneradresse</string>
   <string name="set_consumer_key_secret_message">Twidere er i ferd med å nå token-grensen. Opprett en app på https://apps.twitter.com/ and lime inn nøkkelen and passordet under.\nHvis du fortsetter å bruke standardnøkkelen, kan det hende du ikke får logget inn.</string>
-  <string name="settings">Innstillinger</string>
+  <string name="action_settings">Innstillinger</string>
   <string name="settings_interface">Grensesnitt</string>
   <string name="settings_notifications">Varsler</string>
   <string name="settings_refresh">Oppdater</string>

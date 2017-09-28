@@ -94,7 +94,7 @@ public class MicroBlogAPIFactory implements TwidereConstants {
 
     @NonNull
     public static String getApiBaseUrl(@NonNull String format, @Nullable final String domain) {
-        final Matcher matcher = Pattern.compile("\\[(\\.?)DOMAIN(\\.?)\\]", Pattern.CASE_INSENSITIVE).matcher(format);
+        final Matcher matcher = Pattern.compile("\\[(\\.?)DOMAIN(\\.?)]", Pattern.CASE_INSENSITIVE).matcher(format);
         final String baseUrl;
         if (!matcher.find()) {
             // For backward compatibility

@@ -4,11 +4,12 @@ import android.content.ContentResolver
 import android.net.Uri
 import org.mariotaku.ktextension.addAllEnhanced
 import org.mariotaku.ktextension.isNullOrEmpty
-import org.mariotaku.ktextension.map
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.twidere.extension.queryAll
 import org.mariotaku.twidere.model.FiltersData
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.filter.FilterScopeStringMap
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.xmlpull.v1.XmlPullParser
@@ -23,25 +24,13 @@ import java.util.*
 fun FiltersData.read(cr: ContentResolver, loadSubscription: Boolean = false) {
     fun readBaseItems(uri: Uri): List<FiltersData.BaseItem>? {
         val where = if (loadSubscription) null else Expression.lesserThan(Filters.SOURCE, 0).sql
-        val c = cr.query(uri, Filters.COLUMNS, where, null, null) ?: return null
-        @Suppress("ConvertTryFinallyToUseCall")
-        try {
-            val indices = ObjectCursor.indicesFrom(c, FiltersData.BaseItem::class.java)
-            return c.map(indices)
-        } finally {
-            c.close()
-        }
+        return cr.queryAll(uri, Filters.COLUMNS, where, null, null,
+                FiltersData.BaseItem::class.java)
     }
     this.users = run {
         val where = if (loadSubscription) null else Expression.lesserThan(Filters.Users.SOURCE, 0).sql
-        val c = cr.query(Filters.Users.CONTENT_URI, Filters.Users.COLUMNS, where, null, null) ?: return@run null
-        @Suppress("ConvertTryFinallyToUseCall")
-        try {
-            val indices = ObjectCursor.indicesFrom(c, FiltersData.UserItem::class.java)
-            return@run c.map(indices)
-        } finally {
-            c.close()
-        }
+        return@run cr.queryAll(Filters.Users.CONTENT_URI, Filters.Users.COLUMNS, where, null,
+                null, FiltersData.UserItem::class.java)
     }
     this.keywords = readBaseItems(Filters.Keywords.CONTENT_URI)
     this.sources = readBaseItems(Filters.Sources.CONTENT_URI)
@@ -86,27 +75,39 @@ private const val TAG_USER = "user"
 private const val ATTR_SCREEN_NAME = "screenName"
 private const val ATTR_NAME = "name"
 private const val ATTR_KEY = "key"
+private const val ATTR_SCOPE = "scope"
+private const val ATTR_USER_KEY = "userKey"
 
 
 @Throws(IOException::class)
 fun FiltersData.serialize(serializer: XmlSerializer) {
 
-    @Throws(IOException::class)
     fun FiltersData.BaseItem.serialize(name: String, writer: XmlSerializer) {
         writer.startTag(null, name)
+        if (scope != 0) {
+            writer.attribute(null, ATTR_SCOPE, FilterScopeStringMap.toString(scope))
+        }
+        if (userKey != null) {
+            writer.attribute(null, ATTR_USER_KEY, userKey.toString())
+        }
         writer.text(value)
         writer.endTag(null, name)
     }
 
-    serializer.startDocument("utf-8", true)
-    serializer.startTag(null, TAG_FILTERS)
-    this.users?.forEach { user ->
+    fun FiltersData.UserItem.serialize(serializer: XmlSerializer) {
         serializer.startTag(null, TAG_USER)
-        serializer.attribute(null, ATTR_KEY, user.userKey.toString())
-        serializer.attribute(null, ATTR_NAME, user.name)
-        serializer.attribute(null, ATTR_SCREEN_NAME, user.screenName)
+        serializer.attribute(null, ATTR_KEY, userKey.toString())
+        serializer.attribute(null, ATTR_NAME, name)
+        serializer.attribute(null, ATTR_SCREEN_NAME, screenName)
+        if (scope != 0) {
+            serializer.attribute(null, ATTR_SCOPE, FilterScopeStringMap.toString(scope))
+        }
         serializer.endTag(null, TAG_USER)
     }
+
+    serializer.startDocument("utf-8", true)
+    serializer.startTag(null, TAG_FILTERS)
+    this.users?.forEach { it.serialize(serializer) }
     this.keywords?.forEach { it.serialize(TAG_KEYWORD, serializer) }
     this.sources?.forEach { it.serialize(TAG_SOURCE, serializer) }
     this.links?.forEach { it.serialize(TAG_LINK, serializer) }
@@ -114,13 +115,23 @@ fun FiltersData.serialize(serializer: XmlSerializer) {
     serializer.endDocument()
 }
 
+
 @Throws(IOException::class)
 fun FiltersData.parse(parser: XmlPullParser) {
+
+    fun parseBaseItem(parser: XmlPullParser): FiltersData.BaseItem {
+        val item = FiltersData.BaseItem()
+        item.userKey = parser.getAttributeValue(null, ATTR_USER_KEY)?.let(UserKey::valueOf)
+        item.scope = parser.getAttributeValue(null, ATTR_SCOPE)?.let(FilterScopeStringMap::fromString) ?: 0
+        return item
+    }
+
     fun parseUserItem(parser: XmlPullParser): FiltersData.UserItem? {
         val item = FiltersData.UserItem()
         item.name = parser.getAttributeValue(null, ATTR_NAME) ?: return null
         item.screenName = parser.getAttributeValue(null, ATTR_SCREEN_NAME) ?: return null
         item.userKey = parser.getAttributeValue(null, ATTR_KEY)?.let(UserKey::valueOf) ?: return null
+        item.scope = parser.getAttributeValue(null, ATTR_SCOPE)?.let(FilterScopeStringMap::fromString) ?: 0
         return item
     }
 
@@ -134,7 +145,7 @@ fun FiltersData.parse(parser: XmlPullParser) {
             XmlPullParser.START_TAG -> {
                 stack.push(when (parser.name) {
                     TAG_USER -> parseUserItem(parser)
-                    TAG_KEYWORD, TAG_SOURCE, TAG_LINK -> FiltersData.BaseItem()
+                    TAG_KEYWORD, TAG_SOURCE, TAG_LINK -> parseBaseItem(parser)
                     else -> null
                 })
             }
@@ -165,7 +176,7 @@ fun FiltersData.parse(parser: XmlPullParser) {
 }
 
 fun FiltersData.addAll(data: FiltersData, ignoreDuplicates: Boolean = false): Boolean {
-    var changed: Boolean = false
+    var changed = false
     initFields()
     if (data.users != null) {
         changed = changed or this.users.addAllEnhanced(collection = data.users, ignoreDuplicates = ignoreDuplicates)
@@ -183,7 +194,7 @@ fun FiltersData.addAll(data: FiltersData, ignoreDuplicates: Boolean = false): Bo
 }
 
 fun FiltersData.removeAll(data: FiltersData): Boolean {
-    var changed: Boolean = false
+    var changed = false
     changed = changed or (data.users?.let { this.users?.removeAll(it) } ?: false)
     changed = changed or (data.keywords?.let { this.keywords?.removeAll(it) } ?: false)
     changed = changed or (data.sources?.let { this.sources?.removeAll(it) } ?: false)

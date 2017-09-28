@@ -245,7 +245,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Emoji destek</string>
   <string name="empty_content">Boş içerik</string>
-  <string name="enable_retweets">Retweetleri etkinleştir</string>
   <string name="enable_streaming">Akışı etkinleştir</string>
   <string name="error_message">Hata: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_device_incompatible">Bu cihaz Twidere ile uyumlu değildir, en son Android işletim sistemi yükseltme önerilir.\nYardımcı olabilmek için aşağıdaki bilgileri gönderebilirsiniz.</string>
@@ -456,7 +455,7 @@
   <string name="no_status_content_text">İçerik yok</string>
   <string name="no_tab">Sekme yok</string>
   <string name="no_tab_hint">Sekme yok</string>
-  <string name="no_thanks">Hayır, teşekkürler</string>
+  <string name="action_no_thanks">Hayır, teşekkürler</string>
   <string name="no_user_found">Kullanıcı bulunamadı</string>
   <string name="no_version_suffix">Düzeltme yok</string>
   <string name="none">Hiçbiri</string>
@@ -550,7 +549,7 @@
   <string name="projects_we_took_part">Projelerde yer aldık</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
-  <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
+  <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
   <string name="provider_fanfou">Fanfou</string>
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>
@@ -634,7 +633,7 @@
   <string name="sent_follow_request_to_user"><xliff:g id="user">%s</xliff:g> kişisine takip isteği gönderildi.</string>
   <string name="server_address">Sunucu adresi</string>
   <string name="set_consumer_key_secret_message">Twidere token\'i sınırı geçiyorsa, https://apps.twitter.com/ adresinden bir uygulama oluşturabilir ve consumer key ve secret kısımlarına yapıştırın.\nEğer, varsayılan anahtar kullanmaya devam ederseniz oturum açmanız mümkün olmayabilir.</string>
-  <string name="settings">Ayarlar</string>
+  <string name="action_settings">Ayarlar</string>
   <string name="settings_interface">Arayüz</string>
   <string name="settings_notifications">Bildirimler</string>
   <string name="settings_refresh">Yenile</string>

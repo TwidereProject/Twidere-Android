@@ -22,21 +22,40 @@ package org.mariotaku.ktextension
 import android.annotation.TargetApi
 import android.content.res.Configuration
 import android.os.Build
+import android.os.LocaleList
+import android.support.v4.os.ConfigurationCompat
+import android.support.v4.os.LocaleListCompat
 import java.util.*
 
-/**
- * Created by mariotaku on 2017/3/23.
- */
-
-fun Configuration.setLayoutDirectionCompat(locale: Locale?) {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) return
-    ConfigurationExtensionsApi18.setLayoutDirectionCompat(this, locale)
-}
+var Configuration.localesCompat: LocaleListCompat
+    get() = ConfigurationCompat.getLocales(this)
+    set(value) {
+        when {
+            Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1 -> {
+                @Suppress("DEPRECATION")
+                this.locale = value[0]
+            }
+            Build.VERSION.SDK_INT < Build.VERSION_CODES.N -> {
+                ConfigurationExtensionsApi18.setLocaleCompat(this, value[0])
+            }
+            else -> {
+                ConfigurationExtensionsApi24.setLocalesCompat(this, value)
+            }
+        }
+    }
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 private object ConfigurationExtensionsApi18 {
 
-    fun setLayoutDirectionCompat(configuration: Configuration, locale: Locale?) {
-        configuration.setLayoutDirection(locale)
+    fun setLocaleCompat(configuration: Configuration, locale: Locale?) {
+        configuration.setLocale(locale)
+    }
+}
+
+@TargetApi(Build.VERSION_CODES.N)
+private object ConfigurationExtensionsApi24 {
+
+    fun setLocalesCompat(configuration: Configuration, locales: LocaleListCompat) {
+        configuration.locales = locales.unwrap() as? LocaleList
     }
 }

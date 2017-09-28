@@ -54,6 +54,7 @@ import org.mariotaku.twidere.util.SQLiteDatabaseWrapper.LazyLoadCallback
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.database.CachedUsersQueryBuilder
 import org.mariotaku.twidere.util.database.SuggestionsCursorCreator
+import org.mariotaku.twidere.util.notification.ContentNotificationManager
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 import javax.inject.Inject
@@ -229,8 +230,9 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                 }
             }
             if (table == null) return null
+            val limit = uri.getQueryParameter(QUERY_PARAM_LIMIT)
             val c = databaseWrapper.query(table, projection, selection, selectionArgs,
-                    null, null, sortOrder)
+                    null, null, sortOrder, limit)
             c?.setNotificationUri(context.contentResolver, uri)
             return c
         } catch (e: SQLException) {
