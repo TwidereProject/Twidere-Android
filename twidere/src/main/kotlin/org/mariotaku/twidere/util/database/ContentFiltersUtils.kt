@@ -41,13 +41,14 @@ object ContentFiltersUtils {
     private fun isFilteredQuery(users: Array<UserKey>?, texts: String?, sources: Array<String>?,
             links: Array<String>?, names: Array<String>?, descriptions: String?,
             filterRts: Boolean, @FilterScope scope: Int, allowedKeywords: Array<String>? = null): Pair<String, Array<String>> {
+        var numExpressions = 0;
         val selectionArgs = mutableListOf<String>()
         val queryBuilder = StringBuilder("SELECT ")
 
         fun addExpression(ruleTable: String, ruleField: String, scopeField: String,
                 @FilterScope expressionScope: Int, noScopeAsTrue: Boolean, matchType: Int,
                 value: String, extraWhereAppend: ((StringBuilder, MutableList<String>, String) -> Unit)? = null) {
-            if (selectionArgs.isNotEmpty()) {
+            if (numExpressions > 0) {
                 queryBuilder.append(" OR ")
             }
             selectionArgs.add(value)
@@ -86,7 +87,7 @@ object ContentFiltersUtils {
             }
             extraWhereAppend?.invoke(queryBuilder, selectionArgs, ruleField)
             queryBuilder.append(")")
-
+            numExpressions += 1;
         }
 
         fun allowKeywordsWhere(sb: StringBuilder, args: MutableList<String>, ruleField: String) {
@@ -130,7 +131,7 @@ object ContentFiltersUtils {
                     FilterScope.TARGET_DESCRIPTION or scope, false, CONTAINS,
                     descriptions, ::allowKeywordsWhere)
         }
-        if (queryBuilder.isEmpty())
+        if (numExpressions == 0)
             return Pair("SELECT 0", emptyArray())
         return Pair(queryBuilder.toString(), selectionArgs.toTypedArray())
     }
