@@ -127,7 +127,6 @@
   <string name="search_type_statuses">Tweets</string>
   <string name="search_type_users">Χρήστες</string>
   <string name="select_account">Επιλογή λογαριασμού</string>
-  <string name="action_settings">Ρυθμίσεις</string>
   <string name="show_absolute_time">Εμφάνιση απόλυτου χρόνου</string>
   <string name="sign_up">Εγγραφή</string>
   <!-- [noun] Accessibility label for retweet icon -->

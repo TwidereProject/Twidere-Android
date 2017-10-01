@@ -390,7 +390,6 @@
   <string name="no_status_content_text">Geen inhoud</string>
   <string name="no_tab">Geen tabblad</string>
   <string name="no_tab_hint">Geen tab</string>
-  <string name="action_no_thanks">Nee, bedankt</string>
   <string name="no_user_found">Geen gebruiker gevonden</string>
   <string name="no_version_suffix">Geen versie-achtervoegsel</string>
   <string name="none">Geen</string>
@@ -567,7 +566,6 @@
   <string name="sent_follow_request_to_user">Verstuur volgverzoek naar <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Server adres</string>
   <string name="set_consumer_key_secret_message">Twidere bereikt de tokenlimiet. Je moet een app aanmaken op https://apps.twitter.com/ en de \'consumer key\' en \'secret\' hieronder plakken.\nAls je doorgaat met de standaardkey kun je mogelijk niet inloggen.</string>
-  <string name="action_settings">Instellingen</string>
   <string name="settings_interface">Interface</string>
   <string name="settings_notifications">Notificaties</string>
   <string name="settings_refresh">Vernieuwen</string>

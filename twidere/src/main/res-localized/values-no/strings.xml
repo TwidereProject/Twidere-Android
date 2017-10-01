@@ -340,7 +340,6 @@
   <string name="no_status_content_text">Ingen innhold</string>
   <string name="no_tab">Ingen faner</string>
   <string name="no_tab_hint">Ingen faner</string>
-  <string name="action_no_thanks">Nei, takk</string>
   <string name="no_user_found">Fant ingen bruker</string>
   <string name="no_version_suffix">Ingen versjonssuffiks</string>
   <string name="none">Ingen</string>
@@ -498,7 +497,6 @@
   <string name="sent_follow_request_to_user">Sendte følgeforespørsel til <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Tjeneradresse</string>
   <string name="set_consumer_key_secret_message">Twidere er i ferd med å nå token-grensen. Opprett en app på https://apps.twitter.com/ and lime inn nøkkelen and passordet under.\nHvis du fortsetter å bruke standardnøkkelen, kan det hende du ikke får logget inn.</string>
-  <string name="action_settings">Innstillinger</string>
   <string name="settings_interface">Grensesnitt</string>
   <string name="settings_notifications">Varsler</string>
   <string name="settings_refresh">Oppdater</string>

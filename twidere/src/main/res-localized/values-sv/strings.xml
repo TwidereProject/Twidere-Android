@@ -590,7 +590,6 @@
   <string name="no_status_content_text">Inget innehåll</string>
   <string name="no_tab">Ingen flik</string>
   <string name="no_tab_hint">Ingen flik</string>
-  <string name="action_no_thanks">Nej tack</string>
   <string name="no_user_found">Ingen användare hittat</string>
   <string name="no_version_suffix">Ingen versionssuffix</string>
   <string name="none">Ingen</string>
@@ -804,7 +803,6 @@
   <string name="sensitive_content_warning">Det här tweetet kan innehålla stötande material, vill du fortsätta?</string>
   <string name="sent_follow_request_to_user">Skicka förföljarförfrågan till <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Serveradress</string>
-  <string name="action_settings">Inställningar</string>
   <string name="settings_interface">Gränssnitt</string>
   <string name="settings_notifications">Notifieringar</string>
   <string name="settings_refresh">Uppdatera</string>

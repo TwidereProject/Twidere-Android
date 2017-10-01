@@ -58,7 +58,9 @@
   <string name="action_edit_filter_rule">編輯規則</string>
   <string name="action_enable">啟用</string>
   <string name="action_enable_notifications">啟用通知</string>
+  <string name="action_enable_promotions">啟用推廣</string>
   <string name="action_enable_retweets">啓用轉推</string>
+  <string name="action_export_to_muted_users">匯出到靜音的使用者</string>
   <string name="action_favorite">收藏</string>
   <string name="action_filter_import_from_blocked_users">從被封鎖的使用者匯入</string>
   <string name="action_filter_import_from_muted_users">從被靜音的使用者匯入</string>
@@ -82,6 +84,7 @@
   <string name="action_mute_notifications">靜音通知</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>，儲存於<xliff:g id="time">%2$s</xliff:g></string>
   <string name="action_next_step">下一步</string>
+  <string name="action_no_thanks">不，謝謝</string>
   <string name="action_open_in_browser">在瀏覽器中打開</string>
   <string name="action_pick_color">選取顏色</string>
   <string name="action_purchase">購買</string>
@@ -111,6 +114,7 @@
   <string name="action_set_color">設定顏色</string>
   <string name="action_set_nickname">設定暱稱</string>
   <string name="action_set_status_visibility">設置可見性</string>
+  <string name="action_settings">設定</string>
   <string name="action_share">分享</string>
   <string name="action_sign_in">登入</string>
   <!-- [verb] Used for skip some settings -->
@@ -313,9 +317,11 @@
   <string name="external_group_host_format"><xliff:g id="host">%s</xliff:g> 的外部群組</string>
   <string name="external_user_host_format"><xliff:g id="host">%s</xliff:g> 的外部使用者</string>
   <string name="extra_configurations">額外設定</string>
+  <string name="extra_feature_description_advanced_filters">過濾器訂閱，高級規則等</string>
   <string name="extra_feature_description_schedule_status">定期發推 (稍候傳送)</string>
   <string name="extra_feature_description_share_gif">在推文中分享 GIF</string>
   <string name="extra_feature_description_sync_data">透過 Dropbox 或 Google Drive 等同步資料</string>
+  <string name="extra_feature_title_advanced_filters">高級過濾器</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">支持 Twidere 並且得到強化功能</string>
   <string name="extra_features_pack_description">或是購買功能包大補帖 (包含之後新增功能)</string>
@@ -399,6 +405,7 @@
   <string name="keyword_filter_name">關鍵詞：<xliff:g id="name">%s</xliff:g></string>
   <string name="label_account">帳號</string>
   <string name="label_account_type">帳號類型</string>
+  <string name="label_advanced">進階</string>
   <string name="label_auth_type">驗證方式</string>
   <string name="label_background_operation_service">後台操作服務</string>
   <string name="label_buffer_accounts">Buffer 帳號</string>
@@ -415,6 +422,16 @@
   <string name="label_data_provider">Twidere 資料庫存儲</string>
   <string name="label_feedback_content">內容</string>
   <string name="label_feedback_title">標題</string>
+  <string name="label_filter_apply_to">適用于&#8230;</string>
+  <string name="label_filter_for">針對&#8230;</string>
+  <string name="label_filter_scope_home">首頁</string>
+  <string name="label_filter_scope_interactions">互動</string>
+  <string name="label_filter_scope_messages">私訊</string>
+  <string name="label_filter_scope_search_other">其他</string>
+  <string name="label_filter_scope_search_results">搜尋結果</string>
+  <string name="label_filter_target_description">介紹</string>
+  <string name="label_filter_target_name">名字</string>
+  <string name="label_filter_target_text">文本</string>
   <string name="label_filters_subscription">訂閱</string>
   <string name="label_follow_request_sent">已發送關注請求</string>
   <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> 通過 <xliff:g example="api" id="source">%2$s</xliff:g></string>
@@ -643,7 +660,6 @@
   <string name="no_status_content_text">沒有內容</string>
   <string name="no_tab">沒有標籤頁</string>
   <string name="no_tab_hint">沒有標籤頁</string>
-  <string name="action_no_thanks">不用了，謝謝</string>
   <string name="no_user_found">沒有找到使用者</string>
   <string name="no_version_suffix">沒有版本後綴</string>
   <string name="none">無</string>
@@ -882,7 +898,6 @@
   <string name="sent_follow_request_to_user">向 <xliff:g id="user">%s</xliff:g> 送出了關注請求</string>
   <string name="server_address">伺服器位址</string>
   <string name="set_consumer_key_secret_message">Twidere 的令牌將要用完了。您需要在 https://apps.twitter.com/ 創建一個應用程式，並把 consumer key 與 consumer secret 粘貼在下面。\n如果您繼續使用預設的key，可能會沒法登入。</string>
-  <string name="action_settings">設定</string>
   <string name="settings_interface">界面</string>
   <string name="settings_notifications">通知</string>
   <string name="settings_refresh">更新</string>

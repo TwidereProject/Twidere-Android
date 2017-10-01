@@ -319,6 +319,7 @@
   <string name="highlight_and_underline">Sorot dan garis bawah</string>
   <string name="hint_accounts_dashboard_message">Geser dari ujung layar untuk membuka panel akun.</string>
   <string name="hint_accounts_dashboard_title">Panel Akun</string>
+  <string name="hint_message_select_user">Cari pengguna</string>
   <string name="hint_no_account">Tidak ada akun</string>
   <string name="hints">Petunjuk</string>
   <string name="home_refresh">Segarkan pada timeline</string>
@@ -359,6 +360,7 @@
   <string name="label_follow_request_sent">Permintaan mengikuti terkirim</string>
   <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> via <xliff:g example="api" id="source">%2$s</xliff:g></string>
   <string name="label_location_your_coarse_location">Lokasi anda secara kasar</string>
+  <string name="label_media">Media</string>
   <string name="label_original_status">Cuit asli</string>
   <string name="label_poll">Pemungutan suara</string>
   <string name="label_refresh_and_sync_service">Muat ulang &amp; Menyinkronisasikan layanan</string>
@@ -497,7 +499,6 @@
   <string name="no_status_content_text">Tidak ada konten</string>
   <string name="no_tab">Tidak terdapat tab</string>
   <string name="no_tab_hint">Tidak ada tab</string>
-  <string name="action_no_thanks">Tidak, terima kasih</string>
   <string name="no_user_found">Tidak menemukan pengguna</string>
   <string name="no_version_suffix">Tidak ada akhiran versi</string>
   <string name="none">Tidak ada</string>
@@ -560,6 +561,7 @@
   <string name="preference_summary_database_item_limit">Batas atas item yang disimpan pada database untuk tiap akun, berikan nilai kecil untuk menghemat ruang dan meningkatkan kecepatan muat.</string>
   <string name="preference_title_accounts">Akun</string>
   <string name="preference_title_advanced">Lanjutan</string>
+  <string name="preference_title_auto_refresh_power_saving">Mode hemat daya</string>
   <string name="preference_title_database_item_limit">Batas ukuran database</string>
   <string name="preference_title_filter_manage_subscriptions">Atur</string>
   <string name="preference_title_filter_subscriptions">Menyaring langganan</string>
@@ -688,7 +690,6 @@
   <string name="sent_follow_request_to_user">Mengirim permintaan mengikuti ke <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Alamat server</string>
   <string name="set_consumer_key_secret_message">Twidere mencapai batas token, Anda harus membuat sebuah aplikasi di https://apps.twitter.com/ kemudian menempelkan consumer key dan consumer secret dibawah ini.\nJika Anda tetap menggunakan kunci bawaan, Anda mungkin tidak dapat masuk.</string>
-  <string name="action_settings">Pengaturan</string>
   <string name="settings_interface">Antarmuka</string>
   <string name="settings_notifications">Notifikasi</string>
   <string name="settings_refresh">Segarkan</string>
@@ -798,6 +799,7 @@
   <string name="title_set_nickname">Tentukan nama panggilan</string>
   <string name="title_status">Tweet</string>
   <string name="title_statuses">Kicauan</string>
+  <string name="title_streaming">Streaming</string>
   <string name="title_subscription_name">Nama</string>
   <string name="title_subscription_url">Alamat web</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s </xliff:g>: <xliff:g id="summary">%2$s </xliff:g></string>

@@ -391,7 +391,6 @@
   <string name="no_status_content_text">Немає вмісту</string>
   <string name="no_tab">Вкладки відсутні</string>
   <string name="no_tab_hint">Нема вкладок</string>
-  <string name="action_no_thanks">Ні, дякую</string>
   <string name="no_user_found">Користувача не знайдено</string>
   <string name="no_version_suffix">Без суфіксу версії</string>
   <string name="none">Нічого</string>
@@ -570,7 +569,6 @@
   <string name="sent_follow_request_to_user">Надіслано запит на читання до <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Адреса серверу</string>
   <string name="set_consumer_key_secret_message">Twidere доходить до обмеження за токеном, вам потрібно створти додаток за адресою https://apps.twitter.com/ і ввести код та cекретний ключ користувача нижче.\nПри подальшому використанні усталеного токену ви не зможете увійти.</string>
-  <string name="action_settings">Параметри</string>
   <string name="settings_interface">Інтерфейс</string>
   <string name="settings_notifications">Сповіщення</string>
   <string name="settings_refresh">Оновлення</string>

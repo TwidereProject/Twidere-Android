@@ -31,6 +31,7 @@
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">Encaboxar retuit</string>
   <string name="action_center">Centrar</string>
+  <string name="action_change_language">Camudar llingua</string>
   <string name="action_clear">Llimpiar</string>
   <string name="action_clear_messages">Llimpiar mensaxes</string>
   <string name="action_compose">Componer</string>
@@ -381,6 +382,7 @@
   <string name="keyword_filter_name">Pallabra clave: <xliff:g id="name">%s</xliff:g></string>
   <string name="label_account">Cuenta</string>
   <string name="label_account_type">Triba de cuenta</string>
+  <string name="label_advanced">Avanzao</string>
   <string name="label_auth_type">Triba d\'autenticación</string>
   <string name="label_background_operation_service">Serviciu d\'operación de fondu</string>
   <string name="label_buffer_accounts">Cuentes Buffer</string>
@@ -396,6 +398,9 @@
   <string name="label_data_provider">Fornidor de base de datos Twidere</string>
   <string name="label_feedback_content">Conteníu</string>
   <string name="label_feedback_title">Títulu</string>
+  <string name="label_filter_target_description">Descripción</string>
+  <string name="label_filter_target_name">Nome</string>
+  <string name="label_filter_target_text">Testu</string>
   <string name="label_filters_subscription">Soscripción</string>
   <string name="label_follow_request_sent">Unvióse la solicitú de siguimientu</string>
   <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> per <xliff:g example="api" id="source">%2$s</xliff:g></string>
@@ -535,6 +540,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="message_toast_login_verification_failed">Falló la verificación del aniciu de sesión</string>
   <!-- Toast message for network errors -->
   <string name="message_toast_network_error">Fallu de rede</string>
+  <string name="message_toast_network_error_with_message">Fallu de rede: <xliff:g id="message">%s</xliff:g></string>
   <string name="message_toast_no_account">Ensin cuentes</string>
   <string name="message_toast_no_account_permission">Ríquese\'l permisu de cuentes</string>
   <string name="message_toast_no_account_selected">Nun s\'esbillaron cuentes</string>
@@ -607,10 +613,16 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="no_status_content_text">Ensin conteníu</string>
   <string name="no_tab">Ensin llingüetes</string>
   <string name="no_tab_hint">Ensin llingüetes</string>
-  <string name="action_no_thanks">Non, gracies</string>
   <string name="no_user_found">Nun s\'alcontró usuariu dalu</string>
   <string name="no_version_suffix">Ensin sufixu de versión</string>
   <string name="none">Dengún</string>
+  <string name="notification_channel_description_content_interactions">Interaiciones como menciones y retuits</string>
+  <string name="notification_channel_description_content_messages">Mensaxes importantes como DMs</string>
+  <string name="notification_channel_name_background_progresses">Operaciones de fondu</string>
+  <string name="notification_channel_name_content_interactions">Interaiciones</string>
+  <string name="notification_channel_name_content_messages">Mensaxes</string>
+  <string name="notification_channel_name_content_subscriptions">Soscripciones</string>
+  <string name="notification_channel_name_content_updates">Anovamientos</string>
   <string name="notification_direct_message"><xliff:g id="user">%s</xliff:g> unvióte un mensaxe direutu.</string>
   <string name="notification_direct_message_multiple_messages"><xliff:g id="user">%1$s</xliff:g> unvióte <xliff:g id="messages_count">%2$d</xliff:g> mensaxes direutos.</string>
   <string name="notification_direct_message_multiple_users"><xliff:g id="user">%1$s</xliff:g> y otros <xliff:g id="users_count">%2$d</xliff:g> unviáronte <xliff:g id="messages_count">%3$d</xliff:g> mensaxes direutos.</string>
@@ -701,6 +713,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="preference_title_media_preload_non_metered_network">Precargar en rede llibre</string>
   <string name="preference_title_multi_column_tab_width">Anchor de llingüeta multi-columna</string>
   <string name="preference_title_multi_column_tabs">Llingüetes de multi-columna</string>
+  <string name="preference_title_notification_channels">Canales</string>
   <string name="preference_title_notification_ringtone">Timbre</string>
   <string name="preference_title_override_language">Llingua d\'aplicación</string>
   <string name="preference_title_portrait">Vertical</string>
@@ -829,7 +842,6 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="sent_follow_request_to_user">Unvióse la solicitú de siguimientu a <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Direición del sirvidor</string>
   <string name="set_consumer_key_secret_message">Twidere ta algamando la llende de pases y tendrás de crear un pase nuevu en https://apps.twitter.com/. Dempués apega la clave y secretu de consumidor embaxo.\nSi sigues usando la clave por defeutu, quiciabes nun seyas a aniciar sesión.</string>
-  <string name="action_settings">Axustes</string>
   <string name="settings_interface">Interfaz</string>
   <string name="settings_notifications">Avisos</string>
   <string name="settings_refresh">Refrescu</string>

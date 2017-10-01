@@ -640,7 +640,6 @@
   <string name="no_status_content_text">Sen contido</string>
   <string name="no_tab">Sen lapelas</string>
   <string name="no_tab_hint">Sen lapelas</string>
-  <string name="action_no_thanks">Non, grazas</string>
   <string name="no_user_found">Non se atopou o usuario</string>
   <string name="no_version_suffix">Sen sufixo de versión</string>
   <string name="none">Ningún</string>
@@ -879,7 +878,6 @@
   <string name="sent_follow_request_to_user">Petición de seguimento enviada a <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Enderezo do servidor</string>
   <string name="set_consumer_key_secret_message">Twidere está chegando á súa cota límite, terás que crear unha app en https://apps.twitter.com/ e colar abaixo as chaves cliente e secreta.\nSe continúas usando a chave por defecto, é posible que non poidas entrar.</string>
-  <string name="action_settings">Axustes</string>
   <string name="settings_interface">Aparencia</string>
   <string name="settings_notifications">Notificacións</string>
   <string name="settings_refresh">Recargar</string>

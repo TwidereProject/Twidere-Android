@@ -22,7 +22,10 @@
   <string name="action_add_media">Adicionar mídia</string>
   <string name="action_add_member">Adicionar membro</string>
   <string name="action_add_tab">Adicionar aba</string>
+  <string name="action_add_tab_to_home_screen">Adicionar aba à página inicial</string>
   <string name="action_add_to_filter">Adicionar filtro</string>
+  <string name="action_add_to_home_screen">Adicionar à página inicial</string>
+  <string name="action_add_to_home_screen_more">Adicionar à página inicial&#8230;</string>
   <string name="action_add_to_list">Adicionar à lista</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Bloquear</string>
@@ -32,6 +35,7 @@
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">Cancelar retweet</string>
   <string name="action_center">Centro</string>
+  <string name="action_change_language">Mudar idioma</string>
   <string name="action_clear">Limpar</string>
   <string name="action_clear_messages">Limpar mensagens</string>
   <string name="action_compose">Escrever</string>
@@ -42,6 +46,7 @@
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">Excluir</string>
   <string name="action_delete_messages">Excluir mensagens</string>
+  <string name="action_disable_promotions">Desabilitar publicidade</string>
   <string name="action_dont_restart">Não reiniciar</string>
   <string name="action_dont_terminate">Não saia</string>
   <!-- [verb] Edit image/settings etc. -->
@@ -49,6 +54,9 @@
   <string name="action_edit_conversation_avatar">Editar o ícone</string>
   <string name="action_edit_conversation_name">Editar o nome</string>
   <string name="action_edit_filter_rule">Editar regra</string>
+  <string name="action_enable">Desabilitar</string>
+  <string name="action_enable_notifications">Habilitar notificações</string>
+  <string name="action_enable_retweets">Habilitar retweets</string>
   <string name="action_favorite">Favoritar</string>
   <string name="action_filter_import_from_blocked_users">Importar de usuários bloqueados</string>
   <string name="action_filter_import_from_muted_users">Importar de usuários silenciados</string>
@@ -72,6 +80,7 @@
   <string name="action_mute_notifications">Silenciar notificações</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, salvo em <xliff:g id="time">%2$s</xliff:g></string>
   <string name="action_next_step">Próximo</string>
+  <string name="action_no_thanks">Não, obrigado</string>
   <string name="action_open_in_browser">Abrir no navegador</string>
   <string name="action_pick_color">Escolher cor</string>
   <string name="action_purchase">Comprar</string>
@@ -100,6 +109,7 @@
   <string name="action_set_color">Definir cor</string>
   <string name="action_set_nickname">Definir apelido</string>
   <string name="action_set_status_visibility">Definir visibilidade</string>
+  <string name="action_settings">Configurações</string>
   <string name="action_share">Compartilhar</string>
   <string name="action_sign_in">Entrar</string>
   <!-- [verb] Used for skip some settings -->
@@ -462,7 +472,6 @@
   <string name="no_status_content_text">Nenhum conteúdo</string>
   <string name="no_tab">Sem abas</string>
   <string name="no_tab_hint">Sem abas</string>
-  <string name="action_no_thanks">Não, obrigado</string>
   <string name="no_user_found">Nenhum usuário encontrado</string>
   <string name="no_version_suffix">Sem sufixo de versão</string>
   <string name="none">Nenhum</string>
@@ -642,7 +651,6 @@
   <string name="sent_follow_request_to_user">Solicitação de seguidor enviada para <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Endereço do servidor</string>
   <string name="set_consumer_key_secret_message">Os tokens de autorização gerados pelo Twidere estão se esgotando, pode ser necessário que você crie um aplicativo em https://apps.twitter.com/ e cole seu \"consumer key\" e senha abaixo.\nSe, ao invés disso, você usar a \"key default\" do Twidere, você pode não conseguir entrar.</string>
-  <string name="action_settings">Configurações</string>
   <string name="settings_interface">Interface</string>
   <string name="settings_notifications">Notificações</string>
   <string name="settings_refresh">Atualizar</string>
