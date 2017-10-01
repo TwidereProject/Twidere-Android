@@ -71,7 +71,7 @@ class StreamingService : BaseService() {
         super.onCreate()
         GeneralComponent.get(this).inject(this)
         threadPoolExecutor = Executors.newCachedThreadPool { runnable ->
-            val thread = Thread()
+            val thread = Thread(runnable)
             thread.priority = Thread.NORM_PRIORITY - 1
             if (runnable is StreamingRunnable<*>) {
                 thread.name = "twidere-streaming-${runnable.account.key}"
