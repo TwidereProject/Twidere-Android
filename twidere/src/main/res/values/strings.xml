@@ -573,6 +573,7 @@
     <string name="label_statuses_retweets_replies">Tweets, retweets and replies</string>
     <string name="label_streaming_service">Streaming service</string>
     <string name="label_translate_from_language">Translate from <xliff:g id="language">%s</xliff:g></string>
+    <string name="label_translated_to_language">Translated to <xliff:g id="language">%s</xliff:g></string>
     <string name="label_translation">Translation</string>
     <string name="label_username">Username</string>
     <string name="label_video">Video</string>
@@ -1263,6 +1264,7 @@
     <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
     <string name="title_sync">Data sync</string>
     <string name="title_sync_settings">Sync settings</string>
+    <string name="title_translate_to">Translate to…</string>
     <string name="title_unpin_status_confirm">Unpin tweet</string>
     <string name="title_user">User</string>
     <string name="title_user_colors">User colors</string>
