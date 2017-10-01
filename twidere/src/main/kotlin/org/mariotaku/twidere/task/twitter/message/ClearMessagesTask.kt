@@ -26,11 +26,13 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.queryReference
+import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.task.ExceptionHandlingAbstractTask
 import org.mariotaku.twidere.util.content.ContentResolverUtils
+import org.mariotaku.twidere.util.updateItems
 
 /**
  * Created by mariotaku on 2017/2/16.
@@ -71,6 +73,19 @@ class ClearMessagesTask(
         }
         ContentResolverUtils.bulkDelete(context.contentResolver, Messages.CONTENT_URI,
                 Messages.MESSAGE_ID, false, messageIds, messagesWhere, messagesWhereArgs)
+        val conversationWhere = Expression.and(Expression.equalsArgs(Messages.Conversations.ACCOUNT_KEY),
+                Expression.equalsArgs(Messages.Conversations.CONVERSATION_ID)).sql
+        val conversationWhereArgs = arrayOf(accountKey.toString(), conversationId)
+        context.contentResolver.updateItems(Messages.Conversations.CONTENT_URI,
+                Messages.Conversations.COLUMNS, conversationWhere, conversationWhereArgs,
+                cls = ParcelableMessageConversation::class.java) { item ->
+            item.message_extras = null
+            item.message_type = null
+            item.message_timestamp = -1L
+            item.text_unescaped = null
+            item.media = null
+            return@updateItems item
+        }
         return true
     }
 
