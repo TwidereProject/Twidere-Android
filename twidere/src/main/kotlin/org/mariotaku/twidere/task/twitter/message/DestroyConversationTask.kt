@@ -28,6 +28,7 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
@@ -53,21 +54,31 @@ class DestroyConversationTask(
         val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
         val conversation = DataStoreUtils.findMessageConversation(context, accountKey, conversationId)
 
+        var deleteMessages = true
+        var deleteConversation = true
         // Only perform real deletion when it's not temp conversation (stored locally)
-        if (conversation == null || !conversation.is_temp) {
-            if (!performDestroyConversation(microBlog, account)) {
+        if (conversation != null) when {
+            conversation.conversation_extras_type != ParcelableMessageConversation.ExtrasType.TWITTER_OFFICIAL -> {
+                deleteMessages = false
+                deleteConversation = ClearMessagesTask.clearMessages(context, account, conversationId)
+            }
+            !conversation.is_temp -> if (!requestDestroyConversation(microBlog, account)) {
                 return false
             }
         }
 
-        val deleteMessageWhere = Expression.and(Expression.equalsArgs(Messages.ACCOUNT_KEY),
-                Expression.equalsArgs(Messages.CONVERSATION_ID)).sql
-        val deleteMessageWhereArgs = arrayOf(accountKey.toString(), conversationId)
-        context.contentResolver.delete(Messages.CONTENT_URI, deleteMessageWhere, deleteMessageWhereArgs)
-        val deleteConversationWhere = Expression.and(Expression.equalsArgs(Conversations.ACCOUNT_KEY),
-                Expression.equalsArgs(Conversations.CONVERSATION_ID)).sql
-        val deleteConversationWhereArgs = arrayOf(accountKey.toString(), conversationId)
-        context.contentResolver.delete(Conversations.CONTENT_URI, deleteConversationWhere, deleteConversationWhereArgs)
+        if (deleteMessages) {
+            val deleteMessageWhere = Expression.and(Expression.equalsArgs(Messages.ACCOUNT_KEY),
+                    Expression.equalsArgs(Messages.CONVERSATION_ID)).sql
+            val deleteMessageWhereArgs = arrayOf(accountKey.toString(), conversationId)
+            context.contentResolver.delete(Messages.CONTENT_URI, deleteMessageWhere, deleteMessageWhereArgs)
+        }
+        if (deleteConversation) {
+            val deleteConversationWhere = Expression.and(Expression.equalsArgs(Conversations.ACCOUNT_KEY),
+                    Expression.equalsArgs(Conversations.CONVERSATION_ID)).sql
+            val deleteConversationWhereArgs = arrayOf(accountKey.toString(), conversationId)
+            context.contentResolver.delete(Conversations.CONTENT_URI, deleteConversationWhere, deleteConversationWhereArgs)
+        }
         return true
     }
 
@@ -75,7 +86,7 @@ class DestroyConversationTask(
         callback?.invoke(result ?: false)
     }
 
-    private fun performDestroyConversation(microBlog: MicroBlog, account: AccountDetails): Boolean {
+    private fun requestDestroyConversation(microBlog: MicroBlog, account: AccountDetails): Boolean {
         when (account.type) {
             AccountType.TWITTER -> {
                 if (account.isOfficial(context)) {

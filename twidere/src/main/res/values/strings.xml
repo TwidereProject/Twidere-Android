@@ -39,6 +39,7 @@
     <string name="action_change_language">Change language</string>
     <string name="action_clear">Clear</string>
     <string name="action_clear_messages">Clear messages</string>
+    <string name="action_clear_messages_and_delete_conversation">Clear and delete conversation</string>
     <string name="action_comment">Comment</string>
     <string name="action_compose">Compose</string>
     <string name="action_compose_message_convert_to_status">Convert to tweet</string>
