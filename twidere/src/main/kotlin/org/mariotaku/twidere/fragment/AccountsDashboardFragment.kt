@@ -277,6 +277,8 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     }
 
     override fun onApplySystemWindowInsets(insets: Rect) {
+        view?.findViewById<View?>(android.support.design.R.id.design_navigation_view)?.
+                setPadding(0, 0, 0, insets.bottom)
         systemWindowsInsets.set(insets)
         updateSystemWindowsInsets()
     }
