@@ -28,13 +28,13 @@ import android.os.Bundle
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.davemorrissey.labs.subscaleview.decoder.SkiaImageDecoder
+import org.mariotaku.ktextension.nextPowerOf2
 import org.mariotaku.mediaviewer.library.CacheDownloadLoader
 import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewerFragment
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.MediaViewerActivity
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.util.TwidereMathUtils
 import org.mariotaku.twidere.util.UriUtils
 import org.mariotaku.twidere.util.media.MediaExtra
 import java.io.IOException
@@ -156,10 +156,9 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
                 val dm = context.resources.displayMetrics
                 val targetSize = Math.min(1024, Math.max(dm.widthPixels, dm.heightPixels))
                 val sizeRatio = Math.ceil(Math.max(o.outHeight, o.outWidth) / targetSize.toDouble())
-                o.inSampleSize = TwidereMathUtils.nextPowerOf2(Math.max(1.0, sizeRatio).toInt())
+                o.inSampleSize = Math.max(1.0, sizeRatio).toInt().nextPowerOf2
                 o.inJustDecodeBounds = false
-                val bitmap = decodeBitmap(cr, uri, o) ?: throw IOException()
-                return bitmap
+                return decodeBitmap(cr, uri, o) ?: throw IOException()
             }
             return super.decode(context, uri)
         }

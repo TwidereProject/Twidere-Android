@@ -57,7 +57,6 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.ktextension.spannable
-import org.mariotaku.ktextension.useCursor
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
@@ -77,11 +76,8 @@ import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.exception.UnsupportedCountIndexException
-import org.mariotaku.twidere.extension.applyTheme
-import org.mariotaku.twidere.extension.getDirectMessageMaxParticipants
-import org.mariotaku.twidere.extension.loadProfileImage
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.*
-import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.extension.view.calculateSpaceItemHeight
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BaseFragment
@@ -491,8 +487,8 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             val where = Expression.and(Expression.equalsArgs(Conversations.ACCOUNT_KEY),
                     Expression.equalsArgs(Conversations.CONVERSATION_ID)).sql
             val whereArgs = arrayOf(accountKey.toString(), conversationId)
-            context.contentResolver.query(Conversations.CONTENT_URI, Conversations.COLUMNS, where,
-                    whereArgs, null).useCursor { cur ->
+            context.contentResolver.queryReference(Conversations.CONTENT_URI, Conversations.COLUMNS, where,
+                    whereArgs, null)?.use { (cur) ->
                 if (cur.moveToFirst()) {
                     val indices = ObjectCursor.indicesFrom(cur, ParcelableMessageConversation::class.java)
                     return indices.newObject(cur)

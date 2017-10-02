@@ -1,26 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
     <title>ic_action_qr_scan-mdpi</title>
     <desc>Created with Sketch.</desc>
-    <defs>
-        <path d="M0,0 L11,0 L11,11 L0,11 L0,0 Z M21,21 L32,21 L32,32 L21,32 L21,21 Z M21,0 L32,0 L32,11 L21,11 L21,0 Z M0,21 L11,21 L11,32 L0,32 L0,21 Z" id="path-1"></path>
-        <rect id="path-3" x="6" y="6" width="20" height="20" rx="2"></rect>
-        <mask id="mask-4" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="20" height="20" fill="white">
-            <use xlink:href="#path-3"></use>
-        </mask>
-    </defs>
+    <defs></defs>
     <g id="Action-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="ic_action_qr_scan-mdpi">
             <polygon id="Shape" points="4 4 28 4 28 28 4 28"></polygon>
-            <rect id="Rectangle-2" fill="#FFFFFF" x="6" y="15" width="20" height="2"></rect>
-            <mask id="mask-2" fill="white">
-                <use xlink:href="#path-1"></use>
-            </mask>
-            <g id="Combined-Shape"></g>
-            <g id="Rectangle-5" mask="url(#mask-2)" stroke-width="4" stroke="#FFFFFF">
-                <use mask="url(#mask-4)" xlink:href="#path-3"></use>
-            </g>
+            <rect id="Rectangle" fill="#FFFFFF" x="6" y="15" width="20" height="2"></rect>
+            <path d="M11.0014118,26 C10.3642585,26 9.36071955,26 7.99079514,26 C6.89130934,26 6,25.1017876 6,24.0092049 C6,22.6713982 6,21.6680432 6,20.9991398 L7.99079514,20.9991398 L8,24 L11,24 L11.0014118,26 Z" id="Path" fill="#FFFFFF"></path>
+            <path d="M26.0014118,26 C25.3642585,26 24.3607196,26 22.9907951,26 C21.8913093,26 21,25.1017876 21,24.0092049 C21,22.6713982 21,21.6680432 21,20.9991398 L22.9907951,20.9991398 L23,24 L26,24 L26.0014118,26 Z" id="Path" fill="#FFFFFF" transform="translate(23.500706, 23.499570) scale(-1, 1) translate(-23.500706, -23.499570) "></path>
+            <path d="M11.0014118,11 C10.3642585,11 9.36071955,11 7.99079514,11 C6.89130934,11 6,10.1017876 6,9.00920486 C6,7.67139818 6,6.66804317 6,5.99913983 L7.99079514,5.99913983 L8,9 L11,9 L11.0014118,11 Z" id="Path" fill="#FFFFFF" transform="translate(8.500706, 8.499570) scale(1, -1) translate(-8.500706, -8.499570) "></path>
+            <path d="M26.0014118,11 C25.3642585,11 24.3607196,11 22.9907951,11 C21.8913093,11 21,10.1017876 21,9.00920486 C21,7.67139818 21,6.66804317 21,5.99913983 L22.9907951,5.99913983 L23,9 L26,9 L26.0014118,11 Z" id="Path" fill="#FFFFFF" transform="translate(23.500706, 8.499570) scale(-1, -1) translate(-23.500706, -8.499570) "></path>
         </g>
     </g>
 </svg>

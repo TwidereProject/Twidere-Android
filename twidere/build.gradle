@@ -88,6 +88,7 @@ android {
                 signingConfig signingConfigs.twidere
             }
 
+            multiDexEnabled true
             minifyEnabled false
             shrinkResources false
             resValue("bool", "debug", "true")
@@ -97,6 +98,7 @@ android {
                 signingConfig signingConfigs.twidere
             }
 
+            multiDexEnabled true
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -120,12 +122,22 @@ android {
     }
 
     packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/README'
         exclude 'META-INF/INDEX.LIST'
-        exclude '/LICENSE​-​junit​.​txt'
-        exclude '/sdk-version.​txt'
-        exclude '/generated-sources'
+        exclude 'META-INF/maven/**'
+        exclude 'META-INF/*.kotlin_module'
+        exclude 'kotlin/**.kotlin_builtins'
+        exclude 'org/osmdroid/**.png'
+        exclude 'javax/annotation/**.java'
+        exclude 'generated-sources/**'
+        exclude 'jsr305_annotations/**'
+        exclude 'error_prone/**'
+        exclude 'third_party/java_src/**'
+        exclude 'sdk-version.​txt'
+        exclude 'build-data.properties'
     }
 
 }
@@ -165,7 +177,7 @@ dependencies {
 
     debugImplementation "com.facebook.stetho:stetho:${libVersions['Stetho']}"
     debugImplementation "com.facebook.stetho:stetho-okhttp3:${libVersions['Stetho']}"
-    debugImplementation "com.facebook.stetho:stetho-js-rhino:${libVersions['Stetho']}"
+    debugImplementation "com.github.mariotaku:StethoBeanShellREPL:${libVersions['StethoBeanShellREPL']}"
     debugImplementation "com.squareup.leakcanary:leakcanary-android:${libVersions['LeakCanary']}"
     debugImplementation('com.jayway.jsonpath:json-path:2.2.0') {
         exclude group: 'net.minidev', module: 'json-smart'
@@ -210,9 +222,6 @@ dependencies {
     implementation "pl.droidsonroids.gif:android-gif-drawable:${libVersions['AndroidGIFDrawable']}"
     implementation 'com.sprylab.android.texturevideoview:texturevideoview:1.2.1'
     implementation 'com.squareup:pollexor:2.0.4'
-    implementation 'org.apache.commons:commons-lang3:3.6'
-    implementation 'org.apache.commons:commons-text:1.1'
-    implementation 'commons-primitives:commons-primitives:1.0'
     implementation "org.apache.james:apache-mime4j-core:${libVersions['Mime4J']}"
     implementation "org.apache.james:apache-mime4j-storage:${libVersions['Mime4J']}"
     implementation "com.bluelinelabs:logansquare:${libVersions['LoganSquare']}"
@@ -246,7 +255,9 @@ dependencies {
     implementation "com.github.mariotaku.CommonsLibrary:io:${libVersions['MariotakuCommons']}"
     implementation "com.github.mariotaku.CommonsLibrary:text:${libVersions['MariotakuCommons']}"
     implementation "com.github.mariotaku.CommonsLibrary:text-kotlin:${libVersions['MariotakuCommons']}"
-    implementation "com.github.mariotaku.CommonsLibrary:emojione-android:${libVersions['MariotakuCommons']}"
+    implementation("com.github.mariotaku.CommonsLibrary:emojione-android:${libVersions['MariotakuCommons']}") {
+        exclude group: 'org.apache.commons', module: 'commons-text'
+    }
     implementation "com.github.mariotaku.CommonsLibrary:objectcursor:${libVersions['MariotakuCommons']}"
     implementation "com.github.mariotaku.CommonsLibrary:logansquare:${libVersions['MariotakuCommons']}"
     implementation "com.github.mariotaku:KPreferences:${libVersions['KPreferences']}"
@@ -293,3 +304,7 @@ task svgToMipmap(type: SvgDrawableTask) {
 
     outputType = 'mipmap'
 }
+
+// START Non-FOSS component
+apply plugin: 'com.google.gms.google-services'
+// END Non-FOSS component

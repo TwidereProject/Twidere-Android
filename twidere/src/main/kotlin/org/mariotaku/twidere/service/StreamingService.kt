@@ -11,7 +11,6 @@ import android.support.annotation.UiThread
 import android.support.annotation.WorkerThread
 import android.support.v4.app.NotificationCompat
 import android.support.v4.net.ConnectivityManagerCompat
-import org.apache.commons.lang3.concurrent.BasicThreadFactory
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
@@ -71,9 +70,14 @@ class StreamingService : BaseService() {
     override fun onCreate() {
         super.onCreate()
         GeneralComponent.get(this).inject(this)
-        threadPoolExecutor = Executors.newCachedThreadPool(BasicThreadFactory.Builder()
-                .namingPattern("twidere-streaming-%d")
-                .priority(Thread.NORM_PRIORITY - 1).build())
+        threadPoolExecutor = Executors.newCachedThreadPool { runnable ->
+            val thread = Thread(runnable)
+            thread.priority = Thread.NORM_PRIORITY - 1
+            if (runnable is StreamingRunnable<*>) {
+                thread.name = "twidere-streaming-${runnable.account.key}"
+            }
+            return@newCachedThreadPool thread
+        }
         handler = Handler(Looper.getMainLooper())
         AccountManager.get(this).addOnAccountsUpdatedListenerSafe(accountChangeObserver, updateImmediately = false)
     }

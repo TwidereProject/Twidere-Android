@@ -21,26 +21,20 @@ package org.mariotaku.twidere.util;
 
 import android.app.Application;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.webkit.WebView;
 
-import com.facebook.stetho.DumperPluginsProvider;
 import com.facebook.stetho.Stetho;
-import com.facebook.stetho.dumpapp.DumperPlugin;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
+import org.mariotaku.stethoext.bsh.BshRuntimeReplFactoryBuilder;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.util.net.NoIntercept;
 import org.mariotaku.twidere.util.stetho.AccountsDumperPlugin;
 import org.mariotaku.twidere.util.stetho.UserStreamDumperPlugin;
 
-import java.io.IOException;
-
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Response;
 
 /**
  * Created by mariotaku on 15/5/27.
@@ -55,29 +49,23 @@ public class DebugModeUtils {
     public static void initForOkHttpClient(final OkHttpClient.Builder builder) {
         final StethoInterceptor interceptor = new StethoInterceptor();
 
-        builder.addNetworkInterceptor(new Interceptor() {
-            @Override
-            public Response intercept(@NonNull Chain chain) throws IOException {
-                if (chain.request().tag() == NoIntercept.INSTANCE) {
-                    return chain.proceed(chain.request());
-                }
-                return interceptor.intercept(chain);
+        builder.addNetworkInterceptor(chain -> {
+            if (chain.request().tag() == NoIntercept.INSTANCE) {
+                return chain.proceed(chain.request());
             }
+            return interceptor.intercept(chain);
         });
     }
 
     public static void initForApplication(final Application application) {
         Stetho.initialize(Stetho.newInitializerBuilder(application)
-                .enableDumpapp(new DumperPluginsProvider() {
-                    @Override
-                    public Iterable<DumperPlugin> get() {
-                        return new Stetho.DefaultDumperPluginsBuilder(application)
-                                .provide(new AccountsDumperPlugin(application))
-                                .provide(new UserStreamDumperPlugin(application))
-                                .finish();
-                    }
-                })
-                .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(application))
+                .enableDumpapp(() -> new Stetho.DefaultDumperPluginsBuilder(application)
+                        .provide(new AccountsDumperPlugin(application))
+                        .provide(new UserStreamDumperPlugin(application))
+                        .finish())
+                .enableWebKitInspector(() -> new Stetho.DefaultInspectorModulesBuilder(application)
+                        .runtimeRepl(new BshRuntimeReplFactoryBuilder(application).build())
+                        .finish())
                 .build());
         initLeakCanary(application);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

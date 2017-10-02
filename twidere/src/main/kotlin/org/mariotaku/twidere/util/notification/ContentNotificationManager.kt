@@ -279,10 +279,8 @@ class ContentNotificationManager(
             TwidereQueryBuilder.mapConversationsProjection(it)
         }.toTypedArray()
         val unreadHaving = Expression.greaterThan(Conversations.UNREAD_COUNT, 0)
-        val cur = cr.getUnreadMessagesEntriesCursor(projection, arrayOf(accountKey),
-                extraHaving = unreadHaving) ?: return
-        @Suppress("ConvertTryFinallyToUseCall")
-        try {
+        cr.getUnreadMessagesEntriesCursorReference(projection, arrayOf(accountKey),
+                extraHaving = unreadHaving)?.use { (cur) ->
             if (cur.isEmpty) return
 
             val indices = ObjectCursor.indicesFrom(cur, ParcelableMessageConversation::class.java)
@@ -337,8 +335,6 @@ class ContentNotificationManager(
             }
             val notificationId = Utils.getNotificationId(NOTIFICATION_ID_DIRECT_MESSAGES, accountKey)
             notificationManager.notify("direct_messages", notificationId, builder.build())
-        } finally {
-            cur.close()
         }
     }
 

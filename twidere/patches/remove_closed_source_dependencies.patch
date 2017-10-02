@@ -3,7 +3,7 @@ IDEA additional info:
 Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
---- twidere/build.gradle	(revision 0bb81b5b1599891f940a365eeba099ebec16260f)
+--- twidere/build.gradle	(date 1506175932000)
 +++ twidere/build.gradle	(revision )
 @@ -20,7 +20,7 @@
          }
@@ -27,7 +27,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
          // END Non-FOSS component
          fdroid {
              dimension 'channel'
-@@ -146,15 +146,15 @@
+@@ -155,15 +155,15 @@
      implementation project(':twidere.component.nyan')
  
      // START Non-FOSS component
@@ -52,3 +52,11 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
      // END Non-FOSS component
  
      fdroidImplementation "org.osmdroid:osmdroid-android:${libVersions['OSMDroid']}"
+@@ -299,5 +299,5 @@
+ }
+ 
+ // START Non-FOSS component
+-apply plugin: 'com.google.gms.google-services'
++//apply plugin: 'com.google.gms.google-services'
+ // END Non-FOSS component
+\ No newline at end of file

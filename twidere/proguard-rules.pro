@@ -16,7 +16,7 @@
 #   public *;
 #}
 
-#-dontobfuscate
+-dontobfuscate
 
 -dontwarn com.squareup.haha.**
 -dontwarn com.makeramen.roundedimageview.**
@@ -35,6 +35,14 @@
 -dontwarn java.nio.file.**
 -dontwarn InnerClasses
 
+# https://github.com/osmdroid/osmdroid/issues/633
+-dontwarn org.osmdroid.tileprovider.modules.NetworkAvailabliltyCheck
+
+# https://github.com/dropbox/dropbox-sdk-java#does-this-sdk-require-any-special-proguard-rules-for-shrink-optimizations
+-dontwarn com.dropbox.core.DbxStandardSessionStore**
+-dontwarn com.dropbox.core.http.OkHttpRequestor**
+-dontwarn com.dropbox.core.http.GoogleAppEngineRequestor**
+
 -keepattributes *Annotation*
 -keepattributes EnclosingMethod
 -keepattributes SourceFile
@@ -51,7 +59,9 @@
 # https://github.com/mariotaku/RestFu
 -keep class org.mariotaku.restfu.annotation.** { *; }
 
-# http://square.github.io/otto/
+-keep class * extends org.mariotaku.library.objectcursor.ObjectCursor$CursorIndices
+
+# https://github.com/square/otto/
 -keepclassmembers class ** {
     @com.squareup.otto.Subscribe public *;
     @com.squareup.otto.Produce public *;
@@ -61,6 +71,9 @@
 -keepclassmembers class * extends android.support.v4.view.ActionProvider {
     <init>(android.content.Context);
 }
+
+# https://github.com/bumptech/glide
+-keep class * extends com.bumptech.glide.module.GlideModule
 
 # Essential components
 -keep class * extends org.mariotaku.twidere.util.Analyzer
@@ -72,13 +85,13 @@
 -keep class * extends org.mariotaku.twidere.util.promotion.PromotionService
 
 # Extra feature component factories
--keep class * extends org.mariotaku.twidere.util.gifshare.GifShareProvider.Factory
--keep class * extends org.mariotaku.twidere.util.schedule.StatusScheduleProvider.Factory
--keep class * extends org.mariotaku.twidere.util.sync.DataSyncProvider.Factory
--keep class * extends org.mariotaku.twidere.util.sync.TimelineSyncManager.Factory
+-keep class * extends org.mariotaku.twidere.util.gifshare.GifShareProvider$Factory
+-keep class * extends org.mariotaku.twidere.util.schedule.StatusScheduleProvider$Factory
+-keep class * extends org.mariotaku.twidere.util.sync.DataSyncProvider$Factory
+-keep class * extends org.mariotaku.twidere.util.sync.TimelineSyncManager$Factory
 
 # View components
--keep class * extends org.mariotaku.twidere.util.view.AppBarChildBehavior.ChildTransformation
+-keep class * extends org.mariotaku.twidere.util.view.AppBarChildBehavior$ChildTransformation
 
 -keepclassmembers class * {
     private <fields>;

@@ -36,3 +36,5 @@ Thumbs.db
 
 # JRE error dumps
 hs_err_*.log
+
+.externalNativeBuild/

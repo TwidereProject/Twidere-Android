@@ -2,7 +2,6 @@ package org.mariotaku.twidere.task
 
 import android.content.Context
 import android.widget.Toast
-import org.apache.commons.collections.primitives.ArrayIntList
 import org.mariotaku.kpreferences.get
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
@@ -76,7 +75,7 @@ class CreateFavoriteTask(context: Context, accountKey: UserKey, private val stat
     }
 
     override fun afterExecute(callback: Any?, result: ParcelableStatus?, exception: MicroBlogException?) {
-        creatingFavoriteIds.removeElement(calculateHashCode(accountKey, statusId))
+        creatingFavoriteIds.remove(calculateHashCode(accountKey, statusId))
         val taskEvent = FavoriteTaskEvent(FavoriteTaskEvent.Action.CREATE, accountKey, statusId)
         taskEvent.isFinished = true
         if (result != null) {
@@ -123,7 +122,7 @@ class CreateFavoriteTask(context: Context, accountKey: UserKey, private val stat
 
     companion object {
 
-        private val creatingFavoriteIds = ArrayIntList()
+        private val creatingFavoriteIds = ArrayList<Int>()
 
         fun isCreatingFavorite(accountKey: UserKey?, statusId: String?): Boolean {
             return creatingFavoriteIds.contains(calculateHashCode(accountKey, statusId))

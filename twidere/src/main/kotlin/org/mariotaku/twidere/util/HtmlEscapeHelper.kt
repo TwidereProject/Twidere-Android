@@ -19,18 +19,23 @@
 
 package org.mariotaku.twidere.util
 
-import org.apache.commons.text.StringEscapeUtils
-import org.apache.commons.text.translate.*
+import org.apache.commons.text.translate.AggregateTranslator
+import org.apache.commons.text.translate.CodePointTranslator
+import org.apache.commons.text.translate.LookupTranslator
+import org.apache.commons.text.translate.NumericEntityUnescaper
 import java.io.IOException
 import java.io.Writer
 
 object HtmlEscapeHelper {
 
+    val ESCAPE_BASIC = LookupTranslator(EntityArrays.BASIC_ESCAPE)
+
     val ESCAPE_HTML = AggregateTranslator(
-            StringEscapeUtils.ESCAPE_HTML4,
+            LookupTranslator(EntityArrays.BASIC_ESCAPE),
+            LookupTranslator(EntityArrays.ISO8859_1_ESCAPE),
+            LookupTranslator(EntityArrays.HTML40_EXTENDED_ESCAPE),
             UnicodeControlCharacterToHtmlTranslator()
     )
-    val ESCAPE_BASIC = LookupTranslator(EntityArrays.BASIC_ESCAPE)
 
     val UNESCAPE_HTML = AggregateTranslator(
             LookupTranslator(EntityArrays.BASIC_UNESCAPE),

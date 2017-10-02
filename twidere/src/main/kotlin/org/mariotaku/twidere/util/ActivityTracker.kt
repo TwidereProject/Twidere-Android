@@ -23,7 +23,6 @@ package org.mariotaku.twidere.util
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
-import org.apache.commons.collections.primitives.ArrayIntList
 import org.mariotaku.twidere.activity.HomeActivity
 
 /**
@@ -31,7 +30,7 @@ import org.mariotaku.twidere.activity.HomeActivity
  */
 class ActivityTracker : Application.ActivityLifecycleCallbacks {
 
-    private val internalStack = ArrayIntList()
+    private val internalStack = ArrayList<Int>()
 
     var isHomeActivityStarted: Boolean = false
         private set
@@ -39,15 +38,15 @@ class ActivityTracker : Application.ActivityLifecycleCallbacks {
         private set
 
     private fun isSwitchingInSameTask(hashCode: Int): Boolean {
-        return internalStack.lastIndexOf(hashCode) < internalStack.size() - 1
+        return internalStack.lastIndexOf(hashCode) < internalStack.size - 1
     }
 
     fun size(): Int {
-        return internalStack.size()
+        return internalStack.size
     }
 
     val isEmpty: Boolean
-        get() = internalStack.isEmpty
+        get() = internalStack.isEmpty()
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
         if (activity is HomeActivity) {
@@ -76,7 +75,7 @@ class ActivityTracker : Application.ActivityLifecycleCallbacks {
             isHomeActivityStarted = false
         }
 
-        internalStack.removeElement(hashCode)
+        internalStack.remove(hashCode)
     }
 
     override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {

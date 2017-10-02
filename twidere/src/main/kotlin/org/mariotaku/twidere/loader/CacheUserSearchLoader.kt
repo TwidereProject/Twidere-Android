@@ -1,11 +1,11 @@
 package org.mariotaku.twidere.loader
 
-import android.annotation.SuppressLint
 import android.content.Context
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.sqliteqb.library.Columns
 import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.twidere.extension.queryReference
 import org.mariotaku.twidere.loader.users.UserSearchLoader
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
@@ -49,18 +49,17 @@ class CacheUserSearchLoader(
                         Expression.likeRaw(Columns.Column(CachedUsers.NAME), "?||'%'", "^"),
                         Expression.inArgs(Columns.Column(CachedUsers.USER_KEY), nicknameKeys.size)))
         val selectionArgs = arrayOf(details.type, queryEscaped, queryEscaped, *nicknameKeys)
-        @SuppressLint("Recycle")
-        val c = context.contentResolver.query(CachedUsers.CONTENT_URI, CachedUsers.BASIC_COLUMNS,
-                selection.sql, selectionArgs, null)!!
-        val i = ObjectCursor.indicesFrom(c, ParcelableUser::class.java)
-        c.moveToFirst()
-        while (!c.isAfterLast) {
-            if (list.none { it.key.toString() == c.getString(i[CachedUsers.USER_KEY]) }) {
-                list.add(i.newObject(c))
+        context.contentResolver.queryReference(CachedUsers.CONTENT_URI, CachedUsers.BASIC_COLUMNS,
+                selection.sql, selectionArgs, null)?.use { (c) ->
+            val i = ObjectCursor.indicesFrom(c, ParcelableUser::class.java)
+            c.moveToFirst()
+            while (!c.isAfterLast) {
+                if (list.none { it.key.toString() == c.getString(i[CachedUsers.USER_KEY]) }) {
+                    list.add(i.newObject(c))
+                }
+                c.moveToNext()
             }
-            c.moveToNext()
         }
-        c.close()
         val collator = Collator.getInstance()
         list.sortWith(Comparator { l, r ->
             val compare = collator.compare(r.name, l.name)

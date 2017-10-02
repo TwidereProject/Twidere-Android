@@ -22,7 +22,6 @@ package org.mariotaku.twidere.task.twitter.message
 import android.accounts.AccountManager
 import android.content.Context
 import org.mariotaku.ktextension.forEachRow
-import org.mariotaku.ktextension.useCursor
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
@@ -37,7 +36,7 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.ExceptionHandlingAbstractTask
 import org.mariotaku.twidere.util.TwidereQueryBuilder
-import org.mariotaku.twidere.util.getUnreadMessagesEntriesCursor
+import org.mariotaku.twidere.util.getUnreadMessagesEntriesCursorReference
 
 /**
  * Created by mariotaku on 2017/2/16.
@@ -60,16 +59,16 @@ class BatchMarkMessageReadTask(
         val unreadWhere = Expression.greaterThan(Columns.Column(Table(Conversations.TABLE_NAME),
                 Conversations.LAST_READ_TIMESTAMP), markTimestampBefore)
         val unreadHaving = Expression.greaterThan(Conversations.UNREAD_COUNT, 0)
-        val cur = cr.getUnreadMessagesEntriesCursor(projection, arrayOf(accountKey),
-                unreadWhere, null, unreadHaving, null) ?: return false
 
+        val cRef = cr.getUnreadMessagesEntriesCursorReference(projection, arrayOf(accountKey),
+                unreadWhere, null, unreadHaving, null) ?: return false
         val account = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?:
                 throw MicroBlogException("No account")
         val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
-        cur.useCursor {
+        cRef.use { (cur) ->
             val indices = ObjectCursor.indicesFrom(cur, ParcelableMessageConversation::class.java)
-            cur.forEachRow { cur, _ ->
-                val conversation = indices.newObject(cur)
+            cur.forEachRow { c, _ ->
+                val conversation = indices.newObject(c)
                 try {
                     val lastReadEvent = MarkMessageReadTask.performMarkRead(context, microBlog,
                             account, conversation) ?: return@forEachRow false

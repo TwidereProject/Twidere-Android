@@ -36,7 +36,6 @@ import android.support.multidex.MultiDex
 import com.bumptech.glide.Glide
 import nl.komponents.kovenant.task
 import okhttp3.Dns
-import org.apache.commons.lang3.concurrent.ConcurrentUtils
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.commons.logansquare.LoganSquareMapperFinder
 import org.mariotaku.kpreferences.KPreferences
@@ -61,6 +60,7 @@ import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.receiver.ConnectivityStateReceiver
 import org.mariotaku.twidere.service.StreamingService
 import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.concurrent.ConstantFuture
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
 import org.mariotaku.twidere.util.dagger.ApplicationModule
 import org.mariotaku.twidere.util.dagger.GeneralComponent
@@ -330,7 +330,7 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
         LoganSquareMapperFinder.setDefaultExecutor(object : LoganSquareMapperFinder.FutureExecutor {
             override fun <T> submit(callable: Callable<T>): Future<T> {
                 if (Looper.getMainLooper().isCurrentThreadCompat) {
-                    return ConcurrentUtils.constantFuture(callable.call())
+                    return ConstantFuture(callable.call())
                 }
                 return executor.submit(callable)
             }

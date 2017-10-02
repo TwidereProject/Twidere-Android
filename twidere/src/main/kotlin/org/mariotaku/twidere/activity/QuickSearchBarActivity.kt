@@ -43,7 +43,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.AdapterView.OnItemSelectedListener
-import jopt.csp.util.SortableIntList
 import kotlinx.android.synthetic.main.activity_quick_search_bar.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.empty
@@ -369,7 +368,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         private val requestManager = activity.requestManager
         private val inflater = LayoutInflater.from(activity)
         private val userColorNameManager = activity.userColorNameManager
-        private val removedPositions = SortableIntList()
+        private val removedPositions = ArrayList<Int>()
 
         private var indices: SuggestionItem.Indices? = null
 
@@ -483,7 +482,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         }
 
         override fun getCount(): Int {
-            return super.getCount() - removedPositions.size()
+            return super.getCount() - removedPositions.size
         }
 
         override fun getItem(position: Int): Any? {
@@ -504,7 +503,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
 
         private fun getActualPosition(position: Int): Int {
             var skipped = 0
-            for (i in 0 until removedPositions.size()) {
+            for (i in 0 until removedPositions.size) {
                 if (position + skipped >= removedPositions.get(i)) {
                     skipped++
                 }

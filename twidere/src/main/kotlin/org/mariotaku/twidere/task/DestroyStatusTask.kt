@@ -60,7 +60,7 @@ class DestroyStatusTask(
     }
 
     override fun afterExecute(callback: Any?, result: ParcelableStatus?, exception: MicroBlogException?) {
-        microBlogWrapper.destroyingStatusIds.removeElement(AsyncTwitterWrapper.calculateHashCode(accountKey, statusId))
+        microBlogWrapper.destroyingStatusIds.remove(AsyncTwitterWrapper.calculateHashCode(accountKey, statusId))
         if (result != null) {
             if (result.retweet_id != null) {
                 Toast.makeText(context, R.string.message_toast_retweet_cancelled, Toast.LENGTH_SHORT).show()

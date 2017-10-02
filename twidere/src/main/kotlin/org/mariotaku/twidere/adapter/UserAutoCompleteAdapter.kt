@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.adapter
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.database.Cursor
@@ -118,10 +117,8 @@ class UserAutoCompleteAdapter(
         val ascending = booleanArrayOf(false, false, true, true)
         val orderBy = OrderBy(order, ascending)
         val uri = Uri.withAppendedPath(CachedUsers.CONTENT_URI_WITH_SCORE, accountKey.toString())
-        @SuppressLint("Recycle")
-        val cursor = context.contentResolver.query(uri, CachedUsers.COLUMNS, usersSelection.sql,
+        return context.contentResolver.query(uri, CachedUsers.COLUMNS, usersSelection.sql,
                 selectionArgs, orderBy.sql)
-        return cursor
     }
 
     override fun swapCursor(cursor: Cursor?): Cursor? {
