@@ -18,10 +18,6 @@ buildscript {
             // should be excluded to avoid conflict
             exclude group: 'xerces'
         }
-
-        // START Non-FOSS component
-        classpath "com.google.gms:google-services:${pluginVersions['PlayServices']}"
-        // END Non-FOSS component
     }
 }
 
@@ -304,7 +300,3 @@ task svgToMipmap(type: SvgDrawableTask) {
 
     outputType = 'mipmap'
 }
-
-// START Non-FOSS component
-apply plugin: 'com.google.gms.google-services'
-// END Non-FOSS component
