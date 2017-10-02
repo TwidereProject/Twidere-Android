@@ -301,34 +301,34 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             this.relationship = relationship
         }
         activity.invalidateOptionsMenu()
-        if (relationship.blocked_by) {
-            pagesErrorContainer.visibility = View.GONE
-            pagesErrorText.text = null
-            pagesContent.visibility = View.VISIBLE
-        } else if (!relationship.following && user.is_protected) {
-            pagesErrorContainer.visibility = View.VISIBLE
-            pagesErrorText.setText(R.string.user_protected_summary)
-            pagesErrorIcon.setImageResource(R.drawable.ic_info_locked)
-            pagesContent.visibility = View.GONE
-        } else {
-            pagesErrorContainer.visibility = View.GONE
-            pagesErrorText.text = null
-            pagesContent.visibility = View.VISIBLE
+        when {
+            relationship.blocked_by -> {
+                pagesErrorContainer.visibility = View.GONE
+                pagesErrorText.text = null
+                pagesContent.visibility = View.VISIBLE
+            }
+            !relationship.following && user.hide_protected_contents -> {
+                pagesErrorContainer.visibility = View.VISIBLE
+                pagesErrorText.setText(R.string.user_protected_summary)
+                pagesErrorIcon.setImageResource(R.drawable.ic_info_locked)
+                pagesContent.visibility = View.GONE
+            }
+            else -> {
+                pagesErrorContainer.visibility = View.GONE
+                pagesErrorText.text = null
+                pagesContent.visibility = View.VISIBLE
+            }
         }
-        if (relationship.blocking) {
-            setFollowEditButton(R.drawable.ic_action_block, R.color.material_red,
+        when {
+            relationship.blocking -> setFollowEditButton(R.drawable.ic_action_block, R.color.material_red,
                     R.string.action_unblock)
-        } else if (relationship.blocked_by) {
-            setFollowEditButton(R.drawable.ic_action_block, R.color.material_grey,
+            relationship.blocked_by -> setFollowEditButton(R.drawable.ic_action_block, R.color.material_grey,
                     R.string.action_block)
-        } else if (relationship.following) {
-            setFollowEditButton(R.drawable.ic_action_confirm, R.color.material_light_blue,
+            relationship.following -> setFollowEditButton(R.drawable.ic_action_confirm, R.color.material_light_blue,
                     R.string.action_unfollow)
-        } else if (user.is_follow_request_sent) {
-            setFollowEditButton(R.drawable.ic_action_time, R.color.material_light_blue,
+            user.is_follow_request_sent -> setFollowEditButton(R.drawable.ic_action_time, R.color.material_light_blue,
                     R.string.label_follow_request_sent)
-        } else {
-            setFollowEditButton(R.drawable.ic_action_add, android.R.color.white,
+            else -> setFollowEditButton(R.drawable.ic_action_add, android.R.color.white,
                     R.string.action_follow)
         }
         followingYouIndicator.visibility = if (relationship.followed_by) View.VISIBLE else View.GONE
@@ -1881,5 +1881,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         private const val TAB_TYPE_STATUSES_WITH_REPLIES = "statuses_with_replies"
         private const val TAB_TYPE_MEDIA = "media"
         private const val TAB_TYPE_FAVORITES = "favorites"
+
+        private val ParcelableUser.hide_protected_contents: Boolean
+            get() = user_type != AccountType.MASTODON && is_protected
     }
 }
