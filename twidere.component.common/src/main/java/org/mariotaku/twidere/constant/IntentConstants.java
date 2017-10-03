@@ -80,6 +80,7 @@ public interface IntentConstants {
     String EXTRA_ACCOUNT_KEY = "account_key";
     String EXTRA_ACCOUNT_HOST = "account_host";
     String EXTRA_ACCOUNT_TYPE = "account_type";
+    String EXTRA_ACCOUNT_TYPES = "account_types";
     String EXTRA_ACCOUNT_KEYS = "account_keys";
     String EXTRA_PAGE = "page";
     String EXTRA_DATA = "data";
