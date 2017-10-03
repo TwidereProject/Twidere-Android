@@ -748,7 +748,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
     }
 
-    override fun onPermissionRequestCancelled(requestCode: Int) {
+    override fun onRequestPermissionCancelled(requestCode: Int) {
         when (requestCode) {
             REQUEST_ATTACH_LOCATION_PERMISSION -> {
             }

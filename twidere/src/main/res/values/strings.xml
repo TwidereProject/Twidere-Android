@@ -106,6 +106,7 @@
     <string name="action_retweet">Retweet</string>
     <!-- [verb] Save settings/files etc. -->
     <string name="action_save">Save</string>
+    <string name="action_save_to">Save to…</string>
     <string name="action_search">Search</string>
     <string name="action_select_all">Select all</string>
     <string name="action_select_none">Select none</string>
@@ -700,6 +701,7 @@
     <string name="message_toast_link_copied_to_clipboard">Link copied to clipboard</string>
     <string name="message_toast_livewp_daydream_enabled_message">Here\'s a little present for you, find it in your system settings :)</string>
     <string name="message_toast_login_verification_failed">Login verification failed</string>
+    <string name="message_toast_media_saved">Media saved</string>
     <!-- Toast message for network errors -->
     <string name="message_toast_network_error">Network error</string>
     <string name="message_toast_network_error_with_message">Network error: <xliff:g id="message">%s</xliff:g></string>
