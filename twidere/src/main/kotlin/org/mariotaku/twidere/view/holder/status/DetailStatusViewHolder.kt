@@ -250,9 +250,14 @@ class DetailStatusViewHolder(
         summaryView.hideIfEmpty()
 
         if (displayEnd != -1 && displayEnd <= text.length) {
-            textView.spannable = text.subSequence(0, displayEnd)
+            val displayText = text.subSequence(0, displayEnd)
+            if (!TextUtils.equals(textView.text, displayText)) {
+                textView.spannable = displayText
+            }
         } else {
-            textView.spannable = text
+            if (!TextUtils.equals(textView.text, text)) {
+                textView.spannable = text
+            }
         }
         textView.hideIfEmpty()
 
