@@ -982,8 +982,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private fun handleReplyIntent(status: ParcelableStatus?): Boolean {
         if (status == null) return false
         val am = AccountManager.get(this)
-        val details = AccountUtils.getAccountDetails(am, status.account_key, false) ?: return false
-        val accountUser = details.user
+        val statusAccount = AccountUtils.getAccountDetails(am, status.account_key,
+                false) ?: return false
+        val accountUser = statusAccount.user
         val mentions = ArrayList<String>()
         val userAcct = status.user_acct
         if (accountUser.key != status.user_key) {
@@ -996,20 +997,26 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         if (status.is_quote && !TextUtils.isEmpty(status.quoted_user_screen_name)) {
             status.quoted_user_acct?.addTo(mentions)
         }
-        if (status.mentions.isNotNullOrEmpty()) {
-            status.mentions.filterNot {
-                it.key == status.account_key || it.screen_name.isNullOrEmpty()
-            }.mapTo(mentions) { it.getAcct(details.key) }
-            mentions.addAll(extractor.extractMentionedScreennames(status.quoted_text_plain))
-        } else if (USER_TYPE_FANFOU_COM == status.account_key.host) {
-            addFanfouHtmlToMentions(status.text_unescaped, status.spans, mentions)
-            if (status.is_quote) {
-                addFanfouHtmlToMentions(status.quoted_text_unescaped, status.quoted_spans, mentions)
+        when (statusAccount.type) {
+            AccountType.FANFOU -> {
+                addFanfouHtmlToMentions(status.text_unescaped, status.spans, mentions)
+                if (status.is_quote) {
+                    addFanfouHtmlToMentions(status.quoted_text_unescaped, status.quoted_spans, mentions)
+                }
             }
-        } else {
-            mentions.addAll(extractor.extractMentionedScreennames(status.text_plain))
-            if (status.is_quote) {
+            AccountType.MASTODON -> {
+                addMastodonMentions(status.text_unescaped, status.spans, mentions)
+            }
+            else -> if (status.mentions.isNotNullOrEmpty()) {
+                status.mentions.filterNot {
+                    it.key == status.account_key || it.screen_name.isNullOrEmpty()
+                }.mapTo(mentions) { it.getAcct(statusAccount.key) }
                 mentions.addAll(extractor.extractMentionedScreennames(status.quoted_text_plain))
+            } else {
+                mentions.addAll(extractor.extractMentionedScreennames(status.text_plain))
+                if (status.is_quote) {
+                    mentions.addAll(extractor.extractMentionedScreennames(status.quoted_text_plain))
+                }
             }
         }
 
@@ -1018,7 +1025,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }.forEach { editText.append("@$it ") }
 
         // For non-Twitter instances, put current user mention at last
-        if (details.type != AccountType.TWITTER && accountUser.key == status.user_key) {
+        if (statusAccount.type != AccountType.TWITTER && accountUser.key == status.user_key) {
             selectionStart = editText.length()
             editText.append("@$userAcct ")
         }
@@ -1036,7 +1043,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         editSummaryEnabled = !editSummary.empty
         statusVisibility = intent.getStringExtra(EXTRA_VISIBILITY) ?: status.extras?.visibility
         possiblySensitive = intent.getBooleanExtra(EXTRA_IS_POSSIBLY_SENSITIVE,
-                details.type == AccountType.MASTODON && status.is_possibly_sensitive)
+                statusAccount.type == AccountType.MASTODON && status.is_possibly_sensitive)
         accountsAdapter.selectedAccountKeys = arrayOf(status.account_key)
         showReplyLabelAndHint(status)
 
@@ -1204,6 +1211,17 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             if (ch == '@' || ch == '\uff20') {
                 mentions.add(text.substring(start, end))
             }
+        }
+    }
+
+    private fun addMastodonMentions(text: String, spans: Array<SpanItem>?, mentions: MutableCollection<String>) {
+        if (spans != null && spans.isNotEmpty()) {
+            spans.filter {
+                if (it.type != SpanItem.SpanType.ACCT_MENTION) return@filter false
+                return@filter true
+            }.mapTo(mentions) { it.link }
+        } else {
+            mentions.addAll(extractor.extractMentionedScreennames(text))
         }
     }
 
