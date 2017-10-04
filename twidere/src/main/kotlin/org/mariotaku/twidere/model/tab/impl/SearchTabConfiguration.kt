@@ -53,7 +53,7 @@ class SearchTabConfiguration : TabConfiguration() {
         val arguments = tab.arguments as TextQueryArguments
         when (extraConf.key) {
             EXTRA_QUERY -> {
-                val query = (extraConf as StringExtraConfiguration).value ?: return false
+                val query = (extraConf as StringExtraConfiguration).value?.takeIf(String::isNotBlank) ?: return false
                 arguments.query = query
             }
         }

@@ -26,6 +26,8 @@ import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.TabAccountFlags
 import org.mariotaku.twidere.fragment.CustomTabsFragment.TabEditorDialogFragment
@@ -137,6 +139,12 @@ abstract class TabConfiguration {
 
         open fun onAccountSelectionChanged(account: AccountDetails?) {
 
+        }
+
+        open fun showRequiredError() {
+            val titleString = title.createString(context)
+            Toast.makeText(context, context.getString(R.string.message_tab_field_is_required,
+                    titleString), Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -455,6 +455,7 @@
     <string name="hint_accounts_dashboard_title">Accounts dashboard</string>
     <string name="hint_conversation_name">Conversation name</string>
     <string name="hint_empty_filters_subscriptions">No subscriptions</string>
+    <string name="hint_error_field_required">Required</string>
     <string name="hint_error_message_no_content">No content</string>
     <string name="hint_message_select_user">Search users</string>
     <string name="hint_no_account">No account</string>

@@ -38,6 +38,10 @@ class StringExtraConfiguration(key: String, title: StringHolder, private val def
         editText.setText(def)
     }
 
+    override fun showRequiredError() {
+        editText.error = context.getString(R.string.hint_error_field_required)
+    }
+
     fun maxLines(maxLines: Int): StringExtraConfiguration {
         this.maxLines = maxLines
         return this
