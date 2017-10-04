@@ -101,7 +101,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             View.inflate(quotedMediaPreview.context, R.layout.layout_card_media_preview,
                     itemView.quotedMediaPreview)
         }
-
     }
 
 
@@ -436,6 +435,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         nameView.updateText(formatter)
         quotedNameView.updateText(formatter)
 
+        // Convert to emojidex.
+        textView.setText(Emojidex.getInstance().emojify(textView.getText()))
     }
 
     private fun displayQuotedMedia(requestManager: RequestManager, status: ParcelableStatus) {

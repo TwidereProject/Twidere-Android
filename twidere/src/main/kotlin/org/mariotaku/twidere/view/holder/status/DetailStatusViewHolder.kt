@@ -38,6 +38,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import com.emojidex.emojidexandroid.Emojidex
 import kotlinx.android.synthetic.main.adapter_item_status_count_label.view.*
 import kotlinx.android.synthetic.main.header_status.view.*
 import org.mariotaku.kpreferences.get
@@ -358,6 +359,9 @@ class DetailStatusViewHolder(
 
         textView.movementMethod = LinkMovementMethod.getInstance()
         itemView.quotedText.movementMethod = null
+
+        // Convert to emojidex.
+        textView.setText(Emojidex.getInstance().emojify(textView.getText()))
     }
 
     override fun onClick(v: View) {
