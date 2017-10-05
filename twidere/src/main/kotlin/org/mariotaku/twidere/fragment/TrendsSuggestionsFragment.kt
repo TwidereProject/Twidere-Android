@@ -29,6 +29,7 @@ import android.support.v4.content.Loader
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ListView
+import com.bumptech.glide.RequestManager
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_listview.*
 import org.mariotaku.kpreferences.get
@@ -71,7 +72,7 @@ class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), L
         showProgress()
     }
 
-    override fun onCreateAdapter(context: Context): TrendsAdapter {
+    override fun onCreateAdapter(context: Context, requestManager: RequestManager): TrendsAdapter {
         return TrendsAdapter(activity)
     }
 

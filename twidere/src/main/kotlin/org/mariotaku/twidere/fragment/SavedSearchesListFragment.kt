@@ -26,6 +26,7 @@ import android.support.v4.app.hasRunningLoadersSafe
 import android.support.v4.content.Loader
 import android.view.View
 import android.widget.AdapterView
+import com.bumptech.glide.RequestManager
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_listview.*
 import org.mariotaku.microblog.library.twitter.model.ResponseList
@@ -69,7 +70,7 @@ class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapte
         bus.register(this)
     }
 
-    override fun onCreateAdapter(context: Context): SavedSearchesAdapter {
+    override fun onCreateAdapter(context: Context, requestManager: RequestManager): SavedSearchesAdapter {
         return SavedSearchesAdapter(activity)
     }
 

@@ -1364,4 +1364,7 @@
     <string name="users_blocked">Blocked these users.</string>
     <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>\'s lists</string>
     <string name="users_statuses">User\'s tweets</string>
+    <string name="label_drafts_all">All</string>
+    <string name="label_drafts_statuses">Tweets</string>
+    <string name="label_drafts_others">Others</string>
 </resources>

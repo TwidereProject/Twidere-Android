@@ -185,6 +185,7 @@ public interface IntentConstants {
     String EXTRA_CLEAR_BUTTON = "clear_button";
     String EXTRA_PATH = "path";
     String EXTRA_ACTION = "action";
+    String EXTRA_ACTIONS = "actions";
     String EXTRA_FLAGS = "flags";
     String EXTRA_INTENT = "intent";
     String EXTRA_BLACKLIST = "blacklist";

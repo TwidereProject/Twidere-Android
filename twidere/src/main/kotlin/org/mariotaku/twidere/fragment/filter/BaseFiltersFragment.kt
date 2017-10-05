@@ -37,6 +37,7 @@ import android.widget.AbsListView
 import android.widget.AbsListView.MultiChoiceModeListener
 import android.widget.ListView
 import android.widget.TextView
+import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.fragment_content_listview.*
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
@@ -87,7 +88,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
         }
         listView.setMultiChoiceModeListener(this)
         loaderManager.initLoader(0, null, this)
-        setRefreshEnabled(false)
+        refreshEnabled = false
         showProgress()
     }
 
@@ -208,7 +209,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onCreateAdapter(context: Context): SimpleCursorAdapter {
+    override fun onCreateAdapter(context: Context, requestManager: RequestManager): SimpleCursorAdapter {
         return FilterListAdapter(context)
     }
 

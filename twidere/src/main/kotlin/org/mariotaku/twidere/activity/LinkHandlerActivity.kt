@@ -51,6 +51,7 @@ import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarShowHi
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.exception.NoAccountException
 import org.mariotaku.twidere.fragment.*
+import org.mariotaku.twidere.fragment.drafts.DraftsFragment
 import org.mariotaku.twidere.fragment.filter.FiltersFragment
 import org.mariotaku.twidere.fragment.filter.FiltersImportBlocksFragment
 import org.mariotaku.twidere.fragment.filter.FiltersImportMutesFragment
@@ -458,12 +459,6 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
             }
             LINK_ID_ACCOUNTS -> {
                 setTitle(R.string.title_accounts)
-            }
-            LINK_ID_DRAFTS -> {
-                setTitle(R.string.title_drafts)
-            }
-            LINK_ID_FILTERS -> {
-                setTitle(R.string.title_filters)
             }
             LINK_ID_MAP -> {
                 setTitle(R.string.action_view_map)

@@ -22,6 +22,7 @@ package org.mariotaku.twidere.fragment.filter
 import android.os.Bundle
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
+import org.mariotaku.twidere.extension.title
 import org.mariotaku.twidere.fragment.AbsToolbarTabPagesFragment
 
 class FiltersFragment : AbsToolbarTabPagesFragment() {
@@ -29,6 +30,7 @@ class FiltersFragment : AbsToolbarTabPagesFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
+        title = getString(R.string.title_filters)
     }
 
     override fun addTabs(adapter: SupportTabsAdapter) {
