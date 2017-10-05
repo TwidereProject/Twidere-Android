@@ -326,8 +326,8 @@ class DraftsListFragment : AbsContentListViewFragment<DraftsAdapter>(), LoaderCa
 
         override fun onPostExecute(result: Unit) {
             val activity = activityRef.get() ?: return
-            (activity as IBaseActivity<*>).executeAfterFragmentResumed { activity ->
-                val fm = activity.supportFragmentManager
+            (activity as IBaseActivity<*>).executeAfterFragmentResumed {
+                val fm = it.supportFragmentManager
                 val f = fm.findFragmentByTag(FRAGMENT_TAG_DELETING_DRAFTS)
                 if (f is DialogFragment) {
                     f.dismiss()
