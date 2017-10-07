@@ -327,24 +327,31 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     public long inserted_date;
 
     @FilterFlags
+    @JsonField(name = "filter_flags")
     @CursorField(Statuses.FILTER_FLAGS)
     public long filter_flags;
 
+    @JsonField(name = "filter_users")
     @CursorField(value = Statuses.FILTER_USERS, converter = FilterUserKeysFieldConverter.class)
     public UserKey[] filter_users;
 
+    @JsonField(name = "filter_sources")
     @CursorField(value = Statuses.FILTER_SOURCES, converter = FilterStringsFieldConverter.class)
     public String[] filter_sources;
 
+    @JsonField(name = "filter_links")
     @CursorField(value = Statuses.FILTER_LINKS, converter = FilterStringsFieldConverter.class)
     public String[] filter_links;
 
+    @JsonField(name = "filter_names")
     @CursorField(value = Statuses.FILTER_NAMES, converter = FilterStringsFieldConverter.class)
     public String[] filter_names;
 
+    @JsonField(name = "filter_texts")
     @CursorField(value = Statuses.FILTER_TEXTS)
     public String filter_texts;
 
+    @JsonField(name = "filter_descriptions")
     @CursorField(value = Statuses.FILTER_DESCRIPTIONS)
     public String filter_descriptions;
 
