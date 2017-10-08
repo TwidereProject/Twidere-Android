@@ -33,29 +33,11 @@ import org.mariotaku.twidere.fragment.ParcelableStatusesFragment
 import org.mariotaku.twidere.loader.statuses.GroupTimelineLoader
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.util.Utils
-import java.util.*
 
 /**
  * Created by mariotaku on 14/12/2.
  */
 class GroupTimelineFragment : ParcelableStatusesFragment() {
-    override val savedStatusesFileArgs: Array<String>?
-        get() {
-            val accountKey = Utils.getAccountKey(context, arguments)!!
-            val groupId = arguments.getString(EXTRA_GROUP_ID)
-            val groupName = arguments.getString(EXTRA_GROUP_NAME)
-            val result = ArrayList<String>()
-            result.add(AUTHORITY_GROUP_TIMELINE)
-            result.add("account=$accountKey")
-            if (groupId != null) {
-                result.add("group_id=$groupId")
-            } else if (groupName != null) {
-                result.add("group_name=$groupName")
-            } else {
-                return null
-            }
-            return result.toTypedArray()
-        }
 
     override val readPositionTagWithArguments: String?
         get() {
@@ -106,10 +88,9 @@ class GroupTimelineFragment : ParcelableStatusesFragment() {
         val accountKey = Utils.getAccountKey(context, args)
         val groupId = args.getString(EXTRA_GROUP_ID)
         val groupName = args.getString(EXTRA_GROUP_NAME)
-        val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
         return GroupTimelineLoader(activity, accountKey, groupId, groupName, adapterData,
-                savedStatusesFileArgs, tabPosition, fromUser, loadingMore)
+                fromUser, loadingMore)
     }
 
 }

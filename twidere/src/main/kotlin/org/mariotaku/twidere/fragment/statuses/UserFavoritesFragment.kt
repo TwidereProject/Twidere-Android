@@ -19,62 +19,42 @@
 
 package org.mariotaku.twidere.fragment.statuses
 
-import android.content.Context
 import android.os.Bundle
-import android.support.v4.content.Loader
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.TwidereConstants.EXTRA_USER_KEY
+import org.mariotaku.twidere.annotation.FilterScope
+import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
 import org.mariotaku.twidere.extension.linkHandlerTitle
-import org.mariotaku.twidere.fragment.ParcelableStatusesFragment
-import org.mariotaku.twidere.loader.statuses.UserFavoritesLoader
-import org.mariotaku.twidere.model.ParcelableStatus
+import org.mariotaku.twidere.extension.withAppendedPath
+import org.mariotaku.twidere.fragment.CursorStatusesFragment
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FavoriteTaskEvent
-import org.mariotaku.twidere.util.Utils
-import java.util.*
+import org.mariotaku.twidere.model.refresh.RefreshTaskParam
+import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
+import org.mariotaku.twidere.util.ErrorInfoStore
 
 /**
  * Created by mariotaku on 14/12/2.
  */
-class UserFavoritesFragment : ParcelableStatusesFragment() {
+class UserFavoritesFragment : CursorStatusesFragment() {
 
-    override val savedStatusesFileArgs: Array<String>?
-        get() {
-            val accountKey = Utils.getAccountKey(context, arguments)
-            val userKey = arguments.getParcelable<UserKey>(EXTRA_USER_KEY)
-            val screenName = arguments.getString(EXTRA_SCREEN_NAME)
-            val result = ArrayList<String>()
-            result.add(AUTHORITY_USER_FAVORITES)
-            result.add("account=$accountKey")
-            if (userKey != null) {
-                result.add("user_id=$userKey")
-            } else if (screenName != null) {
-                result.add("screen_name=$screenName")
-            } else {
-                return null
-            }
-            return result.toTypedArray()
-        }
+    override val errorInfoKey = ErrorInfoStore.KEY_PUBLIC_TIMELINE
 
-    override val readPositionTagWithArguments: String?
-        get() {
-            val tabPosition = arguments.getInt(EXTRA_TAB_POSITION, -1)
-            val sb = StringBuilder("user_favorites_")
-            if (tabPosition < 0) return null
+    override val contentUri = Statuses.Favorites.CONTENT_URI.withAppendedPath(tabId)
 
-            val userKey = arguments.getParcelable<UserKey>(EXTRA_USER_KEY)
-            val screenName = arguments.getString(EXTRA_SCREEN_NAME)
-            if (userKey != null) {
-                sb.append(userKey)
-            } else if (screenName != null) {
-                sb.append(screenName)
-            } else {
-                return null
-            }
-            return sb.toString()
-        }
+    override val notificationType = 0
+
+    override val isFilterEnabled = true
+
+    override val readPositionTag = ReadPositionTag.PUBLIC_TIMELINE
+
+    override val timelineSyncTag: String?
+        get() = PublicTimelineFragment.getTimelineSyncTag(accountKeys)
+
+    override val filterScopes: Int
+        get() = FilterScope.PUBLIC_TIMELINE
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -85,31 +65,32 @@ class UserFavoritesFragment : ParcelableStatusesFragment() {
         }
     }
 
-    override fun onCreateStatusesLoader(context: Context, args: Bundle, fromUser: Boolean):
-            Loader<List<ParcelableStatus>?> {
-        refreshing = true
-        val accountKey = Utils.getAccountKey(context, args)
-        val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
-        val screenName = args.getString(EXTRA_SCREEN_NAME)
-        val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
-        val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-        return UserFavoritesLoader(context, accountKey, userKey, screenName, adapterData,
-                savedStatusesFileArgs, tabPosition, fromUser, loadingMore)
+    override fun updateRefreshState() {
+        val twitter = twitterWrapper
+        refreshing = twitter.isStatusTimelineRefreshing(contentUri)
     }
 
-    override fun notifyFavoriteTask(event: FavoriteTaskEvent) {
+
+    override fun getStatuses(param: RefreshTaskParam): Boolean {
+//        val task = GetUserFavoritesTask(context)
+//        task.params = param
+//        TaskStarter.execute(task)
+        return true
+    }
+
+     fun notifyFavoriteTask(event: FavoriteTaskEvent) {
         if (event.action == FavoriteTaskEvent.Action.DESTROY && event.isSucceeded) {
             event.status?.let { status ->
                 val args = arguments!!
                 val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
                 if (status.account_key == userKey) {
-                    removeStatus(event.statusId)
+//                    removeStatus(event.statusId)
                     triggerRefresh()
                     return
                 }
             }
         }
-        super.notifyFavoriteTask(event)
+//        super.notifyFavoriteTask(event)
     }
 
 }

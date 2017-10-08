@@ -44,10 +44,10 @@ import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.loader.ExtendedObjectCursorLoader
 import org.mariotaku.twidere.model.ParameterizedExpression
 import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.RefreshTaskParam
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.*
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
+import org.mariotaku.twidere.model.refresh.RefreshTaskParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.statuses.GetStatusesTask
@@ -55,10 +55,7 @@ import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.ErrorInfoStore
 import org.mariotaku.twidere.util.Utils
 
-/**
- * Created by mariotaku on 14/12/3.
- */
-abstract class CursorStatusesFragment : AbsStatusesFragment() {
+abstract class CursorStatusesFragment: AbsStatusesFragment() {
 
     override var refreshing: Boolean
         get() = swipeLayout.isRefreshing
@@ -120,11 +117,10 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
         val accountKeys = this.accountKeys
         val accountWhere = Expression.inArgs(Column(Statuses.ACCOUNT_KEY), accountKeys.size)
         val filterWhere = getFiltersWhere(table)
-        val where: Expression
-        if (filterWhere != null) {
-            where = Expression.and(accountWhere, filterWhere)
+        val where = if (filterWhere != null) {
+            Expression.and(accountWhere, filterWhere)
         } else {
-            where = accountWhere
+            accountWhere
         }
         adapter.showAccountsColor = accountKeys.size > 1
         val projection = statusColumnsLite

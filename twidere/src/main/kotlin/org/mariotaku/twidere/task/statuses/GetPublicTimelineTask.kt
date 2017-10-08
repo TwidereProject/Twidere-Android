@@ -30,6 +30,7 @@ import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.fragment.statuses.PublicTimelineFragment
 import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.refresh.RefreshTaskParam
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.ErrorInfoStore
@@ -38,7 +39,7 @@ import org.mariotaku.twidere.util.sync.TimelineSyncManager
 /**
  * Created by mariotaku on 16/2/11.
  */
-class GetPublicTimelineTask(context: Context) : GetStatusesTask(context) {
+class GetPublicTimelineTask(context: Context) : GetStatusesTask<RefreshTaskParam>(context) {
 
     override val contentUri: Uri = Statuses.Public.CONTENT_URI
 
@@ -46,19 +47,19 @@ class GetPublicTimelineTask(context: Context) : GetStatusesTask(context) {
 
     override val errorInfoKey: String = ErrorInfoStore.KEY_PUBLIC_TIMELINE
 
-    override fun getTwitterStatuses(account: AccountDetails, twitter: MicroBlog, paging: Paging): List<Status> {
+    override fun getTwitterStatuses(account: AccountDetails, twitter: MicroBlog, paging: Paging, params: RefreshTaskParam?): List<Status> {
         return twitter.getPublicTimeline(paging)
     }
 
-    override fun getStatusNetStatuses(account: AccountDetails, statusNet: MicroBlog, paging: Paging): List<Status> {
+    override fun getStatusNetStatuses(account: AccountDetails, statusNet: MicroBlog, paging: Paging, params: RefreshTaskParam?): List<Status> {
         return statusNet.getPublicTimeline(paging)
     }
 
-    override fun getFanfouStatuses(account: AccountDetails, fanfou: MicroBlog, paging: Paging): List<Status> {
+    override fun getFanfouStatuses(account: AccountDetails, fanfou: MicroBlog, paging: Paging, params: RefreshTaskParam?): List<Status> {
         return fanfou.getPublicTimeline(paging)
     }
 
-    override fun getMastodonStatuses(account: AccountDetails, mastodon: Mastodon, paging: Paging): List<MastodonStatus> {
+    override fun getMastodonStatuses(account: AccountDetails, mastodon: Mastodon, paging: Paging, params: RefreshTaskParam?): List<MastodonStatus> {
         return mastodon.getPublicTimeline(paging, true)
     }
 

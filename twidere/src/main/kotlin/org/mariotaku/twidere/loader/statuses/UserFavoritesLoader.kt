@@ -35,21 +35,17 @@ import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.PaginatedList
+import org.mariotaku.twidere.model.refresh.UserRelatedRefreshTaskParam
 import org.mariotaku.twidere.util.database.ContentFiltersUtils
 
 class UserFavoritesLoader(
         context: Context,
-        accountKey: UserKey?,
-        private val userKey: UserKey?,
-        private val screenName: String?,
+        private val refreshParam: UserRelatedRefreshTaskParam?,
         data: List<ParcelableStatus>?,
-        savedStatusesArgs: Array<String>?,
-        tabPosition: Int,
         fromUser: Boolean,
         loadingMore: Boolean
-) : AbsRequestStatusesLoader(context, accountKey, data, savedStatusesArgs, tabPosition, fromUser, loadingMore) {
+) : AbsRequestStatusesLoader(context, refreshParam?.accountKeys?.singleOrNull(), data, fromUser, loadingMore) {
 
     @Throws(MicroBlogException::class)
     override fun getStatuses(account: AccountDetails, paging: Paging): PaginatedList<ParcelableStatus> {
@@ -71,19 +67,15 @@ class UserFavoritesLoader(
 
     private fun getMicroBlogStatuses(account: AccountDetails, paging: Paging): ResponseList<Status> {
         val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
-        if (userKey != null) {
-            return microBlog.getFavorites(userKey.id, paging)
-        } else if (screenName != null) {
-            return microBlog.getFavoritesByScreenName(screenName, paging)
+        return when {
+            refreshParam?.userKey != null -> microBlog.getFavorites(refreshParam.userKey.id, paging)
+            refreshParam?.userScreenName != null -> microBlog.getFavoritesByScreenName(refreshParam.userScreenName, paging)
+            else -> throw MicroBlogException("Null user")
         }
-        throw MicroBlogException("Null user")
     }
 
     private fun getMastodonStatuses(account: AccountDetails, paging: Paging): PaginatedList<ParcelableStatus> {
-        if (userKey != null && userKey != account.key) {
-            throw MicroBlogException("Only current account favorites is supported")
-        }
-        if (screenName != null && !screenName.equals(account.user?.screen_name, ignoreCase = true)) {
+        if (refreshParam?.userKey != account.key) {
             throw MicroBlogException("Only current account favorites is supported")
         }
         val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)

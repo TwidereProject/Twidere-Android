@@ -61,6 +61,8 @@ import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.analyzer.Share
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
+import org.mariotaku.twidere.model.refresh.BaseRefreshTaskParam
+import org.mariotaku.twidere.model.refresh.RefreshTaskParam
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.util.*

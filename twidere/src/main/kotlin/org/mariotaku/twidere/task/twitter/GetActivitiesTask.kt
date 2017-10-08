@@ -20,7 +20,7 @@ import org.mariotaku.twidere.extension.model.getMaxSortId
 import org.mariotaku.twidere.extension.model.getSinceId
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableActivity
-import org.mariotaku.twidere.model.RefreshTaskParam
+import org.mariotaku.twidere.model.refresh.RefreshTaskParam
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.GetActivitiesTaskEvent
 import org.mariotaku.twidere.model.task.GetTimelineResult

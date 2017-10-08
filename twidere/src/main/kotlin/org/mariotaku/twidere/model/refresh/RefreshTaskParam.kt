@@ -17,15 +17,30 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.extension
+package org.mariotaku.twidere.model.refresh
 
-import android.net.Uri
+import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.pagination.Pagination
+import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 
-fun Uri.withAppendedPath(path: String): Uri = Uri.withAppendedPath(this, path)
+/**
+ * Created by mariotaku on 16/2/14.
+ */
+interface RefreshTaskParam {
+    val accountKeys: Array<UserKey>
 
-fun Uri.withAppendedPath(path: Long): Uri = this.withAppendedPath(path.toString())
+    val pagination: Array<out Pagination?>? get() = null
 
-fun Uri.Builder.appendQueryParameterIgnoreNull(key: String, value: String?) {
-    if (value == null) return
-    appendQueryParameter(key, value)
+    val extraId: Long get() = -1
+
+    val tabId: Long get() = -1
+
+    val isLoadingMore: Boolean get() = false
+
+    val shouldAbort: Boolean get() = false
+
+    val isBackground: Boolean get() = false
+
+    val hasMaxIds: Boolean
+        get() = pagination?.any { (it as? SinceMaxPagination)?.maxId != null } ?: false
 }

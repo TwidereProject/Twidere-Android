@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.extension.model
 
-import org.mariotaku.twidere.model.RefreshTaskParam
+import org.mariotaku.twidere.model.refresh.RefreshTaskParam
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 
 fun RefreshTaskParam.getMaxId(index: Int): String? {

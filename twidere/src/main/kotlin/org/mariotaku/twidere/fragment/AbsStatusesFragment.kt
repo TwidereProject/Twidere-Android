@@ -54,10 +54,15 @@ import org.mariotaku.twidere.fragment.status.FavoriteConfirmDialogFragment
 import org.mariotaku.twidere.fragment.status.RetweetQuoteDialogFragment
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
-import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.model.ObjectId
+import org.mariotaku.twidere.model.ParcelableMedia
+import org.mariotaku.twidere.model.ParcelableStatus
+import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.analyzer.Share
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
+import org.mariotaku.twidere.model.refresh.BaseRefreshTaskParam
+import org.mariotaku.twidere.model.refresh.RefreshTaskParam
 import org.mariotaku.twidere.model.timeline.TimelineFilter
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses

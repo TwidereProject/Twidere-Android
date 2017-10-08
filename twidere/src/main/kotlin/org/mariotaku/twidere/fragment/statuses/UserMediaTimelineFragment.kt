@@ -30,9 +30,6 @@ import org.mariotaku.twidere.loader.statuses.MediaTimelineLoader
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 
-/**
- * Created by mariotaku on 14/11/5.
- */
 class UserMediaTimelineFragment : AbsMediaStatusesFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -45,10 +42,9 @@ class UserMediaTimelineFragment : AbsMediaStatusesFragment() {
         val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
         val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
         val screenName = args.getString(EXTRA_SCREEN_NAME)
-        val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
         return MediaTimelineLoader(context, accountKey, userKey, screenName, adapter.getData(),
-                null, tabPosition, fromUser, loadingMore)
+                fromUser, loadingMore)
     }
 
 

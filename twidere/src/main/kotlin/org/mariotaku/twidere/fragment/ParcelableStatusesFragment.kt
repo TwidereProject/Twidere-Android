@@ -34,9 +34,7 @@ import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.extension.model.getMaxId
 import org.mariotaku.twidere.loader.iface.IPaginationLoader
 import org.mariotaku.twidere.loader.statuses.AbsRequestStatusesLoader
-import org.mariotaku.twidere.model.BaseRefreshTaskParam
 import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.RefreshTaskParam
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.event.StatusDestroyedEvent
@@ -44,6 +42,8 @@ import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.model.event.StatusRetweetedEvent
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
+import org.mariotaku.twidere.model.refresh.BaseRefreshTaskParam
+import org.mariotaku.twidere.model.refresh.RefreshTaskParam
 import org.mariotaku.twidere.util.Utils
 import java.util.*
 
@@ -60,9 +60,6 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         set(value) {
             super.refreshing = value
         }
-
-    protected open val savedStatusesFileArgs: Array<String>?
-        get() = null
 
 
     override val accountKeys: Array<UserKey>

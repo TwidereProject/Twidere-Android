@@ -38,6 +38,7 @@ import org.mariotaku.twidere.extension.queryCount
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.notification.NotificationChannelSpec
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
+import org.mariotaku.twidere.model.refresh.RefreshTaskParam
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask

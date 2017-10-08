@@ -49,11 +49,9 @@ class MediaTimelineLoader(
         private val userKey: UserKey?,
         private val screenName: String?,
         data: List<ParcelableStatus>?,
-        savedStatusesArgs: Array<String>?,
-        tabPosition: Int,
         fromUser: Boolean,
         loadingMore: Boolean
-) : AbsRequestStatusesLoader(context, accountKey, data, savedStatusesArgs, tabPosition, fromUser, loadingMore) {
+) : AbsRequestStatusesLoader(context, accountKey, data, fromUser, loadingMore) {
 
     private var user: User? = null
 

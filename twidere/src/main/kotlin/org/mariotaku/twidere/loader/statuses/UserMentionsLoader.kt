@@ -31,14 +31,12 @@ class UserMentionsLoader(
         accountKey: UserKey?,
         screenName: String,
         data: List<ParcelableStatus>?,
-        savedStatusesArgs: Array<String>?,
-        tabPosition: Int,
         fromUser: Boolean,
         makeGap: Boolean,
         local: Boolean,
         loadingMore: Boolean
-) : TweetSearchLoader(context, accountKey, screenName, data, savedStatusesArgs, tabPosition,
-        fromUser, makeGap, local, loadingMore) {
+) : TweetSearchLoader(context, accountKey, screenName, data, fromUser, makeGap,
+        local, loadingMore) {
 
     override fun processQuery(details: AccountDetails, query: String): String {
         val screenName = query.substringAfter("@")

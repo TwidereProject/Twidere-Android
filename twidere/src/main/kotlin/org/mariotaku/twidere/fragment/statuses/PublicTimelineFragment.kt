@@ -29,8 +29,8 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_EXTRAS
 import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.fragment.CursorStatusesFragment
 import org.mariotaku.twidere.model.ParameterizedExpression
-import org.mariotaku.twidere.model.RefreshTaskParam
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.refresh.RefreshTaskParam
 import org.mariotaku.twidere.model.tab.extra.HomeTabExtras
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.statuses.GetPublicTimelineTask

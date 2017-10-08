@@ -17,15 +17,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.extension
+package org.mariotaku.twidere.exception
 
-import android.net.Uri
+import org.mariotaku.microblog.library.MicroBlogException
 
-fun Uri.withAppendedPath(path: String): Uri = Uri.withAppendedPath(this, path)
 
-fun Uri.withAppendedPath(path: Long): Uri = this.withAppendedPath(path.toString())
-
-fun Uri.Builder.appendQueryParameterIgnoreNull(key: String, value: String?) {
-    if (value == null) return
-    appendQueryParameter(key, value)
-}
+class RequiredFieldNotFoundException(vararg val fields: String) : MicroBlogException("Field ${fields.joinToString(" and ")} required")

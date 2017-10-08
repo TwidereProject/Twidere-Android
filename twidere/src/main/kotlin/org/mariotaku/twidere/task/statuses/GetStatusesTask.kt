@@ -47,8 +47,12 @@ import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.applyLoadLimit
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
-import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.ParcelableStatus
+import org.mariotaku.twidere.model.ParcelableUser
+import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.GetStatusesTaskEvent
+import org.mariotaku.twidere.model.refresh.RefreshTaskParam
 import org.mariotaku.twidere.model.task.GetTimelineResult
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns
@@ -66,9 +70,9 @@ import org.mariotaku.twidere.util.sync.TimelineSyncManager
 /**
  * Created by mariotaku on 16/1/2.
  */
-abstract class GetStatusesTask(
+abstract class GetStatusesTask<P : RefreshTaskParam>(
         context: Context
-) : BaseAbstractTask<RefreshTaskParam, List<Pair<GetTimelineResult<ParcelableStatus>?, Exception?>>,
+) : BaseAbstractTask<P, List<Pair<GetTimelineResult<ParcelableStatus>?, Exception?>>,
         (Boolean) -> Unit>(context) {
 
     private val profileImageSize = context.getString(R.string.profile_image_size)
@@ -80,7 +84,7 @@ abstract class GetStatusesTask(
 
     protected abstract val errorInfoKey: String
 
-    override fun doLongOperation(param: RefreshTaskParam): List<Pair<GetTimelineResult<ParcelableStatus>?, Exception?>> {
+    override fun doLongOperation(param: P): List<Pair<GetTimelineResult<ParcelableStatus>?, Exception?>> {
         if (param.shouldAbort) return emptyList()
         val accountKeys = param.accountKeys.takeIf { it.isNotEmpty() } ?: return emptyList()
         val loadItemLimit = preferences[loadItemLimitKey]
@@ -111,7 +115,7 @@ abstract class GetStatusesTask(
                     }
                 }
                 val timelineResult = getStatuses(account, paging)
-                val storeResult = storeStatus(account, timelineResult.data, sinceId, maxId,
+                val storeResult = storeStatus(account, timelineResult.data, param, sinceId, maxId,
                         sinceSortId, maxSortId, loadItemLimit, false)
                 // TODO cache related data and preload
                 errorInfoStore.remove(errorInfoKey, accountKey.id)
@@ -158,7 +162,7 @@ abstract class GetStatusesTask(
         when (account.type) {
             AccountType.TWITTER -> {
                 val twitter = account.newMicroBlogInstance(context, MicroBlog::class.java)
-                val timeline = getTwitterStatuses(account, twitter, paging)
+                val timeline = getTwitterStatuses(account, twitter, paging, params)
                 val statuses = timeline.map {
                     it.toParcelable(account, profileImageSize)
                 }
@@ -169,7 +173,7 @@ abstract class GetStatusesTask(
             }
             AccountType.STATUSNET -> {
                 val statusnet = account.newMicroBlogInstance(context, MicroBlog::class.java)
-                val timeline = getStatusNetStatuses(account, statusnet, paging)
+                val timeline = getStatusNetStatuses(account, statusnet, paging, params)
                 val statuses = timeline.map {
                     it.toParcelable(account, profileImageSize)
                 }
@@ -180,7 +184,7 @@ abstract class GetStatusesTask(
             }
             AccountType.FANFOU -> {
                 val fanfou = account.newMicroBlogInstance(context, MicroBlog::class.java)
-                val timeline = getFanfouStatuses(account, fanfou, paging)
+                val timeline = getFanfouStatuses(account, fanfou, paging, params)
                 val statuses = timeline.map {
                     it.toParcelable(account, profileImageSize)
                 }
@@ -191,7 +195,7 @@ abstract class GetStatusesTask(
             }
             AccountType.MASTODON -> {
                 val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
-                val timeline = getMastodonStatuses(account, mastodon, paging)
+                val timeline = getMastodonStatuses(account, mastodon, paging, params)
                 return GetTimelineResult(account, timeline.map {
                     it.toParcelable(account)
                 }, timeline.flatMap { status ->
@@ -206,10 +210,10 @@ abstract class GetStatusesTask(
         }
     }
 
-    protected abstract fun getTwitterStatuses(account: AccountDetails, twitter: MicroBlog, paging: Paging): List<Status>
-    protected abstract fun getStatusNetStatuses(account: AccountDetails, statusNet: MicroBlog, paging: Paging): List<Status>
-    protected abstract fun getFanfouStatuses(account: AccountDetails, fanfou: MicroBlog, paging: Paging): List<Status>
-    protected abstract fun getMastodonStatuses(account: AccountDetails, mastodon: Mastodon, paging: Paging): List<MastodonStatus>
+    protected abstract fun getTwitterStatuses(account: AccountDetails, twitter: MicroBlog, paging: Paging, params: P?): List<Status>
+    protected abstract fun getStatusNetStatuses(account: AccountDetails, statusNet: MicroBlog, paging: Paging, params: P?): List<Status>
+    protected abstract fun getFanfouStatuses(account: AccountDetails, fanfou: MicroBlog, paging: Paging, params: P?): List<Status>
+    protected abstract fun getMastodonStatuses(account: AccountDetails, mastodon: Mastodon, paging: Paging, params: P?): List<MastodonStatus>
 
     protected abstract fun syncFetchReadPosition(manager: TimelineSyncManager, accountKeys: Array<UserKey>)
 
@@ -226,7 +230,7 @@ abstract class GetStatusesTask(
     }
 
     private fun storeStatus(account: AccountDetails, statuses: List<ParcelableStatus>,
-            sinceId: String?, maxId: String?, sinceSortId: Long, maxSortId: Long,
+            param: P, sinceId: String?, maxId: String?, sinceSortId: Long, maxSortId: Long,
             loadItemLimit: Int, notify: Boolean): Int {
         val accountKey = account.key
         val uri = contentUri
@@ -248,6 +252,7 @@ abstract class GetStatusesTask(
             statuses.forEachIndexed { i, status ->
                 status.position_key = getPositionKey(status.timestamp, status.sort_id, lastSortId,
                         sortDiff, i, statuses.size)
+                status.tab_id = param.tabId
                 mediaPreloader.preloadStatus(status)
                 values[i] = creator.create(status)
                 if (minIdx == -1 || status < statuses[minIdx]) {

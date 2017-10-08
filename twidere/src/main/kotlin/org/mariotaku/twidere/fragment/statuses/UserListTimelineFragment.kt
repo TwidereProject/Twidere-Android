@@ -23,7 +23,6 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.content.Loader
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.fragment.ParcelableStatusesFragment
@@ -31,37 +30,11 @@ import org.mariotaku.twidere.loader.statuses.UserListTimelineLoader
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.Utils
-import java.util.*
 
 /**
  * Created by mariotaku on 14/12/2.
  */
 class UserListTimelineFragment : ParcelableStatusesFragment() {
-
-    override val savedStatusesFileArgs: Array<String>?
-        get() {
-            val accountKey = Utils.getAccountKey(context, arguments)
-            val listId = arguments.getString(EXTRA_LIST_ID)
-            val userKey = arguments.getParcelable<UserKey?>(EXTRA_USER_KEY)
-            val screenName = arguments.getString(EXTRA_SCREEN_NAME)
-            val listName = arguments.getString(EXTRA_LIST_NAME)
-            val result = ArrayList<String>()
-            result.add(TwidereConstants.AUTHORITY_USER_LIST_TIMELINE)
-            result.add("account=$accountKey")
-            if (listId != null) {
-                result.add("list_id=$listId")
-            } else if (listName != null) {
-                if (userKey != null) {
-                    result.add("user_id=$userKey")
-                } else if (screenName != null) {
-                    result.add("screen_name=$screenName")
-                }
-                return null
-            } else {
-                return null
-            }
-            return result.toTypedArray()
-        }
 
     override val readPositionTagWithArguments: String?
         get() {
@@ -103,10 +76,9 @@ class UserListTimelineFragment : ParcelableStatusesFragment() {
         val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
         val listName = args.getString(EXTRA_LIST_NAME)
         val screenName = args.getString(EXTRA_SCREEN_NAME)
-        val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
         return UserListTimelineLoader(activity, accountKey, listId, userKey, screenName, listName,
-                adapterData, savedStatusesFileArgs, tabPosition, fromUser, loadingMore)
+                adapterData, fromUser, loadingMore)
     }
 
 }

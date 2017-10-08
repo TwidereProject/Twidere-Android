@@ -17,15 +17,22 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.extension
+package org.mariotaku.twidere.model.refresh
 
-import android.net.Uri
+import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.pagination.Pagination
 
-fun Uri.withAppendedPath(path: String): Uri = Uri.withAppendedPath(this, path)
+/**
+ * Created by mariotaku on 16/2/11.
+ */
+open class BaseRefreshTaskParam(
+        override val accountKeys: Array<UserKey>,
+        override val pagination: Array<out Pagination?>?
+) : RefreshTaskParam {
 
-fun Uri.withAppendedPath(path: Long): Uri = this.withAppendedPath(path.toString())
+    override var extraId: Long = -1L
+    override var tabId: Long = -1L
+    override var isLoadingMore: Boolean = false
+    override var shouldAbort: Boolean = false
 
-fun Uri.Builder.appendQueryParameterIgnoreNull(key: String, value: String?) {
-    if (value == null) return
-    appendQueryParameter(key, value)
 }

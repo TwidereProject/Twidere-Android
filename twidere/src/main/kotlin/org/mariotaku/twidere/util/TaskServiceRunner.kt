@@ -15,16 +15,16 @@ import org.mariotaku.twidere.constant.IntentConstants.INTENT_PACKAGE_PREFIX
 import org.mariotaku.twidere.constant.dataSyncProviderInfoKey
 import org.mariotaku.twidere.constant.stopAutoRefreshWhenBatteryLowKey
 import org.mariotaku.twidere.model.AccountPreferences
-import org.mariotaku.twidere.model.RefreshTaskParam
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
+import org.mariotaku.twidere.model.refresh.RefreshTaskParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.filter.RefreshFiltersSubscriptionsTask
 import org.mariotaku.twidere.task.filter.RefreshLaunchPresentationsTask
-import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
 import org.mariotaku.twidere.task.statuses.GetHomeTimelineTask
+import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
 
 /**

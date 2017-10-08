@@ -44,6 +44,7 @@ import org.mariotaku.twidere.loader.ExtendedObjectCursorLoader
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.event.*
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
+import org.mariotaku.twidere.model.refresh.RefreshTaskParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.task.statuses.GetStatusesTask

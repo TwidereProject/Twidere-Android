@@ -43,11 +43,9 @@ class UserListTimelineLoader(
         private val screenName: String?,
         private val listName: String?,
         adapterData: List<ParcelableStatus>?,
-        savedStatusesArgs: Array<String>?,
-        tabPosition: Int,
         fromUser: Boolean,
         loadingMore: Boolean
-) : AbsRequestStatusesLoader(context, accountKey, adapterData, savedStatusesArgs, tabPosition, fromUser, loadingMore) {
+) : AbsRequestStatusesLoader(context, accountKey, adapterData, fromUser, loadingMore) {
 
     @Throws(MicroBlogException::class)
     override fun getStatuses(account: AccountDetails, paging: Paging): PaginatedList<ParcelableStatus> {

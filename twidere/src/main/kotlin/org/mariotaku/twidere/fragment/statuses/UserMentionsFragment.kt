@@ -28,21 +28,8 @@ import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.loader.statuses.UserMentionsLoader
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.util.Utils
-import java.util.*
 
 class UserMentionsFragment : StatusesSearchFragment() {
-
-    override val savedStatusesFileArgs: Array<String>?
-        get() {
-            val accountKey = Utils.getAccountKey(context, arguments)
-            val screenName = arguments.getString(EXTRA_SCREEN_NAME)
-            val result = ArrayList<String>()
-            result.add(AUTHORITY_USER_MENTIONS)
-            result.add("account=$accountKey")
-            result.add("screen_name=$screenName")
-            return result.toTypedArray()
-        }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -54,11 +41,10 @@ class UserMentionsFragment : StatusesSearchFragment() {
             fromUser: Boolean): Loader<List<ParcelableStatus>?> {
         val screenName = args.getString(EXTRA_SCREEN_NAME)
         val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
-        val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
         val makeGap = args.getBoolean(EXTRA_MAKE_GAP, true)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
         return UserMentionsLoader(activity, accountKey, screenName, adapterData,
-                savedStatusesFileArgs, tabPosition, fromUser, makeGap, false, loadingMore)
+                fromUser, makeGap, false, loadingMore)
     }
 
 }

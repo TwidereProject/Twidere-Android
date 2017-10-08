@@ -43,7 +43,6 @@ import org.mariotaku.twidere.model.timeline.TimelineFilter
 import org.mariotaku.twidere.model.timeline.UserTimelineFilter
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.view.holder.TimelineFilterHeaderViewHolder
-import java.util.*
 
 /**
  * User timeline
@@ -51,32 +50,6 @@ import java.util.*
  * Created by mariotaku on 14/12/2.
  */
 class UserTimelineFragment : ParcelableStatusesFragment() {
-
-    override val savedStatusesFileArgs: Array<String>?
-        get() {
-            val accountKey = Utils.getAccountKey(context, arguments)
-            val userKey = arguments.getParcelable<UserKey?>(EXTRA_USER_KEY)
-            val screenName = arguments.getString(EXTRA_SCREEN_NAME)
-            val result = ArrayList<String>()
-            result.add(AUTHORITY_USER_TIMELINE)
-            result.add("account=$accountKey")
-            if (userKey != null) {
-                result.add("user_id=$userKey")
-            } else if (screenName != null) {
-                result.add("screen_name=$screenName")
-            } else {
-                return null
-            }
-            (timelineFilter as? UserTimelineFilter)?.let {
-                if (it.isIncludeReplies) {
-                    result.add("include_replies")
-                }
-                if (it.isIncludeRetweets) {
-                    result.add("include_retweets")
-                }
-            }
-            return result.toTypedArray()
-        }
 
     override val readPositionTagWithArguments: String?
         get() {
@@ -114,12 +87,10 @@ class UserTimelineFragment : ParcelableStatusesFragment() {
         val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
         val screenName = args.getString(EXTRA_SCREEN_NAME)
         val profileUrl = args.getString(EXTRA_PROFILE_URL)
-        val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
         val loadPinnedStatus = args.getBoolean(EXTRA_LOAD_PINNED_STATUS, false)
         return UserTimelineLoader(context, accountKey, userKey, screenName, profileUrl, data,
-                savedStatusesFileArgs, tabPosition, fromUser, loadingMore, loadPinnedStatus,
-                timelineFilter as? UserTimelineFilter)
+                fromUser, loadingMore, loadPinnedStatus, timelineFilter as? UserTimelineFilter)
     }
 
     override fun onStatusesLoaded(loader: Loader<List<ParcelableStatus>?>, data: List<ParcelableStatus>?) {

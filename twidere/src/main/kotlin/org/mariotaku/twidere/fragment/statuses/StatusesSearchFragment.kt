@@ -29,27 +29,11 @@ import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.util.Utils
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
-import java.util.*
 
 /**
  * Created by mariotaku on 14/12/2.
  */
 open class StatusesSearchFragment : ParcelableStatusesFragment() {
-
-    override val savedStatusesFileArgs: Array<String>?
-        get() {
-            val accountKey = Utils.getAccountKey(context, arguments)
-            val query = arguments.getString(EXTRA_QUERY)
-            val local = arguments.getBoolean(EXTRA_LOCAL)
-            val result = ArrayList<String>()
-            result.add(AUTHORITY_SEARCH_TWEETS)
-            result.add("account=$accountKey")
-            result.add("query=$query")
-            if (local) {
-                result.add("local")
-            }
-            return result.toTypedArray()
-        }
 
     override val readPositionTagWithArguments: String?
         get() {
@@ -74,11 +58,10 @@ open class StatusesSearchFragment : ParcelableStatusesFragment() {
         val accountKey = Utils.getAccountKey(context, args)
         val query = arguments.getString(EXTRA_QUERY)
         val local = arguments.getBoolean(EXTRA_LOCAL, false)
-        val tabPosition = arguments.getInt(EXTRA_TAB_POSITION, -1)
         val makeGap = args.getBoolean(EXTRA_MAKE_GAP, true)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-        return TweetSearchLoader(activity, accountKey, query, adapterData, savedStatusesFileArgs,
-                tabPosition, fromUser, makeGap, local, loadingMore)
+        return TweetSearchLoader(activity, accountKey, query, adapterData, fromUser,
+                makeGap, local, loadingMore)
     }
 
 }

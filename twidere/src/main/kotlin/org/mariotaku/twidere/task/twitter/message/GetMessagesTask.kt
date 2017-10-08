@@ -48,6 +48,7 @@ import org.mariotaku.twidere.model.message.conversation.TwitterOfficialConversat
 import org.mariotaku.twidere.model.pagination.CursorPagination
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
+import org.mariotaku.twidere.model.refresh.RefreshTaskParam
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.AccountUtils.getAccountDetails
 import org.mariotaku.twidere.model.util.ParcelableMessageUtils
