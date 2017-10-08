@@ -22,7 +22,7 @@ import org.mariotaku.twidere.model.draft.StatusObjectActionExtras
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.model.event.StatusRetweetedEvent
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
-import org.mariotaku.twidere.task.twitter.UpdateStatusTask
+import org.mariotaku.twidere.task.status.UpdateStatusTask
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.Utils

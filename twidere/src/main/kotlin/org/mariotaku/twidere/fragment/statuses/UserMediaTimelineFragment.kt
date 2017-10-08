@@ -22,7 +22,9 @@ package org.mariotaku.twidere.fragment.statuses
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.content.Loader
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.fragment.AbsMediaStatusesFragment
 import org.mariotaku.twidere.loader.statuses.MediaTimelineLoader
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -32,6 +34,11 @@ import org.mariotaku.twidere.model.UserKey
  * Created by mariotaku on 14/11/5.
  */
 class UserMediaTimelineFragment : AbsMediaStatusesFragment() {
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        linkHandlerTitle = getString(R.string.media)
+    }
 
     override fun onCreateStatusesLoader(context: Context, args: Bundle, fromUser: Boolean):
             Loader<List<ParcelableStatus>?> {

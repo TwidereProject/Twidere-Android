@@ -48,7 +48,10 @@ import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarShowHideHelper
-import org.mariotaku.twidere.constant.*
+import org.mariotaku.twidere.constant.CompatibilityConstants
+import org.mariotaku.twidere.constant.IntentConstants
+import org.mariotaku.twidere.constant.KeyboardShortcutConstants
+import org.mariotaku.twidere.constant.floatingDetailedContentsKey
 import org.mariotaku.twidere.exception.NoAccountException
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.fragment.drafts.DraftsFragment
@@ -56,6 +59,8 @@ import org.mariotaku.twidere.fragment.filter.FiltersFragment
 import org.mariotaku.twidere.fragment.filter.FiltersImportBlocksFragment
 import org.mariotaku.twidere.fragment.filter.FiltersImportMutesFragment
 import org.mariotaku.twidere.fragment.filter.FiltersSubscriptionsFragment
+import org.mariotaku.twidere.fragment.group.GroupFragment
+import org.mariotaku.twidere.fragment.group.UserGroupsFragment
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowInsetsCallback
 import org.mariotaku.twidere.fragment.iface.IFloatingActionButtonFragment
@@ -69,6 +74,9 @@ import org.mariotaku.twidere.fragment.search.MastodonSearchFragment
 import org.mariotaku.twidere.fragment.search.SearchFragment
 import org.mariotaku.twidere.fragment.status.StatusFragment
 import org.mariotaku.twidere.fragment.statuses.*
+import org.mariotaku.twidere.fragment.userlist.ListsFragment
+import org.mariotaku.twidere.fragment.userlist.UserListFragment
+import org.mariotaku.twidere.fragment.userlist.UserListMembershipsFragment
 import org.mariotaku.twidere.fragment.users.*
 import org.mariotaku.twidere.graphic.ActionBarColorDrawable
 import org.mariotaku.twidere.graphic.EmptyDrawable
@@ -82,11 +90,15 @@ import org.mariotaku.twidere.util.theme.getCurrentThemeResource
 class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControlBarActivity,
         SupportFragmentCallback {
 
+    var subtitle: CharSequence? = null
+        set(value) {
+            field = value
+            setupActionBarOption()
+        }
     private lateinit var multiSelectHandler: MultiSelectEventHandler
     private lateinit var controlBarShowHideHelper: ControlBarShowHideHelper
     private var finishOnly: Boolean = false
     private var actionBarHeight: Int = 0
-    private var subtitle: CharSequence? = null
     private var hideOffsetNotSupported: Boolean = false
     private lateinit var fragmentLifecycleCallbacks: FragmentLifecycleCallbacks
 
@@ -173,7 +185,6 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
             ft.replace(contentFragmentId, fragment, "content_fragment")
             ft.commit()
         }
-        setTitle(linkId, uri)
         finishOnly = uri.getQueryParameter(QUERY_PARAM_FINISH_ONLY)?.toBoolean() == true
 
         val theme = overrideTheme
@@ -299,11 +310,6 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
         setupActionBarOption()
     }
 
-    fun setSubtitle(subtitle: CharSequence?) {
-        this.subtitle = subtitle
-        setupActionBarOption()
-    }
-
     override fun setControlBarVisibleAnimate(visible: Boolean, listener: ControlBarShowHideHelper.ControlBarAnimationListener?) {
         // Currently only search page needs this pattern, so we only enable this feature for it.
         actionsButton?.let { fab ->
@@ -368,140 +374,6 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
             return super.getThemeResource(preferences, theme, themeColor)
         }
         return getCurrentThemeResource(this, theme, R.style.Theme_Twidere)
-    }
-
-    private fun setTitle(linkId: Int, uri: Uri): Boolean {
-        setSubtitle(null)
-        when (linkId) {
-            LINK_ID_STATUS -> {
-                setTitle(R.string.title_status)
-            }
-            LINK_ID_USER -> {
-                setTitle(R.string.title_user)
-            }
-            LINK_ID_USER_TIMELINE -> {
-                setTitle(R.string.title_statuses)
-            }
-            LINK_ID_USER_FAVORITES -> {
-                if (preferences[iWantMyStarsBackKey]) {
-                    setTitle(R.string.title_favorites)
-                } else {
-                    setTitle(R.string.title_likes)
-                }
-            }
-            LINK_ID_USER_FOLLOWERS -> {
-                setTitle(R.string.title_followers)
-            }
-            LINK_ID_USER_FRIENDS -> {
-                setTitle(R.string.title_following)
-            }
-            LINK_ID_USER_BLOCKS -> {
-                setTitle(R.string.title_blocked_users)
-            }
-            LINK_ID_MUTES_USERS -> {
-                setTitle(R.string.action_twitter_muted_users)
-            }
-            LINK_ID_USER_LIST -> {
-                setTitle(R.string.title_user_list)
-            }
-            LINK_ID_GROUP -> {
-                setTitle(R.string.group)
-            }
-            LINK_ID_USER_LISTS -> {
-                setTitle(R.string.user_lists)
-            }
-            LINK_ID_USER_GROUPS -> {
-                setTitle(R.string.groups)
-            }
-            LINK_ID_USER_LIST_TIMELINE -> {
-                setTitle(R.string.list_timeline)
-            }
-            LINK_ID_USER_LIST_MEMBERS -> {
-                setTitle(R.string.list_members)
-            }
-            LINK_ID_USER_LIST_SUBSCRIBERS -> {
-                setTitle(R.string.list_subscribers)
-            }
-            LINK_ID_USER_LIST_MEMBERSHIPS -> {
-                setTitle(R.string.lists_following_user)
-            }
-            LINK_ID_SAVED_SEARCHES -> {
-                setTitle(R.string.saved_searches)
-            }
-            LINK_ID_USER_MENTIONS -> {
-                setTitle(R.string.user_mentions)
-            }
-            LINK_ID_INCOMING_FRIENDSHIPS -> {
-                setTitle(R.string.incoming_friendships)
-            }
-            LINK_ID_ITEMS -> {
-            }// TODO show title
-            LINK_ID_USER_MEDIA_TIMELINE -> {
-                setTitle(R.string.media)
-            }
-            LINK_ID_STATUS_RETWEETERS -> {
-                setTitle(R.string.title_users_retweeted_this)
-            }
-            LINK_ID_STATUS_FAVORITERS -> {
-                if (preferences[iWantMyStarsBackKey]) {
-                    setTitle(R.string.title_users_favorited_this)
-                } else {
-                    setTitle(R.string.title_users_liked_this)
-                }
-            }
-            LINK_ID_SEARCH -> {
-                setTitle(R.string.title_search)
-                setSubtitle(uri.getQueryParameter(QUERY_PARAM_QUERY))
-            }
-            LINK_ID_MASTODON_SEARCH -> {
-                setTitle(R.string.title_search)
-                setSubtitle(uri.getQueryParameter(QUERY_PARAM_QUERY))
-            }
-            LINK_ID_ACCOUNTS -> {
-                setTitle(R.string.title_accounts)
-            }
-            LINK_ID_MAP -> {
-                setTitle(R.string.action_view_map)
-            }
-            LINK_ID_PROFILE_EDITOR -> {
-                setTitle(R.string.title_edit_profile)
-            }
-            LINK_ID_MESSAGES -> {
-                title = getString(R.string.title_direct_messages)
-            }
-            LINK_ID_MESSAGES_CONVERSATION -> {
-                title = getString(R.string.title_direct_messages)
-            }
-            LINK_ID_MESSAGES_CONVERSATION_NEW -> {
-                title = getString(R.string.title_direct_messages_conversation_new)
-            }
-            LINK_ID_MESSAGES_CONVERSATION_INFO -> {
-                title = getString(R.string.title_direct_messages_conversation_info)
-            }
-            LINK_ID_INTERACTIONS -> {
-                title = getString(R.string.interactions)
-            }
-            LINK_ID_PUBLIC_TIMELINE -> {
-                title = getString(R.string.title_public_timeline)
-            }
-            LINK_ID_NETWORK_PUBLIC_TIMELINE -> {
-                title = getString(R.string.title_network_public_timeline)
-            }
-            LINK_ID_FILTERS_IMPORT_BLOCKS -> {
-                title = getString(R.string.title_select_users)
-            }
-            LINK_ID_FILTERS_IMPORT_MUTES -> {
-                title = getString(R.string.title_select_users)
-            }
-            LINK_ID_FILTERS_SUBSCRIPTIONS_ADD,
-            LINK_ID_FILTERS_SUBSCRIPTIONS -> {
-                title = getString(R.string.title_manage_filter_subscriptions)
-            }
-            else -> {
-                title = getString(R.string.app_name)
-            }
-        }
-        return true
     }
 
     private fun handleFragmentKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler, keyCode: Int,

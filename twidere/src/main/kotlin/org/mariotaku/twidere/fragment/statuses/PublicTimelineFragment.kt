@@ -19,45 +19,86 @@
 
 package org.mariotaku.twidere.fragment.statuses
 
-import android.content.Context
 import android.os.Bundle
-import android.support.v4.content.Loader
-import org.mariotaku.twidere.TwidereConstants.*
-import org.mariotaku.twidere.fragment.ParcelableStatusesFragment
-import org.mariotaku.twidere.loader.statuses.PublicTimelineLoader
-import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.util.Utils
+import org.mariotaku.abstask.library.TaskStarter
+import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.twidere.R
+import org.mariotaku.twidere.annotation.FilterScope
+import org.mariotaku.twidere.annotation.ReadPositionTag
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_EXTRAS
+import org.mariotaku.twidere.extension.linkHandlerTitle
+import org.mariotaku.twidere.fragment.CursorStatusesFragment
+import org.mariotaku.twidere.model.ParameterizedExpression
+import org.mariotaku.twidere.model.RefreshTaskParam
+import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.tab.extra.HomeTabExtras
+import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
+import org.mariotaku.twidere.task.statuses.GetPublicTimelineTask
+import org.mariotaku.twidere.util.DataStoreUtils
+import org.mariotaku.twidere.util.ErrorInfoStore
 import java.util.*
 
 /**
  * Created by mariotaku on 14/12/2.
  */
-class PublicTimelineFragment : ParcelableStatusesFragment() {
+class PublicTimelineFragment : CursorStatusesFragment() {
 
-    override val savedStatusesFileArgs: Array<String>?
-        get() {
-            val accountKey = Utils.getAccountKey(context, arguments)
-            val result = ArrayList<String>()
-            result.add(AUTHORITY_PUBLIC_TIMELINE)
-            result.add("account=$accountKey")
-            return result.toTypedArray()
+    override val errorInfoKey = ErrorInfoStore.KEY_PUBLIC_TIMELINE
+
+    override val contentUri = Statuses.Public.CONTENT_URI
+
+    override val notificationType = 0
+
+    override val isFilterEnabled = true
+
+    override val readPositionTag = ReadPositionTag.PUBLIC_TIMELINE
+
+    override val timelineSyncTag: String?
+        get() = getTimelineSyncTag(accountKeys)
+
+    override val filterScopes: Int
+        get() = FilterScope.PUBLIC_TIMELINE
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        linkHandlerTitle = getString(R.string.title_public_timeline)
+    }
+
+    override fun updateRefreshState() {
+        val twitter = twitterWrapper
+        refreshing = twitter.isStatusTimelineRefreshing(contentUri)
+    }
+
+    override fun getStatuses(param: RefreshTaskParam): Boolean {
+        val task = GetPublicTimelineTask(context)
+        task.params = param
+        TaskStarter.execute(task)
+        return true
+    }
+
+    override fun processWhere(where: Expression, whereArgs: Array<String>): ParameterizedExpression {
+        val arguments = arguments
+        if (arguments != null) {
+            val extras = arguments.getParcelable<HomeTabExtras?>(EXTRA_EXTRAS)
+            if (extras != null) {
+                val expressions = ArrayList<Expression>()
+                val expressionArgs = ArrayList<String>()
+                Collections.addAll(expressionArgs, *whereArgs)
+                expressions.add(where)
+                DataStoreUtils.processTabExtras(expressions, expressionArgs, extras)
+                val expression = Expression.and(*expressions.toTypedArray())
+                return ParameterizedExpression(expression, expressionArgs.toTypedArray())
+            }
+        }
+        return super.processWhere(where, whereArgs)
+    }
+
+    companion object {
+
+        fun getTimelineSyncTag(accountKeys: Array<UserKey>): String {
+            return "${ReadPositionTag.PUBLIC_TIMELINE}_${accountKeys.sorted().joinToString(",")}"
         }
 
-    override val readPositionTagWithArguments: String?
-        get() {
-            val tabPosition = arguments.getInt(EXTRA_TAB_POSITION, -1)
-            if (tabPosition < 0) return null
-            return "public_timeline"
-        }
-
-    override fun onCreateStatusesLoader(context: Context, args: Bundle,
-            fromUser: Boolean): Loader<List<ParcelableStatus>?> {
-        refreshing = true
-        val data = adapterData
-        val accountKey = Utils.getAccountKey(context, args)
-        val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
-        val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-        return PublicTimelineLoader(context, accountKey, data, savedStatusesFileArgs, tabPosition,
-                fromUser, loadingMore)
     }
 }
+

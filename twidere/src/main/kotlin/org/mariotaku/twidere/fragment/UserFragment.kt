@@ -654,6 +654,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        linkHandlerTitle = getString(R.string.title_user)
         val activity = activity
         nameFirst = preferences[nameFirstKey]
         cardBackgroundColor = ThemeUtils.getCardBackgroundColor(activity,

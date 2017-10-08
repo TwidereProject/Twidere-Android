@@ -52,7 +52,7 @@ import org.mariotaku.twidere.model.util.ParcelableRelationshipUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.task.*
 import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
-import org.mariotaku.twidere.task.twitter.GetHomeTimelineTask
+import org.mariotaku.twidere.task.statuses.GetHomeTimelineTask
 import org.mariotaku.twidere.task.twitter.GetSavedSearchesTask
 import org.mariotaku.twidere.task.twitter.GetTrendsTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask

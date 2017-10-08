@@ -77,7 +77,7 @@ class HomeTimelineFragment : CursorStatusesFragment() {
     override fun processWhere(where: Expression, whereArgs: Array<String>): ParameterizedExpression {
         val arguments = arguments
         if (arguments != null) {
-            val extras = arguments.getParcelable<HomeTabExtras>(EXTRA_EXTRAS)
+            val extras = arguments.getParcelable<HomeTabExtras?>(EXTRA_EXTRAS)
             if (extras != null) {
                 val expressions = ArrayList<Expression>()
                 val expressionArgs = ArrayList<String>()

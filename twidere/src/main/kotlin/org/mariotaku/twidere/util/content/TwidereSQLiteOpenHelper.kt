@@ -49,8 +49,9 @@ class TwidereSQLiteOpenHelper(
 ) : SQLiteOpenHelper(context, name, null, version) {
 
     override fun onCreate(db: SQLiteDatabase) {
+        createStatusesTables(db)
+
         db.beginTransaction()
-        db.execSQL(createTable(Statuses.TABLE_NAME, Statuses.COLUMNS, Statuses.TYPES, true))
         db.execSQL(createTable(Activities.AboutMe.TABLE_NAME, Activities.AboutMe.COLUMNS, Activities.AboutMe.TYPES, true))
         db.execSQL(createTable(Drafts.TABLE_NAME, Drafts.COLUMNS, Drafts.TYPES, true))
         db.setTransactionSuccessful()
@@ -100,6 +101,16 @@ class TwidereSQLiteOpenHelper(
         db.endTransaction()
 
         setupDefaultTabs(db)
+    }
+
+    private fun createStatusesTables(db: SQLiteDatabase) {
+        db.beginTransaction()
+        val tableNames = arrayOf(Statuses.TABLE_NAME, Statuses.Public.TABLE_NAME)
+        tableNames.forEach {
+            db.execSQL(createTable(it, Statuses.COLUMNS, Statuses.TYPES, true))
+        }
+        db.setTransactionSuccessful()
+        db.endTransaction()
     }
 
 
@@ -225,8 +236,7 @@ class TwidereSQLiteOpenHelper(
             db.execSQL(SQLQueryBuilder.dropIndex(true, "messages_inbox_index").sql)
             db.execSQL(SQLQueryBuilder.dropIndex(true, "messages_outbox_index").sql)
         }
-
-        safeUpgrade(db, Statuses.TABLE_NAME, Statuses.COLUMNS, Statuses.TYPES, true, null)
+        upgradeStatuses(db)
         safeUpgrade(db, Activities.AboutMe.TABLE_NAME, Activities.AboutMe.COLUMNS,
                 Activities.AboutMe.TYPES, true, null)
         migrateDrafts(db)
@@ -261,6 +271,11 @@ class TwidereSQLiteOpenHelper(
         createIndices(db)
         db.setTransactionSuccessful()
         db.endTransaction()
+    }
+
+    private fun upgradeStatuses(db: SQLiteDatabase) {
+        safeUpgrade(db, Statuses.TABLE_NAME, Statuses.COLUMNS, Statuses.TYPES, true, null)
+        safeUpgrade(db, Statuses.Public.TABLE_NAME, Statuses.COLUMNS, Statuses.TYPES, true, null)
     }
 
     private fun migrateDrafts(db: SQLiteDatabase) {

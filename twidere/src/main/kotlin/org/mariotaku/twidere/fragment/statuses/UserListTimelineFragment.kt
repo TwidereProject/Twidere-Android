@@ -22,8 +22,10 @@ package org.mariotaku.twidere.fragment.statuses
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.content.Loader
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.fragment.ParcelableStatusesFragment
 import org.mariotaku.twidere.loader.statuses.UserListTimelineLoader
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -87,6 +89,11 @@ class UserListTimelineFragment : ParcelableStatusesFragment() {
             }
             return sb.toString()
         }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        linkHandlerTitle = getString(R.string.list_timeline)
+    }
 
     override fun onCreateStatusesLoader(context: Context, args: Bundle, fromUser: Boolean):
             Loader<List<ParcelableStatus>?> {

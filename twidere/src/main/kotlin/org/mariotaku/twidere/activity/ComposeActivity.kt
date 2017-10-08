@@ -92,7 +92,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.service.LengthyOperationsService
 import org.mariotaku.twidere.task.compose.AbsAddMediaTask
 import org.mariotaku.twidere.task.compose.AbsDeleteMediaTask
-import org.mariotaku.twidere.task.twitter.UpdateStatusTask
+import org.mariotaku.twidere.task.status.UpdateStatusTask
 import org.mariotaku.twidere.text.MarkForDeleteSpan
 import org.mariotaku.twidere.text.style.EmojiSpan
 import org.mariotaku.twidere.util.*

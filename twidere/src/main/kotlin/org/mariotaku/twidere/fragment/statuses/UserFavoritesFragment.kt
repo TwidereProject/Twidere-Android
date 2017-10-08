@@ -22,7 +22,11 @@ package org.mariotaku.twidere.fragment.statuses
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.content.Loader
+import org.mariotaku.kpreferences.get
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.constant.iWantMyStarsBackKey
+import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.fragment.ParcelableStatusesFragment
 import org.mariotaku.twidere.loader.statuses.UserFavoritesLoader
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -71,6 +75,15 @@ class UserFavoritesFragment : ParcelableStatusesFragment() {
             }
             return sb.toString()
         }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        linkHandlerTitle = if (preferences[iWantMyStarsBackKey]) {
+            getString(R.string.title_favorites)
+        } else {
+            getString(R.string.title_likes)
+        }
+    }
 
     override fun onCreateStatusesLoader(context: Context, args: Bundle, fromUser: Boolean):
             Loader<List<ParcelableStatus>?> {

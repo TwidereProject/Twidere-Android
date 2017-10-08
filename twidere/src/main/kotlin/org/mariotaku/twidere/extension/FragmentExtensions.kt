@@ -20,12 +20,16 @@
 package org.mariotaku.twidere.extension
 
 import android.support.v4.app.Fragment
+import org.mariotaku.twidere.activity.LinkHandlerActivity
 
-/**
- * Created by mariotaku on 2017/10/4.
- */
-var Fragment.title: CharSequence?
-    get() = activity.title
+var Fragment.linkHandlerTitle: CharSequence?
+    get() = (activity as? LinkHandlerActivity)?.title
     set(value) {
-        activity.title
+        (activity as? LinkHandlerActivity)?.title = value
+    }
+
+var Fragment.linkHandlerSubtitle: CharSequence?
+    get() = (activity as? LinkHandlerActivity)?.subtitle
+    set(value) {
+        (activity as? LinkHandlerActivity)?.subtitle = value
     }

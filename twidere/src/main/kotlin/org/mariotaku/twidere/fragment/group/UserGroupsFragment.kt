@@ -17,40 +17,33 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.fragment.users
+package org.mariotaku.twidere.fragment.group
 
 import android.content.Context
 import android.os.Bundle
+import android.support.v4.content.Loader
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
+import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.extension.linkHandlerTitle
-import org.mariotaku.twidere.fragment.ParcelableUsersFragment
-import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
-import org.mariotaku.twidere.loader.users.UserBlocksLoader
+import org.mariotaku.twidere.fragment.ParcelableGroupsFragment
+import org.mariotaku.twidere.loader.group.UserGroupsLoader
+import org.mariotaku.twidere.model.ParcelableGroup
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 
-class UserBlocksListFragment : ParcelableUsersFragment() {
-
+/**
+ * Created by mariotaku on 16/3/9.
+ */
+class UserGroupsFragment : ParcelableGroupsFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        linkHandlerTitle = getString(R.string.title_blocked_users)
+        linkHandlerTitle = getString(R.string.groups)
     }
 
-    override fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean):
-            AbsRequestUsersLoader {
-        val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
-        return UserBlocksLoader(context, accountKey, adapter.getData(), fromUser)
-    }
-
-    override fun shouldRemoveUser(position: Int, event: FriendshipTaskEvent): Boolean {
-        if (!event.isSucceeded) return false
-        when (event.action) {
-            FriendshipTaskEvent.Action.FOLLOW, FriendshipTaskEvent.Action.UNBLOCK -> {
-                return true
-            }
-        }
-        return false
+    override fun onCreateUserListsLoader(context: Context, args: Bundle, fromUser: Boolean): Loader<List<ParcelableGroup>?> {
+        val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+        val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
+        val screenName = args.getString(EXTRA_SCREEN_NAME)
+        return UserGroupsLoader(context, accountKey, userKey, screenName, adapter.getData())
     }
 
 }

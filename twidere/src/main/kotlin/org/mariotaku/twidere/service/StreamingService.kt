@@ -287,10 +287,9 @@ class StreamingService : BaseService() {
                 } else {
                     parcelableStatus.position_key = parcelableStatus.timestamp
                 }
-                parcelableStatus.inserted_date = currentTimeMillis
 
                 lastStatusTimestamps[0] = parcelableStatus.position_key
-                lastStatusTimestamps[1] = parcelableStatus.inserted_date
+                lastStatusTimestamps[1] = currentTimeMillis
 
                 val values = ObjectCursor.valuesCreatorFrom(ParcelableStatus::class.java)
                         .create(parcelableStatus)

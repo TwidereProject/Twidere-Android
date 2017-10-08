@@ -41,6 +41,8 @@ import org.mariotaku.twidere.activity.QuickSearchBarActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarOffsetListener
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.linkHandlerSubtitle
+import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.fragment.AbsToolbarTabPagesFragment
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowInsetsCallback
@@ -84,6 +86,9 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface,
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
+
+        linkHandlerTitle = getString(R.string.title_search)
+        linkHandlerSubtitle = query
 
         if (savedInstanceState == null && !TextUtils.isEmpty(query)) {
             val suggestions = SearchRecentSuggestions(activity,

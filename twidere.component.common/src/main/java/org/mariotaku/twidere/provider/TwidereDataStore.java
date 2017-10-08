@@ -63,11 +63,6 @@ public interface TwidereDataStore {
     Uri CONTENT_URI_RAW_QUERY = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH_RAW_QUERY);
     Uri CONTENT_URI_DATABASE_PREPARE = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH_DATABASE_PREPARE);
 
-    interface InsertedDateColumns {
-        String INSERTED_DATE = "inserted_date";
-        String INSERTED_DATE_TYPE = TYPE_INT;
-    }
-
     interface AccountSupportColumns {
 
         String ACCOUNT_KEY = "account_id";
@@ -342,7 +337,7 @@ public interface TwidereDataStore {
         String[] COLUMNS = {_ID, NAME, PATH};
     }
 
-    interface Messages extends BaseColumns, InsertedDateColumns, AccountSupportColumns {
+    interface Messages extends BaseColumns, AccountSupportColumns {
         String MESSAGE_ID = "message_id";
         String CONVERSATION_ID = "conversation_id";
         String MESSAGE_TYPE = "message_type";
@@ -578,7 +573,7 @@ public interface TwidereDataStore {
         String[] COLUMNS = {_ID, PACKAGE_NAME, PERMISSION};
     }
 
-    interface Statuses extends BaseColumns, InsertedDateColumns, AccountSupportColumns {
+    interface Statuses extends BaseColumns, AccountSupportColumns {
 
         String TABLE_NAME = "statuses";
         String CONTENT_PATH = TABLE_NAME;
@@ -738,6 +733,8 @@ public interface TwidereDataStore {
         String FILTER_TEXTS = "filter_texts";
         String FILTER_DESCRIPTIONS = "filter_descriptions";
 
+        String TAB_ID = "tab_id";
+
         String DEFAULT_SORT_ORDER = TIMESTAMP + " DESC, " + SORT_ID + " DESC, " + ID
                 + " DESC";
 
@@ -745,9 +742,27 @@ public interface TwidereDataStore {
 
         String[] TYPES = ParcelableStatusTableInfo.TYPES;
 
+        interface Public extends Statuses {
+
+            String CONTENT_PATH = "public_timeline";
+            String TABLE_NAME = "public_timeline";
+
+            @NonNull
+            Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
+        }
+
+        interface NetworkPublic extends Statuses {
+
+            String CONTENT_PATH = "network_public_timeline";
+            String TABLE_NAME = "network_public_timeline";
+
+            @NonNull
+            Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
+        }
+
     }
 
-    interface Activities extends Statuses, BaseColumns, InsertedDateColumns, AccountSupportColumns {
+    interface Activities extends Statuses, BaseColumns, AccountSupportColumns {
 
         String ACTIVITY_ID = "activity_id";
 

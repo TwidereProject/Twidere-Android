@@ -32,7 +32,7 @@ import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
-import org.mariotaku.twidere.task.twitter.UpdateStatusTask
+import org.mariotaku.twidere.task.status.UpdateStatusTask
 
 /**
  * Created by mariotaku on 2017/4/20.

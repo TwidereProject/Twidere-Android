@@ -22,7 +22,9 @@ package org.mariotaku.twidere.fragment.statuses
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.content.Loader
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.loader.statuses.UserMentionsLoader
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
@@ -41,6 +43,11 @@ class UserMentionsFragment : StatusesSearchFragment() {
             result.add("screen_name=$screenName")
             return result.toTypedArray()
         }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        linkHandlerTitle = getString(R.string.user_mentions)
+    }
 
     override fun onCreateStatusesLoader(context: Context,
             args: Bundle,

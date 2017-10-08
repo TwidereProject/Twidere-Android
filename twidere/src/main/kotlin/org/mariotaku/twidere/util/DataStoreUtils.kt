@@ -113,6 +113,10 @@ object DataStoreUtils {
                 TABLE_ID_CACHED_HASHTAGS)
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedRelationships.CONTENT_PATH,
                 TABLE_ID_CACHED_RELATIONSHIPS)
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Statuses.Public.CONTENT_PATH,
+                TABLE_ID_PUBLIC_TIMELINE)
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Statuses.NetworkPublic.CONTENT_PATH,
+                TABLE_ID_NETWORK_PUBLIC_TIMELINE)
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, SavedSearches.CONTENT_PATH,
                 TABLE_ID_SAVED_SEARCHES)
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, SearchHistory.CONTENT_PATH,
@@ -453,6 +457,8 @@ object DataStoreUtils {
     fun getTableNameById(id: Int): String? {
         when (id) {
             TABLE_ID_STATUSES -> return Statuses.TABLE_NAME
+            TABLE_ID_PUBLIC_TIMELINE -> return Statuses.Public.TABLE_NAME
+            TABLE_ID_NETWORK_PUBLIC_TIMELINE -> return Statuses.NetworkPublic.TABLE_NAME
             TABLE_ID_ACTIVITIES_ABOUT_ME -> return Activities.AboutMe.TABLE_NAME
             TABLE_ID_DRAFTS -> return Drafts.TABLE_NAME
             TABLE_ID_FILTERED_USERS -> return Filters.Users.TABLE_NAME

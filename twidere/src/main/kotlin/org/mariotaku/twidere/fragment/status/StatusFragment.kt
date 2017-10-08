@@ -232,6 +232,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
+        linkHandlerTitle = getString(R.string.title_status)
         Utils.setNdefPushMessageCallback(activity, CreateNdefMessageCallback {
             val status = status ?: return@CreateNdefMessageCallback null
             NdefMessage(arrayOf(NdefRecord.createUri(LinkCreator.getStatusWebLink(status))))

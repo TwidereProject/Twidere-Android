@@ -24,7 +24,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.filter.RefreshFiltersSubscriptionsTask
 import org.mariotaku.twidere.task.filter.RefreshLaunchPresentationsTask
 import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
-import org.mariotaku.twidere.task.twitter.GetHomeTimelineTask
+import org.mariotaku.twidere.task.statuses.GetHomeTimelineTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
 
 /**

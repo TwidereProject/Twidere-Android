@@ -20,14 +20,17 @@
 package org.mariotaku.twidere.fragment
 
 import android.content.Context
+import android.os.Bundle
 import com.bumptech.glide.RequestManager
 import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.NOTIFICATION_ID_INTERACTIONS_TIMELINE
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_EXTRAS
+import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.model.ParameterizedExpression
 import org.mariotaku.twidere.model.RefreshTaskParam
 import org.mariotaku.twidere.model.UserKey
@@ -53,6 +56,11 @@ class InteractionsTimelineFragment : CursorActivitiesFragment() {
 
     override val filterScopes: Int
         get() = FilterScope.INTERACTIONS
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        linkHandlerTitle = getString(R.string.interactions)
+    }
 
     override fun onCreateAdapter(context: Context, requestManager: RequestManager): ParcelableActivitiesAdapter {
         val adapter = ParcelableActivitiesAdapter(context, requestManager)

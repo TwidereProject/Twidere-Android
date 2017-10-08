@@ -46,7 +46,7 @@ import org.mariotaku.twidere.model.event.*
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
-import org.mariotaku.twidere.task.twitter.GetStatusesTask
+import org.mariotaku.twidere.task.statuses.GetStatusesTask
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.DataStoreUtils.getTableNameByUri
 import org.mariotaku.twidere.util.ErrorInfoStore

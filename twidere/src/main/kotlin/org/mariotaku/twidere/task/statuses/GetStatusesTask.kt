@@ -1,4 +1,23 @@
-package org.mariotaku.twidere.task.twitter
+/*
+ *             Twidere - Twitter client for Android
+ *
+ *  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package org.mariotaku.twidere.task.statuses
 
 import android.accounts.AccountManager
 import android.content.ContentValues
@@ -6,25 +25,29 @@ import android.content.Context
 import android.net.Uri
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.addTo
 import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.library.objectcursor.ObjectCursor
+import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.twitter.model.Paging
+import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.sqliteqb.library.Columns
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_NOTIFY_CHANGE
+import org.mariotaku.twidere.alias.MastodonStatus
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.applyLoadLimit
-import org.mariotaku.twidere.model.AccountDetails
-import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.RefreshTaskParam
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
+import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.event.GetStatusesTaskEvent
 import org.mariotaku.twidere.model.task.GetTimelineResult
 import org.mariotaku.twidere.model.util.AccountUtils
@@ -47,6 +70,8 @@ abstract class GetStatusesTask(
         context: Context
 ) : BaseAbstractTask<RefreshTaskParam, List<Pair<GetTimelineResult<ParcelableStatus>?, Exception?>>,
         (Boolean) -> Unit>(context) {
+
+    private val profileImageSize = context.getString(R.string.profile_image_size)
 
     protected abstract val contentUri: Uri
 
@@ -129,9 +154,76 @@ abstract class GetStatusesTask(
     }
 
     @Throws(MicroBlogException::class)
-    protected abstract fun getStatuses(account: AccountDetails, paging: Paging): GetTimelineResult<ParcelableStatus>
+    protected fun getStatuses(account: AccountDetails, paging: Paging): GetTimelineResult<ParcelableStatus> {
+        when (account.type) {
+            AccountType.TWITTER -> {
+                val twitter = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                val timeline = getTwitterStatuses(account, twitter, paging)
+                val statuses = timeline.map {
+                    it.toParcelable(account, profileImageSize)
+                }
+                val hashtags = timeline.flatMap { status ->
+                    status.entities?.hashtags?.map { it.text }.orEmpty()
+                }
+                return GetTimelineResult(account, statuses, extractMicroBlogUsers(timeline, account), hashtags)
+            }
+            AccountType.STATUSNET -> {
+                val statusnet = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                val timeline = getStatusNetStatuses(account, statusnet, paging)
+                val statuses = timeline.map {
+                    it.toParcelable(account, profileImageSize)
+                }
+                val hashtags = timeline.flatMap { status ->
+                    status.entities?.hashtags?.map { it.text }.orEmpty()
+                }
+                return GetTimelineResult(account, statuses, extractMicroBlogUsers(timeline, account), hashtags)
+            }
+            AccountType.FANFOU -> {
+                val fanfou = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                val timeline = getFanfouStatuses(account, fanfou, paging)
+                val statuses = timeline.map {
+                    it.toParcelable(account, profileImageSize)
+                }
+                val hashtags = statuses.flatMap { status ->
+                    return@flatMap status.extractFanfouHashtags()
+                }
+                return GetTimelineResult(account, statuses, extractMicroBlogUsers(timeline, account), hashtags)
+            }
+            AccountType.MASTODON -> {
+                val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
+                val timeline = getMastodonStatuses(account, mastodon, paging)
+                return GetTimelineResult(account, timeline.map {
+                    it.toParcelable(account)
+                }, timeline.flatMap { status ->
+                    val mapResult = mutableListOf(status.account.toParcelable(account))
+                    status.reblog?.account?.toParcelable(account)?.addTo(mapResult)
+                    return@flatMap mapResult
+                }, timeline.flatMap { status ->
+                    status.tags?.map { it.name }.orEmpty()
+                })
+            }
+            else -> throw UnsupportedOperationException()
+        }
+    }
+
+    protected abstract fun getTwitterStatuses(account: AccountDetails, twitter: MicroBlog, paging: Paging): List<Status>
+    protected abstract fun getStatusNetStatuses(account: AccountDetails, statusNet: MicroBlog, paging: Paging): List<Status>
+    protected abstract fun getFanfouStatuses(account: AccountDetails, fanfou: MicroBlog, paging: Paging): List<Status>
+    protected abstract fun getMastodonStatuses(account: AccountDetails, mastodon: Mastodon, paging: Paging): List<MastodonStatus>
 
     protected abstract fun syncFetchReadPosition(manager: TimelineSyncManager, accountKeys: Array<UserKey>)
+
+    private fun extractMicroBlogUsers(timeline: List<Status>, account: AccountDetails): List<ParcelableUser> {
+        return timeline.flatMap { status ->
+            val mapResult = mutableListOf(status.user.toParcelable(account,
+                    profileImageSize = profileImageSize))
+            status.retweetedStatus?.user?.toParcelable(account,
+                    profileImageSize = profileImageSize)?.addTo(mapResult)
+            status.quotedStatus?.user?.toParcelable(account,
+                    profileImageSize = profileImageSize)?.addTo(mapResult)
+            return@flatMap mapResult
+        }
+    }
 
     private fun storeStatus(account: AccountDetails, statuses: List<ParcelableStatus>,
             sinceId: String?, maxId: String?, sinceSortId: Long, maxSortId: Long,
@@ -156,7 +248,6 @@ abstract class GetStatusesTask(
             statuses.forEachIndexed { i, status ->
                 status.position_key = getPositionKey(status.timestamp, status.sort_id, lastSortId,
                         sortDiff, i, statuses.size)
-                status.inserted_date = System.currentTimeMillis()
                 mediaPreloader.preloadStatus(status)
                 values[i] = creator.create(status)
                 if (minIdx == -1 || status < statuses[minIdx]) {

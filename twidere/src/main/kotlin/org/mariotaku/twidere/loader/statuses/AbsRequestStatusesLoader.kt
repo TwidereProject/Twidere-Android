@@ -41,7 +41,7 @@ import org.mariotaku.twidere.model.pagination.PaginatedList
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.task.twitter.GetStatusesTask
+import org.mariotaku.twidere.task.statuses.GetStatusesTask
 import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.cache.JsonCache

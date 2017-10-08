@@ -11,7 +11,7 @@ import org.mariotaku.twidere.model.account.StatusNetAccountExtras
 import org.mariotaku.twidere.model.account.TwitterAccountExtras
 import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.model.account.cred.OAuthCredentials
-import org.mariotaku.twidere.task.twitter.UpdateStatusTask
+import org.mariotaku.twidere.task.status.UpdateStatusTask
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
 
 fun AccountDetails.isOfficial(context: Context): Boolean {

@@ -323,9 +323,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @CursorField(Statuses.ACCOUNT_COLOR)
     public int account_color;
 
-    @CursorField(Statuses.INSERTED_DATE)
-    public long inserted_date;
-
     @FilterFlags
     @JsonField(name = "filter_flags")
     @CursorField(Statuses.FILTER_FLAGS)
@@ -354,6 +351,9 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @JsonField(name = "filter_descriptions")
     @CursorField(value = Statuses.FILTER_DESCRIPTIONS)
     public String filter_descriptions;
+
+    @CursorField(Statuses.TAB_ID)
+    public long tab_id;
 
     public transient boolean is_pinned_status;
     public transient boolean is_filtered;
@@ -457,7 +457,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                 ", spans=" + Arrays.toString(spans) +
                 ", quoted_spans=" + Arrays.toString(quoted_spans) +
                 ", account_color=" + account_color +
-                ", inserted_date=" + inserted_date +
                 ", filter_flags=" + filter_flags +
                 ", filter_users=" + Arrays.toString(filter_users) +
                 ", filter_sources=" + Arrays.toString(filter_sources) +
@@ -465,6 +464,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                 ", filter_names=" + Arrays.toString(filter_names) +
                 ", filter_texts='" + filter_texts + '\'' +
                 ", filter_descriptions='" + filter_descriptions + '\'' +
+                ", tab_id=" + tab_id +
                 ", is_pinned_status=" + is_pinned_status +
                 ", is_filtered=" + is_filtered +
                 '}';

@@ -1,23 +1,23 @@
 /*
- * 				Twidere - Twitter client for Android
- * 
- *  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
- * 
+ *             Twidere - Twitter client for Android
+ *
+ *  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.fragment
+package org.mariotaku.twidere.fragment.userlist
 
 import android.app.Activity
 import android.app.Dialog
@@ -53,8 +53,10 @@ import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.onShow
+import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowInsetsCallback
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
 import org.mariotaku.twidere.fragment.statuses.UserListTimelineFragment
@@ -78,30 +80,34 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
     var userList: ParcelableUserList? = null
         private set
 
-    fun displayUserList(userList: ParcelableUserList?) {
-        val activity = activity ?: return
-        loaderManager.destroyLoader(0)
-        this.userList = userList
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        linkHandlerTitle = getString(R.string.title_user_list)
+        val activity = activity
+        setHasOptionsMenu(true)
 
-        if (userList != null) {
-            activity.title = userList.name
-        } else {
-            activity.setTitle(R.string.title_user_list)
-        }
-        activity.invalidateOptionsMenu()
+        Utils.setNdefPushMessageCallback(activity, CreateNdefMessageCallback {
+            val userList = userList ?: return@CreateNdefMessageCallback null
+            NdefMessage(arrayOf(NdefRecord.createUri(LinkCreator.getTwitterUserListLink(userList.user_screen_name, userList.name))))
+        })
+
+        getUserListInfo(false)
     }
 
-    fun getUserListInfo(omitIntentExtra: Boolean) {
-        val lm = loaderManager
-        lm.destroyLoader(0)
-        val args = Bundle(arguments)
-        args.putBoolean(EXTRA_OMIT_INTENT_EXTRA, omitIntentExtra)
-        if (!userListLoaderInitialized) {
-            lm.initLoader(0, args, this)
-            userListLoaderInitialized = true
-        } else {
-            lm.restartLoader(0, args, this)
-        }
+    override fun onStart() {
+        super.onStart()
+        bus.register(this)
+    }
+
+    override fun onStop() {
+        bus.unregister(this)
+        super.onStop()
+    }
+
+    override fun onDestroyView() {
+        userList = null
+        loaderManager.destroyLoader(0)
+        super.onDestroyView()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -128,19 +134,6 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        val activity = activity
-        setHasOptionsMenu(true)
-
-        Utils.setNdefPushMessageCallback(activity, CreateNdefMessageCallback {
-            val userList = userList ?: return@CreateNdefMessageCallback null
-            NdefMessage(arrayOf(NdefRecord.createUri(LinkCreator.getTwitterUserListLink(userList.user_screen_name, userList.name))))
-        })
-
-        getUserListInfo(false)
-    }
-
     override fun addTabs(adapter: SupportTabsAdapter) {
         val args = arguments
         val tabArgs = Bundle()
@@ -161,22 +154,6 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
         adapter.add(cls = UserListTimelineFragment::class.java, args = tabArgs, name = getString(R.string.title_statuses))
         adapter.add(cls = UserListMembersFragment::class.java, args = tabArgs, name = getString(R.string.members))
         adapter.add(cls = UserListSubscribersFragment::class.java, args = tabArgs, name = getString(R.string.title_userlist_subscribers))
-    }
-
-    override fun onStart() {
-        super.onStart()
-        bus.register(this)
-    }
-
-    override fun onStop() {
-        bus.unregister(this)
-        super.onStop()
-    }
-
-    override fun onDestroyView() {
-        userList = null
-        loaderManager.destroyLoader(0)
-        super.onDestroyView()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -336,6 +313,32 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
         if (userList == null) return
         if (TextUtils.equals(event.userList.id, userList!!.id)) {
             getUserListInfo(true)
+        }
+    }
+
+    fun displayUserList(userList: ParcelableUserList?) {
+        val activity = activity ?: return
+        loaderManager.destroyLoader(0)
+        this.userList = userList
+
+        if (userList != null) {
+            linkHandlerTitle = userList.name
+        } else {
+            linkHandlerTitle = getString(R.string.title_user_list)
+        }
+        activity.invalidateOptionsMenu()
+    }
+
+    fun getUserListInfo(omitIntentExtra: Boolean) {
+        val lm = loaderManager
+        lm.destroyLoader(0)
+        val args = Bundle(arguments)
+        args.putBoolean(EXTRA_OMIT_INTENT_EXTRA, omitIntentExtra)
+        if (!userListLoaderInitialized) {
+            lm.initLoader(0, args, this)
+            userListLoaderInitialized = true
+        } else {
+            lm.restartLoader(0, args, this)
         }
     }
 

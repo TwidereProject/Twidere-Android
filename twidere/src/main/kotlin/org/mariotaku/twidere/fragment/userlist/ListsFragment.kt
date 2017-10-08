@@ -1,7 +1,7 @@
 /*
- * Twidere - Twitter client for Android
+ *             Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,18 +17,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.fragment
+package org.mariotaku.twidere.fragment.userlist
 
 import android.os.Bundle
 
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
+import org.mariotaku.twidere.extension.linkHandlerTitle
+import org.mariotaku.twidere.fragment.AbsToolbarTabPagesFragment
 
 class ListsFragment : AbsToolbarTabPagesFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
+        linkHandlerTitle = getString(R.string.user_lists)
     }
 
     override fun addTabs(adapter: SupportTabsAdapter) {

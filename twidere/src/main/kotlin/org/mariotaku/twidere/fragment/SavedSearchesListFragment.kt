@@ -31,8 +31,10 @@ import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_listview.*
 import org.mariotaku.microblog.library.twitter.model.ResponseList
 import org.mariotaku.microblog.library.twitter.model.SavedSearch
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.SavedSearchesAdapter
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
+import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.loader.SavedSearchesLoader
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.SavedSearchDestroyedEvent
@@ -54,6 +56,8 @@ class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapte
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        linkHandlerTitle = getString(R.string.saved_searches)
+
         listView.onItemClickListener = this
         listView.onItemLongClickListener = this
         loaderManager.initLoader(0, null, this)

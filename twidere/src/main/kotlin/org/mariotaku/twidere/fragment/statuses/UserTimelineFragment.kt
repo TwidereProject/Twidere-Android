@@ -31,6 +31,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.constant.userTimelineFilterKey
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.ParcelableStatusesFragment
@@ -99,6 +100,11 @@ class UserTimelineFragment : ParcelableStatusesFragment() {
 
     override val timelineFilter: TimelineFilter?
         get() = if (enableTimelineFilter) preferences[userTimelineFilterKey] else null
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        linkHandlerTitle = getString(R.string.title_statuses)
+    }
 
     override fun onCreateStatusesLoader(context: Context, args: Bundle, fromUser: Boolean):
             Loader<List<ParcelableStatus>?> {

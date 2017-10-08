@@ -50,7 +50,7 @@ import org.mariotaku.twidere.model.event.*
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
-import org.mariotaku.twidere.task.twitter.GetStatusesTask
+import org.mariotaku.twidere.task.statuses.GetStatusesTask
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.ErrorInfoStore
 import org.mariotaku.twidere.util.Utils
@@ -256,6 +256,8 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
     }
 
     private fun clearNotifications() {
+        val notificationType = notificationType
+        if (notificationType <= 0) return
         if (context != null && userVisibleHint) {
             for (accountKey in accountKeys) {
                 twitterWrapper.clearNotificationAsync(notificationType, accountKey)

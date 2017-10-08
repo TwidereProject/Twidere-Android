@@ -84,6 +84,8 @@ class ErrorInfoStore(application: Context) {
         val KEY_DIRECT_MESSAGES = "direct_messages"
         val KEY_INTERACTIONS = "interactions"
         val KEY_HOME_TIMELINE = "home_timeline"
+        val KEY_PUBLIC_TIMELINE = "public_timeline"
+        val KEY_NETWORK_PUBLIC_TIMELINE = "network_public_timeline"
         val KEY_ACTIVITIES_BY_FRIENDS = "activities_by_friends"
 
         val CODE_NO_DM_PERMISSION = 1

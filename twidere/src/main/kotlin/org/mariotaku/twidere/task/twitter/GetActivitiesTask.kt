@@ -27,6 +27,7 @@ import org.mariotaku.twidere.model.task.GetTimelineResult
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.task.BaseAbstractTask
+import org.mariotaku.twidere.task.statuses.GetStatusesTask
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.ErrorInfoStore
@@ -154,7 +155,6 @@ abstract class GetActivitiesTask(
                     minPositionKey = activity.position_key
                 }
 
-                activity.inserted_date = System.currentTimeMillis()
                 valuesList.add(ObjectCursor.valuesCreatorFrom(ParcelableActivity::class.java)
                         .create(activity))
             }

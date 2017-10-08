@@ -41,8 +41,7 @@ import org.mariotaku.twidere.model.event.SendMessageTaskEvent
 import org.mariotaku.twidere.model.util.ParcelableMessageUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.ExceptionHandlingAbstractTask
-import org.mariotaku.twidere.task.twitter.UpdateStatusTask
-import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
+import org.mariotaku.twidere.task.status.UpdateStatusTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask.Companion.addConversation
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask.Companion.addLocalConversations
 
