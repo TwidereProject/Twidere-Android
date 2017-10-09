@@ -208,8 +208,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                 quotedNameView.visibility = View.VISIBLE
                 quotedTextView.visibility = View.VISIBLE
 
-                val quoted_user_key = status.quoted_user_key!!
-                quotedNameView.name = colorNameManager.getUserNickname(quoted_user_key,
+                val quotedUserKey = status.quoted_user_key!!
+                quotedNameView.name = colorNameManager.getUserNickname(quotedUserKey,
                         status.quoted_user_name)
                 quotedNameView.screenName = "@${status.quoted_user_acct}"
 
@@ -231,9 +231,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                 }
                 quotedTextView.hideIfEmpty()
 
-                val quoted_user_color = colorNameManager.getUserColor(quoted_user_key)
-                if (quoted_user_color != 0) {
-                    quotedView.drawStart(quoted_user_color)
+                val quotedUserColor = colorNameManager.getUserColor(quotedUserKey)
+                if (quotedUserColor != 0) {
+                    quotedView.drawStart(quotedUserColor)
                 } else {
                     quotedView.drawStart(ThemeUtils.getColorFromAttribute(context,
                             R.attr.quoteIndicatorBackgroundColor))
@@ -275,12 +275,10 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
             if (status.is_retweet) {
                 val retweetUserColor = colorNameManager.getUserColor(status.retweeted_by_user_key!!)
-                if (retweetUserColor == 0) {
-                    itemContent.drawStart(userColor)
-                } else if (userColor == 0) {
-                    itemContent.drawStart(retweetUserColor)
-                } else {
-                    itemContent.drawStart(retweetUserColor, userColor)
+                when {
+                    retweetUserColor == 0 -> itemContent.drawStart(userColor)
+                    userColor == 0 -> itemContent.drawStart(retweetUserColor)
+                    else -> itemContent.drawStart(retweetUserColor, userColor)
                 }
             } else {
                 itemContent.drawStart(userColor)
@@ -605,31 +603,43 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
     private fun TextView.displayMediaLabel(cardName: String?, media: Array<ParcelableMedia?>?,
             location: ParcelableLocation?, placeFullName: String?, sensitive: Boolean): Boolean {
         var result = false
-        if (media != null && media.isNotEmpty()) {
-            if (sensitive) {
-                setLabelIcon(R.drawable.ic_label_warning)
-                setText(R.string.label_sensitive_content)
-            } else when {
-                media.type in videoTypes -> {
-                    setLabelIcon(R.drawable.ic_label_video)
-                    setText(R.string.label_video)
+        when {
+            media != null && media.isNotEmpty() -> {
+                when {
+                    sensitive -> {
+                        setLabelIcon(R.drawable.ic_label_warning)
+                        setText(R.string.label_sensitive_content)
+                    }
+                    media.type in videoTypes -> {
+                        setLabelIcon(R.drawable.ic_label_video)
+                        setText(R.string.label_video)
+                    }
+                    media.size > 1 -> {
+                        setLabelIcon(R.drawable.ic_label_gallery)
+                        setText(R.string.label_photos)
+                    }
+                    else -> {
+                        setLabelIcon(R.drawable.ic_label_gallery)
+                        setText(R.string.label_photo)
+                    }
                 }
-                media.size > 1 -> {
-                    setLabelIcon(R.drawable.ic_label_gallery)
-                    setText(R.string.label_photos)
-                }
-                else -> {
-                    setLabelIcon(R.drawable.ic_label_gallery)
-                    setText(R.string.label_photo)
-                }
+                result = true
             }
-            result = true
-        } else if (cardName != null) {
-            if (cardName.startsWith("poll")) {
+            cardName != null -> if (cardName.startsWith("poll")) {
                 setLabelIcon(R.drawable.ic_label_poll)
                 setText(R.string.label_poll)
                 result = true
             }
+//            placeFullName != null -> {
+//                setLabelIcon(R.drawable.ic_label_location)
+//                text = placeFullName
+//                result = true
+//            }
+//            location != null -> {
+//                setLabelIcon(R.drawable.ic_label_location)
+//                setText(R.string.action_view_map)
+//                result = true
+//            }
         }
         refreshDrawableState()
         return result
@@ -645,14 +655,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             forEach { if (it != null) return it.type }
             return 0
         }
-
-    private fun hasVideo(media: Array<ParcelableMedia?>?): Boolean {
-        if (media == null) return false
-        return media.any { item ->
-            if (item == null) return@any false
-            return@any videoTypes.contains(item.type)
-        }
-    }
 
     internal class EventListener(holder: StatusViewHolder) : OnClickListener, OnLongClickListener {
 
