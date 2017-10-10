@@ -15,6 +15,7 @@ import java.lang.annotation.RetentionPolicy;
         ReadPositionTag.NETWORK_PUBLIC_TIMELINE,
         ReadPositionTag.DIRECT_MESSAGES,
         ReadPositionTag.CUSTOM_TIMELINE,
+        ReadPositionTag.LIST_TIMELINE,
 })
 @Retention(RetentionPolicy.SOURCE)
 public @interface ReadPositionTag {
@@ -24,4 +25,5 @@ public @interface ReadPositionTag {
     String ACTIVITIES_ABOUT_ME = "activities_about_me";
     String DIRECT_MESSAGES = "direct_messages";
     String CUSTOM_TIMELINE = "custom_timeline";
+    String LIST_TIMELINE = "list_timeline";
 }

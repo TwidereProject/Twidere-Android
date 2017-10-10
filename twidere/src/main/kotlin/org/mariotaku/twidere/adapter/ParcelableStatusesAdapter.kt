@@ -38,6 +38,7 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.Companion.ITEM_VIEW_TYPE_LOAD_INDICATOR
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.annotation.PreviewStyle
+import org.mariotaku.twidere.annotation.TimelineStyle
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_DISPLAY_SENSITIVE_CONTENTS
 import org.mariotaku.twidere.exception.UnsupportedCountIndexException
@@ -50,34 +51,29 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler
 import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.util.Utils
-import org.mariotaku.twidere.view.holder.EmptyViewHolder
-import org.mariotaku.twidere.view.holder.GapViewHolder
-import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
-import org.mariotaku.twidere.view.holder.TimelineFilterHeaderViewHolder
+import org.mariotaku.twidere.view.holder.*
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 import java.util.*
 
-/**
- * Created by mariotaku on 15/10/26.
- */
-abstract class ParcelableStatusesAdapter(
+class ParcelableStatusesAdapter(
         context: Context,
-        requestManager: RequestManager
+        requestManager: RequestManager,
+        @TimelineStyle val timelineStyle: Int
 ) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context, requestManager),
-        IStatusesAdapter<List<ParcelableStatus>>, IItemCountsAdapter {
+        IStatusesAdapter, IItemCountsAdapter {
 
     protected val inflater: LayoutInflater = LayoutInflater.from(context)
 
-    final override val twidereLinkify: TwidereLinkify
+    override val twidereLinkify: TwidereLinkify
     @PreviewStyle
-    final override val mediaPreviewStyle: Int = preferences[mediaPreviewStyleKey]
-    final override val nameFirst: Boolean = preferences[nameFirstKey]
-    final override val useStarsForLikes: Boolean = preferences[iWantMyStarsBackKey]
+    override val mediaPreviewStyle: Int = preferences[mediaPreviewStyleKey]
+    override val nameFirst: Boolean = preferences[nameFirstKey]
+    override val useStarsForLikes: Boolean = preferences[iWantMyStarsBackKey]
     @TwidereLinkify.HighlightStyle
-    final override val linkHighlightingStyle: Int = preferences[linkHighlightOptionKey]
-    final override val lightFont: Boolean = preferences[lightFontKey]
-    final override val mediaPreviewEnabled: Boolean = Utils.isMediaPreviewEnabled(context, preferences)
-    final override val sensitiveContentEnabled: Boolean = preferences.getBoolean(KEY_DISPLAY_SENSITIVE_CONTENTS, false)
+    override val linkHighlightingStyle: Int = preferences[linkHighlightOptionKey]
+    override val lightFont: Boolean = preferences[lightFontKey]
+    override val mediaPreviewEnabled: Boolean = Utils.isMediaPreviewEnabled(context, preferences)
+    override val sensitiveContentEnabled: Boolean = preferences.getBoolean(KEY_DISPLAY_SENSITIVE_CONTENTS, false)
     private val showCardActions: Boolean = !preferences[hideCardActionsKey]
 
     private val gapLoadingIds: MutableSet<ObjectId> = HashSet()
@@ -115,13 +111,44 @@ abstract class ParcelableStatusesAdapter(
             notifyDataSetChanged()
         }
 
-    private var data: List<ParcelableStatus>? = null
     private var displayPositions: IntArray? = null
     private var displayDataCount: Int = 0
     private var showingActionCardId = RecyclerView.NO_ID
     private val showingFullTextStates = SparseBooleanArray()
     private val reuseStatus = ParcelableStatus()
     private var infoCache: Array<StatusInfo?>? = null
+
+    var data: List<ParcelableStatus>? = null
+        set(data) {
+            when (data) {
+                null -> {
+                    displayPositions = null
+                    displayDataCount = 0
+                }
+                is ObjectCursor -> {
+                    displayPositions = null
+                    displayDataCount = data.size
+                }
+                else -> {
+                    var filteredCount = 0
+                    displayPositions = IntArray(data.size).apply {
+                        data.forEachIndexed { i, item ->
+                            if (!item.is_gap && item.is_filtered) {
+                                filteredCount++
+                            } else {
+                                this[i - filteredCount] = i
+                            }
+                        }
+                    }
+                    displayDataCount = data.size - filteredCount
+                }
+            }
+            field = data
+            this.infoCache = if (data != null) arrayOfNulls(data.size) else null
+            gapLoadingIds.clear()
+            updateItemCount()
+            notifyDataSetChanged()
+        }
 
     override val itemCounts = ItemCounts(5)
 
@@ -165,40 +192,6 @@ abstract class ParcelableStatusesAdapter(
     override fun getStatusCount(raw: Boolean): Int {
         if (raw) return data?.size ?: 0
         return displayDataCount
-    }
-
-    override fun setData(data: List<ParcelableStatus>?): Boolean {
-        var changed = true
-        if (data == null) {
-            displayPositions = null
-            displayDataCount = 0
-        } else if (data is ObjectCursor) {
-            displayPositions = null
-            displayDataCount = data.size
-        } else {
-            var filteredCount = 0
-            displayPositions = IntArray(data.size).apply {
-                data.forEachIndexed { i, item ->
-                    if (!item.is_gap && item.is_filtered) {
-                        filteredCount++
-                    } else {
-                        this[i - filteredCount] = i
-                    }
-                }
-            }
-            displayDataCount = data.size - filteredCount
-            changed = this.data != data
-        }
-        this.data = data
-        this.infoCache = if (data != null) arrayOfNulls(data.size) else null
-        gapLoadingIds.clear()
-        updateItemCount()
-        notifyDataSetChanged()
-        return changed
-    }
-
-    fun getData(): List<ParcelableStatus>? {
-        return data
     }
 
     override fun getItemId(position: Int): Long {
@@ -302,7 +295,7 @@ abstract class ParcelableStatusesAdapter(
                 return LoadIndicatorViewHolder(view)
             }
             VIEW_TYPE_STATUS -> {
-                return onCreateStatusViewHolder(parent) as RecyclerView.ViewHolder
+                return createStatusViewHolder(this, inflater, parent, timelineStyle) as RecyclerView.ViewHolder
             }
             VIEW_TYPE_EMPTY -> {
                 return EmptyViewHolder(Space(context))
@@ -358,8 +351,6 @@ abstract class ParcelableStatusesAdapter(
             else -> throw UnsupportedCountIndexException(countIndex, position)
         }
     }
-
-    protected abstract fun onCreateStatusViewHolder(parent: ViewGroup): IStatusViewHolder
 
     override fun addGapLoadingId(id: ObjectId) {
         gapLoadingIds.add(id)
@@ -521,6 +512,28 @@ abstract class ParcelableStatusesAdapter(
         const val ITEM_INDEX_PINNED_STATUS = 2
         const val ITEM_INDEX_STATUS = 3
         const val ITEM_INDEX_LOAD_END_INDICATOR = 4
+
+
+        fun createStatusViewHolder(adapter: IStatusesAdapter, inflater: LayoutInflater,
+                parent: ViewGroup, @TimelineStyle timelineStyle: Int): IStatusViewHolder {
+            when (timelineStyle) {
+                TimelineStyle.STAGGERED -> {
+                    val view = inflater.inflate(R.layout.adapter_item_media_status, parent, false)
+                    val holder = MediaStatusViewHolder(adapter, view)
+                    holder.setOnClickListeners()
+                    holder.setupViewOptions()
+                    return holder
+                }
+                TimelineStyle.PLAIN, TimelineStyle.GALLERY -> {
+                    val view = inflater.inflate(StatusViewHolder.layoutResource, parent, false)
+                    val holder = StatusViewHolder(adapter, view)
+                    holder.setOnClickListeners()
+                    holder.setupViewOptions()
+                    return holder
+                }
+                else -> throw AssertionError()
+            }
+        }
     }
 
 

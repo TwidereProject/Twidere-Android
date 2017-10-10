@@ -23,7 +23,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.content.Loader
 import org.mariotaku.twidere.TwidereConstants.*
-import org.mariotaku.twidere.fragment.AbsMediaStatusesFragment
+import org.mariotaku.twidere.fragment.ParcelableStatusesFragment
 import org.mariotaku.twidere.loader.statuses.MediaStatusesSearchLoader
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.util.Utils
@@ -31,7 +31,7 @@ import org.mariotaku.twidere.util.Utils
 /**
  * Created by mariotaku on 14/11/5.
  */
-class MediaStatusesSearchFragment : AbsMediaStatusesFragment() {
+class MediaStatusesSearchFragment : ParcelableStatusesFragment() {
 
     override fun onCreateStatusesLoader(context: Context, args: Bundle, fromUser: Boolean):
             Loader<List<ParcelableStatus>?> {
@@ -41,19 +41,8 @@ class MediaStatusesSearchFragment : AbsMediaStatusesFragment() {
         val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
         val makeGap = args.getBoolean(EXTRA_MAKE_GAP, true)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-        return MediaStatusesSearchLoader(activity, accountKey, query, adapter.getData(), fromUser, makeGap,
+        return MediaStatusesSearchLoader(activity, accountKey, query, adapter.data, fromUser, makeGap,
                 loadingMore)
-    }
-
-    override fun getStatuses(maxId: String?, sinceId: String?): Int {
-        if (context == null) return -1
-        val args = Bundle(arguments)
-        args.putBoolean(EXTRA_MAKE_GAP, false)
-        args.putString(EXTRA_MAX_ID, maxId)
-        args.putString(EXTRA_SINCE_ID, sinceId)
-        args.putBoolean(EXTRA_FROM_USER, true)
-        loaderManager.restartLoader(loaderId, args, this)
-        return 0
     }
 
 }

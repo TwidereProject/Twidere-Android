@@ -36,7 +36,7 @@ import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.view.ProfileImageView
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 
-class MediaStatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View) : RecyclerView.ViewHolder(itemView), IStatusViewHolder, View.OnClickListener, View.OnLongClickListener {
+class MediaStatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : RecyclerView.ViewHolder(itemView), IStatusViewHolder, View.OnClickListener, View.OnLongClickListener {
     override val profileImageView: ProfileImageView = itemView.mediaProfileImage
 
     private val mediaImageContainer = itemView.mediaImageContainer

@@ -25,12 +25,12 @@ import android.support.v4.content.Loader
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.extension.linkHandlerTitle
-import org.mariotaku.twidere.fragment.AbsMediaStatusesFragment
+import org.mariotaku.twidere.fragment.ParcelableStatusesFragment
 import org.mariotaku.twidere.loader.statuses.MediaTimelineLoader
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 
-class UserMediaTimelineFragment : AbsMediaStatusesFragment() {
+class UserMediaTimelineFragment : ParcelableStatusesFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -43,20 +43,7 @@ class UserMediaTimelineFragment : AbsMediaStatusesFragment() {
         val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
         val screenName = args.getString(EXTRA_SCREEN_NAME)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-        return MediaTimelineLoader(context, accountKey, userKey, screenName, adapter.getData(),
+        return MediaTimelineLoader(context, accountKey, userKey, screenName, adapter.data,
                 fromUser, loadingMore)
     }
-
-
-    override fun getStatuses(maxId: String?, sinceId: String?): Int {
-        if (context == null) return -1
-        val args = Bundle(arguments)
-        args.putBoolean(EXTRA_MAKE_GAP, false)
-        args.putString(EXTRA_MAX_ID, maxId)
-        args.putString(EXTRA_SINCE_ID, sinceId)
-        args.putBoolean(EXTRA_FROM_USER, true)
-        loaderManager.restartLoader(loaderId, args, this)
-        return 0
-    }
-
 }

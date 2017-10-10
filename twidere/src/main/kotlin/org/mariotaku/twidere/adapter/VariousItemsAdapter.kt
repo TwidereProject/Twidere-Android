@@ -8,6 +8,7 @@ import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.alias.ItemClickListener
+import org.mariotaku.twidere.annotation.TimelineStyle
 import org.mariotaku.twidere.model.ParcelableHashtag
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUser
@@ -45,8 +46,8 @@ class VariousItemsAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {
             VIEW_TYPE_STATUS -> {
-                return ListParcelableStatusesAdapter.createStatusViewHolder(dummyAdapter,
-                        inflater, parent)
+                return ParcelableStatusesAdapter.createStatusViewHolder(dummyAdapter,
+                        inflater, parent, TimelineStyle.PLAIN) as RecyclerView.ViewHolder
             }
             VIEW_TYPE_USER -> {
                 return ParcelableUsersAdapter.createUserViewHolder(dummyAdapter, inflater, parent)

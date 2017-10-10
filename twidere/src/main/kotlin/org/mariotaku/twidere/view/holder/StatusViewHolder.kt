@@ -54,7 +54,7 @@ import java.lang.ref.WeakReference
  *
  * Created by mariotaku on 14/11/19.
  */
-class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View) : ViewHolder(itemView), IStatusViewHolder {
+class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : ViewHolder(itemView), IStatusViewHolder {
 
     override val profileImageView: ShapedImageView by lazy { itemView.profileImage }
     override val profileTypeView: ImageView by lazy { itemView.profileType }

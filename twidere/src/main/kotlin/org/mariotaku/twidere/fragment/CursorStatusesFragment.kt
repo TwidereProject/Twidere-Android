@@ -35,10 +35,11 @@ import org.mariotaku.ktextension.*
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter
+import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
 import org.mariotaku.twidere.annotation.FilterScope
+import org.mariotaku.twidere.annotation.TimelineStyle
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_FROM_USER
 import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.loader.ExtendedObjectCursorLoader
@@ -55,7 +56,7 @@ import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.ErrorInfoStore
 import org.mariotaku.twidere.util.Utils
 
-abstract class CursorStatusesFragment: AbsStatusesFragment() {
+abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
     override var refreshing: Boolean
         get() = swipeLayout.isRefreshing
@@ -143,12 +144,12 @@ abstract class CursorStatusesFragment: AbsStatusesFragment() {
         return data.isNotNullOrEmpty()
     }
 
-    override fun onCreateAdapter(context: Context, requestManager: RequestManager): ListParcelableStatusesAdapter {
-        return ListParcelableStatusesAdapter(context, requestManager)
+    override fun onCreateAdapter(context: Context, requestManager: RequestManager): ParcelableStatusesAdapter {
+        return ParcelableStatusesAdapter(context, requestManager, TimelineStyle.PLAIN)
     }
 
     override fun onLoaderReset(loader: Loader<List<ParcelableStatus>?>) {
-        adapter.setData(null)
+        adapter.data = null
     }
 
     override fun onLoadMoreContents(@IndicatorPosition position: Long) {
@@ -323,7 +324,7 @@ abstract class CursorStatusesFragment: AbsStatusesFragment() {
     }
 
     companion object {
-        private val statusColumnsLite = Statuses.COLUMNS - arrayOf(Statuses.MENTIONS_JSON,
+         val statusColumnsLite = Statuses.COLUMNS - arrayOf(Statuses.MENTIONS_JSON,
                 Statuses.CARD, Statuses.FILTER_FLAGS, Statuses.FILTER_USERS, Statuses.FILTER_LINKS,
                 Statuses.FILTER_SOURCES, Statuses.FILTER_NAMES, Statuses.FILTER_TEXTS,
                 Statuses.FILTER_DESCRIPTIONS)

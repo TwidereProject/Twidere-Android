@@ -28,8 +28,9 @@ import com.bumptech.glide.RequestManager
 import com.squareup.otto.Subscribe
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
-import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter
+import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
+import org.mariotaku.twidere.annotation.TimelineStyle
 import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.extension.model.getMaxId
 import org.mariotaku.twidere.loader.iface.IPaginationLoader
@@ -125,8 +126,8 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         return ParcelableStatusesBusCallback()
     }
 
-    override fun onCreateAdapter(context: Context, requestManager: RequestManager): ListParcelableStatusesAdapter {
-        return ListParcelableStatusesAdapter(context, this.requestManager)
+    override fun onCreateAdapter(context: Context, requestManager: RequestManager): ParcelableStatusesAdapter {
+        return ParcelableStatusesAdapter(context, this.requestManager, TimelineStyle.PLAIN)
     }
 
     override fun onStatusesLoaded(loader: Loader<List<ParcelableStatus>?>, data: List<ParcelableStatus>?) {

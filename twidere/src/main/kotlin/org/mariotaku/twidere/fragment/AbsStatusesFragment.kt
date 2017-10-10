@@ -100,9 +100,9 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
     protected abstract val accountKeys: Array<UserKey>
 
     protected var adapterData: List<ParcelableStatus>?
-        get() = adapter.getData()
+        get() = adapter.data
         set(data) {
-            adapter.setData(data)
+            adapter.data = data
         }
 
     @ReadPositionTag

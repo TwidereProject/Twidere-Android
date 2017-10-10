@@ -742,10 +742,28 @@ public interface TwidereDataStore {
 
         String[] TYPES = ParcelableStatusTableInfo.TYPES;
 
+        interface Home extends Statuses {
+
+            String CONTENT_PATH = "home_timeline";
+            String TABLE_NAME = "home_timeline";
+
+            @NonNull
+            Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
+        }
+
         interface Favorites extends Statuses {
 
             String CONTENT_PATH = "favorites_timeline";
             String TABLE_NAME = "favorites_timeline";
+
+            @NonNull
+            Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
+        }
+
+        interface ListTimeline extends Statuses {
+
+            String CONTENT_PATH = "list_timeline";
+            String TABLE_NAME = "list_timeline";
 
             @NonNull
             Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);

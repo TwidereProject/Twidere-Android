@@ -41,6 +41,7 @@ import org.mariotaku.twidere.adapter.iface.IActivitiesAdapter
 import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
+import org.mariotaku.twidere.annotation.TimelineStyle
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.exception.UnsupportedCountIndexException
 import org.mariotaku.twidere.extension.model.activityStatus
@@ -188,10 +189,10 @@ class ParcelableActivitiesAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {
             ITEM_VIEW_TYPE_STATUS -> {
-                val holder = ListParcelableStatusesAdapter.createStatusViewHolder(statusAdapterDelegate,
-                        inflater, parent)
+                val holder = ParcelableStatusesAdapter.createStatusViewHolder(statusAdapterDelegate,
+                        inflater, parent, TimelineStyle.PLAIN)
                 holder.setStatusClickListener(eventListener)
-                return holder
+                return holder as RecyclerView.ViewHolder
             }
             ITEM_VIEW_TYPE_TITLE_SUMMARY -> {
                 val view = inflater.inflate(R.layout.list_item_activity_summary_compact, parent, false)

@@ -9,7 +9,7 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 /**
  * Created by mariotaku on 14/11/18.
  */
-interface IStatusesAdapter<in Data> : IContentAdapter, IGapSupportedAdapter {
+interface IStatusesAdapter : IContentAdapter, IGapSupportedAdapter {
 
     @TwidereLinkify.HighlightStyle
     val linkHighlightingStyle: Int
@@ -40,8 +40,6 @@ interface IStatusesAdapter<in Data> : IContentAdapter, IGapSupportedAdapter {
     fun isFullTextVisible(position: Int): Boolean
 
     fun setFullTextVisible(position: Int, visible: Boolean)
-
-    fun setData(data: Data?): Boolean
 
     /**
      * @param raw Count hidden (filtered) item if `true `

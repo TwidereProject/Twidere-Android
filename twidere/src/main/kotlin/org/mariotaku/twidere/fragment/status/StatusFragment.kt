@@ -139,7 +139,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             adapter.updateItemDecoration()
             val status: ParcelableStatus = args.getParcelable(EXTRA_STATUS)
             val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-            return ConversationLoader(activity, status, adapter.getData(), true, loadingMore).apply {
+            return ConversationLoader(activity, status, adapter.data, true, loadingMore).apply {
                 pagination = args.toPagination()
             }
         }
@@ -381,7 +381,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     args.putParcelable(EXTRA_STATUS, status)
                 }
                 adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.BOTH
-                adapter.setData(null)
+                adapter.data = null
                 loadConversation(status, null, null)
                 loadActivity(status)
 
@@ -511,8 +511,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     private fun setConversation(data: List<ParcelableStatus>?) {
         val readPosition = saveReadPosition()
-        val changed = adapter.setData(data)
-        hasMoreConversation = data != null && changed
+        adapter.data = data
+        hasMoreConversation = data != null
         restoreReadPosition(readPosition)
     }
 
