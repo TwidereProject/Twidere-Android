@@ -39,6 +39,7 @@
   <string name="action_change_language">言語を変更</string>
   <string name="action_clear">クリア</string>
   <string name="action_clear_messages">メッセージをクリア</string>
+  <string name="action_clear_messages_and_delete_conversation">会話のクリアと削除</string>
   <string name="action_comment">コメント</string>
   <string name="action_compose">ツイートする</string>
   <string name="action_compose_message_convert_to_status">ツイートに変換</string>
@@ -316,6 +317,7 @@
   <string name="external_group_host_format"><xliff:g id="host">%s</xliff:g> の外部グループ</string>
   <string name="external_user_host_format"><xliff:g id="host">%s</xliff:g>の外部ユーザー</string>
   <string name="extra_configurations">追加設定</string>
+  <string name="extra_feature_description_advanced_filters">フィルターの購読や高度なルールなど</string>
   <string name="extra_feature_description_schedule_status">予約ツイート (あとで送る)</string>
   <string name="extra_feature_description_share_gif">ツイートでGIF動画を共有</string>
   <string name="extra_feature_description_sync_data">データを Dropbox や Google ドライブなどで同期</string>
@@ -473,6 +475,7 @@
   <string name="label_statuses_retweets_replies">ツイートとリツイートと返信</string>
   <string name="label_streaming_service">ストリーミングサービス</string>
   <string name="label_translate_from_language"><xliff:g id="language">%s</xliff:g>から翻訳</string>
+  <string name="label_translated_to_language"><xliff:g id="language">%s</xliff:g> へ翻訳</string>
   <string name="label_translation">翻訳</string>
   <string name="label_username">ユーザー名かメールアドレス</string>
   <string name="label_video">動画</string>
@@ -677,7 +680,6 @@
   <string name="notification_channel_name_background_progresses">バックグラウンド操作</string>
   <string name="notification_channel_name_content_interactions">みんなの反応</string>
   <string name="notification_channel_name_content_messages">メッセージ</string>
-  <string name="notification_channel_name_content_subscriptions">予約購読</string>
   <string name="notification_channel_name_content_updates">アップデート</string>
   <string name="notification_channel_name_service_statuses">サービスの状態</string>
   <string name="notification_direct_message"><xliff:g id="user">%s</xliff:g>からDMが届きました。</string>
@@ -1053,6 +1055,7 @@
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
   <string name="title_sync">データ同期</string>
   <string name="title_sync_settings">同期設定</string>
+  <string name="title_translate_to">&#8230;へ翻訳</string>
   <string name="title_unpin_status_confirm">ツイート固定の解除</string>
   <string name="title_user">ユーザー</string>
   <string name="title_user_colors">ユーザー色</string>

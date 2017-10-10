@@ -39,6 +39,7 @@
   <string name="action_change_language">Cambiar idioma</string>
   <string name="action_clear">Limpar</string>
   <string name="action_clear_messages">Limpar mensaxes</string>
+  <string name="action_clear_messages_and_delete_conversation">Eliminar conversa</string>
   <string name="action_comment">Comentar</string>
   <string name="action_compose">Escribir chío</string>
   <string name="action_compose_message_convert_to_status">Converter en chío</string>
@@ -58,7 +59,9 @@
   <string name="action_edit_filter_rule">Editar filtro</string>
   <string name="action_enable">Activar</string>
   <string name="action_enable_notifications">Activar notificacións</string>
+  <string name="action_enable_promotions">Permitir anuncios</string>
   <string name="action_enable_retweets">Activar rechouchíos</string>
+  <string name="action_export_to_muted_users">Exportar a usuarios silenciados</string>
   <string name="action_favorite">Favorito</string>
   <string name="action_filter_import_from_blocked_users">Importar de usuarios bloqueados</string>
   <string name="action_filter_import_from_muted_users">Importar de usuarios silenciados</string>
@@ -82,6 +85,7 @@
   <string name="action_mute_notifications">Silenciar notificacións</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, gardouse ás <xliff:g id="time">%2$s</xliff:g></string>
   <string name="action_next_step">Seguinte</string>
+  <string name="action_no_thanks">Non, gracias</string>
   <string name="action_open_in_browser">Abrir en navegador</string>
   <string name="action_pick_color">Escoller cor</string>
   <string name="action_purchase">Comprar</string>
@@ -111,6 +115,7 @@
   <string name="action_set_color">Escoller cor</string>
   <string name="action_set_nickname">Escoller alcume</string>
   <string name="action_set_status_visibility">Escoller visibilidade</string>
+  <string name="action_settings">Axustes</string>
   <string name="action_share">Compartir</string>
   <string name="action_sign_in">Entrar</string>
   <!-- [verb] Used for skip some settings -->
@@ -229,7 +234,7 @@
   <string name="consumer_secret">Chave secreta cliente</string>
   <string name="content">Contido</string>
   <string name="content_and_storage">Contido e almacenamento</string>
-  <string name="content_description_sticker">Sticker</string>
+  <string name="content_description_sticker">Pegatina</string>
   <string name="content_to_notify">Contido a notificar</string>
   <string name="content_to_refresh">Contido a recargar</string>
   <string name="contributors_list_summary">Se non atopas o teu nome, por favor, avísanos na nosa conta.</string>
@@ -312,9 +317,11 @@
   <string name="external_group_host_format">Grupo externo en <xliff:g id="host">%s</xliff:g></string>
   <string name="external_user_host_format">Usuario externo en <xliff:g id="host">%s</xliff:g></string>
   <string name="extra_configurations">Axustes extra</string>
+  <string name="extra_feature_description_advanced_filters">Filtrar suscripcións, regras avanzadas etc</string>
   <string name="extra_feature_description_schedule_status">Programar chío (enviar máis tarde)</string>
   <string name="extra_feature_description_share_gif">Compartir GIF nun chío</string>
   <string name="extra_feature_description_sync_data">Sincroniza datos con Dropbox, Google Drive, etc</string>
+  <string name="extra_feature_title_advanced_filters">Filtros avanzados</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">Apoia Twidere e consegue características avanzadas</string>
   <string name="extra_features_pack_description">Ou compra o paquete de características para conseguilas todas (incluídas as de futuros lanzamentos)</string>
@@ -398,6 +405,7 @@
   <string name="keyword_filter_name">Palabra clave: <xliff:g id="name">%s</xliff:g></string>
   <string name="label_account">Conta</string>
   <string name="label_account_type">Tipo de conta</string>
+  <string name="label_advanced">Avanzado</string>
   <string name="label_auth_type">Tipo Auth</string>
   <string name="label_background_operation_service">Servizo en segundo plano</string>
   <string name="label_buffer_accounts">Contas no Buffer</string>
@@ -414,6 +422,16 @@
   <string name="label_data_provider">Provedor de base de datos Twidere</string>
   <string name="label_feedback_content">Contido</string>
   <string name="label_feedback_title">Título</string>
+  <string name="label_filter_apply_to">Aplicar a&#8230;</string>
+  <string name="label_filter_for">Para&#8230;</string>
+  <string name="label_filter_scope_home">Inicio</string>
+  <string name="label_filter_scope_interactions">Interaccións</string>
+  <string name="label_filter_scope_messages">Mensaxes</string>
+  <string name="label_filter_scope_search_other">Outros</string>
+  <string name="label_filter_scope_search_results">Resultados da busca</string>
+  <string name="label_filter_target_description">Descrición</string>
+  <string name="label_filter_target_name">Nome</string>
+  <string name="label_filter_target_text">Texto</string>
   <string name="label_filters_subscription">Subscrición</string>
   <string name="label_follow_request_sent">Petición de seguimento enviada</string>
   <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> vía <xliff:g example="api" id="source">%2$s</xliff:g></string>
@@ -457,6 +475,7 @@
   <string name="label_statuses_retweets_replies">Chíos, rechouchíos e respostas</string>
   <string name="label_streaming_service">Servizo streaming</string>
   <string name="label_translate_from_language">Traducir do <xliff:g id="language">%s</xliff:g></string>
+  <string name="label_translated_to_language">Traducir do <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">Tradución</string>
   <string name="label_username">Nome de usuario</string>
   <string name="label_video">Vídeo</string>
@@ -523,7 +542,7 @@
   <string name="message_format_conversation_name_update">Cambiouse o nome de conversa a <xliff:g example="User" id="name">%1$s</xliff:g></string>
   <string name="message_format_conversation_name_update_by_user"><xliff:g example="User" id="by_user">%1$s</xliff:g> cambiou o nome da conversa a <xliff:g example="New name" id="name">%2$s</xliff:g></string>
   <string name="message_format_participants_join">Uniuse <xliff:g example="User" id="name">%1$s</xliff:g></string>
-  <string name="message_format_participants_join_added"><xliff:g example="Sender" id="sender">%1$s</xliff:g> engadiu <xliff:g example="Recipient" id="recipient">%2$s</xliff:g></string>
+  <string name="message_format_participants_join_added"><xliff:g example="Sender" id="sender">%1$s</xliff:g> engadiu a <xliff:g example="Recipient" id="recipient">%2$s</xliff:g></string>
   <string name="message_format_participants_leave">Saiu <xliff:g example="User" id="name">%1$s</xliff:g></string>
   <string name="message_format_sender_time"><xliff:g example="User" id="sender">%1$s</xliff:g> · <xliff:g example="12:00" id="time">%2$s</xliff:g></string>
   <string name="message_gif_sharing_introduction">Buscar e compartir GIF con GIPHY</string>
@@ -1027,6 +1046,7 @@
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
   <string name="title_sync">Sincronizar datos</string>
   <string name="title_sync_settings">Axustes de sincronización</string>
+  <string name="title_translate_to">Traducir a&#8230;</string>
   <string name="title_unpin_status_confirm">Desfacer salientar</string>
   <string name="title_user">Usuario</string>
   <string name="title_user_colors">Cores do usuario</string>

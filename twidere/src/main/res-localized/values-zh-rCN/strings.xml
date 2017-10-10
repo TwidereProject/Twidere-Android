@@ -39,6 +39,7 @@
   <string name="action_change_language">更改语言</string>
   <string name="action_clear">清除</string>
   <string name="action_clear_messages">清除信息</string>
+  <string name="action_clear_messages_and_delete_conversation">清空并删除对话</string>
   <string name="action_comment">评论</string>
   <string name="action_compose">撰写</string>
   <string name="action_compose_message_convert_to_status">转换为推文</string>
@@ -105,6 +106,7 @@
   <string name="action_retweet">转推</string>
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">保存</string>
+  <string name="action_save_to">保存到&#8230;</string>
   <string name="action_search">搜索</string>
   <string name="action_select_all">全选</string>
   <string name="action_select_none">全不选</string>
@@ -371,6 +373,7 @@
   <string name="hint_accounts_dashboard_title">帐号面板</string>
   <string name="hint_conversation_name">对话名称</string>
   <string name="hint_empty_filters_subscriptions">没有订阅</string>
+  <string name="hint_error_field_required">必填</string>
   <string name="hint_error_message_no_content">没有内容</string>
   <string name="hint_message_select_user">搜索用户</string>
   <string name="hint_no_account">没有帐号</string>
@@ -474,6 +477,7 @@
   <string name="label_statuses_retweets_replies">推文、转推和回复</string>
   <string name="label_streaming_service">实时流服务</string>
   <string name="label_translate_from_language">从 <xliff:g id="language">%s</xliff:g> 翻译</string>
+  <string name="label_translated_to_language">翻译到 <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">翻译</string>
   <string name="label_username">用户名</string>
   <string name="label_video">视频</string>
@@ -582,6 +586,7 @@
   <string name="message_toast_link_copied_to_clipboard">链接已复制到剪贴板</string>
   <string name="message_toast_livewp_daydream_enabled_message">我有一份小礼物给您，去系统设置看看吧 :)</string>
   <string name="message_toast_login_verification_failed">登录验证失败</string>
+  <string name="message_toast_media_saved">媒体已保存</string>
   <!-- Toast message for network errors -->
   <string name="message_toast_network_error">网络错误</string>
   <string name="message_toast_network_error_with_message">网络错误：<xliff:g id="message">%s</xliff:g></string>
@@ -1044,6 +1049,7 @@
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
   <string name="title_sync">数据同步</string>
   <string name="title_sync_settings">同步设置</string>
+  <string name="title_translate_to">翻译到&#8230;</string>
   <string name="title_unpin_status_confirm">取消置顶推文</string>
   <string name="title_user">用户</string>
   <string name="title_user_colors">用户颜色标签</string>
@@ -1114,4 +1120,7 @@
   <string name="users_blocked">您阻止了这些用户</string>
   <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g> 的列表</string>
   <string name="users_statuses">用户的推文</string>
+  <string name="label_drafts_all">全部</string>
+  <string name="label_drafts_statuses">推文</string>
+  <string name="label_drafts_others">其他</string>
 </resources>

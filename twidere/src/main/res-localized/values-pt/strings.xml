@@ -21,6 +21,7 @@
   <string name="action_add_gif">Adicionar GIF</string>
   <string name="action_add_media">Adicionar mídia</string>
   <string name="action_add_member">Adicionar membro</string>
+  <string name="action_add_name_to_home_screen">Adicione <xliff:g example="Name" id="name">%1$s</xliff:g> à tela inicial</string>
   <string name="action_add_tab">Adicionar aba</string>
   <string name="action_add_tab_to_home_screen">Adicionar aba à página inicial</string>
   <string name="action_add_to_filter">Adicionar filtro</string>
@@ -38,6 +39,8 @@
   <string name="action_change_language">Mudar idioma</string>
   <string name="action_clear">Limpar</string>
   <string name="action_clear_messages">Limpar mensagens</string>
+  <string name="action_clear_messages_and_delete_conversation">Limpar e excluir conversa</string>
+  <string name="action_comment">Comente</string>
   <string name="action_compose">Escrever</string>
   <string name="action_compose_message_convert_to_status">Converter para Tweet</string>
   <string name="action_connect_to_buffer">Conectar</string>
@@ -56,7 +59,9 @@
   <string name="action_edit_filter_rule">Editar regra</string>
   <string name="action_enable">Desabilitar</string>
   <string name="action_enable_notifications">Habilitar notificações</string>
+  <string name="action_enable_promotions">Ativar promoções</string>
   <string name="action_enable_retweets">Habilitar retweets</string>
+  <string name="action_export_to_muted_users">Exportar para usuários silenciados</string>
   <string name="action_favorite">Favoritar</string>
   <string name="action_filter_import_from_blocked_users">Importar de usuários bloqueados</string>
   <string name="action_filter_import_from_muted_users">Importar de usuários silenciados</string>
@@ -89,6 +94,7 @@
   <string name="action_quote">Citar</string>
   <string name="action_record_video">Gravar vídeo</string>
   <string name="action_refresh">Atualizar</string>
+  <string name="action_refresh_launch_presentations">Atualizar telas de início</string>
   <string name="action_register">Registrar</string>
   <string name="action_remove_conversation_avatar">Remover ícone</string>
   <string name="action_reply">Responder</string>
@@ -100,6 +106,7 @@
   <string name="action_retweet">Retweetar</string>
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Salvar</string>
+  <string name="action_save_to">Salvar em&#8230;</string>
   <string name="action_search">Procurar</string>
   <string name="action_select_all">Selecionar tudo</string>
   <string name="action_select_none">Selecionar nenhum</string>
@@ -146,12 +153,36 @@
   <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> favoritou</string>
   <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> favoritaram</string>
   <string name="activity_about_me_favorited_media_tagged"><xliff:g id="user">%s</xliff:g> favoritou um tweet em que você está marcado</string>
+  <string name="activity_about_me_favorited_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> favoritaram um tweet em que você foi mencionado</string>
+  <string name="activity_about_me_favorited_mention"><xliff:g id="user">%s</xliff:g> favoritou um tweet em que você foi mencionado</string>
+  <string name="activity_about_me_favorited_mention_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> favoritaram um tweet em que você foi mencionado</string>
+  <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g> favoritou seu retweet</string>
+  <string name="activity_about_me_favorited_retweet_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> favoritaram seu retweet</string>
   <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> está te seguindo</string>
   <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> estão te seguindo</string>
   <string name="activity_about_me_like"><xliff:g id="user">%s</xliff:g> curtiu</string>
   <string name="activity_about_me_like_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> curtiram</string>
   <string name="activity_about_me_liked_media_tagged"><xliff:g id="user">%s</xliff:g> curtiu um tweet que você foi mencionado</string>
   <string name="activity_about_me_liked_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> curtiram um tweet que você foi mencionado</string>
+  <string name="activity_about_me_liked_mention"><xliff:g id="user">%s</xliff:g> linkou um tweet em que você foi mencionado</string>
+  <string name="activity_about_me_liked_mention_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> linkaram um tweet em que você foi mencionado</string>
+  <string name="activity_about_me_liked_retweet"><xliff:g id="user">%s</xliff:g> curtiu seu retweet</string>
+  <string name="activity_about_me_liked_retweet_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> curtiram seu retweet</string>
+  <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> te adicionou a uma lista</string>
+  <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> te adicionaram a listas</string>
+  <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> te adicionou à lista "<xliff:g id="list">%2$s</xliff:g>\"</string>
+  <string name="activity_about_me_media_tagged"><xliff:g id="user">%s</xliff:g> te marcou</string>
+  <string name="activity_about_me_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> te marcaram</string>
+  <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g> retweetou</string>
+  <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> retweetaram</string>
+  <string name="activity_about_me_retweeted_media_tagged"><xliff:g id="user">%s</xliff:g> retweetou um tweet em que você foi marcado</string>
+  <string name="activity_about_me_retweeted_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> retweetaram um tweet em que você foi marcado</string>
+  <string name="activity_about_me_retweeted_mention"><xliff:g id="user">%s</xliff:g> retweetou um tweet em que você foi mencionado</string>
+  <string name="activity_about_me_retweeted_mention_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> retweetaram um tweet em que você foi mencionado</string>
+  <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g> retweetou seu retweet</string>
+  <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> retweetaram seu retweet</string>
+  <string name="activity_joined_twitter"><xliff:g id="user">%s</xliff:g> entrou no Twitter</string>
+  <string name="activity_joined_twitter_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> entraram no Twitter</string>
   <string name="add_account">Adicionar uma conta</string>
   <string name="add_host_mapping">Adicionar mapeamento de hosts</string>
   <string name="add_image">Adicionar imagem</string>
@@ -161,9 +192,11 @@
   <!-- App name, normally you don't need to translate this. -->
   <string name="app_name">Twidere</string>
   <string name="app_restart_confirm">Twidere será reiniciado para aplicar as configurações.</string>
+  <string name="app_terminate_confirm">O Twidere irá fechar para aplicar as configurações.</string>
   <string name="appearance">Aparência</string>
   <string name="auth_type_basic">Básico</string>
   <string name="auth_type_oauth">OAuth</string>
+  <string name="auth_type_oauth2">OAuth 2</string>
   <string name="auth_type_twip_o">twip O Mode</string>
   <string name="auth_type_xauth">xAuth</string>
   <string name="auto_refresh">Atualização automática</string>
@@ -180,6 +213,7 @@
   <string name="cant_load_all_replies_message">Não é possível carregar todas as respostas. &lt;a href=\"#dialog\";&gt;Por quê?&lt;/a&gt;</string>
   <string name="cards">Cartões</string>
   <string name="clear_cache">Limpar o cache</string>
+  <string name="clear_cache_summary">Limpar cache de mídia armazenada.</string>
   <string name="clear_databases">Limpar dados armazenados</string>
   <string name="clear_databases_summary">Limpar todos os tweets, perfis e mensagens. Você não irá perder as credenciais de sua conta.</string>
   <string name="clear_search_history">Limpar histórico de buscas</string>
@@ -201,6 +235,7 @@
   <string name="consumer_secret">Segredo de consumidor</string>
   <string name="content">Conteúdo</string>
   <string name="content_and_storage">Conteúdo e Armazenamento</string>
+  <string name="content_description_sticker">Adesivo</string>
   <string name="content_to_notify">Conteúdo para notificar</string>
   <string name="content_to_refresh">Conteúdo para atualizar</string>
   <string name="contributors_list_summary">Se você não encontrar o seu nome, por favor avise a conta do nosso projeto.</string>
@@ -254,16 +289,22 @@
   <string name="emoji_support">Suporte de Emoji</string>
   <string name="empty_content">Nenhum conteúdo</string>
   <string name="enable_streaming">Habilitar atualização em tempo real</string>
+  <string name="error_info_oauth_timestamp_error">Por favor cheque a data de seu sistema &amp; configurações de horário.</string>
   <string name="error_message">Erro: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_device_incompatible">Este dispositivo não é compatível com Twidere, atualize para o Android mais recente. \nVocê pode enviar as informações abaixo para ajudar-me a relatar esse problema para o fabricante do dispositivo.</string>
+  <string name="error_message_media_message_attachment_not_supported">Anexar mídia à DM não é suportado</string>
+  <string name="error_message_media_message_too_many">Mídias demais</string>
   <string name="error_message_media_upload_failed">Upload de media falhou.</string>
   <string name="error_message_media_uploader_not_found">App de envio de imagem não encontrado, talvez tenha sido desinstalado.</string>
   <string name="error_message_message_too_long">Mensagem muito longa.</string>
+  <string name="error_message_message_too_many_participants">Participantes demais</string>
   <string name="error_message_no_content">Nenhum conteúdo</string>
   <string name="error_message_rate_limit">Limite do Twitter alcançado, tente de novo em <xliff:g id="time">%s</xliff:g></string>
+  <string name="error_message_scheduler_not_available">Agendamento de tweet não disponível</string>
   <string name="error_message_status_too_long">Tweet muito longo.</string>
   <string name="error_message_tweet_shorten_failed">Falha ao encurtar URL.</string>
   <string name="error_message_tweet_shortener_not_found">Encurtador de URL não encontrado, talvez tenha sido desinstalado.</string>
+  <string name="error_message_video_upload_not_supported">Envio de vídeo não suportado</string>
   <string name="error_no_access_for_credentials">Seu aplicativo não consegue acessar esse recurso, você habilitou \'Forçar o uso de APIs privadas\'?</string>
   <string name="error_no_dm_permission">Sem permissão para mensagem direta, verifique sua permissão nas configurações do aplicativo do Twitter.</string>
   <string name="error_title_device_incompatible">Dispositivo incompatível</string>
@@ -277,8 +318,11 @@
   <string name="external_group_host_format">Grupo externo em <xliff:g id="host">%s </xliff:g></string>
   <string name="external_user_host_format">Usuário externo em <xliff:g id="host">%s </xliff:g></string>
   <string name="extra_configurations">Configurações extras</string>
+  <string name="extra_feature_description_advanced_filters">Filtros de inscrição, regras avançadas, etc</string>
   <string name="extra_feature_description_schedule_status">Agendar Tweet(enviar depois)</string>
+  <string name="extra_feature_description_share_gif">Compartilhe GIF em um tweet</string>
   <string name="extra_feature_description_sync_data">Dados de sincronização com o Dropbox, Google Drive etc</string>
+  <string name="extra_feature_title_advanced_filters">Filtros avançados</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">Suporte Twidere e obter recursos avançados</string>
   <string name="extra_features_pack_description">Ou comprar o pacote de recursos para obter todos os recursos (incluindo recursos em versões futuras)</string>
@@ -294,6 +338,7 @@
   <string name="filter_type_links">Links</string>
   <string name="filter_type_sources">Fontes</string>
   <string name="filter_type_users">Usuários</string>
+  <string name="filter_user_confirm_message">Adicionar <xliff:g example="Username" id="name">%1$s</xliff:g> ao filtro?</string>
   <string name="follow_request_sent">Solicitação enviada</string>
   <string name="followed_user">Seguindo <xliff:g id="user">%s</xliff:g>.</string>
   <string name="following_only">Apenas quem você segue</string>
@@ -324,8 +369,16 @@
   <string name="hide_retweets">Ocultar retweets</string>
   <string name="highlight">Destacar</string>
   <string name="highlight_and_underline">Destacar e sublinhar</string>
+  <string name="hint_accounts_dashboard_message">Deslize do canto da tela para abrir o painel de contas.</string>
+  <string name="hint_accounts_dashboard_title">Painel de contas</string>
+  <string name="hint_conversation_name">Nome da conversa</string>
+  <string name="hint_empty_filters_subscriptions">Sem inscrições</string>
+  <string name="hint_error_field_required">Obrigatório</string>
   <string name="hint_error_message_no_content">Nenhum conteúdo</string>
+  <string name="hint_message_select_user">Buscar usuários</string>
   <string name="hint_no_account">Sem conta</string>
+  <string name="hint_search_gif">Buscar GIF</string>
+  <string name="hint_status_reply_to_user_removed">Este tweet será enviado como citação porque a menção ao autor do tweet foi removida. &lt;a href=\"#dialog\";&gt;Por quê?&lt;/a&gt;</string>
   <string name="hints">Dicas</string>
   <string name="home_refresh">Atualizar na timeline</string>
   <string name="host_mapping_address">Endereço (pode ser outro endereço de host)</string>
@@ -352,27 +405,82 @@
   <string name="keyboard_shortcut_hint">Pressionar teclas</string>
   <string name="keyboard_shortcuts">Atalhos de teclado</string>
   <string name="keyword_filter_name">Palavra-chave: <xliff:g id="name">%s</xliff:g></string>
+  <string name="label_account">Conta</string>
+  <string name="label_account_type">Tipo de conta</string>
+  <string name="label_advanced">Avançado</string>
   <string name="label_auth_type">Tipo de Autorização</string>
   <string name="label_background_operation_service">Serviço de operação em segundo plano</string>
+  <string name="label_buffer_accounts">Contas do Buffer</string>
+  <string name="label_buffer_due_at_no_time">Sem horário</string>
   <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_g">Livre</string>
   <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_pg">10 anos</string>
   <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_pg13">14 anos</string>
   <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_r">18 anos</string>
+  <string name="label_content_warning">Aviso de conteúdo</string>
   <string name="label_data_provider">Provedor de banco de dados do Twidere</string>
+  <string name="label_feedback_content">Conteúdo</string>
+  <string name="label_feedback_title">Título</string>
+  <string name="label_filter_apply_to">Aplicar a&#8230;</string>
+  <string name="label_filter_for">Para&#8230;</string>
+  <string name="label_filter_scope_home">Página inicial</string>
+  <string name="label_filter_scope_interactions">Interações</string>
+  <string name="label_filter_scope_messages">Mensagens</string>
+  <string name="label_filter_scope_search_other">Outro</string>
+  <string name="label_filter_scope_search_results">Resultados da busca</string>
+  <string name="label_filter_target_description">Descrição</string>
+  <string name="label_filter_target_name">Nome</string>
+  <string name="label_filter_target_text">Texto</string>
+  <string name="label_filters_subscription">Inscrição</string>
+  <string name="label_follow_request_sent">Solicitação de seguidor enviada</string>
+  <string name="label_format_buffer_time_source"><xliff:g example="12:00, 1 de Abril" id="time">%1$s</xliff:g> via <xliff:g example="api" id="source">%2$s</xliff:g></string>
+  <string name="label_location_coarse">Vaga (Cidade)</string>
+  <string name="label_location_no_location">Nome</string>
+  <string name="label_location_precise">Precisa (Coordenada)</string>
   <string name="label_location_your_coarse_location">Sua localização grosseira</string>
+  <string name="label_mastodon_host">Domínio do Mastodon</string>
   <string name="label_media">Mídia</string>
   <string name="label_original_status">Tweet original</string>
+  <string name="label_password">Senha</string>
+  <string name="label_password_sign_in">Senha para entrada</string>
   <string name="label_photo">Foto</string>
+  <string name="label_photos">Fotos</string>
   <string name="label_poll">Enquete</string>
+  <string name="label_powered_by_giphy">Powered by GIPHY</string>
+  <string name="label_quote_name">Citar <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="label_quote_name_text">Citar <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
+  <string name="label_refresh_and_sync_service">Atualizar &amp; sincronizar</string>
   <string name="label_refresh_service">Atualizar serviço</string>
+  <string name="label_reply_name">Responder a <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="label_reply_name_text">Responder a <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
+  <string name="label_schedule_time_buffer_default">Padrão do Buffer</string>
+  <string name="label_send_at">Mandado através de</string>
+  <string name="label_sensitive_content">Conteúdo sensível</string>
+  <string name="label_status_hint">O que está acontecendo?</string>
   <string name="label_status_not_available">Tweet não disponível</string>
+  <string name="label_status_show_more">Mostrar mais</string>
+  <string name="label_status_type_reply">Responder</string>
   <!-- Mastodon feature, post to mentioned users only -->
+  <string name="label_status_visibility_direct">Direta</string>
   <!-- Mastodon feature, post to followers only -->
+  <string name="label_status_visibility_private">Privada</string>
   <!-- Mastodon feature, post to public timelines -->
+  <string name="label_status_visibility_public">Pública</string>
   <!-- Mastodon feature, do not show in public timelines -->
+  <string name="label_status_visibility_unlisted">Não-listada</string>
+  <string name="label_statuses">Tweets</string>
+  <string name="label_statuses_replies">Tweets e respostas</string>
+  <string name="label_statuses_retweets">Tweets e retweets</string>
+  <string name="label_statuses_retweets_replies">Tweets, retweets e respostas</string>
   <string name="label_streaming_service">Serviço de streaming</string>
   <string name="label_translate_from_language">Traduzir do <xliff:g id="language">%s</xliff:g></string>
+  <string name="label_translated_to_language">Traduzido do <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">Tradução</string>
+  <string name="label_username">Nome de usuário</string>
+  <string name="label_video">Vídeo</string>
   <string name="label_your_profile_image">Sua imagem de perfil</string>
   <string name="large">Grande</string>
   <string name="leftside_compose_button">Botão de escrever no lado esquerdo</string>
@@ -396,6 +504,8 @@
   <string name="location_countrywide">Em todo o país</string>
   <string name="login_challenge_retype_email_hint">Digite novamente o endereço de e-mail associado à sua conta do Twitter.</string>
   <string name="login_challenge_retype_phone_hint">Digite novamente o número de telefone associado à sua conta do Twitter.</string>
+  <string name="login_type_default">Parão</string>
+  <string name="login_type_user_settings">Configurações de usuário</string>
   <string name="login_verification">Verificação de login</string>
   <string name="login_verification_pin_hint">Procura no telemóvel um código PIN e insere-o para fazer log in.</string>
   <string name="login_verification_push_hint">Aceite o pedido de verificação de login no app do Twitter, depois de aprovado o pedido, clique em OK.</string>
@@ -412,36 +522,115 @@
   <string name="mention_user">Citar <xliff:g id="user">%s</xliff:g></string>
   <string name="mention_user_name">Mencionar <xliff:g id="name">%1$s</xliff:g></string>
   <string name="mentions_only">Apenas menções</string>
+  <string name="message_account_delete_confirm">Esta conta será deletada do Twidere.</string>
   <string name="message_api_data_corrupted">Dados da API corrompidos.</string>
   <string name="message_api_url_format_help">[DOMAIN]: Domínio da API do Twitter.\nExemplo: https://[DOMAIN].twitter.com/ será substituído por https://api.twitter.com/.</string>
+  <string name="message_app_crashed">Twidere falhou. Mande um relatório de bug apra me ajudar a resolver este problema.</string>
+  <string name="message_auto_refresh_confirm">Ativar atualização automática para receber novos tweets?</string>
   <string name="message_blocked_user">Bloqueou <xliff:g id="user">%s</xliff:g>.</string>
+  <string name="message_buffer_delete_schedule_confirm">Excluir este agendamento?</string>
+  <string name="message_buffer_disconnect_confirm">Desconectar do Buffer?</string>
+  <string name="message_clear_messages_confirm">Limpar todas as mensagens?</string>
+  <string name="message_conversation_created">Conversa criada.</string>
+  <string name="message_destroy_conversation_confirm">Deixar esta conversa?</string>
   <string name="message_direct_message_deleted">Mensagem direta excluída.</string>
   <string name="message_direct_message_sent">Mensagem direta enviada.</string>
+  <string name="message_error_buffer_connection_failed">Não foi possível conectar ao Buffer</string>
+  <string name="message_error_buffer_media_not_supported">Agendar mídia com Buffer ainda não é suportado</string>
+  <string name="message_error_invalid_account">Alguns dados de conta estão corrompidos, o Twidere removerá estas contas para previnir falhas.</string>
+  <string name="message_format_compose_message_convert_to_status">Este tweet será mandado como uma mensagem para <xliff:g id="name">%1$s</xliff:g>, deseja continuar? Converter para um tweet normal exige um caracter extra.</string>
+  <string name="message_format_conversation_avatar_update">Avatar da conversa mudado</string>
+  <string name="message_format_conversation_avatar_update_by_user"><xliff:g example="User" id="by_user">%1$s</xliff:g> mudou o avatar da conversa</string>
+  <string name="message_format_conversation_name_update">Nome da conversa mudado para <xliff:g example="User" id="name">%1$s</xliff:g></string>
+  <string name="message_format_conversation_name_update_by_user"><xliff:g example="User" id="by_user">%1$s</xliff:g> mudou nome da conversa para <xliff:g example="New name" id="name">%2$s</xliff:g></string>
+  <string name="message_format_participants_join"><xliff:g example="User" id="name">%1$s</xliff:g> entrou</string>
+  <string name="message_format_participants_join_added"><xliff:g example="Sender" id="sender">%1$s</xliff:g> adicionou <xliff:g example="Recipient" id="recipient">%2$s</xliff:g></string>
+  <string name="message_format_participants_leave"><xliff:g example="User" id="name">%1$s</xliff:g> saiu</string>
+  <string name="message_format_sender_time"><xliff:g example="User" id="sender">%1$s</xliff:g> · <xliff:g example="12:00" id="time">%2$s</xliff:g></string>
+  <string name="message_gif_sharing_introduction">Buscar &amp; compartilhar GIF por GIPHY</string>
+  <string name="message_info_buffer_queue_empty">A fila do Buffer está vazia</string>
+  <string name="message_join_conversation">Entrou na conversa.</string>
+  <string name="message_permission_request_compose_location">O Twidere precisa de permissão de localização para adicionar o local aos tweets.</string>
+  <string name="message_permission_request_save_media">O Twidere precisa de permissão de armazenamento para salvar mídia.</string>
+  <string name="message_permission_request_share_media">O Twidere precisa de permissão de armazenamento para compartilhar mídia em alguns aplicativos.</string>
+  <string name="message_pin_status_confirm">Fixar este tweet? Isso substituirá o tweet anteriormente fixado.</string>
   <string name="message_please_wait">Por favor, espere.</string>
+  <string name="message_promotions_reward">Ative promoções para usar todas as funcionalidades avançadas de graça, prometemos não pertubá-lo!</string>
+  <string name="message_status_reply_to_user_removed_explanation">O Twitter faz com que o autor do tweet sempre seja mencionado em uma resposta. Se o autor do tweet foi removido, o Twidere mandará esta resposta como uma citação para preservar contexto.</string>
+  <string name="message_status_scheduling_connect_buffer_hint">Conectar ao Buffer para agendar tweets ainda que offline</string>
+  <string name="message_status_scheduling_connected_to_buffer">O Twidere agora está conectado ao Buffer</string>
+  <string name="message_summary_type_sticker">[Sticker]</string>
+  <string name="message_sync_data_connect_hint">Conecte o Twidere com o armazenamento de rede para sincronizar dados</string>
+  <string name="message_sync_data_synced_with_name">O Twidere agora está sincronizado com <xliff:g example="ownCloud" id="name">%s</xliff:g></string>
+  <string name="message_sync_disconnect_from_name_confirm">Desconectar de <xliff:g example="ownCloud" id="name">%s</xliff:g>?</string>
+  <string name="message_sync_last_synced_time">Última sincronização: <xliff:g example="2017/1/1 12:00" id="time">%s</xliff:g></string>
+  <string name="message_tab_field_is_required">O campo \"<xliff:g example="Field" id="name">%s</xliff:g>\" é obrigatório</string>
+  <string name="message_ticker_promotions_reward">Ative as promoções para usar todas as funcionalidades avançadas de graça!</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
     -->
+  <string name="message_toast_accepted_users_follow_request">Solicitação de seguidor de <xliff:g id="user">%s</xliff:g> aprovada</string>
+  <string name="message_toast_added_to_filter">Adicionar ao filtro</string>
+  <string name="message_toast_added_user_to_list"><xliff:g id="user">%1$s</xliff:g> adicionado à lista "<xliff:g id="list">%2$s</xliff:g>\"</string>
+  <string name="message_toast_already_logged_in">Você já entrou</string>
   <string name="message_toast_cannot_get_location">Não foi possível obter sua localização.</string>
+  <string name="message_toast_compose_write_storage_no_permission">Permissão requerida para excluir foto/vídeo captado</string>
+  <string name="message_toast_duplicate_filter_rule">Regra duplicada</string>
   <string name="message_toast_error_occurred">Ocorreu um erro, por favor tente novamente.</string>
   <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <string name="message_toast_extra_features_not_purchased">Funcionalidades avançadas não adquiridas</string>
+  <string name="message_toast_filters_import_hint">Pressione \"+\" para importar</string>
+  <string name="message_toast_internal_storage_install_required">Instalação no cartão SD não é suportada, contas podem ser perder após reinicialização.</string>
+  <string name="message_toast_invalid_mastodon_host">Domínio do Mastodon inválido</string>
   <string name="message_toast_link_copied_to_clipboard">Link copiado para a área de transferência</string>
   <string name="message_toast_livewp_daydream_enabled_message">Aqui vai um pequeno presente, encontre-o nas configurações de sistema :)</string>
   <string name="message_toast_login_verification_failed">A verificação do login falhou.</string>
+  <string name="message_toast_media_saved">Mídia salva</string>
   <!-- Toast message for network errors -->
   <string name="message_toast_network_error">Erro de rede</string>
+  <string name="message_toast_network_error_with_message">Erro de rede: <xliff:g id="message">%s</xliff:g></string>
   <string name="message_toast_no_account">Sem conta</string>
+  <string name="message_toast_no_account_permission">Permissão de conta é obrigatório</string>
   <string name="message_toast_no_account_selected">Nenhuma conta selecionada.</string>
+  <string name="message_toast_no_user_selected">Nenhum usuário selecionado</string>
+  <string name="message_toast_notification_enabled_hint">Apenas disponível quando o streaming está ligado, e não é 100% confiável.</string>
   <string name="message_toast_press_again_to_close">Carregar outra vez para fechar</string>
+  <string name="message_toast_profile_background_image_updated">Imagem de fundo do perfil atualizada</string>
   <string name="message_toast_profile_banner_image_updated">Banner do perfil atualizado.</string>
+  <string name="message_toast_profile_image_updated">Imagem de perfil atualizada</string>
+  <string name="message_toast_qr_scan_link_not_supported">Link não suportado</string>
+  <string name="message_toast_qr_scanner_not_supported">Scanner de QR não suportado</string>
+  <string name="message_toast_retweet_cancelled">Retweet cancelado</string>
   <string name="message_toast_save_media_no_storage_permission">A permissão de acesso ao armazenamento é necessária para salvar mídia.</string>
   <string name="message_toast_saved_to_gallery">Salvo na galeria.</string>
+  <string name="message_toast_schedule_future_time_required">Data/horário precisa ser futuro</string>
+  <string name="message_toast_search_deleted">Busca excluída</string>
+  <string name="message_toast_search_name_deleted">Busca \"<xliff:g example="SearchQuery" id="name">%1$s</xliff:g>\" excluída</string>
+  <string name="message_toast_search_name_saved">Busca \"<xliff:g example="SearchQuery" id="name">%1$s</xliff:g>\" salva</string>
+  <string name="message_toast_search_saved">Busca salva</string>
   <string name="message_toast_select_file_no_storage_permission">A permissão de acesso ao armazenamento é necessária para selecionar um arquivo.</string>
   <string name="message_toast_share_media_no_storage_permission">Algumas aplicações requerem permissão de armazenamento para partilhar media.</string>
+  <string name="message_toast_ssl_tls_error">Erro TLS, por favor cheque o seu relógio ou configurações de proxy</string>
+  <string name="message_toast_status_deleted">Tweet excluído</string>
+  <string name="message_toast_status_favorited">Tweet favoritado</string>
+  <string name="message_toast_status_like_removed">Curtida removida</string>
+  <string name="message_toast_status_liked">Tweet curtido</string>
+  <string name="message_toast_status_pinned">Tweet fixado</string>
+  <string name="message_toast_status_retweeted">Retweetado</string>
   <string name="message_toast_status_saved_to_draft">Tweet salvo como rascunho.</string>
+  <string name="message_toast_status_scheduled">Tweet agendado</string>
+  <string name="message_toast_status_unfavorited">Tweet desfavoritado</string>
+  <string name="message_toast_status_unpinned">Tweet desafixado</string>
   <string name="message_toast_status_updated">Tweet enviado.</string>
+  <string name="message_toast_unable_to_load_more_statuses">Não foi possível carregar tweets antigos</string>
+  <string name="message_toast_user_filters_removed">Remover dos filtros</string>
+  <string name="message_toast_users_filters_added">Adicionar aos filtros</string>
   <string name="message_toast_wrong_api_key">URL da API ou chave de usuário incorreta, verifique novamente.</string>
   <string name="message_toast_wrong_username_password">Usuário/senha incorretos</string>
+  <string name="message_unpin_status_confirm">Desafixar este tweet?</string>
+  <string name="message_video_too_long">Vídeo muito longo</string>
+  <string name="message_video_too_short">Vídeo muito curto</string>
   <string name="multi_select">Multisseleção</string>
   <string name="mute_user">Silenciar <xliff:g id="name">%s</xliff:g></string>
   <string name="mute_user_confirm_message">Silenciar <xliff:g id="name">%s</xliff:g>? Você não será capaz de ver tweets deste usuário enquanto continuar seguindo-o.</string>
@@ -467,6 +656,7 @@
   <string name="next_tab">Separador seguinte</string>
   <string name="no_close_after_status_updated">Manter a tela de edição aberta após o tweet ser enviado</string>
   <string name="no_close_after_status_updated_summary">Um presentinho para os tagarelas</string>
+  <string name="no_extension_installed">Não há extensões instaladas</string>
   <string name="no_location">Sem localização</string>
   <string name="no_rule">Sem regras</string>
   <string name="no_status_content_text">Nenhum conteúdo</string>
@@ -475,6 +665,17 @@
   <string name="no_user_found">Nenhum usuário encontrado</string>
   <string name="no_version_suffix">Sem sufixo de versão</string>
   <string name="none">Nenhum</string>
+  <string name="notification_channel_description_content_interactions">Interações como menções e retweets</string>
+  <string name="notification_channel_description_content_messages">Mensagens importantes como DMs</string>
+  <string name="notification_channel_descriptions_content_subscriptions">Notificações do tweet do usuário</string>
+  <string name="notification_channel_descriptions_content_updates">Atualizações como novos tweets na página inicial</string>
+  <string name="notification_channel_name_app_notices">Notícias do app</string>
+  <string name="notification_channel_name_background_progresses">Operações em segundo plano</string>
+  <string name="notification_channel_name_content_interactions">Interações</string>
+  <string name="notification_channel_name_content_messages">Mensagens</string>
+  <string name="notification_channel_name_content_subscriptions">Inscrições</string>
+  <string name="notification_channel_name_content_updates">Atualizações</string>
+  <string name="notification_channel_name_service_statuses">Status do serviço</string>
   <string name="notification_direct_message"><xliff:g id="user">%s</xliff:g> lhe enviou uma mensagem direta.</string>
   <string name="notification_direct_message_multiple_messages"><xliff:g id="user">%1$s</xliff:g> lhe enviou <xliff:g id="messages_count">%2$d</xliff:g> mensagens diretas.</string>
   <string name="notification_direct_message_multiple_users"><xliff:g id="user">%1$s</xliff:g> e outros <xliff:g id="users_count">%2$d</xliff:g> lhe enviaram <xliff:g id="messages_count">%3$d</xliff:g> mensagens diretas.</string>
@@ -482,11 +683,16 @@
   <string name="notification_mention"><xliff:g id="user">%s</xliff:g> mencionou você.</string>
   <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> e outros <xliff:g id="count">%2$d</xliff:g> mencionaram você.</string>
   <!-- Notification method, flashing LED light -->
+  <string name="notification_method_light">LED</string>
   <!-- Notification method, ringtone -->
+  <string name="notification_method_ringtone">Toque</string>
   <!-- Notification method, device vibration -->
+  <string name="notification_method_vibration">Vibração</string>
   <string name="notification_status">Novo tweet de <xliff:g id="user">%s</xliff:g></string>
   <string name="notification_status_multiple">Novo Tweet de <xliff:g id="user">%1$s</xliff:g> e <xliff:g id="count">%2$d</xliff:g>  outros
 </string>
+  <string name="notification_title_new_retweet_by_user"><xliff:g id="user">%1$s</xliff:g> retweetou</string>
+  <string name="notification_title_new_status_by_user">Novo tweet por <xliff:g id="user">%1$s</xliff:g></string>
   <string name="notification_type_home">Início</string>
   <string name="notification_type_interactions">Interações</string>
   <string name="notification_type_messages">Mensagens</string>
@@ -524,19 +730,58 @@
   <string name="phishing_link_warning_summary">Avisar quando um link numa MD possa ser uma tentativa de phishing.</string>
   <string name="photo">Foto</string>
   <string name="pick_file">Selecionar arquivo</string>
+  <string name="pinned_status">Tweet fixado</string>
   <string name="play">Play</string>
   <string name="poll_summary_format"><xliff:g id="poll_count">%1$s</xliff:g> · <xliff:g id="poll_time_left">%2$s</xliff:g></string>
+  <string name="preference_filter_possibility_sensitive_statuses">Filtrar tweets sensíveis</string>
+  <string name="preference_filter_unavailable_quote_statuses">Filtrar citações indisponíveis</string>
+  <string name="preference_multitasking">Novas janelas</string>
   <string name="preference_multitasking_summary">Abrir perfil e mídias em uma nova tarefa</string>
+  <string name="preference_randomize_account_name">Randomizar nome da conta</string>
+  <string name="preference_randomize_account_name_summary">Não permite que outros aplicativos adquiram seu nome ao ler as contas, aprimora sua privacidade.</string>
+  <string name="preference_randomize_account_rename_accounts_confirm">Renomear contas existentes?</string>
+  <string name="preference_summary_auto_refresh_compatibility_mode">Ativar para intervalo de atualização mais curto, aumenta uso de bateria no Android 5.0+</string>
   <string name="preference_summary_auto_refresh_power_saving">Parar de atualizar automaticamente quando a bateria estiver fraca</string>
+  <string name="preference_summary_background_streaming">Pressione PÁGINA INICIAL ao invés de VOLTAR para manter o streaming aberto</string>
+  <string name="preference_summary_chrome_custom_tab">Abre links com navegador interno (Powered by Chrome)</string>
   <string name="preference_summary_database_item_limit">Limite máximo de itens armazenados para cada conta. Defina um valor menor para economizar espaço e aumentar a velocidade de carregamento.</string>
+  <string name="preference_summary_favorite_confirmation">Mostra diálogo de confirmação antes de favoritar um tweet</string>
+  <string name="preference_summary_like_confirmation">Mostra diálogo de confirmação antes de curtir um tweet</string>
+  <string name="preference_summary_media_preload_non_metered_network">Pré-carrega mídia apenas em redes gratuitas como Wi-Fi</string>
+  <string name="preference_summary_streaming_non_metered_network">Streaming apenas em redes gratuitas como Wi-Fi</string>
+  <string name="preference_summary_streaming_power_saving">Streaming apenas quando carregando</string>
+  <string name="preference_summary_sync_timeline_positions">Quando \"lembrar posição\" estiver ativado</string>
+  <string name="preference_summary_trends_location">Agora você pode configurar a localização separadamente na aba configurações.</string>
   <string name="preference_title_accounts">Contas</string>
   <string name="preference_title_advanced">Avançado</string>
+  <string name="preference_title_auto_refresh_compatibility_mode">Modo de compatibilidade</string>
+  <string name="preference_title_auto_refresh_power_saving">Modo de economia de bateria</string>
+  <string name="preference_title_background_streaming">Streaming em segundo plano</string>
+  <string name="preference_title_chrome_custom_tab">Navegador interno</string>
   <string name="preference_title_database_item_limit">Tamanho limite do banco de dados</string>
+  <string name="preference_title_favorite_confirmation">Confirmação de favorito</string>
+  <string name="preference_title_filter_manage_subscriptions">Administrar</string>
+  <string name="preference_title_filter_subscriptions">Filtro de inscrições</string>
+  <string name="preference_title_floating_detailed_view">Visualização detalhada flutuante</string>
   <string name="preference_title_landscape">Paisagem</string>
+  <string name="preference_title_light_font">Fonte fina</string>
+  <string name="preference_title_like_confirmation">Confirmação de curtida</string>
+  <string name="preference_title_media_preload_non_metered_network">Pré-carregar em redes gratuitas</string>
+  <string name="preference_title_multi_column_tab_width">Largura da aba de múltiplas colunas</string>
+  <string name="preference_title_multi_column_tabs">Abas de múltiplas colunas</string>
+  <string name="preference_title_navbar_style">Estilo de barra de navegação</string>
+  <string name="preference_title_notification_channels">Canais</string>
+  <string name="preference_title_notification_ringtone">Toque</string>
+  <string name="preference_title_override_language">Idioma do aplicativo</string>
   <string name="preference_title_portrait">Retrato</string>
   <string name="preference_title_storage">Armazenamento</string>
+  <string name="preference_title_streaming_content">Conteúdo do streaming</string>
   <string name="preference_title_streaming_enabled">Habilitar atualização em tempo real</string>
+  <string name="preference_title_streaming_non_metered_network">Streaming em redes gratuitas</string>
+  <string name="preference_title_streaming_power_saving">Modo de economia de bateria</string>
+  <string name="preference_title_tablet_mode">Modo de tablet</string>
   <string name="preference_title_text_size">Tamanho do texto</string>
+  <string name="preference_title_timeline_positions">Posições da timeline</string>
   <string name="preference_title_translate">Traduzir</string>
   <string name="preference_title_trends_location">Localização de tópicos</string>
   <string name="preload_wifi_only">Pré-Carregar apenas em Wi-Fi</string>
@@ -571,6 +816,7 @@
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>
   <string name="provider_loadaverage_org">LoadAverage.org</string>
+  <string name="provider_mastodon">Mastodon</string>
   <string name="provider_quitter_se">Quitter.se</string>
   <string name="proxy">Proxy</string>
   <string name="proxy_host">Proxy Host</string>
@@ -632,7 +878,11 @@
   <string name="scheduled_statuses">Tweets agendados</string>
   <string name="scrapyard">Interface</string>
   <string name="search_hint">Procurar por tweets ou usuários</string>
+  <string name="search_hint_users">Buscar usuários</string>
   <string name="search_statuses">Buscar Tweets</string>
+  <string name="search_type_federated">Global</string>
+  <string name="search_type_local">Local</string>
+  <string name="search_type_media">Mídia</string>
   <string name="search_type_statuses">Tweets</string>
   <string name="search_type_users">Usuários</string>
   <string name="security_key">Chave de segurança</string>
@@ -681,6 +931,8 @@
   <string name="sponsored_by">Patrocinado por</string>
   <string name="square">Quadrado</string>
   <string name="state_blocking">Bloqueando</string>
+  <string name="status_format_source"><xliff:g example="Twidere para Android" id="source">%s</xliff:g></string>
+  <string name="status_format_time_source"><xliff:g example="0:00, 1 de Jan de 2017" id="time">%1$s</xliff:g> · <xliff:g example="Twidere para Android" id="source">%2$s</xliff:g></string>
   <string name="status_is_duplicate">Seu tweet está duplicado.</string>
   <string name="status_menu_title_format"><xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="status_not_updated">Tweet não enviado.</string>
@@ -691,13 +943,19 @@
   <string name="status_shortener_default">Nada (cancelar envio)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Retweet</string>
+  <string name="stream_summary_notification_users">Os usuários ativaram \"Notificações\", não é 100% confiável.</string>
   <string name="stream_type_home">Início</string>
   <string name="stream_type_interactions">Interações</string>
   <string name="stream_type_messages">Mensagens</string>
+  <string name="stream_type_notification_users">Usuários com notificações ativadas</string>
   <string name="streaming">Streaming</string>
   <string name="style">Estilo</string>
   <string name="subscribed_to_list">Inscrito na lista \"<xliff:g id="list">%s</xliff:g>\".</string>
+  <string name="summary_interactions_account_not_supported">Conta não suportada</string>
+  <string name="summary_interactions_streaming_required">Interações inteiras disponíveis apenas quando o streaming está ativado</string>
   <string name="swipe_down_to_refresh">Deslize para baixo para atualizar</string>
+  <string name="sync_provider_name_dropbox">Dropbox</string>
+  <string name="sync_provider_name_google_drive">Google Drive</string>
   <string name="system_default">Padrão do sistema</string>
   <string name="tab_display_option">Opções de exibições de abas</string>
   <string name="tab_display_option_icon">Ícone</string>
@@ -727,42 +985,82 @@
   <string name="timeline_streaming_running">Atualização em tempo real ativada</string>
   <string name="timeline_sync_service">Serviço de sincronização da Timeline</string>
   <string name="title_about">Sobre</string>
+  <string name="title_account_delete_confirm">Excluir conta</string>
   <string name="title_accounts">Contas</string>
+  <string name="title_add_or_remove_from_list">Adicionar ou remover da lista</string>
   <string name="title_block_user">Bloquear <xliff:g id="name">%s</xliff:g></string>
   <string name="title_blocked_users">Usuários bloqueados</string>
   <string name="title_browser_sign_in">Autenticação via navegador</string>
+  <string name="title_buffer_queue_manager">Fila do Buffer</string>
+  <string name="title_buffer_schedule">Agenda do Buffer</string>
+  <string name="title_buffer_set_schedule">Agendar com o Buffer</string>
+  <string name="title_buffer_settings">Configurações do Buffer</string>
   <string name="title_compose">Escrever</string>
+  <string name="title_conversation">Conversa</string>
+  <string name="title_crop_image">Cortar imagem</string>
+  <string name="title_dialog_sync_connect_to">Conectar a&#8230;</string>
   <string name="title_direct_messages">Mensagens</string>
   <string name="title_direct_messages_conversation_info">Informação de conversa</string>
+  <string name="title_direct_messages_conversation_new">Nova conversa</string>
   <string name="title_drafts">Rascunhos</string>
   <string name="title_edit_details">Editar detalhes</string>
   <string name="title_edit_profile">Editar perfil</string>
+  <string name="title_error_invalid_account">Conta inválida</string>
   <!-- Enhanced (paid) features title -->
+  <string name="title_extra_features">Funcionalidades avançadas</string>
+  <string name="title_favorite_confirm">Favoritar este tweet?</string>
   <!-- [noun] Twitter's favorite, in the plural -->
   <string name="title_favorites">Favoritos</string>
   <string name="title_filters">Filtros</string>
+  <string name="title_filters_subscription_invalid">Inscrição inválida</string>
   <string name="title_filters_subscription_url">URL</string>
   <string name="title_followers">Seguidores</string>
   <string name="title_following">Seguindo</string>
+  <string name="title_gif_sharing">Compartilhamento de GIF</string>
   <string name="title_home">Início</string>
+  <string name="title_like_confirm">Curtiu este tweet?</string>
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">Curtidas</string>
+  <string name="title_manage_filter_subscriptions">Filtros de inscrições</string>
+  <string name="title_media_timeline">Timeline de mídia</string>
   <string name="title_mentions">Menções</string>
   <string name="title_message_conversation_info">Informação de conversa</string>
+  <string name="title_network_public_timeline">Timeline global</string>
   <string name="title_nicknames">Apelidos</string>
   <string name="title_open_source_license">Licença de código aberto</string>
+  <string name="title_pin_status_confirm">Fixar tweet</string>
   <string name="title_premium_features_name">Twidere ∞</string>
+  <string name="title_promotions_reward">Recompensa de promoções</string>
+  <string name="title_public_timeline">Timeline pública</string>
+  <string name="title_quick_action">Ação rápida</string>
+  <string name="title_retweet_quote_confirm">Retweetar aos seus seguidores?</string>
+  <string name="title_scheduled_statuses">Tweets agendados</string>
   <string name="title_search">Procurar</string>
+  <string name="title_search_gif">Buscar GIF</string>
+  <string name="title_select_users">Selecionar usuários</string>
   <string name="title_set_nickname">Definir apelido</string>
+  <string name="title_sign_in_to_buffer">Entrar no Buffer</string>
   <string name="title_status">Tweet</string>
   <string name="title_statuses">Tweets</string>
+  <string name="title_statuses_and_replies">Tweets &amp; respostas</string>
+  <string name="title_statuses_scheduling">Agendamento de tweets</string>
   <string name="title_streaming">Streaming</string>
   <string name="title_subscription_name">Nome</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
+  <string name="title_sync">Sincronização de dados</string>
+  <string name="title_sync_settings">Configuração de sincronização</string>
+  <string name="title_translate_to">Traduzir para&#8230;</string>
+  <string name="title_unpin_status_confirm">Desafixar tweet</string>
   <string name="title_user">Usuários</string>
   <string name="title_user_colors">Cores de usuários</string>
+  <string name="title_user_feedback">Feedback</string>
+  <string name="title_user_list">Lista</string>
   <string name="title_user_list_memberships">Pertence a</string>
+  <string name="title_user_list_ownerships">Criado</string>
+  <string name="title_user_list_subscriptions">Inscrições</string>
+  <string name="title_user_timeline_filter">Filtro da timeline</string>
+  <string name="title_userlist_subscribers">Inscritos</string>
   <string name="title_users_favorited_this">Usuários favoritaram isso</string>
   <string name="title_users_liked_this">Usuários curtiram isso</string>
   <string name="title_users_retweeted_this">Usuários retweetaram isso</string>
@@ -823,4 +1121,7 @@
   <string name="users_blocked">Usuários bloqueados.</string>
   <string name="users_lists_with_name">listas de <xliff:g id="name">%s</xliff:g></string>
   <string name="users_statuses">Tweets do usuário</string>
+  <string name="label_drafts_all">Todos</string>
+  <string name="label_drafts_statuses">Tweets</string>
+  <string name="label_drafts_others">Outros</string>
 </resources>
