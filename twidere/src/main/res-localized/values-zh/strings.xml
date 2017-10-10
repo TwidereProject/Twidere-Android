@@ -39,6 +39,7 @@
   <string name="action_change_language">更改語言</string>
   <string name="action_clear">清除</string>
   <string name="action_clear_messages">清空訊息</string>
+  <string name="action_clear_messages_and_delete_conversation">清空並刪除對話</string>
   <string name="action_comment">評論</string>
   <string name="action_compose">撰寫</string>
   <string name="action_compose_message_convert_to_status">轉換為推文</string>
@@ -70,7 +71,7 @@
   <string name="action_format_search_update_status">發推 <xliff:g id="text">%1$s</xliff:g></string>
   <!-- [verb] Perform import action -->
   <string name="action_import">匯入</string>
-  <string name="action_import_from">匯入從&#8230;</string>
+  <string name="action_import_from">匯入從⋯</string>
   <string name="action_invert_selection">反選</string>
   <!-- Used for decide something later, like permission request -->
   <string name="action_later">稍後</string>
@@ -105,6 +106,7 @@
   <string name="action_retweet">轉推</string>
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">保存</string>
+  <string name="action_save_to">保存到⋯</string>
   <string name="action_search">搜尋</string>
   <string name="action_select_all">全選</string>
   <string name="action_select_none">全不選擇</string>
@@ -121,8 +123,8 @@
   <string name="action_skip">跳過</string>
   <string name="action_start">開始</string>
   <string name="action_status_attachment">推文附件</string>
-  <string name="action_status_block_users">封鎖使用者&#8230;</string>
-  <string name="action_status_mute_users">靜音使用者&#8230;</string>
+  <string name="action_status_block_users">封鎖使用者⋯</string>
+  <string name="action_status_mute_users">靜音使用者⋯</string>
   <string name="action_status_pin">置頂推文</string>
   <string name="action_status_schedule">推文排期</string>
   <string name="action_status_unpin">取消置頂推文</string>
@@ -221,7 +223,7 @@
   <string name="combined_notifications">已合併的通知</string>
   <string name="combined_notifications_summary_off">通知將分開顯示</string>
   <string name="combined_notifications_summary_on">通知將被分組</string>
-  <string name="comment_hint">評論&#8230;</string>
+  <string name="comment_hint">評論⋯</string>
   <string name="compact_cards">緊湊卡片視圖</string>
   <string name="compact_cards_summary">在螢幕上顯示更多卡片</string>
   <string name="compose_now">即時撰寫</string>
@@ -283,7 +285,7 @@
   <string name="edit_media">編輯多媒體</string>
   <string name="edit_tab">編輯標籤頁</string>
   <string name="edit_tabs">編輯標籤頁</string>
-  <string name="ellipsis">&#8230;</string>
+  <string name="ellipsis">⋯</string>
   <string name="emoji_support">支援表情符號</string>
   <string name="empty_content">空內容</string>
   <string name="enable_streaming">啟用實時流</string>
@@ -372,6 +374,7 @@
   <string name="hint_accounts_dashboard_title">帳號面板</string>
   <string name="hint_conversation_name">對話名稱</string>
   <string name="hint_empty_filters_subscriptions">沒有訂閱</string>
+  <string name="hint_error_field_required">必填</string>
   <string name="hint_error_message_no_content">沒有內容</string>
   <string name="hint_message_select_user">搜尋使用者</string>
   <string name="hint_no_account">沒有帳號</string>
@@ -422,8 +425,8 @@
   <string name="label_data_provider">Twidere 資料庫存儲</string>
   <string name="label_feedback_content">內容</string>
   <string name="label_feedback_title">標題</string>
-  <string name="label_filter_apply_to">適用于&#8230;</string>
-  <string name="label_filter_for">針對&#8230;</string>
+  <string name="label_filter_apply_to">適用于⋯</string>
+  <string name="label_filter_for">針對⋯</string>
   <string name="label_filter_scope_home">首頁</string>
   <string name="label_filter_scope_interactions">互動</string>
   <string name="label_filter_scope_messages">私訊</string>
@@ -475,6 +478,7 @@
   <string name="label_statuses_retweets_replies">推文，轉推與回覆</string>
   <string name="label_streaming_service">實時流服務</string>
   <string name="label_translate_from_language">從 <xliff:g id="language">%s</xliff:g> 翻譯</string>
+  <string name="label_translated_to_language">翻譯到 <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">翻譯</string>
   <string name="label_username">帳號</string>
   <string name="label_video">影片</string>
@@ -585,6 +589,7 @@
   <string name="message_toast_link_copied_to_clipboard">連結已複製到剪貼簿</string>
   <string name="message_toast_livewp_daydream_enabled_message">我有一份小禮物給您，去系統設定裡看看吧 :)</string>
   <string name="message_toast_login_verification_failed">登入驗證失敗</string>
+  <string name="message_toast_media_saved">多媒體已保存</string>
   <!-- Toast message for network errors -->
   <string name="message_toast_network_error">網路錯誤</string>
   <string name="message_toast_network_error_with_message">網絡錯誤：<xliff:g id="message">%s</xliff:g></string>
@@ -913,7 +918,7 @@
   <string name="sign_in_service_email">Email</string>
   <string name="sign_in_service_google_id">Google ID</string>
   <string name="sign_in_service_twitter">Twitter</string>
-  <string name="sign_in_with_ellip">登入方式&#8230;</string>
+  <string name="sign_in_with_ellip">登入方式⋯</string>
   <string name="sign_up">註冊</string>
   <string name="signing_in_error_browser_sign_in_hint">登入時發生問題，您可能需要使用「瀏覽器登入」。（這將在登入時暫時忽略自訂API設定）</string>
   <string name="size">尺寸</string>
@@ -1047,6 +1052,7 @@
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
   <string name="title_sync">資料同步</string>
   <string name="title_sync_settings">同步設定</string>
+  <string name="title_translate_to">翻譯到⋯</string>
   <string name="title_unpin_status_confirm">取消置頂推文</string>
   <string name="title_user">用戶</string>
   <string name="title_user_colors">顏色標籤</string>
@@ -1089,7 +1095,7 @@
   <string name="unsupported_login_verification_type_name">不支援的登入類型 <xliff:g id="name">%1$s</xliff:g>，請回報給支援帳號。</string>
   <string name="update_status">發送推文</string>
   <string name="updated_list_details">更新了列表\"<xliff:g id="list">%s</xliff:g>\"的詳細訊息</string>
-  <string name="updating_status_notification">正在發送推文&#8230;</string>
+  <string name="updating_status_notification">正在發送推文⋯</string>
   <string name="uploader_version_incompatible">不相容的多媒體上傳服務</string>
   <string name="usage_statistics">使用訊息統計</string>
   <string name="usage_statistics_header_summary">Twidere參與了一些研究項目，加入這些項目幫助Twidere和更多應用做得更好。</string>
@@ -1117,4 +1123,7 @@
   <string name="users_blocked">您封鎖了這些使用者</string>
   <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>的列表</string>
   <string name="users_statuses">使用者的推文</string>
+  <string name="label_drafts_all">所有</string>
+  <string name="label_drafts_statuses">推文</string>
+  <string name="label_drafts_others">其他</string>
 </resources>
