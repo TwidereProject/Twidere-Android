@@ -1,4 +1,3 @@
 include ':twidere'
 include ':twidere.component.common'
 include ':twidere.component.nyan'
-include ':twidere.wear'
