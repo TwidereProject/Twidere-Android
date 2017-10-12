@@ -23,7 +23,9 @@ import android.content.ContentResolver
 import android.net.Uri
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.successUi
-import org.mariotaku.twidere.extension.queryAll
+import org.mariotaku.ktextension.weak
+import org.mariotaku.library.objectcursor.ObjectCursor
+import org.mariotaku.twidere.extension.queryReference
 
 /**
  * Created by mariotaku on 2017/10/9.
@@ -40,11 +42,26 @@ class ObjectCursorLiveData<T>(
 ) : ReloadableLiveData<List<T>?>() {
 
     override fun onLoadData(callback: (List<T>?) -> Unit) {
+        val weakThis = weak()
         task {
-            return@task resolver.queryAll(uri, projection, selection, selectionArgs, cls = cls)
+            val (c) = resolver.queryReference(uri, projection, selection, selectionArgs) ?:
+                    throw NullPointerException()
+            val i = ObjectCursor.indicesFrom(c, cls)
+            return@task ObjectCursor(c, i)
         }.successUi { data ->
+            val ld = weakThis.get()
+            val oldValue = ld?.value
+            if (oldValue is ObjectCursor<*>) {
+                oldValue.close()
+            }
             callback(data)
         }
     }
 
+    override fun onInactive() {
+        val oldValue = this.value
+        if (oldValue is ObjectCursor<*>) {
+            oldValue.close()
+        }
+    }
 }

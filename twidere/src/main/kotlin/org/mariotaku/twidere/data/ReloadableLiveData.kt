@@ -24,12 +24,12 @@ import android.arch.lifecycle.LiveData
 
 abstract class ReloadableLiveData<T> : LiveData<T>() {
 
-    init {
-        loadData()
-    }
-
     fun loadData() {
         onLoadData(this::setValue)
+    }
+
+    override fun onActive() {
+        loadData()
     }
 
     protected abstract fun onLoadData(callback: (T) -> Unit)
