@@ -24,20 +24,17 @@ import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.model.refresh.RefreshTaskParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 
-/**
- * Created by mariotaku on 2017/10/9.
- */
-
 class HomeTimelineFragment : AbsTimelineFragment<RefreshTaskParam>() {
     override val filterScope: Int = FilterScope.HOME
 
     override val contentUri: Uri = Statuses.CONTENT_URI
 
     override fun onCreateRefreshParam(position: Int): RefreshTaskParam {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return getBaseRefreshTaskParam(this, position)
     }
 
     override fun getStatuses(param: RefreshTaskParam): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (!param.hasMaxIds) return twitterWrapper.refreshAll(param.accountKeys)
+        return twitterWrapper.getHomeTimelineAsync(param)
     }
 }

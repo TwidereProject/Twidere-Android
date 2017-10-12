@@ -36,9 +36,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.ErrorInfoStore
 import org.mariotaku.twidere.util.sync.TimelineSyncManager
 
-/**
- * Created by mariotaku on 16/2/11.
- */
 class GetHomeTimelineTask(context: Context) : GetStatusesTask<RefreshTaskParam>(context) {
 
     override val contentUri: Uri = Statuses.CONTENT_URI

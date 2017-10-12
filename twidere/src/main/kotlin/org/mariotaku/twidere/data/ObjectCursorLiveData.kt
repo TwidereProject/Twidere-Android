@@ -20,16 +20,15 @@
 package org.mariotaku.twidere.data
 
 import android.content.ContentResolver
+import android.database.ContentObserver
 import android.net.Uri
+import android.os.Handler
+import android.os.Looper
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.ktextension.weak
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.twidere.extension.queryReference
-
-/**
- * Created by mariotaku on 2017/10/9.
- */
 
 class ObjectCursorLiveData<T>(
         val resolver: ContentResolver,
@@ -41,11 +40,20 @@ class ObjectCursorLiveData<T>(
         val cls: Class<out T>
 ) : ReloadableLiveData<List<T>?>() {
 
+    private val reloadObserver = object : ContentObserver(MainThreadHandler) {
+        override fun onChange(selfChange: Boolean) {
+            if (hasActiveObservers()) {
+                loadData()
+            }
+        }
+    }
+
     override fun onLoadData(callback: (List<T>?) -> Unit) {
         val weakThis = weak()
         task {
             val (c) = resolver.queryReference(uri, projection, selection, selectionArgs) ?:
                     throw NullPointerException()
+            c.registerContentObserver(reloadObserver)
             val i = ObjectCursor.indicesFrom(c, cls)
             return@task ObjectCursor(c, i)
         }.successUi { data ->
@@ -61,7 +69,11 @@ class ObjectCursorLiveData<T>(
     override fun onInactive() {
         val oldValue = this.value
         if (oldValue is ObjectCursor<*>) {
+            oldValue.cursor.unregisterContentObserver(reloadObserver)
             oldValue.close()
         }
+        value = null
     }
+
+    object MainThreadHandler : Handler(Looper.getMainLooper())
 }

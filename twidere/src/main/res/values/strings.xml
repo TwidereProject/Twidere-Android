@@ -521,6 +521,9 @@
     <string name="label_content_rating_r">R</string>
     <string name="label_content_warning">Content warning</string>
     <string name="label_data_provider">Twidere database provider</string>
+    <string name="label_drafts_all">All</string>
+    <string name="label_drafts_others">Others</string>
+    <string name="label_drafts_statuses">Tweets</string>
     <string name="label_feedback_content">Content</string>
     <string name="label_feedback_title">Title</string>
     <string name="label_filter_apply_to">Apply to…</string>
@@ -1277,6 +1280,7 @@
     <string name="title_user_list_memberships">Belongs to</string>
     <string name="title_user_list_ownerships">Created</string>
     <string name="title_user_list_subscriptions">Subscriptions</string>
+    <string name="title_user_timeline">User timeline</string>
     <string name="title_user_timeline_filter">Timeline filter</string>
     <string name="title_userlist_subscribers">Subscribers</string>
     <string name="title_users_favorited_this">Users favorited this</string>
@@ -1363,8 +1367,4 @@
 
     <string name="users_blocked">Blocked these users.</string>
     <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>\'s lists</string>
-    <string name="users_statuses">User\'s tweets</string>
-    <string name="label_drafts_all">All</string>
-    <string name="label_drafts_statuses">Tweets</string>
-    <string name="label_drafts_others">Others</string>
 </resources>

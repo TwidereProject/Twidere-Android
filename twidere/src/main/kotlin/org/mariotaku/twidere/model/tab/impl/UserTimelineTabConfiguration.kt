@@ -37,7 +37,7 @@ import org.mariotaku.twidere.model.tab.conf.UserExtraConfiguration
 
 class UserTimelineTabConfiguration : TabConfiguration() {
 
-    override val name = StringHolder.resource(R.string.users_statuses)
+    override val name = StringHolder.resource(R.string.title_user_timeline)
 
     override val icon = DrawableHolder.Builtin.USER
 

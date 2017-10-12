@@ -136,6 +136,9 @@ public class Status {
     @JsonField(name = "application")
     Application application;
 
+    @JsonField(name = "language")
+    String language;
+
     @JsonField(name = "emojis")
     Emoji[] emojis;
 
@@ -222,6 +225,10 @@ public class Status {
         return application;
     }
 
+    public String getLanguage() {
+        return language;
+    }
+
     public Emoji[] getEmojis() {
         return emojis;
     }
@@ -264,6 +271,7 @@ public class Status {
                 ", mentions=" + Arrays.toString(mentions) +
                 ", tags=" + Arrays.toString(tags) +
                 ", application=" + application +
+                ", language='" + language + '\'' +
                 ", emojis=" + Arrays.toString(emojis) +
                 ", sortId=" + sortId +
                 '}';
