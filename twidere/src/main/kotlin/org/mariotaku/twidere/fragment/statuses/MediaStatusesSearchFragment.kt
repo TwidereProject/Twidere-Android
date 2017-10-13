@@ -41,7 +41,7 @@ class MediaStatusesSearchFragment : ParcelableStatusesFragment() {
         val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
         val makeGap = args.getBoolean(EXTRA_MAKE_GAP, true)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-        return MediaStatusesSearchLoader(activity, accountKey, query, adapter.data, fromUser, makeGap,
+        return MediaStatusesSearchLoader(activity, accountKey, query, adapter.statuses, fromUser, makeGap,
                 loadingMore)
     }
 

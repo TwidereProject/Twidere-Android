@@ -43,7 +43,7 @@ class UserMediaTimelineFragment : ParcelableStatusesFragment() {
         val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
         val screenName = args.getString(EXTRA_SCREEN_NAME)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-        return MediaTimelineLoader(context, accountKey, userKey, screenName, adapter.data,
+        return MediaTimelineLoader(context, accountKey, userKey, screenName, adapter.statuses,
                 fromUser, loadingMore)
     }
 }

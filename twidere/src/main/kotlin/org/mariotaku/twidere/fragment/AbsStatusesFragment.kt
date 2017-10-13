@@ -43,7 +43,6 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.AccountSelectorActivity
 import org.mariotaku.twidere.activity.ComposeActivity
 import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter
-import org.mariotaku.twidere.adapter.decorator.ExtendedDividerItemDecoration
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.*
@@ -52,6 +51,7 @@ import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.fragment.status.FavoriteConfirmDialogFragment
 import org.mariotaku.twidere.fragment.status.RetweetQuoteDialogFragment
+import org.mariotaku.twidere.fragment.timeline.AbsTimelineFragment
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.ObjectId
@@ -100,9 +100,9 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
     protected abstract val accountKeys: Array<UserKey>
 
     protected var adapterData: List<ParcelableStatus>?
-        get() = adapter.data
+        get() = adapter.statuses
         set(data) {
-            adapter.data = data
+//            adapter.statuses = data
         }
 
     @ReadPositionTag
@@ -400,27 +400,9 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         return handleActionLongClick(this, status, adapter.getItemId(position), id)
     }
 
-    override fun onCreateItemDecoration(context: Context, recyclerView: RecyclerView, layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
-        val itemDecoration = ExtendedDividerItemDecoration(context, (recyclerView.layoutManager as LinearLayoutManager).orientation)
-        val res = context.resources
-        if (adapter.profileImageEnabled) {
-            val decorPaddingLeft = res.getDimensionPixelSize(R.dimen.element_spacing_normal) * 2 + res.getDimensionPixelSize(R.dimen.icon_size_status_profile_image)
-            itemDecoration.setPadding { position, rect ->
-                val itemViewType = adapter.getItemViewType(position)
-                var nextItemIsStatus = false
-                if (position < adapter.itemCount - 1) {
-                    nextItemIsStatus = adapter.getItemViewType(position + 1) == ParcelableStatusesAdapter.VIEW_TYPE_STATUS
-                }
-                if (nextItemIsStatus && itemViewType == ParcelableStatusesAdapter.VIEW_TYPE_STATUS) {
-                    rect.left = decorPaddingLeft
-                } else {
-                    rect.left = 0
-                }
-                true
-            }
-        }
-        itemDecoration.setDecorationEndOffset(1)
-        return itemDecoration
+    override fun onCreateItemDecoration(context: Context, recyclerView: RecyclerView,
+            layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
+        return AbsTimelineFragment.createStatusesListItemDecoration(context, recyclerView, adapter)
     }
 
     protected fun saveReadPosition() {

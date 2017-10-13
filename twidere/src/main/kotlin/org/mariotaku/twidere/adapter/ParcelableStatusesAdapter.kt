@@ -19,17 +19,20 @@
 
 package org.mariotaku.twidere.adapter
 
+import android.arch.paging.PagedList
+import android.arch.paging.PagedListAdapterHelper
 import android.content.Context
-import android.database.CursorIndexOutOfBoundsException
 import android.support.v4.widget.Space
+import android.support.v7.recyclerview.extensions.DiffCallback
 import android.support.v7.widget.RecyclerView
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
-import org.mariotaku.ktextension.*
-import org.mariotaku.library.objectcursor.ObjectCursor
+import org.mariotaku.ktextension.contains
+import org.mariotaku.ktextension.findPositionByItemId
+import org.mariotaku.ktextension.rangeOfSize
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter
 import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter.Companion.ITEM_VIEW_TYPE_GAP
@@ -47,7 +50,6 @@ import org.mariotaku.twidere.model.ObjectId
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.timeline.TimelineFilter
-import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler
 import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.util.Utils
@@ -62,9 +64,8 @@ class ParcelableStatusesAdapter(
 ) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context, requestManager),
         IStatusesAdapter, IItemCountsAdapter {
 
-    protected val inflater: LayoutInflater = LayoutInflater.from(context)
-
     override val twidereLinkify: TwidereLinkify
+
     @PreviewStyle
     override val mediaPreviewStyle: Int = preferences[mediaPreviewStyleKey]
     override val nameFirst: Boolean = preferences[nameFirstKey]
@@ -74,11 +75,6 @@ class ParcelableStatusesAdapter(
     override val lightFont: Boolean = preferences[lightFontKey]
     override val mediaPreviewEnabled: Boolean = Utils.isMediaPreviewEnabled(context, preferences)
     override val sensitiveContentEnabled: Boolean = preferences.getBoolean(KEY_DISPLAY_SENSITIVE_CONTENTS, false)
-    private val showCardActions: Boolean = !preferences[hideCardActionsKey]
-
-    private val gapLoadingIds: MutableSet<ObjectId> = HashSet()
-
-    override var statusClickListener: IStatusViewHolder.StatusClickListener? = null
 
     override val gapClickListener: IGapSupportedAdapter.GapClickListener?
         get() = statusClickListener
@@ -89,6 +85,10 @@ class ParcelableStatusesAdapter(
             field = value
             notifyDataSetChanged()
         }
+
+    override var statusClickListener: IStatusViewHolder.StatusClickListener? = null
+
+    override val itemCounts = ItemCounts(5)
 
     var isShowInReplyTo: Boolean = false
         set(value) {
@@ -111,46 +111,34 @@ class ParcelableStatusesAdapter(
             notifyDataSetChanged()
         }
 
-    private var displayPositions: IntArray? = null
-    private var displayDataCount: Int = 0
-    private var showingActionCardId = RecyclerView.NO_ID
-    private val showingFullTextStates = SparseBooleanArray()
-    private val reuseStatus = ParcelableStatus()
-    private var infoCache: Array<StatusInfo?>? = null
+    private val inflater: LayoutInflater = LayoutInflater.from(context)
 
-    var data: List<ParcelableStatus>? = null
-        set(data) {
-            when (data) {
-                null -> {
-                    displayPositions = null
-                    displayDataCount = 0
-                }
-                is ObjectCursor -> {
-                    displayPositions = null
-                    displayDataCount = data.size
-                }
-                else -> {
-                    var filteredCount = 0
-                    displayPositions = IntArray(data.size).apply {
-                        data.forEachIndexed { i, item ->
-                            if (!item.is_gap && item.is_filtered) {
-                                filteredCount++
-                            } else {
-                                this[i - filteredCount] = i
-                            }
-                        }
-                    }
-                    displayDataCount = data.size - filteredCount
-                }
-            }
-            field = data
-            this.infoCache = if (data != null) arrayOfNulls(data.size) else null
+    private val showCardActions: Boolean = !preferences[hideCardActionsKey]
+
+    private val gapLoadingIds: MutableSet<ObjectId> = HashSet()
+    private var showingActionCardId = RecyclerView.NO_ID
+
+    private val showingFullTextStates = SparseBooleanArray()
+
+    private var pagedStatusesHelper = PagedListAdapterHelper<ParcelableStatus>(this, object : DiffCallback<ParcelableStatus>() {
+        override fun areContentsTheSame(oldItem: ParcelableStatus, newItem: ParcelableStatus): Boolean {
+            return oldItem == newItem
+        }
+
+        override fun areItemsTheSame(oldItem: ParcelableStatus, newItem: ParcelableStatus): Boolean {
+            return oldItem._id == newItem._id || oldItem === newItem
+        }
+
+    })
+
+    var statuses: PagedList<ParcelableStatus>?
+        get() = pagedStatusesHelper.currentList
+        set(value) {
+            pagedStatusesHelper.setList(value)
             gapLoadingIds.clear()
             updateItemCount()
             notifyDataSetChanged()
         }
-
-    override val itemCounts = ItemCounts(5)
 
     val statusStartIndex: Int
         get() = getItemStartPosition(ITEM_INDEX_STATUS)
@@ -178,20 +166,16 @@ class ParcelableStatusesAdapter(
     }
 
     override fun isGapItem(position: Int): Boolean {
-        return getFieldValue(position, { info ->
-            return@getFieldValue info.gap
-        }, { status ->
-            return@getFieldValue status.is_gap
-        }, false)
+        return getStatus(position).is_gap
     }
 
     override fun getStatus(position: Int, raw: Boolean): ParcelableStatus {
-        return getStatusInternal(position, getItemCountIndex(position, raw), raw, reuse = false)
+        return getStatusInternal(position, getItemCountIndex(position, raw), raw)
     }
 
     override fun getStatusCount(raw: Boolean): Int {
-        if (raw) return data?.size ?: 0
-        return displayDataCount
+        if (raw) return statuses?.size ?: 0
+        return pagedStatusesHelper.itemCount
     }
 
     override fun getItemId(position: Int): Long {
@@ -201,57 +185,29 @@ class ParcelableStatusesAdapter(
                 val status = pinnedStatuses!![position - getItemStartPosition(ITEM_INDEX_PINNED_STATUS)]
                 return status.hashCode().toLong()
             }
-            ITEM_INDEX_STATUS -> getFieldValue(position, { (_, accountKey, id) ->
-                return@getFieldValue ParcelableStatus.calculateHashCode(accountKey, id)
-            }, { status ->
-                return@getFieldValue status.hashCode()
-            }, -1).toLong()
+            ITEM_INDEX_STATUS -> return getStatus(position, false).hashCode().toLong()
             else -> position.toLong()
         }
     }
 
     override fun getStatusId(position: Int, raw: Boolean): String {
-        return getFieldValue(position, { info ->
-            return@getFieldValue info.id
-        }, { status ->
-            return@getFieldValue status.id
-        }, "")
+        return getStatus(position, raw).id
     }
 
     fun getStatusSortId(position: Int, raw: Boolean): Long {
-        return getFieldValue(position, { info ->
-            return@getFieldValue info.sortId
-        }, { status ->
-            return@getFieldValue status.sort_id
-        }, -1L, raw)
+        return getStatus(position, raw).sort_id
     }
 
     override fun getStatusTimestamp(position: Int, raw: Boolean): Long {
-        return getFieldValue(position, { info ->
-            return@getFieldValue info.timestamp
-        }, { status ->
-            return@getFieldValue status.timestamp
-        }, -1L)
+        return getStatus(position, raw).timestamp
     }
 
     override fun getStatusPositionKey(position: Int, raw: Boolean): Long {
-        return getFieldValue(position, { info ->
-            if (info.positionKey > 0) return@getFieldValue info.positionKey
-            return@getFieldValue info.timestamp
-        }, { status ->
-            val positionKey = status.position_key
-            if (positionKey > 0) return@getFieldValue positionKey
-            return@getFieldValue status.timestamp
-        }, -1L)
+        return getStatus(position, raw).position_key
     }
 
     override fun getAccountKey(position: Int, raw: Boolean): UserKey {
-        val def: UserKey? = null
-        return getFieldValue(position, { info ->
-            return@getFieldValue info.accountKey
-        }, { status ->
-            return@getFieldValue status.account_key
-        }, def, raw)!!
+        return getStatus(position, raw).account_key
     }
 
     override fun isCardActionsShown(position: Int): Boolean {
@@ -313,7 +269,7 @@ class ParcelableStatusesAdapter(
         when (holder.itemViewType) {
             VIEW_TYPE_STATUS -> {
                 val countIndex: Int = getItemCountIndex(position)
-                val status = getStatusInternal(position, countIndex = countIndex, reuse = true)
+                val status = getStatusInternal(position, countIndex = countIndex)
                 (holder as IStatusViewHolder).display(status, displayInReplyTo = isShowInReplyTo,
                         displayPinned = countIndex == ITEM_INDEX_PINNED_STATUS)
             }
@@ -321,7 +277,7 @@ class ParcelableStatusesAdapter(
                 (holder as TimelineFilterHeaderViewHolder).display(timelineFilter!!)
             }
             ITEM_VIEW_TYPE_GAP -> {
-                val status = getStatusInternal(position, reuse = true)
+                val status = getStatusInternal(position)
                 val loading = gapLoadingIds.any { it.accountKey == status.account_key && it.id == status.id }
                 (holder as GapViewHolder).display(loading)
             }
@@ -378,11 +334,8 @@ class ParcelableStatusesAdapter(
     }
 
     fun getRowId(adapterPosition: Int, raw: Boolean = false): Long {
-        return getFieldValue(adapterPosition, readInfoValueAction = {
-            it._id
-        }, readStatusValueAction = { status ->
-            status.hashCode().toLong()
-        }, defValue = -1L, raw = raw)
+        val status = getStatus(adapterPosition, raw)
+        return if (status._id < 0) status.hashCode().toLong() else status._id
     }
 
     fun findPositionByPositionKey(positionKey: Long, raw: Boolean = false): Int {
@@ -414,7 +367,7 @@ class ParcelableStatusesAdapter(
         var sum = 0
         for (i in 0 until itemCounts.size) {
             sum += when (i) {
-                ITEM_INDEX_STATUS -> data?.size ?: 0
+                ITEM_INDEX_STATUS -> statuses?.size ?: 0
                 else -> itemCounts[i]
             }
             if (position < sum) {
@@ -424,57 +377,15 @@ class ParcelableStatusesAdapter(
         return -1
     }
 
-    private inline fun <T> getFieldValue(position: Int,
-            readInfoValueAction: (StatusInfo) -> T,
-            readStatusValueAction: (status: ParcelableStatus) -> T,
-            defValue: T, raw: Boolean = false): T {
-        val data = this.data
-        if (data is ObjectCursor) {
-            val dataPosition = position - statusStartIndex
-            if (dataPosition < 0 || dataPosition >= getStatusCount(true)) {
-                throw CursorIndexOutOfBoundsException("index: $position, valid range is $0..${getStatusCount(true)}")
-            }
-            val info = infoCache?.get(dataPosition) ?: run {
-                val cursor = data.cursor
-                if (!cursor.safeMoveToPosition(dataPosition)) return defValue
-                val indices = data.indices
-                val _id = cursor.safeGetLong(indices[Statuses._ID])
-                val accountKey = UserKey.valueOf(cursor.safeGetString(indices[Statuses.ACCOUNT_KEY]))
-                val id = cursor.safeGetString(indices[Statuses.ID])
-                val timestamp = cursor.safeGetLong(indices[Statuses.TIMESTAMP])
-                val sortId = cursor.safeGetLong(indices[Statuses.SORT_ID])
-                val positionKey = cursor.safeGetLong(indices[Statuses.POSITION_KEY])
-                val gap = cursor.getInt(indices[Statuses.IS_GAP]) == 1
-                val newInfo = StatusInfo(_id, accountKey, id, timestamp, sortId, positionKey, gap)
-                infoCache?.set(dataPosition, newInfo)
-                return@run newInfo
-            }
-            return readInfoValueAction(info)
-        }
-        return readStatusValueAction(getStatus(position, raw))
-    }
-
     private fun getStatusInternal(position: Int, countIndex: Int = getItemCountIndex(position),
-            raw: Boolean = false, reuse: Boolean): ParcelableStatus {
+            raw: Boolean = false): ParcelableStatus {
         when (countIndex) {
             ITEM_INDEX_PINNED_STATUS -> {
                 return pinnedStatuses!![position - getItemStartPosition(ITEM_INDEX_PINNED_STATUS)]
             }
             ITEM_INDEX_STATUS -> {
-                val data = this.data!!
                 val dataPosition = position - statusStartIndex
-                val positions = displayPositions
-                val listPosition = if (positions != null && !raw) {
-                    positions[dataPosition]
-                } else {
-                    dataPosition
-                }
-                if (reuse && data is ObjectCursor) {
-                    reuseStatus.is_filtered = false
-                    return data.setInto(listPosition, reuseStatus)
-                } else {
-                    return data[listPosition]
-                }
+                return pagedStatusesHelper.getItem(dataPosition)!!
             }
         }
         val validStart = getItemStartPosition(ITEM_INDEX_PINNED_STATUS)

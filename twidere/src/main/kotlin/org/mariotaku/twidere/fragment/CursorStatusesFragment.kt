@@ -149,7 +149,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
     }
 
     override fun onLoaderReset(loader: Loader<List<ParcelableStatus>?>) {
-        adapter.data = null
+        adapter.statuses = null
     }
 
     override fun onLoadMoreContents(@IndicatorPosition position: Long) {

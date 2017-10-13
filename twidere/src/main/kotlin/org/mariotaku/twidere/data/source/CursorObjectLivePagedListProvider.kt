@@ -17,21 +17,27 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.data
+package org.mariotaku.twidere.data.source
 
-import android.arch.lifecycle.LiveData
+import android.arch.paging.LivePagedListProvider
+import android.content.ContentResolver
+import android.net.Uri
 
+/**
+ * Created by mariotaku on 2017/10/13.
+ */
 
-abstract class ReloadableLiveData<T> : LiveData<T>() {
+class CursorObjectLivePagedListProvider<T>(
+        private val resolver: ContentResolver,
+        val uri: Uri,
+        val projection: Array<String>? = null,
+        val selection: String? = null,
+        val selectionArgs: Array<String>? = null,
+        val sortOrder: String? = null,
+        val cls: Class<T>
+) : LivePagedListProvider<Int, T>() {
 
-    fun loadData() {
-        onLoadData(this::setValue)
-    }
-
-    override fun onActive() {
-        loadData()
-    }
-
-    protected abstract fun onLoadData(callback: (T) -> Unit)
+    override fun createDataSource() = CursorObjectTiledDataSource(resolver, uri, projection,
+            selection, selectionArgs, sortOrder, cls)
 
 }

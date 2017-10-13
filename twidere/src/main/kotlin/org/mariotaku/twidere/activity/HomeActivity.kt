@@ -839,7 +839,9 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             toolbar.setContentInsetsRelative(toolbarStyle.getDimensionPixelSize(0, 0),
                     toolbarStyle.getDimensionPixelSize(1, 0))
             toolbarStyle.recycle()
-
+            toolbar.setOnClickListener {
+                (currentVisibleFragment as? RefreshScrollTopInterface)?.scrollToStart()
+            }
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
     }

@@ -71,8 +71,9 @@ fun <T> ContentResolver.queryOne(uri: Uri, projection: Array<String>?, selection
 }
 
 fun <T> ContentResolver.queryAll(uri: Uri, projection: Array<String>?, selection: String?,
-        selectionArgs: Array<String>?, sortOrder: String? = null, cls: Class<T>): List<T> {
-    return queryReference(uri, projection, selection, selectionArgs, sortOrder)?.use { (cur) ->
+        selectionArgs: Array<String>?, sortOrder: String? = null, limit: String? = null,
+        cls: Class<T>): List<T> {
+    return queryReference(uri, projection, selection, selectionArgs, sortOrder, limit)?.use { (cur) ->
         return@use cur.map(ObjectCursor.indicesFrom(cur, cls))
     } ?: emptyList()
 }

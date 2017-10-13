@@ -29,7 +29,7 @@ class HomeTimelineFragment : AbsTimelineFragment<RefreshTaskParam>() {
 
     override val contentUri: Uri = Statuses.CONTENT_URI
 
-    override fun onCreateRefreshParam(position: Int): RefreshTaskParam {
+    override fun onCreateRefreshParam(position: Int): RefreshTaskParam? {
         return getBaseRefreshTaskParam(this, position)
     }
 
