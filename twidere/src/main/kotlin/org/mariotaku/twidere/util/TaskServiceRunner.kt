@@ -18,7 +18,7 @@ import org.mariotaku.twidere.model.AccountPreferences
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
-import org.mariotaku.twidere.model.refresh.RefreshTaskParam
+import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.filter.RefreshFiltersSubscriptionsTask
@@ -65,7 +65,7 @@ class TaskServiceRunner(
         when (action) {
             ACTION_REFRESH_HOME_TIMELINE -> {
                 val task = GetHomeTimelineTask(context)
-                task.params = AutoRefreshTaskParam(context, preferences, activityTracker.isEmpty,
+                task.params = AutoContentRefreshParam(context, preferences, activityTracker.isEmpty,
                         AccountPreferences::isAutoRefreshHomeTimelineEnabled) { accountKeys ->
                     DataStoreUtils.getNewestStatusIds(context, Statuses.CONTENT_URI,
                             accountKeys.toNulls())
@@ -74,7 +74,7 @@ class TaskServiceRunner(
             }
             ACTION_REFRESH_NOTIFICATIONS -> {
                 val task = GetActivitiesAboutMeTask(context)
-                task.params = AutoRefreshTaskParam(context, preferences, activityTracker.isEmpty,
+                task.params = AutoContentRefreshParam(context, preferences, activityTracker.isEmpty,
                         AccountPreferences::isAutoRefreshMentionsEnabled) { accountKeys ->
                     DataStoreUtils.getRefreshNewestActivityMaxPositions(context,
                             Activities.AboutMe.CONTENT_URI, accountKeys.toNulls())
@@ -83,7 +83,7 @@ class TaskServiceRunner(
             }
             ACTION_REFRESH_DIRECT_MESSAGES -> {
                 val task = GetMessagesTask(context)
-                task.params = object : GetMessagesTask.RefreshNewTaskParam(context) {
+                task.params = object : GetMessagesTask.RefreshNewParam(context) {
 
                     override val isBackground: Boolean = activityTracker.isEmpty
 
@@ -112,13 +112,13 @@ class TaskServiceRunner(
     @Retention(AnnotationRetention.SOURCE)
     annotation class Action
 
-    class AutoRefreshTaskParam(
+    class AutoContentRefreshParam(
             val context: Context,
             val preferences: SharedPreferences,
             override val isBackground: Boolean,
             val refreshable: (AccountPreferences) -> Boolean,
             val getSinceIds: (Array<UserKey>) -> Array<String?>?
-    ) : RefreshTaskParam {
+    ) : ContentRefreshParam {
 
         override val accountKeys: Array<UserKey> by lazy {
             return@lazy AccountPreferences.getAccountPreferences(context, preferences,

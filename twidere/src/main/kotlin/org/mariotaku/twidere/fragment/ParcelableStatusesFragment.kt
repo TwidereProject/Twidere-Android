@@ -43,8 +43,8 @@ import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.model.event.StatusRetweetedEvent
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
-import org.mariotaku.twidere.model.refresh.BaseRefreshTaskParam
-import org.mariotaku.twidere.model.refresh.RefreshTaskParam
+import org.mariotaku.twidere.model.refresh.BaseContentRefreshParam
+import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.util.Utils
 import java.util.*
 
@@ -99,7 +99,7 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         return loader
     }
 
-    override fun getStatuses(param: RefreshTaskParam): Boolean {
+    override fun getStatuses(param: ContentRefreshParam): Boolean {
         if (!loaderInitialized) return false
         val args = Bundle(arguments)
         val maxId = param.getMaxId(0)
@@ -161,7 +161,7 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         val status = adapter.getStatus(startIdx + statusCount - 1, true)
         val accountKeys = arrayOf(status.account_key)
         val pagination = arrayOf<Pagination?>(SinceMaxPagination.maxId(status.id, -1))
-        val param = BaseRefreshTaskParam(accountKeys, pagination)
+        val param = BaseContentRefreshParam(accountKeys, pagination)
         param.isLoadingMore = true
         getStatuses(param)
     }
@@ -179,9 +179,9 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
                     null
                 }
             }
-            getStatuses(BaseRefreshTaskParam(accountKeys, pagination))
+            getStatuses(BaseContentRefreshParam(accountKeys, pagination))
         } else {
-            getStatuses(BaseRefreshTaskParam(accountKeys, null))
+            getStatuses(BaseContentRefreshParam(accountKeys, null))
         }
         return true
     }

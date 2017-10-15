@@ -17,30 +17,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.model
+package org.mariotaku.twidere.data.status
 
-import org.mariotaku.sqliteqb.library.Expression
-import java.util.*
 
-data class ParameterizedExpression(var expression: Expression, val parameters: Array<String>) {
-    val sql: String
-        get() = expression.sql
+import android.arch.paging.LivePagedListProvider
+import android.content.Context
+import org.mariotaku.twidere.data.fetcher.StatusesFetcher
+import org.mariotaku.twidere.model.ParcelableStatus
+import org.mariotaku.twidere.model.UserKey
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+class StatusesLivePagedListProvider(
+        private val context: Context,
+        private val fetcher: StatusesFetcher,
+        private val accountKey: UserKey
+) : LivePagedListProvider<String, ParcelableStatus>() {
 
-        other as ParameterizedExpression
+    override fun createDataSource() = StatusesDataSource(context, fetcher, accountKey)
 
-        if (expression != other.expression) return false
-        if (!Arrays.equals(parameters, other.parameters)) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = expression.hashCode()
-        result = 31 * result + Arrays.hashCode(parameters)
-        return result
-    }
 }

@@ -319,7 +319,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         if (ILoadMoreSupportAdapter.START !in position) return
         val message = adapter.getMessage(adapter.messageRange.endInclusive)
         setLoadMoreIndicatorPosition(position)
-        val param = GetMessagesTask.LoadMoreMessageTaskParam(context, accountKey, conversationId,
+        val param = GetMessagesTask.LoadMoreMessagesParam(context, accountKey, conversationId,
                 message.id)
         param.taskTag = loadMoreTaskTag
         twitterWrapper.getMessagesAsync(param)

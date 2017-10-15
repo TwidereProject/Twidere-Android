@@ -21,18 +21,26 @@ package org.mariotaku.twidere.model.refresh
 
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.Pagination
+import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 
 /**
- * Created by mariotaku on 16/2/11.
+ * Created by mariotaku on 16/2/14.
  */
-open class BaseRefreshTaskParam(
-        override val accountKeys: Array<UserKey>,
-        override val pagination: Array<out Pagination?>?
-) : RefreshTaskParam {
+interface ContentRefreshParam {
+    val accountKeys: Array<UserKey>
 
-    override var extraId: Long = -1L
-    override var tabId: Long = -1L
-    override var isLoadingMore: Boolean = false
-    override var shouldAbort: Boolean = false
+    val pagination: Array<out Pagination?>? get() = null
 
+    val extraId: Long get() = -1
+
+    val tabId: Long get() = -1
+
+    val isLoadingMore: Boolean get() = false
+
+    val shouldAbort: Boolean get() = false
+
+    val isBackground: Boolean get() = false
+
+    val hasMaxIds: Boolean
+        get() = pagination?.any { (it as? SinceMaxPagination)?.maxId != null } ?: false
 }

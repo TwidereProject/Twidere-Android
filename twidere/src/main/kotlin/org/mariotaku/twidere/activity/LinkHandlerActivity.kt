@@ -74,6 +74,7 @@ import org.mariotaku.twidere.fragment.search.MastodonSearchFragment
 import org.mariotaku.twidere.fragment.search.SearchFragment
 import org.mariotaku.twidere.fragment.status.StatusFragment
 import org.mariotaku.twidere.fragment.statuses.*
+import org.mariotaku.twidere.fragment.timeline.FavoritesTimelineFragment
 import org.mariotaku.twidere.fragment.userlist.ListsFragment
 import org.mariotaku.twidere.fragment.userlist.UserListFragment
 import org.mariotaku.twidere.fragment.userlist.UserListMembershipsFragment
@@ -533,7 +534,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
                 if (TextUtils.isEmpty(paramScreenName) && paramUserKey == null) return null
             }
             LINK_ID_USER_FAVORITES -> {
-                fragment = UserFavoritesFragment()
+                fragment = FavoritesTimelineFragment()
                 val paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME)
                 val paramUserKey = uri.getUserKeyQueryParameter()
                 if (!args.containsKey(EXTRA_SCREEN_NAME)) {

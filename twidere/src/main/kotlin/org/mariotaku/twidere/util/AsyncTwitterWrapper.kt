@@ -47,7 +47,7 @@ import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.event.*
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
-import org.mariotaku.twidere.model.refresh.RefreshTaskParam
+import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableRelationshipUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.*
@@ -229,7 +229,7 @@ class AsyncTwitterWrapper(
         TaskStarter.execute(task)
     }
 
-    fun getHomeTimelineAsync(param: RefreshTaskParam): Boolean {
+    fun getHomeTimelineAsync(param: ContentRefreshParam): Boolean {
         val task = GetHomeTimelineTask(context)
         task.params = param
         TaskStarter.execute(task)
@@ -241,7 +241,7 @@ class AsyncTwitterWrapper(
         TaskStarter.execute(task)
     }
 
-    fun getMessagesAsync(param: GetMessagesTask.RefreshMessagesTaskParam) {
+    fun getMessagesAsync(param: GetMessagesTask.RefreshMessagesParam) {
         val task = GetMessagesTask(context)
         task.params = param
         TaskStarter.execute(task)
@@ -274,7 +274,7 @@ class AsyncTwitterWrapper(
     }
 
     fun refreshAll(action: () -> Array<UserKey>): Boolean {
-        getHomeTimelineAsync(object : RefreshTaskParam {
+        getHomeTimelineAsync(object : ContentRefreshParam {
 
             override val accountKeys by lazy { action() }
 
@@ -286,7 +286,7 @@ class AsyncTwitterWrapper(
             }
         })
         if (preferences[homeRefreshMentionsKey]) {
-            getActivitiesAboutMeAsync(object : RefreshTaskParam {
+            getActivitiesAboutMeAsync(object : ContentRefreshParam {
 
                 override val accountKeys by lazy { action() }
 
@@ -299,7 +299,7 @@ class AsyncTwitterWrapper(
             })
         }
         if (preferences[homeRefreshDirectMessagesKey]) {
-            getMessagesAsync(object : GetMessagesTask.RefreshMessagesTaskParam(context) {
+            getMessagesAsync(object : GetMessagesTask.RefreshMessagesParam(context) {
                 override val accountKeys by lazy { action() }
             })
         }
@@ -371,7 +371,7 @@ class AsyncTwitterWrapper(
         })
     }
 
-    fun getActivitiesAboutMeAsync(param: RefreshTaskParam) {
+    fun getActivitiesAboutMeAsync(param: ContentRefreshParam) {
         val task = GetActivitiesAboutMeTask(context)
         task.params = param
         TaskStarter.execute(task)

@@ -23,9 +23,28 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.Pagination
 
 
-class UserRelatedRefreshTaskParam(
-        accountKey: UserKey,
-        val userKey: UserKey?,
-        val userScreenName: String?,
-        pagination: Pagination? = null
-) : BaseRefreshTaskParam(arrayOf(accountKey), arrayOf(pagination))
+open class DelegateContentRefreshParam(private val delegated: ContentRefreshParam) : ContentRefreshParam {
+    override val accountKeys: Array<UserKey>
+        get() = delegated.accountKeys
+
+    override val pagination: Array<out Pagination?>?
+        get() = delegated.pagination
+
+    override val extraId: Long
+        get() = delegated.extraId
+
+    override val tabId: Long
+        get() = delegated.tabId
+
+    override val isLoadingMore: Boolean
+        get() = delegated.isLoadingMore
+
+    override val shouldAbort: Boolean
+        get() = delegated.shouldAbort
+
+    override val isBackground: Boolean
+        get() = delegated.isBackground
+
+    override val hasMaxIds: Boolean
+        get() = delegated.hasMaxIds
+}

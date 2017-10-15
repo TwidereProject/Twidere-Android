@@ -36,12 +36,12 @@ import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.pagination.PaginatedList
-import org.mariotaku.twidere.model.refresh.UserRelatedRefreshTaskParam
+import org.mariotaku.twidere.model.refresh.UserRelatedContentRefreshParam
 import org.mariotaku.twidere.util.database.ContentFiltersUtils
 
 class UserFavoritesLoader(
         context: Context,
-        private val refreshParam: UserRelatedRefreshTaskParam?,
+        private val refreshParam: UserRelatedContentRefreshParam?,
         data: List<ParcelableStatus>?,
         fromUser: Boolean,
         loadingMore: Boolean

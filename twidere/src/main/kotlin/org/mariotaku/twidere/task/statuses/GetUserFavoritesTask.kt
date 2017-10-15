@@ -21,17 +21,10 @@ package org.mariotaku.twidere.task.statuses
 
 import android.content.Context
 import android.net.Uri
-import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.mastodon.Mastodon
-import org.mariotaku.microblog.library.twitter.model.Paging
-import org.mariotaku.microblog.library.twitter.model.Status
-import org.mariotaku.twidere.alias.MastodonStatus
 import org.mariotaku.twidere.annotation.FilterScope
-import org.mariotaku.twidere.exception.RequiredFieldNotFoundException
-import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.data.fetcher.UserFavoritesFetcher
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.refresh.UserRelatedRefreshTaskParam
+import org.mariotaku.twidere.model.refresh.UserRelatedContentRefreshParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.ErrorInfoStore
 import org.mariotaku.twidere.util.sync.TimelineSyncManager
@@ -39,7 +32,7 @@ import org.mariotaku.twidere.util.sync.TimelineSyncManager
 /**
  * Created by mariotaku on 16/2/11.
  */
-class GetUserFavoritesTask(context: Context) : GetStatusesTask<UserRelatedRefreshTaskParam>(context) {
+class GetUserFavoritesTask(context: Context) : GetStatusesTask<UserRelatedContentRefreshParam>(context) {
 
     override val contentUri: Uri = Statuses.Favorites.CONTENT_URI
 
@@ -47,34 +40,11 @@ class GetUserFavoritesTask(context: Context) : GetStatusesTask<UserRelatedRefres
 
     override val errorInfoKey: String = ErrorInfoStore.KEY_FAVORITES_TIMELINE
 
-    override fun getTwitterStatuses(account: AccountDetails, twitter: MicroBlog, paging: Paging, params: UserRelatedRefreshTaskParam?): List<Status> {
-        return getMicroBlogUserFavorites(params, twitter, paging)
-    }
-
-    override fun getStatusNetStatuses(account: AccountDetails, statusNet: MicroBlog, paging: Paging, params: UserRelatedRefreshTaskParam?): List<Status> {
-        return getMicroBlogUserFavorites(params, statusNet, paging)
-    }
-
-    override fun getFanfouStatuses(account: AccountDetails, fanfou: MicroBlog, paging: Paging, params: UserRelatedRefreshTaskParam?): List<Status> {
-        return getMicroBlogUserFavorites(params, fanfou, paging)
-    }
-
-    override fun getMastodonStatuses(account: AccountDetails, mastodon: Mastodon, paging: Paging, params: UserRelatedRefreshTaskParam?): List<MastodonStatus> {
-        if (params?.userKey != account.key) {
-            throw MicroBlogException("Only current account favorites is supported")
-        }
-        return mastodon.getFavourites(paging)
+    override fun getStatusesFetcher(params: UserRelatedContentRefreshParam?): UserFavoritesFetcher {
+        return UserFavoritesFetcher(params?.userKey, params?.userScreenName)
     }
 
     override fun syncFetchReadPosition(manager: TimelineSyncManager, accountKeys: Array<UserKey>) {
-    }
-
-    private fun getMicroBlogUserFavorites(params: UserRelatedRefreshTaskParam?, microBlog: MicroBlog, paging: Paging): List<Status> {
-        return when {
-            params?.userKey != null -> microBlog.getFavorites(params.userKey.id, paging)
-            params?.userScreenName != null -> microBlog.getFavoritesByScreenName(params.userScreenName, paging)
-            else -> throw RequiredFieldNotFoundException("user_id", "screen_name")
-        }
     }
 
 }

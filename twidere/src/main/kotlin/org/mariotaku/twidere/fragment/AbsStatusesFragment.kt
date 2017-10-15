@@ -61,8 +61,8 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.analyzer.Share
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
-import org.mariotaku.twidere.model.refresh.BaseRefreshTaskParam
-import org.mariotaku.twidere.model.refresh.RefreshTaskParam
+import org.mariotaku.twidere.model.refresh.BaseContentRefreshParam
+import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.timeline.TimelineFilter
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
@@ -190,7 +190,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         }
     }
 
-    abstract fun getStatuses(param: RefreshTaskParam): Boolean
+    abstract fun getStatuses(param: ContentRefreshParam): Boolean
 
     override fun handleKeyboardShortcutSingle(handler: KeyboardShortcutsHandler, keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
         var action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event, metaState)
@@ -372,7 +372,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         adapter.addGapLoadingId(ObjectId(status.account_key, status.id))
         val accountKeys = arrayOf(status.account_key)
         val pagination = arrayOf(SinceMaxPagination.maxId(status.id, status.sort_id))
-        getStatuses(BaseRefreshTaskParam(accountKeys, pagination))
+        getStatuses(BaseContentRefreshParam(accountKeys, pagination))
     }
 
     override fun onMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia,

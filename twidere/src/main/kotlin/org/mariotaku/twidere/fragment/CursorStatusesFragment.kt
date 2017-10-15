@@ -48,7 +48,7 @@ import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.*
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
-import org.mariotaku.twidere.model.refresh.RefreshTaskParam
+import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.statuses.GetStatusesTask
@@ -157,7 +157,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
         if (ILoadMoreSupportAdapter.START in position) return
         super.onLoadMoreContents(position)
         if (position == 0L) return
-        getStatuses(object : RefreshTaskParam {
+        getStatuses(object : ContentRefreshParam {
             override val accountKeys by lazy {
                 this@CursorStatusesFragment.accountKeys
             }
@@ -176,7 +176,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
     override fun triggerRefresh(): Boolean {
         super.triggerRefresh()
-        getStatuses(object : RefreshTaskParam {
+        getStatuses(object : ContentRefreshParam {
             override val accountKeys: Array<UserKey> by lazy {
                 this@CursorStatusesFragment.accountKeys
             }

@@ -116,9 +116,9 @@ import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowInsetsCall
 import org.mariotaku.twidere.fragment.iface.IToolBarSupportFragment
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
-import org.mariotaku.twidere.fragment.statuses.UserFavoritesFragment
 import org.mariotaku.twidere.fragment.statuses.UserMediaTimelineFragment
 import org.mariotaku.twidere.fragment.statuses.UserTimelineFragment
+import org.mariotaku.twidere.fragment.timeline.FavoritesTimelineFragment
 import org.mariotaku.twidere.graphic.ActionBarColorDrawable
 import org.mariotaku.twidere.graphic.ActionIconDrawable
 import org.mariotaku.twidere.loader.ParcelableUserLoader
@@ -1477,11 +1477,11 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 name = getString(R.string.media), type = TAB_TYPE_MEDIA, position = TAB_POSITION_MEDIA)
         if (account?.type != AccountType.MASTODON || account?.key == userKey) {
             if (preferences[iWantMyStarsBackKey]) {
-                pagerAdapter.add(cls = UserFavoritesFragment::class.java, args = tabArgs,
+                pagerAdapter.add(cls = FavoritesTimelineFragment::class.java, args = tabArgs,
                         name = getString(R.string.title_favorites), type = TAB_TYPE_FAVORITES,
                         position = TAB_POSITION_FAVORITES)
             } else {
-                pagerAdapter.add(cls = UserFavoritesFragment::class.java, args = tabArgs,
+                pagerAdapter.add(cls = FavoritesTimelineFragment::class.java, args = tabArgs,
                         name = getString(R.string.title_likes), type = TAB_TYPE_FAVORITES,
                         position = TAB_POSITION_FAVORITES)
             }

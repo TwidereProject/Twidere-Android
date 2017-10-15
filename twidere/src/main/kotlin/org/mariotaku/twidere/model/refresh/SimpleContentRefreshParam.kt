@@ -24,7 +24,7 @@ import org.mariotaku.twidere.model.pagination.Pagination
 /**
  * Created by mariotaku on 16/2/14.
  */
-abstract class SimpleRefreshTaskParam : RefreshTaskParam {
+abstract class SimpleContentRefreshParam : ContentRefreshParam {
 
     override val pagination: Array<out Pagination?>? = null
 

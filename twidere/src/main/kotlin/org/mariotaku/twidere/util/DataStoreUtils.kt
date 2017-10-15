@@ -480,8 +480,7 @@ object DataStoreUtils {
         }
     }
 
-    fun getTableNameByUri(uri: Uri?): String? {
-        if (uri == null) return null
+    fun getTableNameByUri(uri: Uri): String? {
         return getTableNameById(getTableId(uri))
     }
 

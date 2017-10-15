@@ -32,7 +32,7 @@ import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_EXTRAS
 import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.model.ParameterizedExpression
-import org.mariotaku.twidere.model.refresh.RefreshTaskParam
+import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.tab.extra.InteractionsTabExtras
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
@@ -72,7 +72,7 @@ class InteractionsTimelineFragment : CursorActivitiesFragment() {
         return adapter
     }
 
-    override fun getActivities(param: RefreshTaskParam): Boolean {
+    override fun getActivities(param: ContentRefreshParam): Boolean {
         twitterWrapper.getActivitiesAboutMeAsync(param)
         return true
     }

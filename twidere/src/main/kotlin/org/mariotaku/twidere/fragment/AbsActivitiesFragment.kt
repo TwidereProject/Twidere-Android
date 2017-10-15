@@ -61,8 +61,8 @@ import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.analyzer.Share
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
-import org.mariotaku.twidere.model.refresh.BaseRefreshTaskParam
-import org.mariotaku.twidere.model.refresh.RefreshTaskParam
+import org.mariotaku.twidere.model.refresh.BaseContentRefreshParam
+import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.util.*
@@ -123,7 +123,7 @@ abstract class AbsActivitiesFragment protected constructor() :
         }
     }
 
-    abstract fun getActivities(param: RefreshTaskParam): Boolean
+    abstract fun getActivities(param: ContentRefreshParam): Boolean
 
     override fun handleKeyboardShortcutSingle(handler: KeyboardShortcutsHandler, keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
         var action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event, metaState)
@@ -317,7 +317,7 @@ abstract class AbsActivitiesFragment protected constructor() :
         val accountKeys = arrayOf(activity.account_key)
         val pagination = arrayOf(SinceMaxPagination.maxId(activity.min_position,
                 activity.min_sort_position))
-        getActivities(BaseRefreshTaskParam(accountKeys, pagination).also {
+        getActivities(BaseContentRefreshParam(accountKeys, pagination).also {
             it.extraId = activity._id
         })
     }

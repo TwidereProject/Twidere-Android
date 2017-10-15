@@ -122,11 +122,11 @@ class ParcelableStatusesAdapter(
 
     private var pagedStatusesHelper = PagedListAdapterHelper<ParcelableStatus>(this, object : DiffCallback<ParcelableStatus>() {
         override fun areContentsTheSame(oldItem: ParcelableStatus, newItem: ParcelableStatus): Boolean {
-            return oldItem == newItem
+            return oldItem === newItem
         }
 
         override fun areItemsTheSame(oldItem: ParcelableStatus, newItem: ParcelableStatus): Boolean {
-            return oldItem._id == newItem._id || oldItem === newItem
+            return oldItem._id == newItem._id || oldItem == newItem
         }
 
     })
@@ -163,14 +163,31 @@ class ParcelableStatusesAdapter(
         handler.setAdapter(this)
         isShowInReplyTo = true
         setHasStableIds(true)
+        registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onChanged() {
+                updateItemCount()
+            }
+
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                updateItemCount()
+            }
+
+            override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
+                updateItemCount()
+            }
+
+            override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
+                updateItemCount()
+            }
+        })
     }
 
     override fun isGapItem(position: Int): Boolean {
-        return getStatus(position).is_gap
+        return getStatusInternal(false, false, position = position)?.is_gap == true
     }
 
     override fun getStatus(position: Int, raw: Boolean): ParcelableStatus {
-        return getStatusInternal(position, getItemCountIndex(position, raw), raw)
+        return getStatusInternal(raw, position = position)!!
     }
 
     override fun getStatusCount(raw: Boolean): Int {
@@ -268,16 +285,18 @@ class ParcelableStatusesAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
             VIEW_TYPE_STATUS -> {
+                holder as IStatusViewHolder
                 val countIndex: Int = getItemCountIndex(position)
-                val status = getStatusInternal(position, countIndex = countIndex)
-                (holder as IStatusViewHolder).display(status, displayInReplyTo = isShowInReplyTo,
+                val status = getStatusInternal(loadAround = true, position = position,
+                        countIndex = countIndex) ?: return
+                holder.display(status, displayInReplyTo = isShowInReplyTo,
                         displayPinned = countIndex == ITEM_INDEX_PINNED_STATUS)
             }
             VIEW_TYPE_FILTER_HEADER -> {
                 (holder as TimelineFilterHeaderViewHolder).display(timelineFilter!!)
             }
             ITEM_VIEW_TYPE_GAP -> {
-                val status = getStatusInternal(position)
+                val status = getStatusInternal(loadAround = true, position = position) ?: return
                 val loading = gapLoadingIds.any { it.accountKey == status.account_key && it.id == status.id }
                 (holder as GapViewHolder).display(loading)
             }
@@ -377,15 +396,19 @@ class ParcelableStatusesAdapter(
         return -1
     }
 
-    private fun getStatusInternal(position: Int, countIndex: Int = getItemCountIndex(position),
-            raw: Boolean = false): ParcelableStatus {
+    private fun getStatusInternal(raw: Boolean = false, loadAround: Boolean = false,
+            position: Int, countIndex: Int = getItemCountIndex(position, raw)): ParcelableStatus? {
         when (countIndex) {
             ITEM_INDEX_PINNED_STATUS -> {
                 return pinnedStatuses!![position - getItemStartPosition(ITEM_INDEX_PINNED_STATUS)]
             }
             ITEM_INDEX_STATUS -> {
                 val dataPosition = position - statusStartIndex
-                return pagedStatusesHelper.getItem(dataPosition)!!
+                return if (loadAround) {
+                    pagedStatusesHelper.getItem(dataPosition)
+                } else {
+                    pagedStatusesHelper.currentList?.get(dataPosition)
+                }
             }
         }
         val validStart = getItemStartPosition(ITEM_INDEX_PINNED_STATUS)
@@ -400,17 +423,6 @@ class ParcelableStatusesAdapter(
         itemCounts[ITEM_INDEX_STATUS] = getStatusCount(false)
         itemCounts[ITEM_INDEX_LOAD_END_INDICATOR] = if (ILoadMoreSupportAdapter.END in loadMoreIndicatorPosition) 1 else 0
     }
-
-
-    data class StatusInfo(
-            val _id: Long,
-            val accountKey: UserKey,
-            val id: String,
-            val timestamp: Long,
-            val sortId: Long,
-            val positionKey: Long,
-            val gap: Boolean
-    )
 
 
     companion object {

@@ -38,7 +38,7 @@ import org.mariotaku.twidere.extension.queryCount
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.notification.NotificationChannelSpec
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
-import org.mariotaku.twidere.model.refresh.RefreshTaskParam
+import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
@@ -425,7 +425,7 @@ class StreamingService : BaseService() {
             @UiThread
             private fun getInteractions() {
                 val task = GetActivitiesAboutMeTask(context)
-                task.params = object : RefreshTaskParam {
+                task.params = object : ContentRefreshParam {
                     override val accountKeys: Array<UserKey> = arrayOf(account.key)
 
                     override val pagination by lazy {
@@ -446,7 +446,7 @@ class StreamingService : BaseService() {
             @UiThread
             private fun getMessages() {
                 val task = GetMessagesTask(context)
-                task.params = object : GetMessagesTask.RefreshMessagesTaskParam(context) {
+                task.params = object : GetMessagesTask.RefreshMessagesParam(context) {
                     override val accountKeys: Array<UserKey> = arrayOf(account.key)
                 }
                 TaskStarter.execute(task)

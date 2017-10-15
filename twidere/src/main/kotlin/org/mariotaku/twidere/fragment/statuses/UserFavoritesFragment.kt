@@ -32,8 +32,6 @@ import org.mariotaku.twidere.loader.statuses.UserFavoritesLoader
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FavoriteTaskEvent
-import org.mariotaku.twidere.model.refresh.UserRelatedRefreshTaskParam
-import org.mariotaku.twidere.util.Utils
 
 /**
  * Created by mariotaku on 14/12/2.
@@ -70,12 +68,8 @@ class UserFavoritesFragment : ParcelableStatusesFragment() {
     override fun onCreateStatusesLoader(context: Context, args: Bundle, fromUser: Boolean):
             Loader<List<ParcelableStatus>?> {
         refreshing = true
-        val accountKey = Utils.getAccountKey(context, args)
-        val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
-        val screenName = args.getString(EXTRA_SCREEN_NAME)
-        val param = UserRelatedRefreshTaskParam(accountKey!!, userKey, screenName, null)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-        return UserFavoritesLoader(context, param, adapterData, fromUser, loadingMore)
+        return UserFavoritesLoader(context, null, adapterData, fromUser, loadingMore)
     }
 
     override fun notifyFavoriteTask(event: FavoriteTaskEvent) {

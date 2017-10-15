@@ -159,7 +159,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
 
     override fun triggerRefresh(): Boolean {
         super.triggerRefresh()
-        twitterWrapper.getMessagesAsync(object : GetMessagesTask.RefreshNewTaskParam(context) {
+        twitterWrapper.getMessagesAsync(object : GetMessagesTask.RefreshNewParam(context) {
             override val accountKeys: Array<UserKey> = this@MessagesEntriesFragment.accountKeys
         })
         return true
@@ -170,7 +170,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
             return
         }
         setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.END)
-        twitterWrapper.getMessagesAsync(object : GetMessagesTask.LoadMoreEntriesTaskParam(context) {
+        twitterWrapper.getMessagesAsync(object : GetMessagesTask.LoadMoreEntriesParam(context) {
             override val accountKeys: Array<UserKey> = this@MessagesEntriesFragment.accountKeys
         })
     }

@@ -38,10 +38,10 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_NOTIFY_CHANGE
-import org.mariotaku.twidere.alias.MastodonStatus
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.constant.loadItemLimitKey
+import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.applyLoadLimit
@@ -52,7 +52,7 @@ import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.GetStatusesTaskEvent
-import org.mariotaku.twidere.model.refresh.RefreshTaskParam
+import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.task.GetTimelineResult
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns
@@ -70,7 +70,7 @@ import org.mariotaku.twidere.util.sync.TimelineSyncManager
 /**
  * Created by mariotaku on 16/1/2.
  */
-abstract class GetStatusesTask<P : RefreshTaskParam>(
+abstract class GetStatusesTask<P : ContentRefreshParam>(
         context: Context
 ) : BaseAbstractTask<P, List<Pair<GetTimelineResult<ParcelableStatus>?, Exception?>>,
         (Boolean) -> Unit>(context) {
@@ -159,10 +159,11 @@ abstract class GetStatusesTask<P : RefreshTaskParam>(
 
     @Throws(MicroBlogException::class)
     protected fun getStatuses(account: AccountDetails, paging: Paging): GetTimelineResult<ParcelableStatus> {
+        val fetcher = getStatusesFetcher(params)
         when (account.type) {
             AccountType.TWITTER -> {
                 val twitter = account.newMicroBlogInstance(context, MicroBlog::class.java)
-                val timeline = getTwitterStatuses(account, twitter, paging, params)
+                val timeline = fetcher.forTwitter(account, twitter, paging)
                 val statuses = timeline.map {
                     it.toParcelable(account, profileImageSize)
                 }
@@ -173,7 +174,7 @@ abstract class GetStatusesTask<P : RefreshTaskParam>(
             }
             AccountType.STATUSNET -> {
                 val statusnet = account.newMicroBlogInstance(context, MicroBlog::class.java)
-                val timeline = getStatusNetStatuses(account, statusnet, paging, params)
+                val timeline = fetcher.forStatusNet(account, statusnet, paging)
                 val statuses = timeline.map {
                     it.toParcelable(account, profileImageSize)
                 }
@@ -184,7 +185,7 @@ abstract class GetStatusesTask<P : RefreshTaskParam>(
             }
             AccountType.FANFOU -> {
                 val fanfou = account.newMicroBlogInstance(context, MicroBlog::class.java)
-                val timeline = getFanfouStatuses(account, fanfou, paging, params)
+                val timeline = fetcher.forFanfou(account, fanfou, paging)
                 val statuses = timeline.map {
                     it.toParcelable(account, profileImageSize)
                 }
@@ -195,7 +196,7 @@ abstract class GetStatusesTask<P : RefreshTaskParam>(
             }
             AccountType.MASTODON -> {
                 val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
-                val timeline = getMastodonStatuses(account, mastodon, paging, params)
+                val timeline = fetcher.forMastodon(account, mastodon, paging)
                 return GetTimelineResult(account, timeline.map {
                     it.toParcelable(account)
                 }, timeline.flatMap { status ->
@@ -210,10 +211,7 @@ abstract class GetStatusesTask<P : RefreshTaskParam>(
         }
     }
 
-    protected abstract fun getTwitterStatuses(account: AccountDetails, twitter: MicroBlog, paging: Paging, params: P?): List<Status>
-    protected abstract fun getStatusNetStatuses(account: AccountDetails, statusNet: MicroBlog, paging: Paging, params: P?): List<Status>
-    protected abstract fun getFanfouStatuses(account: AccountDetails, fanfou: MicroBlog, paging: Paging, params: P?): List<Status>
-    protected abstract fun getMastodonStatuses(account: AccountDetails, mastodon: Mastodon, paging: Paging, params: P?): List<MastodonStatus>
+    protected abstract fun getStatusesFetcher(params: P?): StatusesFetcher
 
     protected abstract fun syncFetchReadPosition(manager: TimelineSyncManager, accountKeys: Array<UserKey>)
 

@@ -20,20 +20,33 @@
 package org.mariotaku.twidere.fragment.timeline
 
 import android.net.Uri
+import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.twidere.annotation.FilterScope
-import org.mariotaku.twidere.data.fetcher.HomeTimelineFetcher
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_SCREEN_NAME
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER_KEY
+import org.mariotaku.twidere.data.fetcher.UserFavoritesFetcher
+import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
+import org.mariotaku.twidere.model.refresh.UserRelatedContentRefreshParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
+import org.mariotaku.twidere.task.statuses.GetUserFavoritesTask
 
-class HomeTimelineFragment : AbsTimelineFragment() {
+class FavoritesTimelineFragment : AbsTimelineFragment() {
     override val filterScope: Int = FilterScope.HOME
 
     override val contentUri: Uri = Statuses.CONTENT_URI
 
     override fun getStatuses(param: ContentRefreshParam): Boolean {
-        if (!param.hasMaxIds) return twitterWrapper.refreshAll(param.accountKeys)
-        return twitterWrapper.getHomeTimelineAsync(param)
+        val userKey = arguments.getParcelable<UserKey>(EXTRA_USER_KEY) ?: return false
+        val userScreenName = arguments.getString(EXTRA_SCREEN_NAME) ?: return false
+        val task = GetUserFavoritesTask(context)
+        task.params = UserRelatedContentRefreshParam(userKey, userScreenName, param)
+        TaskStarter.execute(task)
+        return true
     }
 
-    override fun onCreateStatusesFetcher() = HomeTimelineFetcher()
+    override fun onCreateStatusesFetcher(): UserFavoritesFetcher {
+        return UserFavoritesFetcher(arguments.getParcelable<UserKey>(EXTRA_USER_KEY),
+                arguments.getString(EXTRA_SCREEN_NAME))
+    }
 }

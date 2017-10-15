@@ -17,30 +17,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.model
+package org.mariotaku.twidere.model.refresh
 
-import org.mariotaku.sqliteqb.library.Expression
-import java.util.*
+import org.mariotaku.twidere.model.UserKey
 
-data class ParameterizedExpression(var expression: Expression, val parameters: Array<String>) {
-    val sql: String
-        get() = expression.sql
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as ParameterizedExpression
-
-        if (expression != other.expression) return false
-        if (!Arrays.equals(parameters, other.parameters)) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = expression.hashCode()
-        result = 31 * result + Arrays.hashCode(parameters)
-        return result
-    }
-}
+class UserRelatedContentRefreshParam(
+        val userKey: UserKey?,
+        val userScreenName: String?,
+        delegated: ContentRefreshParam
+) : DelegateContentRefreshParam(delegated)

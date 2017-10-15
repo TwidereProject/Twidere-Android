@@ -34,6 +34,10 @@ import android.widget.Toast
 import com.bumptech.glide.RequestManager
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_listview.*
+import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.mapToArray
+import org.mariotaku.ktextension.toNulls
+import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.decorator.ExtendedDividerItemDecoration
@@ -41,24 +45,23 @@ import org.mariotaku.twidere.adapter.iface.IContentAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.annotation.TimelineStyle
+import org.mariotaku.twidere.constant.loadItemLimitKey
+import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.data.source.CursorObjectLivePagedListProvider
+import org.mariotaku.twidere.data.status.StatusesLivePagedListProvider
 import org.mariotaku.twidere.fragment.AbsContentRecyclerViewFragment
 import org.mariotaku.twidere.fragment.CursorStatusesFragment
-import org.mariotaku.twidere.model.ObjectId
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.GetStatusesTaskEvent
-import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
-import org.mariotaku.twidere.model.refresh.BaseRefreshTaskParam
-import org.mariotaku.twidere.model.refresh.RefreshTaskParam
+import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.statuses.GetStatusesTask
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.Utils
 
-abstract class AbsTimelineFragment<RefreshParam : RefreshTaskParam> :
-        AbsContentRecyclerViewFragment<ParcelableStatusesAdapter, LayoutManager>() {
+abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableStatusesAdapter, LayoutManager>() {
 
     override val reachingStart: Boolean
         get() = listView.firstVisiblePosition <= 0
@@ -72,6 +75,9 @@ abstract class AbsTimelineFragment<RefreshParam : RefreshTaskParam> :
 
     protected open val isStandalone: Boolean
         get() = tabId <= 0
+
+    protected open val filtersEnabled: Boolean
+        get() = true
 
     @FilterScope
     protected abstract val filterScope: Int
@@ -133,14 +139,50 @@ abstract class AbsTimelineFragment<RefreshParam : RefreshTaskParam> :
     }
 
     override fun triggerRefresh(): Boolean {
-        val param = onCreateRefreshParam(REFRESH_POSITION_START) ?: return false
-        return getStatuses(param)
+        if (isStandalone) {
+            return false
+        }
+        return getStatuses(object : ContentRefreshParam {
+            override val accountKeys: Array<UserKey> by lazy {
+                this@AbsTimelineFragment.accountKeys
+            }
+
+            override val pagination by lazy {
+                val keys = accountKeys.toNulls()
+                val sinceIds = DataStoreUtils.getNewestStatusIds(context, contentUri, keys)
+                val sinceSortIds = DataStoreUtils.getNewestStatusSortIds(context, contentUri, keys)
+                return@lazy Array(keys.size) { idx ->
+                    SinceMaxPagination.sinceId(sinceIds[idx], sinceSortIds[idx])
+                }
+            }
+
+            override val shouldAbort: Boolean
+                get() = context == null
+
+            override val hasMaxIds: Boolean
+                get() = false
+        })
     }
 
     override fun onLoadMoreContents(position: Long) {
+        if (isStandalone) return
         if (position != ILoadMoreSupportAdapter.END) return
-        val param = onCreateRefreshParam(REFRESH_POSITION_END) ?: return
-        if (getStatuses(param)) {
+        val started = getStatuses(object : ContentRefreshParam {
+            override val accountKeys by lazy {
+                this@AbsTimelineFragment.accountKeys
+            }
+
+            override val pagination by lazy {
+                val keys = accountKeys.toNulls()
+                val maxIds = DataStoreUtils.getOldestStatusIds(context, contentUri, keys)
+                val maxSortIds = DataStoreUtils.getOldestStatusSortIds(context, contentUri, keys)
+                return@lazy Array(keys.size) { idx ->
+                    SinceMaxPagination.maxId(maxIds[idx], maxSortIds[idx])
+                }
+            }
+
+        })
+        if (started) {
             adapter.loadMoreIndicatorPosition = position
         }
     }
@@ -172,19 +214,42 @@ abstract class AbsTimelineFragment<RefreshParam : RefreshTaskParam> :
         }
     }
 
-    protected abstract fun getStatuses(param: RefreshParam): Boolean
+    protected abstract fun getStatuses(param: ContentRefreshParam): Boolean
 
-    protected abstract fun onCreateRefreshParam(position: Int): RefreshParam?
+    protected abstract fun onCreateStatusesFetcher(): StatusesFetcher
 
-    protected open fun onCreateStandaloneLiveData(): LiveData<PagedList<ParcelableStatus>?> {
-        throw UnsupportedOperationException()
+    protected open fun getMaxLoadItemLimit(forAccount: UserKey): Int {
+        return 200
     }
 
     private fun createLiveData(): LiveData<PagedList<ParcelableStatus>?> {
-        if (isStandalone) return onCreateStandaloneLiveData()
+        return if (isStandalone) onCreateStandaloneLiveData() else onCreateDatabaseLiveData()
+    }
+
+    private fun onCreateStandaloneLiveData(): LiveData<PagedList<ParcelableStatus>?> {
+        val accountKey = accountKeys.singleOrNull()!!
+        val provider = StatusesLivePagedListProvider(context.applicationContext,
+                onCreateStatusesFetcher(), accountKey)
+        val maxLoadLimit = getMaxLoadItemLimit(accountKey)
+        val loadLimit = preferences[loadItemLimitKey]
+        return provider.create(null, PagedList.Config.Builder()
+                .setPageSize(loadLimit.coerceAtMost(maxLoadLimit))
+                .setInitialLoadSizeHint(loadLimit.coerceAtMost(maxLoadLimit))
+                .build())
+    }
+
+    private fun onCreateDatabaseLiveData(): LiveData<PagedList<ParcelableStatus>?> {
+        val table = DataStoreUtils.getTableNameByUri(contentUri)!!
+        val accountKeys = accountKeys
+        val expressions = mutableListOf(Expression.inArgs(Statuses.ACCOUNT_KEY, accountKeys.size))
+        val expressionArgs = mutableListOf(*accountKeys.mapToArray(UserKey::toString))
+        if (filtersEnabled) {
+            expressions.add(DataStoreUtils.buildStatusFilterWhereClause(preferences, table,
+                    null, filterScope))
+        }
         val provider = CursorObjectLivePagedListProvider(context.contentResolver, contentUri,
-                CursorStatusesFragment.statusColumnsLite, sortOrder = Statuses.DEFAULT_SORT_ORDER,
-                cls = ParcelableStatus::class.java)
+                CursorStatusesFragment.statusColumnsLite, Expression.and(*expressions.toTypedArray()).sql,
+                expressionArgs.toTypedArray(), Statuses.DEFAULT_SORT_ORDER, ParcelableStatus::class.java)
         return provider.create(null, 20)
     }
 
@@ -209,58 +274,6 @@ abstract class AbsTimelineFragment<RefreshParam : RefreshTaskParam> :
     }
 
     companion object {
-        const val REFRESH_POSITION_START = -1
-        const val REFRESH_POSITION_END = -2
-
-        fun getBaseRefreshTaskParam(fragment: AbsTimelineFragment<*>, position: Int): BaseRefreshTaskParam? {
-            when (position) {
-                REFRESH_POSITION_START -> {
-                    return getRefreshBaseRefreshTaskParam(fragment)
-                }
-                REFRESH_POSITION_END -> {
-                    val adapter = fragment.adapter
-                    // Get last raw status
-                    val startIdx = adapter.statusStartIndex
-                    if (startIdx < 0) return null
-                    val statusCount = adapter.getStatusCount(true)
-                    if (statusCount <= 0) return null
-                    val status = adapter.getStatus(startIdx + statusCount - 1, true)
-                    val accountKeys = arrayOf(status.account_key)
-                    val pagination = arrayOf<Pagination?>(SinceMaxPagination.maxId(status.id, -1))
-                    val param = BaseRefreshTaskParam(accountKeys, pagination)
-                    param.isLoadingMore = true
-                    return param
-                }
-                else -> {
-                    val adapter = fragment.adapter
-                    val status = adapter.getStatus(position)
-                    adapter.addGapLoadingId(ObjectId(status.account_key, status.id))
-                    val accountKeys = arrayOf(status.account_key)
-                    val pagination = arrayOf(SinceMaxPagination.maxId(status.id, status.sort_id))
-                    return BaseRefreshTaskParam(accountKeys, pagination)
-                }
-            }
-        }
-
-        private fun getRefreshBaseRefreshTaskParam(fragment: AbsTimelineFragment<*>): BaseRefreshTaskParam {
-            val adapter = fragment.adapter
-            val accountKeys = fragment.accountKeys
-            val statusStartIndex = adapter.statusStartIndex
-            if (statusStartIndex >= 0 && adapter.getStatusCount(true) > 0) {
-                val firstStatus = adapter.getStatus(statusStartIndex, true)
-                val pagination = Array(accountKeys.size) lambda@ {
-                    if (firstStatus.account_key == accountKeys[it]) {
-                        return@lambda SinceMaxPagination.sinceId(firstStatus.id, -1)
-                    } else {
-                        return@lambda null
-                    }
-                }
-                return BaseRefreshTaskParam(accountKeys, pagination)
-            } else {
-                return BaseRefreshTaskParam(accountKeys, null)
-            }
-        }
-
 
         fun createStatusesListItemDecoration(context: Context, recyclerView: RecyclerView,
                 adapter: IContentAdapter): RecyclerView.ItemDecoration {
