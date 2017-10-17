@@ -760,6 +760,15 @@ public interface TwidereDataStore {
             Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
         }
 
+        interface UserTimeline extends Statuses {
+
+            String CONTENT_PATH = "user_timeline";
+            String TABLE_NAME = "user_timeline";
+
+            @NonNull
+            Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
+        }
+
         interface ListTimeline extends Statuses {
 
             String CONTENT_PATH = "list_timeline";

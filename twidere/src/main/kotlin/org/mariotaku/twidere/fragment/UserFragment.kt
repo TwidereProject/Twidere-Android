@@ -117,8 +117,8 @@ import org.mariotaku.twidere.fragment.iface.IToolBarSupportFragment
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
 import org.mariotaku.twidere.fragment.statuses.UserMediaTimelineFragment
-import org.mariotaku.twidere.fragment.statuses.UserTimelineFragment
 import org.mariotaku.twidere.fragment.timeline.FavoritesTimelineFragment
+import org.mariotaku.twidere.fragment.timeline.UserTimelineFragment
 import org.mariotaku.twidere.graphic.ActionBarColorDrawable
 import org.mariotaku.twidere.graphic.ActionIconDrawable
 import org.mariotaku.twidere.loader.ParcelableUserLoader

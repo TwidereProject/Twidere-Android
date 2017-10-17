@@ -20,15 +20,30 @@
 package org.mariotaku.twidere.fragment.timeline
 
 import android.net.Uri
+import android.os.Bundle
+import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.FilterScope
+import org.mariotaku.twidere.annotation.ReadPositionTag
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_EXTRAS
 import org.mariotaku.twidere.data.fetcher.HomeTimelineFetcher
+import org.mariotaku.twidere.extension.linkHandlerTitle
+import org.mariotaku.twidere.extension.model.tab.applyToSelection
+import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
+import org.mariotaku.twidere.model.tab.extra.HomeTabExtras
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
+import java.util.*
 
 class HomeTimelineFragment : AbsTimelineFragment() {
     override val filterScope: Int = FilterScope.HOME
 
     override val contentUri: Uri = Statuses.CONTENT_URI
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        linkHandlerTitle = getString(R.string.title_home)
+    }
 
     override fun getStatuses(param: ContentRefreshParam): Boolean {
         if (!param.hasMaxIds) return twitterWrapper.refreshAll(param.accountKeys)
@@ -36,4 +51,23 @@ class HomeTimelineFragment : AbsTimelineFragment() {
     }
 
     override fun onCreateStatusesFetcher() = HomeTimelineFetcher()
+
+    override fun getExtraSelection(): Pair<Expression, Array<String>?>? {
+        val extras = arguments.getParcelable<HomeTabExtras>(EXTRA_EXTRAS) ?: return null
+        val expressions = ArrayList<Expression>()
+        val expressionArgs = ArrayList<String>()
+        extras.applyToSelection(expressions, expressionArgs)
+        if (expressions.isEmpty()) return null
+        val expression = Expression.and(*expressions.toTypedArray())
+        return Pair(expression, expressionArgs.toTypedArray())
+    }
+
+
+    companion object {
+
+        fun getTimelineSyncTag(accountKeys: Array<UserKey>): String {
+            return "${ReadPositionTag.HOME_TIMELINE}_${accountKeys.sorted().joinToString(",")}"
+        }
+
+    }
 }

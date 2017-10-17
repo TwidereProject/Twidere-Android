@@ -49,6 +49,7 @@ import org.mariotaku.twidere.constant.filterUnavailableQuoteStatusesKey
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.model.tab.applyToSelection
 import org.mariotaku.twidere.extension.queryCount
 import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.extension.queryReference
@@ -371,7 +372,7 @@ object DataStoreUtils {
         if (extraArgs != null) {
             val extras = extraArgs.getParcelable<Parcelable>(EXTRA_EXTRAS)
             if (extras is HomeTabExtras) {
-                processTabExtras(expressions, expressionArgs, extras)
+                extras.applyToSelection(expressions, expressionArgs)
             }
         }
 
@@ -832,20 +833,6 @@ object DataStoreUtils {
         }
     }
 
-
-    fun processTabExtras(expressions: MutableList<Expression>, expressionArgs: MutableList<String>, extras: HomeTabExtras) {
-        if (extras.isHideRetweets) {
-            expressions.add(Expression.equalsArgs(Statuses.IS_RETWEET))
-            expressionArgs.add("0")
-        }
-        if (extras.isHideQuotes) {
-            expressions.add(Expression.equalsArgs(Statuses.IS_QUOTE))
-            expressionArgs.add("0")
-        }
-        if (extras.isHideReplies) {
-            expressions.add(Expression.isNull(Column(Statuses.IN_REPLY_TO_STATUS_ID)))
-        }
-    }
 
     fun prepareDatabase(context: Context) {
         val cr = context.contentResolver

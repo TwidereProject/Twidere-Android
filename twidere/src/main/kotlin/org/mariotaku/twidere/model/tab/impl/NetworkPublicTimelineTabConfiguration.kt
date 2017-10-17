@@ -22,15 +22,11 @@ package org.mariotaku.twidere.model.tab.impl
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.TabAccountFlags
-import org.mariotaku.twidere.fragment.statuses.NetworkPublicTimelineFragment
+import org.mariotaku.twidere.fragment.timeline.NetworkPublicTimelineFragment
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.model.tab.StringHolder
 import org.mariotaku.twidere.model.tab.TabConfiguration
-
-/**
- * Created by mariotaku on 2016/11/27.
- */
 
 class NetworkPublicTimelineTabConfiguration : TabConfiguration() {
 

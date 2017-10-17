@@ -35,6 +35,8 @@ import com.bumptech.glide.RequestManager
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_listview.*
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.addAllTo
+import org.mariotaku.ktextension.addTo
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.toNulls
 import org.mariotaku.sqliteqb.library.Expression
@@ -49,17 +51,23 @@ import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.data.source.CursorObjectLivePagedListProvider
 import org.mariotaku.twidere.data.status.StatusesLivePagedListProvider
+import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.fragment.AbsContentRecyclerViewFragment
+import org.mariotaku.twidere.fragment.AbsStatusesFragment
 import org.mariotaku.twidere.fragment.CursorStatusesFragment
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.event.GetStatusesTaskEvent
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.statuses.GetStatusesTask
 import org.mariotaku.twidere.util.DataStoreUtils
+import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.Utils
+import org.mariotaku.twidere.view.holder.StatusViewHolder
+import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 
 abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableStatusesAdapter, LayoutManager>() {
 
@@ -101,6 +109,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        adapter.statusClickListener = StatusClickHandler()
         statuses = createLiveData()
 
         statuses.observe(this, Observer { onDataLoaded(it) })
@@ -218,9 +227,21 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
     protected abstract fun onCreateStatusesFetcher(): StatusesFetcher
 
+    protected open fun getExtraSelection(): Pair<Expression, Array<String>?>? {
+        return null
+    }
+
     protected open fun getMaxLoadItemLimit(forAccount: UserKey): Int {
         return 200
     }
+
+    protected open fun onFavoriteTaskEvent(event: FavoriteTaskEvent) {
+        val status = event.status
+        if (event.isSucceeded && status != null) {
+            replaceStatusStates(status)
+        }
+    }
+
 
     private fun createLiveData(): LiveData<PagedList<ParcelableStatus>?> {
         return if (isStandalone) onCreateStandaloneLiveData() else onCreateDatabaseLiveData()
@@ -247,10 +268,42 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
             expressions.add(DataStoreUtils.buildStatusFilterWhereClause(preferences, table,
                     null, filterScope))
         }
+        val extraSelection = getExtraSelection()
+        if (extraSelection != null) {
+            extraSelection.first.addTo(expressions)
+            extraSelection.second?.addAllTo(expressionArgs)
+        }
         val provider = CursorObjectLivePagedListProvider(context.contentResolver, contentUri,
                 CursorStatusesFragment.statusColumnsLite, Expression.and(*expressions.toTypedArray()).sql,
                 expressionArgs.toTypedArray(), Statuses.DEFAULT_SORT_ORDER, ParcelableStatus::class.java)
         return provider.create(null, 20)
+    }
+
+    private fun getFullStatus(position: Int): ParcelableStatus? {
+        if (isStandalone) {
+            return adapter.getStatus(position, false)
+        }
+        val _id = adapter.getRowId(position)
+        val where = Expression.equals(Statuses._ID, _id).sql
+        return context.contentResolver.queryOne(contentUri, Statuses.COLUMNS, where, null, null,
+                ParcelableStatus::class.java)
+    }
+
+    fun replaceStatusStates(status: ParcelableStatus) {
+        val statuses = adapter.statuses?.snapshot() ?: return
+        val lm = layoutManager
+        val range = lm.firstVisibleItemPosition..lm.lastVisibleItemPosition
+        statuses.forEachIndexed { index, item ->
+            if (item?.id != status.id) return@forEachIndexed
+            item.favorite_count = status.favorite_count
+            item.retweet_count = status.retweet_count
+            item.reply_count = status.reply_count
+
+            item.is_favorite = status.is_favorite
+            if (index in range) {
+                adapter.notifyItemRangeChanged(index, 1)
+            }
+        }
     }
 
     private inner class BusEventHandler {
@@ -271,9 +324,47 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
             }
         }
 
+        @Subscribe
+        fun notifyFavoriteTask(event: FavoriteTaskEvent) {
+            onFavoriteTaskEvent(event)
+        }
+
+    }
+
+    private inner class StatusClickHandler : IStatusViewHolder.StatusClickListener {
+        override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
+            val status = getFullStatus(position) ?: return
+            IntentUtils.openStatus(activity, status, null)
+        }
+
+        override fun onItemActionClick(holder: RecyclerView.ViewHolder, id: Int, position: Int) {
+            val status = getFullStatus(position) ?: return
+            AbsStatusesFragment.handleActionClick(this@AbsTimelineFragment, id, status,
+                    holder as StatusViewHolder)
+        }
+
+        override fun onItemActionLongClick(holder: RecyclerView.ViewHolder, id: Int, position: Int): Boolean {
+            val status = getFullStatus(position) ?: return false
+            return AbsStatusesFragment.handleActionLongClick(this@AbsTimelineFragment, status,
+                    adapter.getItemId(position), id)
+        }
     }
 
     companion object {
+
+        private val LayoutManager.firstVisibleItemPosition: Int
+            get() = when (this) {
+                is LinearLayoutManager -> findFirstVisibleItemPosition()
+                is StaggeredGridLayoutManager -> findFirstVisibleItemPositions(null).firstOrNull() ?: -1
+                else -> throw UnsupportedOperationException()
+            }
+
+        private val LayoutManager.lastVisibleItemPosition: Int
+            get() = when (this) {
+                is LinearLayoutManager -> findLastVisibleItemPosition()
+                is StaggeredGridLayoutManager -> findLastVisibleItemPositions(null).lastOrNull() ?: -1
+                else -> throw UnsupportedOperationException()
+            }
 
         fun createStatusesListItemDecoration(context: Context, recyclerView: RecyclerView,
                 adapter: IContentAdapter): RecyclerView.ItemDecoration {

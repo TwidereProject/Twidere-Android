@@ -583,8 +583,8 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
                     fragment.startActivity(intent)
                 }
                 R.id.retweet -> {
-                    fragment.executeAfterFragmentResumed { fragment ->
-                        RetweetQuoteDialogFragment.show(fragment.childFragmentManager,
+                    fragment.executeAfterFragmentResumed { f ->
+                        RetweetQuoteDialogFragment.show(f.childFragmentManager,
                                 status.account_key, status.id, status)
                     }
                 }

@@ -24,7 +24,7 @@ import android.net.Uri
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.data.fetcher.HomeTimelineFetcher
-import org.mariotaku.twidere.fragment.HomeTimelineFragment
+import org.mariotaku.twidere.fragment.timeline.HomeTimelineFragment
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses

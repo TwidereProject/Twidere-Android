@@ -17,8 +17,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.fragment.statuses
+package org.mariotaku.twidere.fragment.timeline
 
+import android.net.Uri
 import android.os.Bundle
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.sqliteqb.library.Expression
@@ -26,47 +27,23 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_EXTRAS
+import org.mariotaku.twidere.data.fetcher.PublicTimelineFetcher
 import org.mariotaku.twidere.extension.linkHandlerTitle
-import org.mariotaku.twidere.fragment.CursorStatusesFragment
-import org.mariotaku.twidere.model.ParameterizedExpression
+import org.mariotaku.twidere.extension.model.tab.applyToSelection
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.tab.extra.HomeTabExtras
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.statuses.GetPublicTimelineTask
-import org.mariotaku.twidere.util.DataStoreUtils
-import org.mariotaku.twidere.util.ErrorInfoStore
 import java.util.*
 
-/**
- * Created by mariotaku on 14/12/2.
- */
-class PublicTimelineFragment : CursorStatusesFragment() {
+class PublicTimelineFragment : AbsTimelineFragment() {
+    override val filterScope: Int = FilterScope.PUBLIC_TIMELINE
 
-    override val errorInfoKey = ErrorInfoStore.KEY_PUBLIC_TIMELINE
-
-    override val contentUri = Statuses.Public.CONTENT_URI
-
-    override val notificationType = 0
-
-    override val isFilterEnabled = true
-
-    override val readPositionTag = ReadPositionTag.PUBLIC_TIMELINE
-
-    override val timelineSyncTag: String?
-        get() = getTimelineSyncTag(accountKeys)
-
-    override val filterScopes: Int
-        get() = FilterScope.PUBLIC_TIMELINE
-
+    override val contentUri: Uri = Statuses.Public.CONTENT_URI
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         linkHandlerTitle = getString(R.string.title_public_timeline)
-    }
-
-    override fun updateRefreshState() {
-        val twitter = twitterWrapper
-        refreshing = twitter.isStatusTimelineRefreshing(contentUri)
     }
 
     override fun getStatuses(param: ContentRefreshParam): Boolean {
@@ -76,21 +53,16 @@ class PublicTimelineFragment : CursorStatusesFragment() {
         return true
     }
 
-    override fun processWhere(where: Expression, whereArgs: Array<String>): ParameterizedExpression {
-        val arguments = arguments
-        if (arguments != null) {
-            val extras = arguments.getParcelable<HomeTabExtras?>(EXTRA_EXTRAS)
-            if (extras != null) {
-                val expressions = ArrayList<Expression>()
-                val expressionArgs = ArrayList<String>()
-                Collections.addAll(expressionArgs, *whereArgs)
-                expressions.add(where)
-                DataStoreUtils.processTabExtras(expressions, expressionArgs, extras)
-                val expression = Expression.and(*expressions.toTypedArray())
-                return ParameterizedExpression(expression, expressionArgs.toTypedArray())
-            }
-        }
-        return super.processWhere(where, whereArgs)
+    override fun onCreateStatusesFetcher() = PublicTimelineFetcher()
+
+    override fun getExtraSelection(): Pair<Expression, Array<String>?>? {
+        val extras = arguments.getParcelable<HomeTabExtras>(EXTRA_EXTRAS) ?: return null
+        val expressions = ArrayList<Expression>()
+        val expressionArgs = ArrayList<String>()
+        extras.applyToSelection(expressions, expressionArgs)
+        if (expressions.isEmpty()) return null
+        val expression = Expression.and(*expressions.toTypedArray())
+        return Pair(expression, expressionArgs.toTypedArray())
     }
 
     companion object {
@@ -101,4 +73,3 @@ class PublicTimelineFragment : CursorStatusesFragment() {
 
     }
 }
-

@@ -22,11 +22,9 @@ package org.mariotaku.twidere.task.statuses
 import android.content.Context
 import android.net.Uri
 import org.mariotaku.twidere.annotation.FilterScope
-import org.mariotaku.twidere.annotation.ReadPositionTag
-import org.mariotaku.twidere.data.fetcher.NetworkPublicTimelineFetcher
-import org.mariotaku.twidere.fragment.timeline.NetworkPublicTimelineFragment
+import org.mariotaku.twidere.data.fetcher.UserTimelineFetcher
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.refresh.ContentRefreshParam
+import org.mariotaku.twidere.model.refresh.UserRelatedContentRefreshParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.ErrorInfoStore
 import org.mariotaku.twidere.util.sync.TimelineSyncManager
@@ -34,18 +32,19 @@ import org.mariotaku.twidere.util.sync.TimelineSyncManager
 /**
  * Created by mariotaku on 16/2/11.
  */
-class GetNetworkPublicTimelineTask(context: Context) : GetStatusesTask<ContentRefreshParam>(context) {
+class GetUserTimelineTask(context: Context) : GetStatusesTask<UserRelatedContentRefreshParam>(context) {
 
-    override val contentUri: Uri = Statuses.NetworkPublic.CONTENT_URI
+    override val contentUri: Uri = Statuses.UserTimeline.CONTENT_URI
 
-    override val filterScopes: Int = FilterScope.PUBLIC_TIMELINE
+    override val filterScopes: Int = FilterScope.USER_TIMELINE
 
-    override val errorInfoKey: String = ErrorInfoStore.KEY_NETWORK_PUBLIC_TIMELINE
+    override val errorInfoKey: String = ErrorInfoStore.KEY_USER_TIMELINE
 
-    override fun getStatusesFetcher(params: ContentRefreshParam?) = NetworkPublicTimelineFetcher()
+    override fun getStatusesFetcher(params: UserRelatedContentRefreshParam?): UserTimelineFetcher {
+        return UserTimelineFetcher(params?.userKey, params?.userScreenName)
+    }
 
     override fun syncFetchReadPosition(manager: TimelineSyncManager, accountKeys: Array<UserKey>) {
-        val tag = NetworkPublicTimelineFragment.getTimelineSyncTag(accountKeys)
-        manager.fetchSingle(ReadPositionTag.NETWORK_PUBLIC_TIMELINE, tag)
     }
+
 }
