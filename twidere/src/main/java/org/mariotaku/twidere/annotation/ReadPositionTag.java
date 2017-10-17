@@ -21,6 +21,7 @@ import java.lang.annotation.RetentionPolicy;
 public @interface ReadPositionTag {
     String HOME_TIMELINE = "home_timeline";
     String PUBLIC_TIMELINE = "public_timeline";
+    String GROUP_TIMELINE = "group_timeline";
     String NETWORK_PUBLIC_TIMELINE = "network_public_timeline";
     String ACTIVITIES_ABOUT_ME = "activities_about_me";
     String DIRECT_MESSAGES = "direct_messages";

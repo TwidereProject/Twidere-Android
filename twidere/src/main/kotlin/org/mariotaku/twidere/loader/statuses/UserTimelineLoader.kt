@@ -20,8 +20,6 @@
 package org.mariotaku.twidere.loader.statuses
 
 import android.content.Context
-import android.support.annotation.WorkerThread
-import android.text.TextUtils
 import okhttp3.HttpUrl
 import org.attoparser.ParseException
 import org.attoparser.config.ParseConfiguration
@@ -41,10 +39,7 @@ import org.mariotaku.restfu.http.mime.SimpleBody
 import org.mariotaku.twidere.alias.MastodonStatus
 import org.mariotaku.twidere.alias.MastodonTimelineOption
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.extension.api.tryShowUser
-import org.mariotaku.twidere.extension.model.api.mastodon.mapToPaginated
-import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.api.updateFilterInfoForUserTimeline
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
@@ -54,7 +49,6 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.timeline.UserTimelineFilter
 import org.mariotaku.twidere.util.JsonSerializer
 import org.mariotaku.twidere.util.dagger.DependencyHolder
-import org.mariotaku.twidere.util.database.ContentFiltersUtils
 import java.io.IOException
 import java.util.concurrent.atomic.AtomicReference
 
@@ -80,38 +74,9 @@ class UserTimelineLoader(
         }
 
     @Throws(MicroBlogException::class)
-    override fun getStatuses(account: AccountDetails, paging: Paging) = when (account.type) {
-        AccountType.MASTODON -> getMastodonStatuses(account, paging).mapToPaginated {
-            it.toParcelable(account)
-        }
-        else -> getMicroBlogStatuses(account, paging).mapMicroBlogToPaginated {
-            it.toParcelable(account, profileImageSize = profileImageSize,
-                    updateFilterInfoAction = ::updateFilterInfoForUserTimeline)
-        }
-    }
-
-    @WorkerThread
-    override fun shouldFilterStatus(status: ParcelableStatus): Boolean {
-        if (timelineFilter != null) {
-            if (status.is_retweet && !timelineFilter.isIncludeRetweets) {
-                return true
-            }
-        }
-        if (accountKey != null && userKey != null && TextUtils.equals(accountKey.id, userKey.id))
-            return false
-        return ContentFiltersUtils.isFiltered(context.contentResolver, status, true,
-                FilterScope.USER_TIMELINE)
-    }
-
-    private fun getMastodonStatuses(account: AccountDetails, paging: Paging): LinkHeaderList<MastodonStatus> {
-        val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
-        val id = userKey?.id ?: throw MicroBlogException("Only ID are supported at this moment")
-        val option = MastodonTimelineOption()
-        if (timelineFilter != null) {
-            option.excludeReplies(!timelineFilter.isIncludeReplies)
-        }
-
-        return mastodon.getStatuses(id, paging, option)
+    override fun getStatuses(account: AccountDetails, paging: Paging) = getMicroBlogStatuses(account, paging).mapMicroBlogToPaginated {
+        it.toParcelable(account, profileImageSize = profileImageSize,
+                updateFilterInfoAction = ::updateFilterInfoForUserTimeline)
     }
 
     private fun getMicroBlogStatuses(account: AccountDetails, paging: Paging): List<Status> {
@@ -138,20 +103,20 @@ class UserTimelineLoader(
             option.setExcludeReplies(!timelineFilter.isIncludeReplies)
             option.setIncludeRetweets(timelineFilter.isIncludeRetweets)
         }
-        if (userKey != null) {
-            if (account.type == AccountType.STATUSNET && userKey.host != account.key.host
-                    && profileUrl != null) {
-                try {
-                    return showStatusNetExternalTimeline(profileUrl, paging)
-                } catch (e: IOException) {
-                    throw MicroBlogException(e)
+        when {
+            userKey != null -> {
+                if (account.type == AccountType.STATUSNET && userKey.host != account.key.host
+                        && profileUrl != null) {
+                    try {
+                        return showStatusNetExternalTimeline(profileUrl, paging)
+                    } catch (e: IOException) {
+                        throw MicroBlogException(e)
+                    }
                 }
+                return microBlog.getUserTimeline(userKey.id, paging, option)
             }
-            return microBlog.getUserTimeline(userKey.id, paging, option)
-        } else if (screenName != null) {
-            return microBlog.getUserTimelineByScreenName(screenName, paging, option)
-        } else {
-            throw MicroBlogException("Invalid user")
+            screenName != null -> return microBlog.getUserTimelineByScreenName(screenName, paging, option)
+            else -> throw MicroBlogException("Invalid user")
         }
     }
 

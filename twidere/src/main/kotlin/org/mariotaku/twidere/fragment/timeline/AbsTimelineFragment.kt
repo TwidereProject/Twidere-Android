@@ -61,6 +61,7 @@ import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.event.GetStatusesTaskEvent
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
+import org.mariotaku.twidere.model.timeline.TimelineFilter
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.statuses.GetStatusesTask
 import org.mariotaku.twidere.util.DataStoreUtils
@@ -86,6 +87,8 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
     protected open val filtersEnabled: Boolean
         get() = true
+
+    protected open val timelineFilter: TimelineFilter? = null
 
     @FilterScope
     protected abstract val filterScope: Int
@@ -210,6 +213,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
     protected open fun onDataLoaded(data: PagedList<ParcelableStatus>?) {
         adapter.statuses = data
+        adapter.timelineFilter = timelineFilter
         when {
 //            data is ExceptionResponseList -> {
 //                showEmpty(R.drawable.ic_info_error_generic, data.exception.toString())
@@ -250,7 +254,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
     private fun onCreateStandaloneLiveData(): LiveData<PagedList<ParcelableStatus>?> {
         val accountKey = accountKeys.singleOrNull()!!
         val provider = StatusesLivePagedListProvider(context.applicationContext,
-                onCreateStatusesFetcher(), accountKey)
+                onCreateStatusesFetcher(), accountKey, timelineFilter)
         val maxLoadLimit = getMaxLoadItemLimit(accountKey)
         val loadLimit = preferences[loadItemLimitKey]
         return provider.create(null, PagedList.Config.Builder()

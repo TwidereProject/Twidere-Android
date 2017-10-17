@@ -24,53 +24,37 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.Status
-import org.mariotaku.microblog.library.twitter.model.TimelineOption
 import org.mariotaku.twidere.alias.MastodonStatus
-import org.mariotaku.twidere.alias.MastodonTimelineOption
-import org.mariotaku.twidere.exception.RequiredFieldNotFoundException
+import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.model.AccountDetails
-import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.timeline.TimelineFilter
-import org.mariotaku.twidere.model.timeline.UserTimelineFilter
 
-class UserTimelineFetcher(
-        private val userKey: UserKey?,
-        private val userScreenName: String?
-) : StatusesFetcher {
 
+class GroupTimelineFetcher(val groupId: String?, val groupName: String?) : StatusesFetcher {
     override fun forTwitter(account: AccountDetails, twitter: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
-        return getMicroBlogUserFavorites(twitter, paging, filter)
+        throw APINotSupportedException("Group timeline", account.type)
     }
 
     override fun forStatusNet(account: AccountDetails, statusNet: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
-        return getMicroBlogUserFavorites(statusNet, paging, filter)
-    }
-
-    override fun forFanfou(account: AccountDetails, fanfou: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
-        return getMicroBlogUserFavorites(fanfou, paging, filter)
-    }
-
-    override fun forMastodon(account: AccountDetails, mastodon: Mastodon, paging: Paging, filter: TimelineFilter?): List<MastodonStatus> {
-        val id = userKey?.id ?: throw MicroBlogException("Only ID are supported at this moment")
-        val option = (filter as? UserTimelineFilter)?.toMastodonTimelineOption()
-        return mastodon.getStatuses(id, paging, option)
-    }
-
-    private fun getMicroBlogUserFavorites(microBlog: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
-        val option = (filter as? UserTimelineFilter)?.toTwitterTimelineOption()
         return when {
-            userKey != null -> microBlog.getUserTimeline(userKey.id, paging, option)
-            userScreenName != null -> microBlog.getUserTimelineByScreenName(userScreenName, paging, option)
-            else -> throw RequiredFieldNotFoundException("user_id", "screen_name")
+            groupId != null -> {
+                statusNet.getGroupStatuses(groupId, paging)
+            }
+            groupName != null -> {
+                statusNet.getGroupStatusesByName(groupName, paging)
+            }
+            else -> {
+                throw MicroBlogException("No group name or id given")
+            }
         }
     }
 
-    private fun UserTimelineFilter.toTwitterTimelineOption() = TimelineOption().apply {
-        setExcludeReplies(!isIncludeReplies)
-        setIncludeRetweets(isIncludeRetweets)
+    override fun forFanfou(account: AccountDetails, fanfou: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
+        throw APINotSupportedException("Group timeline", account.type)
     }
 
-    private fun UserTimelineFilter.toMastodonTimelineOption() = MastodonTimelineOption().apply {
-        excludeReplies(!isIncludeReplies)
+    override fun forMastodon(account: AccountDetails, mastodon: Mastodon, paging: Paging, filter: TimelineFilter?): List<MastodonStatus> {
+        throw APINotSupportedException("Group timeline", account.type)
     }
+
 }

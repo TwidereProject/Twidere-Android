@@ -27,6 +27,7 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.model.ParcelableStatus;
 
 /**
  * Created by mariotaku on 2017/3/31.
@@ -64,6 +65,13 @@ public class UserTimelineFilter implements TimelineFilter, Parcelable {
             return context.getString(R.string.label_statuses_retweets);
         }
         return context.getString(R.string.label_statuses);
+    }
+
+    @Override
+    public boolean shouldFilter(ParcelableStatus status) {
+        if (!includeRetweets && status.is_retweet) return true;
+        if (!includeReplies && status.in_reply_to_user_key != null) return true;
+        return false;
     }
 
     @Override

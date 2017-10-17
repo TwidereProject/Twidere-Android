@@ -113,7 +113,7 @@ class ConversationLoader(
                 }
             }
             else -> {
-                throw APINotSupportedException(account.type)
+                throw APINotSupportedException("API", account.type)
             }
         }
         canLoadAllReplies = true

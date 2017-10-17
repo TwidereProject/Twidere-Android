@@ -33,13 +33,15 @@ import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.timeline.TimelineFilter
 import org.mariotaku.twidere.model.util.AccountUtils
 
 
 class StatusesDataSource(
         private val context: Context,
         private val fetcher: StatusesFetcher,
-        private val accountKey: UserKey
+        private val accountKey: UserKey,
+        private val timelineFilter: TimelineFilter?
 ) : KeyedDataSource<String, ParcelableStatus>() {
 
     private val profileImageSize = context.getString(R.string.profile_image_size)
@@ -47,15 +49,21 @@ class StatusesDataSource(
     override fun getKey(item: ParcelableStatus) = item.id
 
     override fun loadInitial(pageSize: Int): List<ParcelableStatus> {
-        return load(Paging().count(pageSize))
+        return load(Paging().count(pageSize)).filterNot {
+            timelineFilter?.shouldFilter(it) == true
+        }
     }
 
     override fun loadBefore(currentBeginKey: String, pageSize: Int): List<ParcelableStatus> {
-        return load(Paging().count(pageSize).sinceId(currentBeginKey))
+        return load(Paging().count(pageSize).sinceId(currentBeginKey)).filterNot {
+            it.id == currentBeginKey && timelineFilter?.shouldFilter(it) == true
+        }
     }
 
     override fun loadAfter(currentEndKey: String, pageSize: Int): List<ParcelableStatus> {
-        return load(Paging().count(pageSize).maxId(currentEndKey)).filterNot { it.id == currentEndKey }
+        return load(Paging().count(pageSize).maxId(currentEndKey)).filterNot {
+            it.id == currentEndKey && timelineFilter?.shouldFilter(it) == true
+        }
     }
 
     private fun load(paging: Paging): List<ParcelableStatus> {
@@ -65,28 +73,28 @@ class StatusesDataSource(
         when (account.type) {
             AccountType.TWITTER -> {
                 val twitter = account.newMicroBlogInstance(context, MicroBlog::class.java)
-                val timeline = fetcher.forTwitter(account, twitter, paging)
+                val timeline = fetcher.forTwitter(account, twitter, paging, timelineFilter)
                 return timeline.map {
                     it.toParcelable(account, profileImageSize)
                 }
             }
             AccountType.STATUSNET -> {
                 val statusnet = account.newMicroBlogInstance(context, MicroBlog::class.java)
-                val timeline = fetcher.forStatusNet(account, statusnet, paging)
+                val timeline = fetcher.forStatusNet(account, statusnet, paging, timelineFilter)
                 return timeline.map {
                     it.toParcelable(account, profileImageSize)
                 }
             }
             AccountType.FANFOU -> {
                 val fanfou = account.newMicroBlogInstance(context, MicroBlog::class.java)
-                val timeline = fetcher.forFanfou(account, fanfou, paging)
+                val timeline = fetcher.forFanfou(account, fanfou, paging, timelineFilter)
                 return timeline.map {
                     it.toParcelable(account, profileImageSize)
                 }
             }
             AccountType.MASTODON -> {
                 val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
-                val timeline = fetcher.forMastodon(account, mastodon, paging)
+                val timeline = fetcher.forMastodon(account, mastodon, paging, timelineFilter)
                 return timeline.map {
                     it.toParcelable(account)
                 }

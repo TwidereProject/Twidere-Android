@@ -24,9 +24,11 @@ import android.arch.paging.rawList
 import android.net.Uri
 import android.os.Bundle
 import org.mariotaku.abstask.library.TaskStarter
+import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.constant.IntentConstants
+import org.mariotaku.twidere.constant.userTimelineFilterKey
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.data.fetcher.UserTimelineFetcher
 import org.mariotaku.twidere.extension.linkHandlerTitle
@@ -34,6 +36,7 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.refresh.UserRelatedContentRefreshParam
+import org.mariotaku.twidere.model.timeline.TimelineFilter
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.statuses.GetUserTimelineTask
 
@@ -41,6 +44,9 @@ class UserTimelineFragment : AbsTimelineFragment() {
     override val filterScope: Int = FilterScope.USER_TIMELINE
 
     override val contentUri: Uri = Statuses.UserTimeline.CONTENT_URI
+
+    override val timelineFilter: TimelineFilter?
+        get() = if (arguments.getBoolean(EXTRA_ENABLE_TIMELINE_FILTER)) preferences[userTimelineFilterKey] else null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

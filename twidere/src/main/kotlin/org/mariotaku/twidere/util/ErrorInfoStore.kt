@@ -87,6 +87,7 @@ class ErrorInfoStore(application: Context) {
         val KEY_PUBLIC_TIMELINE = "public_timeline"
         val KEY_FAVORITES_TIMELINE = "favorites_timeline"
         val KEY_USER_TIMELINE = "user_timeline"
+        val KEY_GROUP_TIMELINE = "group_timeline"
         val KEY_NETWORK_PUBLIC_TIMELINE = "network_public_timeline"
         val KEY_ACTIVITIES_BY_FRIENDS = "activities_by_friends"
 

@@ -61,7 +61,7 @@ class NetworkPublicTimelineLoader(
                     it.toParcelable(account, profileImageSize = profileImageSize)
                 }
             }
-            else -> throw APINotSupportedException(account.type)
+            else -> throw APINotSupportedException("API", account.type)
         }
     }
 

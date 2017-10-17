@@ -163,7 +163,7 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
         when (account.type) {
             AccountType.TWITTER -> {
                 val twitter = account.newMicroBlogInstance(context, MicroBlog::class.java)
-                val timeline = fetcher.forTwitter(account, twitter, paging)
+                val timeline = fetcher.forTwitter(account, twitter, paging, null)
                 val statuses = timeline.map {
                     it.toParcelable(account, profileImageSize)
                 }
@@ -174,7 +174,7 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
             }
             AccountType.STATUSNET -> {
                 val statusnet = account.newMicroBlogInstance(context, MicroBlog::class.java)
-                val timeline = fetcher.forStatusNet(account, statusnet, paging)
+                val timeline = fetcher.forStatusNet(account, statusnet, paging, null)
                 val statuses = timeline.map {
                     it.toParcelable(account, profileImageSize)
                 }
@@ -185,7 +185,7 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
             }
             AccountType.FANFOU -> {
                 val fanfou = account.newMicroBlogInstance(context, MicroBlog::class.java)
-                val timeline = fetcher.forFanfou(account, fanfou, paging)
+                val timeline = fetcher.forFanfou(account, fanfou, paging, null)
                 val statuses = timeline.map {
                     it.toParcelable(account, profileImageSize)
                 }
@@ -196,7 +196,7 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
             }
             AccountType.MASTODON -> {
                 val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
-                val timeline = fetcher.forMastodon(account, mastodon, paging)
+                val timeline = fetcher.forMastodon(account, mastodon, paging, null)
                 return GetTimelineResult(account, timeline.map {
                     it.toParcelable(account)
                 }, timeline.flatMap { status ->

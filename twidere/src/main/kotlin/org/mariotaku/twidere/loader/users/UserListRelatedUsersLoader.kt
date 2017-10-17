@@ -53,7 +53,7 @@ abstract class UserListRelatedUsersLoader(
                 it.toParcelable(details, profileImageSize = profileImageSize)
             }
             else -> {
-                throw APINotSupportedException(details.type)
+                throw APINotSupportedException("API", details.type)
             }
         }
     }

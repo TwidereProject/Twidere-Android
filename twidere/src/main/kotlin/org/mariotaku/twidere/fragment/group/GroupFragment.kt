@@ -33,7 +33,7 @@ import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.fragment.AbsToolbarTabPagesFragment
-import org.mariotaku.twidere.fragment.statuses.GroupTimelineFragment
+import org.mariotaku.twidere.fragment.timeline.GroupTimelineFragment
 import org.mariotaku.twidere.fragment.users.GroupMembersFragment
 import org.mariotaku.twidere.model.ParcelableGroup
 import org.mariotaku.twidere.model.SingleResponse

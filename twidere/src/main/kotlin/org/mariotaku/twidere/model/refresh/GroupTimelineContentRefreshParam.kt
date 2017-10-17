@@ -17,19 +17,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.model.timeline;
+package org.mariotaku.twidere.model.refresh
 
-import android.content.Context;
-import android.os.Parcelable;
-
-import org.mariotaku.twidere.model.ParcelableStatus;
-
-/**
- * Created by mariotaku on 2017/3/31.
- */
-
-public interface TimelineFilter extends Parcelable {
-    CharSequence getSummary(Context context);
-
-    boolean shouldFilter(ParcelableStatus status);
-}
+class GroupTimelineContentRefreshParam(
+        val id: String?,
+        val name: String?,
+        delegated: ContentRefreshParam
+) : DelegateContentRefreshParam(delegated)

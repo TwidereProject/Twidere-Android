@@ -159,7 +159,7 @@ abstract class AbsRequestStatusesLoader(
     }
 
     @WorkerThread
-    protected abstract fun shouldFilterStatus(status: ParcelableStatus): Boolean
+    protected open fun shouldFilterStatus(status: ParcelableStatus): Boolean = false
 
     protected open fun processPaging(paging: Paging, details: AccountDetails, loadItemLimit: Int) {
         paging.applyLoadLimit(details, loadItemLimit)

@@ -68,11 +68,8 @@ class UserTimelineFragment : ParcelableStatusesFragment() {
             return sb.toString()
         }
 
-    override val enableTimelineFilter: Boolean
-        get() = arguments.getBoolean(EXTRA_ENABLE_TIMELINE_FILTER)
-
     override val timelineFilter: TimelineFilter?
-        get() = if (enableTimelineFilter) preferences[userTimelineFilterKey] else null
+        get() = if (arguments.getBoolean(EXTRA_ENABLE_TIMELINE_FILTER)) preferences[userTimelineFilterKey] else null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

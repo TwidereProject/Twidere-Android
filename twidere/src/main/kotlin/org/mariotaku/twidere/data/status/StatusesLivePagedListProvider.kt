@@ -25,13 +25,15 @@ import android.content.Context
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.timeline.TimelineFilter
 
 class StatusesLivePagedListProvider(
         private val context: Context,
         private val fetcher: StatusesFetcher,
-        private val accountKey: UserKey
+        private val accountKey: UserKey,
+        private val timelineFilter: TimelineFilter?
 ) : LivePagedListProvider<String, ParcelableStatus>() {
 
-    override fun createDataSource() = StatusesDataSource(context, fetcher, accountKey)
+    override fun createDataSource() = StatusesDataSource(context, fetcher, accountKey, timelineFilter)
 
 }

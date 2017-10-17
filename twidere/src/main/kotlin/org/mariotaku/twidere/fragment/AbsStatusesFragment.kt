@@ -136,8 +136,6 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         get() = (parentFragment as? StatusesFragmentDelegate)?.shouldInitLoader ?: true
 
 
-    protected open val enableTimelineFilter: Boolean = false
-
     protected open val timelineFilter: TimelineFilter? = null
 
     protected open val loaderId: Int

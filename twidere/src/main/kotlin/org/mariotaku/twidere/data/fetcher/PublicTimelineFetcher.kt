@@ -25,22 +25,23 @@ import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.alias.MastodonStatus
 import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.timeline.TimelineFilter
 
 class PublicTimelineFetcher : StatusesFetcher {
 
-    override fun forTwitter(account: AccountDetails, twitter: MicroBlog, paging: Paging): List<Status> {
+    override fun forTwitter(account: AccountDetails, twitter: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
         return twitter.getPublicTimeline(paging)
     }
 
-    override fun forStatusNet(account: AccountDetails, statusNet: MicroBlog, paging: Paging): List<Status> {
+    override fun forStatusNet(account: AccountDetails, statusNet: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
         return statusNet.getPublicTimeline(paging)
     }
 
-    override fun forFanfou(account: AccountDetails, fanfou: MicroBlog, paging: Paging): List<Status> {
+    override fun forFanfou(account: AccountDetails, fanfou: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
         return fanfou.getPublicTimeline(paging)
     }
 
-    override fun forMastodon(account: AccountDetails, mastodon: Mastodon, paging: Paging): List<MastodonStatus> {
+    override fun forMastodon(account: AccountDetails, mastodon: Mastodon, paging: Paging, filter: TimelineFilter?): List<MastodonStatus> {
         return mastodon.getPublicTimeline(paging, true)
     }
 }

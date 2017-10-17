@@ -28,22 +28,23 @@ import org.mariotaku.twidere.alias.MastodonStatus
 import org.mariotaku.twidere.exception.RequiredFieldNotFoundException
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.timeline.TimelineFilter
 
 class UserFavoritesFetcher(val userKey: UserKey?, val userScreenName: String?) : StatusesFetcher {
 
-    override fun forTwitter(account: AccountDetails, twitter: MicroBlog, paging: Paging): List<Status> {
+    override fun forTwitter(account: AccountDetails, twitter: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
         return getMicroBlogUserFavorites(twitter, paging)
     }
 
-    override fun forStatusNet(account: AccountDetails, statusNet: MicroBlog, paging: Paging): List<Status> {
+    override fun forStatusNet(account: AccountDetails, statusNet: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
         return getMicroBlogUserFavorites(statusNet, paging)
     }
 
-    override fun forFanfou(account: AccountDetails, fanfou: MicroBlog, paging: Paging): List<Status> {
+    override fun forFanfou(account: AccountDetails, fanfou: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
         return getMicroBlogUserFavorites(fanfou, paging)
     }
 
-    override fun forMastodon(account: AccountDetails, mastodon: Mastodon, paging: Paging): List<MastodonStatus> {
+    override fun forMastodon(account: AccountDetails, mastodon: Mastodon, paging: Paging, filter: TimelineFilter?): List<MastodonStatus> {
         if (userKey != account.key) {
             throw MicroBlogException("Only current account favorites is supported")
         }

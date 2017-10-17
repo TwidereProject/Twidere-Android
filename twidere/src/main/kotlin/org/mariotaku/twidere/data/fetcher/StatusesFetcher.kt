@@ -25,11 +25,12 @@ import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.alias.MastodonStatus
 import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.timeline.TimelineFilter
 
 interface StatusesFetcher {
 
-    fun forTwitter(account: AccountDetails, twitter: MicroBlog, paging: Paging): List<Status>
-    fun forStatusNet(account: AccountDetails, statusNet: MicroBlog, paging: Paging): List<Status>
-    fun forFanfou(account: AccountDetails, fanfou: MicroBlog, paging: Paging): List<Status>
-    fun forMastodon(account: AccountDetails, mastodon: Mastodon, paging: Paging): List<MastodonStatus>
+    fun forTwitter(account: AccountDetails, twitter: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status>
+    fun forStatusNet(account: AccountDetails, statusNet: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status>
+    fun forFanfou(account: AccountDetails, fanfou: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status>
+    fun forMastodon(account: AccountDetails, mastodon: Mastodon, paging: Paging, filter: TimelineFilter?): List<MastodonStatus>
 }
