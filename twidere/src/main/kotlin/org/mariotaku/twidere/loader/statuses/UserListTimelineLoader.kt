@@ -67,10 +67,10 @@ class UserListTimelineLoader(
                 return microBlog.getUserListStatuses(listId, paging)
             }
             listName != null && userKey != null -> {
-                return microBlog.getUserListStatuses(listName.replace(' ', '-'), userKey.id, paging)
+                return microBlog.getUserListStatusesByScreenName(listName.replace(' ', '-'), userKey.id, paging)
             }
             listName != null && screenName != null -> {
-                return microBlog.getUserListStatuses(listName.replace(' ', '-'), screenName, paging)
+                return microBlog.getUserListStatusesByScreenName(listName.replace(' ', '-'), screenName, paging)
             }
             else -> {
                 throw MicroBlogException("User id or screen name is required for list name")

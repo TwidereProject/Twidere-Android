@@ -22,23 +22,24 @@ package org.mariotaku.twidere.task.statuses
 import android.content.Context
 import android.net.Uri
 import org.mariotaku.twidere.annotation.FilterScope
-import org.mariotaku.twidere.data.fetcher.UserFavoritesFetcher
+import org.mariotaku.twidere.data.fetcher.ListTimelineFetcher
+import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.refresh.UserRelatedContentRefreshParam
+import org.mariotaku.twidere.model.refresh.ListTimelineContentRefreshParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.ErrorInfoStore
 import org.mariotaku.twidere.util.sync.TimelineSyncManager
 
-class GetUserFavoritesTask(context: Context) : GetStatusesTask<UserRelatedContentRefreshParam>(context) {
+class GetListTimelineTask(context: Context) : GetStatusesTask<ListTimelineContentRefreshParam>(context) {
 
-    override val contentUri: Uri = Statuses.Favorites.CONTENT_URI
+    override val contentUri: Uri = Statuses.GroupTimeline.CONTENT_URI
 
-    override val filterScopes: Int = FilterScope.FAVORITES
+    override val filterScopes: Int = FilterScope.LIST_GROUP_TIMELINE
 
-    override val errorInfoKey: String = ErrorInfoStore.KEY_FAVORITES_TIMELINE
+    override val errorInfoKey: String = ErrorInfoStore.KEY_LIST_GROUP_TIMELINE
 
-    override fun getStatusesFetcher(params: UserRelatedContentRefreshParam?): UserFavoritesFetcher {
-        return UserFavoritesFetcher(params?.userKey, params?.userScreenName)
+    override fun getStatusesFetcher(params: ListTimelineContentRefreshParam?): StatusesFetcher {
+        return ListTimelineFetcher(params?.id, params?.slug, params?.ownerId, params?.ownerScreenName)
     }
 
     override fun syncFetchReadPosition(manager: TimelineSyncManager, accountKeys: Array<UserKey>) {

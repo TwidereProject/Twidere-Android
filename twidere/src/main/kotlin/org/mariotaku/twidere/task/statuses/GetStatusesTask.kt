@@ -67,9 +67,6 @@ import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.mariotaku.twidere.util.sync.SyncTaskRunner
 import org.mariotaku.twidere.util.sync.TimelineSyncManager
 
-/**
- * Created by mariotaku on 16/1/2.
- */
 abstract class GetStatusesTask<P : ContentRefreshParam>(
         context: Context
 ) : BaseAbstractTask<P, List<Pair<GetTimelineResult<ParcelableStatus>?, Exception?>>,

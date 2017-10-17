@@ -59,7 +59,7 @@ import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowInsetsCallback
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
-import org.mariotaku.twidere.fragment.statuses.UserListTimelineFragment
+import org.mariotaku.twidere.fragment.timeline.ListTimelineFragment
 import org.mariotaku.twidere.fragment.users.UserListMembersFragment
 import org.mariotaku.twidere.fragment.users.UserListSubscribersFragment
 import org.mariotaku.twidere.model.ParcelableUser
@@ -151,7 +151,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
             tabArgs.putString(EXTRA_LIST_ID, args.getString(EXTRA_LIST_ID))
             tabArgs.putString(EXTRA_LIST_NAME, args.getString(EXTRA_LIST_NAME))
         }
-        adapter.add(cls = UserListTimelineFragment::class.java, args = tabArgs, name = getString(R.string.title_statuses))
+        adapter.add(cls = ListTimelineFragment::class.java, args = tabArgs, name = getString(R.string.title_statuses))
         adapter.add(cls = UserListMembersFragment::class.java, args = tabArgs, name = getString(R.string.members))
         adapter.add(cls = UserListSubscribersFragment::class.java, args = tabArgs, name = getString(R.string.title_userlist_subscribers))
     }

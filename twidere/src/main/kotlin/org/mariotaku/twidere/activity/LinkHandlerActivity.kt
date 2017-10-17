@@ -73,13 +73,9 @@ import org.mariotaku.twidere.fragment.message.MessagesEntriesFragment
 import org.mariotaku.twidere.fragment.search.MastodonSearchFragment
 import org.mariotaku.twidere.fragment.search.SearchFragment
 import org.mariotaku.twidere.fragment.status.StatusFragment
-import org.mariotaku.twidere.fragment.statuses.UserListTimelineFragment
 import org.mariotaku.twidere.fragment.statuses.UserMediaTimelineFragment
 import org.mariotaku.twidere.fragment.statuses.UserMentionsFragment
-import org.mariotaku.twidere.fragment.timeline.FavoritesTimelineFragment
-import org.mariotaku.twidere.fragment.timeline.NetworkPublicTimelineFragment
-import org.mariotaku.twidere.fragment.timeline.PublicTimelineFragment
-import org.mariotaku.twidere.fragment.timeline.UserTimelineFragment
+import org.mariotaku.twidere.fragment.timeline.*
 import org.mariotaku.twidere.fragment.userlist.ListsFragment
 import org.mariotaku.twidere.fragment.userlist.UserListFragment
 import org.mariotaku.twidere.fragment.userlist.UserListMembershipsFragment
@@ -659,7 +655,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
                 if (TextUtils.isEmpty(paramScreenName) && paramUserKey == null) return null
             }
             LINK_ID_USER_LIST_TIMELINE -> {
-                fragment = UserListTimelineFragment()
+                fragment = ListTimelineFragment()
                 val paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME)
                 val paramUserKey = uri.getUserKeyQueryParameter()
                 val paramListId = uri.getQueryParameter(QUERY_PARAM_LIST_ID)

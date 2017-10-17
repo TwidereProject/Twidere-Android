@@ -18,6 +18,8 @@
 
 package org.mariotaku.microblog.library.twitter.api;
 
+import android.support.annotation.NonNull;
+
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.PageableResponseList;
 import org.mariotaku.microblog.library.twitter.model.Paging;
@@ -125,11 +127,13 @@ public interface ListResources {
 
     @GET("/lists/statuses.json")
     @Params(template = StatusAnnotationTemplate.class)
-    ResponseList<Status> getUserListStatuses(@Query("slug") String slug, @Query("owner_id") long ownerId, @Query Paging paging) throws MicroBlogException;
+    ResponseList<Status> getUserListStatuses(@Query("slug") String slug,
+            @NonNull @Query("owner_id") String ownerId, @Query Paging paging) throws MicroBlogException;
 
     @GET("/lists/statuses.json")
     @Params(template = StatusAnnotationTemplate.class)
-    ResponseList<Status> getUserListStatuses(@Query("slug") String slug, @Query("owner_screen_name") String ownerScreenName, @Query Paging paging)
+    ResponseList<Status> getUserListStatusesByScreenName(@Query("slug") String slug,
+            @NonNull @Query("owner_screen_name") String ownerScreenName, @Query Paging paging)
             throws MicroBlogException;
 
     @GET("/lists/subscribers.json")
