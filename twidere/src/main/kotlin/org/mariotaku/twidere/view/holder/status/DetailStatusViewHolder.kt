@@ -38,7 +38,9 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import com.emojidex.emojidexandroid.EmojiFormat
 import com.emojidex.emojidexandroid.Emojidex
+import com.emojidex.emojidexandroid.downloader.DownloadListener
 import kotlinx.android.synthetic.main.adapter_item_status_count_label.view.*
 import kotlinx.android.synthetic.main.header_status.view.*
 import org.mariotaku.kpreferences.get
@@ -87,6 +89,8 @@ class DetailStatusViewHolder(
     private val translateContainer = itemView.translateContainer
     private val translateLabelView = itemView.translateLabel
 
+    private val downloadListener: CustomDownloadListener = CustomDownloadListener()
+
 
     init {
         this.linkClickHandler = DetailStatusLinkClickHandler(adapter.context,
@@ -94,6 +98,13 @@ class DetailStatusViewHolder(
         this.linkify = TwidereLinkify(linkClickHandler)
 
         initViews()
+
+        Emojidex.getInstance().addDownloadListener(downloadListener)
+    }
+
+    protected fun finalize()
+    {
+        Emojidex.getInstance().removeDownloadListener(downloadListener)
     }
 
     @UiThread
@@ -785,5 +796,16 @@ class DetailStatusViewHolder(
 
         const val REQUEST_FAVORITE_SELECT_ACCOUNT = 101
         const val REQUEST_RETWEET_SELECT_ACCOUNT = 102
+    }
+
+    inner class CustomDownloadListener : DownloadListener()
+    {
+        override fun onDownloadJson(handle: Int, vararg emojiNames: String?) {
+            textView.setText(Emojidex.getInstance().emojify(textView.getText(), true, true, null, false))
+        }
+
+        override fun onDownloadImage(handle: Int, emojiName: String?, format: EmojiFormat?) {
+            textView.setText(Emojidex.getInstance().emojify(textView.getText(), true, true, null, false))
+        }
     }
 }

@@ -15,7 +15,9 @@ import android.view.View.OnLongClickListener
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.RequestManager
+import com.emojidex.emojidexandroid.EmojiFormat
 import com.emojidex.emojidexandroid.Emojidex
+import com.emojidex.emojidexandroid.downloader.DownloadListener
 import kotlinx.android.synthetic.main.list_item_status.view.*
 import org.mariotaku.ktextension.*
 import org.mariotaku.microblog.library.mastodon.annotation.StatusVisibility
@@ -91,6 +93,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
     private var statusClickListener: IStatusViewHolder.StatusClickListener? = null
 
+    private val downloadListener: CustomDownloadListener = CustomDownloadListener()
 
     init {
         this.eventListener = EventListener(this)
@@ -101,6 +104,13 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             View.inflate(quotedMediaPreview.context, R.layout.layout_card_media_preview,
                     itemView.quotedMediaPreview)
         }
+
+        Emojidex.getInstance().addDownloadListener(downloadListener)
+    }
+
+    protected fun finalize()
+    {
+        Emojidex.getInstance().removeDownloadListener(downloadListener)
     }
 
 
@@ -730,6 +740,17 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
         private val videoTypes = intArrayOf(ParcelableMedia.Type.VIDEO, ParcelableMedia.Type.ANIMATED_GIF,
                 ParcelableMedia.Type.EXTERNAL_PLAYER)
+    }
+
+    inner class CustomDownloadListener : DownloadListener()
+    {
+        override fun onDownloadJson(handle: Int, vararg emojiNames: String?) {
+            textView.setText(Emojidex.getInstance().emojify(textView.getText(), true, true, null, false))
+        }
+
+        override fun onDownloadImage(handle: Int, emojiName: String?, format: EmojiFormat?) {
+            textView.setText(Emojidex.getInstance().emojify(textView.getText(), true, true, null, false))
+        }
     }
 }
 
