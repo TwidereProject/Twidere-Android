@@ -21,8 +21,12 @@
   <string name="action_add_gif">Añadir GIF</string>
   <string name="action_add_media">Añadir multimedia</string>
   <string name="action_add_member">Agregar un miembro</string>
+  <string name="action_add_name_to_home_screen">Añadir <xliff:g example="Name" id="name">%1$s</xliff:g> a la pantalla de inicio</string>
   <string name="action_add_tab">Agregar pestaña</string>
+  <string name="action_add_tab_to_home_screen">Agregar pestaña a pantalla de inicio</string>
   <string name="action_add_to_filter">Añadir a filtros</string>
+  <string name="action_add_to_home_screen">Añadir a pantalla de inicio</string>
+  <string name="action_add_to_home_screen_more">Añadir a pantalla de inicio&#8230;</string>
   <string name="action_add_to_list">Añadir a la lista</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Bloquear</string>
@@ -32,6 +36,7 @@
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">Cancelar retweet</string>
   <string name="action_center">Centro</string>
+  <string name="action_change_language">Cambiar idioma</string>
   <string name="action_clear">Borrar</string>
   <string name="action_clear_messages">Limpiar mensajes</string>
   <string name="action_comment">Comentario</string>
@@ -43,6 +48,7 @@
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">Eliminar</string>
   <string name="action_delete_messages">Eliminar mensajes</string>
+  <string name="action_disable_promotions">Desactivar promociones</string>
   <string name="action_dont_restart">No reinicie</string>
   <string name="action_dont_terminate">No cerrar</string>
   <!-- [verb] Edit image/settings etc. -->
@@ -50,6 +56,10 @@
   <string name="action_edit_conversation_avatar">Editar icono</string>
   <string name="action_edit_conversation_name">Editar nombre</string>
   <string name="action_edit_filter_rule">Editar regla</string>
+  <string name="action_enable">Activar</string>
+  <string name="action_enable_notifications">Activar notificaciones</string>
+  <string name="action_enable_retweets">Activar retweets</string>
+  <string name="action_export_to_muted_users">Mover a usuarios silenciados</string>
   <string name="action_favorite">Añadir a Favoritos</string>
   <string name="action_filter_import_from_blocked_users">Importar de usuarios bloqueados</string>
   <string name="action_filter_import_from_muted_users">Importar de usuarios silenciados</string>
@@ -73,6 +83,7 @@
   <string name="action_mute_notifications">Silenciar notificaciones</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, grabado en <xliff:g id="time">%2$s</xliff:g></string>
   <string name="action_next_step">Siguiente</string>
+  <string name="action_no_thanks">No, gracias</string>
   <string name="action_open_in_browser">Abrir en el navegador</string>
   <string name="action_pick_color">Elegir color</string>
   <string name="action_purchase">Comprar</string>
@@ -81,6 +92,7 @@
   <string name="action_quote">Cita</string>
   <string name="action_record_video">Grabar vídeo</string>
   <string name="action_refresh">Actualizar</string>
+  <string name="action_refresh_launch_presentations">Refrescar pantallas de partida</string>
   <string name="action_register">Registro</string>
   <string name="action_remove_conversation_avatar">Eliminar icono</string>
   <string name="action_reply">Respuesta</string>
@@ -288,6 +300,7 @@
   <string name="error_message_status_too_long">Tweet demasiado largo.</string>
   <string name="error_message_tweet_shorten_failed">Error al acortar el tweet.</string>
   <string name="error_message_tweet_shortener_not_found">El acortador de tweets no se ha encontrado, quizás se ha desinstalado.</string>
+  <string name="error_message_video_upload_not_supported">Subida de video no soportado</string>
   <string name="error_no_access_for_credentials">Tu aplicación no puede acceder a este recurso, ¿has activado la opción \"Forzar el uso de las APIs privadas\"?</string>
   <string name="error_no_dm_permission">Sin permiso para mensajes directos, chequee la configuración de permisos en Twitter.</string>
   <string name="error_title_device_incompatible">Dispositivo incompatible</string>
@@ -301,9 +314,11 @@
   <string name="external_group_host_format">Grupo externo en <xliff:g id="host">%s</xliff:g></string>
   <string name="external_user_host_format">Usuario externo en <xliff:g id="host">%s</xliff:g></string>
   <string name="extra_configurations">Configuraciones Extra</string>
+  <string name="extra_feature_description_advanced_filters">Filtrar suscripciones, reglas avanzadas, etc</string>
   <string name="extra_feature_description_schedule_status">Planifica tu tweet (envíalo más tarde)</string>
   <string name="extra_feature_description_share_gif">Compartir GIF en tweet</string>
   <string name="extra_feature_description_sync_data">Sincronizar datos con Dropbox, Google Drive etc</string>
+  <string name="extra_feature_title_advanced_filters">Filtros avanzados</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">Apoyar Twidere y obtener características mejoradas</string>
   <string name="extra_features_pack_description">O compra el pack de características para desbloquearlo (incluyendo características futuras)</string>
@@ -387,6 +402,7 @@
   <string name="keyword_filter_name">Palabra Clave: <xliff:g id="name">%s</xliff:g></string>
   <string name="label_account">Cuenta</string>
   <string name="label_account_type">Tipo de cuenta</string>
+  <string name="label_advanced">Avanzado</string>
   <string name="label_auth_type">Tipo de autenticación</string>
   <string name="label_background_operation_service">Servicio en segundo plano</string>
   <string name="label_buffer_accounts">Cuentas de Buffer</string>
@@ -403,6 +419,16 @@
   <string name="label_data_provider">Proveedor de base de datos Twidere</string>
   <string name="label_feedback_content">Contenido</string>
   <string name="label_feedback_title">Título</string>
+  <string name="label_filter_apply_to">Se aplica a&#8230;</string>
+  <string name="label_filter_for">Para&#8230;</string>
+  <string name="label_filter_scope_home">Inicio</string>
+  <string name="label_filter_scope_interactions">Interacciones</string>
+  <string name="label_filter_scope_messages">Mensajes</string>
+  <string name="label_filter_scope_search_other">Otros</string>
+  <string name="label_filter_scope_search_results">Resultados de la búsqueda</string>
+  <string name="label_filter_target_description">Descripción</string>
+  <string name="label_filter_target_name">Nombre</string>
+  <string name="label_filter_target_text">Texto</string>
   <string name="label_filters_subscription">Suscripción</string>
   <string name="label_follow_request_sent">Seguir la solicitud</string>
   <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s </xliff:g> vía <xliff:g example="api" id="source">%2$s </xliff:g></string>
@@ -523,6 +549,7 @@
   <string name="message_permission_request_share_media">Twidere necesita permiso de almacenamiento para el intercambio de archivos con otras aplicaciones.</string>
   <string name="message_pin_status_confirm">¿Fijar este tweet? Reemplazará el tweet anteriormente fijado.</string>
   <string name="message_please_wait">Por favor espera.</string>
+  <string name="message_promotions_reward">Permitir promociones para usar todas las características mejoradas, prometemos no molestarte</string>
   <string name="message_status_reply_to_user_removed_explanation">Twitter hace que el usuario del tweet sea siempre mencionado en una respuesta. Si el usuario de twitter fue removido, Twidere enviará esta respuesta como una cotización para preservar el contexto.</string>
   <string name="message_status_scheduling_connect_buffer_hint">Conecta con buffer para programar tweets aún sin conexión</string>
   <string name="message_status_scheduling_connected_to_buffer">Twidere ahora está conectado con buffer</string>
@@ -532,6 +559,7 @@
   <string name="message_sync_disconnect_from_name_confirm">¿Desconectar de <xliff:g example="ownCloud" id="name">%s</xliff:g>?</string>
   <string name="message_sync_last_synced_time">Última sincronización: <xliff:g example="2017/1/1 12:00" id="time">%s</xliff:g></string>
   <string name="message_tab_field_is_required">El campo <xliff:g example="Field" id="name">%s</xliff:g>\" es obligatorio</string>
+  <string name="message_ticker_promotions_reward">Permitir promociones para usar las características mejoradas gratuitamente.</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
@@ -554,6 +582,7 @@
   <string name="message_toast_login_verification_failed">Verificación de inicio de sesión fallida.</string>
   <!-- Toast message for network errors -->
   <string name="message_toast_network_error">Error de red</string>
+  <string name="message_toast_network_error_with_message">Error de red: <xliff:g id="message">%s</xliff:g></string>
   <string name="message_toast_no_account">Sin cuenta</string>
   <string name="message_toast_no_account_permission">Se requiere permiso de cuenta</string>
   <string name="message_toast_no_account_selected">No se seleccionó ninguna cuenta.</string>
@@ -626,10 +655,20 @@
   <string name="no_status_content_text">Sin contenido</string>
   <string name="no_tab">Sin pestaña</string>
   <string name="no_tab_hint">Sin pestañas</string>
-  <string name="action_no_thanks">No, gracias</string>
   <string name="no_user_found">Ningún usuario encontrado</string>
   <string name="no_version_suffix">Sin versión de sufijo</string>
   <string name="none">Ninguno</string>
+  <string name="notification_channel_description_content_interactions">Interacciones como menciones y retweets</string>
+  <string name="notification_channel_description_content_messages">Mensajes importantes como DMs</string>
+  <string name="notification_channel_descriptions_content_subscriptions">Notificaciones de tweets del usuario</string>
+  <string name="notification_channel_descriptions_content_updates">Actualizaciones como nuevos tweets en pantalla de inicio</string>
+  <string name="notification_channel_name_app_notices">Avisos de la aplicación</string>
+  <string name="notification_channel_name_background_progresses">Operaciones de fondo</string>
+  <string name="notification_channel_name_content_interactions">Interacciones</string>
+  <string name="notification_channel_name_content_messages">Mensajes</string>
+  <string name="notification_channel_name_content_subscriptions">Suscripciones</string>
+  <string name="notification_channel_name_content_updates">Actualizaciones</string>
+  <string name="notification_channel_name_service_statuses">Estados del servicio</string>
   <string name="notification_direct_message"><xliff:g id="user">%s</xliff:g> te ha enviado un mensaje directo.</string>
   <string name="notification_direct_message_multiple_messages"><xliff:g id="user">%1$s</xliff:g> te envió <xliff:g id="messages_count">%2$d</xliff:g> mensajes directos.</string>
   <string name="notification_direct_message_multiple_users"><xliff:g id="user">%1$s</xliff:g> y otros <xliff:g id="users_count">%2$d</xliff:g> te enviaron <xliff:g id="messages_count">%3$d</xliff:g> mensajes directos.</string>
@@ -722,6 +761,8 @@
   <string name="preference_title_media_preload_non_metered_network">Precargar en redes sin coste</string>
   <string name="preference_title_multi_column_tab_width">Ancho de pestaña multicolumna</string>
   <string name="preference_title_multi_column_tabs">Pestañas multicolumna</string>
+  <string name="preference_title_navbar_style">Estilo de barra de navegación</string>
+  <string name="preference_title_notification_channels">Canales</string>
   <string name="preference_title_notification_ringtone">Tono de llamada</string>
   <string name="preference_title_override_language">Idioma de la aplicación</string>
   <string name="preference_title_portrait">Vertical</string>
@@ -851,7 +892,6 @@
   <string name="sent_follow_request_to_user">Enviar una petición de Seguir a <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Dirección del servidor</string>
   <string name="set_consumer_key_secret_message">Twidere está alcanzando el limite de token, ud necesita crear una aplicación en https://apps.twitter.com/ y pegar la llave de consumidor y el secreto debajo.\n si ud continua usando la llave por defecto, no podrá acceder.</string>
-  <string name="action_settings">Configuración</string>
   <string name="settings_interface">Interfaz</string>
   <string name="settings_notifications">Notificaciones</string>
   <string name="settings_refresh">Actualizar</string>
@@ -981,6 +1021,7 @@
   <string name="title_open_source_license">Licencia de código abierto</string>
   <string name="title_pin_status_confirm">Fijar tweet</string>
   <string name="title_premium_features_name">Twidere ∞</string>
+  <string name="title_promotions_reward">Recompensa de promociones</string>
   <string name="title_public_timeline">Línea de tiempo pública</string>
   <string name="title_quick_action">Acción rápida</string>
   <string name="title_retweet_quote_confirm">¿Retweetear a tus seguidores?</string>

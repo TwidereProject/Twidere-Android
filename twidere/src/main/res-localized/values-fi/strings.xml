@@ -376,7 +376,6 @@
   <string name="no_status_content_text">Ei sisältöä</string>
   <string name="no_tab">Ei välilehteä</string>
   <string name="no_tab_hint">Ei välilehteä</string>
-  <string name="action_no_thanks">Ei kiitos</string>
   <string name="no_user_found">Käyttäjää ei löytynyt</string>
   <string name="no_version_suffix">Ei versiojälkiliitettä</string>
   <string name="none">Ei mitään</string>
@@ -549,7 +548,6 @@
   <string name="sent_follow_request_to_user">Seurauspyyntö lähetetty käyttäjälle <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Palvelinosoite</string>
   <string name="set_consumer_key_secret_message">Twidere on ylittämässä sallitun käyttäjämäärän. Sinun täytyy luoda sovellus osoitteessa https://apps.twitter.com/ ja liittää alle kuluttaja-avain ja -salaus.\nJos jatkat oletusavaimen käyttöä, et välttämättä pääse enää kirjautumaan sisälle.</string>
-  <string name="action_settings">Asetukset</string>
   <string name="settings_interface">Käyttöliittymä</string>
   <string name="settings_notifications">Ilmoitukset</string>
   <string name="settings_refresh">Päivitys</string>

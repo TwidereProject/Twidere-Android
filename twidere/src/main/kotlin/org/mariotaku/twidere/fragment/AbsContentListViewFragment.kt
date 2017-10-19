@@ -27,6 +27,7 @@ import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener
 import android.view.*
 import android.widget.AbsListView
 import android.widget.ListAdapter
+import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.fragment_content_listview.*
 import kotlinx.android.synthetic.main.layout_content_fragment_common.*
 import org.mariotaku.twidere.R
@@ -45,9 +46,13 @@ import org.mariotaku.twidere.util.TwidereColorUtils
 abstract class AbsContentListViewFragment<A : ListAdapter> : BaseFragment(),
         OnRefreshListener, RefreshScrollTopInterface, ControlBarOffsetListener, ContentListSupport<A>,
         AbsListView.OnScrollListener {
-    private lateinit var scrollHandler: ListViewScrollHandler<A>
-    // Data fields
-    private val systemWindowsInsets = Rect()
+    override lateinit var adapter: A
+
+    var refreshEnabled: Boolean
+        get() = swipeLayout.isEnabled
+        set(value) {
+            swipeLayout.isEnabled = value
+        }
 
     protected open val overrideDivider: Drawable?
         get() = ThemeUtils.getDrawableFromThemeAttribute(context, android.R.attr.listDivider)
@@ -55,8 +60,10 @@ abstract class AbsContentListViewFragment<A : ListAdapter> : BaseFragment(),
     protected val isProgressShowing: Boolean
         get() = progressContainer.visibility == View.VISIBLE
 
-    override lateinit var adapter: A
+    // Data fields
+    private val systemWindowsInsets = Rect()
 
+    private lateinit var scrollHandler: ListViewScrollHandler<A>
 
     override fun onControlBarOffsetChanged(activity: IControlBarActivity, offset: Float) {
         updateRefreshProgressOffset()
@@ -96,7 +103,7 @@ abstract class AbsContentListViewFragment<A : ListAdapter> : BaseFragment(),
         }
 
     override fun onLoadMoreContents(@ILoadMoreSupportAdapter.IndicatorPosition position: Long) {
-        setRefreshEnabled(false)
+        refreshEnabled = false
     }
 
     override fun onAttach(context: Context) {
@@ -125,7 +132,7 @@ abstract class AbsContentListViewFragment<A : ListAdapter> : BaseFragment(),
                 R.color.bg_refresh_progress_color_light, R.color.bg_refresh_progress_color_dark)
         swipeLayout.setOnRefreshListener(this)
         swipeLayout.setProgressBackgroundColorSchemeResource(colorRes)
-        adapter = onCreateAdapter(context)
+        adapter = onCreateAdapter(context, requestManager)
         listView.setOnTouchListener { _, event ->
             if (event.actionMasked == MotionEvent.ACTION_DOWN) {
                 updateRefreshProgressOffset()
@@ -160,15 +167,11 @@ abstract class AbsContentListViewFragment<A : ListAdapter> : BaseFragment(),
         updateRefreshProgressOffset()
     }
 
-    fun setRefreshEnabled(enabled: Boolean) {
-        swipeLayout.isEnabled = enabled
-    }
-
     override fun triggerRefresh(): Boolean {
         return false
     }
 
-    protected abstract fun onCreateAdapter(context: Context): A
+    protected abstract fun onCreateAdapter(context: Context, requestManager: RequestManager): A
 
     protected fun showContent() {
         errorContainer.visibility = View.GONE

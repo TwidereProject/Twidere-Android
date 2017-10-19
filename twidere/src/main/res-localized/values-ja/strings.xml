@@ -39,6 +39,7 @@
   <string name="action_change_language">言語を変更</string>
   <string name="action_clear">クリア</string>
   <string name="action_clear_messages">メッセージをクリア</string>
+  <string name="action_clear_messages_and_delete_conversation">会話のクリアと削除</string>
   <string name="action_comment">コメント</string>
   <string name="action_compose">ツイートする</string>
   <string name="action_compose_message_convert_to_status">ツイートに変換</string>
@@ -58,7 +59,9 @@
   <string name="action_edit_filter_rule">ルールの編集</string>
   <string name="action_enable">有効にする</string>
   <string name="action_enable_notifications">通知をオン</string>
+  <string name="action_enable_promotions">広告を有効にする</string>
   <string name="action_enable_retweets">リツイートを有効にする</string>
+  <string name="action_export_to_muted_users">ミュートしたユーザーをエクスポートする</string>
   <string name="action_favorite">お気に入り</string>
   <string name="action_filter_import_from_blocked_users">ブロック済みユーザーをインポートする</string>
   <string name="action_filter_import_from_muted_users">ミュート済みユーザーをインポートする</string>
@@ -82,6 +85,7 @@
   <string name="action_mute_notifications">通知をミュート</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g> - 保存日時:<xliff:g id="time">%2$s</xliff:g></string>
   <string name="action_next_step">次へ</string>
+  <string name="action_no_thanks">いいえ、結構です</string>
   <string name="action_open_in_browser">ブラウザで開く</string>
   <string name="action_pick_color">色を選択</string>
   <string name="action_purchase">購入</string>
@@ -111,6 +115,7 @@
   <string name="action_set_color">色を設定</string>
   <string name="action_set_nickname">ニックネームを設定</string>
   <string name="action_set_status_visibility">公開範囲を設定</string>
+  <string name="action_settings">設定</string>
   <string name="action_share">共有</string>
   <string name="action_sign_in">ログイン</string>
   <!-- [verb] Used for skip some settings -->
@@ -312,9 +317,11 @@
   <string name="external_group_host_format"><xliff:g id="host">%s</xliff:g> の外部グループ</string>
   <string name="external_user_host_format"><xliff:g id="host">%s</xliff:g>の外部ユーザー</string>
   <string name="extra_configurations">追加設定</string>
+  <string name="extra_feature_description_advanced_filters">フィルターの購読や高度なルールなど</string>
   <string name="extra_feature_description_schedule_status">予約ツイート (あとで送る)</string>
   <string name="extra_feature_description_share_gif">ツイートでGIF動画を共有</string>
   <string name="extra_feature_description_sync_data">データを Dropbox や Google ドライブなどで同期</string>
+  <string name="extra_feature_title_advanced_filters">高度なフィルター</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">Twidere を支援して追加機能を取得</string>
   <string name="extra_features_pack_description">または、追加機能パックを購入して、すべての機能 (将来追加される機能を含む) を手に入れましょう。</string>
@@ -398,6 +405,7 @@
   <string name="keyword_filter_name">キーワード: <xliff:g id="name">%s</xliff:g></string>
   <string name="label_account">アカウント</string>
   <string name="label_account_type">アカウントの種類</string>
+  <string name="label_advanced">高度な</string>
   <string name="label_auth_type">認証タイプ</string>
   <string name="label_background_operation_service">バックグラウンド操作サービス</string>
   <string name="label_buffer_accounts">Buffer アカウント</string>
@@ -414,6 +422,16 @@
   <string name="label_data_provider">Twidere データベースプロバイダ</string>
   <string name="label_feedback_content">コンテンツ</string>
   <string name="label_feedback_title">タイトル</string>
+  <string name="label_filter_apply_to">適用する</string>
+  <string name="label_filter_for">ための</string>
+  <string name="label_filter_scope_home">ホーム</string>
+  <string name="label_filter_scope_interactions">みんなの反応</string>
+  <string name="label_filter_scope_messages">メッセージ</string>
+  <string name="label_filter_scope_search_other">その他</string>
+  <string name="label_filter_scope_search_results">検索結果</string>
+  <string name="label_filter_target_description">説明</string>
+  <string name="label_filter_target_name">名前</string>
+  <string name="label_filter_target_text">テキスト</string>
   <string name="label_filters_subscription">購読</string>
   <string name="label_follow_request_sent">フォローリクエストを送信しました。</string>
   <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> via <xliff:g example="api" id="source">%2$s</xliff:g></string>
@@ -457,6 +475,7 @@
   <string name="label_statuses_retweets_replies">ツイートとリツイートと返信</string>
   <string name="label_streaming_service">ストリーミングサービス</string>
   <string name="label_translate_from_language"><xliff:g id="language">%s</xliff:g>から翻訳</string>
+  <string name="label_translated_to_language"><xliff:g id="language">%s</xliff:g> へ翻訳</string>
   <string name="label_translation">翻訳</string>
   <string name="label_username">ユーザー名かメールアドレス</string>
   <string name="label_video">動画</string>
@@ -650,17 +669,17 @@
   <string name="no_status_content_text">コンテンツなし</string>
   <string name="no_tab">タブ無し</string>
   <string name="no_tab_hint">タブ無し</string>
-  <string name="action_no_thanks">いいえ、結構です</string>
   <string name="no_user_found">ユーザーが見つかりません。</string>
   <string name="no_version_suffix">バージョンサフィックスなし</string>
   <string name="none">なし</string>
+  <string name="notification_channel_description_content_interactions">「いいね」された＠メンションとリツイートをみんなの反応に表示する</string>
   <string name="notification_channel_description_content_messages">DMのような重要なメッセージ</string>
   <string name="notification_channel_descriptions_content_subscriptions">ユーザーのツイート通知</string>
+  <string name="notification_channel_descriptions_content_updates">ホームタイムラインに新しい「いいね」ツイートの更新</string>
   <string name="notification_channel_name_app_notices">アプリの通知</string>
   <string name="notification_channel_name_background_progresses">バックグラウンド操作</string>
   <string name="notification_channel_name_content_interactions">みんなの反応</string>
   <string name="notification_channel_name_content_messages">メッセージ</string>
-  <string name="notification_channel_name_content_subscriptions">予約購読</string>
   <string name="notification_channel_name_content_updates">アップデート</string>
   <string name="notification_channel_name_service_statuses">サービスの状態</string>
   <string name="notification_direct_message"><xliff:g id="user">%s</xliff:g>からDMが届きました。</string>
@@ -886,7 +905,6 @@
   <string name="sent_follow_request_to_user">フォローリクエストを<xliff:g id="user">%s</xliff:g>に送信済み</string>
   <string name="server_address">サーバーのアドレス</string>
   <string name="set_consumer_key_secret_message">Twidere はトークン規制が迫っているので、 https://apps.twitter.com/ でアプリを作成し、コンシューマーキーとシークレットを下に貼り付けて規制を回避してください。\nもしこのまま Twidere のキーを使い続けると、サインインできないかもしれません。</string>
-  <string name="action_settings">設定</string>
   <string name="settings_interface">インターフェース</string>
   <string name="settings_notifications">通知</string>
   <string name="settings_refresh">更新</string>
@@ -1036,6 +1054,7 @@
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
   <string name="title_sync">データ同期</string>
   <string name="title_sync_settings">同期設定</string>
+  <string name="title_translate_to">&#8230;へ翻訳</string>
   <string name="title_unpin_status_confirm">ツイート固定の解除</string>
   <string name="title_user">ユーザー</string>
   <string name="title_user_colors">ユーザー色</string>

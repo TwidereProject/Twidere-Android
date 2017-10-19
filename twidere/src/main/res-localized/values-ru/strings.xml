@@ -82,6 +82,7 @@
   <string name="action_mute_notifications">Отключить уведомления</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, сохранено в <xliff:g id="time">%2$s</xliff:g></string>
   <string name="action_next_step">След.</string>
+  <string name="action_no_thanks">Нет, спасибо</string>
   <string name="action_open_in_browser">Открыть в браузере</string>
   <string name="action_pick_color">Выбрать цвет</string>
   <string name="action_purchase">Купить</string>
@@ -111,6 +112,7 @@
   <string name="action_set_color">Выбрать цвет</string>
   <string name="action_set_nickname">Задать никнейм</string>
   <string name="action_set_status_visibility">Установить видимость</string>
+  <string name="action_settings">Настройки</string>
   <string name="action_share">Поделиться</string>
   <string name="action_sign_in">Войти</string>
   <!-- [verb] Used for skip some settings -->
@@ -505,7 +507,6 @@
   <string name="no_status_content_text">Нет содержимого</string>
   <string name="no_tab">Нет вкладок</string>
   <string name="no_tab_hint">Нет вкладок</string>
-  <string name="action_no_thanks">Нет, спасибо</string>
   <string name="no_user_found">Пользователь не найден</string>
   <string name="no_version_suffix">Нет суффикса версии</string>
   <string name="none">Никак</string>
@@ -693,7 +694,6 @@
   <string name="sent_follow_request_to_user">Послать запрос на подписку <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Адрес сервера</string>
   <string name="set_consumer_key_secret_message">Twidere достигла лимит токенов, вы должны создать токен на https://apps.twitter.com/ и вставить персональный ключ в секретную секцию.\nЕсли вы продолжите использовать стандартный ключ, то вы не сможете войти.</string>
-  <string name="action_settings">Настройки</string>
   <string name="settings_interface">Интерфейс</string>
   <string name="settings_notifications">Уведомления</string>
   <string name="settings_refresh">Обновления</string>

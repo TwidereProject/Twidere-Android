@@ -262,9 +262,14 @@ class DetailStatusViewHolder(
         summaryView.hideIfEmpty()
 
         if (displayEnd != -1 && displayEnd <= text.length) {
-            textView.spannable = text.subSequence(0, displayEnd)
+            val displayText = text.subSequence(0, displayEnd)
+            if (!TextUtils.equals(textView.text, displayText)) {
+                textView.spannable = displayText
+            }
         } else {
-            textView.spannable = text
+            if (!TextUtils.equals(textView.text, text)) {
+                textView.spannable = text
+            }
         }
         textView.hideIfEmpty()
 
@@ -347,14 +352,16 @@ class DetailStatusViewHolder(
 
         val lang = status.lang
         if (CheckUtils.isValidLocale(lang) && account.isOfficial(context)) {
-            val locale = Locale(lang)
             translateContainer.visibility = View.VISIBLE
             if (translation != null) {
-                translateLabelView.text = context.getString(R.string.label_translation)
+                val locale = Locale(translation.translatedLang)
+                translateLabelView.text = context.getString(R.string.label_translated_to_language,
+                        locale.displayLanguage)
                 translateResultView.visibility = View.VISIBLE
                 translateChangeLanguageView.visibility = View.VISIBLE
                 translateResultView.text = translation.text
             } else {
+                val locale = Locale(lang)
                 translateLabelView.text = context.getString(R.string.label_translate_from_language,
                         locale.displayLanguage)
                 translateResultView.visibility = View.GONE
@@ -499,6 +506,7 @@ class DetailStatusViewHolder(
         locationView.textSize = textSize * 0.85f
         itemView.timeSource.textSize = textSize * 0.85f
         translateLabelView.textSize = textSize * 0.85f
+        translateChangeLanguageView.textSize = textSize * 0.85f
         translateResultView.textSize = textSize * 1.05f
 
         itemView.countsUsersHeightHolder.count.textSize = textSize * 1.25f

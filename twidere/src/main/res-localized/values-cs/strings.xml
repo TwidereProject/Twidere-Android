@@ -221,7 +221,6 @@
   <string name="no_location">Poloha není k dispozici</string>
   <string name="no_rule">Žádné pravidlo</string>
   <string name="no_status_content_text">Žádný obsah</string>
-  <string name="action_no_thanks">Ne, děkuji</string>
   <string name="no_user_found">Nenalezen žádný uživatel</string>
   <string name="notification_light_color">Světlá barva</string>
   <!-- Notification method, flashing LED light -->
@@ -314,7 +313,6 @@
   <string name="send_crash_report">Odeslat hlášení o pádu Twidere</string>
   <string name="send_direct_message">Poslat DM</string>
   <string name="server_address">Adresa serveru</string>
-  <string name="action_settings">Nastavení</string>
   <string name="settings_interface">Rozhraní</string>
   <string name="settings_notifications">Oznámení</string>
   <string name="settings_refresh">Aktualizovat</string>

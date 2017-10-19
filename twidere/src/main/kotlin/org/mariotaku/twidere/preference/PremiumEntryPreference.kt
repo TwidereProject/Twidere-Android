@@ -25,11 +25,11 @@ class PremiumEntryPreference(context: Context, attrs: AttributeSet) : Preference
     init {
         GeneralComponent.get(context).inject(this)
         val a = context.obtainStyledAttributes(attrs, R.styleable.PremiumEntryPreference)
-        val requiredFeature: String = a.getString(R.styleable.PremiumEntryPreference_requiredFeature)
+        val requiredFeature = a.getString(R.styleable.PremiumEntryPreference_requiredFeature)
         a.recycle()
         isEnabled = extraFeaturesService.isSupported()
         setOnPreferenceClickListener {
-            if (!extraFeaturesService.isEnabled(requiredFeature)) {
+            if (requiredFeature != null && !extraFeaturesService.isEnabled(requiredFeature)) {
                 val activity = ChameleonUtils.getActivity(context)
                 if (activity is FragmentActivity) {
                     ExtraFeaturesIntroductionDialogFragment.show(fm = activity.supportFragmentManager,

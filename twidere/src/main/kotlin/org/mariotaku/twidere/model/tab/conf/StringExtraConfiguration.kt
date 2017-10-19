@@ -33,9 +33,13 @@ class StringExtraConfiguration(key: String, title: StringHolder, private val def
 
     override fun onViewCreated(context: Context, view: View, fragment: CustomTabsFragment.TabEditorDialogFragment) {
         super.onViewCreated(context, view, fragment)
-        editText = view.findViewById<EditText>(R.id.editText)
+        editText = view.findViewById(R.id.editText)
         editText.hint = title.createString(context)
         editText.setText(def)
+    }
+
+    override fun showRequiredError() {
+        editText.error = context.getString(R.string.hint_error_field_required)
     }
 
     fun maxLines(maxLines: Int): StringExtraConfiguration {

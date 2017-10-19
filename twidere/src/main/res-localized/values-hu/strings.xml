@@ -644,10 +644,10 @@
   <string name="no_status_content_text">Nincs tartalom</string>
   <string name="no_tab">Nincs fül</string>
   <string name="no_tab_hint">Nincs fül</string>
-  <string name="action_no_thanks">Köszönöm, nem</string>
   <string name="no_user_found">Nem található felhasználó</string>
   <string name="no_version_suffix">Nincs verzió utótag</string>
   <string name="none">Semmi</string>
+  <string name="notification_channel_description_content_messages">Fontos üzenetek, mint például személyes üzenetek</string>
   <string name="notification_channel_name_content_interactions">Események</string>
   <string name="notification_channel_name_content_messages">Üzenetek</string>
   <string name="notification_channel_name_content_subscriptions">Feliratkozások</string>
@@ -744,6 +744,7 @@
   <string name="preference_title_media_preload_non_metered_network">Előzetes betöltés ingyenes elérés esetén</string>
   <string name="preference_title_multi_column_tab_width">Többoszlopos fülszélesség</string>
   <string name="preference_title_multi_column_tabs">Többoszlopos fülek</string>
+  <string name="preference_title_notification_channels">Csatornák</string>
   <string name="preference_title_notification_ringtone">Csengőhang</string>
   <string name="preference_title_override_language">Alkalmazás nyelve</string>
   <string name="preference_title_portrait">Álló</string>
@@ -873,7 +874,6 @@
   <string name="sent_follow_request_to_user">Követési kérelem elküldve ide: <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Szerver címe</string>
   <string name="set_consumer_key_secret_message">Twidere lassan eléri a token korlátozást, létre kell majd hoznod egy alkalmazást a https://apps.twitter.com/ webhelyen és be kell illeszteni a lenti felhasználó kulcsot és jelszót.\nHa folytatod az alapértelmezett kulcs használatát, lehetséges, hogy nem tudsz majd bejelentkezni.</string>
-  <string name="action_settings">Beállítások</string>
   <string name="settings_interface">Felhasználói felület</string>
   <string name="settings_notifications">Értesítések</string>
   <string name="settings_refresh">Frissít</string>

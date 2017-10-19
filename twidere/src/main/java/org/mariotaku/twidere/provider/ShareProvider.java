@@ -38,7 +38,6 @@ public class ShareProvider extends ContentProvider {
     public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         try {
             final File file = getFile(uri);
-            if (file == null) return null;
             if (projection == null) {
                 projection = COLUMNS;
             }

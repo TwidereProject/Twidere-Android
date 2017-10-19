@@ -39,6 +39,7 @@
     <string name="action_change_language">Change language</string>
     <string name="action_clear">Clear</string>
     <string name="action_clear_messages">Clear messages</string>
+    <string name="action_clear_messages_and_delete_conversation">Clear and delete conversation</string>
     <string name="action_comment">Comment</string>
     <string name="action_compose">Compose</string>
     <string name="action_compose_message_convert_to_status">Convert to tweet</string>
@@ -105,6 +106,7 @@
     <string name="action_retweet">Retweet</string>
     <!-- [verb] Save settings/files etc. -->
     <string name="action_save">Save</string>
+    <string name="action_save_to">Save to…</string>
     <string name="action_search">Search</string>
     <string name="action_select_all">Select all</string>
     <string name="action_select_none">Select none</string>
@@ -453,6 +455,7 @@
     <string name="hint_accounts_dashboard_title">Accounts dashboard</string>
     <string name="hint_conversation_name">Conversation name</string>
     <string name="hint_empty_filters_subscriptions">No subscriptions</string>
+    <string name="hint_error_field_required">Required</string>
     <string name="hint_error_message_no_content">No content</string>
     <string name="hint_message_select_user">Search users</string>
     <string name="hint_no_account">No account</string>
@@ -573,6 +576,7 @@
     <string name="label_statuses_retweets_replies">Tweets, retweets and replies</string>
     <string name="label_streaming_service">Streaming service</string>
     <string name="label_translate_from_language">Translate from <xliff:g id="language">%s</xliff:g></string>
+    <string name="label_translated_to_language">Translated to <xliff:g id="language">%s</xliff:g></string>
     <string name="label_translation">Translation</string>
     <string name="label_username">Username</string>
     <string name="label_video">Video</string>
@@ -698,6 +702,7 @@
     <string name="message_toast_link_copied_to_clipboard">Link copied to clipboard</string>
     <string name="message_toast_livewp_daydream_enabled_message">Here\'s a little present for you, find it in your system settings :)</string>
     <string name="message_toast_login_verification_failed">Login verification failed</string>
+    <string name="message_toast_media_saved">Media saved</string>
     <!-- Toast message for network errors -->
     <string name="message_toast_network_error">Network error</string>
     <string name="message_toast_network_error_with_message">Network error: <xliff:g id="message">%s</xliff:g></string>
@@ -1262,6 +1267,7 @@
     <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
     <string name="title_sync">Data sync</string>
     <string name="title_sync_settings">Sync settings</string>
+    <string name="title_translate_to">Translate to…</string>
     <string name="title_unpin_status_confirm">Unpin tweet</string>
     <string name="title_user">User</string>
     <string name="title_user_colors">User colors</string>
@@ -1353,4 +1359,7 @@
     <string name="users_blocked">Blocked these users.</string>
     <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>\'s lists</string>
     <string name="users_statuses">User\'s tweets</string>
+    <string name="label_drafts_all">All</string>
+    <string name="label_drafts_statuses">Tweets</string>
+    <string name="label_drafts_others">Others</string>
 </resources>

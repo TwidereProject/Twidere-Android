@@ -28,7 +28,7 @@ class PermissionRequestDialog : BaseDialogFragment() {
         builder.setNegativeButton(R.string.action_later) { _, _ ->
             val callback = parentFragment as? PermissionRequestCancelCallback ?: activity as?
                     PermissionRequestCancelCallback ?: return@setNegativeButton
-            callback.onPermissionRequestCancelled(requestCode)
+            callback.onRequestPermissionCancelled(requestCode)
         }
         val dialog = builder.create()
         dialog.onShow { it.applyTheme() }
@@ -36,7 +36,7 @@ class PermissionRequestDialog : BaseDialogFragment() {
     }
 
     interface PermissionRequestCancelCallback {
-        fun onPermissionRequestCancelled(requestCode: Int)
+        fun onRequestPermissionCancelled(requestCode: Int)
     }
 
     companion object {

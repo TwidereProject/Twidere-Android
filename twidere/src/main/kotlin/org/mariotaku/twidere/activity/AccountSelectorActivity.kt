@@ -60,8 +60,17 @@ class AccountSelectorActivity : BaseActivity(), OnItemClickListener {
     private val accountHost: String?
         get() = intent.getStringExtra(EXTRA_ACCOUNT_HOST)
 
-    private val accountType: String?
-        get() = intent.getStringExtra(EXTRA_ACCOUNT_TYPE)
+    private val accountTypes: Array<String>?
+        get() {
+            var types = intent.getStringArrayExtra(EXTRA_ACCOUNT_TYPES)
+            if (types == null) {
+                val type = intent.getStringExtra(EXTRA_ACCOUNT_TYPE)
+                if (type != null) {
+                    types = arrayOf(type)
+                }
+            }
+            return types
+        }
 
     private val isSelectNoneAllowed: Boolean
         get() = intent.getBooleanExtra(EXTRA_ALLOW_SELECT_NONE, false)
@@ -94,21 +103,21 @@ class AccountSelectorActivity : BaseActivity(), OnItemClickListener {
             val extraKeys = onlyIncludeKeys
             val oauthOnly = isOAuthOnly
             val accountHost = accountHost
-            val accountType = accountType
-            val matchedAccounts = allAccountDetails.filter {
-                if (extraKeys != null) {
-                    return@filter extraKeys.contains(it.key)
+            val accountTypes = accountTypes
+            val matchedAccounts = allAccountDetails.filter { account ->
+                if (extraKeys != null && !extraKeys.contains(account.key)) {
+                    return@filter false
                 }
-                if (oauthOnly && !it.isOAuth) {
+                if (oauthOnly && !account.isOAuth) {
                     return@filter false
                 }
                 if (USER_TYPE_TWITTER_COM == accountHost) {
-                    if (it.key.host != null && it.type != AccountType.TWITTER) return@filter false
-                } else if (accountHost != null && accountType == AccountType.MASTODON) {
-                    if (accountHost != it.key.host) return@filter false
+                    if (account.key.host != null && account.type != AccountType.TWITTER) return@filter false
+                } else if (accountHost != null && accountTypes?.singleOrNull() == AccountType.MASTODON) {
+                    if (accountHost != account.key.host) return@filter false
                 }
-                if (accountType != null) {
-                    if (accountType != it.type) return@filter false
+                if (accountTypes != null && accountTypes.none { it == account.type }) {
+                    return@filter false
                 }
                 return@filter true
             }

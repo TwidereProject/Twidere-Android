@@ -118,10 +118,14 @@ abstract class AbsRequestStatusesLoader(
                 } else {
                     data.sort()
                 }
+                data.forEach { it.is_filtered = shouldFilterStatus(it) }
                 return ListResponse.getListInstance(data)
             }
         }
-        if (!fromUser) return ListResponse.getListInstance(data)
+        if (!fromUser) {
+            data.forEach { it.is_filtered = shouldFilterStatus(it) }
+            return ListResponse.getListInstance(data)
+        }
         val noItemsBefore = data.isEmpty()
         val loadItemLimit = preferences[loadItemLimitKey]
         val statuses = try {

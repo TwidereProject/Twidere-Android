@@ -30,6 +30,7 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.AsyncTask
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.ContextCompat
@@ -154,9 +155,11 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         if (savedInstanceState == null) {
             // Only start at the first time
             showLoginTypeChooser()
-            // Must call this before cookie manager
-            @Suppress("DEPRECATION")
-            CookieSyncManager.createInstance(this)
+            // Must call this before cookie manager under lollipop
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                @Suppress("DEPRECATION")
+                CookieSyncManager.createInstance(this)
+            }
             CookieManager.getInstance().removeAllCookiesSupport()
         }
     }

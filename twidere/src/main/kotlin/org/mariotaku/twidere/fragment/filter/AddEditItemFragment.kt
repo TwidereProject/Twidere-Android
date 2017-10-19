@@ -21,12 +21,14 @@ package org.mariotaku.twidere.fragment.filter
 
 import android.accounts.AccountManager
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.view.View
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.CheckBox
 import android.widget.Toast
 import kotlinx.android.synthetic.main.dialog_filter_rule_editor.*
@@ -137,9 +139,7 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
                 else -> null
             })
             editText.threshold = 1
-            val canEdit = canEditValue
-            editText.isEnabled = canEdit
-            editText.setTextIsSelectable(canEdit)
+            editText.isEnabled = canEditValue
             advancedToggle.setOnClickListener {
                 advancedExpanded = !advancedExpanded
             }
@@ -161,6 +161,11 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
                 scopes = defaultScopes
                 advancedExpanded = false
                 editText.setSelection(editText.length().coerceAtLeast(0))
+                if (editText.isEnabled) {
+                    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE)
+                            as InputMethodManager
+                    imm.showSoftInput(editText, 0)
+                }
             } else {
                 value = savedInstanceState.getString(EXTRA_VALUE)
                 scopes = savedInstanceState.getParcelable(EXTRA_SCOPE)

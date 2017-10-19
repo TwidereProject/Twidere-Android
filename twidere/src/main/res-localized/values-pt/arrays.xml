@@ -42,7 +42,7 @@
   </string-array>
   <string-array name="entries_proxy_type">
     <item>HTTP</item>
-    <item>Reverse proxy</item>
+    <item>Proxy reverso</item>
     <!--<item>SOCKS</item>-->
   </string-array>
   <string-array name="entries_refresh_interval">
@@ -78,8 +78,12 @@
   <string-array name="entries_quick_access_shortcut_types">
     <item>Usuários</item>
     <item>Linha do tempo</item>
-    <item>User Favorites</item>
+    <item>Favoritos</item>
     <item>Lista</item>
     <item>Listar timeline</item>
+  </string-array>
+  <string-array name="entries_user_timeline_filter">
+    <item>Respostas</item>
+    <item>Retweets</item>
   </string-array>
 </resources>

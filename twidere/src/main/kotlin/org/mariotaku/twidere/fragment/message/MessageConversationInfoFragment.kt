@@ -56,6 +56,7 @@ import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.setItemAvailability
+import org.mariotaku.ktextension.setItemTitle
 import org.mariotaku.ktextension.spannable
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
@@ -219,10 +220,11 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         menu.setItemAvailability(R.id.clear_messages, true)
+        menu.setItemAvailability(R.id.leave_conversation, true)
         if (adapter.conversation?.conversation_extras_type == ExtrasType.TWITTER_OFFICIAL) {
-            menu.setItemAvailability(R.id.leave_conversation, true)
+            menu.setItemTitle(R.id.leave_conversation, R.string.action_leave_conversation)
         } else {
-            menu.setItemAvailability(R.id.leave_conversation, false)
+            menu.setItemTitle(R.id.leave_conversation, R.string.action_clear_messages_and_delete_conversation)
         }
     }
 

@@ -80,6 +80,7 @@ public interface IntentConstants {
     String EXTRA_ACCOUNT_KEY = "account_key";
     String EXTRA_ACCOUNT_HOST = "account_host";
     String EXTRA_ACCOUNT_TYPE = "account_type";
+    String EXTRA_ACCOUNT_TYPES = "account_types";
     String EXTRA_ACCOUNT_KEYS = "account_keys";
     String EXTRA_PAGE = "page";
     String EXTRA_DATA = "data";
@@ -184,6 +185,7 @@ public interface IntentConstants {
     String EXTRA_CLEAR_BUTTON = "clear_button";
     String EXTRA_PATH = "path";
     String EXTRA_ACTION = "action";
+    String EXTRA_ACTIONS = "actions";
     String EXTRA_FLAGS = "flags";
     String EXTRA_INTENT = "intent";
     String EXTRA_BLACKLIST = "blacklist";

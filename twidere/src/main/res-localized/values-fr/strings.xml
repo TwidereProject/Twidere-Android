@@ -626,7 +626,6 @@
   <string name="no_status_content_text">Aucun contenu</string>
   <string name="no_tab">Aucun onglet</string>
   <string name="no_tab_hint">Aucun onglet</string>
-  <string name="action_no_thanks">Non, merci</string>
   <string name="no_user_found">Aucun utilisateur trouvé</string>
   <string name="no_version_suffix">Pas de suffixe de version</string>
   <string name="none">Aucun</string>
@@ -851,7 +850,6 @@
   <string name="sent_follow_request_to_user">Demande d\'abonnement à <xliff:g id="user">%s</xliff:g> envoyée.</string>
   <string name="server_address">Adresse du serveur</string>
   <string name="set_consumer_key_secret_message">Twidere a atteint sa limite de requêtes autorisées, vous devez désormais créer une app sur https://apps.twitter.com/ et copier ci-dessous votre nouvelle clé client. \nSi vous continuez à utiliser la clé par défaut, vous ne pourrez plus vous connecter.</string>
-  <string name="action_settings">Paramètres</string>
   <string name="settings_interface">Interface</string>
   <string name="settings_notifications">Notifications</string>
   <string name="settings_refresh">Rafraîchir</string>

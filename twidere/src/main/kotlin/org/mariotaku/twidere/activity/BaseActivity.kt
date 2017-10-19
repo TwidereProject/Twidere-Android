@@ -431,7 +431,9 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP || isDialogTheme) return
         when (navbarStyle) {
             NavbarStyle.TRANSPARENT -> {
-                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+                if (resources.getBoolean(R.bool.support_translucent_navigation)) {
+                    window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+                }
             }
             NavbarStyle.COLORED -> {
                 WindowSupport.setNavigationBarColor(window, themeColor)

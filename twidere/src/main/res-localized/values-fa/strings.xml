@@ -611,7 +611,6 @@
   <string name="no_status_content_text">بدون محتوا</string>
   <string name="no_tab">بدون زبانه</string>
   <string name="no_tab_hint">بدون زبانه</string>
-  <string name="action_no_thanks">نه، ممنون</string>
   <string name="no_user_found">هیچ کاربری پیدا نشد</string>
   <string name="no_version_suffix">بدون پسوند نگارش</string>
   <string name="none">هیچ‌کدام</string>
@@ -832,7 +831,6 @@
   <string name="sent_follow_request_to_user">درخواست دنبال کردن به <xliff:g id="user">%s</xliff:g> فرستاده شد.</string>
   <string name="server_address">نشانی کارساز</string>
   <string name="set_consumer_key_secret_message">توییدر به کران ژتون رسیده است. باید در https://apps.twitter.com/ کاره‌ای ساختع و کلید و رمز مصرف‌کننده را در زیر بچسبانید.\nاگر به استفاده از کلید پیش‌گزیده ادامه دهید، ممکن است قادر به ورود نباشید.</string>
-  <string name="action_settings">تنظیمات</string>
   <string name="settings_interface">رابط</string>
   <string name="settings_notifications">آگاهی‌ها</string>
   <string name="settings_refresh">تازه‌سازی</string>

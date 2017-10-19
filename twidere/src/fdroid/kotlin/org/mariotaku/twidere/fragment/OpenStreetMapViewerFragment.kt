@@ -19,20 +19,26 @@
 
 package org.mariotaku.twidere.fragment
 
+import android.content.Context
 import android.graphics.Point
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.content.res.ResourcesCompat
 import android.view.*
 import kotlinx.android.synthetic.fdroid.activity_osm_viewer.*
+import org.mariotaku.ktextension.preferExternalCacheDir
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_LATITUDE
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_LONGITUDE
+import org.mariotaku.twidere.util.DebugLog
 import org.osmdroid.api.IMapView
+import org.osmdroid.config.Configuration
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.ItemizedOverlay
 import org.osmdroid.views.overlay.OverlayItem
+import java.io.File
 import java.util.*
 
 class OpenStreetMapViewerFragment : BaseFragment(), Constants {
@@ -52,6 +58,7 @@ class OpenStreetMapViewerFragment : BaseFragment(), Constants {
         }
         this.latitude = latitude
         this.longitude = longitude
+        mapView.setTileSource(TileSourceFactory.MAPNIK)
         mapView.setMultiTouchControls(true)
         mapView.setBuiltInZoomControls(true)
         mapView.isTilesScaledToDpi = true
@@ -68,6 +75,21 @@ class OpenStreetMapViewerFragment : BaseFragment(), Constants {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.activity_osm_viewer, container, false)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        Configuration.getInstance().apply {
+            try {
+                osmdroidBasePath = File(context.preferExternalCacheDir, "osmdroid")
+                osmdroidTileCache = File(osmdroidBasePath, "tiles")
+
+                osmdroidBasePath.mkdirs()
+                osmdroidTileCache.mkdirs()
+            } catch (e: Exception) {
+                DebugLog.w(tr = e)
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

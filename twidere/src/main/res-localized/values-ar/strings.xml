@@ -365,7 +365,6 @@
   <string name="no_status_content_text">لا محتوى</string>
   <string name="no_tab">ولا تبويبة</string>
   <string name="no_tab_hint">ولا تبويبة</string>
-  <string name="action_no_thanks">لا، شكرا</string>
   <string name="no_user_found">لم أجد مستخدمًا</string>
   <string name="none">لا شيء</string>
   <string name="notification_direct_message"><xliff:g id="user">%s</xliff:g> راسلك مباشرة.</string>
@@ -407,6 +406,7 @@
   <string name="preference_title_accounts">الحسابات</string>
   <string name="preference_title_advanced">متقدم</string>
   <string name="preference_title_database_item_limit">حد حجم قاعدة البيانات</string>
+  <string name="preference_title_filter_subscriptions">تصفية الاشتراكات</string>
   <string name="preference_title_landscape">الوضع المائل</string>
   <string name="preference_title_notification_ringtone">الرنة</string>
   <string name="preference_title_portrait">الوضع المعتدل</string>
@@ -504,7 +504,6 @@
   <string name="sensitive_content_warning">يحتمل أن تحتوي هذه التغريدة على محتوى حساس, هل أُكمل؟</string>
   <string name="sent_follow_request_to_user">أرسل طلب المتابعة إلى <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">عنوان السيرفر</string>
-  <string name="action_settings">الاعدادات</string>
   <string name="settings_interface">الواجهة</string>
   <string name="settings_notifications">الإخطارات</string>
   <string name="settings_refresh">تحديث</string>
@@ -603,6 +602,7 @@
   <string name="title_set_nickname">تعيين اللقب</string>
   <string name="title_status">تغريدة</string>
   <string name="title_statuses">من التغريدات</string>
+  <string name="title_subscription_name">الاسم</string>
   <string name="title_subscription_url">الموقع</string>
   <string name="title_user">مستخدم</string>
   <string name="title_user_colors">ألوان المستخدم</string>

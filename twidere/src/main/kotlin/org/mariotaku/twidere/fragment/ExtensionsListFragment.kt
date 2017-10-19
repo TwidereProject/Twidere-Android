@@ -33,6 +33,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.AdapterContextMenuInfo
+import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.fragment_content_listview.*
 import org.mariotaku.ktextension.isNullOrEmpty
 import org.mariotaku.ktextension.setItemAvailability
@@ -55,7 +56,7 @@ class ExtensionsListFragment : AbsContentListViewFragment<ExtensionsAdapter>(),
         showProgress()
     }
 
-    override fun onCreateAdapter(context: Context): ExtensionsAdapter {
+    override fun onCreateAdapter(context: Context, requestManager: RequestManager): ExtensionsAdapter {
         return ExtensionsAdapter(activity, requestManager)
     }
 

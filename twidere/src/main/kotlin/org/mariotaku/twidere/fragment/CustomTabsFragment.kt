@@ -39,7 +39,6 @@ import android.view.*
 import android.widget.*
 import android.widget.AbsListView.MultiChoiceModeListener
 import android.widget.AdapterView.OnItemClickListener
-import com.bumptech.glide.Glide
 import com.mobeta.android.dslv.SimpleDragSortCursorAdapter
 import kotlinx.android.synthetic.main.dialog_custom_tab_editor.*
 import kotlinx.android.synthetic.main.layout_draggable_list_with_empty_view.*
@@ -372,9 +371,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
                     // Make sure immutable configuration skipped in edit mode
                     if (editMode && !extraConf.isMutable) return@forEach
                     if (!conf.applyExtraConfigurationTo(tab, extraConf)) {
-                        val titleString = extraConf.title.createString(context)
-                        Toast.makeText(context, getString(R.string.message_tab_field_is_required,
-                                titleString), Toast.LENGTH_SHORT).show()
+                        extraConf.showRequiredError()
                         return@setOnClickListener
                     }
                 }

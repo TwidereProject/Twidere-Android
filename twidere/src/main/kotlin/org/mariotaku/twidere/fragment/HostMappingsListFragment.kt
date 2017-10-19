@@ -35,6 +35,7 @@ import android.widget.CompoundButton
 import android.widget.CompoundButton.OnCheckedChangeListener
 import android.widget.ListView
 import android.widget.TextView
+import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.dialog_add_host_mapping.*
 import kotlinx.android.synthetic.main.dialog_user_list_detail_editor.*
 import kotlinx.android.synthetic.main.fragment_content_listview.*
@@ -63,7 +64,7 @@ class HostMappingsListFragment : AbsContentListViewFragment<HostMappingsListFrag
         reloadHostMappings()
     }
 
-    override fun onCreateAdapter(context: Context): HostMappingAdapter {
+    override fun onCreateAdapter(context: Context, requestManager: RequestManager): HostMappingAdapter {
         return HostMappingAdapter(activity)
     }
 

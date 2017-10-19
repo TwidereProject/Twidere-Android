@@ -20,7 +20,9 @@
   <!-- [verb] Used for skip some settings -->
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
   <!-- [verb] Disconnect from network storage -->
+  <string name="action_take_photo">影相</string>
   <!-- [verb] Action for unblocking user -->
+  <string name="app_description">爲你量身訂做嘅 Twitter app</string>
   <!-- App name, normally you don't need to translate this. -->
   <!-- [noun] Count label for retweets, e.g. (N retweets)-->
   <!-- Enhanced (paid) features description -->

@@ -1,26 +1,27 @@
 /*
- * 				Twidere - Twitter client for Android
- * 
- *  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
- * 
+ *             Twidere - Twitter client for Android
+ *
+ *  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.fragment
+package org.mariotaku.twidere.fragment.drafts
 
 import android.app.Activity
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.DialogInterface.OnClickListener
 import android.content.Intent
@@ -40,8 +41,10 @@ import android.widget.AbsListView.MultiChoiceModeListener
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ListView
-import kotlinx.android.synthetic.main.fragment_drafts.*
+import com.bumptech.glide.RequestManager
+import kotlinx.android.synthetic.main.fragment_content_listview.*
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.isEmpty
 import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.sqliteqb.library.OrderBy
@@ -54,6 +57,9 @@ import org.mariotaku.twidere.adapter.DraftsAdapter
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.textSizeKey
 import org.mariotaku.twidere.extension.*
+import org.mariotaku.twidere.fragment.AbsContentListViewFragment
+import org.mariotaku.twidere.fragment.BaseDialogFragment
+import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.model.draft.QuoteStatusActionExtras
@@ -64,26 +70,22 @@ import org.mariotaku.twidere.util.deleteDrafts
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import java.lang.ref.WeakReference
 
-class DraftsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, OnItemClickListener, MultiChoiceModeListener {
+class DraftsListFragment : AbsContentListViewFragment<DraftsAdapter>(), LoaderCallbacks<Cursor?>,
+        OnItemClickListener, MultiChoiceModeListener {
 
-    private lateinit var adapter: DraftsAdapter
+    private var actionMode: ActionMode? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
-        adapter = DraftsAdapter(activity, requestManager).apply {
-            textSize = preferences[textSizeKey].toFloat()
-        }
 
         listView.adapter = adapter
-        listView.emptyView = emptyView
         listView.onItemClickListener = this
         listView.choiceMode = ListView.CHOICE_MODE_MULTIPLE_MODAL
         listView.setMultiChoiceModeListener(this)
-        emptyIcon.setImageResource(R.drawable.ic_info_draft)
-        emptyText.setText(R.string.drafts_hint_messages)
+        refreshEnabled = false
         loaderManager.initLoader(0, null, this)
-        setListShown(false)
+        showProgress()
     }
 
     override fun onStart() {
@@ -101,21 +103,38 @@ class DraftsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, OnItemClickList
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_drafts, container, false)
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if (!isVisibleToUser) {
+            actionMode?.finish()
+        }
+    }
+
+    override fun onCreateAdapter(context: Context, requestManager: RequestManager): DraftsAdapter {
+        return DraftsAdapter(activity, requestManager).apply {
+            textSize = preferences[textSizeKey].toFloat()
+        }
     }
 
     // MARK: Loader callbacks
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor?> {
         val uri = Drafts.CONTENT_URI_UNSENT
         val cols = Drafts.COLUMNS
+        val actions = arguments.getStringArray(EXTRA_ACTIONS)
+        val (selection, selectionArgs) = if (actions != null) {
+            Pair(Expression.inArgs(Drafts.ACTION_TYPE, actions.size).sql, actions)
+        } else Pair(null, null)
         val orderBy = OrderBy(Drafts.TIMESTAMP, false).sql
-        return CursorLoader(activity, uri, cols, null, null, orderBy)
+        return CursorLoader(activity, uri, cols, selection, selectionArgs, orderBy)
     }
 
     override fun onLoadFinished(loader: Loader<Cursor?>, cursor: Cursor?) {
         adapter.swapCursor(cursor)
-        setListShown(true)
+        if (cursor == null || cursor.isEmpty) {
+            showEmpty(R.drawable.ic_info_draft, getString(R.string.drafts_hint_messages))
+        } else {
+            showContent()
+        }
     }
 
     override fun onLoaderReset(loader: Loader<Cursor?>) {
@@ -142,7 +161,9 @@ class DraftsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, OnItemClickList
         return false
     }
 
+
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
+        actionMode = mode
         mode.menuInflater.inflate(R.menu.action_multi_select_drafts, menu)
         listView.updateSelectionItems(menu)
         return true
@@ -185,9 +206,8 @@ class DraftsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, OnItemClickList
     }
 
     override fun onDestroyActionMode(mode: ActionMode) {
-
+        actionMode = null
     }
-
 
     override fun onItemCheckedStateChanged(mode: ActionMode, position: Int, id: Long,
             checked: Boolean) {
@@ -214,12 +234,6 @@ class DraftsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, OnItemClickList
             cr.delete(Drafts.CONTENT_URI_NOTIFICATIONS.withAppendedPath(draft._id.toString()),
                     null, null)
         }
-    }
-
-    fun setListShown(listShown: Boolean) {
-        listContainer.visibility = if (listShown) View.VISIBLE else View.GONE
-        progressContainer.visibility = if (listShown) View.GONE else View.VISIBLE
-        emptyView.visibility = if (listShown && adapter.isEmpty) View.VISIBLE else View.GONE
     }
 
     private fun editUpdateStatusDraft(draft: Draft): Boolean {
@@ -312,8 +326,8 @@ class DraftsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, OnItemClickList
 
         override fun onPostExecute(result: Unit) {
             val activity = activityRef.get() ?: return
-            (activity as IBaseActivity<*>).executeAfterFragmentResumed { activity ->
-                val fm = activity.supportFragmentManager
+            (activity as IBaseActivity<*>).executeAfterFragmentResumed {
+                val fm = it.supportFragmentManager
                 val f = fm.findFragmentByTag(FRAGMENT_TAG_DELETING_DRAFTS)
                 if (f is DialogFragment) {
                     f.dismiss()

@@ -30,6 +30,7 @@ import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.getTypedArray
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.set
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.translationDestinationKey
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.onShow
@@ -47,6 +48,7 @@ class TranslationDestinationDialogFragment : BaseDialogFragment() {
         val languages = arguments.getTypedArray<DisplayLanguage>(EXTRA_LANGUAGES).sortedArrayWith(LanguageComparator())
         val selectedLanguage = preferences[translationDestinationKey] ?: arguments.getString(EXTRA_SELECTED_LANGUAGE)
         val selectedIndex = languages.indexOfFirst { selectedLanguage == it.code }
+        builder.setTitle(R.string.title_translate_to)
         builder.setSingleChoiceItems(languages.mapToArray { it.name }, selectedIndex) { _, which ->
             currentIndex.set(which)
         }

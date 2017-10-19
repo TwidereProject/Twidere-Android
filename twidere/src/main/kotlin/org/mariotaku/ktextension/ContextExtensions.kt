@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.pm.PackageManager
 import android.support.v4.content.ContextCompat
+import java.io.File
 
 /**
  * Created by mariotaku on 2016/12/13.
@@ -26,3 +27,6 @@ fun Context.unregisterReceiverSafe(receiver: BroadcastReceiver?): Boolean {
         return false
     }
 }
+
+val Context.preferExternalCacheDir: File
+    get() = externalCacheDir ?: cacheDir

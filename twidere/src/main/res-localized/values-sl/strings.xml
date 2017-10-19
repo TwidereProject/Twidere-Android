@@ -46,7 +46,9 @@
   <!-- [verb] Used for skip some settings -->
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
   <!-- [verb] Disconnect from network storage -->
+  <string name="action_take_photo">Fotografiraj</string>
   <!-- [verb] Action for unblocking user -->
+  <string name="app_description">Samo tvoja aplikacija za Twitter</string>
   <!-- App name, normally you don't need to translate this. -->
   <!-- [noun] Count label for retweets, e.g. (N retweets)-->
   <!-- Enhanced (paid) features description -->
@@ -61,6 +63,7 @@
   <!-- Mastodon feature, post to followers only -->
   <!-- Mastodon feature, post to public timelines -->
   <!-- Mastodon feature, do not show in public timelines -->
+  <string name="list_timeline">Časovnica seznama</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted

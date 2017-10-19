@@ -18,6 +18,7 @@ import android.text.Spanned
 import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.fragment_content_listview.*
 import nl.komponents.kovenant.then
 import nl.komponents.kovenant.ui.alwaysUi
@@ -164,7 +165,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
         return super.onActionItemClicked(mode, item)
     }
 
-    override fun onCreateAdapter(context: Context): SimpleCursorAdapter {
+    override fun onCreateAdapter(context: Context, requestManager: RequestManager): SimpleCursorAdapter {
         return FilterUsersListAdapter(context)
     }
 
