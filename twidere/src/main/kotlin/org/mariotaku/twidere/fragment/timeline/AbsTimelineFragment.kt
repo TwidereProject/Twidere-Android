@@ -19,55 +19,81 @@
 
 package org.mariotaku.twidere.fragment.timeline
 
+import android.accounts.AccountManager
+import android.app.Activity
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
 import android.arch.paging.PagedList
+import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.widget.FixedLinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.LayoutManager
 import android.support.v7.widget.StaggeredGridLayoutManager
+import android.view.ContextMenu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import com.bumptech.glide.RequestManager
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_listview.*
+import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.kpreferences.get
-import org.mariotaku.ktextension.addAllTo
-import org.mariotaku.ktextension.addTo
-import org.mariotaku.ktextension.mapToArray
-import org.mariotaku.ktextension.toNulls
+import org.mariotaku.ktextension.*
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.activity.AccountSelectorActivity
+import org.mariotaku.twidere.activity.ComposeActivity
 import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.decorator.ExtendedDividerItemDecoration
 import org.mariotaku.twidere.adapter.iface.IContentAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.annotation.TimelineStyle
+import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
+import org.mariotaku.twidere.constant.displaySensitiveContentsKey
+import org.mariotaku.twidere.constant.favoriteConfirmationKey
 import org.mariotaku.twidere.constant.loadItemLimitKey
+import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.data.source.CursorObjectLivePagedListProvider
 import org.mariotaku.twidere.data.status.StatusesLivePagedListProvider
+import org.mariotaku.twidere.extension.adapter.removeStatuses
+import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.fragment.AbsContentRecyclerViewFragment
-import org.mariotaku.twidere.fragment.AbsStatusesFragment
-import org.mariotaku.twidere.fragment.CursorStatusesFragment
+import org.mariotaku.twidere.fragment.BaseFragment
+import org.mariotaku.twidere.fragment.status.FavoriteConfirmDialogFragment
+import org.mariotaku.twidere.fragment.status.RetweetQuoteDialogFragment
+import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
+import org.mariotaku.twidere.model.ObjectId
+import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.analyzer.Share
 import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.event.GetStatusesTaskEvent
+import org.mariotaku.twidere.model.event.StatusDestroyedEvent
+import org.mariotaku.twidere.model.event.StatusRetweetedEvent
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
+import org.mariotaku.twidere.model.refresh.BaseContentRefreshParam
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.timeline.TimelineFilter
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.statuses.GetStatusesTask
-import org.mariotaku.twidere.util.DataStoreUtils
-import org.mariotaku.twidere.util.IntentUtils
-import org.mariotaku.twidere.util.Utils
+import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.view.ExtendedRecyclerView
+import org.mariotaku.twidere.view.holder.GapViewHolder
 import org.mariotaku.twidere.view.holder.StatusViewHolder
+import org.mariotaku.twidere.view.holder.TimelineFilterHeaderViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 
 abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableStatusesAdapter, LayoutManager>() {
@@ -114,7 +140,6 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         super.onActivityCreated(savedInstanceState)
         adapter.statusClickListener = StatusClickHandler()
         statuses = createLiveData()
-
         statuses.observe(this, Observer { onDataLoaded(it) })
         showProgress()
     }
@@ -149,6 +174,46 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
             }
         }
     }
+
+    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
+        if (!userVisibleHint || menuInfo == null) return
+        val inflater = MenuInflater(context)
+        val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo?
+        val status = adapter.getStatus(contextMenuInfo!!.position)
+        inflater.inflate(R.menu.action_status, menu)
+        MenuUtils.setupForStatus(context, menu, preferences, twitterWrapper, userColorNameManager,
+                status)
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        if (!userVisibleHint) return false
+        val contextMenuInfo = item.menuInfo as ExtendedRecyclerView.ContextMenuInfo
+        val status = adapter.getStatus(contextMenuInfo.position)
+        when (item.itemId) {
+            R.id.share -> {
+                val shareIntent = Utils.createStatusShareIntent(activity, status)
+                val chooser = Intent.createChooser(shareIntent, getString(R.string.share_status))
+                startActivity(chooser)
+
+                val am = AccountManager.get(context)
+                val accountType = AccountUtils.findByAccountKey(am, status.account_key)?.getAccountType(am)
+                Analyzer.log(Share.status(accountType, status))
+                return true
+            }
+            R.id.make_gap -> {
+                if (isStandalone) return true
+                val resolver = context.contentResolver
+                val values = ContentValues()
+                values.put(Statuses.IS_GAP, 1)
+                val where = Expression.equals(Statuses._ID, status._id).sql
+                resolver.update(contentUri, values, where, null)
+                return true
+            }
+            else -> return MenuUtils.handleStatusClick(activity, this, fragmentManager,
+                    preferences, userColorNameManager, twitterWrapper, status, item)
+        }
+    }
+
 
     override fun triggerRefresh(): Boolean {
         if (isStandalone) {
@@ -211,6 +276,16 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         }
     }
 
+
+    fun reloadAll() {
+        showProgress()
+        adapter.statuses = null
+        statuses.removeObservers(this)
+        statuses = createLiveData()
+        statuses.observe(this, Observer { onDataLoaded(it) })
+    }
+
+
     protected open fun onDataLoaded(data: PagedList<ParcelableStatus>?) {
         adapter.statuses = data
         adapter.timelineFilter = timelineFilter
@@ -246,6 +321,19 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         }
     }
 
+    protected open fun onStatusRetweetedEvent(event: StatusRetweetedEvent) {
+        replaceStatusStates(event.status)
+    }
+
+    protected open fun onStatusDestroyedEvent(event: StatusDestroyedEvent) {
+        if (!isStandalone) return
+        adapter.removeStatuses { it != null && it.id == event.status.id }
+    }
+
+    protected open fun onTimelineFilterClick() {
+
+    }
+
 
     private fun createLiveData(): LiveData<PagedList<ParcelableStatus>?> {
         return if (isStandalone) onCreateStandaloneLiveData() else onCreateDatabaseLiveData()
@@ -278,7 +366,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
             extraSelection.second?.addAllTo(expressionArgs)
         }
         val provider = CursorObjectLivePagedListProvider(context.contentResolver, contentUri,
-                CursorStatusesFragment.statusColumnsLite, Expression.and(*expressions.toTypedArray()).sql,
+                statusColumnsLite, Expression.and(*expressions.toTypedArray()).sql,
                 expressionArgs.toTypedArray(), Statuses.DEFAULT_SORT_ORDER, ParcelableStatus::class.java)
         return provider.create(null, 20)
     }
@@ -293,7 +381,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                 ParcelableStatus::class.java)
     }
 
-    fun replaceStatusStates(status: ParcelableStatus) {
+    private fun replaceStatusStates(status: ParcelableStatus) {
         val statuses = adapter.statuses?.snapshot() ?: return
         val lm = layoutManager
         val range = lm.firstVisibleItemPosition..lm.lastVisibleItemPosition
@@ -303,6 +391,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
             item.retweet_count = status.retweet_count
             item.reply_count = status.reply_count
 
+            item.my_retweet_id = status.my_retweet_id
             item.is_favorite = status.is_favorite
             if (index in range) {
                 adapter.notifyItemRangeChanged(index, 1)
@@ -311,6 +400,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
     }
 
     private inner class BusEventHandler {
+
 
         @Subscribe
         fun notifyGetStatusesTaskChanged(event: GetStatusesTaskEvent) {
@@ -329,8 +419,18 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         }
 
         @Subscribe
+        fun notifyStatusDestroyed(event: StatusDestroyedEvent) {
+            onStatusDestroyedEvent(event)
+        }
+
+        @Subscribe
         fun notifyFavoriteTask(event: FavoriteTaskEvent) {
             onFavoriteTaskEvent(event)
+        }
+
+        @Subscribe
+        fun notifyRetweetTask(event: StatusRetweetedEvent) {
+            onStatusRetweetedEvent(event)
         }
 
     }
@@ -343,18 +443,92 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
         override fun onItemActionClick(holder: RecyclerView.ViewHolder, id: Int, position: Int) {
             val status = getFullStatus(position) ?: return
-            AbsStatusesFragment.handleActionClick(this@AbsTimelineFragment, id, status,
+            handleActionClick(this@AbsTimelineFragment, id, status,
                     holder as StatusViewHolder)
         }
 
         override fun onItemActionLongClick(holder: RecyclerView.ViewHolder, id: Int, position: Int): Boolean {
             val status = getFullStatus(position) ?: return false
-            return AbsStatusesFragment.handleActionLongClick(this@AbsTimelineFragment, status,
+            return handleActionLongClick(this@AbsTimelineFragment, status,
                     adapter.getItemId(position), id)
+        }
+
+        override fun onFilterClick(holder: TimelineFilterHeaderViewHolder) {
+            onTimelineFilterClick()
+        }
+
+        override fun onMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia, statusPosition: Int) {
+            val status = adapter.getStatus(statusPosition)
+            IntentUtils.openMedia(activity, status, current, preferences[newDocumentApiKey],
+                    preferences[displaySensitiveContentsKey])
+        }
+
+        override fun onQuotedMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia, statusPosition: Int) {
+            val status = adapter.getStatus(statusPosition)
+            val quotedMedia = status.quoted_media ?: return
+            IntentUtils.openMedia(activity, status.account_key, status.is_possibly_sensitive, status,
+                    current, quotedMedia, preferences[newDocumentApiKey], preferences[displaySensitiveContentsKey])
+        }
+
+        override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
+            val status = adapter.getStatus(position)
+            val quotedId = status.quoted_id ?: return
+            IntentUtils.openStatus(activity, status.account_key, quotedId)
+        }
+
+        override fun onStatusLongClick(holder: IStatusViewHolder, position: Int): Boolean {
+            return super.onStatusLongClick(holder, position)
+        }
+
+        override fun onUserProfileClick(holder: IStatusViewHolder, position: Int) {
+            val status = adapter.getStatus(position)
+            val intent = IntentUtils.userProfile(status.account_key, status.user_key,
+                    status.user_screen_name, status.extras?.user_statusnet_profile_url)
+            IntentUtils.applyNewDocument(intent, preferences[newDocumentApiKey])
+            startActivity(intent)
+        }
+
+        override fun onItemMenuClick(holder: RecyclerView.ViewHolder, menuView: View, position: Int) {
+            if (activity == null) return
+            val view = layoutManager.findViewByPosition(position) ?: return
+            recyclerView.showContextMenuForChild(view)
+        }
+
+        override fun onGapClick(holder: GapViewHolder, position: Int) {
+            val status = adapter.getStatus(position)
+            DebugLog.v(msg = "Load activity gap $status")
+            adapter.addGapLoadingId(ObjectId(status.account_key, status.id))
+            val accountKeys = arrayOf(status.account_key)
+            val pagination = arrayOf(SinceMaxPagination.maxId(status.id, status.sort_id))
+            getStatuses(BaseContentRefreshParam(accountKeys, pagination))
+        }
+    }
+
+
+    class DefaultOnLikedListener(
+            private val twitter: AsyncTwitterWrapper,
+            private val status: ParcelableStatus,
+            private val accountKey: UserKey? = null
+    ) : LikeAnimationDrawable.OnLikedListener {
+
+        override fun onLiked(): Boolean {
+            if (status.is_favorite) return false
+            twitter.createFavoriteAsync(accountKey ?: status.account_key, status)
+            return true
         }
     }
 
     companion object {
+
+
+        const val REQUEST_FAVORITE_SELECT_ACCOUNT = 101
+        const val REQUEST_RETWEET_SELECT_ACCOUNT = 102
+
+
+        val statusColumnsLite = Statuses.COLUMNS - arrayOf(Statuses.MENTIONS_JSON,
+                Statuses.CARD, Statuses.FILTER_FLAGS, Statuses.FILTER_USERS, Statuses.FILTER_LINKS,
+                Statuses.FILTER_SOURCES, Statuses.FILTER_NAMES, Statuses.FILTER_TEXTS,
+                Statuses.FILTER_DESCRIPTIONS)
 
         private val LayoutManager.firstVisibleItemPosition: Int
             get() = when (this) {
@@ -369,6 +543,120 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                 is StaggeredGridLayoutManager -> findLastVisibleItemPositions(null).lastOrNull() ?: -1
                 else -> throw UnsupportedOperationException()
             }
+
+        fun handleActionClick(fragment: BaseFragment, id: Int, status: ParcelableStatus,
+                holder: StatusViewHolder) {
+            when (id) {
+                R.id.reply -> {
+                    val intent = Intent(INTENT_ACTION_REPLY)
+                    intent.`package` = fragment.context.packageName
+                    intent.putExtra(EXTRA_STATUS, status)
+                    fragment.startActivity(intent)
+                }
+                R.id.retweet -> {
+                    fragment.executeAfterFragmentResumed { f ->
+                        RetweetQuoteDialogFragment.show(f.childFragmentManager,
+                                status.account_key, status.id, status)
+                    }
+                }
+                R.id.favorite -> {
+                    when {
+                        fragment.preferences[favoriteConfirmationKey] -> fragment.executeAfterFragmentResumed {
+                            FavoriteConfirmDialogFragment.show(it.childFragmentManager,
+                                    status.account_key, status.id, status)
+                        }
+                        status.is_favorite -> fragment.twitterWrapper.destroyFavoriteAsync(status.account_key, status.id)
+                        else -> holder.playLikeAnimation(DefaultOnLikedListener(fragment.twitterWrapper, status))
+                    }
+                }
+            }
+        }
+
+        fun handleActionLongClick(fragment: Fragment, status: ParcelableStatus, itemId: Long, id: Int): Boolean {
+            when (id) {
+                R.id.favorite -> {
+                    val intent = selectAccountIntent(fragment.context, status, itemId)
+                    fragment.startActivityForResult(intent, REQUEST_FAVORITE_SELECT_ACCOUNT)
+                    return true
+                }
+                R.id.retweet -> {
+                    val intent = selectAccountIntent(fragment.context, status, itemId, false)
+                    fragment.startActivityForResult(intent, REQUEST_RETWEET_SELECT_ACCOUNT)
+                    return true
+                }
+            }
+            return false
+        }
+
+        fun handleActionActivityResult(fragment: BaseFragment, requestCode: Int, resultCode: Int, data: Intent?) {
+            when (requestCode) {
+                REQUEST_FAVORITE_SELECT_ACCOUNT -> {
+                    if (resultCode != Activity.RESULT_OK || data == null) return
+                    val accountKey = data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
+                    val extras = data.getBundleExtra(EXTRA_EXTRAS)
+                    val status = extras.getParcelable<ParcelableStatus>(EXTRA_STATUS)
+                    if (fragment.preferences[favoriteConfirmationKey]) {
+                        fragment.executeAfterFragmentResumed {
+                            FavoriteConfirmDialogFragment.show(it.childFragmentManager,
+                                    accountKey, status.id, status)
+                        }
+                    } else {
+                        fragment.twitterWrapper.createFavoriteAsync(accountKey, status)
+                    }
+                }
+                REQUEST_RETWEET_SELECT_ACCOUNT -> {
+                    if (resultCode != Activity.RESULT_OK || data == null) return
+                    val accountKey = data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
+                    val extras = data.getBundleExtra(EXTRA_EXTRAS)
+                    val status = extras.getParcelable<ParcelableStatus>(EXTRA_STATUS)
+                    if (status.account_key.host != accountKey.host) {
+                        val composeIntent = Intent(fragment.context, ComposeActivity::class.java)
+                        composeIntent.putExtra(Intent.EXTRA_TEXT, "${status.text_plain} ${LinkCreator.getStatusWebLink(status)}")
+                        composeIntent.putExtra(EXTRA_ACCOUNT_KEY, accountKey)
+                        composeIntent.putExtra(EXTRA_SELECTION, 0)
+                        fragment.startActivity(composeIntent)
+                    } else fragment.executeAfterFragmentResumed {
+                        RetweetQuoteDialogFragment.show(it.childFragmentManager, accountKey,
+                                status.id, status)
+                    }
+                }
+            }
+        }
+
+
+        fun handleKeyboardShortcutAction(fragment: BaseFragment, action: String,
+                status: ParcelableStatus, position: Int): Boolean {
+            when (action) {
+                ACTION_STATUS_REPLY -> {
+                    val intent = Intent(INTENT_ACTION_REPLY)
+                    intent.putExtra(EXTRA_STATUS, status)
+                    fragment.startActivity(intent)
+                    return true
+                }
+                ACTION_STATUS_RETWEET -> {
+                    fragment.executeAfterFragmentResumed {
+                        RetweetQuoteDialogFragment.show(it.childFragmentManager,
+                                status.account_key, status.id, status)
+                    }
+                    return true
+                }
+                ACTION_STATUS_FAVORITE -> {
+                    if (fragment.preferences[favoriteConfirmationKey]) {
+                        fragment.executeAfterFragmentResumed {
+                            FavoriteConfirmDialogFragment.show(it.childFragmentManager,
+                                    status.account_key, status.id, status)
+                        }
+                    } else if (status.is_favorite) {
+                        fragment.twitterWrapper.destroyFavoriteAsync(status.account_key, status.id)
+                    } else {
+                        val holder = fragment.recyclerView.findViewHolderForLayoutPosition(position) as StatusViewHolder
+                        holder.playLikeAnimation(DefaultOnLikedListener(fragment.twitterWrapper, status))
+                    }
+                    return true
+                }
+            }
+            return false
+        }
 
         fun createStatusesListItemDecoration(context: Context, recyclerView: RecyclerView,
                 adapter: IContentAdapter): RecyclerView.ItemDecoration {
@@ -394,5 +682,22 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
             itemDecoration.setDecorationEndOffset(1)
             return itemDecoration
         }
+
+        fun selectAccountIntent(context: Context, status: ParcelableStatus, itemId: Long,
+                sameHostOnly: Boolean = true): Intent {
+            val intent = Intent(context, AccountSelectorActivity::class.java)
+            intent.putExtra(EXTRA_SELECT_ONLY_ITEM_AUTOMATICALLY, true)
+            if (sameHostOnly) {
+                intent.putExtra(EXTRA_ACCOUNT_HOST, status.account_key.host)
+            }
+            intent.putExtra(EXTRA_SINGLE_SELECTION, true)
+            intent.putExtra(EXTRA_EXTRAS, Bundle {
+                this[EXTRA_STATUS] = status
+                this[EXTRA_ID] = itemId
+            })
+            return intent
+        }
+
+
     }
 }

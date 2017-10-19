@@ -62,7 +62,6 @@ import org.mariotaku.twidere.service.StreamingService
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.concurrent.ConstantFuture
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
-import org.mariotaku.twidere.util.dagger.ApplicationModule
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.emoji.EmojioneTranslator
 import org.mariotaku.twidere.util.kovenant.startKovenant
@@ -124,9 +123,6 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
         TwidereSQLiteOpenHelper(this, Constants.DATABASES_NAME, Constants.DATABASES_VERSION)
     }
 
-    val applicationModule: ApplicationModule by lazy {
-        ApplicationModule(this)
-    }
 
     private val sharedPreferences: SharedPreferences by lazy {
         val prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
@@ -154,7 +150,6 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
         NotificationChannelsManager.initialize(this)
 
         updateEasterEggIcon()
-
         GeneralComponent.get(this).inject(this)
 
         autoRefreshController.appStarted()
@@ -347,4 +342,5 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
             return context.applicationContext as TwidereApplication
         }
     }
+
 }

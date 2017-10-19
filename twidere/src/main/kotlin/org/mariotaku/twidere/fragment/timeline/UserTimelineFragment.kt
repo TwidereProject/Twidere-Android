@@ -19,24 +19,28 @@
 
 package org.mariotaku.twidere.fragment.timeline
 
-import android.arch.paging.NullPaddedList
-import android.arch.paging.rawList
+import android.app.Dialog
 import android.net.Uri
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
+import org.mariotaku.kpreferences.set
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.FilterScope
-import org.mariotaku.twidere.constant.IntentConstants
+import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.userTimelineFilterKey
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.data.fetcher.UserTimelineFetcher
+import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.linkHandlerTitle
+import org.mariotaku.twidere.extension.onShow
+import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.refresh.UserRelatedContentRefreshParam
 import org.mariotaku.twidere.model.timeline.TimelineFilter
+import org.mariotaku.twidere.model.timeline.UserTimelineFilter
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.statuses.GetUserTimelineTask
 
@@ -54,8 +58,8 @@ class UserTimelineFragment : AbsTimelineFragment() {
     }
 
     override fun getStatuses(param: ContentRefreshParam): Boolean {
-        val userKey = arguments.getParcelable<UserKey>(IntentConstants.EXTRA_USER_KEY) ?: return false
-        val userScreenName = arguments.getString(IntentConstants.EXTRA_SCREEN_NAME) ?: return false
+        val userKey = arguments.getParcelable<UserKey>(EXTRA_USER_KEY) ?: return false
+        val userScreenName = arguments.getString(EXTRA_SCREEN_NAME) ?: return false
         val task = GetUserTimelineTask(context)
         task.params = UserRelatedContentRefreshParam(userKey, userScreenName, param)
         TaskStarter.execute(task)
@@ -63,19 +67,50 @@ class UserTimelineFragment : AbsTimelineFragment() {
     }
 
     override fun onCreateStatusesFetcher(): StatusesFetcher {
-        return UserTimelineFetcher(arguments.getParcelable(IntentConstants.EXTRA_USER_KEY),
-                arguments.getString(IntentConstants.EXTRA_SCREEN_NAME))
+        return UserTimelineFetcher(arguments.getParcelable(EXTRA_USER_KEY),
+                arguments.getString(EXTRA_SCREEN_NAME), arguments.getString(EXTRA_PROFILE_URL))
     }
 
-    override fun onFavoriteTaskEvent(event: FavoriteTaskEvent) {
-        if (!event.isSucceeded) return
-        val statuses = adapter.statuses as? NullPaddedList ?: return
-        // FIXME: Dirty hack, may break in future versions
-        if (statuses.rawList.removeAll { it != null && it.id == event.statusId }) {
-            adapter.notifyDataSetChanged()
+    override fun onTimelineFilterClick() {
+        val df = UserTimelineFilterDialogFragment()
+        df.setTargetFragment(this, REQUEST_SET_TIMELINE_FILTER)
+        df.show(fragmentManager, "set_timeline_filter")
+    }
+
+    class UserTimelineFilterDialogFragment : BaseDialogFragment() {
+
+        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+            val builder = AlertDialog.Builder(context)
+            val values = resources.getStringArray(R.array.values_user_timeline_filter)
+            val checkedItems = BooleanArray(values.size) {
+                val filter = preferences[userTimelineFilterKey]
+                when (values[it]) {
+                    "replies" -> filter.isIncludeReplies
+                    "retweets" -> filter.isIncludeRetweets
+                    else -> false
+                }
+            }
+            builder.setTitle(R.string.title_user_timeline_filter)
+            builder.setMultiChoiceItems(R.array.entries_user_timeline_filter, checkedItems, null)
+            builder.setNegativeButton(android.R.string.cancel, null)
+            builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
+                dialog as AlertDialog
+                val listView = dialog.listView
+                val filter = UserTimelineFilter().apply {
+                    isIncludeRetweets = listView.isItemChecked(values.indexOf("retweets"))
+                    isIncludeReplies = listView.isItemChecked(values.indexOf("replies"))
+                }
+                preferences.edit().apply {
+                    this[userTimelineFilterKey] = filter
+                }.apply()
+                (targetFragment as UserTimelineFragment).reloadAll()
+            }
+            val dialog = builder.create()
+            dialog.onShow { it.applyTheme() }
+            return dialog
         }
-    }
 
+    }
 
     companion object {
         const val EXTRA_ENABLE_TIMELINE_FILTER = "enable_timeline_filter"

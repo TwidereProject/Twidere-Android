@@ -122,7 +122,7 @@ class ParcelableStatusesAdapter(
 
     private var pagedStatusesHelper = PagedListAdapterHelper<ParcelableStatus>(this, object : DiffCallback<ParcelableStatus>() {
         override fun areContentsTheSame(oldItem: ParcelableStatus, newItem: ParcelableStatus): Boolean {
-            return oldItem === newItem
+            return oldItem == newItem
         }
 
         override fun areItemsTheSame(oldItem: ParcelableStatus, newItem: ParcelableStatus): Boolean {

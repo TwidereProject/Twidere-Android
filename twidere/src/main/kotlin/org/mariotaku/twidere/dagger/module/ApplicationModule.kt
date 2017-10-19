@@ -1,7 +1,7 @@
 /*
- *                 Twidere - Twitter client for Android
+ *             Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,8 +17,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util.dagger
+package org.mariotaku.twidere.dagger.module
 
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.location.LocationManager
@@ -46,7 +47,6 @@ import org.mariotaku.mediaviewer.library.FileCache
 import org.mariotaku.mediaviewer.library.MediaDownloader
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.Constants
-import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_CACHE_SIZE_LIMIT
 import org.mariotaku.twidere.constant.autoRefreshCompatibilityModeKey
 import org.mariotaku.twidere.extension.model.load
@@ -54,14 +54,11 @@ import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.cache.DiskLRUFileCache
 import org.mariotaku.twidere.util.cache.JsonCache
-import org.mariotaku.twidere.util.gifshare.GifShareProvider
 import org.mariotaku.twidere.util.media.MediaPreloader
 import org.mariotaku.twidere.util.media.ThumborWrapper
 import org.mariotaku.twidere.util.media.TwidereMediaDownloader
 import org.mariotaku.twidere.util.net.TwidereDns
 import org.mariotaku.twidere.util.notification.ContentNotificationManager
-import org.mariotaku.twidere.util.premium.ExtraFeaturesService
-import org.mariotaku.twidere.util.promotion.PromotionService
 import org.mariotaku.twidere.util.refresh.AutoRefreshController
 import org.mariotaku.twidere.util.refresh.JobSchedulerAutoRefreshController
 import org.mariotaku.twidere.util.refresh.LegacyAutoRefreshController
@@ -70,11 +67,8 @@ import org.mariotaku.twidere.util.sync.*
 import java.io.File
 import javax.inject.Singleton
 
-/**
- * Created by mariotaku on 15/10/5.
- */
-@Module
-class ApplicationModule(private val context: Context) {
+@Module()
+class ApplicationModule(private val application: Application) {
 
     init {
         if (Thread.currentThread() !== Looper.getMainLooper().thread) {
@@ -85,25 +79,25 @@ class ApplicationModule(private val context: Context) {
     @Provides
     @Singleton
     fun keyboardShortcutsHandler(): KeyboardShortcutsHandler {
-        return KeyboardShortcutsHandler(context)
+        return KeyboardShortcutsHandler(application)
     }
 
     @Provides
     @Singleton
     fun externalThemeManager(preferences: SharedPreferences): ExternalThemeManager {
-        return ExternalThemeManager(context, preferences)
+        return ExternalThemeManager(application, preferences)
     }
 
     @Provides
     @Singleton
     fun notificationManagerWrapper(): NotificationManagerWrapper {
-        return NotificationManagerWrapper(context)
+        return NotificationManagerWrapper(application)
     }
 
     @Provides
     @Singleton
     fun sharedPreferences(): SharedPreferences {
-        return context.getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+        return application.getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
     }
 
     @Provides
@@ -115,13 +109,13 @@ class ApplicationModule(private val context: Context) {
     @Provides
     @Singleton
     fun permissionsManager(): PermissionsManager {
-        return PermissionsManager(context)
+        return PermissionsManager(application)
     }
 
     @Provides
     @Singleton
     fun userColorNameManager(): UserColorNameManager {
-        return UserColorNameManager(context)
+        return UserColorNameManager(application)
     }
 
     @Provides
@@ -160,13 +154,13 @@ class ApplicationModule(private val context: Context) {
     @Singleton
     fun asyncTwitterWrapper(bus: Bus, preferences: SharedPreferences,
             notificationManagerWrapper: NotificationManagerWrapper): AsyncTwitterWrapper {
-        return AsyncTwitterWrapper(context, bus, preferences, notificationManagerWrapper)
+        return AsyncTwitterWrapper(application, bus, preferences, notificationManagerWrapper)
     }
 
     @Provides
     @Singleton
     fun readStateManager(): ReadStateManager {
-        return ReadStateManager(context)
+        return ReadStateManager(application)
     }
 
     @Provides
@@ -174,15 +168,15 @@ class ApplicationModule(private val context: Context) {
     fun contentNotificationManager(activityTracker: ActivityTracker, userColorNameManager: UserColorNameManager,
             notificationManagerWrapper: NotificationManagerWrapper,
             preferences: SharedPreferences): ContentNotificationManager {
-        return ContentNotificationManager(context, activityTracker, userColorNameManager, notificationManagerWrapper, preferences)
+        return ContentNotificationManager(application, activityTracker, userColorNameManager, notificationManagerWrapper, preferences)
     }
 
     @Provides
     @Singleton
     fun mediaLoaderWrapper(preferences: SharedPreferences): MediaPreloader {
-        val preloader = MediaPreloader(context)
+        val preloader = MediaPreloader(application)
         preloader.reloadOptions(preferences)
-        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val cm = application.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         preloader.isNetworkMetered = ConnectivityManagerCompat.isActiveNetworkMetered(cm)
         return preloader
     }
@@ -190,13 +184,13 @@ class ApplicationModule(private val context: Context) {
     @Provides
     @Singleton
     fun dns(preferences: SharedPreferences): Dns {
-        return TwidereDns(context, preferences)
+        return TwidereDns(application, preferences)
     }
 
     @Provides
     @Singleton
     fun mediaDownloader(client: RestHttpClient, thumbor: ThumborWrapper): MediaDownloader {
-        return TwidereMediaDownloader(context, client, thumbor)
+        return TwidereMediaDownloader(application, client, thumbor)
     }
 
     @Provides
@@ -214,7 +208,7 @@ class ApplicationModule(private val context: Context) {
     @Provides
     @Singleton
     fun errorInfoStore(): ErrorInfoStore {
-        return ErrorInfoStore(context)
+        return ErrorInfoStore(application)
     }
 
     @Provides
@@ -234,31 +228,31 @@ class ApplicationModule(private val context: Context) {
     @Singleton
     fun autoRefreshController(kPreferences: KPreferences): AutoRefreshController {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !kPreferences[autoRefreshCompatibilityModeKey]) {
-            return JobSchedulerAutoRefreshController(context, kPreferences)
+            return JobSchedulerAutoRefreshController(application, kPreferences)
         }
-        return LegacyAutoRefreshController(context, kPreferences)
+        return LegacyAutoRefreshController(application, kPreferences)
     }
 
     @Provides
     @Singleton
     fun syncController(): SyncController {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            return JobSchedulerSyncController(context)
+            return JobSchedulerSyncController(application)
         }
-        return LegacySyncController(context)
+        return LegacySyncController(application)
     }
 
     @Provides
     @Singleton
     fun syncPreferences(): SyncPreferences {
-        return SyncPreferences(context)
+        return SyncPreferences(application)
     }
 
     @Provides
     @Singleton
     fun taskCreator(preferences: SharedPreferences, activityTracker: ActivityTracker,
             bus: Bus): TaskServiceRunner {
-        return TaskServiceRunner(context, preferences, activityTracker, bus)
+        return TaskServiceRunner(application, preferences, activityTracker, bus)
     }
 
     @Provides
@@ -271,24 +265,18 @@ class ApplicationModule(private val context: Context) {
 
     @Provides
     @Singleton
-    fun extraFeaturesService(): ExtraFeaturesService {
-        return ExtraFeaturesService.newInstance(context)
-    }
-
-    @Provides
-    @Singleton
     fun etagCache(): ETagCache {
-        return ETagCache(context)
+        return ETagCache(application)
     }
 
     @Provides
     fun locationManager(): LocationManager {
-        return context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return application.getSystemService(Context.LOCATION_SERVICE) as LocationManager
     }
 
     @Provides
     fun connectivityManager(): ConnectivityManager {
-        return context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        return application.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     }
 
     @Provides
@@ -307,7 +295,7 @@ class ApplicationModule(private val context: Context) {
         val conf = HttpClientFactory.HttpClientConfiguration(preferences)
         val builder = OkHttpClient.Builder()
         HttpClientFactory.initOkHttpClient(conf, builder, dns, connectionPool, cache)
-        val userAgent = UserAgentUtils.getDefaultUserAgentStringSafe(context)
+        val userAgent = UserAgentUtils.getDefaultUserAgentStringSafe(application)
         return OkHttpDataSourceFactory(builder.build(), userAgent, null)
     }
 
@@ -345,12 +333,6 @@ class ApplicationModule(private val context: Context) {
 
     @Provides
     @Singleton
-    fun gifShareProviderFactory(): GifShareProvider.Factory {
-        return GifShareProvider.newFactory()
-    }
-
-    @Provides
-    @Singleton
     fun timelineSyncManagerFactory(): TimelineSyncManager.Factory {
         return TimelineSyncManager.newFactory()
     }
@@ -358,29 +340,15 @@ class ApplicationModule(private val context: Context) {
     @Provides
     @Singleton
     fun mastodonApplicationRegistry(): MastodonApplicationRegistry {
-        return MastodonApplicationRegistry(context)
-    }
-
-    @Provides
-    @Singleton
-    fun promotionService(preferences: SharedPreferences): PromotionService {
-        return PromotionService.newInstance(context, preferences)
+        return MastodonApplicationRegistry(application)
     }
 
     private fun getCacheDir(dirName: String, sizeInBytes: Long): File {
-        return Utils.getExternalCacheDir(context, dirName, sizeInBytes) ?:
-                Utils.getInternalCacheDir(context, dirName)
+        return Utils.getExternalCacheDir(application, dirName, sizeInBytes) ?:
+                Utils.getInternalCacheDir(application, dirName)
     }
 
-    companion object {
+    companion object : SingletonHolder<ApplicationModule, Application>(::ApplicationModule)
 
-        fun get(context: Context): ApplicationModule {
-            val appContext = context.applicationContext
-            if (appContext is TwidereApplication) {
-                return appContext.applicationModule
-            }
-            return ApplicationModule(appContext)
-        }
-    }
 }
 

@@ -1,5 +1,6 @@
-package org.mariotaku.twidere.fragment
+package org.mariotaku.twidere.fragment.preference
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
@@ -12,9 +13,6 @@ import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import javax.inject.Inject
 
-/**
- * Created by mariotaku on 16/3/15.
- */
 abstract class ThemedPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat() {
 
     @Inject
@@ -25,6 +23,7 @@ abstract class ThemedPreferenceDialogFragmentCompat : PreferenceDialogFragmentCo
         GeneralComponent.get(context).inject(this)
     }
 
+    @SuppressLint("RestrictedApi")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val context = context
         val preference = preference

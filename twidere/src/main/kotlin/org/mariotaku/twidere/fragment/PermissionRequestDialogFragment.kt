@@ -12,10 +12,7 @@ import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.onShow
 
-/**
- * Created by mariotaku on 2016/12/13.
- */
-class PermissionRequestDialog : BaseDialogFragment() {
+class PermissionRequestDialogFragment : BaseDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(context)
@@ -42,8 +39,8 @@ class PermissionRequestDialog : BaseDialogFragment() {
     companion object {
 
         fun show(fragmentManager: FragmentManager, message: String, permissions: Array<String>,
-                requestCode: Int): PermissionRequestDialog {
-            val df = PermissionRequestDialog()
+                requestCode: Int): PermissionRequestDialogFragment {
+            val df = PermissionRequestDialogFragment()
             df.arguments = Bundle {
                 this[EXTRA_MESSAGE] = message
                 this[EXTRA_PERMISSIONS] = permissions

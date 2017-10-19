@@ -79,10 +79,9 @@ import org.mariotaku.twidere.extension.model.media_type
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.model.originalId
 import org.mariotaku.twidere.extension.view.calculateSpaceItemHeight
-import org.mariotaku.twidere.fragment.AbsStatusesFragment
-import org.mariotaku.twidere.fragment.AbsStatusesFragment.Companion.handleActionClick
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BaseFragment
+import org.mariotaku.twidere.fragment.timeline.AbsTimelineFragment
 import org.mariotaku.twidere.loader.ParcelableStatusLoader
 import org.mariotaku.twidere.loader.statuses.ConversationLoader
 import org.mariotaku.twidere.model.*
@@ -218,9 +217,9 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     IntentUtils.openStatus(activity, accountKey, status.id)
                 }
             }
-            AbsStatusesFragment.REQUEST_FAVORITE_SELECT_ACCOUNT,
-            AbsStatusesFragment.REQUEST_RETWEET_SELECT_ACCOUNT -> {
-                AbsStatusesFragment.handleActionActivityResult(this, requestCode, resultCode, data)
+            AbsTimelineFragment.REQUEST_FAVORITE_SELECT_ACCOUNT,
+            AbsTimelineFragment.REQUEST_RETWEET_SELECT_ACCOUNT -> {
+                AbsTimelineFragment.handleActionActivityResult(this, requestCode, resultCode, data)
             }
         }
     }
@@ -279,13 +278,13 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     override fun onItemActionClick(holder: ViewHolder, id: Int, position: Int) {
         val status = adapter.getStatus(position)
-        handleActionClick(this@StatusFragment, id, status, holder as StatusViewHolder)
+        AbsTimelineFragment.handleActionClick(this@StatusFragment, id, status, holder as StatusViewHolder)
     }
 
 
     override fun onItemActionLongClick(holder: RecyclerView.ViewHolder, id: Int, position: Int): Boolean {
         val status = adapter.getStatus(position)
-        return AbsStatusesFragment.handleActionLongClick(this, status, adapter.getItemId(position), id)
+        return AbsTimelineFragment.handleActionLongClick(this, status, adapter.getItemId(position), id)
     }
 
     override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
@@ -341,7 +340,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         if (position == -1) return false
         val status = adapter.getStatus(position)
         val action = handler.getKeyAction(CONTEXT_TAG_STATUS, keyCode, event, metaState) ?: return false
-        return AbsStatusesFragment.handleKeyboardShortcutAction(this, action, status, position)
+        return AbsTimelineFragment.handleKeyboardShortcutAction(this, action, status, position)
     }
 
     override fun isKeyboardShortcutHandled(handler: KeyboardShortcutsHandler, keyCode: Int, event: KeyEvent, metaState: Int): Boolean {

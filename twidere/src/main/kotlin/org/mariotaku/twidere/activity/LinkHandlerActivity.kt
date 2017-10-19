@@ -73,8 +73,6 @@ import org.mariotaku.twidere.fragment.message.MessagesEntriesFragment
 import org.mariotaku.twidere.fragment.search.MastodonSearchFragment
 import org.mariotaku.twidere.fragment.search.SearchFragment
 import org.mariotaku.twidere.fragment.status.StatusFragment
-import org.mariotaku.twidere.fragment.statuses.UserMediaTimelineFragment
-import org.mariotaku.twidere.fragment.statuses.UserMentionsFragment
 import org.mariotaku.twidere.fragment.timeline.*
 import org.mariotaku.twidere.fragment.userlist.ListsFragment
 import org.mariotaku.twidere.fragment.userlist.UserListFragment
@@ -467,7 +465,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
                     args.putDouble(EXTRA_LATITUDE, lat)
                     args.putDouble(EXTRA_LONGITUDE, lng)
                 }
-                fragment = MapFragmentFactory.instance.createMapFragment(context)
+                fragment = mapFragmentFactory.createMapFragment(context)
             }
             LINK_ID_STATUS -> {
                 fragment = StatusFragment()
@@ -698,7 +696,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
                 fragment = SavedSearchesListFragment()
             }
             LINK_ID_USER_MENTIONS -> {
-                fragment = UserMentionsFragment()
+                fragment = UserMentionsTimelineFragment()
                 val paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME)
                 if (!args.containsKey(EXTRA_SCREEN_NAME) && !TextUtils.isEmpty(paramScreenName)) {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName)

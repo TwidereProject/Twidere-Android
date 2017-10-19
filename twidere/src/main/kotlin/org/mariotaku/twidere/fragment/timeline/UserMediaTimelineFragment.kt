@@ -22,52 +22,40 @@ package org.mariotaku.twidere.fragment.timeline
 import android.net.Uri
 import android.os.Bundle
 import org.mariotaku.abstask.library.TaskStarter
-import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.FilterScope
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_SCREEN_NAME
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER_KEY
-import org.mariotaku.twidere.constant.iWantMyStarsBackKey
-import org.mariotaku.twidere.data.fetcher.UserFavoritesFetcher
-import org.mariotaku.twidere.extension.adapter.removeStatuses
+import org.mariotaku.twidere.constant.IntentConstants
+import org.mariotaku.twidere.data.fetcher.StatusesFetcher
+import org.mariotaku.twidere.data.fetcher.UserMediaTimelineFetcher
 import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.refresh.UserRelatedContentRefreshParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
-import org.mariotaku.twidere.task.statuses.GetUserFavoritesTask
+import org.mariotaku.twidere.task.statuses.GetUserMediaTimelineTask
 
-class FavoritesTimelineFragment : AbsTimelineFragment() {
-    override val filterScope: Int = FilterScope.HOME
+class UserMediaTimelineFragment : AbsTimelineFragment() {
+    override val filterScope: Int = FilterScope.USER_TIMELINE
 
-    override val contentUri: Uri = Statuses.CONTENT_URI
+    override val contentUri: Uri = Statuses.UserTimeline.CONTENT_URI
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if (preferences[iWantMyStarsBackKey]) {
-            linkHandlerTitle = getString(R.string.title_favorites)
-        } else {
-            linkHandlerTitle = getString(R.string.title_likes)
-        }
+        linkHandlerTitle = getString(R.string.title_media_timeline)
     }
 
     override fun getStatuses(param: ContentRefreshParam): Boolean {
-        val userKey = arguments.getParcelable<UserKey>(EXTRA_USER_KEY) ?: return false
-        val userScreenName = arguments.getString(EXTRA_SCREEN_NAME) ?: return false
-        val task = GetUserFavoritesTask(context)
+        val userKey = arguments.getParcelable<UserKey>(IntentConstants.EXTRA_USER_KEY) ?: return false
+        val userScreenName = arguments.getString(IntentConstants.EXTRA_SCREEN_NAME) ?: return false
+        val task = GetUserMediaTimelineTask(context)
         task.params = UserRelatedContentRefreshParam(userKey, userScreenName, param)
         TaskStarter.execute(task)
         return true
     }
 
-    override fun onCreateStatusesFetcher(): UserFavoritesFetcher {
-        return UserFavoritesFetcher(arguments.getParcelable(EXTRA_USER_KEY),
-                arguments.getString(EXTRA_SCREEN_NAME))
+    override fun onCreateStatusesFetcher(): StatusesFetcher {
+        return UserMediaTimelineFetcher(arguments.getParcelable(IntentConstants.EXTRA_USER_KEY),
+                arguments.getString(IntentConstants.EXTRA_SCREEN_NAME))
     }
 
-    override fun onFavoriteTaskEvent(event: FavoriteTaskEvent) {
-        if (!isStandalone) return
-        if (event.action != FavoriteTaskEvent.Action.DESTROY && !event.isSucceeded) return
-        adapter.removeStatuses { it != null && it.id == event.statusId }
-    }
 }

@@ -77,7 +77,7 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     @Inject
     lateinit var timelineSyncManagerFactory: TimelineSyncManager.Factory
     @Inject
-    lateinit var gifShareProviderFactory: GifShareProvider.Factory
+    lateinit var gifShareProvider: GifShareProvider
     @Inject
     lateinit var restHttpClient: RestHttpClient
     @Inject
@@ -98,8 +98,6 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     protected val timelineSyncManager: TimelineSyncManager?
         get() = timelineSyncManagerFactory.get()
 
-    protected val gifShareProvider: GifShareProvider?
-        get() = gifShareProviderFactory.newInstance(context)
 
     private val actionHelper = IBaseFragment.ActionHelper<BaseFragment>()
 
@@ -130,7 +128,6 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
 
     override fun onDestroy() {
         requestManager.onDestroy()
-        extraFeaturesService.release()
         super.onDestroy()
         DebugModeUtils.watchReferenceLeak(this)
     }

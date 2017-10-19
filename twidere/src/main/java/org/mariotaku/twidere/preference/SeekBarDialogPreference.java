@@ -34,7 +34,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.fragment.ThemedPreferenceDialogFragmentCompat;
+import org.mariotaku.twidere.fragment.preference.ThemedPreferenceDialogFragmentCompat;
 import org.mariotaku.twidere.preference.iface.IDialogPreference;
 
 /**

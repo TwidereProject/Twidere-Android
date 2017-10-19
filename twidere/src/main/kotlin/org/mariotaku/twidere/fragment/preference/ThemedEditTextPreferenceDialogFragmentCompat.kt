@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License
  */
-package org.mariotaku.twidere.fragment
+package org.mariotaku.twidere.fragment.preference
 
 import android.content.Context
 import android.os.Bundle

@@ -17,34 +17,37 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.fragment.statuses
+package org.mariotaku.twidere.fragment.timeline
 
-import android.content.Context
+import android.net.Uri
 import android.os.Bundle
-import android.support.v4.content.Loader
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.annotation.FilterScope
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_SCREEN_NAME
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER_KEY
+import org.mariotaku.twidere.data.fetcher.StatusesFetcher
+import org.mariotaku.twidere.data.fetcher.UserMentionsTimelineFetcher
 import org.mariotaku.twidere.extension.linkHandlerTitle
-import org.mariotaku.twidere.loader.statuses.UserMentionsLoader
-import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 
-class UserMentionsFragment : StatusesSearchFragment() {
+class UserMentionsTimelineFragment : AbsTimelineFragment() {
+    override val filterScope: Int
+        get() = FilterScope.SEARCH_RESULTS
+    override val contentUri: Uri
+        get() = TODO("not implemented")
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         linkHandlerTitle = getString(R.string.user_mentions)
     }
 
-    override fun onCreateStatusesLoader(context: Context,
-            args: Bundle,
-            fromUser: Boolean): Loader<List<ParcelableStatus>?> {
-        val screenName = args.getString(EXTRA_SCREEN_NAME)
-        val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
-        val makeGap = args.getBoolean(EXTRA_MAKE_GAP, true)
-        val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-        return UserMentionsLoader(activity, accountKey, screenName, adapterData,
-                fromUser, makeGap, false, loadingMore)
+    override fun getStatuses(param: ContentRefreshParam): Boolean {
+        TODO("not implemented")
+    }
+
+    override fun onCreateStatusesFetcher(): StatusesFetcher {
+        return UserMentionsTimelineFetcher(arguments.getParcelable(EXTRA_USER_KEY),
+                arguments.getString(EXTRA_SCREEN_NAME))
     }
 
 }

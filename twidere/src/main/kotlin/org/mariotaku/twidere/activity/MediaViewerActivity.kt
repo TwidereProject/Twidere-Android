@@ -55,7 +55,7 @@ import org.mariotaku.twidere.extension.addSystemUiVisibility
 import org.mariotaku.twidere.extension.dismissProgressDialog
 import org.mariotaku.twidere.extension.removeSystemUiVisibility
 import org.mariotaku.twidere.extension.showProgressDialog
-import org.mariotaku.twidere.fragment.PermissionRequestDialog
+import org.mariotaku.twidere.fragment.PermissionRequestDialogFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.fragment.media.*
@@ -76,7 +76,7 @@ import javax.inject.Inject
 import android.Manifest.permission as AndroidPermissions
 
 class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeCloseContainer.Listener,
-        PermissionRequestDialog.PermissionRequestCancelCallback {
+        PermissionRequestDialogFragment.PermissionRequestCancelCallback {
     @Inject
     internal lateinit var mediaFileCache: FileCache
     @Inject
@@ -472,7 +472,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
             } else {
                 permissions = arrayOf(AndroidPermissions.WRITE_EXTERNAL_STORAGE)
             }
-            PermissionRequestDialog.show(supportFragmentManager, getString(R.string.message_permission_request_save_media),
+            PermissionRequestDialogFragment.show(supportFragmentManager, getString(R.string.message_permission_request_save_media),
                     permissions, REQUEST_PERMISSION_SAVE_MEDIA)
         }
     }
@@ -487,7 +487,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
             } else {
                 arrayOf(AndroidPermissions.WRITE_EXTERNAL_STORAGE)
             }
-            PermissionRequestDialog.show(supportFragmentManager, getString(R.string.message_permission_request_share_media),
+            PermissionRequestDialogFragment.show(supportFragmentManager, getString(R.string.message_permission_request_share_media),
                     permissions, REQUEST_PERMISSION_SHARE_MEDIA)
         }
     }

@@ -23,7 +23,7 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ITEMS
 import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.model.prefixedHashtag
-import org.mariotaku.twidere.fragment.AbsStatusesFragment.Companion.handleActionClick
+import org.mariotaku.twidere.fragment.timeline.AbsTimelineFragment
 import org.mariotaku.twidere.model.ParcelableHashtag
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.UserKey
@@ -54,9 +54,9 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
-            AbsStatusesFragment.REQUEST_FAVORITE_SELECT_ACCOUNT,
-            AbsStatusesFragment.REQUEST_RETWEET_SELECT_ACCOUNT -> {
-                AbsStatusesFragment.handleActionActivityResult(this, requestCode, resultCode, data)
+            AbsTimelineFragment.REQUEST_FAVORITE_SELECT_ACCOUNT,
+            AbsTimelineFragment.REQUEST_RETWEET_SELECT_ACCOUNT -> {
+                AbsTimelineFragment.handleActionActivityResult(this, requestCode, resultCode, data)
             }
         }
     }
@@ -77,12 +77,12 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
 
             override fun onItemActionClick(holder: RecyclerView.ViewHolder, id: Int, position: Int) {
                 val status = dummyItemAdapter.getStatus(position)
-                handleActionClick(this@ItemsListFragment, id, status, holder as StatusViewHolder)
+                AbsTimelineFragment.handleActionClick(this@ItemsListFragment, id, status, holder as StatusViewHolder)
             }
 
             override fun onItemActionLongClick(holder: RecyclerView.ViewHolder, id: Int, position: Int): Boolean {
                 val status = dummyItemAdapter.getStatus(position)
-                return AbsStatusesFragment.handleActionLongClick(this@ItemsListFragment, status,
+                return AbsTimelineFragment.handleActionLongClick(this@ItemsListFragment, status,
                         adapter.getItemId(position), id)
             }
 

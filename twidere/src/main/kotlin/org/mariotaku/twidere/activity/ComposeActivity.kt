@@ -80,7 +80,7 @@ import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.text.twitter.ReplyTextAndMentions
 import org.mariotaku.twidere.extension.text.twitter.extractReplyTextAndMentions
 import org.mariotaku.twidere.fragment.*
-import org.mariotaku.twidere.fragment.PermissionRequestDialog.PermissionRequestCancelCallback
+import org.mariotaku.twidere.fragment.PermissionRequestDialogFragment.PermissionRequestCancelCallback
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.model.draft.UpdateStatusActionExtras
@@ -1445,7 +1445,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
         } else {
             val permissions = arrayOf(AndroidPermission.ACCESS_COARSE_LOCATION, AndroidPermission.ACCESS_FINE_LOCATION)
-            PermissionRequestDialog.show(supportFragmentManager, getString(R.string.message_permission_request_compose_location),
+            PermissionRequestDialogFragment.show(supportFragmentManager, getString(R.string.message_permission_request_compose_location),
                     permissions, REQUEST_ATTACH_LOCATION_PERMISSION)
         }
     }

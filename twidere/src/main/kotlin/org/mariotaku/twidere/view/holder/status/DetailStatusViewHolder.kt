@@ -55,8 +55,8 @@ import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.*
-import org.mariotaku.twidere.fragment.AbsStatusesFragment
 import org.mariotaku.twidere.fragment.status.StatusFragment
+import org.mariotaku.twidere.fragment.timeline.AbsTimelineFragment
 import org.mariotaku.twidere.menu.FavoriteItemProvider
 import org.mariotaku.twidere.menu.RetweetItemProvider
 import org.mariotaku.twidere.model.*
@@ -452,7 +452,7 @@ class DetailStatusViewHolder(
             favoriteProvider.longClickListener = {
                 val status = adapter.getStatus(layoutPosition)
                 val itemId = adapter.getItemId(layoutPosition)
-                AbsStatusesFragment.handleActionLongClick(fragment, status, itemId, R.id.favorite)
+                AbsTimelineFragment.handleActionLongClick(fragment, status, itemId, R.id.favorite)
             }
             favoriteProvider.init(itemView.menuBar, favoriteItem)
         }
@@ -463,7 +463,7 @@ class DetailStatusViewHolder(
             retweetProvider.longClickListener = {
                 val status = adapter.getStatus(layoutPosition)
                 val itemId = adapter.getItemId(layoutPosition)
-                AbsStatusesFragment.handleActionLongClick(fragment, status, itemId, R.id.retweet)
+                AbsTimelineFragment.handleActionLongClick(fragment, status, itemId, R.id.retweet)
             }
             retweetProvider.init(itemView.menuBar, retweetItem)
         }

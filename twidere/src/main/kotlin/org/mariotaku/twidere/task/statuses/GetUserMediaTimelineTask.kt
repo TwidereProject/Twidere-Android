@@ -22,14 +22,15 @@ package org.mariotaku.twidere.task.statuses
 import android.content.Context
 import android.net.Uri
 import org.mariotaku.twidere.annotation.FilterScope
-import org.mariotaku.twidere.data.fetcher.UserTimelineFetcher
+import org.mariotaku.twidere.data.fetcher.StatusesFetcher
+import org.mariotaku.twidere.data.fetcher.UserMediaTimelineFetcher
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.refresh.UserRelatedContentRefreshParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.ErrorInfoStore
 import org.mariotaku.twidere.util.sync.TimelineSyncManager
 
-class GetUserTimelineTask(context: Context) : GetStatusesTask<UserRelatedContentRefreshParam>(context) {
+class GetUserMediaTimelineTask(context: Context) : GetStatusesTask<UserRelatedContentRefreshParam>(context) {
 
     override val contentUri: Uri = Statuses.UserTimeline.CONTENT_URI
 
@@ -37,8 +38,8 @@ class GetUserTimelineTask(context: Context) : GetStatusesTask<UserRelatedContent
 
     override val errorInfoKey: String = ErrorInfoStore.KEY_USER_TIMELINE
 
-    override fun getStatusesFetcher(params: UserRelatedContentRefreshParam?): UserTimelineFetcher {
-        return UserTimelineFetcher(params?.userKey, params?.userScreenName, null)
+    override fun getStatusesFetcher(params: UserRelatedContentRefreshParam?): StatusesFetcher {
+        return UserMediaTimelineFetcher(params?.userKey, params?.userScreenName)
     }
 
     override fun syncFetchReadPosition(manager: TimelineSyncManager, accountKeys: Array<UserKey>) {

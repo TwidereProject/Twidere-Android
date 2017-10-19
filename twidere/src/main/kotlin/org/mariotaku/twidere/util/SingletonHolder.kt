@@ -17,21 +17,28 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util.promotion
+package org.mariotaku.twidere.util
 
-import android.view.ViewGroup
+open class SingletonHolder<out T, in A>(creator: (A) -> T) {
+    private var creator: ((A) -> T)? = creator
+    @Volatile private var instance: T? = null
 
-class DummyPromotionService : PromotionService() {
-    override fun appStarted() {
-        // No-op
+    fun getInstance(arg: A): T {
+        val i = instance
+        if (i != null) {
+            return i
+        }
+
+        return synchronized(this) {
+            val i2 = instance
+            if (i2 != null) {
+                i2
+            } else {
+                val created = creator!!(arg)
+                instance = created
+                creator = null
+                created
+            }
+        }
     }
-
-    override fun setupBanner(container: ViewGroup, type: BannerType, params: ViewGroup.LayoutParams?) {
-        // No-op
-    }
-
-    override fun loadBanner(container: ViewGroup, extras: BannerExtras?) {
-        // No-op
-    }
-
 }

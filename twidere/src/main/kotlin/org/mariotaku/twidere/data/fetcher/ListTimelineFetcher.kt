@@ -35,16 +35,17 @@ class ListTimelineFetcher(
         private val ownerId: String?,
         private val ownerScreenName: String?
 ) : StatusesFetcher {
+
     override fun forTwitter(account: AccountDetails, twitter: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
         return when {
             listId != null -> {
                 twitter.getUserListStatuses(listId, paging)
             }
             slug != null && ownerId != null -> {
-                twitter.getUserListStatuses(slug, ownerId, paging)
+                twitter.getUserListStatuses(slug.replace(' ', '-'), ownerId, paging)
             }
             slug != null && ownerScreenName != null -> {
-                twitter.getUserListStatusesByScreenName(slug, ownerScreenName, paging)
+                twitter.getUserListStatusesByScreenName(slug.replace(' ', '-'), ownerScreenName, paging)
             }
             else -> {
                 throw MicroBlogException("listId or listName + ownerId/ownerScreenName needed")

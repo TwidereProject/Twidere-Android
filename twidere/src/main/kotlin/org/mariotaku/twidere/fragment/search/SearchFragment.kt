@@ -48,8 +48,8 @@ import org.mariotaku.twidere.fragment.AbsToolbarTabPagesFragment
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowInsetsCallback
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
-import org.mariotaku.twidere.fragment.statuses.MediaStatusesSearchFragment
-import org.mariotaku.twidere.fragment.statuses.StatusesSearchFragment
+import org.mariotaku.twidere.fragment.timeline.MediaSearchTimelineFragment
+import org.mariotaku.twidere.fragment.timeline.SearchTimelineFragment
 import org.mariotaku.twidere.fragment.users.SearchUsersFragment
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.analyzer.Search
@@ -170,15 +170,15 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface,
     override fun addTabs(adapter: SupportTabsAdapter) {
         when (accountType) {
             AccountType.TWITTER -> {
-                adapter.add(cls = StatusesSearchFragment::class.java, args = arguments,
+                adapter.add(cls = SearchTimelineFragment::class.java, args = arguments,
                         name = getString(R.string.search_type_statuses),
                         icon = DrawableHolder.resource(R.drawable.ic_action_twitter))
-                adapter.add(cls = MediaStatusesSearchFragment::class.java, args = arguments,
+                adapter.add(cls = MediaSearchTimelineFragment::class.java, args = arguments,
                         name = getString(R.string.search_type_media),
                         icon = DrawableHolder.resource(R.drawable.ic_action_gallery))
             }
             else -> {
-                adapter.add(cls = StatusesSearchFragment::class.java, args = arguments,
+                adapter.add(cls = SearchTimelineFragment::class.java, args = arguments,
                         name = getString(R.string.search_type_statuses),
                         icon = DrawableHolder.resource(R.drawable.ic_action_twitter))
             }

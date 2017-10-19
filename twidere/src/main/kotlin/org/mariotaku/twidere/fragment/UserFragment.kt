@@ -111,13 +111,13 @@ import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
-import org.mariotaku.twidere.fragment.AbsStatusesFragment.StatusesFragmentDelegate
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowInsetsCallback
 import org.mariotaku.twidere.fragment.iface.IToolBarSupportFragment
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
-import org.mariotaku.twidere.fragment.statuses.UserMediaTimelineFragment
+import org.mariotaku.twidere.fragment.timeline.AbsTimelineFragment
 import org.mariotaku.twidere.fragment.timeline.FavoritesTimelineFragment
+import org.mariotaku.twidere.fragment.timeline.UserMediaTimelineFragment
 import org.mariotaku.twidere.fragment.timeline.UserTimelineFragment
 import org.mariotaku.twidere.graphic.ActionBarColorDrawable
 import org.mariotaku.twidere.graphic.ActionIconDrawable
@@ -154,8 +154,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         OnSizeChangedListener, OnTouchListener, DrawerCallback, SupportFragmentCallback,
         SystemWindowInsetsCallback, RefreshScrollTopInterface, OnPageChangeListener,
         KeyboardShortcutCallback, UserColorChangedListener, UserNicknameChangedListener,
-        IToolBarSupportFragment, StatusesFragmentDelegate,
-        AbsContentRecyclerViewFragment.RefreshCompleteListener {
+        IToolBarSupportFragment, AbsContentRecyclerViewFragment.RefreshCompleteListener {
 
     override val toolbar: Toolbar
         get() = profileContentContainer.toolbar
@@ -419,8 +418,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         }
         val adapter = pagerAdapter
         for (i in 0 until adapter.count) {
-            val sf = adapter.instantiateItem(viewPager, i) as? AbsStatusesFragment
-            sf?.initLoaderIfNeeded()
+            val sf = adapter.instantiateItem(viewPager, i) as? AbsTimelineFragment
+            sf?.reloadAll()
         }
         profileImage.visibility = View.VISIBLE
         val resources = resources
@@ -1564,9 +1563,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     override val controlBarHeight: Int
         get() = 0
 
-
-    override val shouldInitLoader: Boolean
-        get() = user != null
 
     private fun updateTitleAlpha() {
         val location = IntArray(2)

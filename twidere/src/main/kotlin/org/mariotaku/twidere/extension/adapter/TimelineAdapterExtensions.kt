@@ -1,7 +1,7 @@
 /*
- * Twidere - Twitter client for Android
+ *             Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,18 +17,17 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.model.event;
+package org.mariotaku.twidere.extension.adapter
 
-import android.support.annotation.NonNull;
+import android.arch.paging.NullPaddedList
+import android.arch.paging.rawList
+import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter
+import org.mariotaku.twidere.model.ParcelableStatus
 
-import org.mariotaku.twidere.model.ParcelableStatus;
-
-public class StatusDestroyedEvent {
-
-    @NonNull
-    public final ParcelableStatus status;
-
-    public StatusDestroyedEvent(@NonNull ParcelableStatus status) {
-        this.status = status;
+fun ParcelableStatusesAdapter.removeStatuses(predicate: (ParcelableStatus?) -> Boolean) {
+    val statuses = statuses as? NullPaddedList ?: return
+    // FIXME: Dirty hack, may break in future versions
+    if (statuses.rawList.removeAll(predicate = predicate)) {
+        notifyDataSetChanged()
     }
 }

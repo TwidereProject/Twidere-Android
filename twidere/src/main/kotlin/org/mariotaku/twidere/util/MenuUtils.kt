@@ -55,11 +55,11 @@ import org.mariotaku.twidere.constant.favoriteConfirmationKey
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.model.isOfficial
-import org.mariotaku.twidere.fragment.AbsStatusesFragment
 import org.mariotaku.twidere.fragment.AddStatusFilterDialogFragment
 import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.fragment.SetUserNicknameDialogFragment
 import org.mariotaku.twidere.fragment.status.*
+import org.mariotaku.twidere.fragment.timeline.AbsTimelineFragment
 import org.mariotaku.twidere.graphic.ActionIconDrawable
 import org.mariotaku.twidere.graphic.PaddingDrawable
 import org.mariotaku.twidere.menu.FavoriteItemProvider
@@ -73,9 +73,6 @@ import org.mariotaku.twidere.task.RetweetStatusTask
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo
 import java.io.IOException
 
-/**
- * Created by mariotaku on 15/4/12.
- */
 object MenuUtils {
 
     fun addIntentToMenu(context: Context, menu: Menu, queryIntent: Intent,
@@ -273,8 +270,7 @@ object MenuUtils {
                 } else {
                     val provider = MenuItemCompat.getActionProvider(item)
                     if (provider is FavoriteItemProvider) {
-                        provider.invokeItem(item,
-                                AbsStatusesFragment.DefaultOnLikedListener(twitter, status))
+                        provider.invokeItem(item, AbsTimelineFragment.DefaultOnLikedListener(twitter, status))
                     } else {
                         twitter.createFavoriteAsync(status.account_key, status)
                     }

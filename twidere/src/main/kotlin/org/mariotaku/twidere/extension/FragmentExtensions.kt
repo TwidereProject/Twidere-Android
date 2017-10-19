@@ -23,13 +23,21 @@ import android.support.v4.app.Fragment
 import org.mariotaku.twidere.activity.LinkHandlerActivity
 
 var Fragment.linkHandlerTitle: CharSequence?
-    get() = (activity as? LinkHandlerActivity)?.title
+    get() {
+        if (parentFragment != null) return null
+        return (activity as? LinkHandlerActivity)?.title
+    }
     set(value) {
+        if (parentFragment != null) return
         (activity as? LinkHandlerActivity)?.title = value
     }
 
 var Fragment.linkHandlerSubtitle: CharSequence?
-    get() = (activity as? LinkHandlerActivity)?.subtitle
+    get() {
+        if (parentFragment != null) return null
+        return (activity as? LinkHandlerActivity)?.subtitle
+    }
     set(value) {
+        if (parentFragment != null) return
         (activity as? LinkHandlerActivity)?.subtitle = value
     }

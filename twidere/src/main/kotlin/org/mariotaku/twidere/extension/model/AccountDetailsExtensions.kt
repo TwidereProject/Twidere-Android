@@ -35,6 +35,9 @@ val AccountExtras.official: Boolean
         return false
     }
 
+val AccountDetails.official: Boolean
+    get() = extras?.official == true
+
 fun <T> AccountDetails.newMicroBlogInstance(context: Context, cls: Class<T>): T {
     return credentials.newMicroBlogInstance(context, type, cls)
 }
@@ -73,26 +76,27 @@ fun AccountDetails.getMediaSizeLimit(@MediaCategory mediaCategory: String? = nul
 /**
  * Text limit when composing a status, 0 for no limit
  */
-val AccountDetails.textLimit: Int get() {
-    if (type == null) {
+val AccountDetails.textLimit: Int
+    get() {
+        if (type == null) {
+            return Validator.MAX_TWEET_LENGTH
+        }
+        when (type) {
+            AccountType.STATUSNET -> {
+                val extras = this.extras as? StatusNetAccountExtras
+                if (extras != null) {
+                    return extras.textLimit
+                }
+            }
+            AccountType.MASTODON -> {
+                val extras = this.extras as? MastodonAccountExtras
+                if (extras != null) {
+                    return extras.statusTextLimit
+                }
+            }
+        }
         return Validator.MAX_TWEET_LENGTH
     }
-    when (type) {
-        AccountType.STATUSNET -> {
-            val extras = this.extras as? StatusNetAccountExtras
-            if (extras != null) {
-                return extras.textLimit
-            }
-        }
-        AccountType.MASTODON -> {
-            val extras = this.extras as? MastodonAccountExtras
-            if (extras != null) {
-                return extras.statusTextLimit
-            }
-        }
-    }
-    return Validator.MAX_TWEET_LENGTH
-}
 
 val Array<AccountDetails>.textLimit: Int
     get() {

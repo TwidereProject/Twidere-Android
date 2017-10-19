@@ -56,6 +56,7 @@ import org.mariotaku.twidere.constant.readFromBottomKey
 import org.mariotaku.twidere.constant.rememberPositionKey
 import org.mariotaku.twidere.extension.model.activityStatus
 import org.mariotaku.twidere.extension.model.getAccountType
+import org.mariotaku.twidere.fragment.timeline.AbsTimelineFragment
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.analyzer.Share
@@ -116,9 +117,9 @@ abstract class AbsActivitiesFragment protected constructor() :
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
-            AbsStatusesFragment.REQUEST_FAVORITE_SELECT_ACCOUNT,
-            AbsStatusesFragment.REQUEST_RETWEET_SELECT_ACCOUNT -> {
-                AbsStatusesFragment.handleActionActivityResult(this, requestCode, resultCode, data)
+            AbsTimelineFragment.REQUEST_FAVORITE_SELECT_ACCOUNT,
+            AbsTimelineFragment.REQUEST_RETWEET_SELECT_ACCOUNT -> {
+                AbsTimelineFragment.handleActionActivityResult(this, requestCode, resultCode, data)
             }
         }
     }
@@ -148,7 +149,7 @@ abstract class AbsActivitiesFragment protected constructor() :
                 action = handler.getKeyAction(CONTEXT_TAG_STATUS, keyCode, event, metaState)
             }
             if (action == null) return false
-            return AbsStatusesFragment.handleKeyboardShortcutAction(this, action, status,
+            return AbsTimelineFragment.handleKeyboardShortcutAction(this, action, status,
                     position)
         }
         return navigationHelper.handleKeyboardShortcutSingle(handler, keyCode, event, metaState)
@@ -331,12 +332,12 @@ abstract class AbsActivitiesFragment protected constructor() :
 
     override fun onStatusActionClick(holder: IStatusViewHolder, id: Int, position: Int) {
         val status = getActivityStatus(position) ?: return
-        AbsStatusesFragment.handleActionClick(this, id, status, holder as StatusViewHolder)
+        AbsTimelineFragment.handleActionClick(this, id, status, holder as StatusViewHolder)
     }
 
     override fun onStatusActionLongClick(holder: IStatusViewHolder, id: Int, position: Int): Boolean {
         val status = getActivityStatus(position) ?: return false
-        return AbsStatusesFragment.handleActionLongClick(this, status, adapter.getItemId(position), id)
+        return AbsTimelineFragment.handleActionLongClick(this, status, adapter.getItemId(position), id)
     }
 
     override fun onActivityClick(holder: ActivityTitleSummaryViewHolder, position: Int) {

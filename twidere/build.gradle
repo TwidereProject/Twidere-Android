@@ -163,7 +163,7 @@ dependencies {
     googleImplementation "com.google.android.gms:play-services-auth:${libVersions['PlayServices']}"
     googleImplementation "com.google.android.gms:play-services-ads:${libVersions['PlayServices']}"
     googleImplementation "com.google.maps.android:android-maps-utils:${libVersions['MapsUtils']}"
-    googleImplementation "com.anjlab.android.iab.v3:library:${libVersions['IABv3']}"
+    googleImplementation "com.android.billingclient:billing:${libVersions['PlayBilling']}"
     googleImplementation "com.dropbox.core:dropbox-core-sdk:${libVersions['DropboxCoreSdk']}"
     googleImplementation("com.google.apis:google-api-services-drive:${libVersions['GoogleDriveApi']}") {
         exclude group: 'org.apache.httpcomponents'
