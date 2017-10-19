@@ -19,9 +19,47 @@
 
 package org.mariotaku.twidere.dagger.module
 
+import android.app.Application
 import dagger.Module
+import dagger.Provides
+import org.mariotaku.twidere.util.MapFragmentFactory
+import org.mariotaku.twidere.util.OSMMapFragmentFactory
+import org.mariotaku.twidere.util.SingletonHolder
+import org.mariotaku.twidere.util.gifshare.GifShareProvider
+import org.mariotaku.twidere.util.gifshare.NullGifShareProvider
+import org.mariotaku.twidere.util.premium.DummyExtraFeaturesService
+import org.mariotaku.twidere.util.premium.ExtraFeaturesService
+import org.mariotaku.twidere.util.promotion.DummyPromotionService
+import org.mariotaku.twidere.util.promotion.PromotionService
+import javax.inject.Singleton
 
 @Module
-class ChannelModule {
+class ChannelModule private constructor(private val application: Application) {
 
+    @Provides
+    @Singleton
+    fun promotionService(): PromotionService {
+        return DummyPromotionService()
+    }
+
+    @Provides
+    @Singleton
+    fun mapFragmentFactory(): MapFragmentFactory {
+        return OSMMapFragmentFactory
+    }
+
+
+    @Provides
+    @Singleton
+    fun gifShareProvider(): GifShareProvider {
+        return NullGifShareProvider()
+    }
+
+    @Provides
+    @Singleton
+    fun extraFeaturesService(): ExtraFeaturesService {
+        return DummyExtraFeaturesService()
+    }
+
+    companion object : SingletonHolder<ChannelModule, Application>(::ChannelModule)
 }

@@ -1,7 +1,7 @@
 /*
- * Twidere - Twitter client for Android
+ *             Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,15 +17,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util
+package org.mariotaku.twidere.util.gifshare
 
-import android.content.Context
-import android.support.v4.app.Fragment
+import android.content.Intent
 
-import org.mariotaku.twidere.fragment.OpenStreetMapViewerFragment
+class NullGifShareProvider : GifShareProvider {
+    override fun createGifSelectorIntent(): Intent = throw UnsupportedOperationException()
 
-object OSMMapFragmentFactory : MapFragmentFactory {
-    override fun createMapFragment(context: Context): Fragment {
-        return OpenStreetMapViewerFragment()
-    }
+    override fun createSettingsIntent(): Intent? = null
+
 }
