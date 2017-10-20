@@ -126,7 +126,8 @@ class ParcelableStatusesAdapter(
         }
 
         override fun areItemsTheSame(oldItem: ParcelableStatus, newItem: ParcelableStatus): Boolean {
-            return oldItem._id == newItem._id || oldItem == newItem
+            if (oldItem._id > 0 && newItem._id > 0) return oldItem._id == newItem._id
+            return oldItem == newItem
         }
 
     })
@@ -163,23 +164,6 @@ class ParcelableStatusesAdapter(
         handler.setAdapter(this)
         isShowInReplyTo = true
         setHasStableIds(true)
-        registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-            override fun onChanged() {
-                updateItemCount()
-            }
-
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                updateItemCount()
-            }
-
-            override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
-                updateItemCount()
-            }
-
-            override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
-                updateItemCount()
-            }
-        })
     }
 
     override fun isGapItem(position: Int): Boolean {
@@ -197,13 +181,31 @@ class ParcelableStatusesAdapter(
 
     override fun getItemId(position: Int): Long {
         val countIndex = getItemCountIndex(position)
-        return (countIndex.toLong() shl 32) or when (countIndex) {
-            ITEM_INDEX_PINNED_STATUS -> {
-                val status = pinnedStatuses!![position - getItemStartPosition(ITEM_INDEX_PINNED_STATUS)]
+        /*            ID memory layout
+         *             0xFFFFFFFFFFFFFFFFL
+         * For pinned:   ------IIHHHHHHHH
+         * For others:   ------IIPPPPPPPP
+         *
+         * I: Count index
+         * P: Position relative to count index start
+         * H: Hashcode
+         */
+        when (countIndex) {
+            ITEM_INDEX_STATUS -> {
+                val status = getStatus(position, false)
+                if (status._id > 0) return status._id
                 return status.hashCode().toLong()
             }
-            ITEM_INDEX_STATUS -> return getStatus(position, false).hashCode().toLong()
-            else -> position.toLong()
+            ITEM_INDEX_PINNED_STATUS -> {
+                val countIndexFlag = countIndex.toLong() shl 32
+                val status = pinnedStatuses!![position - getItemStartPosition(ITEM_INDEX_PINNED_STATUS)]
+                return -(countIndexFlag or status.hashCode().toLong())
+            }
+            else -> {
+                val countIndexFlag = countIndex.toLong() shl 32
+                val relativePosition = getItemStartPosition(countIndex).toLong()
+                return -(countIndexFlag or relativePosition)
+            }
         }
     }
 
