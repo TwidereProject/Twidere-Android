@@ -56,12 +56,9 @@ import org.mariotaku.twidere.adapter.iface.IContentAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.annotation.TimelineStyle
+import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
-import org.mariotaku.twidere.constant.displaySensitiveContentsKey
-import org.mariotaku.twidere.constant.favoriteConfirmationKey
-import org.mariotaku.twidere.constant.loadItemLimitKey
-import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.data.source.CursorObjectLivePagedListProvider
 import org.mariotaku.twidere.data.status.StatusesLivePagedListProvider
@@ -138,6 +135,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        registerForContextMenu(recyclerView)
         adapter.statusClickListener = StatusClickHandler()
         statuses = createLiveData()
         statuses.observe(this, Observer { onDataLoaded(it) })
@@ -166,12 +164,9 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
     override fun onCreateItemDecoration(context: Context, recyclerView: RecyclerView,
             layoutManager: LayoutManager): RecyclerView.ItemDecoration? {
         return when (timelineStyle) {
-            TimelineStyle.PLAIN -> {
-                createStatusesListItemDecoration(context, recyclerView, adapter)
-            }
-            else -> {
-                super.onCreateItemDecoration(context, recyclerView, layoutManager)
-            }
+            TimelineStyle.PLAIN -> createStatusesListItemDecoration(context, recyclerView, adapter)
+            TimelineStyle.GALLERY -> createStatusesListGalleryDecoration(context, recyclerView)
+            else -> super.onCreateItemDecoration(context, recyclerView, layoutManager)
         }
     }
 
@@ -287,17 +282,20 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
 
     protected open fun onDataLoaded(data: PagedList<ParcelableStatus>?) {
+        val firstVisiblePosition = layoutManager.firstVisibleItemPosition
         adapter.statuses = data
         adapter.timelineFilter = timelineFilter
         when {
-//            data is ExceptionResponseList -> {
-//                showEmpty(R.drawable.ic_info_error_generic, data.exception.toString())
-//            }
             data == null || data.isEmpty() -> {
                 showEmpty(R.drawable.ic_info_refresh, getString(R.string.swipe_down_to_refresh))
             }
             else -> {
                 showContent()
+            }
+        }
+        if (firstVisiblePosition == 0 && !preferences[readFromBottomKey]) {
+            recyclerView.post {
+                recyclerView.smoothScrollToPosition(0)
             }
         }
     }
@@ -366,9 +364,10 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
             extraSelection.second?.addAllTo(expressionArgs)
         }
         val provider = CursorObjectLivePagedListProvider(context.contentResolver, contentUri,
-                statusColumnsLite, Expression.and(*expressions.toTypedArray()).sql,
+                Statuses.COLUMNS, Expression.and(*expressions.toTypedArray()).sql,
                 expressionArgs.toTypedArray(), Statuses.DEFAULT_SORT_ORDER, ParcelableStatus::class.java)
-        return provider.create(null, 20)
+        return provider.create(null, PagedList.Config.Builder()
+                .setPageSize(50).setEnablePlaceholders(false).build())
     }
 
     private fun getFullStatus(position: Int): ParcelableStatus? {
@@ -441,6 +440,12 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
             IntentUtils.openStatus(activity, status, null)
         }
 
+        override fun onStatusLongClick(holder: IStatusViewHolder, position: Int): Boolean {
+            val status = adapter.getStatus(position)
+            System.identityHashCode(status)
+            return false
+        }
+
         override fun onItemActionClick(holder: RecyclerView.ViewHolder, id: Int, position: Int) {
             val status = getFullStatus(position) ?: return
             handleActionClick(this@AbsTimelineFragment, id, status,
@@ -474,10 +479,6 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
             val status = adapter.getStatus(position)
             val quotedId = status.quoted_id ?: return
             IntentUtils.openStatus(activity, status.account_key, quotedId)
-        }
-
-        override fun onStatusLongClick(holder: IStatusViewHolder, position: Int): Boolean {
-            return super.onStatusLongClick(holder, position)
         }
 
         override fun onUserProfileClick(holder: IStatusViewHolder, position: Int) {
@@ -679,6 +680,12 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                     true
                 }
             }
+            itemDecoration.setDecorationEndOffset(1)
+            return itemDecoration
+        }
+
+        fun createStatusesListGalleryDecoration(context: Context, recyclerView: RecyclerView): RecyclerView.ItemDecoration {
+            val itemDecoration = ExtendedDividerItemDecoration(context, (recyclerView.layoutManager as LinearLayoutManager).orientation)
             itemDecoration.setDecorationEndOffset(1)
             return itemDecoration
         }

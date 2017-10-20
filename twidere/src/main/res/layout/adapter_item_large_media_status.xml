@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~             Twidere - Twitter client for Android
+  ~
+  ~  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/itemContent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <org.mariotaku.twidere.view.ProfileImageView
+        android:id="@+id/profileImage"
+        android:layout_width="@dimen/icon_size_large_media_status_profile_image"
+        android:layout_height="@dimen/icon_size_large_media_status_profile_image"
+        android:layout_marginLeft="@dimen/element_spacing_large"
+        android:layout_marginStart="@dimen/element_spacing_large"
+        android:layout_marginTop="@dimen/element_spacing_large"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@mipmap/ic_launcher"/>
+
+    <org.mariotaku.twidere.view.NameView
+        android:id="@+id/nameView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/element_spacing_normal"
+        android:layout_marginStart="@dimen/element_spacing_normal"
+        app:layout_constraintBottom_toBottomOf="@+id/profileImage"
+        app:layout_constraintStart_toEndOf="@+id/profileImage"
+        app:layout_constraintTop_toTopOf="@+id/profileImage"
+        app:nv_primaryTextColor="?android:textColorPrimary"
+        app:nv_primaryTextStyle="bold"
+        app:nv_secondaryTextColor="?android:textColorSecondary"
+        tools:text="Username"/>
+
+    <org.mariotaku.twidere.view.ExtendedViewPager
+        android:id="@+id/mediaPreviewPager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/element_spacing_large"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileImage"
+        tools:background="@drawable/nyan_stars_background"/>
+
+</android.support.constraint.ConstraintLayout>

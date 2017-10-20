@@ -62,7 +62,7 @@ import java.util.*
 class ParcelableStatusesAdapter(
         context: Context,
         requestManager: RequestManager,
-        @TimelineStyle val timelineStyle: Int
+        @TimelineStyle private val timelineStyle: Int
 ) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context, requestManager),
         IStatusesAdapter, IItemCountsAdapter {
 
@@ -457,15 +457,22 @@ class ParcelableStatusesAdapter(
                 parent: ViewGroup, @TimelineStyle timelineStyle: Int): IStatusViewHolder {
             when (timelineStyle) {
                 TimelineStyle.STAGGERED -> {
-                    val view = inflater.inflate(R.layout.adapter_item_media_status, parent, false)
+                    val view = inflater.inflate(MediaStatusViewHolder.layoutResource, parent, false)
                     val holder = MediaStatusViewHolder(adapter, view)
                     holder.setOnClickListeners()
                     holder.setupViewOptions()
                     return holder
                 }
-                TimelineStyle.PLAIN, TimelineStyle.GALLERY -> {
+                TimelineStyle.PLAIN -> {
                     val view = inflater.inflate(StatusViewHolder.layoutResource, parent, false)
                     val holder = StatusViewHolder(adapter, view)
+                    holder.setOnClickListeners()
+                    holder.setupViewOptions()
+                    return holder
+                }
+                TimelineStyle.GALLERY -> {
+                    val view = inflater.inflate(LargeMediaStatusViewHolder.layoutResource, parent, false)
+                    val holder = LargeMediaStatusViewHolder(adapter, view)
                     holder.setOnClickListeners()
                     holder.setupViewOptions()
                     return holder

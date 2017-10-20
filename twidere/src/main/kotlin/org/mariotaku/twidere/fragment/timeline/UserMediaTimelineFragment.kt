@@ -24,6 +24,7 @@ import android.os.Bundle
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.FilterScope
+import org.mariotaku.twidere.annotation.TimelineStyle
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.data.fetcher.UserMediaTimelineFetcher
@@ -38,6 +39,8 @@ class UserMediaTimelineFragment : AbsTimelineFragment() {
     override val filterScope: Int = FilterScope.USER_TIMELINE
 
     override val contentUri: Uri = Statuses.UserTimeline.CONTENT_URI
+
+    override val timelineStyle: Int = TimelineStyle.GALLERY
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

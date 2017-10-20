@@ -5,11 +5,8 @@ import android.util.SparseArray
 import android.view.View
 import android.view.ViewGroup
 
-/**
- * Created by mariotaku on 2016/12/9.
- */
-abstract class RecyclerPagerAdapter : PagerAdapter() {
-    private val viewHolders: SparseArray<ViewHolder> = SparseArray()
+abstract class RecyclerPagerAdapter<VH : RecyclerPagerAdapter.ViewHolder> : PagerAdapter() {
+    private val viewHolders: SparseArray<VH> = SparseArray()
 
     final override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val itemViewType = getItemViewType(position)
@@ -44,9 +41,9 @@ abstract class RecyclerPagerAdapter : PagerAdapter() {
         return (obj as ViewHolder).itemView == view
     }
 
-    abstract fun onCreateViewHolder(container: ViewGroup, position: Int, itemViewType: Int): ViewHolder
+    abstract fun onCreateViewHolder(container: ViewGroup, position: Int, itemViewType: Int): VH
 
-    abstract fun onBindViewHolder(holder: ViewHolder, position: Int, itemViewType: Int)
+    abstract fun onBindViewHolder(holder: VH, position: Int, itemViewType: Int)
 
     open fun getItemViewType(position: Int): Int = 0
 

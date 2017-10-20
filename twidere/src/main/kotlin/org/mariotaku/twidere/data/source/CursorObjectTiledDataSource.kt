@@ -21,15 +21,13 @@ package org.mariotaku.twidere.data.source
 
 import android.arch.paging.TiledDataSource
 import android.content.ContentResolver
+import android.database.ContentObserver
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
+import org.mariotaku.ktextension.weak
 import org.mariotaku.twidere.extension.queryAll
 import org.mariotaku.twidere.extension.queryCount
-
-/**
- * Created by mariotaku on 2017/10/13.
- */
 
 class CursorObjectTiledDataSource<T>(
         private val resolver: ContentResolver,
@@ -40,6 +38,19 @@ class CursorObjectTiledDataSource<T>(
         val sortOrder: String? = null,
         val cls: Class<T>
 ) : TiledDataSource<T>() {
+
+    init {
+        val weakThis = weak()
+        val observer = object : ContentObserver(MainHandler) {
+            override fun onChange(selfChange: Boolean) {
+                weakThis.get()?.invalidate()
+            }
+        }
+        addInvalidatedCallback cb@ {
+            resolver.unregisterContentObserver(observer)
+        }
+        resolver.registerContentObserver(uri, false, observer)
+    }
 
     override fun countItems() = resolver.queryCount(uri, selection, selectionArgs)
 
