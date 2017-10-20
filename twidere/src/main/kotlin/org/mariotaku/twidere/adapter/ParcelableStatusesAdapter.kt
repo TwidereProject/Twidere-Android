@@ -23,7 +23,8 @@ import android.arch.paging.PagedList
 import android.arch.paging.PagedListAdapterHelper
 import android.content.Context
 import android.support.v4.widget.Space
-import android.support.v7.recyclerview.extensions.DiffCallback
+import android.support.v7.recyclerview.extensions.ListAdapterConfig
+import android.support.v7.util.ListUpdateCallback
 import android.support.v7.widget.RecyclerView
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
@@ -53,6 +54,7 @@ import org.mariotaku.twidere.model.timeline.TimelineFilter
 import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler
 import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.util.Utils
+import org.mariotaku.twidere.util.paging.DiffCallbacks
 import org.mariotaku.twidere.view.holder.*
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 import java.util.*
@@ -108,6 +110,7 @@ class ParcelableStatusesAdapter(
     var timelineFilter: TimelineFilter? = null
         set(value) {
             field = value
+            updateItemCount()
             notifyDataSetChanged()
         }
 
@@ -120,17 +123,28 @@ class ParcelableStatusesAdapter(
 
     private val showingFullTextStates = SparseBooleanArray()
 
-    private var pagedStatusesHelper = PagedListAdapterHelper<ParcelableStatus>(this, object : DiffCallback<ParcelableStatus>() {
-        override fun areContentsTheSame(oldItem: ParcelableStatus, newItem: ParcelableStatus): Boolean {
-            return oldItem == newItem
+    private var pagedStatusesHelper = PagedListAdapterHelper<ParcelableStatus>(object : ListUpdateCallback {
+        override fun onInserted(position: Int, count: Int) {
+            updateItemCount()
+            notifyItemRangeInserted(position, count)
         }
 
-        override fun areItemsTheSame(oldItem: ParcelableStatus, newItem: ParcelableStatus): Boolean {
-            if (oldItem._id > 0 && newItem._id > 0) return oldItem._id == newItem._id
-            return oldItem == newItem
+        override fun onRemoved(position: Int, count: Int) {
+            updateItemCount()
+            notifyItemRangeRemoved(position, count)
         }
 
-    })
+        override fun onMoved(fromPosition: Int, toPosition: Int) {
+            updateItemCount()
+            notifyItemMoved(fromPosition, toPosition)
+        }
+
+        override fun onChanged(position: Int, count: Int, payload: Any?) {
+            updateItemCount()
+            notifyItemRangeChanged(position, count, payload)
+        }
+
+    }, ListAdapterConfig.Builder<ParcelableStatus>().setDiffCallback(DiffCallbacks.status).build())
 
     var statuses: PagedList<ParcelableStatus>?
         get() = pagedStatusesHelper.currentList
