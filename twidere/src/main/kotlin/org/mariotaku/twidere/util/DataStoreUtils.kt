@@ -65,18 +65,28 @@ import java.util.*
 
 object DataStoreUtils {
 
-    val STATUSES_URIS = arrayOf(Statuses.HomeTimeline.CONTENT_URI, CachedStatuses.CONTENT_URI)
+    val STATUSES_URIS = arrayOf(Statuses.HomeTimeline.CONTENT_URI, Statuses.Favorites.CONTENT_URI,
+            Statuses.UserTimeline.CONTENT_URI, Statuses.UserMediaTimeline.CONTENT_URI,
+            Statuses.ListTimeline.CONTENT_URI, Statuses.GroupTimeline.CONTENT_URI,
+            Statuses.Public.CONTENT_URI, Statuses.NetworkPublic.CONTENT_URI)
     val CACHE_URIS = arrayOf(CachedUsers.CONTENT_URI, CachedStatuses.CONTENT_URI,
             CachedHashtags.CONTENT_URI, CachedTrends.Local.CONTENT_URI)
     val MESSAGES_URIS = arrayOf(Messages.CONTENT_URI, Conversations.CONTENT_URI)
     val ACTIVITIES_URIS = arrayOf(Activities.AboutMe.CONTENT_URI)
-    val STATUSES_ACTIVITIES_URIS = arrayOf(Statuses.HomeTimeline.CONTENT_URI, CachedStatuses.CONTENT_URI,
-            Activities.AboutMe.CONTENT_URI)
+    val STATUSES_ACTIVITIES_URIS = STATUSES_URIS + ACTIVITIES_URIS
 
     private val tableMatcher = UriMatcher(UriMatcher.NO_MATCH)
 
     init {
         tableMatcher.addPath(Statuses.HomeTimeline.CONTENT_PATH, TableIds.HOME_TIMELINE)
+        tableMatcher.addPath(Statuses.Favorites.CONTENT_PATH, TableIds.FAVORITES)
+        tableMatcher.addPath(Statuses.UserTimeline.CONTENT_PATH, TableIds.USER_TIMELINE)
+        tableMatcher.addPath(Statuses.UserMediaTimeline.CONTENT_PATH, TableIds.USER_MEDIA_TIMELINE)
+        tableMatcher.addPath(Statuses.ListTimeline.CONTENT_PATH, TableIds.LIST_TIMELINE)
+        tableMatcher.addPath(Statuses.GroupTimeline.CONTENT_PATH, TableIds.GROUP_TIMELINE)
+        tableMatcher.addPath(Statuses.Public.CONTENT_PATH, TableIds.PUBLIC_TIMELINE)
+        tableMatcher.addPath(Statuses.NetworkPublic.CONTENT_PATH, TableIds.NETWORK_PUBLIC_TIMELINE)
+
         tableMatcher.addPath("${Statuses.Favorites.CONTENT_PATH}/#", TableIds.FAVORITES)
         tableMatcher.addPath("${Statuses.UserTimeline.CONTENT_PATH}/#", TableIds.USER_TIMELINE)
         tableMatcher.addPath("${Statuses.UserMediaTimeline.CONTENT_PATH}/#", TableIds.USER_MEDIA_TIMELINE)

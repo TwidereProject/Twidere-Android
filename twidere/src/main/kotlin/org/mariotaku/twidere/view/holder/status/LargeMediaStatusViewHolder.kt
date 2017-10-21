@@ -23,9 +23,7 @@ import android.support.constraint.ConstraintLayout
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.text.SpannableStringBuilder
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import kotlinx.android.synthetic.main.adapter_item_large_media_status.view.*
 import kotlinx.android.synthetic.main.adapter_item_large_media_status_preview_item.view.*
@@ -240,11 +238,11 @@ class LargeMediaStatusViewHolder(private val adapter: IStatusesAdapter, itemView
 
     private class LargeMediaItemHolder(val adapter: ImagePagerAdapter, itemView: View) : RecyclerPagerAdapter.ViewHolder(itemView) {
 
+        val detector = GestureDetector(itemView.context, OnGestureHandler())
+
         init {
-            itemView.setOnClickListener {
-                adapter.parentAdapter.statusClickListener?.onMediaClick(adapter.parentHolder, it,
-                        adapter.getMedia(position), adapter.parentHolder.layoutPosition)
-            }
+            itemView.setOnTouchListener { _, ev -> detector.onTouchEvent(ev) }
+
         }
 
         private val mediaPreview = itemView.mediaPreview
@@ -252,6 +250,26 @@ class LargeMediaStatusViewHolder(private val adapter: IStatusesAdapter, itemView
         fun display(media: ParcelableMedia) {
             adapter.parentAdapter.requestManager.load(media.preview_url).centerCrop().into(mediaPreview)
             mediaPreview.hasPlayIcon = ParcelableMediaUtils.hasPlayIcon(media.type)
+        }
+
+        private inner class OnGestureHandler : GestureDetector.SimpleOnGestureListener() {
+
+            override fun onDown(e: MotionEvent?) = true
+
+            override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                val listener = adapter.parentAdapter.statusClickListener ?: return false
+                listener.onMediaClick(adapter.parentHolder, itemView, adapter.getMedia(position),
+                        adapter.parentHolder.layoutPosition)
+                return true
+            }
+
+            override fun onDoubleTapEvent(e: MotionEvent): Boolean {
+                if (e.action != MotionEvent.ACTION_UP) return false
+                val listener = adapter.parentAdapter.statusClickListener ?: return false
+                listener.onItemActionClick(adapter.parentHolder, R.id.favorite,
+                        adapter.parentHolder.layoutPosition)
+                return true
+            }
         }
 
         companion object {
