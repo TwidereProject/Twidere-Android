@@ -575,12 +575,6 @@ public interface TwidereDataStore {
 
     interface Statuses extends BaseColumns, AccountSupportColumns {
 
-        String TABLE_NAME = "statuses";
-        String CONTENT_PATH = TABLE_NAME;
-
-        @NonNull
-        Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
-
         /**
          * Id of the status.<br>
          */
@@ -742,10 +736,14 @@ public interface TwidereDataStore {
 
         String[] TYPES = ParcelableStatusTableInfo.TYPES;
 
-        interface Home extends Statuses {
+        String[] STATUSES_TABLES = {HomeTimeline.TABLE_NAME, Favorites.TABLE_NAME,
+                UserTimeline.TABLE_NAME, UserMediaTimeline.TABLE_NAME, ListTimeline.TABLE_NAME,
+                GroupTimeline.TABLE_NAME, Public.TABLE_NAME, NetworkPublic.TABLE_NAME};
 
-            String CONTENT_PATH = "home_timeline";
-            String TABLE_NAME = "home_timeline";
+        interface HomeTimeline extends Statuses {
+
+            String CONTENT_PATH = "statuses";
+            String TABLE_NAME = "statuses";
 
             @NonNull
             Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
@@ -753,7 +751,7 @@ public interface TwidereDataStore {
 
         interface Favorites extends Statuses {
 
-            String CONTENT_PATH = "favorites_timeline";
+            String CONTENT_PATH = "statuses/favorites_timeline";
             String TABLE_NAME = "favorites_timeline";
 
             @NonNull
@@ -762,8 +760,18 @@ public interface TwidereDataStore {
 
         interface UserTimeline extends Statuses {
 
-            String CONTENT_PATH = "user_timeline";
+            String CONTENT_PATH = "statuses/user_timeline";
             String TABLE_NAME = "user_timeline";
+
+            @NonNull
+            Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
+        }
+
+
+        interface UserMediaTimeline extends Statuses {
+
+            String CONTENT_PATH = "statuses/user_media_timeline";
+            String TABLE_NAME = "user_media_timeline";
 
             @NonNull
             Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
@@ -771,7 +779,7 @@ public interface TwidereDataStore {
 
         interface ListTimeline extends Statuses {
 
-            String CONTENT_PATH = "list_timeline";
+            String CONTENT_PATH = "statuses/list_timeline";
             String TABLE_NAME = "list_timeline";
 
             @NonNull
@@ -781,7 +789,7 @@ public interface TwidereDataStore {
 
         interface GroupTimeline extends Statuses {
 
-            String CONTENT_PATH = "group_timeline";
+            String CONTENT_PATH = "statuses/group_timeline";
             String TABLE_NAME = "group_timeline";
 
             @NonNull
@@ -790,7 +798,7 @@ public interface TwidereDataStore {
 
         interface Public extends Statuses {
 
-            String CONTENT_PATH = "public_timeline";
+            String CONTENT_PATH = "statuses/public_timeline";
             String TABLE_NAME = "public_timeline";
 
             @NonNull
@@ -799,13 +807,16 @@ public interface TwidereDataStore {
 
         interface NetworkPublic extends Statuses {
 
-            String CONTENT_PATH = "network_public_timeline";
+            String CONTENT_PATH = "statuses/network_public_timeline";
             String TABLE_NAME = "network_public_timeline";
 
             @NonNull
             Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
         }
 
+        @NonNull
+        @Deprecated
+        Uri CONTENT_URI = HomeTimeline.CONTENT_URI;
     }
 
     interface Activities extends Statuses, BaseColumns, AccountSupportColumns {

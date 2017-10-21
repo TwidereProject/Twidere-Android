@@ -33,7 +33,7 @@ import org.mariotaku.twidere.util.sync.TimelineSyncManager
 
 class GetHomeTimelineTask(context: Context) : GetStatusesTask<ContentRefreshParam>(context) {
 
-    override val contentUri: Uri = Statuses.CONTENT_URI
+    override val contentUri: Uri = Statuses.HomeTimeline.CONTENT_URI
 
     override val filterScopes: Int = FilterScope.HOME
 

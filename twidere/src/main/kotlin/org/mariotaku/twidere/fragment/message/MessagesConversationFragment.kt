@@ -235,8 +235,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
                         TaskStarter.execute(AddMediaTask(this, mediaUris, types, false, false))
                     }
                     RESULT_SEARCH_GIF -> {
-                        val provider = gifShareProvider ?: return
-                        startActivityForResult(provider.createGifSelectorIntent(), REQUEST_ADD_GIF)
+                        startActivityForResult(gifShareProvider.createGifSelectorIntent(), REQUEST_ADD_GIF)
                     }
                 }
 
@@ -452,7 +451,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
                 MediaPickerActivity.SOURCE_CAMCORDER,
                 MediaPickerActivity.SOURCE_GALLERY,
                 MediaPickerActivity.SOURCE_CLIPBOARD))
-        if (gifShareProvider != null) {
+        if (gifShareProvider.supported) {
             builder.addEntry(getString(R.string.action_add_gif), "gif", RESULT_SEARCH_GIF)
         }
         builder.containsVideo(true)

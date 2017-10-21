@@ -88,18 +88,18 @@ class ContentNotificationManager(
                 Expression.notEquals(Statuses.IS_GAP, 1)
         )
         val selectionArgs = arrayOf(accountKey.toString())
-        val filteredSelection = DataStoreUtils.buildStatusFilterWhereClause(preferences, Statuses.TABLE_NAME,
-                selection, FilterScope.HOME)
+        val filteredSelection = DataStoreUtils.buildStatusFilterWhereClause(preferences,
+                Statuses.HomeTimeline.TABLE_NAME, selection, FilterScope.HOME)
         val userProjection = arrayOf(Statuses.USER_KEY, Statuses.USER_NAME, Statuses.USER_SCREEN_NAME)
         val statusProjection = arrayOf(Statuses.POSITION_KEY)
 
         @SuppressLint("Recycle")
-        val statusCursor = context.contentResolver.query(Statuses.CONTENT_URI, statusProjection,
+        val statusCursor = context.contentResolver.query(Statuses.HomeTimeline.CONTENT_URI, statusProjection,
                 filteredSelection.sql, selectionArgs, Statuses.DEFAULT_SORT_ORDER)
 
         @SuppressLint("Recycle")
         val userCursor = context.contentResolver.rawQuery(SQLQueryBuilder.select(Columns(*userProjection))
-                .from(Table(Statuses.TABLE_NAME))
+                .from(Table(Statuses.HomeTimeline.TABLE_NAME))
                 .where(filteredSelection)
                 .groupBy(Column(Statuses.USER_KEY))
                 .orderBy(OrderBy(Statuses.DEFAULT_SORT_ORDER)).buildSQL(), selectionArgs)
@@ -455,8 +455,7 @@ class ContentNotificationManager(
     }
 
     private fun getMarkReadDeleteIntent(context: Context, @NotificationType type: String,
-            accountKey: UserKey?, position: Long,
-            extraUserFollowing: Boolean): PendingIntent {
+            accountKey: UserKey?, position: Long, extraUserFollowing: Boolean): PendingIntent {
         return getMarkReadDeleteIntent(context, type, accountKey, position)
     }
 

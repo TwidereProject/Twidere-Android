@@ -81,6 +81,7 @@
     <string name="action_location">Location</string>
     <string name="action_manage_in_buffer">Manage in Buffer</string>
     <string name="action_mark_as_read">Mark as read</string>
+    <string name="action_more_actions">More actions</string>
     <string name="action_mute">Mute</string>
     <string name="action_mute_notifications">Mute notifications</string>
     <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, saved at <xliff:g id="time">%2$s</xliff:g></string>
@@ -539,6 +540,7 @@
     <string name="label_filters_subscription">Subscription</string>
     <string name="label_follow_request_sent">Follow request sent</string>
     <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> via <xliff:g example="api" id="source">%2$s</xliff:g></string>
+    <string name="label_item_separator_comma_localized">, </string>
     <string name="label_location_coarse">Coarse (City)</string>
     <string name="label_location_no_location">None</string>
     <string name="label_location_precise">Precise (Coordinate)</string>

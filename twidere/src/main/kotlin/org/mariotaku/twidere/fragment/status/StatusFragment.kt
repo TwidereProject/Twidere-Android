@@ -102,7 +102,6 @@ import org.mariotaku.twidere.util.RecyclerViewScrollHandler.RecyclerViewCallback
 import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener
 import org.mariotaku.twidere.view.ExtendedRecyclerView
 import org.mariotaku.twidere.view.holder.GapViewHolder
-import org.mariotaku.twidere.view.holder.StatusViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder.StatusClickListener
 import java.lang.ref.WeakReference
@@ -278,9 +277,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     override fun onItemActionClick(holder: ViewHolder, id: Int, position: Int) {
         val status = adapter.getStatus(position)
-        AbsTimelineFragment.handleActionClick(this@StatusFragment, id, status, holder as StatusViewHolder)
+        AbsTimelineFragment.handleActionClick(this, id, status, holder as IStatusViewHolder)
     }
-
 
     override fun onItemActionLongClick(holder: RecyclerView.ViewHolder, id: Int, position: Int): Boolean {
         val status = adapter.getStatus(position)
@@ -571,8 +569,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         val status = adapter.getStatus(contextMenuInfo.position)
         val inflater = MenuInflater(context)
         inflater.inflate(R.menu.action_status, menu)
-        MenuUtils.setupForStatus(context, menu, preferences, twitterWrapper, userColorNameManager,
-                status)
+        MenuUtils.setupForStatus(context, menu, preferences, userColorNameManager, status)
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
@@ -737,7 +734,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                                 Expression.equalsArgs(Statuses.ID),
                                 Expression.equalsArgs(Statuses.RETWEET_ID)))
                 val statusWhereArgs = arrayOf(accountKey.toString(), statusId, statusId)
-                cr.update(Statuses.CONTENT_URI, countValues, statusWhere.sql, statusWhereArgs)
+                cr.update(Statuses.HomeTimeline.CONTENT_URI, countValues, statusWhere.sql, statusWhereArgs)
                 cr.updateStatusInfo(DataStoreUtils.STATUSES_ACTIVITIES_URIS, Statuses.COLUMNS,
                         accountKey, statusId, ParcelableStatus::class.java) { item ->
                     item.favorite_count = activitySummary.favoriteCount

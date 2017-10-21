@@ -36,7 +36,6 @@ import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.fragment.BaseDialogFragment
-import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.refresh.UserRelatedContentRefreshParam
 import org.mariotaku.twidere.model.timeline.TimelineFilter
@@ -58,10 +57,9 @@ class UserTimelineFragment : AbsTimelineFragment() {
     }
 
     override fun getStatuses(param: ContentRefreshParam): Boolean {
-        val userKey = arguments.getParcelable<UserKey>(EXTRA_USER_KEY) ?: return false
-        val userScreenName = arguments.getString(EXTRA_SCREEN_NAME) ?: return false
         val task = GetUserTimelineTask(context)
-        task.params = UserRelatedContentRefreshParam(userKey, userScreenName, param)
+        task.params = UserRelatedContentRefreshParam(arguments.getParcelable(EXTRA_USER_KEY),
+                arguments.getString(EXTRA_SCREEN_NAME), param)
         TaskStarter.execute(task)
         return true
     }

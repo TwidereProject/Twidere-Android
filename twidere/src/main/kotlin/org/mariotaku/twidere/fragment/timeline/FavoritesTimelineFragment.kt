@@ -31,7 +31,6 @@ import org.mariotaku.twidere.constant.iWantMyStarsBackKey
 import org.mariotaku.twidere.data.fetcher.UserFavoritesFetcher
 import org.mariotaku.twidere.extension.adapter.removeStatuses
 import org.mariotaku.twidere.extension.linkHandlerTitle
-import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.refresh.UserRelatedContentRefreshParam
@@ -39,23 +38,24 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.statuses.GetUserFavoritesTask
 
 class FavoritesTimelineFragment : AbsTimelineFragment() {
+
     override val filterScope: Int = FilterScope.HOME
 
-    override val contentUri: Uri = Statuses.CONTENT_URI
+    override val contentUri: Uri = Statuses.HomeTimeline.CONTENT_URI
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if (preferences[iWantMyStarsBackKey]) {
-            linkHandlerTitle = getString(R.string.title_favorites)
+        linkHandlerTitle = if (preferences[iWantMyStarsBackKey]) {
+            getString(R.string.title_favorites)
         } else {
-            linkHandlerTitle = getString(R.string.title_likes)
+            getString(R.string.title_likes)
         }
     }
 
     override fun getStatuses(param: ContentRefreshParam): Boolean {
-        val userKey = arguments.getParcelable<UserKey>(EXTRA_USER_KEY) ?: return false
-        val userScreenName = arguments.getString(EXTRA_SCREEN_NAME) ?: return false
         val task = GetUserFavoritesTask(context)
-        task.params = UserRelatedContentRefreshParam(userKey, userScreenName, param)
+        task.params = UserRelatedContentRefreshParam(arguments.getParcelable(EXTRA_USER_KEY),
+                arguments.getString(EXTRA_SCREEN_NAME), param)
         TaskStarter.execute(task)
         return true
     }

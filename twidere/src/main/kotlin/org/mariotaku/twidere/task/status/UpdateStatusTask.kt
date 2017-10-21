@@ -723,13 +723,13 @@ class UpdateStatusTask(
                 callback: UploadCallback?): SharedMediaUploadResult {
             val deleteOnSuccess = ArrayList<MediaDeletionItem>()
             val deleteAlways = ArrayList<MediaDeletionItem>()
-            val mediaIds = media.mapIndexedToArray { index, media ->
+            val mediaIds = media.mapIndexedToArray { index, item ->
                 val resp: MediaUploadResponse
                 //noinspection TryWithIdenticalCatches
                 var body: MediaStreamBody? = null
                 try {
                     val sizeLimit = account.getMediaSizeLimit(mediaCategory)
-                    body = getBodyFromMedia(context, media, sizeLimit, chucked,
+                    body = getBodyFromMedia(context, item, sizeLimit, chucked,
                             ContentLengthInputStream.ReadListener { length, position ->
                                 callback?.onUploadingProgressChanged(index, position, length)
                             })
@@ -751,9 +751,9 @@ class UpdateStatusTask(
                 }
                 body?.deleteOnSuccess?.addAllTo(deleteOnSuccess)
                 body?.deleteAlways?.addAllTo(deleteAlways)
-                if (media.alt_text?.isNotEmpty() == true) {
+                if (item.alt_text?.isNotEmpty() == true) {
                     try {
-                        upload.createMetadata(NewMediaMetadata(resp.id, media.alt_text))
+                        upload.createMetadata(NewMediaMetadata(resp.id, item.alt_text))
                     } catch (e: MicroBlogException) {
                         // Ignore
                     }
@@ -769,13 +769,13 @@ class UpdateStatusTask(
                 chucked: Boolean, callback: UploadCallback?): SharedMediaUploadResult {
             val deleteOnSuccess = ArrayList<MediaDeletionItem>()
             val deleteAlways = ArrayList<MediaDeletionItem>()
-            val mediaIds = media.mapIndexedToArray { index, media ->
+            val mediaIds = media.mapIndexedToArray { index, item ->
                 val resp: Attachment
                 //noinspection TryWithIdenticalCatches
                 var body: MediaStreamBody? = null
                 try {
                     val sizeLimit = account.getMediaSizeLimit()
-                    body = getBodyFromMedia(context, media, sizeLimit, chucked,
+                    body = getBodyFromMedia(context, item, sizeLimit, chucked,
                             ContentLengthInputStream.ReadListener { length, position ->
                                 callback?.onUploadingProgressChanged(index, position, length)
                             })

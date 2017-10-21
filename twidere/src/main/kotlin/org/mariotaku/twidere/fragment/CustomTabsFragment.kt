@@ -142,7 +142,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
         if (itemAdd != null && itemAdd.hasSubMenu()) {
             val subMenu = itemAdd.subMenu
             subMenu.clear()
-            for ((type, conf) in TabConfiguration.all()) {
+            for ((type, conf) in TabConfiguration.all) {
                 val accountRequired = TabAccountFlags.FLAG_ACCOUNT_REQUIRED in conf.accountFlags
                 val subItem = subMenu.add(0, 0, conf.sortPosition, conf.name.createString(context))
                 val disabledByNoAccount = accountRequired && accounts.none(conf::checkAccountAvailability)

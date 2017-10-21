@@ -17,56 +17,65 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.view.holder
+package org.mariotaku.twidere.view.holder.status
 
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
-import com.bumptech.glide.RequestManager
-import kotlinx.android.synthetic.main.adapter_item_large_media_status.view.*
-import kotlinx.android.synthetic.main.adapter_item_large_media_status_preview_item.view.*
+import com.commonsware.cwac.layouts.AspectLockedFrameLayout
+import kotlinx.android.synthetic.main.adapter_item_media_status.view.*
+import org.mariotaku.ktextension.spannable
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.adapter.RecyclerPagerAdapter
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.view.ProfileImageView
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 
-class LargeMediaStatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) :
-        RecyclerView.ViewHolder(itemView), IStatusViewHolder, View.OnClickListener, View.OnLongClickListener {
-    override val profileImageView: ProfileImageView = itemView.profileImage
+class MediaStatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : RecyclerView.ViewHolder(itemView), IStatusViewHolder, View.OnClickListener, View.OnLongClickListener {
+    override val profileImageView: ProfileImageView = itemView.mediaProfileImage
     override val profileTypeView: ImageView? = null
 
-    private val mediaPreviewAdapter: ImagePagerAdapter
-    private val mediaPreviewPager = itemView.mediaPreviewPager
-    private val nameView = itemView.nameView
+    private val mediaImageContainer = itemView.mediaImageContainer
+    private val mediaImageView = itemView.mediaImage
+    private val mediaTextView = itemView.mediaText
+    private val aspectRatioSource = SimpleAspectRatioSource()
 
     private var listener: IStatusViewHolder.StatusClickListener? = null
 
-
     init {
-        mediaPreviewAdapter = ImagePagerAdapter(adapter.requestManager)
-        mediaPreviewPager.adapter = mediaPreviewAdapter
+        mediaImageContainer.setAspectRatioSource(aspectRatioSource)
     }
 
     override fun display(status: ParcelableStatus, displayInReplyTo: Boolean,
             displayPinned: Boolean) {
         val context = itemView.context
+
+        val displayEnd = status.extras?.display_text_range?.getOrNull(1) ?: -1
+
+        if (displayEnd >= 0) {
+            mediaTextView.spannable = status.text_unescaped.subSequence(0, displayEnd)
+        } else {
+            mediaTextView.spannable = status.text_unescaped
+        }
         adapter.requestManager.loadProfileImage(context, status,
                 adapter.profileImageStyle, profileImageView.cornerRadius,
                 profileImageView.cornerRadiusRatio).into(profileImageView)
 
-        nameView.name = status.user_name
-        nameView.screenName = "@${status.user_screen_name}"
-        nameView.updateText(adapter.bidiFormatter)
+        val firstMedia = status.media?.firstOrNull() ?: return
 
-        mediaPreviewAdapter.media = status.media
+        aspectRatioSource.setSize(firstMedia.width, firstMedia.height)
+        mediaImageContainer.tag = firstMedia
+        mediaImageContainer.requestLayout()
+
+        mediaImageView.hasPlayIcon = ParcelableMediaUtils.hasPlayIcon(firstMedia.type)
+
+        // TODO image loaded event and credentials
+        adapter.requestManager.load(firstMedia.preview_url).into(mediaImageView)
     }
 
     override fun onClick(v: View) {
@@ -103,41 +112,31 @@ class LargeMediaStatusViewHolder(private val adapter: IStatusesAdapter, itemView
 
     fun setupViewOptions() {
         setTextSize(adapter.textSize)
-        nameView.nameFirst = adapter.nameFirst
     }
 
-    private class ImagePagerAdapter(val requestManager: RequestManager) : RecyclerPagerAdapter<LargeMediaItemHolder>() {
-        var media: Array<ParcelableMedia>? = null
-            set(value) {
-                field = value
-                notifyDataSetChanged()
-            }
 
-        override fun getCount() = media?.size ?: 0
+    private class SimpleAspectRatioSource : AspectLockedFrameLayout.AspectRatioSource {
+        private var width: Int = 0
+        private var height: Int = 0
 
-        override fun onCreateViewHolder(container: ViewGroup, position: Int, itemViewType: Int): LargeMediaItemHolder {
-            return LargeMediaItemHolder(this, LayoutInflater.from(container.context)
-                    .inflate(LargeMediaItemHolder.layoutResource, container, false))
+        override fun getWidth(): Int {
+            if (width <= 0 || height <= 0) return 100
+            return width
         }
 
-        override fun onBindViewHolder(holder: LargeMediaItemHolder, position: Int, itemViewType: Int) {
-            holder.display(media!![position])
+        override fun getHeight(): Int {
+            if (width <= 0 || height <= 0) return 100
+            return height
         }
 
-    }
-
-    private class LargeMediaItemHolder(val adapter: ImagePagerAdapter, itemView: View) : RecyclerPagerAdapter.ViewHolder(itemView) {
-        private val mediaPreview = itemView.mediaPreview
-        fun display(media: ParcelableMedia) {
-            adapter.requestManager.load(media.preview_url).into(mediaPreview)
+        fun setSize(width: Int, height: Int) {
+            this.width = width
+            this.height = height
         }
 
-        companion object {
-            val layoutResource = R.layout.adapter_item_large_media_status_preview_item
-        }
     }
 
     companion object {
-        const val layoutResource = R.layout.adapter_item_large_media_status
+        const val layoutResource = R.layout.adapter_item_media_status
     }
 }

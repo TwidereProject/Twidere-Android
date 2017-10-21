@@ -21,6 +21,9 @@ package org.mariotaku.twidere.view
 
 import android.content.Context
 import android.content.res.Resources
+import android.support.annotation.ColorInt
+import android.support.annotation.Dimension
+import android.support.annotation.Px
 import android.support.v4.text.BidiFormatter
 import android.text.SpannableStringBuilder
 import android.text.Spanned
@@ -38,6 +41,7 @@ import org.mariotaku.twidere.R
 class NameView(context: Context, attrs: AttributeSet? = null) : FixedTextView(context, attrs) {
 
     var nameFirst: Boolean = false
+
     var twoLine: Boolean = false
         set(value) {
             field = value
@@ -48,26 +52,66 @@ class NameView(context: Context, attrs: AttributeSet? = null) : FixedTextView(co
             }
         }
 
+    var primaryTextStyle: Int
+        get() = primaryTextStyleSpan?.style ?: 0
+        set(value) {
+            primaryTextStyleSpan = StyleSpan(value)
+        }
+
+    var secondaryTextStyle: Int
+        get() = secondaryTextStyleSpan?.style ?: 0
+        set(value) {
+            secondaryTextStyleSpan = StyleSpan(value)
+        }
+
+    var primaryTextSize: Int
+        @Px get() = primaryTextSizeSpan?.size ?: 0
+        set(@Px value) {
+            primaryTextSizeSpan = AbsoluteSizeSpan(value)
+        }
+
+    var secondaryTextSize: Int
+        @Px get() = secondaryTextSizeSpan?.size ?: 0
+        set(@Px value) {
+            secondaryTextSizeSpan = AbsoluteSizeSpan(value)
+        }
+
+    var primaryTextColor: Int
+        @ColorInt get() = primaryTextColorSpan?.foregroundColor ?: 0
+        set(@ColorInt value) {
+            primaryTextColorSpan = ForegroundColorSpan(value)
+        }
+
+    var secondaryTextColor: Int
+        @ColorInt get() = secondaryTextColorSpan?.foregroundColor ?: 0
+        set(@ColorInt value) {
+            secondaryTextColorSpan = ForegroundColorSpan(value)
+        }
+
     var name: String? = null
     var screenName: String? = null
 
-    private val primaryTextStyle: StyleSpan
-    private val secondaryTextStyle: StyleSpan
-    private var primaryTextColor: ForegroundColorSpan? = null
-    private var secondaryTextColor: ForegroundColorSpan? = null
-    private var primaryTextSize: AbsoluteSizeSpan? = null
-    private var secondaryTextSize: AbsoluteSizeSpan? = null
+    private var primaryTextStyleSpan: StyleSpan? = null
+    private var secondaryTextStyleSpan: StyleSpan? = null
+
+    private var primaryTextColorSpan: ForegroundColorSpan? = null
+    private var secondaryTextColorSpan: ForegroundColorSpan? = null
+    private var primaryTextSizeSpan: AbsoluteSizeSpan? = null
+    private var secondaryTextSizeSpan: AbsoluteSizeSpan? = null
+
 
     init {
         ellipsize = TextUtils.TruncateAt.END
         val a = context.obtainStyledAttributes(attrs, R.styleable.NameView, 0, 0)
-        setPrimaryTextColor(a.getColor(R.styleable.NameView_nv_primaryTextColor, 0))
-        setSecondaryTextColor(a.getColor(R.styleable.NameView_nv_secondaryTextColor, 0))
         twoLine = a.getBoolean(R.styleable.NameView_nv_twoLine, false)
-        primaryTextStyle = StyleSpan(a.getInt(R.styleable.NameView_nv_primaryTextStyle, 0))
-        secondaryTextStyle = StyleSpan(a.getInt(R.styleable.NameView_nv_secondaryTextStyle, 0))
+        nameFirst = a.getBoolean(R.styleable.NameView_nv_nameFirst, true)
+        primaryTextColor = a.getColor(R.styleable.NameView_nv_primaryTextColor, 0)
+        secondaryTextColor = a.getColor(R.styleable.NameView_nv_secondaryTextColor, 0)
+        primaryTextStyle = a.getInt(R.styleable.NameView_nv_primaryTextStyle, 0)
+        secondaryTextStyle = a.getInt(R.styleable.NameView_nv_secondaryTextStyle, 0)
+        primaryTextSize = a.getDimensionPixelSize(R.styleable.NameView_nv_primaryTextSize, 0)
+        secondaryTextSize = a.getDimensionPixelSize(R.styleable.NameView_nv_secondaryTextSize, 0)
         a.recycle()
-        nameFirst = true
         if (isInEditMode && text.isNullOrEmpty()) {
             name = "Name"
             screenName = "@screenname"
@@ -76,20 +120,12 @@ class NameView(context: Context, attrs: AttributeSet? = null) : FixedTextView(co
     }
 
     override fun onTextContextMenuItem(id: Int): Boolean {
-        try {
-            return super.onTextContextMenuItem(id)
+        return try {
+            super.onTextContextMenuItem(id)
         } catch (e: AbstractMethodError) {
             // http://crashes.to/s/69acd0ea0de
-            return true
+            true
         }
-    }
-
-    fun setPrimaryTextColor(color: Int) {
-        primaryTextColor = ForegroundColorSpan(color)
-    }
-
-    fun setSecondaryTextColor(color: Int) {
-        secondaryTextColor = ForegroundColorSpan(color)
     }
 
     fun updateText(formatter: BidiFormatter? = null) {
@@ -104,9 +140,9 @@ class NameView(context: Context, attrs: AttributeSet? = null) : FixedTextView(co
                 sb.append(primaryText)
             }
             val end = sb.length
-            sb.setSpan(primaryTextColor, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            sb.setSpan(primaryTextStyle, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            sb.setSpan(primaryTextSize, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            sb.setSpan(primaryTextColorSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            sb.setSpan(primaryTextStyleSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            sb.setSpan(primaryTextSizeSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
         sb.append(if (twoLine) '\n' else ' ')
         if (secondaryText != null) {
@@ -117,22 +153,23 @@ class NameView(context: Context, attrs: AttributeSet? = null) : FixedTextView(co
                 sb.append(secondaryText)
             }
             val end = sb.length
-            sb.setSpan(secondaryTextColor, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            sb.setSpan(secondaryTextStyle, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            sb.setSpan(secondaryTextSize, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            sb.setSpan(secondaryTextColorSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            sb.setSpan(secondaryTextStyleSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            sb.setSpan(secondaryTextSizeSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
         setText(sb, BufferType.SPANNABLE)
     }
 
-    fun setPrimaryTextSize(textSize: Float) {
-        primaryTextSize = AbsoluteSizeSpan(calculateTextSize(TypedValue.COMPLEX_UNIT_SP, textSize).toInt())
+    fun setPrimaryTextSize(size: Float, unit: Int = TypedValue.COMPLEX_UNIT_SP) {
+        primaryTextSize = calculateTextSize(size, unit).toInt()
     }
 
-    fun setSecondaryTextSize(textSize: Float) {
-        secondaryTextSize = AbsoluteSizeSpan(calculateTextSize(TypedValue.COMPLEX_UNIT_SP, textSize).toInt())
+    fun setSecondaryTextSize(size: Float, unit: Int = TypedValue.COMPLEX_UNIT_SP) {
+        secondaryTextSize = calculateTextSize(size, unit).toInt()
     }
 
-    private fun calculateTextSize(unit: Int, size: Float): Float {
+    @Dimension(unit = Dimension.PX)
+    private fun calculateTextSize(size: Float, unit: Int): Float {
         val r = context.resources ?: Resources.getSystem()
         return TypedValue.applyDimension(unit, size, r.displayMetrics)
     }

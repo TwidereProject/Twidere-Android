@@ -38,7 +38,7 @@ import java.util.*
 class HomeTimelineFragment : AbsTimelineFragment() {
     override val filterScope: Int = FilterScope.HOME
 
-    override val contentUri: Uri = Statuses.CONTENT_URI
+    override val contentUri: Uri = Statuses.HomeTimeline.CONTENT_URI
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

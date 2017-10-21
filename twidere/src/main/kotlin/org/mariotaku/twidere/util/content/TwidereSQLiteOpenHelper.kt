@@ -105,8 +105,7 @@ class TwidereSQLiteOpenHelper(
 
     private fun createStatusesTables(db: SQLiteDatabase) {
         db.beginTransaction()
-        val tableNames = arrayOf(Statuses.TABLE_NAME, Statuses.Public.TABLE_NAME)
-        tableNames.forEach {
+        Statuses.STATUSES_TABLES.forEach {
             db.execSQL(createTable(it, Statuses.COLUMNS, Statuses.TYPES, true))
         }
         db.setTransactionSuccessful()
@@ -141,7 +140,7 @@ class TwidereSQLiteOpenHelper(
 
     private fun createIndices(db: SQLiteDatabase) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return
-        db.execSQL(createIndex("statuses_index", Statuses.TABLE_NAME, arrayOf(Statuses.ACCOUNT_KEY), true))
+        db.execSQL(createIndex("statuses_index", Statuses.HomeTimeline.TABLE_NAME, arrayOf(Statuses.ACCOUNT_KEY), true))
     }
 
     private fun createTriggers(db: SQLiteDatabase) {
@@ -150,7 +149,7 @@ class TwidereSQLiteOpenHelper(
         db.execSQL(SQLQueryBuilder.dropTrigger(true, "on_user_cache_update_trigger").sql)
         db.execSQL(SQLQueryBuilder.dropTrigger(true, "delete_old_cached_hashtags").sql)
 
-        db.execSQL(createDeleteDuplicateStatusTrigger("delete_old_statuses", Statuses.TABLE_NAME).sql)
+        db.execSQL(createDeleteDuplicateStatusTrigger("delete_old_statuses", Statuses.HomeTimeline.TABLE_NAME).sql)
         db.execSQL(createDeleteDuplicateStatusTrigger("delete_old_cached_statuses", CachedStatuses.TABLE_NAME).sql)
 
         // Update user info in filtered users
@@ -274,8 +273,9 @@ class TwidereSQLiteOpenHelper(
     }
 
     private fun upgradeStatuses(db: SQLiteDatabase) {
-        safeUpgrade(db, Statuses.TABLE_NAME, Statuses.COLUMNS, Statuses.TYPES, true, null)
-        safeUpgrade(db, Statuses.Public.TABLE_NAME, Statuses.COLUMNS, Statuses.TYPES, true, null)
+        Statuses.STATUSES_TABLES.forEach { table ->
+            safeUpgrade(db, table, Statuses.COLUMNS, Statuses.TYPES, true, null)
+        }
     }
 
     private fun migrateDrafts(db: SQLiteDatabase) {

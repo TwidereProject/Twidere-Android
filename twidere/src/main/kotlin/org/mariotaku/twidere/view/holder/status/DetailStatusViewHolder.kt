@@ -102,7 +102,6 @@ class DetailStatusViewHolder(
         val fragment = adapter.fragment
         val context = adapter.context
         val formatter = adapter.bidiFormatter
-        val twitter = adapter.twitterWrapper
         val nameFirst = adapter.nameFirst
         val colorNameManager = adapter.userColorNameManager
 
@@ -334,8 +333,8 @@ class DetailStatusViewHolder(
             itemView.twitterCard.visibility = View.GONE
         }
 
-        MenuUtils.setupForStatus(context, itemView.menuBar.menu, fragment.preferences, twitter,
-                colorNameManager, status, adapter.statusAccount!!)
+        MenuUtils.setupForStatus(context, itemView.menuBar.menu, fragment.preferences, colorNameManager,
+                status, adapter.statusAccount!!)
 
 
         val lang = status.lang

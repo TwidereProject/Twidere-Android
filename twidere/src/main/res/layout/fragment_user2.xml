@@ -18,18 +18,9 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<FrameLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/previewItemContent"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:foreground="?selectableItemBackground">
+    android:layout_height="match_parent">
 
-    <org.mariotaku.twidere.view.MediaPreviewImageView
-        android:id="@+id/mediaPreview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:foregroundGravity="center"
-        android:scaleType="centerCrop"/>
-
-</FrameLayout>
+</android.support.design.widget.CoordinatorLayout>

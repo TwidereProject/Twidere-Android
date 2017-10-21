@@ -1,4 +1,23 @@
-package org.mariotaku.twidere.view.holder
+/*
+ *             Twidere - Twitter client for Android
+ *
+ *  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package org.mariotaku.twidere.view.holder.status
 
 import android.support.annotation.DrawableRes
 import android.support.v4.content.ContextCompat
@@ -36,6 +55,7 @@ import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.task.CreateFavoriteTask
 import org.mariotaku.twidere.task.DestroyFavoriteTask
+import org.mariotaku.twidere.task.DestroyStatusTask
 import org.mariotaku.twidere.task.RetweetStatusTask
 import org.mariotaku.twidere.text.TwidereClickableSpan
 import org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText
@@ -46,13 +66,9 @@ import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.Utils.getUserTypeIconRes
 import org.mariotaku.twidere.view.ShapedImageView
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
-import java.lang.ref.WeakReference
 
 /**
- * IDE gives me warning if I don't change default comment, so I wrote this XD
- *
- *
- * Created by mariotaku on 14/11/19.
+ * [ViewHolder] class for standard status list item
  */
 class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : ViewHolder(itemView), IStatusViewHolder {
 
@@ -86,14 +102,12 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
     private val retweetButton by lazy { itemView.retweet }
     private val favoriteButton by lazy { itemView.favorite }
 
-    private val eventListener: EventListener
+    private val eventHandler = EventHandler()
 
     private var statusClickListener: IStatusViewHolder.StatusClickListener? = null
 
 
     init {
-        this.eventListener = EventListener(this)
-
         if (adapter.mediaPreviewEnabled) {
             View.inflate(mediaPreview.context, R.layout.layout_card_media_preview,
                     itemView.mediaPreview)
@@ -146,7 +160,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
 
         val context = itemView.context
         val requestManager = adapter.requestManager
-        val twitter = adapter.twitterWrapper
         val linkify = adapter.twidereLinkify
         val formatter = adapter.bidiFormatter
         val colorNameManager = adapter.userColorNameManager
@@ -397,14 +410,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
             }
         }
 
-        if (twitter.isDestroyingStatus(status.account_key, status.my_retweet_id)) {
-            retweetIcon.isActivated = false
-        } else {
-            val creatingRetweet = RetweetStatusTask.isCreatingRetweet(status.account_key, status.id)
-            retweetIcon.isActivated = creatingRetweet || status.retweeted ||
-                    Utils.isMyRetweet(status.account_key, status.retweeted_by_user_key,
-                            status.my_retweet_id)
-        }
+        retweetIcon.isActivated = isRetweetIconActivated(status)
 
         if (retweetCount > 0) {
             retweetCountView.spannable = UnitConvertUtils.calculateProperCount(retweetCount)
@@ -413,12 +419,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         }
         retweetCountView.hideIfEmpty()
 
-        if (DestroyFavoriteTask.isDestroyingFavorite(status.account_key, status.id)) {
-            favoriteIcon.isActivated = false
-        } else {
-            val creatingFavorite = CreateFavoriteTask.isCreatingFavorite(status.account_key, status.id)
-            favoriteIcon.isActivated = creatingFavorite || status.is_favorite
-        }
+        favoriteIcon.isActivated = isFavoriteIconActivated(status)
 
         if (favoriteCount > 0) {
             favoriteCountView.spannable = UnitConvertUtils.calculateProperCount(favoriteCount)
@@ -481,20 +482,20 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
 
     override fun setStatusClickListener(listener: IStatusViewHolder.StatusClickListener?) {
         statusClickListener = listener
-        itemContent.setOnClickListener(eventListener)
-        itemContent.setOnLongClickListener(eventListener)
+        itemContent.setOnClickListener(eventHandler)
+        itemContent.setOnLongClickListener(eventHandler)
 
-        itemMenu.setOnClickListener(eventListener)
-        profileImageView.setOnClickListener(eventListener)
-        replyButton.setOnClickListener(eventListener)
-        retweetButton.setOnClickListener(eventListener)
-        favoriteButton.setOnClickListener(eventListener)
-        retweetButton.setOnLongClickListener(eventListener)
-        favoriteButton.setOnLongClickListener(eventListener)
+        itemMenu.setOnClickListener(eventHandler)
+        profileImageView.setOnClickListener(eventHandler)
+        replyButton.setOnClickListener(eventHandler)
+        retweetButton.setOnClickListener(eventHandler)
+        favoriteButton.setOnClickListener(eventHandler)
+        retweetButton.setOnLongClickListener(eventHandler)
+        favoriteButton.setOnLongClickListener(eventHandler)
 
-        mediaLabel.setOnClickListener(eventListener)
+        mediaLabel.setOnClickListener(eventHandler)
 
-        quotedView.setOnClickListener(eventListener)
+        quotedView.setOnClickListener(eventHandler)
     }
 
 
@@ -530,27 +531,22 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         nameView.nameFirst = nameFirst
         quotedNameView.nameFirst = nameFirst
 
-        val favIcon: Int
-        val favStyle: Int
-        val favColor: Int
         val context = itemView.context
-        if (adapter.useStarsForLikes) {
-            favIcon = R.drawable.ic_action_star
-            favStyle = LikeAnimationDrawable.Style.FAVORITE
-            favColor = ContextCompat.getColor(context, R.color.highlight_favorite)
+        val drawable = if (adapter.useStarsForLikes) {
+            LikeAnimationDrawable(ContextCompat.getDrawable(context, R.drawable.ic_action_star),
+                    favoriteIcon.defaultColor, ContextCompat.getColor(context, R.color.highlight_favorite),
+                    LikeAnimationDrawable.Style.FAVORITE)
         } else {
-            favIcon = R.drawable.ic_action_heart
-            favStyle = LikeAnimationDrawable.Style.LIKE
-            favColor = ContextCompat.getColor(context, R.color.highlight_like)
+            LikeAnimationDrawable(ContextCompat.getDrawable(context, R.drawable.ic_action_heart),
+                    favoriteIcon.defaultColor, ContextCompat.getColor(context, R.color.highlight_like),
+                    LikeAnimationDrawable.Style.LIKE)
         }
-        val icon = ContextCompat.getDrawable(context, favIcon)
-        val drawable = LikeAnimationDrawable(icon,
-                favoriteCountView.textColors.defaultColor, favColor, favStyle)
         drawable.mutate()
         favoriteIcon.setImageDrawable(drawable)
+        favoriteIcon.activatedColor = drawable.activatedColor
+
         timeView.showAbsoluteTime = adapter.showAbsoluteTime
 
-        favoriteIcon.activatedColor = favColor
 
         nameView.applyFontFamily(adapter.lightFont)
         timeView.applyFontFamily(adapter.lightFont)
@@ -656,66 +652,62 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
             return 0
         }
 
-    internal class EventListener(holder: StatusViewHolder) : OnClickListener, OnLongClickListener {
-
-        private val holderRef = WeakReference(holder)
+    private inner class EventHandler : OnClickListener, OnLongClickListener {
 
         override fun onClick(v: View) {
-            val holder = holderRef.get() ?: return
-            val listener = holder.statusClickListener ?: return
-            val position = holder.layoutPosition
+            val listener = statusClickListener ?: return
+            val position = layoutPosition
             when (v) {
-                holder.itemContent -> {
-                    listener.onStatusClick(holder, position)
+                itemContent -> {
+                    listener.onStatusClick(this@StatusViewHolder, position)
                 }
-                holder.quotedView -> {
-                    listener.onQuotedStatusClick(holder, position)
+                quotedView -> {
+                    listener.onQuotedStatusClick(this@StatusViewHolder, position)
                 }
-                holder.itemMenu -> {
-                    listener.onItemMenuClick(holder, v, position)
+                itemMenu -> {
+                    listener.onItemMenuClick(this@StatusViewHolder, v, position)
                 }
-                holder.profileImageView -> {
-                    listener.onUserProfileClick(holder, position)
+                profileImageView -> {
+                    listener.onUserProfileClick(this@StatusViewHolder, position)
                 }
-                holder.replyButton -> {
-                    listener.onItemActionClick(holder, R.id.reply, position)
+                replyButton -> {
+                    listener.onItemActionClick(this@StatusViewHolder, R.id.reply, position)
                 }
-                holder.retweetButton -> {
-                    listener.onItemActionClick(holder, R.id.retweet, position)
+                retweetButton -> {
+                    listener.onItemActionClick(this@StatusViewHolder, R.id.retweet, position)
                 }
-                holder.favoriteButton -> {
-                    listener.onItemActionClick(holder, R.id.favorite, position)
+                favoriteButton -> {
+                    listener.onItemActionClick(this@StatusViewHolder, R.id.favorite, position)
                 }
-                holder.mediaLabel -> {
-                    val firstMedia = holder.adapter.getStatus(position).media?.firstOrNull()
+                mediaLabel -> {
+                    val firstMedia = adapter.getStatus(position).media?.firstOrNull()
                     if (firstMedia != null) {
-                        listener.onMediaClick(holder, v, firstMedia, position)
+                        listener.onMediaClick(this@StatusViewHolder, v, firstMedia, position)
                     } else {
-                        listener.onStatusClick(holder, position)
+                        listener.onStatusClick(this@StatusViewHolder, position)
                     }
                 }
             }
         }
 
         override fun onLongClick(v: View): Boolean {
-            val holder = holderRef.get() ?: return false
-            val listener = holder.statusClickListener ?: return false
-            val position = holder.layoutPosition
+            val listener = statusClickListener ?: return false
+            val position = layoutPosition
             when (v) {
-                holder.itemContent -> {
-                    if (!holder.isCardActionsShown) {
-                        holder.showCardActions()
+                itemContent -> {
+                    if (!isCardActionsShown) {
+                        showCardActions()
                         return true
-                    } else if (holder.hideTempCardActions()) {
+                    } else if (hideTempCardActions()) {
                         return true
                     }
-                    return listener.onStatusLongClick(holder, position)
+                    return listener.onStatusLongClick(this@StatusViewHolder, position)
                 }
-                holder.favoriteButton -> {
-                    return listener.onItemActionLongClick(holder, R.id.favorite, position)
+                favoriteButton -> {
+                    return listener.onItemActionLongClick(this@StatusViewHolder, R.id.favorite, position)
                 }
-                holder.retweetButton -> {
-                    return listener.onItemActionLongClick(holder, R.id.retweet, position)
+                retweetButton -> {
+                    return listener.onItemActionLongClick(this@StatusViewHolder, R.id.retweet, position)
                 }
             }
             return false
@@ -727,6 +719,19 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
 
         private val videoTypes = intArrayOf(ParcelableMedia.Type.VIDEO, ParcelableMedia.Type.ANIMATED_GIF,
                 ParcelableMedia.Type.EXTERNAL_PLAYER)
+
+        fun isRetweetIconActivated(status: ParcelableStatus): Boolean {
+            return !DestroyStatusTask.isRunning(status.account_key, status.my_retweet_id) &&
+                    (RetweetStatusTask.isRunning(status.account_key, status.id) ||
+                            status.retweeted || Utils.isMyRetweet(status.account_key,
+                            status.retweeted_by_user_key, status.my_retweet_id))
+        }
+
+        fun isFavoriteIconActivated(status: ParcelableStatus): Boolean {
+            return !DestroyFavoriteTask.isRunning(status.account_key, status.id) &&
+                    (CreateFavoriteTask.isCreatingFavorite(status.account_key, status.id) || status.is_favorite)
+        }
+
     }
 }
 

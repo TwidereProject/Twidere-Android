@@ -52,8 +52,8 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableRelationshipUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.task.*
-import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
 import org.mariotaku.twidere.task.statuses.GetHomeTimelineTask
+import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
 import org.mariotaku.twidere.task.twitter.GetSavedSearchesTask
 import org.mariotaku.twidere.task.twitter.GetTrendsTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
@@ -67,8 +67,6 @@ class AsyncTwitterWrapper(
 ) {
     private val resolver = context.contentResolver
 
-
-    var destroyingStatusIds = ArrayList<Int>()
     private val updatingRelationshipIds = ArrayList<Int>()
 
     private val sendingDraftIds = ArrayList<Long>()
@@ -257,10 +255,6 @@ class AsyncTwitterWrapper(
         return sendingDraftIds.toLongArray()
     }
 
-    fun isDestroyingStatus(accountKey: UserKey?, statusId: String?): Boolean {
-        return destroyingStatusIds.contains(calculateHashCode(accountKey, statusId))
-    }
-
     fun isStatusTimelineRefreshing(uri: Uri): Boolean {
         return getStatusTasks.contains(uri)
     }
@@ -279,7 +273,7 @@ class AsyncTwitterWrapper(
             override val accountKeys by lazy { action() }
 
             override val pagination by lazy {
-                return@lazy DataStoreUtils.getNewestStatusIds(context, Statuses.CONTENT_URI,
+                return@lazy DataStoreUtils.getNewestStatusIds(context, Statuses.HomeTimeline.CONTENT_URI,
                         accountKeys.toNulls()).mapToArray {
                     return@mapToArray SinceMaxPagination.sinceId(it, -1)
                 }
@@ -349,7 +343,7 @@ class AsyncTwitterWrapper(
                             Expression.equalsArgs(Statuses.RETWEETED_BY_USER_KEY)
                     )
                     val selectionArgs = arrayOf(accountKey.toString(), userKey.toString())
-                    cr.delete(Statuses.CONTENT_URI, where.sql, selectionArgs)
+                    cr.delete(Statuses.HomeTimeline.CONTENT_URI, where.sql, selectionArgs)
                 }
 
                 ParcelableRelationshipUtils.insert(cr, listOf(relationship))

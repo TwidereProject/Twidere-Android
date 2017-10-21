@@ -25,11 +25,12 @@ import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.annotation.TimelineStyle
-import org.mariotaku.twidere.constant.IntentConstants
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_SCREEN_NAME
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER_KEY
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.data.fetcher.UserMediaTimelineFetcher
 import org.mariotaku.twidere.extension.linkHandlerTitle
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.refresh.UserRelatedContentRefreshParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
@@ -38,7 +39,8 @@ import org.mariotaku.twidere.task.statuses.GetUserMediaTimelineTask
 class UserMediaTimelineFragment : AbsTimelineFragment() {
     override val filterScope: Int = FilterScope.USER_TIMELINE
 
-    override val contentUri: Uri = Statuses.UserTimeline.CONTENT_URI
+    override val contentUri: Uri
+        get() = Statuses.UserMediaTimeline.CONTENT_URI.withAppendedPath(tabId)
 
     override val timelineStyle: Int = TimelineStyle.GALLERY
 
@@ -48,17 +50,16 @@ class UserMediaTimelineFragment : AbsTimelineFragment() {
     }
 
     override fun getStatuses(param: ContentRefreshParam): Boolean {
-        val userKey = arguments.getParcelable<UserKey>(IntentConstants.EXTRA_USER_KEY) ?: return false
-        val userScreenName = arguments.getString(IntentConstants.EXTRA_SCREEN_NAME) ?: return false
         val task = GetUserMediaTimelineTask(context)
-        task.params = UserRelatedContentRefreshParam(userKey, userScreenName, param)
+        task.params = UserRelatedContentRefreshParam(arguments.getParcelable(EXTRA_USER_KEY),
+                arguments.getString(EXTRA_SCREEN_NAME), param)
         TaskStarter.execute(task)
         return true
     }
 
     override fun onCreateStatusesFetcher(): StatusesFetcher {
-        return UserMediaTimelineFetcher(arguments.getParcelable(IntentConstants.EXTRA_USER_KEY),
-                arguments.getString(IntentConstants.EXTRA_SCREEN_NAME))
+        return UserMediaTimelineFetcher(arguments.getParcelable(EXTRA_USER_KEY),
+                arguments.getString(EXTRA_SCREEN_NAME))
     }
 
 }

@@ -89,9 +89,9 @@ import org.mariotaku.twidere.task.statuses.GetStatusesTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.view.ExtendedRecyclerView
 import org.mariotaku.twidere.view.holder.GapViewHolder
-import org.mariotaku.twidere.view.holder.StatusViewHolder
 import org.mariotaku.twidere.view.holder.TimelineFilterHeaderViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
+import org.mariotaku.twidere.view.holder.status.StatusViewHolder
 
 abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableStatusesAdapter, LayoutManager>() {
 
@@ -176,8 +176,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo?
         val status = adapter.getStatus(contextMenuInfo!!.position)
         inflater.inflate(R.menu.action_status, menu)
-        MenuUtils.setupForStatus(context, menu, preferences, twitterWrapper, userColorNameManager,
-                status)
+        MenuUtils.setupForStatus(context, menu, preferences, userColorNameManager, status)
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
@@ -228,6 +227,9 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                 }
             }
 
+            override val tabId: Long
+                get() = this@AbsTimelineFragment.tabId
+
             override val shouldAbort: Boolean
                 get() = context == null
 
@@ -243,7 +245,6 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
             override val accountKeys by lazy {
                 this@AbsTimelineFragment.accountKeys
             }
-
             override val pagination by lazy {
                 val keys = accountKeys.toNulls()
                 val maxIds = DataStoreUtils.getOldestStatusIds(context, contentUri, keys)
@@ -252,6 +253,9 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                     SinceMaxPagination.maxId(maxIds[idx], maxSortIds[idx])
                 }
             }
+
+            override val tabId: Long
+                get() = this@AbsTimelineFragment.tabId
 
         })
         if (started) {
@@ -449,7 +453,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         override fun onItemActionClick(holder: RecyclerView.ViewHolder, id: Int, position: Int) {
             val status = getFullStatus(position) ?: return
             handleActionClick(this@AbsTimelineFragment, id, status,
-                    holder as StatusViewHolder)
+                    holder as IStatusViewHolder)
         }
 
         override fun onItemActionLongClick(holder: RecyclerView.ViewHolder, id: Int, position: Int): Boolean {
@@ -501,7 +505,9 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
             adapter.addGapLoadingId(ObjectId(status.account_key, status.id))
             val accountKeys = arrayOf(status.account_key)
             val pagination = arrayOf(SinceMaxPagination.maxId(status.id, status.sort_id))
-            getStatuses(BaseContentRefreshParam(accountKeys, pagination))
+            getStatuses(BaseContentRefreshParam(accountKeys, pagination).also {
+                it.tabId = tabId
+            })
         }
     }
 
@@ -546,7 +552,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
             }
 
         fun handleActionClick(fragment: BaseFragment, id: Int, status: ParcelableStatus,
-                holder: StatusViewHolder) {
+                holder: IStatusViewHolder) {
             when (id) {
                 R.id.reply -> {
                     val intent = Intent(INTENT_ACTION_REPLY)

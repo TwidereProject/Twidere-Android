@@ -67,7 +67,7 @@ class TaskServiceRunner(
                 val task = GetHomeTimelineTask(context)
                 task.params = AutoContentRefreshParam(context, preferences, activityTracker.isEmpty,
                         AccountPreferences::isAutoRefreshHomeTimelineEnabled) { accountKeys ->
-                    DataStoreUtils.getNewestStatusIds(context, Statuses.CONTENT_URI,
+                    DataStoreUtils.getNewestStatusIds(context, Statuses.HomeTimeline.CONTENT_URI,
                             accountKeys.toNulls())
                 }
                 return task

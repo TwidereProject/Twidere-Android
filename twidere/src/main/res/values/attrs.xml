@@ -57,11 +57,14 @@
         <attr name="android:background"/>
     </declare-styleable>
     <declare-styleable name="NameView">
+        <attr name="nv_twoLine" format="boolean"/>
+        <attr name="nv_nameFirst" format="boolean"/>
         <attr name="nv_primaryTextColor" format="color"/>
         <attr name="nv_secondaryTextColor" format="color"/>
-        <attr name="nv_twoLine" format="boolean"/>
         <attr name="nv_primaryTextStyle"/>
         <attr name="nv_secondaryTextStyle"/>
+        <attr name="nv_primaryTextSize" format="dimension"/>
+        <attr name="nv_secondaryTextSize" format="dimension"/>
     </declare-styleable>
     <declare-styleable name="ValueDependencyPreference">
         <attr name="dependencyKey" format="string"/>

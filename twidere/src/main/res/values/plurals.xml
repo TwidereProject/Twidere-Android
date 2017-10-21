@@ -70,4 +70,17 @@
         <item quantity="other"><xliff:g id="count">%d</xliff:g> members</item>
     </plurals>
 
+    <plurals name="N_favorites_abbrev">
+        <item quantity="one"><xliff:g example="1" id="count">%s</xliff:g> favorite</item>
+        <item quantity="other"><xliff:g example="19K" id="count">%s</xliff:g> favorites</item>
+    </plurals>
+    <plurals name="N_likes_abbrev">
+        <item quantity="one"><xliff:g example="1" id="count">%s</xliff:g> like</item>
+        <item quantity="other"><xliff:g example="19K" id="count">%s</xliff:g> likes</item>
+    </plurals>
+    <plurals name="N_retweets_abbrev">
+        <item quantity="one"><xliff:g example="1" id="count">%s</xliff:g> retweet</item>
+        <item quantity="other"><xliff:g example="19K" id="count">%s</xliff:g> retweets</item>
+    </plurals>
+
 </resources>

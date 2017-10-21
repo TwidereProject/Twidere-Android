@@ -294,7 +294,7 @@ class StreamingService : BaseService() {
 
                 val values = ObjectCursor.valuesCreatorFrom(ParcelableStatus::class.java)
                         .create(parcelableStatus)
-                context.contentResolver.insert(Statuses.CONTENT_URI, values)
+                context.contentResolver.insert(Statuses.HomeTimeline.CONTENT_URI, values)
                 homeInsertGap = false
                 return true
             }
@@ -404,7 +404,7 @@ class StreamingService : BaseService() {
                 val deleteWhere = Expression.and(Expression.likeRaw(Columns.Column(Statuses.ACCOUNT_KEY), "'%@'||?"),
                         Expression.equalsArgs(Columns.Column(Statuses.ID))).sql
                 val deleteWhereArgs = arrayOf(account.key.host, event.id)
-                context.contentResolver.delete(Statuses.CONTENT_URI, deleteWhere, deleteWhereArgs)
+                context.contentResolver.delete(Statuses.HomeTimeline.CONTENT_URI, deleteWhere, deleteWhereArgs)
                 return true
             }
 

@@ -55,6 +55,7 @@ import org.mariotaku.twidere.util.OnLinkClickHandler
 import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.view.holder.*
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
+import org.mariotaku.twidere.view.holder.status.StatusViewHolder
 import java.lang.ref.WeakReference
 import java.util.*
 

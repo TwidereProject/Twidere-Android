@@ -33,6 +33,7 @@ import java.lang.annotation.RetentionPolicy;
         CustomTabType.DIRECT_MESSAGES,
         CustomTabType.FAVORITES,
         CustomTabType.USER_TIMELINE,
+        CustomTabType.USER_MEDIA_TIMELINE,
         CustomTabType.SEARCH_STATUSES,
         CustomTabType.LIST_TIMELINE,
         CustomTabType.PUBLIC_TIMELINE,
@@ -46,6 +47,7 @@ public @interface CustomTabType {
     String DIRECT_MESSAGES = "direct_messages";
     String FAVORITES = "favorites";
     String USER_TIMELINE = "user_timeline";
+    String USER_MEDIA_TIMELINE = "user_media_timeline";
     String SEARCH_STATUSES = "search_statuses";
     String LIST_TIMELINE = "list_timeline";
     String PUBLIC_TIMELINE = "public_timeline";

@@ -57,6 +57,9 @@ import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.paging.DiffCallbacks
 import org.mariotaku.twidere.view.holder.*
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
+import org.mariotaku.twidere.view.holder.status.LargeMediaStatusViewHolder
+import org.mariotaku.twidere.view.holder.status.MediaStatusViewHolder
+import org.mariotaku.twidere.view.holder.status.StatusViewHolder
 import java.util.*
 
 class ParcelableStatusesAdapter(
@@ -185,7 +188,7 @@ class ParcelableStatusesAdapter(
     }
 
     override fun getStatus(position: Int, raw: Boolean): ParcelableStatus {
-        return getStatusInternal(raw, position = position)!!
+        return getStatusInternal(raw, position = position) ?: ParcelableStatusPlaceholder
     }
 
     override fun getStatusCount(raw: Boolean): Int {
@@ -438,6 +441,18 @@ class ParcelableStatusesAdapter(
         itemCounts[ITEM_INDEX_PINNED_STATUS] = pinnedStatuses?.size ?: 0
         itemCounts[ITEM_INDEX_STATUS] = getStatusCount(false)
         itemCounts[ITEM_INDEX_LOAD_END_INDICATOR] = if (ILoadMoreSupportAdapter.END in loadMoreIndicatorPosition) 1 else 0
+    }
+
+    object ParcelableStatusPlaceholder : ParcelableStatus() {
+        init {
+            id = "none"
+            account_key = UserKey.INVALID
+            user_key = UserKey.INVALID
+        }
+
+        override fun hashCode(): Int {
+            return -1
+        }
     }
 
 

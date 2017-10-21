@@ -31,7 +31,6 @@ import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.MenuUtils
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.view.ExtendedRecyclerView
-import org.mariotaku.twidere.view.holder.StatusViewHolder
 import org.mariotaku.twidere.view.holder.UserViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 
@@ -77,7 +76,8 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
 
             override fun onItemActionClick(holder: RecyclerView.ViewHolder, id: Int, position: Int) {
                 val status = dummyItemAdapter.getStatus(position)
-                AbsTimelineFragment.handleActionClick(this@ItemsListFragment, id, status, holder as StatusViewHolder)
+                AbsTimelineFragment.handleActionClick(this@ItemsListFragment, id, status,
+                        holder as IStatusViewHolder)
             }
 
             override fun onItemActionLongClick(holder: RecyclerView.ViewHolder, id: Int, position: Int): Boolean {
@@ -148,8 +148,8 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
                 val dummyAdapter = adapter.dummyAdapter
                 val status = dummyAdapter.getStatus(contextMenuInfo.position)
                 inflater.inflate(R.menu.action_status, menu)
-                MenuUtils.setupForStatus(context, menu, preferences, twitterWrapper,
-                        userColorNameManager, status)
+                MenuUtils.setupForStatus(context, menu, preferences, userColorNameManager,
+                        status)
             }
         }
     }

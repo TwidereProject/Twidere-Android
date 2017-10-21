@@ -21,6 +21,7 @@ package org.mariotaku.twidere.task
 
 import android.accounts.AccountManager
 import android.content.Context
+import android.support.v4.util.ArraySet
 import android.widget.Toast
 import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.microblog.library.MicroBlogException
@@ -29,14 +30,11 @@ import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.extension.insert
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.Draft
+import org.mariotaku.twidere.model.ObjectId
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.task.status.UpdateStatusTask
-
-/**
- * Created by mariotaku on 2017/4/20.
- */
 
 abstract class AbsAccountRequestTask<Params, Result, Callback>(context: Context, val accountKey: UserKey?) :
         ExceptionHandlingAbstractTask<Params, Result, MicroBlogException, Callback>(context) {
@@ -94,5 +92,23 @@ abstract class AbsAccountRequestTask<Params, Result, Callback>(context: Context,
 
     override fun onException(callback: Callback?, exception: MicroBlogException) {
         Toast.makeText(context, exception.getErrorMessage(context), Toast.LENGTH_SHORT).show()
+    }
+
+    abstract class ObjectIdTaskCompanion {
+        private val taskIds = ArraySet<ObjectId>()
+
+        protected fun addTaskId(accountKey: UserKey?, id: String?) {
+            if (accountKey == null || id == null) return
+            taskIds.add(ObjectId(accountKey, id))
+        }
+
+        protected fun removeTaskId(accountKey: UserKey?, id: String?) {
+            if (accountKey == null || id == null) return
+            taskIds.removeAll { it.accountKey == accountKey && it.id == id }
+        }
+
+        fun isRunning(accountKey: UserKey?, id: String?): Boolean {
+            return taskIds.any { it.accountKey == accountKey && it.id == id }
+        }
     }
 }

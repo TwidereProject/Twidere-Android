@@ -281,11 +281,12 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         emptyTabHint.setOnClickListener(this)
 
         setupSlidingMenu()
+        setupHomeTabs()
         setupBars()
+        updateActionsButton()
+
         showPromotionOffer()
         initUnreadCount()
-        setupHomeTabs()
-        updateActionsButton()
 
         if (savedInstanceState == null) {
             if (refreshOnStart) {
@@ -995,7 +996,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                             readStateManager.getPosition(tag)
                         }.fold(0L, Math::max)
                         val count = DataStoreUtils.getStatusesCount(context, preferences,
-                                Statuses.CONTENT_URI, spec.args, Statuses.TIMESTAMP, position,
+                                Statuses.HomeTimeline.CONTENT_URI, spec.args, Statuses.TIMESTAMP, position,
                                 true, accountKeys, FilterScope.HOME)
                         result.put(i, count)
                         publishProgress(TabBadge(i, count))

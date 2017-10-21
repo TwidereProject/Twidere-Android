@@ -45,7 +45,7 @@ fun ContentResolver.deleteAccountData(accountKey: UserKey) {
     val whereArgs = arrayOf(accountKey.toString())
     // Also delete tweets related to the account we previously
     // deleted.
-    delete(Statuses.CONTENT_URI, where, whereArgs)
+    delete(Statuses.HomeTimeline.CONTENT_URI, where, whereArgs)
     delete(Activities.AboutMe.CONTENT_URI, where, whereArgs)
     delete(Messages.CONTENT_URI, where, whereArgs)
     delete(Conversations.CONTENT_URI, where, whereArgs)

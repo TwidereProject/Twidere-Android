@@ -583,8 +583,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 startActivityForResult(provider.createSetScheduleIntent(), REQUEST_SET_SCHEDULE)
             }
             R.id.add_gif -> {
-                val provider = gifShareProvider ?: return true
-                startActivityForResult(provider.createGifSelectorIntent(), REQUEST_ADD_GIF)
+                if (!gifShareProvider.supported) return true
+                startActivityForResult(gifShareProvider.createGifSelectorIntent(), REQUEST_ADD_GIF)
             }
             R.id.edit_summary -> {
                 editSummaryEnabled = true

@@ -24,6 +24,7 @@ import android.net.Uri
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.data.fetcher.UserMediaTimelineFetcher
+import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.refresh.UserRelatedContentRefreshParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
@@ -32,7 +33,8 @@ import org.mariotaku.twidere.util.sync.TimelineSyncManager
 
 class GetUserMediaTimelineTask(context: Context) : GetStatusesTask<UserRelatedContentRefreshParam>(context) {
 
-    override val contentUri: Uri = Statuses.UserTimeline.CONTENT_URI
+    override val contentUri: Uri
+        get() = Statuses.UserMediaTimeline.CONTENT_URI.withAppendedPath(params.tabId)
 
     override val filterScopes: Int = FilterScope.USER_TIMELINE
 

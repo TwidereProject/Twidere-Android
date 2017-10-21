@@ -73,7 +73,6 @@ import org.mariotaku.twidere.util.sync.SyncTaskRunner
 import org.mariotaku.twidere.view.ExtendedRecyclerView
 import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder
 import org.mariotaku.twidere.view.holder.GapViewHolder
-import org.mariotaku.twidere.view.holder.StatusViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 
 abstract class AbsActivitiesFragment protected constructor() :
@@ -332,7 +331,7 @@ abstract class AbsActivitiesFragment protected constructor() :
 
     override fun onStatusActionClick(holder: IStatusViewHolder, id: Int, position: Int) {
         val status = getActivityStatus(position) ?: return
-        AbsTimelineFragment.handleActionClick(this, id, status, holder as StatusViewHolder)
+        AbsTimelineFragment.handleActionClick(this, id, status, holder)
     }
 
     override fun onStatusActionLongClick(holder: IStatusViewHolder, id: Int, position: Int): Boolean {
@@ -489,8 +488,7 @@ abstract class AbsActivitiesFragment protected constructor() :
             ITEM_VIEW_TYPE_STATUS -> {
                 val status = getActivityStatus(position) ?: return
                 inflater.inflate(R.menu.action_status, menu)
-                MenuUtils.setupForStatus(context, menu, preferences, twitterWrapper, userColorNameManager,
-                        status)
+                MenuUtils.setupForStatus(context, menu, preferences, userColorNameManager, status)
             }
         }
     }

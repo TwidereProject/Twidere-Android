@@ -107,6 +107,7 @@ public class TabArguments implements TwidereConstants {
                 return LoganSquare.parse(json, TabArguments.class);
             }
             case CustomTabType.USER_TIMELINE:
+            case CustomTabType.USER_MEDIA_TIMELINE:
             case CustomTabType.FAVORITES: {
                 return LoganSquare.parse(json, UserArguments.class);
             }

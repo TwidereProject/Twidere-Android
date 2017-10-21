@@ -16,7 +16,7 @@ import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler
 import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.view.holder.HashtagViewHolder
-import org.mariotaku.twidere.view.holder.StatusViewHolder
+import org.mariotaku.twidere.view.holder.status.StatusViewHolder
 import org.mariotaku.twidere.view.holder.UserListViewHolder
 import org.mariotaku.twidere.view.holder.UserViewHolder
 

@@ -453,6 +453,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/actionButtons"
+        android:contentDescription="@string/action_more_actions"
         android:focusable="false"
         android:src="@drawable/ic_action_more_horizontal"
         tools:tint="?android:textColorSecondary"
