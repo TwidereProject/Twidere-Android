@@ -29,6 +29,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.support.annotation.CallSuper
 import android.support.v4.app.Fragment
 import android.support.v7.widget.FixedLinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager
@@ -55,6 +56,7 @@ import org.mariotaku.twidere.adapter.decorator.ExtendedDividerItemDecoration
 import org.mariotaku.twidere.adapter.iface.IContentAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.FilterScope
+import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.annotation.TimelineStyle
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.IntentConstants.*
@@ -103,7 +105,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
     @TimelineStyle
     protected open val timelineStyle: Int
-        get() = TimelineStyle.PLAIN
+        get() = arguments.getInt(EXTRA_TIMELINE_STYLE, TimelineStyle.PLAIN)
 
     protected open val isStandalone: Boolean
         get() = tabId <= 0
@@ -112,6 +114,11 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         get() = true
 
     protected open val timelineFilter: TimelineFilter? = null
+
+    protected open val readPositionTag: String? = null
+
+    protected open val readPositionTagWithArguments: String?
+        get() = readPositionTag
 
     @FilterScope
     protected abstract val filterScope: Int
@@ -132,6 +139,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         }
 
     private val busEventHandler = BusEventHandler()
+    private val scrollHandler = ScrollHandler()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -144,11 +152,16 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
     override fun onStart() {
         super.onStart()
+        recyclerView.addOnScrollListener(scrollHandler)
         bus.register(busEventHandler)
     }
 
     override fun onStop() {
         bus.unregister(busEventHandler)
+        recyclerView.removeOnScrollListener(scrollHandler)
+        if (userVisibleHint) {
+            saveReadPosition(layoutManager.firstVisibleItemPosition)
+        }
         super.onStop()
     }
 
@@ -299,7 +312,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         }
         if (firstVisiblePosition == 0 && !preferences[readFromBottomKey]) {
             recyclerView.post {
-                recyclerView.smoothScrollToPosition(0)
+                scrollToStart()
             }
         }
     }
@@ -336,6 +349,25 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
     }
 
+    @CallSuper
+    protected open fun saveReadPosition(position: Int) {
+        if (host == null) return
+        if (position == RecyclerView.NO_POSITION || adapter.getStatusCount(false) <= 0) return
+        val status = adapter.getStatus(position.coerceIn(rangeOfSize(adapter.statusStartIndex,
+                adapter.getStatusCount(false))))
+        val readPosition = if (isStandalone) {
+            status.sort_id
+        } else {
+            status.position_key
+        }
+        val positionTag = readPositionTag ?: ReadPositionTag.CUSTOM_TIMELINE
+        readPositionTagWithArguments?.let {
+            accountKeys.forEach { accountKey ->
+                val tag = Utils.getReadPositionTagWithAccount(it, accountKey)
+                readStateManager.setPosition(tag, readPosition)
+            }
+        }
+    }
 
     private fun createLiveData(): LiveData<PagedList<ParcelableStatus>?> {
         return if (isStandalone) onCreateStandaloneLiveData() else onCreateDatabaseLiveData()
@@ -511,6 +543,15 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         }
     }
 
+    private inner class ScrollHandler : RecyclerView.OnScrollListener() {
+
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                val layoutManager = layoutManager
+                saveReadPosition(layoutManager.firstVisibleItemPosition)
+            }
+        }
+    }
 
     class DefaultOnLikedListener(
             private val twitter: AsyncTwitterWrapper,
@@ -530,7 +571,6 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
         const val REQUEST_FAVORITE_SELECT_ACCOUNT = 101
         const val REQUEST_RETWEET_SELECT_ACCOUNT = 102
-
 
         val statusColumnsLite = Statuses.COLUMNS - arrayOf(Statuses.MENTIONS_JSON,
                 Statuses.CARD, Statuses.FILTER_FLAGS, Statuses.FILTER_USERS, Statuses.FILTER_LINKS,

@@ -40,6 +40,8 @@ class HomeTimelineFragment : AbsTimelineFragment() {
 
     override val contentUri: Uri = Statuses.HomeTimeline.CONTENT_URI
 
+    override val readPositionTag = ReadPositionTag.HOME_TIMELINE
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         linkHandlerTitle = getString(R.string.title_home)

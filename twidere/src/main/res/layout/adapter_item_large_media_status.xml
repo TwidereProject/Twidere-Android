@@ -47,12 +47,12 @@
         app:layout_constraintBottom_toBottomOf="@+id/profileImage"
         app:layout_constraintStart_toEndOf="@+id/profileImage"
         app:layout_constraintTop_toTopOf="@+id/profileImage"
-        app:nv_primaryTextColor="?android:textColorPrimary"
-        app:nv_primaryTextSize="13sp"
-        app:nv_primaryTextStyle="bold"
-        app:nv_secondaryTextColor="?android:textColorSecondary"
-        app:nv_secondaryTextSize="11sp"
-        app:nv_twoLine="true"/>
+        app:tltvPrimaryTextColor="?android:textColorPrimary"
+        app:tltvPrimaryTextSize="13sp"
+        app:tltvPrimaryTextStyle="bold"
+        app:tltvSecondaryTextColor="?android:textColorSecondary"
+        app:tltvSecondaryTextSize="11sp"
+        app:tltvTwoLine="true"/>
 
     <org.mariotaku.twidere.view.ShortTimeView
         android:id="@+id/time"

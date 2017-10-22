@@ -20,7 +20,32 @@
 
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/profileBannerContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top">
+
+        <org.mariotaku.twidere.view.ProfileBannerImageView
+            android:id="@+id/profileBanner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            app:bannerAspectRatio="@fraction/aspect_ratio_profile_banner"
+            tools:src="@drawable/nyan_stars_background"/>
+
+        <ViewStub
+            android:id="@+id/profileBirthdayStub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/profileBanner"
+            android:layout_alignTop="@+id/profileBanner"
+            android:layout="@layout/layout_user_profile_birthday_stub"/>
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

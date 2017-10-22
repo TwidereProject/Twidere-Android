@@ -218,7 +218,7 @@ class LargeMediaStatusViewHolder(private val adapter: IStatusesAdapter, itemView
         var media: Array<ParcelableMedia>? = null
             set(value) {
                 field = value
-                notifyDataSetChanged()
+                notifyPagesChanged()
             }
 
         override fun getCount() = media?.size ?: 0

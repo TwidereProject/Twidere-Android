@@ -78,7 +78,6 @@ import kotlinx.android.synthetic.main.fragment_user.*
 import kotlinx.android.synthetic.main.fragment_user.view.*
 import kotlinx.android.synthetic.main.header_user.*
 import kotlinx.android.synthetic.main.header_user.view.*
-import kotlinx.android.synthetic.main.layout_content_fragment_common.*
 import kotlinx.android.synthetic.main.layout_content_pages_common.*
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.then
@@ -105,6 +104,7 @@ import org.mariotaku.twidere.activity.LinkHandlerActivity
 import org.mariotaku.twidere.activity.iface.IBaseActivity
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.annotation.TimelineStyle
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.extension.*
@@ -221,11 +221,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
             val screenName = args.getString(EXTRA_SCREEN_NAME)
             if (user == null && (!omitIntentExtra || !args.containsKey(EXTRA_USER))) {
-                cardContent.visibility = View.GONE
-                errorContainer.visibility = View.GONE
-                progressContainer.visibility = View.VISIBLE
-                errorText.text = null
-                errorText.visibility = View.GONE
             }
             val user = this@UserFragment.user
             val loadFromCache = user == null || !user.is_cache && user.key.maybeEquals(userKey)
@@ -242,9 +237,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             val activity = activity ?: return
             if (data.data != null) {
                 val user = data.data
-                cardContent.visibility = View.VISIBLE
-                errorContainer.visibility = View.GONE
-                progressContainer.visibility = View.GONE
                 val account: AccountDetails = data.extras.getParcelable(EXTRA_ACCOUNT)
                 displayUser(user, account)
                 if (user.is_cache) {
@@ -256,20 +248,12 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     loaderManager.restartLoader(LOADER_ID_USER, args, this)
                 }
                 updateOptionsMenuVisibility()
-            } else if (user?.is_cache ?: false) {
-                cardContent.visibility = View.VISIBLE
-                errorContainer.visibility = View.GONE
-                progressContainer.visibility = View.GONE
+            } else if (user?.is_cache == true) {
                 displayUser(user, account)
                 updateOptionsMenuVisibility()
             } else {
                 if (data.hasException()) {
-                    errorText.text = data.exception?.getErrorMessage(activity)
-                    errorText.visibility = View.VISIBLE
                 }
-                cardContent.visibility = View.GONE
-                errorContainer.visibility = View.VISIBLE
-                progressContainer.visibility = View.GONE
                 displayUser(null, null)
                 updateOptionsMenuVisibility()
             }
@@ -387,10 +371,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     override fun shouldLayoutHeaderBottom(): Boolean {
-        val drawer = userProfileDrawer
-        val card = profileDetailsContainer
-        if (drawer == null || card == null) return false
-        return card.top + drawer.headerTop - drawer.paddingTop <= 0
+        val drawer = userProfileDrawer ?: return false
+        return drawer.headerTop - drawer.paddingTop <= 0
     }
 
     override fun topChanged(top: Int) {
@@ -426,13 +408,10 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val lm = loaderManager
         lm.destroyLoader(LOADER_ID_USER)
         lm.destroyLoader(LOADER_ID_FRIENDSHIP)
-        cardContent.visibility = View.VISIBLE
-        errorContainer.visibility = View.GONE
-        progressContainer.visibility = View.GONE
         this.user = user
         profileImage.setBorderColor(if (user.color != 0) user.color else Color.WHITE)
-        profileNameContainer.drawEnd(user.account_color)
-        profileNameContainer.name.setText(bidiFormatter.unicodeWrap(when {
+        followContainer.drawEnd(user.account_color)
+        nameContainer.name.setText(bidiFormatter.unicodeWrap(when {
             user.nickname.isNullOrEmpty() -> user.name
             else -> getString(R.string.name_with_nickname, user.name, user.nickname)
         }), TextView.BufferType.SPANNABLE)
@@ -445,50 +424,58 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             profileType.visibility = View.GONE
         }
         @SuppressLint("SetTextI18n")
-        profileNameContainer.screenName.spannable = "@${user.acct}"
+        nameContainer.screenName.spannable = "@${user.acct}"
         val linkHighlightOption = preferences[linkHighlightOptionKey]
         val linkify = TwidereLinkify(this, linkHighlightOption)
+
         if (user.description_unescaped != null) {
             val text = SpannableStringBuilder.valueOf(user.description_unescaped).apply {
                 user.description_spans?.applyTo(this)
                 linkify.applyAllLinks(this, user.account_key, false, false)
             }
-            descriptionContainer.description.spannable = text
+            description.spannable = text
         } else {
-            descriptionContainer.description.spannable = user.description_plain
-            Linkify.addLinks(descriptionContainer.description, Linkify.WEB_URLS)
+            description.spannable = user.description_plain
+            Linkify.addLinks(description, Linkify.WEB_URLS)
         }
-        descriptionContainer.hideIfEmpty(descriptionContainer.description)
+        description.hideIfEmpty()
 
-        locationContainer.location.spannable = user.location
-        locationContainer.visibility = if (locationContainer.location.empty) View.GONE else View.VISIBLE
-        urlContainer.url.spannable = user.urlPreferred?.let {
+        location.spannable = user.location
+        location.hideIfEmpty()
+
+        url.spannable = user.urlPreferred?.let {
             val ssb = SpannableStringBuilder(it)
             ssb.setSpan(TwidereURLSpan(it, highlightStyle = linkHighlightOption), 0, ssb.length,
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             return@let ssb
         }
-        urlContainer.hideIfEmpty(urlContainer.url)
+        this.url.hideIfEmpty()
+
         if (user.created_at >= 0) {
             val createdAt = Utils.formatToLongTimeString(activity, user.created_at)
             val daysSinceCreation = (System.currentTimeMillis() - user.created_at) / 1000 / 60 / 60 / 24.toFloat()
             val dailyTweets = Math.round(user.statuses_count / Math.max(1f, daysSinceCreation))
-
-            createdAtContainer.visibility = View.VISIBLE
-            createdAtContainer.createdAt.text = resources.getQuantityString(R.plurals.created_at_with_N_tweets_per_day, dailyTweets,
+            this.createdAt.text = resources.getQuantityString(R.plurals.created_at_with_N_tweets_per_day, dailyTweets,
                     createdAt, dailyTweets)
         } else {
-            createdAtContainer.visibility = View.GONE
+            this.createdAt.text = null
         }
+        this.createdAt.hideIfEmpty()
+
         val locale = Locale.getDefault()
 
-        listedContainer.listedCount.text = Utils.getLocalizedNumber(locale, user.listed_count)
-        groupsContainer.groupsCount.text = Utils.getLocalizedNumber(locale, user.groups_count)
-        followersContainer.followersCount.text = Utils.getLocalizedNumber(locale, user.followers_count)
-        friendsContainer.friendsCount.text = Utils.getLocalizedNumber(locale, user.friends_count)
+        listedCount.primaryText = Utils.getLocalizedNumber(locale, user.listed_count)
+        groupsCount.primaryText = Utils.getLocalizedNumber(locale, user.groups_count)
+        followersCount.primaryText = Utils.getLocalizedNumber(locale, user.followers_count)
+        friendsCount.primaryText = Utils.getLocalizedNumber(locale, user.friends_count)
 
-        listedContainer.visibility = if (user.listed_count < 0) View.GONE else View.VISIBLE
-        groupsContainer.visibility = if (user.groups_count < 0) View.GONE else View.VISIBLE
+        listedCount.updateText()
+        groupsCount.updateText()
+        followersCount.updateText()
+        friendsCount.updateText()
+
+        listedCount.visibility = if (user.listed_count < 0) View.GONE else View.VISIBLE
+        groupsCount.visibility = if (user.groups_count < 0) View.GONE else View.VISIBLE
 
         if (user.color != 0) {
             setUiColor(user.color)
@@ -536,7 +523,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             profileBirthdayBanner.visibility = View.GONE
         }
 
-        urlContainer.url.movementMethod = null
+        url.movementMethod = null
 
         updateTitleAlpha()
         activity.invalidateOptionsMenu()
@@ -577,8 +564,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             lm.restartLoader(LOADER_ID_USER, args, userInfoLoaderCallbacks)
         }
         if (userKey == null && screenName == null) {
-            cardContent.visibility = View.GONE
-            errorContainer.visibility = View.GONE
         }
     }
 
@@ -711,12 +696,11 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         followContainer.follow.setOnClickListener(this)
         profileImage.setOnClickListener(this)
         profileBanner.setOnClickListener(this)
-        listedContainer.setOnClickListener(this)
-        groupsContainer.setOnClickListener(this)
-        followersContainer.setOnClickListener(this)
-        friendsContainer.setOnClickListener(this)
-        errorIcon.setOnClickListener(this)
-        urlContainer.setOnClickListener(this)
+        listedCount.setOnClickListener(this)
+        groupsCount.setOnClickListener(this)
+        followersCount.setOnClickListener(this)
+        friendsCount.setOnClickListener(this)
+        url.setOnClickListener(this)
         profileBanner.onSizeChangedListener = this
         profileBannerSpace.setOnTouchListener(this)
 
@@ -727,7 +711,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         }
 
         profileNameBackground.setBackgroundColor(cardBackgroundColor)
-        profileDetailsContainer.setBackgroundColor(cardBackgroundColor)
         toolbarTabs.setBackgroundColor(cardBackgroundColor)
 
         val actionBarElevation = ThemeUtils.getSupportActionBarElevation(activity)
@@ -1237,19 +1220,19 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 IntentUtils.openMedia(activity, accountKey, media, null, false,
                         preferences[newDocumentApiKey], preferences[displaySensitiveContentsKey])
             }
-            R.id.listedContainer -> {
+            R.id.listedCount -> {
                 IntentUtils.openUserLists(getActivity(), accountKey, user.key,
                         user.screen_name)
             }
-            R.id.groupsContainer -> {
+            R.id.groupsCount -> {
                 IntentUtils.openUserGroups(getActivity(), accountKey, user.key,
                         user.screen_name)
             }
-            R.id.followersContainer -> {
+            R.id.followersCount -> {
                 IntentUtils.openUserFollowers(getActivity(), accountKey, user.key,
                         user.screen_name)
             }
-            R.id.friendsContainer -> {
+            R.id.friendsCount -> {
                 IntentUtils.openUserFriends(getActivity(), accountKey, user.key,
                         user.screen_name)
             }
@@ -1257,7 +1240,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 if (accountKey == user.key) return
                 IntentUtils.openProfileEditor(getActivity(), accountKey)
             }
-            R.id.urlContainer -> {
+            R.id.url -> {
                 val uri = user.urlPreferred?.let(Uri::parse) ?: return
                 OnLinkClickHandler.openLink(context, preferences, uri)
             }
@@ -1408,11 +1391,10 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         } else {
             ActivitySupport.setTaskDescription(activity, TaskDescriptionCompat(null, null, taskColor))
         }
-        val optimalAccentColor = ThemeUtils.getOptimalAccentColor(color,
-                descriptionContainer.description.currentTextColor)
-        descriptionContainer.description.setLinkTextColor(optimalAccentColor)
-        locationContainer.location.setLinkTextColor(optimalAccentColor)
-        urlContainer.url.setLinkTextColor(optimalAccentColor)
+        val optimalAccentColor = ThemeUtils.getOptimalAccentColor(color, description.currentTextColor)
+        description.setLinkTextColor(optimalAccentColor)
+        location.setLinkTextColor(optimalAccentColor)
+        url.setLinkTextColor(optimalAccentColor)
         profileBanner.setBackgroundColor(color)
 
         toolbarTabs.setBackgroundColor(primaryColor)
@@ -1439,13 +1421,13 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
         val lightFont = preferences[lightFontKey]
 
-        profileNameContainer.name.applyFontFamily(lightFont)
-        profileNameContainer.screenName.applyFontFamily(lightFont)
-        profileNameContainer.followingYouIndicator.applyFontFamily(lightFont)
-        descriptionContainer.description.applyFontFamily(lightFont)
-        urlContainer.url.applyFontFamily(lightFont)
-        locationContainer.location.applyFontFamily(lightFont)
-        createdAtContainer.createdAt.applyFontFamily(lightFont)
+        nameContainer.name.applyFontFamily(lightFont)
+        nameContainer.screenName.applyFontFamily(lightFont)
+        nameContainer.followingYouIndicator.applyFontFamily(lightFont)
+        description.applyFontFamily(lightFont)
+        url.applyFontFamily(lightFont)
+        location.applyFontFamily(lightFont)
+        createdAt.applyFontFamily(lightFont)
     }
 
     private fun setupUserPages() {
@@ -1466,13 +1448,13 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             tabArgs.putString(EXTRA_SCREEN_NAME, args.getString(EXTRA_SCREEN_NAME))
             tabArgs.putString(EXTRA_PROFILE_URL, args.getString(EXTRA_PROFILE_URL))
         }
-        pagerAdapter.add(cls = UserTimelineFragment::class.java, args = Bundle(tabArgs).apply {
+        pagerAdapter.add(cls = UserTimelineFragment::class.java, args = Bundle(tabArgs) {
             this[UserTimelineFragment.EXTRA_ENABLE_TIMELINE_FILTER] = true
             this[UserTimelineFragment.EXTRA_LOAD_PINNED_STATUS] = true
-        }, name = getString(R.string.title_statuses), type = TAB_TYPE_STATUSES,
-                position = TAB_POSITION_STATUSES)
-        pagerAdapter.add(cls = UserMediaTimelineFragment::class.java, args = tabArgs,
-                name = getString(R.string.media), type = TAB_TYPE_MEDIA, position = TAB_POSITION_MEDIA)
+        }, name = getString(R.string.title_statuses), type = TAB_TYPE_STATUSES, position = TAB_POSITION_STATUSES)
+        pagerAdapter.add(cls = UserMediaTimelineFragment::class.java, args = Bundle(tabArgs) {
+            this[EXTRA_TIMELINE_STYLE] = TimelineStyle.STAGGERED
+        }, name = getString(R.string.media), type = TAB_TYPE_MEDIA, position = TAB_POSITION_MEDIA)
         if (account?.type != AccountType.MASTODON || account?.key == userKey) {
             if (preferences[iWantMyStarsBackKey]) {
                 pagerAdapter.add(cls = FavoritesTimelineFragment::class.java, args = tabArgs,
@@ -1506,7 +1488,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val stackedTabColor = primaryColor
 
 
-        val profileContentHeight = (profileNameContainer!!.height + profileDetailsContainer.height).toFloat()
+        val profileContentHeight = profileNameBackground.height.toFloat()
         val tabOutlineAlphaFactor: Float
         if (offset - spaceHeight > 0) {
             tabOutlineAlphaFactor = 1f - ((offset - spaceHeight) / profileContentHeight).coerceIn(0f, 1f)
@@ -1565,8 +1547,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
     private fun updateTitleAlpha() {
         val location = IntArray(2)
-        profileNameContainer.name.getLocationInWindow(location)
-        val nameShowingRatio = (userProfileDrawer.paddingTop - location[1]) / profileNameContainer.name.height.toFloat()
+        nameContainer.name.getLocationInWindow(location)
+        val nameShowingRatio = (userProfileDrawer.paddingTop - location[1]) / nameContainer.name.height.toFloat()
         val textAlpha = nameShowingRatio.coerceIn(0f, 1f)
         val titleView = ViewSupport.findViewByText(toolbar, toolbar.title)
         if (titleView != null) {

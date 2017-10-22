@@ -57,14 +57,18 @@
         <attr name="android:background"/>
     </declare-styleable>
     <declare-styleable name="NameView">
-        <attr name="nv_twoLine" format="boolean"/>
-        <attr name="nv_nameFirst" format="boolean"/>
-        <attr name="nv_primaryTextColor" format="color"/>
-        <attr name="nv_secondaryTextColor" format="color"/>
-        <attr name="nv_primaryTextStyle"/>
-        <attr name="nv_secondaryTextStyle"/>
-        <attr name="nv_primaryTextSize" format="dimension"/>
-        <attr name="nv_secondaryTextSize" format="dimension"/>
+        <attr name="nvNameFirst" format="boolean"/>
+    </declare-styleable>
+    <declare-styleable name="TwoLineTextView">
+        <attr name="tltvTwoLine" format="boolean"/>
+        <attr name="tltvPrimaryText" format="string"/>
+        <attr name="tltvSecondaryText" format="string"/>
+        <attr name="tltvPrimaryTextColor" format="color"/>
+        <attr name="tltvSecondaryTextColor" format="color"/>
+        <attr name="tltvPrimaryTextStyle"/>
+        <attr name="tltvSecondaryTextStyle"/>
+        <attr name="tltvPrimaryTextSize" format="dimension"/>
+        <attr name="tltvSecondaryTextSize" format="dimension"/>
     </declare-styleable>
     <declare-styleable name="ValueDependencyPreference">
         <attr name="dependencyKey" format="string"/>
@@ -221,12 +225,12 @@
         <enum name="circle" value="0x1"/>
         <enum name="rectangle" value="0x2"/>
     </attr>
-    <attr name="nv_primaryTextStyle">
+    <attr name="tltvPrimaryTextStyle">
         <flag name="normal" value="0"/>
         <flag name="bold" value="1"/>
         <flag name="italic" value="2"/>
     </attr>
-    <attr name="nv_secondaryTextStyle">
+    <attr name="tltvSecondaryTextStyle">
         <flag name="normal" value="0"/>
         <flag name="bold" value="1"/>
         <flag name="italic" value="2"/>
