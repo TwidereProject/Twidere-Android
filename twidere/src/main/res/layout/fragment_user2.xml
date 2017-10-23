@@ -22,14 +22,25 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    app:statusBarBackground="@android:color/transparent"
+    tools:theme="@style/Theme.Twidere.NoActionBar">
+
+    <org.mariotaku.twidere.view.ExtendedViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="org.mariotaku.twidere.view.behavior.userprofile.PagerBehavior"/>
 
     <RelativeLayout
         android:id="@+id/profileBannerContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="top">
+        android:layout_gravity="top"
+        app:layout_behavior="org.mariotaku.twidere.view.behavior.userprofile.BannerBehavior">
 
         <org.mariotaku.twidere.view.ProfileBannerImageView
             android:id="@+id/profileBanner"
@@ -47,5 +58,99 @@
             android:layout_alignTop="@+id/profileBanner"
             android:layout="@layout/layout_user_profile_birthday_stub"/>
     </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/profileHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="org.mariotaku.twidere.view.behavior.userprofile.DetailsBehavior">
+
+        <include
+            layout="@layout/header_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include layout="@layout/layout_content_fragment_common"/>
+    </FrameLayout>
+
+
+    <FrameLayout
+        android:id="@+id/pagesErrorContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/element_spacing_large">
+
+            <org.mariotaku.twidere.view.IconActionView
+                android:id="@+id/pagesErrorIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:color="?android:textColorSecondary"
+                android:src="@drawable/ic_info_error_generic"/>
+
+            <org.mariotaku.twidere.view.FixedTextView
+                android:id="@+id/pagesErrorText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/element_spacing_normal"
+                android:textAppearance="?android:textAppearanceMedium"/>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/errorWindowOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/element_spacing_normal"
+            android:layout_gravity="top"
+            android:background="@drawable/shadow_bottom"/>
+
+    </FrameLayout>
+
+    <org.mariotaku.twidere.view.TabPagerIndicator
+        android:id="@+id/toolbarTabs"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/element_size_normal"
+        android:outlineProvider="background"
+        android:textColor="?android:textColorSecondary"
+        app:layout_behavior="org.mariotaku.twidere.view.behavior.userprofile.TabBehavior"
+        app:tabExpandEnabled="true"
+        app:tabHorizontalPadding="@dimen/element_spacing_large"
+        app:tabIconColor="?android:colorForeground"
+        app:tabShowDivider="false"
+        tools:ignore="UnusedAttribute"
+        tools:listitem="@layout/layout_tab_item"/>
+
+    <!-- Don't change view order, since this view consumes window insets-->
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:layout_alignParentTop="true"
+        android:elevation="@dimen/toolbar_elevation"
+        app:layout_behavior="org.mariotaku.twidere.view.behavior.userprofile.ToolbarBehavior"
+        app:popupTheme="?actionBarPopupTheme"
+        tools:background="@drawable/shadow_bottom"
+        tools:elevation="0dp"
+        tools:layout_marginTop="24dp"
+        tools:navigationIcon="@drawable/ic_action_back"
+        tools:title="User"
+        tools:titleTextColor="?android:colorBackground"/>
+
+    <View
+        android:id="@+id/pagerWindowOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:windowContentOverlay"/>
 
 </android.support.design.widget.CoordinatorLayout>

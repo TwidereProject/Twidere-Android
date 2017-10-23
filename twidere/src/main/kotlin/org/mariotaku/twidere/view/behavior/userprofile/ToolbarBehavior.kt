@@ -17,23 +17,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.ktextension
+package org.mariotaku.twidere.view.behavior.userprofile
 
-import android.annotation.TargetApi
-import android.graphics.Rect
-import android.os.Build
-import android.support.v4.view.WindowInsetsCompat
-import android.view.WindowInsets
+import android.content.Context
+import android.support.design.widget.CoordinatorLayout
+import android.support.v7.widget.Toolbar
+import android.util.AttributeSet
 
-inline val WindowInsetsCompat.systemWindowInsets: Rect
-    get() = Rect().also { getSystemWindowInsets(it) }
+internal class ToolbarBehavior(context: Context?, attrs: AttributeSet? = null) : CoordinatorLayout.Behavior<Toolbar>(context, attrs) {
 
-fun WindowInsetsCompat.getSystemWindowInsets(rect: Rect) {
-    rect.set(systemWindowInsetLeft, systemWindowInsetTop, systemWindowInsetRight,
-            systemWindowInsetBottom)
 }
-
-inline val WindowInsets.systemWindowInsets: Rect
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    get() = Rect(systemWindowInsetLeft, systemWindowInsetTop, systemWindowInsetRight,
-            systemWindowInsetBottom)

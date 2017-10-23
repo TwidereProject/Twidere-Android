@@ -861,7 +861,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val displayDoneIcon = isAccountSelectorVisible
 
         if (single != null) {
-            accountsCount.setText(null)
+            accountsCount.text = null
 
             if (displayDoneIcon) {
                 Glide.clear(accountProfileImage)
@@ -878,7 +878,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
             accountProfileImage.setBorderColor(single.color)
         } else {
-            accountsCount.setText(accounts.size.toString())
+            accountsCount.text = accounts.size.toString()
 
             Glide.clear(accountProfileImage)
             if (displayDoneIcon) {

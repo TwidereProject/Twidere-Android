@@ -42,7 +42,10 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
-            app:popupTheme="?actionBarPopupTheme"/>
+            app:popupTheme="?actionBarPopupTheme"
+            tools:backgroundTint="@color/branding_color"
+            tools:navigationIcon="@drawable/ic_action_back"
+            tools:title="Twidere"/>
 
         <org.mariotaku.twidere.view.TabPagerIndicator
             android:id="@+id/toolbarTabs"
