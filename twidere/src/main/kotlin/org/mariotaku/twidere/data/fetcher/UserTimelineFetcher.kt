@@ -28,6 +28,7 @@ import org.attoparser.simple.SimpleMarkupParser
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.mastodon.Mastodon
+import org.mariotaku.microblog.library.mastodon.model.LinkHeaderList
 import org.mariotaku.microblog.library.statusnet.StatusNet
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.Status
@@ -82,7 +83,7 @@ class UserTimelineFetcher(
         }
     }
 
-    override fun forMastodon(account: AccountDetails, mastodon: Mastodon, paging: Paging, filter: TimelineFilter?): List<MastodonStatus> {
+    override fun forMastodon(account: AccountDetails, mastodon: Mastodon, paging: Paging, filter: TimelineFilter?): LinkHeaderList<MastodonStatus> {
         val id = userKey?.id ?: throw MicroBlogException("Only ID are supported at this moment")
         val option = (filter as? UserTimelineFilter)?.toMastodonTimelineOption()
         return mastodon.getStatuses(id, paging, option)

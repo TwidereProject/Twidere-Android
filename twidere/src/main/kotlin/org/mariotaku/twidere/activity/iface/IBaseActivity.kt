@@ -55,15 +55,15 @@ interface IBaseActivity<out A : FragmentActivity> {
 
         fun dispatchOnPause(activity: A) {
             fragmentResumed = false
-            pauseActionQueue.executePending(activity, !fragmentResumed)
+            pauseActionQueue.executePending(activity)
         }
 
         fun dispatchOnResumeFragments(activity: A) {
             fragmentResumed = true
-            resumeActionQueue.executePending(activity, fragmentResumed)
+            resumeActionQueue.executePending(activity)
         }
 
-        private fun Queue<ExecuteInfo<A>>.executePending(activity: A, condition: Boolean) {
+        private fun Queue<ExecuteInfo<A>>.executePending(activity: A, condition: Boolean = true) {
             if (!condition) return
             var info: ExecuteInfo<A>?
             do {

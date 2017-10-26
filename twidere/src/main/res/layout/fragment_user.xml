@@ -1,7 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  ~ Twidere - Twitter client for Android
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~             Twidere - Twitter client for Android
   ~
-  ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
   ~
   ~  This program is free software: you can redistribute it and/or modify
   ~  it under the terms of the GNU General Public License as published by
@@ -17,21 +18,29 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<org.mariotaku.twidere.view.TintedStatusFrameLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/userFragmentView"
+    android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    app:setPadding="false">
+    app:statusBarBackground="@android:color/transparent"
+    tools:theme="@style/Theme.Twidere.NoActionBar">
+
+    <org.mariotaku.twidere.view.ExtendedViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="org.mariotaku.twidere.view.behavior.userprofile.PagerBehavior"/>
 
     <RelativeLayout
         android:id="@+id/profileBannerContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="top">
+        android:layout_gravity="top"
+        app:layout_behavior="org.mariotaku.twidere.view.behavior.userprofile.BannerBehavior">
 
         <org.mariotaku.twidere.view.ProfileBannerImageView
             android:id="@+id/profileBanner"
@@ -50,47 +59,84 @@
             android:layout="@layout/layout_user_profile_birthday_stub"/>
     </RelativeLayout>
 
-    <org.mariotaku.twidere.view.ExtendedRelativeLayout
-        android:id="@+id/profileContentContainer"
+    <FrameLayout
+        android:id="@+id/profileHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="org.mariotaku.twidere.view.behavior.userprofile.HeaderBehavior">
+
+        <include
+            layout="@layout/header_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </FrameLayout>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <org.mariotaku.twidere.view.ExtendedSwipeRefreshLayout
-            android:id="@+id/userProfileSwipeLayout"
+        <include layout="@layout/layout_content_fragment_common"/>
+    </FrameLayout>
+
+
+    <FrameLayout
+        android:id="@+id/pagesErrorContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/element_spacing_large">
 
-            <org.mariotaku.twidere.view.HeaderDrawerLayout
-                android:id="@+id/userProfileDrawer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:hdl_contentLayout="@layout/fragment_content_pages"
-                app:hdl_headerLayout="@layout/header_user"/>
-        </org.mariotaku.twidere.view.ExtendedSwipeRefreshLayout>
+            <org.mariotaku.twidere.view.IconActionView
+                android:id="@+id/pagesErrorIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:color="?android:textColorSecondary"
+                android:src="@drawable/ic_info_error_generic"/>
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <include layout="@layout/layout_content_fragment_common"/>
-        </FrameLayout>
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:layout_alignParentTop="true"
-            android:elevation="@dimen/toolbar_elevation"
-            app:popupTheme="?actionBarPopupTheme"
-            tools:elevation="0dp"/>
+            <org.mariotaku.twidere.view.FixedTextView
+                android:id="@+id/pagesErrorText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/element_spacing_normal"
+                android:textAppearance="?android:textAppearanceMedium"/>
+        </LinearLayout>
 
         <View
-            android:id="@+id/windowOverlay"
+            android:id="@+id/errorWindowOverlay"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/toolbar"
-            android:background="?android:windowContentOverlay"/>
+            android:layout_height="@dimen/element_spacing_normal"
+            android:layout_gravity="top"
+            android:background="@drawable/shadow_bottom"/>
 
-    </org.mariotaku.twidere.view.ExtendedRelativeLayout>
+    </FrameLayout>
 
-</org.mariotaku.twidere.view.TintedStatusFrameLayout>
+    <!-- Don't change view order, since this view consumes window insets-->
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:layout_alignParentTop="true"
+        android:elevation="@dimen/toolbar_elevation"
+        app:layout_behavior="org.mariotaku.twidere.view.behavior.userprofile.ToolbarBehavior"
+        app:popupTheme="?actionBarPopupTheme"
+        tools:background="@drawable/shadow_bottom"
+        tools:elevation="0dp"
+        tools:layout_marginTop="24dp"
+        tools:navigationIcon="@drawable/ic_action_back"
+        tools:title="User"
+        tools:titleTextColor="?android:colorBackground"/>
+
+    <View
+        android:id="@+id/pagerWindowOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:windowContentOverlay"/>
+
+</android.support.design.widget.CoordinatorLayout>

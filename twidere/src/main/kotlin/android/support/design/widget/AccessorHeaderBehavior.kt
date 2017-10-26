@@ -23,7 +23,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 
-internal open class PublicHeaderBehavior<V : View>(context: Context, attrs: AttributeSet? = null) : HeaderBehavior<V>(context, attrs) {
+internal open class AccessorHeaderBehavior<V : View>(context: Context, attrs: AttributeSet? = null) : HeaderBehavior<V>(context, attrs) {
 
     internal override fun getScrollRangeForDragFling(view: V): Int {
         return super.getScrollRangeForDragFling(view)

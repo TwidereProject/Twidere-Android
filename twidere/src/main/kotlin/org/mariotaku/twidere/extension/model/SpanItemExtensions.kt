@@ -19,17 +19,24 @@
 
 package org.mariotaku.twidere.extension.model
 
+import android.annotation.SuppressLint
+import android.graphics.drawable.Drawable
 import android.text.Spannable
 import android.text.Spanned
 import android.text.style.URLSpan
+import com.bumptech.glide.RequestManager
+import org.mariotaku.twidere.model.CustomEmoji
 import org.mariotaku.twidere.model.SpanItem
 import org.mariotaku.twidere.text.AcctMentionSpan
 import org.mariotaku.twidere.text.HashtagSpan
 import org.mariotaku.twidere.text.ZeroWidthSpan
+import org.mariotaku.twidere.text.style.CustomEmojiSpan
 
 val SpanItem.length: Int get() = end - start
 
-fun Array<SpanItem>.applyTo(spannable: Spannable) {
+@SuppressLint("SwitchIntDef")
+fun Array<SpanItem>.applyTo(spannable: Spannable, emojis: Map<String, CustomEmoji>?,
+        requestManager: RequestManager, callback: Drawable.Callback) {
     forEach { span ->
         when (span.type) {
             SpanItem.SpanType.HIDE -> {
@@ -43,6 +50,12 @@ fun Array<SpanItem>.applyTo(spannable: Spannable) {
             SpanItem.SpanType.HASHTAG -> {
                 spannable.setSpan(HashtagSpan(span.link), span.start, span.end,
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+            SpanItem.SpanType.EMOJI -> {
+                val shortCode = span.link ?: return@forEach
+                val emoji = emojis?.get(shortCode) ?: return@forEach
+                spannable.setSpan(CustomEmojiSpan(emoji.url, requestManager, callback), span.start,
+                        span.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             else -> {
                 spannable.setSpan(URLSpan(span.link), span.start, span.end,

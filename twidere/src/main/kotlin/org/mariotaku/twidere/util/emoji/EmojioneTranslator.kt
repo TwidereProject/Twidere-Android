@@ -19,26 +19,12 @@
 
 package org.mariotaku.twidere.util.emoji
 
-import android.content.Context
-import org.apache.commons.text.translate.CharSequenceTranslator
-import org.mariotaku.commons.emojione.ShortnameToUnicodeTranslator
-import java.io.Writer
+object EmojioneTranslator {
 
-/**
- * Created by mariotaku on 2017/4/26.
- */
-object EmojioneTranslator: CharSequenceTranslator() {
+    val shortCodePattern = Regex(":[-+\\w]+:")
 
-    private var implementation: ShortnameToUnicodeTranslator? = null
-
-    fun init(context: Context) {
-        if (implementation != null)return
-        implementation = ShortnameToUnicodeTranslator(context)
-    }
-
-    override fun translate(input: CharSequence?, index: Int, out: Writer?): Int {
-        val translator = implementation ?: return 0
-        return translator.translate(input, index, out)
+    fun translate(text: CharSequence): String = text.replace(shortCodePattern) { matchResult ->
+        EmojiOneShortCodeMap[matchResult.value] ?: matchResult.value
     }
 
 }

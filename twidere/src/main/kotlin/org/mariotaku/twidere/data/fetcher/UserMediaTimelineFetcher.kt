@@ -21,6 +21,7 @@ package org.mariotaku.twidere.data.fetcher
 
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.mastodon.Mastodon
+import org.mariotaku.microblog.library.mastodon.model.LinkHeaderList
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.ResponseList
 import org.mariotaku.microblog.library.twitter.model.SearchQuery
@@ -74,7 +75,7 @@ class UserMediaTimelineFetcher(
         throw APINotSupportedException("Media timeline", account.type)
     }
 
-    override fun forMastodon(account: AccountDetails, mastodon: Mastodon, paging: Paging, filter: TimelineFilter?): List<MastodonStatus> {
+    override fun forMastodon(account: AccountDetails, mastodon: Mastodon, paging: Paging, filter: TimelineFilter?): LinkHeaderList<MastodonStatus> {
         val option = MastodonTimelineOption()
         option.onlyMedia(true)
         return when {

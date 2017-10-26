@@ -93,7 +93,8 @@ class LargeMediaStatusViewHolder(private val adapter: IStatusesAdapter, itemView
         val displayEnd: Int
         if (adapter.linkHighlightingStyle != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
             text = SpannableStringBuilder.valueOf(status.text_unescaped).apply {
-                status.spans?.applyTo(this)
+                status.spans?.applyTo(this, status.extras?.emojis,
+                        adapter.requestManager, textView)
                 linkify.applyAllLinks(this, status.account_key, layoutPosition.toLong(),
                         status.is_possibly_sensitive, adapter.linkHighlightingStyle,
                         skipLinksInText)

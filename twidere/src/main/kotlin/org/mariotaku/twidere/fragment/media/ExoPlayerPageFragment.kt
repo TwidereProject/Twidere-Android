@@ -37,7 +37,7 @@ import com.google.android.exoplayer2.extractor.ExtractorsFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.LoopingMediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
-import com.google.android.exoplayer2.trackselection.AdaptiveVideoTrackSelection
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DataSource
@@ -111,7 +111,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)
     }
 
-    private val playerListener = object : ExoPlayer.EventListener {
+    private val playerListener = object : Player.EventListener {
         override fun onLoadingChanged(isLoading: Boolean) {
 
         }
@@ -123,11 +123,11 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
 
         override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
             when (playbackState) {
-                ExoPlayer.STATE_BUFFERING -> {
+                Player.STATE_BUFFERING -> {
                     playerView.keepScreenOn = true
                     showProgress(true, 0f)
                 }
-                ExoPlayer.STATE_ENDED -> {
+                Player.STATE_ENDED -> {
                     playbackCompleted = true
                     positionBackup = -1L
                     playerView.keepScreenOn = false
@@ -144,7 +144,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
 
                     adContainer.setVisible(true)
                 }
-                ExoPlayer.STATE_READY -> {
+                Player.STATE_READY -> {
                     playbackCompleted = playWhenReady
                     playerHasError = false
                     playerView.keepScreenOn = playWhenReady
@@ -152,7 +152,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
 
                     adContainer.setVisible(!playWhenReady)
                 }
-                ExoPlayer.STATE_IDLE -> {
+                Player.STATE_IDLE -> {
                     playerView.keepScreenOn = false
                     hideProgress()
 
@@ -170,6 +170,12 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         override fun onTracksChanged(trackGroups: TrackGroupArray, trackSelections: TrackSelectionArray) {
         }
 
+        override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters?) {
+
+        }
+
+        override fun onRepeatModeChanged(repeatMode: Int) {
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -317,9 +323,9 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         if (playerView.player != null) return
         playerView.player = run {
             val bandwidthMeter = DefaultBandwidthMeter()
-            val videoTrackSelectionFactory = AdaptiveVideoTrackSelection.Factory(bandwidthMeter)
+            val videoTrackSelectionFactory = AdaptiveTrackSelection.Factory(bandwidthMeter)
             val trackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
-            val player = ExoPlayerFactory.newSimpleInstance(context, trackSelector, DefaultLoadControl())
+            val player = ExoPlayerFactory.newSimpleInstance(context, trackSelector)
             if (positionBackup >= 0) {
                 player.seekTo(positionBackup)
             }

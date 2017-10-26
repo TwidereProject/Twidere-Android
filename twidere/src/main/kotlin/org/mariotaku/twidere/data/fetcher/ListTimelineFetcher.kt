@@ -22,6 +22,7 @@ package org.mariotaku.twidere.data.fetcher
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.mastodon.Mastodon
+import org.mariotaku.microblog.library.mastodon.model.LinkHeaderList
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.alias.MastodonStatus
@@ -61,7 +62,7 @@ class ListTimelineFetcher(
         throw APINotSupportedException("List timeline", account.type)
     }
 
-    override fun forMastodon(account: AccountDetails, mastodon: Mastodon, paging: Paging, filter: TimelineFilter?): List<MastodonStatus> {
+    override fun forMastodon(account: AccountDetails, mastodon: Mastodon, paging: Paging, filter: TimelineFilter?): LinkHeaderList<MastodonStatus> {
         throw APINotSupportedException("List timeline", account.type)
     }
 

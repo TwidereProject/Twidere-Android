@@ -17,27 +17,31 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.view.behavior.userprofile
+package android.support.design.widget
 
 import android.content.Context
-import android.support.design.widget.CoordinatorLayout
 import android.util.AttributeSet
 import android.view.View
-import org.mariotaku.twidere.R
 
-internal class BannerBehavior(context: Context, attrs: AttributeSet? = null) : CoordinatorLayout.Behavior<View>(context, attrs) {
 
-    override fun layoutDependsOn(parent: CoordinatorLayout, child: View, dependency: View): Boolean {
-        return dependency.id == R.id.profileHeader
+internal abstract class AccessorHeaderScrollingViewBehavior(context: Context, attrs: AttributeSet? = null) : HeaderScrollingViewBehavior(context, attrs) {
+    internal val tempRect1 = mTempRect1
+
+    internal val verticalLayoutGapAccessor = verticalLayoutGap
+
+    internal override fun getOverlapRatioForOffset(header: View): Float {
+        return super.getOverlapRatioForOffset(header)
     }
 
-    override fun onLayoutChild(parent: CoordinatorLayout, child: View, layoutDirection: Int): Boolean {
-        child.layout(0, 0, child.measuredWidth, child.measuredHeight)
-        return true
+    internal override fun findFirstDependency(views: List<View>): View? {
+        throw UnsupportedOperationException()
     }
 
-    override fun onDependentViewChanged(parent: CoordinatorLayout, child: View, dependency: View): Boolean {
-        child.translationY = (dependency.top / 2f).coerceIn(-child.height.toFloat()..0f)
-        return true
+    internal override fun getScrollRange(v: View): Int {
+        return super.getScrollRange(v)
+    }
+
+    internal fun getOverlapPixelsForOffsetAccessor(header: View): Int {
+        return getOverlapPixelsForOffset(header)
     }
 }

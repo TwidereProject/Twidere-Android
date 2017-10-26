@@ -22,6 +22,7 @@ package org.mariotaku.twidere.data.fetcher
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.mastodon.Mastodon
+import org.mariotaku.microblog.library.mastodon.model.LinkHeaderList
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.SearchQuery
 import org.mariotaku.microblog.library.twitter.model.Status
@@ -58,7 +59,7 @@ class SearchTimelineFetcher(val query: String?, val local: Boolean) : StatusesFe
         return fanfou.searchPublicTimeline(query, paging)
     }
 
-    override fun forMastodon(account: AccountDetails, mastodon: Mastodon, paging: Paging, filter: TimelineFilter?): List<MastodonStatus> {
+    override fun forMastodon(account: AccountDetails, mastodon: Mastodon, paging: Paging, filter: TimelineFilter?): LinkHeaderList<MastodonStatus> {
         if (query == null) throw MicroBlogException("Empty query")
         val tagQuery = if (query.startsWith("#")) query.substringAfter("#") else query
         return mastodon.getHashtagTimeline(tagQuery, paging, local)

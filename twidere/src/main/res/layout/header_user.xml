@@ -23,8 +23,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/headerUserProfile"
+
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <org.mariotaku.twidere.view.ProfileBannerSpace
         android:id="@+id/profileBannerSpace"
@@ -297,6 +300,22 @@
             tools:tltvPrimaryText="255"/>
 
     </LinearLayout>
+
+    <org.mariotaku.twidere.view.TabPagerIndicator
+        android:id="@+id/toolbarTabs"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/element_size_normal"
+        android:textColor="?android:textColorSecondary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/countsContainer"
+        app:tabExpandEnabled="true"
+        app:tabHorizontalPadding="@dimen/element_spacing_large"
+        app:tabIconColor="?android:colorForeground"
+        app:tabShowDivider="false"
+        tools:background="?cardBackgroundColor"
+        tools:ignore="UnusedAttribute"
+        tools:listitem="@layout/layout_tab_item"/>
 
     <org.mariotaku.twidere.view.ProfileImageView
         android:id="@+id/profileImage"

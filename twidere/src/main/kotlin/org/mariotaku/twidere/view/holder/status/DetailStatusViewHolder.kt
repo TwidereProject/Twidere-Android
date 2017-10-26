@@ -65,6 +65,7 @@ import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.twitter.card.TwitterCardViewFactory
 import org.mariotaku.twidere.view.ProfileImageView
+import org.mariotaku.twidere.view.TimelineContentTextView
 import java.util.*
 
 class DetailStatusViewHolder(
@@ -85,7 +86,7 @@ class DetailStatusViewHolder(
     private val translateChangeLanguageView = itemView.translateChangeLanguage
     private val translateContainer = itemView.translateContainer
     private val translateLabelView = itemView.translateLabel
-
+    private val quotedTextView: TimelineContentTextView = itemView.quotedText
 
     init {
         this.linkClickHandler = DetailStatusLinkClickHandler(adapter.context,
@@ -130,7 +131,7 @@ class DetailStatusViewHolder(
 
             if (quoteContentAvailable) {
                 itemView.quotedName.visibility = View.VISIBLE
-                itemView.quotedText.visibility = View.VISIBLE
+                quotedTextView.visibility = View.VISIBLE
 
                 itemView.quotedName.name = colorNameManager.getUserNickname(status.quoted_user_key!!,
                         status.quoted_user_name)
@@ -140,15 +141,16 @@ class DetailStatusViewHolder(
 
                 val quotedDisplayEnd = status.extras?.quoted_display_text_range?.getOrNull(1) ?: -1
                 val quotedText = SpannableStringBuilder.valueOf(status.quoted_text_unescaped)
-                status.quoted_spans?.applyTo(quotedText)
+                status.quoted_spans?.applyTo(quotedText, status.extras?.emojis,
+                        adapter.requestManager, quotedTextView)
                 linkify.applyAllLinks(quotedText, status.account_key, layoutPosition.toLong(),
                         status.is_possibly_sensitive, skipLinksInText)
                 if (quotedDisplayEnd != -1 && quotedDisplayEnd <= quotedText.length) {
-                    itemView.quotedText.spannable = quotedText.subSequence(0, quotedDisplayEnd)
+                    quotedTextView.spannable = quotedText.subSequence(0, quotedDisplayEnd)
                 } else {
-                    itemView.quotedText.spannable = quotedText
+                    quotedTextView.spannable = quotedText
                 }
-                itemView.quotedText.hideIfEmpty()
+                quotedTextView.hideIfEmpty()
 
                 val quotedUserColor = colorNameManager.getUserColor(status.quoted_user_key!!)
                 if (quotedUserColor != 0) {
@@ -175,7 +177,7 @@ class DetailStatusViewHolder(
                 }
             } else {
                 itemView.quotedName.visibility = View.GONE
-                itemView.quotedText.visibility = View.VISIBLE
+                quotedTextView.visibility = View.VISIBLE
                 itemView.quotedMediaLabel.visibility = View.GONE
                 itemView.quotedMediaPreview.visibility = View.GONE
 
@@ -184,7 +186,7 @@ class DetailStatusViewHolder(
                 string.setSpan(ForegroundColorSpan(ThemeUtils.getColorFromAttribute(context,
                         android.R.attr.textColorTertiary, textView.currentTextColor)), 0,
                         string.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                itemView.quotedText.spannable = string
+                quotedTextView.spannable = string
 
                 itemView.quotedView.drawStart(ThemeUtils.getColorFromAttribute(context,
                         R.attr.quoteIndicatorBackgroundColor))
@@ -238,15 +240,15 @@ class DetailStatusViewHolder(
         }
         itemView.timeSource.movementMethod = LinkMovementMethod.getInstance()
 
+        summaryView.spannable = status.extras?.summary_text
+        summaryView.hideIfEmpty()
+
         val displayEnd = status.extras?.display_text_range?.getOrNull(1) ?: -1
         val text = SpannableStringBuilder.valueOf(status.text_unescaped).apply {
-            status.spans?.applyTo(this)
+            status.spans?.applyTo(this, status.extras?.emojis, adapter.requestManager, textView)
             linkify.applyAllLinks(this, status.account_key, layoutPosition.toLong(),
                     status.is_possibly_sensitive, skipLinksInText)
         }
-
-        summaryView.spannable = status.extras?.summary_text
-        summaryView.hideIfEmpty()
 
         if (displayEnd != -1 && displayEnd <= text.length) {
             val displayText = text.subSequence(0, displayEnd)
@@ -363,7 +365,7 @@ class DetailStatusViewHolder(
         translateResultView.setTextIsSelectable(true)
 
         textView.movementMethod = LinkMovementMethod.getInstance()
-        itemView.quotedText.movementMethod = null
+        quotedTextView.movementMethod = null
     }
 
     override fun onClick(v: View) {
@@ -485,7 +487,7 @@ class DetailStatusViewHolder(
 
         itemView.quotedName.setPrimaryTextSize(textSize * 1.25f)
         itemView.quotedName.setSecondaryTextSize(textSize * 0.85f)
-        itemView.quotedText.textSize = textSize * 1.25f
+        quotedTextView.textSize = textSize * 1.25f
 
         locationView.textSize = textSize * 0.85f
         itemView.timeSource.textSize = textSize * 0.85f
@@ -519,7 +521,7 @@ class DetailStatusViewHolder(
         summaryView.applyFontFamily(adapter.lightFont)
         textView.applyFontFamily(adapter.lightFont)
         itemView.quotedName.applyFontFamily(adapter.lightFont)
-        itemView.quotedText.applyFontFamily(adapter.lightFont)
+        quotedTextView.applyFontFamily(adapter.lightFont)
         itemView.locationView.applyFontFamily(adapter.lightFont)
         translateLabelView.applyFontFamily(adapter.lightFont)
         translateResultView.applyFontFamily(adapter.lightFont)

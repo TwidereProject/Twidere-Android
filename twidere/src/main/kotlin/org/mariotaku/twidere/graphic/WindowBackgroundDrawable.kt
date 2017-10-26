@@ -24,9 +24,6 @@ import android.graphics.ColorFilter
 import android.graphics.PixelFormat
 import android.graphics.drawable.Drawable
 
-/**
- * Created by mariotaku on 16/3/30.
- */
 class WindowBackgroundDrawable(private val color: Int) : Drawable() {
 
     override fun draw(canvas: Canvas) {

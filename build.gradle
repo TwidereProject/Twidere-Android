@@ -6,7 +6,7 @@ buildscript {
         maven { url 'https://plugins.gradle.org/m2/' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-rc2'
+        classpath 'com.android.tools.build:gradle:3.0.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -52,11 +52,11 @@ subprojects {
                     MapsUtils              : '0.5',
                     DropboxCoreSdk         : '3.0.3',
                     GoogleDriveApi         : 'v3-rev81-1.22.0',
-                    Exoplayer              : 'r2.2.0',
+                    Exoplayer              : 'r2.5.4',
                     Toro                   : '2.1.0',
                     LoganSquare            : '1.3.7',
                     Mime4J                 : '0.7.2',
-                    OkHttp                 : '3.8.1',
+                    OkHttp                 : '3.9.0',
                     Stetho                 : '1.5.0',
                     OSMDroid               : '5.6.5',
                     LeakCanary             : '1.5.1',

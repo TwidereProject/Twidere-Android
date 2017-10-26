@@ -73,8 +73,8 @@ import android.view.animation.AnimationUtils
 import android.widget.TextView
 import android.widget.Toast
 import com.squareup.otto.Subscribe
-import kotlinx.android.synthetic.main.fragment_user2.*
-import kotlinx.android.synthetic.main.fragment_user2.view.*
+import kotlinx.android.synthetic.main.fragment_user.*
+import kotlinx.android.synthetic.main.fragment_user.view.*
 import kotlinx.android.synthetic.main.header_user.*
 import kotlinx.android.synthetic.main.header_user.view.*
 import kotlinx.android.synthetic.main.layout_content_fragment_common.*
@@ -390,7 +390,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
         if (user.description_unescaped != null) {
             val text = SpannableStringBuilder.valueOf(user.description_unescaped).apply {
-                user.description_spans?.applyTo(this)
+                user.description_spans?.applyTo(this, null, requestManager, description)
                 linkify.applyAllLinks(this, user.account_key, false, false)
             }
             description.spannable = text
@@ -502,7 +502,9 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
     override fun getSystemWindowInsets(caller: Fragment, insets: Rect): Boolean {
         insetsCallback?.getSystemWindowInsets(this, insets)
-        insets.top = 0
+        if (caller.parentFragment === this) {
+            insets.top = toolbar.bottom + toolbarTabs.height
+        }
         return true
     }
 
@@ -592,7 +594,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_user2, container, false)
+        return inflater.inflate(R.layout.fragment_user, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -637,9 +639,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
         profileNameBackground.setBackgroundColor(cardBackgroundColor)
         toolbarTabs.setBackgroundColor(cardBackgroundColor)
-
-        val actionBarElevation = ThemeUtils.getSupportActionBarElevation(activity)
-        ViewCompat.setElevation(toolbarTabs, actionBarElevation)
 
         actionBarBackground = ActionBarDrawable(ResourcesCompat.getDrawable(activity.resources,
                 R.drawable.shadow_user_banner_action_bar, null)!!)

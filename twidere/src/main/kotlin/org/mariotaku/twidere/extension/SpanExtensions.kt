@@ -22,15 +22,27 @@ package org.mariotaku.twidere.extension
 import android.text.Spanned
 import android.text.style.URLSpan
 import org.mariotaku.twidere.model.SpanItem
+import org.mariotaku.twidere.text.AcctMentionSpan
+import org.mariotaku.twidere.text.HashtagSpan
+import org.mariotaku.twidere.text.placeholder.CustomEmojiShortCodeSpan
 
-/**
- * Created by mariotaku on 2017/4/26.
- */
+fun URLSpan.toSpanItem(spanned: Spanned) = createSpanItem(spanned) { item ->
+    item.link = url
+    item.type = when (this) {
+        is AcctMentionSpan -> SpanItem.SpanType.ACCT_MENTION
+        is HashtagSpan -> SpanItem.SpanType.HASHTAG
+        else -> SpanItem.SpanType.LINK
+    }
+}
 
-fun URLSpan.toSpanItem(spanned: Spanned): SpanItem {
+fun CustomEmojiShortCodeSpan.toSpanItem(spanned: Spanned) = createSpanItem(spanned) { item ->
+    item.link = shortCode
+    item.type = SpanItem.SpanType.EMOJI
+}
+
+private inline fun Any.createSpanItem(spanned: Spanned, setup: (item: SpanItem) -> Unit): SpanItem {
     val spanItem = SpanItem()
-    spanItem.link = url
-    spanItem.type = SpanItem.SpanType.LINK
+    setup(spanItem)
     spanItem.start = spanned.getSpanStart(this)
     spanItem.end = spanned.getSpanEnd(this)
     return spanItem

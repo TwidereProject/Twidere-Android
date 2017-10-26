@@ -12,9 +12,6 @@ import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.activity.SignInActivity
 
 
-/**
- * Created by mariotaku on 2016/12/2.
- */
 class AccountAuthenticatorService : BaseService() {
 
     private lateinit var authenticator: TwidereAccountAuthenticator
@@ -22,6 +19,10 @@ class AccountAuthenticatorService : BaseService() {
     override fun onCreate() {
         super.onCreate()
         authenticator = TwidereAccountAuthenticator(this)
+
+//        AccountManager.get(this).addOnAccountsUpdatedListenerSafe(OnAccountsUpdateListener {
+//            NotificationChannelsManager.updateAccountChannelsAndGroups(this)
+//        }, updateImmediately = true)
     }
 
     override fun onBind(intent: Intent): IBinder {

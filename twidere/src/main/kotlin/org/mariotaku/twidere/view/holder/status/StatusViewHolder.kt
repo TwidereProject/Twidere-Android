@@ -230,7 +230,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
                 val quotedText: CharSequence
                 if (adapter.linkHighlightingStyle != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
                     quotedText = SpannableStringBuilder.valueOf(status.quoted_text_unescaped)
-                    status.quoted_spans?.applyTo(quotedText)
+                    status.quoted_spans?.applyTo(quotedText, status.extras?.emojis, requestManager,
+                            quotedTextView)
                     linkify.applyAllLinks(quotedText, status.account_key, layoutPosition.toLong(),
                             status.is_possibly_sensitive, adapter.linkHighlightingStyle,
                             skipLinksInText)
@@ -373,7 +374,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
             displayEnd = -1
         } else if (adapter.linkHighlightingStyle != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
             text = SpannableStringBuilder.valueOf(status.text_unescaped).apply {
-                status.spans?.applyTo(this)
+                status.spans?.applyTo(this, status.extras?.emojis, requestManager, textView)
                 linkify.applyAllLinks(this, status.account_key, layoutPosition.toLong(),
                         status.is_possibly_sensitive, adapter.linkHighlightingStyle,
                         skipLinksInText)

@@ -17,24 +17,31 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.data.status
+package org.mariotaku.twidere.util.emoji
 
-
-import android.arch.paging.LivePagedListProvider
 import android.content.Context
-import org.mariotaku.twidere.data.fetcher.StatusesFetcher
-import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.pagination.Pagination
-import org.mariotaku.twidere.model.timeline.TimelineFilter
+import org.mariotaku.twidere.R
 
-class StatusesLivePagedListProvider(
-        private val context: Context,
-        private val fetcher: StatusesFetcher,
-        private val accountKey: UserKey,
-        private val timelineFilter: TimelineFilter?
-) : LivePagedListProvider<Pagination, ParcelableStatus>() {
 
-    override fun createDataSource() = StatusesDataSource(context, fetcher, accountKey, timelineFilter)
+object EmojiOneShortCodeMap {
 
+    val ready: Boolean
+        get() = map != null
+
+    private var map: HashMap<String, String>? = null
+
+    fun init(context: Context) {
+        if (map != null) return
+        map = context.resources.openRawResource(R.raw.emojione_shortcodes).reader(Charsets.UTF_8).use {
+            val newMap = HashMap<String, String>()
+            it.forEachLine { line ->
+                val equalIdx = line.indexOf('=')
+                if (equalIdx < 0) return@forEachLine
+                newMap[line.substring(0, equalIdx)] = line.substring(equalIdx + 1)
+            }
+            return@use newMap
+        }
+    }
+
+    operator fun get(str: String): String? = map?.get(str)
 }

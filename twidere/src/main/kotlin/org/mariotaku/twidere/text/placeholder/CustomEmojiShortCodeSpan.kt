@@ -17,8 +17,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.text
+package org.mariotaku.twidere.text.placeholder
 
-import android.text.style.URLSpan
-
-class HashtagSpan(value: String) : URLSpan(value)
+class CustomEmojiShortCodeSpan(val shortCode: String)

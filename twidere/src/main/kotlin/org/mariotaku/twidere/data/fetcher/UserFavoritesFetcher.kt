@@ -20,8 +20,8 @@
 package org.mariotaku.twidere.data.fetcher
 
 import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.mastodon.Mastodon
+import org.mariotaku.microblog.library.mastodon.model.LinkHeaderList
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.alias.MastodonStatus
@@ -44,9 +44,9 @@ class UserFavoritesFetcher(val userKey: UserKey?, val userScreenName: String?) :
         return getMicroBlogUserFavorites(fanfou, paging)
     }
 
-    override fun forMastodon(account: AccountDetails, mastodon: Mastodon, paging: Paging, filter: TimelineFilter?): List<MastodonStatus> {
+    override fun forMastodon(account: AccountDetails, mastodon: Mastodon, paging: Paging, filter: TimelineFilter?): LinkHeaderList<MastodonStatus> {
         if (userKey != account.key) {
-            throw MicroBlogException("Only current account favorites is supported")
+            return LinkHeaderList()
         }
         return mastodon.getFavourites(paging)
     }

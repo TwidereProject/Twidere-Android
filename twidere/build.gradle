@@ -256,9 +256,6 @@ dependencies {
     implementation "com.github.mariotaku.CommonsLibrary:io:${libVersions['MariotakuCommons']}"
     implementation "com.github.mariotaku.CommonsLibrary:text:${libVersions['MariotakuCommons']}"
     implementation "com.github.mariotaku.CommonsLibrary:text-kotlin:${libVersions['MariotakuCommons']}"
-    implementation("com.github.mariotaku.CommonsLibrary:emojione-android:${libVersions['MariotakuCommons']}") {
-        exclude group: 'org.apache.commons', module: 'commons-text'
-    }
     implementation "com.github.mariotaku.CommonsLibrary:objectcursor:${libVersions['MariotakuCommons']}"
     implementation "com.github.mariotaku.CommonsLibrary:logansquare:${libVersions['MariotakuCommons']}"
     implementation "com.github.mariotaku:KPreferences:${libVersions['KPreferences']}"

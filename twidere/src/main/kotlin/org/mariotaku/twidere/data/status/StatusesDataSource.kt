@@ -29,11 +29,14 @@ import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
+import org.mariotaku.twidere.extension.model.api.mastodon.getLinkPagination
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.pagination.Pagination
+import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.timeline.TimelineFilter
 import org.mariotaku.twidere.model.util.AccountUtils
 
@@ -43,11 +46,20 @@ class StatusesDataSource(
         private val fetcher: StatusesFetcher,
         private val accountKey: UserKey,
         private val timelineFilter: TimelineFilter?
-) : KeyedDataSource<String, ParcelableStatus>() {
+) : KeyedDataSource<Pagination, ParcelableStatus>() {
 
     private val profileImageSize = context.getString(R.string.profile_image_size)
 
-    override fun getKey(item: ParcelableStatus) = item.id
+    private var lastEndKey: String? = null
+
+    override fun getKey(item: ParcelableStatus): Pagination {
+        val prevKey = item.extras?.prev_key
+        val nextKey = item.extras?.next_key
+        return SinceMaxPagination().apply {
+            sinceId = nextKey
+            maxId = prevKey
+        }
+    }
 
     override fun loadInitial(pageSize: Int): List<ParcelableStatus>? {
         return load(Paging().count(pageSize))?.filterNot {
@@ -55,15 +67,22 @@ class StatusesDataSource(
         }
     }
 
-    override fun loadBefore(currentBeginKey: String, pageSize: Int): List<ParcelableStatus>? {
-        return load(Paging().count(pageSize).sinceId(currentBeginKey))?.filterNot {
-            it.id == currentBeginKey && timelineFilter?.shouldFilter(it) == true
+    override fun loadBefore(currentBeginKey: Pagination, pageSize: Int): List<ParcelableStatus>? {
+        val sinceId = (currentBeginKey as? SinceMaxPagination)?.sinceId ?: return null
+        return load(Paging().count(pageSize).sinceId(sinceId))?.filterNot {
+            it.id == sinceId && timelineFilter?.shouldFilter(it) == true
         }
     }
 
-    override fun loadAfter(currentEndKey: String, pageSize: Int): List<ParcelableStatus>? {
-        return load(Paging().count(pageSize).maxId(currentEndKey))?.filterNot {
-            it.id == currentEndKey && timelineFilter?.shouldFilter(it) == true
+    override fun loadAfter(currentEndKey: Pagination, pageSize: Int): List<ParcelableStatus>? {
+        val maxId = (currentEndKey as? SinceMaxPagination)?.maxId ?: return null
+        if (lastEndKey == maxId) {
+            return null
+        }
+        val loadResult = load(Paging().count(pageSize).maxId(maxId)) ?: return null
+        lastEndKey = loadResult.singleOrNull()?.id
+        return loadResult.filterNot {
+            it.id == maxId && timelineFilter?.shouldFilter(it) == true
         }
     }
 
@@ -97,8 +116,13 @@ class StatusesDataSource(
                 AccountType.MASTODON -> {
                     val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
                     val timeline = fetcher.forMastodon(account, mastodon, paging, timelineFilter)
+                    val prevPagination = timeline.getLinkPagination("prev") as? SinceMaxPagination
+                    val nextPagination = timeline.getLinkPagination("next") as? SinceMaxPagination
                     return timeline.map {
-                        it.toParcelable(account)
+                        val status = it.toParcelable(account)
+                        status.extras?.prev_key = prevPagination?.sinceId
+                        status.extras?.next_key = nextPagination?.maxId
+                        return@map status
                     }
                 }
                 else -> throw UnsupportedOperationException()

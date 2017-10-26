@@ -9,10 +9,6 @@ import android.support.annotation.RequiresApi
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-/**
- * Created by mariotaku on 2016/12/2.
- */
-
 fun AccountManager.removeAccountSupport(
         account: Account,
         activity: Activity? = null,

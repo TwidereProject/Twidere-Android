@@ -20,7 +20,7 @@ import java.util.*
 
 /**
  * Class holding various entity data for HTML and XML - generally for use with
- * the LookupTranslator.
+ * the CustomEmojiTranslator.
  * All Maps are generated using `java.util.Collections.unmodifiableMap()`.
  *
  * @since 1.0

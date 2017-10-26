@@ -22,13 +22,14 @@ package org.mariotaku.twidere.data.fetcher
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.mastodon.Mastodon
+import org.mariotaku.microblog.library.mastodon.model.LinkHeaderList
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.alias.MastodonStatus
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.timeline.TimelineFilter
 
-class NetworkPublicTimelineFetcher: StatusesFetcher {
+class NetworkPublicTimelineFetcher : StatusesFetcher {
 
     override fun forTwitter(account: AccountDetails, twitter: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
         throw MicroBlogException("Network public timeline unsupported")
@@ -42,7 +43,7 @@ class NetworkPublicTimelineFetcher: StatusesFetcher {
         throw MicroBlogException("Network public timeline unsupported")
     }
 
-    override fun forMastodon(account: AccountDetails, mastodon: Mastodon, paging: Paging, filter: TimelineFilter?): List<MastodonStatus> {
+    override fun forMastodon(account: AccountDetails, mastodon: Mastodon, paging: Paging, filter: TimelineFilter?): LinkHeaderList<MastodonStatus> {
         return mastodon.getPublicTimeline(paging, false)
     }
 }

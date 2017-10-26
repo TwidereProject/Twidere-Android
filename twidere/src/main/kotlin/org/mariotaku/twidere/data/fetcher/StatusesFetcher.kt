@@ -21,6 +21,7 @@ package org.mariotaku.twidere.data.fetcher
 
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.mastodon.Mastodon
+import org.mariotaku.microblog.library.mastodon.model.LinkHeaderList
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.alias.MastodonStatus
@@ -39,6 +40,6 @@ interface StatusesFetcher {
     fun forFanfou(account: AccountDetails, fanfou: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status>
             = throw APINotSupportedException(account.type)
 
-    fun forMastodon(account: AccountDetails, mastodon: Mastodon, paging: Paging, filter: TimelineFilter?): List<MastodonStatus>
+    fun forMastodon(account: AccountDetails, mastodon: Mastodon, paging: Paging, filter: TimelineFilter?): LinkHeaderList<MastodonStatus>
             = throw APINotSupportedException(account.type)
 }
