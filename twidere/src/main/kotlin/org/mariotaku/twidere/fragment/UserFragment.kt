@@ -22,24 +22,19 @@ package org.mariotaku.twidere.fragment
 import android.accounts.AccountManager
 import android.animation.ArgbEvaluator
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.Outline
 import android.graphics.PorterDuff
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.LayerDrawable
 import android.net.Uri
 import android.nfc.NdefMessage
 import android.nfc.NdefRecord
 import android.nfc.NfcAdapter.CreateNdefMessageCallback
-import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.annotation.ColorRes
@@ -118,8 +113,8 @@ import org.mariotaku.twidere.fragment.timeline.AbsTimelineFragment
 import org.mariotaku.twidere.fragment.timeline.FavoritesTimelineFragment
 import org.mariotaku.twidere.fragment.timeline.UserMediaTimelineFragment
 import org.mariotaku.twidere.fragment.timeline.UserTimelineFragment
-import org.mariotaku.twidere.graphic.ActionBarColorDrawable
 import org.mariotaku.twidere.graphic.ActionIconDrawable
+import org.mariotaku.twidere.graphic.drawable.userprofile.ActionBarDrawable
 import org.mariotaku.twidere.loader.ParcelableUserLoader
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
@@ -637,7 +632,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         profileBanner.onSizeChangedListener = this
         profileBannerSpace.setOnTouchListener(this)
 
-        profileNameBackground.setBackgroundColor(cardBackgroundColor)
+        profileHeaderBackground.setBackgroundColor(cardBackgroundColor)
         toolbarTabs.setBackgroundColor(cardBackgroundColor)
 
         actionBarBackground = ActionBarDrawable(ResourcesCompat.getDrawable(activity.resources,
@@ -1301,8 +1296,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         location.setLinkTextColor(optimalAccentColor)
         url.setLinkTextColor(optimalAccentColor)
         profileBanner.setBackgroundColor(color)
-
-        toolbarTabs.setBackgroundColor(primaryColor)
     }
 
     private fun setupBaseActionBar() {
@@ -1370,11 +1363,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     private fun updateScrollOffset(offset: Int) {
         val spaceHeight = profileBannerSpace.height
         val factor = (if (spaceHeight == 0) 0f else offset / spaceHeight.toFloat()).coerceIn(0f, 1f)
-        profileBannerContainer.translationY = (-offset).toFloat()
-        profileBanner.translationY = (offset / 2).toFloat()
-        if (profileBirthdayStub == null) {
-            profileBirthdayBanner.translationY = (offset / 2).toFloat()
-        }
 
         val activity = activity as BaseActivity
 
@@ -1386,7 +1374,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val stackedTabColor = primaryColor
 
 
-        val profileContentHeight = profileNameBackground.height.toFloat()
+        val profileContentHeight = profileHeaderBackground.height.toFloat()
         val tabOutlineAlphaFactor: Float
         if (offset - spaceHeight > 0) {
             tabOutlineAlphaFactor = 1f - ((offset - spaceHeight) / profileContentHeight).coerceIn(0f, 1f)
@@ -1512,70 +1500,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             Toast.makeText(fragment.context, it.getErrorMessage(fragment.context),
                     Toast.LENGTH_SHORT).show()
         }
-    }
-
-    private class ActionBarDrawable(shadow: Drawable) : LayerDrawable(arrayOf(shadow, ActionBarColorDrawable.create(true))) {
-
-        private val shadowDrawable = getDrawable(0)
-        private val colorDrawable = getDrawable(1) as ColorDrawable
-        private var alphaValue: Int = 0
-
-        var factor: Float = 0f
-            set(value) {
-                field = value
-                updateValue()
-            }
-
-        var color: Int = 0
-            set(value) {
-                field = value
-                colorDrawable.color = value
-                updateValue()
-            }
-
-        var outlineAlphaFactor: Float = 0f
-            set(value) {
-                field = value
-                updateValue()
-            }
-
-        init {
-            alpha = 0xFF
-            updateValue()
-        }
-
-        override fun setAlpha(alpha: Int) {
-            alphaValue = alpha
-            updateValue()
-        }
-
-        override fun getAlpha(): Int {
-            return alphaValue
-        }
-
-        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-        override fun getOutline(outline: Outline) {
-            colorDrawable.getOutline(outline)
-            outline.alpha = factor * outlineAlphaFactor * 0.99f
-        }
-
-        override fun getIntrinsicWidth(): Int {
-            return colorDrawable.intrinsicWidth
-        }
-
-        override fun getIntrinsicHeight(): Int {
-            return colorDrawable.intrinsicHeight
-        }
-
-        private fun updateValue() {
-            val shadowAlpha = Math.round(alpha * (1 - factor).coerceIn(0f, 1f))
-            shadowDrawable.alpha = shadowAlpha
-            val hasColor = color != 0
-            val colorAlpha = if (hasColor) Math.round(alpha * factor.coerceIn(0f, 1f)) else 0
-            colorDrawable.alpha = colorAlpha
-            invalidateSelf()
-        }
-
     }
 
 

@@ -22,43 +22,53 @@ package org.mariotaku.twidere.view.behavior.userprofile
 import android.annotation.SuppressLint
 import android.content.Context
 import android.support.design.widget.CoordinatorLayout
+import android.support.design.widget.lastWindowInsetsCompat
 import android.support.graphics.drawable.ArgbEvaluator
-import android.support.v7.widget.Toolbar
 import android.util.AttributeSet
 import android.view.View
+import android.view.Window
 import kotlinx.android.synthetic.main.fragment_user.view.*
+import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.graphic.drawable.userprofile.ActionBarDrawable
 import org.mariotaku.twidere.util.ThemeUtils
+import org.mariotaku.twidere.util.support.WindowSupport
 
-internal class ToolbarBehavior(context: Context?, attrs: AttributeSet? = null) : CoordinatorLayout.Behavior<Toolbar>(context, attrs) {
+internal class StatusBarBehavior(context: Context, attrs: AttributeSet? = null) : CoordinatorLayout.Behavior<View>(context, attrs) {
 
-    private val actionBarShadowColor: Int = 0xA0000000.toInt()
-    private var actionItemIsDark: Int = 0
+    private val window: Window = ChameleonUtils.getActivity(context)!!.window
+    private var lightStatusBar: Int = 0
 
-    override fun layoutDependsOn(parent: CoordinatorLayout, child: Toolbar, dependency: View): Boolean {
+    override fun layoutDependsOn(parent: CoordinatorLayout, child: View, dependency: View): Boolean {
         return dependency.id == R.id.profileHeader
     }
 
+    override fun onLayoutChild(parent: CoordinatorLayout, child: View, layoutDirection: Int): Boolean {
+        val lastInsets = parent.lastWindowInsetsCompat ?: return true
+        val height = lastInsets.systemWindowInsetTop
+        child.layout(0, 0, child.measuredWidth, height)
+        return true
+    }
+
     @SuppressLint("RestrictedApi")
-    override fun onDependentViewChanged(parent: CoordinatorLayout, child: Toolbar, dependency: View): Boolean {
-        val actionBarBackground = child.background as? ActionBarDrawable ?: return false
+    override fun onDependentViewChanged(parent: CoordinatorLayout, child: View, dependency: View): Boolean {
+        if (child.height == 0) return true
+        val actionBarBackground = parent.toolbar.background as? ActionBarDrawable ?: return true
         val bannerContainer = parent.profileBannerContainer
         val bannerBottom = dependency.top + bannerContainer.height
         val currentOffset = bannerBottom - child.bottom
         val maxOffset = (bannerContainer.height - child.bottom).toFloat()
         val factor = (1 - currentOffset / maxOffset).coerceIn(0f, 1f)
-        actionBarBackground.factor = factor
-        actionBarBackground.outlineAlphaFactor = factor
 
-        val colorPrimary = actionBarBackground.color
-        val currentActionBarColor = ArgbEvaluator.getInstance().evaluate(factor, actionBarShadowColor,
-                colorPrimary) as Int
-        val actionItemIsDark = if (ThemeUtils.isLightColor(currentActionBarColor)) 1 else -1
-        if (this.actionItemIsDark != actionItemIsDark) {
-            ThemeUtils.applyToolbarItemColor(parent.context, child, currentActionBarColor)
+        val primaryColorDark = ChameleonUtils.darkenColor(actionBarBackground.color)
+        val statusBarColor = ArgbEvaluator.getInstance().evaluate(factor, 0xA0000000.toInt(),
+                ChameleonUtils.darkenColor(primaryColorDark))
+        child.setBackgroundColor(statusBarColor as Int)
+        val lightStatusBar = if (ThemeUtils.isLightColor(statusBarColor)) 1 else -1
+        if (this.lightStatusBar != lightStatusBar) {
+            WindowSupport.setLightStatusBar(window, lightStatusBar == 1)
         }
-        this.actionItemIsDark = actionItemIsDark
+        this.lightStatusBar = lightStatusBar
         return true
     }
 

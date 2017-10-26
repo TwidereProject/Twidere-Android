@@ -21,9 +21,7 @@ package org.mariotaku.twidere.view
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.text.Spannable
-import android.text.Spanned
 import android.text.method.BaseMovementMethod
 import android.text.method.MovementMethod
 import android.text.style.ClickableSpan
@@ -32,7 +30,6 @@ import android.view.MotionEvent
 import android.widget.TextView
 import org.mariotaku.chameleon.view.ChameleonTextView
 import org.mariotaku.twidere.extension.setupEmojiFactory
-import org.mariotaku.twidere.text.style.CustomEmojiSpan
 import java.lang.ref.WeakReference
 
 /**
@@ -87,16 +84,6 @@ class TimelineContentTextView(
         } catch (e: AbstractMethodError) {
             // http://crashes.to/s/69acd0ea0de
             true
-        }
-    }
-
-    override fun verifyDrawable(who: Drawable): Boolean {
-        val result = super.verifyDrawable(who)
-        if (result) return true
-        val spanned = text as? Spanned ?: return false
-        val spans = spanned.getSpans(0, length(), CustomEmojiSpan::class.java)
-        return spans.any {
-            it.verify(who)
         }
     }
 

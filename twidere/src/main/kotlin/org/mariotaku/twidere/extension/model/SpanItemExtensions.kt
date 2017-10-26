@@ -20,10 +20,10 @@
 package org.mariotaku.twidere.extension.model
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.Drawable
 import android.text.Spannable
 import android.text.Spanned
 import android.text.style.URLSpan
+import android.widget.TextView
 import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.model.CustomEmoji
 import org.mariotaku.twidere.model.SpanItem
@@ -36,7 +36,7 @@ val SpanItem.length: Int get() = end - start
 
 @SuppressLint("SwitchIntDef")
 fun Array<SpanItem>.applyTo(spannable: Spannable, emojis: Map<String, CustomEmoji>?,
-        requestManager: RequestManager, callback: Drawable.Callback) {
+        requestManager: RequestManager, textView: TextView) {
     forEach { span ->
         when (span.type) {
             SpanItem.SpanType.HIDE -> {
@@ -54,7 +54,7 @@ fun Array<SpanItem>.applyTo(spannable: Spannable, emojis: Map<String, CustomEmoj
             SpanItem.SpanType.EMOJI -> {
                 val shortCode = span.link ?: return@forEach
                 val emoji = emojis?.get(shortCode) ?: return@forEach
-                spannable.setSpan(CustomEmojiSpan(emoji.url, requestManager, callback), span.start,
+                spannable.setSpan(CustomEmojiSpan(emoji.url, requestManager, textView), span.start,
                         span.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             else -> {

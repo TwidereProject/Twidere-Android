@@ -117,7 +117,12 @@
 
     </FrameLayout>
 
-    <!-- Don't change view order, since this view consumes window insets-->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="org.mariotaku.twidere.view.behavior.userprofile.StatusBarBehavior"
+        tools:layout_height="25dp"/>
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"

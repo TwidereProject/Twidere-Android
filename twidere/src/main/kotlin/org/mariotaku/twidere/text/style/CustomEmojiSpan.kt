@@ -19,99 +19,95 @@
 
 package org.mariotaku.twidere.text.style
 
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.graphics.Rect
-import android.graphics.drawable.Animatable
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.support.v4.widget.CircularProgressDrawable
-import android.text.style.DynamicDrawableSpan
+import android.text.style.ReplacementSpan
 import android.widget.TextView
 import com.bumptech.glide.RequestManager
-import com.bumptech.glide.load.resource.drawable.GlideDrawable
 import com.bumptech.glide.request.animation.GlideAnimation
 import com.bumptech.glide.request.target.BaseTarget
 import com.bumptech.glide.request.target.SizeReadyCallback
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.graphic.DrawableWrapper
+import java.lang.ref.WeakReference
 
 class CustomEmojiSpan(
         val uri: String,
         requestManager: RequestManager,
-        callback: Drawable.Callback
-) : DynamicDrawableSpan(DynamicDrawableSpan.ALIGN_BASELINE) {
+        val textView: TextView,
+        val alignBaseline: Boolean = false
+) : ReplacementSpan() {
 
-    private val textSize = (callback as TextView).textSize.toInt()
+    private val textSize = textView.textSize.toInt()
 
-    private val emojiDrawable = EmojiDrawable(textSize)
-    private val emojiDirtyBounds = Rect()
-
-    private val target = GlideTarget()
+    private val target = GlideTarget(textSize)
 
     init {
-        emojiDrawable.callback = callback
         requestManager.load(uri)
-                .placeholder(CircularProgressDrawable((callback as TextView).context))
+                .asBitmap()
+                .placeholder(R.mipmap.ic_emoji_loading)
                 .error(R.mipmap.ic_emoji_error)
                 .fitCenter()
+                .dontAnimate()
                 .into(target)
+    }
+
+    override fun getSize(paint: Paint, text: CharSequence, start: Int, end: Int,
+            fm: Paint.FontMetricsInt?): Int {
+        return textSize
     }
 
     override fun draw(canvas: Canvas, text: CharSequence, start: Int, end: Int, x: Float, top: Int,
             y: Int, bottom: Int, paint: Paint) {
+        val b = target.drawable ?: return
+        canvas.save()
 
-        var transY = bottom - emojiDrawable.bounds.bottom
-        if (verticalAlignment == ALIGN_BASELINE) {
+        var transY = bottom - b.bounds.bottom
+        if (alignBaseline) {
             transY -= paint.fontMetricsInt.descent
         }
-        emojiDrawable.copyBounds(emojiDirtyBounds)
-        emojiDirtyBounds.offsetTo(x.toInt(), transY)
-        super.draw(canvas, text, start, end, x, top, y, bottom, paint)
+
+        canvas.translate(x, transY.toFloat())
+        b.setBounds(0, 0, textSize, textSize)
+        b.draw(canvas)
+        canvas.restore()
     }
 
-    override fun getDrawable(): Drawable = emojiDrawable
+    private inner class GlideTarget(
+            val textSize: Int
+    ) : BaseTarget<Bitmap>() {
 
-    fun verify(who: Drawable): Boolean = who === emojiDrawable
+        var drawable: Drawable?
+            get() = drawableRef?.get()
+            private set(value) {
+                drawableRef = if (value != null) WeakReference(value) else null
+                textView.invalidate()
+            }
 
-    private inner class GlideTarget : BaseTarget<GlideDrawable>() {
+        private var drawableRef: WeakReference<Drawable>? = null
 
-        override fun onResourceReady(resource: GlideDrawable, glideAnimation: GlideAnimation<in GlideDrawable>) {
-            resource.setLoopCount(GlideDrawable.LOOP_FOREVER)
-            emojiDrawable.setDrawable(resource)
+        override fun onResourceReady(resource: Bitmap, glideAnimation: GlideAnimation<in Bitmap>) {
+            drawable = BitmapDrawable(textView.resources, resource)
         }
 
         override fun onLoadCleared(placeholder: Drawable?) {
-            emojiDrawable.setDrawable(placeholder)
+            drawable = placeholder
         }
 
         override fun onLoadStarted(placeholder: Drawable?) {
-            emojiDrawable.setDrawable(placeholder)
+            drawable = placeholder
         }
 
         override fun onLoadFailed(e: Exception?, errorDrawable: Drawable?) {
-            emojiDrawable.setDrawable(errorDrawable)
+            drawable = errorDrawable
         }
 
         override fun getSize(cb: SizeReadyCallback) {
             cb.onSizeReady(textSize, textSize)
         }
 
-    }
-
-    private inner class EmojiDrawable(val textSize: Int) : DrawableWrapper() {
-
-        override fun getDirtyBounds(): Rect {
-            return emojiDirtyBounds
-        }
-
-        fun setDrawable(drawable: Drawable?) {
-            wrapped = drawable
-            drawable?.setBounds(0, 0, textSize, textSize)
-            setBounds(0, 0, textSize, textSize)
-            if (drawable is Animatable) {
-                drawable.start()
-            }
-        }
     }
 
 }
