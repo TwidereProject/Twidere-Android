@@ -139,6 +139,35 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             return mainTabs.height - mainTabs.stripHeight
         }
 
+    override var controlBarOffset: Float
+        get() {
+            if (mainTabs.columns > 1) {
+                val lp = actionsButton.layoutParams
+                val total: Float
+                total = if (lp is MarginLayoutParams) {
+                    (lp.bottomMargin + actionsButton.height).toFloat()
+                } else {
+                    actionsButton.height.toFloat()
+                }
+                return 1 - actionsButton.translationY / total
+            }
+            val totalHeight = controlBarHeight.toFloat()
+            return 1 + toolbar.translationY / totalHeight
+        }
+        set(offset) {
+            if (mainTabsContainer.visibility != View.VISIBLE) return
+            val translationY = if (mainTabs.columns > 1) 0 else (controlBarHeight * (offset - 1)).toInt()
+            toolbar.translationY = translationY.toFloat()
+            windowOverlay.translationY = translationY.toFloat()
+            val lp = actionsButton.layoutParams
+            if (lp is MarginLayoutParams) {
+                actionsButton.translationY = (lp.bottomMargin + actionsButton.height) * (1 - offset)
+            } else {
+                actionsButton.translationY = actionsButton.height * (1 - offset)
+            }
+            notifyControlBarOffsetChanged()
+        }
+
     override val currentVisibleFragment: Fragment?
         get() {
             val currentItem = mainPager.currentItem
@@ -602,35 +631,6 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
     val tabs: List<SupportTabSpec>
         get() = pagerAdapter.tabs
-
-    override var controlBarOffset: Float
-        get() {
-            if (mainTabs.columns > 1) {
-                val lp = actionsButton.layoutParams
-                val total: Float
-                total = if (lp is MarginLayoutParams) {
-                    (lp.bottomMargin + actionsButton.height).toFloat()
-                } else {
-                    actionsButton.height.toFloat()
-                }
-                return 1 - actionsButton.translationY / total
-            }
-            val totalHeight = controlBarHeight.toFloat()
-            return 1 + toolbar.translationY / totalHeight
-        }
-        set(offset) {
-            if (mainTabsContainer.visibility != View.VISIBLE) return
-            val translationY = if (mainTabs.columns > 1) 0 else (controlBarHeight * (offset - 1)).toInt()
-            toolbar.translationY = translationY.toFloat()
-            windowOverlay.translationY = translationY.toFloat()
-            val lp = actionsButton.layoutParams
-            if (lp is MarginLayoutParams) {
-                actionsButton.translationY = (lp.bottomMargin + actionsButton.height) * (1 - offset)
-            } else {
-                actionsButton.translationY = actionsButton.height * (1 - offset)
-            }
-            notifyControlBarOffsetChanged()
-        }
 
     override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
 

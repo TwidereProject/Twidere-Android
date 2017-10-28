@@ -43,9 +43,6 @@ import org.mariotaku.twidere.util.TwidereColorUtils
 import org.mariotaku.twidere.view.ExtendedSwipeRefreshLayout
 import org.mariotaku.twidere.view.iface.IExtendedView
 
-/**
- * Created by mariotaku on 15/10/26.
- */
 abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<RecyclerView.ViewHolder>,
         L : RecyclerView.LayoutManager> : BaseFragment(), SwipeRefreshLayout.OnRefreshListener,
         RefreshScrollTopInterface, IControlBarActivity.ControlBarOffsetListener,

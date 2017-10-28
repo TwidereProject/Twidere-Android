@@ -72,7 +72,7 @@
     </FrameLayout>
 
     <View
-        android:id="@+id/pagerWindowOverlay"
+        android:id="@+id/tabsShadow"
         android:layout_width="match_parent"
         android:layout_height="@dimen/element_spacing_msmall"
         android:background="@drawable/shadow_bottom"

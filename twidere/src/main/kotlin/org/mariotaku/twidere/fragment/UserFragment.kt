@@ -92,6 +92,7 @@ import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity
 import org.mariotaku.twidere.activity.LinkHandlerActivity
 import org.mariotaku.twidere.activity.iface.IBaseActivity
+import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.TimelineStyle
@@ -139,7 +140,7 @@ import org.mariotaku.twidere.view.TabPagerIndicator
 import java.util.*
 
 class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
-        OnTouchListener, SupportFragmentCallback,
+        OnTouchListener, SupportFragmentCallback, LinkHandlerActivity.HideUiOnScroll,
         SystemWindowInsetsCallback, RefreshScrollTopInterface, OnPageChangeListener,
         KeyboardShortcutCallback, UserColorChangedListener, UserNicknameChangedListener,
         IToolBarSupportFragment, AbsContentRecyclerViewFragment.RefreshCompleteListener {
@@ -147,18 +148,30 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     override val fragmentToolbar: Toolbar
         get() = toolbar
 
+    override var controlBarOffset: Float
+        get() {
+            return 1 + toolbar.translationY / 0.98f / controlBarHeight
+        }
+        set(offset) {
+            val translationY = (offset - 1) * controlBarHeight
+            toolbar.translationY = translationY * 0.98f
+            profileHeader.translationY = translationY
+            tabsShadow.translationY = translationY
+        }
+
+    override val controlBarHeight: Int
+        get() = toolbar.height
+
     private lateinit var profileBirthdayBanner: View
     private lateinit var pagerAdapter: SupportTabsAdapter
 
     // Data fields
-    var user: ParcelableUser? = null
-        private set
+    private var user: ParcelableUser? = null
     private var account: AccountDetails? = null
     private var relationship: ParcelableRelationship? = null
 
     private var userInfoLoaderInitialized: Boolean = false
     private var friendShipLoaderInitialized: Boolean = false
-    private var bannerWidth: Int = 0
     private var cardBackgroundColor: Int = 0
     private var actionBarShadowColor: Int = 0
     private var uiColor: Int = 0
@@ -326,7 +339,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     override fun onPageScrollStateChanged(state: Int) {
-
+        (activity as? IControlBarActivity)?.setControlBarVisibleAnimate(true)
     }
 
     @UiThread
@@ -432,8 +445,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             setUiColor(theme.colorPrimary)
         }
         val defWidth = resources.displayMetrics.widthPixels
-        val width = if (bannerWidth > 0) bannerWidth else defWidth
-        requestManager.loadProfileBanner(context, user, width).into(profileBanner)
+        requestManager.loadProfileBanner(context, user, defWidth).into(profileBanner)
         requestManager.loadOriginalProfileImage(context, user, profileImage.style,
                 profileImage.cornerRadius, profileImage.cornerRadiusRatio)
                 .thumbnail(requestManager.loadProfileImage(context, user, profileImage.style,
@@ -1344,14 +1356,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             }
         }
     }
-
-    override var controlBarOffset: Float
-        get() = 0f
-        set(value) = Unit //Ignore
-
-    override val controlBarHeight: Int
-        get() = 0
-
 
     private fun ParcelableRelationship.check(user: ParcelableUser): Boolean {
         if (account_key != user.account_key) {
