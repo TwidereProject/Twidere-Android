@@ -41,9 +41,20 @@ internal class ToolbarBehavior(context: Context?, attrs: AttributeSet? = null) :
         return dependency.id == R.id.profileHeader
     }
 
-    @SuppressLint("RestrictedApi")
+    override fun onLayoutChild(parent: CoordinatorLayout, child: Toolbar, layoutDirection: Int): Boolean {
+        val ret = super.onLayoutChild(parent, child, layoutDirection)
+        updateToolbarFactor(parent, child, parent.getDependencies(child).first())
+        return ret
+    }
+
     override fun onDependentViewChanged(parent: CoordinatorLayout, child: Toolbar, dependency: View): Boolean {
-        val actionBarBackground = child.background as? ActionBarDrawable ?: return false
+        if (updateToolbarFactor(parent, child, dependency)) return false
+        return true
+    }
+
+    @SuppressLint("RestrictedApi")
+    private fun updateToolbarFactor(parent: CoordinatorLayout, child: Toolbar, dependency: View): Boolean {
+        val actionBarBackground = child.background as? ActionBarDrawable ?: return true
         val bannerContainer = parent.profileBannerContainer
         val detailsBackground = parent.profileHeaderBackground
         val bannerBottom = dependency.top + bannerContainer.bottom
@@ -69,7 +80,7 @@ internal class ToolbarBehavior(context: Context?, attrs: AttributeSet? = null) :
             ThemeUtils.applyToolbarItemColor(parent.context, child, currentActionBarColor)
         }
         this.actionItemIsDark = actionItemIsDark
-        return true
+        return false
     }
 
 }

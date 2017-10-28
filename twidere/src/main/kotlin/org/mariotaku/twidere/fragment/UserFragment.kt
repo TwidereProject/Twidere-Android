@@ -164,8 +164,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     private var uiColor: Int = 0
     private var primaryColor: Int = 0
     private var nameFirst: Boolean = false
-    private var previousTabItemIsDark: Int = 0
-    private var previousActionBarItemIsDark: Int = 0
     private var hideBirthdayView: Boolean = false
 
     private val friendshipLoaderCallbacks = object : LoaderCallbacks<SingleResponse<ParcelableRelationship>> {
@@ -1250,9 +1248,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     private fun setUiColor(color: Int) {
         val theme = Chameleon.getOverrideTheme(activity, activity)
         uiColor = if (color != 0) color else theme.colorPrimary
-        previousActionBarItemIsDark = 0
-        previousTabItemIsDark = 0
-        setupViewStyle()
         val activity = activity as BaseActivity
         primaryColor = if (theme.isToolbarColored) {
             color
@@ -1291,11 +1286,9 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
         val actionBarElevation = ThemeUtils.getSupportActionBarElevation(activity)
         ViewCompat.setElevation(toolbar, actionBarElevation)
-//        ViewCompat.setElevation(profileHeader, actionBarElevation)
         ViewCompat.setElevation(statusBarBackground, actionBarElevation * 2)
 
         ViewSupport.setOutlineProvider(toolbar, ViewOutlineProviderCompat.BACKGROUND)
-//        ViewSupport.setOutlineProvider(profileHeader, ViewOutlineProviderCompat.BOUNDS)
         ViewSupport.setOutlineProvider(statusBarBackground, null)
     }
 
