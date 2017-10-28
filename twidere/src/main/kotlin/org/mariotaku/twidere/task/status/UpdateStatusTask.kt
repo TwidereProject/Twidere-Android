@@ -779,7 +779,7 @@ class UpdateStatusTask(
                             ContentLengthInputStream.ReadListener { length, position ->
                                 callback?.onUploadingProgressChanged(index, position, length)
                             })
-                    resp = mastodon.uploadMediaAttachment(body.body)
+                    resp = mastodon.uploadMediaAttachment(body.body, item.alt_text)
                 } catch (e: IOException) {
                     throw UploadException(e).apply {
                         this.deleteAlways = deleteAlways
