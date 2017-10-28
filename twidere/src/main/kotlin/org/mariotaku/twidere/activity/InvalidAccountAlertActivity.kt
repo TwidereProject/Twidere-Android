@@ -12,7 +12,7 @@ import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
-import org.mariotaku.ktextension.weak
+import org.mariotaku.ktextension.toWeak
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.iface.IBaseActivity
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_INTENT
@@ -55,7 +55,7 @@ class InvalidAccountAlertActivity : FragmentActivity(), IBaseActivity<InvalidAcc
 
     fun removeInvalidAccounts() {
         val am = AccountManager.get(this)
-        val weakThis = weak()
+        val weakThis = toWeak()
         val invalidAccounts = AccountUtils.getAccounts(am).filter { !am.isAccountValid(it) }
         (showProgressDialog("remove_invalid_accounts") and task {
             invalidAccounts.forEach { account ->

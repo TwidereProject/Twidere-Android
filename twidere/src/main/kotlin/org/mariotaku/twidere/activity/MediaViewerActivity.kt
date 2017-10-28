@@ -536,7 +536,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
 
     private fun saveMediaToContentUri(data: Uri) {
         val fileInfo = getCurrentCacheFileInfo(viewPager.currentItem) ?: return
-        val weakThis = weak()
+        val weakThis = toWeak()
         (showProgressDialog("save_media_to_progress") and task {
             val a = weakThis.get() ?: throw InterruptedException()
             fileInfo.inputStream().use { st ->

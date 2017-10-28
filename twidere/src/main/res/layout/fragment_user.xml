@@ -18,7 +18,7 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<android.support.design.widget.CoordinatorLayout
+<org.mariotaku.twidere.view.userprofile.UserProfileCoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -26,7 +26,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    app:statusBarBackground="@android:color/transparent"
+    app:statusBarBackground="@null"
     tools:theme="@style/Theme.Twidere.NoActionBar">
 
     <org.mariotaku.twidere.view.ExtendedViewPager
@@ -119,6 +119,7 @@
 
     <View
         android:layout_width="match_parent"
+        android:id="@+id/statusBarBackground"
         android:layout_height="wrap_content"
         app:layout_behavior="org.mariotaku.twidere.view.behavior.userprofile.StatusBarBehavior"
         tools:layout_height="25dp"/>
@@ -128,7 +129,6 @@
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:layout_alignParentTop="true"
-        android:elevation="@dimen/toolbar_elevation"
         app:layout_behavior="org.mariotaku.twidere.view.behavior.userprofile.ToolbarBehavior"
         app:popupTheme="?actionBarPopupTheme"
         tools:background="@drawable/shadow_bottom"
@@ -144,4 +144,4 @@
         android:layout_height="wrap_content"
         android:background="?android:windowContentOverlay"/>
 
-</android.support.design.widget.CoordinatorLayout>
+</org.mariotaku.twidere.view.userprofile.UserProfileCoordinatorLayout>

@@ -25,7 +25,7 @@ import android.database.ContentObserver
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
-import org.mariotaku.ktextension.weak
+import org.mariotaku.ktextension.toWeak
 import org.mariotaku.twidere.extension.queryAll
 import org.mariotaku.twidere.extension.queryCount
 
@@ -40,7 +40,7 @@ class CursorObjectTiledDataSource<T>(
 ) : TiledDataSource<T>() {
 
     init {
-        val weakThis = weak()
+        val weakThis = toWeak()
         val observer = object : ContentObserver(MainHandler) {
             override fun onChange(selfChange: Boolean) {
                 weakThis.get()?.invalidate()

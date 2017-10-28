@@ -35,7 +35,6 @@ import nl.komponents.kovenant.android.startKovenant
 import nl.komponents.kovenant.android.stopKovenant
 import nl.komponents.kovenant.task
 import okhttp3.Dns
-import org.mariotaku.commons.logansquare.LoganSquareMapperFinder
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
@@ -56,7 +55,6 @@ import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.receiver.ConnectivityStateReceiver
 import org.mariotaku.twidere.service.StreamingService
 import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.util.concurrent.ConstantFuture
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.emoji.EmojiOneShortCodeMap
@@ -71,8 +69,6 @@ import org.mariotaku.twidere.util.refresh.AutoRefreshController
 import org.mariotaku.twidere.util.sync.DataSyncProvider
 import org.mariotaku.twidere.util.sync.SyncController
 import java.util.*
-import java.util.concurrent.Callable
-import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -309,16 +305,10 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
             Class.forName(AsyncTask::class.java.name)
         } catch (ignore: ClassNotFoundException) {
         }
-        LoganSquareMapperFinder.setDefaultExecutor(object : LoganSquareMapperFinder.FutureExecutor {
-            override fun <T> submit(callable: Callable<T>): Future<T> {
-                return ConstantFuture(callable.call())
-            }
-        })
     }
 
     companion object {
 
-        private val KEY_KEYBOARD_SHORTCUT_INITIALIZED = "keyboard_shortcut_initialized"
         var instance: TwidereApplication? = null
             private set
 

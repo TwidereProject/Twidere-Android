@@ -22,8 +22,12 @@ package android.support.design.widget
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import android.widget.OverScroller
 
 internal open class AccessorHeaderBehavior<V : View>(context: Context, attrs: AttributeSet? = null) : HeaderBehavior<V>(context, attrs) {
+
+    internal val scroller: OverScroller?
+        get() = mScroller
 
     internal override fun getScrollRangeForDragFling(view: V): Int {
         return super.getScrollRangeForDragFling(view)
@@ -45,11 +49,21 @@ internal open class AccessorHeaderBehavior<V : View>(context: Context, attrs: At
         return super.getTopBottomOffsetForScrollingSibling()
     }
 
-    internal override fun onFlingFinished(parent: CoordinatorLayout?, layout: V) {
+    internal override fun onFlingFinished(parent: CoordinatorLayout, layout: V) {
         super.onFlingFinished(parent, layout)
     }
 
     internal override fun canDragView(view: V): Boolean {
         return super.canDragView(view)
+    }
+
+    internal fun scrollAccessor(coordinatorLayout: CoordinatorLayout, header: V,
+            dy: Int, minOffset: Int, maxOffset: Int): Int {
+        return scroll(coordinatorLayout, header, dy, minOffset, maxOffset)
+    }
+
+    internal fun flingAccessor(coordinatorLayout: CoordinatorLayout, layout: V, minOffset: Int,
+            maxOffset: Int, velocityY: Float): Boolean {
+        return fling(coordinatorLayout, layout, minOffset, maxOffset, velocityY)
     }
 }

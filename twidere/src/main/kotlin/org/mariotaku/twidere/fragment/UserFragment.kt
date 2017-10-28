@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.fragment
 
 import android.accounts.AccountManager
-import android.animation.ArgbEvaluator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
@@ -30,7 +29,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.Rect
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.nfc.NdefMessage
 import android.nfc.NdefRecord
@@ -79,7 +77,6 @@ import nl.komponents.kovenant.ui.alwaysUi
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.chameleon.Chameleon
-import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
 import org.mariotaku.library.objectcursor.ObjectCursor
@@ -136,7 +133,9 @@ import org.mariotaku.twidere.util.menu.TwidereMenuInfo
 import org.mariotaku.twidere.util.shortcut.ShortcutCreator
 import org.mariotaku.twidere.util.support.ActivitySupport
 import org.mariotaku.twidere.util.support.ActivitySupport.TaskDescriptionCompat
+import org.mariotaku.twidere.util.support.ViewSupport
 import org.mariotaku.twidere.util.support.WindowSupport
+import org.mariotaku.twidere.util.support.view.ViewOutlineProviderCompat
 import org.mariotaku.twidere.view.TabPagerIndicator
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener
 import java.lang.ref.WeakReference
@@ -152,7 +151,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         get() = coordinatorLayout.toolbar
 
     private lateinit var profileBirthdayBanner: View
-    private lateinit var actionBarBackground: ActionBarDrawable
     private lateinit var pagerAdapter: SupportTabsAdapter
 
     // Data fields
@@ -169,7 +167,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     private var actionBarShadowColor: Int = 0
     private var uiColor: Int = 0
     private var primaryColor: Int = 0
-    private var primaryColorDark: Int = 0
     private var nameFirst: Boolean = false
     private var previousTabItemIsDark: Int = 0
     private var previousActionBarItemIsDark: Int = 0
@@ -635,10 +632,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         profileHeaderBackground.setBackgroundColor(cardBackgroundColor)
         toolbarTabs.setBackgroundColor(cardBackgroundColor)
 
-        actionBarBackground = ActionBarDrawable(ResourcesCompat.getDrawable(activity.resources,
-                R.drawable.shadow_user_banner_action_bar, null)!!)
-        setupBaseActionBar()
         setupViewStyle()
+        setupViewSettings()
         setupUserPages()
 
         getUserInfo(accountKey, userKey, screenName, false)
@@ -1269,20 +1264,18 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         uiColor = if (color != 0) color else theme.colorPrimary
         previousActionBarItemIsDark = 0
         previousTabItemIsDark = 0
-        setupBaseActionBar()
+        setupViewStyle()
         val activity = activity as BaseActivity
-        if (theme.isToolbarColored) {
-            primaryColor = color
+        primaryColor = if (theme.isToolbarColored) {
+            color
         } else {
-            primaryColor = theme.colorToolbar
+            theme.colorToolbar
         }
-        primaryColorDark = ChameleonUtils.darkenColor(primaryColor)
-        actionBarBackground.color = primaryColor
-        val taskColor: Int
-        if (theme.isToolbarColored) {
-            taskColor = ColorUtils.setAlphaComponent(color, 0xFF)
+        (toolbar.background as? ActionBarDrawable)?.color = primaryColor
+        val taskColor = if (theme.isToolbarColored) {
+            ColorUtils.setAlphaComponent(color, 0xFF)
         } else {
-            taskColor = ColorUtils.setAlphaComponent(theme.colorToolbar, 0xFF)
+            ColorUtils.setAlphaComponent(theme.colorToolbar, 0xFF)
         }
         val user = this.user
         if (user != null) {
@@ -1298,17 +1291,28 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         profileBanner.setBackgroundColor(color)
     }
 
-    private fun setupBaseActionBar() {
+    private fun setupViewStyle() {
         val activity = activity as? LinkHandlerActivity ?: return
         val actionBar = activity.supportActionBar ?: return
         if (!ThemeUtils.isWindowFloating(activity) && ThemeUtils.isTransparentBackground(activity.currentThemeBackgroundOption)) {
             profileBanner.alpha = activity.currentThemeBackgroundAlpha / 255f
         }
-        actionBar.setBackgroundDrawable(actionBarBackground)
+
+        actionBar.setBackgroundDrawable(ActionBarDrawable(ResourcesCompat.getDrawable(activity.resources,
+                R.drawable.shadow_user_banner_action_bar, null)!!))
+
+        val actionBarElevation = ThemeUtils.getSupportActionBarElevation(activity)
+        ViewCompat.setElevation(toolbar, actionBarElevation)
+//        ViewCompat.setElevation(profileHeader, actionBarElevation)
+        ViewCompat.setElevation(statusBarBackground, actionBarElevation * 2)
+
+        ViewSupport.setOutlineProvider(toolbar, ViewOutlineProviderCompat.BACKGROUND)
+//        ViewSupport.setOutlineProvider(profileHeader, ViewOutlineProviderCompat.BOUNDS)
+        ViewSupport.setOutlineProvider(statusBarBackground, null)
     }
 
 
-    private fun setupViewStyle() {
+    private fun setupViewSettings() {
         profileImage.style = preferences[profileImageStyleKey]
 
         val lightFont = preferences[lightFontKey]
@@ -1358,63 +1362,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                         position = TAB_POSITION_FAVORITES)
             }
         }
-    }
-
-    private fun updateScrollOffset(offset: Int) {
-        val spaceHeight = profileBannerSpace.height
-        val factor = (if (spaceHeight == 0) 0f else offset / spaceHeight.toFloat()).coerceIn(0f, 1f)
-
-        val activity = activity as BaseActivity
-
-
-        val statusBarColor = sArgbEvaluator.evaluate(factor, 0xA0000000.toInt(),
-                ChameleonUtils.darkenColor(primaryColorDark)) as Int
-        val window = activity.window
-        WindowSupport.setLightStatusBar(window, ThemeUtils.isLightColor(statusBarColor))
-        val stackedTabColor = primaryColor
-
-
-        val profileContentHeight = profileHeaderBackground.height.toFloat()
-        val tabOutlineAlphaFactor: Float
-        if (offset - spaceHeight > 0) {
-            tabOutlineAlphaFactor = 1f - ((offset - spaceHeight) / profileContentHeight).coerceIn(0f, 1f)
-        } else {
-            tabOutlineAlphaFactor = 1f
-        }
-
-        actionBarBackground.apply {
-            this.factor = factor
-            this.outlineAlphaFactor = tabOutlineAlphaFactor
-        }
-
-        val currentTabColor = sArgbEvaluator.evaluate(tabOutlineAlphaFactor,
-                stackedTabColor, cardBackgroundColor) as Int
-
-        val tabBackground = toolbarTabs.background
-        (tabBackground as ColorDrawable).color = currentTabColor
-        val tabItemIsDark = ThemeUtils.isLightColor(currentTabColor)
-
-        if (previousTabItemIsDark == 0 || (if (tabItemIsDark) 1 else -1) != previousTabItemIsDark) {
-            val tabContrastColor = ThemeUtils.getColorDependent(currentTabColor)
-            toolbarTabs.setIconColor(tabContrastColor)
-            toolbarTabs.setLabelColor(tabContrastColor)
-            val theme = Chameleon.getOverrideTheme(activity, activity)
-            if (theme.isToolbarColored) {
-                toolbarTabs.setStripColor(tabContrastColor)
-            } else {
-                toolbarTabs.setStripColor(ThemeUtils.getOptimalAccentColor(uiColor, tabContrastColor))
-            }
-            toolbarTabs.updateAppearance()
-        }
-        previousTabItemIsDark = if (tabItemIsDark) 1 else -1
-
-        val currentActionBarColor = sArgbEvaluator.evaluate(factor, actionBarShadowColor,
-                stackedTabColor) as Int
-        val actionItemIsDark = ThemeUtils.isLightColor(currentActionBarColor)
-        if (previousActionBarItemIsDark == 0 || (if (actionItemIsDark) 1 else -1) != previousActionBarItemIsDark) {
-            ThemeUtils.applyToolbarItemColor(activity, toolbar, currentActionBarColor)
-        }
-        previousActionBarItemIsDark = if (actionItemIsDark) 1 else -1
     }
 
     override var controlBarOffset: Float
@@ -1649,7 +1596,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
     companion object {
 
-        private val sArgbEvaluator = ArgbEvaluator()
         private val LOADER_ID_USER = 1
         private val LOADER_ID_FRIENDSHIP = 2
 
