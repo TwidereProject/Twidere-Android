@@ -30,8 +30,8 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.animation.GlideAnimation
 import com.bumptech.glide.request.target.BaseTarget
 import com.bumptech.glide.request.target.SizeReadyCallback
+import org.mariotaku.ktextension.weak
 import org.mariotaku.twidere.R
-import java.lang.ref.WeakReference
 
 class CustomEmojiSpan(
         val uri: String,
@@ -79,14 +79,7 @@ class CustomEmojiSpan(
             val textSize: Int
     ) : BaseTarget<Bitmap>() {
 
-        var drawable: Drawable?
-            get() = drawableRef?.get()
-            private set(value) {
-                drawableRef = if (value != null) WeakReference(value) else null
-                textView.invalidate()
-            }
-
-        private var drawableRef: WeakReference<Drawable>? = null
+        var drawable: Drawable? by weak()
 
         override fun onResourceReady(resource: Bitmap, glideAnimation: GlideAnimation<in Bitmap>) {
             drawable = BitmapDrawable(textView.resources, resource)

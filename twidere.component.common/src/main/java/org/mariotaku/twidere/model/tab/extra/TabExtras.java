@@ -31,9 +31,6 @@ import org.mariotaku.twidere.annotation.CustomTabType;
 
 import java.io.IOException;
 
-/**
- * Created by mariotaku on 16/3/6.
- */
 @JsonObject
 public abstract class TabExtras implements Parcelable {
     @CallSuper

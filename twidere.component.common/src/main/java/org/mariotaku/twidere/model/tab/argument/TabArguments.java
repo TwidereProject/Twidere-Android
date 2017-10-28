@@ -34,9 +34,6 @@ import org.mariotaku.twidere.model.UserKey;
 import java.io.IOException;
 import java.util.Arrays;
 
-/**
- * Created by mariotaku on 16/3/6.
- */
 @JsonObject
 public class TabArguments implements TwidereConstants {
     @JsonField(name = "account_id")

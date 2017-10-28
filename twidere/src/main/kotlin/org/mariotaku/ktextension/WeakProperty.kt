@@ -22,9 +22,13 @@ package org.mariotaku.ktextension
 import java.lang.ref.WeakReference
 import kotlin.reflect.KProperty
 
-class WeakDelegate<T> {
+class WeakDelegate<T>(obj: T?) {
 
     private var weakRef: WeakReference<T>? = null
+
+    init {
+        weakRef = if (obj != null) WeakReference(obj) else null
+    }
 
     operator fun getValue(thisRef: Any?, property: KProperty<*>): T? {
         return weakRef?.get()
@@ -35,4 +39,4 @@ class WeakDelegate<T> {
     }
 }
 
-fun <T> weak(): WeakDelegate<T> = WeakDelegate()
+fun <T> weak(obj: T? = null): WeakDelegate<T> = WeakDelegate(obj)

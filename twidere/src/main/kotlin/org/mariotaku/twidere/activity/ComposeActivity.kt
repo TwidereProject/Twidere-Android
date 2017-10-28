@@ -108,7 +108,6 @@ import org.mariotaku.twidere.view.ShapedImageView
 import org.mariotaku.twidere.view.helper.SimpleItemTouchHelperCallback
 import org.mariotaku.twidere.view.holder.compose.MediaPreviewViewHolder
 import java.io.IOException
-import java.lang.ref.WeakReference
 import java.text.Normalizer
 import java.util.*
 import javax.inject.Inject
@@ -1920,11 +1919,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private class ComposeLocationListener(activity: ComposeActivity) : LocationListener {
 
-        private val activityRef = WeakReference(activity)
+        private val activity by weak(activity)
 
         override fun onLocationChanged(location: Location) {
-            val activity = activityRef.get() ?: return
-            activity.setRecentLocation(ParcelableLocationUtils.fromLocation(location))
+            activity?.setRecentLocation(ParcelableLocationUtils.fromLocation(location))
         }
 
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
