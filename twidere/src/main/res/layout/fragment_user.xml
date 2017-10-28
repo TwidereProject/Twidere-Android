@@ -71,13 +71,12 @@
             android:layout_height="wrap_content"/>
     </FrameLayout>
 
-    <FrameLayout
+    <View
+        android:id="@+id/pagerWindowOverlay"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <include layout="@layout/layout_content_fragment_common"/>
-    </FrameLayout>
-
+        android:layout_height="@dimen/element_spacing_msmall"
+        android:background="@drawable/shadow_bottom"
+        app:layout_behavior="org.mariotaku.twidere.view.behavior.userprofile.HeaderShadowBehavior"/>
 
     <FrameLayout
         android:id="@+id/pagesErrorContainer"
@@ -117,9 +116,16 @@
 
     </FrameLayout>
 
-    <View
+    <FrameLayout
         android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include layout="@layout/layout_content_fragment_common"/>
+    </FrameLayout>
+
+    <View
         android:id="@+id/statusBarBackground"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_behavior="org.mariotaku.twidere.view.behavior.userprofile.StatusBarBehavior"
         tools:layout_height="25dp"/>
@@ -138,10 +144,5 @@
         tools:title="User"
         tools:titleTextColor="?android:colorBackground"/>
 
-    <View
-        android:id="@+id/pagerWindowOverlay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?android:windowContentOverlay"/>
 
 </org.mariotaku.twidere.view.userprofile.UserProfileCoordinatorLayout>

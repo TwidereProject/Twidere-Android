@@ -24,6 +24,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.text.BidiFormatter
+import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.squareup.otto.Bus
@@ -135,6 +136,16 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         GeneralComponent.get(context).inject(this)
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        view?.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+            if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
+                requestApplyInsets()
+            }
+        }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {

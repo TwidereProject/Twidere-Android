@@ -113,10 +113,10 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
     private lateinit var adapter: ConversationInfoAdapter
     private lateinit var itemDecoration: ConversationInfoDecoration
 
-    override val controlBarHeight: Int get() = toolbar.measuredHeight
+    override val controlBarHeight: Int get() = fragmentToolbar.measuredHeight
     override var controlBarOffset: Float = 0f
 
-    override val toolbar: Toolbar
+    override val fragmentToolbar: Toolbar
         get() = toolbarLayout.toolbar
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

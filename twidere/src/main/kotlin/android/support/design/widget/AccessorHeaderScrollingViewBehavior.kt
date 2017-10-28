@@ -26,8 +26,7 @@ import android.view.View
 
 internal abstract class AccessorHeaderScrollingViewBehavior(context: Context, attrs: AttributeSet? = null) : HeaderScrollingViewBehavior(context, attrs) {
     internal val tempRect1 = mTempRect1
-
-    internal val verticalLayoutGapAccessor = verticalLayoutGap
+    internal val tempRect2 = mTempRect2
 
     internal override fun getOverlapRatioForOffset(header: View): Float {
         return super.getOverlapRatioForOffset(header)

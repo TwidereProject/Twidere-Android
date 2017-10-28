@@ -23,26 +23,53 @@ import android.content.Context
 import android.graphics.Rect
 import android.support.design.widget.AccessorHeaderScrollingViewBehavior
 import android.support.design.widget.CoordinatorLayout
+import android.support.design.widget.lastWindowInsetsCompat
 import android.support.v4.view.ViewCompat
 import android.util.AttributeSet
 import android.view.View
+import kotlinx.android.synthetic.main.fragment_user.view.*
 import kotlinx.android.synthetic.main.header_user.view.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.extension.view.measureChildIgnoringInsets
 
 internal class PagerBehavior(context: Context, attrs: AttributeSet? = null) : AccessorHeaderScrollingViewBehavior(context, attrs) {
 
-    override fun onMeasureChild(parent: CoordinatorLayout, child: View,
-            parentWidthMeasureSpec: Int, widthUsed: Int, parentHeightMeasureSpec: Int,
-            heightUsed: Int): Boolean {
-        return parent.measureChildIgnoringInsets(child, parentWidthMeasureSpec, widthUsed,
-                parentHeightMeasureSpec, heightUsed)
-    }
-
     override fun layoutDependsOn(parent: CoordinatorLayout, child: View, dependency: View): Boolean {
         return dependency.id == R.id.profileHeader
     }
 
+    override fun onMeasureChild(parent: CoordinatorLayout, child: View,
+            parentWidthMeasureSpec: Int, widthUsed: Int, parentHeightMeasureSpec: Int,
+            heightUsed: Int): Boolean {
+        val topInset = parent.lastWindowInsetsCompat?.systemWindowInsetTop ?: 0
+        return parent.measureChildIgnoringInsets(child, parentWidthMeasureSpec, widthUsed,
+                parentHeightMeasureSpec - topInset, heightUsed)
+    }
+
+    override fun layoutChild(parent: CoordinatorLayout, child: View, layoutDirection: Int) {
+        val header = parent.getDependencies(child).first()
+        val lp = child.layoutParams as CoordinatorLayout.LayoutParams
+        val rect = tempRect1
+        rect.set(parent.paddingLeft + lp.leftMargin,
+                header.contentBottom + lp.topMargin,
+                parent.width - parent.paddingRight - lp.rightMargin,
+                parent.height + header.contentBottom
+                        - parent.paddingBottom - lp.bottomMargin)
+
+        val parentInsets = parent.lastWindowInsetsCompat
+        if ((parentInsets != null && ViewCompat.getFitsSystemWindows(parent)
+                && !ViewCompat.getFitsSystemWindows(child))) {
+            // If we're set to handle insets but this child isn't, then it has been measured as
+            // if there are no insets. We need to lay it out to match horizontally.
+            // Top and bottom and already handled in the logic above
+            rect.left += parentInsets.systemWindowInsetLeft
+            rect.right -= parentInsets.systemWindowInsetRight
+        }
+
+        val overlap = getOverlapPixelsForOffsetAccessor(header)
+
+        child.layout(rect.left, rect.top - overlap, rect.right, rect.bottom - overlap)
+    }
 
     override fun onDependentViewChanged(parent: CoordinatorLayout, child: View, dependency: View): Boolean {
         offsetChildAsNeeded(parent, child, dependency)
@@ -73,7 +100,7 @@ internal class PagerBehavior(context: Context, attrs: AttributeSet? = null) : Ac
         // any vertical gap and overlap
 
         ViewCompat.offsetTopAndBottom(child, (dependency.contentBottom - child.top
-                + behavior.offsetDelta + verticalLayoutGapAccessor)
+                + behavior.offsetDelta)
                 - getOverlapPixelsForOffsetAccessor(dependency))
     }
 
@@ -111,5 +138,5 @@ internal class PagerBehavior(context: Context, attrs: AttributeSet? = null) : Ac
     }
 
     private val View.contentBottom
-        get() = top + toolbarTabs.bottom
+        get() = bottom - toolbarTabs.height - (parent as View).toolbar.height
 }

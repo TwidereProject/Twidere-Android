@@ -61,7 +61,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
     // Callbacks and listeners
     lateinit var scrollListener: RecyclerViewScrollHandler<A>
     // Data fields
-    private val systemWindowsInsets = Rect()
+    private val systemWindowInsets = Rect()
 
     private val refreshCompleteListener: RefreshCompleteListener?
         get() = parentFragment as? RefreshCompleteListener
@@ -232,7 +232,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
                 insets.right + extraPadding.right, insets.bottom + extraPadding.bottom)
         errorContainer.setPadding(insets.left, insets.top, insets.right, insets.bottom)
         progressContainer.setPadding(insets.left, insets.top, insets.right, insets.bottom)
-        systemWindowsInsets.set(insets)
+        systemWindowInsets.set(insets)
         updateRefreshProgressOffset()
     }
 
@@ -280,7 +280,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
     }
 
     protected fun updateRefreshProgressOffset() {
-        val insets = this.systemWindowsInsets
+        val insets = this.systemWindowInsets
         if (insets.top == 0 || swipeLayout == null || swipeLayout.isRefreshing) {
             return
         }

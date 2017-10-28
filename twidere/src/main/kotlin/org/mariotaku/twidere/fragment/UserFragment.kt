@@ -67,7 +67,6 @@ import android.widget.TextView
 import android.widget.Toast
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_user.*
-import kotlinx.android.synthetic.main.fragment_user.view.*
 import kotlinx.android.synthetic.main.header_user.*
 import kotlinx.android.synthetic.main.header_user.view.*
 import kotlinx.android.synthetic.main.layout_content_fragment_common.*
@@ -137,18 +136,16 @@ import org.mariotaku.twidere.util.support.ViewSupport
 import org.mariotaku.twidere.util.support.WindowSupport
 import org.mariotaku.twidere.util.support.view.ViewOutlineProviderCompat
 import org.mariotaku.twidere.view.TabPagerIndicator
-import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener
-import java.lang.ref.WeakReference
 import java.util.*
 
 class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
-        OnSizeChangedListener, OnTouchListener, SupportFragmentCallback,
+        OnTouchListener, SupportFragmentCallback,
         SystemWindowInsetsCallback, RefreshScrollTopInterface, OnPageChangeListener,
         KeyboardShortcutCallback, UserColorChangedListener, UserNicknameChangedListener,
         IToolBarSupportFragment, AbsContentRecyclerViewFragment.RefreshCompleteListener {
 
-    override val toolbar: Toolbar
-        get() = coordinatorLayout.toolbar
+    override val fragmentToolbar: Toolbar
+        get() = toolbar
 
     private lateinit var profileBirthdayBanner: View
     private lateinit var pagerAdapter: SupportTabsAdapter
@@ -159,7 +156,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     private var account: AccountDetails? = null
     private var relationship: ParcelableRelationship? = null
 
-    private var systemWindowsInsets: Rect = Rect()
     private var userInfoLoaderInitialized: Boolean = false
     private var friendShipLoaderInitialized: Boolean = false
     private var bannerWidth: Int = 0
@@ -495,7 +491,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     override fun getSystemWindowInsets(caller: Fragment, insets: Rect): Boolean {
         insetsCallback?.getSystemWindowInsets(this, insets)
         if (caller.parentFragment === this) {
-            insets.top = toolbar.bottom + toolbarTabs.height
+            insets.top = toolbar.height + toolbarTabs.height
         }
         return true
     }
@@ -626,7 +622,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         followersCount.setOnClickListener(this)
         friendsCount.setOnClickListener(this)
         url.setOnClickListener(this)
-        profileBanner.onSizeChangedListener = this
         profileBannerSpace.setOnTouchListener(this)
 
         profileHeaderBackground.setBackgroundColor(cardBackgroundColor)
@@ -1207,13 +1202,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         displayUser(user, account)
     }
 
-    override fun onSizeChanged(view: View, w: Int, h: Int, oldw: Int, oldh: Int) {
-        bannerWidth = w
-        if (w != oldw || h != oldh) {
-            requestApplyInsets()
-        }
-    }
-
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouch(v: View, event: MotionEvent): Boolean {
         if (profileBirthdayStub == null && profileBirthdayBanner.visibility == View.VISIBLE) {
@@ -1389,7 +1377,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
     private fun showAddToListDialog(user: ParcelableUser) {
         val accountKey = user.account_key ?: return
-        val weakThis = WeakReference(this)
+        val weakThis = toWeak()
         executeAfterFragmentResumed {
             ProgressDialogFragment.show(it.childFragmentManager, "get_list_progress")
         }.then {
@@ -1535,7 +1523,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 d.applyTheme()
                 d.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
                     val checkedPositions = d.listView.checkedItemPositions
-                    val weakActivity = WeakReference(activity)
+                    val weakActivity = activity.toWeak()
                     (activity as IBaseActivity<*>).executeAfterFragmentResumed {
                         ProgressDialogFragment.show(it.supportFragmentManager, "update_lists_progress")
                     }.then {

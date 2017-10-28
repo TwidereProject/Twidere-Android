@@ -117,11 +117,11 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         get() = super.reachingEnd
 
     override val controlBarHeight: Int
-        get() = toolbar.height
+        get() = fragmentToolbar.height
 
     override var controlBarOffset: Float = 1f
 
-    override val toolbar: Toolbar
+    override val fragmentToolbar: Toolbar
         get() = conversationContainer.toolbar
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

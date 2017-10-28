@@ -41,7 +41,7 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
         HideUiOnScroll, OnPageChangeListener, IToolBarSupportFragment, KeyboardShortcutCallback {
 
     protected lateinit var pagerAdapter: SupportTabsAdapter
-    override val toolbar: Toolbar
+    override val fragmentToolbar: Toolbar
         get() = toolbarContainer.toolbar
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -185,7 +185,7 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
         }
 
     override val controlBarHeight: Int
-        get() = toolbar.measuredHeight
+        get() = fragmentToolbar.measuredHeight
 
     override fun setupWindow(activity: FragmentActivity): Boolean {
         return false

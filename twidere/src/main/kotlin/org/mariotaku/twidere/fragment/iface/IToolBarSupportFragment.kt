@@ -5,7 +5,7 @@ import android.support.v7.widget.Toolbar
 
 interface IToolBarSupportFragment {
 
-    val toolbar: Toolbar
+    val fragmentToolbar: Toolbar
 
     var controlBarOffset: Float
 

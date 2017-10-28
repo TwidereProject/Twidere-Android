@@ -26,5 +26,6 @@ import org.mariotaku.chameleon.ChameleonView
 
 class UserProfileCoordinatorLayout(context: Context, attrs: AttributeSet?) :
         CoordinatorLayout(context, attrs), ChameleonView.StatusBarThemeable {
+
     override fun isStatusBarColorHandled() = true
 }

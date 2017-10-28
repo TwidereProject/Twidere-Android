@@ -114,7 +114,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
         fragmentLifecycleCallbacks = object : FragmentManager.FragmentLifecycleCallbacks() {
             override fun onFragmentViewCreated(fm: FragmentManager, f: Fragment, v: View, savedState: Bundle?) {
                 if (f is IToolBarSupportFragment) {
-                    setSupportActionBar(f.toolbar)
+                    setSupportActionBar(f.fragmentToolbar)
                 }
             }
         }
