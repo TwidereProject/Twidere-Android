@@ -27,6 +27,7 @@ import android.support.v7.widget.Toolbar
 import android.util.AttributeSet
 import android.view.View
 import kotlinx.android.synthetic.main.fragment_user.view.*
+import kotlinx.android.synthetic.main.header_user.view.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.graphic.drawable.userprofile.ActionBarDrawable
 import org.mariotaku.twidere.util.ThemeUtils
@@ -44,15 +45,24 @@ internal class ToolbarBehavior(context: Context?, attrs: AttributeSet? = null) :
     override fun onDependentViewChanged(parent: CoordinatorLayout, child: Toolbar, dependency: View): Boolean {
         val actionBarBackground = child.background as? ActionBarDrawable ?: return false
         val bannerContainer = parent.profileBannerContainer
-        val bannerBottom = dependency.top + bannerContainer.height
+        val detailsBackground = parent.profileHeaderBackground
+        val bannerBottom = dependency.top + bannerContainer.bottom
+        val detailsBottom = dependency.top + detailsBackground.bottom
         val currentOffset = bannerBottom - child.bottom
-        val maxOffset = (bannerContainer.height - child.bottom).toFloat()
-        val factor = (1 - currentOffset / maxOffset).coerceIn(0f, 1f)
-        actionBarBackground.factor = factor
-        actionBarBackground.outlineAlphaFactor = factor
+        val maxOffset = (bannerContainer.bottom - child.bottom).toFloat()
+        val colorFactor = (1 - currentOffset / maxOffset).coerceIn(0f, 1f)
+        actionBarBackground.factor = colorFactor
+
+        val outlineFactor = if (colorFactor < 1) {
+            colorFactor
+        } else {
+            ((detailsBottom - child.bottom) / detailsBackground.height.toFloat()).coerceIn(0f, 1f)
+        }
+
+        actionBarBackground.outlineAlphaFactor = outlineFactor
 
         val colorPrimary = actionBarBackground.color
-        val currentActionBarColor = ArgbEvaluator.getInstance().evaluate(factor, actionBarShadowColor,
+        val currentActionBarColor = ArgbEvaluator.getInstance().evaluate(colorFactor, actionBarShadowColor,
                 colorPrimary) as Int
         val actionItemIsDark = if (ThemeUtils.isLightColor(currentActionBarColor)) 1 else -1
         if (this.actionItemIsDark != actionItemIsDark) {
