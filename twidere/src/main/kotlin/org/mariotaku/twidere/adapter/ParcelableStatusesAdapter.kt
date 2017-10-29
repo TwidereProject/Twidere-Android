@@ -120,6 +120,30 @@ class ParcelableStatusesAdapter(
             notifyDataSetChanged()
         }
 
+    var statuses: PagedList<ParcelableStatus>?
+        get() = pagedStatusesHelper.currentList
+        set(value) {
+            pagedStatusesHelper.setList(value)
+            gapLoadingIds.clear()
+        }
+
+    val statusStartIndex: Int
+        get() = getItemStartPosition(ITEM_INDEX_STATUS)
+
+    override var loadMoreIndicatorPosition: Long
+        get() = super.loadMoreIndicatorPosition
+        set(value) {
+            super.loadMoreIndicatorPosition = value
+            updateItemCount()
+        }
+
+    override var loadMoreSupportedPosition: Long
+        get() = super.loadMoreSupportedPosition
+        set(value) {
+            super.loadMoreSupportedPosition = value
+            updateItemCount()
+        }
+
     private val inflater: LayoutInflater = LayoutInflater.from(context)
 
     private val showCardActions: Boolean = !preferences[hideCardActionsKey]
@@ -143,38 +167,14 @@ class ParcelableStatusesAdapter(
         }
 
         override fun onMoved(fromPosition: Int, toPosition: Int) {
-            updateItemCount()
             notifyItemMoved(fromPosition, toPosition)
         }
 
         override fun onChanged(position: Int, count: Int, payload: Any?) {
-            updateItemCount()
-            gapLoadingIds.clear()
             notifyItemRangeChanged(position, count, payload)
         }
 
     }, ListAdapterConfig.Builder<ParcelableStatus>().setDiffCallback(DiffCallbacks.status).build())
-
-    var statuses: PagedList<ParcelableStatus>?
-        get() = pagedStatusesHelper.currentList
-        set(value) = pagedStatusesHelper.setList(value)
-
-    val statusStartIndex: Int
-        get() = getItemStartPosition(ITEM_INDEX_STATUS)
-
-    override var loadMoreIndicatorPosition: Long
-        get() = super.loadMoreIndicatorPosition
-        set(value) {
-            super.loadMoreIndicatorPosition = value
-            updateItemCount()
-        }
-
-    override var loadMoreSupportedPosition: Long
-        get() = super.loadMoreSupportedPosition
-        set(value) {
-            super.loadMoreSupportedPosition = value
-            updateItemCount()
-        }
 
     init {
         val handler = StatusAdapterLinkClickHandler<List<ParcelableStatus>>(context, preferences)
@@ -453,7 +453,6 @@ class ParcelableStatusesAdapter(
             return -1
         }
     }
-
 
     companion object {
         const val VIEW_TYPE_STATUS = 2

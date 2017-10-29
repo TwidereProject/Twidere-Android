@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.util.paging
 
 import android.support.v7.recyclerview.extensions.DiffCallback
+import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.ParcelableStatus
 
 object DiffCallbacks {
@@ -29,6 +30,17 @@ object DiffCallbacks {
         }
 
         override fun areItemsTheSame(oldItem: ParcelableStatus, newItem: ParcelableStatus): Boolean {
+            if (oldItem._id > 0 && newItem._id > 0) return oldItem._id == newItem._id
+            return oldItem == newItem
+        }
+
+    }
+    val activity: DiffCallback<ParcelableActivity> = object : DiffCallback<ParcelableActivity>() {
+        override fun areContentsTheSame(oldItem: ParcelableActivity, newItem: ParcelableActivity): Boolean {
+            return oldItem == newItem
+        }
+
+        override fun areItemsTheSame(oldItem: ParcelableActivity, newItem: ParcelableActivity): Boolean {
             if (oldItem._id > 0 && newItem._id > 0) return oldItem._id == newItem._id
             return oldItem == newItem
         }

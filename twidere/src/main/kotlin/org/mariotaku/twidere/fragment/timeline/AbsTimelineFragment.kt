@@ -43,7 +43,6 @@ import android.view.View
 import android.widget.Toast
 import com.bumptech.glide.RequestManager
 import com.squareup.otto.Subscribe
-import kotlinx.android.synthetic.main.fragment_content_listview.*
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
@@ -67,6 +66,8 @@ import org.mariotaku.twidere.data.status.StatusesLivePagedListProvider
 import org.mariotaku.twidere.extension.adapter.removeStatuses
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.extension.queryOne
+import org.mariotaku.twidere.extension.view.firstVisibleItemPosition
+import org.mariotaku.twidere.extension.view.lastVisibleItemPosition
 import org.mariotaku.twidere.fragment.AbsContentRecyclerViewFragment
 import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.fragment.status.FavoriteConfirmDialogFragment
@@ -98,10 +99,10 @@ import org.mariotaku.twidere.view.holder.status.StatusViewHolder
 abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableStatusesAdapter, LayoutManager>() {
 
     override val reachingStart: Boolean
-        get() = listView.firstVisiblePosition <= 0
+        get() = recyclerView.layoutManager.firstVisibleItemPosition <= 0
 
     override val reachingEnd: Boolean
-        get() = listView.lastVisiblePosition >= listView.count - 1
+        get() = recyclerView.layoutManager.lastVisibleItemPosition >= recyclerView.layoutManager.itemCount - 1
 
     @TimelineStyle
     protected open val timelineStyle: Int
@@ -186,8 +187,8 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
         if (!userVisibleHint || menuInfo == null) return
         val inflater = MenuInflater(context)
-        val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo?
-        val status = adapter.getStatus(contextMenuInfo!!.position)
+        val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo
+        val status = adapter.getStatus(contextMenuInfo.position)
         inflater.inflate(R.menu.action_status, menu)
         MenuUtils.setupForStatus(context, menu, preferences, userColorNameManager, status)
     }
@@ -576,20 +577,6 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                 Statuses.CARD, Statuses.FILTER_FLAGS, Statuses.FILTER_USERS, Statuses.FILTER_LINKS,
                 Statuses.FILTER_SOURCES, Statuses.FILTER_NAMES, Statuses.FILTER_TEXTS,
                 Statuses.FILTER_DESCRIPTIONS)
-
-        private val LayoutManager.firstVisibleItemPosition: Int
-            get() = when (this) {
-                is LinearLayoutManager -> findFirstVisibleItemPosition()
-                is StaggeredGridLayoutManager -> findFirstVisibleItemPositions(null).firstOrNull() ?: -1
-                else -> throw UnsupportedOperationException()
-            }
-
-        private val LayoutManager.lastVisibleItemPosition: Int
-            get() = when (this) {
-                is LinearLayoutManager -> findLastVisibleItemPosition()
-                is StaggeredGridLayoutManager -> findLastVisibleItemPositions(null).lastOrNull() ?: -1
-                else -> throw UnsupportedOperationException()
-            }
 
         fun handleActionClick(fragment: BaseFragment, id: Int, status: ParcelableStatus,
                 holder: IStatusViewHolder) {

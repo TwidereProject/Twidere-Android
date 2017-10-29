@@ -54,6 +54,7 @@ import org.mariotaku.twidere.constant.KeyboardShortcutConstants
 import org.mariotaku.twidere.constant.floatingDetailedContentsKey
 import org.mariotaku.twidere.exception.NoAccountException
 import org.mariotaku.twidere.fragment.*
+import org.mariotaku.twidere.fragment.activities.InteractionsActivitiesFragment
 import org.mariotaku.twidere.fragment.drafts.DraftsFragment
 import org.mariotaku.twidere.fragment.filter.FiltersFragment
 import org.mariotaku.twidere.fragment.filter.FiltersImportBlocksFragment
@@ -597,7 +598,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
                 accountRequired = true
             }
             LINK_ID_INTERACTIONS -> {
-                fragment = InteractionsTimelineFragment()
+                fragment = InteractionsActivitiesFragment()
             }
             LINK_ID_PUBLIC_TIMELINE -> {
                 fragment = PublicTimelineFragment()
