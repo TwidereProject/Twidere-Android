@@ -24,6 +24,7 @@ import android.net.Uri
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.data.fetcher.GroupTimelineFetcher
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
+import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.refresh.GroupTimelineContentRefreshParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
@@ -32,7 +33,8 @@ import org.mariotaku.twidere.util.sync.TimelineSyncManager
 
 class GetGroupTimelineTask(context: Context) : GetStatusesTask<GroupTimelineContentRefreshParam>(context) {
 
-    override val contentUri: Uri = Statuses.GroupTimeline.CONTENT_URI
+    override val contentUri: Uri
+        get() = Statuses.GroupTimeline.CONTENT_URI.withAppendedPath(params.tabId)
 
     override val filterScopes: Int = FilterScope.LIST_GROUP_TIMELINE
 

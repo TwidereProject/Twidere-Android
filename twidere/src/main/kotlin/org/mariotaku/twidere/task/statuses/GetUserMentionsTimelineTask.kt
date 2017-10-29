@@ -30,10 +30,10 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.ErrorInfoStore
 import org.mariotaku.twidere.util.sync.TimelineSyncManager
 
-class GetUserTimelineTask(context: Context) : GetStatusesTask<UserRelatedContentRefreshParam>(context) {
+class GetUserMentionsTimelineTask(context: Context) : GetStatusesTask<UserRelatedContentRefreshParam>(context) {
 
     override val contentUri: Uri
-        get() = Statuses.UserTimeline.CONTENT_URI.withAppendedPath(params.tabId)
+        get() = Statuses.UserMentions.CONTENT_URI.withAppendedPath(params.tabId)
 
     override val filterScopes: Int = FilterScope.USER_TIMELINE
 

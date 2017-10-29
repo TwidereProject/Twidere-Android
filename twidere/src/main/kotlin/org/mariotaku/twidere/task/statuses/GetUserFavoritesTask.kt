@@ -23,6 +23,7 @@ import android.content.Context
 import android.net.Uri
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.data.fetcher.UserFavoritesFetcher
+import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.refresh.UserRelatedContentRefreshParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
@@ -31,7 +32,8 @@ import org.mariotaku.twidere.util.sync.TimelineSyncManager
 
 class GetUserFavoritesTask(context: Context) : GetStatusesTask<UserRelatedContentRefreshParam>(context) {
 
-    override val contentUri: Uri = Statuses.Favorites.CONTENT_URI
+    override val contentUri: Uri
+        get() = Statuses.Favorites.CONTENT_URI.withAppendedPath(params.tabId)
 
     override val filterScopes: Int = FilterScope.FAVORITES
 

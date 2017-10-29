@@ -736,14 +736,33 @@ public interface TwidereDataStore {
 
         String[] TYPES = ParcelableStatusTableInfo.TYPES;
 
-        String[] STATUSES_TABLES = {HomeTimeline.TABLE_NAME, Favorites.TABLE_NAME,
-                UserTimeline.TABLE_NAME, UserMediaTimeline.TABLE_NAME, ListTimeline.TABLE_NAME,
-                GroupTimeline.TABLE_NAME, Public.TABLE_NAME, NetworkPublic.TABLE_NAME};
+        String[] STATUSES_TABLES = {HomeTimeline.TABLE_NAME, Public.TABLE_NAME, NetworkPublic.TABLE_NAME,
+                Favorites.TABLE_NAME, UserTimeline.TABLE_NAME, UserMediaTimeline.TABLE_NAME,
+                ListTimeline.TABLE_NAME, GroupTimeline.TABLE_NAME, SearchTimeline.TABLE_NAME,
+                MediaSearchTimeline.TABLE_NAME, UserMentions.TABLE_NAME};
 
         interface HomeTimeline extends Statuses {
 
             String CONTENT_PATH = "statuses";
             String TABLE_NAME = "statuses";
+
+            @NonNull
+            Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
+        }
+
+        interface Public extends Statuses {
+
+            String CONTENT_PATH = "statuses/public_timeline";
+            String TABLE_NAME = "public_timeline";
+
+            @NonNull
+            Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
+        }
+
+        interface NetworkPublic extends Statuses {
+
+            String CONTENT_PATH = "statuses/network_public_timeline";
+            String TABLE_NAME = "network_public_timeline";
 
             @NonNull
             Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
@@ -796,19 +815,29 @@ public interface TwidereDataStore {
             Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
         }
 
-        interface Public extends Statuses {
+        interface SearchTimeline extends Statuses {
 
-            String CONTENT_PATH = "statuses/public_timeline";
-            String TABLE_NAME = "public_timeline";
+            String CONTENT_PATH = "statuses/search_timeline";
+            String TABLE_NAME = "search_timeline";
 
             @NonNull
             Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
         }
 
-        interface NetworkPublic extends Statuses {
 
-            String CONTENT_PATH = "statuses/network_public_timeline";
-            String TABLE_NAME = "network_public_timeline";
+        interface MediaSearchTimeline extends Statuses {
+
+            String CONTENT_PATH = "statuses/media_search_timeline";
+            String TABLE_NAME = "media_search_timeline";
+
+            @NonNull
+            Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
+        }
+
+        interface UserMentions extends Statuses {
+
+            String CONTENT_PATH = "statuses/user_mentions";
+            String TABLE_NAME = "user_mentions_timeline";
 
             @NonNull
             Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);

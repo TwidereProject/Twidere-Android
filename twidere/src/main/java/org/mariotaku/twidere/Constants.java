@@ -30,7 +30,7 @@ import org.mariotaku.twidere.model.UserKey;
 public interface Constants extends TwidereConstants {
 
     String DATABASES_NAME = "twidere.sqlite";
-    int DATABASES_VERSION = 191;
+    int DATABASES_VERSION = 192;
 
     int EXTRA_FEATURES_NOTICE_VERSION = 2;
 

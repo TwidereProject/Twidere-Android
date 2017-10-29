@@ -39,6 +39,7 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_GROUP_NAME
 import org.mariotaku.twidere.data.fetcher.GroupTimelineFetcher
 import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.model.tab.applyToSelection
+import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.refresh.GroupTimelineContentRefreshParam
 import org.mariotaku.twidere.model.tab.extra.HomeTabExtras
@@ -49,7 +50,8 @@ import java.util.*
 class GroupTimelineFragment : AbsTimelineFragment() {
     override val filterScope: Int = FilterScope.LIST_GROUP_TIMELINE
 
-    override val contentUri: Uri = Statuses.GroupTimeline.CONTENT_URI
+    override val contentUri: Uri
+        get() = Statuses.GroupTimeline.CONTENT_URI.withAppendedPath(tabId)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

@@ -41,6 +41,7 @@ class PublicTimelineFragment : AbsTimelineFragment() {
     override val filterScope: Int = FilterScope.PUBLIC_TIMELINE
 
     override val contentUri: Uri = Statuses.Public.CONTENT_URI
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         linkHandlerTitle = getString(R.string.title_public_timeline)

@@ -17,23 +17,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.data.source
+package org.mariotaku.twidere.model.refresh
 
-import android.arch.paging.LivePagedListProvider
-import android.content.ContentResolver
-import android.net.Uri
-
-class CursorObjectLivePagedListProvider<T>(
-        private val resolver: ContentResolver,
-        val uri: Uri,
-        val projection: Array<String>? = null,
-        val selection: String? = null,
-        val selectionArgs: Array<String>? = null,
-        val sortOrder: String? = null,
-        val cls: Class<T>
-) : LivePagedListProvider<Int, T>() {
-
-    override fun createDataSource() = CursorObjectTiledDataSource(resolver, uri, projection,
-            selection, selectionArgs, sortOrder, cls)
-
-}
+class SearchTimelineContentRefreshParam(
+        val query: String?,
+        val local: Boolean,
+        delegated: ContentRefreshParam
+) : DelegateContentRefreshParam(delegated)

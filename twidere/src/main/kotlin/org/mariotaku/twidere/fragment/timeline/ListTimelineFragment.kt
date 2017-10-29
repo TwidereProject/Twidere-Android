@@ -29,6 +29,7 @@ import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.data.fetcher.ListTimelineFetcher
 import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.model.tab.applyToSelection
+import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.refresh.ListTimelineContentRefreshParam
@@ -40,7 +41,8 @@ import java.util.*
 class ListTimelineFragment : AbsTimelineFragment() {
     override val filterScope: Int = FilterScope.LIST_GROUP_TIMELINE
 
-    override val contentUri: Uri = Statuses.ListTimeline.CONTENT_URI
+    override val contentUri: Uri
+        get() = Statuses.ListTimeline.CONTENT_URI.withAppendedPath(tabId)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

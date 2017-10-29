@@ -22,13 +22,16 @@ package org.mariotaku.twidere.constant
 
 object TableIds {
     const val HOME_TIMELINE = 11
-    const val FAVORITES = 12
-    const val USER_TIMELINE = 13
-    const val USER_MEDIA_TIMELINE = 14
-    const val LIST_TIMELINE = 15
-    const val GROUP_TIMELINE = 16
-    const val PUBLIC_TIMELINE = 17
-    const val NETWORK_PUBLIC_TIMELINE = 18
+    const val PUBLIC_TIMELINE = 12
+    const val NETWORK_PUBLIC_TIMELINE = 13
+
+    const val FAVORITES = 21
+    const val USER_TIMELINE = 22
+    const val USER_MEDIA_TIMELINE = 23
+    const val LIST_TIMELINE = 24
+    const val GROUP_TIMELINE = 25
+    const val SEARCH_TIMELINE = 26
+    const val MEDIA_SEARCH_TIMELINE = 27
 
     const val ACTIVITIES_ABOUT_ME = 51
     const val ACTIVITIES_BY_FRIENDS = 52

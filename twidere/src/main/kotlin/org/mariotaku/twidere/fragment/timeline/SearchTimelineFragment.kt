@@ -21,6 +21,7 @@ package org.mariotaku.twidere.fragment.timeline
 
 import android.net.Uri
 import android.os.Bundle
+import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_LOCAL
@@ -28,13 +29,17 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_QUERY
 import org.mariotaku.twidere.data.fetcher.SearchTimelineFetcher
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.extension.linkHandlerTitle
+import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
+import org.mariotaku.twidere.model.refresh.SearchTimelineContentRefreshParam
+import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
+import org.mariotaku.twidere.task.statuses.GetSearchTimelineTask
 
 class SearchTimelineFragment : AbsTimelineFragment() {
     override val filterScope: Int
         get() = FilterScope.SEARCH_RESULTS
     override val contentUri: Uri
-        get() = TODO("not implemented")
+        get() = Statuses.SearchTimeline.CONTENT_URI.withAppendedPath(tabId)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -42,7 +47,11 @@ class SearchTimelineFragment : AbsTimelineFragment() {
     }
 
     override fun getStatuses(param: ContentRefreshParam): Boolean {
-        TODO("not implemented")
+        val task = GetSearchTimelineTask(context)
+        task.params = SearchTimelineContentRefreshParam(arguments.getString(EXTRA_QUERY),
+                arguments.getBoolean(EXTRA_LOCAL, false), param)
+        TaskStarter.execute(task)
+        return true
     }
 
     override fun onCreateStatusesFetcher(): StatusesFetcher {

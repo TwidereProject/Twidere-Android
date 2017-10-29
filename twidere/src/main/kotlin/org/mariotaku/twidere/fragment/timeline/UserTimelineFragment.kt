@@ -35,6 +35,7 @@ import org.mariotaku.twidere.data.fetcher.UserTimelineFetcher
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.onShow
+import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.refresh.UserRelatedContentRefreshParam
@@ -46,7 +47,8 @@ import org.mariotaku.twidere.task.statuses.GetUserTimelineTask
 class UserTimelineFragment : AbsTimelineFragment() {
     override val filterScope: Int = FilterScope.USER_TIMELINE
 
-    override val contentUri: Uri = Statuses.UserTimeline.CONTENT_URI
+    override val contentUri: Uri
+        get() = Statuses.UserTimeline.CONTENT_URI.withAppendedPath(tabId)
 
     override val timelineFilter: TimelineFilter?
         get() = if (arguments.getBoolean(EXTRA_ENABLE_TIMELINE_FILTER)) preferences[userTimelineFilterKey] else null

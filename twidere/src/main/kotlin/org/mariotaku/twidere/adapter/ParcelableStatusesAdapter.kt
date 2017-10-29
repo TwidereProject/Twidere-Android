@@ -55,7 +55,10 @@ import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler
 import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.paging.DiffCallbacks
-import org.mariotaku.twidere.view.holder.*
+import org.mariotaku.twidere.view.holder.EmptyViewHolder
+import org.mariotaku.twidere.view.holder.GapViewHolder
+import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
+import org.mariotaku.twidere.view.holder.TimelineFilterHeaderViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 import org.mariotaku.twidere.view.holder.status.LargeMediaStatusViewHolder
 import org.mariotaku.twidere.view.holder.status.MediaStatusViewHolder
@@ -128,11 +131,13 @@ class ParcelableStatusesAdapter(
 
     private var pagedStatusesHelper = PagedListAdapterHelper<ParcelableStatus>(object : ListUpdateCallback {
         override fun onInserted(position: Int, count: Int) {
+            itemCounts[ITEM_INDEX_STATUS] += count
             updateItemCount()
             notifyItemRangeInserted(position, count)
         }
 
         override fun onRemoved(position: Int, count: Int) {
+            itemCounts[ITEM_INDEX_STATUS] -= count
             updateItemCount()
             notifyItemRangeRemoved(position, count)
         }
@@ -144,6 +149,7 @@ class ParcelableStatusesAdapter(
 
         override fun onChanged(position: Int, count: Int, payload: Any?) {
             updateItemCount()
+            gapLoadingIds.clear()
             notifyItemRangeChanged(position, count, payload)
         }
 
@@ -151,12 +157,7 @@ class ParcelableStatusesAdapter(
 
     var statuses: PagedList<ParcelableStatus>?
         get() = pagedStatusesHelper.currentList
-        set(value) {
-            pagedStatusesHelper.setList(value)
-            gapLoadingIds.clear()
-            updateItemCount()
-            notifyDataSetChanged()
-        }
+        set(value) = pagedStatusesHelper.setList(value)
 
     val statusStartIndex: Int
         get() = getItemStartPosition(ITEM_INDEX_STATUS)
@@ -192,8 +193,7 @@ class ParcelableStatusesAdapter(
     }
 
     override fun getStatusCount(raw: Boolean): Int {
-        if (raw) return statuses?.size ?: 0
-        return pagedStatusesHelper.itemCount
+        return itemCounts[ITEM_INDEX_STATUS]
     }
 
     override fun getItemId(position: Int): Long {
@@ -439,7 +439,6 @@ class ParcelableStatusesAdapter(
         itemCounts[ITEM_INDEX_LOAD_START_INDICATOR] = if (ILoadMoreSupportAdapter.START in loadMoreIndicatorPosition) 1 else 0
         itemCounts[ITEM_INDEX_FILTER_HEADER] = if (timelineFilter != null) 1 else 0
         itemCounts[ITEM_INDEX_PINNED_STATUS] = pinnedStatuses?.size ?: 0
-        itemCounts[ITEM_INDEX_STATUS] = getStatusCount(false)
         itemCounts[ITEM_INDEX_LOAD_END_INDICATOR] = if (ILoadMoreSupportAdapter.END in loadMoreIndicatorPosition) 1 else 0
     }
 

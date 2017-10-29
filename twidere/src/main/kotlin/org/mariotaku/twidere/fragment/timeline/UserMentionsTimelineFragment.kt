@@ -21,6 +21,7 @@ package org.mariotaku.twidere.fragment.timeline
 
 import android.net.Uri
 import android.os.Bundle
+import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_SCREEN_NAME
@@ -28,13 +29,17 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER_KEY
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.data.fetcher.UserMentionsTimelineFetcher
 import org.mariotaku.twidere.extension.linkHandlerTitle
+import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
+import org.mariotaku.twidere.model.refresh.UserRelatedContentRefreshParam
+import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
+import org.mariotaku.twidere.task.statuses.GetUserMentionsTimelineTask
 
 class UserMentionsTimelineFragment : AbsTimelineFragment() {
     override val filterScope: Int
         get() = FilterScope.SEARCH_RESULTS
     override val contentUri: Uri
-        get() = TODO("not implemented")
+        get() = Statuses.UserMentions.CONTENT_URI.withAppendedPath(tabId)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -42,7 +47,11 @@ class UserMentionsTimelineFragment : AbsTimelineFragment() {
     }
 
     override fun getStatuses(param: ContentRefreshParam): Boolean {
-        TODO("not implemented")
+        val task = GetUserMentionsTimelineTask(context)
+        task.params = UserRelatedContentRefreshParam(arguments.getParcelable(EXTRA_USER_KEY),
+                arguments.getString(EXTRA_SCREEN_NAME), param)
+        TaskStarter.execute(task)
+        return true
     }
 
     override fun onCreateStatusesFetcher(): StatusesFetcher {

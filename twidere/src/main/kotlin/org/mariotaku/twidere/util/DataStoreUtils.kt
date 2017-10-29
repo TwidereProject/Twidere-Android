@@ -79,21 +79,24 @@ object DataStoreUtils {
 
     init {
         tableMatcher.addPath(Statuses.HomeTimeline.CONTENT_PATH, TableIds.HOME_TIMELINE)
+        tableMatcher.addPath(Statuses.Public.CONTENT_PATH, TableIds.PUBLIC_TIMELINE)
+        tableMatcher.addPath(Statuses.NetworkPublic.CONTENT_PATH, TableIds.NETWORK_PUBLIC_TIMELINE)
+
         tableMatcher.addPath(Statuses.Favorites.CONTENT_PATH, TableIds.FAVORITES)
         tableMatcher.addPath(Statuses.UserTimeline.CONTENT_PATH, TableIds.USER_TIMELINE)
         tableMatcher.addPath(Statuses.UserMediaTimeline.CONTENT_PATH, TableIds.USER_MEDIA_TIMELINE)
         tableMatcher.addPath(Statuses.ListTimeline.CONTENT_PATH, TableIds.LIST_TIMELINE)
         tableMatcher.addPath(Statuses.GroupTimeline.CONTENT_PATH, TableIds.GROUP_TIMELINE)
-        tableMatcher.addPath(Statuses.Public.CONTENT_PATH, TableIds.PUBLIC_TIMELINE)
-        tableMatcher.addPath(Statuses.NetworkPublic.CONTENT_PATH, TableIds.NETWORK_PUBLIC_TIMELINE)
+        tableMatcher.addPath(Statuses.SearchTimeline.CONTENT_PATH, TableIds.SEARCH_TIMELINE)
+        tableMatcher.addPath(Statuses.MediaSearchTimeline.CONTENT_PATH, TableIds.MEDIA_SEARCH_TIMELINE)
 
         tableMatcher.addPath("${Statuses.Favorites.CONTENT_PATH}/#", TableIds.FAVORITES)
         tableMatcher.addPath("${Statuses.UserTimeline.CONTENT_PATH}/#", TableIds.USER_TIMELINE)
         tableMatcher.addPath("${Statuses.UserMediaTimeline.CONTENT_PATH}/#", TableIds.USER_MEDIA_TIMELINE)
         tableMatcher.addPath("${Statuses.ListTimeline.CONTENT_PATH}/#", TableIds.LIST_TIMELINE)
         tableMatcher.addPath("${Statuses.GroupTimeline.CONTENT_PATH}/#", TableIds.GROUP_TIMELINE)
-        tableMatcher.addPath("${Statuses.Public.CONTENT_PATH}/#", TableIds.PUBLIC_TIMELINE)
-        tableMatcher.addPath("${Statuses.NetworkPublic.CONTENT_PATH}/#", TableIds.NETWORK_PUBLIC_TIMELINE)
+        tableMatcher.addPath("${Statuses.SearchTimeline.CONTENT_PATH}/#", TableIds.SEARCH_TIMELINE)
+        tableMatcher.addPath("${Statuses.MediaSearchTimeline.CONTENT_PATH}/#", TableIds.MEDIA_SEARCH_TIMELINE)
 
         tableMatcher.addPath(Activities.AboutMe.CONTENT_PATH, TableIds.ACTIVITIES_ABOUT_ME)
         tableMatcher.addPath(Drafts.CONTENT_PATH, TableIds.DRAFTS)

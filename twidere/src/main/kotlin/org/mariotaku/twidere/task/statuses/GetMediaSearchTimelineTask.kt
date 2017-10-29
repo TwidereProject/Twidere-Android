@@ -22,25 +22,26 @@ package org.mariotaku.twidere.task.statuses
 import android.content.Context
 import android.net.Uri
 import org.mariotaku.twidere.annotation.FilterScope
-import org.mariotaku.twidere.data.fetcher.UserTimelineFetcher
+import org.mariotaku.twidere.data.fetcher.MediaSearchTimelineFetcher
+import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.refresh.UserRelatedContentRefreshParam
+import org.mariotaku.twidere.model.refresh.SearchTimelineContentRefreshParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.ErrorInfoStore
 import org.mariotaku.twidere.util.sync.TimelineSyncManager
 
-class GetUserTimelineTask(context: Context) : GetStatusesTask<UserRelatedContentRefreshParam>(context) {
+class GetMediaSearchTimelineTask(context: Context) : GetStatusesTask<SearchTimelineContentRefreshParam>(context) {
 
     override val contentUri: Uri
-        get() = Statuses.UserTimeline.CONTENT_URI.withAppendedPath(params.tabId)
+        get() = Statuses.MediaSearchTimeline.CONTENT_URI.withAppendedPath(params.tabId)
 
-    override val filterScopes: Int = FilterScope.USER_TIMELINE
+    override val filterScopes: Int = FilterScope.SEARCH_RESULTS
 
-    override val errorInfoKey: String = ErrorInfoStore.KEY_USER_TIMELINE
+    override val errorInfoKey: String = ErrorInfoStore.KEY_SEARCH_TIMELINE
 
-    override fun getStatusesFetcher(params: UserRelatedContentRefreshParam?): UserTimelineFetcher {
-        return UserTimelineFetcher(params?.userKey, params?.userScreenName, null)
+    override fun getStatusesFetcher(params: SearchTimelineContentRefreshParam?): StatusesFetcher {
+        return MediaSearchTimelineFetcher(params?.query)
     }
 
     override fun syncFetchReadPosition(manager: TimelineSyncManager, accountKeys: Array<UserKey>) {

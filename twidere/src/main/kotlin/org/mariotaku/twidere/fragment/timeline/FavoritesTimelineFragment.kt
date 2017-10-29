@@ -31,6 +31,7 @@ import org.mariotaku.twidere.constant.iWantMyStarsBackKey
 import org.mariotaku.twidere.data.fetcher.UserFavoritesFetcher
 import org.mariotaku.twidere.extension.adapter.removeStatuses
 import org.mariotaku.twidere.extension.linkHandlerTitle
+import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.refresh.UserRelatedContentRefreshParam
@@ -41,7 +42,8 @@ class FavoritesTimelineFragment : AbsTimelineFragment() {
 
     override val filterScope: Int = FilterScope.HOME
 
-    override val contentUri: Uri = Statuses.HomeTimeline.CONTENT_URI
+    override val contentUri: Uri
+        get() = Statuses.Favorites.CONTENT_URI.withAppendedPath(tabId)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
