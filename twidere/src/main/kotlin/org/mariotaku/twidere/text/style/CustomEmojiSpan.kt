@@ -27,59 +27,69 @@ import android.graphics.drawable.Drawable
 import android.text.style.ReplacementSpan
 import android.widget.TextView
 import com.bumptech.glide.RequestManager
+import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.request.animation.GlideAnimation
-import com.bumptech.glide.request.target.BaseTarget
-import com.bumptech.glide.request.target.SizeReadyCallback
-import org.mariotaku.ktextension.weak
+import com.bumptech.glide.request.target.SimpleTarget
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.extension.setBoundsFitCenter
 
 class CustomEmojiSpan(
-        val uri: String,
+        uri: String,
         requestManager: RequestManager,
-        val textView: TextView,
-        val alignBaseline: Boolean = false
+        textView: TextView
 ) : ReplacementSpan() {
 
-    private val textSize = textView.textSize.toInt()
-
-    private val target = GlideTarget(textSize)
+    private val emojiSize = textView.textSize.toInt()
+    private val target = GlideTarget(textView, emojiSize, emojiSize)
 
     init {
         requestManager.load(uri)
                 .asBitmap()
                 .placeholder(R.mipmap.ic_emoji_loading)
                 .error(R.mipmap.ic_emoji_error)
+                .format(DecodeFormat.PREFER_ARGB_8888)
                 .fitCenter()
-                .dontAnimate()
                 .into(target)
     }
 
     override fun getSize(paint: Paint, text: CharSequence, start: Int, end: Int,
             fm: Paint.FontMetricsInt?): Int {
-        return textSize
+        if (fm != null) {
+            fm.ascent = -target.height
+            fm.descent = 0
+
+            fm.top = fm.ascent
+            fm.bottom = 0
+        }
+
+        return target.width
     }
 
     override fun draw(canvas: Canvas, text: CharSequence, start: Int, end: Int, x: Float, top: Int,
             y: Int, bottom: Int, paint: Paint) {
         val b = target.drawable ?: return
+
         canvas.save()
 
-        var transY = bottom - b.bounds.bottom
-        if (alignBaseline) {
-            transY -= paint.fontMetricsInt.descent
-        }
+        val transY = bottom - b.bounds.bottom
 
         canvas.translate(x, transY.toFloat())
-        b.setBounds(0, 0, textSize, textSize)
         b.draw(canvas)
         canvas.restore()
     }
 
-    private inner class GlideTarget(
-            val textSize: Int
-    ) : BaseTarget<Bitmap>() {
+    private class GlideTarget(
+            val textView: TextView,
+            val width: Int,
+            val height: Int
+    ) : SimpleTarget<Bitmap>(width, height) {
 
-        var drawable: Drawable? by weak()
+        var drawable: Drawable? = null
+            set(value) {
+                field = value
+                value?.setBoundsFitCenter(0, 0, width, height)
+                textView.postInvalidate()
+            }
 
         override fun onResourceReady(resource: Bitmap, glideAnimation: GlideAnimation<in Bitmap>) {
             drawable = BitmapDrawable(textView.resources, resource)
@@ -97,10 +107,7 @@ class CustomEmojiSpan(
             drawable = errorDrawable
         }
 
-        override fun getSize(cb: SizeReadyCallback) {
-            cb.onSizeReady(textSize, textSize)
-        }
-
     }
+
 
 }

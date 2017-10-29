@@ -54,8 +54,8 @@ fun Array<SpanItem>.applyTo(spannable: Spannable, emojis: Map<String, CustomEmoj
             SpanItem.SpanType.EMOJI -> {
                 val shortCode = span.link ?: return@forEach
                 val emoji = emojis?.get(shortCode) ?: return@forEach
-                spannable.setSpan(CustomEmojiSpan(emoji.url, requestManager, textView), span.start,
-                        span.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                spannable.setSpan(CustomEmojiSpan(emoji.url, requestManager, textView),
+                        span.start, span.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             else -> {
                 spannable.setSpan(URLSpan(span.link), span.start, span.end,

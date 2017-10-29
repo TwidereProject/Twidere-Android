@@ -136,6 +136,7 @@ internal class HeaderBehavior(context: Context, attrs: AttributeSet? = null) :
     }
 
     override fun canDragView(view: ViewGroup): Boolean {
+        if (view.translationY != 0f) return false
         // Else we'll use the default behaviour of seeing if it can scroll down
         val scrollingView = lastNestedScrollingChild
         return if (scrollingView != null) {

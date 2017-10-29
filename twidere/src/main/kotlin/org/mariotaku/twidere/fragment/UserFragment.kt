@@ -501,7 +501,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     override fun getSystemWindowInsets(caller: Fragment, insets: Rect): Boolean {
         insetsCallback?.getSystemWindowInsets(this, insets)
         if (caller.parentFragment === this) {
-            insets.top = toolbar.height + toolbarTabs.height
+            insets.top = toolbar.measuredHeight + toolbarTabs.measuredHeight
         }
         return true
     }

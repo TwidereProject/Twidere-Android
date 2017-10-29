@@ -33,6 +33,6 @@ class ComposeActivityTestRule(initialTouchMode: Boolean = false, launchActivity:
     }
 
     override fun afterActivityFinished() {
-        TestAccountUtils.removeTestAccounts()
+        TestAccountUtils.removeTestAccounts().get()
     }
 }

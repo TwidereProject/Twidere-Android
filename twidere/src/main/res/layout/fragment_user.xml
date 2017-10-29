@@ -29,11 +29,43 @@
     app:statusBarBackground="@null"
     tools:theme="@style/Theme.Twidere.NoActionBar">
 
-    <org.mariotaku.twidere.view.ExtendedViewPager
-        android:id="@+id/viewPager"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="org.mariotaku.twidere.view.behavior.userprofile.PagerBehavior"/>
+        android:visibility="visible"
+        app:layout_behavior="org.mariotaku.twidere.view.behavior.userprofile.PagerBehavior">
+
+        <org.mariotaku.twidere.view.ExtendedViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <LinearLayout
+            android:id="@+id/pagesErrorContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/element_spacing_large"
+            android:visibility="gone">
+
+            <org.mariotaku.twidere.view.IconActionView
+                android:id="@+id/pagesErrorIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:color="?android:textColorSecondary"
+                android:src="@drawable/ic_info_error_generic"/>
+
+            <org.mariotaku.twidere.view.FixedTextView
+                android:id="@+id/pagesErrorText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/element_spacing_normal"
+                android:textAppearance="?android:textAppearanceMedium"/>
+        </LinearLayout>
+
+    </FrameLayout>
 
     <RelativeLayout
         android:id="@+id/profileBannerContainer"
@@ -77,44 +109,6 @@
         android:layout_height="@dimen/element_spacing_msmall"
         android:background="@drawable/shadow_bottom"
         app:layout_behavior="org.mariotaku.twidere.view.behavior.userprofile.HeaderShadowBehavior"/>
-
-    <FrameLayout
-        android:id="@+id/pagesErrorContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="@dimen/element_spacing_large">
-
-            <org.mariotaku.twidere.view.IconActionView
-                android:id="@+id/pagesErrorIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:color="?android:textColorSecondary"
-                android:src="@drawable/ic_info_error_generic"/>
-
-            <org.mariotaku.twidere.view.FixedTextView
-                android:id="@+id/pagesErrorText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/element_spacing_normal"
-                android:textAppearance="?android:textAppearanceMedium"/>
-        </LinearLayout>
-
-        <View
-            android:id="@+id/errorWindowOverlay"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/element_spacing_normal"
-            android:layout_gravity="top"
-            android:background="@drawable/shadow_bottom"/>
-
-    </FrameLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
