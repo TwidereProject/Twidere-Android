@@ -681,6 +681,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
                     listener.onItemActionClick(this@StatusViewHolder, R.id.favorite, position)
                 }
                 mediaLabel -> {
+                    if (position < 0) return
                     val firstMedia = adapter.getStatus(position).media?.firstOrNull()
                     if (firstMedia != null) {
                         listener.onMediaClick(this@StatusViewHolder, v, firstMedia, position)
