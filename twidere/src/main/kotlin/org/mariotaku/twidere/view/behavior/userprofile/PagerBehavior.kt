@@ -72,35 +72,23 @@ internal class PagerBehavior(context: Context, attrs: AttributeSet? = null) : Ac
     }
 
     override fun onDependentViewChanged(parent: CoordinatorLayout, child: View, dependency: View): Boolean {
-        offsetChildAsNeeded(parent, child, dependency)
+        offsetChildAsNeeded(child, dependency)
         return false
     }
 
     override fun onRequestChildRectangleOnScreen(parent: CoordinatorLayout, child: View,
             rectangle: Rect, immediate: Boolean): Boolean {
-        val header = parent.getDependencies(child).first()
         // Offset the rect by the child's left/top
         rectangle.offset(child.left, child.top)
 
         val parentRect = tempRect1
         parentRect.set(0, 0, parent.width, parent.height)
 
-        if (!parentRect.contains(rectangle)) {
-            // If the rectangle can not be fully seen the visible bounds, collapse
-            // the AppBarLayout
-//            header.setExpanded(false, !immediate)
-            return true
-        }
-        return false
+        return !parentRect.contains(rectangle)
     }
 
-    private fun offsetChildAsNeeded(parent: CoordinatorLayout, child: View, dependency: View) {
-        val behavior = (dependency.layoutParams as CoordinatorLayout.LayoutParams).behavior as? HeaderBehavior ?: return
-        // Offset the child, pinning it to the bottom the header-dependency, maintaining
-        // any vertical gap and overlap
-
-        ViewCompat.offsetTopAndBottom(child, (dependency.contentBottom - child.top
-                + behavior.offsetDelta)
+    private fun offsetChildAsNeeded(child: View, dependency: View) {
+        ViewCompat.offsetTopAndBottom(child, (dependency.contentBottom - child.top)
                 - getOverlapPixelsForOffsetAccessor(dependency))
     }
 

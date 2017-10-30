@@ -28,6 +28,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Parcelable
 import android.support.annotation.CallSuper
 import android.support.v7.widget.FixedLinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager
@@ -43,12 +44,16 @@ import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
+import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter
+import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter.Companion.ITEM_VIEW_TYPE_STATUS
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.annotation.ReadPositionTag
+import org.mariotaku.twidere.constant.displaySensitiveContentsKey
+import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.readFromBottomKey
 import org.mariotaku.twidere.data.source.CursorObjectLivePagedListProvider
 import org.mariotaku.twidere.extension.model.activityStatus
@@ -58,16 +63,14 @@ import org.mariotaku.twidere.extension.view.firstVisibleItemPosition
 import org.mariotaku.twidere.extension.view.lastVisibleItemPosition
 import org.mariotaku.twidere.fragment.AbsContentRecyclerViewFragment
 import org.mariotaku.twidere.fragment.timeline.AbsTimelineFragment
-import org.mariotaku.twidere.model.ParcelableActivity
-import org.mariotaku.twidere.model.ParcelableMedia
-import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.analyzer.Share
 import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.event.GetActivitiesTaskEvent
 import org.mariotaku.twidere.model.event.StatusDestroyedEvent
 import org.mariotaku.twidere.model.event.StatusRetweetedEvent
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
+import org.mariotaku.twidere.model.refresh.BaseContentRefreshParam
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
@@ -362,7 +365,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
                 .setPageSize(50).setEnablePlaceholders(false).build())
     }
 
-    private fun getFullStatus(position: Int): ParcelableStatus? {
+    private fun getFullActivity(position: Int): ParcelableActivity? {
         if (isStandalone) {
             return adapter.getActivity(position, false)
         }
@@ -428,33 +431,77 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
 
     private inner class ActivityClickHandler : ParcelableActivitiesAdapter.ActivityAdapterListener {
         override fun onActivityClick(holder: ActivityTitleSummaryViewHolder, position: Int) {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            val activity = adapter.getActivity(position)
+            val list = ArrayList<Parcelable>()
+            if (activity.target_objects?.statuses.isNotNullOrEmpty()) {
+                activity.target_objects?.statuses?.addAllTo(list)
+            } else if (activity.targets?.statuses.isNotNullOrEmpty()) {
+                activity.targets?.statuses?.addAllTo(list)
+            }
+            activity.sources?.addAllTo(list)
+            IntentUtils.openItems(getActivity(), list)
         }
 
         override fun onStatusActionClick(holder: IStatusViewHolder, id: Int, position: Int) {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            val status = getActivityStatus(position) ?: return
+            AbsTimelineFragment.handleActionClick(this@AbsActivitiesFragment, id, status,
+                    holder as IStatusViewHolder)
         }
 
         override fun onStatusActionLongClick(holder: IStatusViewHolder, id: Int, position: Int): Boolean {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            val status = getActivityStatus(position) ?: return false
+            return AbsTimelineFragment.handleActionLongClick(this@AbsActivitiesFragment,
+                    status, adapter.getItemId(position), id)
         }
 
         override fun onStatusMenuClick(holder: IStatusViewHolder, menuView: View, position: Int) {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            if (activity == null) return
+            val lm = layoutManager
+            val view = lm.findViewByPosition(position) ?: return
+            if (lm.getItemViewType(view) != ITEM_VIEW_TYPE_STATUS) {
+                return
+            }
+            recyclerView.showContextMenuForChild(view)
         }
 
         override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
-            val status = getFullStatus(position) ?: return
+            val status = getActivityStatus(position) ?: return
             IntentUtils.openStatus(activity, status, null)
         }
 
         override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
+            val status = getActivityStatus(position)?.takeIf { it.quoted_id != null } ?: return
+            IntentUtils.openStatus(context, status.account_key, status.quoted_id)
         }
 
         override fun onMediaClick(holder: IStatusViewHolder, view: View, media: ParcelableMedia, position: Int) {
+            val status = getActivityStatus(position) ?: return
+            IntentUtils.openMedia(activity, status, media, preferences[newDocumentApiKey],
+                    preferences[displaySensitiveContentsKey],
+                    null)
         }
 
         override fun onGapClick(holder: GapViewHolder, position: Int) {
+            val activity = adapter.getActivity(position)
+            DebugLog.v(msg = "Load activity gap $activity")
+            if (!AccountUtils.isOfficial(context, activity.account_key)) {
+                // Skip if item is not a status
+                if (activity.action !in Activity.Action.MENTION_ACTIONS) {
+                    adapter.removeGapLoadingId(ObjectId(activity.account_key, activity.id))
+                    adapter.notifyItemChanged(position)
+                    return
+                }
+            }
+            val accountKeys = arrayOf(activity.account_key)
+            val pagination = arrayOf(SinceMaxPagination.maxId(activity.min_position,
+                    activity.min_sort_position))
+            getActivities(BaseContentRefreshParam(accountKeys, pagination).also {
+                it.extraId = activity._id
+            })
+        }
+
+        private fun getActivityStatus(position: Int): ParcelableStatus? {
+            return adapter.getActivity(position).activityStatus
         }
     }
 

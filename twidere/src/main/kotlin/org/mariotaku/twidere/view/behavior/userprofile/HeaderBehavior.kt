@@ -45,9 +45,6 @@ import org.mariotaku.twidere.util.dagger.DependencyHolder
 internal class HeaderBehavior(context: Context, attrs: AttributeSet? = null) :
         AccessorHeaderBehavior<ViewGroup>(context, attrs) {
 
-    var offsetDelta: Int = 0
-        private set
-
     private val cardBackgroundColor: Int
     private var tabItemIsDark: Int = 0
 
@@ -161,33 +158,11 @@ internal class HeaderBehavior(context: Context, attrs: AttributeSet? = null) :
     }
 
     override fun setHeaderTopBottomOffset(parent: CoordinatorLayout, header: ViewGroup, newOffset: Int, minOffset: Int, maxOffset: Int): Int {
-        val curOffset = topBottomOffsetForScrollingSibling
-        var consumed = 0
-
-        if (minOffset != 0 && curOffset in minOffset..maxOffset) {
-            // If we have some scrolling range, and we're currently within the min and max
-            // offsets, calculate a new offset
-            val clampedOffset = newOffset.coerceIn(minOffset, maxOffset)
-            if (curOffset != clampedOffset) {
-
-                topAndBottomOffset = clampedOffset
-                updateTabColor(parent, header, clampedOffset)
-                // Update how much dy we have consumed
-                consumed = curOffset - clampedOffset
-                // Update the stored sibling offset
-                offsetDelta = clampedOffset - clampedOffset
-
-            }
-        } else {
-            // Reset the offset delta
-            offsetDelta = 0
+        val consumed = super.setHeaderTopBottomOffset(parent, header, newOffset, minOffset, maxOffset)
+        if (consumed != 0) {
+            updateTabColor(parent, header, topAndBottomOffset)
         }
-
         return consumed
-    }
-
-    override fun getTopBottomOffsetForScrollingSibling(): Int {
-        return topAndBottomOffset + offsetDelta
     }
 
     @SuppressLint("RestrictedApi")
