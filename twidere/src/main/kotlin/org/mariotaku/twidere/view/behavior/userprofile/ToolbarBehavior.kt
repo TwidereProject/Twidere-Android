@@ -48,8 +48,8 @@ internal class ToolbarBehavior(context: Context?, attrs: AttributeSet? = null) :
     }
 
     override fun onDependentViewChanged(parent: CoordinatorLayout, child: Toolbar, dependency: View): Boolean {
-        if (updateToolbarFactor(parent, child, dependency)) return false
-        return true
+        updateToolbarFactor(parent, child, dependency)
+        return false
     }
 
     @SuppressLint("RestrictedApi")

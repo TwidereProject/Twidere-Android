@@ -27,10 +27,6 @@ import android.view.View
 internal abstract class AccessorHeaderScrollingViewBehavior(context: Context, attrs: AttributeSet? = null) : HeaderScrollingViewBehavior(context, attrs) {
     internal val tempRect1 = mTempRect1
 
-    internal override fun getOverlapRatioForOffset(header: View): Float {
-        return super.getOverlapRatioForOffset(header)
-    }
-
     internal override fun findFirstDependency(views: List<View>): View? {
         throw UnsupportedOperationException()
     }
@@ -39,7 +35,4 @@ internal abstract class AccessorHeaderScrollingViewBehavior(context: Context, at
         return super.getScrollRange(v)
     }
 
-    internal fun getOverlapPixelsForOffsetAccessor(header: View): Int {
-        return getOverlapPixelsForOffset(header)
-    }
 }

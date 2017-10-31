@@ -49,7 +49,6 @@ internal class HeaderBehavior(context: Context, attrs: AttributeSet? = null) :
     private var tabItemIsDark: Int = 0
 
     private var lastNestedScrollingChild by weak<View>()
-    private var nestedScrollTarget by weak<View>()
 
     init {
         val preferences = DependencyHolder.get(context).preferences
@@ -94,7 +93,6 @@ internal class HeaderBehavior(context: Context, attrs: AttributeSet? = null) :
     override fun onNestedScroll(coordinatorLayout: CoordinatorLayout, child: ViewGroup,
             target: View, dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int, dyUnconsumed: Int,
             type: Int) {
-        nestedScrollTarget = target
         if (dyUnconsumed < 0) {
             // If the scrolling view is scrolling down but not consuming, it's probably be at
             // the top of it's content

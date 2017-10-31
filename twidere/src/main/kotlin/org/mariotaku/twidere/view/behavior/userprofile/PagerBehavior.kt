@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.view.behavior.userprofile
 
 import android.content.Context
-import android.graphics.Rect
 import android.support.design.widget.AccessorHeaderScrollingViewBehavior
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.lastWindowInsetsCompat
@@ -66,9 +65,7 @@ internal class PagerBehavior(context: Context, attrs: AttributeSet? = null) : Ac
             rect.right -= parentInsets.systemWindowInsetRight
         }
 
-        val overlap = getOverlapPixelsForOffsetAccessor(header)
-
-        child.layout(rect.left, rect.top - overlap, rect.right, rect.bottom - overlap)
+        child.layout(rect.left, rect.top, rect.right, rect.bottom)
     }
 
     override fun onDependentViewChanged(parent: CoordinatorLayout, child: View, dependency: View): Boolean {
@@ -76,44 +73,8 @@ internal class PagerBehavior(context: Context, attrs: AttributeSet? = null) : Ac
         return false
     }
 
-    override fun onRequestChildRectangleOnScreen(parent: CoordinatorLayout, child: View,
-            rectangle: Rect, immediate: Boolean): Boolean {
-        // Offset the rect by the child's left/top
-        rectangle.offset(child.left, child.top)
-
-        val parentRect = tempRect1
-        parentRect.set(0, 0, parent.width, parent.height)
-
-        return !parentRect.contains(rectangle)
-    }
-
     private fun offsetChildAsNeeded(child: View, dependency: View) {
-        ViewCompat.offsetTopAndBottom(child, (dependency.contentBottom - child.top)
-                - getOverlapPixelsForOffsetAccessor(dependency))
-    }
-
-    override fun getOverlapRatioForOffset(header: View): Float {
-        val totalScrollRange = header.totalScrollRange
-        val preScrollDown = header.downNestedPreScrollRange
-        val offset = getAppBarLayoutOffset(header)
-
-        if (preScrollDown != 0 && totalScrollRange + offset <= preScrollDown) {
-            // If we're in a pre-scroll down. Don't use the offset at all.
-            return 0f
-        } else {
-            val availScrollRange = totalScrollRange - preScrollDown
-            if (availScrollRange != 0) {
-                // Else we'll use a interpolated ratio of the overlap, depending on offset
-                return 1f + offset / availScrollRange.toFloat()
-            }
-        }
-        return 0f
-    }
-
-    private fun getAppBarLayoutOffset(abl: View): Int {
-        val lp = abl.layoutParams as CoordinatorLayout.LayoutParams
-        val behavior = lp.behavior as? HeaderBehavior ?: return 0
-        return behavior.topBottomOffsetForScrollingSibling
+        ViewCompat.offsetTopAndBottom(child, dependency.contentBottom - child.top)
     }
 
     override fun findFirstDependency(views: List<View>): View? {
