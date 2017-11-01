@@ -275,6 +275,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
 
     protected open fun onDataLoaded(data: PagedList<ParcelableActivity>?) {
         val firstVisiblePosition = layoutManager.firstVisibleItemPosition
+        adapter.showAccountsColor = accountKeys.size > 1
         adapter.activities = data
         when {
             data == null || data.isEmpty() -> {

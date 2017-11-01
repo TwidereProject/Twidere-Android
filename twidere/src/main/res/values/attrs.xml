@@ -61,10 +61,14 @@
     </declare-styleable>
     <declare-styleable name="TwoLineTextView">
         <attr name="tltvTwoLine" format="boolean"/>
+        <attr name="tltvPrimaryTextAppearance" format="reference"/>
+        <attr name="tltvSecondaryTextAppearance" format="reference"/>
         <attr name="tltvPrimaryText" format="string"/>
         <attr name="tltvSecondaryText" format="string"/>
         <attr name="tltvPrimaryTextColor" format="color"/>
         <attr name="tltvSecondaryTextColor" format="color"/>
+        <attr name="tltvPrimaryLinkTextColor" format="color"/>
+        <attr name="tltvSecondaryLinkTextColor" format="color"/>
         <attr name="tltvPrimaryTextStyle"/>
         <attr name="tltvSecondaryTextStyle"/>
         <attr name="tltvPrimaryTextSize" format="dimension"/>

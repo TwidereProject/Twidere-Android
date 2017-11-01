@@ -160,6 +160,8 @@ class LargeMediaStatusViewHolder(private val adapter: IStatusesAdapter, itemView
         textView.textSize = textSize * 0.9f
         countsLabel.textSize = textSize * 0.85f
         timeView.textSize = textSize * 0.8f
+
+        nameView.updateTextAppearance()
     }
 
     override fun playLikeAnimation(listener: LikeAnimationDrawable.OnLikedListener) {

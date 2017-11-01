@@ -41,11 +41,13 @@ class CursorObjectTiledDataSource<T>(
 
     init {
         val weakThis = toWeak()
-        resolver.registerContentObserver(uri, false, object : ContentObserver(MainHandler) {
+        val observer: ContentObserver = object : ContentObserver(MainHandler) {
             override fun onChange(selfChange: Boolean) {
+                resolver.unregisterContentObserver(this)
                 weakThis.get()?.invalidate()
             }
-        })
+        }
+        resolver.registerContentObserver(uri, false, observer)
     }
 
     override fun countItems() = resolver.queryCount(uri, selection, selectionArgs)

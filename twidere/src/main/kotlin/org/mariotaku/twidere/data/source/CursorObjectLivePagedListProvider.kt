@@ -19,9 +19,9 @@
 
 package org.mariotaku.twidere.data.source
 
-import android.arch.paging.LivePagedListProvider
 import android.content.ContentResolver
 import android.net.Uri
+import org.mariotaku.twidere.data.ExtendedPagedListProvider
 
 class CursorObjectLivePagedListProvider<T>(
         private val resolver: ContentResolver,
@@ -31,9 +31,11 @@ class CursorObjectLivePagedListProvider<T>(
         val selectionArgs: Array<String>? = null,
         val sortOrder: String? = null,
         val cls: Class<T>
-) : LivePagedListProvider<Int, T>() {
+) : ExtendedPagedListProvider<Int, T>() {
 
-    override fun createDataSource() = CursorObjectTiledDataSource(resolver, uri, projection,
-            selection, selectionArgs, sortOrder, cls)
+    override fun onCreateDataSource(): CursorObjectTiledDataSource<T> {
+        return CursorObjectTiledDataSource(resolver, uri, projection,
+                selection, selectionArgs, sortOrder, cls)
+    }
 
 }

@@ -246,6 +246,8 @@ class UserViewHolder(
         statusesCountView.textSize = textSize
         followersCountView.textSize = textSize
         friendsCountView.textSize = textSize
+
+        nameView.updateTextAppearance()
     }
 
     fun setUserClickListener(listener: UserClickListener?) {

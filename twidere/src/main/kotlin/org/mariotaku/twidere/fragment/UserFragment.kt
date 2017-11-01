@@ -358,7 +358,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         (0 until adapter.count).forEach { i ->
             val sf = adapter.instantiateItem(viewPager, i) as? AbsTimelineFragment ?: return@forEach
             if (sf.view == null) return@forEach
-            sf.reloadAll()
         }
         profileImage.visibility = View.VISIBLE
         val resources = resources
@@ -1337,6 +1336,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             tabArgs.putString(EXTRA_SCREEN_NAME, args.getString(EXTRA_SCREEN_NAME))
             tabArgs.putString(EXTRA_PROFILE_URL, args.getString(EXTRA_PROFILE_URL))
         }
+
         pagerAdapter.add(cls = UserTimelineFragment::class.java, args = Bundle(tabArgs) {
             this[UserTimelineFragment.EXTRA_ENABLE_TIMELINE_FILTER] = true
             this[UserTimelineFragment.EXTRA_LOAD_PINNED_STATUS] = true

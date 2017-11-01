@@ -517,6 +517,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         replyCountView.textSize = textSize
         retweetCountView.textSize = textSize
         favoriteCountView.textSize = textSize
+
+        nameView.updateTextAppearance()
+        quotedNameView.updateTextAppearance()
     }
 
     fun setupViewOptions() {

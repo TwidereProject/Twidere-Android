@@ -20,8 +20,8 @@
 package org.mariotaku.twidere.data.status
 
 
-import android.arch.paging.LivePagedListProvider
 import android.content.Context
+import org.mariotaku.twidere.data.ExtendedPagedListProvider
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
@@ -33,8 +33,9 @@ class StatusesLivePagedListProvider(
         private val fetcher: StatusesFetcher,
         private val accountKey: UserKey,
         private val timelineFilter: TimelineFilter?
-) : LivePagedListProvider<Pagination, ParcelableStatus>() {
+) : ExtendedPagedListProvider<Pagination, ParcelableStatus>() {
 
-    override fun createDataSource() = StatusesDataSource(context, fetcher, accountKey, timelineFilter)
-
+    override fun onCreateDataSource(): StatusesDataSource {
+        return StatusesDataSource(context, fetcher, accountKey, timelineFilter)
+    }
 }

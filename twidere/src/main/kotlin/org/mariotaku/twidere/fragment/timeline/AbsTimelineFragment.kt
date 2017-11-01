@@ -60,6 +60,7 @@ import org.mariotaku.twidere.annotation.TimelineStyle
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
+import org.mariotaku.twidere.data.ExtendedPagedListProvider
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.data.source.CursorObjectLivePagedListProvider
 import org.mariotaku.twidere.data.status.StatusesLivePagedListProvider
@@ -129,8 +130,11 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
      */
     protected abstract val contentUri: Uri
 
-    protected lateinit var statuses: LiveData<PagedList<ParcelableStatus>?>
-        private set
+    protected var statuses: LiveData<PagedList<ParcelableStatus>?>? = null
+        private set(value) {
+            field?.removeObservers(this)
+            field = value
+        }
 
     protected val accountKeys: Array<UserKey>
         get() = Utils.getAccountKeys(context, arguments) ?: if (isStandalone) {
@@ -141,13 +145,13 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
     private val busEventHandler = BusEventHandler()
     private val scrollHandler = ScrollHandler()
+    private var dataController: ExtendedPagedListProvider.DataController? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         registerForContextMenu(recyclerView)
         adapter.statusClickListener = StatusClickHandler()
-        statuses = createLiveData()
-        statuses.observe(this, Observer { onDataLoaded(it) })
+        setupLiveData()
         showProgress()
     }
 
@@ -291,16 +295,20 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
 
     fun reloadAll() {
+        val controller = dataController
+        if (controller != null) {
+            if (!controller.invalidate()) return
+        } else {
+            adapter.statuses = null
+            setupLiveData()
+        }
         showProgress()
-        adapter.statuses = null
-        statuses.removeObservers(this)
-        statuses = createLiveData()
-        statuses.observe(this, Observer { onDataLoaded(it) })
     }
 
 
     protected open fun onDataLoaded(data: PagedList<ParcelableStatus>?) {
         val firstVisiblePosition = layoutManager.firstVisibleItemPosition
+        adapter.showAccountsColor = accountKeys.size > 1
         adapter.statuses = data
         adapter.timelineFilter = timelineFilter
         when {
@@ -370,8 +378,10 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         }
     }
 
-    private fun createLiveData(): LiveData<PagedList<ParcelableStatus>?> {
-        return if (isStandalone) onCreateStandaloneLiveData() else onCreateDatabaseLiveData()
+    private fun setupLiveData() {
+        statuses = (if (isStandalone) onCreateStandaloneLiveData() else onCreateDatabaseLiveData()).also { ld ->
+            ld.observe(this, Observer { onDataLoaded(it) })
+        }
     }
 
     private fun onCreateStandaloneLiveData(): LiveData<PagedList<ParcelableStatus>?> {
@@ -380,11 +390,14 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                 onCreateStatusesFetcher(), accountKey, timelineFilter)
         val maxLoadLimit = getMaxLoadItemLimit(accountKey)
         val loadLimit = preferences[loadItemLimitKey]
+        // We don't use dataController since it's not supported
+        dataController = null
         return provider.create(null, PagedList.Config.Builder()
                 .setPageSize(loadLimit.coerceAtMost(maxLoadLimit))
                 .setInitialLoadSizeHint(loadLimit.coerceAtMost(maxLoadLimit))
                 .build())
     }
+
 
     private fun onCreateDatabaseLiveData(): LiveData<PagedList<ParcelableStatus>?> {
         val table = DataStoreUtils.getTableNameByUri(contentUri)!!
@@ -403,6 +416,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         val provider = CursorObjectLivePagedListProvider(context.contentResolver, contentUri,
                 Statuses.COLUMNS, Expression.and(*expressions.toTypedArray()).sql,
                 expressionArgs.toTypedArray(), Statuses.DEFAULT_SORT_ORDER, ParcelableStatus::class.java)
+        dataController = provider.obtainDataController()
         return provider.create(null, PagedList.Config.Builder()
                 .setPageSize(50).setEnablePlaceholders(false).build())
     }

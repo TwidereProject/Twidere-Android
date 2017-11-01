@@ -125,6 +125,9 @@ class ParcelableStatusesAdapter(
         set(value) {
             pagedStatusesHelper.setList(value)
             gapLoadingIds.clear()
+            if (value == null) {
+                itemCounts[ITEM_INDEX_STATUS] = 0
+            }
         }
 
     val statusStartIndex: Int

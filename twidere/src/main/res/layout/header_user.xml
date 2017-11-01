@@ -245,8 +245,10 @@
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
+            app:tltvPrimaryTextAppearance="?android:textAppearanceMedium"
             app:tltvPrimaryTextColor="?android:textColorPrimary"
             app:tltvSecondaryText="@string/title_followers"
+            app:tltvSecondaryTextAppearance="?android:textAppearanceSmall"
             app:tltvSecondaryTextColor="?android:textColorSecondary"
             app:tltvTwoLine="true"
             tools:tltvPrimaryText="255"/>
@@ -260,8 +262,10 @@
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
+            app:tltvPrimaryTextAppearance="?android:textAppearanceMedium"
             app:tltvPrimaryTextColor="?android:textColorPrimary"
             app:tltvSecondaryText="@string/title_following"
+            app:tltvSecondaryTextAppearance="?android:textAppearanceSmall"
             app:tltvSecondaryTextColor="?android:textColorSecondary"
             app:tltvTwoLine="true"
             tools:tltvPrimaryText="255"/>
@@ -275,8 +279,10 @@
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
+            app:tltvPrimaryTextAppearance="?android:textAppearanceMedium"
             app:tltvPrimaryTextColor="?android:textColorPrimary"
             app:tltvSecondaryText="@string/listed"
+            app:tltvSecondaryTextAppearance="?android:textAppearanceSmall"
             app:tltvSecondaryTextColor="?android:textColorSecondary"
             app:tltvTwoLine="true"
             tools:tltvPrimaryText="255"/>
@@ -290,8 +296,10 @@
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
+            app:tltvPrimaryTextAppearance="?android:textAppearanceMedium"
             app:tltvPrimaryTextColor="?android:textColorPrimary"
             app:tltvSecondaryText="@string/groups"
+            app:tltvSecondaryTextAppearance="?android:textAppearanceSmall"
             app:tltvSecondaryTextColor="?android:textColorSecondary"
             app:tltvTwoLine="true"
             tools:tltvPrimaryText="255"/>

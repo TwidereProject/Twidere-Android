@@ -108,7 +108,9 @@
                 android:layout_height="wrap_content"
                 app:tltvPrimaryTextColor="?android:textColorPrimary"
                 app:tltvSecondaryTextColor="?android:textColorSecondary"
-                app:tltvTwoLine="false"/>
+                app:tltvTwoLine="false"
+                tools:tltvPrimaryText="Name"
+                tools:tltvSecondaryText="\@screenname"/>
 
             <org.mariotaku.twidere.view.TimelineContentTextView
                 android:id="@+id/timeSource"
