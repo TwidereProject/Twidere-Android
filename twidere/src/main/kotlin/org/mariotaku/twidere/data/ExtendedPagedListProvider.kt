@@ -21,27 +21,33 @@ package org.mariotaku.twidere.data
 
 import android.arch.paging.DataSource
 import android.arch.paging.LivePagedListProvider
+import android.support.annotation.UiThread
+import android.support.annotation.WorkerThread
 import org.mariotaku.ktextension.weak
 
 abstract class ExtendedPagedListProvider<Key, Value> : LivePagedListProvider<Key, Value>() {
 
     private val dataControllers: MutableList<DataControllerImpl> = ArrayList()
 
+    @WorkerThread
     override final fun createDataSource(): DataSource<Key, Value> {
         val source = onCreateDataSource()
         dataControllers.forEach { it.attach(source) }
         return source
     }
 
+    @UiThread
     fun obtainDataController(): DataController {
         val controller = ExtendedPagedListProvider.DataControllerImpl()
         dataControllers.add(controller)
         return controller
     }
 
+    @WorkerThread
     protected abstract fun onCreateDataSource(): DataSource<Key, Value>
 
     interface DataController {
+        @UiThread
         fun invalidate(): Boolean
     }
 

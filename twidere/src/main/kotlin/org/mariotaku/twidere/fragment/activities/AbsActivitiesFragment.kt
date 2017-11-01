@@ -55,7 +55,8 @@ import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.readFromBottomKey
-import org.mariotaku.twidere.data.source.CursorObjectLivePagedListProvider
+import org.mariotaku.twidere.data.CursorObjectLivePagedListProvider
+import org.mariotaku.twidere.data.CursorObjectLivePagedListProvider.CursorObjectProcessor
 import org.mariotaku.twidere.extension.model.activityStatus
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.extension.queryOne
@@ -337,6 +338,8 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
         }
     }
 
+    protected abstract fun onCreateCursorObjectProcessor(): CursorObjectProcessor<ParcelableActivity>
+
     private fun createLiveData(): LiveData<PagedList<ParcelableActivity>?> {
         return if (isStandalone) onCreateStandaloneLiveData() else onCreateDatabaseLiveData()
     }
@@ -361,7 +364,8 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
         }
         val provider = CursorObjectLivePagedListProvider(context.contentResolver, contentUri,
                 Activities.COLUMNS, Expression.and(*expressions.toTypedArray()).sql,
-                expressionArgs.toTypedArray(), Activities.DEFAULT_SORT_ORDER, ParcelableActivity::class.java)
+                expressionArgs.toTypedArray(), Activities.DEFAULT_SORT_ORDER,
+                ParcelableActivity::class.java, onCreateCursorObjectProcessor())
         return provider.create(null, PagedList.Config.Builder()
                 .setPageSize(50).setEnablePlaceholders(false).build())
     }

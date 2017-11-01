@@ -198,9 +198,9 @@ class ContentNotificationManager(
 
 
         var newMaxPositionKey = -1L
-        val filteredUserKeys = DataStoreUtils.getFilteredUserKeys(context, FilterScope.INTERACTIONS)
-        val filteredNameKeywords = DataStoreUtils.getFilteredKeywords(context, FilterScope.INTERACTIONS or FilterScope.TARGET_NAME)
-        val filteredDescriptionKeywords = DataStoreUtils.getFilteredKeywords(context, FilterScope.INTERACTIONS or FilterScope.TARGET_DESCRIPTION)
+        val filteredUserKeys = cr.getFilteredUserKeys(FilterScope.INTERACTIONS)
+        val filteredNameKeywords = cr.getFilteredKeywords(FilterScope.INTERACTIONS or FilterScope.TARGET_NAME)
+        val filteredDescriptionKeywords = cr.getFilteredKeywords(FilterScope.INTERACTIONS or FilterScope.TARGET_DESCRIPTION)
 
 
         val (remaining, consumed) = cr.queryReference(Activities.AboutMe.CONTENT_URI, Activities.COLUMNS,

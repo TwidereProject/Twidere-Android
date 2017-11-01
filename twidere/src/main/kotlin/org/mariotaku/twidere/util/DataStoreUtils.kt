@@ -262,38 +262,6 @@ object DataStoreUtils {
         return context.contentResolver.queryCount(uri, where, arrayOf(accountKey.toString()))
     }
 
-    fun getFilteredUserKeys(context: Context, @FilterScope scope: Int): Array<UserKey> {
-        val resolver = context.contentResolver
-        val projection = arrayOf(Filters.Users.USER_KEY)
-        val where = Expression.or(
-                Expression.equals("${Filters.Users.SCOPE} & ${FilterScope.MASK_SCOPE}", 0),
-                Expression.notEquals("${Filters.Users.SCOPE} & $scope", 0)
-        )
-        return resolver.queryReference(Filters.Users.CONTENT_URI, projection, where.sql,
-                null, null)?.use { (cur) ->
-            return@use Array(cur.count) { i ->
-                cur.moveToPosition(i)
-                UserKey.valueOf(cur.getString(0))
-            }
-        } ?: emptyArray()
-    }
-
-    fun getFilteredKeywords(context: Context, @FilterScope scope: Int): Array<String> {
-        val resolver = context.contentResolver
-        val projection = arrayOf(Filters.VALUE)
-        val where = Expression.or(
-                Expression.equals("${Filters.SCOPE} & ${FilterScope.MASK_SCOPE}", 0),
-                Expression.notEquals("${Filters.SCOPE} & $scope", 0)
-        )
-        return resolver.queryReference(Filters.Keywords.CONTENT_URI, projection, where.sql,
-                null, null)?.use { (cur) ->
-            return@use Array(cur.count) { i ->
-                cur.moveToPosition(i)
-                cur.getString(0)
-            }
-        } ?: emptyArray()
-    }
-
     fun getAccountDisplayName(context: Context, accountKey: UserKey, nameFirst: Boolean): String? {
         val name: String?
         if (nameFirst) {

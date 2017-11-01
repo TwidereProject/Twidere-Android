@@ -35,7 +35,7 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.PaginatedList
-import org.mariotaku.twidere.util.DataStoreUtils
+import org.mariotaku.twidere.util.getFilteredUserKeys
 
 class MutesUsersLoader(
         context: Context,
@@ -44,7 +44,7 @@ class MutesUsersLoader(
         fromUser: Boolean
 ) : AbsRequestUsersLoader(context, accountKey, data, fromUser) {
 
-    private val filteredUsers by lazy { DataStoreUtils.getFilteredUserKeys(context, FilterScope.ALL) }
+    private val filteredUsers by lazy { context.contentResolver.getFilteredUserKeys(FilterScope.ALL) }
 
     @Throws(MicroBlogException::class)
     override fun getUsers(details: AccountDetails, paging: Paging): PaginatedList<ParcelableUser> {

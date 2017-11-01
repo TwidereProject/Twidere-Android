@@ -23,7 +23,6 @@ import android.annotation.SuppressLint
 import android.arch.paging.PagedList
 import android.arch.paging.PagedListAdapterHelper
 import android.content.Context
-import android.support.v4.widget.Space
 import android.support.v7.recyclerview.extensions.ListAdapterConfig
 import android.support.v7.util.ListUpdateCallback
 import android.support.v7.widget.RecyclerView
@@ -46,13 +45,11 @@ import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.exception.UnsupportedCountIndexException
 import org.mariotaku.twidere.extension.model.activityStatus
 import org.mariotaku.twidere.model.*
-import org.mariotaku.twidere.model.util.ParcelableActivityUtils
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.OnLinkClickHandler
 import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.util.paging.DiffCallbacks
 import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder
-import org.mariotaku.twidere.view.holder.EmptyViewHolder
 import org.mariotaku.twidere.view.holder.GapViewHolder
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
@@ -113,17 +110,6 @@ class ParcelableActivitiesAdapter(
     val activityStartIndex: Int
         get() = getItemStartPosition(ITEM_INDEX_ACTIVITY)
 
-    var followingOnly: Boolean = false
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
-    var mentionsOnly: Boolean = false
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
-
     var activities: PagedList<ParcelableActivity>?
         get() = pagedActivitiesHelper.currentList
         set(value) {
@@ -137,9 +123,6 @@ class ParcelableActivitiesAdapter(
     private val twidereLinkify = TwidereLinkify(OnLinkClickHandler(context, null, preferences))
     private val statusAdapterDelegate = DummyItemAdapter(context, twidereLinkify, this, requestManager)
     private val eventListener: EventListener
-    private var filteredUserKeys: Array<UserKey>? = null
-    private var filteredUserNames: Array<String>? = null
-    private var filteredUserDescriptions: Array<String>? = null
     private val gapLoadingIds: MutableSet<ObjectId> = HashSet()
 
     private var pagedActivitiesHelper = PagedListAdapterHelper<ParcelableActivity>(object : ListUpdateCallback {
@@ -224,9 +207,6 @@ class ParcelableActivitiesAdapter(
                 val view = inflater.inflate(R.layout.list_item_two_line, parent, false)
                 return StubViewHolder(view)
             }
-            ITEM_VIEW_TYPE_EMPTY -> {
-                return EmptyViewHolder(Space(context))
-            }
         }
         throw UnsupportedOperationException("Unsupported viewType " + viewType)
     }
@@ -240,8 +220,6 @@ class ParcelableActivitiesAdapter(
             }
             ITEM_VIEW_TYPE_TITLE_SUMMARY -> {
                 val activity = getActivityInternal(position, raw = false) ?: return
-                val sources = getAfterFilteredSources(position, false)
-                activity.after_filtered_sources = sources
                 (holder as ActivityTitleSummaryViewHolder).displayActivity(activity)
             }
             ITEM_VIEW_TYPE_STUB -> {
@@ -274,11 +252,6 @@ class ParcelableActivitiesAdapter(
                     Activity.Action.LIST_CREATED, Activity.Action.LIST_MEMBER_ADDED,
                     Activity.Action.MEDIA_TAGGED, Activity.Action.RETWEETED_MEDIA_TAGGED,
                     Activity.Action.FAVORITED_MEDIA_TAGGED, Activity.Action.JOINED_TWITTER -> {
-                        if (mentionsOnly) return ITEM_VIEW_TYPE_EMPTY
-                        val afterFiltered = getAfterFilteredSources(position, false)
-                        if (afterFiltered != null && afterFiltered.isEmpty()) {
-                            return ITEM_VIEW_TYPE_EMPTY
-                        }
                         return ITEM_VIEW_TYPE_TITLE_SUMMARY
                     }
                 }
@@ -345,15 +318,6 @@ class ParcelableActivitiesAdapter(
             throw IndexOutOfBoundsException("index: $position, valid range is $validRange")
         }
         return activities?.get(dataPosition)
-    }
-
-    private fun getAfterFilteredSources(position: Int, raw: Boolean): Array<ParcelableLiteUser>? {
-        val activity = getActivity(position, raw)
-        if (activity.after_filtered_sources != null) return activity.after_filtered_sources
-        val sources = ParcelableActivityUtils.filterSources(activity.sources_lite,
-                filteredUserKeys, filteredUserNames, filteredUserDescriptions, followingOnly)
-        activity.after_filtered_sources = sources
-        return sources
     }
 
     interface ActivityAdapterListener {
@@ -473,7 +437,6 @@ class ParcelableActivitiesAdapter(
         const val ITEM_VIEW_TYPE_LOAD_INDICATOR = 2
         const val ITEM_VIEW_TYPE_TITLE_SUMMARY = 3
         const val ITEM_VIEW_TYPE_STATUS = 4
-        const val ITEM_VIEW_TYPE_EMPTY = 5
 
         const val ITEM_INDEX_ACTIVITY = 0
         const val ITEM_INDEX_LOAD_MORE_INDICATOR = 1

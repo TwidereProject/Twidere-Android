@@ -21,15 +21,19 @@ package org.mariotaku.twidere.model.timeline;
 
 import android.content.Context;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.model.ParcelableStatus;
 
-/**
- * Created by mariotaku on 2017/3/31.
- */
-
 public interface TimelineFilter extends Parcelable {
-    CharSequence getSummary(Context context);
 
-    boolean shouldFilter(ParcelableStatus status);
+    @NonNull
+    CharSequence getSummary(@NonNull Context context);
+
+    /**
+     * @param status Status object to be checked
+     * @return {@code true} if {@code status} should be kept, {@code false} otherwise
+     */
+    boolean check(@NonNull ParcelableStatus status);
+
 }

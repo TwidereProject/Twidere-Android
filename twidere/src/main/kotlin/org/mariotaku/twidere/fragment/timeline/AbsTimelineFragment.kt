@@ -62,8 +62,8 @@ import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.data.ExtendedPagedListProvider
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
-import org.mariotaku.twidere.data.source.CursorObjectLivePagedListProvider
-import org.mariotaku.twidere.data.status.StatusesLivePagedListProvider
+import org.mariotaku.twidere.data.CursorObjectLivePagedListProvider
+import org.mariotaku.twidere.data.StatusesLivePagedListProvider
 import org.mariotaku.twidere.extension.adapter.removeStatuses
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.extension.queryOne
@@ -415,7 +415,8 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         }
         val provider = CursorObjectLivePagedListProvider(context.contentResolver, contentUri,
                 Statuses.COLUMNS, Expression.and(*expressions.toTypedArray()).sql,
-                expressionArgs.toTypedArray(), Statuses.DEFAULT_SORT_ORDER, ParcelableStatus::class.java)
+                expressionArgs.toTypedArray(), Statuses.DEFAULT_SORT_ORDER,
+                ParcelableStatus::class.java)
         dataController = provider.obtainDataController()
         return provider.create(null, PagedList.Config.Builder()
                 .setPageSize(50).setEnablePlaceholders(false).build())

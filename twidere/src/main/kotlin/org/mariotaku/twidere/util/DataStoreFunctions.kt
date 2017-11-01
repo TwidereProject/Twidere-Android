@@ -13,6 +13,7 @@ import org.mariotaku.ktextension.toStringArray
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.sqliteqb.library.*
 import org.mariotaku.sqliteqb.library.Columns.Column
+import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.extension.queryReference
 import org.mariotaku.twidere.extension.rawQueryReference
 import org.mariotaku.twidere.model.*
@@ -187,4 +188,34 @@ fun ContentResolver.getUnreadMessagesEntriesCursorReference(projection: Array<Co
         selectionArgs += extraHavingArgs
     }
     return rawQueryReference(qb.buildSQL(), selectionArgs)
+}
+
+fun ContentResolver.getFilteredUserKeys(@FilterScope scope: Int): Array<UserKey> {
+    val projection = arrayOf(Filters.Users.USER_KEY)
+    val where = Expression.or(
+            Expression.equals("${Filters.Users.SCOPE} & ${FilterScope.MASK_SCOPE}", 0),
+            Expression.notEquals("${Filters.Users.SCOPE} & $scope", 0)
+    )
+    return queryReference(Filters.Users.CONTENT_URI, projection, where.sql,
+            null, null)?.use { (cur) ->
+        return@use Array(cur.count) { i ->
+            cur.moveToPosition(i)
+            UserKey.valueOf(cur.getString(0))
+        }
+    } ?: emptyArray()
+}
+
+fun ContentResolver.getFilteredKeywords(@FilterScope scope: Int): Array<String> {
+    val projection = arrayOf(Filters.VALUE)
+    val where = Expression.or(
+            Expression.equals("${Filters.SCOPE} & ${FilterScope.MASK_SCOPE}", 0),
+            Expression.notEquals("${Filters.SCOPE} & $scope", 0)
+    )
+    return queryReference(Filters.Keywords.CONTENT_URI, projection, where.sql,
+            null, null)?.use { (cur) ->
+        return@use Array(cur.count) { i ->
+            cur.moveToPosition(i)
+            cur.getString(0)
+        }
+    } ?: emptyArray()
 }

@@ -22,18 +22,33 @@ package org.mariotaku.twidere.fragment.activities
 import android.net.Uri
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.annotation.ReadPositionTag
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_EXTRAS
+import org.mariotaku.twidere.data.CursorObjectLivePagedListProvider
+import org.mariotaku.twidere.data.predicate.ParcelableActivityProcessor
+import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
+import org.mariotaku.twidere.model.tab.extra.InteractionsTabExtras
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 
 class InteractionsActivitiesFragment : AbsActivitiesFragment() {
-    override val filterScope: Int
-        get() = FilterScope.INTERACTIONS
-    override val contentUri: Uri
-        get() = Activities.AboutMe.CONTENT_URI
+    override val filterScope: Int = FilterScope.INTERACTIONS
+    override val contentUri: Uri = Activities.AboutMe.CONTENT_URI
 
     override fun getActivities(param: ContentRefreshParam): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        twitterWrapper.getActivitiesAboutMeAsync(param)
+        return true
+    }
+
+    override fun onCreateCursorObjectProcessor(): CursorObjectLivePagedListProvider.CursorObjectProcessor<ParcelableActivity> {
+        val extras: InteractionsTabExtras? = arguments.getParcelable(EXTRA_EXTRAS)
+        var followingOnly = false
+        var mentionsOnly = false
+        if (extras != null) {
+            followingOnly = extras.isMyFollowingOnly
+            mentionsOnly = extras.isMentionsOnly
+        }
+        return ParcelableActivityProcessor(filterScope, followingOnly, mentionsOnly)
     }
 
     companion object {
