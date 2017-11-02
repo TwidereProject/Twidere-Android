@@ -64,8 +64,8 @@ class StatusesLivePagedListProvider(
         private var lastEndKey: String? = null
 
         override fun getKey(item: ParcelableStatus): Pagination {
-            val prevKey = item.extras?.prev_key
-            val nextKey = item.extras?.next_key
+            val prevKey = item.extras?.prev_key ?: item.id
+            val nextKey = item.extras?.next_key ?: item.id
             return SinceMaxPagination().apply {
                 sinceId = nextKey
                 maxId = prevKey
