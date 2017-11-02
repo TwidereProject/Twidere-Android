@@ -111,6 +111,7 @@ internal class HeaderBehavior(context: Context, attrs: AttributeSet? = null) :
             type: Int) {
         // Keep a reference to the previous nested scrolling child
         lastNestedScrollingChild = target
+        scroller?.forceFinished(true)
     }
 
     override fun onMeasureChild(parent: CoordinatorLayout, child: ViewGroup,

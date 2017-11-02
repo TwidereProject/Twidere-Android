@@ -22,8 +22,12 @@ package android.support.design.widget
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import android.widget.OverScroller
 
 internal open class AccessorHeaderBehavior<V : View>(context: Context, attrs: AttributeSet? = null) : HeaderBehavior<V>(context, attrs) {
+
+    internal val scroller: OverScroller?
+        get() = mScroller
 
     internal override fun getScrollRangeForDragFling(view: V): Int {
         return super.getScrollRangeForDragFling(view)

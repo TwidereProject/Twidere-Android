@@ -67,7 +67,7 @@ class CursorObjectLivePagedListProvider<T : Any>(
             val selectionArgs: Array<String>? = null,
             val sortOrder: String? = null,
             val cls: Class<T>,
-            val predicate: CursorObjectProcessor<T>?
+            val processor: CursorObjectProcessor<T>?
     ) : TiledDataSource<T>() {
 
         private val lazyCount: Int by lazy { resolver.queryCount(uri, selection, selectionArgs) }
@@ -82,13 +82,13 @@ class CursorObjectLivePagedListProvider<T : Any>(
                 }
             }
             resolver.registerContentObserver(uri, false, observer)
-            predicate?.init(resolver)
+            processor?.init(resolver)
         }
 
         override fun countItems() = lazyCount
 
         override fun loadRange(startPosition: Int, count: Int): List<T> {
-            if (predicate == null) {
+            if (processor == null) {
                 return resolver.queryAll(uri, projection, selection, selectionArgs, sortOrder,
                         "$startPosition,$count", cls)
             }
@@ -100,7 +100,7 @@ class CursorObjectLivePagedListProvider<T : Any>(
                         "$offset,$limit", cls)
                 val reachedEnd = list.size < count
                 list.mapIndexedNotNullTo(result) lambda@ { index, item ->
-                    val processed = predicate.process(item)
+                    val processed = processor.process(item)
                     filterStates[offset + index] = processed != null
                     return@lambda processed
                 }
@@ -112,7 +112,7 @@ class CursorObjectLivePagedListProvider<T : Any>(
         }
 
         override fun invalidate() {
-            predicate?.invalidate()
+            processor?.invalidate()
             super.invalidate()
         }
 
