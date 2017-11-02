@@ -57,6 +57,7 @@ import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.readFromBottomKey
 import org.mariotaku.twidere.data.CursorObjectLivePagedListProvider
 import org.mariotaku.twidere.data.CursorObjectLivePagedListProvider.CursorObjectProcessor
+import org.mariotaku.twidere.data.ExtendedPagedListProvider
 import org.mariotaku.twidere.extension.model.activityStatus
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.extension.queryOne
@@ -109,8 +110,11 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
      */
     protected abstract val contentUri: Uri
 
-    protected lateinit var activities: LiveData<PagedList<ParcelableActivity>?>
-        private set
+    protected var activities: LiveData<PagedList<ParcelableActivity>?>? = null
+        private set(value) {
+            field?.removeObservers(this)
+            field = value
+        }
 
     protected val accountKeys: Array<UserKey>
         get() = Utils.getAccountKeys(context, arguments) ?: if (isStandalone) {
@@ -121,16 +125,18 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
 
     private val busEventHandler = BusEventHandler()
     private val scrollHandler = ScrollHandler()
+    private var dataController: ExtendedPagedListProvider.DataController? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         registerForContextMenu(recyclerView)
         adapter.activityClickListener = ActivityClickHandler()
-        if (!isStandalone) {
-            adapter.loadMoreSupportedPosition = LoadMorePosition.END
+        adapter.loadMoreSupportedPosition = if (isStandalone) {
+            LoadMorePosition.NONE
+        } else {
+            LoadMorePosition.END
         }
-        activities = createLiveData()
-        activities.observe(this, Observer { onDataLoaded(it) })
+        setupLiveData()
         showProgress()
     }
 
@@ -231,7 +237,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
     }
 
     override fun onLoadMoreContents(position: Int) {
-        if (isStandalone || position != LoadMorePosition.END) return
+        if (isStandalone || !refreshEnabled || position != LoadMorePosition.END) return
         val started = getActivities(object : ContentRefreshParam {
             override val accountKeys by lazy {
                 this@AbsActivitiesFragment.accountKeys
@@ -249,9 +255,8 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
                 get() = this@AbsActivitiesFragment.tabId
 
         })
-        if (started) {
-            adapter.loadMoreIndicatorPosition = position
-        }
+        if (!started) return
+        super.onLoadMoreContents(position)
     }
 
     override fun scrollToPositionWithOffset(position: Int, offset: Int) {
@@ -268,11 +273,14 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
 
 
     fun reloadAll() {
+        val controller = dataController
+        if (controller != null) {
+            if (!controller.invalidate()) return
+        } else {
+            adapter.activities = null
+            setupLiveData()
+        }
         showProgress()
-        adapter.activities = null
-        activities.removeObservers(this)
-        activities = createLiveData()
-        activities.observe(this, Observer { onDataLoaded(it) })
     }
 
 
@@ -342,8 +350,9 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
 
     protected abstract fun onCreateCursorObjectProcessor(): CursorObjectProcessor<ParcelableActivity>
 
-    private fun createLiveData(): LiveData<PagedList<ParcelableActivity>?> {
-        return if (isStandalone) onCreateStandaloneLiveData() else onCreateDatabaseLiveData()
+    private fun setupLiveData() {
+        activities = if (isStandalone) onCreateStandaloneLiveData() else onCreateDatabaseLiveData()
+        activities?.observe(this, Observer { onDataLoaded(it) })
     }
 
     private fun onCreateStandaloneLiveData(): LiveData<PagedList<ParcelableActivity>?> {
@@ -368,6 +377,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
                 Activities.COLUMNS, Expression.and(*expressions.toTypedArray()).sql,
                 expressionArgs.toTypedArray(), Activities.DEFAULT_SORT_ORDER,
                 ParcelableActivity::class.java, onCreateCursorObjectProcessor())
+        dataController = provider.obtainDataController()
         return provider.create(null, PagedList.Config.Builder()
                 .setPageSize(50).setEnablePlaceholders(false).build())
     }

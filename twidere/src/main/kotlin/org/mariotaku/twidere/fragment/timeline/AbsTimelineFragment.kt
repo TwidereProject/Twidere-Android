@@ -151,6 +151,11 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         super.onActivityCreated(savedInstanceState)
         registerForContextMenu(recyclerView)
         adapter.statusClickListener = StatusClickHandler()
+        adapter.loadMoreSupportedPosition = if (isStandalone) {
+            LoadMorePosition.NONE
+        } else {
+            LoadMorePosition.END
+        }
         setupLiveData()
         showProgress()
     }
@@ -257,8 +262,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
     }
 
     override fun onLoadMoreContents(position: Int) {
-        if (isStandalone) return
-        if (position != LoadMorePosition.END) return
+        if (isStandalone || !refreshEnabled || position != LoadMorePosition.END) return
         val started = getStatuses(object : ContentRefreshParam {
             override val accountKeys by lazy {
                 this@AbsTimelineFragment.accountKeys
@@ -276,9 +280,8 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                 get() = this@AbsTimelineFragment.tabId
 
         })
-        if (started) {
-            adapter.loadMoreIndicatorPosition = position
-        }
+        if (!started) return
+        super.onLoadMoreContents(position)
     }
 
     override fun scrollToPositionWithOffset(position: Int, offset: Int) {
@@ -379,9 +382,8 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
     }
 
     private fun setupLiveData() {
-        statuses = (if (isStandalone) onCreateStandaloneLiveData() else onCreateDatabaseLiveData()).also { ld ->
-            ld.observe(this, Observer { onDataLoaded(it) })
-        }
+        statuses = if (isStandalone) onCreateStandaloneLiveData() else onCreateDatabaseLiveData()
+        statuses?.observe(this, Observer { onDataLoaded(it) })
     }
 
     private fun onCreateStandaloneLiveData(): LiveData<PagedList<ParcelableStatus>?> {

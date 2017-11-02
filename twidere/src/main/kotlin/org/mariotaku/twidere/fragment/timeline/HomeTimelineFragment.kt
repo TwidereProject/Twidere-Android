@@ -36,6 +36,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import java.util.*
 
 class HomeTimelineFragment : AbsTimelineFragment() {
+
     override val filterScope: Int = FilterScope.HOME
 
     override val contentUri: Uri = Statuses.HomeTimeline.CONTENT_URI

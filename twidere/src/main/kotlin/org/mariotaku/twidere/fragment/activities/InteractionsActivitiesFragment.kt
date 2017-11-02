@@ -32,8 +32,12 @@ import org.mariotaku.twidere.model.tab.extra.InteractionsTabExtras
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 
 class InteractionsActivitiesFragment : AbsActivitiesFragment() {
+
     override val filterScope: Int = FilterScope.INTERACTIONS
+
     override val contentUri: Uri = Activities.AboutMe.CONTENT_URI
+
+    override val readPositionTag: String? = ReadPositionTag.ACTIVITIES_ABOUT_ME
 
     override fun getActivities(param: ContentRefreshParam): Boolean {
         twitterWrapper.getActivitiesAboutMeAsync(param)
