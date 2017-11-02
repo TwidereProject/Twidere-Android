@@ -33,8 +33,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarShowHideHelper
 import org.mariotaku.twidere.adapter.LoadMoreSupportAdapter
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
+import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.util.ContentScrollHandler
 import org.mariotaku.twidere.util.RecyclerViewScrollHandler
@@ -78,7 +77,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
                 refreshCompleteListener?.onRefreshComplete(this)
             }
             if (value == currentRefreshing) return
-            val layoutRefreshing = value && adapter.loadMoreIndicatorPosition != ILoadMoreSupportAdapter.NONE
+            val layoutRefreshing = value && adapter.loadMoreIndicatorPosition != LoadMorePosition.NONE
             swipeLayout.isRefreshing = layoutRefreshing
         }
 
@@ -132,9 +131,9 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
             swipeLayout.isEnabled = value
         }
 
-    override fun onLoadMoreContents(@IndicatorPosition position: Long) {
+    override fun onLoadMoreContents(@LoadMorePosition position: Int) {
         setLoadMoreIndicatorPosition(position)
-        refreshEnabled = position == ILoadMoreSupportAdapter.NONE
+        refreshEnabled = position == LoadMorePosition.NONE
     }
 
     override fun onAttach(context: Context) {
@@ -233,7 +232,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
         updateRefreshProgressOffset()
     }
 
-    open fun setLoadMoreIndicatorPosition(@IndicatorPosition position: Long) {
+    open fun setLoadMoreIndicatorPosition(@LoadMorePosition position: Int) {
         adapter.loadMoreIndicatorPosition = position
     }
 

@@ -53,17 +53,17 @@ import org.mariotaku.twidere.activity.ComposeActivity
 import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.decorator.ExtendedDividerItemDecoration
 import org.mariotaku.twidere.adapter.iface.IContentAdapter
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.FilterScope
+import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.annotation.TimelineStyle
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
-import org.mariotaku.twidere.data.ExtendedPagedListProvider
-import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.data.CursorObjectLivePagedListProvider
+import org.mariotaku.twidere.data.ExtendedPagedListProvider
 import org.mariotaku.twidere.data.StatusesLivePagedListProvider
+import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.extension.adapter.removeStatuses
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.extension.queryOne
@@ -256,9 +256,9 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         })
     }
 
-    override fun onLoadMoreContents(position: Long) {
+    override fun onLoadMoreContents(position: Int) {
         if (isStandalone) return
-        if (position != ILoadMoreSupportAdapter.END) return
+        if (position != LoadMorePosition.END) return
         val started = getStatuses(object : ContentRefreshParam {
             override val accountKeys by lazy {
                 this@AbsTimelineFragment.accountKeys
@@ -458,7 +458,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
             if (event.uri != contentUri) return
             refreshing = event.running
             if (!event.running) {
-                setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.NONE)
+                setLoadMoreIndicatorPosition(LoadMorePosition.NONE)
                 refreshEnabled = true
                 // TODO: showContentOrError()
 

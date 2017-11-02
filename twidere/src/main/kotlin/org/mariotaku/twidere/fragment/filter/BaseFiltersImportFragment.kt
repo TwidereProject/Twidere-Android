@@ -24,8 +24,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.REQUEST_PURCHASE_EXTRA_FEATURES
 import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.adapter.SelectableUsersAdapter
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
+import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.onShow
@@ -153,9 +152,9 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
         adapter.data = data
         if (loader !is IExtendedLoader || loader.fromUser) {
             adapter.loadMoreSupportedPosition = if (hasMoreData) {
-                ILoadMoreSupportAdapter.END
+                LoadMorePosition.END
             } else {
-                ILoadMoreSupportAdapter.NONE
+                LoadMorePosition.NONE
             }
             refreshEnabled = true
         }
@@ -165,18 +164,17 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
         showContent()
         refreshEnabled = data.isNullOrEmpty()
         refreshing = false
-        setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.NONE)
+        setLoadMoreIndicatorPosition(LoadMorePosition.NONE)
         val cursorLoader = loader as AbsRequestUsersLoader
         nextPagination = cursorLoader.nextPagination
         prevPagination = cursorLoader.prevPagination
         activity.invalidateOptionsMenu()
     }
 
-    override fun onLoadMoreContents(@IndicatorPosition position: Long) {
+    override fun onLoadMoreContents(@LoadMorePosition position: Int) {
         // Only supports load from end, skip START flag
-        if (ILoadMoreSupportAdapter.START in position) return
+        if (LoadMorePosition.END != position) return
         super.onLoadMoreContents(position)
-        if (position == 0L) return
         val loaderArgs = Bundle(arguments)
         loaderArgs.putBoolean(EXTRA_FROM_USER, true)
         loaderArgs.putParcelable(EXTRA_NEXT_PAGINATION, nextPagination)

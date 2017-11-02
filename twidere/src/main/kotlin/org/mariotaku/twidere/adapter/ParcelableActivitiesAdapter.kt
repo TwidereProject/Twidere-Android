@@ -40,6 +40,7 @@ import org.mariotaku.twidere.adapter.iface.IActivitiesAdapter
 import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
+import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.annotation.TimelineStyle
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.exception.UnsupportedCountIndexException
@@ -65,14 +66,14 @@ class ParcelableActivitiesAdapter(
 
     override val itemCounts: ItemCounts = ItemCounts(2)
 
-    override var loadMoreIndicatorPosition: Long
+    override var loadMoreIndicatorPosition: Int
         get() = super.loadMoreIndicatorPosition
         set(value) {
             super.loadMoreIndicatorPosition = value
             updateItemCount()
         }
 
-    override var loadMoreSupportedPosition: Long
+    override var loadMoreSupportedPosition: Int
         get() = super.loadMoreSupportedPosition
         set(value) {
             super.loadMoreSupportedPosition = value
@@ -307,7 +308,7 @@ class ParcelableActivitiesAdapter(
     }
 
     private fun updateItemCount() {
-        itemCounts[1] = if (ILoadMoreSupportAdapter.END in loadMoreIndicatorPosition) 1 else 0
+        itemCounts[1] = if (LoadMorePosition.END in loadMoreIndicatorPosition) 1 else 0
     }
 
     private fun getActivityInternal(position: Int, raw: Boolean): ParcelableActivity? {

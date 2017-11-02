@@ -22,27 +22,23 @@ package org.mariotaku.twidere.adapter
 import android.content.Context
 import android.support.v7.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.RequestManager
-
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
+import org.mariotaku.twidere.annotation.LoadMorePosition
 
-/**
- * Created by mariotaku on 15/4/16.
- */
 abstract class LoadMoreSupportAdapter<VH : ViewHolder>(
         context: Context,
         requestManager: RequestManager
 ) : BaseRecyclerViewAdapter<VH>(context, requestManager), ILoadMoreSupportAdapter {
 
-    override var loadMoreSupportedPosition: Long = 0
-        set(@IndicatorPosition value) {
+    override var loadMoreSupportedPosition: Int = 0
+        set(@LoadMorePosition value) {
             field = value
             loadMoreIndicatorPosition = ILoadMoreSupportAdapter.apply(loadMoreIndicatorPosition, value)
             notifyDataSetChanged()
         }
 
-    override var loadMoreIndicatorPosition: Long = 0
-        set(@IndicatorPosition value) {
+    override var loadMoreIndicatorPosition: Int = 0
+        set(@LoadMorePosition value) {
             if (field == value) return
             field = ILoadMoreSupportAdapter.apply(value, loadMoreSupportedPosition)
             notifyDataSetChanged()

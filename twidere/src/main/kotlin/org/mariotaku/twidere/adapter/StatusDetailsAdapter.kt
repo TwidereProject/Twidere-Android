@@ -34,8 +34,8 @@ import org.mariotaku.microblog.library.twitter.model.TranslationResult
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
+import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.annotation.TimelineStyle
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.extension.model.originalId
@@ -485,23 +485,23 @@ class StatusDetailsAdapter(
 
 
     var isConversationsLoading: Boolean
-        get() = ILoadMoreSupportAdapter.START in loadMoreIndicatorPosition
+        get() = LoadMorePosition.START in loadMoreIndicatorPosition
         set(loading) {
             if (loading) {
-                loadMoreIndicatorPosition = loadMoreIndicatorPosition or ILoadMoreSupportAdapter.START
+                loadMoreIndicatorPosition = loadMoreIndicatorPosition or LoadMorePosition.START
             } else {
-                loadMoreIndicatorPosition = loadMoreIndicatorPosition and ILoadMoreSupportAdapter.START.inv()
+                loadMoreIndicatorPosition = loadMoreIndicatorPosition and LoadMorePosition.START.inv()
             }
             updateItemDecoration()
         }
 
     var isRepliesLoading: Boolean
-        get() = ILoadMoreSupportAdapter.END in loadMoreIndicatorPosition
+        get() = LoadMorePosition.END in loadMoreIndicatorPosition
         set(loading) {
-            if (loading) {
-                loadMoreIndicatorPosition = loadMoreIndicatorPosition or ILoadMoreSupportAdapter.END
+            loadMoreIndicatorPosition = if (loading) {
+                loadMoreIndicatorPosition or LoadMorePosition.END
             } else {
-                loadMoreIndicatorPosition = loadMoreIndicatorPosition and ILoadMoreSupportAdapter.END.inv()
+                loadMoreIndicatorPosition and LoadMorePosition.END.inv()
             }
             updateItemDecoration()
         }

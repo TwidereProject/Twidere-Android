@@ -65,9 +65,8 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity
 import org.mariotaku.twidere.adapter.StatusDetailsAdapter
 import org.mariotaku.twidere.adapter.decorator.ExtendedDividerItemDecoration
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
@@ -146,20 +145,20 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             val adapter = this@StatusFragment.adapter
             adapter.updateItemDecoration()
             val conversationLoader = loader as ConversationLoader
-            var supportedPositions: Long = 0
+            var supportedPositions: Int = 0
             if (data != null && !data.isEmpty()) {
                 val sinceSortId = (conversationLoader.pagination as? SinceMaxPagination)?.sinceSortId ?: -1
                 if (sinceSortId < data[data.size - 1].sort_id) {
-                    supportedPositions = supportedPositions or ILoadMoreSupportAdapter.END
+                    supportedPositions = supportedPositions or LoadMorePosition.END
                 }
                 if (data[0].in_reply_to_status_id != null) {
-                    supportedPositions = supportedPositions or ILoadMoreSupportAdapter.START
+                    supportedPositions = supportedPositions or LoadMorePosition.START
                 }
             } else {
-                supportedPositions = supportedPositions or ILoadMoreSupportAdapter.END
+                supportedPositions = supportedPositions or LoadMorePosition.END
                 val status = status
                 if (status?.in_reply_to_status_id != null) {
-                    supportedPositions = supportedPositions or ILoadMoreSupportAdapter.START
+                    supportedPositions = supportedPositions or LoadMorePosition.START
                 }
             }
             adapter.loadMoreSupportedPosition = supportedPositions
@@ -377,7 +376,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 if (args.containsKey(EXTRA_STATUS)) {
                     args.putParcelable(EXTRA_STATUS, status)
                 }
-                adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.BOTH
+                adapter.loadMoreSupportedPosition = LoadMorePosition.BOTH
                 adapter.data = null
                 loadConversation(status, null, null)
                 loadActivity(status)
@@ -396,7 +395,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             }
             setState(STATE_LOADED)
         } else {
-            adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.NONE
+            adapter.loadMoreSupportedPosition = LoadMorePosition.NONE
             setState(STATE_ERROR)
             val errorInfo = StatusCodeMessageUtils.getErrorInfo(context, data.exception!!)
             errorText.spannable = errorInfo.message
@@ -411,14 +410,14 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     override val refreshing: Boolean
         get() = loaderManager.hasRunningLoadersSafe()
 
-    override fun onLoadMoreContents(@IndicatorPosition position: Long) {
+    override fun onLoadMoreContents(@LoadMorePosition position: Int) {
         if (!hasMoreConversation) return
-        if (ILoadMoreSupportAdapter.START in position) {
+        if (LoadMorePosition.START in position) {
             val start = adapter.getIndexStart(StatusDetailsAdapter.ITEM_IDX_CONVERSATION)
             val first = adapter.getStatus(start, true)
             if (first.in_reply_to_status_id == null) return
             loadConversation(status, null, first.id)
-        } else if (ILoadMoreSupportAdapter.END in position) {
+        } else if (LoadMorePosition.END in position) {
             val start = adapter.getIndexStart(StatusDetailsAdapter.ITEM_IDX_CONVERSATION)
             val last = adapter.getStatus(start + adapter.getStatusCount(true) - 1, true)
             loadConversation(status, last.id, null)

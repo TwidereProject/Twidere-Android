@@ -25,7 +25,7 @@ import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ParcelableUsersAdapter
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
+import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_STATUS_ID
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
@@ -54,7 +54,7 @@ class StatusFavoritersListFragment : ParcelableUsersFragment() {
 
     override fun onCreateAdapter(context: Context, requestManager: RequestManager): ParcelableUsersAdapter {
         return super.onCreateAdapter(context, requestManager).apply {
-            loadMoreSupportedPosition = ILoadMoreSupportAdapter.NONE
+            loadMoreSupportedPosition = LoadMorePosition.NONE
         }
     }
 

@@ -43,8 +43,8 @@ import org.mariotaku.twidere.TwidereConstants.REQUEST_SELECT_ACCOUNT
 import org.mariotaku.twidere.activity.AccountSelectorActivity
 import org.mariotaku.twidere.adapter.MessagesEntriesAdapter
 import org.mariotaku.twidere.adapter.MessagesEntriesAdapter.MessageConversationClickListener
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_TYPES
 import org.mariotaku.twidere.constant.nameFirstKey
@@ -87,7 +87,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
         super.onActivityCreated(savedInstanceState)
         linkHandlerTitle = getString(R.string.title_direct_messages)
         adapter.listener = this
-        adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.END
+        adapter.loadMoreSupportedPosition = LoadMorePosition.END
         loaderManager.initLoader(loaderId, null, this)
         registerForContextMenu(recyclerView)
     }
@@ -149,7 +149,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
     override fun onLoadFinished(loader: Loader<List<ParcelableMessageConversation>?>?, data: List<ParcelableMessageConversation>?) {
         adapter.conversations = data
         adapter.drawAccountColors = accountKeys.size > 1
-        setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.NONE)
+        setLoadMoreIndicatorPosition(LoadMorePosition.NONE)
         showContentOrError()
     }
 
@@ -165,11 +165,11 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
         return true
     }
 
-    override fun onLoadMoreContents(position: Long) {
-        if (position != ILoadMoreSupportAdapter.END) {
+    override fun onLoadMoreContents(position: Int) {
+        if (position != LoadMorePosition.END) {
             return
         }
-        setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.END)
+        setLoadMoreIndicatorPosition(LoadMorePosition.END)
         twitterWrapper.getMessagesAsync(object : GetMessagesTask.LoadMoreEntriesParam(context) {
             override val accountKeys: Array<UserKey> = this@MessagesEntriesFragment.accountKeys
         })

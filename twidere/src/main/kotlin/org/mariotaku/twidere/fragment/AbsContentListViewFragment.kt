@@ -34,6 +34,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarOffsetListener
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
+import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.util.ContentScrollHandler.ContentListSupport
 import org.mariotaku.twidere.util.ListViewScrollHandler
@@ -102,7 +103,7 @@ abstract class AbsContentListViewFragment<A : ListAdapter> : BaseFragment(),
             swipeLayout.isRefreshing = refreshing
         }
 
-    override fun onLoadMoreContents(@ILoadMoreSupportAdapter.IndicatorPosition position: Long) {
+    override fun onLoadMoreContents(@LoadMorePosition position: Int) {
         refreshEnabled = false
     }
 

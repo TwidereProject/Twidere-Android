@@ -38,9 +38,9 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter
 import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter.Companion.ITEM_VIEW_TYPE_GAP
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.Companion.ITEM_VIEW_TYPE_LOAD_INDICATOR
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
+import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.annotation.PreviewStyle
 import org.mariotaku.twidere.annotation.TimelineStyle
 import org.mariotaku.twidere.constant.*
@@ -133,14 +133,14 @@ class ParcelableStatusesAdapter(
     val statusStartIndex: Int
         get() = getItemStartPosition(ITEM_INDEX_STATUS)
 
-    override var loadMoreIndicatorPosition: Long
+    override var loadMoreIndicatorPosition: Int
         get() = super.loadMoreIndicatorPosition
         set(value) {
             super.loadMoreIndicatorPosition = value
             updateItemCount()
         }
 
-    override var loadMoreSupportedPosition: Long
+    override var loadMoreSupportedPosition: Int
         get() = super.loadMoreSupportedPosition
         set(value) {
             super.loadMoreSupportedPosition = value
@@ -326,9 +326,6 @@ class ParcelableStatusesAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (position == 0 && ILoadMoreSupportAdapter.START in loadMoreIndicatorPosition) {
-            return ITEM_VIEW_TYPE_LOAD_INDICATOR
-        }
         val countIndex = getItemCountIndex(position)
         when (countIndex) {
             ITEM_INDEX_LOAD_START_INDICATOR, ITEM_INDEX_LOAD_END_INDICATOR -> {
@@ -439,10 +436,10 @@ class ParcelableStatusesAdapter(
     }
 
     private fun updateItemCount() {
-        itemCounts[ITEM_INDEX_LOAD_START_INDICATOR] = if (ILoadMoreSupportAdapter.START in loadMoreIndicatorPosition) 1 else 0
+        itemCounts[ITEM_INDEX_LOAD_START_INDICATOR] = if (LoadMorePosition.START in loadMoreIndicatorPosition) 1 else 0
         itemCounts[ITEM_INDEX_FILTER_HEADER] = if (timelineFilter != null) 1 else 0
         itemCounts[ITEM_INDEX_PINNED_STATUS] = pinnedStatuses?.size ?: 0
-        itemCounts[ITEM_INDEX_LOAD_END_INDICATOR] = if (ILoadMoreSupportAdapter.END in loadMoreIndicatorPosition) 1 else 0
+        itemCounts[ITEM_INDEX_LOAD_END_INDICATOR] = if (LoadMorePosition.END in loadMoreIndicatorPosition) 1 else 0
     }
 
     object ParcelableStatusPlaceholder : ParcelableStatus() {

@@ -1,7 +1,7 @@
 /*
- * Twidere - Twitter client for Android
+ *             Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,25 +17,20 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.adapter.iface
+package org.mariotaku.twidere.annotation;
 
-import org.mariotaku.twidere.annotation.LoadMorePosition
+import android.support.annotation.IntDef;
 
-interface ILoadMoreSupportAdapter {
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-    @LoadMorePosition
-    var loadMoreIndicatorPosition: Int
+@IntDef(value = {LoadMorePosition.NONE, LoadMorePosition.START, LoadMorePosition.END,
+        LoadMorePosition.BOTH}, flag = true)
+@Retention(RetentionPolicy.SOURCE)
+public @interface LoadMorePosition {
 
-    @LoadMorePosition
-    var loadMoreSupportedPosition: Int
-
-    companion object {
-        val ITEM_VIEW_TYPE_LOAD_INDICATOR = 0
-
-        @LoadMorePosition
-        fun apply(@LoadMorePosition orig: Int, @LoadMorePosition supported: Int): Int {
-            return orig and supported
-        }
-
-    }
+    int NONE = 0;
+    int START = 1;
+    int END = 2;
+    int BOTH = START | END;
 }

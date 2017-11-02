@@ -28,7 +28,6 @@ import android.support.v4.content.Loader
 import android.view.View
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.TextView
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.layout_list_with_empty_view.*
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.contains
@@ -36,8 +35,7 @@ import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.REQUEST_SELECT_USER
 import org.mariotaku.twidere.adapter.SimpleParcelableUserListsAdapter
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
+import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.loader.iface.IPaginationLoader
 import org.mariotaku.twidere.loader.userlists.UserListOwnershipsLoader
@@ -86,7 +84,7 @@ class UserListSelectorActivity : BaseActivity(),
         setContentView(R.layout.activity_user_list_selector)
 
         adapter = SimpleParcelableUserListsAdapter(this, requestManager)
-        adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.END
+        adapter.loadMoreSupportedPosition = LoadMorePosition.END
         listView.addFooterView(layoutInflater.inflate(R.layout.simple_list_item_activated_1,
                 listView, false).apply {
             findViewById<TextView>(android.R.id.text1).setText(R.string.action_select_user)
@@ -159,11 +157,11 @@ class UserListSelectorActivity : BaseActivity(),
 
 
     override fun onLoadFinished(loader: Loader<List<ParcelableUserList>>?, data: List<ParcelableUserList>?) {
-        adapter.loadMoreIndicatorPosition = ILoadMoreSupportAdapter.NONE
+        adapter.loadMoreIndicatorPosition = LoadMorePosition.NONE
         adapter.loadMoreSupportedPosition = if (adapter.all != data) {
-            ILoadMoreSupportAdapter.END
+            LoadMorePosition.END
         } else {
-            ILoadMoreSupportAdapter.NONE
+            LoadMorePosition.NONE
         }
         adapter.setData(data)
         refreshing = false
@@ -177,7 +175,7 @@ class UserListSelectorActivity : BaseActivity(),
     }
 
 
-    override fun onLoadMoreContents(@IndicatorPosition position: Long) {
+    override fun onLoadMoreContents(@LoadMorePosition position: Int) {
         val accountKey = this.accountKey ?: return
         val userKey = this.userKey ?: return
         if (refreshing || position !in adapter.loadMoreSupportedPosition) {

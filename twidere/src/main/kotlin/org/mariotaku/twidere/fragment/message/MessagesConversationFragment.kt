@@ -58,8 +58,8 @@ import org.mariotaku.twidere.activity.LinkHandlerActivity
 import org.mariotaku.twidere.activity.ThemedMediaPickerActivity
 import org.mariotaku.twidere.adapter.MediaPreviewAdapter
 import org.mariotaku.twidere.adapter.MessagesConversationAdapter
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
@@ -189,7 +189,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
 
         // No refresh for this fragment
         refreshEnabled = false
-        adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.NONE
+        adapter.loadMoreSupportedPosition = LoadMorePosition.NONE
 
         if (account.type == AccountType.TWITTER) {
             addMedia.visibility = View.VISIBLE
@@ -285,9 +285,9 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         adapter.setData(conversation, data)
         adapter.displaySenderProfile = conversation?.conversation_type == ConversationType.GROUP
         if (conversation?.conversation_extras_type == ParcelableMessageConversation.ExtrasType.TWITTER_OFFICIAL) {
-            adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.START
+            adapter.loadMoreSupportedPosition = LoadMorePosition.START
         } else {
-            adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.NONE
+            adapter.loadMoreSupportedPosition = LoadMorePosition.NONE
         }
         showContent()
 
@@ -314,8 +314,8 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         return null
     }
 
-    override fun onLoadMoreContents(position: Long) {
-        if (ILoadMoreSupportAdapter.START !in position) return
+    override fun onLoadMoreContents(position: Int) {
+        if (LoadMorePosition.START !in position) return
         val message = adapter.getMessage(adapter.messageRange.endInclusive)
         setLoadMoreIndicatorPosition(position)
         val param = GetMessagesTask.LoadMoreMessagesParam(context, accountKey, conversationId,
@@ -388,7 +388,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
     @Subscribe
     fun onGetMessagesTaskEvent(event: GetMessagesTaskEvent) {
         if (!event.running && event.taskTag == loadMoreTaskTag) {
-            setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.NONE)
+            setLoadMoreIndicatorPosition(LoadMorePosition.NONE)
         }
     }
 

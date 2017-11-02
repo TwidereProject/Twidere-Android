@@ -23,13 +23,9 @@ import android.annotation.SuppressLint
 import android.support.v4.app.Fragment
 import android.view.MotionEvent
 import android.view.View
-
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
+import org.mariotaku.twidere.annotation.LoadMorePosition
 
-/**
- * Created by mariotaku on 15/3/15.
- */
 open class ContentScrollHandler<A>(
         private val contentListSupport: ContentScrollHandler.ContentListSupport<A>,
         private val viewCallback: ContentScrollHandler.ViewCallback?
@@ -72,17 +68,17 @@ open class ContentScrollHandler<A>(
             if (contentListSupport.context == null) return
         }
         val adapter = contentListSupport.adapter as? ILoadMoreSupportAdapter ?: return
-        if (!contentListSupport.refreshing && adapter.loadMoreSupportedPosition != ILoadMoreSupportAdapter.NONE
-                && adapter.loadMoreIndicatorPosition == ILoadMoreSupportAdapter.NONE) {
-            var position: Long = 0
+        if (!contentListSupport.refreshing && adapter.loadMoreSupportedPosition != LoadMorePosition.NONE
+                && adapter.loadMoreIndicatorPosition == LoadMorePosition.NONE) {
+            var position: Int = 0
             if (contentListSupport.reachingEnd && scrollDirection < 0) {
-                position = position or ILoadMoreSupportAdapter.END
+                position = position or LoadMorePosition.END
             }
             if (contentListSupport.reachingStart && scrollDirection > 0) {
-                position = position or ILoadMoreSupportAdapter.START
+                position = position or LoadMorePosition.START
             }
             resetScrollDirection()
-            if (position != 0L) {
+            if (position != 0) {
                 contentListSupport.onLoadMoreContents(position)
             }
         }
@@ -166,7 +162,7 @@ open class ContentScrollHandler<A>(
 
         val reachingEnd: Boolean
 
-        fun onLoadMoreContents(@IndicatorPosition position: Long)
+        fun onLoadMoreContents(@LoadMorePosition position: Int)
 
         fun setControlVisible(visible: Boolean)
 

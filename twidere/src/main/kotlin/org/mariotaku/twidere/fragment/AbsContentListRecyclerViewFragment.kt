@@ -24,11 +24,9 @@ import android.support.v7.widget.FixedLinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import org.mariotaku.ktextension.contains
-
 import org.mariotaku.twidere.adapter.LoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.decorator.ExtendedDividerItemDecoration
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
+import org.mariotaku.twidere.annotation.LoadMorePosition
 
 /**
  * Comment, blah, blah, blah.
@@ -42,11 +40,11 @@ abstract class AbsContentListRecyclerViewFragment<A : LoadMoreSupportAdapter<Rec
         return ExtendedDividerItemDecoration(context, layoutManager.orientation)
     }
 
-    override fun setLoadMoreIndicatorPosition(@IndicatorPosition position: Long) {
+    override fun setLoadMoreIndicatorPosition(@LoadMorePosition position: Int) {
         val decor = itemDecoration
         if (decor is ExtendedDividerItemDecoration) {
-            decor.setDecorationStart(if (ILoadMoreSupportAdapter.START in position) 1 else 0)
-            decor.setDecorationEndOffset(if (ILoadMoreSupportAdapter.END in position) 1 else 0)
+            decor.setDecorationStart(if (LoadMorePosition.START in position) 1 else 0)
+            decor.setDecorationEndOffset(if (LoadMorePosition.END in position) 1 else 0)
         }
         super.setLoadMoreIndicatorPosition(position)
     }

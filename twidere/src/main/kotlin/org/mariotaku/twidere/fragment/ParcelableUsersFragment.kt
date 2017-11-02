@@ -36,10 +36,10 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ParcelableUsersAdapter
 import org.mariotaku.twidere.adapter.decorator.ExtendedDividerItemDecoration
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.UserClickListener
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.model.getAccountType
@@ -134,7 +134,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
     override fun onLoadFinished(loader: Loader<List<ParcelableUser>?>, data: List<ParcelableUser>?) {
         adapter.setData(data)
         if (loader !is IExtendedLoader || loader.fromUser) {
-            adapter.loadMoreSupportedPosition = if (hasMoreData(data)) ILoadMoreSupportAdapter.END else ILoadMoreSupportAdapter.NONE
+            adapter.loadMoreSupportedPosition = if (hasMoreData(data)) LoadMorePosition.END else LoadMorePosition.NONE
             refreshEnabled = true
         }
         if (loader is IExtendedLoader) {
@@ -147,7 +147,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         showContent()
         refreshEnabled = true
         refreshing = false
-        setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.NONE)
+        setLoadMoreIndicatorPosition(LoadMorePosition.NONE)
     }
 
     override fun onLoaderReset(loader: Loader<List<ParcelableUser>?>) {
@@ -156,11 +156,10 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         }
     }
 
-    override fun onLoadMoreContents(@ILoadMoreSupportAdapter.IndicatorPosition position: Long) {
+    override fun onLoadMoreContents(@LoadMorePosition position: Int) {
         // Only supports load from end, skip START flag
-        if (position and ILoadMoreSupportAdapter.START != 0L) return
+        if (position != LoadMorePosition.END) return
         super.onLoadMoreContents(position)
-        if (position == 0L) return
         val loaderArgs = Bundle(arguments)
         loaderArgs.putBoolean(EXTRA_FROM_USER, true)
         loaderArgs.putParcelable(EXTRA_PAGINATION, nextPagination)

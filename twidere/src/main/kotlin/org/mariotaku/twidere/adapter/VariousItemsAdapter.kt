@@ -8,6 +8,7 @@ import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.alias.ItemClickListener
+import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.annotation.TimelineStyle
 import org.mariotaku.twidere.model.ParcelableHashtag
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -40,7 +41,7 @@ class VariousItemsAdapter(
         dummyAdapter = DummyItemAdapter(context, TwidereLinkify(handler), this, requestManager)
         handler.setAdapter(dummyAdapter)
         dummyAdapter.updateOptions()
-        loadMoreIndicatorPosition = ILoadMoreSupportAdapter.NONE
+        loadMoreIndicatorPosition = LoadMorePosition.NONE
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

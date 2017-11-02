@@ -26,9 +26,9 @@ import android.view.ViewGroup
 import com.bumptech.glide.RequestManager
 import org.mariotaku.ktextension.contains
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.Companion.ITEM_VIEW_TYPE_LOAD_INDICATOR
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter
+import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
@@ -65,10 +65,10 @@ class ParcelableUsersAdapter(
     override fun getItemCount(): Int {
         val position = loadMoreIndicatorPosition
         var count = userCount
-        if (position and ILoadMoreSupportAdapter.START != 0L) {
+        if (LoadMorePosition.START in position) {
             count++
         }
-        if (position and ILoadMoreSupportAdapter.END != 0L) {
+        if (LoadMorePosition.END in position) {
             count++
         }
         return count
@@ -84,7 +84,7 @@ class ParcelableUsersAdapter(
         get() {
             val position = loadMoreIndicatorPosition
             var start = 0
-            if (position and ILoadMoreSupportAdapter.START != 0L) {
+            if (LoadMorePosition.START in position) {
                 start += 1
             }
             return start
@@ -152,7 +152,7 @@ class ParcelableUsersAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (position == 0 && ILoadMoreSupportAdapter.START in loadMoreIndicatorPosition) {
+        if (position == 0 && LoadMorePosition.START in loadMoreIndicatorPosition) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR
         }
         if (position == userCount) {

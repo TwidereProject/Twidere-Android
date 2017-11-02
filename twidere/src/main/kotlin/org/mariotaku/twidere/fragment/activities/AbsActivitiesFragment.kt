@@ -49,8 +49,8 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter.Companion.ITEM_VIEW_TYPE_STATUS
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.FilterScope
+import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
@@ -126,6 +126,9 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
         super.onActivityCreated(savedInstanceState)
         registerForContextMenu(recyclerView)
         adapter.activityClickListener = ActivityClickHandler()
+        if (!isStandalone) {
+            adapter.loadMoreSupportedPosition = LoadMorePosition.END
+        }
         activities = createLiveData()
         activities.observe(this, Observer { onDataLoaded(it) })
         showProgress()
@@ -227,9 +230,8 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
         })
     }
 
-    override fun onLoadMoreContents(position: Long) {
-        if (isStandalone) return
-        if (position != ILoadMoreSupportAdapter.END) return
+    override fun onLoadMoreContents(position: Int) {
+        if (isStandalone || position != LoadMorePosition.END) return
         val started = getActivities(object : ContentRefreshParam {
             override val accountKeys by lazy {
                 this@AbsActivitiesFragment.accountKeys
@@ -406,7 +408,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
             if (event.uri != contentUri) return
             refreshing = event.running
             if (!event.running) {
-                setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.NONE)
+                setLoadMoreIndicatorPosition(LoadMorePosition.NONE)
                 refreshEnabled = true
                 // TODO: showContentOrError()
 

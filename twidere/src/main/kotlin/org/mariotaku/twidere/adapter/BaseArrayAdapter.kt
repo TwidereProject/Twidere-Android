@@ -28,6 +28,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IContentAdapter
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
+import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.util.*
@@ -66,15 +67,15 @@ open class BaseArrayAdapter<T>(
     override val itemCounts: ItemCounts = ItemCounts(1)
 
 
-    override var loadMoreSupportedPosition: Long = 0
-        @ILoadMoreSupportAdapter.IndicatorPosition set(value) {
+    override var loadMoreSupportedPosition: Int = 0
+        set(@LoadMorePosition value) {
             field = value
             loadMoreIndicatorPosition = ILoadMoreSupportAdapter.apply(loadMoreIndicatorPosition, value)
             notifyDataSetChanged()
         }
 
-    override var loadMoreIndicatorPosition: Long = 0
-        @ILoadMoreSupportAdapter.IndicatorPosition set(value) {
+    override var loadMoreIndicatorPosition: Int = 0
+        set(@LoadMorePosition value) {
             if (field == value) return
             field = ILoadMoreSupportAdapter.apply(value, loadMoreSupportedPosition)
             notifyDataSetChanged()

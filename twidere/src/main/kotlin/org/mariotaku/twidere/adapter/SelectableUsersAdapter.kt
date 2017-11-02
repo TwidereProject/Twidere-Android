@@ -25,10 +25,11 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.RequestManager
+import org.mariotaku.ktextension.contains
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.Companion.ITEM_VIEW_TYPE_LOAD_INDICATOR
+import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.exception.UnsupportedCountIndexException
 import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.model.ParcelableUser
@@ -114,9 +115,9 @@ class SelectableUsersAdapter(
 
     private fun updateItemCounts() {
         val position = loadMoreIndicatorPosition
-        itemCounts[ITEM_TYPE_START_INDICATOR] = if (position and ILoadMoreSupportAdapter.START != 0L) 1 else 0
+        itemCounts[ITEM_TYPE_START_INDICATOR] = if (LoadMorePosition.START in position) 1 else 0
         itemCounts[ITEM_TYPE_USER] = userCount
-        itemCounts[ITEM_TYPE_END_INDICATOR] = if (position and ILoadMoreSupportAdapter.END != 0L) 1 else 0
+        itemCounts[ITEM_TYPE_END_INDICATOR] = if (LoadMorePosition.END in position) 1 else 0
     }
 
     fun getUser(position: Int): ParcelableUser {
@@ -127,7 +128,7 @@ class SelectableUsersAdapter(
         get() {
             val position = loadMoreIndicatorPosition
             var start = 0
-            if (position and ILoadMoreSupportAdapter.START != 0L) {
+            if (LoadMorePosition.START in position) {
                 start += 1
             }
             return start
@@ -170,9 +171,10 @@ class SelectableUsersAdapter(
     }
 
 
-    val checkedCount: Int get() {
-        return data?.count { it.key !in lockedState && checkedState[it.key] ?: false } ?: 0
-    }
+    val checkedCount: Int
+        get() {
+            return data?.count { it.key !in lockedState && checkedState[it.key] ?: false } ?: 0
+        }
 
     fun setItemChecked(position: Int, value: Boolean) {
         val userKey = getUserKey(position)

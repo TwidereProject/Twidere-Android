@@ -6,9 +6,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.contains
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
+import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.exception.UnsupportedCountIndexException
 import org.mariotaku.twidere.model.ItemCounts
@@ -87,7 +88,7 @@ class MessagesEntriesAdapter(
 
     private fun updateItemCounts() {
         itemCounts[0] = conversations?.size ?: 0
-        itemCounts[1] = if (loadMoreIndicatorPosition and ILoadMoreSupportAdapter.END != 0L) 1 else 0
+        itemCounts[1] = if (LoadMorePosition.END in loadMoreIndicatorPosition) 1 else 0
     }
 
     fun getConversation(position: Int, reuse: Boolean = false): ParcelableMessageConversation {

@@ -23,9 +23,10 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.RequestManager
+import org.mariotaku.ktextension.contains
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.IUserListsAdapter
+import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.view.holder.SimpleUserListViewHolder
@@ -92,7 +93,7 @@ class SimpleParcelableUserListsAdapter(
 
     override fun getCount(): Int {
         itemCounts[0] = super.getCount()
-        itemCounts[1] = if (loadMoreIndicatorPosition and ILoadMoreSupportAdapter.END != 0L) 1 else 0
+        itemCounts[1] = if (LoadMorePosition.END in loadMoreIndicatorPosition) 1 else 0
         return itemCounts.itemCount
     }
 

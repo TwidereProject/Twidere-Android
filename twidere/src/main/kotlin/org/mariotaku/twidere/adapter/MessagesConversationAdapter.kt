@@ -30,10 +30,11 @@ import com.bumptech.glide.RequestManager
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.contains
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
+import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.annotation.PreviewStyle
 import org.mariotaku.twidere.constant.linkHighlightOptionKey
 import org.mariotaku.twidere.constant.mediaPreviewStyleKey
@@ -87,7 +88,7 @@ class MessagesConversationAdapter(
     val bubbleColorOutgoing: ColorStateList? = ThemeUtils.getColorStateListFromAttribute(context, R.attr.messageBubbleColor)
     val bubbleColorIncoming: ColorStateList? = context.getIncomingMessageColor()
 
-    override var loadMoreIndicatorPosition: Long
+    override var loadMoreIndicatorPosition: Int
         get() = super.loadMoreIndicatorPosition
         set(value) {
             super.loadMoreIndicatorPosition = value
@@ -204,7 +205,7 @@ class MessagesConversationAdapter(
 
     private fun updateItemCounts() {
         itemCounts[ITEM_START_MESSAGE] = messages?.size ?: 0
-        itemCounts[ITEM_START_LOAD_OLDER] = if (loadMoreIndicatorPosition and ILoadMoreSupportAdapter.START != 0L) 1 else 0
+        itemCounts[ITEM_START_LOAD_OLDER] = if (LoadMorePosition.START in loadMoreIndicatorPosition) 1 else 0
     }
 
     interface Listener {
