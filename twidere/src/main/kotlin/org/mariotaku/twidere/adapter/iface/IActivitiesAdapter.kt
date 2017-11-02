@@ -22,10 +22,7 @@ package org.mariotaku.twidere.adapter.iface
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder
 
-/**
- * Created by mariotaku on 14/11/18.
- */
-interface IActivitiesAdapter<in Data> : IContentAdapter, IGapSupportedAdapter {
+interface IActivitiesAdapter : IContentAdapter, IGapSupportedAdapter {
 
     val mediaPreviewStyle: Int
 
@@ -42,8 +39,6 @@ interface IActivitiesAdapter<in Data> : IContentAdapter, IGapSupportedAdapter {
     fun getActivityCount(raw: Boolean = false): Int
 
     fun getActivity(position: Int, raw: Boolean = false): ParcelableActivity
-
-    fun setData(data: Data?)
 
     interface ActivityEventListener {
 

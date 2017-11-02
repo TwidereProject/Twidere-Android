@@ -41,8 +41,8 @@ public class LikeAnimationDrawable extends Drawable implements Animatable, Drawa
     private boolean mMutated;
 
     public LikeAnimationDrawable(final Drawable icon, @ColorInt final int defaultColor,
-                                 @ColorInt final int activatedColor,
-                                 @Style final int style) {
+            @ColorInt final int activatedColor,
+            @Style final int style) {
         mState = new LikeAnimationState(icon, defaultColor, activatedColor, style, this);
     }
 
@@ -104,71 +104,6 @@ public class LikeAnimationDrawable extends Drawable implements Animatable, Drawa
         mState.mCurrentAnimator = animatorSet;
     }
 
-    private void setupFavoriteAnimation(final AnimatorSet animatorSet, final Layer particleLayer,
-                                        final Layer circleLayer, final ScalableDrawable iconLayer) {
-        setupLikeAnimation(animatorSet, particleLayer, circleLayer, iconLayer);
-    }
-
-    private void setupLikeAnimation(final AnimatorSet animatorSet, final Layer particleLayer,
-                                    final Layer circleLayer, final ScalableDrawable iconLayer) {
-        final long duration = mState.mDuration;
-        final long scaleDownDuration = Math.round(1f / 24f * duration);
-        final long ovalExpandDuration = Math.round(4f / 24f * duration);
-        final long iconExpandOffset = Math.round(6f / 24f * duration);
-        final long iconExpandDuration = Math.round(8f / 24f * duration);
-        final long iconNormalDuration = Math.round(4f / 24f * duration);
-        final long particleExpandDuration = Math.round(12f / 24f * duration);
-        final long circleExplodeDuration = Math.round(5f / 24f * duration);
-
-        final ObjectAnimator iconScaleDown = ObjectAnimator.ofFloat(iconLayer, IconScaleProperty.SINGLETON, 1, 0);
-        iconScaleDown.setDuration(scaleDownDuration);
-        iconScaleDown.setInterpolator(new AccelerateInterpolator(2));
-        iconScaleDown.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                setColorFilter(mState.mDefaultColor, PorterDuff.Mode.SRC_ATOP);
-            }
-
-        });
-
-        final ObjectAnimator ovalExpand = ObjectAnimator.ofFloat(circleLayer, LayerProgressProperty.SINGLETON, 0, 0.5f);
-        ovalExpand.setDuration(ovalExpandDuration);
-
-
-        final ObjectAnimator iconExpand = ObjectAnimator.ofFloat(iconLayer, IconScaleProperty.SINGLETON, 0, 1.25f);
-        iconExpand.setDuration(iconExpandDuration);
-        iconExpand.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                setColorFilter(mState.mActivatedColor, PorterDuff.Mode.SRC_ATOP);
-            }
-
-        });
-
-        final ObjectAnimator particleExplode = ObjectAnimator.ofFloat(particleLayer, LayerProgressProperty.SINGLETON, 0, 0.5f);
-        particleExplode.setDuration(iconExpandDuration);
-
-        final ObjectAnimator iconNormal = ObjectAnimator.ofFloat(iconLayer, IconScaleProperty.SINGLETON, 1.25f, 1);
-        iconNormal.setDuration(iconNormalDuration);
-        final ObjectAnimator circleExplode = ObjectAnimator.ofFloat(circleLayer, LayerProgressProperty.SINGLETON, 0.5f, 0.95f, 0.95f, 1);
-        circleExplode.setDuration(circleExplodeDuration);
-        circleExplode.setInterpolator(new DecelerateInterpolator());
-
-
-        final ObjectAnimator particleFade = ObjectAnimator.ofFloat(particleLayer, LayerProgressProperty.SINGLETON, 0.5f, 1);
-        particleFade.setDuration(particleExpandDuration);
-
-
-        animatorSet.play(iconScaleDown);
-        animatorSet.play(ovalExpand).after(iconScaleDown);
-        animatorSet.play(iconExpand).after(iconExpandOffset);
-        animatorSet.play(particleExplode).after(iconExpandOffset);
-        animatorSet.play(circleExplode).after(iconExpandOffset);
-
-        animatorSet.play(iconNormal).after(iconExpand);
-        animatorSet.play(particleFade).after(iconExpand);
-    }
-
     @Override
     public void stop() {
         if (mState.mCurrentAnimator == null) return;
@@ -178,18 +113,6 @@ public class LikeAnimationDrawable extends Drawable implements Animatable, Drawa
     @Override
     public boolean isRunning() {
         return mState.mCurrentAnimator != null && mState.mCurrentAnimator.isRunning();
-    }
-
-    public long getDuration() {
-        return mState.mDuration;
-    }
-
-    public void setDuration(long duration) {
-        mState.mDuration = duration;
-    }
-
-    public void setOnLikedListener(OnLikedListener listener) {
-        mState.mListenerRef = new WeakReference<>(listener);
     }
 
     @Override
@@ -265,6 +188,87 @@ public class LikeAnimationDrawable extends Drawable implements Animatable, Drawa
         return this;
     }
 
+    public long getDuration() {
+        return mState.mDuration;
+    }
+
+    public void setDuration(long duration) {
+        mState.mDuration = duration;
+    }
+
+    public int getActivatedColor() {
+        return mState.getActivatedColor();
+    }
+
+    public void setOnLikedListener(OnLikedListener listener) {
+        mState.mListenerRef = new WeakReference<>(listener);
+    }
+
+    private void setupFavoriteAnimation(final AnimatorSet animatorSet, final Layer particleLayer,
+            final Layer circleLayer, final ScalableDrawable iconLayer) {
+        setupLikeAnimation(animatorSet, particleLayer, circleLayer, iconLayer);
+    }
+
+    private void setupLikeAnimation(final AnimatorSet animatorSet, final Layer particleLayer,
+            final Layer circleLayer, final ScalableDrawable iconLayer) {
+        final long duration = mState.mDuration;
+        final long scaleDownDuration = Math.round(1f / 24f * duration);
+        final long ovalExpandDuration = Math.round(4f / 24f * duration);
+        final long iconExpandOffset = Math.round(6f / 24f * duration);
+        final long iconExpandDuration = Math.round(8f / 24f * duration);
+        final long iconNormalDuration = Math.round(4f / 24f * duration);
+        final long particleExpandDuration = Math.round(12f / 24f * duration);
+        final long circleExplodeDuration = Math.round(5f / 24f * duration);
+
+        final ObjectAnimator iconScaleDown = ObjectAnimator.ofFloat(iconLayer, IconScaleProperty.SINGLETON, 1, 0);
+        iconScaleDown.setDuration(scaleDownDuration);
+        iconScaleDown.setInterpolator(new AccelerateInterpolator(2));
+        iconScaleDown.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                setColorFilter(mState.mDefaultColor, PorterDuff.Mode.SRC_ATOP);
+            }
+
+        });
+
+        final ObjectAnimator ovalExpand = ObjectAnimator.ofFloat(circleLayer, LayerProgressProperty.SINGLETON, 0, 0.5f);
+        ovalExpand.setDuration(ovalExpandDuration);
+
+
+        final ObjectAnimator iconExpand = ObjectAnimator.ofFloat(iconLayer, IconScaleProperty.SINGLETON, 0, 1.25f);
+        iconExpand.setDuration(iconExpandDuration);
+        iconExpand.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                setColorFilter(mState.mActivatedColor, PorterDuff.Mode.SRC_ATOP);
+            }
+
+        });
+
+        final ObjectAnimator particleExplode = ObjectAnimator.ofFloat(particleLayer, LayerProgressProperty.SINGLETON, 0, 0.5f);
+        particleExplode.setDuration(iconExpandDuration);
+
+        final ObjectAnimator iconNormal = ObjectAnimator.ofFloat(iconLayer, IconScaleProperty.SINGLETON, 1.25f, 1);
+        iconNormal.setDuration(iconNormalDuration);
+        final ObjectAnimator circleExplode = ObjectAnimator.ofFloat(circleLayer, LayerProgressProperty.SINGLETON, 0.5f, 0.95f, 0.95f, 1);
+        circleExplode.setDuration(circleExplodeDuration);
+        circleExplode.setInterpolator(new DecelerateInterpolator());
+
+
+        final ObjectAnimator particleFade = ObjectAnimator.ofFloat(particleLayer, LayerProgressProperty.SINGLETON, 0.5f, 1);
+        particleFade.setDuration(particleExpandDuration);
+
+
+        animatorSet.play(iconScaleDown);
+        animatorSet.play(ovalExpand).after(iconScaleDown);
+        animatorSet.play(iconExpand).after(iconExpandOffset);
+        animatorSet.play(particleExplode).after(iconExpandOffset);
+        animatorSet.play(circleExplode).after(iconExpandOffset);
+
+        animatorSet.play(iconNormal).after(iconExpand);
+        animatorSet.play(particleFade).after(iconExpand);
+    }
+
     public interface OnLikedListener {
         boolean onLiked();
     }
@@ -273,6 +277,26 @@ public class LikeAnimationDrawable extends Drawable implements Animatable, Drawa
     public @interface Style {
         int LIKE = 1;
         int FAVORITE = 2;
+    }
+
+
+    /**
+     * Created by mariotaku on 16/2/22.
+     */
+    public interface Layer {
+
+        float getProgress();
+
+        void setProgress(float progress);
+    }
+
+    /**
+     * Created by mariotaku on 16/2/22.
+     */
+    public interface Palette {
+        int getParticleColor(int count, int index, float progress);
+
+        int getCircleColor(float progress);
     }
 
     static class LikeAnimationState extends ConstantState {
@@ -293,7 +317,7 @@ public class LikeAnimationDrawable extends Drawable implements Animatable, Drawa
         private WeakReference<OnLikedListener> mListenerRef;
 
         public LikeAnimationState(final Drawable icon, final int defaultColor, final int activatedColor,
-                                  @Style final int style, Callback callback) {
+                @Style final int style, Callback callback) {
             mDefaultColor = defaultColor;
             mActivatedColor = activatedColor;
             mStyle = style;
@@ -341,12 +365,8 @@ public class LikeAnimationDrawable extends Drawable implements Animatable, Drawa
             mIconDrawable.setColorFilter(cf);
         }
 
-        private static Drawable clone(Drawable orig, LikeAnimationDrawable owner) {
-            final Drawable clone = orig.getConstantState().newDrawable();
-            clone.mutate();
-            clone.setCallback(owner);
-            clone.setBounds(orig.getBounds());
-            return clone;
+        public int getActivatedColor() {
+            return mActivatedColor;
         }
 
         public void setBounds(int left, int top, int right, int bottom) {
@@ -366,6 +386,14 @@ public class LikeAnimationDrawable extends Drawable implements Animatable, Drawa
             return mCircleLayer.getChangingConfigurations() |
                     mParticleLayer.getChangingConfigurations() |
                     mIconDrawable.getChangingConfigurations();
+        }
+
+        private static Drawable clone(Drawable orig, LikeAnimationDrawable owner) {
+            final Drawable clone = orig.getConstantState().newDrawable();
+            clone.mutate();
+            clone.setCallback(owner);
+            clone.setBounds(orig.getBounds());
+            return clone;
         }
     }
 
@@ -413,24 +441,5 @@ public class LikeAnimationDrawable extends Drawable implements Animatable, Drawa
         public Float get(Layer object) {
             return object.getProgress();
         }
-    }
-
-    /**
-     * Created by mariotaku on 16/2/22.
-     */
-    public interface Layer {
-
-        float getProgress();
-
-        void setProgress(float progress);
-    }
-
-    /**
-     * Created by mariotaku on 16/2/22.
-     */
-    public interface Palette {
-        int getParticleColor(int count, int index, float progress);
-
-        int getCircleColor(float progress);
     }
 }

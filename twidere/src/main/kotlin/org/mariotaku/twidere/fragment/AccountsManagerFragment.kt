@@ -32,6 +32,7 @@ import org.mariotaku.twidere.adapter.AccountDetailsAdapter
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.model.getAccountKey
 import org.mariotaku.twidere.extension.model.setActivated
 import org.mariotaku.twidere.extension.model.setColor
@@ -59,6 +60,7 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
+        linkHandlerTitle = getString(R.string.title_accounts)
         val am = AccountManager.get(context)
         adapter = AccountDetailsAdapter(context, requestManager).apply {
             sortEnabled = true

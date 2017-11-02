@@ -30,7 +30,7 @@ class DummyItemAdapter(
         override val twidereLinkify: TwidereLinkify = TwidereLinkify(null),
         private val adapter: RecyclerView.Adapter<out RecyclerView.ViewHolder>? = null,
         override val requestManager: RequestManager
-) : IStatusesAdapter<Any>, IUsersAdapter<Any>, IUserListsAdapter<Any> {
+) : IStatusesAdapter, IUsersAdapter<Any>, IUserListsAdapter<Any> {
 
     @Inject
     lateinit var preferences: SharedPreferences

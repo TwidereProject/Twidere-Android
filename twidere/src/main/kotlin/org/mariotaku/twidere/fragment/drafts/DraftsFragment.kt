@@ -24,7 +24,7 @@ import org.mariotaku.ktextension.Bundle
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACTIONS
-import org.mariotaku.twidere.extension.title
+import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.fragment.AbsToolbarTabPagesFragment
 import org.mariotaku.twidere.model.Draft
 
@@ -35,7 +35,7 @@ import org.mariotaku.twidere.model.Draft
 class DraftsFragment : AbsToolbarTabPagesFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        title = getString(R.string.title_drafts)
+        linkHandlerTitle = getString(R.string.title_drafts)
     }
 
     override fun addTabs(adapter: SupportTabsAdapter) {

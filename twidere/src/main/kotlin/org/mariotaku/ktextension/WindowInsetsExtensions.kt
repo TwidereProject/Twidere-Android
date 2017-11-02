@@ -26,8 +26,7 @@ import android.support.v4.view.WindowInsetsCompat
 import android.view.WindowInsets
 
 inline val WindowInsetsCompat.systemWindowInsets: Rect
-    get() = Rect(systemWindowInsetLeft, systemWindowInsetTop, systemWindowInsetRight,
-            systemWindowInsetBottom)
+    get() = Rect().also { getSystemWindowInsets(it) }
 
 fun WindowInsetsCompat.getSystemWindowInsets(rect: Rect) {
     rect.set(systemWindowInsetLeft, systemWindowInsetTop, systemWindowInsetRight,

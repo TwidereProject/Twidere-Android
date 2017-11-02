@@ -44,6 +44,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.SelectableUsersAdapter
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.nameFirstKey
+import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.extension.text.appendCompat
@@ -98,6 +99,7 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
+        linkHandlerTitle = getString(R.string.title_direct_messages_conversation_new)
         usersAdapter = SelectableUsersAdapter(context, requestManager)
         recyclerView.adapter = usersAdapter
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)

@@ -54,18 +54,13 @@ inline fun <R> MicroBlog.lookupUsersMapPaginated(ids: IDs, transform: (User) -> 
 
 @Throws(MicroBlogException::class)
 private fun MicroBlog.showUser(id: String?, screenName: String?, accountType: String?): User {
-    if (id != null) {
-        if (AccountType.FANFOU == accountType) {
-            return showFanfouUser(id)
-        }
-        return showUser(id)
-    } else if (screenName != null) {
-        if (AccountType.FANFOU == accountType) {
-            return showFanfouUser(screenName)
-        }
-        return showUserByScreenName(screenName)
+    return when {
+        accountType == AccountType.FANFOU -> showFanfouUser(id ?: screenName ?:
+                throw MicroBlogException("Invalid user id or screen name"))
+        id != null -> showUser(id)
+        screenName != null -> showUserByScreenName(screenName)
+        else -> throw MicroBlogException("Invalid user id or screen name")
     }
-    throw MicroBlogException("Invalid user id or screen name")
 }
 
 @Throws(MicroBlogException::class)

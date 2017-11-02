@@ -23,6 +23,7 @@ import android.annotation.TargetApi;
 import android.graphics.Outline;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 
@@ -83,15 +84,18 @@ public abstract class ViewOutlineProviderCompat {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static class ViewOutlineProviderL extends ViewOutlineProvider {
 
+        @Nullable
         private final ViewOutlineProviderCompat providerCompat;
 
-        public ViewOutlineProviderL(ViewOutlineProviderCompat providerCompat) {
+        public ViewOutlineProviderL(@Nullable ViewOutlineProviderCompat providerCompat) {
             this.providerCompat = providerCompat;
         }
 
         @Override
         public void getOutline(View view, Outline outline) {
-            providerCompat.getOutline(view, new OutlineCompat.OutlineL(outline));
+            if (providerCompat != null) {
+                providerCompat.getOutline(view, new OutlineCompat.OutlineL(outline));
+            }
         }
     }
 }

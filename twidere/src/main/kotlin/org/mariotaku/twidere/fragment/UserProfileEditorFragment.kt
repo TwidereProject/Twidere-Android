@@ -50,6 +50,8 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity
 import org.mariotaku.twidere.activity.ThemedMediaPickerActivity
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.annotation.ImageShapeStyle
+import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.loadProfileBanner
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
@@ -76,6 +78,44 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
     private var account: AccountDetails? = null
     private var userInfoLoaderInitialized: Boolean = false
     private var getUserInfoCalled: Boolean = false
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        setHasOptionsMenu(true)
+        linkHandlerTitle = getString(R.string.title_edit_profile)
+        if (!Utils.isMyAccount(activity, accountKey)) {
+            activity.finish()
+            return
+        }
+
+        val lengthChecker = TwitterValidatorMETLengthChecker(Validator())
+
+        editDescription.setLengthChecker(lengthChecker)
+
+        profileImage.setOnClickListener(this)
+        profileBanner.setOnClickListener(this)
+        profileBackground.setOnClickListener(this)
+
+        editProfileImage.setOnClickListener(this)
+        editProfileBanner.setOnClickListener(this)
+        editProfileBackground.setOnClickListener(this)
+
+        setLinkColor.setOnClickListener(this)
+        setBackgroundColor.setOnClickListener(this)
+
+        val savedUser = savedInstanceState?.getParcelable<ParcelableUser?>(EXTRA_USER)
+        val savedAccount = savedInstanceState?.getParcelable<AccountDetails?>(EXTRA_ACCOUNT)
+        if (savedInstanceState != null && savedUser != null && savedAccount != null) {
+            displayUser(savedUser, savedAccount)
+            editName.setText(savedInstanceState.getString(EXTRA_NAME, savedUser.name))
+            editLocation.setText(savedInstanceState.getString(EXTRA_LOCATION, savedUser.location))
+            editDescription.setText(savedInstanceState.getString(EXTRA_DESCRIPTION,
+                    ParcelableUserUtils.getExpandedDescription(savedUser)))
+            editUrl.setText(savedInstanceState.getString(EXTRA_URL, savedUser.url_expanded))
+        } else {
+            getUserInfo()
+        }
+    }
 
     override fun onClick(view: View) {
         val user = user ?: return
@@ -145,6 +185,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
         inflater.inflate(R.menu.menu_profile_editor, menu)
     }
 
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.save -> {
@@ -162,44 +203,6 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        setHasOptionsMenu(true)
-        if (!Utils.isMyAccount(activity, accountKey)) {
-            activity.finish()
-            return
-        }
-
-        val lengthChecker = TwitterValidatorMETLengthChecker(Validator())
-
-        editDescription.setLengthChecker(lengthChecker)
-
-        profileImage.setOnClickListener(this)
-        profileBanner.setOnClickListener(this)
-        profileBackground.setOnClickListener(this)
-
-        editProfileImage.setOnClickListener(this)
-        editProfileBanner.setOnClickListener(this)
-        editProfileBackground.setOnClickListener(this)
-
-        setLinkColor.setOnClickListener(this)
-        setBackgroundColor.setOnClickListener(this)
-
-        val savedUser = savedInstanceState?.getParcelable<ParcelableUser?>(EXTRA_USER)
-        val savedAccount = savedInstanceState?.getParcelable<AccountDetails?>(EXTRA_ACCOUNT)
-        if (savedInstanceState != null && savedUser != null && savedAccount != null) {
-            displayUser(savedUser, savedAccount)
-            editName.setText(savedInstanceState.getString(EXTRA_NAME, savedUser.name))
-            editLocation.setText(savedInstanceState.getString(EXTRA_LOCATION, savedUser.location))
-            editDescription.setText(savedInstanceState.getString(EXTRA_DESCRIPTION,
-                    ParcelableUserUtils.getExpandedDescription(savedUser)))
-            editUrl.setText(savedInstanceState.getString(EXTRA_URL, savedUser.url_expanded))
-        } else {
-            getUserInfo()
-        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -277,7 +280,8 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
             editLocation.setText(user.location)
             editUrl.setText(if (isEmpty(user.url_expanded)) user.url else user.url_expanded)
 
-            requestManager.loadProfileImage(context, user, 0).into(profileImage)
+            requestManager.loadProfileImage(context, user,
+                    ImageShapeStyle.SHAPE_RECTANGLE).into(profileImage)
             requestManager.loadProfileBanner(context, user, resources.displayMetrics.widthPixels)
                     .into(profileBanner)
             requestManager.load(user.profile_background_url).into(profileBackground)

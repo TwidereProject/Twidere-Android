@@ -21,4 +21,5 @@ package org.mariotaku.twidere.exception
 
 import org.mariotaku.microblog.library.MicroBlogException
 
-class APINotSupportedException(platform: String = "this platform") : MicroBlogException("API not supported for $platform")
+class APINotSupportedException(api: String = "This API", platform: String = "this platform") :
+        MicroBlogException("$api not supported for $platform")

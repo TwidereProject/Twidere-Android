@@ -48,7 +48,7 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.view.holder.StatusViewHolder
+import org.mariotaku.twidere.view.holder.status.StatusViewHolder
 import java.lang.ref.WeakReference
 
 abstract class AbsStatusDialogFragment : BaseDialogFragment() {

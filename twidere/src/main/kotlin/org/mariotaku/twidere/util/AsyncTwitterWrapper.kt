@@ -47,12 +47,13 @@ import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.event.*
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
+import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableRelationshipUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.task.*
+import org.mariotaku.twidere.task.statuses.GetHomeTimelineTask
 import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
-import org.mariotaku.twidere.task.twitter.GetHomeTimelineTask
 import org.mariotaku.twidere.task.twitter.GetSavedSearchesTask
 import org.mariotaku.twidere.task.twitter.GetTrendsTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
@@ -66,8 +67,6 @@ class AsyncTwitterWrapper(
 ) {
     private val resolver = context.contentResolver
 
-
-    var destroyingStatusIds = ArrayList<Int>()
     private val updatingRelationshipIds = ArrayList<Int>()
 
     private val sendingDraftIds = ArrayList<Long>()
@@ -228,7 +227,7 @@ class AsyncTwitterWrapper(
         TaskStarter.execute(task)
     }
 
-    fun getHomeTimelineAsync(param: RefreshTaskParam): Boolean {
+    fun getHomeTimelineAsync(param: ContentRefreshParam): Boolean {
         val task = GetHomeTimelineTask(context)
         task.params = param
         TaskStarter.execute(task)
@@ -240,7 +239,7 @@ class AsyncTwitterWrapper(
         TaskStarter.execute(task)
     }
 
-    fun getMessagesAsync(param: GetMessagesTask.RefreshMessagesTaskParam) {
+    fun getMessagesAsync(param: GetMessagesTask.RefreshMessagesParam) {
         val task = GetMessagesTask(context)
         task.params = param
         TaskStarter.execute(task)
@@ -256,10 +255,6 @@ class AsyncTwitterWrapper(
         return sendingDraftIds.toLongArray()
     }
 
-    fun isDestroyingStatus(accountKey: UserKey?, statusId: String?): Boolean {
-        return destroyingStatusIds.contains(calculateHashCode(accountKey, statusId))
-    }
-
     fun isStatusTimelineRefreshing(uri: Uri): Boolean {
         return getStatusTasks.contains(uri)
     }
@@ -273,19 +268,19 @@ class AsyncTwitterWrapper(
     }
 
     fun refreshAll(action: () -> Array<UserKey>): Boolean {
-        getHomeTimelineAsync(object : RefreshTaskParam {
+        getHomeTimelineAsync(object : ContentRefreshParam {
 
             override val accountKeys by lazy { action() }
 
             override val pagination by lazy {
-                return@lazy DataStoreUtils.getNewestStatusIds(context, Statuses.CONTENT_URI,
+                return@lazy DataStoreUtils.getNewestStatusIds(context, Statuses.HomeTimeline.CONTENT_URI,
                         accountKeys.toNulls()).mapToArray {
                     return@mapToArray SinceMaxPagination.sinceId(it, -1)
                 }
             }
         })
         if (preferences[homeRefreshMentionsKey]) {
-            getActivitiesAboutMeAsync(object : RefreshTaskParam {
+            getActivitiesAboutMeAsync(object : ContentRefreshParam {
 
                 override val accountKeys by lazy { action() }
 
@@ -298,7 +293,7 @@ class AsyncTwitterWrapper(
             })
         }
         if (preferences[homeRefreshDirectMessagesKey]) {
-            getMessagesAsync(object : GetMessagesTask.RefreshMessagesTaskParam(context) {
+            getMessagesAsync(object : GetMessagesTask.RefreshMessagesParam(context) {
                 override val accountKeys by lazy { action() }
             })
         }
@@ -348,7 +343,7 @@ class AsyncTwitterWrapper(
                             Expression.equalsArgs(Statuses.RETWEETED_BY_USER_KEY)
                     )
                     val selectionArgs = arrayOf(accountKey.toString(), userKey.toString())
-                    cr.delete(Statuses.CONTENT_URI, where.sql, selectionArgs)
+                    cr.delete(Statuses.HomeTimeline.CONTENT_URI, where.sql, selectionArgs)
                 }
 
                 ParcelableRelationshipUtils.insert(cr, listOf(relationship))
@@ -370,7 +365,7 @@ class AsyncTwitterWrapper(
         })
     }
 
-    fun getActivitiesAboutMeAsync(param: RefreshTaskParam) {
+    fun getActivitiesAboutMeAsync(param: ContentRefreshParam) {
         val task = GetActivitiesAboutMeTask(context)
         task.params = param
         TaskStarter.execute(task)

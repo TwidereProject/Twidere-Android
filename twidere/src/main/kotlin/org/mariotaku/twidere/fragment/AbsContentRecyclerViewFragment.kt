@@ -36,17 +36,16 @@ import org.mariotaku.twidere.adapter.LoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
-import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.ContentScrollHandler
+import org.mariotaku.twidere.util.RecyclerViewScrollHandler
+import org.mariotaku.twidere.util.ThemeUtils
+import org.mariotaku.twidere.util.TwidereColorUtils
 import org.mariotaku.twidere.view.ExtendedSwipeRefreshLayout
-import org.mariotaku.twidere.view.HeaderDrawerLayout
 import org.mariotaku.twidere.view.iface.IExtendedView
 
-/**
- * Created by mariotaku on 15/10/26.
- */
 abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<RecyclerView.ViewHolder>,
         L : RecyclerView.LayoutManager> : BaseFragment(), SwipeRefreshLayout.OnRefreshListener,
-        HeaderDrawerLayout.DrawerCallback, RefreshScrollTopInterface, IControlBarActivity.ControlBarOffsetListener,
+        RefreshScrollTopInterface, IControlBarActivity.ControlBarOffsetListener,
         ContentScrollHandler.ContentListSupport<A>, ControlBarShowHideHelper.ControlBarAnimationListener {
 
     lateinit var layoutManager: L
@@ -57,10 +56,9 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
         private set
 
     // Callbacks and listeners
-    private lateinit var drawerCallback: SimpleDrawerCallback
     lateinit var scrollListener: RecyclerViewScrollHandler<A>
     // Data fields
-    private val systemWindowsInsets = Rect()
+    private val systemWindowInsets = Rect()
 
     private val refreshCompleteListener: RefreshCompleteListener?
         get() = parentFragment as? RefreshCompleteListener
@@ -84,22 +82,6 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
             swipeLayout.isRefreshing = layoutRefreshing
         }
 
-    override fun canScroll(dy: Float): Boolean {
-        return drawerCallback.canScroll(dy)
-    }
-
-    override fun cancelTouch() {
-        drawerCallback.cancelTouch()
-    }
-
-    override fun fling(velocity: Float) {
-        drawerCallback.fling(velocity)
-    }
-
-    override fun isScrollContent(x: Float, y: Float): Boolean {
-        return drawerCallback.isScrollContent(x, y)
-    }
-
     override fun onControlBarOffsetChanged(activity: IControlBarActivity, offset: Float) {
         updateRefreshProgressOffset()
     }
@@ -113,10 +95,6 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         updateRefreshProgressOffset()
-    }
-
-    override fun scrollBy(dy: Float) {
-        drawerCallback.scrollBy(dy)
     }
 
     override fun scrollToStart(): Boolean {
@@ -148,14 +126,6 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
         }
     }
 
-    override fun shouldLayoutHeaderBottom(): Boolean {
-        return drawerCallback.shouldLayoutHeaderBottom()
-    }
-
-    override fun topChanged(offset: Int) {
-        drawerCallback.topChanged(offset)
-    }
-
     var refreshEnabled: Boolean
         get() = swipeLayout.isEnabled
         set(value) {
@@ -180,7 +150,6 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        drawerCallback = SimpleDrawerCallback(recyclerView)
 
         val backgroundColor = ThemeUtils.getColorBackground(context)
         val colorRes = TwidereColorUtils.getContrastYIQ(backgroundColor,
@@ -260,7 +229,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
                 insets.right + extraPadding.right, insets.bottom + extraPadding.bottom)
         errorContainer.setPadding(insets.left, insets.top, insets.right, insets.bottom)
         progressContainer.setPadding(insets.left, insets.top, insets.right, insets.bottom)
-        systemWindowsInsets.set(insets)
+        systemWindowInsets.set(insets)
         updateRefreshProgressOffset()
     }
 
@@ -308,7 +277,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
     }
 
     protected fun updateRefreshProgressOffset() {
-        val insets = this.systemWindowsInsets
+        val insets = this.systemWindowInsets
         if (insets.top == 0 || swipeLayout == null || swipeLayout.isRefreshing) {
             return
         }

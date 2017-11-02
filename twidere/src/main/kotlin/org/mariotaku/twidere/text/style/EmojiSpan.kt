@@ -24,9 +24,6 @@ import android.graphics.Paint
 import android.graphics.drawable.Drawable
 import android.text.style.DynamicDrawableSpan
 
-/**
- * Created by mariotaku on 15/12/22.
- */
 class EmojiSpan(private val drawable: Drawable) : DynamicDrawableSpan(DynamicDrawableSpan.ALIGN_BOTTOM) {
     private val fontMetrics: Paint.FontMetrics = Paint.FontMetrics()
 
@@ -41,15 +38,22 @@ class EmojiSpan(private val drawable: Drawable) : DynamicDrawableSpan(DynamicDra
         val textHeightPx = Math.round(fontMetrics.descent - fontMetrics.ascent)
         val intrinsicWidth = drawable.intrinsicWidth.toFloat()
         val intrinsicHeight = drawable.intrinsicHeight.toFloat()
-        val scaledWidth: Int
-        if (intrinsicWidth > intrinsicHeight) {
-            scaledWidth = Math.round(textHeightPx * (intrinsicWidth / intrinsicHeight))
+        val scaledWidth = if (intrinsicWidth > intrinsicHeight) {
+            Math.round(textHeightPx * (intrinsicWidth / intrinsicHeight))
         } else {
-            scaledWidth = Math.round(intrinsicWidth * (textHeightPx / intrinsicHeight))
+            Math.round(intrinsicWidth * (textHeightPx / intrinsicHeight))
         }
         val top = Math.round(fontMetrics.bottom) - textHeightPx
         val left = 0
         drawable.setBounds(left, top, left + scaledWidth, top + textHeightPx)
+
+        if (fm != null) {
+            fm.ascent = -(top + textHeightPx)
+            fm.descent = 0
+
+            fm.top = fm.ascent
+            fm.bottom = 0
+        }
         return scaledWidth
     }
 

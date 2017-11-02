@@ -44,6 +44,7 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.app.TwidereApplication
+import org.mariotaku.twidere.constant.TableIds
 import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.model.AccountPreferences
 import org.mariotaku.twidere.model.UserKey
@@ -144,11 +145,11 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
             val tableId = DataStoreUtils.getTableId(uri)
             val table = DataStoreUtils.getTableNameById(tableId)
             when (tableId) {
-                VIRTUAL_TABLE_ID_DATABASE_PREPARE -> {
+                TableIds.VIRTUAL_DATABASE_PREPARE -> {
                     databaseWrapper.prepare()
                     return MatrixCursor(projection ?: arrayOfNulls<String>(0))
                 }
-                VIRTUAL_TABLE_ID_PERMISSIONS -> {
+                TableIds.VIRTUAL_PERMISSIONS -> {
                     val context = context ?: return null
                     val c = MatrixCursor(Permissions.MATRIX_COLUMNS)
                     val pm = context.packageManager
@@ -168,7 +169,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                     }
                     return c
                 }
-                VIRTUAL_TABLE_ID_CACHED_USERS_WITH_RELATIONSHIP -> {
+                TableIds.VIRTUAL_CACHED_USERS_WITH_RELATIONSHIP -> {
                     val accountKey = UserKey.valueOf(uri.lastPathSegment)
                     val accountHost = uri.getQueryParameter(EXTRA_ACCOUNT_HOST)
                     val accountType = uri.getQueryParameter(EXTRA_ACCOUNT_TYPE)
@@ -179,7 +180,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                     c?.setNotificationUri(context.contentResolver, CachedUsers.CONTENT_URI)
                     return c
                 }
-                VIRTUAL_TABLE_ID_CACHED_USERS_WITH_SCORE -> {
+                TableIds.VIRTUAL_CACHED_USERS_WITH_SCORE -> {
                     val accountKey = UserKey.valueOf(uri.lastPathSegment)
                     val accountHost = uri.getQueryParameter(EXTRA_ACCOUNT_HOST)
                     val accountType = uri.getQueryParameter(EXTRA_ACCOUNT_TYPE)
@@ -189,7 +190,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                     c?.setNotificationUri(context.contentResolver, CachedUsers.CONTENT_URI)
                     return c
                 }
-                VIRTUAL_TABLE_ID_DRAFTS_UNSENT -> {
+                TableIds.VIRTUAL_DRAFTS_UNSENT -> {
                     val twitter = twitterWrapper
                     val sendingIds = RawItemArray(twitter.getSendingDraftIds())
                     val where: Expression
@@ -204,21 +205,21 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                     c?.setNotificationUri(context.contentResolver, uri)
                     return c
                 }
-                VIRTUAL_TABLE_ID_SUGGESTIONS_AUTO_COMPLETE -> {
+                TableIds.VIRTUAL_SUGGESTIONS_AUTO_COMPLETE -> {
                     return SuggestionsCursorCreator.forAutoComplete(databaseWrapper,
                             userColorNameManager, uri, projection)
                 }
-                VIRTUAL_TABLE_ID_SUGGESTIONS_SEARCH -> {
+                TableIds.VIRTUAL_SUGGESTIONS_SEARCH -> {
                     return SuggestionsCursorCreator.forSearch(databaseWrapper,
                             userColorNameManager, uri, projection)
                 }
-                VIRTUAL_TABLE_ID_NULL -> {
+                TableIds.VIRTUAL_NULL -> {
                     return null
                 }
-                VIRTUAL_TABLE_ID_EMPTY -> {
+                TableIds.VIRTUAL_EMPTY -> {
                     return MatrixCursor(projection ?: arrayOfNulls<String>(0))
                 }
-                VIRTUAL_TABLE_ID_RAW_QUERY -> {
+                TableIds.VIRTUAL_RAW_QUERY -> {
                     if (projection != null || selection != null || sortOrder != null) {
                         throw IllegalArgumentException()
                     }
@@ -303,14 +304,14 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
         val newIds = LongArray(valuesArray.size)
         if (table != null && valuesArray.isNotEmpty()) {
             databaseWrapper.beginTransaction()
-            if (tableId == TABLE_ID_CACHED_USERS) {
+            if (tableId == TableIds.CACHED_USERS) {
                 for (values in valuesArray) {
                     val where = Expression.equalsArgs(CachedUsers.USER_KEY)
                     databaseWrapper.update(table, values, where.sql, arrayOf(values.getAsString(CachedUsers.USER_KEY)))
                     newIds[result++] = databaseWrapper.insertWithOnConflict(table, null,
                             values, SQLiteDatabase.CONFLICT_REPLACE)
                 }
-            } else if (tableId == TABLE_ID_SEARCH_HISTORY) {
+            } else if (tableId == TableIds.SEARCH_HISTORY) {
                 for (values in valuesArray) {
                     values.put(SearchHistory.RECENT_QUERY, System.currentTimeMillis())
                     val where = Expression.equalsArgs(SearchHistory.QUERY)
@@ -345,7 +346,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
     private fun deleteInternal(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
         val tableId = DataStoreUtils.getTableId(uri)
         when (tableId) {
-            VIRTUAL_TABLE_ID_DRAFTS_NOTIFICATIONS -> {
+            TableIds.VIRTUAL_DRAFTS_NOTIFICATIONS -> {
                 notificationManager.cancel(uri.toString(), NOTIFICATION_ID_DRAFTS)
                 return 1
             }
@@ -367,7 +368,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
         val table = DataStoreUtils.getTableNameById(tableId)
         var rowId: Long = -1
         when (tableId) {
-            TABLE_ID_CACHED_USERS -> {
+            TableIds.CACHED_USERS -> {
                 if (values != null) {
                     val where = Expression.equalsArgs(CachedUsers.USER_KEY)
                     val whereArgs = arrayOf(values.getAsString(CachedUsers.USER_KEY))
@@ -376,7 +377,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                 rowId = databaseWrapper.insertWithOnConflict(table, null, values,
                         SQLiteDatabase.CONFLICT_IGNORE)
             }
-            TABLE_ID_SEARCH_HISTORY -> {
+            TableIds.SEARCH_HISTORY -> {
                 if (values != null) {
                     values.put(SearchHistory.RECENT_QUERY, System.currentTimeMillis())
                     val where = Expression.equalsArgs(SearchHistory.QUERY)
@@ -386,7 +387,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                 rowId = databaseWrapper.insertWithOnConflict(table, null, values,
                         SQLiteDatabase.CONFLICT_IGNORE)
             }
-            TABLE_ID_CACHED_RELATIONSHIPS -> {
+            TableIds.CACHED_RELATIONSHIPS -> {
                 var updated = false
                 if (values != null) {
                     val accountKey = values.getAsString(CachedRelationships.ACCOUNT_KEY)
@@ -410,7 +411,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                             SQLiteDatabase.CONFLICT_IGNORE)
                 }
             }
-            VIRTUAL_TABLE_ID_DRAFTS_NOTIFICATIONS -> {
+            TableIds.VIRTUAL_DRAFTS_NOTIFICATIONS -> {
                 rowId = contentNotificationManager.showDraft(uri)
             }
             else -> {
@@ -466,7 +467,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
         val context = context ?: return
         if (valuesArray.isNullOrEmpty()) return
         when (tableId) {
-            TABLE_ID_STATUSES -> {
+            TableIds.HOME_TIMELINE -> {
                 if (!uri.getBooleanQueryParameter(QUERY_PARAM_SHOW_NOTIFICATION, true)) return
                 backgroundExecutor.execute {
                     val prefs = AccountPreferences.getAccountPreferences(context, preferences,
@@ -478,7 +479,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                     notifyUnreadCountChanged(NOTIFICATION_ID_HOME_TIMELINE)
                 }
             }
-            TABLE_ID_ACTIVITIES_ABOUT_ME -> {
+            TableIds.ACTIVITIES_ABOUT_ME -> {
                 if (!uri.getBooleanQueryParameter(QUERY_PARAM_SHOW_NOTIFICATION, true)) return
                 backgroundExecutor.execute {
                     val prefs = AccountPreferences.getAccountPreferences(context, preferences,
@@ -490,7 +491,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                     notifyUnreadCountChanged(NOTIFICATION_ID_INTERACTIONS_TIMELINE)
                 }
             }
-            TABLE_ID_MESSAGES_CONVERSATIONS -> {
+            TableIds.MESSAGES_CONVERSATIONS -> {
                 if (!uri.getBooleanQueryParameter(QUERY_PARAM_SHOW_NOTIFICATION, true)) return
                 backgroundExecutor.execute {
                     val prefs = AccountPreferences.getAccountPreferences(context, preferences,
@@ -501,7 +502,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                     notifyUnreadCountChanged(NOTIFICATION_ID_DIRECT_MESSAGES)
                 }
             }
-            TABLE_ID_DRAFTS -> {
+            TableIds.DRAFTS -> {
             }
         }
     }
@@ -517,13 +518,13 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
 
         private fun getConflictAlgorithm(tableId: Int): Int {
             when (tableId) {
-                TABLE_ID_CACHED_HASHTAGS, TABLE_ID_CACHED_STATUSES, TABLE_ID_CACHED_USERS,
-                TABLE_ID_CACHED_RELATIONSHIPS, TABLE_ID_SEARCH_HISTORY, TABLE_ID_MESSAGES,
-                TABLE_ID_MESSAGES_CONVERSATIONS -> {
+                TableIds.CACHED_HASHTAGS, TableIds.CACHED_STATUSES, TableIds.CACHED_USERS,
+                TableIds.CACHED_RELATIONSHIPS, TableIds.SEARCH_HISTORY, TableIds.MESSAGES,
+                TableIds.MESSAGES_CONVERSATIONS -> {
                     return SQLiteDatabase.CONFLICT_REPLACE
                 }
-                TABLE_ID_FILTERED_USERS, TABLE_ID_FILTERED_KEYWORDS, TABLE_ID_FILTERED_SOURCES,
-                TABLE_ID_FILTERED_LINKS -> {
+                TableIds.FILTERED_USERS, TableIds.FILTERED_KEYWORDS, TableIds.FILTERED_SOURCES,
+                TableIds.FILTERED_LINKS -> {
                     return SQLiteDatabase.CONFLICT_IGNORE
                 }
             }

@@ -11,13 +11,20 @@ import java.lang.annotation.RetentionPolicy;
 @StringDef({
         ReadPositionTag.ACTIVITIES_ABOUT_ME,
         ReadPositionTag.HOME_TIMELINE,
+        ReadPositionTag.PUBLIC_TIMELINE,
+        ReadPositionTag.NETWORK_PUBLIC_TIMELINE,
         ReadPositionTag.DIRECT_MESSAGES,
         ReadPositionTag.CUSTOM_TIMELINE,
+        ReadPositionTag.LIST_TIMELINE,
 })
 @Retention(RetentionPolicy.SOURCE)
 public @interface ReadPositionTag {
     String HOME_TIMELINE = "home_timeline";
+    String PUBLIC_TIMELINE = "public_timeline";
+    String GROUP_TIMELINE = "group_timeline";
+    String NETWORK_PUBLIC_TIMELINE = "network_public_timeline";
     String ACTIVITIES_ABOUT_ME = "activities_about_me";
     String DIRECT_MESSAGES = "direct_messages";
     String CUSTOM_TIMELINE = "custom_timeline";
+    String LIST_TIMELINE = "list_timeline";
 }

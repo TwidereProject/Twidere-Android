@@ -80,7 +80,7 @@ import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.text.twitter.ReplyTextAndMentions
 import org.mariotaku.twidere.extension.text.twitter.extractReplyTextAndMentions
 import org.mariotaku.twidere.fragment.*
-import org.mariotaku.twidere.fragment.PermissionRequestDialog.PermissionRequestCancelCallback
+import org.mariotaku.twidere.fragment.PermissionRequestDialogFragment.PermissionRequestCancelCallback
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.model.draft.UpdateStatusActionExtras
@@ -92,7 +92,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.service.LengthyOperationsService
 import org.mariotaku.twidere.task.compose.AbsAddMediaTask
 import org.mariotaku.twidere.task.compose.AbsDeleteMediaTask
-import org.mariotaku.twidere.task.twitter.UpdateStatusTask
+import org.mariotaku.twidere.task.status.UpdateStatusTask
 import org.mariotaku.twidere.text.MarkForDeleteSpan
 import org.mariotaku.twidere.text.style.EmojiSpan
 import org.mariotaku.twidere.util.*
@@ -108,7 +108,6 @@ import org.mariotaku.twidere.view.ShapedImageView
 import org.mariotaku.twidere.view.helper.SimpleItemTouchHelperCallback
 import org.mariotaku.twidere.view.holder.compose.MediaPreviewViewHolder
 import java.io.IOException
-import java.lang.ref.WeakReference
 import java.text.Normalizer
 import java.util.*
 import javax.inject.Inject
@@ -583,8 +582,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 startActivityForResult(provider.createSetScheduleIntent(), REQUEST_SET_SCHEDULE)
             }
             R.id.add_gif -> {
-                val provider = gifShareProvider ?: return true
-                startActivityForResult(provider.createGifSelectorIntent(), REQUEST_ADD_GIF)
+                if (!gifShareProvider.supported) return true
+                startActivityForResult(gifShareProvider.createGifSelectorIntent(), REQUEST_ADD_GIF)
             }
             R.id.edit_summary -> {
                 editSummaryEnabled = true
@@ -861,7 +860,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val displayDoneIcon = isAccountSelectorVisible
 
         if (single != null) {
-            accountsCount.setText(null)
+            accountsCount.text = null
 
             if (displayDoneIcon) {
                 Glide.clear(accountProfileImage)
@@ -878,7 +877,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
             accountProfileImage.setBorderColor(single.color)
         } else {
-            accountsCount.setText(accounts.size.toString())
+            accountsCount.text = accounts.size.toString()
 
             Glide.clear(accountProfileImage)
             if (displayDoneIcon) {
@@ -1445,7 +1444,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
         } else {
             val permissions = arrayOf(AndroidPermission.ACCESS_COARSE_LOCATION, AndroidPermission.ACCESS_FINE_LOCATION)
-            PermissionRequestDialog.show(supportFragmentManager, getString(R.string.message_permission_request_compose_location),
+            PermissionRequestDialogFragment.show(supportFragmentManager, getString(R.string.message_permission_request_compose_location),
                     permissions, REQUEST_ATTACH_LOCATION_PERMISSION)
         }
     }
@@ -1920,11 +1919,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private class ComposeLocationListener(activity: ComposeActivity) : LocationListener {
 
-        private val activityRef = WeakReference(activity)
+        private val activity by weak(activity)
 
         override fun onLocationChanged(location: Location) {
-            val activity = activityRef.get() ?: return
-            activity.setRecentLocation(ParcelableLocationUtils.fromLocation(location))
+            activity?.setRecentLocation(ParcelableLocationUtils.fromLocation(location))
         }
 
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {

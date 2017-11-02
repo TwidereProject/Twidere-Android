@@ -24,7 +24,7 @@ import android.support.v7.preference.EditTextPreference
 import android.support.v7.preference.PreferenceFragmentCompat
 import android.util.AttributeSet
 
-import org.mariotaku.twidere.fragment.ThemedEditTextPreferenceDialogFragmentCompat
+import org.mariotaku.twidere.fragment.preference.ThemedEditTextPreferenceDialogFragmentCompat
 import org.mariotaku.twidere.preference.iface.IDialogPreference
 
 /**

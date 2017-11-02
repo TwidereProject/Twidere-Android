@@ -23,7 +23,7 @@ import android.content.Context
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.TabAccountFlags
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_QUERY
-import org.mariotaku.twidere.fragment.statuses.StatusesSearchFragment
+import org.mariotaku.twidere.fragment.timeline.SearchTimelineFragment
 import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.model.tab.StringHolder
@@ -43,7 +43,7 @@ class SearchTabConfiguration : TabConfiguration() {
 
     override val accountFlags = TabAccountFlags.FLAG_HAS_ACCOUNT or TabAccountFlags.FLAG_ACCOUNT_REQUIRED
 
-    override val fragmentClass = StatusesSearchFragment::class.java
+    override val fragmentClass = SearchTimelineFragment::class.java
 
     override fun getExtraConfigurations(context: Context) = arrayOf(
             StringExtraConfiguration(EXTRA_QUERY, R.string.search_statuses, null).maxLines(1).headerTitle(R.string.query)

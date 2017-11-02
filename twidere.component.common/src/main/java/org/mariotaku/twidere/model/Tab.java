@@ -45,9 +45,6 @@ import org.mariotaku.twidere.model.util.TabArgumentsFieldConverter;
 import org.mariotaku.twidere.model.util.TabExtrasFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
 
-/**
- * Created by mariotaku on 16/3/6.
- */
 @ParcelablePlease(allFields = false)
 @CursorObject(valuesCreator = true, tableInfo = true)
 @JsonObject

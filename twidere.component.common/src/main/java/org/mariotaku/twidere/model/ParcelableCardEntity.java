@@ -26,16 +26,15 @@ import android.support.annotation.Nullable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.hannesdorfmann.parcelableplease.ParcelBagger;
 import com.hannesdorfmann.parcelableplease.annotation.Bagger;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import org.mariotaku.microblog.library.twitter.model.CardEntity;
+import org.mariotaku.microblog.library.twitter.model.util.ParcelMapBagger;
 import org.mariotaku.twidere.model.util.UserKeyConverter;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -106,33 +105,9 @@ public final class ParcelableCardEntity implements Parcelable {
         ParcelableCardEntityParcelablePlease.writeToParcel(this, dest, flags);
     }
 
-    public static class ValueMapConverter implements ParcelBagger<Map<String, ParcelableBindingValue>> {
-
-        @Override
-        public void write(Map<String, ParcelableBindingValue> map, Parcel out, int flags) {
-            if (map != null) {
-                final int size = map.size();
-                out.writeInt(size);
-                for (Map.Entry<String, ParcelableBindingValue> entry : map.entrySet()) {
-                    out.writeString(entry.getKey());
-                    out.writeParcelable(entry.getValue(), flags);
-                }
-            } else {
-                out.writeInt(-1);
-            }
-        }
-
-        @Override
-        public Map<String, ParcelableBindingValue> read(Parcel in) {
-            final int size = in.readInt();
-            if (size == -1) return null;
-            final Map<String, ParcelableBindingValue> map = new HashMap<>(size);
-            for (int i = 0; i < size; i++) {
-                final String key = in.readString();
-                final ParcelableBindingValue value = in.readParcelable(ParcelableBindingValue.class.getClassLoader());
-                map.put(key, value);
-            }
-            return map;
+    public static class ValueMapConverter extends ParcelMapBagger<ParcelableBindingValue> {
+        public ValueMapConverter() {
+            super(ParcelableBindingValue.class);
         }
 
     }

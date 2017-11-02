@@ -20,6 +20,8 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.ListPreference;
 
+import org.mariotaku.twidere.fragment.preference.ThemedPreferenceDialogFragmentCompat;
+
 public class ThemedListPreferenceDialogFragmentCompat extends ThemedPreferenceDialogFragmentCompat {
     private int mClickedDialogEntryIndex;
 

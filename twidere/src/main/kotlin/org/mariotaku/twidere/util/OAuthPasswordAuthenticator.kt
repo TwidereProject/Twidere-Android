@@ -403,9 +403,9 @@ class OAuthPasswordAuthenticator(
             if (!response.isRedirect) {
                 return response
             }
-            val location = response.header("Location")
+            val location = response.header("Location")?.takeIf(String::isNotEmpty)
             val builder = response.newBuilder()
-            if (!TextUtils.isEmpty(location) && !endpoint.checkEndpoint(location)) {
+            if (location != null && !endpoint.checkEndpoint(location)) {
                 val originalLocation = HttpUrl.parse("https://api.twitter.com/")?.resolve(location)!!
                 val locationBuilder = HttpUrl.parse(endpoint.url)!!.newBuilder()
                 for (pathSegments in originalLocation.pathSegments()) {

@@ -79,10 +79,9 @@ import org.mariotaku.twidere.extension.model.media_type
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.model.originalId
 import org.mariotaku.twidere.extension.view.calculateSpaceItemHeight
-import org.mariotaku.twidere.fragment.AbsStatusesFragment
-import org.mariotaku.twidere.fragment.AbsStatusesFragment.Companion.handleActionClick
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BaseFragment
+import org.mariotaku.twidere.fragment.timeline.AbsTimelineFragment
 import org.mariotaku.twidere.loader.ParcelableStatusLoader
 import org.mariotaku.twidere.loader.statuses.ConversationLoader
 import org.mariotaku.twidere.model.*
@@ -103,7 +102,6 @@ import org.mariotaku.twidere.util.RecyclerViewScrollHandler.RecyclerViewCallback
 import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener
 import org.mariotaku.twidere.view.ExtendedRecyclerView
 import org.mariotaku.twidere.view.holder.GapViewHolder
-import org.mariotaku.twidere.view.holder.StatusViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder.StatusClickListener
 import java.lang.ref.WeakReference
@@ -139,7 +137,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             adapter.updateItemDecoration()
             val status: ParcelableStatus = args.getParcelable(EXTRA_STATUS)
             val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-            return ConversationLoader(activity, status, adapter.getData(), true, loadingMore).apply {
+            return ConversationLoader(activity, status, adapter.data, true, loadingMore).apply {
                 pagination = args.toPagination()
             }
         }
@@ -218,9 +216,9 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     IntentUtils.openStatus(activity, accountKey, status.id)
                 }
             }
-            AbsStatusesFragment.REQUEST_FAVORITE_SELECT_ACCOUNT,
-            AbsStatusesFragment.REQUEST_RETWEET_SELECT_ACCOUNT -> {
-                AbsStatusesFragment.handleActionActivityResult(this, requestCode, resultCode, data)
+            AbsTimelineFragment.REQUEST_FAVORITE_SELECT_ACCOUNT,
+            AbsTimelineFragment.REQUEST_RETWEET_SELECT_ACCOUNT -> {
+                AbsTimelineFragment.handleActionActivityResult(this, requestCode, resultCode, data)
             }
         }
     }
@@ -232,6 +230,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
+        linkHandlerTitle = getString(R.string.title_status)
         Utils.setNdefPushMessageCallback(activity, CreateNdefMessageCallback {
             val status = status ?: return@CreateNdefMessageCallback null
             NdefMessage(arrayOf(NdefRecord.createUri(LinkCreator.getStatusWebLink(status))))
@@ -278,13 +277,12 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     override fun onItemActionClick(holder: ViewHolder, id: Int, position: Int) {
         val status = adapter.getStatus(position)
-        handleActionClick(this@StatusFragment, id, status, holder as StatusViewHolder)
+        AbsTimelineFragment.handleActionClick(this, id, status, holder as IStatusViewHolder)
     }
-
 
     override fun onItemActionLongClick(holder: RecyclerView.ViewHolder, id: Int, position: Int): Boolean {
         val status = adapter.getStatus(position)
-        return AbsStatusesFragment.handleActionLongClick(this, status, adapter.getItemId(position), id)
+        return AbsTimelineFragment.handleActionLongClick(this, status, adapter.getItemId(position), id)
     }
 
     override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
@@ -340,7 +338,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         if (position == -1) return false
         val status = adapter.getStatus(position)
         val action = handler.getKeyAction(CONTEXT_TAG_STATUS, keyCode, event, metaState) ?: return false
-        return AbsStatusesFragment.handleKeyboardShortcutAction(this, action, status, position)
+        return AbsTimelineFragment.handleKeyboardShortcutAction(this, action, status, position)
     }
 
     override fun isKeyboardShortcutHandled(handler: KeyboardShortcutsHandler, keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
@@ -380,7 +378,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     args.putParcelable(EXTRA_STATUS, status)
                 }
                 adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.BOTH
-                adapter.setData(null)
+                adapter.data = null
                 loadConversation(status, null, null)
                 loadActivity(status)
 
@@ -510,8 +508,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     private fun setConversation(data: List<ParcelableStatus>?) {
         val readPosition = saveReadPosition()
-        val changed = adapter.setData(data)
-        hasMoreConversation = data != null && changed
+        adapter.data = data
+        hasMoreConversation = data != null
         restoreReadPosition(readPosition)
     }
 
@@ -571,8 +569,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         val status = adapter.getStatus(contextMenuInfo.position)
         val inflater = MenuInflater(context)
         inflater.inflate(R.menu.action_status, menu)
-        MenuUtils.setupForStatus(context, menu, preferences, twitterWrapper, userColorNameManager,
-                status)
+        MenuUtils.setupForStatus(context, menu, preferences, userColorNameManager, status)
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
@@ -737,7 +734,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                                 Expression.equalsArgs(Statuses.ID),
                                 Expression.equalsArgs(Statuses.RETWEET_ID)))
                 val statusWhereArgs = arrayOf(accountKey.toString(), statusId, statusId)
-                cr.update(Statuses.CONTENT_URI, countValues, statusWhere.sql, statusWhereArgs)
+                cr.update(Statuses.HomeTimeline.CONTENT_URI, countValues, statusWhere.sql, statusWhereArgs)
                 cr.updateStatusInfo(DataStoreUtils.STATUSES_ACTIVITIES_URIS, Statuses.COLUMNS,
                         accountKey, statusId, ParcelableStatus::class.java) { item ->
                     item.favorite_count = activitySummary.favoriteCount

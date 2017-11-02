@@ -21,16 +21,14 @@ package org.mariotaku.twidere.util
 
 import android.accounts.AccountManager
 import android.support.test.InstrumentationRegistry
+import nl.komponents.kovenant.Promise
+import nl.komponents.kovenant.task
 import org.mariotaku.twidere.extension.model.updateDetails
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.support.removeAccountSupport
+import java.lang.Exception
 
-import com.emojidex.twidere.test.R
-
-/**
- * Created by mariotaku on 2017/4/16.
- */
 object TestAccountUtils {
 
     private val accountResources = intArrayOf(R.raw.account_4223092274_twitter_com)
@@ -52,10 +50,12 @@ object TestAccountUtils {
         }
     }
 
-    fun removeTestAccounts() {
+    fun removeTestAccounts(): Promise<Unit, Exception> {
         val targetContext = InstrumentationRegistry.getTargetContext()
         val am = AccountManager.get(targetContext)
         val existingAccounts = AccountUtils.getAllAccountDetails(am, false)
-        existingAccounts.filter { it.test }.forEach { am.removeAccountSupport(it.account) }
+        return task {
+            existingAccounts.filter { it.test }.forEach { am.removeAccountSupport(it.account).result }
+        }
     }
 }

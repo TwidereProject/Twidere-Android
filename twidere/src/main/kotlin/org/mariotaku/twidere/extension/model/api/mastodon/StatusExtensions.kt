@@ -24,16 +24,20 @@ import android.text.Editable
 import android.text.Spanned
 import org.mariotaku.ktextension.isNotNullOrEmpty
 import org.mariotaku.ktextension.mapToArray
+import org.mariotaku.microblog.library.mastodon.model.Emoji
 import org.mariotaku.microblog.library.mastodon.model.Status
 import org.mariotaku.twidere.extension.model.addFilterFlag
 import org.mariotaku.twidere.extension.model.api.isHtml
 import org.mariotaku.twidere.extension.model.api.spanItems
 import org.mariotaku.twidere.extension.model.updateFilterInfo
+import org.mariotaku.twidere.extension.text.appendCompat
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.text.AcctMentionSpan
 import org.mariotaku.twidere.text.HashtagSpan
+import org.mariotaku.twidere.text.placeholder.CustomEmojiShortCodeSpan
 import org.mariotaku.twidere.util.HtmlEscapeHelper
 import org.mariotaku.twidere.util.HtmlSpanBuilder
+import org.mariotaku.twidere.util.emoji.EmojiOneShortCodeMap
 import org.mariotaku.twidere.util.emoji.EmojioneTranslator
 
 fun Status.toParcelable(details: AccountDetails): ParcelableStatus {
@@ -95,7 +99,8 @@ fun Status.applyTo(accountKey: UserKey, result: ParcelableStatus) {
     result.user_profile_image_url = account.avatar
     result.user_is_protected = account.isLocked
     // Mastodon has HTML formatted content text
-    val html = HtmlSpanBuilder.fromHtml(status.content, status.content, MastodonSpanProcessor)
+    val html = HtmlSpanBuilder.fromHtml(status.content, status.content,
+            MastodonSpanProcessor(status.emojis))
     result.text_unescaped = html?.toString()
     result.text_plain = result.text_unescaped
     result.spans = html?.spanItems
@@ -110,6 +115,11 @@ fun Status.applyTo(accountKey: UserKey, result: ParcelableStatus) {
     extras.summary_text = status.spoilerText?.let(EmojioneTranslator::translate)
     extras.visibility = status.visibility
     extras.external_url = status.url
+    extras.emojis = HashMap<String, CustomEmoji>().also { map ->
+        status.emojis?.forEach { emoji ->
+            map[emoji.shortCode] = emoji.toCustomEmoji()
+        }
+    }
 
     // Try to complete mastodon `in_reply_to` info
     val inReplyToMention = result.mentions?.firstOrNull {
@@ -129,6 +139,13 @@ fun Status.applyTo(accountKey: UserKey, result: ParcelableStatus) {
             accountUrl, reblog?.accountUrl))
 }
 
+private fun Emoji.toCustomEmoji(): CustomEmoji {
+    return CustomEmoji().also { ce ->
+        ce.url = url
+        ce.static_url = staticUrl
+    }
+}
+
 private fun calculateDisplayTextRange(text: String, spans: Array<SpanItem>?, media: Array<ParcelableMedia>?): IntArray? {
     if (spans == null || media == null) return null
     val lastMatch = spans.lastOrNull { span -> media.any { span.link == it.page_url } } ?: return null
@@ -140,7 +157,7 @@ private val Status.accountDescriptionUnescaped: String?
     get() {
         val note = account?.note ?: return null
         return if (note.isHtml) {
-            HtmlSpanBuilder.fromHtml(note, note, MastodonSpanProcessor).toString()
+            HtmlSpanBuilder.fromHtml(note, note, MastodonSpanProcessor()).toString()
         } else {
             HtmlEscapeHelper.unescape(note)
         }
@@ -149,12 +166,30 @@ private val Status.accountDescriptionUnescaped: String?
 private val Status.accountUrl: String?
     get() = account?.url
 
-object MastodonSpanProcessor : HtmlSpanBuilder.SpanProcessor {
+class MastodonSpanProcessor(val customEmojis: Array<Emoji>? = null) : HtmlSpanBuilder.SpanProcessor {
 
     override fun appendText(text: Editable, buffer: CharArray, start: Int, len: Int,
             info: HtmlSpanBuilder.TagInfo?): Boolean {
         val unescaped = HtmlEscapeHelper.unescape(String(buffer, start, len))
-        text.append(EmojioneTranslator.translate(unescaped))
+        var index = 0
+        EmojioneTranslator.shortCodePattern.findAll(unescaped).forEach { mr ->
+            text.append(unescaped, index, mr.range.start)
+            index = mr.range.endInclusive + 1
+            val matchValue = mr.value
+            val mappedEmoji = EmojiOneShortCodeMap[matchValue]
+            if (mappedEmoji != null) {
+                text.append(mappedEmoji)
+            } else {
+                val shortCode = matchValue.substring(1, matchValue.length - 1)
+                if (customEmojis?.any { emoji -> emoji.shortCode == shortCode } == true) {
+                    text.appendCompat(matchValue, CustomEmojiShortCodeSpan(shortCode),
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                } else {
+                    text.append(matchValue)
+                }
+            }
+        }
+        text.append(unescaped, index, unescaped.length)
         return true
     }
 

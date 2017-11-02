@@ -24,10 +24,7 @@ import android.support.v4.app.Fragment
 
 import org.mariotaku.twidere.fragment.OpenStreetMapViewerFragment
 
-/**
- * Created by mariotaku on 15/4/27.
- */
-class OSMMapFragmentFactory : MapFragmentFactory() {
+object OSMMapFragmentFactory : MapFragmentFactory {
     override fun createMapFragment(context: Context): Fragment {
         return OpenStreetMapViewerFragment()
     }

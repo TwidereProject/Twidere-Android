@@ -35,10 +35,6 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.tab.impl.*
 
-/**
- * Created by mariotaku on 2016/11/27.
- */
-
 abstract class TabConfiguration {
 
     abstract val name: StringHolder
@@ -93,7 +89,7 @@ abstract class TabConfiguration {
             this.title = title
         }
 
-        protected constructor(key: String, titleRes: Int) :this(key, StringHolder.resource(titleRes))
+        protected constructor(key: String, titleRes: Int) : this(key, StringHolder.resource(titleRes))
 
         fun summary(summary: StringHolder): ExtraConfiguration {
             this.summary = summary
@@ -150,35 +146,32 @@ abstract class TabConfiguration {
 
     companion object {
 
-        fun all(): List<Pair<String, TabConfiguration>> {
-            return allTypes().mapNotNull {
-                val conf = ofType(it) ?: return@mapNotNull null
-                return@mapNotNull Pair(it, conf)
-            }
-        }
+        val allTypes: Array<String> = arrayOf(CustomTabType.HOME_TIMELINE, CustomTabType.NOTIFICATIONS_TIMELINE,
+                CustomTabType.TRENDS_SUGGESTIONS, CustomTabType.DIRECT_MESSAGES,
+                CustomTabType.FAVORITES, CustomTabType.USER_TIMELINE, CustomTabType.USER_MEDIA_TIMELINE,
+                CustomTabType.SEARCH_STATUSES, CustomTabType.LIST_TIMELINE,
+                CustomTabType.PUBLIC_TIMELINE, CustomTabType.NETWORK_PUBLIC_TIMELINE)
 
-        fun allTypes(): Array<String> {
-            return arrayOf(CustomTabType.HOME_TIMELINE, CustomTabType.NOTIFICATIONS_TIMELINE,
-                    CustomTabType.TRENDS_SUGGESTIONS, CustomTabType.DIRECT_MESSAGES,
-                    CustomTabType.FAVORITES, CustomTabType.USER_TIMELINE,
-                    CustomTabType.SEARCH_STATUSES, CustomTabType.LIST_TIMELINE,
-                    CustomTabType.PUBLIC_TIMELINE, CustomTabType.NETWORK_PUBLIC_TIMELINE)
+        val all: List<Pair<String, TabConfiguration>> = allTypes.mapNotNull {
+            val conf = ofType(it) ?: return@mapNotNull null
+            return@mapNotNull Pair(it, conf)
         }
 
         fun ofType(@CustomTabType type: String): TabConfiguration? {
-            when (type) {
-                CustomTabType.HOME_TIMELINE -> return HomeTabConfiguration()
-                CustomTabType.NOTIFICATIONS_TIMELINE -> return InteractionsTabConfiguration()
-                CustomTabType.DIRECT_MESSAGES -> return MessagesTabConfiguration()
-                CustomTabType.LIST_TIMELINE -> return UserListTimelineTabConfiguration()
-                CustomTabType.FAVORITES -> return FavoriteTimelineTabConfiguration()
-                CustomTabType.USER_TIMELINE -> return UserTimelineTabConfiguration()
-                CustomTabType.TRENDS_SUGGESTIONS -> return TrendsTabConfiguration()
-                CustomTabType.SEARCH_STATUSES -> return SearchTabConfiguration()
-                CustomTabType.PUBLIC_TIMELINE -> return PublicTimelineTabConfiguration()
-                CustomTabType.NETWORK_PUBLIC_TIMELINE -> return NetworkPublicTimelineTabConfiguration()
+            return when (type) {
+                CustomTabType.HOME_TIMELINE -> HomeTabConfiguration()
+                CustomTabType.NOTIFICATIONS_TIMELINE -> InteractionsTabConfiguration()
+                CustomTabType.DIRECT_MESSAGES -> MessagesTabConfiguration()
+                CustomTabType.LIST_TIMELINE -> UserListTimelineTabConfiguration()
+                CustomTabType.FAVORITES -> FavoriteTimelineTabConfiguration()
+                CustomTabType.USER_TIMELINE -> UserTimelineTabConfiguration()
+                CustomTabType.USER_MEDIA_TIMELINE -> UserMediaTimelineTabConfiguration()
+                CustomTabType.TRENDS_SUGGESTIONS -> TrendsTabConfiguration()
+                CustomTabType.SEARCH_STATUSES -> SearchTabConfiguration()
+                CustomTabType.PUBLIC_TIMELINE -> PublicTimelineTabConfiguration()
+                CustomTabType.NETWORK_PUBLIC_TIMELINE -> NetworkPublicTimelineTabConfiguration()
+                else -> null
             }
-            return null
         }
     }
 

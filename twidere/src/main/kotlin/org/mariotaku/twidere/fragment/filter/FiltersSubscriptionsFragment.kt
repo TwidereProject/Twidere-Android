@@ -59,6 +59,7 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
+        linkHandlerTitle = getString(R.string.title_manage_filter_subscriptions)
 
         adapter = FilterSubscriptionsAdapter(context)
         listView.adapter = adapter

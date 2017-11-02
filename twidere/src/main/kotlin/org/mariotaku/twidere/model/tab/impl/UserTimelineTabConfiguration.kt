@@ -23,7 +23,7 @@ import android.content.Context
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.TabAccountFlags
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER
-import org.mariotaku.twidere.fragment.statuses.UserTimelineFragment
+import org.mariotaku.twidere.fragment.timeline.UserTimelineFragment
 import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.model.tab.StringHolder
@@ -31,13 +31,10 @@ import org.mariotaku.twidere.model.tab.TabConfiguration
 import org.mariotaku.twidere.model.tab.argument.UserArguments
 import org.mariotaku.twidere.model.tab.conf.UserExtraConfiguration
 
-/**
- * Created by mariotaku on 2016/11/27.
- */
 
 class UserTimelineTabConfiguration : TabConfiguration() {
 
-    override val name = StringHolder.resource(R.string.users_statuses)
+    override val name = StringHolder.resource(R.string.title_user_timeline)
 
     override val icon = DrawableHolder.Builtin.USER
 

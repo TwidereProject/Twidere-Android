@@ -35,7 +35,7 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.PaginatedList
-import org.mariotaku.twidere.util.DataStoreUtils
+import org.mariotaku.twidere.util.getFilteredUserKeys
 
 class UserBlocksLoader(
         context: Context,
@@ -71,7 +71,7 @@ class UserBlocksLoader(
     }
 
     override fun onLoadInBackground(): List<ParcelableUser> {
-        filteredUsers = DataStoreUtils.getFilteredUserKeys(context, FilterScope.ALL)
+        filteredUsers = context.contentResolver.getFilteredUserKeys(FilterScope.ALL)
         return super.onLoadInBackground()
     }
 

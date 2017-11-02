@@ -29,6 +29,7 @@ import org.mariotaku.messagebubbleview.library.MessageBubbleView
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.MessagesConversationAdapter
 import org.mariotaku.twidere.extension.model.applyTo
+import org.mariotaku.twidere.extension.setVisible
 import org.mariotaku.twidere.model.ParcelableMessage
 import org.mariotaku.twidere.model.SpanItem
 import org.mariotaku.twidere.util.ThemeUtils
@@ -64,6 +65,7 @@ class MessageViewHolder(itemView: View, adapter: MessagesConversationAdapter) : 
 
     override fun display(message: ParcelableMessage, showDate: Boolean) {
         super.display(message, showDate)
+        val requestManager = adapter.requestManager
 
         messageBubble.bubbleColor = if (message.is_outgoing) {
             adapter.bubbleColorOutgoing
@@ -102,22 +104,18 @@ class MessageViewHolder(itemView: View, adapter: MessagesConversationAdapter) : 
 
 
         text.spannable = SpannableStringBuilder.valueOf(message.text_unescaped).apply {
-            message.spans?.applyTo(this)
+            message.spans?.applyTo(this, null, requestManager, text)
             adapter.linkify.applyAllLinks(this, message.account_key, layoutPosition.toLong(),
                     false, adapter.linkHighlightingStyle, true)
         }
 
-        text.visibility = if (hideText || text.empty) {
-            View.GONE
-        } else {
-            View.VISIBLE
-        }
+        text.setVisible(!hideText && !text.empty)
 
         if (message.media.isNullOrEmpty()) {
             mediaPreview.visibility = View.GONE
         } else {
             mediaPreview.visibility = View.VISIBLE
-            mediaPreview.displayMedia(adapter.requestManager, message.media, message.account_key,
+            mediaPreview.displayMedia(requestManager, message.media, message.account_key,
                     extraId = layoutPosition.toLong(), withCredentials = true,
                     mediaClickListener = adapter.mediaClickListener)
         }

@@ -30,7 +30,7 @@ import org.mariotaku.twidere.model.timeline.TimelineFilter
  * Created by mariotaku on 2017/3/31.
  */
 
-class TimelineFilterHeaderViewHolder(val adapter: IStatusesAdapter<*>, itemView: View) : RecyclerView.ViewHolder(itemView) {
+class TimelineFilterHeaderViewHolder(val adapter: IStatusesAdapter, itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     private val filterLabel = itemView.filterLabel
     private val filterButton = itemView.filterButton

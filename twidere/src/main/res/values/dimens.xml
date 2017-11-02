@@ -31,6 +31,7 @@
     <dimen name="drawer_width_home">288dp</dimen>
 
     <dimen name="element_size_mlarge">64dp</dimen>
+    <dimen name="element_size_large">72dp</dimen>
     <dimen name="element_size_msmall">36dp</dimen>
     <dimen name="element_size_normal">48dp</dimen>
     <dimen name="element_size_quick_search_bar_item_icon">40dp</dimen>
@@ -80,6 +81,7 @@
     <dimen name="icon_size_profile_type_detail">22dp</dimen>
     <dimen name="icon_size_profile_type_user_profile">26dp</dimen>
     <dimen name="icon_size_status_profile_image">48dp</dimen>
+    <dimen name="icon_size_large_media_status_profile_image">32dp</dimen>
     <dimen name="icon_size_user_profile">84dp</dimen>
     <dimen name="icon_size_conversation_info">64dp</dimen>
 

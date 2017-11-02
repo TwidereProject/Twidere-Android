@@ -117,7 +117,7 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     @Inject
     lateinit var timelineSyncManagerFactory: TimelineSyncManager.Factory
     @Inject
-    lateinit var gifShareProviderFactory: GifShareProvider.Factory
+    lateinit var gifShareProvider: GifShareProvider
     @Inject
     lateinit var defaultFeatures: DefaultFeatures
     @Inject
@@ -128,6 +128,8 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     lateinit var taskServiceRunner: TaskServiceRunner
     @Inject
     lateinit var promotionService: PromotionService
+    @Inject
+    lateinit var mapFragmentFactory: MapFragmentFactory
 
     lateinit var requestManager: RequestManager
         private set
@@ -137,9 +139,6 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
 
     protected val timelineSyncManager: TimelineSyncManager?
         get() = timelineSyncManagerFactory.get()
-
-    protected val gifShareProvider: GifShareProvider?
-        get() = gifShareProviderFactory.newInstance(this)
 
     protected val isDialogTheme: Boolean
         get() = ThemeUtils.getBooleanFromAttribute(this, R.attr.isDialogTheme)
@@ -330,7 +329,7 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
             }
 
         }
-        actionHelper.dispatchOnPause()
+        actionHelper.dispatchOnPause(this)
         super.onPause()
     }
 
@@ -368,6 +367,9 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
         return actionHelper.executeAfterFragmentResumed(this, useHandler, action)
     }
 
+    override fun executeBeforeFragmentPaused(useHandler: Boolean, action: (BaseActivity) -> Unit): Promise<Unit, Exception> {
+        return actionHelper.executeBeforeFragmentPaused(this, useHandler, action)
+    }
 
     protected open val shouldApplyWindowBackground: Boolean
         get() {

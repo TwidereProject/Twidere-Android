@@ -28,7 +28,7 @@ import android.support.v4.view.MenuItemCompat
 import android.support.v7.widget.ActionMenuView
 import android.view.MenuItem
 import android.view.View
-import org.mariotaku.ktextension.weak
+import org.mariotaku.ktextension.toWeak
 import org.mariotaku.twidere.extension.view.findItemView
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable.Style
@@ -75,7 +75,7 @@ class FavoriteItemProvider(context: Context) : ActionProvider(context) {
     }
 
     private class ViewCallback(view: View) : Drawable.Callback {
-        private val viewRef = view.weak()
+        private val viewRef = view.toWeak()
 
         override fun invalidateDrawable(who: Drawable) {
             val view = viewRef.get() ?: return

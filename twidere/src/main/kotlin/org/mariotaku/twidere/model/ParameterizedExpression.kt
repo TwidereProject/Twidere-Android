@@ -20,11 +20,27 @@
 package org.mariotaku.twidere.model
 
 import org.mariotaku.sqliteqb.library.Expression
+import java.util.*
 
-/**
- * Created by mariotaku on 16/6/22.
- */
 data class ParameterizedExpression(var expression: Expression, val parameters: Array<String>) {
     val sql: String
         get() = expression.sql
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ParameterizedExpression
+
+        if (expression != other.expression) return false
+        if (!Arrays.equals(parameters, other.parameters)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = expression.hashCode()
+        result = 31 * result + Arrays.hashCode(parameters)
+        return result
+    }
 }

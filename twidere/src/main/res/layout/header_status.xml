@@ -106,9 +106,11 @@
                 android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:nv_primaryTextColor="?android:textColorPrimary"
-                app:nv_secondaryTextColor="?android:textColorSecondary"
-                app:nv_twoLine="false"/>
+                app:tltvPrimaryTextColor="?android:textColorPrimary"
+                app:tltvSecondaryTextColor="?android:textColorSecondary"
+                app:tltvTwoLine="false"
+                tools:tltvPrimaryText="Name"
+                tools:tltvSecondaryText="\@screenname"/>
 
             <org.mariotaku.twidere.view.TimelineContentTextView
                 android:id="@+id/timeSource"
@@ -316,9 +318,9 @@
             android:paddingLeft="@dimen/element_spacing_normal"
             android:paddingRight="@dimen/element_spacing_normal"
             android:visibility="gone"
-            app:nv_primaryTextColor="?android:textColorPrimary"
-            app:nv_secondaryTextColor="?android:textColorSecondary"
-            app:nv_twoLine="false"
+            app:tltvPrimaryTextColor="?android:textColorPrimary"
+            app:tltvSecondaryTextColor="?android:textColorSecondary"
+            app:tltvTwoLine="false"
             tools:visibility="visible"/>
 
         <org.mariotaku.twidere.view.TimelineContentTextView

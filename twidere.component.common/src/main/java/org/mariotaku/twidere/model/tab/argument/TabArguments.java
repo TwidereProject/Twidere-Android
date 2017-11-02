@@ -34,9 +34,6 @@ import org.mariotaku.twidere.model.UserKey;
 import java.io.IOException;
 import java.util.Arrays;
 
-/**
- * Created by mariotaku on 16/3/6.
- */
 @JsonObject
 public class TabArguments implements TwidereConstants {
     @JsonField(name = "account_id")
@@ -107,6 +104,7 @@ public class TabArguments implements TwidereConstants {
                 return LoganSquare.parse(json, TabArguments.class);
             }
             case CustomTabType.USER_TIMELINE:
+            case CustomTabType.USER_MEDIA_TIMELINE:
             case CustomTabType.FAVORITES: {
                 return LoganSquare.parse(json, UserArguments.class);
             }

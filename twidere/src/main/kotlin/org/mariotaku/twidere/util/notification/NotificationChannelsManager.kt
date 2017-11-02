@@ -84,22 +84,27 @@ object NotificationChannelsManager {
             val pref = holder.preferences
             val ucnm = holder.userColorNameManager
 
-            val accounts = AccountUtils.getAllAccountDetails(am, false)
+            val accounts = AccountUtils.getAccounts(am)
             val specs = NotificationChannelSpec.values()
 
             val addedChannels = mutableListOf<String>()
             val addedGroups = mutableListOf<String>()
 
             accounts.forEach { account ->
-                val group = NotificationChannelGroup(account.key.notificationChannelGroupId(),
-                        ucnm.getDisplayName(account.user, pref[nameFirstKey]))
+                val details = try {
+                    AccountUtils.getAccountDetails(am, account, false)
+                } catch (e: Exception) {
+                    return@forEach
+                }
+                val group = NotificationChannelGroup(details.key.notificationChannelGroupId(),
+                        ucnm.getDisplayName(details.user, pref[nameFirstKey]))
 
                 addedGroups.add(group.id)
                 nm.createNotificationChannelGroup(group)
 
                 for (spec in specs) {
                     if (!spec.grouped) continue
-                    val channel = NotificationChannel(account.key.notificationChannelId(spec.id),
+                    val channel = NotificationChannel(details.key.notificationChannelId(spec.id),
                             context.getString(spec.nameRes), spec.importance)
 
                     if (spec.descriptionRes != 0) {

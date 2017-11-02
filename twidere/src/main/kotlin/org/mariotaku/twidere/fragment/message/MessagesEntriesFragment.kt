@@ -49,6 +49,7 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_TYPES
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
+import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.model.getTitle
 import org.mariotaku.twidere.extension.model.user
 import org.mariotaku.twidere.fragment.AbsContentListRecyclerViewFragment
@@ -84,6 +85,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        linkHandlerTitle = getString(R.string.title_direct_messages)
         adapter.listener = this
         adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.END
         loaderManager.initLoader(loaderId, null, this)
@@ -157,7 +159,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
 
     override fun triggerRefresh(): Boolean {
         super.triggerRefresh()
-        twitterWrapper.getMessagesAsync(object : GetMessagesTask.RefreshNewTaskParam(context) {
+        twitterWrapper.getMessagesAsync(object : GetMessagesTask.RefreshNewParam(context) {
             override val accountKeys: Array<UserKey> = this@MessagesEntriesFragment.accountKeys
         })
         return true
@@ -168,7 +170,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
             return
         }
         setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.END)
-        twitterWrapper.getMessagesAsync(object : GetMessagesTask.LoadMoreEntriesTaskParam(context) {
+        twitterWrapper.getMessagesAsync(object : GetMessagesTask.LoadMoreEntriesParam(context) {
             override val accountKeys: Array<UserKey> = this@MessagesEntriesFragment.accountKeys
         })
     }

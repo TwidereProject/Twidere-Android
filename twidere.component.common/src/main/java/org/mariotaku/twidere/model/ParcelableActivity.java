@@ -213,7 +213,6 @@ public class ParcelableActivity extends ParcelableStatus implements Parcelable {
                 ", spans=" + Arrays.toString(spans) +
                 ", quoted_spans=" + Arrays.toString(quoted_spans) +
                 ", account_color=" + account_color +
-                ", inserted_date=" + inserted_date +
                 ", filter_flags=" + filter_flags +
                 ", filter_users=" + Arrays.toString(filter_users) +
                 ", filter_sources=" + Arrays.toString(filter_sources) +
@@ -221,6 +220,7 @@ public class ParcelableActivity extends ParcelableStatus implements Parcelable {
                 ", filter_names=" + Arrays.toString(filter_names) +
                 ", filter_texts='" + filter_texts + '\'' +
                 ", filter_descriptions='" + filter_descriptions + '\'' +
+                ", tab_id=" + tab_id +
                 ", is_pinned_status=" + is_pinned_status +
                 ", is_filtered=" + is_filtered +
                 '}';

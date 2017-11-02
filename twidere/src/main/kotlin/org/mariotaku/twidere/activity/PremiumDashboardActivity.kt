@@ -80,7 +80,6 @@ class PremiumDashboardActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
-        extraFeaturesService.release()
         if (isFinishing) {
             // Make sure promotionsEnabled set
             preferences[promotionsEnabledKey] = preferences[promotionsEnabledKey]

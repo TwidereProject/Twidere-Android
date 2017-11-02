@@ -30,9 +30,6 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.util.support.TextViewSupport
 import org.mariotaku.twidere.view.iface.IIconActionButton
 
-/**
- * Created by mariotaku on 14/11/20.
- */
 class ActionIconThemedTextView(
         context: Context, attrs: AttributeSet? = null
 ) : FixedTextView(context, attrs), IIconActionButton {

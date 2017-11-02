@@ -42,13 +42,11 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.FilterScope
-import org.mariotaku.twidere.constant.IntentConstants
-import org.mariotaku.twidere.constant.databaseItemLimitKey
-import org.mariotaku.twidere.constant.filterPossibilitySensitiveStatusesKey
-import org.mariotaku.twidere.constant.filterUnavailableQuoteStatusesKey
+import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.model.tab.applyToSelection
 import org.mariotaku.twidere.extension.queryCount
 import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.extension.queryReference
@@ -65,83 +63,71 @@ import org.mariotaku.twidere.util.content.ContentResolverUtils
 import java.io.IOException
 import java.util.*
 
-/**
- * Created by mariotaku on 15/11/28.
- */
 object DataStoreUtils {
 
-    val STATUSES_URIS = arrayOf(Statuses.CONTENT_URI, CachedStatuses.CONTENT_URI)
+    val STATUSES_URIS = arrayOf(Statuses.HomeTimeline.CONTENT_URI, Statuses.Favorites.CONTENT_URI,
+            Statuses.UserTimeline.CONTENT_URI, Statuses.UserMediaTimeline.CONTENT_URI,
+            Statuses.ListTimeline.CONTENT_URI, Statuses.GroupTimeline.CONTENT_URI,
+            Statuses.Public.CONTENT_URI, Statuses.NetworkPublic.CONTENT_URI)
     val CACHE_URIS = arrayOf(CachedUsers.CONTENT_URI, CachedStatuses.CONTENT_URI,
             CachedHashtags.CONTENT_URI, CachedTrends.Local.CONTENT_URI)
     val MESSAGES_URIS = arrayOf(Messages.CONTENT_URI, Conversations.CONTENT_URI)
     val ACTIVITIES_URIS = arrayOf(Activities.AboutMe.CONTENT_URI)
-    val STATUSES_ACTIVITIES_URIS = arrayOf(Statuses.CONTENT_URI, CachedStatuses.CONTENT_URI,
-            Activities.AboutMe.CONTENT_URI)
+    val STATUSES_ACTIVITIES_URIS = STATUSES_URIS + ACTIVITIES_URIS
 
-    private val CONTENT_PROVIDER_URI_MATCHER = UriMatcher(UriMatcher.NO_MATCH)
+    private val tableMatcher = UriMatcher(UriMatcher.NO_MATCH)
 
     init {
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Statuses.CONTENT_PATH,
-                TABLE_ID_STATUSES)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Activities.AboutMe.CONTENT_PATH,
-                TABLE_ID_ACTIVITIES_ABOUT_ME)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Drafts.CONTENT_PATH,
-                TABLE_ID_DRAFTS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedUsers.CONTENT_PATH,
-                TABLE_ID_CACHED_USERS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Filters.Users.CONTENT_PATH,
-                TABLE_ID_FILTERED_USERS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Filters.Keywords.CONTENT_PATH,
-                TABLE_ID_FILTERED_KEYWORDS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Filters.Sources.CONTENT_PATH,
-                TABLE_ID_FILTERED_SOURCES)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Filters.Links.CONTENT_PATH,
-                TABLE_ID_FILTERED_LINKS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Filters.Subscriptions.CONTENT_PATH,
-                TABLE_ID_FILTERS_SUBSCRIPTIONS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Messages.CONTENT_PATH,
-                TABLE_ID_MESSAGES)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Conversations.CONTENT_PATH,
-                TABLE_ID_MESSAGES_CONVERSATIONS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedTrends.Local.CONTENT_PATH,
-                TABLE_ID_TRENDS_LOCAL)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Tabs.CONTENT_PATH,
-                TABLE_ID_TABS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedStatuses.CONTENT_PATH,
-                TABLE_ID_CACHED_STATUSES)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedHashtags.CONTENT_PATH,
-                TABLE_ID_CACHED_HASHTAGS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedRelationships.CONTENT_PATH,
-                TABLE_ID_CACHED_RELATIONSHIPS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, SavedSearches.CONTENT_PATH,
-                TABLE_ID_SAVED_SEARCHES)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, SearchHistory.CONTENT_PATH,
-                TABLE_ID_SEARCH_HISTORY)
+        tableMatcher.addPath(Statuses.HomeTimeline.CONTENT_PATH, TableIds.HOME_TIMELINE)
+        tableMatcher.addPath(Statuses.Public.CONTENT_PATH, TableIds.PUBLIC_TIMELINE)
+        tableMatcher.addPath(Statuses.NetworkPublic.CONTENT_PATH, TableIds.NETWORK_PUBLIC_TIMELINE)
 
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Permissions.CONTENT_PATH,
-                VIRTUAL_TABLE_ID_PERMISSIONS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedUsers.CONTENT_PATH_WITH_RELATIONSHIP + "/*",
-                VIRTUAL_TABLE_ID_CACHED_USERS_WITH_RELATIONSHIP)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedUsers.CONTENT_PATH_WITH_SCORE + "/*",
-                VIRTUAL_TABLE_ID_CACHED_USERS_WITH_SCORE)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Drafts.CONTENT_PATH_UNSENT,
-                VIRTUAL_TABLE_ID_DRAFTS_UNSENT)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Drafts.CONTENT_PATH_NOTIFICATIONS,
-                VIRTUAL_TABLE_ID_DRAFTS_NOTIFICATIONS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Drafts.CONTENT_PATH_NOTIFICATIONS + "/#",
-                VIRTUAL_TABLE_ID_DRAFTS_NOTIFICATIONS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Suggestions.AutoComplete.CONTENT_PATH,
-                VIRTUAL_TABLE_ID_SUGGESTIONS_AUTO_COMPLETE)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Suggestions.Search.CONTENT_PATH,
-                VIRTUAL_TABLE_ID_SUGGESTIONS_SEARCH)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, TwidereDataStore.CONTENT_PATH_DATABASE_PREPARE,
-                VIRTUAL_TABLE_ID_DATABASE_PREPARE)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, TwidereDataStore.CONTENT_PATH_NULL,
-                VIRTUAL_TABLE_ID_NULL)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, TwidereDataStore.CONTENT_PATH_EMPTY,
-                VIRTUAL_TABLE_ID_EMPTY)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, TwidereDataStore.CONTENT_PATH_RAW_QUERY + "/*",
-                VIRTUAL_TABLE_ID_RAW_QUERY)
+        tableMatcher.addPath(Statuses.Favorites.CONTENT_PATH, TableIds.FAVORITES)
+        tableMatcher.addPath(Statuses.UserTimeline.CONTENT_PATH, TableIds.USER_TIMELINE)
+        tableMatcher.addPath(Statuses.UserMediaTimeline.CONTENT_PATH, TableIds.USER_MEDIA_TIMELINE)
+        tableMatcher.addPath(Statuses.ListTimeline.CONTENT_PATH, TableIds.LIST_TIMELINE)
+        tableMatcher.addPath(Statuses.GroupTimeline.CONTENT_PATH, TableIds.GROUP_TIMELINE)
+        tableMatcher.addPath(Statuses.SearchTimeline.CONTENT_PATH, TableIds.SEARCH_TIMELINE)
+        tableMatcher.addPath(Statuses.MediaSearchTimeline.CONTENT_PATH, TableIds.MEDIA_SEARCH_TIMELINE)
+
+        tableMatcher.addPath("${Statuses.Favorites.CONTENT_PATH}/#", TableIds.FAVORITES)
+        tableMatcher.addPath("${Statuses.UserTimeline.CONTENT_PATH}/#", TableIds.USER_TIMELINE)
+        tableMatcher.addPath("${Statuses.UserMediaTimeline.CONTENT_PATH}/#", TableIds.USER_MEDIA_TIMELINE)
+        tableMatcher.addPath("${Statuses.ListTimeline.CONTENT_PATH}/#", TableIds.LIST_TIMELINE)
+        tableMatcher.addPath("${Statuses.GroupTimeline.CONTENT_PATH}/#", TableIds.GROUP_TIMELINE)
+        tableMatcher.addPath("${Statuses.SearchTimeline.CONTENT_PATH}/#", TableIds.SEARCH_TIMELINE)
+        tableMatcher.addPath("${Statuses.MediaSearchTimeline.CONTENT_PATH}/#", TableIds.MEDIA_SEARCH_TIMELINE)
+
+        tableMatcher.addPath(Activities.AboutMe.CONTENT_PATH, TableIds.ACTIVITIES_ABOUT_ME)
+        tableMatcher.addPath(Drafts.CONTENT_PATH, TableIds.DRAFTS)
+        tableMatcher.addPath(CachedUsers.CONTENT_PATH, TableIds.CACHED_USERS)
+        tableMatcher.addPath(Filters.Users.CONTENT_PATH, TableIds.FILTERED_USERS)
+        tableMatcher.addPath(Filters.Keywords.CONTENT_PATH, TableIds.FILTERED_KEYWORDS)
+        tableMatcher.addPath(Filters.Sources.CONTENT_PATH, TableIds.FILTERED_SOURCES)
+        tableMatcher.addPath(Filters.Links.CONTENT_PATH, TableIds.FILTERED_LINKS)
+        tableMatcher.addPath(Filters.Subscriptions.CONTENT_PATH, TableIds.FILTERS_SUBSCRIPTIONS)
+        tableMatcher.addPath(Messages.CONTENT_PATH, TableIds.MESSAGES)
+        tableMatcher.addPath(Conversations.CONTENT_PATH, TableIds.MESSAGES_CONVERSATIONS)
+        tableMatcher.addPath(CachedTrends.Local.CONTENT_PATH, TableIds.TRENDS_LOCAL)
+        tableMatcher.addPath(Tabs.CONTENT_PATH, TableIds.TABS)
+        tableMatcher.addPath(CachedStatuses.CONTENT_PATH, TableIds.CACHED_STATUSES)
+        tableMatcher.addPath(CachedHashtags.CONTENT_PATH, TableIds.CACHED_HASHTAGS)
+        tableMatcher.addPath(CachedRelationships.CONTENT_PATH, TableIds.CACHED_RELATIONSHIPS)
+        tableMatcher.addPath(SavedSearches.CONTENT_PATH, TableIds.SAVED_SEARCHES)
+        tableMatcher.addPath(SearchHistory.CONTENT_PATH, TableIds.SEARCH_HISTORY)
+
+        tableMatcher.addPath(Permissions.CONTENT_PATH, TableIds.VIRTUAL_PERMISSIONS)
+        tableMatcher.addPath("${CachedUsers.CONTENT_PATH_WITH_RELATIONSHIP}/*", TableIds.VIRTUAL_CACHED_USERS_WITH_RELATIONSHIP)
+        tableMatcher.addPath("${CachedUsers.CONTENT_PATH_WITH_SCORE}/*", TableIds.VIRTUAL_CACHED_USERS_WITH_SCORE)
+        tableMatcher.addPath(Drafts.CONTENT_PATH_UNSENT, TableIds.VIRTUAL_DRAFTS_UNSENT)
+        tableMatcher.addPath(Drafts.CONTENT_PATH_NOTIFICATIONS, TableIds.VIRTUAL_DRAFTS_NOTIFICATIONS)
+        tableMatcher.addPath("${Drafts.CONTENT_PATH_NOTIFICATIONS}/#", TableIds.VIRTUAL_DRAFTS_NOTIFICATIONS)
+        tableMatcher.addPath(Suggestions.AutoComplete.CONTENT_PATH, TableIds.VIRTUAL_SUGGESTIONS_AUTO_COMPLETE)
+        tableMatcher.addPath(Suggestions.Search.CONTENT_PATH, TableIds.VIRTUAL_SUGGESTIONS_SEARCH)
+        tableMatcher.addPath(TwidereDataStore.CONTENT_PATH_DATABASE_PREPARE, TableIds.VIRTUAL_DATABASE_PREPARE)
+        tableMatcher.addPath(TwidereDataStore.CONTENT_PATH_NULL, TableIds.VIRTUAL_NULL)
+        tableMatcher.addPath(TwidereDataStore.CONTENT_PATH_EMPTY, TableIds.VIRTUAL_EMPTY)
+        tableMatcher.addPath("${TwidereDataStore.CONTENT_PATH_RAW_QUERY}/*", TableIds.VIRTUAL_RAW_QUERY)
     }
 
     fun getNewestStatusIds(context: Context, uri: Uri, accountKeys: Array<UserKey?>): Array<String?> {
@@ -276,38 +262,6 @@ object DataStoreUtils {
         return context.contentResolver.queryCount(uri, where, arrayOf(accountKey.toString()))
     }
 
-    fun getFilteredUserKeys(context: Context, @FilterScope scope: Int): Array<UserKey> {
-        val resolver = context.contentResolver
-        val projection = arrayOf(Filters.Users.USER_KEY)
-        val where = Expression.or(
-                Expression.equals("${Filters.Users.SCOPE} & ${FilterScope.MASK_SCOPE}", 0),
-                Expression.notEquals("${Filters.Users.SCOPE} & $scope", 0)
-        )
-        return resolver.queryReference(Filters.Users.CONTENT_URI, projection, where.sql,
-                null, null)?.use { (cur) ->
-            return@use Array(cur.count) { i ->
-                cur.moveToPosition(i)
-                UserKey.valueOf(cur.getString(0))
-            }
-        } ?: emptyArray()
-    }
-
-    fun getFilteredKeywords(context: Context, @FilterScope scope: Int): Array<String> {
-        val resolver = context.contentResolver
-        val projection = arrayOf(Filters.VALUE)
-        val where = Expression.or(
-                Expression.equals("${Filters.SCOPE} & ${FilterScope.MASK_SCOPE}", 0),
-                Expression.notEquals("${Filters.SCOPE} & $scope", 0)
-        )
-        return resolver.queryReference(Filters.Keywords.CONTENT_URI, projection, where.sql,
-                null, null)?.use { (cur) ->
-            return@use Array(cur.count) { i ->
-                cur.moveToPosition(i)
-                cur.getString(0)
-            }
-        } ?: emptyArray()
-    }
-
     fun getAccountDisplayName(context: Context, accountKey: UserKey, nameFirst: Boolean): String? {
         val name: String?
         if (nameFirst) {
@@ -367,7 +321,7 @@ object DataStoreUtils {
         if (extraArgs != null) {
             val extras = extraArgs.getParcelable<Parcelable>(EXTRA_EXTRAS)
             if (extras is HomeTabExtras) {
-                processTabExtras(expressions, expressionArgs, extras)
+                extras.applyToSelection(expressions, expressionArgs)
             }
         }
 
@@ -445,39 +399,39 @@ object DataStoreUtils {
         return resolver.queryCount(uri, selection.sql, selectionArgs)
     }
 
-    fun getTableId(uri: Uri?): Int {
-        if (uri == null) return -1
-        return CONTENT_PROVIDER_URI_MATCHER.match(uri)
+    fun getTableId(uri: Uri): Int = tableMatcher.match(uri)
+
+    fun getTableNameById(id: Int): String? = when (id) {
+        TableIds.HOME_TIMELINE -> Statuses.HomeTimeline.TABLE_NAME
+        TableIds.FAVORITES -> Statuses.Favorites.TABLE_NAME
+        TableIds.USER_TIMELINE -> Statuses.UserTimeline.TABLE_NAME
+        TableIds.USER_MEDIA_TIMELINE -> Statuses.UserMediaTimeline.TABLE_NAME
+        TableIds.LIST_TIMELINE -> Statuses.ListTimeline.TABLE_NAME
+        TableIds.GROUP_TIMELINE -> Statuses.GroupTimeline.TABLE_NAME
+        TableIds.PUBLIC_TIMELINE -> Statuses.Public.TABLE_NAME
+        TableIds.NETWORK_PUBLIC_TIMELINE -> Statuses.NetworkPublic.TABLE_NAME
+
+        TableIds.ACTIVITIES_ABOUT_ME -> Activities.AboutMe.TABLE_NAME
+        TableIds.DRAFTS -> Drafts.TABLE_NAME
+        TableIds.FILTERED_USERS -> Filters.Users.TABLE_NAME
+        TableIds.FILTERED_KEYWORDS -> Filters.Keywords.TABLE_NAME
+        TableIds.FILTERED_SOURCES -> Filters.Sources.TABLE_NAME
+        TableIds.FILTERED_LINKS -> Filters.Links.TABLE_NAME
+        TableIds.FILTERS_SUBSCRIPTIONS -> Filters.Subscriptions.TABLE_NAME
+        TableIds.MESSAGES -> Messages.TABLE_NAME
+        TableIds.MESSAGES_CONVERSATIONS -> Conversations.TABLE_NAME
+        TableIds.TRENDS_LOCAL -> CachedTrends.Local.TABLE_NAME
+        TableIds.TABS -> Tabs.TABLE_NAME
+        TableIds.CACHED_STATUSES -> CachedStatuses.TABLE_NAME
+        TableIds.CACHED_USERS -> CachedUsers.TABLE_NAME
+        TableIds.CACHED_HASHTAGS -> CachedHashtags.TABLE_NAME
+        TableIds.CACHED_RELATIONSHIPS -> CachedRelationships.TABLE_NAME
+        TableIds.SAVED_SEARCHES -> SavedSearches.TABLE_NAME
+        TableIds.SEARCH_HISTORY -> SearchHistory.TABLE_NAME
+        else -> null
     }
 
-    fun getTableNameById(id: Int): String? {
-        when (id) {
-            TABLE_ID_STATUSES -> return Statuses.TABLE_NAME
-            TABLE_ID_ACTIVITIES_ABOUT_ME -> return Activities.AboutMe.TABLE_NAME
-            TABLE_ID_DRAFTS -> return Drafts.TABLE_NAME
-            TABLE_ID_FILTERED_USERS -> return Filters.Users.TABLE_NAME
-            TABLE_ID_FILTERED_KEYWORDS -> return Filters.Keywords.TABLE_NAME
-            TABLE_ID_FILTERED_SOURCES -> return Filters.Sources.TABLE_NAME
-            TABLE_ID_FILTERED_LINKS -> return Filters.Links.TABLE_NAME
-            TABLE_ID_FILTERS_SUBSCRIPTIONS -> return Filters.Subscriptions.TABLE_NAME
-            TABLE_ID_MESSAGES -> return Messages.TABLE_NAME
-            TABLE_ID_MESSAGES_CONVERSATIONS -> return Conversations.TABLE_NAME
-            TABLE_ID_TRENDS_LOCAL -> return CachedTrends.Local.TABLE_NAME
-            TABLE_ID_TABS -> return Tabs.TABLE_NAME
-            TABLE_ID_CACHED_STATUSES -> return CachedStatuses.TABLE_NAME
-            TABLE_ID_CACHED_USERS -> return CachedUsers.TABLE_NAME
-            TABLE_ID_CACHED_HASHTAGS -> return CachedHashtags.TABLE_NAME
-            TABLE_ID_CACHED_RELATIONSHIPS -> return CachedRelationships.TABLE_NAME
-            TABLE_ID_SAVED_SEARCHES -> return SavedSearches.TABLE_NAME
-            TABLE_ID_SEARCH_HISTORY -> return SearchHistory.TABLE_NAME
-            else -> return null
-        }
-    }
-
-    fun getTableNameByUri(uri: Uri?): String? {
-        if (uri == null) return null
-        return getTableNameById(getTableId(uri))
-    }
+    fun getTableNameByUri(uri: Uri): String? = getTableNameById(getTableId(uri))
 
     fun buildStatusFilterWhereClause(preferences: SharedPreferences, table: String,
             extraSelection: Expression?, @FilterScope filterScopes: Int): Expression {
@@ -828,20 +782,6 @@ object DataStoreUtils {
     }
 
 
-    fun processTabExtras(expressions: MutableList<Expression>, expressionArgs: MutableList<String>, extras: HomeTabExtras) {
-        if (extras.isHideRetweets) {
-            expressions.add(Expression.equalsArgs(Statuses.IS_RETWEET))
-            expressionArgs.add("0")
-        }
-        if (extras.isHideQuotes) {
-            expressions.add(Expression.equalsArgs(Statuses.IS_QUOTE))
-            expressionArgs.add("0")
-        }
-        if (extras.isHideReplies) {
-            expressions.add(Expression.isNull(Column(Statuses.IN_REPLY_TO_STATUS_ID)))
-        }
-    }
-
     fun prepareDatabase(context: Context) {
         val cr = context.contentResolver
         cr.queryReference(TwidereDataStore.CONTENT_URI_DATABASE_PREPARE, null, null,
@@ -1016,5 +956,9 @@ object DataStoreUtils {
         val officialMaxPositions = getFromDatabase(officialKeys, true)
         val notOfficialMaxPositions = getFromDatabase(notOfficialKeys, false)
         return mergeResult(officialMaxPositions, notOfficialMaxPositions)
+    }
+
+    private fun UriMatcher.addPath(path: String, code: Int) {
+        addURI(TwidereDataStore.AUTHORITY, path, code)
     }
 }

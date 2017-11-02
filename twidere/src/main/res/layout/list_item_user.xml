@@ -81,10 +81,10 @@
         android:layout_toRightOf="@+id/profileImageContainer"
         android:layout_toStartOf="@+id/actionsProgressContainer"
         android:gravity="center_vertical"
-        app:nv_primaryTextColor="?android:textColorPrimary"
-        app:nv_primaryTextStyle="bold"
-        app:nv_secondaryTextColor="?android:textColorSecondary"
-        app:nv_twoLine="true"/>
+        app:tltvPrimaryTextColor="?android:textColorPrimary"
+        app:tltvPrimaryTextStyle="bold"
+        app:tltvSecondaryTextColor="?android:textColorSecondary"
+        app:tltvTwoLine="true"/>
 
     <FrameLayout
         android:id="@+id/actionsProgressContainer"

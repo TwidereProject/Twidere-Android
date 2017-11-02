@@ -16,7 +16,6 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_toolbar_tab_pages.*
 import kotlinx.android.synthetic.main.fragment_toolbar_tab_pages.view.*
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.activity.LinkHandlerActivity
 import org.mariotaku.twidere.activity.LinkHandlerActivity.HideUiOnScroll
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarOffsetListener
@@ -41,7 +40,7 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
         HideUiOnScroll, OnPageChangeListener, IToolBarSupportFragment, KeyboardShortcutCallback {
 
     protected lateinit var pagerAdapter: SupportTabsAdapter
-    override val toolbar: Toolbar
+    override val fragmentToolbar: Toolbar
         get() = toolbarContainer.toolbar
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -166,10 +165,7 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
     }
 
     override fun onPageScrollStateChanged(state: Int) {
-        val activity = activity
-        if (activity is LinkHandlerActivity) {
-            activity.setControlBarVisibleAnimate(true)
-        }
+        (activity as? IControlBarActivity)?.setControlBarVisibleAnimate(true)
     }
 
     override var controlBarOffset: Float
@@ -181,11 +177,11 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
             if (toolbarContainer == null) return
             val translationY = (offset - 1) * controlBarHeight
             toolbarContainer.translationY = translationY
-            windowOverlay!!.translationY = translationY
+            windowOverlay.translationY = translationY
         }
 
     override val controlBarHeight: Int
-        get() = toolbar.measuredHeight
+        get() = toolbar.height
 
     override fun setupWindow(activity: FragmentActivity): Boolean {
         return false

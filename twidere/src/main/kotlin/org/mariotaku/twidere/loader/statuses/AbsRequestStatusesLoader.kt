@@ -28,7 +28,6 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.extension.model.api.applyLoadLimit
 import org.mariotaku.twidere.loader.iface.IPaginationLoader
@@ -41,12 +40,10 @@ import org.mariotaku.twidere.model.pagination.PaginatedList
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.task.twitter.GetStatusesTask
+import org.mariotaku.twidere.task.statuses.GetStatusesTask
 import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.util.cache.JsonCache
 import org.mariotaku.twidere.util.dagger.GeneralComponent
-import java.io.IOException
 import java.util.*
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
@@ -55,11 +52,9 @@ abstract class AbsRequestStatusesLoader(
         context: Context,
         val accountKey: UserKey?,
         adapterData: List<ParcelableStatus>?,
-        private val savedStatusesArgs: Array<String>?,
-        tabPosition: Int,
         fromUser: Boolean,
         protected val loadingMore: Boolean
-) : ParcelableStatusesLoader(context, adapterData, tabPosition, fromUser), IPaginationLoader {
+) : ParcelableStatusesLoader(context, adapterData, fromUser), IPaginationLoader {
     // Statuses sorted descending by default
     open val comparator: Comparator<ParcelableStatus>? = ParcelableStatus.REVERSE_COMPARATOR
 
@@ -80,22 +75,11 @@ abstract class AbsRequestStatusesLoader(
     protected val profileImageSize: String = context.getString(R.string.profile_image_size)
 
     @Inject
-    lateinit var jsonCache: JsonCache
-    @Inject
     lateinit var preferences: SharedPreferences
     @Inject
     lateinit var userColorNameManager: UserColorNameManager
 
     private val exceptionRef = AtomicReference<MicroBlogException?>()
-
-    private val cachedData: List<ParcelableStatus>?
-        get() {
-            val key = serializationKey ?: return null
-            return jsonCache.getList(key, ParcelableStatus::class.java)
-        }
-
-    private val serializationKey: String?
-        get() = savedStatusesArgs?.joinToString("_")
 
     init {
         GeneralComponent.get(context).inject(this)
@@ -109,19 +93,6 @@ abstract class AbsRequestStatusesLoader(
         val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?:
                 return ListResponse.getListInstance<ParcelableStatus>(MicroBlogException("No Account"))
 
-        if (isFirstLoad && tabPosition >= 0) {
-            val cached = cachedData
-            if (cached != null) {
-                data.addAll(cached)
-                if (comparator != null) {
-                    data.sortWith(comparator)
-                } else {
-                    data.sort()
-                }
-                data.forEach { it.is_filtered = shouldFilterStatus(it) }
-                return ListResponse.getListInstance(data)
-            }
-        }
         if (!fromUser) {
             data.forEach { it.is_filtered = shouldFilterStatus(it) }
             return ListResponse.getListInstance(data)
@@ -179,7 +150,6 @@ abstract class AbsRequestStatusesLoader(
         } else {
             data.sort()
         }
-        saveCachedData(data)
         return ListResponse.getListInstance(data)
     }
 
@@ -189,7 +159,7 @@ abstract class AbsRequestStatusesLoader(
     }
 
     @WorkerThread
-    protected abstract fun shouldFilterStatus(status: ParcelableStatus): Boolean
+    protected open fun shouldFilterStatus(status: ParcelableStatus): Boolean = false
 
     protected open fun processPaging(paging: Paging, details: AccountDetails, loadItemLimit: Int) {
         paging.applyLoadLimit(details, loadItemLimit)
@@ -206,22 +176,6 @@ abstract class AbsRequestStatusesLoader(
 
     @Throws(MicroBlogException::class)
     protected abstract fun getStatuses(account: AccountDetails, paging: Paging): PaginatedList<ParcelableStatus>
-
-    private fun saveCachedData(data: List<ParcelableStatus>?) {
-        val key = serializationKey
-        if (key == null || data == null) return
-        val databaseItemLimit = preferences[loadItemLimitKey]
-        try {
-            val statuses = data.subList(0, Math.min(databaseItemLimit, data.size))
-            jsonCache.saveList(key, statuses, ParcelableStatus::class.java)
-        } catch (e: Exception) {
-            // Ignore
-            if (e !is IOException) {
-                DebugLog.w(LOGTAG, "Error saving cached data", e)
-            }
-        }
-
-    }
 
     companion object {
         inline fun <R> List<Status>.mapMicroBlogToPaginated(transform: (Status) -> R): PaginatedList<R> {

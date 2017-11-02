@@ -47,9 +47,11 @@ import android.support.v4.view.WindowInsetsCompat
 import android.support.v4.view.unwrapped
 import android.support.v4.widget.DrawerLayout
 import android.support.v4.widget.DrawerLayoutAccessor
+import android.support.v7.app.ActionBar
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatDelegate
+import android.support.v7.graphics.drawable.DrawerArrowDrawable
 import android.support.v7.widget.TintTypedArray
 import android.util.SparseIntArray
 import android.view.Gravity
@@ -89,6 +91,7 @@ import org.mariotaku.twidere.emojidex.EmojidexUpdater
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.model.notificationBuilder
 import org.mariotaku.twidere.extension.onShow
+import org.mariotaku.twidere.extension.setVisible
 import org.mariotaku.twidere.fragment.AccountsDashboardFragment
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.iface.IFloatingActionButtonFragment
@@ -130,10 +133,41 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     private var updateUnreadCountTask: UpdateUnreadCountTask? = null
     private val readStateChangeListener = OnSharedPreferenceChangeListener { _, _ -> updateUnreadCount() }
     private val controlBarShowHideHelper = ControlBarShowHideHelper(this)
+    private val useTabNavigation get() = pagerAdapter.count > 1
 
     override val controlBarHeight: Int
         get() {
+            if (mainTabsContainer.visibility != View.VISIBLE) return toolbar.height
             return mainTabs.height - mainTabs.stripHeight
+        }
+
+    override var controlBarOffset: Float
+        get() {
+            if (mainTabs.columns > 1) {
+                val lp = actionsButton.layoutParams
+                val total: Float
+                total = if (lp is MarginLayoutParams) {
+                    (lp.bottomMargin + actionsButton.height).toFloat()
+                } else {
+                    actionsButton.height.toFloat()
+                }
+                return 1 - actionsButton.translationY / total
+            }
+            val totalHeight = controlBarHeight.toFloat()
+            return 1 + toolbar.translationY / totalHeight
+        }
+        set(offset) {
+            if (mainTabsContainer.visibility != View.VISIBLE) return
+            val translationY = if (mainTabs.columns > 1) 0 else (controlBarHeight * (offset - 1)).toInt()
+            toolbar.translationY = translationY.toFloat()
+            windowOverlay.translationY = translationY.toFloat()
+            val lp = actionsButton.layoutParams
+            if (lp is MarginLayoutParams) {
+                actionsButton.translationY = (lp.bottomMargin + actionsButton.height) * (1 - offset)
+            } else {
+                actionsButton.translationY = actionsButton.height * (1 - offset)
+            }
+            notifyControlBarOffsetChanged()
         }
 
     override val currentVisibleFragment: Fragment?
@@ -145,13 +179,21 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
     private val homeDrawerToggleDelegate = object : ActionBarDrawerToggle.Delegate {
         override fun setActionBarUpIndicator(upDrawable: Drawable, @StringRes contentDescRes: Int) {
-            drawerToggleButton.setImageDrawable(upDrawable)
-            drawerToggleButton.setColorFilter(ChameleonUtils.getColorDependent(overrideTheme.colorToolbar))
-            drawerToggleButton.contentDescription = getString(contentDescRes)
+            if (upDrawable is DrawerArrowDrawable) {
+                upDrawable.color = ChameleonUtils.getColorDependent(overrideTheme.colorToolbar)
+            }
+            if (useTabNavigation) {
+                drawerToggleButton.setImageDrawable(upDrawable)
+                drawerToggleButton.contentDescription = getString(contentDescRes)
+            } else {
+                supportActionBar?.setHomeAsUpIndicator(upDrawable)
+                supportActionBar?.setHomeActionContentDescription(contentDescRes)
+            }
         }
 
         override fun setActionBarDescription(@StringRes contentDescRes: Int) {
             drawerToggleButton.contentDescription = getString(contentDescRes)
+            supportActionBar?.setHomeActionContentDescription(contentDescRes)
         }
 
         @SuppressLint("RestrictedApi")
@@ -168,7 +210,11 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         }
 
         override fun isNavigationVisible(): Boolean {
-            return true
+            return if (useTabNavigation) {
+                drawerToggleButton.visibility == View.VISIBLE
+            } else {
+                ActionBar.DISPLAY_HOME_AS_UP in (supportActionBar?.displayOptions ?: 0)
+            }
         }
     }
 
@@ -244,12 +290,6 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         mainTabs.setDisplayBadge(preferences[unreadCountKey])
         mainTabs.updateAppearance()
 
-        if (preferences[drawerToggleKey]) {
-            drawerToggleButton.visibility = View.VISIBLE
-        } else {
-            drawerToggleButton.visibility = View.GONE
-        }
-
         if (preferences[fabVisibleKey]) {
             actionsButton.visibility = View.VISIBLE
         } else {
@@ -272,11 +312,12 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         emptyTabHint.setOnClickListener(this)
 
         setupSlidingMenu()
+        setupHomeTabs()
         setupBars()
+        updateActionsButton()
+
         showPromotionOffer()
         initUnreadCount()
-        setupHomeTabs()
-        updateActionsButton()
 
         if (savedInstanceState == null) {
             if (refreshOnStart) {
@@ -598,34 +639,6 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     val tabs: List<SupportTabSpec>
         get() = pagerAdapter.tabs
 
-    override var controlBarOffset: Float
-        get() {
-            if (mainTabs.columns > 1) {
-                val lp = actionsButton.layoutParams
-                val total: Float
-                total = if (lp is MarginLayoutParams) {
-                    (lp.bottomMargin + actionsButton.height).toFloat()
-                } else {
-                    actionsButton.height.toFloat()
-                }
-                return 1 - actionsButton.translationY / total
-            }
-            val totalHeight = controlBarHeight.toFloat()
-            return 1 + toolbar.translationY / totalHeight
-        }
-        set(offset) {
-            val translationY = if (mainTabs.columns > 1) 0 else (controlBarHeight * (offset - 1)).toInt()
-            toolbar.translationY = translationY.toFloat()
-            windowOverlay.translationY = translationY.toFloat()
-            val lp = actionsButton.layoutParams
-            if (lp is MarginLayoutParams) {
-                actionsButton.translationY = (lp.bottomMargin + actionsButton.height) * (1 - offset)
-            } else {
-                actionsButton.translationY = actionsButton.height * (1 - offset)
-            }
-            notifyControlBarOffsetChanged()
-        }
-
     override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
 
     }
@@ -645,9 +658,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         }
     }
 
-    override fun getDrawerToggleDelegate(): ActionBarDrawerToggle.Delegate? {
-        return homeDrawerToggleDelegate
-    }
+    override fun getDrawerToggleDelegate() = homeDrawerToggleDelegate
 
     fun closeAccountsDrawer() {
         if (homeMenu == null) return
@@ -813,6 +824,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         }
     }
 
+    @SuppressLint("ResourceType")
     private fun setupBars() {
         val backgroundOption = currentThemeBackgroundOption
         val isTransparent = ThemeUtils.isTransparentBackground(backgroundOption)
@@ -822,6 +834,24 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             0xFF
         }
         actionsButton.alpha = actionBarAlpha / 255f
+
+        mainTabsContainer.setVisible(useTabNavigation)
+        if (useTabNavigation) {
+            toolbar.setContentInsetsRelative(0, 0)
+
+            drawerToggleButton.visibility = if (preferences[drawerToggleKey]) View.VISIBLE else View.GONE
+        } else {
+            val attrs = intArrayOf(R.attr.contentInsetStart, R.attr.contentInsetEnd)
+            val toolbarStyle = obtainStyledAttributes(null, attrs, R.attr.toolbarStyle,
+                    0)
+            toolbar.setContentInsetsRelative(toolbarStyle.getDimensionPixelSize(0, 0),
+                    toolbarStyle.getDimensionPixelSize(1, 0))
+            toolbarStyle.recycle()
+            toolbar.setOnClickListener {
+                (currentVisibleFragment as? RefreshScrollTopInterface)?.scrollToStart()
+            }
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        }
     }
 
     private fun setupHomeTabs() {
@@ -830,7 +860,8 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         val hasNoTab = pagerAdapter.count == 0
         emptyTabHint.visibility = if (hasNoTab) View.VISIBLE else View.GONE
         mainPager.visibility = if (hasNoTab) View.GONE else View.VISIBLE
-        if (pagerAdapter.count > 1 && hasMultiColumns()) {
+        val useTabNavigation = useTabNavigation
+        if (useTabNavigation && hasMultiColumns()) {
             mainPager.pageMargin = resources.getDimensionPixelOffset(R.dimen.home_page_margin)
             mainPager.setPageMarginDrawable(ThemeUtils.getDrawableFromThemeAttribute(this, R.attr.dividerVertical))
             pagerAdapter.hasMultipleColumns = true
@@ -972,7 +1003,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                             readStateManager.getPosition(tag)
                         }.fold(0L, Math::max)
                         val count = DataStoreUtils.getStatusesCount(context, preferences,
-                                Statuses.CONTENT_URI, spec.args, Statuses.TIMESTAMP, position,
+                                Statuses.HomeTimeline.CONTENT_URI, spec.args, Statuses.TIMESTAMP, position,
                                 true, accountKeys, FilterScope.HOME)
                         result.put(i, count)
                         publishProgress(TabBadge(i, count))

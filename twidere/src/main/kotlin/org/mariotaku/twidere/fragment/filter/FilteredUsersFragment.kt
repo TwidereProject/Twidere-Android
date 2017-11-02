@@ -215,7 +215,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
     }
 
     private fun exportToMutedUsers(accountKey: UserKey, items: Array<UserKey>) {
-        val weakThis = this.weak()
+        val weakThis = this.toWeak()
         showProgressDialog("export_to_muted").then {
             val fragment = weakThis.get() ?: throw InterruptedException()
             val am = AccountManager.get(fragment.context)

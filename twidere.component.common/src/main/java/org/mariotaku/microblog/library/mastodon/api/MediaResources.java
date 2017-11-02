@@ -18,6 +18,9 @@
 
 package org.mariotaku.microblog.library.mastodon.api;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.mastodon.model.Attachment;
 import org.mariotaku.restfu.annotation.method.POST;
@@ -25,14 +28,12 @@ import org.mariotaku.restfu.annotation.param.Param;
 import org.mariotaku.restfu.http.BodyType;
 import org.mariotaku.restfu.http.mime.Body;
 
-/**
- * Created by mariotaku on 2017/4/17.
- */
 
 public interface MediaResources {
 
     @POST("/v1/media")
     @BodyType(BodyType.MULTIPART)
-    Attachment uploadMediaAttachment(@Param("file") Body body) throws MicroBlogException;
+    Attachment uploadMediaAttachment(@NonNull @Param("file") Body body,
+            @Nullable @Param("description") String description) throws MicroBlogException;
 
 }
