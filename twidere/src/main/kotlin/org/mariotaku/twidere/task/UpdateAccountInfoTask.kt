@@ -5,44 +5,46 @@ import android.accounts.AccountManager
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
-import android.support.v4.util.LongSparseArray
-import android.text.TextUtils
-import org.mariotaku.abstask.library.AbstractTask
-import org.mariotaku.library.objectcursor.ObjectCursor
+import nl.komponents.kovenant.Promise
+import nl.komponents.kovenant.task
+import nl.komponents.kovenant.then
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.TwidereConstants.ACCOUNT_TYPE
 import org.mariotaku.twidere.extension.model.setAccountKey
 import org.mariotaku.twidere.extension.model.setAccountUser
-import org.mariotaku.twidere.extension.queryReference
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.*
-import java.io.IOException
+import org.mariotaku.twidere.util.updateItems
 
-/**
- * Created by mariotaku on 16/3/8.
- */
 class UpdateAccountInfoTask(
         private val context: Context
-) : AbstractTask<Pair<AccountDetails, ParcelableUser>, Unit, Unit?>() {
+) : PromiseTask<Pair<AccountDetails, ParcelableUser>, Unit> {
 
-    override fun doLongOperation(params: Pair<AccountDetails, ParcelableUser>) {
+    override fun toPromise(param: Pair<AccountDetails, ParcelableUser>): Promise<Unit, Exception> {
         val resolver = context.contentResolver
-        val (details, user) = params
+        val (details, user) = param
         if (user.is_cache) {
-            return
+            return Promise.ofSuccess(Unit)
         }
         if (!user.key.maybeEquals(user.account_key)) {
-            return
+            return Promise.ofSuccess(Unit)
         }
+        return task {
+            val am = AccountManager.get(context)
+            val account = Account(details.account.name, ACCOUNT_TYPE)
+            account.setAccountUser(am, user)
+            account.setAccountKey(am, user.key)
+        }.then {
+            updateTimeline(user, details, resolver)
+        }.then {
+            updateTabs(resolver, user.key)
+        }
+    }
 
-        val am = AccountManager.get(context)
-        val account = Account(details.account.name, ACCOUNT_TYPE)
-        account.setAccountUser(am, user)
-        account.setAccountKey(am, user.key)
-
+    private fun updateTimeline(user: ParcelableUser, details: AccountDetails, resolver: ContentResolver) {
         val accountKeyValues = ContentValues().apply {
             put(AccountSupportColumns.ACCOUNT_KEY, user.key.toString())
         }
@@ -54,38 +56,19 @@ class UpdateAccountInfoTask(
         resolver.update(Messages.CONTENT_URI, accountKeyValues, accountKeyWhere, accountKeyWhereArgs)
         resolver.update(Messages.Conversations.CONTENT_URI, accountKeyValues, accountKeyWhere, accountKeyWhereArgs)
         resolver.update(CachedRelationships.CONTENT_URI, accountKeyValues, accountKeyWhere, accountKeyWhereArgs)
-
-        updateTabs(resolver, user.key)
     }
 
     private fun updateTabs(resolver: ContentResolver, accountKey: UserKey) {
-        resolver.queryReference(Tabs.CONTENT_URI, Tabs.COLUMNS, null, null,
-                null)?.use { (tabsCursor) ->
-            val indices = ObjectCursor.indicesFrom(tabsCursor, Tab::class.java)
-            val creator = ObjectCursor.valuesCreatorFrom(Tab::class.java)
-            tabsCursor.moveToFirst()
-            val values = LongSparseArray<ContentValues>()
-            try {
-                while (!tabsCursor.isAfterLast) {
-                    val tab = indices.newObject(tabsCursor)
-                    val arguments = tab.arguments
-                    if (arguments != null) {
-                        val accountId = arguments.accountId
-                        val keys = arguments.accountKeys
-                        if (TextUtils.equals(accountKey.id, accountId) && keys == null) {
-                            arguments.accountKeys = arrayOf(accountKey)
-                            values.put(tab.id, creator.create(tab))
-                        }
-                    }
-                    tabsCursor.moveToNext()
+        resolver.updateItems(Tabs.CONTENT_URI, Tabs.COLUMNS, null, null, Tab::class.java) { tab ->
+            val arguments = tab.arguments
+            if (arguments != null) {
+                val accountId = arguments.accountId
+                val keys = arguments.accountKeys
+                if (accountKey.id == accountId && keys == null) {
+                    arguments.accountKeys = arrayOf(accountKey)
                 }
-            } catch (e: IOException) {
-                // Ignore
             }
-            for (i in 0 until values.size()) {
-                val where = Expression.equals(Tabs._ID, values.keyAt(i)).sql
-                resolver.update(Tabs.CONTENT_URI, values.valueAt(i), where, null)
-            }
+            return@updateItems tab
         }
     }
 }

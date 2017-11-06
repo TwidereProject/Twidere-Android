@@ -25,11 +25,9 @@ import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.data.fetcher.SearchTimelineFetcher
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.extension.withAppendedPath
-import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.refresh.SearchTimelineContentRefreshParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.ErrorInfoStore
-import org.mariotaku.twidere.util.sync.TimelineSyncManager
 
 class GetSearchTimelineTask(context: Context) : GetStatusesTask<SearchTimelineContentRefreshParam>(context) {
 
@@ -42,9 +40,6 @@ class GetSearchTimelineTask(context: Context) : GetStatusesTask<SearchTimelineCo
 
     override fun getStatusesFetcher(params: SearchTimelineContentRefreshParam?): StatusesFetcher {
         return SearchTimelineFetcher(params?.query, params?.local ?: false)
-    }
-
-    override fun syncFetchReadPosition(manager: TimelineSyncManager, accountKeys: Array<UserKey>) {
     }
 
 }

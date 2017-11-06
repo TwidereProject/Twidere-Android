@@ -9,9 +9,6 @@ import org.mariotaku.twidere.util.JsonSerializer
 import org.mariotaku.twidere.util.filter.FiltersSubscriptionProvider
 import org.mariotaku.twidere.util.filter.LocalFiltersSubscriptionProvider
 
-/**
- * Created by mariotaku on 2017/1/9.
- */
 
 fun FiltersSubscription.instantiateComponent(context: Context): FiltersSubscriptionProvider? {
     val component = this.component ?: return null

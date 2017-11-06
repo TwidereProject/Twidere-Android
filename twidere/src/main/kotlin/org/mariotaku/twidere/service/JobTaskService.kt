@@ -19,26 +19,23 @@
 
 package org.mariotaku.twidere.service
 
-import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.job.JobParameters
 import android.app.job.JobService
 import android.os.Build
-import android.util.Log
+import nl.komponents.kovenant.ui.failUi
+import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.kpreferences.KPreferences
-import org.mariotaku.twidere.TwidereConstants.LOGTAG
+import org.mariotaku.ktextension.deadline
 import org.mariotaku.twidere.annotation.AutoRefreshType
 import org.mariotaku.twidere.constant.autoRefreshCompatibilityModeKey
 import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.TaskServiceRunner
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.support.JobServiceSupport
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-/**
- * Created by mariotaku on 14/12/12.
- */
-@SuppressLint("Registered")
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 class JobTaskService : JobService() {
 
@@ -49,22 +46,19 @@ class JobTaskService : JobService() {
 
     override fun onCreate() {
         super.onCreate()
-        Log.d(LOGTAG, "JobTaskService started")
         GeneralComponent.get(this).inject(this)
     }
 
-    override fun onDestroy() {
-        Log.d(LOGTAG, "JobTaskService destroyed")
-        super.onDestroy()
-    }
-
     override fun onStartJob(params: JobParameters): Boolean {
-        Log.d(LOGTAG, "JobTaskService received job $params")
         if (kPreferences[autoRefreshCompatibilityModeKey]) return false
         val action = getTaskAction(params.jobId) ?: return false
-        return taskServiceRunner.runTask(action) {
-            this.jobFinished(params, false)
+        val promise = taskServiceRunner.createPromise(action) ?: return false
+        promise.deadline(3, TimeUnit.MINUTES).successUi {
+            jobFinished(params, false)
+        }.failUi {
+            jobFinished(params, false)
         }
+        return true
     }
 
     override fun onStopJob(params: JobParameters): Boolean {
@@ -116,5 +110,7 @@ class JobTaskService : JobService() {
             JOB_ID_SYNC_USER_COLORS -> TaskServiceRunner.ACTION_SYNC_USER_COLORS
             else -> null
         }
+
     }
+
 }

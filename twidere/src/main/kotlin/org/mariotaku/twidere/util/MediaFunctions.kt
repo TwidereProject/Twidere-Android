@@ -17,25 +17,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.task.compose
+package org.mariotaku.twidere.util
 
-import android.content.Context
-import android.net.Uri
-import org.mariotaku.abstask.library.AbstractTask
-import org.mariotaku.twidere.util.Utils
-import java.lang.ref.WeakReference
-
-open class AbsDeleteMediaTask<Callback>(
-        context: Context,
-        val sources: Array<Uri>
-) : AbstractTask<Unit, BooleanArray, Callback>() {
-
-    private val contextRef = WeakReference(context)
-    val context: Context? get() = contextRef.get()
-
-    override fun doLongOperation(params: Unit?): BooleanArray {
-        val context = contextRef.get() ?: return kotlin.BooleanArray(sources.size) { false }
-        return BooleanArray(sources.size) { Utils.deleteMedia(context, sources[it]) }
-    }
-
-}
+/**
+ * Created by mariotaku on 2017/11/6.
+ */

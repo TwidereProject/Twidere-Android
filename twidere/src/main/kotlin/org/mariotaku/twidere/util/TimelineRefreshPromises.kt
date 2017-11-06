@@ -17,24 +17,5 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.task.statuses
+package org.mariotaku.twidere.util
 
-import android.content.Context
-import android.net.Uri
-import org.mariotaku.twidere.annotation.FilterScope
-import org.mariotaku.twidere.data.fetcher.PublicTimelineFetcher
-import org.mariotaku.twidere.model.refresh.ContentRefreshParam
-import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
-import org.mariotaku.twidere.util.ErrorInfoStore
-
-class GetPublicTimelineTask(context: Context) : GetStatusesTask<ContentRefreshParam>(context) {
-
-    override val contentUri: Uri = Statuses.Public.CONTENT_URI
-
-    override val filterScopes: Int = FilterScope.PUBLIC_TIMELINE
-
-    override val errorInfoKey: String = ErrorInfoStore.KEY_PUBLIC_TIMELINE
-
-    override fun getStatusesFetcher(params: ContentRefreshParam?) = PublicTimelineFetcher()
-
-}

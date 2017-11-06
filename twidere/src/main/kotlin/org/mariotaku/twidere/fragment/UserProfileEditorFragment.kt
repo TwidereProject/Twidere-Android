@@ -399,8 +399,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
                 val context = this.callback?.context ?: return@promiseOnUi
                 val (user, account) = result
                 val task = UpdateAccountInfoTask(context)
-                task.params = Pair(account, user)
-                TaskStarter.execute(task)
+                task.toPromise(Pair(account, user))
             } and callback.executeAfterFragmentResumed { fragment ->
                 fragment.childFragmentManager.dismissDialogFragment(DIALOG_FRAGMENT_TAG)
                 fragment.activity.finish()

@@ -6,23 +6,32 @@ import android.content.Context
 import android.net.Uri
 import android.support.annotation.UiThread
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.addTo
 import org.mariotaku.library.objectcursor.ObjectCursor
+import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.mastodon.Mastodon
+import org.mariotaku.microblog.library.twitter.model.Activity
+import org.mariotaku.microblog.library.twitter.model.InternalActivityCreator
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_NOTIFY_CHANGE
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.constant.loadItemLimitKey
+import org.mariotaku.twidere.data.fetcher.ActivitiesFetcher
 import org.mariotaku.twidere.exception.AccountNotFoundException
-import org.mariotaku.twidere.extension.model.getMaxId
-import org.mariotaku.twidere.extension.model.getMaxSortId
-import org.mariotaku.twidere.extension.model.getSinceId
+import org.mariotaku.twidere.extension.api.batchGetRelationships
+import org.mariotaku.twidere.extension.model.*
+import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
+import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableActivity
-import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.GetActivitiesTaskEvent
+import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.task.GetTimelineResult
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
@@ -37,9 +46,6 @@ import org.mariotaku.twidere.util.sync.SyncTaskRunner
 import org.mariotaku.twidere.util.sync.TimelineSyncManager
 import java.util.*
 
-/**
- * Created by mariotaku on 16/1/4.
- */
 abstract class GetActivitiesTask(
         context: Context
 ) : BaseAbstractTask<ContentRefreshParam, List<Pair<GetTimelineResult<ParcelableActivity>?, Exception?>>,
@@ -51,6 +57,8 @@ abstract class GetActivitiesTask(
     protected abstract val filterScopes: Int
 
     protected abstract val contentUri: Uri
+
+    private val profileImageSize = context.getString(R.string.profile_image_size)
 
     override fun doLongOperation(param: ContentRefreshParam): List<Pair<GetTimelineResult<ParcelableActivity>?, Exception?>> {
         if (param.shouldAbort) return emptyList()
@@ -119,7 +127,91 @@ abstract class GetActivitiesTask(
     }
 
     @Throws(MicroBlogException::class)
-    protected abstract fun getActivities(account: AccountDetails, paging: Paging): GetTimelineResult<ParcelableActivity>
+    protected fun getActivities(account: AccountDetails, paging: Paging): GetTimelineResult<ParcelableActivity> {
+        val fetcher = getActivitiesFetcher(params)
+        when (account.type) {
+            AccountType.MASTODON -> {
+                val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
+                val notifications = fetcher.forMastodon(account, mastodon, paging)
+                val userIds = notifications.flatMapTo(HashSet()) {
+                    val mapResult = mutableSetOf<String>()
+                    it?.account?.id?.addTo(mapResult)
+                    it.status?.account?.id?.addTo(mapResult)
+                    return@flatMapTo mapResult
+                }
+                val relationships = mastodon.batchGetRelationships(userIds)
+                val activities = notifications.mapNotNull {
+                    val activity = it.toParcelable(account, relationships)
+                    if (activity.action == Activity.Action.INVALID) return@mapNotNull null
+                    return@mapNotNull activity
+                }
+                return GetTimelineResult(account, activities, activities.flatMap {
+                    it.sources?.toList().orEmpty()
+                }, notifications.flatMapTo(HashSet()) { notification ->
+                    notification.status?.tags?.map { it.name }.orEmpty()
+                })
+            }
+            AccountType.TWITTER -> {
+                val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                if (account.isOfficial(context)) {
+                    val timeline = fetcher.forTwitterOfficial(account, microBlog, paging)
+                    val activities = timeline.map {
+                        it.toParcelable(account, profileImageSize = profileImageSize)
+                    }
+
+                    return GetTimelineResult(account, activities, activities.flatMap {
+                        it.sources?.toList().orEmpty()
+                    }, timeline.flatMapTo(HashSet()) { activity ->
+                        val mapResult = mutableSetOf<String>()
+                        activity.targetStatuses?.flatMapTo(mapResult) { status ->
+                            status.entities?.hashtags?.map { it.text }.orEmpty()
+                        }
+                        activity.targetObjectStatuses?.flatMapTo(mapResult) { status ->
+                            status.entities?.hashtags?.map { it.text }.orEmpty()
+                        }
+                        return@flatMapTo mapResult
+                    })
+                } else {
+                    val timeline = fetcher.forTwitter(account, microBlog, paging)
+                    val activities = timeline.map {
+                        InternalActivityCreator.status(it, account.key.id).toParcelable(account,
+                                profileImageSize = profileImageSize)
+                    }
+                    return GetTimelineResult(account, activities, activities.flatMap {
+                        it.sources?.toList().orEmpty()
+                    }, timeline.flatMap {
+                        it.entities?.hashtags?.map { it.text }.orEmpty()
+                    })
+                }
+            }
+            AccountType.FANFOU -> {
+                val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                val activities = fetcher.forFanfou(account, microBlog, paging).map {
+                    InternalActivityCreator.status(it, account.key.id).toParcelable(account,
+                            profileImageSize = profileImageSize)
+                }
+                return GetTimelineResult(account, activities, activities.flatMap {
+                    it.sources?.toList().orEmpty()
+                }, activities.flatMap { it.extractFanfouHashtags() })
+            }
+            AccountType.STATUSNET -> {
+                val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                val timeline = fetcher.forStatusNet(account, microBlog, paging)
+                val activities = timeline.map {
+                    InternalActivityCreator.status(it, account.key.id).toParcelable(account,
+                            profileImageSize = profileImageSize)
+                }
+                return GetTimelineResult(account, activities, activities.flatMap {
+                    it.sources?.toList().orEmpty()
+                }, timeline.flatMap {
+                    it.entities?.hashtags?.map { it.text }.orEmpty()
+                })
+            }
+            else -> throw UnsupportedOperationException()
+        }
+    }
+
+    protected abstract fun getActivitiesFetcher(params: ContentRefreshParam?): ActivitiesFetcher
 
     protected abstract fun syncFetchReadPosition(manager: TimelineSyncManager, accountKeys: Array<UserKey>)
 

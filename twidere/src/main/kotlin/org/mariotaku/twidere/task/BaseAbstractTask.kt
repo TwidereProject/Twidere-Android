@@ -21,10 +21,6 @@ import org.mariotaku.twidere.util.sync.SyncPreferences
 import org.mariotaku.twidere.util.sync.TimelineSyncManager
 import javax.inject.Inject
 
-/**
- * Created by mariotaku on 2017/2/7.
- */
-
 abstract class BaseAbstractTask<Params, Result, Callback>(val context: Context) : AbstractTask<Params, Result, Callback>() {
 
     @Inject
@@ -73,4 +69,5 @@ abstract class BaseAbstractTask<Params, Result, Callback>(val context: Context) 
         @Suppress("UNCHECKED_CAST")
         GeneralComponent.get(context).inject(this as BaseAbstractTask<Any, Any, Any>)
     }
+
 }

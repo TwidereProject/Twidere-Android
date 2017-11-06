@@ -23,10 +23,6 @@ import android.os.Bundle
 import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.util.TaskServiceRunner
 
-/**
- * Created by mariotaku on 2017/8/22.
- */
-
 class ToggleRefreshActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -30,7 +30,7 @@ import org.mariotaku.twidere.model.util.ParcelableCardEntityUtils
 import java.text.ParseException
 import java.util.*
 
-fun CardEntity.toParcelable(accountKey: UserKey, accountType: String): ParcelableCardEntity? {
+fun CardEntity.toParcelable(accountKey: UserKey, accountType: String): ParcelableCardEntity {
     val obj = ParcelableCardEntity()
     obj.name = name
     obj.url = url

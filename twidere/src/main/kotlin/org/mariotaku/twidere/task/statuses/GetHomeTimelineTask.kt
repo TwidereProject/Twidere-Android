@@ -22,14 +22,10 @@ package org.mariotaku.twidere.task.statuses
 import android.content.Context
 import android.net.Uri
 import org.mariotaku.twidere.annotation.FilterScope
-import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.data.fetcher.HomeTimelineFetcher
-import org.mariotaku.twidere.fragment.timeline.HomeTimelineFragment
-import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.ErrorInfoStore
-import org.mariotaku.twidere.util.sync.TimelineSyncManager
 
 class GetHomeTimelineTask(context: Context) : GetStatusesTask<ContentRefreshParam>(context) {
 
@@ -41,8 +37,4 @@ class GetHomeTimelineTask(context: Context) : GetStatusesTask<ContentRefreshPara
 
     override fun getStatusesFetcher(params: ContentRefreshParam?) = HomeTimelineFetcher()
 
-    override fun syncFetchReadPosition(manager: TimelineSyncManager, accountKeys: Array<UserKey>) {
-        val tag = HomeTimelineFragment.getTimelineSyncTag(accountKeys)
-        manager.fetchSingle(ReadPositionTag.HOME_TIMELINE, tag)
-    }
 }

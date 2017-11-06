@@ -25,11 +25,9 @@ import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.data.fetcher.UserMediaTimelineFetcher
 import org.mariotaku.twidere.extension.withAppendedPath
-import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.refresh.UserRelatedContentRefreshParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.ErrorInfoStore
-import org.mariotaku.twidere.util.sync.TimelineSyncManager
 
 class GetUserMediaTimelineTask(context: Context) : GetStatusesTask<UserRelatedContentRefreshParam>(context) {
 
@@ -42,9 +40,6 @@ class GetUserMediaTimelineTask(context: Context) : GetStatusesTask<UserRelatedCo
 
     override fun getStatusesFetcher(params: UserRelatedContentRefreshParam?): StatusesFetcher {
         return UserMediaTimelineFetcher(params?.userKey, params?.userScreenName)
-    }
-
-    override fun syncFetchReadPosition(manager: TimelineSyncManager, accountKeys: Array<UserKey>) {
     }
 
 }

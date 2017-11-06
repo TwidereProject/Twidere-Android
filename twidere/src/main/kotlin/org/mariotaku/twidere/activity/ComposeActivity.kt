@@ -59,9 +59,15 @@ import com.bumptech.glide.Glide
 import com.twitter.Extractor
 import com.twitter.Validator
 import kotlinx.android.synthetic.main.activity_compose.*
+import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.task
-import org.mariotaku.abstask.library.AbstractTask
+import nl.komponents.kovenant.then
+import nl.komponents.kovenant.ui.alwaysUi
+import nl.komponents.kovenant.ui.failUi
+import nl.komponents.kovenant.ui.promiseOnUi
+import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.abstask.library.TaskStarter
+import org.mariotaku.kpreferences.edit
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
 import org.mariotaku.ktextension.*
@@ -91,7 +97,6 @@ import org.mariotaku.twidere.preference.ComponentPickerPreference
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.service.LengthyOperationsService
 import org.mariotaku.twidere.task.compose.AbsAddMediaTask
-import org.mariotaku.twidere.task.compose.AbsDeleteMediaTask
 import org.mariotaku.twidere.task.status.UpdateStatusTask
 import org.mariotaku.twidere.text.MarkForDeleteSpan
 import org.mariotaku.twidere.text.style.EmojiSpan
@@ -107,10 +112,10 @@ import org.mariotaku.twidere.view.ExtendedRecyclerView
 import org.mariotaku.twidere.view.ShapedImageView
 import org.mariotaku.twidere.view.helper.SimpleItemTouchHelperCallback
 import org.mariotaku.twidere.view.holder.compose.MediaPreviewViewHolder
-import java.io.IOException
 import java.text.Normalizer
 import java.util.*
 import javax.inject.Inject
+import kotlin.NoSuchElementException
 import kotlin.collections.ArrayList
 import android.Manifest.permission as AndroidPermission
 
@@ -300,7 +305,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             showLabelAndHint(intent)
             val selectedAccountKeys = accountsAdapter.selectedAccountKeys
             if (selectedAccountKeys.isNullOrEmpty()) {
-                val idsInPrefs = kPreferences[composeAccountsKey]?.asList() ?: emptyList()
+                val idsInPrefs = preferences[composeAccountsKey]?.asList() ?: emptyList()
                 val intersection = defaultAccountKeys.intersect(idsInPrefs)
 
                 if (intersection.isEmpty()) {
@@ -357,9 +362,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     override fun onStart() {
         super.onStart()
 
-        imageUploaderUsed = !ComponentPickerPreference.isNoneValue(kPreferences[mediaUploaderKey])
-        statusShortenerUsed = !ComponentPickerPreference.isNoneValue(kPreferences[statusShortenerKey])
-        if (kPreferences[attachLocationKey]) {
+        imageUploaderUsed = !ComponentPickerPreference.isNoneValue(preferences[mediaUploaderKey])
+        statusShortenerUsed = !ComponentPickerPreference.isNoneValue(preferences[statusShortenerKey])
+        if (preferences[attachLocationKey]) {
             if (checkAnySelfPermissionsGranted(AndroidPermission.ACCESS_COARSE_LOCATION,
                     AndroidPermission.ACCESS_FINE_LOCATION)) {
                 try {
@@ -558,18 +563,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 IntentUtils.openDrafts(this)
             }
             R.id.delete -> {
-                val media = this.media
-                val task = DeleteMediaTask(this, media)
-                task.callback = { result ->
-                    setProgressVisible(false)
-                    removeMedia(media.filterIndexed { i, _ -> result[i] })
-                    setMenu()
-                    if (result.contains(false)) {
-                        Toast.makeText(this, R.string.message_toast_error_occurred,
-                                Toast.LENGTH_SHORT).show()
-                    }
-                }
-                TaskStarter.execute(task)
+                deleteMedia(media)
             }
             R.id.toggle_sensitive -> {
                 if (!hasMedia) return true
@@ -720,7 +714,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                     }
                 } else {
                     Toast.makeText(this, R.string.message_toast_cannot_get_location, Toast.LENGTH_SHORT).show()
-                    kPreferences.edit {
+                    preferences.edit {
                         this[attachLocationKey] = false
                         this[attachPreciseLocationKey] = false
                     }
@@ -774,7 +768,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 attachPreciseLocationChecked = false
             }
         }
-        kPreferences.edit {
+        preferences.edit {
             this[attachLocationKey] = attachLocationChecked
             this[attachPreciseLocationKey] = attachPreciseLocationChecked
         }
@@ -1328,8 +1322,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         menu.setGroupAvailability(MENU_GROUP_IMAGE_EXTENSION, hasMedia)
         menu.setItemChecked(R.id.toggle_sensitive, possiblySensitive)
 
-        val attachLocation = kPreferences[attachLocationKey]
-        val attachPreciseLocation = kPreferences[attachPreciseLocationKey]
+        val attachLocation = preferences[attachLocationKey]
+        val attachPreciseLocation = preferences[attachPreciseLocationKey]
 
         if (!attachLocation) {
             menu.setItemChecked(R.id.location_off, true)
@@ -1383,20 +1377,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun setRecentLocation(location: ParcelableLocation?) {
-        if (location != null) {
-            val attachPreciseLocation = kPreferences[attachPreciseLocationKey]
-            if (attachPreciseLocation) {
-                locationLabel.spannable = ParcelableLocationUtils.getHumanReadableString(location, 3)
-            } else {
-                if (locationLabel.tag == null || location != recentLocation) {
-                    val task = DisplayPlaceNameTask()
-                    task.params = location
-                    task.callback = this
-                    TaskStarter.execute(task)
-                }
-            }
-        } else {
+        if (location == null) {
             locationLabel.setText(R.string.unknown_location)
+        } else if (preferences[attachPreciseLocationKey]) {
+            locationLabel.spannable = ParcelableLocationUtils.getHumanReadableString(location, 3)
+        } else if (locationLabel.tag == null || location != recentLocation) {
+            loadPlaceName(location)
         }
         recentLocation = location
     }
@@ -1409,11 +1395,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     @Throws(SecurityException::class)
     private fun startLocationUpdateIfEnabled(): Boolean {
         if (locationListener != null) return true
-        val attachLocation = kPreferences[attachLocationKey]
+        val attachLocation = preferences[attachLocationKey]
         if (!attachLocation) {
             return false
         }
-        val attachPreciseLocation = kPreferences[attachPreciseLocationKey]
+        val attachPreciseLocation = preferences[attachPreciseLocationKey]
         val criteria = Criteria()
         if (attachPreciseLocation) {
             criteria.accuracy = Criteria.ACCURACY_FINE
@@ -1583,8 +1569,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
         update.summary = summary
 
-        val attachLocation = kPreferences[attachLocationKey]
-        val attachPreciseLocation = kPreferences[attachPreciseLocationKey]
+        val attachLocation = preferences[attachLocationKey]
+        val attachPreciseLocation = preferences[attachPreciseLocationKey]
         update.draft_action = draftAction
         update.accounts = accounts
         if (attachLocation) {
@@ -1636,7 +1622,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun updateLocationState() {
-        if (kPreferences[attachLocationKey]) {
+        if (preferences[attachLocationKey]) {
             locationLabel.visibility = View.VISIBLE
             if (recentLocation != null) {
                 setRecentLocation(recentLocation)
@@ -1813,6 +1799,72 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
         editTextContainer.touchDelegate = ComposeEditTextTouchDelegate(editTextContainer, editText)
     }
+
+    private fun loadPlaceName(location: ParcelableLocation) {
+        val weakThis by weak(this)
+        promiseOnUi {
+            val activity = weakThis ?: return@promiseOnUi
+            activity.updateLocationLabel(location, false)
+        } and task {
+            val activity = weakThis ?: throw InterruptedException()
+            val gcd = Geocoder(activity, Locale.getDefault())
+            return@task gcd.getFromLocation(location.latitude, location.longitude, 1)
+                    ?.firstOrNull() ?: throw NoSuchElementException("Address not found")
+        }.successUi { address ->
+            val activity = weakThis ?: return@successUi
+            activity.locationLabel.tag = address
+            activity.updateLocationLabel(location, true)
+        }.failUi { ex ->
+            val activity = weakThis ?: return@failUi
+            activity.locationLabel.tag = if (ex is NoSuchElementException) NoAddress else null
+            activity.updateLocationLabel(location, true)
+        }
+    }
+
+    private fun updateLocationLabel(location: ParcelableLocation, finished: Boolean) {
+        when {
+            !preferences[attachLocationKey] -> {
+                locationLabel.setText(R.string.no_location)
+            }
+            preferences[attachPreciseLocationKey] -> {
+                locationLabel.string = ParcelableLocationUtils.getHumanReadableString(location, 3)
+            }
+            else -> {
+                val tag = locationLabel.tag
+                when (tag) {
+                    is Address -> locationLabel.text = tag.locality
+                    is NoAddress -> locationLabel.setText(R.string.label_location_your_coarse_location)
+                    null -> if (finished) {
+                        locationLabel.setText(R.string.no_location)
+                    } else {
+                        locationLabel.setText(R.string.getting_location)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun deleteMedia(media:Array<ParcelableMediaUpdate>) {
+        val weakThis by weak(this)
+        promiseOnUi {
+            weakThis?.setProgressVisible(true)
+        }.then {
+            val context = weakThis ?: throw InterruptedException()
+            media.forEach {
+                Utils.deleteMedia(context, Uri.parse(it.uri))
+            }
+        }.alwaysUi {
+            weakThis?.setProgressVisible(false)
+            weakThis?.removeMedia(media.toList())
+            setMenu()
+        }.failUi {
+            val context = weakThis ?: throw InterruptedException()
+            Toast.makeText(context, R.string.message_toast_error_occurred,
+                    Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    internal object NoAddress
 
     class RetweetProtectedStatusWarnFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
 
@@ -2064,93 +2116,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             activity.setProgressVisible(true)
         }
 
-    }
-
-    private class DeleteMediaTask(
-            activity: ComposeActivity,
-            media: Array<ParcelableMediaUpdate>
-    ) : AbsDeleteMediaTask<((BooleanArray) -> Unit)?>(activity, media.mapToArray { Uri.parse(it.uri) }) {
-
-        override fun beforeExecute() {
-            val activity = context as? ComposeActivity ?: return
-            activity.setProgressVisible(true)
-        }
-
-        override fun afterExecute(callback: ((BooleanArray) -> Unit)?, result: BooleanArray) {
-            callback?.invoke(result)
-        }
-    }
-
-    private class DisplayPlaceNameTask : AbstractTask<ParcelableLocation, List<Address>, ComposeActivity>() {
-
-        override fun doLongOperation(location: ParcelableLocation): List<Address>? {
-            try {
-                val activity = callback ?: throw IOException("Interrupted")
-                val gcd = Geocoder(activity, Locale.getDefault())
-                return gcd.getFromLocation(location.latitude, location.longitude, 1)
-            } catch (e: IOException) {
-                return null
-            }
-
-        }
-
-        override fun beforeExecute() {
-            val location = params
-            val activity = callback ?: return
-            val textView = activity.locationLabel ?: return
-
-            val preferences = activity.preferences
-            val attachLocation = preferences[attachLocationKey]
-            val attachPreciseLocation = preferences[attachPreciseLocationKey]
-            if (attachLocation) {
-                if (attachPreciseLocation) {
-                    textView.spannable = ParcelableLocationUtils.getHumanReadableString(location, 3)
-                    textView.tag = location
-                } else {
-                    val tag = textView.tag
-                    if (tag is Address) {
-                        textView.spannable = tag.locality
-                    } else if (tag is NoAddress) {
-                        textView.setText(R.string.label_location_your_coarse_location)
-                    } else {
-                        textView.setText(R.string.getting_location)
-                    }
-                }
-            } else {
-                textView.setText(R.string.no_location)
-            }
-        }
-
-        override fun afterExecute(activity: ComposeActivity?, addresses: List<Address>?) {
-            if (activity == null) return
-            val textView = activity.locationLabel ?: return
-            val preferences = activity.preferences
-            val attachLocation = preferences[attachLocationKey]
-            val attachPreciseLocation = preferences[attachPreciseLocationKey]
-            if (attachLocation) {
-                if (attachPreciseLocation) {
-                    val location = params
-                    textView.spannable = ParcelableLocationUtils.getHumanReadableString(location, 3)
-                    textView.tag = location
-                } else if (addresses == null || addresses.isEmpty()) {
-                    val tag = textView.tag
-                    if (tag is Address) {
-                        textView.spannable = tag.locality
-                    } else {
-                        textView.setText(R.string.label_location_your_coarse_location)
-                        textView.tag = NoAddress()
-                    }
-                } else {
-                    val address = addresses[0]
-                    textView.spannable = address.locality
-                    textView.tag = address
-                }
-            } else {
-                textView.setText(R.string.no_location)
-            }
-        }
-
-        internal class NoAddress
     }
 
     private class ComposeEnterListener(private val activity: ComposeActivity?) : EnterListener {

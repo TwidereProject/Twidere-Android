@@ -9,11 +9,8 @@ import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import java.lang.Exception
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-
-/**
- * Created by mariotaku on 2017/1/3.
- */
 
 abstract class SyncTaskRunner(val context: Context) {
     @Inject
@@ -35,7 +32,7 @@ abstract class SyncTaskRunner(val context: Context) {
      */
     protected abstract fun onRunningTask(action: String, callback: ((Boolean) -> Unit)): Boolean
 
-    fun runTask(action: String, callback: ((Boolean) -> Unit)? = null): Boolean {
+    fun runTask(action: String, timeout: Long = 0, unit: TimeUnit? = null, callback: ((Boolean) -> Unit)? = null): Boolean {
         val syncType = SyncTaskRunner.getSyncType(action) ?: return false
         if (!syncPreferences.isSyncEnabled(syncType)) return false
         return onRunningTask(action) { success ->

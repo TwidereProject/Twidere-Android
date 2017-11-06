@@ -25,6 +25,7 @@ import android.net.Uri
 import android.widget.Toast
 import com.squareup.otto.Bus
 import com.squareup.otto.Subscribe
+import nl.komponents.kovenant.Promise
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.mapToArray
@@ -245,10 +246,9 @@ class AsyncTwitterWrapper(
         TaskStarter.execute(task)
     }
 
-    fun getSavedSearchesAsync(accountKeys: Array<UserKey>) {
+    fun getSavedSearchesAsync(accountKeys: Array<UserKey>): Promise<List<Unit>, Exception> {
         val task = GetSavedSearchesTask(context)
-        task.params = accountKeys
-        TaskStarter.execute(task)
+        return task.toPromise(accountKeys)
     }
 
     fun getSendingDraftIds(): LongArray {

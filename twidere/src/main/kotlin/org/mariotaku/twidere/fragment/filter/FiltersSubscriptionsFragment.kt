@@ -18,8 +18,9 @@ import android.widget.ListView
 import android.widget.TextView
 import com.rengwuxian.materialedittext.MaterialEditText
 import kotlinx.android.synthetic.main.layout_list_with_empty_view.*
+import nl.komponents.kovenant.combine.and
+import nl.komponents.kovenant.ui.alwaysUi
 import okhttp3.HttpUrl
-import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.ktextension.*
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.sqliteqb.library.Expression
@@ -35,7 +36,6 @@ import org.mariotaku.twidere.extension.util.isAdvancedFiltersEnabled
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
-import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.model.FiltersSubscription
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
@@ -44,7 +44,6 @@ import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.view.SimpleTextWatcher
-import java.lang.ref.WeakReference
 
 
 /**
@@ -134,16 +133,9 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
                 return true
             }
             R.id.refresh -> {
-                executeAfterFragmentResumed { fragment ->
-                    ProgressDialogFragment.show(fragment.childFragmentManager, FRAGMENT_TAG_RREFRESH_FILTERS)
-                    val task = RefreshFiltersSubscriptionsTask(fragment.context)
-                    val fragmentRef = WeakReference(fragment)
-                    task.callback = {
-                        fragmentRef.get()?.executeAfterFragmentResumed { fragment ->
-                            fragment.fragmentManager.dismissDialogFragment(FRAGMENT_TAG_RREFRESH_FILTERS)
-                        }
-                    }
-                    TaskStarter.execute(task)
+                val weakThis by weak(this)
+                showProgressDialog(FRAGMENT_TAG_RREFRESH_FILTERS) and RefreshFiltersSubscriptionsTask(context).toPromise(Unit).alwaysUi {
+                    weakThis?.fragmentManager?.dismissDialogFragment(FRAGMENT_TAG_RREFRESH_FILTERS)
                 }
                 return true
             }

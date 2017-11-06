@@ -283,7 +283,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
         val progressCircleDiameter = swipeLayout.progressCircleDiameter
         if (progressCircleDiameter == 0) return
         val progressViewStart = 0 - progressCircleDiameter
-        val progressViewEnd = insets.top + resources.getDimensionPixelSize(R.dimen.element_spacing_normal)
+        val progressViewEnd = insets.top + resources.getDimensionPixelSize(R.dimen.element_spacing_large)
         swipeLayout.setProgressViewOffset(false, progressViewStart, progressViewEnd)
     }
 

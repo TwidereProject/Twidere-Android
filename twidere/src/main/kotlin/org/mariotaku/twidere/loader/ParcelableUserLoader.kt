@@ -25,7 +25,6 @@ import android.os.Bundle
 import android.support.v4.content.FixedAsyncTaskLoader
 import android.text.TextUtils
 import android.util.Log
-import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.ktextension.set
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
@@ -202,8 +201,7 @@ class ParcelableUserLoader(
         val account = data.extras.getParcelable<AccountDetails>(EXTRA_ACCOUNT)
         if (account != null) {
             val task = UpdateAccountInfoTask(context)
-            task.params = Pair(account, user)
-            TaskStarter.execute(task)
+            task.toPromise(Pair(account, user))
         }
     }
 }

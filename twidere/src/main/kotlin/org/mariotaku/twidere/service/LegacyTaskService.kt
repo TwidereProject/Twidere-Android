@@ -23,7 +23,10 @@ import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
+import nl.komponents.kovenant.ui.failUi
+import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.deadline
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.annotation.AutoRefreshType
 import org.mariotaku.twidere.constant.autoRefreshCompatibilityModeKey
@@ -31,6 +34,7 @@ import org.mariotaku.twidere.util.TaskServiceRunner.Companion.ACTION_REFRESH_DIR
 import org.mariotaku.twidere.util.TaskServiceRunner.Companion.ACTION_REFRESH_HOME_TIMELINE
 import org.mariotaku.twidere.util.TaskServiceRunner.Companion.ACTION_REFRESH_NOTIFICATIONS
 import org.mariotaku.twidere.util.dagger.GeneralComponent
+import java.util.concurrent.TimeUnit
 
 class LegacyTaskService : BaseService() {
 
@@ -50,11 +54,19 @@ class LegacyTaskService : BaseService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d(LOGTAG, "LegacyTaskService received $intent")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
-                !preferences[autoRefreshCompatibilityModeKey]) return START_NOT_STICKY
-        val action = intent?.action ?: return START_NOT_STICKY
-        taskServiceRunner.runTask(action) {
+                !preferences[autoRefreshCompatibilityModeKey]) return serviceNotHandled(startId)
+        val action = intent?.action ?: return serviceNotHandled(startId)
+        val promise = taskServiceRunner.createPromise(action) ?: return serviceNotHandled(startId)
+        promise.deadline(3, TimeUnit.MINUTES).successUi {
+            stopSelfResult(startId)
+        }.failUi {
             stopSelfResult(startId)
         }
+        return START_NOT_STICKY
+    }
+
+    private fun serviceNotHandled(startId: Int): Int {
+        stopSelfResult(startId)
         return START_NOT_STICKY
     }
 

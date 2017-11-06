@@ -19,14 +19,12 @@
 
 package org.mariotaku.twidere.alias
 
+import org.mariotaku.microblog.library.mastodon.model.Notification
 import org.mariotaku.microblog.library.mastodon.model.Status
 import org.mariotaku.microblog.library.mastodon.model.StatusUpdate
 import org.mariotaku.microblog.library.mastodon.model.TimelineOption
 
-/**
- * Created by mariotaku on 2017/4/21.
- */
-
 typealias MastodonStatus = Status
 typealias MastodonTimelineOption = TimelineOption
 typealias MastodonStatusUpdate = StatusUpdate
+typealias MastodonNotification = Notification

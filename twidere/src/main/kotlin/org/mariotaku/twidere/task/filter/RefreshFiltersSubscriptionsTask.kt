@@ -3,46 +3,39 @@ package org.mariotaku.twidere.task.filter
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
-import org.mariotaku.abstask.library.AbstractTask
+import nl.komponents.kovenant.Promise
+import nl.komponents.kovenant.task
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.extension.model.instantiateComponent
-import org.mariotaku.twidere.extension.queryReference
+import org.mariotaku.twidere.extension.queryAll
 import org.mariotaku.twidere.model.FiltersData
 import org.mariotaku.twidere.model.FiltersSubscription
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
+import org.mariotaku.twidere.task.PromiseTask
 import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.mariotaku.twidere.util.sync.LOGTAG_SYNC
 import java.io.IOException
 import java.util.*
 
-class RefreshFiltersSubscriptionsTask(val context: Context) : AbstractTask<Unit?, Boolean, (Boolean) -> Unit>() {
-
-    override fun doLongOperation(param: Unit?): Boolean {
+class RefreshFiltersSubscriptionsTask(val context: Context) : PromiseTask<Unit, Unit> {
+    override fun toPromise(param: Unit): Promise<Unit, Exception> = task {
         val resolver = context.contentResolver
         val sourceIds = ArrayList<Long>()
-        resolver.queryReference(Filters.Subscriptions.CONTENT_URI, Filters.Subscriptions.COLUMNS,
-                null, null, null)?.use { (cursor) ->
-            val indices = ObjectCursor.indicesFrom(cursor, FiltersSubscription::class.java)
-            cursor.moveToFirst()
-            while (!cursor.isAfterLast) {
-                val subscription = indices.newObject(cursor)
-                sourceIds.add(subscription.id)
-                val component = subscription.instantiateComponent(context)
-                if (component != null) {
-                    try {
-                        if (component.fetchFilters()) {
-                            updateUserItems(resolver, component.users, subscription.id)
-                            updateBaseItems(resolver, component.keywords, Filters.Keywords.CONTENT_URI, subscription.id)
-                            updateBaseItems(resolver, component.links, Filters.Links.CONTENT_URI, subscription.id)
-                            updateBaseItems(resolver, component.sources, Filters.Sources.CONTENT_URI, subscription.id)
-                        }
-                    } catch (e: IOException) {
-                        DebugLog.w(LOGTAG_SYNC, "Unable to refresh filters", e)
-                    }
+        resolver.queryAll(Filters.Subscriptions.CONTENT_URI, Filters.Subscriptions.COLUMNS,
+                null, null, cls = FiltersSubscription::class.java).forEach { subscription ->
+            sourceIds.add(subscription.id)
+            val component = subscription.instantiateComponent(context) ?: return@forEach
+            try {
+                if (component.fetchFilters()) {
+                    updateUserItems(resolver, component.users, subscription.id)
+                    updateBaseItems(resolver, component.keywords, Filters.Keywords.CONTENT_URI, subscription.id)
+                    updateBaseItems(resolver, component.links, Filters.Links.CONTENT_URI, subscription.id)
+                    updateBaseItems(resolver, component.sources, Filters.Sources.CONTENT_URI, subscription.id)
                 }
-                cursor.moveToNext()
+            } catch (e: IOException) {
+                DebugLog.w(LOGTAG_SYNC, "Unable to refresh filters", e)
             }
         }
         // Delete 'orphaned' filter items with `sourceId` > 0
@@ -55,16 +48,7 @@ class RefreshFiltersSubscriptionsTask(val context: Context) : AbstractTask<Unit?
                 true, sourceIds, extraWhere, null)
         ContentResolverUtils.bulkDelete(resolver, Filters.Links.CONTENT_URI, Filters.Links.SOURCE,
                 true, sourceIds, extraWhere, null)
-        try {
-            Thread.sleep(1000)
-        } catch (e: InterruptedException) {
-            return false
-        }
-        return true
-    }
-
-    override fun afterExecute(callback: ((Boolean) -> Unit)?, result: Boolean) {
-        callback?.invoke(result)
+        Thread.sleep(1000)
     }
 
     private fun updateUserItems(resolver: ContentResolver, items: List<FiltersData.UserItem>?, sourceId: Long) {

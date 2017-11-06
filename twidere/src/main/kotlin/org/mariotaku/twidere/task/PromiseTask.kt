@@ -17,24 +17,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.task.statuses
+package org.mariotaku.twidere.task
 
-import android.content.Context
-import android.net.Uri
-import org.mariotaku.twidere.annotation.FilterScope
-import org.mariotaku.twidere.data.fetcher.PublicTimelineFetcher
-import org.mariotaku.twidere.model.refresh.ContentRefreshParam
-import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
-import org.mariotaku.twidere.util.ErrorInfoStore
+import nl.komponents.kovenant.Promise
 
-class GetPublicTimelineTask(context: Context) : GetStatusesTask<ContentRefreshParam>(context) {
-
-    override val contentUri: Uri = Statuses.Public.CONTENT_URI
-
-    override val filterScopes: Int = FilterScope.PUBLIC_TIMELINE
-
-    override val errorInfoKey: String = ErrorInfoStore.KEY_PUBLIC_TIMELINE
-
-    override fun getStatusesFetcher(params: ContentRefreshParam?) = PublicTimelineFetcher()
-
+interface PromiseTask<in P, out T : Any> {
+    fun toPromise(param: P): Promise<T, Exception>
 }

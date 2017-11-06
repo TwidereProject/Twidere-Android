@@ -3,14 +3,13 @@ package org.mariotaku.twidere.util
 import android.content.Context
 import android.content.SharedPreferences
 import android.support.annotation.StringDef
-import android.util.Log
 import com.squareup.otto.Bus
+import nl.komponents.kovenant.Promise
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.toNulls
-import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.constant.IntentConstants.INTENT_PACKAGE_PREFIX
 import org.mariotaku.twidere.constant.dataSyncProviderInfoKey
 import org.mariotaku.twidere.constant.stopAutoRefreshWhenBatteryLowKey
@@ -26,10 +25,7 @@ import org.mariotaku.twidere.task.filter.RefreshLaunchPresentationsTask
 import org.mariotaku.twidere.task.statuses.GetHomeTimelineTask
 import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
-
-/**
- * Created by mariotaku on 2017/1/6.
- */
+import java.util.concurrent.TimeUnit
 
 class TaskServiceRunner(
         val context: Context,
@@ -38,8 +34,17 @@ class TaskServiceRunner(
         val bus: Bus
 ) {
 
-    fun runTask(@Action action: String, callback: (Boolean) -> Unit): Boolean {
-        Log.d(LOGTAG, "TaskServiceRunner run task $action")
+    fun createPromise(action: String): Promise<*, Exception>? {
+        return when (action) {
+            ACTION_REFRESH_LAUNCH_PRESENTATIONS -> {
+                RefreshFiltersSubscriptionsTask(context).toPromise(Unit)
+            }
+            else -> null
+        }
+    }
+
+    fun runTask(@Action action: String, timeout: Long = 0, unit: TimeUnit? = null, callback: (Boolean) -> Unit): Boolean {
+        DebugLog.d(msg = "TaskServiceRunner run task $action")
         when (action) {
             ACTION_REFRESH_HOME_TIMELINE, ACTION_REFRESH_NOTIFICATIONS,
             ACTION_REFRESH_DIRECT_MESSAGES, ACTION_REFRESH_FILTERS_SUBSCRIPTIONS,
@@ -51,7 +56,7 @@ class TaskServiceRunner(
             }
             ACTION_SYNC_DRAFTS, ACTION_SYNC_FILTERS, ACTION_SYNC_USER_NICKNAMES, ACTION_SYNC_USER_COLORS -> {
                 val runner = preferences[dataSyncProviderInfoKey]?.newSyncTaskRunner(context) ?: return false
-                return runner.runTask(action, callback)
+                return runner.runTask(action, timeout, unit, callback)
             }
         }
         return false
@@ -95,9 +100,6 @@ class TaskServiceRunner(
                     }
                 }
                 return task
-            }
-            ACTION_REFRESH_FILTERS_SUBSCRIPTIONS -> {
-                return RefreshFiltersSubscriptionsTask(context)
             }
             ACTION_REFRESH_LAUNCH_PRESENTATIONS -> {
                 return RefreshLaunchPresentationsTask(context)
@@ -151,11 +153,12 @@ class TaskServiceRunner(
         const val ACTION_SYNC_FILTERS = INTENT_PACKAGE_PREFIX + "SYNC_FILTERS"
         @Action
         const val ACTION_SYNC_USER_NICKNAMES = INTENT_PACKAGE_PREFIX + "SYNC_USER_NICKNAMES"
+
         @Action
         const val ACTION_SYNC_USER_COLORS = INTENT_PACKAGE_PREFIX + "SYNC_USER_COLORS"
-
         val ACTIONS_SYNC = arrayOf(ACTION_SYNC_DRAFTS, ACTION_SYNC_FILTERS, ACTION_SYNC_USER_COLORS,
                 ACTION_SYNC_USER_NICKNAMES)
+
     }
 
     data class SyncFinishedEvent(val syncType: String, val success: Boolean)

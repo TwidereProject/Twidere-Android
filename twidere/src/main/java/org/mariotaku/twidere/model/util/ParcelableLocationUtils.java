@@ -1,6 +1,7 @@
 package org.mariotaku.twidere.model.util;
 
 import android.location.Location;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.mariotaku.microblog.library.twitter.model.GeoLocation;
@@ -14,7 +15,7 @@ public class ParcelableLocationUtils {
     private ParcelableLocationUtils() {
     }
 
-    public static String getHumanReadableString(ParcelableLocation obj, int decimalDigits) {
+    public static String getHumanReadableString(@NonNull ParcelableLocation obj, int decimalDigits) {
         return String.format("%s,%s", InternalParseUtils.parsePrettyDecimal(obj.latitude, decimalDigits),
                 InternalParseUtils.parsePrettyDecimal(obj.longitude, decimalDigits));
     }

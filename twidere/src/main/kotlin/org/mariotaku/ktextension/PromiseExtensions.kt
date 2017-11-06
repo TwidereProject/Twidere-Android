@@ -1,14 +1,26 @@
 package org.mariotaku.ktextension
 
+import android.os.Handler
 import nl.komponents.kovenant.Deferred
+import nl.komponents.kovenant.Kovenant
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.deferred
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReferenceArray
 
-/**
- * Created by mariotaku on 2016/12/2.
- */
+
+fun <V> Promise<V, Exception>.deadline(time: Long, unit: TimeUnit): Promise<V, Exception> {
+    val weakPromise = toWeak()
+    WatchdogHandler.postDelayed({
+        val promise = weakPromise.get() ?: return@postDelayed
+        if (promise.isDone()) return@postDelayed
+        Kovenant.cancel(promise, DeadlineException())
+    }, unit.toMillis(time))
+    return this
+}
+
+
 fun <V, E> combine(promises: List<Promise<V, E>>): Promise<List<V>, E> {
     return concreteCombine(promises)
 }
@@ -49,4 +61,10 @@ fun <V, E> concreteCombine(promises: List<Promise<V, E>>): Promise<List<V>, E> {
     deferred.registerFail(promises)
 
     return deferred.promise
+}
+
+private object WatchdogHandler : Handler()
+
+class DeadlineException : Exception() {
+
 }

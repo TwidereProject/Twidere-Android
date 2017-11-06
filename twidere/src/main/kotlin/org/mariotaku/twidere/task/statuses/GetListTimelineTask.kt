@@ -25,11 +25,9 @@ import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.data.fetcher.ListTimelineFetcher
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.extension.withAppendedPath
-import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.refresh.ListTimelineContentRefreshParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.ErrorInfoStore
-import org.mariotaku.twidere.util.sync.TimelineSyncManager
 
 class GetListTimelineTask(context: Context) : GetStatusesTask<ListTimelineContentRefreshParam>(context) {
 
@@ -42,9 +40,6 @@ class GetListTimelineTask(context: Context) : GetStatusesTask<ListTimelineConten
 
     override fun getStatusesFetcher(params: ListTimelineContentRefreshParam?): StatusesFetcher {
         return ListTimelineFetcher(params?.id, params?.slug, params?.ownerId, params?.ownerScreenName)
-    }
-
-    override fun syncFetchReadPosition(manager: TimelineSyncManager, accountKeys: Array<UserKey>) {
     }
 
 }

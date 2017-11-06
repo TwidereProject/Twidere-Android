@@ -29,9 +29,6 @@ import org.mariotaku.twidere.util.JsonSerializer
 import java.io.IOException
 
 
-/**
- * Created by mariotaku on 2017/8/22.
- */
 class RefreshLaunchPresentationsTask(context: Context) : BaseAbstractTask<Unit?, Boolean, (Boolean) -> Unit>(context) {
     override fun doLongOperation(params: Unit?): Boolean {
         val builder = HttpRequest.Builder()
@@ -52,6 +49,10 @@ class RefreshLaunchPresentationsTask(context: Context) : BaseAbstractTask<Unit?,
         } catch (e: IOException) {
             return false
         }
+    }
+
+    override fun afterExecute(callback: ((Boolean) -> Unit)?, result: Boolean) {
+        callback?.invoke(result)
     }
 
     companion object {

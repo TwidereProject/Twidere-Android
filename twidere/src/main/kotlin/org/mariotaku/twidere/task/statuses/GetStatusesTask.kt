@@ -42,6 +42,7 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
+import org.mariotaku.twidere.data.syncher.TimelinePositionSyncher
 import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.applyLoadLimit
@@ -72,8 +73,6 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
 ) : BaseAbstractTask<P, List<Pair<GetTimelineResult<ParcelableStatus>?, Exception?>>,
         (Boolean) -> Unit>(context) {
 
-    private val profileImageSize = context.getString(R.string.profile_image_size)
-
     protected abstract val contentUri: Uri
 
     @FilterScope
@@ -81,7 +80,9 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
 
     protected abstract val errorInfoKey: String
 
-    override fun doLongOperation(param: P): List<Pair<GetTimelineResult<ParcelableStatus>?, Exception?>> {
+    private val profileImageSize = context.getString(R.string.profile_image_size)
+
+    override final fun doLongOperation(param: P): List<Pair<GetTimelineResult<ParcelableStatus>?, Exception?>> {
         if (param.shouldAbort) return emptyList()
         val accountKeys = param.accountKeys.takeIf { it.isNotEmpty() } ?: return emptyList()
         val loadItemLimit = preferences[loadItemLimitKey]
@@ -210,7 +211,12 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
 
     protected abstract fun getStatusesFetcher(params: P?): StatusesFetcher
 
-    protected abstract fun syncFetchReadPosition(manager: TimelineSyncManager, accountKeys: Array<UserKey>)
+    protected open fun getPositionSyncher(manager: TimelineSyncManager): TimelinePositionSyncher? = null
+
+    private fun syncFetchReadPosition(manager: TimelineSyncManager, accountKeys: Array<UserKey>) {
+        val fetcher = getPositionSyncher(manager) ?: return
+        fetcher.get(accountKeys)
+    }
 
     private fun extractMicroBlogUsers(timeline: List<Status>, account: AccountDetails): List<ParcelableUser> {
         return timeline.flatMap { status ->
@@ -319,13 +325,12 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
         fun getPositionKey(timestamp: Long, sortId: Long, lastSortId: Long, sortDiff: Long,
                 position: Int, count: Int): Long {
             if (sortDiff == 0L) return timestamp
-            val extraValue: Int
-            if (sortDiff > 0) {
+            val extraValue = if (sortDiff > 0) {
                 // descent sorted by time
-                extraValue = count - 1 - position
+                count - 1 - position
             } else {
                 // ascent sorted by time
-                extraValue = position
+                position
             }
             return timestamp + (sortId - lastSortId) * (499 - count) / sortDiff + extraValue.toLong()
         }

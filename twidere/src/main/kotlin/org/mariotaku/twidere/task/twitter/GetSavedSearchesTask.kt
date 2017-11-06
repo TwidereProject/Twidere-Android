@@ -20,41 +20,36 @@
 package org.mariotaku.twidere.task.twitter
 
 import android.content.Context
-import org.mariotaku.abstask.library.AbstractTask
-import org.mariotaku.microblog.library.MicroBlogException
+import nl.komponents.kovenant.Promise
+import nl.komponents.kovenant.all
+import nl.komponents.kovenant.task
 import org.mariotaku.sqliteqb.library.Expression
-import org.mariotaku.twidere.TwidereConstants.LOGTAG
-import org.mariotaku.twidere.model.SingleResponse
+import org.mariotaku.twidere.exception.NoAccountException
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches
+import org.mariotaku.twidere.task.PromiseTask
 import org.mariotaku.twidere.util.ContentValuesCreator
-import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 
-/**
- * Created by mariotaku on 16/2/13.
- */
 class GetSavedSearchesTask(
         private val context: Context
-) : AbstractTask<Array<UserKey>, SingleResponse<Unit>, Any?>() {
+) : PromiseTask<Array<UserKey>, List<Unit>> {
 
-    override fun doLongOperation(params: Array<UserKey>): SingleResponse<Unit> {
-        val cr = context.contentResolver
-        for (accountKey in params) {
-            val twitter = MicroBlogAPIFactory.getInstance(context, accountKey) ?: continue
-            try {
-                val searches = twitter.savedSearches
-                val values = ContentValuesCreator.createSavedSearches(searches,
-                        accountKey)
-                val where = Expression.equalsArgs(SavedSearches.ACCOUNT_KEY)
-                val whereArgs = arrayOf(accountKey.toString())
-                cr.delete(SavedSearches.CONTENT_URI, where.sql, whereArgs)
-                ContentResolverUtils.bulkInsert(cr, SavedSearches.CONTENT_URI, values)
-            } catch (e: MicroBlogException) {
-                DebugLog.w(LOGTAG, tr = e)
-            }
+    override fun toPromise(param: Array<UserKey>): Promise<List<Unit>, Exception> = all(param.map { accountKey ->
+        return@map task {
+            val cr = context.contentResolver
+            val twitter = MicroBlogAPIFactory.getInstance(context, accountKey) ?:
+                    throw NoAccountException()
+            val searches = twitter.savedSearches
+            val values = ContentValuesCreator.createSavedSearches(searches,
+                    accountKey)
+            val where = Expression.equalsArgs(SavedSearches.ACCOUNT_KEY)
+            val whereArgs = arrayOf(accountKey.toString())
+            cr.delete(SavedSearches.CONTENT_URI, where.sql, whereArgs)
+            ContentResolverUtils.bulkInsert(cr, SavedSearches.CONTENT_URI, values)
+            return@task
         }
-        return SingleResponse(Unit)
-    }
+    }, cancelOthersOnError = false)
+
 }

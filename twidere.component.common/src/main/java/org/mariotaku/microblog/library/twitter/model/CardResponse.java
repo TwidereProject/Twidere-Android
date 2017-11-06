@@ -23,11 +23,11 @@ import android.os.Parcelable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
-/**
- * Created by mariotaku on 15/12/31.
- */
+import java.io.IOException;
+
 @ParcelablePlease
 @JsonObject
 public class CardResponse implements Parcelable {
@@ -36,6 +36,11 @@ public class CardResponse implements Parcelable {
 
     public CardEntity getCard() {
         return card;
+    }
+
+    @OnJsonParseComplete
+    void onParseComplete() throws IOException {
+        if (card == null) throw new IOException("Empty card result");
     }
 
     @Override

@@ -24,23 +24,21 @@ import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import android.text.format.DateUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.RadioButton
 import android.widget.TextView
 import kotlinx.android.synthetic.main.layout_twitter_card_poll.view.*
 import nl.komponents.kovenant.task
+import nl.komponents.kovenant.then
 import nl.komponents.kovenant.ui.successUi
-import org.mariotaku.abstask.library.AbstractTask
-import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.ktextension.spannable
 import org.mariotaku.ktextension.toLongOr
-import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.ktextension.weak
 import org.mariotaku.microblog.library.twitter.TwitterCaps
 import org.mariotaku.microblog.library.twitter.model.CardDataMap
-import org.mariotaku.twidere.Constants.LOGTAG
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.exception.NoAccountException
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.model.ParcelableCardEntity
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -49,18 +47,15 @@ import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import org.mariotaku.twidere.util.TwitterCardUtils
 import org.mariotaku.twidere.util.support.ViewSupport
 import org.mariotaku.twidere.view.ContainerView
-import java.lang.ref.WeakReference
 import java.util.*
 
-/**
- * Created by mariotaku on 15/12/20.
- */
 class CardPollViewController : ContainerView.ViewController() {
 
     private lateinit var status: ParcelableStatus
     private var fetchedCard: ParcelableCardEntity? = null
-    private val card: ParcelableCardEntity
-        get() = fetchedCard ?: status.card!!
+    private var clickedChoice: Boolean = false
+    private val card: ParcelableCardEntity?
+        get() = fetchedCard ?: status.card
 
     override fun onCreate() {
         super.onCreate()
@@ -73,6 +68,7 @@ class CardPollViewController : ContainerView.ViewController() {
     }
 
     private fun initChoiceView() {
+        val card = this.card ?: return
         val choicesCount = TwitterCardUtils.getChoicesCount(card)
         val inflater = LayoutInflater.from(context)
 
@@ -90,11 +86,13 @@ class CardPollViewController : ContainerView.ViewController() {
     }
 
     private fun loadCardPoll() {
-        val weakThis = WeakReference(this)
+        val status = this.status
+        val card = this.card ?: return
+        val weakThis by weak(this)
         task {
-            val vc = weakThis.get() ?: throw IllegalStateException()
-            val card = vc.card
-            val details = AccountUtils.getAccountDetails(AccountManager.get(vc.context), card.account_key, true)!!
+            val vc = weakThis ?: throw IllegalStateException()
+            val details = AccountUtils.getAccountDetails(AccountManager.get(vc.context),
+                    card.account_key, true) ?: throw NoAccountException()
             val caps = details.newMicroBlogInstance(vc.context, cls = TwitterCaps::class.java)
             val params = CardDataMap()
             params.putString("card_uri", card.url)
@@ -106,7 +104,7 @@ class CardPollViewController : ContainerView.ViewController() {
             }
             return@task cardResponse.toParcelable(details.key, details.type)
         }.successUi { data ->
-            weakThis.get()?.displayPoll(data, status)
+            weakThis?.displayPoll(data, status)
         }
     }
 
@@ -126,54 +124,13 @@ class CardPollViewController : ContainerView.ViewController() {
             votesSum += card.getAsInteger("choice${choiceIndex}_count", 0)
         }
 
-        val clickListener = object : View.OnClickListener {
-            private var clickedChoice: Boolean = false
-
-            override fun onClick(v: View) {
-                if (hasChoice || clickedChoice) return
-                for (i in 0 until view.pollContainer.childCount) {
-                    val pollItem = view.pollContainer.getChildAt(i)
-                    pollItem.isClickable = false
-                    clickedChoice = true
-                    val choiceRadioButton: RadioButton = pollItem.findViewById(R.id.choice_button)
-                    val checked = v === pollItem
-                    choiceRadioButton.isChecked = checked
-                    if (checked) {
-                        val cardData = CardDataMap()
-                        cardData.putLong("original_tweet_id", status.id.toLongOr(-1L))
-                        cardData.putString("card_uri", card.url)
-                        cardData.putString("cards_platform", MicroBlogAPIFactory.CARDS_PLATFORM_ANDROID_12)
-                        cardData.putString("response_card_name", card.name)
-                        cardData.putString("selected_choice", (i + 1).toString())
-                        val task = object : AbstractTask<CardDataMap, ParcelableCardEntity, CardPollViewController>() {
-
-                            override fun afterExecute(callback: CardPollViewController?, results: ParcelableCardEntity?) {
-                                results ?: return
-                                callback?.displayAndReloadPoll(results, status)
-                            }
-
-                            override fun doLongOperation(cardDataMap: CardDataMap): ParcelableCardEntity? {
-                                val details = AccountUtils.getAccountDetails(AccountManager.get(context),
-                                        card.account_key, true) ?: return null
-                                val caps = details.newMicroBlogInstance(context, cls = TwitterCaps::class.java)
-                                try {
-                                    val cardEntity = caps.sendPassThrough(cardDataMap).card ?: run {
-                                        return null
-                                    }
-                                    return cardEntity.toParcelable(card.account_key, details.type)
-                                } catch (e: MicroBlogException) {
-                                    Log.w(LOGTAG, e)
-                                }
-
-                                return null
-                            }
-                        }
-                        task.callback = this@CardPollViewController
-                        task.params = cardData
-                        TaskStarter.execute(task)
-                    }
-                }
-            }
+        val clickListener = View.OnClickListener click@ { v ->
+            if (hasChoice || clickedChoice) return@click
+            clickedChoice = true
+            val i = view.pollContainer.indexOfChild(v)
+            if (i < 0) return@click
+            v.isClickable = false
+            submitChoice(i + 1)
         }
 
         val color = ContextCompat.getColor(context, R.color.material_light_blue_a200)
@@ -216,6 +173,28 @@ class CardPollViewController : ContainerView.ViewController() {
 
         val timeLeft = DateUtils.getRelativeTimeSpanString(context, endDatetimeUtc.time, true)
         view.pollSummary.spannable = context.getString(R.string.poll_summary_format, nVotes, timeLeft)
+    }
+
+    private fun submitChoice(which: Int) {
+        val status = this.status
+        val card = this.card ?: return
+        val cardData = CardDataMap()
+        cardData.putLong("original_tweet_id", status.id.toLongOr(-1L))
+        cardData.putString("card_uri", card.url)
+        cardData.putString("cards_platform", MicroBlogAPIFactory.CARDS_PLATFORM_ANDROID_12)
+        cardData.putString("response_card_name", card.name)
+        cardData.putString("selected_choice", which.toString())
+        val weakThis by weak(this)
+        task {
+            val vc = weakThis ?: throw InterruptedException()
+            val details = AccountUtils.getAccountDetails(AccountManager.get(vc.context),
+                    card.account_key, true) ?: throw NoAccountException()
+            val caps = details.newMicroBlogInstance(vc.context, cls = TwitterCaps::class.java)
+            val cardEntity = caps.sendPassThrough(cardData).card
+            return@task cardEntity.toParcelable(card.account_key, details.type)
+        }.then { result ->
+            weakThis?.displayAndReloadPoll(result, status)
+        }
     }
 
     private class PercentDrawable internal constructor(

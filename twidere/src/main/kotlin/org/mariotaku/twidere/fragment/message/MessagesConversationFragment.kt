@@ -44,6 +44,9 @@ import kotlinx.android.synthetic.main.activity_premium_dashboard.*
 import kotlinx.android.synthetic.main.fragment_messages_conversation.*
 import kotlinx.android.synthetic.main.fragment_messages_conversation.view.*
 import kotlinx.android.synthetic.main.layout_toolbar_message_conversation_title.*
+import nl.komponents.kovenant.then
+import nl.komponents.kovenant.ui.alwaysUi
+import nl.komponents.kovenant.ui.promiseOnUi
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonUtils
@@ -79,14 +82,10 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.service.LengthyOperationsService
 import org.mariotaku.twidere.task.compose.AbsAddMediaTask
-import org.mariotaku.twidere.task.compose.AbsDeleteMediaTask
 import org.mariotaku.twidere.task.twitter.message.DestroyMessageTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
 import org.mariotaku.twidere.task.twitter.message.MarkMessageReadTask
-import org.mariotaku.twidere.util.ClipboardUtils
-import org.mariotaku.twidere.util.DataStoreUtils
-import org.mariotaku.twidere.util.IntentUtils
-import org.mariotaku.twidere.util.PreviewGridItemDecoration
+import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.view.ExtendedRecyclerView
 import org.mariotaku.twidere.view.holder.compose.MediaPreviewViewHolder
 import java.lang.ref.WeakReference
@@ -148,9 +147,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
 
         mediaPreviewAdapter.listener = object : MediaPreviewAdapter.Listener {
             override fun onRemoveClick(position: Int, holder: MediaPreviewViewHolder) {
-                val task = DeleteMediaTask(this@MessagesConversationFragment,
-                        arrayOf(mediaPreviewAdapter.getItem(position)))
-                TaskStarter.execute(task)
+                deleteMedia(mediaPreviewAdapter.getItem(position))
             }
 
             override fun onEditClick(position: Int, holder: MediaPreviewViewHolder) {
@@ -565,27 +562,19 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
 
     }
 
-    internal class DeleteMediaTask(
-            fragment: MessagesConversationFragment,
-            val media: Array<ParcelableMediaUpdate>
-    ) : AbsDeleteMediaTask<MessagesConversationFragment>(fragment.context,
-            media.mapToArray { Uri.parse(it.uri) }) {
-
-        init {
-            callback = fragment
+    private fun deleteMedia(vararg media: ParcelableMediaUpdate) {
+        val weakThis by weak(this)
+        promiseOnUi {
+            weakThis?.setProgressVisible(true)
+        }.then {
+            val context = weakThis?.context ?: throw InterruptedException()
+            media.forEach {
+                Utils.deleteMedia(context, Uri.parse(it.uri))
+            }
+        }.alwaysUi {
+            weakThis?.setProgressVisible(false)
+            weakThis?.removeMedia(media.toList())
         }
-
-        override fun afterExecute(callback: MessagesConversationFragment?, results: BooleanArray) {
-            if (callback == null) return
-            callback.setProgressVisible(false)
-            callback.removeMedia(media.toList())
-        }
-
-        override fun beforeExecute() {
-            val fragment = callback ?: return
-            fragment.setProgressVisible(true)
-        }
-
     }
 
     internal class ConversationLoader(
