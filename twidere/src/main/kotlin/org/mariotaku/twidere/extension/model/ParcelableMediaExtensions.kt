@@ -1,7 +1,9 @@
 package org.mariotaku.twidere.extension.model
 
 import android.annotation.SuppressLint
+import android.support.v13.view.inputmethod.InputContentInfoCompat
 import org.mariotaku.twidere.model.ParcelableMedia
+import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.util.promotion.PromotionService
 
 /**
@@ -49,4 +51,12 @@ val ParcelableMedia.bannerExtras: PromotionService.BannerExtras?
     get() {
         val contentUrl = this.page_url ?: this.url ?: return null
         return PromotionService.BannerExtras(contentUrl)
+    }
+
+@ParcelableMedia.Type
+val InputContentInfoCompat.inferredMediaType: Int
+    get() = if (description.mimeTypeCount > 0) {
+        ParcelableMediaUtils.inferMediaType(description.getMimeType(0))
+    } else {
+        ParcelableMedia.Type.IMAGE
     }

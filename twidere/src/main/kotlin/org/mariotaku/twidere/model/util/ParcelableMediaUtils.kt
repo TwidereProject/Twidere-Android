@@ -19,6 +19,14 @@ import org.mariotaku.twidere.model.UserKey
  */
 object ParcelableMediaUtils {
 
+    fun inferMediaType(mimeType: String, def: Int = ParcelableMedia.Type.IMAGE): Int {
+        return when {
+            mimeType == "image/gif" -> ParcelableMedia.Type.ANIMATED_GIF
+            mimeType.startsWith("video/") -> ParcelableMedia.Type.VIDEO
+            mimeType.startsWith("image/") -> ParcelableMedia.Type.IMAGE
+            else -> def
+        }
+    }
 
     fun fromStatus(status: Status, accountKey: UserKey, accountType: String): Array<ParcelableMedia>? {
         return status.getEntityMedia() + status.getAttachmentMedia() + fromCard(status.card,

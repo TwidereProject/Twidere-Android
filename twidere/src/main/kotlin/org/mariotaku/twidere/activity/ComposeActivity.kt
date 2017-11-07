@@ -66,7 +66,6 @@ import nl.komponents.kovenant.ui.alwaysUi
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.promiseOnUi
 import nl.komponents.kovenant.ui.successUi
-import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.edit
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
@@ -96,7 +95,7 @@ import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.preference.ComponentPickerPreference
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.service.LengthyOperationsService
-import org.mariotaku.twidere.task.compose.AbsAddMediaTask
+import org.mariotaku.twidere.util.obtainMedia
 import org.mariotaku.twidere.task.status.UpdateStatusTask
 import org.mariotaku.twidere.text.MarkForDeleteSpan
 import org.mariotaku.twidere.text.style.EmojiSpan
@@ -399,9 +398,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             REQUEST_TAKE_PHOTO, REQUEST_PICK_MEDIA -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     val src = MediaPickerActivity.getMediaUris(data)
-                    TaskStarter.execute(AddMediaTask(this, src, null, false, false))
+                    performObtainMedia(src, null, false, false)
                     val extras = data.getBundleExtra(MediaPickerActivity.EXTRA_EXTRAS)
-                    if (extras?.getBoolean(EXTRA_IS_POSSIBLY_SENSITIVE) ?: false) {
+                    if (extras?.getBoolean(EXTRA_IS_POSSIBLY_SENSITIVE) == true) {
                         possiblySensitive = true
                     }
                 }
@@ -436,7 +435,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                     val src = MediaPickerActivity.getMediaUris(data)?.takeIf(Array<Uri>::isNotEmpty) ?:
                             data.getParcelableExtra<Uri>(EXTRA_IMAGE_URI)?.let { arrayOf(it) }
                     if (src != null) {
-                        TaskStarter.execute(AddMediaTask(this, src, null, false, false))
+                        performObtainMedia(src, null, false, false)
                     }
                 }
             }
@@ -834,6 +833,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         mediaPreviewAdapter.addAll(media)
         updateMediaState()
         setMenu()
+        updateTextCount()
     }
 
     private fun removeMedia(list: List<ParcelableMediaUpdate>) {
@@ -1057,7 +1057,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
 
         if (extras != null) {
-            if (extras.summaryText?.isNotEmpty() ?: false) {
+            if (extras.summaryText?.isNotEmpty() == true) {
                 editSummaryEnabled = true
             }
             editSummary.setText(extras.summaryText)
@@ -1099,7 +1099,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 val stream = intent.getStreamExtra()
                 if (stream != null) {
                     val src = stream.toTypedArray()
-                    TaskStarter.execute(AddMediaTask(this, src, null, true, false))
+                    performObtainMedia(src, null, true, false)
                 }
             }
             else -> {
@@ -1108,7 +1108,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 val data = intent.data
                 if (data != null) {
                     val src = arrayOf(data)
-                    TaskStarter.execute(AddMediaTask(this, src, null, true, false))
+                    performObtainMedia(src, null, true, false)
                 }
             }
         }
@@ -1791,11 +1791,17 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         })
         editText.customSelectionActionModeCallback = this
         editText.imageInputListener = { contentInfo ->
-            val task = AddMediaTask(this, arrayOf(contentInfo.contentUri), null, true, false)
-            task.callback = {
-                contentInfo.releasePermission()
+            val weakThis by weak(this)
+            val weakContentInfo by weak(contentInfo)
+            promiseOnUi {
+                weakThis?.setProgressVisible(true)
+            } and obtainMedia(arrayOf(contentInfo.contentUri), intArrayOf(contentInfo.inferredMediaType),
+                    true, false).successUi { media ->
+                weakThis?.addMedia(media)
+            }.alwaysUi {
+                weakContentInfo?.releasePermission()
+                weakThis?.setProgressVisible(false)
             }
-            TaskStarter.execute(task)
         }
         editTextContainer.touchDelegate = ComposeEditTextTouchDelegate(editTextContainer, editText)
     }
@@ -1844,7 +1850,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
     }
 
-    private fun deleteMedia(media:Array<ParcelableMediaUpdate>) {
+    private fun deleteMedia(media: Array<ParcelableMediaUpdate>) {
         val weakThis by weak(this)
         promiseOnUi {
             weakThis?.setProgressVisible(true)
@@ -1861,6 +1867,17 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             val context = weakThis ?: throw InterruptedException()
             Toast.makeText(context, R.string.message_toast_error_occurred,
                     Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun performObtainMedia(sources: Array<Uri>, types: IntArray?, copySrc: Boolean, deleteSrc: Boolean) {
+        val weakThis by weak(this)
+        promiseOnUi {
+            weakThis?.setProgressVisible(true)
+        } and obtainMedia(sources, types, copySrc, deleteSrc).successUi { media ->
+            weakThis?.addMedia(media)
+        }.alwaysUi {
+            weakThis?.setProgressVisible(false)
         }
     }
 
@@ -2092,28 +2109,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             activity.updateSummaryTextState()
             activity.setMenu()
             notifyDataSetChanged()
-        }
-    }
-
-    private class AddMediaTask(activity: ComposeActivity, sources: Array<Uri>, types: IntArray?,
-            copySrc: Boolean, deleteSrc: Boolean) : AbsAddMediaTask<((List<ParcelableMediaUpdate>?) -> Unit)?>(
-            activity, sources, types, copySrc, deleteSrc) {
-
-        override fun afterExecute(callback: ((List<ParcelableMediaUpdate>?) -> Unit)?,
-                result: List<ParcelableMediaUpdate>?) {
-            callback?.invoke(result)
-            val activity = context as? ComposeActivity ?: return
-            activity.setProgressVisible(false)
-            if (result != null) {
-                activity.addMedia(result)
-            }
-            activity.setMenu()
-            activity.updateTextCount()
-        }
-
-        override fun beforeExecute() {
-            val activity = context as? ComposeActivity ?: return
-            activity.setProgressVisible(true)
         }
 
     }

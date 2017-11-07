@@ -30,6 +30,7 @@ import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_LIMIT
 import org.mariotaku.twidere.model.CursorReference
 import org.mariotaku.twidere.util.TwidereQueryBuilder
 import org.mariotaku.twidere.util.content.ContentResolverUtils
+import java.io.FileNotFoundException
 
 fun ContentResolver.query(uri: Uri, projection: Array<String>? = null,
         selection: String? = null, selectionArgs: Array<String>? = null, sortOrder: String? = null,
@@ -105,4 +106,12 @@ fun <T : Any> ContentResolver.insert(uri: Uri, obj: T, cls: Class<T> = obj.javaC
 fun <T : Any> ContentResolver.bulkInsert(uri: Uri, collection: Collection<T>, cls: Class<T>): Int {
     val creator = ObjectCursor.valuesCreatorFrom(cls)
     return ContentResolverUtils.bulkInsert(this, uri, collection.map(creator::create))
+}
+
+fun ContentResolver.copyStream(src: Uri, dest: Uri) {
+    openOutputStream(dest)?.use { os ->
+        openInputStream(src)?.use { st ->
+            st.copyTo(os)
+        } ?: throw FileNotFoundException("Unable to open $src")
+    } ?: throw FileNotFoundException("Unable to open $dest")
 }

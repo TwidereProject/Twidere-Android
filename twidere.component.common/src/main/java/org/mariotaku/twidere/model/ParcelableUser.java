@@ -221,7 +221,7 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
     public ParcelableUser() {
     }
 
-    public ParcelableUser(final UserKey account_key, final UserKey key, final String name,
+    public ParcelableUser(@Nullable final UserKey account_key, final UserKey key, final String name,
             final String screenName, final String profileImageUrl) {
         this.account_key = account_key;
         this.key = key;
