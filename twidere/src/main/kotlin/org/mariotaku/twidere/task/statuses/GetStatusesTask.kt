@@ -23,7 +23,7 @@ import android.accounts.AccountManager
 import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
-import org.mariotaku.abstask.library.TaskStarter
+import nl.komponents.kovenant.all
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.addTo
 import org.mariotaku.ktextension.toLongOr
@@ -59,7 +59,7 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.BaseAbstractTask
-import org.mariotaku.twidere.task.cache.CacheTimelineResultTask
+import org.mariotaku.twidere.util.cacheTimelineResult
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.ErrorInfoStore
@@ -336,13 +336,12 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
         }
 
         fun cacheItems(context: Context, results: List<Pair<GetTimelineResult<*>?, Exception?>>) {
-            results.forEach { (result, _) ->
-                if (result == null) return@forEach
+            all(results.mapNotNull { (result, _) ->
+                if (result == null) return@mapNotNull null
                 val account = result.account
-                val task = CacheTimelineResultTask(context, result,
-                        account.type == AccountType.STATUSNET || account.isOfficial(context))
-                TaskStarter.execute(task)
-            }
+                val cacheRelationship = account.type == AccountType.STATUSNET || account.isOfficial(context)
+                context.contentResolver.cacheTimelineResult(result, cacheRelationship)
+            }, cancelOthersOnError = false)
         }
     }
 

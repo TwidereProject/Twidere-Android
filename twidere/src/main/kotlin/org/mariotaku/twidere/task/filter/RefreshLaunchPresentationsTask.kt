@@ -59,3 +59,4 @@ class RefreshLaunchPresentationsTask(context: Context) : BaseAbstractTask<Unit?,
         const val JSON_CACHE_KEY = "launch_presentations"
     }
 }
+
