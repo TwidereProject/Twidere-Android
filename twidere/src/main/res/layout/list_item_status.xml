@@ -121,13 +121,19 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_marginEnd="@dimen/element_spacing_small"
+            android:layout_marginRight="@dimen/element_spacing_small"
             android:layout_toLeftOf="@+id/time"
             android:layout_toStartOf="@+id/time"
             android:ellipsize="end"
             android:maxLines="1"
+            app:tltvPrimaryTextAppearance="?android:textAppearanceSmall"
             app:tltvPrimaryTextColor="?android:textColorPrimary"
             app:tltvPrimaryTextStyle="bold"
-            app:tltvSecondaryTextColor="?android:textColorSecondary"/>
+            app:tltvSecondaryTextAppearance="?android:textAppearanceSmall"
+            app:tltvSecondaryTextColor="?android:textColorSecondary"
+            tools:tltvPrimaryText="Name"
+            tools:tltvSecondaryText="\@screenname"/>
 
         <org.mariotaku.twidere.view.ShortTimeView
             android:id="@+id/time"
