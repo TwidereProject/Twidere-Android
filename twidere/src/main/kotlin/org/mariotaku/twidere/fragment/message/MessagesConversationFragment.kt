@@ -81,10 +81,9 @@ import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationTyp
 import org.mariotaku.twidere.model.event.GetMessagesTaskEvent
 import org.mariotaku.twidere.model.event.SendMessageTaskEvent
 import org.mariotaku.twidere.model.util.AccountUtils
+import org.mariotaku.twidere.promise.MessagePromises
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.service.LengthyOperationsService
-import org.mariotaku.twidere.util.obtainMedia
-import org.mariotaku.twidere.task.twitter.message.DestroyMessageTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
 import org.mariotaku.twidere.task.twitter.message.MarkMessageReadTask
 import org.mariotaku.twidere.util.*
@@ -351,9 +350,9 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
                         ClipboardUtils.setText(context, message.text_unescaped)
                     }
                     R.id.delete -> {
-                        val task = DestroyMessageTask(context, message.account_key,
+                        // TODO show progress
+                        MessagePromises.destroyMessage(context, message.account_key,
                                 message.conversation_id, message.id)
-                        TaskStarter.execute(task)
                     }
                 }
                 return true

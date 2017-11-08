@@ -24,7 +24,7 @@ import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.all
 import nl.komponents.kovenant.task
 import org.mariotaku.sqliteqb.library.Expression
-import org.mariotaku.twidere.exception.NoAccountException
+import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches
 import org.mariotaku.twidere.task.PromiseTask
@@ -40,7 +40,7 @@ class GetSavedSearchesTask(
         return@map task {
             val cr = context.contentResolver
             val twitter = MicroBlogAPIFactory.getInstance(context, accountKey) ?:
-                    throw NoAccountException()
+                    throw AccountNotFoundException()
             val searches = twitter.savedSearches
             val values = ContentValuesCreator.createSavedSearches(searches,
                     accountKey)

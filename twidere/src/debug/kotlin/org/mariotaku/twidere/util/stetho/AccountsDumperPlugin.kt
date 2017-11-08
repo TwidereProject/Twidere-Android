@@ -37,6 +37,7 @@ import org.apache.commons.cli.*
 import org.json.JSONArray
 import org.json.JSONObject
 import org.mariotaku.ktextension.subArray
+import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.exception.NoAccountException
 import org.mariotaku.twidere.extension.model.updateDetails
 import org.mariotaku.twidere.model.AccountDetails
@@ -308,7 +309,8 @@ class AccountsDumperPlugin(val context: Context) : DumperPlugin {
 
         private fun AccountManager.docContext(forKey: String): DocumentContext {
             val accountKey = UserKey.valueOf(forKey)
-            val details = AccountUtils.getAccountDetails(this, accountKey, true) ?: throw NoAccountException()
+            val details = AccountUtils.getAccountDetails(this, accountKey, true)
+                    ?: throw AccountNotFoundException()
             val configuration = Configuration.builder()
                     .jsonProvider(JsonOrgJsonProvider())
                     .mappingProvider(AsIsMappingProvider())

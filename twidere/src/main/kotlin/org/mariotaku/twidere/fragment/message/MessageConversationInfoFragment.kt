@@ -89,11 +89,10 @@ import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ExtrasType
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.promise.MessageConversationPromises
+import org.mariotaku.twidere.promise.MessagePromises
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.status.UpdateStatusTask
 import org.mariotaku.twidere.task.twitter.message.AddParticipantsTask
-import org.mariotaku.twidere.task.twitter.message.ClearMessagesTask
 import org.mariotaku.twidere.task.twitter.message.SetConversationNotificationDisabledTask
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.view.holder.SimpleUserViewHolder
@@ -297,7 +296,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     private fun performDestroyConversation() {
         val weakThis by weak(this)
-        showProgressDialog("leave_conversation_progress") and MessageConversationPromises.destroyConversation(context, accountKey, conversationId).successUi {
+        showProgressDialog("leave_conversation_progress") and MessagePromises.destroyConversation(context, accountKey, conversationId).successUi {
             val f = weakThis ?: return@successUi
             f.dismissProgressDialog("leave_conversation_progress")
             f.activity?.setResult(RESULT_CLOSE)
@@ -306,18 +305,15 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
     }
 
     private fun performClearMessages() {
-        ProgressDialogFragment.show(childFragmentManager, "clear_messages_progress")
-        val weakThis = WeakReference(this)
-        val task = ClearMessagesTask(context, accountKey, conversationId)
-        task.callback = callback@ { succeed ->
-            val f = weakThis.get() ?: return@callback
+        val weakThis by weak(this)
+        showProgressDialog("clear_messages_progress") and MessagePromises.clearMessages(context, accountKey, conversationId).successUi { succeed ->
+            val f = weakThis ?: return@successUi
             f.dismissDialogThen("clear_messages_progress") {
                 if (succeed) {
                     activity?.finish()
                 }
             }
         }
-        TaskStarter.execute(task)
     }
 
     private fun performAddParticipant(user: ParcelableUser) {

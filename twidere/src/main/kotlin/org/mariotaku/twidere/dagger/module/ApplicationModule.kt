@@ -64,6 +64,7 @@ import org.mariotaku.twidere.util.refresh.JobSchedulerAutoRefreshController
 import org.mariotaku.twidere.util.refresh.LegacyAutoRefreshController
 import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
 import org.mariotaku.twidere.util.sync.*
+import org.mariotaku.twidere.util.text.TwitterValidator
 import java.io.File
 import javax.inject.Singleton
 
@@ -196,7 +197,7 @@ class ApplicationModule(private val application: Application) {
     @Provides
     @Singleton
     fun validator(): Validator {
-        return Validator()
+        return TwitterValidator()
     }
 
     @Provides

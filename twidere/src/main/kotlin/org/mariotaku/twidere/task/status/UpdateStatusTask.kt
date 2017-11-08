@@ -33,7 +33,6 @@ import android.support.annotation.WorkerThread
 import android.support.media.ExifInterface
 import android.text.TextUtils
 import android.webkit.MimeTypeMap
-import com.twitter.Validator
 import net.ypresto.androidtranscoder.MediaTranscoder
 import net.ypresto.androidtranscoder.format.MediaFormatStrategyPresets
 import org.mariotaku.ktextension.*
@@ -74,6 +73,7 @@ import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.io.ContentLengthInputStream
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
+import org.mariotaku.twidere.util.text.TwitterValidator
 import java.io.Closeable
 import java.io.File
 import java.io.FileNotFoundException
@@ -241,7 +241,7 @@ class UpdateStatusTask(
             update: ParcelableStatusUpdate,
             pending: PendingStatusUpdate) {
         if (shortener == null) return
-        val validator = Validator()
+        val validator = TwitterValidator()
         stateCallback.onShorteningStatus()
         val sharedShortened = HashMap<UserKey, StatusShortenResult>()
         for (i in 0 until pending.length) {

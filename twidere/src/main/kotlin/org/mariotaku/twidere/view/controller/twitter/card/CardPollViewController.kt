@@ -38,7 +38,7 @@ import org.mariotaku.ktextension.weak
 import org.mariotaku.microblog.library.twitter.TwitterCaps
 import org.mariotaku.microblog.library.twitter.model.CardDataMap
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.exception.NoAccountException
+import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.model.ParcelableCardEntity
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -92,7 +92,7 @@ class CardPollViewController : ContainerView.ViewController() {
         task {
             val vc = weakThis ?: throw IllegalStateException()
             val details = AccountUtils.getAccountDetails(AccountManager.get(vc.context),
-                    card.account_key, true) ?: throw NoAccountException()
+                    card.account_key, true) ?: throw AccountNotFoundException()
             val caps = details.newMicroBlogInstance(vc.context, cls = TwitterCaps::class.java)
             val params = CardDataMap()
             params.putString("card_uri", card.url)
@@ -188,7 +188,7 @@ class CardPollViewController : ContainerView.ViewController() {
         task {
             val vc = weakThis ?: throw InterruptedException()
             val details = AccountUtils.getAccountDetails(AccountManager.get(vc.context),
-                    card.account_key, true) ?: throw NoAccountException()
+                    card.account_key, true) ?: throw AccountNotFoundException()
             val caps = details.newMicroBlogInstance(vc.context, cls = TwitterCaps::class.java)
             val cardEntity = caps.sendPassThrough(cardData).card
             return@task cardEntity.toParcelable(card.account_key, details.type)

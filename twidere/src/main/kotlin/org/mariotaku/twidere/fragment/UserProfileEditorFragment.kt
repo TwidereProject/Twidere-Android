@@ -65,6 +65,7 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.task.*
 import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.text.TwitterValidator
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener
 
 class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
@@ -88,7 +89,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
             return
         }
 
-        val lengthChecker = TwitterValidatorMETLengthChecker(Validator())
+        val lengthChecker = TwitterValidatorMETLengthChecker(TwitterValidator())
 
         editDescription.setLengthChecker(lengthChecker)
 
