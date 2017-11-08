@@ -64,8 +64,8 @@ class AddParticipantsTask(
             Thread.sleep(300L)
             return true
         }
-        val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
-        val addData = requestAddParticipants(microBlog, account, conversation)
+
+        val addData = requestAddParticipants(account, conversation)
         GetMessagesTask.storeMessages(context, addData, account, showNotification = false)
         return true
     }
@@ -74,11 +74,12 @@ class AddParticipantsTask(
         callback?.invoke(result ?: false)
     }
 
-    private fun requestAddParticipants(microBlog: MicroBlog, account: AccountDetails, conversation: ParcelableMessageConversation?):
+    private fun requestAddParticipants(account: AccountDetails, conversation: ParcelableMessageConversation?):
             GetMessagesTask.DatabaseUpdateData {
         when (account.type) {
             AccountType.TWITTER -> {
                 if (account.isOfficial(context)) {
+                    val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
                     val ids = participants.mapToArray { it.key.id }
                     val response = microBlog.addParticipants(conversationId, ids)
                     if (conversation != null) {

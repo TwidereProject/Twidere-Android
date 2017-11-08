@@ -47,17 +47,16 @@ import kotlinx.android.synthetic.main.activity_home_content.view.*
 import kotlinx.android.synthetic.main.fragment_messages_conversation_info.*
 import kotlinx.android.synthetic.main.header_message_conversation_info.view.*
 import kotlinx.android.synthetic.main.layout_toolbar_message_conversation_title.*
+import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.then
 import nl.komponents.kovenant.ui.alwaysUi
+import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
-import org.mariotaku.ktextension.mapToArray
-import org.mariotaku.ktextension.setItemAvailability
-import org.mariotaku.ktextension.setItemTitle
-import org.mariotaku.ktextension.spannable
+import org.mariotaku.ktextension.*
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
@@ -90,11 +89,11 @@ import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ExtrasType
 import org.mariotaku.twidere.model.util.AccountUtils
+import org.mariotaku.twidere.promise.MessageConversationPromises
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.status.UpdateStatusTask
 import org.mariotaku.twidere.task.twitter.message.AddParticipantsTask
 import org.mariotaku.twidere.task.twitter.message.ClearMessagesTask
-import org.mariotaku.twidere.task.twitter.message.DestroyConversationTask
 import org.mariotaku.twidere.task.twitter.message.SetConversationNotificationDisabledTask
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.view.holder.SimpleUserViewHolder
@@ -266,7 +265,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         val name = data.getTitle(context, userColorNameManager, preferences[nameFirstKey]).first
         val summary = data.getSubtitle(context)
 
-        @ImageShapeStyle val profileImageStyle = preferences[profileImageStyleKey]
+        @ImageShapeStyle val profileImageStyle: Int = preferences[profileImageStyleKey]
         requestManager.loadProfileImage(context, data, profileImageStyle).into(conversationAvatar)
         requestManager.loadProfileImage(context, data, profileImageStyle, 0f,
                 0f, ProfileImageSize.REASONABLY_SMALL).into(appBarIcon)
@@ -297,19 +296,13 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
     }
 
     private fun performDestroyConversation() {
-        ProgressDialogFragment.show(childFragmentManager, "leave_conversation_progress")
-        val weakThis = WeakReference(this)
-        val task = DestroyConversationTask(context, accountKey, conversationId)
-        task.callback = callback@ { succeed ->
-            val f = weakThis.get() ?: return@callback
-            f.dismissDialogThen("leave_conversation_progress") {
-                if (succeed) {
-                    activity?.setResult(RESULT_CLOSE)
-                    activity?.finish()
-                }
-            }
+        val weakThis by weak(this)
+        showProgressDialog("leave_conversation_progress") and MessageConversationPromises.destroyConversation(context, accountKey, conversationId).successUi {
+            val f = weakThis ?: return@successUi
+            f.dismissProgressDialog("leave_conversation_progress")
+            f.activity?.setResult(RESULT_CLOSE)
+            f.activity?.finish()
         }
-        TaskStarter.execute(task)
     }
 
     private fun performClearMessages() {
