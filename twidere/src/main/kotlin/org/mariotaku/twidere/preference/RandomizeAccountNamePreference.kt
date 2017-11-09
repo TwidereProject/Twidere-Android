@@ -15,7 +15,7 @@ import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.extension.model.getAccountKey
 import org.mariotaku.twidere.extension.model.getAccountUser
-import org.mariotaku.twidere.extension.model.renameTwidereAccount
+import org.mariotaku.twidere.extension.renameTwidereAccount
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.preference.iface.IDialogPreference
 import org.mariotaku.twidere.util.generateAccountName

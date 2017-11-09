@@ -95,7 +95,6 @@ import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.preference.ComponentPickerPreference
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.service.LengthyOperationsService
-import org.mariotaku.twidere.util.obtainMedia
 import org.mariotaku.twidere.task.status.UpdateStatusTask
 import org.mariotaku.twidere.text.MarkForDeleteSpan
 import org.mariotaku.twidere.text.style.EmojiSpan
@@ -103,6 +102,7 @@ import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.EditTextEnterHandler.EnterListener
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
+import org.mariotaku.twidere.util.text.StatusTextValidator
 import org.mariotaku.twidere.util.view.SimpleTextWatcher
 import org.mariotaku.twidere.util.view.ViewAnimator
 import org.mariotaku.twidere.util.view.ViewProperties
@@ -1524,8 +1524,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun getStatusUpdate(checkLength: Boolean): ParcelableStatusUpdate {
-        val accountKeys = accountsAdapter.selectedAccountKeys
-        if (accountKeys.isEmpty()) throw NoAccountException()
+        val accounts = accountsAdapter.selectedAccounts
+        if (accounts.isEmpty()) throw NoAccountException()
         val update = ParcelableStatusUpdate()
         val media = this.media
         val text = editText.string?.let { Normalizer.normalize(it, Normalizer.Form.NFC) }.orEmpty()
@@ -1537,7 +1537,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
             summaryLength = summary?.let { validator.getTweetLength(it) } ?: 0
         }
-        val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(this), accountKeys, true)
         val maxLength = statusTextCount.maxLength
         val inReplyTo = inReplyToStatus
         val replyTextAndMentions = getTwitterReplyTextAndMentions(text, accounts)
@@ -1589,27 +1588,31 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private fun updateTextCount() {
         val editable = editText.editableText ?: return
-        var summaryLength = 0
-        if (editSummary.visibility == View.VISIBLE) {
-            summaryLength = validator.getTweetLength(editSummary.string.orEmpty())
-        }
+        val summary = editSummary.textIfVisible?.toString()
+        val accounts = accountsAdapter.selectedAccounts
         val text = editable.toString()
         val textAndMentions = getTwitterReplyTextAndMentions(text)
         if (textAndMentions == null) {
             hintLabel.visibility = View.GONE
             editable.clearSpans(MentionColorSpan::class.java)
-            statusTextCount.textCount = summaryLength + validator.getTweetLength(text)
+            val lengths = StatusTextValidator.calculateLengths(accounts, summary, text,
+                    false, null)
+            statusTextCount.textCount = lengths.max() ?: 0
         } else if (textAndMentions.replyToOriginalUser || replyToSelf) {
             hintLabel.visibility = View.GONE
             val mentionColor = ThemeUtils.getTextColorSecondary(this)
             editable.clearSpans(MentionColorSpan::class.java)
             editable.setSpan(MentionColorSpan(mentionColor), 0, textAndMentions.replyStartIndex,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            statusTextCount.textCount = summaryLength + validator.getTweetLength(textAndMentions.replyText)
+            val lengths = StatusTextValidator.calculateLengths(accounts, summary, textAndMentions.replyText,
+                    false, null)
+            statusTextCount.textCount = lengths.max() ?: 0
         } else {
             hintLabel.visibility = View.VISIBLE
             editable.clearSpans(MentionColorSpan::class.java)
-            statusTextCount.textCount = summaryLength + validator.getTweetLength(textAndMentions.replyText)
+            val lengths = StatusTextValidator.calculateLengths(accounts, summary, textAndMentions.replyText,
+                    false, null)
+            statusTextCount.textCount = lengths.max() ?: 0
         }
     }
 

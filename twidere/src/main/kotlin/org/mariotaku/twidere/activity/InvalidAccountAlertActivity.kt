@@ -8,22 +8,17 @@ import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AlertDialog
 import nl.komponents.kovenant.Promise
+import nl.komponents.kovenant.all
 import nl.komponents.kovenant.combine.and
-import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.ktextension.toWeak
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.iface.IBaseActivity
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_INTENT
-import org.mariotaku.twidere.extension.applyTheme
-import org.mariotaku.twidere.extension.model.isAccountValid
-import org.mariotaku.twidere.extension.onShow
-import org.mariotaku.twidere.extension.showProgressDialog
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.util.DebugLog
-import org.mariotaku.twidere.util.support.removeAccountSupport
 
 class InvalidAccountAlertActivity : FragmentActivity(), IBaseActivity<InvalidAccountAlertActivity> {
 
@@ -57,14 +52,7 @@ class InvalidAccountAlertActivity : FragmentActivity(), IBaseActivity<InvalidAcc
         val am = AccountManager.get(this)
         val weakThis = toWeak()
         val invalidAccounts = AccountUtils.getAccounts(am).filter { !am.isAccountValid(it) }
-        (showProgressDialog("remove_invalid_accounts") and task {
-            invalidAccounts.forEach { account ->
-                val result = am.removeAccountSupport(account).result
-                if (!result.getBoolean(AccountManager.KEY_BOOLEAN_RESULT)) {
-                    DebugLog.e(msg = "Unable to remove account $account")
-                }
-            }
-        }).successUi {
+        (showProgressDialog("remove_invalid_accounts") and all(invalidAccounts.map { am.removeAccount(it) })).successUi {
             val activity = weakThis.get() ?: return@successUi
             val intent = activity.intent.getParcelableExtra<Intent>(EXTRA_INTENT)
             if (intent != null) {

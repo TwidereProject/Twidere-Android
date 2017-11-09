@@ -72,10 +72,8 @@ import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.contains
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
-import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
 import org.mariotaku.ktextension.coerceInOr
 import org.mariotaku.ktextension.contains
-import org.mariotaku.ktextension.removeOnAccountsUpdatedListenerSafe
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
@@ -86,10 +84,8 @@ import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.annotation.NavbarStyle
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.*
-import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.notificationBuilder
-import org.mariotaku.twidere.extension.onShow
-import org.mariotaku.twidere.extension.setVisible
 import org.mariotaku.twidere.fragment.AccountsDashboardFragment
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.iface.IFloatingActionButtonFragment

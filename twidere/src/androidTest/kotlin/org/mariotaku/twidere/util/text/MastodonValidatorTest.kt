@@ -17,10 +17,15 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.ktextension
+package org.mariotaku.twidere.util.text
 
-fun CharSequence.appendTo(sb: StringBuilder) {
-    sb.append(this)
+import junit.framework.Assert
+import org.junit.Test
+
+class MastodonValidatorTest {
+    val validator = MastodonValidator()
+    @Test
+    fun testGetCountableLength() {
+        Assert.assertEquals(41, validator.getCountableLength(null, "@mariotaku@pawoo.jp Hello! https://github.com/tootsuite/mastodon"))
+    }
 }
-
-operator fun CharSequence.times(n: Int): String = repeat(n)

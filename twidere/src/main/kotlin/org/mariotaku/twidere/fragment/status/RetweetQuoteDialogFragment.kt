@@ -53,6 +53,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.service.LengthyOperationsService
 import org.mariotaku.twidere.util.EditTextEnterHandler
 import org.mariotaku.twidere.util.LinkCreator
+import org.mariotaku.twidere.util.text.StatusTextValidator
 import org.mariotaku.twidere.util.view.SimpleTextWatcher
 import org.mariotaku.twidere.view.ComposeEditText
 import org.mariotaku.twidere.view.StatusTextCountView
@@ -162,7 +163,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
         }
     }
 
-    private fun DialogInterface.updateTextCount(s: CharSequence, status: ParcelableStatus, account: AccountDetails) {
+    private fun DialogInterface.updateTextCount(text: CharSequence, status: ParcelableStatus, account: AccountDetails) {
         if (this !is AlertDialog) return
         val positiveButton = getButton(AlertDialog.BUTTON_POSITIVE) ?: return
 
@@ -184,7 +185,8 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
             positiveButton.setText(R.string.action_retweet)
             positiveButton.isEnabled = status.can_retweet
         }
-        textCountView.textCount = validator.getTweetLength(s.toString())
+        textCountView.textCount = StatusTextValidator.calculateLength(account.type, account.key,
+                null, text.toString(), false, null)
     }
 
     private fun DialogInterface.shouldQuoteRetweet(account: AccountDetails): Boolean {

@@ -27,6 +27,7 @@ import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
 
+
 /**
  * Created by mariotaku on 16/1/27.
  */
@@ -272,4 +273,5 @@ object HttpClientFactory {
         }
 
     }
+
 }

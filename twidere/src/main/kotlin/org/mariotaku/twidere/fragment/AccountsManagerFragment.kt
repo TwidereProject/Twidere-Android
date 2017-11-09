@@ -38,6 +38,7 @@ import org.mariotaku.twidere.extension.model.setActivated
 import org.mariotaku.twidere.extension.model.setColor
 import org.mariotaku.twidere.extension.model.setPosition
 import org.mariotaku.twidere.extension.onShow
+import org.mariotaku.twidere.extension.removeAccount
 import org.mariotaku.twidere.loader.AccountDetailsLoader
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.AccountPreferences
@@ -46,7 +47,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.deleteAccountData
-import org.mariotaku.twidere.util.support.removeAccountSupport
 
 /**
  * Sort and toggle account availability
@@ -217,7 +217,8 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
                     resolver.deleteAccountData(accountKey)
                     AccountPreferences.getSharedPreferencesForAccount(context, accountKey).edit()
                             .clear().apply()
-                    am.removeAccountSupport(account)
+                    // TODO: Promise progress
+                    am.removeAccount(account)
                 }
             }
         }

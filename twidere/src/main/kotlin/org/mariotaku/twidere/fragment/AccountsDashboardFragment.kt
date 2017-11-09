@@ -55,7 +55,9 @@ import kotlinx.android.synthetic.main.header_drawer_account_selector.view.*
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
-import org.mariotaku.ktextension.*
+import org.mariotaku.ktextension.setItemAvailability
+import org.mariotaku.ktextension.setItemIcon
+import org.mariotaku.ktextension.spannable
 import org.mariotaku.twidere.Constants.EXTRA_FEATURES_NOTICE_VERSION
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
@@ -73,10 +75,8 @@ import org.mariotaku.twidere.constant.extraFeaturesNoticeVersionKey
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
-import org.mariotaku.twidere.extension.loadProfileBanner
-import org.mariotaku.twidere.extension.loadProfileImage
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.setActivated
-import org.mariotaku.twidere.extension.queryCount
 import org.mariotaku.twidere.fragment.AccountsDashboardFragment.AccountsInfo
 import org.mariotaku.twidere.graphic.BadgeDrawable
 import org.mariotaku.twidere.menu.AccountToggleProvider

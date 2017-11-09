@@ -1,12 +1,9 @@
 package org.mariotaku.twidere.extension.model
 
-import android.accounts.*
+import android.accounts.Account
+import android.accounts.AccountManager
 import android.content.Context
-import android.os.Build
-import android.os.Handler
 import android.os.Looper
-import android.support.annotation.RequiresApi
-import android.text.TextUtils
 import org.mariotaku.ktextension.HexColorFormat
 import org.mariotaku.ktextension.toHexColor
 import org.mariotaku.ktextension.toIntOr
@@ -17,13 +14,10 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.account.AccountExtras
 import org.mariotaku.twidere.model.account.TwitterAccountExtras
 import org.mariotaku.twidere.model.account.cred.*
-import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.model.util.AccountUtils.ACCOUNT_USER_DATA_KEYS
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
 import org.mariotaku.twidere.util.JsonSerializer
 import org.mariotaku.twidere.util.ParseUtils
 import org.mariotaku.twidere.util.model.AccountDetailsUtils
-import java.io.IOException
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -113,37 +107,6 @@ fun Account.isOfficial(am: AccountManager, context: Context): Boolean {
     return false
 }
 
-fun AccountManager.hasInvalidAccount(): Boolean {
-    val accounts = AccountUtils.getAccounts(this)
-    if (accounts.isEmpty()) return false
-    return accounts.any { !isAccountValid(it) }
-}
-
-fun AccountManager.isAccountValid(account: Account): Boolean {
-    if (TextUtils.isEmpty(AccountDataQueue.peekAuthToken(this, account, ACCOUNT_AUTH_TOKEN_TYPE))) return false
-    if (TextUtils.isEmpty(AccountDataQueue.getUserData(this, account, ACCOUNT_USER_DATA_KEY))) return false
-    if (TextUtils.isEmpty(AccountDataQueue.getUserData(this, account, ACCOUNT_USER_DATA_USER))) return false
-    return true
-}
-
-fun AccountManager.renameTwidereAccount(oldAccount: Account, newName: String): AccountManagerFuture<Account>? {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        return AccountExtensionFunctionsL.renameAccount(this, oldAccount, newName, null, null)
-    }
-    val newAccount = Account(newName, oldAccount.type)
-    if (addAccountExplicitly(newAccount, null, null)) {
-        for (key in ACCOUNT_USER_DATA_KEYS) {
-            setUserData(newAccount, key, getUserData(oldAccount, key))
-        }
-        setAuthToken(newAccount, ACCOUNT_AUTH_TOKEN_TYPE,
-                peekAuthToken(oldAccount, ACCOUNT_AUTH_TOKEN_TYPE))
-        @Suppress("DEPRECATION")
-        val booleanFuture = removeAccount(oldAccount, null, null)
-        return AccountFuture(newAccount, booleanFuture)
-    }
-    return null
-}
-
 private fun AccountManager.getNonNullUserData(account: Account, key: String): String {
     return AccountDataQueue.getUserData(this, account, key) ?: run {
         // Rare case, assume account manager service is not running
@@ -152,7 +115,7 @@ private fun AccountManager.getNonNullUserData(account: Account, key: String): St
             val data = AccountDataQueue.getUserData(this, account, key)
             if (data != null) return data
         }
-        throw NullPointerException("NonNull userData $key is null for $account")
+        throw NullPointerException("NonNull userData `$key` is null for $account")
     }
 }
 
@@ -198,47 +161,3 @@ internal object AccountDataQueue {
     }
 }
 
-private object AccountExtensionFunctionsL {
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    internal fun renameAccount(am: AccountManager, account: Account,
-            newName: String,
-            callback: AccountManagerCallback<Account>?,
-            handler: Handler?): AccountManagerFuture<Account> {
-        return am.renameAccount(account, newName, callback, handler)
-    }
-}
-
-private class AccountFuture internal constructor(
-        private val account: Account,
-        private val booleanFuture: AccountManagerFuture<Boolean>
-) : AccountManagerFuture<Account> {
-
-    override fun cancel(mayInterruptIfRunning: Boolean): Boolean {
-        return booleanFuture.cancel(mayInterruptIfRunning)
-    }
-
-    override fun isCancelled(): Boolean {
-        return booleanFuture.isCancelled
-    }
-
-    override fun isDone(): Boolean {
-        return booleanFuture.isDone
-    }
-
-    @Throws(OperationCanceledException::class, IOException::class, AuthenticatorException::class)
-    override fun getResult(): Account? {
-        if (booleanFuture.result) {
-            return account
-        }
-        return null
-    }
-
-    @Throws(OperationCanceledException::class, IOException::class, AuthenticatorException::class)
-    override fun getResult(timeout: Long, unit: TimeUnit): Account? {
-        if (booleanFuture.getResult(timeout, unit)) {
-            return account
-        }
-        return null
-    }
-}

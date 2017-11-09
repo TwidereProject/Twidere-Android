@@ -17,10 +17,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.ktextension
+package org.mariotaku.twidere.alias
 
-fun CharSequence.appendTo(sb: StringBuilder) {
-    sb.append(this)
-}
-
-operator fun CharSequence.times(n: Int): String = repeat(n)
+typealias TwitterRegex = com.twitter.Regex

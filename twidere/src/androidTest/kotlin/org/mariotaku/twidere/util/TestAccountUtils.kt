@@ -20,14 +20,16 @@
 package org.mariotaku.twidere.util
 
 import android.accounts.AccountManager
+import android.os.Bundle
 import android.support.test.InstrumentationRegistry
 import nl.komponents.kovenant.Promise
-import nl.komponents.kovenant.task
+import nl.komponents.kovenant.all
+import org.mariotaku.twidere.extension.isAccountValid
 import org.mariotaku.twidere.extension.model.updateDetails
+import org.mariotaku.twidere.extension.removeAccount
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.test.R
-import org.mariotaku.twidere.util.support.removeAccountSupport
 import java.lang.Exception
 
 object TestAccountUtils {
@@ -37,12 +39,21 @@ object TestAccountUtils {
     fun insertTestAccounts() {
         val targetContext = InstrumentationRegistry.getTargetContext()
         val context = InstrumentationRegistry.getContext()
-        val am = AccountManager.get(targetContext)
-        val existingAccounts = AccountUtils.getAllAccountDetails(am, false)
-        accountResources.forEach { resId ->
-            val details = context.resources.openRawResource(resId).use {
+        val testAccounts = accountResources.map {
+            return@map context.resources.openRawResource(it).use {
                 JsonSerializer.parse(it, AccountDetails::class.java)
             }
+        }
+        val am = AccountManager.get(targetContext)
+        val result = all(AccountUtils.getAccounts(am).mapNotNull { account ->
+            if (am.isAccountValid(account) || testAccounts.none { account == it.account }) {
+                return@mapNotNull null
+            }
+            return@mapNotNull am.removeAccount(account)
+        }, cancelOthersOnError = false).get()
+        DebugLog.d(msg = "Removed accounts: $result")
+        val existingAccounts = AccountUtils.getAllAccountDetails(am, false)
+        testAccounts.forEach { details ->
             if (existingAccounts.any { it.account == details.account || it.key == details.key }) {
                 return@forEach
             }
@@ -51,12 +62,11 @@ object TestAccountUtils {
         }
     }
 
-    fun removeTestAccounts(): Promise<Unit, Exception> {
+    fun removeTestAccounts(): Promise<List<Bundle>, Exception> {
         val targetContext = InstrumentationRegistry.getTargetContext()
         val am = AccountManager.get(targetContext)
         val existingAccounts = AccountUtils.getAllAccountDetails(am, false)
-        return task {
-            existingAccounts.filter { it.test }.forEach { am.removeAccountSupport(it.account).result }
-        }
+        return all(existingAccounts.map { am.removeAccount(it.account) })
     }
+
 }

@@ -24,11 +24,6 @@ import com.twitter.Validator
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 
-/**
- * Created by mariotaku on 2017/3/31.
- */
-
-
 fun Validator.getTweetLength(text: String, ignoreMentions: Boolean, inReplyTo: ParcelableStatus?,
         accountKey: UserKey? = inReplyTo?.account_key): Int {
     if (!ignoreMentions || inReplyTo == null || accountKey == null) {

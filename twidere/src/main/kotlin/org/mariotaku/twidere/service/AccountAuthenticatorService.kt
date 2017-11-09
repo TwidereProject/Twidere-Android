@@ -6,26 +6,28 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.IBinder
-import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
 import org.mariotaku.ktextension.set
+import org.mariotaku.ktextension.weak
 import org.mariotaku.twidere.activity.SignInActivity
+import org.mariotaku.twidere.extension.addOnAccountsUpdatedListenerSafe
 import org.mariotaku.twidere.util.notification.NotificationChannelsManager
 
 
 class AccountAuthenticatorService : Service() {
 
-    private lateinit var authenticator: TwidereAccountAuthenticator
+    private val authenticator by lazy { TwidereAccountAuthenticator(this) }
 
     override fun onCreate() {
         super.onCreate()
-        authenticator = TwidereAccountAuthenticator(this)
-
+        val weakThis by weak(this)
         AccountManager.get(this).addOnAccountsUpdatedListenerSafe(OnAccountsUpdateListener {
-            NotificationChannelsManager.updateAccountChannelsAndGroups(this)
+            val service = weakThis ?: return@OnAccountsUpdateListener
+            NotificationChannelsManager.updateAccountChannelsAndGroups(service)
         }, updateImmediately = true)
     }
 
-    override fun onBind(intent: Intent): IBinder {
+    override fun onBind(intent: Intent): IBinder? {
+        if (intent.action != AccountManager.ACTION_AUTHENTICATOR_INTENT) return null
         return authenticator.iBinder
     }
 
@@ -58,34 +60,20 @@ class AccountAuthenticatorService : Service() {
             return result
         }
 
-        override fun confirmCredentials(response: AccountAuthenticatorResponse, account: Account, options: Bundle?): Bundle {
-            val result = Bundle()
-            result[AccountManager.KEY_BOOLEAN_RESULT] = true
-            return result
-        }
-
-        override fun editProperties(response: AccountAuthenticatorResponse, accountType: String): Bundle {
-            val result = Bundle()
-            result[AccountManager.KEY_BOOLEAN_RESULT] = true
-            return result
-        }
-
         override fun getAuthTokenLabel(authTokenType: String): String {
             return authTokenType
         }
 
-        override fun hasFeatures(response: AccountAuthenticatorResponse, account: Account, features: Array<String>): Bundle {
-            val result = Bundle()
-            result[AccountManager.KEY_BOOLEAN_RESULT] = true
-            return result
-        }
+        override fun confirmCredentials(response: AccountAuthenticatorResponse, account: Account,
+                options: Bundle?) = null
+
+        override fun editProperties(response: AccountAuthenticatorResponse, accountType: String) = null
+
+        override fun hasFeatures(response: AccountAuthenticatorResponse, account: Account,
+                features: Array<String>) = null
 
         override fun updateCredentials(response: AccountAuthenticatorResponse, account: Account,
-                authTokenType: String, options: Bundle?): Bundle {
-            val result = Bundle()
-            result[AccountManager.KEY_BOOLEAN_RESULT] = true
-            return result
-        }
+                authTokenType: String, options: Bundle?) = null
     }
 
 }
