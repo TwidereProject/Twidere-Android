@@ -30,7 +30,6 @@ import org.acra.ACRA
 import org.acra.ReportingInteractionMode
 import org.acra.config.ConfigurationBuilder
 import org.mariotaku.kpreferences.get
-import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.ACCOUNT_TYPE
@@ -39,10 +38,7 @@ import org.mariotaku.twidere.activity.CrashReportDialogActivity
 import org.mariotaku.twidere.constant.themeBackgroundAlphaKey
 import org.mariotaku.twidere.constant.themeBackgroundOptionKey
 import org.mariotaku.twidere.constant.themeKey
-
-/**
- * Created by mariotaku on 2017/5/8.
- */
+import org.mariotaku.twidere.extension.addOnAccountsUpdatedListenerSafe
 
 class ACRAAnalyzer : Analyzer() {
     override fun log(priority: Int, tag: String, msg: String) {

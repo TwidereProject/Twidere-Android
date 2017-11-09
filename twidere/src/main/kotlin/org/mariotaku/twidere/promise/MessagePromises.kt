@@ -31,12 +31,14 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.extension.model.notificationDisabled
 import org.mariotaku.twidere.extension.queryReference
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
+import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.mariotaku.twidere.util.updateItems
@@ -118,6 +120,19 @@ object MessagePromises {
         }
     }
 
+    fun setConversationNotificationDisabled(context: Context, accountKey: UserKey,
+            conversationId: String, notificationDisabled: Boolean): Promise<Boolean, Exception> {
+        val weakContext by weak(context)
+        return task {
+            val taskContext = weakContext ?: throw InterruptedException()
+            val account = AccountUtils.getAccountDetails(AccountManager.get(taskContext),
+                    accountKey, true) ?: throw AccountNotFoundException()
+            val addData = requestSetNotificationDisabled(taskContext, account, conversationId, notificationDisabled)
+            GetMessagesTask.storeMessages(taskContext, addData, account)
+            return@task true
+        }
+    }
+
     private fun clearMessagesSync(context: Context, account: AccountDetails, conversationId: String): Boolean {
         val messagesWhere = Expression.and(Expression.equalsArgs(Messages.ACCOUNT_KEY),
                 Expression.equalsArgs(Messages.CONVERSATION_ID)).sql
@@ -185,5 +200,34 @@ object MessagePromises {
         }
         return false
     }
+
+    private fun requestSetNotificationDisabled(context: Context, account: AccountDetails,
+            conversationId: String, notificationDisabled: Boolean):
+            GetMessagesTask.DatabaseUpdateData {
+        when (account.type) {
+            AccountType.TWITTER -> {
+                val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
+                if (account.isOfficial(context)) {
+                    val response = if (notificationDisabled) {
+                        microBlog.disableDmConversations(conversationId)
+                    } else {
+                        microBlog.enableDmConversations(conversationId)
+                    }
+                    val conversation = DataStoreUtils.findMessageConversation(context, account.key,
+                            conversationId) ?: return GetMessagesTask.DatabaseUpdateData(emptyList(), emptyList())
+                    if (response.isSuccessful) {
+                        conversation.notificationDisabled = notificationDisabled
+                    }
+                    return GetMessagesTask.DatabaseUpdateData(listOf(conversation), emptyList())
+                }
+            }
+        }
+
+        val conversation = DataStoreUtils.findMessageConversation(context, account.key,
+                conversationId) ?: return GetMessagesTask.DatabaseUpdateData(emptyList(), emptyList())
+        conversation.notificationDisabled = notificationDisabled
+        return GetMessagesTask.DatabaseUpdateData(listOf(conversation), emptyList())
+    }
+
 
 }

@@ -35,9 +35,6 @@ import org.mariotaku.twidere.model.ParcelableStatusUpdate
 import org.mariotaku.twidere.test.R
 import org.mariotaku.twidere.util.getJsonResource
 
-/**
- * Created by mariotaku on 2017/4/16.
- */
 @RunWith(AndroidJUnit4::class)
 @SuppressLint("SetTextI18n")
 class ComposeActivityTest {

@@ -93,7 +93,6 @@ import org.mariotaku.twidere.promise.MessagePromises
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.status.UpdateStatusTask
 import org.mariotaku.twidere.task.twitter.message.AddParticipantsTask
-import org.mariotaku.twidere.task.twitter.message.SetConversationNotificationDisabledTask
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.view.holder.SimpleUserViewHolder
 import java.lang.ref.WeakReference
@@ -330,16 +329,10 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
     }
 
     private fun performSetNotificationDisabled(disabled: Boolean) {
-        ProgressDialogFragment.show(childFragmentManager, "set_notifications_disabled_progress")
-        val weakThis = WeakReference(this)
-        val task = SetConversationNotificationDisabledTask(context, accountKey, conversationId, disabled)
-        task.callback = callback@ { _ ->
-            val f = weakThis.get() ?: return@callback
-            f.dismissDialogThen("set_notifications_disabled_progress") {
-                loaderManager.restartLoader(0, null, this)
-            }
+        val weakThis by weak(this)
+        showProgressDialog("set_notifications_disabled_progress") and MessagePromises.setConversationNotificationDisabled(context, accountKey, conversationId, disabled).alwaysUi {
+            weakThis?.dismissProgressDialog("set_notifications_disabled_progress")
         }
-        TaskStarter.execute(task)
     }
 
 
