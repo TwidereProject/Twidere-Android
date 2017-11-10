@@ -49,7 +49,6 @@ import nl.komponents.kovenant.then
 import nl.komponents.kovenant.ui.alwaysUi
 import nl.komponents.kovenant.ui.promiseOnUi
 import nl.komponents.kovenant.ui.successUi
-import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
@@ -85,7 +84,6 @@ import org.mariotaku.twidere.promise.MessagePromises
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.service.LengthyOperationsService
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
-import org.mariotaku.twidere.task.twitter.message.MarkMessageReadTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.view.ExtendedRecyclerView
 import org.mariotaku.twidere.view.holder.compose.MediaPreviewViewHolder
@@ -351,8 +349,8 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
                     }
                     R.id.delete -> {
                         // TODO show progress
-                        MessagePromises.destroyMessage(context, message.account_key,
-                                message.conversation_id, message.id)
+                        MessagePromises.getInstance(context).destroyMessage(message.account_key, message.conversation_id,
+                                message.id)
                     }
                 }
                 return true
@@ -481,7 +479,8 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
     }
 
     private fun markRead() {
-        TaskStarter.execute(MarkMessageReadTask(context, accountKey, conversationId))
+        // TODO: Promise progress
+        MessagePromises.getInstance(context).markRead(accountKey, conversationId)
     }
 
     private fun updateConversationStatus() {

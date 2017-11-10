@@ -32,7 +32,6 @@ import android.view.View
 import com.bumptech.glide.RequestManager
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.activity_premium_dashboard.*
-import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.toStringArray
 import org.mariotaku.sqliteqb.library.*
@@ -59,10 +58,10 @@ import org.mariotaku.twidere.loader.ObjectCursorLoader
 import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.GetMessagesTaskEvent
+import org.mariotaku.twidere.promise.MessagePromises
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
-import org.mariotaku.twidere.task.twitter.message.MarkMessageReadTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.view.ExtendedRecyclerView
@@ -225,8 +224,8 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
         when (item.itemId) {
             R.id.mark_read -> {
                 val conversation = adapter.getConversation(menuInfo.position)
-                TaskStarter.execute(MarkMessageReadTask(context, conversation.account_key,
-                        conversation.id))
+                // TODO: Promise progress
+                MessagePromises.getInstance(context).markRead(conversation.account_key, conversation.id)
                 return true
             }
         }

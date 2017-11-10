@@ -66,7 +66,10 @@ object TestAccountUtils {
         val targetContext = InstrumentationRegistry.getTargetContext()
         val am = AccountManager.get(targetContext)
         val existingAccounts = AccountUtils.getAllAccountDetails(am, false)
-        return all(existingAccounts.map { am.removeAccount(it.account) })
+        return all(existingAccounts.mapNotNull {
+            if (!it.test) return@mapNotNull null
+            return@mapNotNull am.removeAccount(it.account)
+        })
     }
 
 }

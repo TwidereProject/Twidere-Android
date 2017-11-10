@@ -46,6 +46,7 @@ import org.mariotaku.twidere.preference.KeyboardShortcutPreference
 import org.mariotaku.twidere.preference.PremiumEntryPreference
 import org.mariotaku.twidere.preference.PremiumEntryPreferenceCategory
 import org.mariotaku.twidere.preference.sync.SyncItemPreference
+import org.mariotaku.twidere.promise.MessagePromises
 import org.mariotaku.twidere.provider.CacheProvider
 import org.mariotaku.twidere.provider.TwidereDataProvider
 import org.mariotaku.twidere.service.*
@@ -153,6 +154,8 @@ interface GeneralComponent {
 
     fun inject(fragment: VideoPageFragment)
 
+    fun inject(promises: MessagePromises)
+
     companion object : SingletonHolder<GeneralComponent, Context>(creation@ { context ->
         val application = context.applicationContext as Application
         return@creation DaggerGeneralComponent.builder()
@@ -161,5 +164,6 @@ interface GeneralComponent {
                 .build()
     }) {
         fun get(context: Context) = getInstance(context)
+
     }
 }

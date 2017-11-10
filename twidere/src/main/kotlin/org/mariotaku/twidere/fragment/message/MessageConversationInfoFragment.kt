@@ -89,6 +89,7 @@ import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ExtrasType
 import org.mariotaku.twidere.model.util.AccountUtils
+import org.mariotaku.twidere.promise.ConversationPromises
 import org.mariotaku.twidere.promise.MessagePromises
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.status.UpdateStatusTask
@@ -295,7 +296,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     private fun performDestroyConversation() {
         val weakThis by weak(this)
-        showProgressDialog("leave_conversation_progress") and MessagePromises.destroyConversation(context, accountKey, conversationId).successUi {
+        showProgressDialog("leave_conversation_progress") and MessagePromises.getInstance(context).destroyConversation(accountKey, conversationId).successUi {
             val f = weakThis ?: return@successUi
             f.dismissProgressDialog("leave_conversation_progress")
             f.activity?.setResult(RESULT_CLOSE)
@@ -305,7 +306,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     private fun performClearMessages() {
         val weakThis by weak(this)
-        showProgressDialog("clear_messages_progress") and MessagePromises.clearMessages(context, accountKey, conversationId).successUi { succeed ->
+        showProgressDialog("clear_messages_progress") and MessagePromises.getInstance(context).clearMessages(accountKey, conversationId).successUi { succeed ->
             val f = weakThis ?: return@successUi
             f.dismissDialogThen("clear_messages_progress") {
                 if (succeed) {
@@ -330,7 +331,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     private fun performSetNotificationDisabled(disabled: Boolean) {
         val weakThis by weak(this)
-        showProgressDialog("set_notifications_disabled_progress") and MessagePromises.setConversationNotificationDisabled(context, accountKey, conversationId, disabled).alwaysUi {
+        showProgressDialog("set_notifications_disabled_progress") and ConversationPromises.getInstance(context).setNotificationDisabled(accountKey, conversationId, disabled).alwaysUi {
             weakThis?.dismissProgressDialog("set_notifications_disabled_progress")
         }
     }

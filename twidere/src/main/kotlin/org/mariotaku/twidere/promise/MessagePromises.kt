@@ -20,133 +20,141 @@
 package org.mariotaku.twidere.promise
 
 import android.accounts.AccountManager
+import android.app.Application
+import android.content.ContentResolver
+import android.content.ContentValues
 import android.content.Context
+import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.task
-import org.mariotaku.ktextension.weak
+import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.sqliteqb.library.OrderBy
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
-import org.mariotaku.twidere.extension.model.notificationDisabled
+import org.mariotaku.twidere.extension.model.timestamp
+import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.extension.queryReference
 import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.ParcelableMessage
 import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.event.UnreadCountUpdatedEvent
+import org.mariotaku.twidere.model.message.conversation.TwitterOfficialConversationExtras
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
-import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
+import org.mariotaku.twidere.task.twitter.message.SendMessageTask
 import org.mariotaku.twidere.util.DataStoreUtils
+import org.mariotaku.twidere.util.SingletonHolder
 import org.mariotaku.twidere.util.content.ContentResolverUtils
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.updateItems
+import javax.inject.Inject
 
-object MessagePromises {
+class MessagePromises private constructor(private val application: Application) {
+    @Inject
+    lateinit var bus: Bus
 
-    fun destroyConversation(context: Context, accountKey: UserKey, conversationId: String): Promise<Boolean, Exception> {
-        val weakContext by weak(context)
-        return task {
-            val taskContext = weakContext ?: throw InterruptedException()
-            val account = AccountUtils.getAccountDetails(AccountManager.get(taskContext), accountKey, true) ?:
-                    throw MicroBlogException("No account")
-            val conversation = DataStoreUtils.findMessageConversation(taskContext, accountKey, conversationId)
-
-            var deleteMessages = true
-            var deleteConversation = true
-            // Only perform real deletion when it's not temp conversation (stored locally)
-            if (conversation != null) when {
-                conversation.conversation_extras_type != ParcelableMessageConversation.ExtrasType.TWITTER_OFFICIAL -> {
-                    deleteMessages = false
-                    deleteConversation = clearMessagesSync(taskContext, account, conversationId)
-                }
-                !conversation.is_temp -> if (!requestDestroyConversation(taskContext, account, conversationId)) {
-                    return@task false
-                }
-            }
-
-            if (deleteMessages) {
-                val deleteMessageWhere = Expression.and(Expression.equalsArgs(Messages.ACCOUNT_KEY),
-                        Expression.equalsArgs(Messages.CONVERSATION_ID)).sql
-                val deleteMessageWhereArgs = arrayOf(accountKey.toString(), conversationId)
-                taskContext.contentResolver.delete(Messages.CONTENT_URI, deleteMessageWhere, deleteMessageWhereArgs)
-            }
-            if (deleteConversation) {
-                val deleteConversationWhere = Expression.and(Expression.equalsArgs(Messages.Conversations.ACCOUNT_KEY),
-                        Expression.equalsArgs(Messages.Conversations.CONVERSATION_ID)).sql
-                val deleteConversationWhereArgs = arrayOf(accountKey.toString(), conversationId)
-                taskContext.contentResolver.delete(Messages.Conversations.CONTENT_URI, deleteConversationWhere, deleteConversationWhereArgs)
-            }
-            return@task true
-        }
+    init {
+        GeneralComponent.get(application).inject(this)
     }
 
-    fun destroyMessage(context: Context, accountKey: UserKey, conversationId: String?,
-            messageId: String): Promise<Boolean, Exception> {
-        val weakContext by weak(context)
-        return task {
-            val taskContext = weakContext ?: throw InterruptedException()
-            val account = AccountUtils.getAccountDetails(AccountManager.get(taskContext), accountKey,
-                    true) ?: throw AccountNotFoundException()
-            if (!requestDestroyMessage(taskContext, account, messageId)) {
+    fun destroyConversation(accountKey: UserKey, conversationId: String): Promise<Boolean, Exception> = task {
+        val account = AccountUtils.getAccountDetails(AccountManager.get(application), accountKey, true) ?:
+                throw MicroBlogException("No account")
+        val conversation = DataStoreUtils.findMessageConversation(application, accountKey, conversationId)
+
+        var deleteMessages = true
+        var deleteConversation = true
+        // Only perform real deletion when it's not temp conversation (stored locally)
+        if (conversation != null) when {
+            conversation.conversation_extras_type != ParcelableMessageConversation.ExtrasType.TWITTER_OFFICIAL -> {
+                deleteMessages = false
+                deleteConversation = clearMessagesSync(account, conversationId)
+            }
+            !conversation.is_temp -> if (!requestDestroyConversation(account, conversationId)) {
                 return@task false
             }
-            val deleteWhere: String
-            val deleteWhereArgs: Array<String>
-            if (conversationId != null) {
-                deleteWhere = Expression.and(Expression.equalsArgs(Messages.ACCOUNT_KEY),
-                        Expression.equalsArgs(Messages.CONVERSATION_ID),
-                        Expression.equalsArgs(Messages.MESSAGE_ID)).sql
-                deleteWhereArgs = arrayOf(accountKey.toString(), conversationId, messageId)
-            } else {
-                deleteWhere = Expression.and(Expression.equalsArgs(Messages.ACCOUNT_KEY),
-                        Expression.equalsArgs(Messages.MESSAGE_ID)).sql
-                deleteWhereArgs = arrayOf(accountKey.toString(), messageId)
-            }
-            taskContext.contentResolver.delete(Messages.CONTENT_URI, deleteWhere, deleteWhereArgs)
-            return@task true
         }
+
+        if (deleteMessages) {
+            val deleteMessageWhere = Expression.and(Expression.equalsArgs(Messages.ACCOUNT_KEY),
+                    Expression.equalsArgs(Messages.CONVERSATION_ID)).sql
+            val deleteMessageWhereArgs = arrayOf(accountKey.toString(), conversationId)
+            application.contentResolver.delete(Messages.CONTENT_URI, deleteMessageWhere, deleteMessageWhereArgs)
+        }
+        if (deleteConversation) {
+            val deleteConversationWhere = Expression.and(Expression.equalsArgs(Messages.Conversations.ACCOUNT_KEY),
+                    Expression.equalsArgs(Messages.Conversations.CONVERSATION_ID)).sql
+            val deleteConversationWhereArgs = arrayOf(accountKey.toString(), conversationId)
+            application.contentResolver.delete(Messages.Conversations.CONTENT_URI, deleteConversationWhere, deleteConversationWhereArgs)
+        }
+        return@task true
+    }
+
+    fun destroyMessage(accountKey: UserKey, conversationId: String?, messageId: String): Promise<Boolean, Exception> = task {
+        val account = AccountUtils.getAccountDetails(AccountManager.get(application), accountKey,
+                true) ?: throw AccountNotFoundException()
+        if (!requestDestroyMessage(account, messageId)) {
+            return@task false
+        }
+        val deleteWhere: String
+        val deleteWhereArgs: Array<String>
+        if (conversationId != null) {
+            deleteWhere = Expression.and(Expression.equalsArgs(Messages.ACCOUNT_KEY),
+                    Expression.equalsArgs(Messages.CONVERSATION_ID),
+                    Expression.equalsArgs(Messages.MESSAGE_ID)).sql
+            deleteWhereArgs = arrayOf(accountKey.toString(), conversationId, messageId)
+        } else {
+            deleteWhere = Expression.and(Expression.equalsArgs(Messages.ACCOUNT_KEY),
+                    Expression.equalsArgs(Messages.MESSAGE_ID)).sql
+            deleteWhereArgs = arrayOf(accountKey.toString(), messageId)
+        }
+        application.contentResolver.delete(Messages.CONTENT_URI, deleteWhere, deleteWhereArgs)
+        return@task true
     }
 
 
-    fun clearMessages(context: Context, accountKey: UserKey, conversationId: String): Promise<Boolean, Exception> {
-        val weakContext by weak(context)
-        return task {
-            val taskContext = weakContext ?: throw InterruptedException()
-            val account = AccountUtils.getAccountDetails(AccountManager.get(taskContext), accountKey,
-                    true) ?: throw AccountNotFoundException()
-            clearMessagesSync(taskContext, account, conversationId)
-        }
+    fun clearMessages(accountKey: UserKey, conversationId: String): Promise<Boolean, Exception> = task {
+        val account = AccountUtils.getAccountDetails(AccountManager.get(application), accountKey,
+                true) ?: throw AccountNotFoundException()
+        clearMessagesSync(account, conversationId)
     }
 
-    fun setConversationNotificationDisabled(context: Context, accountKey: UserKey,
-            conversationId: String, notificationDisabled: Boolean): Promise<Boolean, Exception> {
-        val weakContext by weak(context)
-        return task {
-            val taskContext = weakContext ?: throw InterruptedException()
-            val account = AccountUtils.getAccountDetails(AccountManager.get(taskContext),
-                    accountKey, true) ?: throw AccountNotFoundException()
-            val addData = requestSetNotificationDisabled(taskContext, account, conversationId, notificationDisabled)
-            GetMessagesTask.storeMessages(taskContext, addData, account)
-            return@task true
-        }
+
+    fun markRead(accountKey: UserKey, conversationId: String): Promise<Boolean, Exception> = task {
+        if (conversationId.startsWith(SendMessageTask.TEMP_CONVERSATION_ID_PREFIX)) return@task true
+        val account = AccountUtils.getAccountDetails(AccountManager.get(application), accountKey,
+                true) ?: throw AccountNotFoundException()
+        val microBlog = account.newMicroBlogInstance(application, cls = MicroBlog::class.java)
+        val conversation = DataStoreUtils.findMessageConversation(application, accountKey, conversationId)
+        val lastReadEvent = conversation?.let {
+            return@let performMarkRead(microBlog, account, conversation)
+        } ?: return@task false
+        updateLocalLastRead(application.contentResolver, accountKey, conversationId, lastReadEvent)
+        return@task true
+    }.successUi {
+        bus.post(UnreadCountUpdatedEvent(-1))
     }
 
-    private fun clearMessagesSync(context: Context, account: AccountDetails, conversationId: String): Boolean {
+    private fun clearMessagesSync(account: AccountDetails, conversationId: String): Boolean {
         val messagesWhere = Expression.and(Expression.equalsArgs(Messages.ACCOUNT_KEY),
                 Expression.equalsArgs(Messages.CONVERSATION_ID)).sql
         val messagesWhereArgs = arrayOf(account.key.toString(), conversationId)
         val projection = arrayOf(Messages.MESSAGE_ID)
         val messageIds = mutableListOf<String>()
         var allSuccess = true
-        context.contentResolver.queryReference(Messages.CONTENT_URI, projection, messagesWhere,
+        application.contentResolver.queryReference(Messages.CONTENT_URI, projection, messagesWhere,
                 messagesWhereArgs, null)?.use { (cur) ->
             cur.moveToFirst()
             while (!cur.isAfterLast) {
                 val messageId = cur.getString(0)
                 try {
-                    if (requestDestroyMessage(context, account, messageId)) {
+                    if (requestDestroyMessage(account, messageId)) {
                         messageIds.add(messageId)
                     }
                 } catch (e: MicroBlogException) {
@@ -156,12 +164,12 @@ object MessagePromises {
                 cur.moveToNext()
             }
         }
-        ContentResolverUtils.bulkDelete(context.contentResolver, Messages.CONTENT_URI,
+        ContentResolverUtils.bulkDelete(application.contentResolver, Messages.CONTENT_URI,
                 Messages.MESSAGE_ID, false, messageIds, messagesWhere, messagesWhereArgs)
         val conversationWhere = Expression.and(Expression.equalsArgs(Messages.Conversations.ACCOUNT_KEY),
                 Expression.equalsArgs(Messages.Conversations.CONVERSATION_ID)).sql
         val conversationWhereArgs = arrayOf(account.key.toString(), conversationId)
-        context.contentResolver.updateItems(Messages.Conversations.CONTENT_URI,
+        application.contentResolver.updateItems(Messages.Conversations.CONTENT_URI,
                 Messages.Conversations.COLUMNS, conversationWhere, conversationWhereArgs,
                 cls = ParcelableMessageConversation::class.java) { item ->
             item.message_extras = null
@@ -174,11 +182,11 @@ object MessagePromises {
         return allSuccess
     }
 
-    private fun requestDestroyConversation(context: Context, account: AccountDetails, conversationId: String): Boolean {
+    private fun requestDestroyConversation(account: AccountDetails, conversationId: String): Boolean {
         when (account.type) {
             AccountType.TWITTER -> {
-                if (account.isOfficial(context)) {
-                    val twitter = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                if (account.isOfficial(application)) {
+                    val twitter = account.newMicroBlogInstance(application, MicroBlog::class.java)
                     return twitter.deleteDmConversation(conversationId).isSuccessful
                 }
             }
@@ -186,12 +194,11 @@ object MessagePromises {
         return false
     }
 
-    private fun requestDestroyMessage(context: Context, account: AccountDetails,
-            messageId: String): Boolean {
+    private fun requestDestroyMessage(account: AccountDetails, messageId: String): Boolean {
         when (account.type) {
             AccountType.TWITTER -> {
-                val twitter = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
-                if (account.isOfficial(context)) {
+                val twitter = account.newMicroBlogInstance(application, cls = MicroBlog::class.java)
+                if (account.isOfficial(application)) {
                     return twitter.destroyDm(messageId).isSuccessful
                 }
                 twitter.destroyDirectMessage(messageId)
@@ -201,33 +208,59 @@ object MessagePromises {
         return false
     }
 
-    private fun requestSetNotificationDisabled(context: Context, account: AccountDetails,
-            conversationId: String, notificationDisabled: Boolean):
-            GetMessagesTask.DatabaseUpdateData {
+    @Throws(MicroBlogException::class)
+    internal fun performMarkRead(microBlog: MicroBlog, account: AccountDetails,
+            conversation: ParcelableMessageConversation): Pair<String, Long>? {
+        val cr = application.contentResolver
         when (account.type) {
             AccountType.TWITTER -> {
-                val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
-                if (account.isOfficial(context)) {
-                    val response = if (notificationDisabled) {
-                        microBlog.disableDmConversations(conversationId)
-                    } else {
-                        microBlog.enableDmConversations(conversationId)
+                if (account.isOfficial(application)) {
+                    val event = (conversation.conversation_extras as? TwitterOfficialConversationExtras)?.maxReadEvent ?: run {
+                        val message = cr.findRecentMessage(account.key, conversation.id) ?: return null
+                        return@run Pair(message.id, message.timestamp)
                     }
-                    val conversation = DataStoreUtils.findMessageConversation(context, account.key,
-                            conversationId) ?: return GetMessagesTask.DatabaseUpdateData(emptyList(), emptyList())
-                    if (response.isSuccessful) {
-                        conversation.notificationDisabled = notificationDisabled
+                    if (conversation.last_read_timestamp > event.second) {
+                        // Local is newer, ignore network request
+                        return event
                     }
-                    return GetMessagesTask.DatabaseUpdateData(listOf(conversation), emptyList())
+                    if (microBlog.markDmRead(conversation.id, event.first).isSuccessful) {
+                        return event
+                    }
                 }
             }
         }
-
-        val conversation = DataStoreUtils.findMessageConversation(context, account.key,
-                conversationId) ?: return GetMessagesTask.DatabaseUpdateData(emptyList(), emptyList())
-        conversation.notificationDisabled = notificationDisabled
-        return GetMessagesTask.DatabaseUpdateData(listOf(conversation), emptyList())
+        val message = cr.findRecentMessage(account.key, conversation.id) ?: return null
+        return Pair(message.id, message.timestamp)
     }
 
+    internal fun updateLocalLastRead(cr: ContentResolver, accountKey: UserKey,
+            conversationId: String, lastRead: Pair<String, Long>) {
+        val values = ContentValues()
+        values.put(Messages.Conversations.LAST_READ_ID, lastRead.first)
+        values.put(Messages.Conversations.LAST_READ_TIMESTAMP, lastRead.second)
+        val updateWhere = Expression.and(Expression.equalsArgs(Messages.Conversations.ACCOUNT_KEY),
+                Expression.equalsArgs(Messages.Conversations.CONVERSATION_ID),
+                Expression.lesserThan(Messages.Conversations.LAST_READ_TIMESTAMP, lastRead.second)).sql
+        val updateWhereArgs = arrayOf(accountKey.toString(), conversationId)
+        cr.update(Messages.Conversations.CONTENT_URI, values, updateWhere, updateWhereArgs)
+    }
 
+    private fun ContentResolver.findRecentMessage(accountKey: UserKey, conversationId: String): ParcelableMessage? {
+        val where = Expression.and(Expression.equalsArgs(Messages.ACCOUNT_KEY),
+                Expression.equalsArgs(Messages.CONVERSATION_ID)).sql
+        val whereArgs = arrayOf(accountKey.toString(), conversationId)
+        return queryOne(Messages.CONTENT_URI, Messages.COLUMNS, where, whereArgs,
+                OrderBy(Messages.LOCAL_TIMESTAMP, false).sql, ParcelableMessage::class.java)
+    }
+
+    private val TwitterOfficialConversationExtras.maxReadEvent: Pair<String, Long>?
+        get() {
+            val id = maxEntryId ?: return null
+            if (maxEntryTimestamp < 0) return null
+            return Pair(id, maxEntryTimestamp)
+        }
+
+    companion object : SingletonHolder<MessagePromises, Context>({
+        MessagePromises(it.applicationContext as Application)
+    })
 }
