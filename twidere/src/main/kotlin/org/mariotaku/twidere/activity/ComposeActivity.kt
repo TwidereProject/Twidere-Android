@@ -240,7 +240,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
         setFinishOnTouchOutside(false)
         val am = AccountManager.get(this)
-        val accounts = AccountUtils.getAccounts(am)
+        val accounts = am.ownedAccounts
         if (accounts.isEmpty()) {
             Toast.makeText(this, R.string.message_toast_no_account, Toast.LENGTH_SHORT).show()
             shouldSkipDraft = true

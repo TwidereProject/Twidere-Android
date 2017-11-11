@@ -3,10 +3,6 @@ package org.mariotaku.ktextension
 import java.text.NumberFormat
 import java.util.*
 
-/**
- * Created by mariotaku on 16/7/30.
- */
-
 fun String?.toLongOr(def: Long) = try {
     this?.toLong() ?: def
 } catch (e: NumberFormatException) {
@@ -15,6 +11,12 @@ fun String?.toLongOr(def: Long) = try {
 
 fun String?.toIntOr(def: Int) = try {
     this?.toInt() ?: def
+} catch (e: NumberFormatException) {
+    def
+}
+
+fun String?.toBooleanOr(def: Boolean) = try {
+    this?.toBoolean() ?: def
 } catch (e: NumberFormatException) {
     def
 }

@@ -40,6 +40,7 @@ import org.mariotaku.ktextension.subArray
 import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.exception.NoAccountException
 import org.mariotaku.twidere.extension.model.updateDetails
+import org.mariotaku.twidere.extension.ownedAccounts
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
@@ -278,7 +279,7 @@ class AccountsDumperPlugin(val context: Context) : DumperPlugin {
         }
 
         private fun AccountManager.importAccounts(allDetails: List<AccountDetails>) {
-            val usedAccounts = AccountUtils.getAccounts(this)
+            val usedAccounts = ownedAccounts
             allDetails.forEach { details ->
                 val account = details.account
                 if (account !in usedAccounts) {

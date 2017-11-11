@@ -4,26 +4,38 @@ import android.accounts.*
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.os.Binder
 import android.os.Bundle
 import android.os.IBinder
+import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
 import org.mariotaku.ktextension.weak
 import org.mariotaku.twidere.activity.SignInActivity
 import org.mariotaku.twidere.extension.addOnAccountsUpdatedListenerSafe
+import org.mariotaku.twidere.extension.removeOnAccountsUpdatedListenerSafe
+import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.notification.NotificationChannelsManager
 
 
 class AccountAuthenticatorService : Service() {
 
+    private val weakThis by weak(this)
+
     private val authenticator by lazy { TwidereAccountAuthenticator(this) }
+
+    private val accountsUpdateListener = OnAccountsUpdateListener {
+        val service = weakThis ?: return@OnAccountsUpdateListener
+        NotificationChannelsManager.updateAccountChannelsAndGroups(service)
+    }
 
     override fun onCreate() {
         super.onCreate()
-        val weakThis by weak(this)
-        AccountManager.get(this).addOnAccountsUpdatedListenerSafe(OnAccountsUpdateListener {
-            val service = weakThis ?: return@OnAccountsUpdateListener
-            NotificationChannelsManager.updateAccountChannelsAndGroups(service)
-        }, updateImmediately = true)
+        AccountManager.get(this).addOnAccountsUpdatedListenerSafe(accountsUpdateListener, updateImmediately = true)
+    }
+
+    override fun onDestroy() {
+        AccountManager.get(this).removeOnAccountsUpdatedListenerSafe(accountsUpdateListener)
+        super.onDestroy()
     }
 
     override fun onBind(intent: Intent): IBinder? {
@@ -74,6 +86,14 @@ class AccountAuthenticatorService : Service() {
 
         override fun updateCredentials(response: AccountAuthenticatorResponse, account: Account,
                 authTokenType: String, options: Bundle?) = null
+
+        override fun getAccountRemovalAllowed(response: AccountAuthenticatorResponse?, account: Account?): Bundle {
+            val callingPkg = context.packageManager.getPackagesForUid(Binder.getCallingUid()).firstOrNull()
+            DebugLog.d(msg = "getAccountRemovalAllowed, called from ${Binder.getCallingPid()}:$callingPkg")
+            return Bundle {
+                this[AccountManager.KEY_BOOLEAN_RESULT] = true
+            }
+        }
     }
 
 }

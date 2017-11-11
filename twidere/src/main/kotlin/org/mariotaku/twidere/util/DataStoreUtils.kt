@@ -43,14 +43,11 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.constant.*
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.tab.applyToSelection
-import org.mariotaku.twidere.extension.queryCount
-import org.mariotaku.twidere.extension.queryOne
-import org.mariotaku.twidere.extension.queryReference
-import org.mariotaku.twidere.extension.rawQueryReference
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.tab.extra.HomeTabExtras
 import org.mariotaku.twidere.model.tab.extra.InteractionsTabExtras
@@ -288,7 +285,7 @@ object DataStoreUtils {
     fun getActivatedAccountKeys(context: Context): Array<UserKey> {
         val am = AccountManager.get(context)
         val keys = ArrayList<UserKey>()
-        for (account in AccountUtils.getAccounts(am)) {
+        for (account in am.ownedAccounts) {
             if (account.isActivated(am)) {
                 keys.add(account.getAccountKey(am))
             }
@@ -534,7 +531,7 @@ object DataStoreUtils {
 
     fun findAccountKeyByScreenName(context: Context, screenName: String): UserKey? {
         val am = AccountManager.get(context)
-        for (account in AccountUtils.getAccounts(am)) {
+        for (account in am.ownedAccounts) {
             val user = account.getAccountUser(am)
             if (screenName.equals(user.screen_name, ignoreCase = true)) {
                 return user.key
@@ -545,7 +542,7 @@ object DataStoreUtils {
 
     fun getAccountKeys(context: Context): Array<UserKey> {
         val am = AccountManager.get(context)
-        val accounts = AccountUtils.getAccounts(am)
+        val accounts = am.ownedAccounts
         val keys = ArrayList<UserKey>(accounts.size)
         for (account in accounts) {
             val keyString = am.getUserData(account, ACCOUNT_USER_DATA_KEY) ?: continue
@@ -556,7 +553,7 @@ object DataStoreUtils {
 
     fun findAccountKey(context: Context, accountId: String): UserKey? {
         val am = AccountManager.get(context)
-        for (account in AccountUtils.getAccounts(am)) {
+        for (account in am.ownedAccounts) {
             val key = account.getAccountKey(am)
             if (accountId == key.id) {
                 return key
@@ -566,7 +563,7 @@ object DataStoreUtils {
     }
 
     fun hasAccount(context: Context): Boolean {
-        return AccountUtils.getAccounts(AccountManager.get(context)).isNotEmpty()
+        return AccountManager.get(context).ownedAccounts.isNotEmpty()
     }
 
     @Synchronized

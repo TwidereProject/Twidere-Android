@@ -34,12 +34,12 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.extension.model.getAccountUser
+import org.mariotaku.twidere.extension.ownedAccounts
 import org.mariotaku.twidere.menu.AccountActionProvider
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.mariotaku.twidere.util.dagger.GeneralComponent
@@ -95,7 +95,7 @@ class MultiSelectEventHandler(
                 val am = AccountManager.get(activity)
                 val intent = Intent(INTENT_ACTION_REPLY_MULTIPLE)
                 val bundle = Bundle()
-                val accountScreenNames = AccountUtils.getAccounts(am).map { it.getAccountUser(am).screen_name }
+                val accountScreenNames = am.ownedAccounts.map { it.getAccountUser(am).screen_name }
                 val allMentions = TreeSet(String.CASE_INSENSITIVE_ORDER)
                 for (selected in selectedItems) {
                     if (selected is ParcelableStatus) {

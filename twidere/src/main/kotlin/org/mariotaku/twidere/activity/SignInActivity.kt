@@ -1166,7 +1166,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             var accountName: String
             if (randomizeAccountName) {
                 val usedNames = ArraySet<String>()
-                AccountUtils.getAccounts(am).mapTo(usedNames, Account::name)
+                am.ownedAccounts.mapTo(usedNames, Account::name)
                 do {
                     accountName = UUID.randomUUID().toString()
                 } while (accountName in usedNames)
@@ -1174,7 +1174,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                 accountName = generateAccountName(user.screen_name, user.key.host)
             }
             val account = Account(accountName, ACCOUNT_TYPE)
-            val accountPosition = AccountUtils.getAccounts(am).size
+            val accountPosition = am.ownedAccounts.size
             // Don't add UserData in this method, see http://stackoverflow.com/a/29776224/859190
             am.addAccountExplicitly(account, null, null)
             writeAccountInfo { k, v ->

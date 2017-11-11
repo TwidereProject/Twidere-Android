@@ -21,12 +21,12 @@ package org.mariotaku.twidere.extension
 
 import android.accounts.Account
 import android.accounts.AccountManager
+import org.mariotaku.ktextension.toBooleanOr
 import org.mariotaku.twidere.TwidereConstants.ACCOUNT_USER_DATA_TEST
-import org.mariotaku.twidere.extension.model.AccountDataQueue
 
 
 fun Account.isTest(am: AccountManager): Boolean {
-    return AccountDataQueue.getUserData(am, this, ACCOUNT_USER_DATA_TEST)?.toBoolean() ?: true
+    return am.getUserData(this, ACCOUNT_USER_DATA_TEST).toBooleanOr(false)
 }
 
 fun Account.setTest(am: AccountManager, test: Boolean) {

@@ -30,6 +30,7 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.model.notificationChannelGroupId
 import org.mariotaku.twidere.extension.model.notificationChannelId
+import org.mariotaku.twidere.extension.ownedAccounts
 import org.mariotaku.twidere.model.notification.NotificationChannelSpec
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.dagger.DependencyHolder
@@ -84,7 +85,7 @@ object NotificationChannelsManager {
             val pref = holder.preferences
             val ucnm = holder.userColorNameManager
 
-            val accounts = AccountUtils.getAccounts(am)
+            val accounts = am.ownedAccounts
             val specs = NotificationChannelSpec.values()
 
             val addedChannels = mutableListOf<String>()

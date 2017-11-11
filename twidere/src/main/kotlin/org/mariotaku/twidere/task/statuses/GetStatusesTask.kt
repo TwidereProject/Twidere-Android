@@ -44,6 +44,7 @@ import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.data.syncher.TimelinePositionSyncher
 import org.mariotaku.twidere.exception.AccountNotFoundException
+import org.mariotaku.twidere.extension.bulkInsert
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.applyLoadLimit
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
@@ -59,12 +60,7 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.BaseAbstractTask
-import org.mariotaku.twidere.util.cacheTimelineResult
-import org.mariotaku.twidere.util.DataStoreUtils
-import org.mariotaku.twidere.util.DebugLog
-import org.mariotaku.twidere.util.ErrorInfoStore
-import org.mariotaku.twidere.util.UriUtils
-import org.mariotaku.twidere.util.content.ContentResolverUtils
+import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.sync.SyncTaskRunner
 import org.mariotaku.twidere.util.sync.TimelineSyncManager
 
@@ -238,7 +234,6 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
         val writeUri = UriUtils.appendQueryParameters(uri, QUERY_PARAM_NOTIFY_CHANGE, notify)
         val resolver = context.contentResolver
         val noItemsBefore = DataStoreUtils.getStatusCount(context, uri, accountKey) <= 0
-        val values = arrayOfNulls<ContentValues>(statuses.size)
         val statusIds = arrayOfNulls<String>(statuses.size)
         var minIdx = -1
         var minPositionKey: Long = -1
@@ -255,7 +250,6 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
                         sortDiff, i, statuses.size)
                 status.tab_id = param.tabId
                 mediaPreloader.preloadStatus(status)
-                values[i] = creator.create(status)
                 if (minIdx == -1 || status < statuses[minIdx]) {
                     minIdx = i
                     minPositionKey = status.position_key
@@ -287,10 +281,10 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
         val insertGap = minIdx != -1 && olderCount > 0 && (noRowsDeleted || deletedOldGap)
                 && !noItemsBefore && !hasIntersection && statuses.size > loadItemLimit / 2
         if (insertGap) {
-            values[minIdx]!!.put(Statuses.IS_GAP, true)
+            statuses[minIdx].is_gap = true
         }
         // Insert previously fetched items.
-        ContentResolverUtils.bulkInsert(resolver, writeUri, values)
+        resolver.bulkInsert(writeUri, statuses, ParcelableStatus::class.java)
 
         // Remove gap flag
         if (maxId != null && sinceId == null) {

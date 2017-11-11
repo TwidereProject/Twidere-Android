@@ -26,6 +26,7 @@ import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.getDetailsOrThrow
 import org.mariotaku.twidere.extension.model.addParticipants
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
@@ -33,7 +34,6 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.task.ExceptionHandlingAbstractTask
 import org.mariotaku.twidere.util.DataStoreUtils
 
@@ -53,8 +53,7 @@ class AddParticipantsTask(
     override val exceptionClass = MicroBlogException::class.java
 
     override fun onExecute(params: Unit?): Boolean {
-        val account = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?:
-                throw MicroBlogException("No account")
+        val account = AccountManager.get(context).getDetailsOrThrow(accountKey, true)
         val conversation = DataStoreUtils.findMessageConversation(context, accountKey, conversationId)
         if (conversation != null && conversation.is_temp) {
             val addData = GetMessagesTask.DatabaseUpdateData(listOf(conversation), emptyList())

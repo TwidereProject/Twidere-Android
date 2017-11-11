@@ -33,7 +33,7 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.sqliteqb.library.OrderBy
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.exception.AccountNotFoundException
+import org.mariotaku.twidere.extension.getDetailsOrThrow
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.model.timestamp
@@ -45,7 +45,6 @@ import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.UnreadCountUpdatedEvent
 import org.mariotaku.twidere.model.message.conversation.TwitterOfficialConversationExtras
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.task.twitter.message.SendMessageTask
 import org.mariotaku.twidere.util.DataStoreUtils
@@ -59,13 +58,14 @@ class MessagePromises private constructor(private val application: Application) 
     @Inject
     lateinit var bus: Bus
 
+    private val accountManager = AccountManager.get(application)
+
     init {
         GeneralComponent.get(application).inject(this)
     }
 
     fun destroyConversation(accountKey: UserKey, conversationId: String): Promise<Boolean, Exception> = task {
-        val account = AccountUtils.getAccountDetails(AccountManager.get(application), accountKey, true) ?:
-                throw MicroBlogException("No account")
+        val account = accountManager.getDetailsOrThrow(accountKey, true)
         val conversation = DataStoreUtils.findMessageConversation(application, accountKey, conversationId)
 
         var deleteMessages = true
@@ -97,8 +97,7 @@ class MessagePromises private constructor(private val application: Application) 
     }
 
     fun destroyMessage(accountKey: UserKey, conversationId: String?, messageId: String): Promise<Boolean, Exception> = task {
-        val account = AccountUtils.getAccountDetails(AccountManager.get(application), accountKey,
-                true) ?: throw AccountNotFoundException()
+        val account = accountManager.getDetailsOrThrow(accountKey, true)
         if (!requestDestroyMessage(account, messageId)) {
             return@task false
         }
@@ -120,16 +119,14 @@ class MessagePromises private constructor(private val application: Application) 
 
 
     fun clearMessages(accountKey: UserKey, conversationId: String): Promise<Boolean, Exception> = task {
-        val account = AccountUtils.getAccountDetails(AccountManager.get(application), accountKey,
-                true) ?: throw AccountNotFoundException()
+        val account = accountManager.getDetailsOrThrow(accountKey, true)
         clearMessagesSync(account, conversationId)
     }
 
 
     fun markRead(accountKey: UserKey, conversationId: String): Promise<Boolean, Exception> = task {
         if (conversationId.startsWith(SendMessageTask.TEMP_CONVERSATION_ID_PREFIX)) return@task true
-        val account = AccountUtils.getAccountDetails(AccountManager.get(application), accountKey,
-                true) ?: throw AccountNotFoundException()
+        val account = accountManager.getDetailsOrThrow(accountKey, true)
         val microBlog = account.newMicroBlogInstance(application, cls = MicroBlog::class.java)
         val conversation = DataStoreUtils.findMessageConversation(application, accountKey, conversationId)
         val lastReadEvent = conversation?.let {

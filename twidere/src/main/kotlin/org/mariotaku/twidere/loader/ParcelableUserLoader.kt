@@ -42,6 +42,7 @@ import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.host
 import org.mariotaku.twidere.extension.model.isAcctPlaceholder
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.extension.ownedAccounts
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.SingleResponse
@@ -78,7 +79,7 @@ class ParcelableUserLoader(
         val resolver = context.contentResolver
         val accountKey = accountKey ?: return SingleResponse(MicroBlogException("No account"))
         val am = AccountManager.get(context)
-        val details = AccountUtils.getAllAccountDetails(am, AccountUtils.getAccounts(am), true).firstOrNull {
+        val details = AccountUtils.getAllAccountDetails(am, am.ownedAccounts, true).firstOrNull {
             if (it.key == accountKey) {
                 return@firstOrNull true
             } else if (it.user.account_key == accountKey) {

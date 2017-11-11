@@ -296,6 +296,11 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         }
     }
 
+    override fun scrollToStart(): Boolean {
+        val result = super.scrollToStart()
+        if (result) saveReadPosition(0)
+        return result
+    }
 
     fun reloadAll() {
         val controller = dataController

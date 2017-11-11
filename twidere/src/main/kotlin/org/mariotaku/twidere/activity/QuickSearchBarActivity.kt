@@ -60,6 +60,7 @@ import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.extension.appendQueryParameterIgnoreNull
 import org.mariotaku.twidere.extension.loadProfileImage
+import org.mariotaku.twidere.extension.ownedAccounts
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.SuggestionItem
 import org.mariotaku.twidere.model.UserKey
@@ -96,7 +97,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
                         ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM))
 
         val am = AccountManager.get(this)
-        val accounts = AccountUtils.getAllAccountDetails(am, AccountUtils.getAccounts(am), true).toList()
+        val accounts = AccountUtils.getAllAccountDetails(am, am.ownedAccounts, true).toList()
         val accountsSpinnerAdapter = AccountsSpinnerAdapter(this, R.layout.spinner_item_account_icon,
                 requestManager = requestManager)
         accountsSpinnerAdapter.setDropDownViewResource(R.layout.list_item_simple_user)

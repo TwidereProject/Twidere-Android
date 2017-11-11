@@ -22,34 +22,43 @@ package org.mariotaku.twidere.util
 import android.accounts.AccountManager
 import android.os.Bundle
 import android.support.test.InstrumentationRegistry
+import com.bluelinelabs.logansquare.LoganSquare
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.all
+import org.mariotaku.ktextension.deadline
 import org.mariotaku.twidere.extension.isAccountValid
 import org.mariotaku.twidere.extension.model.updateDetails
+import org.mariotaku.twidere.extension.ownedAccounts
 import org.mariotaku.twidere.extension.removeAccount
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.test.R
+import java.io.InputStream
 import java.lang.Exception
+import java.util.concurrent.TimeUnit
 
 object TestAccountUtils {
+
+    val testAccounts: List<AccountDetails> by lazy {
+        val context = InstrumentationRegistry.getContext()
+        return@lazy accountResources.map {
+            return@map context.resources.openRawResource(it).use<InputStream?, AccountDetails> {
+                LoganSquare.parse(it, AccountDetails::class.java)
+            }
+        }
+    }
 
     private val accountResources = intArrayOf(R.raw.account_4223092274_twitter_com)
 
     fun insertTestAccounts() {
         val targetContext = InstrumentationRegistry.getTargetContext()
-        val context = InstrumentationRegistry.getContext()
-        val testAccounts = accountResources.map {
-            return@map context.resources.openRawResource(it).use {
-                JsonSerializer.parse(it, AccountDetails::class.java)
-            }
-        }
+        val testAccounts = testAccounts
         val am = AccountManager.get(targetContext)
-        val result = all(AccountUtils.getAccounts(am).mapNotNull { account ->
+        val result = all(am.ownedAccounts.mapNotNull { account ->
             if (am.isAccountValid(account) || testAccounts.none { account == it.account }) {
                 return@mapNotNull null
             }
-            return@mapNotNull am.removeAccount(account)
+            return@mapNotNull am.removeAccount(account).deadline(1, TimeUnit.SECONDS)
         }, cancelOthersOnError = false).get()
         DebugLog.d(msg = "Removed accounts: $result")
         val existingAccounts = AccountUtils.getAllAccountDetails(am, false)

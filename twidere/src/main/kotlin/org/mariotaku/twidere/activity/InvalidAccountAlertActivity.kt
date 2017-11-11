@@ -18,7 +18,6 @@ import org.mariotaku.twidere.activity.iface.IBaseActivity
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_INTENT
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.fragment.BaseDialogFragment
-import org.mariotaku.twidere.model.util.AccountUtils
 
 class InvalidAccountAlertActivity : FragmentActivity(), IBaseActivity<InvalidAccountAlertActivity> {
 
@@ -51,7 +50,7 @@ class InvalidAccountAlertActivity : FragmentActivity(), IBaseActivity<InvalidAcc
     fun removeInvalidAccounts() {
         val am = AccountManager.get(this)
         val weakThis = toWeak()
-        val invalidAccounts = AccountUtils.getAccounts(am).filter { !am.isAccountValid(it) }
+        val invalidAccounts = am.ownedAccounts.filter { !am.isAccountValid(it) }
         (showProgressDialog("remove_invalid_accounts") and all(invalidAccounts.map { am.removeAccount(it) })).successUi {
             val activity = weakThis.get() ?: return@successUi
             val intent = activity.intent.getParcelableExtra<Intent>(EXTRA_INTENT)

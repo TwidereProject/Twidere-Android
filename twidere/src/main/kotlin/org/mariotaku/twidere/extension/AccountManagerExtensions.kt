@@ -21,32 +21,31 @@ package org.mariotaku.twidere.extension
 
 import android.accounts.*
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.support.annotation.RequiresApi
-import android.text.TextUtils
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.thenApply
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
-import org.mariotaku.twidere.TwidereConstants
-import org.mariotaku.twidere.extension.model.AccountDataQueue
+import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.extension.model.*
+import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 
 fun AccountManager.hasInvalidAccount(): Boolean {
-    val accounts = AccountUtils.getAccounts(this)
+    val accounts = ownedAccounts
     if (accounts.isEmpty()) return false
     return accounts.any { !isAccountValid(it) }
 }
 
 fun AccountManager.isAccountValid(account: Account): Boolean {
-    if (TextUtils.isEmpty(AccountDataQueue.peekAuthToken(this, account, TwidereConstants.ACCOUNT_AUTH_TOKEN_TYPE))) return false
-    if (TextUtils.isEmpty(AccountDataQueue.getUserData(this, account, TwidereConstants.ACCOUNT_USER_DATA_KEY))) return false
-    if (TextUtils.isEmpty(AccountDataQueue.getUserData(this, account, TwidereConstants.ACCOUNT_USER_DATA_USER))) return false
-    return true
+    return !getUserData(account, ACCOUNT_USER_DATA_KEY).isNullOrEmpty()
 }
 
 fun AccountManager.renameTwidereAccount(oldAccount: Account, newName: String,
@@ -61,8 +60,8 @@ fun AccountManager.renameTwidereAccount(oldAccount: Account, newName: String,
         for (key in AccountUtils.ACCOUNT_USER_DATA_KEYS) {
             setUserData(newAccount, key, getUserData(oldAccount, key))
         }
-        setAuthToken(newAccount, TwidereConstants.ACCOUNT_AUTH_TOKEN_TYPE,
-                peekAuthToken(oldAccount, TwidereConstants.ACCOUNT_AUTH_TOKEN_TYPE))
+        setAuthToken(newAccount, ACCOUNT_AUTH_TOKEN_TYPE,
+                peekAuthToken(oldAccount, ACCOUNT_AUTH_TOKEN_TYPE))
         return@task newAccount
     }.and(removeAccount(oldAccount, activity = null, handler = handler)).thenApply {
         return@thenApply first
@@ -107,6 +106,41 @@ fun AccountManager.removeAccount(account: Account, activity: Activity? = null, h
         }
     }
 }
+
+fun AccountManager.findAccount(byKey: UserKey): Account? {
+    return ownedAccounts.find { byKey == it.getAccountKey(this) }
+}
+
+fun AccountManager.getDetails(key: UserKey, getCredentials: Boolean): AccountDetails? {
+    val account = findAccount(key) ?: return null
+    return getDetails(account, getCredentials)
+}
+
+fun AccountManager.getDetails(account: Account, getCredentials: Boolean): AccountDetails {
+    val details = AccountDetails()
+    details.key = account.getAccountKey(this)
+    details.account = account
+    details.color = account.getColor(this)
+    details.position = account.getPosition(this)
+    details.activated = account.isActivated(this)
+    details.type = account.getAccountType(this)
+    details.credentials_type = account.getCredentialsType(this)
+    details.user = account.getAccountUser(this)
+    details.user.color = details.color
+
+    details.extras = account.getAccountExtras(this)
+
+    if (getCredentials) {
+        details.credentials = account.getCredentials(this)
+    }
+    return details
+}
+
+fun AccountManager.getDetailsOrThrow(key: UserKey, getCredentials: Boolean): AccountDetails {
+    return getDetails(key, getCredentials) ?: throw ActivityNotFoundException()
+}
+
+val AccountManager.ownedAccounts: Array<Account> get() = getAccountsByType(ACCOUNT_TYPE)
 
 private object API22 {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)

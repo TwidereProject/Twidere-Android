@@ -3,8 +3,8 @@ package org.mariotaku.twidere.extension.model
 import android.accounts.Account
 import android.accounts.AccountManager
 import android.content.Context
-import android.os.Looper
 import org.mariotaku.ktextension.HexColorFormat
+import org.mariotaku.ktextension.toBooleanOr
 import org.mariotaku.ktextension.toHexColor
 import org.mariotaku.ktextension.toIntOr
 import org.mariotaku.twidere.TwidereConstants.*
@@ -18,27 +18,17 @@ import org.mariotaku.twidere.util.InternalTwitterContentUtils
 import org.mariotaku.twidere.util.JsonSerializer
 import org.mariotaku.twidere.util.ParseUtils
 import org.mariotaku.twidere.util.model.AccountDetailsUtils
-import java.util.concurrent.Callable
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.TimeoutException
 
 
 fun Account.getCredentials(am: AccountManager): Credentials {
-    val authToken = AccountDataQueue.peekAuthToken(am, this, ACCOUNT_AUTH_TOKEN_TYPE) ?: run {
-        for (i in 0 until 5) {
-            Thread.sleep(50L)
-            val token = AccountDataQueue.peekAuthToken(am, this, ACCOUNT_AUTH_TOKEN_TYPE)
-            if (token != null) return@run token
-        }
-        return@run null
-    } ?: throw NullPointerException("AuthToken is null for ${this}")
+    val authToken = am.peekAuthToken(this, ACCOUNT_AUTH_TOKEN_TYPE) ?:
+            throw NullPointerException("AuthToken is null for ${this}")
     return parseCredentials(authToken, getCredentialsType(am))
 }
 
 @Credentials.Type
 fun Account.getCredentialsType(am: AccountManager): String {
-    return AccountDataQueue.getUserData(am, this, ACCOUNT_USER_DATA_CREDS_TYPE) ?: Credentials.Type.OAUTH
+    return am.getUserData(this, ACCOUNT_USER_DATA_CREDS_TYPE) ?: Credentials.Type.OAUTH
 }
 
 fun Account.getAccountKey(am: AccountManager): UserKey {
@@ -61,25 +51,25 @@ fun Account.setAccountUser(am: AccountManager, user: ParcelableUser) {
 
 @android.support.annotation.ColorInt
 fun Account.getColor(am: AccountManager): Int {
-    return ParseUtils.parseColor(AccountDataQueue.getUserData(am, this, ACCOUNT_USER_DATA_COLOR), 0)
+    return ParseUtils.parseColor(am.getUserData(this, ACCOUNT_USER_DATA_COLOR), 0)
 }
 
 fun Account.getPosition(am: AccountManager): Int {
-    return AccountDataQueue.getUserData(am, this, ACCOUNT_USER_DATA_POSITION).toIntOr(-1)
+    return am.getUserData(this, ACCOUNT_USER_DATA_POSITION).toIntOr(-1)
 }
 
 fun Account.getAccountExtras(am: AccountManager): AccountExtras? {
-    val json = AccountDataQueue.getUserData(am, this, ACCOUNT_USER_DATA_EXTRAS) ?: return null
+    val json = am.getUserData(this, ACCOUNT_USER_DATA_EXTRAS) ?: return null
     return AccountDetailsUtils.parseAccountExtras(json, getAccountType(am))
 }
 
 @AccountType
 fun Account.getAccountType(am: AccountManager): String {
-    return AccountDataQueue.getUserData(am, this, ACCOUNT_USER_DATA_TYPE) ?: AccountType.TWITTER
+    return am.getUserData(this, ACCOUNT_USER_DATA_TYPE) ?: AccountType.TWITTER
 }
 
 fun Account.isActivated(am: AccountManager): Boolean {
-    return AccountDataQueue.getUserData(am, this, ACCOUNT_USER_DATA_ACTIVATED)?.toBoolean() ?: true
+    return am.getUserData(this, ACCOUNT_USER_DATA_ACTIVATED).toBooleanOr(true)
 }
 
 fun Account.setActivated(am: AccountManager, activated: Boolean) {
@@ -108,15 +98,7 @@ fun Account.isOfficial(am: AccountManager, context: Context): Boolean {
 }
 
 private fun AccountManager.getNonNullUserData(account: Account, key: String): String {
-    return AccountDataQueue.getUserData(this, account, key) ?: run {
-        // Rare case, assume account manager service is not running
-        for (i in 0 until 5) {
-            Thread.sleep(50L)
-            val data = AccountDataQueue.getUserData(this, account, key)
-            if (data != null) return data
-        }
-        throw NullPointerException("NonNull userData `$key` is null for $account")
-    }
+    return getUserData(account, key) ?: throw NullPointerException("NonNull userData `$key` is null for $account")
 }
 
 private fun parseCredentials(authToken: String, @Credentials.Type authType: String) = when (authType) {
@@ -126,38 +108,3 @@ private fun parseCredentials(authToken: String, @Credentials.Type authType: Stri
     Credentials.Type.OAUTH2 -> JsonSerializer.parse(authToken, OAuth2Credentials::class.java)
     else -> throw UnsupportedOperationException()
 }
-
-internal object AccountDataQueue {
-    private val executor = Executors.newSingleThreadExecutor()
-
-    fun getUserData(manager: AccountManager, account: Account, key: String): String? {
-        val callable = Callable {
-            manager.getUserData(account, key)
-        }
-        if (Thread.currentThread() === Looper.getMainLooper().thread) {
-            return callable.call()
-        }
-        val future = executor.submit(callable)
-        try {
-            return future.get(1, TimeUnit.SECONDS)
-        } catch (e: TimeoutException) {
-            return manager.getUserData(account, key)
-        }
-    }
-
-    fun peekAuthToken(manager: AccountManager, account: Account, authTokenType: String): String? {
-        val callable = Callable {
-            manager.peekAuthToken(account, authTokenType)
-        }
-        if (Thread.currentThread() === Looper.getMainLooper().thread) {
-            return callable.call()
-        }
-        val future = executor.submit(callable)
-        try {
-            return future.get(1, TimeUnit.SECONDS)
-        } catch (e: TimeoutException) {
-            return manager.peekAuthToken(account, authTokenType)
-        }
-    }
-}
-

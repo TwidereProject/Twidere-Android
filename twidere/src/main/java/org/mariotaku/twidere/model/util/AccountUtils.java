@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.annotation.AuthTypeInt;
+import org.mariotaku.twidere.extension.AccountManagerExtensionsKt;
 import org.mariotaku.twidere.extension.model.AccountExtensionsKt;
 import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.UserKey;
@@ -17,7 +18,6 @@ import org.mariotaku.twidere.util.Utils;
 
 import java.util.Arrays;
 
-import static org.mariotaku.twidere.TwidereConstants.ACCOUNT_TYPE;
 import static org.mariotaku.twidere.TwidereConstants.ACCOUNT_USER_DATA_ACTIVATED;
 import static org.mariotaku.twidere.TwidereConstants.ACCOUNT_USER_DATA_COLOR;
 import static org.mariotaku.twidere.TwidereConstants.ACCOUNT_USER_DATA_CREDS_TYPE;
@@ -48,17 +48,13 @@ public class AccountUtils {
 
     @Nullable
     public static Account findByAccountKey(@NonNull AccountManager am, @NonNull UserKey userKey) {
-        for (Account account : getAccounts(am)) {
+        //noinspection MissingPermission
+        for (Account account : AccountManagerExtensionsKt.getOwnedAccounts(am)) {
             if (userKey.equals(AccountExtensionsKt.getAccountKey(account, am))) {
                 return account;
             }
         }
         return null;
-    }
-
-    public static Account[] getAccounts(@NonNull AccountManager am) {
-        //noinspection MissingPermission
-        return am.getAccountsByType(ACCOUNT_TYPE);
     }
 
     public static AccountDetails[] getAllAccountDetails(@NonNull AccountManager am, @NonNull Account[] accounts, boolean getCredentials) {
@@ -80,7 +76,8 @@ public class AccountUtils {
     }
 
     public static AccountDetails[] getAllAccountDetails(@NonNull AccountManager am, boolean getCredentials) {
-        return getAllAccountDetails(am, getAccounts(am), getCredentials);
+        //noinspection MissingPermission
+        return getAllAccountDetails(am, AccountManagerExtensionsKt.getOwnedAccounts(am), getCredentials);
     }
 
     @Nullable
@@ -121,7 +118,8 @@ public class AccountUtils {
 
     @Nullable
     public static Account findByScreenName(AccountManager am, @NonNull String screenName) {
-        for (Account account : getAccounts(am)) {
+        //noinspection MissingPermission
+        for (Account account : AccountManagerExtensionsKt.getOwnedAccounts(am)) {
             if (screenName.equalsIgnoreCase(AccountExtensionsKt.getAccountUser(account, am).screen_name)) {
                 return account;
             }
@@ -138,7 +136,8 @@ public class AccountUtils {
 
     public static boolean hasOfficialKeyAccount(Context context) {
         final AccountManager am = AccountManager.get(context);
-        for (Account account : getAccounts(am)) {
+        //noinspection MissingPermission
+        for (Account account : AccountManagerExtensionsKt.getOwnedAccounts(am)) {
             if (AccountExtensionsKt.isOfficial(account, am, context)) {
                 return true;
             }
@@ -184,13 +183,13 @@ public class AccountUtils {
 
     public static boolean hasAccountPermission(@NonNull AccountManager am) {
         try {
-            getAccounts(am);
+            //noinspection MissingPermission
+            AccountManagerExtensionsKt.getOwnedAccounts(am);
         } catch (SecurityException e) {
             return false;
         }
         return true;
     }
-
 
 
 }

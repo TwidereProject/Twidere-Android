@@ -21,6 +21,7 @@ package org.mariotaku.twidere.extension
 
 import android.annotation.SuppressLint
 import android.content.ContentResolver
+import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
 import org.mariotaku.ktextension.map
@@ -29,7 +30,7 @@ import org.mariotaku.sqliteqb.library.SQLFunctions
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_LIMIT
 import org.mariotaku.twidere.model.CursorReference
 import org.mariotaku.twidere.util.TwidereQueryBuilder
-import org.mariotaku.twidere.util.content.ContentResolverUtils
+import org.mariotaku.twidere.util.content.ContentResolverUtils.MAX_BULK_COUNT
 import java.io.FileNotFoundException
 
 fun ContentResolver.query(uri: Uri, projection: Array<String>? = null,
@@ -104,8 +105,18 @@ fun <T : Any> ContentResolver.insert(uri: Uri, obj: T, cls: Class<T> = obj.javaC
 }
 
 fun <T : Any> ContentResolver.bulkInsert(uri: Uri, collection: Collection<T>, cls: Class<T>): Int {
+    if (collection.isEmpty()) return 0
     val creator = ObjectCursor.valuesCreatorFrom(cls)
-    return ContentResolverUtils.bulkInsert(this, uri, collection.map(creator::create))
+    var rowsInserted = 0
+    val block = mutableListOf<ContentValues>()
+    collection.forEachIndexed { index, item ->
+        block.add(creator.create(item))
+        if (index == collection.size - 1 || block.size >= MAX_BULK_COUNT) {
+            rowsInserted += bulkInsert(uri, block.toTypedArray())
+            block.clear()
+        }
+    }
+    return rowsInserted
 }
 
 fun ContentResolver.copyStream(src: Uri, dest: Uri) {

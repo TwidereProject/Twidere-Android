@@ -6,9 +6,11 @@ import android.support.test.runner.AndroidJUnit4
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.twidere.model.*
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.io.InputStream
 import java.util.concurrent.TimeUnit
 
@@ -26,19 +28,18 @@ class DraftExtensionsTest {
         draft.account_keys = arrayOf(UserKey("user1", "twitter.com"), UserKey("user2", "twitter.com"))
         draft.text = "Hello world 测试"
         draft.location = ParcelableLocation(-11.956, 99.625) // Randomly generated
-        draft.media = arrayOf(
-                "file:///system/media/audio/ringtones/Atria.ogg",
-                "file:///system/media/audio/ringtones/Callisto.ogg",
-                "file:///system/media/audio/ringtones/Dione.ogg"
-        ).map { uri ->
+
+        draft.media = File("/system/media/audio/ringtones/").listFiles().let {
+            it.slice(0..3.coerceAtMost(it.size - 1))
+        }.mapToArray {
             ParcelableMediaUpdate().apply {
-                this.uri = uri
+                this.uri = Uri.fromFile(it).toString()
                 this.type = ParcelableMedia.Type.VIDEO
                 this.alt_text = String(CharArray(420).apply {
                     fill('A')
                 })
             }
-        }.toTypedArray()
+        }
         val output = ByteArrayOutputStream()
         draft.writeMimeMessageTo(context, output)
         val input = ByteArrayInputStream(output.toByteArray())

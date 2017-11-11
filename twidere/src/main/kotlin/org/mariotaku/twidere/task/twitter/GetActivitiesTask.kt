@@ -7,7 +7,6 @@ import android.net.Uri
 import android.support.annotation.UiThread
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.addTo
-import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.mastodon.Mastodon
@@ -24,6 +23,7 @@ import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.data.fetcher.ActivitiesFetcher
 import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.extension.api.batchGetRelationships
+import org.mariotaku.twidere.extension.bulkInsert
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
@@ -41,7 +41,6 @@ import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.ErrorInfoStore
 import org.mariotaku.twidere.util.UriUtils
-import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.mariotaku.twidere.util.sync.SyncTaskRunner
 import org.mariotaku.twidere.util.sync.TimelineSyncManager
 import java.util.*
@@ -220,7 +219,6 @@ abstract class GetActivitiesTask(
             notify: Boolean): Int {
         val cr = context.contentResolver
         val deleteBound = LongArray(2) { -1 }
-        val valuesList = ArrayList<ContentValues>()
         var minIdx = -1
         var minPositionKey: Long = -1
         if (!activities.isEmpty()) {
@@ -246,9 +244,6 @@ abstract class GetActivitiesTask(
                     minIdx = i
                     minPositionKey = activity.position_key
                 }
-
-                valuesList.add(ObjectCursor.valuesCreatorFrom(ParcelableActivity::class.java)
-                        .create(activity))
             }
         }
         var olderCount = -1
@@ -269,12 +264,12 @@ abstract class GetActivitiesTask(
             val rowsDeleted = cr.delete(writeUri, where.sql, whereArgs) - localDeleted
             // Why loadItemLimit / 2? because it will not acting strange in most cases
             val insertGap = !noItemsBefore && olderCount > 0 && rowsDeleted <= 0 && activities.size > loadItemLimit / 2
-            if (insertGap && !valuesList.isEmpty()) {
-                valuesList[valuesList.size - 1].put(Activities.IS_GAP, true)
+            if (insertGap && !activities.isEmpty()) {
+                activities.last().is_gap = true
             }
         }
         // Insert previously fetched items.
-        ContentResolverUtils.bulkInsert(cr, writeUri, valuesList)
+        cr.bulkInsert(writeUri, activities, ParcelableActivity::class.java)
 
         // Remove gap flag
         if (maxId != null && sinceId == null) {
