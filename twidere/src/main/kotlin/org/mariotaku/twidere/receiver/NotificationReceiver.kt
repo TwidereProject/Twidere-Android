@@ -22,7 +22,6 @@ package org.mariotaku.twidere.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.set
 import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.twidere.TwidereConstants.*
@@ -31,7 +30,7 @@ import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.IntentConstants.BROADCAST_NOTIFICATION_DELETED
 import org.mariotaku.twidere.constant.promotionsEnabledKey
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.task.twitter.message.BatchMarkMessageReadTask
+import org.mariotaku.twidere.promise.MessagePromises
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.dagger.DependencyHolder
 
@@ -77,9 +76,8 @@ class NotificationReceiver : BroadcastReceiver() {
             NotificationType.DIRECT_MESSAGES -> {
                 if (accountKey == null) return
                 val appContext = context.applicationContext
-                val task = BatchMarkMessageReadTask(appContext, accountKey,
+                MessagePromises.getInstance(appContext).batchMarkRead(accountKey,
                         paramReadPosition.toLongOr(-1L))
-                TaskStarter.execute(task)
             }
         }
     }

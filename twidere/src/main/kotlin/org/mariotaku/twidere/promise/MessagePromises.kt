@@ -28,10 +28,14 @@ import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.successUi
+import org.mariotaku.ktextension.forEachRow
+import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.sqliteqb.library.Columns
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.sqliteqb.library.OrderBy
+import org.mariotaku.sqliteqb.library.Table
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.getDetailsOrThrow
 import org.mariotaku.twidere.extension.model.isOfficial
@@ -47,11 +51,9 @@ import org.mariotaku.twidere.model.event.UnreadCountUpdatedEvent
 import org.mariotaku.twidere.model.message.conversation.TwitterOfficialConversationExtras
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.task.twitter.message.SendMessageTask
-import org.mariotaku.twidere.util.DataStoreUtils
-import org.mariotaku.twidere.util.SingletonHolder
+import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.mariotaku.twidere.util.dagger.GeneralComponent
-import org.mariotaku.twidere.util.updateItems
 import javax.inject.Inject
 
 class MessagePromises private constructor(private val application: Application) {
@@ -130,9 +132,42 @@ class MessagePromises private constructor(private val application: Application) 
         val microBlog = account.newMicroBlogInstance(application, cls = MicroBlog::class.java)
         val conversation = DataStoreUtils.findMessageConversation(application, accountKey, conversationId)
         val lastReadEvent = conversation?.let {
-            return@let performMarkRead(microBlog, account, conversation)
+            return@let performMarkRead(account, conversation)
         } ?: return@task false
         updateLocalLastRead(application.contentResolver, accountKey, conversationId, lastReadEvent)
+        return@task true
+    }.successUi {
+        bus.post(UnreadCountUpdatedEvent(-1))
+    }
+
+
+    fun batchMarkRead(accountKey: UserKey, markTimestampBefore: Long): Promise<Boolean, Exception> = task {
+        val cr = application.contentResolver
+        val projection = (Messages.Conversations.COLUMNS + Messages.Conversations.UNREAD_COUNT).map {
+            TwidereQueryBuilder.mapConversationsProjection(it)
+        }.toTypedArray()
+
+        val unreadWhere = Expression.greaterThan(Columns.Column(Table(Messages.Conversations.TABLE_NAME),
+                Messages.Conversations.LAST_READ_TIMESTAMP), markTimestampBefore)
+        val unreadHaving = Expression.greaterThan(Messages.Conversations.UNREAD_COUNT, 0)
+
+        val cRef = cr.getUnreadMessagesEntriesCursorReference(projection, arrayOf(accountKey),
+                unreadWhere, null, unreadHaving, null) ?: return@task false
+        val account = AccountManager.get(application).getDetailsOrThrow(accountKey, true)
+        cRef.use { (cur) ->
+            val indices = ObjectCursor.indicesFrom(cur, ParcelableMessageConversation::class.java)
+            cur.forEachRow { c, _ ->
+                val conversation = indices.newObject(c)
+                try {
+                    val lastReadEvent = performMarkRead(account, conversation) ?: return@forEachRow false
+                    updateLocalLastRead(cr, account.key, conversation.id,
+                            lastReadEvent)
+                    return@forEachRow true
+                } catch (e: MicroBlogException) {
+                    return@forEachRow false
+                }
+            }
+        }
         return@task true
     }.successUi {
         bus.post(UnreadCountUpdatedEvent(-1))
@@ -206,11 +241,11 @@ class MessagePromises private constructor(private val application: Application) 
     }
 
     @Throws(MicroBlogException::class)
-    internal fun performMarkRead(microBlog: MicroBlog, account: AccountDetails,
-            conversation: ParcelableMessageConversation): Pair<String, Long>? {
+    private fun performMarkRead(account: AccountDetails, conversation: ParcelableMessageConversation): Pair<String, Long>? {
         val cr = application.contentResolver
         when (account.type) {
             AccountType.TWITTER -> {
+                val microBlog = account.newMicroBlogInstance(application, cls = MicroBlog::class.java)
                 if (account.isOfficial(application)) {
                     val event = (conversation.conversation_extras as? TwitterOfficialConversationExtras)?.maxReadEvent ?: run {
                         val message = cr.findRecentMessage(account.key, conversation.id) ?: return null
@@ -230,7 +265,7 @@ class MessagePromises private constructor(private val application: Application) 
         return Pair(message.id, message.timestamp)
     }
 
-    internal fun updateLocalLastRead(cr: ContentResolver, accountKey: UserKey,
+    private fun updateLocalLastRead(cr: ContentResolver, accountKey: UserKey,
             conversationId: String, lastRead: Pair<String, Long>) {
         val values = ContentValues()
         values.put(Messages.Conversations.LAST_READ_ID, lastRead.first)

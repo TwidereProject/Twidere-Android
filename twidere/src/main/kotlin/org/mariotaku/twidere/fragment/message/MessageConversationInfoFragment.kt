@@ -52,7 +52,6 @@ import nl.komponents.kovenant.task
 import nl.komponents.kovenant.then
 import nl.komponents.kovenant.ui.alwaysUi
 import nl.komponents.kovenant.ui.successUi
-import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
@@ -93,7 +92,6 @@ import org.mariotaku.twidere.promise.ConversationPromises
 import org.mariotaku.twidere.promise.MessagePromises
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.status.UpdateStatusTask
-import org.mariotaku.twidere.task.twitter.message.AddParticipantsTask
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.view.holder.SimpleUserViewHolder
 import java.lang.ref.WeakReference
@@ -318,15 +316,13 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     private fun performAddParticipant(user: ParcelableUser) {
         ProgressDialogFragment.show(childFragmentManager, "add_participant_progress")
-        val weakThis = WeakReference(this)
-        val task = AddParticipantsTask(context, accountKey, conversationId, listOf(user))
-        task.callback = callback@ { succeed ->
-            val f = weakThis.get() ?: return@callback
-            f.dismissDialogThen("add_participant_progress") {
+        val weakThis by weak(this)
+        ConversationPromises.getInstance(context).addParticipants(accountKey,
+                conversationId, listOf(user)).alwaysUi {
+            weakThis?.dismissDialogThen("add_participant_progress") {
                 loaderManager.restartLoader(0, null, this)
             }
         }
-        TaskStarter.execute(task)
     }
 
     private fun performSetNotificationDisabled(disabled: Boolean) {
