@@ -23,9 +23,12 @@ import org.mariotaku.ktextension.times
 import org.mariotaku.twidere.alias.TwitterRegex
 
 
-class MastodonValidator {
+object MastodonValidator {
+
+    const val textLimit: Int = 500
 
     private val mentionRegex = Regex("(?<=^|[^/[\\w]])@(([a-z0-9_]+)(?:@[a-z0-9.\\-]+[a-z0-9]+)?)", RegexOption.IGNORE_CASE)
+
     private val urlRegex = TwitterRegex.VALID_URL.toRegex()
 
     fun getCountableLength(summary: String?, text: String): Int {

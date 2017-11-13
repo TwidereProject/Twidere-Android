@@ -35,7 +35,6 @@ import com.google.android.exoplayer2.upstream.DataSource
 import com.squareup.otto.Bus
 import com.squareup.otto.ThreadEnforcer
 import com.twitter.Extractor
-import com.twitter.Validator
 import dagger.Module
 import dagger.Provides
 import okhttp3.Cache
@@ -69,7 +68,7 @@ import org.mariotaku.twidere.util.text.TwitterValidator
 import java.io.File
 import javax.inject.Singleton
 
-@Module()
+@Module
 class ApplicationModule(private val application: Application) {
 
     init {
@@ -193,12 +192,6 @@ class ApplicationModule(private val application: Application) {
     @Singleton
     fun mediaDownloader(client: RestHttpClient, thumbor: ThumborWrapper): MediaDownloader {
         return TwidereMediaDownloader(application, client, thumbor)
-    }
-
-    @Provides
-    @Singleton
-    fun validator(): Validator {
-        return TwitterValidator()
     }
 
     @Provides

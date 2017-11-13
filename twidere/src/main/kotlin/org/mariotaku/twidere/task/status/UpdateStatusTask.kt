@@ -61,7 +61,6 @@ import org.mariotaku.twidere.extension.calculateInSampleSize
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
-import org.mariotaku.twidere.extension.text.twitter.getTweetLength
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.account.AccountExtras
 import org.mariotaku.twidere.model.analyzer.UpdateStatus
@@ -73,7 +72,7 @@ import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.io.ContentLengthInputStream
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
-import org.mariotaku.twidere.util.text.TwitterValidator
+import org.mariotaku.twidere.util.text.StatusTextValidator
 import java.io.Closeable
 import java.io.File
 import java.io.FileNotFoundException
@@ -241,7 +240,6 @@ class UpdateStatusTask(
             update: ParcelableStatusUpdate,
             pending: PendingStatusUpdate) {
         if (shortener == null) return
-        val validator = TwitterValidator()
         stateCallback.onShorteningStatus()
         val sharedShortened = HashMap<UserKey, StatusShortenResult>()
         for (i in 0 until pending.length) {
@@ -249,8 +247,8 @@ class UpdateStatusTask(
             val text = pending.overrideTexts[i]
             val textLimit = account.textLimit
             val ignoreMentions = account.type == AccountType.TWITTER
-            if (textLimit >= 0 && validator.getTweetLength(text, ignoreMentions,
-                    update.in_reply_to_status, account.key) <= textLimit) {
+            if (textLimit >= 0 && StatusTextValidator.calculateLength(account.type, account.key,
+                    update.summary, text, ignoreMentions, update.in_reply_to_status) <= textLimit) {
                 continue
             }
             shortener.waitForService()

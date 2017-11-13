@@ -28,35 +28,52 @@ import org.mariotaku.twidere.model.UserKey
 
 object StatusTextValidator {
 
-    private val twitterValidator = TwitterValidator()
-    private val mastodonValidator = MastodonValidator()
+    fun calculateLength(@AccountType accountType: String, accountKey: UserKey?, summary: String?,
+            text: String, ignoreMentions: Boolean = false, inReplyTo: ParcelableStatus? = null) = when (accountType) {
+        AccountType.TWITTER -> {
+            TwitterValidator.getTweetLength(text, ignoreMentions, inReplyTo, accountKey)
+        }
+        AccountType.MASTODON -> {
+            MastodonValidator.getCountableLength(summary, text)
+        }
+        AccountType.FANFOU -> {
+            FanfouValidator.calculateLength(text)
+        }
+        AccountType.STATUSNET -> {
+            text.codePointCount(0, text.length)
+        }
+        else -> {
+            text.codePointCount(0, text.length)
+        }
+    }
 
     fun calculateLengths(accounts: Array<AccountDetails>, summary: String?, text: String,
-            ignoreMentions: Boolean, inReplyTo: ParcelableStatus?): IntArray {
+            ignoreMentions: Boolean = false, inReplyTo: ParcelableStatus? = null): IntArray {
         return accounts.mapToIntArray {
             calculateLength(it.type, it.key, summary, text, ignoreMentions, inReplyTo)
         }
     }
 
-    fun calculateLength(@AccountType accountType: String, accountKey: UserKey?, summary: String?,
-            text: String, ignoreMentions: Boolean, inReplyTo: ParcelableStatus?): Int {
-        when (accountType) {
-            AccountType.TWITTER -> {
-                return twitterValidator.getTweetLength(text, ignoreMentions, inReplyTo, accountKey)
-            }
-            AccountType.MASTODON -> {
-                // TODO Algorithm according to https://github.com/tootsuite/mastodon/blob/master/app/validators/status_length_validator.rb
-                return mastodonValidator.getCountableLength(summary, text)
-            }
-            AccountType.FANFOU -> {
-                return text.codePointCount(0, text.length)
-            }
-            AccountType.STATUSNET -> {
-                return text.codePointCount(0, text.length)
-            }
-            else -> {
-                return text.codePointCount(0, text.length)
-            }
+    fun calculateLength(accounts: Array<AccountDetails>, summary: String?, text: String,
+            ignoreMentions: Boolean = false, inReplyTo: ParcelableStatus? = null): Int {
+        return calculateLengths(accounts, summary, text, ignoreMentions, inReplyTo).max() ?: 0
+    }
+
+    fun calculateSummaryLength(@AccountType accountType: String,
+            summary: String?) = when (accountType) {
+        AccountType.MASTODON -> {
+            MastodonValidator.getCountableLength(summary, "")
         }
+        else -> 0
+    }
+
+    fun calculateSummaryLengths(accounts: Array<AccountDetails>, summary: String?): IntArray {
+        return accounts.mapToIntArray {
+            calculateSummaryLength(it.type, summary)
+        }
+    }
+
+    fun calculateSummaryLength(accounts: Array<AccountDetails>, summary: String?): Int {
+        return calculateSummaryLengths(accounts, summary).max() ?: 0
     }
 }

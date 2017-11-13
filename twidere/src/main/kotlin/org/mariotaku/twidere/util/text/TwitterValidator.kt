@@ -23,10 +23,11 @@ import com.twitter.Extractor
 import com.twitter.Validator
 import java.text.Normalizer
 
-class TwitterValidator: Validator() {
-    val maxWeightedTweetLength: Int = 280
+object TwitterValidator : Validator() {
 
-    val defaultWeight: Int = 200
+    const val maxWeightedTweetLength: Int = 280
+
+    const val defaultWeight: Int = 200
 
     var ranges: Array<WeightRange> = arrayOf(
             WeightRange(0, 4351, 100),

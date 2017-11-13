@@ -1,7 +1,6 @@
 package org.mariotaku.twidere.extension.model
 
 import android.content.Context
-import com.twitter.Validator
 import org.mariotaku.microblog.library.twitter.annotation.MediaCategory
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.model.AccountDetails
@@ -13,6 +12,9 @@ import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.model.account.cred.OAuthCredentials
 import org.mariotaku.twidere.task.status.UpdateStatusTask
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
+import org.mariotaku.twidere.util.text.FanfouValidator
+import org.mariotaku.twidere.util.text.MastodonValidator
+import org.mariotaku.twidere.util.text.TwitterValidator
 
 fun AccountDetails.isOfficial(context: Context): Boolean {
     val extra = this.extras
@@ -77,26 +79,22 @@ fun AccountDetails.getMediaSizeLimit(@MediaCategory mediaCategory: String? = nul
  * Text limit when composing a status, 0 for no limit
  */
 val AccountDetails.textLimit: Int
-    get() {
-        if (type == null) {
-            return Validator.MAX_TWEET_LENGTH
+    get() = when (type) {
+        AccountType.STATUSNET -> {
+            (this.extras as? StatusNetAccountExtras)?.textLimit ?: 140
         }
-        when (type) {
-            AccountType.STATUSNET -> {
-                val extras = this.extras as? StatusNetAccountExtras
-                if (extras != null) {
-                    return extras.textLimit
-                }
-            }
-            AccountType.MASTODON -> {
-                val extras = this.extras as? MastodonAccountExtras
-                if (extras != null) {
-                    return extras.statusTextLimit
-                }
-            }
+        AccountType.MASTODON -> {
+            (this.extras as? MastodonAccountExtras)?.statusTextLimit ?: MastodonValidator.textLimit
         }
-        return Validator.MAX_TWEET_LENGTH
+        AccountType.FANFOU -> {
+            FanfouValidator.textLimit
+        }
+        AccountType.TWITTER -> {
+            TwitterValidator.maxWeightedTweetLength
+        }
+        else -> 140
     }
+
 
 val Array<AccountDetails>.textLimit: Int
     get() {

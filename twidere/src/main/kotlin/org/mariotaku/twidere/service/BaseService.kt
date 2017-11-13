@@ -23,7 +23,6 @@ import android.app.Service
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import com.twitter.Extractor
-import com.twitter.Validator
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.notification.ContentNotificationManager
@@ -37,8 +36,6 @@ abstract class BaseService : Service() {
     lateinit var twitterWrapper: AsyncTwitterWrapper
     @Inject
     lateinit var notificationManager: NotificationManagerWrapper
-    @Inject
-    lateinit var validator: Validator
     @Inject
     lateinit var extractor: Extractor
     @Inject
