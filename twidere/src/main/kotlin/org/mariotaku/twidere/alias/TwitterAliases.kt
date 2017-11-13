@@ -17,16 +17,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.ktextension
+package org.mariotaku.twidere.alias
 
-import java.text.Normalizer
-
-fun CharSequence.appendTo(sb: StringBuilder) {
-    sb.append(this)
-}
-
-operator fun CharSequence.times(n: Int): String = repeat(n)
-
-fun CharSequence.normalized(form: Normalizer.Form): String {
-    return Normalizer.normalize(this, form)
-}
+typealias TwitterRegex = com.twitter.Regex

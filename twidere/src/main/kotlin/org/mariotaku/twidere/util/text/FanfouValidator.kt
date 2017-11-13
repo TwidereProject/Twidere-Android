@@ -17,16 +17,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.ktextension
+package org.mariotaku.twidere.util.text
 
-import java.text.Normalizer
+object FanfouValidator {
 
-fun CharSequence.appendTo(sb: StringBuilder) {
-    sb.append(this)
-}
+    const val textLimit = 140
 
-operator fun CharSequence.times(n: Int): String = repeat(n)
+    fun calculateLength(text: String): Int {
+        return text.codePointCount(0, text.length)
+    }
 
-fun CharSequence.normalized(form: Normalizer.Form): String {
-    return Normalizer.normalize(this, form)
 }

@@ -57,7 +57,6 @@ import android.widget.ImageView
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.twitter.Extractor
-import com.twitter.Validator
 import kotlinx.android.synthetic.main.activity_compose.*
 import nl.komponents.kovenant.task
 import org.mariotaku.abstask.library.AbstractTask
@@ -99,6 +98,7 @@ import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.EditTextEnterHandler.EnterListener
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
+import org.mariotaku.twidere.util.text.StatusTextValidator
 import org.mariotaku.twidere.util.view.SimpleTextWatcher
 import org.mariotaku.twidere.util.view.ViewAnimator
 import org.mariotaku.twidere.util.view.ViewProperties
@@ -122,8 +122,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     // Utility classes
     @Inject
     lateinit var extractor: Extractor
-    @Inject
-    lateinit var validator: Validator
     @Inject
     lateinit var locationManager: LocationManager
 
@@ -1539,20 +1537,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun getStatusUpdate(checkLength: Boolean): ParcelableStatusUpdate {
-        val accountKeys = accountsAdapter.selectedAccountKeys
-        if (accountKeys.isEmpty()) throw NoAccountException()
+        val accounts = accountsAdapter.selectedAccounts
+        if (accounts.isEmpty()) throw NoAccountException()
         val update = ParcelableStatusUpdate()
         val media = this.media
-        val text = editText.string?.let { Normalizer.normalize(it, Normalizer.Form.NFC) }.orEmpty()
-        var summary: String? = null
-        var summaryLength = 0
-        if (editSummary.visibility == View.VISIBLE) {
-            summary = editSummary.string?.takeIf(String::isNotEmpty)?.let {
-                Normalizer.normalize(it, Normalizer.Form.NFC)
-            }
-            summaryLength = summary?.let { validator.getTweetLength(it) } ?: 0
-        }
-        val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(this), accountKeys, true)
+        val text = editText.text?.normalized(Normalizer.Form.NFC).orEmpty()
+        val summary = editSummary.textIfVisible?.normalized(Normalizer.Form.NFC)
         val maxLength = statusTextCount.maxLength
         val inReplyTo = inReplyToStatus
         val replyTextAndMentions = getTwitterReplyTextAndMentions(text, accounts)
@@ -1560,10 +1550,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             val (replyStartIndex, replyText, _, excludedMentions, replyToOriginalUser) =
                     replyTextAndMentions
             if (replyText.isEmpty() && media.isEmpty()) throw NoContentException()
-            val totalLength = summaryLength + validator.getTweetLength(replyText)
+            val totalLength = StatusTextValidator.calculateLength(accounts, summary, text)
             if (checkLength && !statusShortenerUsed && maxLength > 0 && totalLength > maxLength) {
                 throw StatusTooLongException(replyStartIndex +
-                        replyText.offsetByCodePoints(0, maxLength - summaryLength))
+                        replyText.offsetByCodePoints(0, maxLength))
             }
             update.text = replyText
             update.extended_reply_mode = true
@@ -1575,9 +1565,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
         } else {
             if (text.isEmpty() && media.isEmpty()) throw NoContentException()
-            val totalLength = summaryLength + validator.getTweetLength(text)
+            val totalLength = StatusTextValidator.calculateLength(accounts, summary, text)
             if (checkLength && !statusShortenerUsed && maxLength > 0 && totalLength > maxLength) {
-                throw StatusTooLongException(text.offsetByCodePoints(0, maxLength - summaryLength))
+                throw StatusTooLongException(text.offsetByCodePoints(0, maxLength))
             }
             update.text = text
             update.extended_reply_mode = false
@@ -1604,27 +1594,28 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private fun updateTextCount() {
         val editable = editText.editableText ?: return
-        var summaryLength = 0
-        if (editSummary.visibility == View.VISIBLE) {
-            summaryLength = validator.getTweetLength(editSummary.string.orEmpty())
-        }
+        val summary = editSummary.textIfVisible?.toString()
+        val accounts = accountsAdapter.selectedAccounts
         val text = editable.toString()
         val textAndMentions = getTwitterReplyTextAndMentions(text)
         if (textAndMentions == null) {
             hintLabel.visibility = View.GONE
             editable.clearSpans(MentionColorSpan::class.java)
-            statusTextCount.textCount = summaryLength + validator.getTweetLength(text)
+            statusTextCount.textCount = StatusTextValidator.calculateLength(accounts, summary, text,
+                    false, null)
         } else if (textAndMentions.replyToOriginalUser || replyToSelf) {
             hintLabel.visibility = View.GONE
             val mentionColor = ThemeUtils.getTextColorSecondary(this)
             editable.clearSpans(MentionColorSpan::class.java)
             editable.setSpan(MentionColorSpan(mentionColor), 0, textAndMentions.replyStartIndex,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            statusTextCount.textCount = summaryLength + validator.getTweetLength(textAndMentions.replyText)
+            statusTextCount.textCount = StatusTextValidator.calculateLength(accounts, summary,
+                    textAndMentions.replyText, false, null)
         } else {
             hintLabel.visibility = View.VISIBLE
             editable.clearSpans(MentionColorSpan::class.java)
-            statusTextCount.textCount = summaryLength + validator.getTweetLength(textAndMentions.replyText)
+            statusTextCount.textCount = StatusTextValidator.calculateLength(accounts, summary,
+                    textAndMentions.replyText, false, null)
         }
     }
 

@@ -27,7 +27,6 @@ import android.support.v4.text.BidiFormatter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.squareup.otto.Bus
-import com.twitter.Validator
 import nl.komponents.kovenant.Promise
 import okhttp3.Dns
 import org.mariotaku.restfu.http.RestHttpClient
@@ -64,8 +63,6 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     lateinit var bidiFormatter: BidiFormatter
     @Inject
     lateinit var errorInfoStore: ErrorInfoStore
-    @Inject
-    lateinit var validator: Validator
     @Inject
     lateinit var extraFeaturesService: ExtraFeaturesService
     @Inject

@@ -31,7 +31,6 @@ import android.view.View
 import android.widget.CheckBox
 import android.widget.RelativeLayout
 import android.widget.Toast
-import com.twitter.Validator
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
 import org.mariotaku.library.objectcursor.ObjectCursor
@@ -53,6 +52,8 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.service.LengthyOperationsService
 import org.mariotaku.twidere.util.EditTextEnterHandler
 import org.mariotaku.twidere.util.LinkCreator
+import org.mariotaku.twidere.util.text.FanfouValidator
+import org.mariotaku.twidere.util.text.StatusTextValidator
 import org.mariotaku.twidere.util.view.SimpleTextWatcher
 import org.mariotaku.twidere.view.ComposeEditText
 import org.mariotaku.twidere.view.StatusTextCountView
@@ -184,7 +185,8 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
             positiveButton.setText(R.string.action_retweet)
             positiveButton.isEnabled = status.can_retweet
         }
-        textCountView.textCount = validator.getTweetLength(s.toString())
+        textCountView.textCount = StatusTextValidator.calculateLength(account.type, account.key,
+                null, s.toString())
     }
 
     private fun DialogInterface.shouldQuoteRetweet(account: AccountDetails): Boolean {
@@ -224,8 +226,8 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
                                 status.quoted_user_screen_name, status.quoted_text_plain)
                         update.repost_status_id = status.quoted_id
                     }
-                    if (commentText.length > Validator.MAX_TWEET_LENGTH) {
-                        commentText = commentText.substring(0, Math.max(Validator.MAX_TWEET_LENGTH,
+                    if (FanfouValidator.calculateLength(commentText) > FanfouValidator.textLimit) {
+                        commentText = commentText.substring(0, Math.max(FanfouValidator.textLimit,
                                 editingComment.length))
                     }
                 }

@@ -26,7 +26,6 @@ import android.support.v4.app.DialogFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.squareup.otto.Bus
-import com.twitter.Validator
 import okhttp3.Dns
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.restfu.http.RestHttpClient
@@ -48,8 +47,6 @@ open class BaseDialogFragment : DialogFragment() {
     lateinit var preferences: SharedPreferences
     @Inject
     lateinit var kPreferences: KPreferences
-    @Inject
-    lateinit var validator: Validator
     @Inject
     lateinit var keyboardShortcutsHandler: KeyboardShortcutsHandler
     @Inject
