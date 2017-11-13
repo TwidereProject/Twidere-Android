@@ -1,0 +1,51 @@
+{
+  "account": {
+    "name": "mariotaku@mastodon.social",
+    "type": "org.mariotaku.twidere.account"
+  },
+  "activated": true,
+  "color": "#000000",
+  "credentials": {
+    "access_token": "REDACTED",
+    "api_url_format": "https:\/\/mastodon.social\/api\/",
+    "no_version_suffix": true
+  },
+  "credentials_type": "oauth2",
+  "dummy": false,
+  "extras": {
+    "status_text_limit": 500
+  },
+  "key": "200092@mastodon.social",
+  "position": 1,
+  "test": true,
+  "type": "mastodon",
+  "user": {
+    "account_id": "200092@mastodon.social",
+    "background_color": null,
+    "created_at": 1505290270613,
+    "description_plain": "",
+    "description_spans": [],
+    "description_unescaped": "",
+    "favorites_count": -1,
+    "followers_count": 0,
+    "friends_count": 10,
+    "is_basic": false,
+    "is_cache": true,
+    "is_follow_request_sent": false,
+    "is_following": false,
+    "is_protected": false,
+    "is_verified": false,
+    "id": "200092@mastodon.social",
+    "link_color": null,
+    "listed_count": -1,
+    "media_count": -1,
+    "name": "Mariotaku Lee",
+    "position": 0,
+    "profile_banner_url": "https:\/\/mastodon.social\/headers\/original\/missing.png",
+    "profile_image_url": "https:\/\/files.mastodon.social\/accounts\/avatars\/000\/200\/092\/original\/pnc__picked_media_7f031c49-be65-4cbb-a949-2711564eacfd.jpeg",
+    "screen_name": "mariotaku",
+    "statuses_count": 2,
+    "text_color": null,
+    "url": "https:\/\/mastodon.social\/@mariotaku"
+  }
+}
