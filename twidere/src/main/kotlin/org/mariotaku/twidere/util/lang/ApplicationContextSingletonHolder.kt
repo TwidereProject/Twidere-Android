@@ -17,28 +17,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util
+package org.mariotaku.twidere.util.lang
 
-open class SingletonHolder<out T, in A>(creator: (A) -> T) {
-    private var creator: ((A) -> T)? = creator
-    @Volatile private var instance: T? = null
+import android.app.Application
+import android.content.Context
 
-    fun getInstance(arg: A): T {
-        val i = instance
-        if (i != null) {
-            return i
-        }
-
-        return synchronized(this) {
-            val i2 = instance
-            if (i2 != null) {
-                i2
-            } else {
-                val created = creator!!(arg)
-                instance = created
-                creator = null
-                created
-            }
-        }
-    }
-}
+open class ApplicationContextSingletonHolder<T>(creator: (Application) -> T) : SingletonHolder<T, Context>({
+    creator(it.applicationContext as Application)
+})

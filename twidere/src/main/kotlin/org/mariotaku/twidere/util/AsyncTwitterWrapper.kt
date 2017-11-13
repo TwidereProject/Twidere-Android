@@ -98,12 +98,6 @@ class AsyncTwitterWrapper(
         })
     }
 
-    fun acceptFriendshipAsync(accountKey: UserKey, userKey: UserKey) {
-        val task = AcceptFriendshipTask(context)
-        task.setup(accountKey, userKey)
-        TaskStarter.execute(task)
-    }
-
     fun addSendingDraftId(id: Long) {
         synchronized(sendingDraftIds) {
             sendingDraftIds.add(id)
@@ -114,14 +108,6 @@ class AsyncTwitterWrapper(
     fun addUserListMembersAsync(accountKey: UserKey, listId: String, vararg users: ParcelableUser) {
         val task = AddUserListMembersTask(context, accountKey, listId, users)
         TaskStarter.execute(task)
-    }
-
-    fun cancelRetweetAsync(accountKey: UserKey, statusId: String?, myRetweetId: String?) {
-        if (myRetweetId != null) {
-            destroyStatusAsync(accountKey, myRetweetId)
-        } else if (statusId != null) {
-            destroyStatusAsync(accountKey, statusId)
-        }
     }
 
     fun clearNotificationAsync(notificationType: Int) {
@@ -140,12 +126,6 @@ class AsyncTwitterWrapper(
 
     fun createFavoriteAsync(accountKey: UserKey, status: ParcelableStatus) {
         val task = CreateFavoriteTask(context, accountKey, status)
-        TaskStarter.execute(task)
-    }
-
-    fun createFriendshipAsync(accountKey: UserKey, userKey: UserKey, screenName: String) {
-        val task = CreateFriendshipTask(context)
-        task.setup(accountKey, userKey, screenName)
         TaskStarter.execute(task)
     }
 
@@ -180,12 +160,6 @@ class AsyncTwitterWrapper(
         TaskStarter.execute(task)
     }
 
-    fun denyFriendshipAsync(accountKey: UserKey, userKey: UserKey) {
-        val task = DenyFriendshipTask(context)
-        task.setup(accountKey, userKey)
-        TaskStarter.execute(task)
-    }
-
     fun destroyBlockAsync(accountKey: UserKey, userKey: UserKey) {
         val task = DestroyUserBlockTask(context)
         task.setup(accountKey, userKey)
@@ -197,12 +171,6 @@ class AsyncTwitterWrapper(
         TaskStarter.execute(task)
     }
 
-    fun destroyFriendshipAsync(accountKey: UserKey, userKey: UserKey) {
-        val task = DestroyFriendshipTask(context)
-        task.setup(accountKey, userKey)
-        TaskStarter.execute(task)
-    }
-
     fun destroyMuteAsync(accountKey: UserKey, userKey: UserKey) {
         val task = DestroyUserMuteTask(context)
         task.setup(accountKey, userKey)
@@ -211,11 +179,6 @@ class AsyncTwitterWrapper(
 
     fun destroySavedSearchAsync(accountKey: UserKey, searchId: Long) {
         val task = DestroySavedSearchTask(context, accountKey, searchId)
-        TaskStarter.execute(task)
-    }
-
-    fun destroyStatusAsync(accountKey: UserKey, statusId: String) {
-        val task = DestroyStatusTask(context, accountKey, statusId)
         TaskStarter.execute(task)
     }
 
@@ -529,14 +492,4 @@ class AsyncTwitterWrapper(
     }
 
 
-    companion object {
-
-        fun calculateHashCode(accountKey: UserKey?, statusId: String?): Int {
-            return (accountKey?.hashCode() ?: 0) xor (statusId?.hashCode() ?: 0)
-        }
-
-        fun <T : Response<*>> getException(responses: List<T>): Exception? {
-            return responses.firstOrNull { it.hasException() }?.exception
-        }
-    }
 }

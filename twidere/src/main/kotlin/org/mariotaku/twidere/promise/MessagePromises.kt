@@ -23,7 +23,6 @@ import android.accounts.AccountManager
 import android.app.Application
 import android.content.ContentResolver
 import android.content.ContentValues
-import android.content.Context
 import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.task
@@ -51,9 +50,13 @@ import org.mariotaku.twidere.model.event.UnreadCountUpdatedEvent
 import org.mariotaku.twidere.model.message.conversation.TwitterOfficialConversationExtras
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.task.twitter.message.SendMessageTask
-import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.DataStoreUtils
+import org.mariotaku.twidere.util.TwidereQueryBuilder
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.util.getUnreadMessagesEntriesCursorReference
+import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
+import org.mariotaku.twidere.util.updateItems
 import javax.inject.Inject
 
 class MessagePromises private constructor(private val application: Application) {
@@ -292,7 +295,5 @@ class MessagePromises private constructor(private val application: Application) 
             return Pair(id, maxEntryTimestamp)
         }
 
-    companion object : SingletonHolder<MessagePromises, Context>({
-        MessagePromises(it.applicationContext as Application)
-    })
+    companion object : ApplicationContextSingletonHolder<MessagePromises>(::MessagePromises)
 }

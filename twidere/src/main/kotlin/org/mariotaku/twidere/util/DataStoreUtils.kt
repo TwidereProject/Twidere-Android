@@ -20,7 +20,10 @@
 package org.mariotaku.twidere.util
 
 import android.accounts.AccountManager
-import android.content.*
+import android.content.ContentValues
+import android.content.Context
+import android.content.SharedPreferences
+import android.content.UriMatcher
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
@@ -284,13 +287,7 @@ object DataStoreUtils {
 
     fun getActivatedAccountKeys(context: Context): Array<UserKey> {
         val am = AccountManager.get(context)
-        val keys = ArrayList<UserKey>()
-        for (account in am.ownedAccounts) {
-            if (account.isActivated(am)) {
-                keys.add(account.getAccountKey(am))
-            }
-        }
-        return keys.toTypedArray()
+        return am.ownedAccounts.filter { it.isActivated(am) }.mapToArray { it.getAccountKey(am) }
     }
 
     fun getStatusesCount(context: Context, preferences: SharedPreferences, uri: Uri,
@@ -736,48 +733,6 @@ object DataStoreUtils {
         }
         return resultArray
     }
-
-    fun deleteStatus(cr: ContentResolver, accountKey: UserKey,
-            statusId: String, status: ParcelableStatus?) {
-
-        val host = accountKey.host
-        val deleteWhere: String
-        val updateWhere: String
-        val deleteWhereArgs: Array<String>
-        val updateWhereArgs: Array<String>
-        if (host != null) {
-            deleteWhere = Expression.and(
-                    Expression.likeRaw(Column(Statuses.ACCOUNT_KEY), "'%@'||?"),
-                    Expression.or(
-                            Expression.equalsArgs(Statuses.ID),
-                            Expression.equalsArgs(Statuses.RETWEET_ID)
-                    )).sql
-            deleteWhereArgs = arrayOf(host, statusId, statusId)
-            updateWhere = Expression.and(
-                    Expression.likeRaw(Column(Statuses.ACCOUNT_KEY), "'%@'||?"),
-                    Expression.equalsArgs(Statuses.MY_RETWEET_ID)
-            ).sql
-            updateWhereArgs = arrayOf(host, statusId)
-        } else {
-            deleteWhere = Expression.or(
-                    Expression.equalsArgs(Statuses.ID),
-                    Expression.equalsArgs(Statuses.RETWEET_ID)
-            ).sql
-            deleteWhereArgs = arrayOf(statusId, statusId)
-            updateWhere = Expression.equalsArgs(Statuses.MY_RETWEET_ID).sql
-            updateWhereArgs = arrayOf(statusId)
-        }
-        for (uri in STATUSES_ACTIVITIES_URIS) {
-            cr.delete(uri, deleteWhere, deleteWhereArgs)
-            if (status != null) {
-                val values = ContentValues()
-                values.putNull(Statuses.MY_RETWEET_ID)
-                values.put(Statuses.RETWEET_COUNT, status.retweet_count - 1)
-                cr.update(uri, values, updateWhere, updateWhereArgs)
-            }
-        }
-    }
-
 
     fun prepareDatabase(context: Context) {
         val cr = context.contentResolver

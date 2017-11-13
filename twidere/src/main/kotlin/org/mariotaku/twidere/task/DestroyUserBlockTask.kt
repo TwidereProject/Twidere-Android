@@ -40,9 +40,7 @@ class DestroyUserBlockTask(context: Context) : AbsFriendshipOperationTask(contex
         }
     }
 
-    override fun succeededWorker(details: AccountDetails,
-            args: Arguments,
-            user: ParcelableUser) {
+    override fun succeededWorker(details: AccountDetails, args: Arguments, user: ParcelableUser) {
         val resolver = context.contentResolver
         // I bet you don't want to see this user in your auto complete list.
         val values = ContentValues()

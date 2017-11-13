@@ -35,6 +35,7 @@ import org.mariotaku.twidere.loader.users.IncomingFriendshipsLoader
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 import org.mariotaku.twidere.model.util.AccountUtils
+import org.mariotaku.twidere.promise.FriendshipPromises
 import org.mariotaku.twidere.view.holder.UserViewHolder
 
 class IncomingFriendshipsFragment : ParcelableUsersFragment(), IUsersAdapter.RequestClickListener {
@@ -65,13 +66,13 @@ class IncomingFriendshipsFragment : ParcelableUsersFragment(), IUsersAdapter.Req
     override fun onAcceptClicked(holder: UserViewHolder, position: Int) {
         val user = adapter.getUser(position) ?: return
         val accountKey = user.account_key ?: return
-        twitterWrapper.acceptFriendshipAsync(accountKey, user.key)
+        FriendshipPromises.getInstance(context).accept(accountKey, user.key)
     }
 
     override fun onDenyClicked(holder: UserViewHolder, position: Int) {
         val user = adapter.getUser(position) ?: return
         val accountKey = user.account_key ?: return
-        twitterWrapper.denyFriendshipAsync(accountKey, user.key)
+        FriendshipPromises.getInstance(context).deny(accountKey, user.key)
     }
 
     @SuppressLint("SwitchIntDef")

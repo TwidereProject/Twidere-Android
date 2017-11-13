@@ -33,6 +33,7 @@ import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.applyOnShow
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.model.ParcelableUser
+import org.mariotaku.twidere.promise.FriendshipPromises
 
 class DestroyFriendshipDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
 
@@ -40,7 +41,7 @@ class DestroyFriendshipDialogFragment : BaseDialogFragment(), DialogInterface.On
         when (which) {
             DialogInterface.BUTTON_POSITIVE -> {
                 val accountKey = user.account_key ?: return
-                twitterWrapper.destroyFriendshipAsync(accountKey, user.key)
+                FriendshipPromises.getInstance(context).destroy(accountKey, user.key)
             }
             else -> {
             }

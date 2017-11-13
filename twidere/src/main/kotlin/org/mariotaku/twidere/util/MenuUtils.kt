@@ -158,7 +158,7 @@ object MenuUtils {
         val favorite = menu.findItem(R.id.favorite)
         if (favorite != null) {
             val isFavorite: Boolean
-            if (CreateFavoriteTask.isCreatingFavorite(status.account_key, status.id)) {
+            if (CreateFavoriteTask.isRunning(status.account_key, status.id)) {
                 isFavorite = true
             } else if (DestroyFavoriteTask.isRunning(status.account_key, status.id)) {
                 isFavorite = false

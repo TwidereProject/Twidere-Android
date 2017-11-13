@@ -49,6 +49,7 @@ import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.draft.QuoteStatusActionExtras
+import org.mariotaku.twidere.promise.StatusPromises
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.service.LengthyOperationsService
 import org.mariotaku.twidere.util.EditTextEnterHandler
@@ -121,7 +122,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
 
         getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
             if (!shouldQuoteRetweet(account) && status.is_my_retweet) {
-                twitterWrapper.cancelRetweetAsync(account.key, status.id, status.my_retweet_id)
+                StatusPromises.getInstance(context).cancelRetweet(account.key, status.id, status.my_retweet_id)
                 dismiss()
             } else if (retweetOrQuote(account, status, showProtectedConfirm)) {
                 dismiss()

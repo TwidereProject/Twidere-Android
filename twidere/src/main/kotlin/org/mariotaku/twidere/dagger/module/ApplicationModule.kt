@@ -54,6 +54,7 @@ import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.cache.DiskLRUFileCache
 import org.mariotaku.twidere.util.cache.JsonCache
+import org.mariotaku.twidere.util.lang.SingletonHolder
 import org.mariotaku.twidere.util.media.MediaPreloader
 import org.mariotaku.twidere.util.media.ThumborWrapper
 import org.mariotaku.twidere.util.media.TwidereMediaDownloader

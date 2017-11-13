@@ -23,7 +23,6 @@ import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.status.UpdateStatusTask
-import org.mariotaku.twidere.util.AsyncTwitterWrapper.Companion.calculateHashCode
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.updateStatusInfo
@@ -67,15 +66,12 @@ class CreateFavoriteTask(context: Context, accountKey: UserKey, private val stat
     }
 
     override fun beforeExecute() {
-        val hashCode = calculateHashCode(accountKey, statusId)
-        if (!creatingFavoriteIds.contains(hashCode)) {
-            creatingFavoriteIds.add(hashCode)
-        }
+        addTaskId(accountKey, statusId)
         bus.post(StatusListChangedEvent())
     }
 
     override fun afterExecute(callback: Any?, result: ParcelableStatus?, exception: MicroBlogException?) {
-        creatingFavoriteIds.remove(calculateHashCode(accountKey, statusId))
+        removeTaskId(accountKey, statusId)
         val taskEvent = FavoriteTaskEvent(FavoriteTaskEvent.Action.CREATE, accountKey, statusId)
         taskEvent.isFinished = true
         if (result != null) {
@@ -120,13 +116,5 @@ class CreateFavoriteTask(context: Context, accountKey: UserKey, private val stat
         return exception.errorCode == TWITTER_ERROR_ALREADY_FAVORITED
     }
 
-    companion object {
-
-        private val creatingFavoriteIds = ArrayList<Int>()
-
-        fun isCreatingFavorite(accountKey: UserKey?, statusId: String?): Boolean {
-            return creatingFavoriteIds.contains(calculateHashCode(accountKey, statusId))
-        }
-    }
-
+    companion object : ObjectIdTaskCompanion()
 }

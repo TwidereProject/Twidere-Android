@@ -38,6 +38,7 @@ import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.deleteActivityStatus
+import org.mariotaku.twidere.util.deleteStatus
 import javax.inject.Inject
 
 /**
@@ -84,7 +85,7 @@ class ParcelableStatusLoader(
             if (e.errorCode == ErrorInfo.STATUS_NOT_FOUND) {
                 // Delete all deleted status
                 val cr = context.contentResolver
-                DataStoreUtils.deleteStatus(cr, accountKey, statusId, null)
+                cr.deleteStatus(accountKey, statusId, null)
                 cr.deleteActivityStatus(accountKey, statusId, null)
             }
             return SingleResponse(e)

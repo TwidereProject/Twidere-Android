@@ -53,6 +53,47 @@ fun ContentResolver.deleteAccountData(accountKey: UserKey) {
 }
 
 
+fun ContentResolver.deleteStatus(accountKey: UserKey, statusId: String, status: ParcelableStatus?) {
+
+    val host = accountKey.host
+    val deleteWhere: String
+    val updateWhere: String
+    val deleteWhereArgs: Array<String>
+    val updateWhereArgs: Array<String>
+    if (host != null) {
+        deleteWhere = Expression.and(
+                Expression.likeRaw(Column(Statuses.ACCOUNT_KEY), "'%@'||?"),
+                Expression.or(
+                        Expression.equalsArgs(Statuses.ID),
+                        Expression.equalsArgs(Statuses.RETWEET_ID)
+                )).sql
+        deleteWhereArgs = arrayOf(host, statusId, statusId)
+        updateWhere = Expression.and(
+                Expression.likeRaw(Column(Statuses.ACCOUNT_KEY), "'%@'||?"),
+                Expression.equalsArgs(Statuses.MY_RETWEET_ID)
+        ).sql
+        updateWhereArgs = arrayOf(host, statusId)
+    } else {
+        deleteWhere = Expression.or(
+                Expression.equalsArgs(Statuses.ID),
+                Expression.equalsArgs(Statuses.RETWEET_ID)
+        ).sql
+        deleteWhereArgs = arrayOf(statusId, statusId)
+        updateWhere = Expression.equalsArgs(Statuses.MY_RETWEET_ID).sql
+        updateWhereArgs = arrayOf(statusId)
+    }
+    for (uri in DataStoreUtils.STATUSES_ACTIVITIES_URIS) {
+        delete(uri, deleteWhere, deleteWhereArgs)
+        if (status != null) {
+            val values = ContentValues()
+            values.putNull(Statuses.MY_RETWEET_ID)
+            values.put(Statuses.RETWEET_COUNT, status.retweet_count - 1)
+            update(uri, values, updateWhere, updateWhereArgs)
+        }
+    }
+}
+
+
 fun ContentResolver.deleteActivityStatus(accountKey: UserKey, statusId: String,
         result: ParcelableStatus?) {
 

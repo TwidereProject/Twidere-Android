@@ -21,7 +21,6 @@ package org.mariotaku.twidere.promise
 
 import android.accounts.AccountManager
 import android.app.Application
-import android.content.Context
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.task
 import org.mariotaku.ktextension.mapToArray
@@ -42,7 +41,7 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
 import org.mariotaku.twidere.util.DataStoreUtils
-import org.mariotaku.twidere.util.SingletonHolder
+import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 
 class ConversationPromises private constructor(private val application: Application) {
 
@@ -123,8 +122,6 @@ class ConversationPromises private constructor(private val application: Applicat
         return GetMessagesTask.DatabaseUpdateData(listOf(conversation), emptyList())
     }
 
-    companion object : SingletonHolder<ConversationPromises, Context>({
-        ConversationPromises(it.applicationContext as Application)
-    })
+    companion object : ApplicationContextSingletonHolder<ConversationPromises>(::ConversationPromises)
 
 }

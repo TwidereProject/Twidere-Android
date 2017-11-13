@@ -52,6 +52,7 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.util.AccountUtils
+import org.mariotaku.twidere.promise.FriendshipPromises
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
@@ -213,7 +214,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         if (user.is_following) {
             DestroyFriendshipDialogFragment.show(fragmentManager, user)
         } else {
-            twitterWrapper.createFriendshipAsync(accountKey, user.key, user.screen_name)
+            FriendshipPromises.getInstance(context).create(accountKey, user.key, user.screen_name)
         }
     }
 

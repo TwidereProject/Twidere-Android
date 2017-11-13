@@ -24,6 +24,7 @@ import android.support.v4.app.FragmentManager
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_STATUS
 import org.mariotaku.twidere.model.ParcelableStatus
+import org.mariotaku.twidere.promise.StatusPromises
 
 class DestroyStatusDialogFragment : AbsSimpleStatusOperationDialogFragment() {
 
@@ -33,7 +34,7 @@ class DestroyStatusDialogFragment : AbsSimpleStatusOperationDialogFragment() {
         get() = getString(R.string.destroy_status_confirm_message)
 
     override fun onPerformAction(status: ParcelableStatus) {
-        twitterWrapper.destroyStatusAsync(status.account_key, status.id)
+        StatusPromises.getInstance(context).destroy(status.account_key, status.id)
     }
 
     companion object {

@@ -121,6 +121,7 @@ import org.mariotaku.twidere.model.event.TaskStateChangedEvent
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.model.util.ParcelableRelationshipUtils
+import org.mariotaku.twidere.promise.FriendshipPromises
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
 import org.mariotaku.twidere.text.TwidereURLSpan
@@ -864,7 +865,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     if (userRelationship.following) {
                         DestroyFriendshipDialogFragment.show(fragmentManager, user)
                     } else {
-                        twitter.createFriendshipAsync(accountKey, user.key, user.screen_name)
+                        FriendshipPromises.getInstance(context).create(accountKey, user.key, user.screen_name)
                     }
                 }
                 return true
@@ -1111,7 +1112,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     } else if (userRelationship.following) {
                         DestroyFriendshipDialogFragment.show(fragmentManager, user)
                     } else {
-                        twitter.createFriendshipAsync(accountKey, user.key, user.screen_name)
+                        FriendshipPromises.getInstance(context).create(accountKey, user.key, user.screen_name)
                     }
                 }
             }

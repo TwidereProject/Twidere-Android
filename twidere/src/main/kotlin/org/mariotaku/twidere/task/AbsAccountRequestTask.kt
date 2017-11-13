@@ -97,12 +97,12 @@ abstract class AbsAccountRequestTask<Params, Result, Callback>(context: Context,
     abstract class ObjectIdTaskCompanion {
         private val taskIds = ArraySet<ObjectId>()
 
-        protected fun addTaskId(accountKey: UserKey?, id: String?) {
+        fun addTaskId(accountKey: UserKey?, id: String?) {
             if (accountKey == null || id == null) return
             taskIds.add(ObjectId(accountKey, id))
         }
 
-        protected fun removeTaskId(accountKey: UserKey?, id: String?) {
+        fun removeTaskId(accountKey: UserKey?, id: String?) {
             if (accountKey == null || id == null) return
             taskIds.removeAll { it.accountKey == accountKey && it.id == id }
         }

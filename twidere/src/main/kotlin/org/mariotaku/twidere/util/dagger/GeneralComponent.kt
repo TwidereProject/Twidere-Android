@@ -47,6 +47,7 @@ import org.mariotaku.twidere.preference.PremiumEntryPreference
 import org.mariotaku.twidere.preference.PremiumEntryPreferenceCategory
 import org.mariotaku.twidere.preference.sync.SyncItemPreference
 import org.mariotaku.twidere.promise.MessagePromises
+import org.mariotaku.twidere.promise.StatusPromises
 import org.mariotaku.twidere.provider.CacheProvider
 import org.mariotaku.twidere.provider.TwidereDataProvider
 import org.mariotaku.twidere.service.*
@@ -54,8 +55,8 @@ import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.text.util.EmojiEditableFactory
 import org.mariotaku.twidere.text.util.EmojiSpannableFactory
 import org.mariotaku.twidere.util.MultiSelectEventHandler
-import org.mariotaku.twidere.util.SingletonHolder
 import org.mariotaku.twidere.util.filter.UrlFiltersSubscriptionProvider
+import org.mariotaku.twidere.util.lang.SingletonHolder
 import org.mariotaku.twidere.util.sync.SyncTaskRunner
 import javax.inject.Singleton
 
@@ -156,6 +157,8 @@ interface GeneralComponent {
 
     fun inject(promises: MessagePromises)
 
+    fun inject(promises: StatusPromises)
+
     companion object : SingletonHolder<GeneralComponent, Context>(creation@ { context ->
         val application = context.applicationContext as Application
         return@creation DaggerGeneralComponent.builder()
@@ -163,6 +166,7 @@ interface GeneralComponent {
                 .channelModule(ChannelModule.getInstance(application))
                 .build()
     }) {
+
         fun get(context: Context) = getInstance(context)
 
     }

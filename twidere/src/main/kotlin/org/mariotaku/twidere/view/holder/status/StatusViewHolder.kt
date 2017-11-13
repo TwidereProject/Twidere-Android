@@ -734,7 +734,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
 
         fun isFavoriteIconActivated(status: ParcelableStatus): Boolean {
             return !DestroyFavoriteTask.isRunning(status.account_key, status.id) &&
-                    (CreateFavoriteTask.isCreatingFavorite(status.account_key, status.id) || status.is_favorite)
+                    (CreateFavoriteTask.isRunning(status.account_key, status.id) || status.is_favorite)
         }
 
     }
