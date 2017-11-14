@@ -21,8 +21,6 @@ package org.mariotaku.twidere.extension.model
 
 import android.accounts.Account
 import android.accounts.AccountManager
-import org.mariotaku.ktextension.HexColorFormat
-import org.mariotaku.ktextension.toHexColor
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.util.JsonSerializer
@@ -31,15 +29,16 @@ import org.mariotaku.twidere.util.JsonSerializer
  * Created by mariotaku on 2017/4/16.
  */
 fun Account.updateDetails(am: AccountManager, details: AccountDetails) {
-    am.setUserData(this, ACCOUNT_USER_DATA_KEY, details.key.toString())
+    setAccountKey(am, details.key)
+    
     am.setUserData(this, ACCOUNT_USER_DATA_TYPE, details.type)
     am.setUserData(this, ACCOUNT_USER_DATA_CREDS_TYPE, details.credentials_type)
 
-    am.setUserData(this, ACCOUNT_USER_DATA_ACTIVATED, details.activated.toString())
-    am.setUserData(this, ACCOUNT_USER_DATA_TEST, details.test.toString())
-    am.setUserData(this, ACCOUNT_USER_DATA_COLOR, toHexColor(details.color, format = HexColorFormat.RGB))
+    setActivated(am, details.activated)
+    setTest(am, details.test)
+    setColor(am, details.color)
+    setAccountUser(am, details.user)
 
-    am.setUserData(this, ACCOUNT_USER_DATA_USER, JsonSerializer.serialize(details.user))
     am.setUserData(this, ACCOUNT_USER_DATA_EXTRAS, details.extras?.let { JsonSerializer.serialize(it) })
     am.setAuthToken(this, ACCOUNT_AUTH_TOKEN_TYPE, JsonSerializer.serialize(details.credentials))
 }

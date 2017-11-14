@@ -29,7 +29,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mariotaku.twidere.constant.IntentConstants.*
-import org.mariotaku.twidere.extension.set
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableStatusUpdate
 import org.mariotaku.twidere.test.R
@@ -58,8 +57,7 @@ class ComposeActivityTest {
         val statusUpdate = activity.getStatusUpdateTest(false)
         Assert.assertEquals("Test Reply", statusUpdate.text)
         assertExcludedMatches(emptyArray(), statusUpdate)
-        activity.requestSkipDraft()
-        activity.finish()
+        activityRule.finishActivity()
     }
 
     @Test
@@ -78,8 +76,7 @@ class ComposeActivityTest {
         val statusUpdate = activity.getStatusUpdateTest(false)
         Assert.assertEquals("Test Reply", statusUpdate.text)
         assertExcludedMatches(arrayOf("17484680", "57610574"), statusUpdate)
-        activity.requestSkipDraft()
-        activity.finish()
+        activityRule.finishActivity()
     }
 
     @Test
@@ -100,8 +97,7 @@ class ComposeActivityTest {
         Assert.assertEquals("https://twitter.com/t_deyarmin/status/847950697987493888",
                 statusUpdate.attachment_url)
         assertExcludedMatches(emptyArray(), statusUpdate)
-        activity.requestSkipDraft()
-        activity.finish()
+        activityRule.finishActivity()
     }
 
     @Test
@@ -120,8 +116,7 @@ class ComposeActivityTest {
         val statusUpdate = activity.getStatusUpdateTest(false)
         Assert.assertEquals("Test Reply", statusUpdate.text)
         assertExcludedMatches(emptyArray(), statusUpdate)
-        activity.requestSkipDraft()
-        activity.finish()
+        activityRule.finishActivity()
     }
 
     @Test
@@ -140,8 +135,7 @@ class ComposeActivityTest {
         val statusUpdate = activity.getStatusUpdateTest(false)
         Assert.assertEquals("Test Reply", statusUpdate.text)
         assertExcludedMatches(arrayOf("57610574"), statusUpdate)
-        activity.requestSkipDraft()
-        activity.finish()
+        activityRule.finishActivity()
     }
 
     @Test
@@ -160,13 +154,7 @@ class ComposeActivityTest {
         val statusUpdate = activity.getStatusUpdateTest(false)
         Assert.assertEquals("Test Reply", statusUpdate.text)
         assertExcludedMatches(arrayOf("583328497", "57610574"), statusUpdate)
-        activity.requestSkipDraft()
-        activity.finish()
-    }
-
-    private fun ComposeActivity.requestSkipDraft() {
-        val shouldSkipDraft = javaClass.getDeclaredField("shouldSkipDraft")
-        this[shouldSkipDraft] = true
+        activityRule.finishActivity()
     }
 
     private fun ComposeActivity.getStatusUpdateTest(checkLength: Boolean): ParcelableStatusUpdate {

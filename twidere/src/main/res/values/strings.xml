@@ -722,6 +722,7 @@
     <string name="message_toast_profile_image_updated">Profile image updated</string>
     <string name="message_toast_qr_scan_link_not_supported">Link not supported</string>
     <string name="message_toast_qr_scanner_not_supported">QR scanner not supported</string>
+    <string name="message_toast_remove_account_failed">Unable to remove account</string>
     <string name="message_toast_retweet_cancelled">Retweet cancelled</string>
     <string name="message_toast_save_media_no_storage_permission">Storage permission is needed to save media</string>
     <string name="message_toast_saved_to_gallery">Saved to gallery</string>

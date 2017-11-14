@@ -113,6 +113,8 @@ public class AccountUtils {
         if (getCredentials) {
             details.credentials = AccountExtensionsKt.getCredentials(account, am);
         }
+
+        details.test = AccountExtensionsKt.isTest(account, am);
         return details;
     }
 

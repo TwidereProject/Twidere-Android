@@ -48,7 +48,8 @@ object TestAccountUtils {
         }
     }
 
-    private val accountResources = intArrayOf(R.raw.account_4223092274_twitter_com)
+    private val accountResources = intArrayOf(R.raw.account_4223092274_twitter_com,
+            R.raw.account_200092_mastodon_social)
 
     fun insertTestAccounts() {
         val targetContext = InstrumentationRegistry.getTargetContext()

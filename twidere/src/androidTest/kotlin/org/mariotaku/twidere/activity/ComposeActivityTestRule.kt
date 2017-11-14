@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.activity
 
 import android.support.test.rule.ActivityTestRule
+import org.mariotaku.twidere.extension.set
 import org.mariotaku.twidere.util.TestAccountUtils
 
 class ComposeActivityTestRule(initialTouchMode: Boolean = false, launchActivity: Boolean = true) :
@@ -29,7 +30,17 @@ class ComposeActivityTestRule(initialTouchMode: Boolean = false, launchActivity:
         TestAccountUtils.insertTestAccounts()
     }
 
+    override fun finishActivity() {
+        activity.requestSkipDraft()
+        super.finishActivity()
+    }
+
     override fun afterActivityFinished() {
         TestAccountUtils.removeTestAccounts().get()
+    }
+
+    private fun ComposeActivity.requestSkipDraft() {
+        val shouldSkipDraft = javaClass.getDeclaredField("shouldSkipDraft")
+        this[shouldSkipDraft] = true
     }
 }

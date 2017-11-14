@@ -17,11 +17,18 @@ import android.view.*
 import android.view.ContextMenu.ContextMenuInfo
 import android.widget.AdapterView
 import android.widget.AdapterView.AdapterContextMenuInfo
+import android.widget.Toast
 import kotlinx.android.synthetic.main.layout_draggable_list_with_empty_view.*
+import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.task
+import nl.komponents.kovenant.then
+import nl.komponents.kovenant.ui.alwaysUi
+import nl.komponents.kovenant.ui.failUi
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.Bundle
+import org.mariotaku.ktextension.deadline
 import org.mariotaku.ktextension.set
+import org.mariotaku.ktextension.weak
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
@@ -31,14 +38,11 @@ import org.mariotaku.twidere.activity.ColorPickerDialogActivity
 import org.mariotaku.twidere.adapter.AccountDetailsAdapter
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.newDocumentApiKey
-import org.mariotaku.twidere.extension.applyTheme
-import org.mariotaku.twidere.extension.linkHandlerTitle
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.getAccountKey
 import org.mariotaku.twidere.extension.model.setActivated
 import org.mariotaku.twidere.extension.model.setColor
 import org.mariotaku.twidere.extension.model.setPosition
-import org.mariotaku.twidere.extension.onShow
-import org.mariotaku.twidere.extension.removeAccount
 import org.mariotaku.twidere.loader.AccountDetailsLoader
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.AccountPreferences
@@ -47,6 +51,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.deleteAccountData
+import java.util.concurrent.TimeUnit
 
 /**
  * Sort and toggle account availability
@@ -142,9 +147,9 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
             }
             R.id.delete -> {
                 val f = AccountDeletionDialogFragment()
-                val args = Bundle()
-                args.putParcelable(EXTRA_ACCOUNT, details.account)
-                f.arguments = args
+                f.arguments = Bundle {
+                    this[EXTRA_ACCOUNT] = details.account
+                }
                 f.show(childFragmentManager, FRAGMENT_TAG_ACCOUNT_DELETION)
             }
         }
@@ -190,6 +195,25 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
         progressContainer.visibility = if (shown) View.GONE else View.VISIBLE
     }
 
+    private fun performRemoveAccount(account: Account) {
+        val weakThis by weak(this)
+        val am = AccountManager.get(context)
+        showProgressDialog("remove_account") and (task {
+            return@task account.getAccountKey(am)
+        } and am.removeAccount(account).deadline(5, TimeUnit.SECONDS)).then { (key, _) ->
+            val f = weakThis ?: throw InterruptedException()
+            val context = f.context
+            val resolver = context.contentResolver
+            resolver.deleteAccountData(key)
+            AccountPreferences.getSharedPreferencesForAccount(context, key).edit().clear().apply()
+        }.failUi {
+            val f = weakThis ?: return@failUi
+            Toast.makeText(f.context, R.string.message_toast_remove_account_failed, Toast.LENGTH_SHORT).show()
+        }.alwaysUi {
+            weakThis?.dismissProgressDialog("remove_account")
+        }
+    }
+
     private fun updateContentsColor(resolver: ContentResolver, details: AccountDetails) {
         val statusValues = ContentValues().apply {
             put(Statuses.ACCOUNT_COLOR, details.color)
@@ -209,16 +233,9 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
 
         override fun onClick(dialog: DialogInterface, which: Int) {
             val account: Account = arguments.getParcelable(EXTRA_ACCOUNT)
-            val resolver = context.contentResolver
-            val am = AccountManager.get(context)
             when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {
-                    val accountKey = account.getAccountKey(am)
-                    resolver.deleteAccountData(accountKey)
-                    AccountPreferences.getSharedPreferencesForAccount(context, accountKey).edit()
-                            .clear().apply()
-                    // TODO: Promise progress
-                    am.removeAccount(account)
+                    (parentFragment as AccountsManagerFragment).performRemoveAccount(account)
                 }
             }
         }
@@ -237,6 +254,7 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
         }
 
     }
+
 
     companion object {
 

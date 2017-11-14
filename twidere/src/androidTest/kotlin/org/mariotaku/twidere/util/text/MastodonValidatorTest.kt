@@ -23,9 +23,8 @@ import junit.framework.Assert
 import org.junit.Test
 
 class MastodonValidatorTest {
-    val validator = MastodonValidator()
     @Test
     fun testGetCountableLength() {
-        Assert.assertEquals(41, validator.getCountableLength(null, "@mariotaku@pawoo.jp Hello! https://github.com/tootsuite/mastodon"))
+        Assert.assertEquals(41, MastodonValidator.getCountableLength(null, "@mariotaku@pawoo.jp Hello! https://github.com/tootsuite/mastodon"))
     }
 }

@@ -23,11 +23,10 @@ import junit.framework.Assert
 import org.junit.Test
 
 class TwitterValidatorTest {
-    private val validator = TwitterValidator()
     @Test
     fun getTweetLength() {
-        Assert.assertEquals(280, validator.getTweetLength("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi placerat sodales libero id imperdiet. Aliquam malesuada volutpat nisl, quis elementum est tristique eget. In rhoncus lacus non sollicitudin tincidunt. Curabitur a turpis fringilla, varius nisl at, aliquet dolor metus."))
-        Assert.assertEquals(280, validator.getTweetLength("一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十"))
+        Assert.assertEquals(280, TwitterValidator.getTweetLength("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi placerat sodales libero id imperdiet. Aliquam malesuada volutpat nisl, quis elementum est tristique eget. In rhoncus lacus non sollicitudin tincidunt. Curabitur a turpis fringilla, varius nisl at, aliquet dolor metus."))
+        Assert.assertEquals(280, TwitterValidator.getTweetLength("一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十"))
     }
 
 }

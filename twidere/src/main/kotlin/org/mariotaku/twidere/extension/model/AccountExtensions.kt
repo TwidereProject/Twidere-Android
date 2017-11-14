@@ -84,6 +84,14 @@ fun Account.setPosition(am: AccountManager, position: Int) {
     am.setUserData(this, ACCOUNT_USER_DATA_POSITION, position.toString())
 }
 
+fun Account.isTest(am: AccountManager): Boolean {
+    return am.getUserData(this, ACCOUNT_USER_DATA_TEST).toBooleanOr(false)
+}
+
+fun Account.setTest(am: AccountManager, test: Boolean) {
+    am.setUserData(this, ACCOUNT_USER_DATA_TEST, test.toString())
+}
+
 fun Account.isOfficial(am: AccountManager, context: Context): Boolean {
     val extras = getAccountExtras(am)
     if (extras is TwitterAccountExtras) {
