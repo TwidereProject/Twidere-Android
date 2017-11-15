@@ -24,7 +24,7 @@ import android.graphics.ColorFilter
 import android.graphics.PixelFormat
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
-import junit.framework.Assert
+import org.junit.Assert
 import org.junit.Test
 
 class DrawableExtensionsKtTest {
