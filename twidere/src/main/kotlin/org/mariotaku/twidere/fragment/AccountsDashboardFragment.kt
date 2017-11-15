@@ -217,7 +217,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
                 if (data.getBooleanExtra(EXTRA_SHOULD_RESTART, false)) {
                     Utils.restartActivity(activity)
                 } else if (data.getBooleanExtra(EXTRA_SHOULD_RECREATE, false)) {
-                    activity.recreate()
+                    activity!!.recreate()
                 }
                 return
             }
@@ -246,10 +246,10 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
                 val account = accountsAdapter.selectedAccount ?: return
                 val activity = activity
                 if (account.user != null) {
-                    IntentUtils.openUserProfile(activity, account.user!!,
+                    IntentUtils.openUserProfile(activity!!, account.user!!,
                             preferences[newDocumentApiKey], null)
                 } else {
-                    IntentUtils.openUserProfile(activity, account.key, account.key,
+                    IntentUtils.openUserProfile(activity!!, account.key, account.key,
                             account.user.screen_name, null, preferences[newDocumentApiKey],
                             null)
                 }
@@ -258,7 +258,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<AccountsInfo> {
-        return AccountsInfoLoader(activity, accountsAdapter.accounts == null)
+        return AccountsInfoLoader(activity!!, accountsAdapter.accounts == null)
     }
 
 
@@ -367,8 +367,8 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         menu.setItemAvailability(R.id.likes, !useStarsForLikes)
         menu.setItemAvailability(R.id.premium_features, extraFeaturesService.isSupported())
         if (preferences[extraFeaturesNoticeVersionKey] < EXTRA_FEATURES_NOTICE_VERSION) {
-            val icon = ContextCompat.getDrawable(context, R.drawable.ic_action_infinity)
-            val color = ContextCompat.getColor(context, R.color.material_red)
+            val icon = ContextCompat.getDrawable(activity, R.drawable.ic_action_infinity)!!
+            val color = ContextCompat.getColor(activity, R.color.material_red)
             val size = resources.getDimensionPixelSize(R.dimen.element_spacing_msmall)
             menu.setItemIcon(R.id.premium_features, BadgeDrawable(icon, color, size))
         } else {
@@ -408,7 +408,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
 
     private fun hasAccountInTab(tab: SupportTabSpec, accountKey: UserKey, isActivated: Boolean): Boolean {
         if (tab.args == null) return false
-        val accountKeys = Utils.getAccountKeys(context, tab.args) ?: return isActivated
+        val accountKeys = Utils.getAccountKeys(context!!, tab.args) ?: return isActivated
         return accountKey in accountKeys
     }
 
@@ -467,7 +467,8 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             private var clickedColors: IntArray? = null
 
             override fun onAnimationStart(animation: Animator) {
-                if (context == null || isDetached || (activity?.isFinishing ?: true)) return
+                val activity = activity ?: return
+                if (isDetached || activity.isFinishing) return
                 snapshotView.visibility = View.VISIBLE
                 snapshotView.setImageBitmap(snapshotBitmap)
                 val profileDrawable = profileImageView.drawable
@@ -476,7 +477,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
                 clickedColors = clickedImageView.borderColors
                 val oldSelectedAccount = accountsAdapter.selectedAccount ?: return
                 val profileImageStyle = preferences[profileImageStyleKey]
-                requestManager.loadProfileImage(context, oldSelectedAccount,
+                requestManager.loadProfileImage(activity, oldSelectedAccount,
                         profileImageStyle, clickedImageView.cornerRadius, clickedImageView.cornerRadiusRatio)
                         .into(clickedImageView).onLoadStarted(profileDrawable)
                 //TODO complete border color
@@ -523,7 +524,8 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     }
 
     private fun displayAccountBanner(account: AccountDetails) {
-        if (context == null || isDetached || (activity?.isFinishing ?: true)) return
+        val activity = activity ?: return
+        if (isDetached || activity.isFinishing) return
         val bannerWidth = accountProfileBanner.width
         val res = resources
         val defWidth = res.displayMetrics.widthPixels
@@ -538,16 +540,17 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             ColorDrawable(Chameleon.getOverrideTheme(activity, activity).colorPrimary)
         }
 
-        requestManager.loadProfileBanner(context, account.user, width).fallback(fallbackBanner)
+        requestManager.loadProfileBanner(activity, account.user, width).fallback(fallbackBanner)
                 .into(bannerView)
     }
 
     private fun displayCurrentAccount(profileImageSnapshot: Drawable?) {
-        if (context == null || isDetached || (activity?.isFinishing ?: true)) return
+        val activity = activity ?: return
+        if (isDetached || activity.isFinishing) return
         val account = accountsAdapter.selectedAccount ?: return
         accountProfileNameView.spannable = account.user.name
         accountProfileScreenNameView.spannable = "@${account.user.screen_name}"
-        requestManager.loadProfileImage(context, account, preferences[profileImageStyleKey],
+        requestManager.loadProfileImage(activity, account, preferences[profileImageStyleKey],
                 accountProfileImageView.cornerRadius, accountProfileImageView.cornerRadiusRatio,
                 ProfileImageSize.REASONABLY_SMALL).placeholder(profileImageSnapshot).into(accountProfileImageView)
         //TODO complete border color
@@ -559,6 +562,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        val activity = this.activity ?: return false
         val account = accountsAdapter.selectedAccount ?: return false
         when (item.itemId) {
             R.id.search -> {
@@ -629,7 +633,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     }
 
     fun setStatusBarHeight(height: Int) {
-        val top = Utils.getInsetsTopWithoutActionBarHeight(activity, height)
+        val top = Utils.getInsetsTopWithoutActionBarHeight(activity!!, height)
         profileContainer.setPadding(0, top, 0, 0)
     }
 

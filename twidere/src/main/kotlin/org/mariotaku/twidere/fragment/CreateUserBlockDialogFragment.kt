@@ -25,6 +25,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.model.ParcelableUser
+import org.mariotaku.twidere.promise.FriendshipPromises
 
 class CreateUserBlockDialogFragment : AbsUserMuteBlockDialogFragment() {
     override fun getMessage(user: ParcelableUser): String {
@@ -43,7 +44,7 @@ class CreateUserBlockDialogFragment : AbsUserMuteBlockDialogFragment() {
 
     override fun performUserAction(user: ParcelableUser, filterEverywhere: Boolean) {
         val accountKey = user.account_key ?: return
-        twitterWrapper.createBlockAsync(accountKey, user.key, filterEverywhere)
+        FriendshipPromises.getInstance(context).block(accountKey, user.key, filterEverywhere)
     }
 
     companion object {

@@ -103,7 +103,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
     private val currentFragment: MediaViewerFragment?
         get() {
             val viewPager = findViewPager()
-            val adapter = viewPager.adapter
+            val adapter = viewPager.adapter ?: return null
             val currentItem = viewPager.currentItem
             if (currentItem < 0 || currentItem >= adapter.count) return null
             return adapter.instantiateItem(viewPager, currentItem) as? MediaViewerFragment
@@ -112,7 +112,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
     private fun getCurrentCacheFileInfo(position: Int): SaveFileTask.FileInfo? {
         if (position == -1) return null
         val viewPager = findViewPager()
-        val adapter = viewPager.adapter
+        val adapter = viewPager.adapter ?: return null
         val f = adapter.instantiateItem(viewPager, position) as? MediaViewerFragment ?:
                 return null
         return f.cacheFileInfo()
@@ -219,7 +219,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val viewPager = findViewPager()
-        val adapter = viewPager.adapter
+        val adapter = viewPager.adapter ?: return false
         val currentItem = viewPager.currentItem
         if (currentItem < 0 || currentItem >= adapter.count) return false
         val obj = adapter.instantiateItem(viewPager, currentItem) as? MediaViewerFragment ?: return false
@@ -438,7 +438,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
 
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
         val result = super.onApplyWindowInsets(v, insets)
-        val adapter = viewPager.adapter
+        val adapter = viewPager.adapter ?: return result
         if (adapter.count == 0) return insets
         val fragment = adapter.instantiateItem(viewPager, viewPager.currentItem)
         if (fragment is IBaseFragment<*>) {
@@ -552,6 +552,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
     }
 
     private fun MediaViewerFragment.cacheFileInfo(): SaveFileTask.FileInfo? {
+        val context = this.context ?: return null
         return when (this) {
             is CacheDownloadMediaViewerFragment -> {
                 val cacheUri = downloadResult?.cacheUri ?: return null
@@ -561,7 +562,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
                     is GifPageFragment -> CacheFileType.IMAGE
                     else -> return null
                 }
-                CacheProvider.ContentUriFileInfo(activity, cacheUri, type)
+                CacheProvider.ContentUriFileInfo(context, cacheUri, type)
             }
             is ExoPlayerPageFragment -> {
                 return getRequestFileInfo()

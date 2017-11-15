@@ -12,12 +12,12 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.TwidereConstants.ACCOUNT_TYPE
 import org.mariotaku.twidere.extension.model.setAccountKey
 import org.mariotaku.twidere.extension.model.setAccountUser
+import org.mariotaku.twidere.extension.update
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.*
-import org.mariotaku.twidere.util.updateItems
 
 class UpdateAccountInfoTask(
         private val context: Context
@@ -59,7 +59,7 @@ class UpdateAccountInfoTask(
     }
 
     private fun updateTabs(resolver: ContentResolver, accountKey: UserKey) {
-        resolver.updateItems(Tabs.CONTENT_URI, Tabs.COLUMNS, null, null, Tab::class.java) { tab ->
+        resolver.update(Tabs.CONTENT_URI, Tabs.COLUMNS, null, null, Tab::class.java) { tab ->
             val arguments = tab.arguments
             if (arguments != null) {
                 val accountId = arguments.accountId
@@ -68,7 +68,7 @@ class UpdateAccountInfoTask(
                     arguments.accountKeys = arrayOf(accountKey)
                 }
             }
-            return@updateItems tab
+            return@update tab
         }
     }
 }

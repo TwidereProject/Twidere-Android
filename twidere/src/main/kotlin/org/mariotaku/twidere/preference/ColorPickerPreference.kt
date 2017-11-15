@@ -96,7 +96,7 @@ class ColorPickerPreference(context: Context, attrs: AttributeSet? = null) :
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val preference = preference as ColorPickerPreference
-            val context = context
+            val context = context!!
             val builder = AlertDialog.Builder(context)
             builder.setTitle(preference.dialogTitle)
             builder.setView(R.layout.cp__dialog_color_picker)
@@ -125,7 +125,7 @@ class ColorPickerPreference(context: Context, attrs: AttributeSet? = null) :
             controller = ColorPickerDialog.Controller(context, windowView)
             controller.setAlphaEnabled(preference.isAlphaSliderEnabled)
             for (presetColor in PRESET_COLORS) {
-                controller.addColor(ContextCompat.getColor(context, presetColor))
+                controller.addColor(ContextCompat.getColor(context!!, presetColor))
             }
             controller.setInitialColor(preference.value)
         }

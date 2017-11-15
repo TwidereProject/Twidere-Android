@@ -5,9 +5,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
-import android.provider.BaseColumns
-import android.support.annotation.WorkerThread
-import android.support.v4.util.LongSparseArray
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.toStringArray
 import org.mariotaku.library.objectcursor.ObjectCursor
@@ -16,11 +13,11 @@ import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.extension.queryReference
 import org.mariotaku.twidere.extension.rawQueryReference
+import org.mariotaku.twidere.extension.update
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.util.DataStoreUtils.ACTIVITIES_URIS
-import java.io.IOException
 
 
 fun Context.deleteDrafts(draftIds: LongArray): Int {
@@ -126,7 +123,7 @@ fun ContentResolver.deleteActivityStatus(accountKey: UserKey, statusId: String,
     }
     for (uri in ACTIVITIES_URIS) {
         delete(uri, deleteWhere, deleteWhereArgs)
-        updateItems(uri, Activities.COLUMNS, updateWhere, updateWhereArgs,
+        update(uri, Activities.COLUMNS, updateWhere, updateWhereArgs,
                 ParcelableActivity::class.java) { activity ->
             activity.my_retweet_id = null
             if (statusId == activity.id || statusId == activity.retweet_id ||
@@ -138,7 +135,7 @@ fun ContentResolver.deleteActivityStatus(accountKey: UserKey, statusId: String,
                     activity.favorite_count = result.favorite_count
                 }
             }
-            return@updateItems activity
+            return@update activity
         }
     }
 }
@@ -154,33 +151,7 @@ fun <T : ParcelableStatus> ContentResolver.updateStatusInfo(uris: Array<Uri>, co
     ).sql
     val activityWhereArgs = arrayOf(accountKey.toString(), statusId, statusId)
     for (uri in uris) {
-        updateItems(uri, columns, activityWhere, activityWhereArgs, cls, action)
-    }
-}
-
-@WorkerThread
-fun <T> ContentResolver.updateItems(uri: Uri, columns: Array<String>?, where: String?,
-        whereArgs: Array<String>?, cls: Class<T>, action: (T) -> T) {
-    val values = LongSparseArray<ContentValues>()
-
-    queryReference(uri, columns, where, whereArgs, null)?.use { (c) ->
-        val ci = ObjectCursor.indicesFrom(c, cls)
-        val vc = ObjectCursor.valuesCreatorFrom(cls)
-        c.moveToFirst()
-        try {
-            while (!c.isAfterLast) {
-                val item = action(ci.newObject(c))
-                values.put(c.getLong(ci[BaseColumns._ID]), vc.create(item))
-                c.moveToNext()
-            }
-
-        } catch (e: IOException) {
-            return
-        }
-    }
-    for (i in 0 until values.size()) {
-        val updateWhere = Expression.equals(BaseColumns._ID, values.keyAt(i)).sql
-        update(uri, values.valueAt(i), updateWhere, null)
+        update(uri, columns, activityWhere, activityWhereArgs, cls, action)
     }
 }
 

@@ -21,16 +21,10 @@ import org.mariotaku.twidere.preference.iface.IDialogPreference
 import org.mariotaku.twidere.util.generateAccountName
 import java.util.*
 
-/**
- * Created by mariotaku on 2016/12/16.
- */
-
-class RandomizeAccountNamePreference @JvmOverloads constructor(
+class RandomizeAccountNamePreference(
         context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = R.attr.switchPreferenceCompatStyle,
-        defStyleRes: Int = 0
-) : DialogPreference(context, attrs, defStyleAttr, defStyleRes), IDialogPreference {
+        attrs: AttributeSet? = null
+) : DialogPreference(context, attrs, R.attr.switchPreferenceCompatStyle), IDialogPreference {
 
     init {
         dialogTitle = title
@@ -65,7 +59,7 @@ class RandomizeAccountNamePreference @JvmOverloads constructor(
 
         override fun onDialogClosed(positiveResult: Boolean) {
             val am = AccountManager.get(context)
-            val enabled = arguments.getBoolean(ARG_VALUE)
+            val enabled = arguments!!.getBoolean(ARG_VALUE)
             if (enabled) {
                 val usedNames = ArraySet<String>()
                 am.ownedAccounts.forEach { oldAccount ->

@@ -222,7 +222,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         val user = adapter.getUser(position) ?: return
         val accountKey = user.account_key ?: return
         if (twitterWrapper.isUpdatingRelationship(accountKey, user.key)) return
-        twitterWrapper.destroyBlockAsync(accountKey, user.key)
+        FriendshipPromises.getInstance(context).unblock(accountKey, user.key)
     }
 
     override fun onUnmuteClicked(holder: UserViewHolder, position: Int) {

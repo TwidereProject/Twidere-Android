@@ -393,9 +393,12 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
     }
 
     class RestartConfirmDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
+        private val shouldTerminate: Boolean
+            get() = arguments!!.getBoolean(EXTRA_SHOULD_TERMINATE)
+
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(activity)
-            if (arguments.getBoolean(EXTRA_SHOULD_TERMINATE)) {
+            val builder = AlertDialog.Builder(context!!)
+            if (shouldTerminate) {
                 builder.setMessage(R.string.app_terminate_confirm)
                 builder.setNegativeButton(R.string.action_dont_terminate, this)
             } else {
@@ -412,7 +415,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
             val activity = activity as SettingsActivity
             when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {
-                    if (arguments.getBoolean(EXTRA_SHOULD_TERMINATE)) {
+                    if (shouldTerminate) {
                         val intent = Intent(context, SettingsActivity::class.java)
                         intent.putExtra(EXTRA_SHOULD_TERMINATE, true)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)

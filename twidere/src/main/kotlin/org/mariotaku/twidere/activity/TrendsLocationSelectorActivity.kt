@@ -90,10 +90,11 @@ class TrendsLocationSelectorActivity : BaseActivity() {
     }
 
     class TrendsLocationDialogFragment : BaseDialogFragment() {
-        private val list: Array<LocationsMap.LocationsData> get() = arguments.getTypedArray(EXTRA_DATA)
+        private val list: Array<LocationsMap.LocationsData>
+            get() = arguments!!.getTypedArray(EXTRA_DATA)
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val selectorBuilder = AlertDialog.Builder(context)
+            val selectorBuilder = AlertDialog.Builder(context!!)
             selectorBuilder.setTitle(R.string.trends_location)
             selectorBuilder.setView(R.layout.dialog_expandable_list)
             selectorBuilder.setNegativeButton(android.R.string.cancel, null)
@@ -101,7 +102,7 @@ class TrendsLocationSelectorActivity : BaseActivity() {
             dialog.onShow {
                 it.applyTheme()
                 val listView = it.expandableList
-                val adapter = ExpandableTrendLocationsListAdapter(context)
+                val adapter = ExpandableTrendLocationsListAdapter(it.context)
                 adapter.data = list
                 listView.setAdapter(adapter)
                 listView.setOnGroupClickListener(ExpandableListView.OnGroupClickListener { _, _, groupPosition, _ ->

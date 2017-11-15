@@ -31,23 +31,23 @@ class CreateUserMuteTask(
 ) : AbsFriendshipOperationTask(context, FriendshipTaskEvent.Action.MUTE) {
 
     @Throws(MicroBlogException::class)
-    override fun perform(details: AccountDetails, args: Arguments): ParcelableUser {
-        when (details.type) {
+    override fun perform(account: AccountDetails, args: Arguments): ParcelableUser {
+        when (account.type) {
             AccountType.TWITTER -> {
-                val twitter = details.newMicroBlogInstance(context, MicroBlog::class.java)
-                return twitter.createMute(args.userKey.id).toParcelable(details,
+                val twitter = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                return twitter.createMute(args.userKey.id).toParcelable(account,
                         profileImageSize = profileImageSize)
             }
             AccountType.MASTODON -> {
-                val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
+                val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
                 mastodon.muteUser(args.userKey.id)
-                return mastodon.getAccount(args.userKey.id).toParcelable(details)
+                return mastodon.getAccount(args.userKey.id).toParcelable(account)
             }
-            else -> throw APINotSupportedException("API", details.type)
+            else -> throw APINotSupportedException("API", account.type)
         }
     }
 
-    override fun succeededWorker(details: AccountDetails, args: Arguments, user: ParcelableUser) {
+    override fun succeededWorker(account: AccountDetails, args: Arguments, user: ParcelableUser) {
         val resolver = context.contentResolver
         Utils.setLastSeen(context, args.userKey, -1)
         for (uri in DataStoreUtils.STATUSES_URIS) {

@@ -24,8 +24,12 @@ import android.content.ContentResolver
 import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
+import android.provider.BaseColumns
+import android.support.annotation.WorkerThread
+import android.support.v4.util.LongSparseArray
 import org.mariotaku.ktextension.map
 import org.mariotaku.library.objectcursor.ObjectCursor
+import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.sqliteqb.library.SQLFunctions
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_LIMIT
 import org.mariotaku.twidere.model.CursorReference
@@ -117,6 +121,29 @@ fun <T : Any> ContentResolver.bulkInsert(uri: Uri, collection: Collection<T>, cl
         }
     }
     return rowsInserted
+}
+
+@WorkerThread
+fun <T> ContentResolver.update(uri: Uri, columns: Array<String>?, where: String?,
+        whereArgs: Array<String>?, cls: Class<T>, action: (T) -> T): Int {
+    val values = LongSparseArray<ContentValues>()
+
+    queryReference(uri, columns, where, whereArgs, null)?.use { (c) ->
+        val ci = ObjectCursor.indicesFrom(c, cls)
+        val vc = ObjectCursor.valuesCreatorFrom(cls)
+        c.moveToFirst()
+        while (!c.isAfterLast) {
+            val item = action(ci.newObject(c))
+            values.put(c.getLong(ci[BaseColumns._ID]), vc.create(item))
+            c.moveToNext()
+        }
+    }
+    var numbersUpdated = 0
+    for (i in 0 until values.size()) {
+        val updateWhere = Expression.equals(BaseColumns._ID, values.keyAt(i)).sql
+        numbersUpdated += update(uri, values.valueAt(i), updateWhere, null)
+    }
+    return numbersUpdated
 }
 
 fun ContentResolver.copyStream(src: Uri, dest: Uri) {

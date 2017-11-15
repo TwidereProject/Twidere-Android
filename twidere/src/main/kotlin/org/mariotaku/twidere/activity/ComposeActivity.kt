@@ -1908,7 +1908,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val context = activity
+            val context = context!!
             val builder = AlertDialog.Builder(context)
             builder.setMessage(R.string.quote_protected_status_warning_message)
             builder.setPositiveButton(R.string.send_anyway, this)
@@ -1921,7 +1921,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     class DirectMessageConfirmFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
 
-        private val screenName: String get() = arguments.getString(EXTRA_SCREEN_NAME)
+        private val screenName: String get() = arguments!!.getString(EXTRA_SCREEN_NAME)
 
         override fun onClick(dialog: DialogInterface, which: Int) {
             val activity = activity
@@ -1942,7 +1942,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val context = activity
+            val context = context!!
             val builder = AlertDialog.Builder(context)
             builder.setMessage(getString(R.string.message_format_compose_message_convert_to_status,
                     "@$screenName"))

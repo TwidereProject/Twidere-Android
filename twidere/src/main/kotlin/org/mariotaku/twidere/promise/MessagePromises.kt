@@ -42,6 +42,7 @@ import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.model.timestamp
 import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.extension.queryReference
+import org.mariotaku.twidere.extension.update
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableMessage
 import org.mariotaku.twidere.model.ParcelableMessageConversation
@@ -56,7 +57,6 @@ import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.getUnreadMessagesEntriesCursorReference
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
-import org.mariotaku.twidere.util.updateItems
 import javax.inject.Inject
 
 class MessagePromises private constructor(private val application: Application) {
@@ -204,7 +204,7 @@ class MessagePromises private constructor(private val application: Application) 
         val conversationWhere = Expression.and(Expression.equalsArgs(Messages.Conversations.ACCOUNT_KEY),
                 Expression.equalsArgs(Messages.Conversations.CONVERSATION_ID)).sql
         val conversationWhereArgs = arrayOf(account.key.toString(), conversationId)
-        application.contentResolver.updateItems(Messages.Conversations.CONTENT_URI,
+        application.contentResolver.update(Messages.Conversations.CONTENT_URI,
                 Messages.Conversations.COLUMNS, conversationWhere, conversationWhereArgs,
                 cls = ParcelableMessageConversation::class.java) { item ->
             item.message_extras = null
@@ -212,7 +212,7 @@ class MessagePromises private constructor(private val application: Application) 
             item.message_timestamp = -1L
             item.text_unescaped = null
             item.media = null
-            return@updateItems item
+            return@update item
         }
         return allSuccess
     }

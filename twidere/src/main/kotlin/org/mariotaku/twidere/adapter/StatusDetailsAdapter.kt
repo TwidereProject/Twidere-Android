@@ -52,7 +52,7 @@ import org.mariotaku.twidere.view.holder.status.DetailStatusViewHolder
 
 class StatusDetailsAdapter(
         val fragment: StatusFragment
-) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(fragment.context, fragment.requestManager),
+) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(fragment.context!!, fragment.requestManager),
         IStatusesAdapter, IItemCountsAdapter {
 
     override val twidereLinkify: TwidereLinkify
@@ -148,7 +148,7 @@ class StatusDetailsAdapter(
 
     init {
         setHasStableIds(true)
-        val context = fragment.activity
+        val context = fragment.activity!!
         // There's always a space at the end of the list
         itemCounts[ITEM_IDX_SPACE] = 1
         itemCounts[ITEM_IDX_STATUS] = 1

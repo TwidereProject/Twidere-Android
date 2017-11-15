@@ -91,7 +91,7 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
         private set
 
     protected val statusScheduleProvider: StatusScheduleProvider?
-        get() = statusScheduleProviderFactory.newInstance(context)
+        get() = statusScheduleProviderFactory.newInstance(context!!)
 
     protected val timelineSyncManager: TimelineSyncManager?
         get() = timelineSyncManagerFactory.get()
@@ -135,10 +135,10 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
         GeneralComponent.get(context).inject(this)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view?.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+        view.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
             if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
                 requestApplyInsets()
             }

@@ -56,6 +56,11 @@ class UserListMembersFragment : ParcelableUsersFragment() {
             return null
         }
 
+    private val accountKey: UserKey?
+        get() = arguments!!.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
+    private val userKey: UserKey?
+        get() = arguments!!.getParcelable<UserKey?>(EXTRA_USER_KEY)
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         linkHandlerTitle = getString(R.string.list_members)
@@ -94,9 +99,8 @@ class UserListMembersFragment : ParcelableUsersFragment() {
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
         if (!userVisibleHint || menuInfo == null) return
-        val accountKey = arguments.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
-        val userKey = arguments.getParcelable<UserKey?>(EXTRA_USER_KEY)
-        if (accountKey == null || accountKey != userKey) return
+        val accountKey = accountKey ?: return
+        if (accountKey != userKey) return
         val inflater = MenuInflater(context)
         val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo?
         val user = adapter.getUser(contextMenuInfo!!.position) ?: return
@@ -111,7 +115,7 @@ class UserListMembersFragment : ParcelableUsersFragment() {
         val user = adapter.getUser(contextMenuInfo.position) ?: return false
         when (item.itemId) {
             R.id.delete_from_list -> {
-                DeleteUserListMembersDialogFragment.show(fragmentManager, userList, user)
+                DeleteUserListMembersDialogFragment.show(fragmentManager!!, userList, user)
                 return true
             }
         }
@@ -121,11 +125,11 @@ class UserListMembersFragment : ParcelableUsersFragment() {
     @Subscribe
     fun onUserListMembersChanged(event: UserListMembersChangedEvent) {
         val userList = event.userList
-        val accountKey = arguments.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY) ?: return
-        val listId = arguments.getString(EXTRA_LIST_ID)
-        val userKey = arguments.getParcelable<UserKey?>(EXTRA_USER_KEY)
-        val screenName = arguments.getString(EXTRA_SCREEN_NAME)
-        val listName = arguments.getString(EXTRA_LIST_NAME)
+        val accountKey = accountKey ?: return
+        val userKey = userKey ?: return
+        val listId = arguments!!.getString(EXTRA_LIST_ID)
+        val screenName = arguments!!.getString(EXTRA_SCREEN_NAME)
+        val listName = arguments!!.getString(EXTRA_LIST_NAME)
         if (!ParcelableUserListUtils.check(userList, accountKey, listId, userKey, screenName, listName)) {
             return
         }

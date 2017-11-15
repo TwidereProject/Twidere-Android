@@ -34,6 +34,7 @@ import nl.komponents.kovenant.then
 import nl.komponents.kovenant.ui.alwaysUi
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.weak
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.ImageShapeStyle
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
@@ -142,15 +143,15 @@ object ShortcutCreator {
     }
 
     inline fun performCreation(fragment: BaseFragment, createPromise: () -> Promise<ShortcutInfoCompat, Exception>) {
-        if (!ShortcutManagerCompat.isRequestPinShortcutSupported(fragment.context)) return
+        if (!ShortcutManagerCompat.isRequestPinShortcutSupported(fragment.context!!)) return
         val promise = fragment.showProgressDialog("create_shortcut")
                 .and(createPromise())
-        val weakThis = WeakReference(fragment)
+        val weakThis by weak(fragment)
         promise.successUi { (_, shortcut) ->
-            val f = weakThis.get() ?: return@successUi
-            ShortcutManagerCompat.requestPinShortcut(f.context, shortcut, null)
+            val context = weakThis?.context ?: return@successUi
+            ShortcutManagerCompat.requestPinShortcut(context, shortcut, null)
         }.alwaysUi {
-            val f = weakThis.get() ?: return@alwaysUi
+            val f = weakThis ?: return@alwaysUi
             f.dismissProgressDialog("create_shortcut")
         }
     }

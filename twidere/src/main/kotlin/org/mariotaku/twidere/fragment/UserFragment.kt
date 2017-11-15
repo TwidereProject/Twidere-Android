@@ -34,7 +34,6 @@ import android.nfc.NdefMessage
 import android.nfc.NdefRecord
 import android.nfc.NfcAdapter.CreateNdefMessageCallback
 import android.os.Bundle
-import android.os.Parcelable
 import android.support.annotation.ColorRes
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
@@ -121,6 +120,7 @@ import org.mariotaku.twidere.model.event.TaskStateChangedEvent
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.model.util.ParcelableRelationshipUtils
+import org.mariotaku.twidere.promise.BlockPromises
 import org.mariotaku.twidere.promise.FriendshipPromises
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
@@ -183,6 +183,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     private val friendshipLoaderCallbacks = object : LoaderCallbacks<SingleResponse<ParcelableRelationship>> {
 
         override fun onCreateLoader(id: Int, args: Bundle): Loader<SingleResponse<ParcelableRelationship>> {
+            val activity = activity!!
             activity.invalidateOptionsMenu()
             val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
             val user = args.getParcelable<ParcelableUser>(EXTRA_USER)
@@ -225,7 +226,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             }
             val user = this@UserFragment.user
             val loadFromCache = user == null || !user.is_cache && user.key.maybeEquals(userKey)
-            return ParcelableUserLoader(activity, accountKey, userKey, screenName, arguments,
+            return ParcelableUserLoader(activity!!, accountKey, userKey, screenName, arguments,
                     omitIntentExtra, loadFromCache)
         }
 
@@ -275,6 +276,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     private fun displayRelationship(relationship: ParcelableRelationship?) {
+        val activity = activity ?: return
         val user = this.user ?: run {
             this.relationship = null
             return
@@ -322,8 +324,9 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         }
         followingYouIndicator.visibility = if (relationship.followed_by) View.VISIBLE else View.GONE
 
-        val resolver = context.applicationContext.contentResolver
+        val weakThis by weak(this)
         task {
+            val resolver = weakThis?.context?.contentResolver ?: throw InterruptedException()
             resolver.insert(CachedUsers.CONTENT_URI, user, ParcelableUser::class.java)
             resolver.insert(CachedRelationships.CONTENT_URI, relationship, ParcelableRelationship::class.java)
         }
@@ -445,10 +448,10 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             setUiColor(theme.colorPrimary)
         }
         val defWidth = resources.displayMetrics.widthPixels
-        requestManager.loadProfileBanner(context, user, defWidth).into(profileBanner)
-        requestManager.loadOriginalProfileImage(context, user, profileImage.style,
+        requestManager.loadProfileBanner(activity, user, defWidth).into(profileBanner)
+        requestManager.loadOriginalProfileImage(activity, user, profileImage.style,
                 profileImage.cornerRadius, profileImage.cornerRadiusRatio)
-                .thumbnail(requestManager.loadProfileImage(context, user, profileImage.style,
+                .thumbnail(requestManager.loadProfileImage(activity, user, profileImage.style,
                         profileImage.cornerRadius, profileImage.cornerRadiusRatio,
                         getString(R.string.profile_image_size))).into(profileImage)
         val relationship = relationship
@@ -551,7 +554,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
     @Subscribe
     fun notifyTaskStateChanged(event: TaskStateChangedEvent) {
-        activity.invalidateOptionsMenu()
+        activity?.invalidateOptionsMenu()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -582,7 +585,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     if (account?.type == AccountType.MASTODON && account?.key?.host != selectedAccountKey.host) {
                         userKey = AcctPlaceholderUserKey(user.key.host)
                     }
-                    IntentUtils.openUserProfile(activity, selectedAccountKey, userKey, user.screen_name,
+                    IntentUtils.openUserProfile(context!!, selectedAccountKey, userKey, user.screen_name,
                             user.extras?.statusnet_profile_url, preferences[newDocumentApiKey],
                             null)
                 }
@@ -598,12 +601,13 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         linkHandlerTitle = null
-        val activity = activity
+        val activity = activity!!
+        val args = arguments!!
+
         nameFirst = preferences[nameFirstKey]
         cardBackgroundColor = ThemeUtils.getCardBackgroundColor(activity,
                 preferences[themeBackgroundOptionKey], preferences[themeBackgroundAlphaKey])
         actionBarShadowColor = 0xA0000000.toInt()
-        val args = arguments
         val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY) ?: run {
             activity.finish()
             return
@@ -684,6 +688,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
     @UiThread
     override fun onPrepareOptionsMenu(menu: Menu) {
+        val context = context ?: return
         val user = this.user ?: return
         val accountKey = user.account_key ?: return
         val account = this.account
@@ -768,11 +773,12 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         extras.putParcelable(EXTRA_USER, user)
         intent.putExtras(extras)
         menu.removeGroup(MENU_GROUP_USER_EXTENSION)
-        MenuUtils.addIntentToMenu(activity, menu, intent, MENU_GROUP_USER_EXTENSION)
+        MenuUtils.addIntentToMenu(context, menu, intent, MENU_GROUP_USER_EXTENSION)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val context = context
+        val context = context ?: return false
+        val fragmentManager = fragmentManager ?: return false
         val twitter = twitterWrapper
         val user = user ?: return false
         val accountKey = user.account_key ?: return false
@@ -781,7 +787,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             R.id.block -> {
                 if (userRelationship == null) return true
                 if (userRelationship.blocking) {
-                    twitter.destroyBlockAsync(accountKey, user.key)
+                    BlockPromises.getInstance(context).unblock(accountKey, user.key)
                 } else {
                     CreateUserBlockDialogFragment.show(fragmentManager, user)
                 }
@@ -891,15 +897,15 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 return true
             }
             R.id.muted_users -> {
-                IntentUtils.openMutesUsers(activity, accountKey)
+                IntentUtils.openMutesUsers(context, accountKey)
                 return true
             }
             R.id.blocked_users -> {
-                IntentUtils.openUserBlocks(activity, accountKey)
+                IntentUtils.openUserBlocks(context, accountKey)
                 return true
             }
             R.id.incoming_friendships -> {
-                IntentUtils.openIncomingFriendships(activity, accountKey)
+                IntentUtils.openIncomingFriendships(context, accountKey)
                 return true
             }
             R.id.user_mentions -> {
@@ -1091,7 +1097,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     override fun onClick(view: View) {
-        val activity = activity ?: return
+        val context = activity ?: return
+        val fragmentManager = fragmentManager ?: return
         val user = user ?: return
         val accountKey = user.account_key ?: return
         when (view.id) {
@@ -1100,19 +1107,22 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             }
             R.id.follow -> {
                 if (accountKey.maybeEquals(user.key)) {
-                    IntentUtils.openProfileEditor(getActivity(), accountKey)
+                    IntentUtils.openProfileEditor(context, accountKey)
                 } else {
-                    val userRelationship = relationship
-                    val twitter = twitterWrapper
-                    if (userRelationship == null) return
-                    if (userRelationship.blocking) {
-                        twitter.destroyBlockAsync(accountKey, user.key)
-                    } else if (userRelationship.blocked_by) {
-                        CreateUserBlockDialogFragment.show(childFragmentManager, user)
-                    } else if (userRelationship.following) {
-                        DestroyFriendshipDialogFragment.show(fragmentManager, user)
-                    } else {
-                        FriendshipPromises.getInstance(context).create(accountKey, user.key, user.screen_name)
+                    val userRelationship = relationship ?: return
+                    when {
+                        userRelationship.blocking -> {
+                            BlockPromises.getInstance(context).unblock(accountKey, user.key)
+                        }
+                        userRelationship.blocked_by -> {
+                            CreateUserBlockDialogFragment.show(childFragmentManager, user)
+                        }
+                        userRelationship.following -> {
+                            DestroyFriendshipDialogFragment.show(fragmentManager, user)
+                        }
+                        else -> {
+                            FriendshipPromises.getInstance(context).create(accountKey, user.key, user.screen_name)
+                        }
                     }
                 }
             }
@@ -1122,7 +1132,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 profileImage.type = ParcelableMedia.Type.IMAGE
                 profileImage.preview_url = user.profile_image_url
                 val media = arrayOf(profileImage)
-                IntentUtils.openMedia(activity, accountKey, media, null, false,
+                IntentUtils.openMedia(context, accountKey, media, null, false,
                         preferences[newDocumentApiKey], preferences[displaySensitiveContentsKey])
             }
             R.id.profileBanner -> {
@@ -1130,28 +1140,24 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 val profileBanner = ParcelableMediaUtils.image(url)
                 profileBanner.type = ParcelableMedia.Type.IMAGE
                 val media = arrayOf(profileBanner)
-                IntentUtils.openMedia(activity, accountKey, media, null, false,
+                IntentUtils.openMedia(context, accountKey, media, null, false,
                         preferences[newDocumentApiKey], preferences[displaySensitiveContentsKey])
             }
             R.id.listedCount -> {
-                IntentUtils.openUserLists(getActivity(), accountKey, user.key,
-                        user.screen_name)
+                IntentUtils.openUserLists(context, accountKey, user.key, user.screen_name)
             }
             R.id.groupsCount -> {
-                IntentUtils.openUserGroups(getActivity(), accountKey, user.key,
-                        user.screen_name)
+                IntentUtils.openUserGroups(context, accountKey, user.key, user.screen_name)
             }
             R.id.followersCount -> {
-                IntentUtils.openUserFollowers(getActivity(), accountKey, user.key,
-                        user.screen_name)
+                IntentUtils.openUserFollowers(context, accountKey, user.key, user.screen_name)
             }
             R.id.friendsCount -> {
-                IntentUtils.openUserFriends(getActivity(), accountKey, user.key,
-                        user.screen_name)
+                IntentUtils.openUserFriends(context, accountKey, user.key, user.screen_name)
             }
             R.id.nameContainer -> {
                 if (accountKey == user.key) return
-                IntentUtils.openProfileEditor(getActivity(), accountKey)
+                IntentUtils.openProfileEditor(context, accountKey)
             }
             R.id.url -> {
                 val uri = user.urlPreferred?.let(Uri::parse) ?: return
@@ -1169,6 +1175,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     override fun onLinkClick(link: String, orig: String?, accountKey: UserKey?,
             extraId: Long, type: Int, sensitive: Boolean,
             start: Int, end: Int): Boolean {
+        val activity = activity ?: return false
         val user = user ?: return false
         when (type) {
             TwidereLinkify.LINK_TYPE_MENTION -> {
@@ -1258,9 +1265,9 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     private fun setUiColor(color: Int) {
+        val activity = activity as? BaseActivity ?: return
         val theme = Chameleon.getOverrideTheme(activity, activity)
         uiColor = if (color != 0) color else theme.colorPrimary
-        val activity = activity as BaseActivity
         primaryColor = if (theme.isToolbarColored) {
             color
         } else {
@@ -1320,22 +1327,21 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     private fun setupUserPages() {
-        val args = arguments
-        val tabArgs = Bundle()
+        val args = arguments!!
         val user = args.getParcelable<ParcelableUser>(EXTRA_USER)
-        val userKey: UserKey?
-        if (user != null) {
-            userKey = user.account_key
-            tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, userKey)
-            tabArgs.putParcelable(EXTRA_USER_KEY, user.key)
-            tabArgs.putString(EXTRA_SCREEN_NAME, user.screen_name)
-            tabArgs.putString(EXTRA_PROFILE_URL, user.extras?.statusnet_profile_url)
-        } else {
-            userKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
-            tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, userKey)
-            tabArgs.putParcelable(EXTRA_USER_KEY, args.getParcelable<Parcelable>(EXTRA_USER_KEY))
-            tabArgs.putString(EXTRA_SCREEN_NAME, args.getString(EXTRA_SCREEN_NAME))
-            tabArgs.putString(EXTRA_PROFILE_URL, args.getString(EXTRA_PROFILE_URL))
+        val accountKey = user.account_key ?: args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
+        val tabArgs = Bundle {
+            if (user != null) {
+                this[EXTRA_ACCOUNT_KEY] = accountKey
+                this[EXTRA_USER_KEY] = user.key
+                this[EXTRA_SCREEN_NAME] = user.screen_name
+                this[EXTRA_PROFILE_URL] = user.extras?.statusnet_profile_url
+            } else {
+                this[EXTRA_ACCOUNT_KEY] = accountKey
+                this[EXTRA_USER_KEY] = accountKey
+                this[EXTRA_SCREEN_NAME] = args.getString(EXTRA_SCREEN_NAME)
+                this[EXTRA_PROFILE_URL] = args.getString(EXTRA_PROFILE_URL)
+            }
         }
 
         pagerAdapter.add(cls = UserTimelineFragment::class.java, args = Bundle(tabArgs) {
@@ -1345,7 +1351,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         pagerAdapter.add(cls = UserMediaTimelineFragment::class.java, args = Bundle(tabArgs) {
             this[EXTRA_TIMELINE_STYLE] = TimelineStyle.STAGGERED
         }, name = getString(R.string.media), type = TAB_TYPE_MEDIA, position = TAB_POSITION_MEDIA)
-        if (account?.type != AccountType.MASTODON || account?.key == userKey) {
+        if (account?.type != AccountType.MASTODON || account?.key == accountKey) {
             if (preferences[iWantMyStarsBackKey]) {
                 pagerAdapter.add(cls = FavoritesTimelineFragment::class.java, args = tabArgs,
                         name = getString(R.string.title_favorites), type = TAB_TYPE_FAVORITES,
@@ -1369,17 +1375,17 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val followButton = followContainer.follow
         followButton.setImageResource(icon)
         ViewCompat.setBackgroundTintMode(followButton, PorterDuff.Mode.SRC_ATOP)
-        ViewCompat.setBackgroundTintList(followButton, ContextCompat.getColorStateList(context, color))
+        ViewCompat.setBackgroundTintList(followButton, ContextCompat.getColorStateList(context!!, color))
         followButton.contentDescription = getString(label)
     }
 
     private fun showAddToListDialog(user: ParcelableUser) {
         val accountKey = user.account_key ?: return
-        val weakThis = toWeak()
+        val weakThis by weak(this)
         executeAfterFragmentResumed {
             ProgressDialogFragment.show(it.childFragmentManager, "get_list_progress")
         }.then {
-            val fragment = weakThis.get() ?: throw InterruptedException()
+            val context = weakThis?.context ?: throw InterruptedException()
             fun MicroBlog.getUserListOwnerMemberships(id: String): ArrayList<UserList> {
                 val result = ArrayList<UserList>()
                 var nextCursor: Long
@@ -1395,7 +1401,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 return result
             }
 
-            val microBlog = MicroBlogAPIFactory.getInstance(fragment.context, accountKey)
+            val microBlog = MicroBlogAPIFactory.getInstance(context, accountKey)
             val ownedLists = ArrayList<ParcelableUserList>()
             val listMemberships = microBlog.getUserListOwnerMemberships(user.key.id)
             val paging = Paging()
@@ -1413,12 +1419,12 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             } while (nextCursor > 0)
             return@then ownedLists.toTypedArray()
         }.alwaysUi {
-            val fragment = weakThis.get() ?: return@alwaysUi
+            val fragment = weakThis ?: return@alwaysUi
             fragment.executeAfterFragmentResumed {
                 it.childFragmentManager.dismissDialogFragment("get_list_progress")
             }
         }.successUi { result ->
-            val fragment = weakThis.get() ?: return@successUi
+            val fragment = weakThis ?: return@successUi
             fragment.executeAfterFragmentResumed { f ->
                 val df = AddRemoveUserListDialogFragment()
                 df.arguments = Bundle {
@@ -1429,9 +1435,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 df.show(f.childFragmentManager, "add_remove_list")
             }
         }.failUi {
-            val fragment = weakThis.get() ?: return@failUi
-            Toast.makeText(fragment.context, it.getErrorMessage(fragment.context),
-                    Toast.LENGTH_SHORT).show()
+            val context = weakThis?.context ?: return@failUi
+            Toast.makeText(context, it.getErrorMessage(context), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -1500,10 +1505,11 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     class AddRemoveUserListDialogFragment : BaseDialogFragment() {
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val lists = arguments.getTypedArray<ParcelableUserList>(EXTRA_USER_LISTS)
-            val userKey = arguments.getParcelable<UserKey>(EXTRA_USER_KEY)
-            val accountKey = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-            val builder = AlertDialog.Builder(context)
+            val args = arguments!!
+            val lists = args.getTypedArray<ParcelableUserList>(EXTRA_USER_LISTS)
+            val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
+            val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+            val builder = AlertDialog.Builder(context!!)
             builder.setTitle(R.string.title_add_or_remove_from_list)
             val entries = Array(lists.size) { idx ->
                 lists[idx].name
@@ -1521,11 +1527,11 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 d.applyTheme()
                 d.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
                     val checkedPositions = d.listView.checkedItemPositions
-                    val weakActivity = activity.toWeak()
+                    val weakActivity by weak(activity)
                     (activity as IBaseActivity<*>).executeAfterFragmentResumed {
                         ProgressDialogFragment.show(it.supportFragmentManager, "update_lists_progress")
                     }.then {
-                        val activity = weakActivity.get() ?: throw IllegalStateException()
+                        val activity = weakActivity ?: throw IllegalStateException()
                         val twitter = MicroBlogAPIFactory.getInstance(activity, accountKey)
                         val successfulStates = SparseBooleanArray()
                         try {
@@ -1545,7 +1551,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                             throw UpdateListsException(e, successfulStates)
                         }
                     }.alwaysUi {
-                        val activity = weakActivity.get() as? IBaseActivity<*> ?: return@alwaysUi
+                        val activity = weakActivity as? IBaseActivity<*> ?: return@alwaysUi
                         activity.executeAfterFragmentResumed { a ->
                             val manager = a.supportFragmentManager
                             val df = manager.findFragmentByTag("update_lists_progress") as? DialogFragment
@@ -1554,6 +1560,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     }.successUi {
                         dismiss()
                     }.failUi { e ->
+                        val activity = weakActivity ?: return@failUi
                         if (e is UpdateListsException) {
                             val successfulStates = e.successfulStates
                             for (i in 0 until successfulStates.size()) {
@@ -1563,7 +1570,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                                 states[pos] = checked
                             }
                         }
-                        Toast.makeText(context, e.getErrorMessage(context), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(activity, e.getErrorMessage(activity), Toast.LENGTH_SHORT).show()
                     }
                 }
                 d.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener {

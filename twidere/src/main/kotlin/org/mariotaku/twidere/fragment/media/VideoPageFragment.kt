@@ -180,7 +180,7 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         requestApplyInsets()
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         promotionService.setupBanner(adContainer, PromotionService.BannerType.MEDIA_PAUSE)
     }

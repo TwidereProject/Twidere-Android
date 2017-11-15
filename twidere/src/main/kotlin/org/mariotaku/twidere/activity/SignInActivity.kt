@@ -575,13 +575,13 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
     class SignInTypeChooserDialogFragment : BaseDialogFragment(),
             LoaderManager.LoaderCallbacks<List<CustomAPIConfig>> {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context!!)
             builder.setView(R.layout.dialog_expandable_list)
             val dialog = builder.create()
             dialog.onShow {
                 it.applyTheme()
                 val listView = it.expandableList
-                val adapter = LoginTypeAdapter(context)
+                val adapter = LoginTypeAdapter(it.context)
                 listView.setAdapter(adapter)
                 listView.setOnGroupClickListener { _, _, groupPosition, _ ->
                     val type = adapter.getGroup(groupPosition)
@@ -625,7 +625,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                     AccountType.MASTODON, AccountType.STATUSNET)
             val result = supportedAccountTypes.mapNotNullTo(ArrayList()) { type ->
                 if (type == AccountType.MASTODON) return@mapNotNullTo LoginType(type,
-                        listOf(CustomAPIConfig.mastodon(context)))
+                        listOf(CustomAPIConfig.mastodon(context!!)))
                 return@mapNotNullTo configGroup[type]?.let { list ->
                     LoginType(type, list.sortedBy { !it.isDefault })
                 }
@@ -633,9 +633,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             (listView.expandableListAdapter as LoginTypeAdapter).data = result
         }
 
-        override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<CustomAPIConfig>> {
-            return DefaultAPIConfigLoader(context)
-        }
+        override fun onCreateLoader(id: Int, args: Bundle?) = DefaultAPIConfigLoader(context!!)
 
         override fun onLoaderReset(loader: Loader<List<CustomAPIConfig>>) {
 
@@ -696,7 +694,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         var challengeType: String? = null
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context!!)
             builder.setTitle(R.string.login_verification)
             builder.setView(R.layout.dialog_login_verification_code)
             builder.positive(android.R.string.ok, this::performVerification)
@@ -755,7 +753,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
     class PasswordSignInDialogFragment : BaseDialogFragment() {
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context!!)
             builder.setView(R.layout.dialog_password_sign_in)
             builder.positive(R.string.action_sign_in, this::onPositiveButton)
             builder.setNegativeButton(android.R.string.cancel, null)

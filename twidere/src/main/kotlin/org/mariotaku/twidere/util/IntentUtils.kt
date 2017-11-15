@@ -1,6 +1,5 @@
 package org.mariotaku.twidere.util
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -381,11 +380,10 @@ object IntentUtils {
         openSearch(context, accountKey, query, QUERY_PARAM_VALUE_TWEETS)
     }
 
-    fun openUserBlocks(activity: Activity?, accountKey: UserKey) {
-        if (activity == null) return
+    fun openUserBlocks(context: Context, accountKey: UserKey) {
         val builder = UriBuilder(AUTHORITY_USER_BLOCKS)
         builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
-        activity.startActivity(builder.intent())
+        context.startActivity(builder.intent())
     }
 
     fun openUserFavorites(context: Context, accountKey: UserKey?, userKey: UserKey?,

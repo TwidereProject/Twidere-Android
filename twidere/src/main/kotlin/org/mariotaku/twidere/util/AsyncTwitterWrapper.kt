@@ -118,12 +118,6 @@ class AsyncTwitterWrapper(
         notificationManager.cancelById(Utils.getNotificationId(notificationId, accountKey))
     }
 
-    fun createBlockAsync(accountKey: UserKey, userKey: UserKey, filterEverywhere: Boolean) {
-        val task = CreateUserBlockTask(context, filterEverywhere)
-        task.setup(accountKey, userKey)
-        TaskStarter.execute(task)
-    }
-
     fun createFavoriteAsync(accountKey: UserKey, status: ParcelableStatus) {
         val task = CreateFavoriteTask(context, accountKey, status)
         TaskStarter.execute(task)
@@ -157,12 +151,6 @@ class AsyncTwitterWrapper(
 
     fun deleteUserListMembersAsync(accountKey: UserKey, listId: String, users: Array<ParcelableUser>) {
         val task = DeleteUserListMembersTask(context, accountKey, listId, users)
-        TaskStarter.execute(task)
-    }
-
-    fun destroyBlockAsync(accountKey: UserKey, userKey: UserKey) {
-        val task = DestroyUserBlockTask(context)
-        task.setup(accountKey, userKey)
         TaskStarter.execute(task)
     }
 
@@ -276,12 +264,6 @@ class AsyncTwitterWrapper(
 
     fun reportMultiSpam(accountKey: UserKey, userIds: Array<String>) {
         // TODO implementation
-    }
-
-    fun reportSpamAsync(accountKey: UserKey, userKey: UserKey) {
-        val task = ReportSpamAndBlockTask(context)
-        task.setup(accountKey, userKey)
-        TaskStarter.execute(task)
     }
 
     fun retweetStatusAsync(accountKey: UserKey, status: ParcelableStatus) {

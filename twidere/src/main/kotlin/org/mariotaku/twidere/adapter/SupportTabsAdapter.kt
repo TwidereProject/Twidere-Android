@@ -61,7 +61,7 @@ class SupportTabsAdapter(
         return this.tabs.size
     }
 
-    override fun getItemPosition(obj: Any?): Int {
+    override fun getItemPosition(obj: Any): Int {
         if (obj !is Fragment) return PagerAdapter.POSITION_NONE
         val args = obj.arguments ?: return PagerAdapter.POSITION_NONE
         return args.getInt(EXTRA_ADAPTER_POSITION, PagerAdapter.POSITION_NONE)

@@ -33,7 +33,6 @@ import kotlinx.android.synthetic.main.layout_content_fragment_common.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarOffsetListener
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.util.ContentScrollHandler.ContentListSupport
@@ -56,7 +55,7 @@ abstract class AbsContentListViewFragment<A : ListAdapter> : BaseFragment(),
         }
 
     protected open val overrideDivider: Drawable?
-        get() = ThemeUtils.getDrawableFromThemeAttribute(context, android.R.attr.listDivider)
+        get() = ThemeUtils.getDrawableFromThemeAttribute(context!!, android.R.attr.listDivider)
 
     protected val isProgressShowing: Boolean
         get() = progressContainer.visibility == View.VISIBLE
@@ -128,12 +127,12 @@ abstract class AbsContentListViewFragment<A : ListAdapter> : BaseFragment(),
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val backgroundColor = ThemeUtils.getColorBackground(context)
+        val backgroundColor = ThemeUtils.getColorBackground(context!!)
         val colorRes = TwidereColorUtils.getContrastYIQ(backgroundColor,
                 R.color.bg_refresh_progress_color_light, R.color.bg_refresh_progress_color_dark)
         swipeLayout.setOnRefreshListener(this)
         swipeLayout.setProgressBackgroundColorSchemeResource(colorRes)
-        adapter = onCreateAdapter(context, requestManager)
+        adapter = onCreateAdapter(context!!, requestManager)
         listView.setOnTouchListener { _, event ->
             if (event.actionMasked == MotionEvent.ACTION_DOWN) {
                 updateRefreshProgressOffset()

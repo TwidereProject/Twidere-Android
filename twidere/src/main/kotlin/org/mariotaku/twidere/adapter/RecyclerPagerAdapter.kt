@@ -19,13 +19,13 @@ abstract class RecyclerPagerAdapter<VH : RecyclerPagerAdapter.ViewHolder> : Page
         return holder
     }
 
-    final override fun destroyItem(container: ViewGroup, position: Int, obj: Any?) {
+    final override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {
         val holder = obj as ViewHolder
         viewHolders.remove(position)
         container.removeView(holder.itemView)
     }
 
-    final override fun getItemPosition(obj: Any?): Int {
+    final override fun getItemPosition(obj: Any): Int {
         for (i in 0 until viewHolders.size()) {
             val position = viewHolders.keyAt(i)
             val holder = viewHolders.valueAt(i)

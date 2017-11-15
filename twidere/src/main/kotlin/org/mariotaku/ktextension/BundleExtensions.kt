@@ -2,6 +2,9 @@ package org.mariotaku.ktextension
 
 import android.os.Bundle
 import android.os.Parcelable
+import java.lang.ref.WeakReference
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
 inline fun Bundle(copyFrom: Bundle? = null, action: Bundle.() -> Unit): Bundle {
     val bundle = Bundle()

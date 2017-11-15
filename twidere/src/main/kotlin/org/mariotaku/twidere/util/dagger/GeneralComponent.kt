@@ -46,6 +46,8 @@ import org.mariotaku.twidere.preference.KeyboardShortcutPreference
 import org.mariotaku.twidere.preference.PremiumEntryPreference
 import org.mariotaku.twidere.preference.PremiumEntryPreferenceCategory
 import org.mariotaku.twidere.preference.sync.SyncItemPreference
+import org.mariotaku.twidere.promise.BlockPromises
+import org.mariotaku.twidere.promise.FriendshipPromises
 import org.mariotaku.twidere.promise.MessagePromises
 import org.mariotaku.twidere.promise.StatusPromises
 import org.mariotaku.twidere.provider.CacheProvider
@@ -158,6 +160,10 @@ interface GeneralComponent {
     fun inject(promises: MessagePromises)
 
     fun inject(promises: StatusPromises)
+
+    fun inject(promises: FriendshipPromises)
+
+    fun inject(promises: BlockPromises)
 
     companion object : SingletonHolder<GeneralComponent, Context>(creation@ { context ->
         val application = context.applicationContext as Application

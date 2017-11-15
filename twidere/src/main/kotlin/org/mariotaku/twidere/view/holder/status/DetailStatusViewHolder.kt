@@ -383,8 +383,7 @@ class DetailStatusViewHolder(
                 }
             }
             itemView.profileContainer -> {
-                val activity = fragment.activity
-                IntentUtils.openUserProfile(activity, status.account_key, status.user_key,
+                IntentUtils.openUserProfile(adapter.context, status.account_key, status.user_key,
                         status.user_screen_name, status.extras?.user_statusnet_profile_url,
                         preferences[newDocumentApiKey], null)
             }
@@ -418,10 +417,10 @@ class DetailStatusViewHolder(
         if (layoutPosition < 0) return false
         val fragment = adapter.fragment
         val status = adapter.getStatus(layoutPosition)
+        val activity = fragment.activity!!
         val preferences = fragment.preferences
         val twitter = fragment.twitterWrapper
         val manager = fragment.userColorNameManager
-        val activity = fragment.activity
         return MenuUtils.handleStatusClick(activity, fragment, fragment.childFragmentManager,
                 preferences, manager, twitter, status, item)
     }
@@ -435,7 +434,7 @@ class DetailStatusViewHolder(
     private fun initViews() {
         itemView.menuBar.setOnMenuItemClickListener(this)
         val fragment = adapter.fragment
-        val activity = fragment.activity
+        val activity = fragment.activity!!
         val inflater = activity.menuInflater
         val menu = itemView.menuBar.menu
         inflater.inflate(R.menu.menu_detail_status, menu)

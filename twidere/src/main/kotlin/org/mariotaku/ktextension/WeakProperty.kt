@@ -30,9 +30,7 @@ class WeakDelegate<T>(obj: T?) {
         weakRef = if (obj != null) WeakReference(obj) else null
     }
 
-    operator fun getValue(thisRef: Any?, property: KProperty<*>): T? {
-        return weakRef?.get()
-    }
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): T? = weakRef?.get()
 
     operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T?) {
         weakRef = if (value != null) WeakReference(value) else null

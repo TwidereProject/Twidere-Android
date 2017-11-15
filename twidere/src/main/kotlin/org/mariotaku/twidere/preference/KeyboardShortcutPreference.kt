@@ -120,7 +120,7 @@ class KeyboardShortcutPreference(context: Context, attrs: AttributeSet? = null) 
             keySpec = spec
             keysLabel.text = spec.toKeyString()
             val oldAction = handler.findAction(spec)
-            val context = context
+            val context = context!!
             if (action == oldAction || TextUtils.isEmpty(oldAction)) {
                 conflictLabel.visibility = View.GONE
                 (dialog as? AlertDialog)?.getButton(DialogInterface.BUTTON_POSITIVE)?.setText(android.R.string.ok)

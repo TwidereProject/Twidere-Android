@@ -24,11 +24,11 @@ import android.support.v4.util.ArraySet
 import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.extension.bulkInsert
+import org.mariotaku.twidere.extension.update
 import org.mariotaku.twidere.model.ParcelableRelationship
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships
-import org.mariotaku.twidere.util.updateItems
 
 object ParcelableRelationshipUtils {
 
@@ -72,9 +72,9 @@ object ParcelableRelationshipUtils {
         relationships.forEach {
             if (it._id > 0) {
                 val where = Expression.equals(CachedRelationships._ID, it._id).sql
-                cr.updateItems(CachedRelationships.CONTENT_URI, CachedRelationships.COLUMNS, where, null,
+                cr.update(CachedRelationships.CONTENT_URI, CachedRelationships.COLUMNS, where, null,
                         ParcelableRelationship::class.java) {
-                    return@updateItems it
+                    return@update it
                 }
             } else {
                 insertItems.add(it)

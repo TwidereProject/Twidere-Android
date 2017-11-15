@@ -65,9 +65,9 @@ abstract class AbsFriendshipOperationTask(
     }
 
     @Throws(MicroBlogException::class)
-    protected abstract fun perform(details: AccountDetails, args: Arguments): ParcelableUser
+    protected abstract fun perform(account: AccountDetails, args: Arguments): ParcelableUser
 
-    protected abstract fun succeededWorker(details: AccountDetails, args: Arguments,
+    protected abstract fun succeededWorker(account: AccountDetails, args: Arguments,
             user: ParcelableUser)
 
     protected abstract fun showSucceededMessage(params: Arguments, user: ParcelableUser)

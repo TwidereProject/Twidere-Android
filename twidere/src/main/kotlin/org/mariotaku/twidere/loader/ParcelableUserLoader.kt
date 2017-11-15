@@ -195,9 +195,9 @@ class ParcelableUserLoader(
         forceLoad()
     }
 
-    override fun deliverResult(data: SingleResponse<ParcelableUser>) {
+    override fun deliverResult(data: SingleResponse<ParcelableUser>?) {
         super.deliverResult(data)
-        val user = data.data ?: return
+        val user = data?.data ?: return
         if (user.is_cache) return
         val account = data.extras.getParcelable<AccountDetails>(EXTRA_ACCOUNT)
         if (account != null) {

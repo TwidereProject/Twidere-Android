@@ -41,6 +41,7 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.Utils
+import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 import javax.inject.Inject
 
@@ -52,6 +53,10 @@ class FriendshipPromises private constructor(val application: Application) {
     lateinit var preferences: SharedPreferences
     @Inject
     lateinit var manager: UserColorNameManager
+
+    init {
+        GeneralComponent.get(application).inject(this)
+    }
 
     fun accept(accountKey: UserKey, userKey: UserKey): Promise<ParcelableUser, Exception> = accountTask(application, accountKey) { details ->
         when (details.type) {
@@ -143,7 +148,7 @@ class FriendshipPromises private constructor(val application: Application) {
                     manager.getDisplayName(user, nameFirst))
         }
         Toast.makeText(application, message, Toast.LENGTH_SHORT).show()
-    }
+    }.toastOnFail(application)
 
     fun destroy(accountKey: UserKey, userKey: UserKey): Promise<ParcelableUser, Exception> = accountTask(application, accountKey) { account ->
         when (account.type) {
@@ -178,7 +183,7 @@ class FriendshipPromises private constructor(val application: Application) {
         val message = application.getString(R.string.unfollowed_user,
                 manager.getDisplayName(user, nameFirst))
         Toast.makeText(application, message, Toast.LENGTH_SHORT).show()
-    }
+    }.toastOnFail(application)
 
     companion object : ApplicationContextSingletonHolder<FriendshipPromises>(::FriendshipPromises)
 }

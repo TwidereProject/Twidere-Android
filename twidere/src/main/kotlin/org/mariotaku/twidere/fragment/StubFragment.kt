@@ -35,7 +35,7 @@ class StubFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        text.text = arguments.get(EXTRA_TAB_POSITION).toString()
+        text.text = arguments?.get(EXTRA_TAB_POSITION).toString()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

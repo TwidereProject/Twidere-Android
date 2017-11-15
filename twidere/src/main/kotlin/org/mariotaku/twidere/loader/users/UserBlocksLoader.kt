@@ -70,7 +70,7 @@ class UserBlocksLoader(
         }
     }
 
-    override fun onLoadInBackground(): List<ParcelableUser> {
+    override fun onLoadInBackground(): List<ParcelableUser>? {
         filteredUsers = context.contentResolver.getFilteredUserKeys(FilterScope.ALL)
         return super.onLoadInBackground()
     }
