@@ -34,6 +34,6 @@ class AccountStreamingSettingsFragment : BaseAccountPreferenceFragment() {
 
     override fun onSwitchPreferenceChanged(isChecked: Boolean) {
         super.onSwitchPreferenceChanged(isChecked)
-        StreamingService.startOrStopService(context)
+        StreamingService.startOrStopService(context!!)
     }
 }

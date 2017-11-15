@@ -2,9 +2,6 @@ package org.mariotaku.ktextension
 
 import android.os.Bundle
 import android.os.Parcelable
-import java.lang.ref.WeakReference
-import kotlin.properties.ReadWriteProperty
-import kotlin.reflect.KProperty
 
 inline fun Bundle(copyFrom: Bundle? = null, action: Bundle.() -> Unit): Bundle {
     val bundle = Bundle()
@@ -47,12 +44,12 @@ operator fun Bundle.set(key: String, value: Array<String>?) {
     return putStringArray(key, value)
 }
 
-inline fun <reified T: Parcelable> Bundle.getTypedArray(key: String): Array<T> {
+inline fun <reified T : Parcelable> Bundle.getTypedArray(key: String): Array<T> {
     val parcelable = getParcelableArray(key)
     return Array(parcelable.size) { parcelable[it] as T }
 }
 
-inline fun <reified T: Parcelable> Bundle.getNullableTypedArray(key: String): Array<T>? {
+inline fun <reified T : Parcelable> Bundle.getNullableTypedArray(key: String): Array<T>? {
     val parcelable = getParcelableArray(key) ?: return null
     return Array(parcelable.size) { parcelable[it] as T }
 }

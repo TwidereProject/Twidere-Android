@@ -66,6 +66,7 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
         linkHandlerTitle = getString(R.string.title_accounts)
+        val context = context!!
         val am = AccountManager.get(context)
         adapter = AccountDetailsAdapter(context, requestManager).apply {
             sortEnabled = true
@@ -107,8 +108,9 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
                 val details = adapter.findItem(accountKey) ?: return
                 details.color = color
                 details.account.setColor(am, color)
-                val resolver = context.contentResolver
+                val weakThis by weak(this)
                 task {
+                    val resolver = weakThis?.context?.contentResolver ?: throw InterruptedException()
                     updateContentsColor(resolver, details)
                 }
                 adapter.notifyDataSetChanged()
@@ -158,12 +160,12 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
 
     override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         val account = adapter.getItem(position)
-        IntentUtils.openUserProfile(context, account.user, preferences[newDocumentApiKey],
+        IntentUtils.openUserProfile(context!!, account.user, preferences[newDocumentApiKey],
                 null)
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<AccountDetails>> {
-        return AccountDetailsLoader(context)
+        return AccountDetailsLoader(context!!)
     }
 
     override fun onLoaderReset(loader: Loader<List<AccountDetails>>) {
@@ -201,8 +203,7 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
         showProgressDialog("remove_account") and (task {
             return@task account.getAccountKey(am)
         } and am.removeAccount(account).deadline(5, TimeUnit.SECONDS)).then { (key, _) ->
-            val f = weakThis ?: throw InterruptedException()
-            val context = f.context
+            val context = weakThis?.context ?: throw InterruptedException()
             val resolver = context.contentResolver
             resolver.deleteAccountData(key)
             AccountPreferences.getSharedPreferencesForAccount(context, key).edit().clear().apply()
@@ -232,7 +233,7 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
     class AccountDeletionDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
 
         override fun onClick(dialog: DialogInterface, which: Int) {
-            val account: Account = arguments.getParcelable(EXTRA_ACCOUNT)
+            val account: Account = arguments!!.getParcelable(EXTRA_ACCOUNT)
             when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {
                     (parentFragment as AccountsManagerFragment).performRemoveAccount(account)
@@ -242,7 +243,7 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
 
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val context = context
+            val context = context!!
             val builder = AlertDialog.Builder(context)
             builder.setNegativeButton(android.R.string.cancel, null)
             builder.setPositiveButton(android.R.string.ok, this)

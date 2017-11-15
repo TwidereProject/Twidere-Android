@@ -45,7 +45,7 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val activity = activity
+        val activity = activity!!
         pagerAdapter = SupportTabsAdapter(activity, childFragmentManager, null)
         viewPager.adapter = pagerAdapter
         viewPager.offscreenPageLimit = 2
@@ -148,7 +148,7 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
         if (height != 0) {
             insets.top = height
         } else {
-            insets.top = ThemeUtils.getActionBarHeight(context)
+            insets.top = ThemeUtils.getActionBarHeight(context!!)
         }
         return true
     }
