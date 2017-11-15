@@ -24,9 +24,9 @@ import dagger.Module
 import dagger.Provides
 import org.mariotaku.twidere.util.MapFragmentFactory
 import org.mariotaku.twidere.util.OSMMapFragmentFactory
-import org.mariotaku.twidere.util.SingletonHolder
 import org.mariotaku.twidere.util.gifshare.GifShareProvider
 import org.mariotaku.twidere.util.gifshare.NullGifShareProvider
+import org.mariotaku.twidere.util.lang.SingletonHolder
 import org.mariotaku.twidere.util.premium.DummyExtraFeaturesService
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.promotion.DummyPromotionService
