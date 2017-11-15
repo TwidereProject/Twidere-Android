@@ -1544,7 +1544,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             val (replyStartIndex, replyText, _, excludedMentions, replyToOriginalUser) =
                     replyTextAndMentions
             if (replyText.isEmpty() && media.isEmpty()) throw NoContentException()
-            val totalLength = StatusTextValidator.calculateLength(accounts, summary, text)
+            val totalLength = StatusTextValidator.calculateLength(accounts, summary, replyText)
             if (checkLength && !statusShortenerUsed && maxLength > 0 && totalLength > maxLength) {
                 val summaryLength = StatusTextValidator.calculateSummaryLength(accounts, summary)
                 if (summary != null && summaryLength > maxLength) {
