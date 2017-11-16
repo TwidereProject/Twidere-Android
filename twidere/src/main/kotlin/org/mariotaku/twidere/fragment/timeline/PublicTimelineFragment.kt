@@ -48,7 +48,7 @@ class PublicTimelineFragment : AbsTimelineFragment() {
     }
 
     override fun getStatuses(param: ContentRefreshParam): Boolean {
-        val task = GetPublicTimelineTask(context)
+        val task = GetPublicTimelineTask(context!!)
         task.params = param
         TaskStarter.execute(task)
         return true
@@ -57,7 +57,7 @@ class PublicTimelineFragment : AbsTimelineFragment() {
     override fun onCreateStatusesFetcher() = PublicTimelineFetcher()
 
     override fun getExtraSelection(): Pair<Expression, Array<String>?>? {
-        val extras = arguments.getParcelable<HomeTabExtras>(EXTRA_EXTRAS) ?: return null
+        val extras = arguments!!.getParcelable<HomeTabExtras>(EXTRA_EXTRAS) ?: return null
         val expressions = ArrayList<Expression>()
         val expressionArgs = ArrayList<String>()
         extras.applyToSelection(expressions, expressionArgs)

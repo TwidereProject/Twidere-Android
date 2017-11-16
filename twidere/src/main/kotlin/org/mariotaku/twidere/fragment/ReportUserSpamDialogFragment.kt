@@ -45,7 +45,7 @@ class ReportUserSpamDialogFragment : AbsUserMuteBlockDialogFragment() {
 
     override fun performUserAction(user: ParcelableUser, filterEverywhere: Boolean) {
         val accountKey = user.account_key ?: return
-        BlockPromises.getInstance(context).report(accountKey, user.key, filterEverywhere)
+        BlockPromises.getInstance(context!!).report(accountKey, user.key, filterEverywhere)
     }
 
     companion object {

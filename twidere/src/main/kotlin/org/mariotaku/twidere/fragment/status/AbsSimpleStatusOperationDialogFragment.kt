@@ -23,9 +23,9 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_STATUS
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.onShow
+import org.mariotaku.twidere.extension.status
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.ParcelableStatus
 
@@ -35,7 +35,7 @@ abstract class AbsSimpleStatusOperationDialogFragment : BaseDialogFragment(), Di
     protected abstract val message: String
 
     protected val status: ParcelableStatus
-        get() = arguments.getParcelable<ParcelableStatus>(EXTRA_STATUS)
+        get() = arguments!!.status!!
 
     override final fun onClick(dialog: DialogInterface, which: Int) {
         when (which) {
@@ -46,7 +46,7 @@ abstract class AbsSimpleStatusOperationDialogFragment : BaseDialogFragment(), Di
     }
 
     override final fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context)
+        val builder = AlertDialog.Builder(context!!)
         builder.setTitle(title)
         builder.setMessage(message)
         builder.setPositiveButton(android.R.string.ok, this)

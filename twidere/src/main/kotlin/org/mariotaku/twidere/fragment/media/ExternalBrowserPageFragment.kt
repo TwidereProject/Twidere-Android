@@ -44,7 +44,7 @@ class ExternalBrowserPageFragment : MediaViewerFragment() {
         val webSettings = webView.settings
         webSettings.javaScriptEnabled = true
         webSettings.loadsImagesAutomatically = true
-        val media = arguments.getParcelable<ParcelableMedia>(EXTRA_MEDIA) ?: throw NullPointerException()
+        val media = arguments!!.getParcelable<ParcelableMedia>(EXTRA_MEDIA) ?: throw NullPointerException()
         webView.loadUrl(if (TextUtils.isEmpty(media.media_url)) media.url else media.media_url)
         webViewContainer.setAspectRatioSource(VideoPageFragment.MediaAspectRatioSource(media, this))
     }

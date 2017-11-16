@@ -22,10 +22,6 @@ import org.mariotaku.twidere.fragment.BasePreferenceFragment
 import org.mariotaku.twidere.util.TaskServiceRunner
 import org.mariotaku.twidere.util.sync.DataSyncProvider
 
-/**
- * Created by mariotaku on 2017/1/3.
- */
-
 class SyncSettingsFragment : BasePreferenceFragment() {
 
     private var syncProvider: DataSyncProvider? = null
@@ -87,16 +83,16 @@ class SyncSettingsFragment : BasePreferenceFragment() {
             val f = weakThis.get() ?: return@alwaysUi
             f.dismissProgressDialog("cleanup_sync_cache")
             f.kPreferences[dataSyncProviderInfoKey] = null
-            DataSyncProvider.Factory.notifyUpdate(f.context)
+            DataSyncProvider.Factory.notifyUpdate(f.context!!)
             f.activity?.finish()
         }
     }
 
     class DisconnectSyncConfirmDialogFragment : BaseDialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context!!)
             val providerInfo = kPreferences[dataSyncProviderInfoKey]!!
-            val entry = DataSyncProvider.Factory.getProviderEntry(context, providerInfo.type)!!
+            val entry = DataSyncProvider.Factory.getProviderEntry(context!!, providerInfo.type)!!
             builder.setMessage(getString(R.string.message_sync_disconnect_from_name_confirm, entry.name))
             builder.setPositiveButton(R.string.action_sync_disconnect) { _, _ ->
                 (parentFragment as SyncSettingsFragment).cleanupAndDisconnect()

@@ -44,6 +44,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.SelectableUsersAdapter
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.nameFirstKey
+import org.mariotaku.twidere.extension.accountKey
 import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.queryOne
@@ -67,7 +68,7 @@ import java.lang.ref.WeakReference
  */
 class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<ParcelableUser>?> {
 
-    private val accountKey by lazy { arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY) }
+    private val accountKey by lazy { arguments!!.accountKey!! }
     private val account by lazy {
         AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)
     }
@@ -100,7 +101,7 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
         linkHandlerTitle = getString(R.string.title_direct_messages_conversation_new)
-        usersAdapter = SelectableUsersAdapter(context, requestManager)
+        usersAdapter = SelectableUsersAdapter(context!!, requestManager)
         recyclerView.adapter = usersAdapter
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
@@ -190,11 +191,11 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
         }
 
         if (savedInstanceState == null) {
-            val users = arguments.getNullableTypedArray<ParcelableUser>(EXTRA_USERS)
+            val users = arguments!!.getNullableTypedArray<ParcelableUser>(EXTRA_USERS)
             if (users != null && users.isNotEmpty()) {
                 selectedRecipients = users.toList()
                 editParticipants.setSelection(editParticipants.length())
-                if (arguments.getBoolean(EXTRA_OPEN_CONVERSATION)) {
+                if (arguments!!.getBoolean(EXTRA_OPEN_CONVERSATION)) {
                     createOrOpenConversation()
                 }
             }
@@ -209,7 +210,7 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
         val query = args.getString(EXTRA_QUERY)
         val fromCache = args.getBoolean(EXTRA_FROM_CACHE)
         val fromUser = args.getBoolean(EXTRA_FROM_USER)
-        return CacheUserSearchLoader(context, accountKey, query, !fromCache, true, fromUser)
+        return CacheUserSearchLoader(context!!, accountKey, query, !fromCache, true, fromUser)
     }
 
     override fun onLoaderReset(loader: Loader<List<ParcelableUser>?>) {
@@ -240,10 +241,11 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
     }
 
     private fun createOrOpenConversation() {
+        val activity = this.activity ?: return
         val account = this.account ?: return
         val selected = this.selectedRecipients
         if (selected.isEmpty()) return
-        val maxParticipants = if (account.isOfficial(context)) {
+        val maxParticipants = if (account.isOfficial(activity)) {
             defaultFeatures.twitterDirectMessageMaxParticipants
         } else {
             1
@@ -267,7 +269,7 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
 
         if (conversation.conversation_type == ConversationType.ONE_TO_ONE) {
             val participantKeys = conversation.participants.map(ParcelableUser::key)
-            val existingConversation = findMessageConversation(context, accountKey, participantKeys)
+            val existingConversation = findMessageConversation(activity, accountKey, participantKeys)
             if (existingConversation != null) {
                 activity.startActivity(IntentUtils.messageConversation(accountKey, existingConversation.id))
                 activity.finish()
@@ -276,7 +278,7 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
         }
 
         val values = ObjectCursor.valuesCreatorFrom(ParcelableMessageConversation::class.java).create(conversation)
-        context.contentResolver.insert(Conversations.CONTENT_URI, values)
+        activity.contentResolver.insert(Conversations.CONTENT_URI, values)
         activity.startActivity(IntentUtils.messageConversation(accountKey, conversation.id))
         activity.finish()
     }

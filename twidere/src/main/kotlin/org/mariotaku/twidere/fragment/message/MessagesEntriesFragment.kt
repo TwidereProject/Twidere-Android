@@ -74,7 +74,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
         IFloatingActionButtonFragment {
 
     private val accountKeys: Array<UserKey> by lazy {
-        Utils.getAccountKeys(context, arguments) ?: DataStoreUtils.getActivatedAccountKeys(context)
+        Utils.getAccountKeys(context!!, arguments) ?: DataStoreUtils.getActivatedAccountKeys(context!!)
     }
 
     private val errorInfoKey: String = ErrorInfoStore.KEY_DIRECT_MESSAGES
@@ -158,7 +158,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
 
     override fun triggerRefresh(): Boolean {
         super.triggerRefresh()
-        twitterWrapper.getMessagesAsync(object : GetMessagesTask.RefreshNewParam(context) {
+        twitterWrapper.getMessagesAsync(object : GetMessagesTask.RefreshNewParam(context!!) {
             override val accountKeys: Array<UserKey> = this@MessagesEntriesFragment.accountKeys
         })
         return true
@@ -169,14 +169,14 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
             return
         }
         setLoadMoreIndicatorPosition(LoadMorePosition.END)
-        twitterWrapper.getMessagesAsync(object : GetMessagesTask.LoadMoreEntriesParam(context) {
+        twitterWrapper.getMessagesAsync(object : GetMessagesTask.LoadMoreEntriesParam(context!!) {
             override val accountKeys: Array<UserKey> = this@MessagesEntriesFragment.accountKeys
         })
     }
 
     override fun onConversationClick(position: Int) {
         val conversation = adapter.getConversation(position)
-        IntentUtils.openMessageConversation(context, conversation.account_key, conversation.id)
+        IntentUtils.openMessageConversation(context!!, conversation.account_key, conversation.id)
     }
 
     override fun onConversationLongClick(position: Int): Boolean {
@@ -188,7 +188,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
     override fun onProfileImageClick(position: Int) {
         val conversation = adapter.getConversation(position)
         val user = conversation.user ?: return
-        IntentUtils.openUserProfile(context, user, preferences[newDocumentApiKey])
+        IntentUtils.openUserProfile(context!!, user, preferences[newDocumentApiKey])
     }
 
     override fun getActionInfo(tag: String): ActionInfo? {
@@ -214,7 +214,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
         val conversation = adapter.getConversation(info.position)
         val inflater = MenuInflater(context)
         inflater.inflate(R.menu.context_message_entry, menu)
-        menu.setHeaderTitle(conversation.getTitle(context, userColorNameManager,
+        menu.setHeaderTitle(conversation.getTitle(context!!, userColorNameManager,
                 preferences[nameFirstKey]).first)
     }
 
@@ -225,7 +225,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
             R.id.mark_read -> {
                 val conversation = adapter.getConversation(menuInfo.position)
                 // TODO: Promise progress
-                MessagePromises.getInstance(context).markRead(conversation.account_key, conversation.id)
+                MessagePromises.getInstance(context!!).markRead(conversation.account_key, conversation.id)
                 return true
             }
         }
@@ -244,7 +244,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
         if (adapter.itemCount > 0) {
             showContent()
         } else if (accountKeys.isNotEmpty()) {
-            val errorInfo = ErrorInfoStore.getErrorInfo(context,
+            val errorInfo = ErrorInfoStore.getErrorInfo(context!!,
                     errorInfoStore[errorInfoKey, accountKeys[0]])
             if (errorInfo != null) {
                 showEmpty(errorInfo.icon, errorInfo.message)

@@ -53,11 +53,11 @@ class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), L
         AdapterView.OnItemClickListener, IFloatingActionButtonFragment {
 
     private val tabExtras: TrendsTabExtras?
-        get() = arguments.getParcelable(EXTRA_EXTRAS)
+        get() = arguments!!.getParcelable(EXTRA_EXTRAS)
 
     private val accountKey: UserKey? get() {
-        return Utils.getAccountKeys(context, arguments)?.firstOrNull()
-                ?: Utils.getDefaultAccountKey(context)
+        return Utils.getAccountKeys(context!!, arguments)?.firstOrNull()
+                ?: Utils.getDefaultAccountKey(context!!)
     }
 
     private val woeId: Int get() {
@@ -73,7 +73,7 @@ class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), L
     }
 
     override fun onCreateAdapter(context: Context, requestManager: RequestManager): TrendsAdapter {
-        return TrendsAdapter(activity)
+        return TrendsAdapter(activity!!)
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
@@ -81,7 +81,7 @@ class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), L
         val loaderWhere = Expression.and(Expression.equalsArgs(CachedTrends.ACCOUNT_KEY),
                 Expression.equalsArgs(CachedTrends.WOEID)).sql
         val loaderWhereArgs = arrayOf(accountKey?.toString().orEmpty(), woeId.toString())
-        return CursorLoader(activity, uri, CachedTrends.COLUMNS, loaderWhere, loaderWhereArgs, CachedTrends.TREND_ORDER)
+        return CursorLoader(activity!!, uri, CachedTrends.COLUMNS, loaderWhere, loaderWhereArgs, CachedTrends.TREND_ORDER)
     }
 
     override fun onItemClick(view: AdapterView<*>, child: View, position: Int, id: Long) {
@@ -94,7 +94,7 @@ class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), L
 
         }
         if (trend == null) return
-        openTweetSearch(activity, accountKey, trend)
+        openTweetSearch(activity!!, accountKey, trend)
     }
 
     override fun onLoaderReset(loader: Loader<Cursor>) {

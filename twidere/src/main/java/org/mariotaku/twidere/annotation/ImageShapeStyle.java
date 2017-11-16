@@ -24,12 +24,10 @@ import android.support.annotation.IntDef;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/**
- * Created by mariotaku on 2017/3/2.
- */
-@IntDef({ImageShapeStyle.SHAPE_CIRCLE, ImageShapeStyle.SHAPE_RECTANGLE})
+@IntDef({ImageShapeStyle.SHAPE_NONE, ImageShapeStyle.SHAPE_CIRCLE, ImageShapeStyle.SHAPE_RECTANGLE})
 @Retention(RetentionPolicy.SOURCE)
 public @interface ImageShapeStyle {
+    int SHAPE_NONE = 0x0;
     int SHAPE_CIRCLE = 0x1;
     int SHAPE_RECTANGLE = 0x2;
 }

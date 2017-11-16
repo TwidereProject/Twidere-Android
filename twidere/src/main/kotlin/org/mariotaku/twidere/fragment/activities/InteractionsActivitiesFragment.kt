@@ -45,7 +45,7 @@ class InteractionsActivitiesFragment : AbsActivitiesFragment() {
     }
 
     override fun onCreateCursorObjectProcessor(): CursorObjectLivePagedListProvider.CursorObjectProcessor<ParcelableActivity> {
-        val extras: InteractionsTabExtras? = arguments.getParcelable(EXTRA_EXTRAS)
+        val extras: InteractionsTabExtras? = arguments!!.getParcelable(EXTRA_EXTRAS)
         var followingOnly = false
         var mentionsOnly = false
         if (extras != null) {

@@ -24,25 +24,22 @@ import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_STATUS
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.model.referencedUsers
 import org.mariotaku.twidere.extension.onShow
+import org.mariotaku.twidere.extension.status
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.CreateUserMuteDialogFragment
 import org.mariotaku.twidere.model.ParcelableStatus
 
-/**
- * Created by mariotaku on 2017/2/28.
- */
-
 class MuteStatusUsersDialogFragment : BaseDialogFragment() {
 
-    private val status: ParcelableStatus get() = arguments.getParcelable(EXTRA_STATUS)
+    private val status: ParcelableStatus
+        get() = arguments!!.status!!
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context)
+        val builder = AlertDialog.Builder(context!!)
         val referencedUsers = status.referencedUsers
         val nameFirst = preferences[nameFirstKey]
         val displayNames = referencedUsers.map {
@@ -50,7 +47,7 @@ class MuteStatusUsersDialogFragment : BaseDialogFragment() {
         }.toTypedArray()
         builder.setTitle(R.string.action_status_mute_users)
         builder.setItems(displayNames) { _, which ->
-            CreateUserMuteDialogFragment.show(fragmentManager, referencedUsers[which])
+            CreateUserMuteDialogFragment.show(fragmentManager!!, referencedUsers[which])
         }
         val dialog = builder.create()
         dialog.onShow { it.applyTheme() }

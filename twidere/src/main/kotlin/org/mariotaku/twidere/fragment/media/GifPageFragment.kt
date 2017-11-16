@@ -29,9 +29,9 @@ import org.mariotaku.mediaviewer.library.CacheDownloadLoader
 import org.mariotaku.mediaviewer.library.CacheDownloadMediaViewerFragment
 import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewerFragment
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.TwidereConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.TwidereConstants.EXTRA_MEDIA
 import org.mariotaku.twidere.activity.MediaViewerActivity
+import org.mariotaku.twidere.extension.accountKey
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.UserKey
 import pl.droidsonroids.gif.InputSource
@@ -39,10 +39,10 @@ import pl.droidsonroids.gif.InputSource
 class GifPageFragment : CacheDownloadMediaViewerFragment() {
 
     private val media: ParcelableMedia
-        get() = arguments.getParcelable(EXTRA_MEDIA)
+        get() = arguments!!.getParcelable(EXTRA_MEDIA)
 
     private val accountKey: UserKey
-        get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)
+        get() = arguments!!.accountKey!!
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -51,7 +51,7 @@ class GifPageFragment : CacheDownloadMediaViewerFragment() {
     }
 
     override fun getDownloadUri(): Uri? {
-        return arguments.getParcelable(SubsampleImageViewerFragment.EXTRA_MEDIA_URI)
+        return arguments!!.getParcelable(SubsampleImageViewerFragment.EXTRA_MEDIA_URI)
     }
 
     override fun getDownloadExtra(): Any? {

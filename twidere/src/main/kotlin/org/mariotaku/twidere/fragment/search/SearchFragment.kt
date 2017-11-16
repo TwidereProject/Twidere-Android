@@ -41,9 +41,11 @@ import org.mariotaku.twidere.activity.QuickSearchBarActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarOffsetListener
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.accountKey
 import org.mariotaku.twidere.extension.linkHandlerSubtitle
 import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.model.getAccountType
+import org.mariotaku.twidere.extension.query
 import org.mariotaku.twidere.fragment.AbsToolbarTabPagesFragment
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowInsetsCallback
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
@@ -65,12 +67,12 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface,
         OnPageChangeListener, LinkHandlerActivity.HideUiOnScroll {
 
     val accountKey: UserKey
-        get() = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+        get() = arguments!!.accountKey!!
 
     val query: String
-        get() = arguments.getString(EXTRA_QUERY)
+        get() = arguments!!.query!!
 
-    val composePrefix: String
+    private val composePrefix: String
         get() = when {
             query.startsWith("@") || query.startsWith("\uff20") -> query
             query.startsWith("#") || query.startsWith("\uff03") -> query
@@ -89,21 +91,21 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface,
 
         linkHandlerTitle = getString(R.string.title_search)
         linkHandlerSubtitle = query
+        val activity = this.activity!!
 
         if (savedInstanceState == null && !TextUtils.isEmpty(query)) {
-            val suggestions = SearchRecentSuggestions(activity,
-                    RecentSearchProvider.AUTHORITY, RecentSearchProvider.MODE)
+            val suggestions = SearchRecentSuggestions(activity, RecentSearchProvider.AUTHORITY,
+                    RecentSearchProvider.MODE)
             suggestions.saveRecentQuery(query, null)
             val values = ContentValues()
             values.put(SearchHistory.QUERY, query)
-            context.contentResolver.insert(SearchHistory.CONTENT_URI, values)
+            activity.contentResolver.insert(SearchHistory.CONTENT_URI, values)
             Analyzer.log(Search(query, accountType))
         }
 
-        val activity = this.activity
         if (activity is AppCompatActivity) {
             val actionBar = activity.supportActionBar
-            val theme = Chameleon.getOverrideTheme(context, activity)
+            val theme = Chameleon.getOverrideTheme(activity, activity)
             if (actionBar != null) {
                 actionBar.setCustomView(R.layout.layout_actionbar_search)
                 actionBar.setDisplayShowTitleEnabled(false)
@@ -163,9 +165,7 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface,
         return super.onOptionsItemSelected(item)
     }
 
-    override fun triggerRefresh(position: Int): Boolean {
-        return false
-    }
+    override fun triggerRefresh(position: Int) = false
 
     override fun addTabs(adapter: SupportTabsAdapter) {
         when (accountType) {

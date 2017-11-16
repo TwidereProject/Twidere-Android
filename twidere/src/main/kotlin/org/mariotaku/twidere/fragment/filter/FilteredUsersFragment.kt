@@ -109,7 +109,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor?> {
-        return CursorLoader(activity, contentUri, contentColumns, null, null, sortOrder)
+        return CursorLoader(activity!!, contentUri, contentColumns, null, null, sortOrder)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -190,9 +190,9 @@ class FilteredUsersFragment : BaseFiltersFragment() {
             return@mapNotNull (adapter as FilterUsersListAdapter).getUserKeyString(positions.keyAt(it))
         }
         super.performDeletion()
-        ContentResolverUtils.bulkDelete(context.contentResolver, Filters.Keywords.CONTENT_URI,
+        ContentResolverUtils.bulkDelete(context!!.contentResolver, Filters.Keywords.CONTENT_URI,
                 Filters.USER_KEY, false, keys, null, null)
-        ContentResolverUtils.bulkDelete(context.contentResolver, Filters.Links.CONTENT_URI,
+        ContentResolverUtils.bulkDelete(context!!.contentResolver, Filters.Links.CONTENT_URI,
                 Filters.USER_KEY, false, keys, null, null)
     }
 
@@ -215,15 +215,15 @@ class FilteredUsersFragment : BaseFiltersFragment() {
     }
 
     private fun exportToMutedUsers(accountKey: UserKey, items: Array<UserKey>) {
-        val weakThis = this.toWeak()
+        val weakThis by weak(this)
         showProgressDialog("export_to_muted").then {
-            val fragment = weakThis.get() ?: throw InterruptedException()
-            val am = AccountManager.get(fragment.context)
+            val context = weakThis?.context ?: throw InterruptedException()
+            val am = AccountManager.get(context)
             val account = AccountUtils.getAccountDetails(am, accountKey, true) ?:
                     throw AccountNotFoundException()
-            CreateUserMuteTask.muteUsers(fragment.context, account, items)
+            CreateUserMuteTask.muteUsers(context, account, items)
         }.alwaysUi {
-            weakThis.get()?.dismissProgressDialog("export_to_muted")
+            weakThis?.dismissProgressDialog("export_to_muted")
         }
     }
 
@@ -268,7 +268,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
                 val start = ssb.length
                 ssb.append("*")
                 val end = start + 1
-                val drawable = ContextCompat.getDrawable(context, R.drawable.ic_action_sync)
+                val drawable = ContextCompat.getDrawable(context, R.drawable.ic_action_sync)!!
                 drawable.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_ATOP)
                 ssb.setSpan(EmojiSpan(drawable), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }

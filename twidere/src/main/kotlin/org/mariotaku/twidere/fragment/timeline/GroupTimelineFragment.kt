@@ -34,9 +34,9 @@ import org.mariotaku.twidere.TwidereConstants.INTENT_ACTION_COMPOSE
 import org.mariotaku.twidere.activity.ComposeActivity
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.constant.IntentConstants
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_GROUP_ID
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_GROUP_NAME
 import org.mariotaku.twidere.data.fetcher.GroupTimelineFetcher
+import org.mariotaku.twidere.extension.groupId
+import org.mariotaku.twidere.extension.groupName
 import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.model.tab.applyToSelection
 import org.mariotaku.twidere.extension.withAppendedPath
@@ -60,18 +60,18 @@ class GroupTimelineFragment : AbsTimelineFragment() {
     }
 
     override fun getStatuses(param: ContentRefreshParam): Boolean {
-        val task = GetGroupTimelineTask(context)
-        task.params = GroupTimelineContentRefreshParam(arguments.getString(EXTRA_GROUP_ID),
-                arguments.getString(EXTRA_GROUP_NAME), param)
+        val task = GetGroupTimelineTask(context!!)
+        task.params = GroupTimelineContentRefreshParam(arguments!!.groupId,
+                arguments!!.groupName, param)
         TaskStarter.execute(task)
         return true
     }
 
-    override fun onCreateStatusesFetcher() = GroupTimelineFetcher(arguments.getString(EXTRA_GROUP_ID),
-            arguments.getString(EXTRA_GROUP_NAME))
+    override fun onCreateStatusesFetcher() = GroupTimelineFetcher(arguments!!.groupId,
+            arguments!!.groupName)
 
     override fun getExtraSelection(): Pair<Expression, Array<String>?>? {
-        val extras = arguments.getParcelable<HomeTabExtras>(IntentConstants.EXTRA_EXTRAS) ?: return null
+        val extras = arguments!!.getParcelable<HomeTabExtras>(IntentConstants.EXTRA_EXTRAS) ?: return null
         val expressions = ArrayList<Expression>()
         val expressionArgs = ArrayList<String>()
         extras.applyToSelection(expressions, expressionArgs)
@@ -89,7 +89,7 @@ class GroupTimelineFragment : AbsTimelineFragment() {
         when (item.itemId) {
             R.id.compose -> {
                 val accountKey = accountKeys.singleOrNull() ?: return true
-                val groupName = arguments.getString(TwidereConstants.EXTRA_GROUP_NAME) ?: return true
+                val groupName = arguments!!.getString(TwidereConstants.EXTRA_GROUP_NAME) ?: return true
                 val intent = Intent(activity, ComposeActivity::class.java)
                 intent.action = INTENT_ACTION_COMPOSE
                 intent.putExtra(Intent.EXTRA_TEXT, "!$groupName ")

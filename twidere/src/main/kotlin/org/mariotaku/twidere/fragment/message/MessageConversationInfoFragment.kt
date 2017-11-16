@@ -71,7 +71,8 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.ImageShapeStyle
 import org.mariotaku.twidere.annotation.ProfileImageSize
 import org.mariotaku.twidere.constant.IntentConstants
-import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.exception.UnsupportedCountIndexException
@@ -94,7 +95,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.status.UpdateStatusTask
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.view.holder.SimpleUserViewHolder
-import java.lang.ref.WeakReference
 
 /**
  * Created by mariotaku on 2017/2/15.
@@ -103,8 +103,8 @@ import java.lang.ref.WeakReference
 class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         LoaderManager.LoaderCallbacks<ParcelableMessageConversation?> {
 
-    private val accountKey: UserKey get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)
-    private val conversationId: String get() = arguments.getString(EXTRA_CONVERSATION_ID)
+    private val accountKey: UserKey get() = arguments!!.accountKey!!
+    private val conversationId: String get() = arguments!!.conversationId!!
 
     private lateinit var adapter: ConversationInfoAdapter
     private lateinit var itemDecoration: ConversationInfoDecoration
@@ -120,11 +120,9 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         setHasOptionsMenu(true)
         linkHandlerTitle = getString(R.string.title_direct_messages_conversation_info)
 
-        val activity = this.activity
+        val context = this.activity!!
 
-        if (activity is AppCompatActivity) {
-            activity.supportActionBar?.setDisplayShowTitleEnabled(false)
-        }
+        (activity as? AppCompatActivity)?.supportActionBar?.setDisplayShowTitleEnabled(false)
         val theme = Chameleon.getOverrideTheme(context, activity)
 
         adapter = ConversationInfoAdapter(context, requestManager)
@@ -247,13 +245,14 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<ParcelableMessageConversation?> {
-        return ConversationInfoLoader(context, accountKey, conversationId)
+        return ConversationInfoLoader(context!!, accountKey, conversationId)
     }
 
     override fun onLoaderReset(loader: Loader<ParcelableMessageConversation?>?) {
     }
 
     override fun onLoadFinished(loader: Loader<ParcelableMessageConversation?>?, data: ParcelableMessageConversation?) {
+        val context = this.context ?: return
         if (data == null) {
             activity?.finish()
             return
@@ -294,7 +293,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     private fun performDestroyConversation() {
         val weakThis by weak(this)
-        showProgressDialog("leave_conversation_progress") and MessagePromises.getInstance(context).destroyConversation(accountKey, conversationId).successUi {
+        showProgressDialog("leave_conversation_progress") and MessagePromises.getInstance(context!!).destroyConversation(accountKey, conversationId).successUi {
             val f = weakThis ?: return@successUi
             f.dismissProgressDialog("leave_conversation_progress")
             f.activity?.setResult(RESULT_CLOSE)
@@ -304,7 +303,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     private fun performClearMessages() {
         val weakThis by weak(this)
-        showProgressDialog("clear_messages_progress") and MessagePromises.getInstance(context).clearMessages(accountKey, conversationId).successUi { succeed ->
+        showProgressDialog("clear_messages_progress") and MessagePromises.getInstance(context!!).clearMessages(accountKey, conversationId).successUi { succeed ->
             val f = weakThis ?: return@successUi
             f.dismissDialogThen("clear_messages_progress") {
                 if (succeed) {
@@ -317,7 +316,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
     private fun performAddParticipant(user: ParcelableUser) {
         ProgressDialogFragment.show(childFragmentManager, "add_participant_progress")
         val weakThis by weak(this)
-        ConversationPromises.getInstance(context).addParticipants(accountKey,
+        ConversationPromises.getInstance(context!!).addParticipants(accountKey,
                 conversationId, listOf(user)).alwaysUi {
             weakThis?.dismissDialogThen("add_participant_progress") {
                 loaderManager.restartLoader(0, null, this)
@@ -327,7 +326,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     private fun performSetNotificationDisabled(disabled: Boolean) {
         val weakThis by weak(this)
-        showProgressDialog("set_notifications_disabled_progress") and ConversationPromises.getInstance(context).setNotificationDisabled(accountKey, conversationId, disabled).alwaysUi {
+        showProgressDialog("set_notifications_disabled_progress") and ConversationPromises.getInstance(context!!).setNotificationDisabled(accountKey, conversationId, disabled).alwaysUi {
             weakThis?.dismissProgressDialog("set_notifications_disabled_progress")
         }
     }
@@ -342,7 +341,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
                 }
             }
             "avatar" -> {
-                val intent = ThemedMediaPickerActivity.withThemed(context)
+                val intent = ThemedMediaPickerActivity.withThemed(context!!)
                         .allowMultiple(false)
                         .aspectRatio(1, 1)
                         .containsVideo(false)
@@ -357,7 +356,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
     private fun performSetConversationName(name: String) {
         val conversationId = this.conversationId
         performUpdateInfo("set_name_progress", updateAction = updateAction@ { fragment, account, microBlog ->
-            val context = fragment.context
+            val context = fragment.context!!
             when (account.type) {
                 AccountType.TWITTER -> {
                     if (account.isOfficial(context)) {
@@ -374,7 +373,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
     private fun performSetConversationAvatar(uri: Uri?) {
         val conversationId = this.conversationId
         performUpdateInfo("set_avatar_progress", updateAction = updateAction@ { fragment, account, microBlog ->
-            val context = fragment.context
+            val context = fragment.context!!
             when (account.type) {
                 AccountType.TWITTER -> {
                     if (account.isOfficial(context)) {
@@ -416,8 +415,8 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
                 }
             }
             throw UnsupportedOperationException()
-        }, successAction = { uri ->
-            put(Conversations.CONVERSATION_AVATAR, uri)
+        }, successAction = { u ->
+            put(Conversations.CONVERSATION_AVATAR, u)
         })
     }
 
@@ -427,25 +426,27 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             crossinline successAction: ContentValues.(T) -> Unit
     ) {
         ProgressDialogFragment.show(childFragmentManager, tag)
-        val weakThis = WeakReference(this)
+        val weakThis by weak(this)
         val accountKey = this.accountKey
         val conversationId = this.conversationId
         task {
-            val fragment = weakThis.get() ?: throw InterruptedException()
-            val account = AccountUtils.getAccountDetails(AccountManager.get(fragment.context),
+            val fragment = weakThis ?: throw InterruptedException()
+            val context = fragment.context ?: throw InterruptedException()
+            val account = AccountUtils.getAccountDetails(AccountManager.get(context),
                     accountKey, true) ?: throw MicroBlogException("No account")
-            val microBlog = account.newMicroBlogInstance(fragment.context, cls = MicroBlog::class.java)
+            val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
             return@task updateAction(fragment, account, microBlog)
         }.then { result ->
-            val fragment = weakThis.get() ?: throw InterruptedException()
+            val fragment = weakThis ?: throw InterruptedException()
+            val context = fragment.context ?: throw InterruptedException()
             val values = ContentValues().apply { successAction(result) }
             val where = Expression.and(Expression.equalsArgs(Conversations.ACCOUNT_KEY),
                     Expression.equalsArgs(Conversations.CONVERSATION_ID)).sql
             val whereArgs = arrayOf(accountKey.toString(), conversationId)
-            fragment.context.contentResolver.update(Conversations.CONTENT_URI, values, where,
+            context.contentResolver.update(Conversations.CONTENT_URI, values, where,
                     whereArgs)
         }.alwaysUi {
-            val fragment = weakThis.get() ?: return@alwaysUi
+            val fragment = weakThis ?: return@alwaysUi
             fragment.dismissDialogThen(tag) {
                 loaderManager.restartLoader(0, null, this)
             }
@@ -713,7 +714,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val actions = arrayOf(Action(getString(R.string.action_edit_conversation_name), "name"),
                     Action(getString(R.string.action_edit_conversation_avatar), "avatar"))
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context!!)
             builder.setItems(actions.mapToArray(Action::title)) { _, which ->
                 val action = actions[which]
                 (parentFragment as MessageConversationInfoFragment).openEditAction(action.type)
@@ -729,7 +730,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     class EditNameDialogFragment : BaseDialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context!!)
             builder.setView(R.layout.dialog_edit_conversation_name)
             builder.setNegativeButton(android.R.string.cancel, null)
             builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
@@ -745,7 +746,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     class DestroyConversationConfirmDialogFragment : BaseDialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context!!)
             builder.setMessage(R.string.message_destroy_conversation_confirm)
             builder.setPositiveButton(R.string.action_leave_conversation) { _, _ ->
                 (parentFragment as MessageConversationInfoFragment).performDestroyConversation()
@@ -760,7 +761,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     class ClearMessagesConfirmDialogFragment : BaseDialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context!!)
             builder.setMessage(R.string.message_clear_messages_confirm)
             builder.setPositiveButton(R.string.action_clear_messages) { _, _ ->
                 (parentFragment as MessageConversationInfoFragment).performClearMessages()

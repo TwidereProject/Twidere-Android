@@ -44,7 +44,7 @@ class SettingsDetailsFragment : BasePreferenceFragment(), OnSharedPreferenceChan
         }
         setPreferenceScreen(preferenceScreen)
 
-        val args = arguments
+        val args = arguments!!
         val rawResId = args.get(EXTRA_RESID)
         val resId: Int
         if (rawResId is Int) {
@@ -77,18 +77,17 @@ class SettingsDetailsFragment : BasePreferenceFragment(), OnSharedPreferenceChan
 
     override fun onSharedPreferenceChanged(preferences: SharedPreferences, key: String) {
         val preference = findPreference(key) ?: return
-        val extras = preference.extras
-        if (extras != null) {
-            if (extras.containsKey(EXTRA_SHOULD_RESTART)) {
-                SettingsActivity.setShouldRestart(activity)
-            } else if (extras.containsKey(EXTRA_SHOULD_RECREATE)) {
-                SettingsActivity.setShouldRecreate(activity)
-            } else if (extras.containsKey(EXTRA_SHOULD_TERMINATE)) {
-                SettingsActivity.setShouldTerminate(activity)
-            }
-            if (extras.containsKey(EXTRA_RECREATE_ACTIVITY)) {
-                activity.recreate()
-            }
+        val extras = preference.extras ?: return
+        val activity = activity ?: return
+        if (extras.containsKey(EXTRA_SHOULD_RESTART)) {
+            SettingsActivity.setShouldRestart(activity)
+        } else if (extras.containsKey(EXTRA_SHOULD_RECREATE)) {
+            SettingsActivity.setShouldRecreate(activity)
+        } else if (extras.containsKey(EXTRA_SHOULD_TERMINATE)) {
+            SettingsActivity.setShouldTerminate(activity)
+        }
+        if (extras.containsKey(EXTRA_RECREATE_ACTIVITY)) {
+            activity.recreate()
         }
     }
 

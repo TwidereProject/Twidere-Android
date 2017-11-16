@@ -131,10 +131,11 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             activity?.finish()
             return
         }
+        val activity = this.activity!!
         adapter.listener = object : MessagesConversationAdapter.Listener {
             override fun onMediaClick(position: Int, media: ParcelableMedia, accountKey: UserKey?) {
                 val message = adapter.getMessage(position)
-                IntentUtils.openMediaDirectly(context = context, accountKey = accountKey,
+                IntentUtils.openMediaDirectly(context = activity, accountKey = accountKey,
                         media = message.media, current = media,
                         newDocument = preferences[newDocumentApiKey], message = message)
             }
@@ -143,7 +144,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
                 return recyclerView.showContextMenuForChild(holder.itemView)
             }
         }
-        mediaPreviewAdapter = MediaPreviewAdapter(context, requestManager)
+        mediaPreviewAdapter = MediaPreviewAdapter(activity, requestManager)
 
         mediaPreviewAdapter.listener = object : MediaPreviewAdapter.Listener {
             override fun onRemoveClick(position: Int, holder: MediaPreviewViewHolder) {
@@ -154,7 +155,8 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
                 attachedMediaPreview.showContextMenuForChild(holder.itemView)
             }
         }
-        attachedMediaPreview.layoutManager = FixedLinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        attachedMediaPreview.layoutManager = FixedLinearLayoutManager(activity,
+                LinearLayoutManager.HORIZONTAL, false)
         attachedMediaPreview.adapter = mediaPreviewAdapter
         attachedMediaPreview.addItemDecoration(PreviewGridItemDecoration(resources.getDimensionPixelSize(R.dimen.element_spacing_small)))
 
@@ -172,11 +174,10 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             startActivityForResult(intent, REQUEST_MANAGE_CONVERSATION_INFO)
         }
 
-        val activity = this.activity
         if (activity is AppCompatActivity) {
             activity.supportActionBar?.setDisplayShowTitleEnabled(false)
         }
-        val theme = Chameleon.getOverrideTheme(context, activity)
+        val theme = Chameleon.getOverrideTheme(activity, activity)
         conversationTitle.setTextColor(ChameleonUtils.getColorDependent(theme.colorToolbar))
         conversationSubtitle.setTextColor(ChameleonUtils.getColorDependent(theme.colorToolbar))
 
@@ -244,7 +245,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             }
             REQUEST_ADD_GIF -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    val intent = ThemedMediaPickerActivity.withThemed(context)
+                    val intent = ThemedMediaPickerActivity.withThemed(context!!)
                             .getMedia(data.data)
                             .extras(Bundle { this[EXTRA_TYPES] = intArrayOf(ParcelableMedia.Type.ANIMATED_GIF) })
                             .build()
@@ -273,7 +274,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableMessage>?> {
-        return ConversationLoader(context, accountKey, conversationId)
+        return ConversationLoader(context!!, accountKey, conversationId)
     }
 
     override fun onLoadFinished(loader: Loader<List<ParcelableMessage>?>, data: List<ParcelableMessage>?) {
@@ -315,7 +316,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         if (LoadMorePosition.START !in position) return
         val message = adapter.getMessage(adapter.messageRange.endInclusive)
         setLoadMoreIndicatorPosition(position)
-        val param = GetMessagesTask.LoadMoreMessagesParam(context, accountKey, conversationId,
+        val param = GetMessagesTask.LoadMoreMessagesParam(context!!, accountKey, conversationId,
                 message.id)
         param.taskTag = loadMoreTaskTag
         twitterWrapper.getMessagesAsync(param)
@@ -327,13 +328,13 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             R.id.recyclerView -> {
                 val message = adapter.getMessage(menuInfo.position)
                 val conversation = adapter.conversation
-                menu.setHeaderTitle(message.getSummaryText(context, userColorNameManager, conversation,
+                menu.setHeaderTitle(message.getSummaryText(context!!, userColorNameManager, conversation,
                         preferences[nameFirstKey]))
-                activity.menuInflater.inflate(R.menu.menu_conversation_message_item, menu)
+                activity!!.menuInflater.inflate(R.menu.menu_conversation_message_item, menu)
             }
             R.id.attachedMediaPreview -> {
                 menu.setHeaderTitle(R.string.edit_media)
-                activity.menuInflater.inflate(R.menu.menu_attached_media_edit, menu)
+                activity!!.menuInflater.inflate(R.menu.menu_attached_media_edit, menu)
             }
         }
     }
@@ -347,11 +348,11 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
                 val message = adapter.getMessage(menuInfo.position)
                 when (item.itemId) {
                     R.id.copy -> {
-                        ClipboardUtils.setText(context, message.text_unescaped)
+                        ClipboardUtils.setText(context!!, message.text_unescaped)
                     }
                     R.id.delete -> {
                         // TODO show progress
-                        MessagePromises.getInstance(context).destroyMessage(message.account_key, message.conversation_id,
+                        MessagePromises.getInstance(context!!).destroyMessage(message.account_key, message.conversation_id,
                                 message.id)
                     }
                 }
@@ -435,7 +436,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             this.text = text
             this.is_temp_conversation = conversation.is_temp
         }
-        LengthyOperationsService.sendMessageAsync(context, message)
+        LengthyOperationsService.sendMessageAsync(context!!, message)
         editText.text = null
 
         // Clear media, those media will be deleted after sent
@@ -529,7 +530,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             val weakContentInfo by weak(contentInfo)
             promiseOnUi {
                 weakThis?.setProgressVisible(true)
-            } and context.obtainMedia(arrayOf(contentInfo.contentUri), intArrayOf(contentInfo.inferredMediaType),
+            } and context!!.obtainMedia(arrayOf(contentInfo.contentUri), intArrayOf(contentInfo.inferredMediaType),
                     true, false).successUi { media ->
                 weakThis?.attachMedia(media)
             }.alwaysUi {
@@ -543,7 +544,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         val weakThis by weak(this)
         promiseOnUi {
             weakThis?.setProgressVisible(true)
-        } and context.obtainMedia(sources, types, copySrc, deleteSrc).successUi { media ->
+        } and context!!.obtainMedia(sources, types, copySrc, deleteSrc).successUi { media ->
             weakThis?.attachMedia(media)
         }.alwaysUi {
             weakThis?.setProgressVisible(false)

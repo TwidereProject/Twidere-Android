@@ -106,7 +106,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
                     return true
                 }
                 if (!extraFeaturesService.isAdvancedFiltersEnabled) {
-                    ExtraFeaturesIntroductionDialogFragment.show(fragmentManager,
+                    ExtraFeaturesIntroductionDialogFragment.show(fragmentManager!!,
                             feature = ExtraFeaturesService.FEATURE_ADVANCED_FILTERS,
                             requestCode = REQUEST_PURCHASE_EXTRA_FEATURES)
                     return true
@@ -127,7 +127,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
     override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableUser>?> {
         val fromUser = args.getBoolean(EXTRA_FROM_USER)
         args.remove(EXTRA_FROM_USER)
-        return onCreateUsersLoader(context, args, fromUser)
+        return onCreateUsersLoader(context!!, args, fromUser)
     }
 
     override fun onLoaderReset(loader: Loader<List<ParcelableUser>?>) {
@@ -168,7 +168,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
         val cursorLoader = loader as AbsRequestUsersLoader
         nextPagination = cursorLoader.nextPagination
         prevPagination = cursorLoader.prevPagination
-        activity.invalidateOptionsMenu()
+        activity!!.invalidateOptionsMenu()
     }
 
     override fun onLoadMoreContents(@LoadMorePosition position: Int) {
@@ -185,7 +185,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
         val adapter = SelectableUsersAdapter(context, this.requestManager)
         adapter.itemCheckedListener = listener@ { _, _ ->
             if (!extraFeaturesService.isAdvancedFiltersEnabled) {
-                ExtraFeaturesIntroductionDialogFragment.show(fragmentManager,
+                ExtraFeaturesIntroductionDialogFragment.show(fragmentManager!!,
                         feature = ExtraFeaturesService.FEATURE_ADVANCED_FILTERS,
                         requestCode = REQUEST_PURCHASE_EXTRA_FEATURES)
                 return@listener false
@@ -197,7 +197,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
             } else {
                 null
             }
-            activity.invalidateOptionsMenu()
+            activity!!.invalidateOptionsMenu()
             return@listener true
         }
         return adapter
@@ -242,7 +242,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context!!)
             builder.setTitle(R.string.action_add_to_filter)
             builder.setView(R.layout.dialog_block_mute_filter_user_confirm)
             builder.setPositiveButton(android.R.string.ok, this)
@@ -256,7 +256,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
                     MessageDialogFragment.show(childFragmentManager, title = getString(R.string.filter_everywhere),
                             message = getString(R.string.filter_everywhere_description), tag = "filter_everywhere_help")
                 }
-                val usersCount = arguments.getInt(EXTRA_COUNT)
+                val usersCount = arguments!!.getInt(EXTRA_COUNT)
                 val nUsers = resources.getQuantityString(R.plurals.N_users, usersCount, usersCount)
                 confirmMessageView.text = getString(R.string.filter_user_confirm_message, nUsers)
             }

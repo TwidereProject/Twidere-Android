@@ -21,9 +21,7 @@ package org.mariotaku.twidere.extension
 
 import android.os.Bundle
 import org.mariotaku.twidere.constant.IntentConstants.*
-import org.mariotaku.twidere.model.ParcelableUser
-import org.mariotaku.twidere.model.ParcelableUserList
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.*
 
 inline var Bundle.name: String?
     get() = getString(EXTRA_NAME)
@@ -53,6 +51,10 @@ inline var Bundle.simpleLayout: Boolean
     get() = getBoolean(EXTRA_SIMPLE_LAYOUT)
     set(value) = putBoolean(EXTRA_SIMPLE_LAYOUT, value)
 
+inline var Bundle.account: AccountDetails?
+    get() = getParcelable(EXTRA_ACCOUNT)
+    set(value) = putParcelable(EXTRA_ACCOUNT, value)
+
 inline var Bundle.user: ParcelableUser?
     get() = getParcelable(EXTRA_USER)
     set(value) = putParcelable(EXTRA_USER, value)
@@ -60,6 +62,10 @@ inline var Bundle.user: ParcelableUser?
 inline var Bundle.userList: ParcelableUserList?
     get() = getParcelable(EXTRA_USER_LIST)
     set(value) = putParcelable(EXTRA_USER_LIST, value)
+
+inline var Bundle.status: ParcelableStatus?
+    get() = getParcelable(EXTRA_STATUS)
+    set(value) = putParcelable(EXTRA_STATUS, value)
 
 inline var Bundle.title: CharSequence?
     get() = getCharSequence(EXTRA_TITLE)
@@ -89,6 +95,22 @@ inline var Bundle.listName: String?
     get() = getString(EXTRA_LIST_NAME)
     set(value) = putString(EXTRA_LIST_NAME, value)
 
+inline var Bundle.groupId: String?
+    get() = getString(EXTRA_GROUP_ID)
+    set(value) = putString(EXTRA_GROUP_ID, value)
+
+inline var Bundle.groupName: String?
+    get() = getString(EXTRA_GROUP_NAME)
+    set(value) = putString(EXTRA_GROUP_NAME, value)
+
 inline var Bundle.conversationId: String?
     get() = getString(EXTRA_CONVERSATION_ID)
     set(value) = putString(EXTRA_CONVERSATION_ID, value)
+
+inline var Bundle.stringId: String?
+    get() = getString(EXTRA_ID)
+    set(value) = putString(EXTRA_ID, value)
+
+inline var Bundle.longId: Long
+    get() = getLong(EXTRA_ID, -1)
+    set(value) = putLong(EXTRA_ID, value)

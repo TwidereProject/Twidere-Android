@@ -178,7 +178,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor?> {
         val selection = Expression.isNull(Columns.Column(Filters.USER_KEY))
-        return CursorLoader(activity, contentUri, contentColumns, selection.sql, null, sortOrder)
+        return CursorLoader(activity!!, contentUri, contentColumns, selection.sql, null, sortOrder)
     }
 
     override fun onLoadFinished(loader: Loader<Cursor?>, data: Cursor?) {
@@ -223,7 +223,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
     protected open fun performDeletion() {
         val ids = listView.checkedItemIds
         val where = Expression.inArgs(Columns.Column(Filters._ID), ids.size)
-        context.contentResolver.delete(contentUri, where.sql, Array(ids.size) { ids[it].toString() })
+        context!!.contentResolver.delete(contentUri, where.sql, Array(ids.size) { ids[it].toString() })
     }
 
     protected open fun addOrEditItem(id: Long = -1, value: String? = null, scope: Int = FilterScope.DEFAULT) {
@@ -273,7 +273,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
                 ssb.append("*")
                 val end = start + 1
                 val drawable = ContextCompat.getDrawable(context, R.drawable.ic_action_sync)
-                drawable.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_ATOP)
+                drawable!!.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_ATOP)
                 ssb.setSpan(EmojiSpan(drawable), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             text1.text = ssb

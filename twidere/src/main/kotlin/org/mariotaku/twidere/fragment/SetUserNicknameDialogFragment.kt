@@ -26,19 +26,20 @@ import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AlertDialog
 import kotlinx.android.synthetic.main.dialog_edit_user_nickname.*
+import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.empty
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_NAME
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER_KEY
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.name
 import org.mariotaku.twidere.extension.onShow
+import org.mariotaku.twidere.extension.userKey
 import org.mariotaku.twidere.model.UserKey
 
 class SetUserNicknameDialogFragment : BaseDialogFragment(), OnClickListener {
 
     override fun onClick(dialog: DialogInterface, which: Int) {
         val editName = (dialog as AlertDialog).editName
-        val userKey = arguments.getParcelable<UserKey>(EXTRA_USER_KEY)
+        val userKey = arguments!!.userKey!!
         when (which) {
             DialogInterface.BUTTON_POSITIVE -> {
                 if (editName.empty) {
@@ -55,8 +56,8 @@ class SetUserNicknameDialogFragment : BaseDialogFragment(), OnClickListener {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val nick = arguments.getString(EXTRA_NAME)
-        val context = activity
+        val nick = arguments!!.name
+        val context = activity!!
         val builder = AlertDialog.Builder(context)
         builder.setTitle(R.string.title_set_nickname)
         builder.setPositiveButton(android.R.string.ok, this)
@@ -76,10 +77,10 @@ class SetUserNicknameDialogFragment : BaseDialogFragment(), OnClickListener {
 
         fun create(userKey: UserKey, nickname: String?): SetUserNicknameDialogFragment {
             val f = SetUserNicknameDialogFragment()
-            val args = Bundle()
-            args.putParcelable(EXTRA_USER_KEY, userKey)
-            args.putString(EXTRA_NAME, nickname)
-            f.arguments = args
+            f.arguments = Bundle {
+                this.userKey = userKey
+                name = nickname
+            }
             return f
         }
 

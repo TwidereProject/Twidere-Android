@@ -44,9 +44,9 @@ class TranslationDestinationDialogFragment : BaseDialogFragment() {
     private val currentIndex = AtomicInteger(-1)
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context)
-        val languages = arguments.getTypedArray<DisplayLanguage>(EXTRA_LANGUAGES).sortedArrayWith(LanguageComparator())
-        val selectedLanguage = preferences[translationDestinationKey] ?: arguments.getString(EXTRA_SELECTED_LANGUAGE)
+        val builder = AlertDialog.Builder(context!!)
+        val languages = arguments!!.getTypedArray<DisplayLanguage>(EXTRA_LANGUAGES).sortedArrayWith(LanguageComparator())
+        val selectedLanguage = preferences[translationDestinationKey] ?: arguments!!.getString(EXTRA_SELECTED_LANGUAGE)
         val selectedIndex = languages.indexOfFirst { selectedLanguage == it.code }
         builder.setTitle(R.string.title_translate_to)
         builder.setSingleChoiceItems(languages.mapToArray { it.name }, selectedIndex) { _, which ->

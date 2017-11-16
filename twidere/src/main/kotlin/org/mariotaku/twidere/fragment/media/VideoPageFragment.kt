@@ -44,11 +44,11 @@ import org.mariotaku.mediaviewer.library.CacheDownloadMediaViewerFragment
 import org.mariotaku.mediaviewer.library.MediaViewerFragment
 import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewerFragment
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.TwidereConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.TwidereConstants.EXTRA_MEDIA
 import org.mariotaku.twidere.activity.MediaViewerActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_POSITION
+import org.mariotaku.twidere.extension.accountKey
 import org.mariotaku.twidere.extension.model.bannerExtras
 import org.mariotaku.twidere.extension.model.getBestVideoUrlAndType
 import org.mariotaku.twidere.extension.setVisible
@@ -85,7 +85,7 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
 
         var handler: Handler? = videoViewProgress.handler
         if (handler == null) {
-            handler = Handler(activity.mainLooper)
+            handler = Handler(activity!!.mainLooper)
         }
 
 
@@ -97,7 +97,7 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
             pausedByUser = savedInstanceState.getBoolean(EXTRA_PAUSED_BY_USER)
             playAudio = savedInstanceState.getBoolean(EXTRA_PLAY_AUDIO)
         } else {
-            val am = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            val am = context!!.getSystemService(Context.AUDIO_SERVICE) as AudioManager
             // Play audio by default if ringer mode on
             playAudio = !isMutedByDefault && am.ringerMode == AudioManager.RINGER_MODE_NORMAL
         }
@@ -204,14 +204,14 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         if (bestVideoUrlAndType != null) {
             return Uri.parse(bestVideoUrlAndType.first)
         }
-        return arguments.getParcelable<Uri>(SubsampleImageViewerFragment.EXTRA_MEDIA_URI)
+        return arguments!!.getParcelable(SubsampleImageViewerFragment.EXTRA_MEDIA_URI)
     }
 
     override fun displayMedia(result: CacheDownloadLoader.Result) {
         videoView.setVideoURI(result.cacheUri)
         videoControl.visibility = View.GONE
         setMediaViewVisible(true)
-        activity.invalidateOptionsMenu()
+        activity!!.invalidateOptionsMenu()
     }
 
     override fun releaseMediaResources() {
@@ -403,15 +403,15 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         internal val FALLBACK_VIDEO_TYPES: Array<String> = arrayOf("video/mp4")
 
         internal val MediaViewerFragment.isLoopEnabled: Boolean
-            get() = arguments.getBoolean(EXTRA_LOOP, false)
+            get() = arguments!!.getBoolean(EXTRA_LOOP, false)
         internal val MediaViewerFragment.isControlDisabled: Boolean
-            get() = arguments.getBoolean(EXTRA_DISABLE_CONTROL, false)
+            get() = arguments!!.getBoolean(EXTRA_DISABLE_CONTROL, false)
         internal val MediaViewerFragment.isMutedByDefault: Boolean
-            get() = arguments.getBoolean(EXTRA_DEFAULT_MUTE, false)
+            get() = arguments!!.getBoolean(EXTRA_DEFAULT_MUTE, false)
         internal val MediaViewerFragment.media: ParcelableMedia?
-            get() = arguments.getParcelable<ParcelableMedia>(EXTRA_MEDIA)
+            get() = arguments!!.getParcelable(EXTRA_MEDIA)
         internal val MediaViewerFragment.accountKey: UserKey
-            get() = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+            get() = arguments!!.accountKey!!
 
     }
 }

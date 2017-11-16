@@ -56,7 +56,7 @@ class HomeTimelineFragment : AbsTimelineFragment() {
     override fun onCreateStatusesFetcher() = HomeTimelineFetcher()
 
     override fun getExtraSelection(): Pair<Expression, Array<String>?>? {
-        val extras = arguments.getParcelable<HomeTabExtras>(EXTRA_EXTRAS) ?: return null
+        val extras = arguments!!.getParcelable<HomeTabExtras>(EXTRA_EXTRAS) ?: return null
         val expressions = ArrayList<Expression>()
         val expressionArgs = ArrayList<String>()
         extras.applyToSelection(expressions, expressionArgs)

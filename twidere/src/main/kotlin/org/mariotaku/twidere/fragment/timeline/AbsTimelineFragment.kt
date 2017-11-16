@@ -107,7 +107,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
     @TimelineStyle
     protected open val timelineStyle: Int
-        get() = arguments.getInt(EXTRA_TIMELINE_STYLE, TimelineStyle.PLAIN)
+        get() = arguments!!.getInt(EXTRA_TIMELINE_STYLE, TimelineStyle.PLAIN)
 
     protected open val isStandalone: Boolean
         get() = tabId <= 0
@@ -137,10 +137,10 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         }
 
     protected val accountKeys: Array<UserKey>
-        get() = Utils.getAccountKeys(context, arguments) ?: if (isStandalone) {
+        get() = Utils.getAccountKeys(context!!, arguments) ?: if (isStandalone) {
             emptyArray()
         } else {
-            DataStoreUtils.getActivatedAccountKeys(context)
+            DataStoreUtils.getActivatedAccountKeys(context!!)
         }
 
     private val busEventHandler = BusEventHandler()
@@ -195,6 +195,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
         if (!userVisibleHint || menuInfo == null) return
+        val context = this.context!!
         val inflater = MenuInflater(context)
         val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo
         val status = adapter.getStatus(contextMenuInfo.position)
@@ -204,11 +205,12 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         if (!userVisibleHint) return false
+        val context = this.context!!
         val contextMenuInfo = item.menuInfo as ExtendedRecyclerView.ContextMenuInfo
         val status = adapter.getStatus(contextMenuInfo.position)
         when (item.itemId) {
             R.id.share -> {
-                val shareIntent = Utils.createStatusShareIntent(activity, status)
+                val shareIntent = Utils.createStatusShareIntent(context, status)
                 val chooser = Intent.createChooser(shareIntent, getString(R.string.share_status))
                 startActivity(chooser)
 
@@ -226,7 +228,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                 resolver.update(contentUri, values, where, null)
                 return true
             }
-            else -> return MenuUtils.handleStatusClick(activity, this, fragmentManager,
+            else -> return MenuUtils.handleStatusClick(context, this, fragmentManager!!,
                     preferences, userColorNameManager, twitterWrapper, status, item)
         }
     }
@@ -242,6 +244,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
             }
 
             override val pagination by lazy {
+                val context = context!!
                 val keys = accountKeys.toNulls()
                 val sinceIds = DataStoreUtils.getNewestStatusIds(context, contentUri, keys)
                 val sinceSortIds = DataStoreUtils.getNewestStatusSortIds(context, contentUri, keys)
@@ -268,6 +271,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                 this@AbsTimelineFragment.accountKeys
             }
             override val pagination by lazy {
+                val context = context!!
                 val keys = accountKeys.toNulls()
                 val maxIds = DataStoreUtils.getOldestStatusIds(context, contentUri, keys)
                 val maxSortIds = DataStoreUtils.getOldestStatusSortIds(context, contentUri, keys)
@@ -392,6 +396,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
     }
 
     private fun onCreateStandaloneLiveData(): LiveData<PagedList<ParcelableStatus>?> {
+        val context = context!!
         val accountKey = accountKeys.singleOrNull()!!
         val provider = StatusesLivePagedListProvider(context.applicationContext,
                 onCreateStatusesFetcher(), accountKey, timelineFilter)
@@ -407,6 +412,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
 
     private fun onCreateDatabaseLiveData(): LiveData<PagedList<ParcelableStatus>?> {
+        val context = context!!
         val table = DataStoreUtils.getTableNameByUri(contentUri)!!
         val accountKeys = accountKeys
         val expressions = mutableListOf(Expression.inArgs(Statuses.ACCOUNT_KEY, accountKeys.size))
@@ -433,8 +439,9 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         if (isStandalone) {
             return adapter.getStatus(position, false)
         }
-        val _id = adapter.getRowId(position)
-        val where = Expression.equals(Statuses._ID, _id).sql
+        val context = context!!
+        val rowId = adapter.getRowId(position)
+        val where = Expression.equals(Statuses._ID, rowId).sql
         return context.contentResolver.queryOne(contentUri, Statuses.COLUMNS, where, null, null,
                 ParcelableStatus::class.java)
     }
@@ -462,6 +469,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
         @Subscribe
         fun notifyGetStatusesTaskChanged(event: GetStatusesTaskEvent) {
+            val context = context ?: return
             if (event.uri != contentUri) return
             refreshing = event.running
             if (!event.running) {
@@ -495,8 +503,9 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
     private inner class StatusClickHandler : IStatusViewHolder.StatusClickListener {
         override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
+            val context = context ?: return
             val status = getFullStatus(position) ?: return
-            IntentUtils.openStatus(activity, status, null)
+            IntentUtils.openStatus(context, status, null)
         }
 
         override fun onStatusLongClick(holder: IStatusViewHolder, position: Int): Boolean {
@@ -522,22 +531,25 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         }
 
         override fun onMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia, statusPosition: Int) {
+            val context = context ?: return
             val status = adapter.getStatus(statusPosition)
-            IntentUtils.openMedia(activity, status, current, preferences[newDocumentApiKey],
+            IntentUtils.openMedia(context, status, current, preferences[newDocumentApiKey],
                     preferences[displaySensitiveContentsKey])
         }
 
         override fun onQuotedMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia, statusPosition: Int) {
+            val context = context ?: return
             val status = adapter.getStatus(statusPosition)
             val quotedMedia = status.quoted_media ?: return
-            IntentUtils.openMedia(activity, status.account_key, status.is_possibly_sensitive, status,
+            IntentUtils.openMedia(context, status.account_key, status.is_possibly_sensitive, status,
                     current, quotedMedia, preferences[newDocumentApiKey], preferences[displaySensitiveContentsKey])
         }
 
         override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
+            val context = context ?: return
             val status = adapter.getStatus(position)
             val quotedId = status.quoted_id ?: return
-            IntentUtils.openStatus(activity, status.account_key, quotedId)
+            IntentUtils.openStatus(context, status.account_key, quotedId)
         }
 
         override fun onUserProfileClick(holder: IStatusViewHolder, position: Int) {
@@ -591,21 +603,15 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
     companion object {
 
-
         const val REQUEST_FAVORITE_SELECT_ACCOUNT = 101
         const val REQUEST_RETWEET_SELECT_ACCOUNT = 102
-
-        val statusColumnsLite = Statuses.COLUMNS - arrayOf(Statuses.MENTIONS_JSON,
-                Statuses.CARD, Statuses.FILTER_FLAGS, Statuses.FILTER_USERS, Statuses.FILTER_LINKS,
-                Statuses.FILTER_SOURCES, Statuses.FILTER_NAMES, Statuses.FILTER_TEXTS,
-                Statuses.FILTER_DESCRIPTIONS)
 
         fun handleActionClick(fragment: BaseFragment, id: Int, status: ParcelableStatus,
                 holder: IStatusViewHolder) {
             when (id) {
                 R.id.reply -> {
                     val intent = Intent(INTENT_ACTION_REPLY)
-                    intent.`package` = fragment.context.packageName
+                    intent.`package` = fragment.context!!.packageName
                     intent.putExtra(EXTRA_STATUS, status)
                     fragment.startActivity(intent)
                 }
@@ -629,14 +635,15 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         }
 
         fun handleActionLongClick(fragment: Fragment, status: ParcelableStatus, itemId: Long, id: Int): Boolean {
+            val context = fragment.context ?: return false
             when (id) {
                 R.id.favorite -> {
-                    val intent = selectAccountIntent(fragment.context, status, itemId)
+                    val intent = selectAccountIntent(context, status, itemId)
                     fragment.startActivityForResult(intent, REQUEST_FAVORITE_SELECT_ACCOUNT)
                     return true
                 }
                 R.id.retweet -> {
-                    val intent = selectAccountIntent(fragment.context, status, itemId, false)
+                    val intent = selectAccountIntent(context, status, itemId, false)
                     fragment.startActivityForResult(intent, REQUEST_RETWEET_SELECT_ACCOUNT)
                     return true
                 }

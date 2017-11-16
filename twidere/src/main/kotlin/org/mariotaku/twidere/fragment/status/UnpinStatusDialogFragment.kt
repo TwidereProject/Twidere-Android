@@ -35,7 +35,7 @@ class UnpinStatusDialogFragment : AbsSimpleStatusOperationDialogFragment() {
         get() = getString(R.string.message_unpin_status_confirm)
 
     override fun onPerformAction(status: ParcelableStatus) {
-        val task = UnpinStatusTask(context, status.account_key, status.id)
+        val task = UnpinStatusTask(context!!, status.account_key, status.id)
         TaskStarter.execute(task)
     }
 

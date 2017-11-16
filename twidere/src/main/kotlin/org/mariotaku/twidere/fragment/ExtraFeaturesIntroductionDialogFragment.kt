@@ -27,9 +27,9 @@ import org.mariotaku.twidere.util.premium.ExtraFeaturesService
  */
 class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
 
-    val feature: String get() = arguments.getString(EXTRA_FEATURE)
-    val source: String? get() = arguments.getString(EXTRA_SOURCE)
-    val requestCode: Int get() = arguments.getInt(EXTRA_REQUEST_CODE, 0)
+    val feature: String get() = arguments!!.getString(EXTRA_FEATURE)
+    val source: String? get() = arguments!!.getString(EXTRA_SOURCE)
+    val requestCode: Int get() = arguments!!.getInt(EXTRA_REQUEST_CODE, 0)
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(context!!)

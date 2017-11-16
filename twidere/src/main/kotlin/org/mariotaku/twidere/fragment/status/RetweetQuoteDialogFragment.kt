@@ -39,12 +39,10 @@ import org.mariotaku.twidere.activity.content.RetweetQuoteDialogActivity
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.quickSendKey
-import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.can_retweet
 import org.mariotaku.twidere.extension.model.is_my_retweet
 import org.mariotaku.twidere.extension.model.textLimit
-import org.mariotaku.twidere.extension.onShow
-import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.draft.QuoteStatusActionExtras
@@ -74,8 +72,8 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
     private val Dialog.editComment: ComposeEditText get() = findViewById(R.id.editComment)
     private val Dialog.quoteOriginal: CheckBox get() = findViewById(R.id.quoteOriginal)
 
-    private val text: String?
-        get() = arguments.getString(EXTRA_TEXT)
+    private val text: CharSequence?
+        get() = arguments!!.text
 
     override fun AlertDialog.Builder.setupAlertDialog() {
         setTitle(R.string.title_retweet_quote_confirm)
@@ -249,7 +247,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
                 this.status = status
                 this.isQuoteOriginalStatus = quoteOriginalStatus
             }
-            LengthyOperationsService.updateStatusesAsync(context, Draft.Action.QUOTE, update)
+            LengthyOperationsService.updateStatusesAsync(context!!, Draft.Action.QUOTE, update)
         } else {
             twitter.retweetStatusAsync(account.key, status)
         }
@@ -291,7 +289,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
 
 
     private fun displayNewDraftNotification(draftUri: Uri) {
-        val contentResolver = context.contentResolver
+        val contentResolver = context!!.contentResolver
         val notificationUri = Drafts.CONTENT_URI_NOTIFICATIONS.withAppendedPath(draftUri.lastPathSegment)
         contentResolver.insert(notificationUri, null)
     }
@@ -302,9 +300,8 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
             val fragment = parentFragment as RetweetQuoteDialogFragment
             when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {
-                    val args = arguments
-                    val account: AccountDetails = args.getParcelable(EXTRA_ACCOUNT)
-                    val status: ParcelableStatus = args.getParcelable(EXTRA_STATUS)
+                    val account = arguments!!.account!!
+                    val status = arguments!!.status!!
                     if (fragment.retweetOrQuote(account, status, false)) {
                         fragment.dismiss()
                     }
@@ -314,7 +311,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val context = activity
+            val context = activity!!
             val builder = AlertDialog.Builder(context)
             builder.setMessage(R.string.quote_protected_status_warning_message)
             builder.setPositiveButton(R.string.send_anyway, this)

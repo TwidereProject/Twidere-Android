@@ -38,11 +38,9 @@ import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.DummyItemAdapter
-import org.mariotaku.twidere.constant.IntentConstants.*
-import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
-import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -57,23 +55,23 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
     protected abstract val Dialog.itemContent: View
 
     protected val status: ParcelableStatus?
-        get() = arguments.getParcelable<ParcelableStatus>(EXTRA_STATUS)
+        get() = arguments!!.status
 
     protected val statusId: String
-        get() = arguments.getString(EXTRA_STATUS_ID)
+        get() = arguments!!.statusId!!
 
     protected val accountKey: UserKey
-        get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)
+        get() = arguments!!.accountKey!!
 
     private lateinit var adapter: DummyItemAdapter
 
     override final fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = Builder(context)
+        val builder = Builder(context!!)
         val accountKey = this.accountKey
 
         builder.setupAlertDialog()
 
-        adapter = DummyItemAdapter(context, requestManager = requestManager)
+        adapter = DummyItemAdapter(context!!, requestManager = requestManager)
         adapter.showCardActions = false
         adapter.showAccountsColor = true
 

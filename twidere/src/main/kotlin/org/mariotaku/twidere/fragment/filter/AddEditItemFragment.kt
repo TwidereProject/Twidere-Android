@@ -52,16 +52,16 @@ import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 class AddEditItemFragment : BaseDialogFragment() {
 
     private val contentUri: Uri
-        get() = arguments.getParcelable(EXTRA_URI)
+        get() = arguments!!.getParcelable(EXTRA_URI)
 
     private val rowId: Long
-        get() = arguments.getLong(EXTRA_ID, -1)
+        get() = arguments!!.longId
 
     private val defaultValue: String?
-        get() = arguments.getString(EXTRA_VALUE)
+        get() = arguments!!.getString(EXTRA_VALUE)
 
     private val defaultScopes: FilterScopesHolder
-        get() = FilterScopesHolder(filterMasks, arguments.getInt(EXTRA_SCOPE, FilterScope.DEFAULT))
+        get() = FilterScopesHolder(filterMasks, arguments!!.getInt(EXTRA_SCOPE, FilterScope.DEFAULT))
 
     private val filterMasks: Int
         get() = when (contentUri) {
@@ -99,10 +99,10 @@ class AddEditItemFragment : BaseDialogFragment() {
         }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context)
+        val builder = AlertDialog.Builder(context!!)
         builder.setView(R.layout.dialog_filter_rule_editor)
 
-        if (arguments.getLong(EXTRA_ID, -1) >= 0) {
+        if (arguments!!.longId >= 0) {
             builder.setTitle(R.string.action_edit_filter_rule)
         } else {
             builder.setTitle(R.string.action_add_filter_rule)
@@ -114,10 +114,10 @@ class AddEditItemFragment : BaseDialogFragment() {
             applyTheme()
             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
             editText.setAdapter(when (contentUri) {
-                Filters.Sources.CONTENT_URI -> SourceAutoCompleteAdapter(activity)
-                Filters.Users.CONTENT_URI -> ComposeAutoCompleteAdapter(activity, requestManager).apply {
+                Filters.Sources.CONTENT_URI -> SourceAutoCompleteAdapter(activity!!)
+                Filters.Users.CONTENT_URI -> ComposeAutoCompleteAdapter(activity!!, requestManager).apply {
                     val am = AccountManager.get(activity)
-                    account = AccountUtils.getDefaultAccountDetails(activity, am, false)
+                    account = AccountUtils.getDefaultAccountDetails(activity!!, am, false)
                 }
                 else -> null
             })
@@ -222,7 +222,7 @@ class AddEditItemFragment : BaseDialogFragment() {
     }
 
     private fun saveScopeOnly(scopes: FilterScopesHolder) {
-        val resolver = context.contentResolver
+        val resolver = context!!.contentResolver
         val contentUri = contentUri
         val rowId = rowId
 
@@ -236,7 +236,7 @@ class AddEditItemFragment : BaseDialogFragment() {
     }
 
     private fun saveItem(value: String, scopes: FilterScopesHolder) {
-        val resolver = context.contentResolver
+        val resolver = context!!.contentResolver
         val uri = contentUri
         val rowId = rowId
         val values = ContentValues {

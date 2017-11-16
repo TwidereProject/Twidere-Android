@@ -33,6 +33,7 @@ import org.mariotaku.mediaviewer.library.CacheDownloadLoader
 import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewerFragment
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.MediaViewerActivity
+import org.mariotaku.twidere.extension.accountKey
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.UriUtils
@@ -44,13 +45,13 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
 
 
     private val media: ParcelableMedia?
-        get() = arguments.getParcelable<ParcelableMedia?>(EXTRA_MEDIA)
+        get() = arguments!!.getParcelable<ParcelableMedia?>(EXTRA_MEDIA)
 
     private val accountKey: UserKey?
-        get() = arguments.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
+        get() = arguments!!.accountKey
 
     private val sizedResultCreator: CacheDownloadLoader.ResultCreator by lazy {
-        return@lazy SizedResultCreator(context)
+        return@lazy SizedResultCreator(context!!)
     }
 
     private var mediaLoadState: Int = 0

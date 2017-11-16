@@ -188,7 +188,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
             pausedByUser = savedInstanceState.getBoolean(EXTRA_PAUSED_BY_USER)
             playAudio = savedInstanceState.getBoolean(EXTRA_PLAY_AUDIO)
         } else {
-            val am = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            val am = context!!.getSystemService(Context.AUDIO_SERVICE) as AudioManager
             // Play audio by default if ringer mode on
             playAudio = !isMutedByDefault && am.ringerMode == AudioManager.RINGER_MODE_NORMAL
         }
@@ -201,8 +201,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         playerView.controllerShowTimeoutMs = 0
         playerView.setOnSystemUiVisibilityChangeListener {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) return@setOnSystemUiVisibilityChangeListener
-            val visible = MediaViewerActivity.FLAG_SYSTEM_UI_HIDE_BARS !in
-                    activity.window.decorView.systemUiVisibility
+            val visible = MediaViewerActivity.FLAG_SYSTEM_UI_HIDE_BARS !in activity!!.window.decorView.systemUiVisibility
             if (visible) {
                 playerView.showController()
             } else {
@@ -274,7 +273,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         return inflater.inflate(R.layout.layout_media_viewer_exo_player_view, parent, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         promotionService.setupBanner(adContainer, PromotionService.BannerType.MEDIA_PAUSE)
     }
@@ -361,7 +360,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         if (bestVideoUrlAndType != null) {
             return Uri.parse(bestVideoUrlAndType.first)
         }
-        return arguments.getParcelable<Uri>(SubsampleImageViewerFragment.EXTRA_MEDIA_URI)
+        return arguments!!.getParcelable<Uri>(SubsampleImageViewerFragment.EXTRA_MEDIA_URI)
     }
 
 

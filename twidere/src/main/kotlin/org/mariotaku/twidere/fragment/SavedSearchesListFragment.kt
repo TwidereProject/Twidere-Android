@@ -33,7 +33,7 @@ import org.mariotaku.microblog.library.twitter.model.ResponseList
 import org.mariotaku.microblog.library.twitter.model.SavedSearch
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.SavedSearchesAdapter
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
+import org.mariotaku.twidere.extension.accountKey
 import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.loader.SavedSearchesLoader
 import org.mariotaku.twidere.model.UserKey
@@ -52,7 +52,7 @@ class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapte
         }
 
     val accountKey: UserKey
-        get() = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+        get() = arguments!!.accountKey!!
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -79,18 +79,18 @@ class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapte
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<ResponseList<SavedSearch>?> {
-        return SavedSearchesLoader(activity, accountKey)
+        return SavedSearchesLoader(activity!!, accountKey)
     }
 
     override fun onItemLongClick(view: AdapterView<*>, child: View, position: Int, id: Long): Boolean {
         val item = adapter.findItem(id) ?: return false
-        DestroySavedSearchDialogFragment.show(fragmentManager, accountKey, item.id, item.name)
+        DestroySavedSearchDialogFragment.show(fragmentManager!!, accountKey, item.id, item.name)
         return true
     }
 
     override fun onItemClick(view: AdapterView<*>, child: View, position: Int, id: Long) {
         val item = adapter.findItem(id) ?: return
-        openTweetSearch(activity, accountKey, item.query)
+        openTweetSearch(activity!!, accountKey, item.query)
     }
 
     override fun onLoaderReset(loader: Loader<ResponseList<SavedSearch>?>) {

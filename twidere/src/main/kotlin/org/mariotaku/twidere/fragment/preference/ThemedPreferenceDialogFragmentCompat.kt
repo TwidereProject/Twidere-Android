@@ -7,16 +7,11 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.preference.PreferenceDialogFragmentCompat
-import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.util.dagger.GeneralComponent
-import javax.inject.Inject
 
 abstract class ThemedPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat() {
-
-    @Inject
-    lateinit var kPreferences: KPreferences
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -25,7 +20,7 @@ abstract class ThemedPreferenceDialogFragmentCompat : PreferenceDialogFragmentCo
 
     @SuppressLint("RestrictedApi")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val context = context
+        val context = context!!
         val preference = preference
         onClick(null, DialogInterface.BUTTON_NEGATIVE)
         val builder = AlertDialog.Builder(context)

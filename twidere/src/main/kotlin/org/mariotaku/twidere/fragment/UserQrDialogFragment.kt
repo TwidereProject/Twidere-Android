@@ -42,10 +42,12 @@ import nl.komponents.kovenant.then
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.promiseOnUi
 import nl.komponents.kovenant.ui.successUi
+import org.mariotaku.ktextension.weak
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER
+import org.mariotaku.twidere.annotation.ImageShapeStyle
 import org.mariotaku.twidere.extension.loadOriginalProfileImage
 import org.mariotaku.twidere.extension.loadProfileImage
+import org.mariotaku.twidere.extension.user
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.util.LinkCreator
 import org.mariotaku.twidere.util.TwidereColorUtils
@@ -61,7 +63,8 @@ import java.util.concurrent.ExecutionException
  */
 class UserQrDialogFragment : BaseDialogFragment() {
 
-    private val user: ParcelableUser get() = arguments.getParcelable(EXTRA_USER)
+    private val user: ParcelableUser
+        get() = arguments!!.user!!
 
     init {
         setStyle(STYLE_NO_TITLE, 0)
@@ -115,14 +118,17 @@ class UserQrDialogFragment : BaseDialogFragment() {
     }
 
     private fun loadProfileImage(): Promise<GlideDrawable, Exception> {
-        if (context == null || isDetached || dialog == null || (activity?.isFinishing ?: true)) {
+        val activity = this.activity ?: return Promise.ofFail(InterruptedException())
+        if (isDetached || dialog == null || activity.isFinishing) {
             return Promise.ofFail(InterruptedException())
         }
-        val profileImageSize = getString(R.string.profile_image_size)
-        val context = context.applicationContext
-        val requestManager = Glide.with(context)
+        val weakActivity by weak(activity)
         val user = this.user
+
         return task {
+            val context = weakActivity ?: throw InterruptedException()
+            val requestManager = Glide.with(context)
+            val profileImageSize = context.getString(R.string.profile_image_size)
             try {
                 return@task requestManager.loadOriginalProfileImage(context, user, 0)
                         .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get()
@@ -130,8 +136,8 @@ class UserQrDialogFragment : BaseDialogFragment() {
                 // Ignore
             }
             // Return fallback profile image
-            return@task requestManager.loadProfileImage(context, user, 0, size = profileImageSize)
-                    .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get()
+            return@task requestManager.loadProfileImage(context, user, ImageShapeStyle.SHAPE_NONE,
+                    size = profileImageSize).into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get()
         }
     }
 

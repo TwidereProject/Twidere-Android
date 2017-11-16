@@ -11,6 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.rengwuxian.materialedittext.MaterialEditText
+import org.mariotaku.kpreferences.get
+import org.mariotaku.kpreferences.set
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ArrayAdapter
 import org.mariotaku.twidere.adapter.BaseArrayAdapter
@@ -55,7 +57,7 @@ class APIEditorDialogFragment : BaseDialogFragment() {
             } else if (host is APIEditorCallback) {
                 host.onSaveAPIConfig(applyCustomAPIConfig())
             } else {
-                kPreferences[defaultAPIConfigKey] = applyCustomAPIConfig()
+                preferences[defaultAPIConfigKey] = applyCustomAPIConfig()
             }
         }
         builder.setNegativeButton(android.R.string.cancel, null)
@@ -97,7 +99,7 @@ class APIEditorDialogFragment : BaseDialogFragment() {
             if (savedInstanceState != null) {
                 apiConfig = savedInstanceState.getParcelable(EXTRA_API_CONFIG)
             } else {
-                apiConfig = arguments?.getParcelable(EXTRA_API_CONFIG) ?: kPreferences[defaultAPIConfigKey]
+                apiConfig = arguments?.getParcelable(EXTRA_API_CONFIG) ?: preferences[defaultAPIConfigKey]
             }
             displayCustomApiConfig()
         }

@@ -19,6 +19,7 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_network_diagnostics.*
 import okhttp3.Dns
+import org.mariotaku.ktextension.weak
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.twitter.model.Paging
@@ -44,7 +45,6 @@ import org.mariotaku.twidere.util.net.SystemDnsFetcher
 import org.mariotaku.twidere.util.net.TwidereDns
 import java.io.IOException
 import java.io.OutputStream
-import java.lang.ref.WeakReference
 import java.net.InetAddress
 import java.util.*
 
@@ -95,11 +95,11 @@ class NetworkDiagnosticsFragment : BaseFragment() {
 
     internal class DiagnosticsTask(fragment: NetworkDiagnosticsFragment) : AsyncTask<Any, LogText, Unit>() {
 
-        private val fragmentRef = WeakReference(fragment)
-        private val contextRef = WeakReference(fragment.activity.applicationContext)
+        private val fragment by weak(fragment)
+        private val context by weak(fragment.activity?.applicationContext)
 
         override fun doInBackground(vararg params: Any) {
-            val context = contextRef.get() ?: return
+            val context = context ?: return
             val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             logPrintln("**** NOTICE ****", LogText.State.WARNING)
             logPrintln()
@@ -246,20 +246,20 @@ class NetworkDiagnosticsFragment : BaseFragment() {
         }
 
         override fun onProgressUpdate(vararg values: LogText) {
-            val fragment = fragmentRef.get() ?: return
+            val fragment = fragment ?: return
             for (value in values) {
                 fragment.appendMessage(value)
             }
         }
 
         override fun onPreExecute() {
-            val fragment = fragmentRef.get() ?: return
+            val fragment = fragment ?: return
             fragment.diagStart()
             super.onPreExecute()
         }
 
         override fun onPostExecute(u: Unit) {
-            val fragment = fragmentRef.get() ?: return
+            val fragment = fragment ?: return
             logPrintln()
             logPrintln(("Done. You can send this log to me, and I'll contact you to solve related issue."))
             fragment.logReady()

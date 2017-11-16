@@ -32,7 +32,9 @@ import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.adapter.ParcelableUserListsAdapter
 import org.mariotaku.twidere.adapter.iface.IUserListsAdapter.UserListClickListener
 import org.mariotaku.twidere.annotation.LoadMorePosition
-import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_FROM_USER
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_PAGINATION
+import org.mariotaku.twidere.extension.accountKey
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.loader.iface.IPaginationLoader
 import org.mariotaku.twidere.model.ParcelableUserList
@@ -54,7 +56,7 @@ abstract class ParcelableUserListsFragment : AbsContentListRecyclerViewFragment<
         private set
 
     protected val accountKey: UserKey?
-        get() = arguments.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
+        get() = arguments!!.accountKey
 
     val data: List<ParcelableUserList>?
         get() = adapter.getData()
@@ -139,7 +141,7 @@ abstract class ParcelableUserListsFragment : AbsContentListRecyclerViewFragment<
     override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableUserList>> {
         val fromUser = args.getBoolean(EXTRA_FROM_USER)
         args.remove(EXTRA_FROM_USER)
-        return onCreateUserListsLoader(activity, args, fromUser)
+        return onCreateUserListsLoader(activity!!, args, fromUser)
     }
 
     override fun onLoaderReset(loader: Loader<List<ParcelableUserList>>) {
@@ -150,7 +152,7 @@ abstract class ParcelableUserListsFragment : AbsContentListRecyclerViewFragment<
 
     override fun onUserListClick(holder: UserListViewHolder, position: Int) {
         val userList = adapter.getUserList(position) ?: return
-        IntentUtils.openUserListDetails(activity, userList)
+        IntentUtils.openUserListDetails(activity!!, userList)
     }
 
     override fun onUserListLongClick(holder: UserListViewHolder, position: Int): Boolean {

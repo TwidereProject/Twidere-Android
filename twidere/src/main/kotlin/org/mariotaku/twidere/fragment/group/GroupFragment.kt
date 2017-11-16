@@ -58,7 +58,7 @@ class GroupFragment : AbsToolbarTabPagesFragment(), LoaderCallbacks<SingleRespon
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        Utils.setNdefPushMessageCallback(activity, NfcAdapter.CreateNdefMessageCallback {
+        Utils.setNdefPushMessageCallback(activity!!, NfcAdapter.CreateNdefMessageCallback {
             val url = group?.url ?: return@CreateNdefMessageCallback null
             NdefMessage(arrayOf(NdefRecord.createUri(url)))
         })
@@ -71,7 +71,7 @@ class GroupFragment : AbsToolbarTabPagesFragment(), LoaderCallbacks<SingleRespon
         val groupId = args.getString(EXTRA_GROUP_ID)
         val groupName = args.getString(EXTRA_GROUP_NAME)
         val omitIntentExtra = args.getBoolean(EXTRA_OMIT_INTENT_EXTRA, true)
-        return ParcelableGroupLoader(context, omitIntentExtra, arguments, accountKey, groupId,
+        return ParcelableGroupLoader(context!!, omitIntentExtra, arguments, accountKey, groupId,
                 groupName)
     }
 
