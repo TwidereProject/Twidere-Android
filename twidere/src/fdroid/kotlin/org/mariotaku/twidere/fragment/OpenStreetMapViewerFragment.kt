@@ -49,11 +49,10 @@ class OpenStreetMapViewerFragment : BaseFragment(), Constants {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
-        val args = arguments
-        val latitude = args.getDouble(EXTRA_LATITUDE, Double.NaN)
-        val longitude = args.getDouble(EXTRA_LONGITUDE, Double.NaN)
+        val latitude = arguments!!.getDouble(EXTRA_LATITUDE, Double.NaN)
+        val longitude = arguments!!.getDouble(EXTRA_LONGITUDE, Double.NaN)
         if (latitude.isNaN() || longitude.isNaN()) {
-            activity.finish()
+            activity!!.finish()
             return
         }
         this.latitude = latitude
