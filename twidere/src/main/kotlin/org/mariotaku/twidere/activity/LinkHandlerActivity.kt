@@ -52,7 +52,7 @@ import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants
 import org.mariotaku.twidere.constant.floatingDetailedContentsKey
 import org.mariotaku.twidere.exception.NoAccountException
-import org.mariotaku.twidere.extension.simpleLayout
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.fragment.activities.InteractionsActivitiesFragment
 import org.mariotaku.twidere.fragment.drafts.DraftsFragment
@@ -496,79 +496,31 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
             }
             LINK_ID_USER_LIST_MEMBERSHIPS -> {
                 fragment = UserListMembershipsFragment()
-                val paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME)
-                val paramUserKey = uri.getUserKeyQueryParameter()
-                if (!args.containsKey(EXTRA_SCREEN_NAME)) {
-                    args.putString(EXTRA_SCREEN_NAME, paramScreenName)
-                }
-                if (!args.containsKey(EXTRA_USER_KEY)) {
-                    args.putParcelable(EXTRA_USER_KEY, paramUserKey)
-                }
+                if (!args.copyUserRelatedArguments(uri)) return null
             }
             LINK_ID_USER_TIMELINE -> {
                 fragment = UserTimelineFragment()
-                val paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME)
+                if (!args.copyUserRelatedArguments(uri)) return null
                 val paramProfileUrl = uri.getQueryParameter(QUERY_PARAM_PROFILE_URL)
-                val paramUserKey = uri.getUserKeyQueryParameter()
-                if (!args.containsKey(EXTRA_SCREEN_NAME)) {
-                    args.putString(EXTRA_SCREEN_NAME, paramScreenName)
-                }
-                if (!args.containsKey(EXTRA_USER_KEY)) {
-                    args.putParcelable(EXTRA_USER_KEY, paramUserKey)
-                }
                 if (!args.containsKey(EXTRA_PROFILE_URL)) {
                     args.putString(EXTRA_PROFILE_URL, paramProfileUrl)
                 }
-                if (TextUtils.isEmpty(paramScreenName) && paramUserKey == null) return null
             }
             LINK_ID_USER_MEDIA_TIMELINE -> {
                 fragment = UserMediaTimelineFragment()
-                val paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME)
-                val paramUserKey = uri.getUserKeyQueryParameter()
-                if (!args.containsKey(EXTRA_SCREEN_NAME)) {
-                    args.putString(EXTRA_SCREEN_NAME, paramScreenName)
-                }
-                if (!args.containsKey(EXTRA_USER_KEY)) {
-                    args.putParcelable(EXTRA_USER_KEY, paramUserKey)
-                }
-                if (TextUtils.isEmpty(paramScreenName) && paramUserKey == null) return null
+                if (!args.copyUserRelatedArguments(uri)) return null
             }
             LINK_ID_USER_FAVORITES -> {
                 fragment = FavoritesTimelineFragment()
-                val paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME)
-                val paramUserKey = uri.getUserKeyQueryParameter()
-                if (!args.containsKey(EXTRA_SCREEN_NAME)) {
-                    args.putString(EXTRA_SCREEN_NAME, paramScreenName)
-                }
-                if (!args.containsKey(EXTRA_USER_KEY)) {
-                    args.putParcelable(EXTRA_USER_KEY, paramUserKey)
-                }
-                if (!args.containsKey(EXTRA_SCREEN_NAME) && !args.containsKey(EXTRA_USER_KEY))
-                    return null
+                if (!args.copyUserRelatedArguments(uri)) return null
             }
             LINK_ID_USER_FOLLOWERS -> {
                 fragment = UserFollowersFragment()
-                val paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME)
-                val paramUserKey = uri.getUserKeyQueryParameter()
-                if (!args.containsKey(EXTRA_SCREEN_NAME)) {
-                    args.putString(EXTRA_SCREEN_NAME, paramScreenName)
-                }
-                if (!args.containsKey(EXTRA_USER_KEY)) {
-                    args.putParcelable(EXTRA_USER_KEY, paramUserKey)
-                }
-                if (TextUtils.isEmpty(paramScreenName) && paramUserKey == null) return null
+                if (!args.copyUserRelatedArguments(uri)) return null
             }
             LINK_ID_USER_FRIENDS -> {
                 fragment = UserFriendsFragment()
-                val paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME)
-                val paramUserKey = uri.getUserKeyQueryParameter()
-                if (!args.containsKey(EXTRA_SCREEN_NAME)) {
-                    args.putString(EXTRA_SCREEN_NAME, paramScreenName)
-                }
-                if (!args.containsKey(EXTRA_USER_KEY)) {
-                    args.putParcelable(EXTRA_USER_KEY, paramUserKey)
-                }
-                if (TextUtils.isEmpty(paramScreenName) && paramUserKey == null) return null
+                if (!args.copyUserRelatedArguments(uri)) return null
             }
             LINK_ID_USER_BLOCKS -> {
                 fragment = UserBlocksListFragment()
@@ -608,17 +560,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
             }
             LINK_ID_USER_LIST -> {
                 fragment = UserListFragment()
-                val paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME)
-                val paramUserKey = uri.getUserKeyQueryParameter()
-                val paramListId = uri.getQueryParameter(QUERY_PARAM_LIST_ID)
-                val paramListName = uri.getQueryParameter(QUERY_PARAM_LIST_NAME)
-                if ((TextUtils.isEmpty(paramListName) || TextUtils.isEmpty(paramScreenName) && paramUserKey == null) && TextUtils.isEmpty(paramListId)) {
-                    return null
-                }
-                args.putString(EXTRA_LIST_ID, paramListId)
-                args.putParcelable(EXTRA_USER_KEY, paramUserKey)
-                args.putString(EXTRA_SCREEN_NAME, paramScreenName)
-                args.putString(EXTRA_LIST_NAME, paramListName)
+                if (!args.copyListRelatedArguments(uri)) return null
             }
             LINK_ID_GROUP -> {
                 fragment = GroupFragment()
@@ -626,83 +568,35 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
                 val paramGroupName = uri.getQueryParameter(QUERY_PARAM_GROUP_NAME)
                 if (TextUtils.isEmpty(paramGroupId) && TextUtils.isEmpty(paramGroupName))
                     return null
-                args.putString(EXTRA_GROUP_ID, paramGroupId)
-                args.putString(EXTRA_GROUP_NAME, paramGroupName)
+                args.groupId = paramGroupId
+                args.groupName = paramGroupName
             }
             LINK_ID_USER_LISTS -> {
                 fragment = ListsFragment()
-                val paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME)
-                val paramUserKey = uri.getUserKeyQueryParameter()
-                if (!args.containsKey(EXTRA_SCREEN_NAME)) {
-                    args.putString(EXTRA_SCREEN_NAME, paramScreenName)
-                }
-                if (!args.containsKey(EXTRA_USER_KEY)) {
-                    args.putParcelable(EXTRA_USER_KEY, paramUserKey)
-                }
-                if (TextUtils.isEmpty(paramScreenName) && paramUserKey == null) return null
+                if (!args.copyUserRelatedArguments(uri)) return null
             }
             LINK_ID_USER_GROUPS -> {
                 fragment = UserGroupsFragment()
-                val paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME)
-                val paramUserKey = uri.getUserKeyQueryParameter()
-                if (!args.containsKey(EXTRA_SCREEN_NAME)) {
-                    args.putString(EXTRA_SCREEN_NAME, paramScreenName)
-                }
-                if (!args.containsKey(EXTRA_USER_KEY)) {
-                    args.putParcelable(EXTRA_USER_KEY, paramUserKey)
-                }
-                if (TextUtils.isEmpty(paramScreenName) && paramUserKey == null) return null
+                if (!args.copyUserRelatedArguments(uri)) return null
             }
             LINK_ID_USER_LIST_TIMELINE -> {
                 fragment = ListTimelineFragment()
-                val paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME)
-                val paramUserKey = uri.getUserKeyQueryParameter()
-                val paramListId = uri.getQueryParameter(QUERY_PARAM_LIST_ID)
-                val paramListName = uri.getQueryParameter(QUERY_PARAM_LIST_NAME)
-                if ((TextUtils.isEmpty(paramListName) || TextUtils.isEmpty(paramScreenName) && paramUserKey == null) && TextUtils.isEmpty(paramListId)) {
-                    return null
-                }
-                args.putString(EXTRA_LIST_ID, paramListId)
-                args.putParcelable(EXTRA_USER_KEY, paramUserKey)
-                args.putString(EXTRA_SCREEN_NAME, paramScreenName)
-                args.putString(EXTRA_LIST_NAME, paramListName)
+                if (!args.copyListRelatedArguments(uri)) return null
             }
             LINK_ID_USER_LIST_MEMBERS -> {
                 fragment = UserListMembersFragment()
-                val paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME)
-                val paramUserKey = uri.getUserKeyQueryParameter()
-                val paramListId = uri.getQueryParameter(QUERY_PARAM_LIST_ID)
-                val paramListName = uri.getQueryParameter(QUERY_PARAM_LIST_NAME)
-                if ((TextUtils.isEmpty(paramListName) || TextUtils.isEmpty(paramScreenName) && paramUserKey == null) && TextUtils.isEmpty(paramListId))
-                    return null
-                args.putString(EXTRA_LIST_ID, paramListId)
-                args.putParcelable(EXTRA_USER_KEY, paramUserKey)
-                args.putString(EXTRA_SCREEN_NAME, paramScreenName)
-                args.putString(EXTRA_LIST_NAME, paramListName)
+                if (!args.copyListRelatedArguments(uri)) return null
             }
             LINK_ID_USER_LIST_SUBSCRIBERS -> {
                 fragment = UserListSubscribersFragment()
-                val paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME)
-                val paramUserKey = uri.getUserKeyQueryParameter()
-                val paramListId = uri.getQueryParameter(QUERY_PARAM_LIST_ID)
-                val paramListName = uri.getQueryParameter(QUERY_PARAM_LIST_NAME)
-                if (TextUtils.isEmpty(paramListId) && (TextUtils.isEmpty(paramListName) || TextUtils.isEmpty(paramScreenName) && paramUserKey == null))
-                    return null
-                args.putString(EXTRA_LIST_ID, paramListId)
-                args.putParcelable(EXTRA_USER_KEY, paramUserKey)
-                args.putString(EXTRA_SCREEN_NAME, paramScreenName)
-                args.putString(EXTRA_LIST_NAME, paramListName)
+                if (!args.copyListRelatedArguments(uri)) return null
             }
             LINK_ID_SAVED_SEARCHES -> {
                 fragment = SavedSearchesListFragment()
             }
             LINK_ID_USER_MENTIONS -> {
                 fragment = UserMentionsTimelineFragment()
-                val paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME)
-                if (!args.containsKey(EXTRA_SCREEN_NAME) && !TextUtils.isEmpty(paramScreenName)) {
-                    args.putString(EXTRA_SCREEN_NAME, paramScreenName)
-                }
-                if (TextUtils.isEmpty(args.getString(EXTRA_SCREEN_NAME))) return null
+                if (!args.copyListRelatedArguments(uri)) return null
             }
             LINK_ID_INCOMING_FRIENDSHIPS -> {
                 fragment = IncomingFriendshipsFragment()
@@ -796,6 +690,32 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
     }
 
     interface HideUiOnScroll
+
+    private fun Bundle.copyListRelatedArguments(uri: Uri): Boolean {
+        val paramScreenName = uri.getNonEmptyQueryParameter(QUERY_PARAM_SCREEN_NAME)
+        val paramUserKey = uri.getUserKeyQueryParameter()
+        val paramListId = uri.getNonEmptyQueryParameter(QUERY_PARAM_LIST_ID)
+        val paramListName = uri.getNonEmptyQueryParameter(QUERY_PARAM_LIST_NAME)
+        if (paramListId == null && (paramListName == null || (paramScreenName == null && paramUserKey == null))) {
+            return false
+        }
+        listId = paramListId
+        listName = paramListName
+        userKey = paramUserKey
+        screenName = paramScreenName
+        return true
+    }
+
+    private fun Bundle.copyUserRelatedArguments(uri: Uri): Boolean {
+        val paramScreenName = uri.getNonEmptyQueryParameter(QUERY_PARAM_SCREEN_NAME)
+        val paramUserKey = uri.getUserKeyQueryParameter()
+        if (paramUserKey == null && paramScreenName == null) {
+            return false
+        }
+        userKey = paramUserKey
+        screenName = paramScreenName
+        return true
+    }
 
     private fun Uri.getUserKeyQueryParameter(): UserKey? {
         val value = getQueryParameter(QUERY_PARAM_USER_KEY) ?: getQueryParameter(QUERY_PARAM_USER_ID)

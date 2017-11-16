@@ -22,12 +22,10 @@ package org.mariotaku.twidere.fragment.users
 import android.content.Context
 import android.os.Bundle
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.constant.IntentConstants.*
-import org.mariotaku.twidere.extension.linkHandlerTitle
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.fragment.ParcelableUsersFragment
 import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
 import org.mariotaku.twidere.loader.users.UserListSubscribersLoader
-import org.mariotaku.twidere.model.UserKey
 
 class UserListSubscribersFragment : ParcelableUsersFragment() {
 
@@ -38,11 +36,11 @@ class UserListSubscribersFragment : ParcelableUsersFragment() {
 
     override fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean):
             AbsRequestUsersLoader {
-        val listId = args.getString(EXTRA_LIST_ID)
-        val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
-        val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
-        val screenName = args.getString(EXTRA_SCREEN_NAME)
-        val listName = args.getString(EXTRA_LIST_NAME)
+        val accountKey = args.accountKey
+        val listId = args.listId
+        val listName = args.listName
+        val userKey = args.userKey
+        val screenName = args.screenName
         return UserListSubscribersLoader(context, accountKey, listId, userKey, screenName, listName,
                 adapter.getData(), fromUser)
     }

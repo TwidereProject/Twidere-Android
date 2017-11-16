@@ -21,19 +21,20 @@ package org.mariotaku.twidere.fragment.users
 
 import android.content.Context
 import android.os.Bundle
-import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.extension.accountKey
+import org.mariotaku.twidere.extension.groupId
+import org.mariotaku.twidere.extension.groupName
 import org.mariotaku.twidere.fragment.ParcelableUsersFragment
 import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
 import org.mariotaku.twidere.loader.users.GroupMembersLoader
-import org.mariotaku.twidere.model.UserKey
 
 class GroupMembersFragment : ParcelableUsersFragment() {
 
     override fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean):
             AbsRequestUsersLoader {
-        val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
-        val groupId = args.getString(EXTRA_GROUP_ID)
-        val groupName = args.getString(EXTRA_GROUP_NAME)
+        val accountKey = args.accountKey
+        val groupId = args.groupId
+        val groupName = args.groupName
         return GroupMembersLoader(context, accountKey, groupId, groupName, adapter.getData(),
                 fromUser)
     }

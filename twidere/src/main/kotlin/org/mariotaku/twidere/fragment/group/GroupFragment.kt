@@ -32,6 +32,8 @@ import org.mariotaku.microblog.library.statusnet.model.Group
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
+import org.mariotaku.twidere.extension.groupId
+import org.mariotaku.twidere.extension.groupName
 import org.mariotaku.twidere.fragment.AbsToolbarTabPagesFragment
 import org.mariotaku.twidere.fragment.timeline.GroupTimelineFragment
 import org.mariotaku.twidere.fragment.users.GroupMembersFragment
@@ -68,8 +70,8 @@ class GroupFragment : AbsToolbarTabPagesFragment(), LoaderCallbacks<SingleRespon
 
     override fun onCreateLoader(id: Int, args: Bundle): Loader<SingleResponse<ParcelableGroup>> {
         val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
-        val groupId = args.getString(EXTRA_GROUP_ID)
-        val groupName = args.getString(EXTRA_GROUP_NAME)
+        val groupId = args.groupId
+        val groupName = args.groupName
         val omitIntentExtra = args.getBoolean(EXTRA_OMIT_INTENT_EXTRA, true)
         return ParcelableGroupLoader(context!!, omitIntentExtra, arguments, accountKey, groupId,
                 groupName)

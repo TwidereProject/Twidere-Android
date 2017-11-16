@@ -31,7 +31,7 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.nameFirstKey
-import org.mariotaku.twidere.extension.linkHandlerTitle
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.fragment.DeleteUserListMembersDialogFragment
 import org.mariotaku.twidere.fragment.ParcelableUsersFragment
 import org.mariotaku.twidere.fragment.userlist.UserListFragment
@@ -84,11 +84,11 @@ class UserListMembersFragment : ParcelableUsersFragment() {
 
     override fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean):
             AbsRequestUsersLoader {
-        val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
-        val listId = args.getString(EXTRA_LIST_ID)
-        val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
-        val screenName = args.getString(EXTRA_SCREEN_NAME)
-        val listName = args.getString(EXTRA_LIST_NAME)
+        val accountKey = args.accountKey
+        val listId = args.listId
+        val userKey = args.userKey
+        val screenName = args.screenName
+        val listName = args.listName
         return UserListMembersLoader(context, accountKey, listId, userKey, screenName, listName,
                 adapter.getData(), fromUser)
     }
@@ -127,9 +127,9 @@ class UserListMembersFragment : ParcelableUsersFragment() {
         val userList = event.userList
         val accountKey = accountKey ?: return
         val userKey = userKey ?: return
-        val listId = arguments!!.getString(EXTRA_LIST_ID)
-        val screenName = arguments!!.getString(EXTRA_SCREEN_NAME)
-        val listName = arguments!!.getString(EXTRA_LIST_NAME)
+        val listId = arguments!!.listId
+        val screenName = arguments!!.screenName
+        val listName = arguments!!.listName
         if (!ParcelableUserListUtils.check(userList, accountKey, listId, userKey, screenName, listName)) {
             return
         }

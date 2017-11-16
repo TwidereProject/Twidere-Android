@@ -27,16 +27,12 @@ import org.mariotaku.ktextension.string
 import org.mariotaku.microblog.library.twitter.model.UserList
 import org.mariotaku.microblog.library.twitter.model.UserListUpdate
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.constant.IntentConstants.*
-import org.mariotaku.twidere.extension.accountKey
-import org.mariotaku.twidere.extension.applyOnShow
-import org.mariotaku.twidere.extension.applyTheme
-import org.mariotaku.twidere.extension.positive
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_DESCRIPTION
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_IS_PUBLIC
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.text.validator.UserListNameValidator
 
 class EditUserListDialogFragment : BaseDialogFragment() {
-
-    private val listId: String by lazy { arguments!!.getString(EXTRA_LIST_ID) }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(context!!)
@@ -49,7 +45,7 @@ class EditUserListDialogFragment : BaseDialogFragment() {
             applyTheme()
             editName.addValidator(UserListNameValidator(getString(R.string.invalid_list_name)))
             if (savedInstanceState == null) {
-                editName.setText(arguments!!.getString(EXTRA_LIST_NAME))
+                editName.setText(arguments!!.listName)
                 editDescription.setText(arguments!!.getString(EXTRA_DESCRIPTION))
                 isPublic.isChecked = arguments!!.getBoolean(EXTRA_IS_PUBLIC, true)
             }
@@ -65,7 +61,7 @@ class EditUserListDialogFragment : BaseDialogFragment() {
         update.setMode(if (isPublic) UserList.Mode.PUBLIC else UserList.Mode.PRIVATE)
         update.setName(name)
         update.setDescription(description)
-        twitterWrapper.updateUserListDetails(arguments!!.accountKey!!, listId, update)
+        twitterWrapper.updateUserListDetails(arguments!!.accountKey!!, arguments!!.listId!!, update)
     }
 
 }

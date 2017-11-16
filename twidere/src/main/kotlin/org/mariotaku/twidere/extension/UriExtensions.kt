@@ -29,3 +29,5 @@ fun Uri.Builder.appendQueryParameterIgnoreNull(key: String, value: String?) {
     if (value == null) return
     appendQueryParameter(key, value)
 }
+
+fun Uri.getNonEmptyQueryParameter(key: String): String? = getQueryParameter(key)?.takeIf(String::isNotEmpty)

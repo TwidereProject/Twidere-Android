@@ -135,20 +135,21 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
 
     override fun addTabs(adapter: SupportTabsAdapter) {
         val args = arguments!!
-        val tabArgs = Bundle()
-        if (args.containsKey(EXTRA_USER_LIST)) {
-            val userList = args.getParcelable<ParcelableUserList>(EXTRA_USER_LIST)!!
-            tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, userList.account_key)
-            tabArgs.putParcelable(EXTRA_USER_KEY, userList.user_key)
-            tabArgs.putString(EXTRA_SCREEN_NAME, userList.user_screen_name)
-            tabArgs.putString(EXTRA_LIST_ID, userList.id)
-            tabArgs.putString(EXTRA_LIST_NAME, userList.name)
-        } else {
-            tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, args.accountKey)
-            tabArgs.putParcelable(EXTRA_USER_KEY, args.getParcelable(EXTRA_USER_KEY))
-            tabArgs.putString(EXTRA_SCREEN_NAME, args.getString(EXTRA_SCREEN_NAME))
-            tabArgs.putString(EXTRA_LIST_ID, args.getString(EXTRA_LIST_ID))
-            tabArgs.putString(EXTRA_LIST_NAME, args.getString(EXTRA_LIST_NAME))
+        val tabArgs = Bundle {
+            if (args.containsKey(EXTRA_USER_LIST)) {
+                val userList = args.userList!!
+                this.accountKey = userList.account_key
+                this.userKey = userList.user_key
+                this.screenName = userList.user_screen_name
+                this.listId = userList.id
+                this.listName = userList.name
+            } else {
+                this.accountKey = args.accountKey
+                this.userKey = args.userKey
+                this.screenName = args.screenName
+                this.listId = args.listId
+                this.listName = args.listName
+            }
         }
         adapter.add(cls = ListTimelineFragment::class.java, args = tabArgs, name = getString(R.string.title_statuses))
         adapter.add(cls = UserListMembersFragment::class.java, args = tabArgs, name = getString(R.string.members))
@@ -208,14 +209,14 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
                 DestroyUserListDialogFragment.show(fragmentManager!!, userList)
             }
             R.id.edit -> {
-                val args = Bundle()
-                args.putParcelable(EXTRA_ACCOUNT_KEY, userList.account_key)
-                args.putString(EXTRA_LIST_NAME, userList.name)
-                args.putString(EXTRA_DESCRIPTION, userList.description)
-                args.putBoolean(EXTRA_IS_PUBLIC, userList.is_public)
-                args.putString(EXTRA_LIST_ID, userList.id)
                 val f = EditUserListDialogFragment()
-                f.arguments = args
+                f.arguments = Bundle {
+                    accountKey = userList.account_key
+                    listId = userList.id
+                    listName = userList.name
+                    putString(EXTRA_DESCRIPTION, userList.description)
+                    putBoolean(EXTRA_IS_PUBLIC, userList.is_public)
+                }
                 f.show(fragmentManager, "edit_user_list_details")
                 return true
             }
@@ -277,8 +278,8 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
     override fun onCreateLoader(id: Int, args: Bundle): Loader<SingleResponse<ParcelableUserList>> {
         val accountKey = args.accountKey
         val userKey = args.userKey
-        val listId = args.getString(EXTRA_LIST_ID)
-        val listName = args.getString(EXTRA_LIST_NAME)
+        val listId = args.listId
+        val listName = args.listName
         val screenName = args.screenName
         val omitIntentExtra = args.getBoolean(EXTRA_OMIT_INTENT_EXTRA, true)
         return ParcelableUserListLoader(activity!!, omitIntentExtra, arguments, accountKey, listId,
