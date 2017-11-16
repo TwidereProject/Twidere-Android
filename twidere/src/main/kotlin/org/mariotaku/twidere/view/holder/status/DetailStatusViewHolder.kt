@@ -499,6 +499,9 @@ class DetailStatusViewHolder(
             setPrimaryTextSize(textSize * 1.25f)
             setSecondaryTextSize(textSize * 0.85f)
             updateTextAppearance()
+            primaryText = "255"
+            secondaryText = "XXXX"
+            updateText()
         }
 
         nameView.updateTextAppearance()
@@ -704,6 +707,7 @@ class DetailStatusViewHolder(
                 val textSize = adapter.textSize
                 labelView.setPrimaryTextSize(textSize * 1.25f)
                 labelView.setSecondaryTextSize(textSize * 0.85f)
+                labelView.updateTextAppearance()
             }
 
             override fun onClick(v: View) {
