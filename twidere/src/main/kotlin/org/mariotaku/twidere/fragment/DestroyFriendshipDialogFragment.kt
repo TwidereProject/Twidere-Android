@@ -26,12 +26,11 @@ import android.support.v4.app.FragmentManager
 import android.support.v7.app.AlertDialog
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.Bundle
-import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.applyOnShow
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.user
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.promise.FriendshipPromises
 
@@ -40,8 +39,9 @@ class DestroyFriendshipDialogFragment : BaseDialogFragment(), DialogInterface.On
     override fun onClick(dialog: DialogInterface, which: Int) {
         when (which) {
             DialogInterface.BUTTON_POSITIVE -> {
+                val user = arguments!!.user!!
                 val accountKey = user.account_key ?: return
-                FriendshipPromises.getInstance(context).destroy(accountKey, user.key)
+                FriendshipPromises.getInstance(context!!).destroy(accountKey, user.key)
             }
             else -> {
             }
@@ -49,8 +49,9 @@ class DestroyFriendshipDialogFragment : BaseDialogFragment(), DialogInterface.On
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context)
+        val builder = AlertDialog.Builder(context!!)
         val nameFirst = preferences[nameFirstKey]
+        val user = arguments!!.user!!
         val displayName = userColorNameManager.getDisplayName(user, nameFirst)
         builder.setTitle(getString(R.string.unfollow_user, displayName))
         builder.setMessage(getString(R.string.unfollow_user_confirm_message, displayName))
@@ -61,9 +62,6 @@ class DestroyFriendshipDialogFragment : BaseDialogFragment(), DialogInterface.On
         return dialog
     }
 
-    private val user: ParcelableUser
-        get() = arguments.getParcelable(EXTRA_USER)
-
     companion object {
 
         val FRAGMENT_TAG = "destroy_friendship"
@@ -71,7 +69,7 @@ class DestroyFriendshipDialogFragment : BaseDialogFragment(), DialogInterface.On
         fun show(fm: FragmentManager, user: ParcelableUser): DestroyFriendshipDialogFragment {
             val f = DestroyFriendshipDialogFragment()
             f.arguments = Bundle {
-                this[EXTRA_USER] = user
+                this.user = user
             }
             f.show(fm, FRAGMENT_TAG)
             return f

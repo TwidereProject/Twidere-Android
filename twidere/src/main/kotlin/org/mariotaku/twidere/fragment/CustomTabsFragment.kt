@@ -82,8 +82,8 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
             R.id.delete -> {
                 val itemIds = listView.checkedItemIds
                 val where = Expression.`in`(Column(Tabs._ID), RawItemArray(itemIds))
-                context.contentResolver.delete(Tabs.CONTENT_URI, where.sql, null)
-                SettingsActivity.setShouldRestart(activity)
+                context!!.contentResolver.delete(Tabs.CONTENT_URI, where.sql, null)
+                SettingsActivity.setShouldRestart(activity!!)
             }
         }
         mode.finish()
@@ -93,7 +93,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
-        adapter = CustomTabsAdapter(context)
+        adapter = CustomTabsAdapter(context!!)
         listView.choiceMode = ListView.CHOICE_MODE_MULTIPLE_MODAL
         listView.setMultiChoiceModeListener(this)
         listView.onItemClickListener = OnItemClickListener { _, _, position, _ ->
@@ -130,12 +130,12 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor?> {
-        return CursorLoader(activity, Tabs.CONTENT_URI, Tabs.COLUMNS, null, null, Tabs.DEFAULT_SORT_ORDER)
+        return CursorLoader(activity!!, Tabs.CONTENT_URI, Tabs.COLUMNS, null, null, Tabs.DEFAULT_SORT_ORDER)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_custom_tabs, menu)
-        val context = this.context
+        val context = this.context!!
         val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(context), false)
         val itemAdd = menu.findItem(R.id.add_submenu)
         val theme = Chameleon.getOverrideTheme(context, context)
@@ -217,10 +217,10 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
                 val values = ContentValues()
                 values.put(Tabs.POSITION, i)
                 val where = Expression.equals(Tabs._ID, id).sql
-                context.contentResolver.update(Tabs.CONTENT_URI, values, where, null)
+                context!!.contentResolver.update(Tabs.CONTENT_URI, values, where, null)
             }
         }
-        SettingsActivity.setShouldRestart(activity)
+        SettingsActivity.setShouldRestart(activity!!)
     }
 
     private fun updateTitle(mode: ActionMode?) {
@@ -242,15 +242,15 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
             val conf: TabConfiguration
             when (tag) {
                 TAG_ADD_TAB -> {
-                    tabType = arguments.getString(EXTRA_TAB_TYPE)
+                    tabType = arguments!!.getString(EXTRA_TAB_TYPE)
                     tab = Tab()
                     conf = TabConfiguration.ofType(tabType)!!
                     tab.type = tabType
                     tab.icon = conf.icon.persistentKey
-                    tab.position = arguments.getInt(EXTRA_TAB_POSITION)
+                    tab.position = arguments!!.getInt(EXTRA_TAB_POSITION)
                 }
                 TAG_EDIT_TAB -> {
-                    tab = arguments.getParcelable(EXTRA_OBJECT)
+                    tab = arguments!!.getParcelable(EXTRA_OBJECT)
                     tabType = tab.type
                     conf = TabConfiguration.ofType(tabType) ?: run {
                         dismiss()
@@ -270,8 +270,8 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
 
             val positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
 
-            val iconsAdapter = TabIconsAdapter(context)
-            val accountsAdapter = AccountsSpinnerAdapter(context, requestManager = requestManager)
+            val iconsAdapter = TabIconsAdapter(context!!)
+            val accountsAdapter = AccountsSpinnerAdapter(context!!, requestManager = requestManager)
             iconSpinner.adapter = iconsAdapter
             accountSpinner.adapter = accountsAdapter
 
@@ -292,9 +292,9 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
                 if (!accountRequired) {
                     accountsAdapter.add(AccountDetails.dummy())
                 }
-                val officialKeyOnly = arguments.getBoolean(EXTRA_OFFICIAL_KEY_ONLY, false)
+                val officialKeyOnly = arguments!!.getBoolean(EXTRA_OFFICIAL_KEY_ONLY, false)
                 accountsAdapter.addAll(AccountUtils.getAllAccountDetails(AccountManager.get(context), true).filter {
-                    if (officialKeyOnly && !it.isOfficial(context)) {
+                    if (officialKeyOnly && !it.isOfficial(context!!)) {
                         return@filter false
                     }
                     return@filter conf.checkAccountAvailability(it)
@@ -308,7 +308,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
                 accountContainer.visibility = View.GONE
             }
 
-            val extraConfigurations = conf.getExtraConfigurations(context).orEmpty()
+            val extraConfigurations = conf.getExtraConfigurations(context!!).orEmpty()
 
             fun inflateHeader(title: String): View {
                 val headerView = LayoutInflater.from(context).inflate(R.layout.list_item_section_header,
@@ -318,7 +318,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
             }
 
             extraConfigurations.forEachIndexed { idx, extraConf ->
-                extraConf.onCreate(context)
+                extraConf.onCreate(context!!)
                 extraConf.position = idx + 1
                 // Hide immutable settings in edit mode
                 if (editMode && !extraConf.isMutable) return@forEachIndexed
@@ -326,8 +326,8 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
                     // Inflate header with headerTitle
                     extraConfigContainer.addView(inflateHeader(it.createString(context)))
                 }
-                val view = extraConf.onCreateView(context, extraConfigContainer)
-                extraConf.onViewCreated(context, view, this)
+                val view = extraConf.onCreateView(context!!, extraConfigContainer)
+                extraConf.onViewCreated(context!!, view, this)
                 conf.readExtraConfigurationFrom(tab, extraConf)
                 extraConfigContainer.addView(view)
             }
@@ -379,14 +379,14 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
                 when (tag) {
                     TAG_EDIT_TAB -> {
                         val where = Expression.equals(Tabs._ID, tab.id).sql
-                        context.contentResolver.update(Tabs.CONTENT_URI, valuesCreator.create(tab),
+                        context!!.contentResolver.update(Tabs.CONTENT_URI, valuesCreator.create(tab),
                                 where, null)
                     }
                     TAG_ADD_TAB -> {
-                        context.contentResolver.insert(Tabs.CONTENT_URI, valuesCreator.create(tab))
+                        context!!.contentResolver.insert(Tabs.CONTENT_URI, valuesCreator.create(tab))
                     }
                 }
-                SettingsActivity.setShouldRestart(activity)
+                SettingsActivity.setShouldRestart(activity!!)
                 dismiss()
             }
         }
@@ -396,7 +396,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context!!)
             builder.setView(R.layout.dialog_custom_tab_editor)
             builder.setPositiveButton(R.string.action_save, null)
             builder.setNegativeButton(android.R.string.cancel, null)

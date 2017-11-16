@@ -49,7 +49,6 @@ import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonActivity
-import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.activityLabel
 import org.mariotaku.ktextension.getSystemWindowInsets
@@ -102,8 +101,6 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     lateinit var bus: Bus
     @Inject
     lateinit var preferences: SharedPreferences
-    @Inject
-    lateinit var kPreferences: KPreferences
     @Inject
     lateinit var notificationManager: NotificationManagerWrapper
     @Inject

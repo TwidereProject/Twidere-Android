@@ -28,14 +28,11 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.FilterScope
-import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_PROFILE_URL
 import org.mariotaku.twidere.constant.userTimelineFilterKey
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.data.fetcher.UserTimelineFetcher
-import org.mariotaku.twidere.extension.applyTheme
-import org.mariotaku.twidere.extension.linkHandlerTitle
-import org.mariotaku.twidere.extension.onShow
-import org.mariotaku.twidere.extension.withAppendedPath
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.refresh.UserRelatedContentRefreshParam
@@ -51,7 +48,7 @@ class UserTimelineFragment : AbsTimelineFragment() {
         get() = Statuses.UserTimeline.CONTENT_URI.withAppendedPath(tabId)
 
     override val timelineFilter: TimelineFilter?
-        get() = if (arguments.getBoolean(EXTRA_ENABLE_TIMELINE_FILTER)) preferences[userTimelineFilterKey] else null
+        get() = if (arguments!!.getBoolean(EXTRA_ENABLE_TIMELINE_FILTER)) preferences[userTimelineFilterKey] else null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -59,16 +56,16 @@ class UserTimelineFragment : AbsTimelineFragment() {
     }
 
     override fun getStatuses(param: ContentRefreshParam): Boolean {
-        val task = GetUserTimelineTask(context)
-        task.params = UserRelatedContentRefreshParam(arguments.getParcelable(EXTRA_USER_KEY),
-                arguments.getString(EXTRA_SCREEN_NAME), param)
+        val task = GetUserTimelineTask(context!!)
+        task.params = UserRelatedContentRefreshParam(arguments!!.userKey,
+                arguments!!.screenName, param)
         TaskStarter.execute(task)
         return true
     }
 
     override fun onCreateStatusesFetcher(): StatusesFetcher {
-        return UserTimelineFetcher(arguments.getParcelable(EXTRA_USER_KEY),
-                arguments.getString(EXTRA_SCREEN_NAME), arguments.getString(EXTRA_PROFILE_URL))
+        return UserTimelineFetcher(arguments!!.userKey, arguments!!.screenName,
+                arguments!!.getString(EXTRA_PROFILE_URL))
     }
 
     override fun onTimelineFilterClick() {
@@ -80,7 +77,7 @@ class UserTimelineFragment : AbsTimelineFragment() {
     class UserTimelineFilterDialogFragment : BaseDialogFragment() {
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context!!)
             val values = resources.getStringArray(R.array.values_user_timeline_filter)
             val checkedItems = BooleanArray(values.size) {
                 val filter = preferences[userTimelineFilterKey]

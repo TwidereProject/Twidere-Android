@@ -146,7 +146,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             apiConfig = savedInstanceState.getParcelable(EXTRA_API_CONFIG)
             apiChangeTimestamp = savedInstanceState.getLong(EXTRA_API_LAST_CHANGE)
         } else {
-            apiConfig = kPreferences[defaultAPIConfigKey]
+            apiConfig = preferences[defaultAPIConfigKey]
         }
 
         updateSignInType()

@@ -8,17 +8,20 @@ import android.support.v7.app.AlertDialog
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_PERMISSIONS
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_REQUEST_CODE
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.message
 import org.mariotaku.twidere.extension.onShow
 
 class PermissionRequestDialogFragment : BaseDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context)
-        val permissions = arguments.getStringArray(EXTRA_PERMISSIONS)
-        val requestCode = arguments.getInt(EXTRA_REQUEST_CODE)
-        builder.setMessage(arguments.getString(EXTRA_MESSAGE))
+        val activity = this.activity!!
+        val builder = AlertDialog.Builder(activity)
+        val permissions = arguments!!.getStringArray(EXTRA_PERMISSIONS)
+        val requestCode = arguments!!.getInt(EXTRA_REQUEST_CODE)
+        builder.setMessage(arguments!!.message)
         builder.setPositiveButton(android.R.string.ok) { _, _ ->
             ActivityCompat.requestPermissions(activity, permissions, requestCode)
         }
@@ -42,7 +45,7 @@ class PermissionRequestDialogFragment : BaseDialogFragment() {
                 requestCode: Int): PermissionRequestDialogFragment {
             val df = PermissionRequestDialogFragment()
             df.arguments = Bundle {
-                this[EXTRA_MESSAGE] = message
+                this.message = message
                 this[EXTRA_PERMISSIONS] = permissions
                 this[EXTRA_REQUEST_CODE] = requestCode
             }

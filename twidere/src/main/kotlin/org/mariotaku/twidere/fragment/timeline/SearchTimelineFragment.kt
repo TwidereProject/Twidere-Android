@@ -24,11 +24,11 @@ import android.os.Bundle
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.FilterScope
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_LOCAL
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_QUERY
 import org.mariotaku.twidere.data.fetcher.SearchTimelineFetcher
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.extension.linkHandlerTitle
+import org.mariotaku.twidere.extension.local
+import org.mariotaku.twidere.extension.query
 import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.refresh.SearchTimelineContentRefreshParam
@@ -47,15 +47,14 @@ class SearchTimelineFragment : AbsTimelineFragment() {
     }
 
     override fun getStatuses(param: ContentRefreshParam): Boolean {
-        val task = GetSearchTimelineTask(context)
-        task.params = SearchTimelineContentRefreshParam(arguments.getString(EXTRA_QUERY),
-                arguments.getBoolean(EXTRA_LOCAL, false), param)
+        val task = GetSearchTimelineTask(context!!)
+        task.params = SearchTimelineContentRefreshParam(arguments!!.query, arguments!!.local, param)
         TaskStarter.execute(task)
         return true
     }
 
     override fun onCreateStatusesFetcher(): StatusesFetcher {
-        return SearchTimelineFetcher(arguments.getString(EXTRA_QUERY), arguments.getBoolean(EXTRA_LOCAL))
+        return SearchTimelineFetcher(arguments!!.query, arguments!!.local)
     }
 
 }

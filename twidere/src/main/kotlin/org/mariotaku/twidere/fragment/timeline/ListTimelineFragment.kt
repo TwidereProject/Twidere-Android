@@ -25,12 +25,10 @@ import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.FilterScope
-import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_EXTRAS
 import org.mariotaku.twidere.data.fetcher.ListTimelineFetcher
-import org.mariotaku.twidere.extension.linkHandlerTitle
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.tab.applyToSelection
-import org.mariotaku.twidere.extension.withAppendedPath
-import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.refresh.ListTimelineContentRefreshParam
 import org.mariotaku.twidere.model.tab.extra.HomeTabExtras
@@ -50,21 +48,21 @@ class ListTimelineFragment : AbsTimelineFragment() {
     }
 
     override fun getStatuses(param: ContentRefreshParam): Boolean {
-        val task = GetListTimelineTask(context)
-        val listId = arguments.getString(EXTRA_LIST_ID)
-        val slug = arguments.getString(EXTRA_LIST_NAME)
-        val ownerId = arguments.getParcelable<UserKey>(EXTRA_USER_KEY)?.id
-        val ownerScreenName = arguments.getString(EXTRA_SCREEN_NAME)
+        val task = GetListTimelineTask(context!!)
+        val listId = arguments!!.listId
+        val slug = arguments!!.listName
+        val ownerId = arguments?.userKey?.id
+        val ownerScreenName = arguments?.screenName
         task.params = ListTimelineContentRefreshParam(listId, slug, ownerId, ownerScreenName, param)
         TaskStarter.execute(task)
         return true
     }
 
     override fun onCreateStatusesFetcher(): ListTimelineFetcher {
-        val listId = arguments.getString(EXTRA_LIST_ID)
-        val slug = arguments.getString(EXTRA_LIST_NAME)
-        val ownerId = arguments.getParcelable<UserKey>(EXTRA_USER_KEY)?.id
-        val ownerScreenName = arguments.getString(EXTRA_SCREEN_NAME)
+        val listId = arguments!!.listId
+        val slug = arguments!!.listName
+        val ownerId = arguments?.userKey?.id
+        val ownerScreenName = arguments?.screenName
         return ListTimelineFetcher(listId, slug, ownerId, ownerScreenName)
     }
 

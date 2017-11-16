@@ -22,6 +22,7 @@ package org.mariotaku.twidere.fragment
 import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import android.widget.Toast
+import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER
 import org.mariotaku.twidere.constant.nameFirstKey
@@ -31,7 +32,7 @@ import org.mariotaku.twidere.util.DataStoreUtils
 
 class AddUserFilterDialogFragment : AbsUserMuteBlockDialogFragment() {
     override fun getMessage(user: ParcelableUser): String {
-        return getString(R.string.filter_user_confirm_message, userColorNameManager.getDisplayName(user, kPreferences[nameFirstKey]))
+        return getString(R.string.filter_user_confirm_message, userColorNameManager.getDisplayName(user, preferences[nameFirstKey]))
     }
 
     override fun getTitle(user: ParcelableUser): String {
@@ -39,7 +40,7 @@ class AddUserFilterDialogFragment : AbsUserMuteBlockDialogFragment() {
     }
 
     override fun performUserAction(user: ParcelableUser, filterEverywhere: Boolean) {
-        DataStoreUtils.addToFilter(context, listOf(user), filterEverywhere)
+        DataStoreUtils.addToFilter(context!!, listOf(user), filterEverywhere)
         val accountKey = user.account_key ?: return
         bus.post(FriendshipTaskEvent(FriendshipTaskEvent.Action.FILTER, accountKey, user.key).apply {
             isFinished = true

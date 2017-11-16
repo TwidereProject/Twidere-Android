@@ -44,7 +44,7 @@ class DateTimePickerDialogFragment : BaseDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
-        val builder = AlertDialog.Builder(context)
+        val builder = AlertDialog.Builder(context!!)
         builder.setView(R.layout.dialog_date_time_picker)
         builder.setNegativeButton(android.R.string.cancel, null)
         builder.setPositiveButton(android.R.string.ok, null)

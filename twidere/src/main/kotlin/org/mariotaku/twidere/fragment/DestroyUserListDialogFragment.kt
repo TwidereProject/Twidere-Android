@@ -28,6 +28,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER_LIST
 import org.mariotaku.twidere.extension.applyOnShow
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.userList
 import org.mariotaku.twidere.model.ParcelableUserList
 
 class DestroyUserListDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
@@ -35,7 +36,7 @@ class DestroyUserListDialogFragment : BaseDialogFragment(), DialogInterface.OnCl
     override fun onClick(dialog: DialogInterface, which: Int) {
         when (which) {
             DialogInterface.BUTTON_POSITIVE -> {
-                val userList = userList
+                val userList = arguments!!.userList!!
                 val twitter = twitterWrapper
                 twitter.destroyUserListAsync(userList.account_key, userList.id)
             }
@@ -45,9 +46,9 @@ class DestroyUserListDialogFragment : BaseDialogFragment(), DialogInterface.OnCl
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val context = activity
+        val context = activity!!
         val builder = AlertDialog.Builder(context)
-        val userList = userList
+        val userList = arguments!!.userList!!
         builder.setTitle(getString(R.string.delete_user_list, userList.name))
         builder.setMessage(getString(R.string.delete_user_list_confirm_message, userList.name))
         builder.setPositiveButton(android.R.string.ok, this)
@@ -56,9 +57,6 @@ class DestroyUserListDialogFragment : BaseDialogFragment(), DialogInterface.OnCl
         dialog.applyOnShow { applyTheme() }
         return dialog
     }
-
-    private val userList: ParcelableUserList
-        get() = arguments.getParcelable<ParcelableUserList>(EXTRA_USER_LIST)
 
     companion object {
 

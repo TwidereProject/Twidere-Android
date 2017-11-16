@@ -37,6 +37,12 @@ import org.mariotaku.twidere.model.ParcelableUserList
 
 class DeleteUserListMembersDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
 
+    private val userList: ParcelableUserList?
+        get() = arguments?.getParcelable(EXTRA_USER_LIST)
+
+    private val users: Array<ParcelableUser>?
+        get() = arguments?.getNullableTypedArray(EXTRA_USERS)
+
     override fun onClick(dialog: DialogInterface, which: Int) {
         when (which) {
             DialogInterface.BUTTON_POSITIVE -> {
@@ -44,16 +50,13 @@ class DeleteUserListMembersDialogFragment : BaseDialogFragment(), DialogInterfac
                 val userList = userList ?: return
                 twitterWrapper.deleteUserListMembersAsync(userList.account_key, userList.id, users)
             }
-            else -> {
-            }
         }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context)
-        val users = users
-        val userList = userList
-        if (users == null || userList == null) throw NullPointerException()
+        val builder = AlertDialog.Builder(context!!)
+        val users = users!!
+        val userList = userList!!
         if (users.size == 1) {
             val user = users[0]
             val nameFirst = preferences[nameFirstKey]
@@ -74,19 +77,6 @@ class DeleteUserListMembersDialogFragment : BaseDialogFragment(), DialogInterfac
         return dialog
     }
 
-    private val userList: ParcelableUserList?
-        get() {
-            val args = arguments
-            if (!args.containsKey(EXTRA_USER_LIST)) return null
-            return args.getParcelable<ParcelableUserList>(EXTRA_USER_LIST)
-        }
-
-    private val users: Array<ParcelableUser>?
-        get() {
-            val args = arguments
-            if (!args.containsKey(EXTRA_USERS)) return null
-            return args.getNullableTypedArray(EXTRA_USERS)
-        }
 
     companion object {
 

@@ -31,7 +31,9 @@ import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.twidere.adapter.ParcelableGroupsAdapter
 import org.mariotaku.twidere.adapter.iface.IGroupsAdapter.GroupAdapterListener
 import org.mariotaku.twidere.annotation.LoadMorePosition
-import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_FROM_USER
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_PAGINATION
+import org.mariotaku.twidere.extension.accountKey
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.loader.iface.IPaginationLoader
 import org.mariotaku.twidere.model.ParcelableGroup
@@ -72,7 +74,7 @@ abstract class ParcelableGroupsFragment : AbsContentListRecyclerViewFragment<Par
     }
 
     protected val accountKey: UserKey?
-        get() = arguments.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
+        get() = arguments!!.accountKey
 
     protected fun hasMoreData(data: List<ParcelableGroup>?): Boolean {
         return data == null || !data.isEmpty()
@@ -135,7 +137,7 @@ abstract class ParcelableGroupsFragment : AbsContentListRecyclerViewFragment<Par
     override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableGroup>?> {
         val fromUser = args.getBoolean(EXTRA_FROM_USER)
         args.remove(EXTRA_FROM_USER)
-        return onCreateUserListsLoader(activity, args, fromUser)
+        return onCreateUserListsLoader(activity!!, args, fromUser)
     }
 
     override fun onLoaderReset(loader: Loader<List<ParcelableGroup>?>) {
@@ -145,7 +147,7 @@ abstract class ParcelableGroupsFragment : AbsContentListRecyclerViewFragment<Par
     }
 
     override fun onGroupClick(holder: GroupViewHolder, position: Int) {
-        IntentUtils.openGroupDetails(context, adapter.getGroup(position)!!)
+        IntentUtils.openGroupDetails(context!!, adapter.getGroup(position)!!)
     }
 
     override fun onGroupLongClick(holder: GroupViewHolder, position: Int): Boolean {

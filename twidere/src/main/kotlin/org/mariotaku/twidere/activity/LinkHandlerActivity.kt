@@ -42,7 +42,6 @@ import android.view.View
 import android.view.Window
 import kotlinx.android.synthetic.main.activity_link_handler.*
 import org.mariotaku.kpreferences.get
-import org.mariotaku.ktextension.set
 import org.mariotaku.ktextension.toDoubleOr
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
@@ -53,6 +52,7 @@ import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants
 import org.mariotaku.twidere.constant.floatingDetailedContentsKey
 import org.mariotaku.twidere.exception.NoAccountException
+import org.mariotaku.twidere.extension.simpleLayout
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.fragment.activities.InteractionsActivitiesFragment
 import org.mariotaku.twidere.fragment.drafts.DraftsFragment
@@ -572,11 +572,11 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
             }
             LINK_ID_USER_BLOCKS -> {
                 fragment = UserBlocksListFragment()
-                args[EXTRA_SIMPLE_LAYOUT] = true
+                args.simpleLayout = true
             }
             LINK_ID_MUTES_USERS -> {
                 fragment = MutesUsersListFragment()
-                args[EXTRA_SIMPLE_LAYOUT] = true
+                args.simpleLayout = true
             }
             LINK_ID_MESSAGES -> {
                 fragment = MessagesEntriesFragment()

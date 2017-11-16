@@ -20,6 +20,7 @@
 package org.mariotaku.ktextension
 
 import java.lang.ref.WeakReference
+import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 class WeakDelegate<T>(obj: T?) {
@@ -37,4 +38,13 @@ class WeakDelegate<T>(obj: T?) {
     }
 }
 
+private class ReadOnlyWeakDelegate<T>(private val ref: WeakReference<T>) : ReadOnlyProperty<Any, T?> {
+
+    override fun getValue(thisRef: Any, property: KProperty<*>): T? = ref.get()
+}
+
+
 fun <T> weak(obj: T? = null): WeakDelegate<T> = WeakDelegate(obj)
+
+operator fun <T> WeakReference<T>.provideDelegate(thisRef: Any, prop: KProperty<*>): ReadOnlyProperty<Any, T?> =
+        ReadOnlyWeakDelegate(this)

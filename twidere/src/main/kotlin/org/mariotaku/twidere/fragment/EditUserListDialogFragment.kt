@@ -28,31 +28,30 @@ import org.mariotaku.microblog.library.twitter.model.UserList
 import org.mariotaku.microblog.library.twitter.model.UserListUpdate
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.extension.accountKey
+import org.mariotaku.twidere.extension.applyOnShow
 import org.mariotaku.twidere.extension.applyTheme
-import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.extension.positive
-import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.text.validator.UserListNameValidator
 
 class EditUserListDialogFragment : BaseDialogFragment() {
 
-    private val accountKey by lazy { arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY) }
-    private val listId: String by lazy { arguments.getString(EXTRA_LIST_ID) }
+    private val listId: String by lazy { arguments!!.getString(EXTRA_LIST_ID) }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context)
+        val builder = AlertDialog.Builder(context!!)
         builder.setView(R.layout.dialog_user_list_detail_editor)
         builder.setTitle(R.string.title_user_list)
         builder.positive(android.R.string.ok, this::onPositiveClick)
         builder.setNegativeButton(android.R.string.cancel, null)
         val dialog = builder.create()
-        dialog.onShow { dialog ->
-            dialog.applyTheme()
-            dialog.editName.addValidator(UserListNameValidator(getString(R.string.invalid_list_name)))
+        dialog.applyOnShow {
+            applyTheme()
+            editName.addValidator(UserListNameValidator(getString(R.string.invalid_list_name)))
             if (savedInstanceState == null) {
-                dialog.editName.setText(arguments.getString(EXTRA_LIST_NAME))
-                dialog.editDescription.setText(arguments.getString(EXTRA_DESCRIPTION))
-                dialog.isPublic.isChecked = arguments.getBoolean(EXTRA_IS_PUBLIC, true)
+                editName.setText(arguments!!.getString(EXTRA_LIST_NAME))
+                editDescription.setText(arguments!!.getString(EXTRA_DESCRIPTION))
+                isPublic.isChecked = arguments!!.getBoolean(EXTRA_IS_PUBLIC, true)
             }
         }
         return dialog
@@ -66,7 +65,7 @@ class EditUserListDialogFragment : BaseDialogFragment() {
         update.setMode(if (isPublic) UserList.Mode.PUBLIC else UserList.Mode.PRIVATE)
         update.setName(name)
         update.setDescription(description)
-        twitterWrapper.updateUserListDetails(accountKey, listId, update)
+        twitterWrapper.updateUserListDetails(arguments!!.accountKey!!, listId, update)
     }
 
 }

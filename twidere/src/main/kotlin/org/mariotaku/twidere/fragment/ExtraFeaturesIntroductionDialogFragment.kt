@@ -32,7 +32,7 @@ class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
     val requestCode: Int get() = arguments.getInt(EXTRA_REQUEST_CODE, 0)
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context)
+        val builder = AlertDialog.Builder(context!!)
         builder.setTitle(R.string.title_extra_features)
         builder.setView(R.layout.dialog_extra_features_introduction)
         builder.setPositiveButton(R.string.action_purchase) { _, _ ->
@@ -42,7 +42,7 @@ class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
         builder.setNegativeButton(R.string.action_later) { _, _ ->
             onDialogCancelled()
         }
-        val restorePurchaseIntent = extraFeaturesService.createRestorePurchaseIntent(context, feature)
+        val restorePurchaseIntent = extraFeaturesService.createRestorePurchaseIntent(context!!, feature)
         if (restorePurchaseIntent != null) {
             builder.setNeutralButton(R.string.action_restore_purchase) { _, _ ->
                 startActivityForResultOnTarget(restorePurchaseIntent)
@@ -56,7 +56,7 @@ class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
             } else {
                 View.GONE
             }
-            val description = ExtraFeaturesService.getIntroduction(context, feature)
+            val description = ExtraFeaturesService.getIntroduction(context!!, feature)
             val featureIcon = it.featureIcon
             val featureDescription = it.featureDescription
             featureIcon.setImageResource(description.icon)
@@ -83,11 +83,13 @@ class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
     }
 
     private fun startPurchase(feature: String) {
-        val purchaseIntent = extraFeaturesService.createPurchaseIntent(context, feature) ?: return
+        val purchaseIntent = extraFeaturesService.createPurchaseIntent(context!!, feature) ?: return
         startActivityForResultOnTarget(purchaseIntent)
     }
 
     private fun startActivityForResultOnTarget(intent: Intent) {
+        val targetFragment = targetFragment
+        val parentFragment = parentFragment
         if (targetFragment != null) {
             targetFragment.startActivityForResult(intent, targetRequestCode)
         } else if (requestCode == 0) {
@@ -95,7 +97,7 @@ class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
         } else if (parentFragment != null) {
             parentFragment.startActivityForResult(intent, requestCode)
         } else {
-            activity.startActivityForResult(intent, requestCode)
+            activity?.startActivityForResult(intent, requestCode)
         }
     }
 

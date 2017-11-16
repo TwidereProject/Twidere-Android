@@ -24,10 +24,11 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AlertDialog
+import org.mariotaku.ktextension.Bundle
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER_LIST
 import org.mariotaku.twidere.extension.applyOnShow
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.userList
 import org.mariotaku.twidere.model.ParcelableUserList
 
 class DestroyUserListSubscriptionDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
@@ -35,9 +36,8 @@ class DestroyUserListSubscriptionDialogFragment : BaseDialogFragment(), DialogIn
     override fun onClick(dialog: DialogInterface, which: Int) {
         when (which) {
             DialogInterface.BUTTON_POSITIVE -> {
-                val userList = userList
+                val userList = arguments!!.userList ?: return
                 val twitter = twitterWrapper
-                if (userList == null) return
                 twitter.destroyUserListSubscriptionAsync(userList.account_key, userList.id)
             }
             else -> {
@@ -46,9 +46,9 @@ class DestroyUserListSubscriptionDialogFragment : BaseDialogFragment(), DialogIn
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val context = activity
+        val context = activity!!
         val builder = AlertDialog.Builder(context)
-        val userList = userList
+        val userList = arguments!!.userList
         if (userList != null) {
             builder.setTitle(getString(R.string.unsubscribe_from_user_list, userList.name))
             builder.setMessage(getString(R.string.unsubscribe_from_user_list_confirm_message, userList.name))
@@ -60,23 +60,16 @@ class DestroyUserListSubscriptionDialogFragment : BaseDialogFragment(), DialogIn
         return dialog
     }
 
-    private val userList: ParcelableUserList?
-        get() {
-            val args = arguments
-            if (!args.containsKey(EXTRA_USER_LIST)) return null
-            return args.getParcelable<ParcelableUserList>(EXTRA_USER_LIST)
-        }
-
     companion object {
 
         val FRAGMENT_TAG = "destroy_user_list"
 
         fun show(fm: FragmentManager,
                 userList: ParcelableUserList): DestroyUserListSubscriptionDialogFragment {
-            val args = Bundle()
-            args.putParcelable(EXTRA_USER_LIST, userList)
             val f = DestroyUserListSubscriptionDialogFragment()
-            f.arguments = args
+            f.arguments = Bundle {
+                this.userList = userList
+            }
             f.show(fm, FRAGMENT_TAG)
             return f
         }

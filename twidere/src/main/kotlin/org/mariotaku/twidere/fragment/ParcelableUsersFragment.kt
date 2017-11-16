@@ -42,7 +42,9 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.newDocumentApiKey
+import org.mariotaku.twidere.extension.accountKey
 import org.mariotaku.twidere.extension.model.getAccountType
+import org.mariotaku.twidere.extension.simpleLayout
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.loader.iface.IPaginationLoader
 import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
@@ -52,6 +54,7 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.util.AccountUtils
+import org.mariotaku.twidere.promise.BlockPromises
 import org.mariotaku.twidere.promise.FriendshipPromises
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
@@ -73,7 +76,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         }
 
     protected open val simpleLayout: Boolean
-        get() = arguments.getBoolean(EXTRA_SIMPLE_LAYOUT)
+        get() = arguments!!.simpleLayout
 
     protected open val showFollow: Boolean
         get() = true
@@ -125,7 +128,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
     override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableUser>?> {
         val fromUser = args.getBoolean(EXTRA_FROM_USER)
         args.remove(EXTRA_FROM_USER)
-        return onCreateUsersLoader(activity, args, fromUser).apply {
+        return onCreateUsersLoader(activity!!, args, fromUser).apply {
             if (this is AbsRequestUsersLoader) {
                 pagination = args.getParcelable(EXTRA_PAGINATION)
             }
@@ -171,7 +174,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         val adapter = ParcelableUsersAdapter(context, this.requestManager)
         adapter.simpleLayout = simpleLayout
         adapter.showFollow = showFollow
-        val accountType = arguments.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)?.let { key ->
+        val accountType = arguments?.accountKey?.let { key ->
             val am = AccountManager.get(context)
             return@let AccountUtils.findByAccountKey(am, key)?.getAccountType(am)
         }
@@ -204,7 +207,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
 
     override fun onUserClick(holder: UserViewHolder, position: Int) {
         val user = adapter.getUser(position) ?: return
-        IntentUtils.openUserProfile(activity, user, preferences[newDocumentApiKey])
+        IntentUtils.openUserProfile(activity!!, user, preferences[newDocumentApiKey])
     }
 
     override fun onFollowClicked(holder: UserViewHolder, position: Int) {
@@ -212,9 +215,9 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         val accountKey = user.account_key ?: return
         if (twitterWrapper.isUpdatingRelationship(accountKey, user.key)) return
         if (user.is_following) {
-            DestroyFriendshipDialogFragment.show(fragmentManager, user)
+            DestroyFriendshipDialogFragment.show(fragmentManager!!, user)
         } else {
-            FriendshipPromises.getInstance(context).create(accountKey, user.key, user.screen_name)
+            FriendshipPromises.getInstance(context!!).create(accountKey, user.key, user.screen_name)
         }
     }
 
@@ -222,7 +225,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         val user = adapter.getUser(position) ?: return
         val accountKey = user.account_key ?: return
         if (twitterWrapper.isUpdatingRelationship(accountKey, user.key)) return
-        FriendshipPromises.getInstance(context).unblock(accountKey, user.key)
+        BlockPromises.getInstance(context!!).unblock(accountKey, user.key)
     }
 
     override fun onUnmuteClicked(holder: UserViewHolder, position: Int) {

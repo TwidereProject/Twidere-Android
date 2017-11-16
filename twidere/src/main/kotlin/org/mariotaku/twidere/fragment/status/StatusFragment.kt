@@ -136,7 +136,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             adapter.updateItemDecoration()
             val status: ParcelableStatus = args.getParcelable(EXTRA_STATUS)
             val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-            return ConversationLoader(activity, status, adapter.data, true, loadingMore).apply {
+            return ConversationLoader(activity!!, status, adapter.data, true, loadingMore).apply {
                 pagination = args.toPagination()
             }
         }
@@ -176,7 +176,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         override fun onCreateLoader(id: Int, args: Bundle): Loader<StatusActivity?> {
             val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
             val statusId = args.getString(EXTRA_STATUS_ID)
-            return StatusActivitySummaryLoader(activity, accountKey, statusId)
+            return StatusActivitySummaryLoader(activity!!, accountKey, statusId)
         }
 
         override fun onLoadFinished(loader: Loader<StatusActivity?>, data: StatusActivity?) {
@@ -201,11 +201,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 } else if (resultCode == ColorPickerDialogActivity.RESULT_CLEARED) {
                     userColorNameManager.clearUserColor(status.user_key)
                 }
-                val args = arguments
-                if (args.containsKey(EXTRA_STATUS)) {
-                    args.putParcelable(EXTRA_STATUS, status)
-                }
-                loaderManager.restartLoader(LOADER_ID_DETAIL_STATUS, args, this)
+                loaderManager.restartLoader(LOADER_ID_DETAIL_STATUS, arguments, this)
             }
             REQUEST_SELECT_ACCOUNT -> {
                 val status = adapter.status ?: return
@@ -230,13 +226,13 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
         linkHandlerTitle = getString(R.string.title_status)
-        Utils.setNdefPushMessageCallback(activity, CreateNdefMessageCallback {
+        Utils.setNdefPushMessageCallback(activity!!, CreateNdefMessageCallback {
             val status = status ?: return@CreateNdefMessageCallback null
             NdefMessage(arrayOf(NdefRecord.createUri(LinkCreator.getStatusWebLink(status))))
         })
         adapter = StatusDetailsAdapter(this)
-        layoutManager = StatusListLinearLayoutManager(context, recyclerView)
-        mItemDecoration = StatusDividerItemDecoration(context, adapter, layoutManager.orientation)
+        layoutManager = StatusListLinearLayoutManager(context!!, recyclerView)
+        mItemDecoration = StatusDividerItemDecoration(context!!, adapter, layoutManager.orientation)
         recyclerView.addItemDecoration(mItemDecoration)
         layoutManager.recycleChildrenOnDetach = true
         recyclerView.layoutManager = layoutManager
@@ -258,14 +254,14 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     override fun onMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia, statusPosition: Int) {
         val status = adapter.getStatus(statusPosition)
-        IntentUtils.openMedia(activity, status, current, preferences[newDocumentApiKey],
+        IntentUtils.openMedia(activity!!, status, current, preferences[newDocumentApiKey],
                 preferences[displaySensitiveContentsKey])
     }
 
     override fun onQuotedMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia, statusPosition: Int) {
         val status = adapter.getStatus(statusPosition)
         val quotedMedia = status.quoted_media ?: return
-        IntentUtils.openMedia(activity, status.account_key, status.is_possibly_sensitive, status,
+        IntentUtils.openMedia(activity!!, status.account_key, status.is_possibly_sensitive, status,
                 current, quotedMedia, preferences[newDocumentApiKey],
                 preferences[displaySensitiveContentsKey])
     }
@@ -286,13 +282,13 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
         val status = adapter.getStatus(position)
-        IntentUtils.openStatus(activity, status)
+        IntentUtils.openStatus(activity!!, status)
     }
 
     override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
         val status = adapter.getStatus(position)
         val quotedId = status.quoted_id ?: return
-        IntentUtils.openStatus(activity, status.account_key, quotedId)
+        IntentUtils.openStatus(activity!!, status.account_key, quotedId)
     }
 
     override fun onStatusLongClick(holder: IStatusViewHolder, position: Int): Boolean {
@@ -307,7 +303,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     override fun onUserProfileClick(holder: IStatusViewHolder, position: Int) {
         val status = adapter.getStatus(position)
-        IntentUtils.openUserProfile(activity, status.account_key, status.user_key,
+        IntentUtils.openUserProfile(activity!!, status.account_key, status.user_key,
                 status.user_screen_name, status.extras?.user_statusnet_profile_url,
                 preferences[newDocumentApiKey], null)
     }
@@ -315,10 +311,10 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     override fun onMediaClick(view: View, current: ParcelableMedia, accountKey: UserKey?, id: Long) {
         val status = adapter.status ?: return
         if ((view.parent as View).id == R.id.quotedMediaPreview && status.quoted_media != null) {
-            IntentUtils.openMediaDirectly(activity, accountKey, status.quoted_media!!, current,
+            IntentUtils.openMediaDirectly(activity!!, accountKey, status.quoted_media!!, current,
                     newDocument = preferences[newDocumentApiKey], status = status)
         } else if (status.media != null) {
-            IntentUtils.openMediaDirectly(activity, accountKey, status.media!!, current,
+            IntentUtils.openMediaDirectly(activity!!, accountKey, status.media!!, current,
                     newDocument = preferences[newDocumentApiKey], status = status)
         }
     }
@@ -356,10 +352,10 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     }
 
     override fun onCreateLoader(id: Int, args: Bundle): Loader<SingleResponse<ParcelableStatus>> {
-        val fragmentArgs = arguments
-        val accountKey = fragmentArgs.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-        val statusId = fragmentArgs.getString(EXTRA_STATUS_ID)
-        return ParcelableStatusLoader(activity, false, fragmentArgs, accountKey, statusId)
+        val fragmentArgs = arguments!!
+        val accountKey = fragmentArgs.accountKey
+        val statusId = fragmentArgs.statusId
+        return ParcelableStatusLoader(activity!!, false, fragmentArgs, accountKey, statusId)
     }
 
 
@@ -372,10 +368,6 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             val dataExtra = data.extras
             val details: AccountDetails? = dataExtra.getParcelable(EXTRA_ACCOUNT)
             if (adapter.setStatus(status, details)) {
-                val args = arguments
-                if (args.containsKey(EXTRA_STATUS)) {
-                    args.putParcelable(EXTRA_STATUS, status)
-                }
                 adapter.loadMoreSupportedPosition = LoadMorePosition.BOTH
                 adapter.data = null
                 loadConversation(status, null, null)
@@ -397,7 +389,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         } else {
             adapter.loadMoreSupportedPosition = LoadMorePosition.NONE
             setState(STATE_ERROR)
-            val errorInfo = StatusCodeMessageUtils.getErrorInfo(context, data.exception!!)
+            val errorInfo = StatusCodeMessageUtils.getErrorInfo(context!!, data.exception!!)
             errorText.spannable = errorInfo.message
             errorIcon.setImageResource(errorInfo.icon)
         }
@@ -568,7 +560,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         val status = adapter.getStatus(contextMenuInfo.position)
         val inflater = MenuInflater(context)
         inflater.inflate(R.menu.action_status, menu)
-        MenuUtils.setupForStatus(context, menu, preferences, userColorNameManager, status)
+        MenuUtils.setupForStatus(context!!, menu, preferences, userColorNameManager, status)
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
@@ -576,7 +568,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         val contextMenuInfo = item.menuInfo as? ExtendedRecyclerView.ContextMenuInfo ?: return false
         val status = adapter.getStatus(contextMenuInfo.position)
         if (item.itemId == R.id.share) {
-            val shareIntent = Utils.createStatusShareIntent(activity, status)
+            val shareIntent = Utils.createStatusShareIntent(activity!!, status)
             val chooser = Intent.createChooser(shareIntent, getString(R.string.share_status))
 
             startActivity(chooser)
@@ -587,7 +579,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             Analyzer.log(Share.status(accountType, status))
             return true
         }
-        return MenuUtils.handleStatusClick(activity, this, fragmentManager,
+        return MenuUtils.handleStatusClick(activity!!, this, fragmentManager!!,
                 preferences, userColorNameManager, twitterWrapper, status, item)
     }
 
@@ -613,25 +605,25 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     }
 
     internal fun onUserClick(user: ParcelableUser) {
-        IntentUtils.openUserProfile(context, user, true, null)
+        IntentUtils.openUserProfile(context!!, user, true, null)
     }
 
     internal fun openTranslationDestinationChooser() {
         val account = adapter.statusAccount ?: return
-        val weakThis = WeakReference(this)
+        val weakThis by weak(this)
         (showProgressDialog("get_language_settings") and task {
-            val fragment = weakThis.get() ?: throw InterruptedException()
-            val microBlog = account.newMicroBlogInstance(fragment.context, MicroBlog::class.java)
+            val context = weakThis?.context ?: throw InterruptedException()
+            val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
             return@task Pair(microBlog.accountSettings.language,
                     microBlog.languages.map { TranslationDestinationDialogFragment.DisplayLanguage(it.name, it.code) })
         }).successUi { (_, settings) ->
             val (accountLanguage, languages) = settings
-            val fragment = weakThis.get() ?: return@successUi
+            val fragment = weakThis ?: return@successUi
             val df = TranslationDestinationDialogFragment.create(languages, accountLanguage)
             df.setTargetFragment(fragment, 0)
             df.show(fragment.fragmentManager, "translation_destination_settings")
         }.alwaysUi {
-            val fragment = weakThis.get() ?: return@alwaysUi
+            val fragment = weakThis ?: return@alwaysUi
             fragment.dismissProgressDialog("get_language_settings")
         }
     }
@@ -653,7 +645,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val context = activity
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context!!)
             builder.setTitle(android.R.string.dialog_alert_title)
             builder.setMessage(R.string.sensitive_content_warning)
             builder.setPositiveButton(android.R.string.ok, this)
@@ -665,7 +657,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     }
 
     internal class LoadTranslationTask(fragment: StatusFragment, val status: ParcelableStatus) :
-            AbsAccountRequestTask<Any?, TranslationResult, Any?>(fragment.context, status.account_key) {
+            AbsAccountRequestTask<Any?, TranslationResult, Any?>(fragment.context!!, status.account_key) {
 
         private val weakFragment = WeakReference(fragment)
 

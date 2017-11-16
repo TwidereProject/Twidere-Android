@@ -57,11 +57,11 @@ class ExtensionsListFragment : AbsContentListViewFragment<ExtensionsAdapter>(),
     }
 
     override fun onCreateAdapter(context: Context, requestManager: RequestManager): ExtensionsAdapter {
-        return ExtensionsAdapter(activity, requestManager)
+        return ExtensionsAdapter(activity!!, requestManager)
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ExtensionInfo>> {
-        return ExtensionsListLoader(activity)
+        return ExtensionsListLoader(activity!!)
     }
 
     override fun onLoadFinished(loader: Loader<List<ExtensionInfo>>, data: List<ExtensionInfo>) {
@@ -94,7 +94,7 @@ class ExtensionsListFragment : AbsContentListViewFragment<ExtensionsAdapter>(),
         if (extensionInfo.settings != null) {
             val intent = Intent(IntentConstants.INTENT_ACTION_EXTENSION_SETTINGS)
             intent.setClassName(extensionInfo.packageName, extensionInfo.settings)
-            menu.setItemAvailability(R.id.settings, context.packageManager.queryIntentActivities(intent, 0).size == 1)
+            menu.setItemAvailability(R.id.settings, context!!.packageManager.queryIntentActivities(intent, 0).size == 1)
         } else {
             menu.setItemAvailability(R.id.settings, false)
         }
@@ -128,7 +128,7 @@ class ExtensionsListFragment : AbsContentListViewFragment<ExtensionsAdapter>(),
         if (info.settings != null) {
             intent.setClassName(info.packageName, info.settings)
         } else {
-            val pm = activity.packageManager
+            val pm = activity!!.packageManager
             val activities = pm.queryIntentActivities(intent, 0)
             if (activities.isEmpty()) {
                 return false

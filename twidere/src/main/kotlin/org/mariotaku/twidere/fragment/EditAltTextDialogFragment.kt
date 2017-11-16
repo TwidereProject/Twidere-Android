@@ -25,22 +25,21 @@ import android.support.v4.app.FragmentManager
 import android.support.v7.app.AlertDialog
 import kotlinx.android.synthetic.main.dialog_compose_edit_alt_text.*
 import org.mariotaku.ktextension.Bundle
-import org.mariotaku.ktextension.set
+import org.mariotaku.ktextension.charSequence
 import org.mariotaku.ktextension.string
-import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_POSITION
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_TEXT
 import org.mariotaku.twidere.extension.applyOnShow
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.position
+import org.mariotaku.twidere.extension.text
 
 class EditAltTextDialogFragment : BaseDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context)
+        val builder = AlertDialog.Builder(context!!)
         builder.setTitle(R.string.edit_description)
         builder.setView(R.layout.dialog_compose_edit_alt_text)
         builder.setNegativeButton(android.R.string.cancel, null)
-        val position = arguments.getInt(EXTRA_POSITION)
+        val position = arguments!!.position
         builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
             val altText = (dialog as Dialog).editText.string
             callback?.onSetAltText(position, altText)
@@ -51,7 +50,7 @@ class EditAltTextDialogFragment : BaseDialogFragment() {
         val dialog = builder.create()
         dialog.applyOnShow {
             applyTheme()
-            editText.setText(arguments.getString(EXTRA_TEXT))
+            editText.charSequence = arguments!!.text
         }
         return dialog
     }
@@ -67,8 +66,8 @@ class EditAltTextDialogFragment : BaseDialogFragment() {
         fun show(fm: FragmentManager, position: Int, altText: String?) {
             val df = EditAltTextDialogFragment()
             df.arguments = Bundle {
-                this[Constants.EXTRA_TEXT] = altText
-                this[Constants.EXTRA_POSITION] = position
+                this.text = altText
+                this.position = position
             }
             df.show(fm, "edit_alt_text")
         }

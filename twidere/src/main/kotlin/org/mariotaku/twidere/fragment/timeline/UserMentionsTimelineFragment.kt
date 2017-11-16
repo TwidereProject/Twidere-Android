@@ -24,11 +24,11 @@ import android.os.Bundle
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.FilterScope
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_SCREEN_NAME
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER_KEY
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.data.fetcher.UserMentionsTimelineFetcher
 import org.mariotaku.twidere.extension.linkHandlerTitle
+import org.mariotaku.twidere.extension.screenName
+import org.mariotaku.twidere.extension.userKey
 import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.refresh.UserRelatedContentRefreshParam
@@ -47,16 +47,15 @@ class UserMentionsTimelineFragment : AbsTimelineFragment() {
     }
 
     override fun getStatuses(param: ContentRefreshParam): Boolean {
-        val task = GetUserMentionsTimelineTask(context)
-        task.params = UserRelatedContentRefreshParam(arguments.getParcelable(EXTRA_USER_KEY),
-                arguments.getString(EXTRA_SCREEN_NAME), param)
+        val task = GetUserMentionsTimelineTask(context!!)
+        task.params = UserRelatedContentRefreshParam(arguments!!.userKey, arguments!!.screenName,
+                param)
         TaskStarter.execute(task)
         return true
     }
 
     override fun onCreateStatusesFetcher(): StatusesFetcher {
-        return UserMentionsTimelineFetcher(arguments.getParcelable(EXTRA_USER_KEY),
-                arguments.getString(EXTRA_SCREEN_NAME))
+        return UserMentionsTimelineFetcher(arguments!!.userKey, arguments!!.screenName)
     }
 
 }

@@ -24,23 +24,18 @@ import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AlertDialog
 import org.mariotaku.ktextension.Bundle
-import org.mariotaku.ktextension.set
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_MESSAGE
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_TITLE
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.message
 import org.mariotaku.twidere.extension.onShow
+import org.mariotaku.twidere.extension.title
 
-/**
- * Created by mariotaku on 14-6-24.
- */
 class MessageDialogFragment : BaseDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val activity = activity
+        val activity = activity!!
         val builder = AlertDialog.Builder(activity)
-        val args = arguments
-        builder.setTitle(args.getString(EXTRA_TITLE))
-        builder.setMessage(args.getString(EXTRA_MESSAGE))
+        builder.setTitle(arguments!!.title)
+        builder.setMessage(arguments!!.message)
         builder.setPositiveButton(android.R.string.ok, null)
         val dialog = builder.create()
         dialog.onShow { it.applyTheme() }
@@ -58,8 +53,8 @@ class MessageDialogFragment : BaseDialogFragment() {
         fun create(title: String? = null, message: String): MessageDialogFragment {
             val df = MessageDialogFragment()
             df.arguments = Bundle {
-                this[EXTRA_TITLE] = title
-                this[EXTRA_MESSAGE] = message
+                this.title = title
+                this.message = message
             }
             return df
         }

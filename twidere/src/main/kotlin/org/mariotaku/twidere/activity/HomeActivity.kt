@@ -244,9 +244,9 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             signInIntent.setClass(this, SignInActivity::class.java)
             startActivity(signInIntent)
             finish()
-            if (defaultAutoRefreshAskedKey !in kPreferences) {
+            if (defaultAutoRefreshAskedKey !in preferences) {
                 // Assume first install
-                kPreferences[defaultAutoRefreshAskedKey] = false
+                preferences[defaultAutoRefreshAskedKey] = false
             }
             return
         } else {
@@ -327,7 +327,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
         StreamingService.startOrStopService(this)
 
-        if (!showDrawerTutorial() && !kPreferences[defaultAutoRefreshAskedKey]) {
+        if (!showDrawerTutorial() && !preferences[defaultAutoRefreshAskedKey]) {
             showAutoRefreshConfirm()
         }
     }

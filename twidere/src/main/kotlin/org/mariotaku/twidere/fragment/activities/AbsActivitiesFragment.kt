@@ -117,10 +117,10 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
         }
 
     protected val accountKeys: Array<UserKey>
-        get() = Utils.getAccountKeys(context, arguments) ?: if (isStandalone) {
+        get() = Utils.getAccountKeys(context!!, arguments) ?: if (isStandalone) {
             emptyArray()
         } else {
-            DataStoreUtils.getActivatedAccountKeys(context)
+            DataStoreUtils.getActivatedAccountKeys(context!!)
         }
 
     private val busEventHandler = BusEventHandler()
@@ -170,6 +170,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
         if (!userVisibleHint || menuInfo == null) return
+        val context = context ?: return
         val inflater = MenuInflater(context)
         val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo
         val status = adapter.getActivity(contextMenuInfo.position).activityStatus ?: return
@@ -179,11 +180,12 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         if (!userVisibleHint) return false
+        val context = context ?: return false
         val contextMenuInfo = item.menuInfo as ExtendedRecyclerView.ContextMenuInfo
         val status = adapter.getActivity(contextMenuInfo.position).activityStatus ?: return false
         when (item.itemId) {
             R.id.share -> {
-                val shareIntent = Utils.createStatusShareIntent(activity, status)
+                val shareIntent = Utils.createStatusShareIntent(context, status)
                 val chooser = Intent.createChooser(shareIntent, getString(R.string.share_status))
                 startActivity(chooser)
 
@@ -201,7 +203,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
                 resolver.update(contentUri, values, where, null)
                 return true
             }
-            else -> return MenuUtils.handleStatusClick(activity, this, fragmentManager,
+            else -> return MenuUtils.handleStatusClick(context, this, fragmentManager!!,
                     preferences, userColorNameManager, twitterWrapper, status, item)
         }
     }
@@ -218,8 +220,8 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
 
             override val pagination by lazy {
                 val keys = accountKeys.toNulls()
-                val sinceIds = DataStoreUtils.getNewestStatusIds(context, contentUri, keys)
-                val sinceSortIds = DataStoreUtils.getNewestStatusSortIds(context, contentUri, keys)
+                val sinceIds = DataStoreUtils.getNewestStatusIds(context!!, contentUri, keys)
+                val sinceSortIds = DataStoreUtils.getNewestStatusSortIds(context!!, contentUri, keys)
                 return@lazy Array(keys.size) { idx ->
                     SinceMaxPagination.sinceId(sinceIds[idx], sinceSortIds[idx])
                 }
@@ -244,8 +246,8 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
             }
             override val pagination by lazy {
                 val keys = accountKeys.toNulls()
-                val maxIds = DataStoreUtils.getOldestStatusIds(context, contentUri, keys)
-                val maxSortIds = DataStoreUtils.getOldestStatusSortIds(context, contentUri, keys)
+                val maxIds = DataStoreUtils.getOldestStatusIds(context!!, contentUri, keys)
+                val maxSortIds = DataStoreUtils.getOldestStatusSortIds(context!!, contentUri, keys)
                 return@lazy Array(keys.size) { idx ->
                     SinceMaxPagination.maxId(maxIds[idx], maxSortIds[idx])
                 }
@@ -378,7 +380,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
             extraSelection.first.addTo(expressions)
             extraSelection.second?.addAllTo(expressionArgs)
         }
-        val provider = CursorObjectLivePagedListProvider(context.contentResolver, contentUri,
+        val provider = CursorObjectLivePagedListProvider(context!!.contentResolver, contentUri,
                 Activities.COLUMNS, Expression.and(*expressions.toTypedArray()).sql,
                 expressionArgs.toTypedArray(), Activities.DEFAULT_SORT_ORDER,
                 ParcelableActivity::class.java, onCreateCursorObjectProcessor())
@@ -393,8 +395,8 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
         }
         val _id = adapter.getRowId(position)
         val where = Expression.equals(Activities._ID, _id).sql
-        return context.contentResolver.queryOne(contentUri, Activities.COLUMNS, where, null, null,
-                ParcelableActivity::class.java)
+        return context!!.contentResolver.queryOne(contentUri, Activities.COLUMNS, where,
+                null, null, ParcelableActivity::class.java)
     }
 
     private fun replaceStatusStates(status: ParcelableStatus) {
@@ -420,6 +422,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
 
         @Subscribe
         fun notifyGetActivitiesTaskChanged(event: GetActivitiesTaskEvent) {
+            val context = context ?: return
             if (event.uri != contentUri) return
             refreshing = event.running
             if (!event.running) {
@@ -461,7 +464,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
                 activity.targets?.statuses?.addAllTo(list)
             }
             activity.sources?.addAllTo(list)
-            IntentUtils.openItems(getActivity(), list)
+            IntentUtils.openItems(context!!, list)
         }
 
         override fun onStatusActionClick(holder: IStatusViewHolder, id: Int, position: Int) {
@@ -488,17 +491,17 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
 
         override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
             val status = getActivityStatus(position) ?: return
-            IntentUtils.openStatus(activity, status, null)
+            IntentUtils.openStatus(context!!, status, null)
         }
 
         override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
             val status = getActivityStatus(position)?.takeIf { it.quoted_id != null } ?: return
-            IntentUtils.openStatus(context, status.account_key, status.quoted_id)
+            IntentUtils.openStatus(context!!, status.account_key, status.quoted_id)
         }
 
         override fun onMediaClick(holder: IStatusViewHolder, view: View, media: ParcelableMedia, position: Int) {
             val status = getActivityStatus(position) ?: return
-            IntentUtils.openMedia(activity, status, media, preferences[newDocumentApiKey],
+            IntentUtils.openMedia(context!!, status, media, preferences[newDocumentApiKey],
                     preferences[displaySensitiveContentsKey],
                     null)
         }
@@ -506,7 +509,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
         override fun onGapClick(holder: GapViewHolder, position: Int) {
             val activity = adapter.getActivity(position)
             DebugLog.v(msg = "Load activity gap $activity")
-            if (!AccountUtils.isOfficial(context, activity.account_key)) {
+            if (!AccountUtils.isOfficial(context!!, activity.account_key)) {
                 // Skip if item is not a status
                 if (activity.action !in Activity.Action.MENTION_ACTIONS) {
                     adapter.removeGapLoadingId(ObjectId(activity.account_key, activity.id))

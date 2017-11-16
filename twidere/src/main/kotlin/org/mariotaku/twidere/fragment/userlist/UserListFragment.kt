@@ -42,6 +42,7 @@ import android.view.View
 import android.view.View.OnClickListener
 import com.squareup.otto.Subscribe
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.UserList
@@ -52,10 +53,8 @@ import org.mariotaku.twidere.activity.UserSelectorActivity
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.newDocumentApiKey
-import org.mariotaku.twidere.extension.applyTheme
-import org.mariotaku.twidere.extension.linkHandlerTitle
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
-import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowInsetsCallback
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
@@ -83,7 +82,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         linkHandlerTitle = getString(R.string.title_user_list)
-        val activity = activity
+        val activity = activity!!
         setHasOptionsMenu(true)
 
         Utils.setNdefPushMessageCallback(activity, CreateNdefMessageCallback {
@@ -125,8 +124,8 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
                 if (resultCode == Activity.RESULT_OK) {
                     if (data == null || !data.hasExtra(EXTRA_ID)) return
                     val userList = this.userList
-                    val accountKey = data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
-                    IntentUtils.openUserListDetails(activity, accountKey, userList!!.id,
+                    val accountKey = data.extras.accountKey
+                    IntentUtils.openUserListDetails(activity!!, accountKey, userList!!.id,
                             userList.user_key, userList.user_screen_name, userList.name)
                 }
             }
@@ -135,7 +134,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
     }
 
     override fun addTabs(adapter: SupportTabsAdapter) {
-        val args = arguments
+        val args = arguments!!
         val tabArgs = Bundle()
         if (args.containsKey(EXTRA_USER_LIST)) {
             val userList = args.getParcelable<ParcelableUserList>(EXTRA_USER_LIST)!!
@@ -145,7 +144,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
             tabArgs.putString(EXTRA_LIST_ID, userList.id)
             tabArgs.putString(EXTRA_LIST_NAME, userList.name)
         } else {
-            tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, args.getParcelable(EXTRA_ACCOUNT_KEY))
+            tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, args.accountKey)
             tabArgs.putParcelable(EXTRA_USER_KEY, args.getParcelable(EXTRA_USER_KEY))
             tabArgs.putString(EXTRA_SCREEN_NAME, args.getString(EXTRA_SCREEN_NAME))
             tabArgs.putString(EXTRA_LIST_ID, args.getString(EXTRA_LIST_ID))
@@ -182,8 +181,8 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
             val extensionsIntent = Intent(INTENT_ACTION_EXTENSION_OPEN_USER_LIST)
             extensionsIntent.setExtrasClassLoader(TwidereApplication::class.java.classLoader)
             extensionsIntent.putExtra(EXTRA_USER_LIST, userList)
-            MenuUtils.addIntentToMenu(activity, menu, extensionsIntent, MENU_GROUP_USER_LIST_EXTENSION)
-            menu.setItemAvailability(R.id.add_to_home_screen_submenu, ShortcutManagerCompat.isRequestPinShortcutSupported(context))
+            MenuUtils.addIntentToMenu(activity!!, menu, extensionsIntent, MENU_GROUP_USER_LIST_EXTENSION)
+            menu.setItemAvailability(R.id.add_to_home_screen_submenu, ShortcutManagerCompat.isRequestPinShortcutSupported(context!!))
         } else {
             menu.setItemAvailability(R.id.edit, false)
             menu.setItemAvailability(R.id.follow, false)
@@ -206,7 +205,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
             }
             R.id.delete -> {
                 if (userList.user_key != userList.account_key) return false
-                DestroyUserListDialogFragment.show(fragmentManager, userList)
+                DestroyUserListDialogFragment.show(fragmentManager!!, userList)
             }
             R.id.edit -> {
                 val args = Bundle()
@@ -222,7 +221,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
             }
             R.id.follow -> {
                 if (userList.is_following) {
-                    DestroyUserListSubscriptionDialogFragment.show(fragmentManager, userList)
+                    DestroyUserListSubscriptionDialogFragment.show(fragmentManager!!, userList)
                 } else {
                     twitter.createUserListSubscriptionAsync(userList.account_key, userList.id)
                 }
@@ -236,13 +235,14 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
             }
             R.id.info -> {
                 val df = UserListDetailsDialogFragment()
-                df.arguments = Bundle()
-                df.arguments.putParcelable(EXTRA_USER_LIST, userList)
+                df.arguments = Bundle {
+                    this.userList = userList
+                }
                 df.show(childFragmentManager, "user_list_details")
             }
             R.id.add_statuses_to_home_screen -> {
                 ShortcutCreator.performCreation(this) {
-                    ShortcutCreator.userListTimeline(context, userList.account_key, userList)
+                    ShortcutCreator.userListTimeline(context!!, userList.account_key, userList)
                 }
             }
             else -> {
@@ -267,7 +267,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
             }
             R.id.profileImage -> {
                 val userList = this.userList ?: return
-                IntentUtils.openUserProfile(activity, userList.account_key, userList.user_key,
+                IntentUtils.openUserProfile(activity!!, userList.account_key, userList.user_key,
                         userList.user_screen_name, null, preferences[newDocumentApiKey], null)
             }
         }
@@ -275,13 +275,13 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
     }
 
     override fun onCreateLoader(id: Int, args: Bundle): Loader<SingleResponse<ParcelableUserList>> {
-        val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
-        val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
+        val accountKey = args.accountKey
+        val userKey = args.userKey
         val listId = args.getString(EXTRA_LIST_ID)
         val listName = args.getString(EXTRA_LIST_NAME)
-        val screenName = args.getString(EXTRA_SCREEN_NAME)
+        val screenName = args.screenName
         val omitIntentExtra = args.getBoolean(EXTRA_OMIT_INTENT_EXTRA, true)
-        return ParcelableUserListLoader(activity, omitIntentExtra, arguments, accountKey, listId,
+        return ParcelableUserListLoader(activity!!, omitIntentExtra, arguments, accountKey, listId,
                 listName, userKey, screenName)
     }
 
@@ -392,8 +392,8 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
 
     class UserListDetailsDialogFragment : BaseDialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val userList = arguments.getParcelable<ParcelableUserList>(EXTRA_USER_LIST)
-            val builder = AlertDialog.Builder(context)
+            val userList = arguments!!.userList!!
+            val builder = AlertDialog.Builder(context!!)
             builder.setTitle(userList.name)
             builder.setMessage(userList.description)
             builder.setPositiveButton(android.R.string.ok, null)

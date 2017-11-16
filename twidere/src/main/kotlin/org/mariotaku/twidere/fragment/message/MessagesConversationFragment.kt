@@ -64,10 +64,12 @@ import org.mariotaku.twidere.adapter.MediaPreviewAdapter
 import org.mariotaku.twidere.adapter.MessagesConversationAdapter
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.LoadMorePosition
-import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_MEDIA
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
+import org.mariotaku.twidere.extension.accountKey
+import org.mariotaku.twidere.extension.conversationId
 import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.*
@@ -94,9 +96,9 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         EditAltTextDialogFragment.EditAltTextCallback {
     private lateinit var mediaPreviewAdapter: MediaPreviewAdapter
 
-    private val accountKey: UserKey get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)
+    private inline val accountKey: UserKey get() = arguments!!.accountKey!!
 
-    private val conversationId: String get() = arguments.getString(EXTRA_CONVERSATION_ID)
+    private val conversationId: String get() = arguments!!.conversationId!!
 
     private val account: AccountDetails? by lazy {
         AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)
@@ -393,7 +395,8 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             return
         }
         val newConversationId = event.newConversationId ?: return
-        arguments[EXTRA_CONVERSATION_ID] = newConversationId
+        arguments?.conversationId = newConversationId
+        val activity = activity
         if (activity is LinkHandlerActivity) {
             activity.intent = IntentUtils.messageConversation(accountKey, newConversationId)
         }
@@ -441,7 +444,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
     }
 
     private fun openMediaPicker() {
-        val builder = ThemedMediaPickerActivity.withThemed(context)
+        val builder = ThemedMediaPickerActivity.withThemed(context!!)
         builder.pickSources(arrayOf(MediaPickerActivity.SOURCE_CAMERA,
                 MediaPickerActivity.SOURCE_CAMCORDER,
                 MediaPickerActivity.SOURCE_GALLERY,
@@ -480,15 +483,16 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
 
     private fun markRead() {
         // TODO: Promise progress
-        MessagePromises.getInstance(context).markRead(accountKey, conversationId)
+        MessagePromises.getInstance(context!!).markRead(accountKey, conversationId)
     }
 
     private fun updateConversationStatus() {
-        if (context == null || isDetached || (activity?.isFinishing ?: true)) return
+        val activity = this.activity ?: return
+        if (isDetached || activity.isFinishing) return
         val conversation = adapter.conversation ?: return
-        val title = conversation.getTitle(context, userColorNameManager,
+        val title = conversation.getTitle(activity, userColorNameManager,
                 preferences[nameFirstKey]).first
-        val subtitle = conversation.getSubtitle(context)
+        val subtitle = conversation.getSubtitle(activity)
         activity.title = title
         val readOnly = conversation.readOnly
         addMedia.isEnabled = !readOnly
@@ -505,7 +509,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
 
 
         val stateIcon = if (conversation.notificationDisabled) {
-            ContextCompat.getDrawable(context, R.drawable.ic_message_type_speaker_muted).apply {
+            ContextCompat.getDrawable(activity, R.drawable.ic_message_type_speaker_muted)?.apply {
                 mutate()
                 setColorFilter(conversationTitle.currentTextColor, PorterDuff.Mode.SRC_ATOP)
             }
@@ -515,7 +519,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(conversationTitle, null,
                 null, stateIcon, null)
 
-        requestManager.loadProfileImage(context, conversation, preferences[profileImageStyleKey])
+        requestManager.loadProfileImage(activity, conversation, preferences[profileImageStyleKey])
                 .into(conversationAvatar)
     }
 
@@ -580,7 +584,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             isUseCache = false
         }
 
-        override fun onLoadInBackground(): MutableList<ParcelableMessage> {
+        override fun onLoadInBackground(): List<ParcelableMessage>? {
             atomicConversation.set(DataStoreUtils.findMessageConversation(context, accountKey, conversationId))
             return super.onLoadInBackground()
         }

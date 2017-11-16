@@ -45,10 +45,42 @@ import java.util.*
 class AddStatusFilterDialogFragment : BaseDialogFragment() {
 
     private val extractor = Extractor()
+    private val filterItemsInfo: Array<FilterItemInfo>
+        get() {
+            val status = arguments!!.getParcelable<ParcelableStatus>(EXTRA_STATUS) ?: return emptyArray()
+            val list = ArrayList<FilterItemInfo>()
+            if (status.is_retweet && status.retweeted_by_user_key != null) {
+                list.add(FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER,
+                        UserItem(status.retweeted_by_user_key!!, status.retweeted_by_user_name,
+                                status.retweeted_by_user_screen_name)))
+            }
+            if (status.is_quote && status.quoted_user_key != null) {
+                list.add(FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER,
+                        UserItem(status.quoted_user_key!!, status.quoted_user_name,
+                                status.quoted_user_screen_name)))
+            }
+            list.add(FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER, UserItem(status.user_key,
+                    status.user_name, status.user_screen_name)))
+            val mentions = status.mentions
+            mentions?.filter { it.key != status.user_key }?.mapTo(list) {
+                FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER, it)
+            }
+            val hashtags = HashSet<String>()
+            hashtags.addAll(extractor.extractHashtags(status.text_plain))
+            for (hashtag in hashtags) {
+                list.add(FilterItemInfo(FilterItemInfo.FILTER_TYPE_KEYWORD, hashtag))
+            }
+            val source = status.source?.let(HtmlEscapeHelper::toPlainText)
+            if (source != null) {
+                list.add(FilterItemInfo(FilterItemInfo.FILTER_TYPE_SOURCE, source))
+            }
+            return list.toTypedArray()
+        }
+
     private var filterItems: Array<FilterItemInfo>? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context)
+        val builder = AlertDialog.Builder(context!!)
         filterItems = filterItemsInfo
         val entries = arrayOfNulls<String>(filterItems!!.size)
         val nameFirst = preferences[nameFirstKey]
@@ -107,7 +139,7 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
                     sourceValues.add(values)
                 }
             }
-            val resolver = context.contentResolver
+            val resolver = context!!.contentResolver
             ContentResolverUtils.bulkDelete(resolver, Filters.Users.CONTENT_URI,
                     Filters.Users.USER_KEY, false, userKeys, null, null)
             ContentResolverUtils.bulkDelete(resolver, Filters.Keywords.CONTENT_URI,
@@ -123,38 +155,6 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
         dialog.onShow { it.applyTheme() }
         return dialog
     }
-
-    private val filterItemsInfo: Array<FilterItemInfo>
-        get() {
-            val status = arguments.getParcelable<ParcelableStatus>(EXTRA_STATUS) ?: return emptyArray()
-            val list = ArrayList<FilterItemInfo>()
-            if (status.is_retweet && status.retweeted_by_user_key != null) {
-                list.add(FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER,
-                        UserItem(status.retweeted_by_user_key!!, status.retweeted_by_user_name,
-                                status.retweeted_by_user_screen_name)))
-            }
-            if (status.is_quote && status.quoted_user_key != null) {
-                list.add(FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER,
-                        UserItem(status.quoted_user_key!!, status.quoted_user_name,
-                                status.quoted_user_screen_name)))
-            }
-            list.add(FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER, UserItem(status.user_key,
-                    status.user_name, status.user_screen_name)))
-            val mentions = status.mentions
-            mentions?.filter { it.key != status.user_key }?.mapTo(list) {
-                FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER, it)
-            }
-            val hashtags = HashSet<String>()
-            hashtags.addAll(extractor.extractHashtags(status.text_plain))
-            for (hashtag in hashtags) {
-                list.add(FilterItemInfo(FilterItemInfo.FILTER_TYPE_KEYWORD, hashtag))
-            }
-            val source = status.source?.let(HtmlEscapeHelper::toPlainText)
-            if (source != null) {
-                list.add(FilterItemInfo(FilterItemInfo.FILTER_TYPE_SOURCE, source))
-            }
-            return list.toTypedArray()
-        }
 
     private fun getName(manager: UserColorNameManager, value: Any, nameFirst: Boolean): String {
         if (value is ParcelableUserMention) {

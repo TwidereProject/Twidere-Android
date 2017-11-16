@@ -27,12 +27,11 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
 import org.mariotaku.twidere.adapter.ParcelableUsersAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
+import org.mariotaku.twidere.extension.accountKey
 import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.fragment.ParcelableUsersFragment
 import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
 import org.mariotaku.twidere.loader.users.IncomingFriendshipsLoader
-import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.promise.FriendshipPromises
@@ -48,13 +47,12 @@ class IncomingFriendshipsFragment : ParcelableUsersFragment(), IUsersAdapter.Req
 
     override fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean):
             AbsRequestUsersLoader {
-        val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
-        return IncomingFriendshipsLoader(context, accountKey, adapter.getData(), fromUser)
+        return IncomingFriendshipsLoader(context, args.accountKey, adapter.getData(), fromUser)
     }
 
     override fun onCreateAdapter(context: Context, requestManager: RequestManager): ParcelableUsersAdapter {
         val adapter = super.onCreateAdapter(context, requestManager)
-        val accountKey = arguments.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY) ?: return adapter
+        val accountKey = arguments?.accountKey ?: return adapter
         if (USER_TYPE_FANFOU_COM == accountKey.host) {
             adapter.requestClickListener = this
         } else if (AccountUtils.isOfficial(context, accountKey)) {
@@ -66,20 +64,21 @@ class IncomingFriendshipsFragment : ParcelableUsersFragment(), IUsersAdapter.Req
     override fun onAcceptClicked(holder: UserViewHolder, position: Int) {
         val user = adapter.getUser(position) ?: return
         val accountKey = user.account_key ?: return
-        FriendshipPromises.getInstance(context).accept(accountKey, user.key)
+        FriendshipPromises.getInstance(context!!).accept(accountKey, user.key)
     }
 
     override fun onDenyClicked(holder: UserViewHolder, position: Int) {
         val user = adapter.getUser(position) ?: return
         val accountKey = user.account_key ?: return
-        FriendshipPromises.getInstance(context).deny(accountKey, user.key)
+        FriendshipPromises.getInstance(context!!).deny(accountKey, user.key)
     }
 
     @SuppressLint("SwitchIntDef")
     override fun shouldRemoveUser(position: Int, event: FriendshipTaskEvent): Boolean {
         if (!event.isSucceeded) return false
         when (event.action) {
-            FriendshipTaskEvent.Action.BLOCK, FriendshipTaskEvent.Action.ACCEPT, FriendshipTaskEvent.Action.DENY -> {
+            FriendshipTaskEvent.Action.BLOCK, FriendshipTaskEvent.Action.ACCEPT,
+            FriendshipTaskEvent.Action.DENY -> {
                 return true
             }
         }
