@@ -31,7 +31,7 @@ android {
     buildToolsVersion globalBuildToolsVersion
 
     defaultConfig {
-        applicationId "org.mariotaku.twidere"
+        applicationId 'org.mariotaku.twidere'
         minSdkVersion 14
         targetSdkVersion 27
         versionCode projectVersionCode
@@ -41,7 +41,7 @@ android {
         buildConfigField 'boolean', 'LEAK_CANARY_ENABLED', 'Boolean.parseBoolean("false")'
         buildConfigField 'boolean', 'SHOW_CUSTOM_TOKEN_DIALOG', 'Boolean.parseBoolean("false")'
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
 
     compileOptions {
@@ -49,8 +49,11 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    dexOptions {
+    }
+
     aaptOptions {
-        additionalParameters "--no-version-vectors"
+        additionalParameters '--no-version-vectors'
     }
 
     flavorDimensions 'channel'

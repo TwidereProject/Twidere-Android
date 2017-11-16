@@ -11,3 +11,4 @@ find /tmp -maxdepth 1 -name 'kotlin-daemon.*.log' -exec sh -c 'travis/scripts/dr
 find /tmp -maxdepth 1 -name 'hs_err_pid*.log' -exec sh -c 'travis/scripts/dropbox_uploader.sh upload $1 $TRAVIS_BUILD_ID/$(basename $1)' find-sh {} \;
 find ~/.gradle/daemon/ -name 'daemon-*.log' -exec sh -c 'travis/scripts/dropbox_uploader.sh upload $1 $TRAVIS_BUILD_ID/gradle-$(basename $1)' find-sh {} \;
 dmesg > dmesg.log; travis/scripts/dropbox_uploader.sh upload dmesg.log ${TRAVIS_BUILD_ID}/dmesg.log
+tar -C ./twidere/build/intermediates/multi-dex/ -czf build-multidex.tgz .; travis/scripts/dropbox_uploader.sh upload build-multidex.tgz ${TRAVIS_BUILD_ID}/build-multidex.tgz
