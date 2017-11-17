@@ -50,7 +50,7 @@ object StatusCodeMessageUtils {
         TWITTER_ERROR_CODE_MESSAGES.put(144, R.string.error_twitter_144)
         TWITTER_ERROR_CODE_MESSAGES.put(161, R.string.error_twitter_161)
         TWITTER_ERROR_CODE_MESSAGES.put(162, R.string.error_twitter_162)
-        TWITTER_ERROR_CODE_MESSAGES.put(172, R.string.error_twitter_172)
+        TWITTER_ERROR_CODE_MESSAGES.put(ErrorInfo.SEARCH_ALREADY_SAVED, R.string.error_twitter_172)
         TWITTER_ERROR_CODE_MESSAGES.put(ErrorInfo.NOT_AUTHORIZED, R.string.error_twitter_179)
         TWITTER_ERROR_CODE_MESSAGES.put(ErrorInfo.STATUS_IS_DUPLICATE, R.string.error_twitter_187)
         TWITTER_ERROR_CODE_MESSAGES.put(193, R.string.error_twitter_193)

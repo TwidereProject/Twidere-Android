@@ -43,7 +43,6 @@ import org.mariotaku.sqliteqb.library.RawItemArray
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.ReadPositionTag
-import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.TableIds
 import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.model.AccountPreferences
@@ -52,6 +51,7 @@ import org.mariotaku.twidere.model.event.UnreadCountUpdatedEvent
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.SQLiteDatabaseWrapper.LazyLoadCallback
+import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.database.CachedUsersQueryBuilder
 import org.mariotaku.twidere.util.database.SuggestionsCursorCreator
@@ -100,9 +100,8 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
     }
 
     override fun onCreateSQLiteDatabase(): SQLiteDatabase {
-        val app = TwidereApplication.getInstance(context!!)
-        val helper = app.sqLiteOpenHelper
-        return helper.writableDatabase
+        val helper = TwidereSQLiteOpenHelper.getInstance(context!!)
+        return helper.singletonWritableDatabase
     }
 
     override fun insert(uri: Uri, values: ContentValues?): Uri? {

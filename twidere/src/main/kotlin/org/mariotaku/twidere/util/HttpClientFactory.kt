@@ -1,6 +1,5 @@
 package org.mariotaku.twidere.util
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Build
@@ -14,7 +13,6 @@ import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.restfu.okhttp3.OkHttpRestClient
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.*
 import org.mariotaku.twidere.constant.cacheSizeLimitKey
-import org.mariotaku.twidere.util.dagger.DependencyHolder
 import org.mariotaku.twidere.util.net.TLSSocketFactory
 import java.io.IOException
 import java.net.InetSocketAddress
@@ -51,15 +49,6 @@ object HttpClientFactory {
         }
         updateTLSConnectionSpecs(builder)
         DebugModeUtils.initForOkHttpClient(builder)
-    }
-
-    fun reloadConnectivitySettings(context: Context) {
-        val holder = DependencyHolder.get(context)
-        val client = holder.restHttpClient as? OkHttpRestClient ?: return
-        val builder = OkHttpClient.Builder()
-        initOkHttpClient(HttpClientConfiguration(holder.preferences), builder, holder.dns,
-                holder.connectionPool, holder.cache)
-        client.client = builder.build()
     }
 
     /**

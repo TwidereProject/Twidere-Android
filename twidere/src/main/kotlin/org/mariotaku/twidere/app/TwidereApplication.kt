@@ -25,8 +25,6 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteOpenHelper
 import android.net.ConnectivityManager
 import android.os.AsyncTask
 import android.support.multidex.MultiDex
@@ -38,7 +36,6 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.BuildConfig
-import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.AssistLauncherActivity
 import org.mariotaku.twidere.activity.MainActivity
@@ -52,7 +49,6 @@ import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.receiver.ConnectivityStateReceiver
 import org.mariotaku.twidere.service.StreamingService
 import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.emoji.EmojiOneShortCodeMap
 import org.mariotaku.twidere.util.notification.NotificationChannelsManager
@@ -83,16 +79,6 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
     lateinit internal var extraFeaturesService: ExtraFeaturesService
     @Inject
     lateinit internal var promotionService: PromotionService
-
-    val sqLiteDatabase: SQLiteDatabase by lazy {
-        StrictModeUtils.checkDiskIO()
-        sqLiteOpenHelper.writableDatabase
-    }
-
-    val sqLiteOpenHelper: SQLiteOpenHelper by lazy {
-        TwidereSQLiteOpenHelper(this, Constants.DATABASES_NAME, Constants.DATABASES_VERSION)
-    }
-
 
     private val sharedPreferences: SharedPreferences by lazy {
         val prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
@@ -130,8 +116,6 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
         registerActivityLifecycleCallbacks(activityTracker)
         registerReceiver(ConnectivityStateReceiver(), IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
 
-        listenExternalThemeChange()
-
         loadDefaultFeatures()
 
         Analyzer.preferencesChanged(sharedPreferences)
@@ -158,16 +142,9 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
             KEY_REFRESH_INTERVAL -> {
                 autoRefreshController.rescheduleAll()
             }
-            KEY_ENABLE_PROXY, KEY_PROXY_HOST, KEY_PROXY_PORT, KEY_PROXY_TYPE, KEY_PROXY_USERNAME,
-            KEY_PROXY_PASSWORD, KEY_CONNECTION_TIMEOUT, KEY_RETRY_ON_NETWORK_ISSUE -> {
-                HttpClientFactory.reloadConnectivitySettings(this)
-            }
             KEY_CREDENTIALS_TYPE, KEY_API_URL_FORMAT, KEY_CONSUMER_KEY, KEY_CONSUMER_SECRET,
             KEY_SAME_OAUTH_SIGNING_URL -> {
                 preferences[apiLastChangeKey] = System.currentTimeMillis()
-            }
-            KEY_EMOJI_SUPPORT -> {
-                externalThemeManager.reloadEmojiPreferences()
             }
             streamingEnabledKey.key, streamingPowerSavingKey.key,
             streamingNonMeteredNetworkKey.key -> {
@@ -211,24 +188,6 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
         }.always {
             sharedPreferences[defaultFeatureLastUpdated] = System.currentTimeMillis()
         }
-    }
-
-    private fun listenExternalThemeChange() {
-        val packageFilter = IntentFilter()
-        packageFilter.addAction(Intent.ACTION_PACKAGE_CHANGED)
-        packageFilter.addAction(Intent.ACTION_PACKAGE_ADDED)
-        packageFilter.addAction(Intent.ACTION_PACKAGE_REMOVED)
-        packageFilter.addAction(Intent.ACTION_PACKAGE_REPLACED)
-        registerReceiver(object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                val uid = intent.getIntExtra(Intent.EXTRA_UID, -1)
-                val packages = packageManager.getPackagesForUid(uid)
-                val manager = externalThemeManager
-                if (manager.emojiPackageName in packages) {
-                    manager.reloadEmojiPreferences()
-                }
-            }
-        }, packageFilter)
     }
 
     private fun updateEasterEggIcon() {

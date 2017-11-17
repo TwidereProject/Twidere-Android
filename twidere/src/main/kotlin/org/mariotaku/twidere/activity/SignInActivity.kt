@@ -70,6 +70,7 @@ import org.mariotaku.microblog.library.mastodon.annotation.AuthScope
 import org.mariotaku.microblog.library.twitter.TwitterOAuth
 import org.mariotaku.microblog.library.twitter.auth.BasicAuthorization
 import org.mariotaku.microblog.library.twitter.auth.EmptyAuthorization
+import org.mariotaku.microblog.library.twitter.model.ErrorInfo
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.restfu.http.Endpoint
@@ -1193,6 +1194,16 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         private val EXTRA_API_LAST_CHANGE = "api_last_change"
         private val DEFAULT_TWITTER_API_URL_FORMAT = "https://[DOMAIN.]twitter.com/"
 
+        private val ignoredTwitterErrorCodes = intArrayOf(ErrorInfo.PAGE_NOT_FOUND,
+                ErrorInfo.RATE_LIMIT_EXCEEDED, ErrorInfo.RESOURCE_NOT_ALLOWED)
+
+        private val CustomAPIConfig.signUpUrlOrDefault: String?
+            get() = signUpUrl ?: when (type) {
+                AccountType.TWITTER -> "https://twitter.com/signup"
+                AccountType.FANFOU -> "https://fanfou.com/register"
+                else -> null
+            }
+
         @Throws(IOException::class)
         internal fun detectAccountType(twitter: MicroBlog, user: User, type: String?): Pair<String, AccountExtras?> {
             when (type) {
@@ -1233,6 +1244,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                 extras.setIsOfficialCredentials(true)
             } catch (e: MicroBlogException) {
                 // Ignore
+                if (e.errorCode  > 0 && e.errorCode !in ignoredTwitterErrorCodes) throw e
             }
             return extras
         }
@@ -1240,13 +1252,6 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         private fun getMastodonAccountExtras(mastodon: Mastodon): MastodonAccountExtras {
             return MastodonAccountExtras()
         }
-
-        private val CustomAPIConfig.signUpUrlOrDefault: String?
-            get() = signUpUrl ?: when (type) {
-                AccountType.TWITTER -> "https://twitter.com/signup"
-                AccountType.FANFOU -> "https://fanfou.com/register"
-                else -> null
-            }
 
     }
 

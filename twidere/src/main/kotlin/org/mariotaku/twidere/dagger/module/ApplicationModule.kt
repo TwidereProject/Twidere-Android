@@ -20,8 +20,7 @@
 package org.mariotaku.twidere.dagger.module
 
 import android.app.Application
-import android.content.Context
-import android.content.SharedPreferences
+import android.content.*
 import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.os.Build
@@ -45,6 +44,7 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.mediaviewer.library.FileCache
 import org.mariotaku.mediaviewer.library.MediaDownloader
 import org.mariotaku.restfu.http.RestHttpClient
+import org.mariotaku.restfu.okhttp3.OkHttpRestClient
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_CACHE_SIZE_LIMIT
@@ -86,8 +86,27 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun externalThemeManager(preferences: SharedPreferences): ExternalThemeManager {
-        return ExternalThemeManager(application, preferences)
+    fun externalThemeManager(preferences: SharedPreferences, notifier: PreferenceChangeNotifier):
+            ExternalThemeManager {
+        val manager = ExternalThemeManager(application, preferences)
+        notifier.register(KEY_EMOJI_SUPPORT) {
+            manager.reloadEmojiPreferences()
+        }
+        val packageFilter = IntentFilter()
+        packageFilter.addAction(Intent.ACTION_PACKAGE_CHANGED)
+        packageFilter.addAction(Intent.ACTION_PACKAGE_ADDED)
+        packageFilter.addAction(Intent.ACTION_PACKAGE_REMOVED)
+        packageFilter.addAction(Intent.ACTION_PACKAGE_REPLACED)
+        application.registerReceiver(object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                val uid = intent.getIntExtra(Intent.EXTRA_UID, -1)
+                val packages = application.packageManager.getPackagesForUid(uid)
+                if (manager.emojiPackageName in packages) {
+                    manager.reloadEmojiPreferences()
+                }
+            }
+        }, packageFilter)
+        return manager
     }
 
     @Provides
@@ -128,10 +147,21 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun restHttpClient(prefs: SharedPreferences, dns: Dns,
-            connectionPool: ConnectionPool, cache: Cache): RestHttpClient {
+    fun restHttpClient(prefs: SharedPreferences, dns: Dns, connectionPool: ConnectionPool,
+            cache: Cache, notifier: PreferenceChangeNotifier): RestHttpClient {
         val conf = HttpClientFactory.HttpClientConfiguration(prefs)
-        return HttpClientFactory.createRestHttpClient(conf, dns, connectionPool, cache)
+        val client = HttpClientFactory.createRestHttpClient(conf, dns, connectionPool, cache)
+        notifier.register(KEY_ENABLE_PROXY, KEY_PROXY_HOST, KEY_PROXY_PORT, KEY_PROXY_TYPE,
+                KEY_PROXY_USERNAME, KEY_PROXY_PASSWORD, KEY_CONNECTION_TIMEOUT,
+                KEY_RETRY_ON_NETWORK_ISSUE) changed@ {
+            if (client !is OkHttpRestClient) return@changed
+            val builder = OkHttpClient.Builder()
+            HttpClientFactory.initOkHttpClient(HttpClientFactory.HttpClientConfiguration(prefs),
+                    builder, dns, connectionPool, cache)
+            client.client = builder.build()
+        }
+
+        return client
     }
 
     @Provides

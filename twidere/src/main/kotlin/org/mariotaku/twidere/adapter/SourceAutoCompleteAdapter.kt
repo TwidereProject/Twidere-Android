@@ -21,26 +21,19 @@ package org.mariotaku.twidere.adapter
 
 import android.content.Context
 import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
 import android.support.v4.widget.SimpleCursorAdapter
 import android.view.View
 import android.widget.TextView
-
-import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedStatuses
 import org.mariotaku.twidere.util.HtmlEscapeHelper
+import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
 
 class SourceAutoCompleteAdapter(context: Context) : SimpleCursorAdapter(context,
         android.R.layout.simple_list_item_1, null, emptyArray<String>(), IntArray(0), 0) {
 
-    private val database: SQLiteDatabase
+    private val database = TwidereSQLiteOpenHelper.getInstance(context).singletonWritableDatabase
 
     private var sourceIdx: Int = 0
-
-    init {
-        val app = TwidereApplication.getInstance(context)
-        database = app.sqLiteDatabase
-    }
 
     override fun bindView(view: View, context: Context?, cursor: Cursor) {
         if (isCursorClosed) return

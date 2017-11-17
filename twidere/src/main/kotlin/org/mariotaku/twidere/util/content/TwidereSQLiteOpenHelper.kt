@@ -31,6 +31,7 @@ import org.mariotaku.sqliteqb.library.*
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.query.SQLCreateTriggerQuery.Event
 import org.mariotaku.sqliteqb.library.query.SQLCreateTriggerQuery.Type
+import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.constant.defaultAPIConfigKey
@@ -39,14 +40,15 @@ import org.mariotaku.twidere.model.tab.TabConfiguration
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.util.content.DatabaseUpgradeHelper.safeUpgrade
+import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 import org.mariotaku.twidere.util.migrateAccounts
 import java.util.*
 
 class TwidereSQLiteOpenHelper(
-        private val context: Context,
-        name: String,
-        version: Int
-) : SQLiteOpenHelper(context, name, null, version) {
+        private val context: Context
+) : SQLiteOpenHelper(context, Constants.DATABASES_NAME, null, Constants.DATABASES_VERSION) {
+
+    val singletonWritableDatabase: SQLiteDatabase by lazy { writableDatabase }
 
     override fun onCreate(db: SQLiteDatabase) {
         createStatusesTables(db)
@@ -343,4 +345,6 @@ class TwidereSQLiteOpenHelper(
         return Constraint.unique("unique_message_conversations", Columns(Conversations.ACCOUNT_KEY,
                 Conversations.CONVERSATION_ID), OnConflict.REPLACE)
     }
+
+    companion object: ApplicationContextSingletonHolder<TwidereSQLiteOpenHelper>(::TwidereSQLiteOpenHelper)
 }
