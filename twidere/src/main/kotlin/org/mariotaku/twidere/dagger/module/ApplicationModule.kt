@@ -41,11 +41,12 @@ import okhttp3.Cache
 import okhttp3.ConnectionPool
 import okhttp3.Dns
 import okhttp3.OkHttpClient
-import org.mariotaku.kpreferences.KPreferences
+import org.mariotaku.kpreferences.get
 import org.mariotaku.mediaviewer.library.FileCache
 import org.mariotaku.mediaviewer.library.MediaDownloader
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.Constants
+import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_CACHE_SIZE_LIMIT
 import org.mariotaku.twidere.constant.autoRefreshCompatibilityModeKey
 import org.mariotaku.twidere.extension.model.load
@@ -59,12 +60,12 @@ import org.mariotaku.twidere.util.media.ThumborWrapper
 import org.mariotaku.twidere.util.media.TwidereMediaDownloader
 import org.mariotaku.twidere.util.net.TwidereDns
 import org.mariotaku.twidere.util.notification.ContentNotificationManager
+import org.mariotaku.twidere.util.preference.PreferenceChangeNotifier
 import org.mariotaku.twidere.util.refresh.AutoRefreshController
 import org.mariotaku.twidere.util.refresh.JobSchedulerAutoRefreshController
 import org.mariotaku.twidere.util.refresh.LegacyAutoRefreshController
 import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
 import org.mariotaku.twidere.util.sync.*
-import org.mariotaku.twidere.util.text.TwitterValidator
 import java.io.File
 import javax.inject.Singleton
 
@@ -103,8 +104,8 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun kPreferences(sharedPreferences: SharedPreferences): KPreferences {
-        return KPreferences(sharedPreferences)
+    fun preferenceChangeNotifier(preferences: SharedPreferences): PreferenceChangeNotifier {
+        return PreferenceChangeNotifier(preferences)
     }
 
     @Provides
@@ -167,25 +168,37 @@ class ApplicationModule(private val application: Application) {
     @Provides
     @Singleton
     fun contentNotificationManager(activityTracker: ActivityTracker, userColorNameManager: UserColorNameManager,
-            notificationManagerWrapper: NotificationManagerWrapper,
-            preferences: SharedPreferences): ContentNotificationManager {
-        return ContentNotificationManager(application, activityTracker, userColorNameManager, notificationManagerWrapper, preferences)
+            notificationManagerWrapper: NotificationManagerWrapper, preferences: SharedPreferences,
+            notifier: PreferenceChangeNotifier): ContentNotificationManager {
+        val manager = ContentNotificationManager(application, activityTracker, userColorNameManager,
+                notificationManagerWrapper, preferences)
+        notifier.register(KEY_NAME_FIRST, KEY_I_WANT_MY_STARS_BACK) {
+            manager.updatePreferences()
+        }
+        return manager
     }
 
     @Provides
     @Singleton
-    fun mediaLoaderWrapper(preferences: SharedPreferences): MediaPreloader {
+    fun mediaPreloader(preferences: SharedPreferences, notifier: PreferenceChangeNotifier): MediaPreloader {
         val preloader = MediaPreloader(application)
         preloader.reloadOptions(preferences)
         val cm = application.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         preloader.isNetworkMetered = ConnectivityManagerCompat.isActiveNetworkMetered(cm)
+        notifier.register(KEY_MEDIA_PRELOAD, KEY_PRELOAD_WIFI_ONLY) {
+            preloader.reloadOptions(preferences)
+        }
         return preloader
     }
 
     @Provides
     @Singleton
-    fun dns(preferences: SharedPreferences): Dns {
-        return TwidereDns(application, preferences)
+    fun dns(preferences: SharedPreferences, notifier: PreferenceChangeNotifier): Dns {
+        val dns = TwidereDns(application, preferences)
+        notifier.register(KEY_DNS_SERVER, KEY_TCP_DNS_QUERY, KEY_BUILTIN_DNS_RESOLVER) {
+            dns.reloadDnsSettings()
+        }
+        return dns
     }
 
     @Provides
@@ -208,9 +221,12 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun thumborWrapper(preferences: SharedPreferences): ThumborWrapper {
+    fun thumborWrapper(preferences: SharedPreferences, notifier: PreferenceChangeNotifier): ThumborWrapper {
         val thumbor = ThumborWrapper()
         thumbor.reloadSettings(preferences)
+        notifier.register(KEY_THUMBOR_ENABLED, KEY_THUMBOR_ADDRESS, KEY_THUMBOR_SECURITY_KEY) {
+            thumbor.reloadSettings(preferences)
+        }
         return thumbor
     }
 
@@ -221,11 +237,11 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun autoRefreshController(kPreferences: KPreferences): AutoRefreshController {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !kPreferences[autoRefreshCompatibilityModeKey]) {
-            return JobSchedulerAutoRefreshController(application, kPreferences)
+    fun autoRefreshController(preferences: SharedPreferences): AutoRefreshController {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !preferences[autoRefreshCompatibilityModeKey]) {
+            return JobSchedulerAutoRefreshController(application, preferences)
         }
-        return LegacyAutoRefreshController(application, kPreferences)
+        return LegacyAutoRefreshController(application, preferences)
     }
 
     @Provides

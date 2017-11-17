@@ -22,10 +22,11 @@ package org.mariotaku.twidere.service
 import android.annotation.TargetApi
 import android.app.job.JobParameters
 import android.app.job.JobService
+import android.content.SharedPreferences
 import android.os.Build
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
-import org.mariotaku.kpreferences.KPreferences
+import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.deadline
 import org.mariotaku.twidere.annotation.AutoRefreshType
 import org.mariotaku.twidere.constant.autoRefreshCompatibilityModeKey
@@ -42,7 +43,7 @@ class JobTaskService : JobService() {
     @Inject
     internal lateinit var taskServiceRunner: TaskServiceRunner
     @Inject
-    internal lateinit var kPreferences: KPreferences
+    internal lateinit var preferences: SharedPreferences
 
     override fun onCreate() {
         super.onCreate()
@@ -50,7 +51,7 @@ class JobTaskService : JobService() {
     }
 
     override fun onStartJob(params: JobParameters): Boolean {
-        if (kPreferences[autoRefreshCompatibilityModeKey]) return false
+        if (preferences[autoRefreshCompatibilityModeKey]) return false
         val action = getTaskAction(params.jobId) ?: return false
         val promise = taskServiceRunner.createPromise(action) ?: return false
         promise.deadline(3, TimeUnit.MINUTES).successUi {

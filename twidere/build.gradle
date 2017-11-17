@@ -50,6 +50,8 @@ android {
     }
 
     dexOptions {
+        additionalParameters += '--minimal-main-dex'
+        additionalParameters += '--set-max-idx-number=48000'
     }
 
     aaptOptions {
@@ -255,12 +257,13 @@ dependencies {
     implementation "com.github.mariotaku.ObjectCursor:core:${libVersions['ObjectCursor']}"
     implementation "com.github.mariotaku.ExportablePreferences:core:${libVersions['ExportablePreferences']}"
     implementation "com.github.mariotaku:AbstractTask:${libVersions['AbstractTask']}"
-    implementation "com.github.mariotaku.CommonsLibrary:parcel:${libVersions['MariotakuCommons']}"
+    implementation "com.github.mariotaku.CommonsLibrary:collection:${libVersions['MariotakuCommons']}"
     implementation "com.github.mariotaku.CommonsLibrary:io:${libVersions['MariotakuCommons']}"
+    implementation "com.github.mariotaku.CommonsLibrary:logansquare:${libVersions['MariotakuCommons']}"
+    implementation "com.github.mariotaku.CommonsLibrary:objectcursor:${libVersions['MariotakuCommons']}"
+    implementation "com.github.mariotaku.CommonsLibrary:parcel:${libVersions['MariotakuCommons']}"
     implementation "com.github.mariotaku.CommonsLibrary:text:${libVersions['MariotakuCommons']}"
     implementation "com.github.mariotaku.CommonsLibrary:text-kotlin:${libVersions['MariotakuCommons']}"
-    implementation "com.github.mariotaku.CommonsLibrary:objectcursor:${libVersions['MariotakuCommons']}"
-    implementation "com.github.mariotaku.CommonsLibrary:logansquare:${libVersions['MariotakuCommons']}"
     implementation "com.github.mariotaku:KPreferences:${libVersions['KPreferences']}"
     implementation "com.github.mariotaku:Chameleon:${libVersions['Chameleon']}"
     implementation "com.github.mariotaku.UniqR:android:${libVersions['UniqR']}"

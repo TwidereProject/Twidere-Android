@@ -253,13 +253,13 @@ class NetworkDiagnosticsFragment : BaseFragment() {
         }
 
         override fun onPreExecute() {
-            val fragment = fragment ?: return
+            val fragment = fragment?.takeUnless { it.isDetached } ?: return
             fragment.diagStart()
             super.onPreExecute()
         }
 
         override fun onPostExecute(u: Unit) {
-            val fragment = fragment ?: return
+            val fragment = fragment?.takeUnless { it.isDetached } ?: return
             logPrintln()
             logPrintln(("Done. You can send this log to me, and I'll contact you to solve related issue."))
             fragment.logReady()

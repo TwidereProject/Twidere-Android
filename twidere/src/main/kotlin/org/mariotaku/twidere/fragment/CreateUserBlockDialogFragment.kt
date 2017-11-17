@@ -35,7 +35,7 @@ class CreateUserBlockDialogFragment : AbsUserMuteBlockDialogFragment() {
     }
 
     override fun getTitle(user: ParcelableUser): String {
-        val displayName = userColorNameManager.getDisplayName(user, kPreferences[nameFirstKey])
+        val displayName = userColorNameManager.getDisplayName(user, preferences[nameFirstKey])
         return getString(R.string.title_block_user, displayName)
     }
 

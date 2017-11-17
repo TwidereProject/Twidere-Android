@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.fragment
 
+import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_AUTO_REFRESH
 import org.mariotaku.twidere.constant.defaultAutoRefreshKey
@@ -29,7 +30,7 @@ class AccountRefreshSettingsFragment : BaseAccountPreferenceFragment() {
         get() = R.xml.preferences_account_refresh
 
     override val switchPreferenceDefault: Boolean
-        get() = kPreferences[defaultAutoRefreshKey]
+        get() = preferences[defaultAutoRefreshKey]
 
     override val switchPreferenceKey: String?
         get() = KEY_AUTO_REFRESH

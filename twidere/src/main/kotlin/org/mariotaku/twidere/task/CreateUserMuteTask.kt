@@ -3,6 +3,7 @@ package org.mariotaku.twidere.task
 import android.content.ContentValues
 import android.content.Context
 import android.widget.Toast
+import org.mariotaku.kpreferences.get
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.mastodon.Mastodon
@@ -80,7 +81,7 @@ class CreateUserMuteTask(
     }
 
     override fun showSucceededMessage(params: AbsFriendshipOperationTask.Arguments, user: ParcelableUser) {
-        val nameFirst = kPreferences[nameFirstKey]
+        val nameFirst = preferences[nameFirstKey]
         val message = context.getString(R.string.muted_user, manager.getDisplayName(user,
                 nameFirst))
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()

@@ -24,7 +24,6 @@ import android.content.SharedPreferences
 import okhttp3.Cache
 import okhttp3.ConnectionPool
 import okhttp3.Dns
-import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
@@ -70,9 +69,6 @@ class DependencyHolder internal constructor(context: Context) {
         internal set
     @Inject
     lateinit var userColorNameManager: UserColorNameManager
-        internal set
-    @Inject
-    lateinit var kPreferences: KPreferences
         internal set
     @Inject
     lateinit var thumbor: ThumborWrapper

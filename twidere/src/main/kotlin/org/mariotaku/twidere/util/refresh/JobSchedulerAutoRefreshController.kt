@@ -5,8 +5,9 @@ import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.ComponentName
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Build
-import org.mariotaku.kpreferences.KPreferences
+import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.annotation.AutoRefreshType
 import org.mariotaku.twidere.constant.refreshIntervalKey
 import org.mariotaku.twidere.service.JobTaskService
@@ -15,15 +16,11 @@ import org.mariotaku.twidere.service.JobTaskService.Companion.JOB_ID_REFRESH_LAU
 import java.util.concurrent.TimeUnit
 import android.Manifest.permission as AndroidPermissions
 
-/**
- * Created by mariotaku on 2016/12/17.
- */
-
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 class JobSchedulerAutoRefreshController(
         context: Context,
-        kPreferences: KPreferences
-) : AutoRefreshController(context, kPreferences) {
+        preferences: SharedPreferences
+) : AutoRefreshController(context, preferences) {
     private val scheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
 
     override fun appStarted() {
@@ -54,7 +51,7 @@ class JobSchedulerAutoRefreshController(
         scheduler.cancel(jobId)
     }
 
-    fun scheduleJob(jobId: Int, periodMillis: Long = TimeUnit.MINUTES.toMillis(kPreferences[refreshIntervalKey]), persisted: Boolean = true) {
+    fun scheduleJob(jobId: Int, periodMillis: Long = TimeUnit.MINUTES.toMillis(preferences[refreshIntervalKey]), persisted: Boolean = true) {
         val builder = JobInfo.Builder(jobId, ComponentName(context, JobTaskService::class.java))
         builder.setPeriodic(periodMillis)
         builder.setPersisted(persisted)

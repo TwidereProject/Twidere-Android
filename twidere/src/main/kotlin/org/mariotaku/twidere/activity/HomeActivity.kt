@@ -1054,10 +1054,10 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             builder.setTitle(R.string.auto_refresh)
             builder.setMessage(R.string.message_auto_refresh_confirm)
             builder.setPositiveButton(android.R.string.ok) { _, _ ->
-                kPreferences[defaultAutoRefreshKey] = true
+                preferences[defaultAutoRefreshKey] = true
             }
             builder.setNegativeButton(R.string.action_no_thanks) { _, _ ->
-                kPreferences[defaultAutoRefreshKey] = false
+                preferences[defaultAutoRefreshKey] = false
             }
             val dialog = builder.create()
             dialog.onShow { it.applyTheme() }
@@ -1065,7 +1065,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         }
 
         override fun onDismiss(dialog: DialogInterface?) {
-            kPreferences[defaultAutoRefreshAskedKey] = true
+            preferences[defaultAutoRefreshAskedKey] = true
             super.onDismiss(dialog)
         }
     }

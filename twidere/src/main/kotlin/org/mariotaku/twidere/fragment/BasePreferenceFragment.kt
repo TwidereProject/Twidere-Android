@@ -22,6 +22,7 @@ package org.mariotaku.twidere.fragment
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Rect
 import android.media.RingtoneManager
 import android.net.Uri
@@ -31,7 +32,6 @@ import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
 import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
-import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.preference.RingtonePreference
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
@@ -48,7 +48,7 @@ abstract class BasePreferenceFragment : PreferenceFragmentCompat(), IBaseFragmen
     @Inject
     lateinit var userColorNameManager: UserColorNameManager
     @Inject
-    lateinit var kPreferences: KPreferences
+    lateinit var preferences: SharedPreferences
     @Inject
     lateinit var syncController: SyncController
     @Inject

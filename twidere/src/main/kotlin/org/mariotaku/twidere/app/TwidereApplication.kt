@@ -34,11 +34,8 @@ import com.bumptech.glide.Glide
 import nl.komponents.kovenant.android.startKovenant
 import nl.komponents.kovenant.android.stopKovenant
 import nl.komponents.kovenant.task
-import okhttp3.Dns
-import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
-import org.mariotaku.mediaviewer.library.MediaDownloader
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants
@@ -58,10 +55,6 @@ import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.emoji.EmojiOneShortCodeMap
-import org.mariotaku.twidere.util.media.MediaPreloader
-import org.mariotaku.twidere.util.media.ThumborWrapper
-import org.mariotaku.twidere.util.net.TwidereDns
-import org.mariotaku.twidere.util.notification.ContentNotificationManager
 import org.mariotaku.twidere.util.notification.NotificationChannelsManager
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.promotion.PromotionService
@@ -79,15 +72,9 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
     @Inject
     lateinit internal var restHttpClient: RestHttpClient
     @Inject
-    lateinit internal var dns: Dns
-    @Inject
-    lateinit internal var mediaDownloader: MediaDownloader
-    @Inject
     lateinit internal var defaultFeatures: DefaultFeatures
     @Inject
     lateinit internal var externalThemeManager: ExternalThemeManager
-    @Inject
-    lateinit internal var kPreferences: KPreferences
     @Inject
     lateinit internal var autoRefreshController: AutoRefreshController
     @Inject
@@ -96,12 +83,6 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
     lateinit internal var extraFeaturesService: ExtraFeaturesService
     @Inject
     lateinit internal var promotionService: PromotionService
-    @Inject
-    lateinit internal var mediaPreloader: MediaPreloader
-    @Inject
-    lateinit internal var contentNotificationManager: ContentNotificationManager
-    @Inject
-    lateinit internal var thumbor: ThumborWrapper
 
     val sqLiteDatabase: SQLiteDatabase by lazy {
         StrictModeUtils.checkDiskIO()
@@ -181,24 +162,12 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
             KEY_PROXY_PASSWORD, KEY_CONNECTION_TIMEOUT, KEY_RETRY_ON_NETWORK_ISSUE -> {
                 HttpClientFactory.reloadConnectivitySettings(this)
             }
-            KEY_DNS_SERVER, KEY_TCP_DNS_QUERY, KEY_BUILTIN_DNS_RESOLVER -> {
-                reloadDnsSettings()
-            }
             KEY_CREDENTIALS_TYPE, KEY_API_URL_FORMAT, KEY_CONSUMER_KEY, KEY_CONSUMER_SECRET,
             KEY_SAME_OAUTH_SIGNING_URL -> {
                 preferences[apiLastChangeKey] = System.currentTimeMillis()
             }
             KEY_EMOJI_SUPPORT -> {
                 externalThemeManager.reloadEmojiPreferences()
-            }
-            KEY_THUMBOR_ENABLED, KEY_THUMBOR_ADDRESS, KEY_THUMBOR_SECURITY_KEY -> {
-                thumbor.reloadSettings(preferences)
-            }
-            KEY_MEDIA_PRELOAD, KEY_PRELOAD_WIFI_ONLY -> {
-                mediaPreloader.reloadOptions(preferences)
-            }
-            KEY_NAME_FIRST, KEY_I_WANT_MY_STARS_BACK -> {
-                contentNotificationManager.updatePreferences()
             }
             streamingEnabledKey.key, streamingPowerSavingKey.key,
             streamingNonMeteredNetworkKey.key -> {
@@ -228,7 +197,7 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
     }
 
     private fun loadDefaultFeatures() {
-        val lastUpdated = kPreferences[defaultFeatureLastUpdated]
+        val lastUpdated = sharedPreferences[defaultFeatureLastUpdated]
         if (lastUpdated > 0 && TimeUnit.MILLISECONDS.toHours(System.currentTimeMillis() - lastUpdated) < 12) {
             return
         }
@@ -240,7 +209,7 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
         }.fail {
             DebugLog.w(LOGTAG, "Unable to load remote features", it)
         }.always {
-            kPreferences[defaultFeatureLastUpdated] = System.currentTimeMillis()
+            sharedPreferences[defaultFeatureLastUpdated] = System.currentTimeMillis()
         }
     }
 
@@ -294,10 +263,6 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
         Analyzer.init(this)
     }
 
-    private fun reloadDnsSettings() {
-        (dns as? TwidereDns)?.reloadDnsSettings()
-    }
-
     private fun initializeAsyncTask() {
         // AsyncTask class needs to be loaded in UI thread.
         // So we load it here to comply the rule.
@@ -312,9 +277,7 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
         var instance: TwidereApplication? = null
             private set
 
-        fun getInstance(context: Context): TwidereApplication {
-            return context.applicationContext as TwidereApplication
-        }
+        fun getInstance(context: Context) = context.applicationContext as TwidereApplication
     }
 
 }

@@ -4,6 +4,7 @@ import android.accounts.AccountManager
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.database.Cursor
 import android.graphics.PorterDuff
 import android.net.Uri
@@ -22,7 +23,6 @@ import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.fragment_content_listview.*
 import nl.komponents.kovenant.then
 import nl.komponents.kovenant.ui.alwaysUi
-import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
 import org.mariotaku.library.objectcursor.ObjectCursor
@@ -235,7 +235,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
         @Inject
         lateinit var userColorNameManager: UserColorNameManager
         @Inject
-        lateinit var preferences: KPreferences
+        lateinit var preferences: SharedPreferences
 
         private val nameFirst: Boolean
 

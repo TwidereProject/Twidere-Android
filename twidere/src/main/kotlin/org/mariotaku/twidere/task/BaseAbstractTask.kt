@@ -5,7 +5,6 @@ import android.content.SharedPreferences
 import com.squareup.otto.Bus
 import com.twitter.Extractor
 import org.mariotaku.abstask.library.AbstractTask
-import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
@@ -31,8 +30,6 @@ abstract class BaseAbstractTask<Params, Result, Callback>(val context: Context) 
     lateinit var mediaPreloader: MediaPreloader
     @Inject
     lateinit var preferences: SharedPreferences
-    @Inject
-    lateinit var kPreferences: KPreferences
     @Inject
     lateinit var manager: UserColorNameManager
     @Inject

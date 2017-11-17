@@ -6,10 +6,11 @@ import android.app.PendingIntent
 import android.app.job.JobScheduler
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.SystemClock
 import android.support.v4.util.ArrayMap
-import org.mariotaku.kpreferences.KPreferences
+import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.annotation.AutoRefreshType
 import org.mariotaku.twidere.constant.refreshIntervalKey
 import org.mariotaku.twidere.service.JobTaskService.Companion.JOB_IDS_REFRESH
@@ -20,8 +21,8 @@ import java.util.concurrent.TimeUnit
 
 class LegacyAutoRefreshController(
         context: Context,
-        kPreferences: KPreferences
-) : AutoRefreshController(context, kPreferences) {
+        preferences: SharedPreferences
+) : AutoRefreshController(context, preferences) {
 
     private val alarmManager: AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     private val pendingIntents: ArrayMap<String, PendingIntent> = ArrayMap()
@@ -55,7 +56,7 @@ class LegacyAutoRefreshController(
 
     override fun schedule(type: String) {
         val pendingIntent = pendingIntents[type] ?: return
-        val interval = TimeUnit.MINUTES.toMillis(kPreferences[refreshIntervalKey])
+        val interval = TimeUnit.MINUTES.toMillis(preferences[refreshIntervalKey])
         if (interval > 0) {
             val triggerAt = SystemClock.elapsedRealtime() + interval
             alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAt, interval, pendingIntent)

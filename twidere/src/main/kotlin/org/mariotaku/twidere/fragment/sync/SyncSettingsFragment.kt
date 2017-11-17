@@ -9,6 +9,8 @@ import android.view.MenuItem
 import com.squareup.otto.Subscribe
 import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.ui.alwaysUi
+import org.mariotaku.kpreferences.get
+import org.mariotaku.kpreferences.set
 import org.mariotaku.ktextension.toWeak
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.SYNC_PREFERENCES_NAME
@@ -29,7 +31,7 @@ class SyncSettingsFragment : BasePreferenceFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        syncProvider = kPreferences[dataSyncProviderInfoKey]
+        syncProvider = preferences[dataSyncProviderInfoKey]
         setHasOptionsMenu(true)
     }
 
@@ -59,7 +61,7 @@ class SyncSettingsFragment : BasePreferenceFragment() {
                 df.show(childFragmentManager, "disconnect_confirm")
             }
             R.id.sync_now -> {
-                val providerInfo = kPreferences[dataSyncProviderInfoKey]!!
+                val providerInfo = preferences[dataSyncProviderInfoKey]!!
                 syncController.performSync(providerInfo)
             }
             else -> {
@@ -75,14 +77,14 @@ class SyncSettingsFragment : BasePreferenceFragment() {
     }
 
     private fun cleanupAndDisconnect() {
-        val providerInfo = kPreferences[dataSyncProviderInfoKey] ?: return
+        val providerInfo = preferences[dataSyncProviderInfoKey] ?: return
         val weakThis = toWeak()
         val task = showProgressDialog("cleanup_sync_cache").
                 and(syncController.cleanupSyncCache(providerInfo))
         task.alwaysUi {
             val f = weakThis.get() ?: return@alwaysUi
             f.dismissProgressDialog("cleanup_sync_cache")
-            f.kPreferences[dataSyncProviderInfoKey] = null
+            f.preferences[dataSyncProviderInfoKey] = null
             DataSyncProvider.Factory.notifyUpdate(f.context!!)
             f.activity?.finish()
         }
@@ -91,7 +93,7 @@ class SyncSettingsFragment : BasePreferenceFragment() {
     class DisconnectSyncConfirmDialogFragment : BaseDialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val builder = AlertDialog.Builder(context!!)
-            val providerInfo = kPreferences[dataSyncProviderInfoKey]!!
+            val providerInfo = preferences[dataSyncProviderInfoKey]!!
             val entry = DataSyncProvider.Factory.getProviderEntry(context!!, providerInfo.type)!!
             builder.setMessage(getString(R.string.message_sync_disconnect_from_name_confirm, entry.name))
             builder.setPositiveButton(R.string.action_sync_disconnect) { _, _ ->

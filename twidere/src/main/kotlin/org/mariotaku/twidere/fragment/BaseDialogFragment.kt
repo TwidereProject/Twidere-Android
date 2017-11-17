@@ -27,7 +27,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.squareup.otto.Bus
 import okhttp3.Dns
-import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.DebugModeUtils
@@ -45,8 +44,6 @@ open class BaseDialogFragment : DialogFragment() {
     lateinit var userColorNameManager: UserColorNameManager
     @Inject
     lateinit var preferences: SharedPreferences
-    @Inject
-    lateinit var kPreferences: KPreferences
     @Inject
     lateinit var keyboardShortcutsHandler: KeyboardShortcutsHandler
     @Inject
