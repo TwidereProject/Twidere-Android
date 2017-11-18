@@ -51,10 +51,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarShowHideHelper
 import org.mariotaku.twidere.annotation.CacheFileType
-import org.mariotaku.twidere.extension.addSystemUiVisibility
-import org.mariotaku.twidere.extension.dismissProgressDialog
-import org.mariotaku.twidere.extension.removeSystemUiVisibility
-import org.mariotaku.twidere.extension.showProgressDialog
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.fragment.PermissionRequestDialogFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.fragment.iface.IBaseFragment

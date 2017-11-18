@@ -38,6 +38,7 @@ import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.annotation.TimelineStyle
 import org.mariotaku.twidere.constant.*
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.originalId
 import org.mariotaku.twidere.extension.model.retweet_sort_id
 import org.mariotaku.twidere.fragment.status.StatusFragment
@@ -45,6 +46,7 @@ import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler
 import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.TwidereLinkify
+import org.mariotaku.twidere.util.dagger.AdapterComponent
 import org.mariotaku.twidere.view.holder.EmptyViewHolder
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder

@@ -33,6 +33,7 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.nameFirstKey
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
@@ -41,7 +42,7 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.Utils
-import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.util.dagger.PromisesComponent
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 import javax.inject.Inject
 
@@ -55,7 +56,7 @@ class FriendshipPromises private constructor(val application: Application) {
     lateinit var manager: UserColorNameManager
 
     init {
-        GeneralComponent.get(application).inject(this)
+        PromisesComponent.get(application).inject(this)
     }
 
     fun accept(accountKey: UserKey, userKey: UserKey): Promise<ParcelableUser, Exception> = accountTask(application, accountKey) { details ->

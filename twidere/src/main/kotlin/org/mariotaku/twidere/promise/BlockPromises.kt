@@ -33,6 +33,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.exception.APINotSupportedException
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.insert
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
@@ -45,6 +46,7 @@ import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.util.dagger.PromisesComponent
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 import javax.inject.Inject
 
@@ -58,7 +60,7 @@ class BlockPromises private constructor(private val application: Application) {
     lateinit var manager: UserColorNameManager
 
     init {
-        GeneralComponent.get(application).inject(this)
+        PromisesComponent.get(application).inject(this)
     }
 
     fun block(accountKey: UserKey, userKey: UserKey, filterEverywhere: Boolean = false): Promise<ParcelableUser, Exception> = accountTask(application, accountKey) { account ->

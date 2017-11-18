@@ -103,7 +103,7 @@ abstract class GetActivitiesTask(
                 return@mapIndexed Pair(null, e)
             }
         }
-        val manager = timelineSyncManagerFactory.get()
+        val manager = dataSyncProvider.newTimelineSyncManager()
         if (manager != null && syncPreferences.isSyncEnabled(SyncTaskRunner.SYNC_TYPE_TIMELINE_POSITIONS)) {
             if (param.isBackground) {
                 syncFetchReadPosition(manager, accountKeys)

@@ -8,14 +8,16 @@ import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.preference.PreferenceDialogFragmentCompat
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.onShow
+import org.mariotaku.twidere.util.dagger.FragmentComponent
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 
 abstract class ThemedPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        GeneralComponent.get(context).inject(this)
+        FragmentComponent.get(context).inject(this)
     }
 
     @SuppressLint("RestrictedApi")

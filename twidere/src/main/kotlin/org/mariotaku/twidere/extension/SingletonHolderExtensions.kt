@@ -17,16 +17,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.activity.presentation
+package org.mariotaku.twidere.extension
 
-import android.os.Bundle
-import org.mariotaku.twidere.activity.BaseActivity
-import org.mariotaku.twidere.util.TaskServiceRunner
+import org.mariotaku.twidere.util.lang.SingletonHolder
 
-class ToggleRefreshActivity : BaseActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        taskServiceRunner.runPromise(TaskServiceRunner.ACTION_REFRESH_LAUNCH_PRESENTATIONS)
-        finish()
-    }
-}
+fun <T, A> SingletonHolder<T, A>.get(arg: A): T = getInstance(arg)

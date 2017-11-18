@@ -360,7 +360,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         bus.unregister(this)
         AccountManager.get(this).removeOnAccountsUpdatedListenerSafe(accountUpdatedListener)
         preferences.edit().putInt(KEY_SAVED_TAB_POSITION, mainPager.currentItem).apply()
-        timelineSyncManager?.commit()
+        dataSyncProvider.newTimelineSyncManager()?.commit()
         super.onStop()
     }
 

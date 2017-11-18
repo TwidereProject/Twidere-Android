@@ -19,61 +19,19 @@
 
 package org.mariotaku.twidere.util.sync
 
-import android.content.Context
-import android.content.SharedPreferences
-import org.mariotaku.twidere.model.sync.SyncProviderEntry
-import java.util.*
+import org.mariotaku.twidere.model.sync.SyncProviderConfig
+import org.mariotaku.twidere.model.sync.SyncProviderInfo
 
-/**
- * Created by mariotaku on 2017/1/2.
- */
-abstract class DataSyncProvider(val type: String) {
+abstract class DataSyncProvider {
 
-    abstract fun writeToPreferences(editor: SharedPreferences.Editor)
+    abstract var providerConfig: SyncProviderConfig?
 
-    abstract fun newSyncTaskRunner(context: Context): SyncTaskRunner
+    abstract fun supportedProviders(): List<SyncProviderInfo>
 
-    open fun newTimelineSyncManager(context: Context): TimelineSyncManager? = null
+    abstract fun newSyncTaskRunner(): SyncTaskRunner?
 
-    abstract class Factory {
-        abstract fun createForType(type: String, preferences: SharedPreferences): DataSyncProvider?
+    open fun providerInfo(type: String): SyncProviderInfo? = supportedProviders().find { it.type == type }
 
-        abstract fun getSupportedProviders(context: Context): List<SyncProviderEntry>
-
-        abstract fun notifyUpdate(context: Context)
-
-        companion object {
-            fun notifyUpdate(context: Context) {
-                ServiceLoader.load(Factory::class.java).forEach { factory ->
-                    factory.notifyUpdate(context)
-                }
-            }
-
-            fun createForType(type: String, preferences: SharedPreferences): DataSyncProvider? {
-                ServiceLoader.load(Factory::class.java).forEach { factory ->
-                    val info = factory.createForType(type, preferences)
-                    if (info != null) return info
-                }
-                return null
-            }
-
-            fun getSupportedProviders(context: Context): List<SyncProviderEntry> {
-                val result = ArrayList<SyncProviderEntry>()
-                ServiceLoader.load(Factory::class.java).forEach { factory ->
-                    result.addAll(factory.getSupportedProviders(context))
-                }
-                return result
-            }
-
-            fun getProviderEntry(context: Context, type: String): SyncProviderEntry? {
-                ServiceLoader.load(Factory::class.java).forEach { factory ->
-                    factory.getSupportedProviders(context).forEach { entry ->
-                        if (entry.type == type) return entry
-                    }
-                }
-                return null
-            }
-        }
-    }
+    open fun newTimelineSyncManager(): TimelineSyncManager? = null
 
 }

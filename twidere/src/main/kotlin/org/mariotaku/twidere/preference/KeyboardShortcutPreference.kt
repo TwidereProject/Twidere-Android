@@ -16,6 +16,7 @@ import android.view.View
 import android.widget.TextView
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.fragment.preference.ThemedPreferenceDialogFragmentCompat
 import org.mariotaku.twidere.preference.iface.IDialogPreference
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler

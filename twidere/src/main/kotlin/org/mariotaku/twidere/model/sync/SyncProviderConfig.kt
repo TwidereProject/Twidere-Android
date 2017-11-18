@@ -17,16 +17,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.activity.presentation
+package org.mariotaku.twidere.model.sync
 
-import android.os.Bundle
-import org.mariotaku.twidere.activity.BaseActivity
-import org.mariotaku.twidere.util.TaskServiceRunner
-
-class ToggleRefreshActivity : BaseActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        taskServiceRunner.runPromise(TaskServiceRunner.ACTION_REFRESH_LAUNCH_PRESENTATIONS)
-        finish()
-    }
-}
+abstract class SyncProviderConfig(val type: String)

@@ -30,6 +30,7 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.deadline
 import org.mariotaku.twidere.annotation.AutoRefreshType
 import org.mariotaku.twidere.constant.autoRefreshCompatibilityModeKey
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.TaskServiceRunner
 import org.mariotaku.twidere.util.dagger.GeneralComponent

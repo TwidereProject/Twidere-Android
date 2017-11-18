@@ -9,11 +9,8 @@ import android.os.Build
 import org.mariotaku.twidere.service.JobTaskService
 import java.util.concurrent.TimeUnit
 
-/**
- * Created by mariotaku on 2017/1/6.
- */
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-class JobSchedulerSyncController(context: Context) : SyncController(context) {
+class JobSchedulerSyncController(context: Context, provider: DataSyncProvider) : SyncController(context, provider) {
     val scheduler: JobScheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
 
     override fun appStarted() {

@@ -29,6 +29,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.REQUEST_PURCHASE_EXTRA_FEATURES
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter
 import org.mariotaku.twidere.constant.promotionsEnabledKey
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.util.Analyzer
@@ -36,6 +37,7 @@ import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.promotion.PromotionService
 import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
+import org.mariotaku.twidere.util.sync.DataSyncProvider
 import org.mariotaku.twidere.view.ContainerView
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
@@ -193,6 +195,9 @@ class PremiumDashboardActivity : BaseActivity() {
 
         @Inject
         protected lateinit var promotionService: PromotionService
+
+        @Inject
+        protected lateinit var dataSyncProvider: DataSyncProvider
 
         var position: Int = RecyclerView.NO_POSITION
             internal set

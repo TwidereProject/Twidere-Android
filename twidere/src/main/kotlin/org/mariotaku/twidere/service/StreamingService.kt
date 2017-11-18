@@ -29,6 +29,7 @@ import org.mariotaku.twidere.constant.streamingEnabledKey
 import org.mariotaku.twidere.constant.streamingNonMeteredNetworkKey
 import org.mariotaku.twidere.constant.streamingPowerSavingKey
 import org.mariotaku.twidere.extension.addOnAccountsUpdatedListenerSafe
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.key
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable

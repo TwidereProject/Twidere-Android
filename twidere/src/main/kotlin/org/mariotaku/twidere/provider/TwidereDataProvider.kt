@@ -44,6 +44,7 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.TableIds
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.model.AccountPreferences
 import org.mariotaku.twidere.model.UserKey

@@ -21,7 +21,6 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.model.timeline.UserTimelineFilter
 import org.mariotaku.twidere.preference.ThemeBackgroundPreference
-import org.mariotaku.twidere.util.sync.DataSyncProvider
 import java.util.*
 
 /**
@@ -226,30 +225,6 @@ object defaultAPIConfigKey : KPreferenceKey<CustomAPIConfig> {
         editor.putString(KEY_CREDENTIALS_TYPE, value.credentialsType)
         editor.putBoolean(KEY_SAME_OAUTH_SIGNING_URL, value.isSameOAuthUrl)
         editor.putBoolean(KEY_NO_VERSION_SUFFIX, value.isNoVersionSuffix)
-        return true
-    }
-
-}
-
-object dataSyncProviderInfoKey : KPreferenceKey<DataSyncProvider?> {
-    private const val PROVIDER_TYPE_KEY = "sync_provider_type"
-
-    override fun contains(preferences: SharedPreferences): Boolean {
-        return read(preferences) != null
-    }
-
-    override fun read(preferences: SharedPreferences): DataSyncProvider? {
-        val type = preferences.getString(PROVIDER_TYPE_KEY, null) ?: return null
-        return DataSyncProvider.Factory.createForType(type, preferences)
-    }
-
-    override fun write(editor: SharedPreferences.Editor, value: DataSyncProvider?): Boolean {
-        if (value == null) {
-            editor.remove(PROVIDER_TYPE_KEY)
-        } else {
-            editor.putString(PROVIDER_TYPE_KEY, value.type)
-            value.writeToPreferences(editor)
-        }
         return true
     }
 

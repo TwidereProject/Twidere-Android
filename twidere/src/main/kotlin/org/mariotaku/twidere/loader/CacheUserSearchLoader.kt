@@ -5,6 +5,7 @@ import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.sqliteqb.library.Columns
 import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.queryReference
 import org.mariotaku.twidere.loader.users.UserSearchLoader
 import org.mariotaku.twidere.model.AccountDetails

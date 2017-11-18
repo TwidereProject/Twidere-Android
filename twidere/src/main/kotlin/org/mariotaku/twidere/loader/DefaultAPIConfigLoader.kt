@@ -24,6 +24,7 @@ import android.support.v4.content.FixedAsyncTaskLoader
 import org.mariotaku.restfu.annotation.method.GET
 import org.mariotaku.restfu.http.HttpRequest
 import org.mariotaku.restfu.http.RestHttpClient
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.util.JsonSerializer
 import org.mariotaku.twidere.util.dagger.GeneralComponent

@@ -55,6 +55,7 @@ import org.mariotaku.twidere.constant.lastLaunchTimeKey
 import org.mariotaku.twidere.constant.promotionsEnabledKey
 import org.mariotaku.twidere.constant.themeColorKey
 import org.mariotaku.twidere.constant.themeKey
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.hasInvalidAccount
 import org.mariotaku.twidere.extension.model.displayingScore
 import org.mariotaku.twidere.extension.model.shouldShow

@@ -22,6 +22,7 @@ package org.mariotaku.twidere.text.util
 import android.text.Spannable
 import android.widget.TextView
 import org.mariotaku.twidere.extension.applyTo
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.text.SafeSpannableString
 import org.mariotaku.twidere.util.ExternalThemeManager
 import org.mariotaku.twidere.util.dagger.GeneralComponent

@@ -13,11 +13,13 @@ import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.adapter.iface.IUserListsAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter
 import org.mariotaku.twidere.constant.*
-import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.activityStatus
+import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.util.UserColorNameManager
+import org.mariotaku.twidere.util.dagger.AdapterComponent
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 import javax.inject.Inject
@@ -67,7 +69,7 @@ class DummyItemAdapter(
     private val showingFullTextStates = SparseBooleanArray()
 
     init {
-        GeneralComponent.get(context).inject(this)
+        AdapterComponent.get(context).inject(this)
         updateOptions()
     }
 

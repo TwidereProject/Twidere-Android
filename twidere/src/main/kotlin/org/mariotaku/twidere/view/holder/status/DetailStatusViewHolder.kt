@@ -63,7 +63,7 @@ import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.util.twitter.card.TwitterCardViewFactory
+import org.mariotaku.twidere.util.twitter.card.StatusCardViewFactory
 import org.mariotaku.twidere.view.ProfileImageView
 import org.mariotaku.twidere.view.TimelineContentTextView
 import java.util.*
@@ -323,7 +323,7 @@ class DetailStatusViewHolder(
             } else {
                 itemView.twitterCard.setCardSize(0, 0)
             }
-            val vc = TwitterCardViewFactory.from(status)
+            val vc = StatusCardViewFactory.from(status)
             itemView.twitterCard.viewController = vc
             if (vc != null) {
                 itemView.twitterCard.visibility = View.VISIBLE

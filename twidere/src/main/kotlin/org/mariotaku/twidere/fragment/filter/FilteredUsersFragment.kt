@@ -35,6 +35,7 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_HOST
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.extension.dismissProgressDialog
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.showProgressDialog
 import org.mariotaku.twidere.fragment.AddUserFilterDialogFragment
 import org.mariotaku.twidere.model.FiltersData

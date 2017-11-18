@@ -55,6 +55,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.MediaViewerActivity
 import org.mariotaku.twidere.annotation.CacheFileType
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_POSITION
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.authorizationHeader
 import org.mariotaku.twidere.extension.model.bannerExtras
 import org.mariotaku.twidere.extension.model.getBestVideoUrlAndType
@@ -73,7 +74,7 @@ import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.CacheProvider
 import org.mariotaku.twidere.task.SaveFileTask
-import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.util.dagger.FragmentComponent
 import org.mariotaku.twidere.util.media.TwidereMediaDownloader
 import org.mariotaku.twidere.util.promotion.PromotionService
 import java.io.InputStream
@@ -227,7 +228,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        GeneralComponent.get(context).inject(this)
+        FragmentComponent.get(context).inject(this)
     }
 
     override fun onStart() {

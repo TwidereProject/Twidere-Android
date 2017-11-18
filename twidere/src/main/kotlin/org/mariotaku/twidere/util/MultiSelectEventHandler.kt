@@ -33,6 +33,7 @@ import org.mariotaku.ktextension.supportActionProvider
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.getAccountUser
 import org.mariotaku.twidere.extension.ownedAccounts
 import org.mariotaku.twidere.menu.AccountActionProvider

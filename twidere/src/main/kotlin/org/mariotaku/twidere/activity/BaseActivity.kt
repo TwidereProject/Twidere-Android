@@ -65,6 +65,7 @@ import org.mariotaku.twidere.annotation.NavbarStyle
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.extension.defaultSharedPreferences
 import org.mariotaku.twidere.extension.firstLanguage
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.overriding
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowInsetsCallback
 import org.mariotaku.twidere.model.DefaultFeatures
@@ -79,6 +80,7 @@ import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
 import org.mariotaku.twidere.util.support.ActivitySupport
 import org.mariotaku.twidere.util.support.ActivitySupport.TaskDescriptionCompat
 import org.mariotaku.twidere.util.support.WindowSupport
+import org.mariotaku.twidere.util.sync.DataSyncProvider
 import org.mariotaku.twidere.util.sync.TimelineSyncManager
 import org.mariotaku.twidere.util.theme.TwidereAppearanceCreator
 import org.mariotaku.twidere.util.theme.getCurrentThemeResource
@@ -112,8 +114,6 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     @Inject
     lateinit var statusScheduleProviderFactory: StatusScheduleProvider.Factory
     @Inject
-    lateinit var timelineSyncManagerFactory: TimelineSyncManager.Factory
-    @Inject
     lateinit var gifShareProvider: GifShareProvider
     @Inject
     lateinit var defaultFeatures: DefaultFeatures
@@ -127,15 +127,14 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     lateinit var promotionService: PromotionService
     @Inject
     lateinit var mapFragmentFactory: MapFragmentFactory
+    @Inject
+    lateinit var dataSyncProvider: DataSyncProvider
 
     lateinit var requestManager: RequestManager
         private set
 
     protected val statusScheduleProvider: StatusScheduleProvider?
         get() = statusScheduleProviderFactory.newInstance(this)
-
-    protected val timelineSyncManager: TimelineSyncManager?
-        get() = timelineSyncManagerFactory.get()
 
     protected val isDialogTheme: Boolean
         get() = ThemeUtils.getBooleanFromAttribute(this, R.attr.isDialogTheme)

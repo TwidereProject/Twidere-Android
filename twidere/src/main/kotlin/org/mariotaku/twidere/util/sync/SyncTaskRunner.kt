@@ -3,12 +3,16 @@ package org.mariotaku.twidere.util.sync
 import android.content.Context
 import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
+import nl.komponents.kovenant.all
 import nl.komponents.kovenant.task
+import nl.komponents.kovenant.ui.failUi
+import nl.komponents.kovenant.ui.successUi
+import org.mariotaku.ktextension.deadline
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.util.TaskServiceRunner
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import java.lang.Exception
-import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -27,20 +31,22 @@ abstract class SyncTaskRunner(val context: Context) {
 
     /**
      * @param action Action of `TaskServiceRunner.Action`
-     * @param callback When task finished, true if task finished successfully
-     * @return True if task actually executed, false otherwise
+     * @return Task promise, `null` if not suported
      */
-    protected abstract fun onRunningTask(action: String, callback: ((Boolean) -> Unit)): Boolean
+    protected abstract fun onCreatePromise(action: String): Promise<Boolean, Exception>?
 
-    fun runTask(action: String, timeout: Long = 0, unit: TimeUnit? = null, callback: ((Boolean) -> Unit)? = null): Boolean {
-        val syncType = SyncTaskRunner.getSyncType(action) ?: return false
-        if (!syncPreferences.isSyncEnabled(syncType)) return false
-        return onRunningTask(action) { success ->
-            callback?.invoke(success)
-            if (success) {
+    fun runPromise(action: String, timeout: Long = 0, unit: TimeUnit = TimeUnit.MILLISECONDS): Promise<Boolean, Exception> {
+        val syncType = SyncTaskRunner.getSyncType(action) ?: return Promise.ofFail(UnsupportedOperationException())
+        if (!syncPreferences.isSyncEnabled(syncType)) return Promise.ofFail(UnsupportedOperationException())
+        val promise = onCreatePromise(action) ?: return Promise.ofFail(UnsupportedOperationException())
+        return promise.deadline(timeout, unit).success { synced ->
+            if (synced) {
                 syncPreferences.setLastSynced(syncType, System.currentTimeMillis())
             }
-            bus.post(TaskServiceRunner.SyncFinishedEvent(syncType, success))
+        }.successUi { synced ->
+            bus.post(TaskServiceRunner.SyncFinishedEvent(syncType, synced))
+        }.failUi {
+            bus.post(TaskServiceRunner.SyncFinishedEvent(syncType, false))
         }
     }
 
@@ -51,17 +57,8 @@ abstract class SyncTaskRunner(val context: Context) {
         }
     }
 
-    fun performSync() {
-        val actions = TaskServiceRunner.ACTIONS_SYNC.toCollection(LinkedList())
-        val runnable = object : Runnable {
-            override fun run() {
-                val action = actions.poll() ?: return
-                runTask(action) {
-                    this.run()
-                }
-            }
-        }
-        runnable.run()
+    fun syncAll(): Promise<List<Boolean>, Exception> {
+        return all(TaskServiceRunner.ACTIONS_SYNC.map { runPromise(it) }, cancelOthersOnError = false)
     }
 
     companion object {

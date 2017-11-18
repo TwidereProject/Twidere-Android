@@ -28,11 +28,6 @@ import okio.ByteString
 import org.mariotaku.twidere.TwidereConstants.TIMELINE_SYNC_CACHE_PREFERENCES_NAME
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.util.DebugLog
-import java.util.*
-
-/**
- * Created by mariotaku on 2017/4/13.
- */
 
 abstract class TimelineSyncManager(val context: Context) {
 
@@ -76,25 +71,7 @@ abstract class TimelineSyncManager(val context: Context) {
     data class TimelineKey(val positionTag: String, val currentTag: String?)
     data class PositionData(val positionTag: String, val currentTag: String?, val positionKey: Long)
 
-    abstract class Factory {
-        protected var manager: TimelineSyncManager? = null
-
-        fun get(): TimelineSyncManager? = manager
-
-        fun setup(context: Context) {
-            manager = create(context)
-        }
-
-        protected abstract fun create(context: Context): TimelineSyncManager?
-
-    }
-
-    object DummyFactory : Factory() {
-        override fun create(context: Context) = null
-    }
-
     companion object {
-        fun newFactory(): Factory = ServiceLoader.load(Factory::class.java).firstOrNull() ?: DummyFactory
 
         private fun cacheKey(@ReadPositionTag positionTag: String, currentTag: String?): String {
             if (currentTag == null) return positionTag

@@ -42,6 +42,7 @@ import org.mariotaku.twidere.activity.MainActivity
 import org.mariotaku.twidere.activity.MainHondaJOJOActivity
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.extension.firstLanguage
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.loadRemoteSettings
 import org.mariotaku.twidere.extension.model.save
 import org.mariotaku.twidere.extension.setLocale
@@ -49,13 +50,12 @@ import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.receiver.ConnectivityStateReceiver
 import org.mariotaku.twidere.service.StreamingService
 import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.util.dagger.ApplicationComponent
 import org.mariotaku.twidere.util.emoji.EmojiOneShortCodeMap
 import org.mariotaku.twidere.util.notification.NotificationChannelsManager
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.promotion.PromotionService
 import org.mariotaku.twidere.util.refresh.AutoRefreshController
-import org.mariotaku.twidere.util.sync.DataSyncProvider
 import org.mariotaku.twidere.util.sync.SyncController
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -69,8 +69,6 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
     lateinit internal var restHttpClient: RestHttpClient
     @Inject
     lateinit internal var defaultFeatures: DefaultFeatures
-    @Inject
-    lateinit internal var externalThemeManager: ExternalThemeManager
     @Inject
     lateinit internal var autoRefreshController: AutoRefreshController
     @Inject
@@ -106,7 +104,7 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
         NotificationChannelsManager.initialize(this)
 
         updateEasterEggIcon()
-        GeneralComponent.get(this).inject(this)
+        ApplicationComponent.get(this).inject(this)
 
         autoRefreshController.appStarted()
         syncController.appStarted()
@@ -119,7 +117,6 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
         loadDefaultFeatures()
 
         Analyzer.preferencesChanged(sharedPreferences)
-        DataSyncProvider.Factory.notifyUpdate(this)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {

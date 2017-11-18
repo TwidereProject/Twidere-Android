@@ -13,6 +13,7 @@ import org.mariotaku.mediaviewer.library.FileCache
 import org.mariotaku.twidere.TwidereConstants.AUTHORITY_TWIDERE_CACHE
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_TYPE
 import org.mariotaku.twidere.annotation.CacheFileType
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.CacheMetadata
 import org.mariotaku.twidere.task.SaveFileTask
 import org.mariotaku.twidere.util.JsonSerializer

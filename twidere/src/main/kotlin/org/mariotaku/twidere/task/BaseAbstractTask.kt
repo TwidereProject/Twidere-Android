@@ -6,6 +6,7 @@ import com.squareup.otto.Bus
 import com.twitter.Extractor
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.restfu.http.RestHttpClient
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.ErrorInfoStore
@@ -16,6 +17,7 @@ import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.media.MediaPreloader
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
+import org.mariotaku.twidere.util.sync.DataSyncProvider
 import org.mariotaku.twidere.util.sync.SyncPreferences
 import org.mariotaku.twidere.util.sync.TimelineSyncManager
 import javax.inject.Inject
@@ -51,7 +53,7 @@ abstract class BaseAbstractTask<Params, Result, Callback>(val context: Context) 
     @Inject
     lateinit var syncPreferences: SyncPreferences
     @Inject
-    lateinit var timelineSyncManagerFactory: TimelineSyncManager.Factory
+    lateinit var dataSyncProvider: DataSyncProvider
     @Inject
     lateinit var jsonCache: JsonCache
 

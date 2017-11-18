@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.view.View
-import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.set
@@ -14,19 +13,13 @@ import org.mariotaku.twidere.TwidereConstants.REQUEST_PURCHASE_EXTRA_FEATURES
 import org.mariotaku.twidere.activity.FragmentContentActivity
 import org.mariotaku.twidere.activity.PremiumDashboardActivity
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_POSITION
-import org.mariotaku.twidere.constant.dataSyncProviderInfoKey
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
 import org.mariotaku.twidere.fragment.sync.SyncSettingsFragment
-import org.mariotaku.twidere.model.sync.SyncProviderEntry
+import org.mariotaku.twidere.model.sync.SyncProviderInfo
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
-import org.mariotaku.twidere.util.sync.DataSyncProvider
-
-/**
- * Created by mariotaku on 2017/2/3.
- */
 
 class SyncStatusViewController : PremiumDashboardActivity.ExtraFeatureViewController() {
 
@@ -63,8 +56,8 @@ class SyncStatusViewController : PremiumDashboardActivity.ExtraFeatureViewContro
     }
 
     private fun updateSyncSettingActions() {
-        val providerInfo = preferences[dataSyncProviderInfoKey]
-        if (providerInfo == null) {
+        val providerConfig = dataSyncProvider.providerConfig
+        if (providerConfig == null) {
             messageView.text = context.getString(R.string.message_sync_data_connect_hint)
             button1.visibility = View.VISIBLE
             button2.visibility = View.GONE
@@ -75,8 +68,8 @@ class SyncStatusViewController : PremiumDashboardActivity.ExtraFeatureViewContro
                 button1.setText(R.string.action_purchase)
             }
         } else {
-            val providerEntry = DataSyncProvider.Factory.getProviderEntry(context, providerInfo.type)!!
-            messageView.text = context.getString(R.string.message_sync_data_synced_with_name, providerEntry.name)
+            val info = dataSyncProvider.providerInfo(providerConfig.type)!!
+            messageView.text = context.getString(R.string.message_sync_data_synced_with_name, info.name)
             button1.visibility = View.GONE
             button2.visibility = View.VISIBLE
         }
@@ -94,8 +87,8 @@ class SyncStatusViewController : PremiumDashboardActivity.ExtraFeatureViewContro
             get() = arguments!!.getInt(EXTRA_POSITION)
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val providers = DataSyncProvider.Factory.getSupportedProviders(context!!)
-            val itemNames = providers.mapToArray(SyncProviderEntry::name)
+            val providers = dataSyncProvider.supportedProviders()
+            val itemNames = providers.mapToArray(SyncProviderInfo::name)
 
             val builder = AlertDialog.Builder(context!!)
             builder.setTitle(R.string.title_dialog_sync_connect_to)

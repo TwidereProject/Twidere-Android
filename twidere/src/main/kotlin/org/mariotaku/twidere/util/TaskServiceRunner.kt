@@ -6,12 +6,10 @@ import android.support.annotation.StringDef
 import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
 import org.mariotaku.abstask.library.AbstractTask
-import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.toNulls
 import org.mariotaku.twidere.constant.IntentConstants.INTENT_PACKAGE_PREFIX
-import org.mariotaku.twidere.constant.dataSyncProviderInfoKey
 import org.mariotaku.twidere.constant.stopAutoRefreshWhenBatteryLowKey
 import org.mariotaku.twidere.model.AccountPreferences
 import org.mariotaku.twidere.model.UserKey
@@ -25,12 +23,14 @@ import org.mariotaku.twidere.task.filter.RefreshLaunchPresentationsTask
 import org.mariotaku.twidere.task.statuses.GetHomeTimelineTask
 import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
+import org.mariotaku.twidere.util.sync.DataSyncProvider
 import java.util.concurrent.TimeUnit
 
 class TaskServiceRunner(
         val context: Context,
         val preferences: SharedPreferences,
         val activityTracker: ActivityTracker,
+        val dataSyncProvider: DataSyncProvider,
         val bus: Bus
 ) {
 
@@ -43,23 +43,21 @@ class TaskServiceRunner(
         }
     }
 
-    fun runTask(@Action action: String, timeout: Long = 0, unit: TimeUnit? = null, callback: (Boolean) -> Unit): Boolean {
+    fun runPromise(@Action action: String, timeout: Long = 0, unit: TimeUnit = TimeUnit.MILLISECONDS): Promise<Boolean, Exception> {
         DebugLog.d(msg = "TaskServiceRunner run task $action")
         when (action) {
             ACTION_REFRESH_HOME_TIMELINE, ACTION_REFRESH_NOTIFICATIONS,
             ACTION_REFRESH_DIRECT_MESSAGES, ACTION_REFRESH_FILTERS_SUBSCRIPTIONS,
             ACTION_REFRESH_LAUNCH_PRESENTATIONS -> {
-                val task = createRefreshTask(action) ?: return false
-                task.callback = callback
-                TaskStarter.execute(task)
-                return true
+                val task = createRefreshTask(action) ?: return Promise.of(false)
+                return Promise.of(true)
             }
             ACTION_SYNC_DRAFTS, ACTION_SYNC_FILTERS, ACTION_SYNC_USER_NICKNAMES, ACTION_SYNC_USER_COLORS -> {
-                val runner = preferences[dataSyncProviderInfoKey]?.newSyncTaskRunner(context) ?: return false
-                return runner.runTask(action, timeout, unit, callback)
+                val runner = dataSyncProvider.newSyncTaskRunner() ?: return Promise.of(false)
+                return runner.runPromise(action, timeout, unit)
             }
         }
-        return false
+        return Promise.of(false)
     }
 
     private fun createRefreshTask(@Action action: String): AbstractTask<*, *, (Boolean) -> Unit>? {

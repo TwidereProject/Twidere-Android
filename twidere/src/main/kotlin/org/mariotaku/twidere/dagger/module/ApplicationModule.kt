@@ -64,7 +64,6 @@ import org.mariotaku.twidere.util.preference.PreferenceChangeNotifier
 import org.mariotaku.twidere.util.refresh.AutoRefreshController
 import org.mariotaku.twidere.util.refresh.JobSchedulerAutoRefreshController
 import org.mariotaku.twidere.util.refresh.LegacyAutoRefreshController
-import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
 import org.mariotaku.twidere.util.sync.*
 import java.io.File
 import javax.inject.Singleton
@@ -276,11 +275,11 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun syncController(): SyncController {
+    fun syncController(provider: DataSyncProvider): SyncController {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            return JobSchedulerSyncController(application)
+            return JobSchedulerSyncController(application, provider)
         }
-        return LegacySyncController(application)
+        return LegacySyncController(application, provider)
     }
 
     @Provides
@@ -292,8 +291,8 @@ class ApplicationModule(private val application: Application) {
     @Provides
     @Singleton
     fun taskCreator(preferences: SharedPreferences, activityTracker: ActivityTracker,
-            bus: Bus): TaskServiceRunner {
-        return TaskServiceRunner(application, preferences, activityTracker, bus)
+            dataSyncProvider: DataSyncProvider, bus: Bus): TaskServiceRunner {
+        return TaskServiceRunner(application, preferences, activityTracker, dataSyncProvider, bus)
     }
 
     @Provides
@@ -364,18 +363,6 @@ class ApplicationModule(private val application: Application) {
     @Singleton
     fun fileCache(): FileCache {
         return DiskLRUFileCache(getCacheDir("media", 100 * 1048576L))
-    }
-
-    @Provides
-    @Singleton
-    fun statusScheduleProviderFactory(): StatusScheduleProvider.Factory {
-        return StatusScheduleProvider.newFactory()
-    }
-
-    @Provides
-    @Singleton
-    fun timelineSyncManagerFactory(): TimelineSyncManager.Factory {
-        return TimelineSyncManager.newFactory()
     }
 
     @Provides

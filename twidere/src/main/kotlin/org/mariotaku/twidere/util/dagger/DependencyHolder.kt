@@ -25,12 +25,12 @@ import okhttp3.Cache
 import okhttp3.ConnectionPool
 import okhttp3.Dns
 import org.mariotaku.restfu.http.RestHttpClient
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.media.MediaPreloader
 import org.mariotaku.twidere.util.media.ThumborWrapper
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
-import org.mariotaku.twidere.util.sync.TimelineSyncManager
 import javax.inject.Inject
 
 /**
@@ -72,9 +72,6 @@ class DependencyHolder internal constructor(context: Context) {
         internal set
     @Inject
     lateinit var thumbor: ThumborWrapper
-        internal set
-    @Inject
-    lateinit var timelineSyncManagerFactory: TimelineSyncManager.Factory
         internal set
 
     @Inject

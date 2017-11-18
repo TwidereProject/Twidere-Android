@@ -1,7 +1,7 @@
 /*
- *                 Twidere - Twitter client for Android
+ *             Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@ import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter
 import org.mariotaku.twidere.adapter.BaseArrayAdapter
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter
 import org.mariotaku.twidere.adapter.DraftsAdapter
+import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.dagger.module.ApplicationModule
 import org.mariotaku.twidere.dagger.module.ChannelModule
 import org.mariotaku.twidere.fragment.filter.FilteredUsersFragment
@@ -54,80 +55,12 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(modules = arrayOf(ApplicationModule::class, ChannelModule::class))
-interface GeneralComponent {
+interface ApplicationComponent {
 
-    fun inject(obj: MultiSelectEventHandler)
+    fun inject(application: TwidereApplication)
 
-    fun inject(obj: LegacyTaskService)
-
-    fun inject(obj: ComposeActivity)
-
-    fun inject(obj: TwidereDataProvider)
-
-    fun inject(obj: BaseActivity)
-
-    fun inject(obj: BaseRecyclerViewAdapter<RecyclerView.ViewHolder>)
-
-    fun inject(obj: AccountsSpinnerAdapter)
-
-    fun inject(obj: BaseArrayAdapter<Any>)
-
-    fun inject(obj: DraftsAdapter)
-
-    fun inject(obj: FilteredUsersFragment.FilterUsersListAdapter)
-
-    fun inject(obj: EmojiSpannableFactory)
-
-    fun inject(obj: EmojiEditableFactory)
-
-    fun inject(obj: AccountsListPreference.AccountItemPreference)
-
-    fun inject(obj: DependencyHolder)
-
-    fun inject(provider: CacheProvider)
-
-    fun inject(loader: AbsRequestStatusesLoader)
-
-    fun inject(activity: MediaViewerActivity)
-
-    fun inject(service: JobTaskService)
-
-    fun inject(task: BaseAbstractTask<Any, Any, Any>)
-
-    fun inject(preference: KeyboardShortcutPreference)
-
-    fun inject(loader: ParcelableUserLoader)
-
-    fun inject(loader: ParcelableStatusLoader)
-
-    fun inject(loader: DefaultAPIConfigLoader)
-
-    fun inject(service: BaseIntentService)
-
-    fun inject(runner: SyncTaskRunner)
-
-    fun inject(preference: SyncItemPreference)
-
-    fun inject(provider: UrlFiltersSubscriptionProvider)
-
-    fun inject(preference: PremiumEntryPreference)
-
-    fun inject(preference: PremiumEntryPreferenceCategory)
-
-    fun inject(loader: CacheUserSearchLoader)
-
-    fun inject(loader: BaseUserListsLoader)
-
-    fun inject(controller: PremiumDashboardActivity.BaseItemViewController)
-
-    fun inject(service: StreamingService)
-
-    fun inject(service: BaseService)
-
-    fun inject(activity: MainActivity)
-
-    companion object : ApplicationContextSingletonHolder<GeneralComponent>(creation@ { application ->
-        return@creation DaggerGeneralComponent.builder()
+    companion object : ApplicationContextSingletonHolder<ApplicationComponent>(creation@ { application ->
+        return@creation DaggerApplicationComponent.builder()
                 .applicationModule(ApplicationModule.getInstance(application))
                 .channelModule(ChannelModule.getInstance(application))
                 .build()

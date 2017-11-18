@@ -31,6 +31,7 @@ import org.mariotaku.twidere.constant.displayProfileImageKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.constant.showAbsoluteTimeKey
 import org.mariotaku.twidere.constant.textSizeKey
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.MultiSelectManager

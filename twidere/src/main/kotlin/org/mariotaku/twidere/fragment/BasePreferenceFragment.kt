@@ -32,11 +32,13 @@ import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
 import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.preference.RingtonePreference
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.util.dagger.FragmentComponent
+import org.mariotaku.twidere.util.sync.DataSyncProvider
 import org.mariotaku.twidere.util.sync.SyncController
 import javax.inject.Inject
 
@@ -53,6 +55,8 @@ abstract class BasePreferenceFragment : PreferenceFragmentCompat(), IBaseFragmen
     lateinit var syncController: SyncController
     @Inject
     lateinit var bus: Bus
+    @Inject
+    lateinit var dataSyncProvider: DataSyncProvider
 
     private val actionHelper = IBaseFragment.ActionHelper<BasePreferenceFragment>()
 
@@ -75,7 +79,7 @@ abstract class BasePreferenceFragment : PreferenceFragmentCompat(), IBaseFragmen
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        GeneralComponent.get(context).inject(this)
+        FragmentComponent.get(context).inject(this)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

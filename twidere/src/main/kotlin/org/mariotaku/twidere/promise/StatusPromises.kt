@@ -34,6 +34,7 @@ import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.twitter.model.ErrorInfo
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
@@ -43,6 +44,7 @@ import org.mariotaku.twidere.model.event.StatusDestroyedEvent
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.task.AbsAccountRequestTask
 import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.util.dagger.PromisesComponent
 import org.mariotaku.twidere.util.deleteActivityStatus
 import org.mariotaku.twidere.util.deleteStatus
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
@@ -53,7 +55,7 @@ class StatusPromises private constructor(private val application: Application) {
     lateinit var bus: Bus
 
     init {
-        GeneralComponent.get(application).inject(this)
+        PromisesComponent.get(application).inject(this)
     }
 
     fun destroy(accountKey: UserKey, id: String): Promise<ParcelableStatus, Exception> = (promiseOnUi {

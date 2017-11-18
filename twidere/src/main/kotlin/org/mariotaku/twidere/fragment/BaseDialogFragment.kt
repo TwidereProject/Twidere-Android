@@ -28,12 +28,14 @@ import com.bumptech.glide.RequestManager
 import com.squareup.otto.Bus
 import okhttp3.Dns
 import org.mariotaku.restfu.http.RestHttpClient
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.DebugModeUtils
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.util.dagger.FragmentComponent
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
+import org.mariotaku.twidere.util.sync.DataSyncProvider
 import javax.inject.Inject
 
 open class BaseDialogFragment : DialogFragment() {
@@ -54,6 +56,8 @@ open class BaseDialogFragment : DialogFragment() {
     lateinit var extraFeaturesService: ExtraFeaturesService
     @Inject
     lateinit var restHttpClient: RestHttpClient
+    @Inject
+    lateinit var dataSyncProvider: DataSyncProvider
 
     lateinit var requestManager: RequestManager
         private set
@@ -81,7 +85,7 @@ open class BaseDialogFragment : DialogFragment() {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        GeneralComponent.get(context!!).inject(this)
+        FragmentComponent.get(context!!).inject(this)
     }
 
 }

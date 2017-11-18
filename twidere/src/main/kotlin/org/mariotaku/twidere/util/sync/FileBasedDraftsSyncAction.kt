@@ -38,7 +38,7 @@ abstract class FileBasedDraftsSyncAction<RemoteFileInfo>(val context: Context) :
         val snapshotIds: List<String> = try {
             snapshotsListFile.readLines()
         } catch (e: FileNotFoundException) {
-            emptyList<String>()
+            emptyList()
         }
 
         val localDrafts = run {

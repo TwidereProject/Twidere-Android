@@ -7,6 +7,7 @@ import org.mariotaku.restfu.http.HttpRequest
 import org.mariotaku.restfu.http.MultiValueMap
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.restfu.http.mime.Body
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.parse
 import org.mariotaku.twidere.extension.newPullParser
 import org.mariotaku.twidere.model.FiltersData

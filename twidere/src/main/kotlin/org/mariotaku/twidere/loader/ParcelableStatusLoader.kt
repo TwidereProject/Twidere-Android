@@ -29,6 +29,7 @@ import org.mariotaku.microblog.library.twitter.model.ErrorInfo
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.updateExtraInformation
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.SingleResponse

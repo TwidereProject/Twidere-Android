@@ -26,8 +26,10 @@ import android.view.ViewGroup
 import android.widget.CompoundButton
 import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.util.dagger.AdapterComponent
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.view.holder.AccountViewHolder
 
@@ -54,7 +56,7 @@ class AccountDetailsAdapter(
     }
 
     init {
-        GeneralComponent.get(context).inject(this)
+        AdapterComponent.get(context).inject(this)
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {

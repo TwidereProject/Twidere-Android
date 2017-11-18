@@ -26,11 +26,6 @@ import org.mariotaku.twidere.model.ParcelableStatusUpdate
 import org.mariotaku.twidere.model.schedule.ScheduleInfo
 import org.mariotaku.twidere.task.status.UpdateStatusTask
 import org.mariotaku.twidere.task.status.UpdateStatusTask.PendingStatusUpdate
-import java.util.*
-
-/**
- * Created by mariotaku on 2017/3/24.
- */
 
 interface StatusScheduleProvider {
 
@@ -63,14 +58,4 @@ interface StatusScheduleProvider {
 
     }
 
-    private object NullFactory : Factory {
-        override fun newInstance(context: Context) = null
-
-        override fun parseInfo(json: String): ScheduleInfo? = null
-
-    }
-
-    companion object {
-        fun newFactory(): Factory = ServiceLoader.load(Factory::class.java)?.firstOrNull() ?: NullFactory
-    }
 }

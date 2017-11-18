@@ -36,13 +36,10 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.sqliteqb.library.OrderBy
 import org.mariotaku.sqliteqb.library.Table
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.extension.getDetailsOrThrow
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.model.timestamp
-import org.mariotaku.twidere.extension.queryOne
-import org.mariotaku.twidere.extension.queryReference
-import org.mariotaku.twidere.extension.update
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableMessage
 import org.mariotaku.twidere.model.ParcelableMessageConversation
@@ -54,7 +51,7 @@ import org.mariotaku.twidere.task.twitter.message.SendMessageTask
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.TwidereQueryBuilder
 import org.mariotaku.twidere.util.content.ContentResolverUtils
-import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.util.dagger.PromisesComponent
 import org.mariotaku.twidere.util.getUnreadMessagesEntriesCursorReference
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 import javax.inject.Inject
@@ -66,7 +63,7 @@ class MessagePromises private constructor(private val application: Application) 
     private val accountManager = AccountManager.get(application)
 
     init {
-        GeneralComponent.get(application).inject(this)
+        PromisesComponent.get(application).inject(this)
     }
 
     fun destroyConversation(accountKey: UserKey, conversationId: String): Promise<Boolean, Exception> = task {

@@ -31,10 +31,11 @@ import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
 import okhttp3.Dns
 import org.mariotaku.restfu.http.RestHttpClient
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.util.dagger.FragmentComponent
 import org.mariotaku.twidere.util.gifshare.GifShareProvider
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.promotion.PromotionService
@@ -73,8 +74,6 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     @Inject
     lateinit var statusScheduleProviderFactory: StatusScheduleProvider.Factory
     @Inject
-    lateinit var timelineSyncManagerFactory: TimelineSyncManager.Factory
-    @Inject
     lateinit var gifShareProvider: GifShareProvider
     @Inject
     lateinit var restHttpClient: RestHttpClient
@@ -92,10 +91,6 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
 
     protected val statusScheduleProvider: StatusScheduleProvider?
         get() = statusScheduleProviderFactory.newInstance(context!!)
-
-    protected val timelineSyncManager: TimelineSyncManager?
-        get() = timelineSyncManagerFactory.get()
-
 
     private val actionHelper = IBaseFragment.ActionHelper<BaseFragment>()
 
@@ -132,7 +127,7 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        GeneralComponent.get(context).inject(this)
+        FragmentComponent.get(context).inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

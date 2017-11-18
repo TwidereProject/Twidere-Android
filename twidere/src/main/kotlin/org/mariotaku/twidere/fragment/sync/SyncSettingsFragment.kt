@@ -9,12 +9,9 @@ import android.view.MenuItem
 import com.squareup.otto.Subscribe
 import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.ui.alwaysUi
-import org.mariotaku.kpreferences.get
-import org.mariotaku.kpreferences.set
 import org.mariotaku.ktextension.toWeak
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.SYNC_PREFERENCES_NAME
-import org.mariotaku.twidere.constant.dataSyncProviderInfoKey
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.dismissProgressDialog
 import org.mariotaku.twidere.extension.onShow
@@ -22,16 +19,11 @@ import org.mariotaku.twidere.extension.showProgressDialog
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BasePreferenceFragment
 import org.mariotaku.twidere.util.TaskServiceRunner
-import org.mariotaku.twidere.util.sync.DataSyncProvider
 
 class SyncSettingsFragment : BasePreferenceFragment() {
 
-    private var syncProvider: DataSyncProvider? = null
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        syncProvider = preferences[dataSyncProviderInfoKey]
         setHasOptionsMenu(true)
     }
 
@@ -61,8 +53,7 @@ class SyncSettingsFragment : BasePreferenceFragment() {
                 df.show(childFragmentManager, "disconnect_confirm")
             }
             R.id.sync_now -> {
-                val providerInfo = preferences[dataSyncProviderInfoKey]!!
-                syncController.performSync(providerInfo)
+                dataSyncProvider.newSyncTaskRunner()?.syncAll()
             }
             else -> {
                 return false
@@ -77,15 +68,14 @@ class SyncSettingsFragment : BasePreferenceFragment() {
     }
 
     private fun cleanupAndDisconnect() {
-        val providerInfo = preferences[dataSyncProviderInfoKey] ?: return
+        val taskRunner = dataSyncProvider.newSyncTaskRunner() ?: return
         val weakThis = toWeak()
         val task = showProgressDialog("cleanup_sync_cache").
-                and(syncController.cleanupSyncCache(providerInfo))
+                and(taskRunner.cleanupSyncCache())
         task.alwaysUi {
             val f = weakThis.get() ?: return@alwaysUi
             f.dismissProgressDialog("cleanup_sync_cache")
-            f.preferences[dataSyncProviderInfoKey] = null
-            DataSyncProvider.Factory.notifyUpdate(f.context!!)
+            dataSyncProvider.providerConfig = null
             f.activity?.finish()
         }
     }
@@ -93,9 +83,8 @@ class SyncSettingsFragment : BasePreferenceFragment() {
     class DisconnectSyncConfirmDialogFragment : BaseDialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val builder = AlertDialog.Builder(context!!)
-            val providerInfo = preferences[dataSyncProviderInfoKey]!!
-            val entry = DataSyncProvider.Factory.getProviderEntry(context!!, providerInfo.type)!!
-            builder.setMessage(getString(R.string.message_sync_disconnect_from_name_confirm, entry.name))
+            val providerInfo = dataSyncProvider.providerInfo(dataSyncProvider.providerConfig!!.type)!!
+            builder.setMessage(getString(R.string.message_sync_disconnect_from_name_confirm, providerInfo.name))
             builder.setPositiveButton(R.string.action_sync_disconnect) { _, _ ->
                 (parentFragment as SyncSettingsFragment).cleanupAndDisconnect()
             }

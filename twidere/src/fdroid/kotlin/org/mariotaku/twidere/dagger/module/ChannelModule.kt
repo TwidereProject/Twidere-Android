@@ -31,6 +31,8 @@ import org.mariotaku.twidere.util.premium.DummyExtraFeaturesService
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.promotion.DummyPromotionService
 import org.mariotaku.twidere.util.promotion.PromotionService
+import org.mariotaku.twidere.util.sync.DataSyncProvider
+import org.mariotaku.twidere.util.sync.OpenSourceSyncProviderInfoFactory
 import javax.inject.Singleton
 
 @Module
@@ -59,6 +61,12 @@ class ChannelModule private constructor(private val application: Application) {
     @Singleton
     fun extraFeaturesService(): ExtraFeaturesService {
         return DummyExtraFeaturesService()
+    }
+
+    @Provides
+    @Singleton
+    fun dataSyncProviderFactory(): DataSyncProvider.Factory {
+        return OpenSourceSyncProviderInfoFactory()
     }
 
     companion object : SingletonHolder<ChannelModule, Application>(::ChannelModule)

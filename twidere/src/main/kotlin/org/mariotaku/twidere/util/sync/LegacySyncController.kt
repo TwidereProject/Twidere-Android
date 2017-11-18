@@ -13,11 +13,7 @@ import org.mariotaku.twidere.util.TaskServiceRunner
 import org.mariotaku.twidere.util.refresh.LegacyAutoRefreshController
 import java.util.concurrent.TimeUnit
 
-/**
- * Created by mariotaku on 2017/1/6.
- */
-
-class LegacySyncController(context: Context) : SyncController(context) {
+class LegacySyncController(context: Context, provider: DataSyncProvider) : SyncController(context, provider) {
 
     private val alarmManager: AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     private val pendingIntents: ArrayMap<String, PendingIntent> = ArrayMap()

@@ -13,6 +13,7 @@ import kotlin.concurrent.schedule
 
 
 fun <V> Promise<V, Exception>.deadline(time: Long, unit: TimeUnit): Promise<V, Exception> {
+    if (time <= 0) return this
     val weakPromise = toWeak()
     WatchdogTimer.schedule(unit.toMillis(time)) {
         val promise = weakPromise.get() ?: return@schedule

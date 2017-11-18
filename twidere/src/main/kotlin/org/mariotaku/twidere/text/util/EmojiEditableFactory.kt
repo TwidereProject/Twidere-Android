@@ -24,6 +24,7 @@ import android.text.Spanned
 import android.text.TextWatcher
 import android.widget.TextView
 import org.mariotaku.twidere.extension.applyTo
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.text.SafeSpannableStringBuilder
 import org.mariotaku.twidere.util.ExternalThemeManager
 import org.mariotaku.twidere.util.dagger.GeneralComponent
