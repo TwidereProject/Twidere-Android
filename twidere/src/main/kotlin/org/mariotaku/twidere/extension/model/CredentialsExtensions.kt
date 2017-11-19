@@ -30,7 +30,7 @@ import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import org.mariotaku.twidere.util.MicroBlogAPIFactory.sFanfouConstantPool
 import org.mariotaku.twidere.util.MicroBlogAPIFactory.sTwitterConstantPool
 import org.mariotaku.twidere.util.api.*
-import org.mariotaku.twidere.util.dagger.DependencyHolder
+import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.util.media.TwidereMediaDownloader
 
 /**

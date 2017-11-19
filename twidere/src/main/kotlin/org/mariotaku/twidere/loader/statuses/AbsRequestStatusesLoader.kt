@@ -44,7 +44,7 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.task.statuses.GetStatusesTask
 import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import java.util.*
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject

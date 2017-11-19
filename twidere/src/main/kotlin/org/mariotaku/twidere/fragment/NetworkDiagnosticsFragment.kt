@@ -40,7 +40,7 @@ import org.mariotaku.twidere.model.account.cred.OAuthCredentials
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.MicroBlogAPIFactory
-import org.mariotaku.twidere.util.dagger.DependencyHolder
+import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.util.net.SystemDnsFetcher
 import org.mariotaku.twidere.util.net.TwidereDns
 import java.io.IOException

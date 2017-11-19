@@ -51,7 +51,7 @@ import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.content.ContentResolverUtils
-import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import javax.inject.Inject
 
 class FilteredUsersFragment : BaseFiltersFragment() {

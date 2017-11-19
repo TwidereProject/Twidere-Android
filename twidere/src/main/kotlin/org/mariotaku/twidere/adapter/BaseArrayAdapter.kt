@@ -33,7 +33,7 @@ import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import javax.inject.Inject
 
 open class BaseArrayAdapter<T>(

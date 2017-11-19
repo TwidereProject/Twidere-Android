@@ -72,7 +72,7 @@ import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.preference.iface.IDialogPreference
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
-import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.util.gifshare.GifShareProvider
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.promotion.PromotionService
@@ -81,7 +81,6 @@ import org.mariotaku.twidere.util.support.ActivitySupport
 import org.mariotaku.twidere.util.support.ActivitySupport.TaskDescriptionCompat
 import org.mariotaku.twidere.util.support.WindowSupport
 import org.mariotaku.twidere.util.sync.DataSyncProvider
-import org.mariotaku.twidere.util.sync.TimelineSyncManager
 import org.mariotaku.twidere.util.theme.TwidereAppearanceCreator
 import org.mariotaku.twidere.util.theme.getCurrentThemeResource
 import java.lang.reflect.InvocationTargetException

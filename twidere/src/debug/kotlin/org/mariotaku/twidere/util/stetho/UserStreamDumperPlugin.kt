@@ -44,7 +44,7 @@ import org.mariotaku.twidere.model.ActivityTitleSummaryMessage
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.util.dagger.DependencyHolder
+import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.util.streaming.FanfouTimelineStreamCallback
 import org.mariotaku.twidere.util.streaming.TwitterTimelineStreamCallback
 

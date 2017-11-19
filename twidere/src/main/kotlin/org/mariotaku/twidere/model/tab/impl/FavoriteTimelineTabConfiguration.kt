@@ -32,7 +32,7 @@ import org.mariotaku.twidere.model.tab.StringHolder
 import org.mariotaku.twidere.model.tab.TabConfiguration
 import org.mariotaku.twidere.model.tab.argument.UserArguments
 import org.mariotaku.twidere.model.tab.conf.UserExtraConfiguration
-import org.mariotaku.twidere.util.dagger.DependencyHolder
+import org.mariotaku.twidere.dagger.DependencyHolder
 
 /**
  * Created by mariotaku on 2016/11/27.

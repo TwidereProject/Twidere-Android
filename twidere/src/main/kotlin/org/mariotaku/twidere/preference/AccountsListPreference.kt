@@ -38,7 +38,7 @@ import org.mariotaku.twidere.TwidereConstants.ACCOUNT_PREFERENCES_NAME_PREFIX
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.util.media.MediaPreloader
 import javax.inject.Inject
 

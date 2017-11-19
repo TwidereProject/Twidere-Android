@@ -51,6 +51,12 @@ import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_CACHE_SIZE_L
 import org.mariotaku.twidere.constant.autoRefreshCompatibilityModeKey
 import org.mariotaku.twidere.extension.model.load
 import org.mariotaku.twidere.model.DefaultFeatures
+import org.mariotaku.twidere.taskcontroller.refresh.JobSchedulerRefreshTaskController
+import org.mariotaku.twidere.taskcontroller.refresh.LegacyRefreshTaskController
+import org.mariotaku.twidere.taskcontroller.refresh.RefreshTaskController
+import org.mariotaku.twidere.taskcontroller.sync.JobSchedulerSyncController
+import org.mariotaku.twidere.taskcontroller.sync.LegacySyncController
+import org.mariotaku.twidere.taskcontroller.sync.SyncTaskController
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.cache.DiskLRUFileCache
 import org.mariotaku.twidere.util.cache.JsonCache
@@ -61,15 +67,13 @@ import org.mariotaku.twidere.util.media.TwidereMediaDownloader
 import org.mariotaku.twidere.util.net.TwidereDns
 import org.mariotaku.twidere.util.notification.ContentNotificationManager
 import org.mariotaku.twidere.util.preference.PreferenceChangeNotifier
-import org.mariotaku.twidere.util.refresh.AutoRefreshController
-import org.mariotaku.twidere.util.refresh.JobSchedulerAutoRefreshController
-import org.mariotaku.twidere.util.refresh.LegacyAutoRefreshController
-import org.mariotaku.twidere.util.sync.*
+import org.mariotaku.twidere.util.sync.DataSyncProvider
+import org.mariotaku.twidere.util.sync.SyncPreferences
 import java.io.File
 import javax.inject.Singleton
 
 @Module
-class ApplicationModule(private val application: Application) {
+class GeneralModule(private val application: Application) {
 
     init {
         if (Thread.currentThread() !== Looper.getMainLooper().thread) {
@@ -266,16 +270,21 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun autoRefreshController(preferences: SharedPreferences): AutoRefreshController {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !preferences[autoRefreshCompatibilityModeKey]) {
-            return JobSchedulerAutoRefreshController(application, preferences)
+    fun autoRefreshController(preferences: SharedPreferences, notifier: PreferenceChangeNotifier): RefreshTaskController {
+        val controller = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !preferences[autoRefreshCompatibilityModeKey]) {
+            JobSchedulerRefreshTaskController(application, preferences)
+        } else {
+            LegacyRefreshTaskController(application, preferences)
         }
-        return LegacyAutoRefreshController(application, preferences)
+        notifier.register(KEY_REFRESH_INTERVAL) {
+            controller.rescheduleAll()
+        }
+        return controller
     }
 
     @Provides
     @Singleton
-    fun syncController(provider: DataSyncProvider): SyncController {
+    fun syncController(provider: DataSyncProvider): SyncTaskController {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return JobSchedulerSyncController(application, provider)
         }
@@ -376,7 +385,7 @@ class ApplicationModule(private val application: Application) {
                 Utils.getInternalCacheDir(application, dirName)
     }
 
-    companion object : SingletonHolder<ApplicationModule, Application>(::ApplicationModule)
+    companion object : SingletonHolder<GeneralModule, Application>(::GeneralModule)
 
 }
 

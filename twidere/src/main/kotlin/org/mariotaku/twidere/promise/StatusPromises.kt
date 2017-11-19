@@ -43,8 +43,7 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.StatusDestroyedEvent
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.task.AbsAccountRequestTask
-import org.mariotaku.twidere.util.dagger.GeneralComponent
-import org.mariotaku.twidere.util.dagger.PromisesComponent
+import org.mariotaku.twidere.dagger.component.PromisesComponent
 import org.mariotaku.twidere.util.deleteActivityStatus
 import org.mariotaku.twidere.util.deleteStatus
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder

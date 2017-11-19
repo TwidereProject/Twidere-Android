@@ -51,7 +51,7 @@ import org.mariotaku.twidere.task.twitter.message.SendMessageTask
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.TwidereQueryBuilder
 import org.mariotaku.twidere.util.content.ContentResolverUtils
-import org.mariotaku.twidere.util.dagger.PromisesComponent
+import org.mariotaku.twidere.dagger.component.PromisesComponent
 import org.mariotaku.twidere.util.getUnreadMessagesEntriesCursorReference
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 import javax.inject.Inject

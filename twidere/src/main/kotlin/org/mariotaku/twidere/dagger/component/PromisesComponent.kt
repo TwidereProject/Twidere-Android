@@ -17,30 +17,35 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util.dagger
+package org.mariotaku.twidere.dagger.component
 
 import dagger.Component
-import org.mariotaku.twidere.adapter.*
-import org.mariotaku.twidere.dagger.module.ApplicationModule
 import org.mariotaku.twidere.dagger.module.ChannelModule
+import org.mariotaku.twidere.dagger.module.GeneralModule
+import org.mariotaku.twidere.promise.*
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 import javax.inject.Singleton
 
+
 @Singleton
-@Component(modules = arrayOf(ApplicationModule::class, ChannelModule::class))
-interface AdapterComponent {
+@Component(modules = arrayOf(GeneralModule::class, ChannelModule::class))
+interface PromisesComponent {
 
-    fun inject(adapter: DummyItemAdapter)
+    fun inject(promises: MessagePromises)
 
-    fun inject(obj: AccountDetailsAdapter)
+    fun inject(promises: StatusPromises)
 
-    fun inject(obj: ComposeAutoCompleteAdapter)
+    fun inject(promises: FriendshipPromises)
 
-    fun inject(obj: UserAutoCompleteAdapter)
+    fun inject(promises: BlockPromises)
 
-    companion object : ApplicationContextSingletonHolder<AdapterComponent>(creation@ { application ->
-        return@creation DaggerAdapterComponent.builder()
-                .applicationModule(ApplicationModule.getInstance(application))
+    fun inject(promises: MutePromises)
+
+    fun inject(promises: DefaultFeaturesPromises)
+
+    companion object : ApplicationContextSingletonHolder<PromisesComponent>(creation@ { application ->
+        return@creation DaggerPromisesComponent.builder()
+                .generalModule(GeneralModule.getInstance(application))
                 .channelModule(ChannelModule.getInstance(application))
                 .build()
     })

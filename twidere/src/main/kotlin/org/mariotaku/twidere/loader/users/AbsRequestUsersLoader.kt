@@ -37,7 +37,7 @@ import org.mariotaku.twidere.model.pagination.PaginatedList
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.DebugLog
-import org.mariotaku.twidere.util.dagger.DependencyHolder
+import org.mariotaku.twidere.dagger.DependencyHolder
 import java.util.*
 
 abstract class AbsRequestUsersLoader(

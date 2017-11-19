@@ -1,16 +1,15 @@
-package org.mariotaku.twidere.util.refresh
+package org.mariotaku.twidere.taskcontroller.refresh
 
 import android.content.Context
 import android.content.SharedPreferences
 import org.mariotaku.twidere.annotation.AutoRefreshType
+import org.mariotaku.twidere.taskcontroller.TaskController
 
 
-abstract class AutoRefreshController(
+abstract class RefreshTaskController(
         val context: Context,
         val preferences: SharedPreferences
-) {
-
-    abstract fun appStarted()
+) : TaskController {
 
     abstract fun schedule(@AutoRefreshType type: String)
 

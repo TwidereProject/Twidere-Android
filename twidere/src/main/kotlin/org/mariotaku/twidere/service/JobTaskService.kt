@@ -33,7 +33,7 @@ import org.mariotaku.twidere.constant.autoRefreshCompatibilityModeKey
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.TaskServiceRunner
-import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.util.support.JobServiceSupport
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject

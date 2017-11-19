@@ -67,7 +67,7 @@ import org.mariotaku.twidere.util.OnLinkClickHandler
 import org.mariotaku.twidere.util.StrictModeUtils
 import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.cache.JsonCache
-import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.util.support.ViewSupport
 import org.mariotaku.twidere.util.support.view.ViewOutlineProviderCompat
 import org.mariotaku.twidere.util.theme.getCurrentThemeResource

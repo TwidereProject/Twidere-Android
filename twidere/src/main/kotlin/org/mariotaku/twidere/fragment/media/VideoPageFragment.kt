@@ -56,7 +56,7 @@ import org.mariotaku.twidere.extension.setVisible
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.util.dagger.FragmentComponent
+import org.mariotaku.twidere.dagger.component.FragmentComponent
 import org.mariotaku.twidere.util.media.MediaExtra
 import org.mariotaku.twidere.util.promotion.PromotionService
 import java.util.*

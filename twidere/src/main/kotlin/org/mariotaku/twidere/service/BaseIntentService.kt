@@ -7,7 +7,7 @@ import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.NotificationManagerWrapper
 import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import javax.inject.Inject
 
 abstract class BaseIntentService(tag: String) : IntentService(tag) {

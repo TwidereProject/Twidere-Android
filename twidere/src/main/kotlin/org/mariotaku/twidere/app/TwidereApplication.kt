@@ -31,10 +31,8 @@ import android.support.multidex.MultiDex
 import com.bumptech.glide.Glide
 import nl.komponents.kovenant.android.startKovenant
 import nl.komponents.kovenant.android.stopKovenant
-import nl.komponents.kovenant.task
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
-import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.AssistLauncherActivity
@@ -42,41 +40,19 @@ import org.mariotaku.twidere.activity.MainActivity
 import org.mariotaku.twidere.activity.MainHondaJOJOActivity
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.extension.firstLanguage
-import org.mariotaku.twidere.extension.get
-import org.mariotaku.twidere.extension.model.loadRemoteSettings
-import org.mariotaku.twidere.extension.model.save
 import org.mariotaku.twidere.extension.setLocale
-import org.mariotaku.twidere.model.DefaultFeatures
+import org.mariotaku.twidere.iface.ApplicationLifecycleComponent
 import org.mariotaku.twidere.receiver.ConnectivityStateReceiver
 import org.mariotaku.twidere.service.StreamingService
 import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.util.dagger.ApplicationComponent
 import org.mariotaku.twidere.util.emoji.EmojiOneShortCodeMap
 import org.mariotaku.twidere.util.notification.NotificationChannelsManager
-import org.mariotaku.twidere.util.premium.ExtraFeaturesService
-import org.mariotaku.twidere.util.promotion.PromotionService
-import org.mariotaku.twidere.util.refresh.AutoRefreshController
-import org.mariotaku.twidere.util.sync.SyncController
 import java.util.*
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
 
-    @Inject
-    lateinit internal var activityTracker: ActivityTracker
-    @Inject
-    lateinit internal var restHttpClient: RestHttpClient
-    @Inject
-    lateinit internal var defaultFeatures: DefaultFeatures
-    @Inject
-    lateinit internal var autoRefreshController: AutoRefreshController
-    @Inject
-    lateinit internal var syncController: SyncController
-    @Inject
-    lateinit internal var extraFeaturesService: ExtraFeaturesService
-    @Inject
-    lateinit internal var promotionService: PromotionService
+    internal lateinit var activityTracker: ActivityTracker
+    internal lateinit var lifecycleComponents: List<ApplicationLifecycleComponent>
 
     private val sharedPreferences: SharedPreferences by lazy {
         val prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
@@ -104,17 +80,13 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
         NotificationChannelsManager.initialize(this)
 
         updateEasterEggIcon()
-        ApplicationComponent.get(this).inject(this)
 
-        autoRefreshController.appStarted()
-        syncController.appStarted()
-        extraFeaturesService.appStarted()
-        promotionService.appStarted()
+        lifecycleComponents.forEach { it.appStarted() }
 
         registerActivityLifecycleCallbacks(activityTracker)
         registerReceiver(ConnectivityStateReceiver(), IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
 
-        loadDefaultFeatures()
+//        DefaultFeaturesPromises.get(this).fetch()
 
         Analyzer.preferencesChanged(sharedPreferences)
     }
@@ -136,9 +108,6 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
 
     override fun onSharedPreferenceChanged(preferences: SharedPreferences, key: String) {
         when (key) {
-            KEY_REFRESH_INTERVAL -> {
-                autoRefreshController.rescheduleAll()
-            }
             KEY_CREDENTIALS_TYPE, KEY_API_URL_FORMAT, KEY_CONSUMER_KEY, KEY_CONSUMER_SECRET,
             KEY_SAME_OAUTH_SIGNING_URL -> {
                 preferences[apiLastChangeKey] = System.currentTimeMillis()
@@ -168,23 +137,6 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
         val locale = sharedPreferences[overrideLanguageKey] ?: Resources.getSystem().
                 firstLanguage ?: return
         resources.setLocale(locale)
-    }
-
-    private fun loadDefaultFeatures() {
-        val lastUpdated = sharedPreferences[defaultFeatureLastUpdated]
-        if (lastUpdated > 0 && TimeUnit.MILLISECONDS.toHours(System.currentTimeMillis() - lastUpdated) < 12) {
-            return
-        }
-        task {
-            defaultFeatures.loadRemoteSettings(restHttpClient)
-        }.success {
-            defaultFeatures.save(sharedPreferences)
-            DebugLog.d(LOGTAG, "Loaded remote features")
-        }.fail {
-            DebugLog.w(LOGTAG, "Unable to load remote features", it)
-        }.always {
-            sharedPreferences[defaultFeatureLastUpdated] = System.currentTimeMillis()
-        }
     }
 
     private fun updateEasterEggIcon() {

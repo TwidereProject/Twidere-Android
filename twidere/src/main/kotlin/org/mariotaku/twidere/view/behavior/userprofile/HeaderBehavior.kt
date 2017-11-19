@@ -40,7 +40,7 @@ import org.mariotaku.twidere.constant.themeBackgroundOptionKey
 import org.mariotaku.twidere.extension.view.measureChildIgnoringInsets
 import org.mariotaku.twidere.graphic.drawable.userprofile.ActionBarDrawable
 import org.mariotaku.twidere.util.ThemeUtils
-import org.mariotaku.twidere.util.dagger.DependencyHolder
+import org.mariotaku.twidere.dagger.DependencyHolder
 
 internal class HeaderBehavior(context: Context, attrs: AttributeSet? = null) :
         AccessorHeaderBehavior<ViewGroup>(context, attrs) {

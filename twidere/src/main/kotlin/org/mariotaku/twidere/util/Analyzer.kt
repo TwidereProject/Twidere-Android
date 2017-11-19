@@ -24,9 +24,6 @@ import android.app.Application
 import android.content.SharedPreferences
 import org.mariotaku.twidere.annotation.AccountType
 
-/**
- * Created by mariotaku on 15/7/8.
- */
 abstract class Analyzer {
 
     protected abstract fun log(priority: Int, tag: String, msg: String)

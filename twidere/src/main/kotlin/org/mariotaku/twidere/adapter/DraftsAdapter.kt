@@ -32,7 +32,7 @@ import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.twidere.constant.mediaPreviewStyleKey
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.Draft
-import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.view.holder.DraftViewHolder
 import javax.inject.Inject
 

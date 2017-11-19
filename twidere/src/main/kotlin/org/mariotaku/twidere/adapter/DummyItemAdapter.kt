@@ -19,8 +19,7 @@ import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.util.dagger.AdapterComponent
-import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.dagger.component.AdapterComponent
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 import javax.inject.Inject
 

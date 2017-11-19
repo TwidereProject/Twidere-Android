@@ -10,8 +10,7 @@ import android.support.v7.preference.PreferenceDialogFragmentCompat
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.onShow
-import org.mariotaku.twidere.util.dagger.FragmentComponent
-import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.dagger.component.FragmentComponent
 
 abstract class ThemedPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat() {
 

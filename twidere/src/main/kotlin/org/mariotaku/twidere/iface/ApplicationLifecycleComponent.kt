@@ -17,23 +17,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util.sync
+package org.mariotaku.twidere.iface
 
-import android.content.Context
-import android.content.SharedPreferences
-import org.mariotaku.twidere.model.sync.SyncProviderEntry
-
-class OpenSourceSyncProviderInfoFactory : DataSyncProvider.Factory() {
-    override fun createForType(type: String, preferences: SharedPreferences): DataSyncProvider? {
-        return null
-    }
-
-    override fun getSupportedProviders(context: Context): List<SyncProviderEntry> {
-        return emptyList()
-    }
-
-    override fun notifyUpdate(context: Context) {
-
-    }
-
+interface ApplicationLifecycleComponent {
+    fun appStarted()
 }

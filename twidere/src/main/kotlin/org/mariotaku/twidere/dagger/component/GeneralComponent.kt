@@ -1,7 +1,7 @@
 /*
- *                 Twidere - Twitter client for Android
+ *             Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util.dagger
+package org.mariotaku.twidere.dagger.component
 
 import android.support.v7.widget.RecyclerView
 import dagger.Component
@@ -26,8 +26,9 @@ import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter
 import org.mariotaku.twidere.adapter.BaseArrayAdapter
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter
 import org.mariotaku.twidere.adapter.DraftsAdapter
-import org.mariotaku.twidere.dagger.module.ApplicationModule
+import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.dagger.module.ChannelModule
+import org.mariotaku.twidere.dagger.module.GeneralModule
 import org.mariotaku.twidere.fragment.filter.FilteredUsersFragment
 import org.mariotaku.twidere.loader.CacheUserSearchLoader
 import org.mariotaku.twidere.loader.DefaultAPIConfigLoader
@@ -53,7 +54,7 @@ import org.mariotaku.twidere.util.sync.SyncTaskRunner
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = arrayOf(ApplicationModule::class, ChannelModule::class))
+@Component(modules = arrayOf(GeneralModule::class, ChannelModule::class))
 interface GeneralComponent {
 
     fun inject(obj: MultiSelectEventHandler)
@@ -128,7 +129,7 @@ interface GeneralComponent {
 
     companion object : ApplicationContextSingletonHolder<GeneralComponent>(creation@ { application ->
         return@creation DaggerGeneralComponent.builder()
-                .applicationModule(ApplicationModule.getInstance(application))
+                .generalModule(GeneralModule.getInstance(application))
                 .channelModule(ChannelModule.getInstance(application))
                 .build()
     })

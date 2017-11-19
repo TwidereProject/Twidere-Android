@@ -29,8 +29,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.util.dagger.AdapterComponent
-import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.dagger.component.AdapterComponent
 import org.mariotaku.twidere.view.holder.AccountViewHolder
 
 class AccountDetailsAdapter(

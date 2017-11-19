@@ -9,7 +9,7 @@ import android.support.v4.content.ContextCompat;
 import org.mariotaku.kpreferences.SharedPreferencesExtensionsKt;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.constant.PreferenceKeysKt;
-import org.mariotaku.twidere.util.dagger.DependencyHolder;
+import org.mariotaku.twidere.dagger.DependencyHolder;
 
 import java.util.ArrayList;
 import java.util.List;

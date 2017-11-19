@@ -25,7 +25,7 @@ import android.net.ConnectivityManager
 import com.twitter.Extractor
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.util.notification.ContentNotificationManager
 import javax.inject.Inject
 

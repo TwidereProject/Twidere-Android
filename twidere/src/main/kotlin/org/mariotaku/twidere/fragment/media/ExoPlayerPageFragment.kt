@@ -74,7 +74,7 @@ import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.CacheProvider
 import org.mariotaku.twidere.task.SaveFileTask
-import org.mariotaku.twidere.util.dagger.FragmentComponent
+import org.mariotaku.twidere.dagger.component.FragmentComponent
 import org.mariotaku.twidere.util.media.TwidereMediaDownloader
 import org.mariotaku.twidere.util.promotion.PromotionService
 import java.io.InputStream

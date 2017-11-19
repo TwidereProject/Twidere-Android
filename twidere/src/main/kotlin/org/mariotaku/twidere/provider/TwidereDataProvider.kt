@@ -53,7 +53,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.SQLiteDatabaseWrapper.LazyLoadCallback
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
-import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.util.database.CachedUsersQueryBuilder
 import org.mariotaku.twidere.util.database.SuggestionsCursorCreator
 import org.mariotaku.twidere.util.notification.ContentNotificationManager

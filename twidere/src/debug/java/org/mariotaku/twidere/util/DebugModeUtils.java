@@ -36,9 +36,6 @@ import org.mariotaku.twidere.util.stetho.UserStreamDumperPlugin;
 
 import okhttp3.OkHttpClient;
 
-/**
- * Created by mariotaku on 15/5/27.
- */
 public class DebugModeUtils {
 
     private static RefWatcher sRefWatcher;

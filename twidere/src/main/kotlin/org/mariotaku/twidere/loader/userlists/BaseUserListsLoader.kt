@@ -43,7 +43,7 @@ import org.mariotaku.twidere.model.pagination.CursorPagination
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.collection.NoDuplicatesArrayList
-import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import java.util.*
 import javax.inject.Inject
 

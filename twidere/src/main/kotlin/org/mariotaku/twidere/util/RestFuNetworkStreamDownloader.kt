@@ -24,7 +24,7 @@ import android.net.Uri
 import org.mariotaku.pickncrop.library.MediaPickerActivity.NetworkStreamDownloader
 import org.mariotaku.restfu.annotation.method.GET
 import org.mariotaku.restfu.http.HttpRequest
-import org.mariotaku.twidere.util.dagger.DependencyHolder
+import org.mariotaku.twidere.dagger.DependencyHolder
 import java.io.IOException
 
 /**

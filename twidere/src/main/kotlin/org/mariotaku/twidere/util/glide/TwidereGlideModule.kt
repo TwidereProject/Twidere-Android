@@ -32,7 +32,7 @@ import org.mariotaku.twidere.model.media.AuthenticatedUri
 import org.mariotaku.twidere.model.media.NoThumborUrl
 import org.mariotaku.twidere.util.HttpClientFactory
 import org.mariotaku.twidere.util.UserAgentUtils
-import org.mariotaku.twidere.util.dagger.DependencyHolder
+import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.util.glide.NoThumborUrlLoader.Companion.HEADER_NO_THUMBOR
 import org.mariotaku.twidere.util.media.ThumborWrapper
 import org.mariotaku.twidere.util.okhttp.ModifyRequestInterceptor

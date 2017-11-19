@@ -17,7 +17,7 @@ import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.CacheMetadata
 import org.mariotaku.twidere.task.SaveFileTask
 import org.mariotaku.twidere.util.JsonSerializer
-import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import java.io.ByteArrayInputStream
 import java.io.FileNotFoundException
 import java.io.IOException

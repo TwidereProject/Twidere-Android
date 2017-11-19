@@ -37,9 +37,9 @@ import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.preference.RingtonePreference
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.util.dagger.FragmentComponent
+import org.mariotaku.twidere.dagger.component.FragmentComponent
 import org.mariotaku.twidere.util.sync.DataSyncProvider
-import org.mariotaku.twidere.util.sync.SyncController
+import org.mariotaku.twidere.taskcontroller.sync.SyncTaskController
 import javax.inject.Inject
 
 abstract class BasePreferenceFragment : PreferenceFragmentCompat(), IBaseFragment<BasePreferenceFragment> {
@@ -52,7 +52,7 @@ abstract class BasePreferenceFragment : PreferenceFragmentCompat(), IBaseFragmen
     @Inject
     lateinit var preferences: SharedPreferences
     @Inject
-    lateinit var syncController: SyncController
+    lateinit var syncController: SyncTaskController
     @Inject
     lateinit var bus: Bus
     @Inject

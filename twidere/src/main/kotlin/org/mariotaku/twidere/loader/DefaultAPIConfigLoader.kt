@@ -27,7 +27,7 @@ import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.util.JsonSerializer
-import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import java.io.IOException
 import javax.inject.Inject
 

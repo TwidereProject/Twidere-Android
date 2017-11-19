@@ -17,11 +17,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util.dagger
+package org.mariotaku.twidere.dagger.component
 
 import dagger.Component
-import org.mariotaku.twidere.dagger.module.ApplicationModule
 import org.mariotaku.twidere.dagger.module.ChannelModule
+import org.mariotaku.twidere.dagger.module.GeneralModule
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.fragment.BasePreferenceFragment
@@ -32,7 +32,7 @@ import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = arrayOf(ApplicationModule::class, ChannelModule::class))
+@Component(modules = arrayOf(GeneralModule::class, ChannelModule::class))
 interface FragmentComponent {
 
     fun inject(fragment: BaseFragment)
@@ -49,7 +49,7 @@ interface FragmentComponent {
 
     companion object : ApplicationContextSingletonHolder<FragmentComponent>(creation@ { application ->
         return@creation DaggerFragmentComponent.builder()
-                .applicationModule(ApplicationModule.getInstance(application))
+                .generalModule(GeneralModule.getInstance(application))
                 .channelModule(ChannelModule.getInstance(application))
                 .build()
     })

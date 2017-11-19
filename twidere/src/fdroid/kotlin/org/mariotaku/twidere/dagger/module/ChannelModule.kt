@@ -22,6 +22,7 @@ package org.mariotaku.twidere.dagger.module
 import android.app.Application
 import dagger.Module
 import dagger.Provides
+import org.mariotaku.twidere.util.DummyStatusScheduleProviderFactory
 import org.mariotaku.twidere.util.MapFragmentFactory
 import org.mariotaku.twidere.util.OSMMapFragmentFactory
 import org.mariotaku.twidere.util.gifshare.GifShareProvider
@@ -31,8 +32,9 @@ import org.mariotaku.twidere.util.premium.DummyExtraFeaturesService
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.promotion.DummyPromotionService
 import org.mariotaku.twidere.util.promotion.PromotionService
+import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
 import org.mariotaku.twidere.util.sync.DataSyncProvider
-import org.mariotaku.twidere.util.sync.OpenSourceSyncProviderInfoFactory
+import org.mariotaku.twidere.util.sync.OpenSourceSyncProvider
 import javax.inject.Singleton
 
 @Module
@@ -65,8 +67,14 @@ class ChannelModule private constructor(private val application: Application) {
 
     @Provides
     @Singleton
-    fun dataSyncProviderFactory(): DataSyncProvider.Factory {
-        return OpenSourceSyncProviderInfoFactory()
+    fun dataSyncProvider(): DataSyncProvider {
+        return OpenSourceSyncProvider()
+    }
+
+    @Provides
+    @Singleton
+    fun statusScheduleProviderFactory(): StatusScheduleProvider.Factory {
+        return DummyStatusScheduleProviderFactory()
     }
 
     companion object : SingletonHolder<ChannelModule, Application>(::ChannelModule)

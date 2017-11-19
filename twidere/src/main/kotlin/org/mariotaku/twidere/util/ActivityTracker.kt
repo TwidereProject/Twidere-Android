@@ -25,9 +25,6 @@ import android.app.Application
 import android.os.Bundle
 import org.mariotaku.twidere.activity.HomeActivity
 
-/**
- * Created by mariotaku on 15/10/5.
- */
 class ActivityTracker : Application.ActivityLifecycleCallbacks {
 
     private val internalStack = ArrayList<Int>()

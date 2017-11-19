@@ -35,13 +35,12 @@ import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.util.dagger.FragmentComponent
+import org.mariotaku.twidere.dagger.component.FragmentComponent
 import org.mariotaku.twidere.util.gifshare.GifShareProvider
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.promotion.PromotionService
 import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
 import org.mariotaku.twidere.util.sync.SyncPreferences
-import org.mariotaku.twidere.util.sync.TimelineSyncManager
 import javax.inject.Inject
 
 open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {

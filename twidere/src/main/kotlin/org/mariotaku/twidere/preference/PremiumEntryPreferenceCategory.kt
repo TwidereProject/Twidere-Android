@@ -24,7 +24,7 @@ import android.util.AttributeSet
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.extension.findParent
 import org.mariotaku.twidere.extension.get
-import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import javax.inject.Inject
 

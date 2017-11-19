@@ -13,13 +13,12 @@ import org.mariotaku.twidere.util.ErrorInfoStore
 import org.mariotaku.twidere.util.ReadStateManager
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.cache.JsonCache
-import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.util.media.MediaPreloader
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
 import org.mariotaku.twidere.util.sync.DataSyncProvider
 import org.mariotaku.twidere.util.sync.SyncPreferences
-import org.mariotaku.twidere.util.sync.TimelineSyncManager
 import javax.inject.Inject
 
 abstract class BaseAbstractTask<Params, Result, Callback>(val context: Context) : AbstractTask<Params, Result, Callback>() {

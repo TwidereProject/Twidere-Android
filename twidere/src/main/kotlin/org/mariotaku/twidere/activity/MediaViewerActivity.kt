@@ -65,7 +65,7 @@ import org.mariotaku.twidere.task.SaveMediaToGalleryTask
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.PermissionUtils
 import org.mariotaku.twidere.util.ThemeUtils
-import org.mariotaku.twidere.util.dagger.GeneralComponent
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.util.support.WindowSupport
 import org.mariotaku.twidere.view.viewer.MediaSwipeCloseContainer
 import java.io.File

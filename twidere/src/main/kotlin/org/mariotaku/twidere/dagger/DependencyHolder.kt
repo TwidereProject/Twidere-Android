@@ -1,7 +1,7 @@
 /*
- *                 Twidere - Twitter client for Android
+ *             Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util.dagger
+package org.mariotaku.twidere.dagger
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -25,6 +25,7 @@ import okhttp3.Cache
 import okhttp3.ConnectionPool
 import okhttp3.Dns
 import org.mariotaku.restfu.http.RestHttpClient
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*

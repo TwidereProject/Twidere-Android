@@ -28,12 +28,12 @@ import android.content.Context
 import android.os.Build
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.constant.nameFirstKey
+import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.extension.model.notificationChannelGroupId
 import org.mariotaku.twidere.extension.model.notificationChannelId
 import org.mariotaku.twidere.extension.ownedAccounts
 import org.mariotaku.twidere.model.notification.NotificationChannelSpec
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.util.dagger.DependencyHolder
 
 /**
  * Created by mariotaku on 2017/8/25.

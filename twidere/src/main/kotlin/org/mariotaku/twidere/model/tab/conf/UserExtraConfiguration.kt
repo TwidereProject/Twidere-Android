@@ -15,7 +15,7 @@ import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.fragment.CustomTabsFragment.TabEditorDialogFragment
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.tab.TabConfiguration
-import org.mariotaku.twidere.util.dagger.DependencyHolder
+import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.view.holder.SimpleUserViewHolder
 
 /**

@@ -17,36 +17,33 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util.dagger
+package org.mariotaku.twidere.dagger.component
 
-import android.app.Application
-import android.content.Context
 import dagger.Component
-import org.mariotaku.twidere.dagger.module.ApplicationModule
+import org.mariotaku.twidere.adapter.AccountDetailsAdapter
+import org.mariotaku.twidere.adapter.ComposeAutoCompleteAdapter
+import org.mariotaku.twidere.adapter.DummyItemAdapter
+import org.mariotaku.twidere.adapter.UserAutoCompleteAdapter
 import org.mariotaku.twidere.dagger.module.ChannelModule
-import org.mariotaku.twidere.promise.*
+import org.mariotaku.twidere.dagger.module.GeneralModule
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
-import org.mariotaku.twidere.util.lang.SingletonHolder
 import javax.inject.Singleton
 
-
 @Singleton
-@Component(modules = arrayOf(ApplicationModule::class, ChannelModule::class))
-interface PromisesComponent {
+@Component(modules = arrayOf(GeneralModule::class, ChannelModule::class))
+interface AdapterComponent {
 
-    fun inject(promises: MessagePromises)
+    fun inject(adapter: DummyItemAdapter)
 
-    fun inject(promises: StatusPromises)
+    fun inject(obj: AccountDetailsAdapter)
 
-    fun inject(promises: FriendshipPromises)
+    fun inject(obj: ComposeAutoCompleteAdapter)
 
-    fun inject(promises: BlockPromises)
+    fun inject(obj: UserAutoCompleteAdapter)
 
-    fun inject(promises: MutePromises)
-
-    companion object : ApplicationContextSingletonHolder<PromisesComponent>(creation@ { application ->
-        return@creation DaggerPromisesComponent.builder()
-                .applicationModule(ApplicationModule.getInstance(application))
+    companion object : ApplicationContextSingletonHolder<AdapterComponent>(creation@ { application ->
+        return@creation DaggerAdapterComponent.builder()
+                .generalModule(GeneralModule.getInstance(application))
                 .channelModule(ChannelModule.getInstance(application))
                 .build()
     })

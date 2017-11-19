@@ -42,7 +42,7 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.Utils
-import org.mariotaku.twidere.util.dagger.PromisesComponent
+import org.mariotaku.twidere.dagger.component.PromisesComponent
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 import javax.inject.Inject
 
