@@ -24,16 +24,25 @@ import android.content.Context
 import android.widget.Toast
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.task
+import nl.komponents.kovenant.then
 import nl.komponents.kovenant.ui.failUi
+import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.twidere.extension.getDetailsOrThrow
 import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
 
+fun <T> Promise<T, Exception>.thenGetAccount(context: Context, accountKey: UserKey): Promise<AccountDetails, Exception> = then {
+    return@then AccountManager.get(context).getDetailsOrThrow(accountKey, true)
+}
+
 fun <T> accountTask(context: Context, accountKey: UserKey, body: (account: AccountDetails) -> T): Promise<T, Exception> = task {
     return@task body(AccountManager.get(context).getDetailsOrThrow(accountKey, true))
 }
 
-fun <T> Promise<T, Exception>.toastOnFail(context: Context): Promise<T, Exception> = failUi {
+fun <T> Promise<T, Exception>.toastOnResult(context: Context, successMessage: (T) -> String): Promise<T, Exception> = successUi {
+    Toast.makeText(context, successMessage(it), Toast.LENGTH_SHORT).show()
+}.failUi {
     Toast.makeText(context, it.getErrorMessage(context), Toast.LENGTH_SHORT).show()
 }
+

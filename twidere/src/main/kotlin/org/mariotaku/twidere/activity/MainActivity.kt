@@ -61,7 +61,7 @@ import org.mariotaku.twidere.extension.model.displayingScore
 import org.mariotaku.twidere.extension.model.shouldShow
 import org.mariotaku.twidere.model.presentation.LaunchPresentation
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.task.filter.RefreshLaunchPresentationsTask
+import org.mariotaku.twidere.promise.LaunchPresentationsPromises
 import org.mariotaku.twidere.util.DeviceUtils
 import org.mariotaku.twidere.util.OnLinkClickHandler
 import org.mariotaku.twidere.util.StrictModeUtils
@@ -164,7 +164,7 @@ open class MainActivity : ChameleonActivity(), IBaseActivity<MainActivity> {
             launchDirectly()
             return
         }
-        val presentation = jsonCache.getList(RefreshLaunchPresentationsTask.JSON_CACHE_KEY,
+        val presentation = jsonCache.getList(LaunchPresentationsPromises.JSON_CACHE_KEY,
                 LaunchPresentation::class.java)?.firstOrNull {
             it.shouldShow(this)
         }

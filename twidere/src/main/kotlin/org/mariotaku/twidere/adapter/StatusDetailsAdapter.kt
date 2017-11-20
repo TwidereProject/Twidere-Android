@@ -358,11 +358,11 @@ class StatusDetailsAdapter(
         return getItemViewTypeByItemType(getItemType(position))
     }
 
-    override fun addGapLoadingId(id: ObjectId) {
+    override fun addGapLoadingId(id: ObjectId<String>) {
 
     }
 
-    override fun removeGapLoadingId(id: ObjectId) {
+    override fun removeGapLoadingId(id: ObjectId<String>) {
 
     }
 

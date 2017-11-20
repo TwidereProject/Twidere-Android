@@ -44,7 +44,6 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
-import org.mariotaku.twidere.task.CreateUserMuteTask
 import org.mariotaku.twidere.text.style.EmojiSpan
 import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.IntentUtils
@@ -52,6 +51,7 @@ import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.mariotaku.twidere.dagger.component.GeneralComponent
+import org.mariotaku.twidere.promise.MutePromises
 import javax.inject.Inject
 
 class FilteredUsersFragment : BaseFiltersFragment() {
@@ -222,7 +222,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
             val am = AccountManager.get(context)
             val account = AccountUtils.getAccountDetails(am, accountKey, true) ?:
                     throw AccountNotFoundException()
-            CreateUserMuteTask.muteUsers(context, account, items)
+            MutePromises.muteUsers(context, account, items)
         }.alwaysUi {
             weakThis?.dismissProgressDialog("export_to_muted")
         }

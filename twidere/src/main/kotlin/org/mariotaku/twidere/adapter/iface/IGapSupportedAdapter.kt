@@ -22,16 +22,13 @@ package org.mariotaku.twidere.adapter.iface
 import org.mariotaku.twidere.model.ObjectId
 import org.mariotaku.twidere.view.holder.GapViewHolder
 
-/**
- * Created by mariotaku on 14/12/3.
- */
 interface IGapSupportedAdapter {
 
     fun isGapItem(position: Int): Boolean
 
-    fun addGapLoadingId(id: ObjectId)
+    fun addGapLoadingId(id: ObjectId<String>)
 
-    fun removeGapLoadingId(id: ObjectId)
+    fun removeGapLoadingId(id: ObjectId<String>)
 
     val gapClickListener: GapClickListener?
 

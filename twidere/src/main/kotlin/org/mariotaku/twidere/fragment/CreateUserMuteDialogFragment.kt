@@ -25,7 +25,9 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER
 import org.mariotaku.twidere.constant.nameFirstKey
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.ParcelableUser
+import org.mariotaku.twidere.promise.MutePromises
 
 class CreateUserMuteDialogFragment : AbsUserMuteBlockDialogFragment() {
 
@@ -45,7 +47,7 @@ class CreateUserMuteDialogFragment : AbsUserMuteBlockDialogFragment() {
 
     override fun performUserAction(user: ParcelableUser, filterEverywhere: Boolean) {
         val accountKey = user.account_key ?: return
-        twitterWrapper.createMuteAsync(accountKey, user.key, filterEverywhere)
+        MutePromises.get(context!!).mute(accountKey, user.key, filterEverywhere)
     }
 
     companion object {

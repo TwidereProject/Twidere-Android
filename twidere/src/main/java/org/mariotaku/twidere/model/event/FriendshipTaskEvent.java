@@ -6,9 +6,6 @@ import android.support.annotation.NonNull;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.UserKey;
 
-/**
- * Created by mariotaku on 16/2/15.
- */
 public class FriendshipTaskEvent {
 
     @Action

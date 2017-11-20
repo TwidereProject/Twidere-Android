@@ -153,7 +153,8 @@ class DraftsListFragment : AbsContentListViewFragment<DraftsAdapter>(), LoaderCa
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.scheduled_statuses -> {
-                val scheduleManageIntent = statusScheduleProvider?.createManageIntent() ?: return true
+                if (!statusScheduleProvider.supported) return true
+                val scheduleManageIntent = statusScheduleProvider.createManageIntent() ?: return true
                 startActivity(scheduleManageIntent)
                 return true
             }

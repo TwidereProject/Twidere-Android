@@ -6,7 +6,7 @@ import org.mariotaku.twidere.extension.model.draftActionTypeString
 import org.mariotaku.twidere.extension.model.parcelableMediaTypeString
 import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.ParcelableMedia
-import org.mariotaku.twidere.task.status.UpdateStatusTask
+import org.mariotaku.twidere.promise.UpdateStatusPromise
 import org.mariotaku.twidere.util.Analyzer
 import java.io.IOException
 
@@ -35,13 +35,13 @@ data class UpdateStatus(
     private val errorReason: String? get() {
         val ex = exception ?: return null
         when (ex) {
-            is UpdateStatusTask.ShortenerNotFoundException,
-            is UpdateStatusTask.UploaderNotFoundException ->
+            is UpdateStatusPromise.ShortenerNotFoundException,
+            is UpdateStatusPromise.UploaderNotFoundException ->
                 return "extension not found"
             else -> {
                 val cause = ex.cause
                 when (cause) {
-                    is UpdateStatusTask.ExtensionVersionMismatchException ->
+                    is UpdateStatusPromise.ExtensionVersionMismatchException ->
                         return "extension version mismatch"
                     is IOException ->
                         return "io exception"
@@ -53,8 +53,8 @@ data class UpdateStatus(
                     }
                 }
                 when (ex) {
-                    is UpdateStatusTask.ShortenException,
-                    is UpdateStatusTask.UploadException ->
+                    is UpdateStatusPromise.ShortenException,
+                    is UpdateStatusPromise.UploadException ->
                         return "extension error"
                 }
                 return "internal error"

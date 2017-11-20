@@ -69,8 +69,6 @@ class AsyncTwitterWrapper(
 ) {
     private val resolver = context.contentResolver
 
-    private val updatingRelationshipIds = ArrayList<Int>()
-
     private val sendingDraftIds = ArrayList<Long>()
 
     private val getMessageTasks = CompactHashSet<Uri>()
@@ -126,12 +124,6 @@ class AsyncTwitterWrapper(
     fun createMultiBlockAsync(accountKey: UserKey, userIds: Array<String>) {
     }
 
-    fun createMuteAsync(accountKey: UserKey, userKey: UserKey, filterEverywhere: Boolean) {
-        val task = CreateUserMuteTask(context, filterEverywhere)
-        task.setup(accountKey, userKey)
-        TaskStarter.execute(task)
-    }
-
     fun createSavedSearchAsync(accountKey: UserKey, query: String) {
         val task = CreateSavedSearchTask(context, accountKey, query)
         TaskStarter.execute(task)
@@ -156,12 +148,6 @@ class AsyncTwitterWrapper(
 
     fun destroyFavoriteAsync(accountKey: UserKey, statusId: String) {
         val task = DestroyFavoriteTask(context, accountKey, statusId)
-        TaskStarter.execute(task)
-    }
-
-    fun destroyMuteAsync(accountKey: UserKey, userKey: UserKey) {
-        val task = DestroyUserMuteTask(context)
-        task.setup(accountKey, userKey)
         TaskStarter.execute(task)
     }
 
@@ -301,10 +287,6 @@ class AsyncTwitterWrapper(
             }
 
             override fun onException(callback: Any?, exception: MicroBlogException) {
-                if (exception !is MicroBlogException) {
-                    Analyzer.logException(exception)
-                    return
-                }
                 DebugLog.w(TwidereConstants.LOGTAG, "Unable to update friendship", exception)
             }
 
@@ -323,18 +305,6 @@ class AsyncTwitterWrapper(
             if (!AccountUtils.isOfficial(context, accountKey)) continue
             microBlog.setActivitiesAboutMeUnread(cursor)
         }
-    }
-
-    fun addUpdatingRelationshipId(accountKey: UserKey, userKey: UserKey) {
-        updatingRelationshipIds.add(ParcelableUser.calculateHashCode(accountKey, userKey))
-    }
-
-    fun removeUpdatingRelationshipId(accountKey: UserKey, userKey: UserKey) {
-        updatingRelationshipIds.remove(ParcelableUser.calculateHashCode(accountKey, userKey))
-    }
-
-    fun isUpdatingRelationship(accountKey: UserKey, userKey: UserKey): Boolean {
-        return updatingRelationshipIds.contains(ParcelableUser.calculateHashCode(accountKey, userKey))
     }
 
     internal class CreateSavedSearchTask(context: Context, accountKey: UserKey,

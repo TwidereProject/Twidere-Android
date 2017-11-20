@@ -151,7 +151,7 @@ class ParcelableStatusesAdapter(
 
     private val showCardActions: Boolean = !preferences[hideCardActionsKey]
 
-    private val gapLoadingIds: MutableSet<ObjectId> = HashSet()
+    private val gapLoadingIds: MutableSet<ObjectId<String>> = HashSet()
     private var showingActionCardId = RecyclerView.NO_ID
 
     private val showingFullTextStates = SparseBooleanArray()
@@ -346,11 +346,11 @@ class ParcelableStatusesAdapter(
         }
     }
 
-    override fun addGapLoadingId(id: ObjectId) {
+    override fun addGapLoadingId(id: ObjectId<String>) {
         gapLoadingIds.add(id)
     }
 
-    override fun removeGapLoadingId(id: ObjectId) {
+    override fun removeGapLoadingId(id: ObjectId<String>) {
         gapLoadingIds.remove(id)
     }
 

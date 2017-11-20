@@ -17,20 +17,36 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.task.filter
+package org.mariotaku.twidere.promise
 
 import android.content.Context
+import nl.komponents.kovenant.Promise
+import nl.komponents.kovenant.task
 import org.mariotaku.restfu.annotation.method.GET
 import org.mariotaku.restfu.http.HttpRequest
+import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.BuildConfig
+import org.mariotaku.twidere.dagger.component.PromisesComponent
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.presentation.LaunchPresentation
-import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.util.JsonSerializer
-import java.io.IOException
+import org.mariotaku.twidere.util.cache.JsonCache
+import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
+import javax.inject.Inject
 
 
-class RefreshLaunchPresentationsTask(context: Context) : BaseAbstractTask<Unit?, Boolean, (Boolean) -> Unit>(context) {
-    override fun doLongOperation(params: Unit?): Boolean {
+class LaunchPresentationsPromises private constructor(context: Context) {
+
+    @Inject
+    lateinit var restHttpClient: RestHttpClient
+    @Inject
+    lateinit var jsonCache: JsonCache
+
+    init {
+        PromisesComponent.get(context).inject(this)
+    }
+
+    fun refresh(): Promise<Boolean, Exception> = task {
         val builder = HttpRequest.Builder()
         builder.method(GET.METHOD)
         if (BuildConfig.DEBUG) {
@@ -39,23 +55,15 @@ class RefreshLaunchPresentationsTask(context: Context) : BaseAbstractTask<Unit?,
             builder.url("https://twidere.mariotaku.org/assets/data/launch_presentations.json")
         }
         val request = builder.build()
-        try {
-            val presentations = restHttpClient.newCall(request).execute().use {
-                if (!it.isSuccessful) return@use null
-                return@use JsonSerializer.parseList(it.body.stream(), LaunchPresentation::class.java)
-            }
-            jsonCache.saveList(JSON_CACHE_KEY, presentations, LaunchPresentation::class.java)
-            return true
-        } catch (e: IOException) {
-            return false
+        val presentations = restHttpClient.newCall(request).execute().use {
+            if (!it.isSuccessful) return@use null
+            return@use JsonSerializer.parseList(it.body.stream(), LaunchPresentation::class.java)
         }
+        jsonCache.saveList(JSON_CACHE_KEY, presentations, LaunchPresentation::class.java)
+        return@task true
     }
 
-    override fun afterExecute(callback: ((Boolean) -> Unit)?, result: Boolean) {
-        callback?.invoke(result)
-    }
-
-    companion object {
+    companion object : ApplicationContextSingletonHolder<LaunchPresentationsPromises>(::LaunchPresentationsPromises) {
         const val JSON_CACHE_KEY = "launch_presentations"
     }
 }

@@ -92,7 +92,7 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.promise.ConversationPromises
 import org.mariotaku.twidere.promise.MessagePromises
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
-import org.mariotaku.twidere.task.status.UpdateStatusTask
+import org.mariotaku.twidere.promise.UpdateStatusPromise
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.view.holder.SimpleUserViewHolder
 
@@ -386,13 +386,13 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
                             }
                             throw MicroBlogException("Error ${result.responseCode}")
                         }
-                        var deleteAlways: List<UpdateStatusTask.MediaDeletionItem>? = null
+                        var deleteAlways: List<UpdateStatusPromise.MediaDeletionItem>? = null
                         try {
                             val media = arrayOf(ParcelableMediaUpdate().apply {
                                 this.uri = uri.toString()
                                 this.delete_always = true
                             })
-                            val uploadResult = UpdateStatusTask.uploadMicroBlogMediaShared(context,
+                            val uploadResult = UpdateStatusPromise.uploadMicroBlogMediaShared(context,
                                     upload, account, media, null, null, true, null)
                             deleteAlways = uploadResult.deleteAlways
                             val avatarId = uploadResult.ids.first()
@@ -403,7 +403,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
                                 return@updateAction dmResponse.conversations[conversationId]?.avatarImageHttps
                             }
                             throw MicroBlogException("Error ${result.responseCode}")
-                        } catch (e: UpdateStatusTask.UploadException) {
+                        } catch (e: UpdateStatusPromise.UploadException) {
                             e.deleteAlways?.forEach {
                                 it.delete(context)
                             }

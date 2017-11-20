@@ -63,6 +63,7 @@ import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.activity.iface.IThemedActivity
 import org.mariotaku.twidere.annotation.NavbarStyle
 import org.mariotaku.twidere.constant.*
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.defaultSharedPreferences
 import org.mariotaku.twidere.extension.firstLanguage
 import org.mariotaku.twidere.extension.get
@@ -72,7 +73,6 @@ import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.preference.iface.IDialogPreference
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
-import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.util.gifshare.GifShareProvider
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.promotion.PromotionService
@@ -111,7 +111,7 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     @Inject
     lateinit var extraFeaturesService: ExtraFeaturesService
     @Inject
-    lateinit var statusScheduleProviderFactory: StatusScheduleProvider.Factory
+    lateinit var statusScheduleProvider: StatusScheduleProvider
     @Inject
     lateinit var gifShareProvider: GifShareProvider
     @Inject
@@ -131,9 +131,6 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
 
     lateinit var requestManager: RequestManager
         private set
-
-    protected val statusScheduleProvider: StatusScheduleProvider?
-        get() = statusScheduleProviderFactory.newInstance(this)
 
     protected val isDialogTheme: Boolean
         get() = ThemeUtils.getBooleanFromAttribute(this, R.attr.isDialogTheme)

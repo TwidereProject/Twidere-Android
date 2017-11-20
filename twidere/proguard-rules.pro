@@ -77,13 +77,6 @@
 
 # Essential components
 -keep class * extends org.mariotaku.twidere.util.Analyzer
--keep class * extends org.mariotaku.twidere.util.twitter.card.TwitterCardViewFactory
-
-# Extra feature component factories
--keep class * extends org.mariotaku.twidere.util.gifshare.GifShareProvider$Factory
--keep class * extends org.mariotaku.twidere.util.schedule.StatusScheduleProvider$Factory
--keep class * extends org.mariotaku.twidere.util.sync.DataSyncProvider$Factory
--keep class * extends org.mariotaku.twidere.util.sync.TimelineSyncManager$Factory
 
 # View components
 -keep class * extends org.mariotaku.twidere.util.view.AppBarChildBehavior$ChildTransformation

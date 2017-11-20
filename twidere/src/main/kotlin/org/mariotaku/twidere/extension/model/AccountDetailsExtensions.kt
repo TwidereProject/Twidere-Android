@@ -10,7 +10,7 @@ import org.mariotaku.twidere.model.account.StatusNetAccountExtras
 import org.mariotaku.twidere.model.account.TwitterAccountExtras
 import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.model.account.cred.OAuthCredentials
-import org.mariotaku.twidere.task.status.UpdateStatusTask
+import org.mariotaku.twidere.promise.UpdateStatusPromise
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
 import org.mariotaku.twidere.util.text.FanfouValidator
 import org.mariotaku.twidere.util.text.MastodonValidator
@@ -47,17 +47,17 @@ fun <T> AccountDetails.newMicroBlogInstance(context: Context, cls: Class<T>): T 
 val AccountDetails.isOAuth: Boolean
     get() = credentials_type == Credentials.Type.OAUTH || credentials_type == Credentials.Type.XAUTH
 
-fun AccountDetails.getMediaSizeLimit(@MediaCategory mediaCategory: String? = null): UpdateStatusTask.SizeLimit? {
+fun AccountDetails.getMediaSizeLimit(@MediaCategory mediaCategory: String? = null): UpdateStatusPromise.SizeLimit? {
     when (type) {
         AccountType.TWITTER -> {
             val imageLimit = AccountExtras.ImageLimit.twitterDefault(mediaCategory)
             val videoLimit = AccountExtras.VideoLimit.twitterDefault()
-            return UpdateStatusTask.SizeLimit(imageLimit, videoLimit)
+            return UpdateStatusPromise.SizeLimit(imageLimit, videoLimit)
         }
         AccountType.FANFOU -> {
             val imageLimit = AccountExtras.ImageLimit.ofSize(5 * 1024 * 1024)
             val videoLimit = AccountExtras.VideoLimit.unsupported()
-            return UpdateStatusTask.SizeLimit(imageLimit, videoLimit)
+            return UpdateStatusPromise.SizeLimit(imageLimit, videoLimit)
         }
         AccountType.STATUSNET -> {
             val extras = extras as? StatusNetAccountExtras ?: return null
@@ -69,7 +69,7 @@ fun AccountDetails.getMediaSizeLimit(@MediaCategory mediaCategory: String? = nul
                 maxSizeSync = extras.uploadLimit
                 maxSizeAsync = extras.uploadLimit
             }
-            return UpdateStatusTask.SizeLimit(imageLimit, videoLimit)
+            return UpdateStatusPromise.SizeLimit(imageLimit, videoLimit)
         }
         else -> return null
     }

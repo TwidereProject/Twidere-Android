@@ -39,20 +39,34 @@ import org.mariotaku.twidere.activity.AssistLauncherActivity
 import org.mariotaku.twidere.activity.MainActivity
 import org.mariotaku.twidere.activity.MainHondaJOJOActivity
 import org.mariotaku.twidere.constant.*
+import org.mariotaku.twidere.dagger.component.ApplicationComponent
 import org.mariotaku.twidere.extension.firstLanguage
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.setLocale
-import org.mariotaku.twidere.iface.ApplicationLifecycleComponent
+import org.mariotaku.twidere.promise.DefaultFeaturesPromises
 import org.mariotaku.twidere.receiver.ConnectivityStateReceiver
 import org.mariotaku.twidere.service.StreamingService
+import org.mariotaku.twidere.taskcontroller.refresh.RefreshTaskController
+import org.mariotaku.twidere.taskcontroller.sync.SyncTaskController
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.emoji.EmojiOneShortCodeMap
 import org.mariotaku.twidere.util.notification.NotificationChannelsManager
+import org.mariotaku.twidere.util.premium.ExtraFeaturesService
+import org.mariotaku.twidere.util.promotion.PromotionService
 import java.util.*
+import javax.inject.Inject
 
 class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
-
-    internal lateinit var activityTracker: ActivityTracker
-    internal lateinit var lifecycleComponents: List<ApplicationLifecycleComponent>
+    @Inject
+    lateinit internal var activityTracker: ActivityTracker
+    @Inject
+    lateinit internal var refreshTaskController: RefreshTaskController
+    @Inject
+    lateinit internal var syncTaskController: SyncTaskController
+    @Inject
+    lateinit internal var extraFeaturesService: ExtraFeaturesService
+    @Inject
+    lateinit internal var promotionService: PromotionService
 
     private val sharedPreferences: SharedPreferences by lazy {
         val prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
@@ -81,12 +95,17 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
 
         updateEasterEggIcon()
 
-        lifecycleComponents.forEach { it.appStarted() }
+        ApplicationComponent.get(this).inject(this)
+
+        refreshTaskController.appStarted()
+        syncTaskController.appStarted()
+        extraFeaturesService.appStarted()
+        promotionService.appStarted()
 
         registerActivityLifecycleCallbacks(activityTracker)
         registerReceiver(ConnectivityStateReceiver(), IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
 
-//        DefaultFeaturesPromises.get(this).fetch()
+        DefaultFeaturesPromises.get(this).fetch()
 
         Analyzer.preferencesChanged(sharedPreferences)
     }

@@ -122,6 +122,7 @@ import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.model.util.ParcelableRelationshipUtils
 import org.mariotaku.twidere.promise.BlockPromises
 import org.mariotaku.twidere.promise.FriendshipPromises
+import org.mariotaku.twidere.promise.MutePromises
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
 import org.mariotaku.twidere.text.TwidereURLSpan
@@ -809,7 +810,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             R.id.mute_user -> {
                 if (userRelationship == null) return true
                 if (userRelationship.muting) {
-                    twitter.destroyMuteAsync(accountKey, user.key)
+                    MutePromises.get(context!!).unmute(accountKey, user.key)
                 } else {
                     CreateUserMuteDialogFragment.show(fragmentManager, user)
                 }
@@ -865,7 +866,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             }
             R.id.follow -> {
                 if (userRelationship == null) return true
-                val updatingRelationship = twitter.isUpdatingRelationship(accountKey,
+                val updatingRelationship = FriendshipPromises.isRunning(accountKey,
                         user.key)
                 if (!updatingRelationship) {
                     if (userRelationship.following) {

@@ -6,6 +6,7 @@ import com.squareup.otto.Bus
 import com.twitter.Extractor
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.restfu.http.RestHttpClient
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
@@ -13,7 +14,6 @@ import org.mariotaku.twidere.util.ErrorInfoStore
 import org.mariotaku.twidere.util.ReadStateManager
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.cache.JsonCache
-import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.util.media.MediaPreloader
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
@@ -46,7 +46,7 @@ abstract class BaseAbstractTask<Params, Result, Callback>(val context: Context) 
     @Inject
     lateinit var defaultFeatures: DefaultFeatures
     @Inject
-    lateinit var scheduleProviderFactory: StatusScheduleProvider.Factory
+    lateinit var scheduleProvider: StatusScheduleProvider
     @Inject
     lateinit var extractor: Extractor
     @Inject
@@ -55,9 +55,6 @@ abstract class BaseAbstractTask<Params, Result, Callback>(val context: Context) 
     lateinit var dataSyncProvider: DataSyncProvider
     @Inject
     lateinit var jsonCache: JsonCache
-
-    val scheduleProvider: StatusScheduleProvider?
-        get() = scheduleProviderFactory.newInstance(context)
 
     init {
         injectMembers()

@@ -14,7 +14,7 @@ import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.ProfileUpdatedEvent
-import org.mariotaku.twidere.task.status.UpdateStatusTask
+import org.mariotaku.twidere.promise.UpdateStatusPromise
 import org.mariotaku.twidere.util.DebugLog
 import java.io.IOException
 
@@ -34,7 +34,7 @@ open class UpdateProfileBackgroundImageTask<ResultHandler>(
     override fun onExecute(account: AccountDetails, params: Any?): ParcelableUser {
         val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
         try {
-            UpdateStatusTask.getBodyFromMedia(context, imageUri, ParcelableMedia.Type.IMAGE, true,
+            UpdateStatusPromise.getBodyFromMedia(context, imageUri, ParcelableMedia.Type.IMAGE, true,
                     true, null, false, null).use {
                 microBlog.updateProfileBackgroundImage(it.body, tile)
             }

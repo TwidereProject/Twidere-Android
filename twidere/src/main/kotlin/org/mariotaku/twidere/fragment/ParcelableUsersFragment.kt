@@ -43,6 +43,7 @@ import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.accountKey
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.extension.simpleLayout
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
@@ -56,6 +57,7 @@ import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.promise.BlockPromises
 import org.mariotaku.twidere.promise.FriendshipPromises
+import org.mariotaku.twidere.promise.MutePromises
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
@@ -213,7 +215,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
     override fun onFollowClicked(holder: UserViewHolder, position: Int) {
         val user = adapter.getUser(position) ?: return
         val accountKey = user.account_key ?: return
-        if (twitterWrapper.isUpdatingRelationship(accountKey, user.key)) return
+        if (FriendshipPromises.isRunning(accountKey, user.key)) return
         if (user.is_following) {
             DestroyFriendshipDialogFragment.show(fragmentManager!!, user)
         } else {
@@ -224,15 +226,15 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
     override fun onUnblockClicked(holder: UserViewHolder, position: Int) {
         val user = adapter.getUser(position) ?: return
         val accountKey = user.account_key ?: return
-        if (twitterWrapper.isUpdatingRelationship(accountKey, user.key)) return
+        if (FriendshipPromises.isRunning(accountKey, user.key)) return
         BlockPromises.getInstance(context!!).unblock(accountKey, user.key)
     }
 
     override fun onUnmuteClicked(holder: UserViewHolder, position: Int) {
         val user = adapter.getUser(position) ?: return
         val accountKey = user.account_key ?: return
-        if (twitterWrapper.isUpdatingRelationship(accountKey, user.key)) return
-        twitterWrapper.destroyMuteAsync(accountKey, user.key)
+        if (FriendshipPromises.isRunning(accountKey, user.key)) return
+        MutePromises.get(context!!).unmute(accountKey, user.key)
     }
 
 

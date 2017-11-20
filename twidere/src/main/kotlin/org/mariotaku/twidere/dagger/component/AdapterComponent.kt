@@ -44,7 +44,6 @@ interface AdapterComponent {
     companion object : ApplicationContextSingletonHolder<AdapterComponent>(creation@ { application ->
         return@creation DaggerAdapterComponent.builder()
                 .generalModule(GeneralModule.getInstance(application))
-                .channelModule(ChannelModule.getInstance(application))
                 .build()
     })
 }

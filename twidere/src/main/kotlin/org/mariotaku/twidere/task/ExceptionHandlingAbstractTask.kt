@@ -22,10 +22,6 @@ package org.mariotaku.twidere.task
 import android.content.Context
 import org.mariotaku.twidere.model.SingleResponse
 
-/**
- * Created by mariotaku on 2017/2/10.
- */
-
 abstract class ExceptionHandlingAbstractTask<Params, Result, TaskException : Exception, Callback>(
         context: Context
 ) : BaseAbstractTask<Params, SingleResponse<Result>, Callback>(context) {

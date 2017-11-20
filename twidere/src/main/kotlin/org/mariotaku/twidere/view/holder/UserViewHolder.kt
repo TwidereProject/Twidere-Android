@@ -33,6 +33,7 @@ import org.mariotaku.twidere.adapter.iface.IUsersAdapter.*
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.hasSameHost
 import org.mariotaku.twidere.model.ParcelableUser
+import org.mariotaku.twidere.promise.FriendshipPromises
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.Utils.getUserTypeIconRes
 import java.util.*
@@ -121,7 +122,7 @@ class UserViewHolder(
         }
 
         val accountKey = user.account_key
-        if (accountKey != null && twitter.isUpdatingRelationship(accountKey, user.key)) {
+        if (accountKey != null && FriendshipPromises.isRunning(accountKey, user.key)) {
             processingRequestProgress.visibility = View.VISIBLE
             actionsContainer.visibility = View.GONE
         } else {

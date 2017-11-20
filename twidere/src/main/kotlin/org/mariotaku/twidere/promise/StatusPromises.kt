@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.promise
 
 import android.app.Application
-import android.widget.Toast
 import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.combine.and
@@ -34,6 +33,7 @@ import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.twitter.model.ErrorInfo
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.dagger.component.PromisesComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
@@ -43,7 +43,6 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.StatusDestroyedEvent
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.task.AbsAccountRequestTask
-import org.mariotaku.twidere.dagger.component.PromisesComponent
 import org.mariotaku.twidere.util.deleteActivityStatus
 import org.mariotaku.twidere.util.deleteStatus
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
@@ -86,13 +85,14 @@ class StatusPromises private constructor(private val application: Application) {
     }.alwaysUi {
         DestroyTasks.removeTaskId(accountKey, id)
     }.successUi { status ->
-        if (status.retweet_id != null) {
-            Toast.makeText(application, R.string.message_toast_retweet_cancelled, Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(application, R.string.message_toast_status_deleted, Toast.LENGTH_SHORT).show()
-        }
         bus.post(StatusDestroyedEvent(status))
-    }.toastOnFail(application)
+    }.toastOnResult(application) { status ->
+        if (status.retweet_id != null) {
+            return@toastOnResult application.getString(R.string.message_toast_retweet_cancelled)
+        } else {
+            return@toastOnResult application.getString(R.string.message_toast_status_deleted)
+        }
+    }
 
     fun cancelRetweet(accountKey: UserKey, statusId: String?, myRetweetId: String?): Promise<ParcelableStatus, Exception> = when {
         myRetweetId != null -> destroy(accountKey, myRetweetId)

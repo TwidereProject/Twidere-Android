@@ -22,7 +22,7 @@ import org.mariotaku.twidere.model.draft.StatusObjectActionExtras
 import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
-import org.mariotaku.twidere.task.status.UpdateStatusTask
+import org.mariotaku.twidere.promise.UpdateStatusPromise
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.updateStatusInfo
@@ -105,7 +105,7 @@ class CreateFavoriteTask(context: Context, accountKey: UserKey, private val stat
         }
     }
 
-    override fun createDraft() = UpdateStatusTask.createDraft(Draft.Action.FAVORITE) {
+    override fun createDraft() = UpdateStatusPromise.createDraft(Draft.Action.FAVORITE) {
         account_keys = arrayOf(accountKey)
         action_extras = StatusObjectActionExtras().also { extras ->
             extras.status = this@CreateFavoriteTask.status

@@ -11,15 +11,16 @@ import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.toNulls
 import org.mariotaku.twidere.constant.IntentConstants.INTENT_PACKAGE_PREFIX
 import org.mariotaku.twidere.constant.stopAutoRefreshWhenBatteryLowKey
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.AccountPreferences
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
+import org.mariotaku.twidere.promise.LaunchPresentationsPromises
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.filter.RefreshFiltersSubscriptionsTask
-import org.mariotaku.twidere.task.filter.RefreshLaunchPresentationsTask
 import org.mariotaku.twidere.task.statuses.GetHomeTimelineTask
 import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
@@ -47,10 +48,12 @@ class TaskServiceRunner(
         DebugLog.d(msg = "TaskServiceRunner run task $action")
         when (action) {
             ACTION_REFRESH_HOME_TIMELINE, ACTION_REFRESH_NOTIFICATIONS,
-            ACTION_REFRESH_DIRECT_MESSAGES, ACTION_REFRESH_FILTERS_SUBSCRIPTIONS,
-            ACTION_REFRESH_LAUNCH_PRESENTATIONS -> {
+            ACTION_REFRESH_DIRECT_MESSAGES, ACTION_REFRESH_FILTERS_SUBSCRIPTIONS -> {
                 val task = createRefreshTask(action) ?: return Promise.of(false)
                 return Promise.of(true)
+            }
+            ACTION_REFRESH_LAUNCH_PRESENTATIONS -> {
+                return LaunchPresentationsPromises.get(context).refresh()
             }
             ACTION_SYNC_DRAFTS, ACTION_SYNC_FILTERS, ACTION_SYNC_USER_NICKNAMES, ACTION_SYNC_USER_COLORS -> {
                 val runner = dataSyncProvider.newSyncTaskRunner() ?: return Promise.of(false)
@@ -98,9 +101,6 @@ class TaskServiceRunner(
                     }
                 }
                 return task
-            }
-            ACTION_REFRESH_LAUNCH_PRESENTATIONS -> {
-                return RefreshLaunchPresentationsTask(context)
             }
         }
         return null

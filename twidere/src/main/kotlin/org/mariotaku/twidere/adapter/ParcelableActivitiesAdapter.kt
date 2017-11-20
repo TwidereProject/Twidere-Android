@@ -124,7 +124,7 @@ class ParcelableActivitiesAdapter(
     private val twidereLinkify = TwidereLinkify(OnLinkClickHandler(context, null, preferences))
     private val statusAdapterDelegate = DummyItemAdapter(context, twidereLinkify, this, requestManager)
     private val eventListener: EventListener
-    private val gapLoadingIds: MutableSet<ObjectId> = HashSet()
+    private val gapLoadingIds: MutableSet<ObjectId<String>> = HashSet()
 
     private var pagedActivitiesHelper = PagedListAdapterHelper<ParcelableActivity>(object : ListUpdateCallback {
         override fun onInserted(position: Int, count: Int) {
@@ -265,11 +265,11 @@ class ParcelableActivitiesAdapter(
         }
     }
 
-    override fun addGapLoadingId(id: ObjectId) {
+    override fun addGapLoadingId(id: ObjectId<String>) {
         gapLoadingIds.add(id)
     }
 
-    override fun removeGapLoadingId(id: ObjectId) {
+    override fun removeGapLoadingId(id: ObjectId<String>) {
         gapLoadingIds.remove(id)
     }
 

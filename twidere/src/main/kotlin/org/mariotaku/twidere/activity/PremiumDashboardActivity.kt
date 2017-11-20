@@ -191,7 +191,7 @@ class PremiumDashboardActivity : BaseActivity() {
         protected lateinit var preferences: SharedPreferences
 
         @Inject
-        protected lateinit var scheduleProviderFactory: StatusScheduleProvider.Factory
+        protected lateinit var scheduleProvider: StatusScheduleProvider
 
         @Inject
         protected lateinit var promotionService: PromotionService

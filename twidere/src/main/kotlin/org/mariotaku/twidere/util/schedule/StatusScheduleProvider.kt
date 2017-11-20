@@ -19,15 +19,16 @@
 
 package org.mariotaku.twidere.util.schedule
 
-import android.content.Context
 import android.content.Intent
 import android.support.annotation.WorkerThread
 import org.mariotaku.twidere.model.ParcelableStatusUpdate
 import org.mariotaku.twidere.model.schedule.ScheduleInfo
-import org.mariotaku.twidere.task.status.UpdateStatusTask
-import org.mariotaku.twidere.task.status.UpdateStatusTask.PendingStatusUpdate
+import org.mariotaku.twidere.promise.UpdateStatusPromise
+import org.mariotaku.twidere.promise.UpdateStatusPromise.PendingStatusUpdate
 
 interface StatusScheduleProvider {
+
+    val supported: Boolean
 
     @WorkerThread
     @Throws(ScheduleException::class)
@@ -40,7 +41,7 @@ interface StatusScheduleProvider {
 
     fun createManageIntent(): Intent?
 
-    class ScheduleException : UpdateStatusTask.UpdateStatusException {
+    class ScheduleException : UpdateStatusPromise.UpdateStatusException {
 
         constructor() : super()
 
@@ -49,13 +50,6 @@ interface StatusScheduleProvider {
         constructor(throwable: Throwable) : super(throwable)
 
         constructor(message: String) : super(message)
-    }
-
-    interface Factory {
-        fun newInstance(context: Context): StatusScheduleProvider?
-
-        fun parseInfo(json: String): ScheduleInfo?
-
     }
 
 }

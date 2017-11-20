@@ -31,11 +31,11 @@ import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
 import okhttp3.Dns
 import org.mariotaku.restfu.http.RestHttpClient
+import org.mariotaku.twidere.dagger.component.FragmentComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.dagger.component.FragmentComponent
 import org.mariotaku.twidere.util.gifshare.GifShareProvider
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.promotion.PromotionService
@@ -71,7 +71,7 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     @Inject
     lateinit var defaultFeatures: DefaultFeatures
     @Inject
-    lateinit var statusScheduleProviderFactory: StatusScheduleProvider.Factory
+    lateinit var statusScheduleProvider: StatusScheduleProvider
     @Inject
     lateinit var gifShareProvider: GifShareProvider
     @Inject
@@ -87,9 +87,6 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
 
     lateinit var requestManager: RequestManager
         private set
-
-    protected val statusScheduleProvider: StatusScheduleProvider?
-        get() = statusScheduleProviderFactory.newInstance(context!!)
 
     private val actionHelper = IBaseFragment.ActionHelper<BaseFragment>()
 
@@ -132,7 +129,7 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+        view.addOnLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
             if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
                 requestApplyInsets()
             }

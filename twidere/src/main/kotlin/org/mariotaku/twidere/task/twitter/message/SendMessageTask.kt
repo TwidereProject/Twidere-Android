@@ -41,7 +41,7 @@ import org.mariotaku.twidere.model.event.SendMessageTaskEvent
 import org.mariotaku.twidere.model.util.ParcelableMessageUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.ExceptionHandlingAbstractTask
-import org.mariotaku.twidere.task.status.UpdateStatusTask
+import org.mariotaku.twidere.promise.UpdateStatusPromise
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask.Companion.addConversation
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask.Companion.addLocalConversations
 
@@ -100,8 +100,8 @@ class SendMessageTask(
 
     private fun sendTwitterOfficialDM(microBlog: MicroBlog, account: AccountDetails,
             message: ParcelableNewMessage): GetMessagesTask.DatabaseUpdateData {
-        var deleteOnSuccess: List<UpdateStatusTask.MediaDeletionItem>? = null
-        var deleteAlways: List<UpdateStatusTask.MediaDeletionItem>? = null
+        var deleteOnSuccess: List<UpdateStatusPromise.MediaDeletionItem>? = null
+        var deleteAlways: List<UpdateStatusPromise.MediaDeletionItem>? = null
         val sendResponse = try {
             val conversationId = message.conversation_id
             val tempConversation = message.is_temp_conversation
@@ -116,14 +116,14 @@ class SendMessageTask(
 
             if (message.media.isNotNullOrEmpty()) {
                 val upload = account.newMicroBlogInstance(context, cls = TwitterUpload::class.java)
-                val uploadResult = UpdateStatusTask.uploadMicroBlogMediaShared(context,
+                val uploadResult = UpdateStatusPromise.uploadMicroBlogMediaShared(context,
                         upload, account, message.media, null, null, true, null)
                 newDm.setMediaId(uploadResult.ids[0])
                 deleteAlways = uploadResult.deleteAlways
                 deleteOnSuccess = uploadResult.deleteOnSuccess
             }
             microBlog.sendDm(newDm)
-        } catch (e: UpdateStatusTask.UploadException) {
+        } catch (e: UpdateStatusPromise.UploadException) {
             e.deleteAlways?.forEach {
                 it.delete(context)
             }
@@ -191,13 +191,13 @@ class SendMessageTask(
 
     private fun <T> uploadMediaThen(account: AccountDetails, message: ParcelableNewMessage,
             category: String? = null, action: (mediaId: String?) -> T): T {
-        var deleteOnSuccess: List<UpdateStatusTask.MediaDeletionItem>? = null
-        var deleteAlways: List<UpdateStatusTask.MediaDeletionItem>? = null
+        var deleteOnSuccess: List<UpdateStatusPromise.MediaDeletionItem>? = null
+        var deleteAlways: List<UpdateStatusPromise.MediaDeletionItem>? = null
         try {
             var mediaId: String? = null
             if (message.media.isNotNullOrEmpty()) {
                 val upload = account.newMicroBlogInstance(context, cls = TwitterUpload::class.java)
-                val uploadResult = UpdateStatusTask.uploadMicroBlogMediaShared(context,
+                val uploadResult = UpdateStatusPromise.uploadMicroBlogMediaShared(context,
                         upload, account, message.media, category, null, true, null)
                 mediaId = uploadResult.ids[0]
                 deleteAlways = uploadResult.deleteAlways
@@ -206,7 +206,7 @@ class SendMessageTask(
             val result = action(mediaId)
             deleteOnSuccess?.forEach { it.delete(context) }
             return result
-        } catch (e: UpdateStatusTask.UploadException) {
+        } catch (e: UpdateStatusPromise.UploadException) {
             e.deleteAlways?.forEach {
                 it.delete(context)
             }

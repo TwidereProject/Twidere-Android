@@ -17,11 +17,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.task.status
+package org.mariotaku.twidere.promise
 
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Point
@@ -35,6 +36,9 @@ import android.text.TextUtils
 import android.webkit.MimeTypeMap
 import net.ypresto.androidtranscoder.MediaTranscoder
 import net.ypresto.androidtranscoder.format.MediaFormatStrategyPresets
+import nl.komponents.kovenant.Promise
+import nl.komponents.kovenant.task
+import nl.komponents.kovenant.then
 import org.mariotaku.ktextension.*
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
@@ -57,7 +61,9 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.alias.MastodonStatusUpdate
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.app.TwidereApplication
+import org.mariotaku.twidere.dagger.component.PromisesComponent
 import org.mariotaku.twidere.extension.calculateInSampleSize
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
@@ -68,10 +74,10 @@ import org.mariotaku.twidere.model.schedule.ScheduleInfo
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.preference.ComponentPickerPreference
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
-import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.io.ContentLengthInputStream
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
+import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
 import org.mariotaku.twidere.util.text.StatusTextValidator
 import java.io.Closeable
 import java.io.File
@@ -79,41 +85,49 @@ import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.*
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 /**
  * Update status
  *
  * Created by mariotaku on 16/5/22.
  */
-class UpdateStatusTask(
-        context: Context,
-        internal val stateCallback: StateCallback
-) : BaseAbstractTask<Pair<ParcelableStatusUpdate, ScheduleInfo?>, UpdateStatusTask.UpdateStatusResult, Any?>(context) {
+class UpdateStatusPromise(
+        val context: Context,
+        private val stateCallback: StateCallback
+) {
 
-    override fun doLongOperation(params: Pair<ParcelableStatusUpdate, ScheduleInfo?>): UpdateStatusResult {
-        val (update, info) = params
+    @Inject
+    lateinit var preferences: SharedPreferences
+    @Inject
+    lateinit var extraFeaturesService: ExtraFeaturesService
+    @Inject
+    lateinit var scheduleProvider: StatusScheduleProvider
+
+    init {
+        PromisesComponent.get(context).inject(this)
+    }
+
+    fun create(update: ParcelableStatusUpdate, info: ScheduleInfo?): Promise<UpdateStatusResult, Exception> = task {
+        stateCallback.beforeExecute()
+    }.then {
         val draftId = saveDraft(context, update.draft_action ?: Draft.Action.UPDATE_STATUS) {
             applyUpdateStatus(update)
         }
-        microBlogWrapper.addSendingDraftId(draftId)
+        addSendingDraftId(draftId)
         try {
             val result = doUpdateStatus(update, info, draftId)
             deleteOrUpdateDraft(update, result, draftId)
-            return result
+            return@then result
         } catch (e: UpdateStatusException) {
-            return UpdateStatusResult(e, draftId)
+            return@then UpdateStatusResult(e, draftId)
         } finally {
-            microBlogWrapper.removeSendingDraftId(draftId)
+            removeSendingDraftId(draftId)
         }
-    }
-
-    override fun beforeExecute() {
-        stateCallback.beforeExecute()
-    }
-
-    override fun afterExecute(callback: Any?, results: UpdateStatusResult) {
-        stateCallback.afterExecute(results)
-        logUpdateStatus(params.first, results)
+    }.then { result ->
+        stateCallback.afterExecute(result)
+        logUpdateStatus(update, result)
+        return@then result
     }
 
     private fun logUpdateStatus(statusUpdate: ParcelableStatusUpdate, result: UpdateStatusResult) {
@@ -712,6 +726,7 @@ class UpdateStatusTask(
 
     companion object {
 
+        private val sendingDraftIds = ArrayList<Long>()
         private val BULK_SIZE = 512 * 1024// 512 Kib
 
         @Throws(UploadException::class)
@@ -929,7 +944,7 @@ class UpdateStatusTask(
                 return null
             }
 
-            if (imageLimit == null || (imageLimit.checkGeomentry(o.outWidth, o.outHeight)
+            if (imageLimit == null || (imageLimit.checkGeometry(o.outWidth, o.outHeight)
                     && imageLimit.checkSize(imageSize, chucked))) return null
             o.inSampleSize = o.calculateInSampleSize(imageLimit.maxWidth, imageLimit.maxHeight)
             o.inJustDecodeBounds = false
@@ -1101,17 +1116,19 @@ class UpdateStatusTask(
         }
 
 
-        fun deleteDraft(context: Context, id: Long) {
-            val where = Expression.equals(Drafts._ID, id).sql
-            context.contentResolver.delete(Drafts.CONTENT_URI, where, null)
+        fun addSendingDraftId(id: Long) {
+            synchronized(sendingDraftIds) {
+                sendingDraftIds.add(id)
+//                resolver.notifyChange(Drafts.CONTENT_URI_UNSENT, null)
+            }
         }
 
-        fun AccountExtras.ImageLimit.checkGeomentry(width: Int, height: Int): Boolean {
-            if (this.maxWidth <= 0 || this.maxHeight <= 0) return true
-            return (width <= this.maxWidth && height <= this.maxHeight) || (height <= this.maxWidth
-                    && width <= this.maxHeight)
+        fun removeSendingDraftId(id: Long) {
+            synchronized(sendingDraftIds) {
+                sendingDraftIds.remove(id)
+//                resolver.notifyChange(Drafts.CONTENT_URI_UNSENT, null)
+            }
         }
-
     }
 
 }

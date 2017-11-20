@@ -21,10 +21,9 @@ package org.mariotaku.twidere.promise
 
 import android.app.Application
 import android.content.SharedPreferences
-import android.widget.Toast
+import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.then
-import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.kpreferences.get
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.mastodon.Mastodon
@@ -32,6 +31,7 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.nameFirstKey
+import org.mariotaku.twidere.dagger.component.PromisesComponent
 import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.insert
@@ -41,11 +41,11 @@ import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.ParcelableRelationship
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 import org.mariotaku.twidere.provider.TwidereDataStore
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.Utils
-import org.mariotaku.twidere.dagger.component.PromisesComponent
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 import javax.inject.Inject
 
@@ -57,26 +57,30 @@ class BlockPromises private constructor(private val application: Application) {
     lateinit var preferences: SharedPreferences
     @Inject
     lateinit var manager: UserColorNameManager
+    @Inject
+    lateinit var bus: Bus
 
     init {
         PromisesComponent.get(application).inject(this)
     }
 
-    fun block(accountKey: UserKey, userKey: UserKey, filterEverywhere: Boolean = false): Promise<ParcelableUser, Exception> = accountTask(application, accountKey) { account ->
+    fun block(accountKey: UserKey, userKey: UserKey, filterEverywhere: Boolean = false): Promise<ParcelableUser, Exception>
+            = notifyCreatePromise(bus, FriendshipTaskEvent.Action.BLOCK, accountKey, userKey)
+            .thenGetAccount(application, accountKey).then { account ->
         when (account.type) {
             AccountType.MASTODON -> {
                 val mastodon = account.newMicroBlogInstance(application, Mastodon::class.java)
                 mastodon.blockUser(userKey.id)
-                return@accountTask mastodon.getAccount(userKey.id).toParcelable(account)
+                return@then mastodon.getAccount(userKey.id).toParcelable(account)
             }
             AccountType.FANFOU -> {
                 val fanfou = account.newMicroBlogInstance(application, MicroBlog::class.java)
-                return@accountTask fanfou.createFanfouBlock(userKey.id).toParcelable(account,
+                return@then fanfou.createFanfouBlock(userKey.id).toParcelable(account,
                         profileImageSize = profileImageSize)
             }
             else -> {
                 val twitter = account.newMicroBlogInstance(application, MicroBlog::class.java)
-                return@accountTask twitter.createBlock(userKey.id).toParcelable(account,
+                return@then twitter.createBlock(userKey.id).toParcelable(account,
                         profileImageSize = profileImageSize)
             }
         }
@@ -86,33 +90,33 @@ class BlockPromises private constructor(private val application: Application) {
         relationship.blocking = true
         relationship.following = false
         relationship.followed_by = false
-    }.successUi { user ->
-        val nameFirst = preferences[nameFirstKey]
-        val message = application.getString(R.string.message_blocked_user,
-                manager.getDisplayName(user, nameFirst))
-        Toast.makeText(application, message, Toast.LENGTH_SHORT).show()
     }.then { user ->
         if (filterEverywhere) {
             DataStoreUtils.addToFilter(application, listOf(user), true)
         }
         return@then user
-    }.toastOnFail(application)
+    }.toastOnResult(application) { user ->
+        return@toastOnResult application.getString(R.string.message_blocked_user,
+                manager.getDisplayName(user, preferences[nameFirstKey]))
+    }.notifyOnResult(bus, FriendshipTaskEvent.Action.BLOCK, accountKey, userKey)
 
-    fun unblock(accountKey: UserKey, userKey: UserKey): Promise<ParcelableUser, Exception> = accountTask(application, accountKey) { account ->
+    fun unblock(accountKey: UserKey, userKey: UserKey): Promise<ParcelableUser, Exception>
+            = notifyCreatePromise(bus, FriendshipTaskEvent.Action.UNBLOCK, accountKey, userKey)
+            .thenGetAccount(application, accountKey).then { account ->
         when (account.type) {
             AccountType.MASTODON -> {
                 val mastodon = account.newMicroBlogInstance(application, Mastodon::class.java)
                 mastodon.unblockUser(userKey.id)
-                return@accountTask mastodon.getAccount(userKey.id).toParcelable(account)
+                return@then mastodon.getAccount(userKey.id).toParcelable(account)
             }
             AccountType.FANFOU -> {
                 val fanfou = account.newMicroBlogInstance(application, MicroBlog::class.java)
-                return@accountTask fanfou.destroyFanfouBlock(userKey.id).toParcelable(account,
+                return@then fanfou.destroyFanfouBlock(userKey.id).toParcelable(account,
                         profileImageSize = profileImageSize)
             }
             else -> {
                 val twitter = account.newMicroBlogInstance(application, MicroBlog::class.java)
-                return@accountTask twitter.destroyBlock(userKey.id).toParcelable(account,
+                return@then twitter.destroyBlock(userKey.id).toParcelable(account,
                         profileImageSize = profileImageSize)
             }
         }
@@ -122,21 +126,22 @@ class BlockPromises private constructor(private val application: Application) {
         relationship.blocking = false
         relationship.following = false
         relationship.followed_by = false
-    }.successUi { user ->
+    }.toastOnResult(application) { user ->
         val nameFirst = preferences[nameFirstKey]
-        val message = application.getString(R.string.unblocked_user,
+        return@toastOnResult application.getString(R.string.unblocked_user,
                 manager.getDisplayName(user, nameFirst))
-        Toast.makeText(application, message, Toast.LENGTH_SHORT).show()
-    }.toastOnFail(application)
+    }.notifyOnResult(bus, FriendshipTaskEvent.Action.UNBLOCK, accountKey, userKey)
 
-    fun report(accountKey: UserKey, userKey: UserKey, filterEverywhere: Boolean = false): Promise<ParcelableUser, Exception> = accountTask(application, accountKey) { account ->
+    fun report(accountKey: UserKey, userKey: UserKey, filterEverywhere: Boolean = false): Promise<ParcelableUser, Exception>
+            = notifyCreatePromise(bus, FriendshipTaskEvent.Action.BLOCK, accountKey, userKey)
+            .thenGetAccount(application, accountKey).then { account ->
         when (account.type) {
             AccountType.MASTODON -> {
                 throw APINotSupportedException(api = "Report spam", platform = account.type)
             }
             else -> {
                 val twitter = account.newMicroBlogInstance(application, MicroBlog::class.java)
-                return@accountTask twitter.reportSpam(userKey.id).toParcelable(account,
+                return@then twitter.reportSpam(userKey.id).toParcelable(account,
                         profileImageSize = profileImageSize)
             }
         }
@@ -146,14 +151,15 @@ class BlockPromises private constructor(private val application: Application) {
         relationship.blocking = true
         relationship.following = false
         relationship.followed_by = false
-    }.successUi {
-        Toast.makeText(application, R.string.reported_user_for_spam, Toast.LENGTH_SHORT).show()
     }.then { user ->
         if (filterEverywhere) {
             DataStoreUtils.addToFilter(application, listOf(user), true)
         }
         return@then user
-    }.toastOnFail(application)
+    }.toastOnResult(application) { user ->
+        return@toastOnResult application.getString(R.string.message_toast_reported_user_for_spam,
+                manager.getDisplayName(user, preferences[nameFirstKey]))
+    }.notifyOnResult(bus, FriendshipTaskEvent.Action.BLOCK, accountKey, userKey)
 
     private fun Promise<ParcelableUser, Exception>.thenUpdateRelationship(accountKey: UserKey,
             userKey: UserKey, update: (ParcelableRelationship) -> Unit): Promise<ParcelableUser, Exception> = then { user ->

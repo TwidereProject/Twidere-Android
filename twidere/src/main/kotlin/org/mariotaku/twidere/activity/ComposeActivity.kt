@@ -94,7 +94,7 @@ import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.preference.ComponentPickerPreference
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.service.LengthyOperationsService
-import org.mariotaku.twidere.task.status.UpdateStatusTask
+import org.mariotaku.twidere.promise.UpdateStatusPromise
 import org.mariotaku.twidere.text.MarkForDeleteSpan
 import org.mariotaku.twidere.text.style.EmojiSpan
 import org.mariotaku.twidere.util.*
@@ -568,8 +568,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 updateTextCount()
             }
             R.id.schedule -> {
-                val provider = statusScheduleProvider ?: return true
-                startActivityForResult(provider.createSetScheduleIntent(), REQUEST_SET_SCHEDULE)
+                if (!statusScheduleProvider.supported) return true
+                startActivityForResult(statusScheduleProvider.createSetScheduleIntent(), REQUEST_SET_SCHEDULE)
             }
             R.id.add_gif -> {
                 if (!gifShareProvider.supported) return true
@@ -1691,7 +1691,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         } catch (e: ComposeException) {
             return null
         }
-        val draft = UpdateStatusTask.createDraft(draftAction) {
+        val draft = UpdateStatusPromise.createDraft(draftAction) {
             applyUpdateStatus(statusUpdate)
         }
         val values = ObjectCursor.valuesCreatorFrom(Draft::class.java).create(draft)

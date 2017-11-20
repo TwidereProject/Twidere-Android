@@ -12,7 +12,7 @@ import org.junit.runner.RunWith
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
-import org.mariotaku.twidere.task.status.UpdateStatusTask
+import org.mariotaku.twidere.promise.UpdateStatusPromise
 
 /**
  * Created by mariotaku on 2016/12/7.
@@ -30,10 +30,10 @@ class StatusShortenerInterfaceTest {
         val shortenerComponent = preferences.getString(TwidereConstants.KEY_STATUS_SHORTENER, null) ?: return
         val instance = StatusShortenerInterface.getInstance(application, shortenerComponent) ?: return
         instance.checkService { metaData ->
-            if (metaData == null) throw UpdateStatusTask.ExtensionVersionMismatchException()
+            if (metaData == null) throw UpdateStatusPromise.ExtensionVersionMismatchException()
             val extensionVersion = metaData.getString(TwidereConstants.METADATA_KEY_EXTENSION_VERSION_STATUS_SHORTENER)
             if (!TextUtils.equals(extensionVersion, context.getString(R.string.status_shortener_service_interface_version))) {
-                throw UpdateStatusTask.ExtensionVersionMismatchException()
+                throw UpdateStatusPromise.ExtensionVersionMismatchException()
             }
         }
         Assert.assertTrue(instance.waitForService())

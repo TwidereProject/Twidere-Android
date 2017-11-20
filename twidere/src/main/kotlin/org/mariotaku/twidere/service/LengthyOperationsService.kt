@@ -61,10 +61,10 @@ import org.mariotaku.twidere.model.notification.NotificationChannelSpec
 import org.mariotaku.twidere.model.schedule.ScheduleInfo
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUpdateUtils
+import org.mariotaku.twidere.promise.UpdateStatusPromise
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.task.CreateFavoriteTask
 import org.mariotaku.twidere.task.RetweetStatusTask
-import org.mariotaku.twidere.task.status.UpdateStatusTask
 import org.mariotaku.twidere.task.twitter.message.SendMessageTask
 import org.mariotaku.twidere.util.deleteDrafts
 import java.io.IOException
@@ -194,7 +194,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
         if (result.hasData()) {
             showToast(R.string.message_direct_message_sent, false)
         } else {
-            UpdateStatusTask.saveDraft(this, Draft.Action.SEND_DIRECT_MESSAGE) {
+            UpdateStatusPromise.saveDraft(this, Draft.Action.SEND_DIRECT_MESSAGE) {
                 account_keys = arrayOf(message.account.key)
                 text = message.text
                 media = message.media
@@ -235,7 +235,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
         startForeground(NOTIFICATION_ID_UPDATE_STATUS, updateUpdateStatusNotification(context,
                 builder, 0, null))
         for (item in statuses) {
-            val task = UpdateStatusTask(context, object : UpdateStatusTask.StateCallback {
+            val task = UpdateStatusPromise(context, object : UpdateStatusPromise.StateCallback {
 
                 @WorkerThread
                 override fun onStartUploadingMedia() {
@@ -263,7 +263,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
                 }
 
                 @UiThread
-                override fun afterExecute(result: UpdateStatusTask.UpdateStatusResult) {
+                override fun afterExecute(result: UpdateStatusPromise.UpdateStatusResult) {
                     var failed = false
                     val exception = result.exception
                     val exceptions = result.exceptions
@@ -304,13 +304,9 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
                 override fun beforeExecute() {
 
                 }
-            })
-            task.callback = this
-            task.params = Pair(item, scheduleInfo)
-            invokeBeforeExecute(task)
+            }).create(item, scheduleInfo)
+            val result = task.get()
 
-            val result = ManualTaskStarter.invokeExecute(task)
-            invokeAfterExecute(task, result)
 
             if (!result.succeed) {
                 contentResolver.insert(Drafts.CONTENT_URI_NOTIFICATIONS.withAppendedPath(result.draftId.toString()), null)

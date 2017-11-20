@@ -17,15 +17,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.extension
+package org.mariotaku.twidere.extension.model
 
-import android.annotation.SuppressLint
-import android.webkit.WebSettings
+import org.mariotaku.twidere.model.account.AccountExtras
 
-@SuppressLint("SetJavaScriptEnabled")
-fun WebSettings.applyDefault() {
-    loadsImagesAutomatically = true
-    javaScriptEnabled = true
-    blockNetworkImage = false
-    saveFormData = true
+fun AccountExtras.ImageLimit.checkGeometry(width: Int, height: Int): Boolean {
+    if (this.maxWidth <= 0 || this.maxHeight <= 0) return true
+    return (width <= this.maxWidth && height <= this.maxHeight) || (height <= this.maxWidth
+            && width <= this.maxHeight)
 }

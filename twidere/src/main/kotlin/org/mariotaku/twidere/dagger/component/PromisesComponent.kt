@@ -43,10 +43,13 @@ interface PromisesComponent {
 
     fun inject(promises: DefaultFeaturesPromises)
 
+    fun inject(promises: LaunchPresentationsPromises)
+
+    fun inject(promise: UpdateStatusPromise)
+
     companion object : ApplicationContextSingletonHolder<PromisesComponent>(creation@ { application ->
         return@creation DaggerPromisesComponent.builder()
                 .generalModule(GeneralModule.getInstance(application))
-                .channelModule(ChannelModule.getInstance(application))
                 .build()
     })
 }
