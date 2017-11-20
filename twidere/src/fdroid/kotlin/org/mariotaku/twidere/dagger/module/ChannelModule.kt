@@ -22,7 +22,7 @@ package org.mariotaku.twidere.dagger.module
 import android.app.Application
 import dagger.Module
 import dagger.Provides
-import org.mariotaku.twidere.util.DummyStatusScheduleProviderFactory
+import org.mariotaku.twidere.util.DummyStatusScheduleProvider
 import org.mariotaku.twidere.util.MapFragmentFactory
 import org.mariotaku.twidere.util.OSMMapFragmentFactory
 import org.mariotaku.twidere.util.gifshare.GifShareProvider
@@ -73,8 +73,8 @@ class ChannelModule private constructor(private val application: Application) {
 
     @Provides
     @Singleton
-    fun statusScheduleProviderFactory(): StatusScheduleProvider.Factory {
-        return DummyStatusScheduleProviderFactory()
+    fun statusScheduleProvider(): StatusScheduleProvider {
+        return DummyStatusScheduleProvider()
     }
 
     companion object : SingletonHolder<ChannelModule, Application>(::ChannelModule)

@@ -301,11 +301,11 @@ class UpdateStatusPromise(
             throw SchedulerNotFoundException(context.getString(R.string.error_message_scheduler_not_available))
         }
 
-        val controller = scheduleProvider ?: run {
+        if (!scheduleProvider.supported) {
             throw SchedulerNotFoundException(context.getString(R.string.error_message_scheduler_not_available))
         }
 
-        controller.scheduleStatus(statusUpdate, pendingUpdate, scheduleInfo)
+        scheduleProvider.scheduleStatus(statusUpdate, pendingUpdate, scheduleInfo)
 
         return UpdateStatusResult(pendingUpdate.length, draftId)
     }

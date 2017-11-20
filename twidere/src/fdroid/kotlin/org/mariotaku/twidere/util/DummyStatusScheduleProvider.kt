@@ -19,13 +19,24 @@
 
 package org.mariotaku.twidere.util
 
-import android.content.Context
+import android.content.Intent
+import org.mariotaku.twidere.model.ParcelableStatusUpdate
 import org.mariotaku.twidere.model.schedule.ScheduleInfo
+import org.mariotaku.twidere.promise.UpdateStatusPromise
 import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
 
+class DummyStatusScheduleProvider : StatusScheduleProvider {
+    override val supported: Boolean
+        get() = false
 
-class DummyStatusScheduleProviderFactory : StatusScheduleProvider.Factory {
-    override fun newInstance(context: Context): StatusScheduleProvider? = null
+    override fun scheduleStatus(statusUpdate: ParcelableStatusUpdate,
+            pendingUpdate: UpdateStatusPromise.PendingStatusUpdate, scheduleInfo: ScheduleInfo) =
+            throw UnsupportedOperationException()
 
-    override fun parseInfo(json: String): ScheduleInfo? = null
+    override fun createSetScheduleIntent(): Intent = throw UnsupportedOperationException()
+
+    override fun createSettingsIntent(): Intent? = null
+
+    override fun createManageIntent(): Intent? = null
+
 }
