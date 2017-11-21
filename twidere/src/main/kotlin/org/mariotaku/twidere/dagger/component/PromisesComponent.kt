@@ -50,6 +50,7 @@ interface PromisesComponent {
     companion object : ApplicationContextSingletonHolder<PromisesComponent>(creation@ { application ->
         return@creation DaggerPromisesComponent.builder()
                 .generalModule(GeneralModule.getInstance(application))
+                .channelModule(ChannelModule.getInstance(application))
                 .build()
     })
 }
