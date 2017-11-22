@@ -37,8 +37,9 @@ import android.webkit.MimeTypeMap
 import net.ypresto.androidtranscoder.MediaTranscoder
 import net.ypresto.androidtranscoder.format.MediaFormatStrategyPresets
 import nl.komponents.kovenant.Promise
-import nl.komponents.kovenant.task
 import nl.komponents.kovenant.then
+import nl.komponents.kovenant.ui.promiseOnUi
+import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.ktextension.*
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
@@ -108,7 +109,7 @@ class UpdateStatusPromise(
         PromisesComponent.get(context).inject(this)
     }
 
-    fun create(update: ParcelableStatusUpdate, info: ScheduleInfo?): Promise<UpdateStatusResult, Exception> = task {
+    fun create(update: ParcelableStatusUpdate, info: ScheduleInfo?): Promise<UpdateStatusResult, Exception> = promiseOnUi {
         stateCallback.beforeExecute()
     }.then {
         val draftId = saveDraft(context, update.draft_action ?: Draft.Action.UPDATE_STATUS) {
@@ -125,9 +126,10 @@ class UpdateStatusPromise(
             removeSendingDraftId(draftId)
         }
     }.then { result ->
-        stateCallback.afterExecute(result)
         logUpdateStatus(update, result)
         return@then result
+    }.successUi { result ->
+        stateCallback.afterExecute(result)
     }
 
     private fun logUpdateStatus(statusUpdate: ParcelableStatusUpdate, result: UpdateStatusResult) {

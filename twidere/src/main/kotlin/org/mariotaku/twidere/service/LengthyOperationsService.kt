@@ -307,7 +307,6 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
             }).create(item, scheduleInfo)
             val result = task.get()
 
-
             if (!result.succeed) {
                 contentResolver.insert(Drafts.CONTENT_URI_NOTIFICATIONS.withAppendedPath(result.draftId.toString()), null)
             }
