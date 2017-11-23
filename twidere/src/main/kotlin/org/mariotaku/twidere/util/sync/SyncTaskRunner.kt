@@ -7,13 +7,11 @@ import nl.komponents.kovenant.all
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
-import org.mariotaku.ktextension.deadline
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.util.TaskServiceRunner
 import org.mariotaku.twidere.util.UserColorNameManager
 import java.lang.Exception
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 abstract class SyncTaskRunner(val context: Context) {
@@ -35,11 +33,11 @@ abstract class SyncTaskRunner(val context: Context) {
      */
     protected abstract fun onCreatePromise(action: String): Promise<Boolean, Exception>?
 
-    fun runPromise(action: String, timeout: Long = 0, unit: TimeUnit = TimeUnit.MILLISECONDS): Promise<Boolean, Exception> {
+    fun promise(action: String): Promise<Boolean, Exception> {
         val syncType = SyncTaskRunner.getSyncType(action) ?: return Promise.ofFail(UnsupportedOperationException())
         if (!syncPreferences.isSyncEnabled(syncType)) return Promise.ofFail(UnsupportedOperationException())
         val promise = onCreatePromise(action) ?: return Promise.ofFail(UnsupportedOperationException())
-        return promise.deadline(timeout, unit).success { synced ->
+        return promise.success { synced ->
             if (synced) {
                 syncPreferences.setLastSynced(syncType, System.currentTimeMillis())
             }
@@ -58,7 +56,7 @@ abstract class SyncTaskRunner(val context: Context) {
     }
 
     fun syncAll(): Promise<List<Boolean>, Exception> {
-        return all(TaskServiceRunner.ACTIONS_SYNC.map { runPromise(it) }, cancelOthersOnError = false)
+        return all(TaskServiceRunner.ACTIONS_SYNC.map(this::promise), cancelOthersOnError = false)
     }
 
     companion object {

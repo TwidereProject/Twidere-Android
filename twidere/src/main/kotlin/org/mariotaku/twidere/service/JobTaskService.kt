@@ -30,10 +30,10 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.deadline
 import org.mariotaku.twidere.annotation.AutoRefreshType
 import org.mariotaku.twidere.constant.autoRefreshCompatibilityModeKey
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.TaskServiceRunner
-import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.util.support.JobServiceSupport
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -54,7 +54,7 @@ class JobTaskService : JobService() {
     override fun onStartJob(params: JobParameters): Boolean {
         if (preferences[autoRefreshCompatibilityModeKey]) return false
         val action = getTaskAction(params.jobId) ?: return false
-        val promise = taskServiceRunner.createPromise(action) ?: return false
+        val promise = taskServiceRunner.promise(action) ?: return false
         promise.deadline(3, TimeUnit.MINUTES).successUi {
             jobFinished(params, false)
         }.failUi {

@@ -46,7 +46,7 @@ class LaunchPresentationsPromises private constructor(context: Context) {
         PromisesComponent.get(context).inject(this)
     }
 
-    fun refresh(): Promise<Boolean, Exception> = task {
+    fun promise(): Promise<Boolean, Exception> = task {
         val builder = HttpRequest.Builder()
         builder.method(GET.METHOD)
         if (BuildConfig.DEBUG) {

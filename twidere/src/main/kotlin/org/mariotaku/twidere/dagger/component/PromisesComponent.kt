@@ -47,6 +47,8 @@ interface PromisesComponent {
 
     fun inject(promise: UpdateStatusPromise)
 
+    fun inject(promise: GetTrendsPromise)
+
     companion object : ApplicationContextSingletonHolder<PromisesComponent>(creation@ { application ->
         return@creation DaggerPromisesComponent.builder()
                 .generalModule(GeneralModule.getInstance(application))

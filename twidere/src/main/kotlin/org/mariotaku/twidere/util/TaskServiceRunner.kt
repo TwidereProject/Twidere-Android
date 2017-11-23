@@ -12,20 +12,20 @@ import org.mariotaku.ktextension.toNulls
 import org.mariotaku.twidere.constant.IntentConstants.INTENT_PACKAGE_PREFIX
 import org.mariotaku.twidere.constant.stopAutoRefreshWhenBatteryLowKey
 import org.mariotaku.twidere.extension.get
+import org.mariotaku.twidere.extension.promise
 import org.mariotaku.twidere.model.AccountPreferences
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.promise.LaunchPresentationsPromises
+import org.mariotaku.twidere.promise.RefreshFiltersSubscriptionsPromise
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
-import org.mariotaku.twidere.task.filter.RefreshFiltersSubscriptionsTask
 import org.mariotaku.twidere.task.statuses.GetHomeTimelineTask
 import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
 import org.mariotaku.twidere.util.sync.DataSyncProvider
-import java.util.concurrent.TimeUnit
 
 class TaskServiceRunner(
         val context: Context,
@@ -35,32 +35,24 @@ class TaskServiceRunner(
         val bus: Bus
 ) {
 
-    fun createPromise(action: String): Promise<*, Exception>? {
+    fun promise(action: String): Promise<*, Exception>? {
         return when (action) {
-            ACTION_REFRESH_LAUNCH_PRESENTATIONS -> {
-                RefreshFiltersSubscriptionsTask(context).toPromise(Unit)
-            }
-            else -> null
-        }
-    }
-
-    fun runPromise(@Action action: String, timeout: Long = 0, unit: TimeUnit = TimeUnit.MILLISECONDS): Promise<Boolean, Exception> {
-        DebugLog.d(msg = "TaskServiceRunner run task $action")
-        when (action) {
             ACTION_REFRESH_HOME_TIMELINE, ACTION_REFRESH_NOTIFICATIONS,
-            ACTION_REFRESH_DIRECT_MESSAGES, ACTION_REFRESH_FILTERS_SUBSCRIPTIONS -> {
-                val task = createRefreshTask(action) ?: return Promise.of(false)
-                return Promise.of(true)
+            ACTION_REFRESH_DIRECT_MESSAGES -> {
+                return createRefreshTask(action)?.promise()
             }
             ACTION_REFRESH_LAUNCH_PRESENTATIONS -> {
-                return LaunchPresentationsPromises.get(context).refresh()
+                LaunchPresentationsPromises.get(context).promise()
+            }
+            ACTION_REFRESH_FILTERS_SUBSCRIPTIONS -> {
+                RefreshFiltersSubscriptionsPromise.get(context).promise()
             }
             ACTION_SYNC_DRAFTS, ACTION_SYNC_FILTERS, ACTION_SYNC_USER_NICKNAMES, ACTION_SYNC_USER_COLORS -> {
                 val runner = dataSyncProvider.newSyncTaskRunner() ?: return Promise.of(false)
-                return runner.runPromise(action, timeout, unit)
+                return runner.promise(action)
             }
+            else -> null
         }
-        return Promise.of(false)
     }
 
     private fun createRefreshTask(@Action action: String): AbstractTask<*, *, (Boolean) -> Unit>? {

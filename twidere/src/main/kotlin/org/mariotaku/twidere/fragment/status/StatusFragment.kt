@@ -51,7 +51,6 @@ import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.alwaysUi
 import nl.komponents.kovenant.ui.successUi
-import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
 import org.mariotaku.library.objectcursor.ObjectCursor
@@ -487,7 +486,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         if (loadTranslationTask?.isFinished == true) return
         loadTranslationTask = run {
             val task = LoadTranslationTask(this, status)
-            TaskStarter.execute(task)
+            task.promise()
             return@run task
         }
     }

@@ -40,11 +40,13 @@ import org.mariotaku.twidere.activity.QuickSearchBarActivity
 import org.mariotaku.twidere.adapter.TrendsAdapter
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_EXTRAS
 import org.mariotaku.twidere.constant.localTrendsWoeIdKey
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.fragment.iface.IFloatingActionButtonFragment
 import org.mariotaku.twidere.fragment.iface.IFloatingActionButtonFragment.ActionInfo
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.TrendsRefreshedEvent
 import org.mariotaku.twidere.model.tab.extra.TrendsTabExtras
+import org.mariotaku.twidere.promise.GetTrendsPromise
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends
 import org.mariotaku.twidere.util.IntentUtils.openTweetSearch
 import org.mariotaku.twidere.util.Utils
@@ -55,15 +57,17 @@ class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), L
     private val tabExtras: TrendsTabExtras?
         get() = arguments!!.getParcelable(EXTRA_EXTRAS)
 
-    private val accountKey: UserKey? get() {
-        return Utils.getAccountKeys(context!!, arguments)?.firstOrNull()
-                ?: Utils.getDefaultAccountKey(context!!)
-    }
+    private val accountKey: UserKey?
+        get() {
+            return Utils.getAccountKeys(context!!, arguments)?.firstOrNull()
+                    ?: Utils.getDefaultAccountKey(context!!)
+        }
 
-    private val woeId: Int get() {
-        val id = tabExtras?.woeId ?: 0
-        return if (id > 0) id else preferences[localTrendsWoeIdKey]
-    }
+    private val woeId: Int
+        get() {
+            val id = tabExtras?.woeId ?: 0
+            return if (id > 0) id else preferences[localTrendsWoeIdKey]
+        }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -113,7 +117,7 @@ class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), L
     override fun onRefresh() {
         if (refreshing) return
         val accountKey = this.accountKey ?: return
-        twitterWrapper.getLocalTrendsAsync(accountKey, woeId)
+        GetTrendsPromise.get(context!!).local(accountKey, woeId)
     }
 
     override var refreshing: Boolean

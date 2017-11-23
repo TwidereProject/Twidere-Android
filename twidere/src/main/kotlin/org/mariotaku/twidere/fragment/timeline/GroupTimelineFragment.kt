@@ -25,7 +25,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants
@@ -35,11 +34,8 @@ import org.mariotaku.twidere.activity.ComposeActivity
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.data.fetcher.GroupTimelineFetcher
-import org.mariotaku.twidere.extension.groupId
-import org.mariotaku.twidere.extension.groupName
-import org.mariotaku.twidere.extension.linkHandlerTitle
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.tab.applyToSelection
-import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.refresh.GroupTimelineContentRefreshParam
 import org.mariotaku.twidere.model.tab.extra.HomeTabExtras
@@ -63,7 +59,7 @@ class GroupTimelineFragment : AbsTimelineFragment() {
         val task = GetGroupTimelineTask(context!!)
         task.params = GroupTimelineContentRefreshParam(arguments!!.groupId,
                 arguments!!.groupName, param)
-        TaskStarter.execute(task)
+        task.promise()
         return true
     }
 

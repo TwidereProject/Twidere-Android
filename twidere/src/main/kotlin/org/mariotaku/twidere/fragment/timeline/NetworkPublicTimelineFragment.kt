@@ -21,7 +21,6 @@ package org.mariotaku.twidere.fragment.timeline
 
 import android.net.Uri
 import android.os.Bundle
-import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.FilterScope
@@ -30,6 +29,7 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_EXTRAS
 import org.mariotaku.twidere.data.fetcher.NetworkPublicTimelineFetcher
 import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.model.tab.applyToSelection
+import org.mariotaku.twidere.extension.promise
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.tab.extra.HomeTabExtras
@@ -49,7 +49,7 @@ class NetworkPublicTimelineFragment : AbsTimelineFragment() {
     override fun getStatuses(param: ContentRefreshParam): Boolean {
         val task = GetNetworkPublicTimelineTask(context!!)
         task.params = param
-        TaskStarter.execute(task)
+        task.promise()
         return true
     }
 

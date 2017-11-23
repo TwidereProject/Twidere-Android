@@ -21,17 +21,13 @@ package org.mariotaku.twidere.fragment.timeline
 
 import android.net.Uri
 import android.os.Bundle
-import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
 import org.mariotaku.twidere.data.fetcher.UserFavoritesFetcher
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.adapter.removeStatuses
-import org.mariotaku.twidere.extension.linkHandlerTitle
-import org.mariotaku.twidere.extension.screenName
-import org.mariotaku.twidere.extension.userKey
-import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.refresh.UserRelatedContentRefreshParam
@@ -58,7 +54,7 @@ class FavoritesTimelineFragment : AbsTimelineFragment() {
         val task = GetUserFavoritesTask(context!!)
         task.params = UserRelatedContentRefreshParam(arguments!!.userKey, arguments!!.screenName,
                 param)
-        TaskStarter.execute(task)
+        task.promise()
         return true
     }
 

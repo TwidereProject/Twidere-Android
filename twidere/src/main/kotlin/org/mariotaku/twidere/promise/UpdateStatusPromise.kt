@@ -115,7 +115,7 @@ class UpdateStatusPromise(
         val draftId = saveDraft(context, update.draft_action ?: Draft.Action.UPDATE_STATUS) {
             applyUpdateStatus(update)
         }
-        addSendingDraftId(draftId)
+        addSendingDraftId(context.contentResolver, draftId)
         try {
             val result = doUpdateStatus(update, info, draftId)
             deleteOrUpdateDraft(update, result, draftId)
@@ -123,7 +123,7 @@ class UpdateStatusPromise(
         } catch (e: UpdateStatusException) {
             return@then UpdateStatusResult(e, draftId)
         } finally {
-            removeSendingDraftId(draftId)
+            removeSendingDraftId(context.contentResolver, draftId)
         }
     }.then { result ->
         logUpdateStatus(update, result)
@@ -1118,17 +1118,17 @@ class UpdateStatusPromise(
         }
 
 
-        fun addSendingDraftId(id: Long) {
+        fun addSendingDraftId(resolver: ContentResolver, id: Long) {
             synchronized(sendingDraftIds) {
                 sendingDraftIds.add(id)
-//                resolver.notifyChange(Drafts.CONTENT_URI_UNSENT, null)
+                resolver.notifyChange(Drafts.CONTENT_URI_UNSENT, null)
             }
         }
 
-        fun removeSendingDraftId(id: Long) {
+        fun removeSendingDraftId(resolver: ContentResolver, id: Long) {
             synchronized(sendingDraftIds) {
                 sendingDraftIds.remove(id)
-//                resolver.notifyChange(Drafts.CONTENT_URI_UNSENT, null)
+                resolver.notifyChange(Drafts.CONTENT_URI_UNSENT, null)
             }
         }
     }

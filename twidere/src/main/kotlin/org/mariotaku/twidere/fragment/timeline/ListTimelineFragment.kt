@@ -21,7 +21,6 @@ package org.mariotaku.twidere.fragment.timeline
 
 import android.net.Uri
 import android.os.Bundle
-import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.FilterScope
@@ -54,7 +53,7 @@ class ListTimelineFragment : AbsTimelineFragment() {
         val ownerId = arguments?.userKey?.id
         val ownerScreenName = arguments?.screenName
         task.params = ListTimelineContentRefreshParam(listId, slug, ownerId, ownerScreenName, param)
-        TaskStarter.execute(task)
+        task.promise()
         return true
     }
 

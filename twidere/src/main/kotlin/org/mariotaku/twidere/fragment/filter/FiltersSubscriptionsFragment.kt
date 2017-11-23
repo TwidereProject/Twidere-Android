@@ -38,8 +38,8 @@ import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
 import org.mariotaku.twidere.model.FiltersSubscription
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
+import org.mariotaku.twidere.promise.RefreshFiltersSubscriptionsPromise
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
-import org.mariotaku.twidere.task.filter.RefreshFiltersSubscriptionsTask
 import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
@@ -134,7 +134,7 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
             }
             R.id.refresh -> {
                 val weakThis by weak(this)
-                showProgressDialog(FRAGMENT_TAG_RREFRESH_FILTERS) and RefreshFiltersSubscriptionsTask(context!!).toPromise(Unit).alwaysUi {
+                showProgressDialog(FRAGMENT_TAG_RREFRESH_FILTERS) and RefreshFiltersSubscriptionsPromise.get(context!!).promise().alwaysUi {
                     weakThis?.fragmentManager?.dismissDialogFragment(FRAGMENT_TAG_RREFRESH_FILTERS)
                 }
                 return true

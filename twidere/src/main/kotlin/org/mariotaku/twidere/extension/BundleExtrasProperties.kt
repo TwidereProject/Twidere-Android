@@ -114,3 +114,7 @@ inline var Bundle.stringId: String?
 inline var Bundle.longId: Long
     get() = getLong(EXTRA_ID, -1)
     set(value) = putLong(EXTRA_ID, value)
+
+inline var Bundle.profileUrl: String?
+    get() = getString(EXTRA_PROFILE_URL, null)
+    set(value) = putString(EXTRA_PROFILE_URL, value)

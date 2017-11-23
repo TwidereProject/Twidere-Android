@@ -11,7 +11,6 @@ import android.support.annotation.UiThread
 import android.support.annotation.WorkerThread
 import android.support.v4.app.NotificationCompat
 import android.support.v4.net.ConnectivityManagerCompat
-import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.ktextension.toNulls
@@ -28,14 +27,13 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.streamingEnabledKey
 import org.mariotaku.twidere.constant.streamingNonMeteredNetworkKey
 import org.mariotaku.twidere.constant.streamingPowerSavingKey
-import org.mariotaku.twidere.extension.addOnAccountsUpdatedListenerSafe
-import org.mariotaku.twidere.extension.get
+import org.mariotaku.twidere.dagger.DependencyHolder
+import org.mariotaku.twidere.dagger.component.GeneralComponent
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.key
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
-import org.mariotaku.twidere.extension.queryCount
-import org.mariotaku.twidere.extension.removeOnAccountsUpdatedListenerSafe
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.notification.NotificationChannelSpec
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
@@ -48,8 +46,6 @@ import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.Utils
-import org.mariotaku.twidere.dagger.DependencyHolder
-import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.util.streaming.TwitterTimelineStreamCallback
 import java.util.*
 import java.util.concurrent.ExecutorService
@@ -441,7 +437,7 @@ class StreamingService : BaseService() {
                     }
 
                 }
-                TaskStarter.execute(task)
+                task.promise()
             }
 
             @UiThread
@@ -450,7 +446,7 @@ class StreamingService : BaseService() {
                 task.params = object : GetMessagesTask.RefreshMessagesParam(context) {
                     override val accountKeys: Array<UserKey> = arrayOf(account.key)
                 }
-                TaskStarter.execute(task)
+                task.promise()
             }
         }
 

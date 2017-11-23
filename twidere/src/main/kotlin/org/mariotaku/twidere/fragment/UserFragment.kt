@@ -1329,19 +1329,19 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
     private fun setupUserPages() {
         val args = arguments!!
-        val user = args.getParcelable<ParcelableUser>(EXTRA_USER)
-        val accountKey = user.account_key ?: args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
+        val user = args.user
+        val accountKey = user?.account_key ?: args.accountKey
         val tabArgs = Bundle {
             if (user != null) {
-                this[EXTRA_ACCOUNT_KEY] = accountKey
-                this[EXTRA_USER_KEY] = user.key
-                this[EXTRA_SCREEN_NAME] = user.screen_name
-                this[EXTRA_PROFILE_URL] = user.extras?.statusnet_profile_url
+                this.accountKey = accountKey
+                this.userKey = user.key
+                this.screenName = user.screen_name
+                this.profileUrl = user.extras?.statusnet_profile_url
             } else {
-                this[EXTRA_ACCOUNT_KEY] = accountKey
-                this[EXTRA_USER_KEY] = accountKey
-                this[EXTRA_SCREEN_NAME] = args.getString(EXTRA_SCREEN_NAME)
-                this[EXTRA_PROFILE_URL] = args.getString(EXTRA_PROFILE_URL)
+                this.accountKey = accountKey
+                this.userKey = accountKey
+                this.screenName = args.screenName
+                this.profileUrl = args.profileUrl
             }
         }
 

@@ -46,6 +46,7 @@ import org.mariotaku.twidere.constant.homeRefreshSavedSearchesKey
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.extension.promise
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.event.*
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
@@ -57,7 +58,6 @@ import org.mariotaku.twidere.task.*
 import org.mariotaku.twidere.task.statuses.GetHomeTimelineTask
 import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
 import org.mariotaku.twidere.task.twitter.GetSavedSearchesTask
-import org.mariotaku.twidere.task.twitter.GetTrendsTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
 import org.mariotaku.twidere.util.collection.CompactHashSet
 
@@ -94,13 +94,6 @@ class AsyncTwitterWrapper(
                 }
             }
         })
-    }
-
-    fun addSendingDraftId(id: Long) {
-        synchronized(sendingDraftIds) {
-            sendingDraftIds.add(id)
-            resolver.notifyChange(Drafts.CONTENT_URI_UNSENT, null)
-        }
     }
 
     fun addUserListMembersAsync(accountKey: UserKey, listId: String, vararg users: ParcelableUser) {
@@ -173,11 +166,6 @@ class AsyncTwitterWrapper(
         return true
     }
 
-    fun getLocalTrendsAsync(accountKey: UserKey, woeId: Int) {
-        val task = GetTrendsTask(context, accountKey, woeId)
-        TaskStarter.execute(task)
-    }
-
     fun getMessagesAsync(param: GetMessagesTask.RefreshMessagesParam) {
         val task = GetMessagesTask(context)
         task.params = param
@@ -241,13 +229,6 @@ class AsyncTwitterWrapper(
         return true
     }
 
-    fun removeSendingDraftId(id: Long) {
-        synchronized(sendingDraftIds) {
-            sendingDraftIds.remove(id)
-            resolver.notifyChange(Drafts.CONTENT_URI_UNSENT, null)
-        }
-    }
-
     fun reportMultiSpam(accountKey: UserKey, userIds: Array<String>) {
         // TODO implementation
     }
@@ -259,7 +240,7 @@ class AsyncTwitterWrapper(
 
     fun updateUserListDetails(accountKey: UserKey, listId: String, update: UserListUpdate) {
         val task = UpdateUserListDetailsTask(context, accountKey, listId, update)
-        TaskStarter.execute(task)
+        task.promise()
     }
 
     fun updateFriendship(accountKey: UserKey, userKey: UserKey, update: FriendshipUpdate) {

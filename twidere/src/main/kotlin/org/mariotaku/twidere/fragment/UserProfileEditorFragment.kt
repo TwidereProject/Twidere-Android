@@ -38,7 +38,6 @@ import kotlinx.android.synthetic.main.fragment_user_profile_editor.*
 import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.ui.promiseOnUi
 import org.mariotaku.abstask.library.AbstractTask
-import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.ktextension.dismissDialogFragment
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
@@ -196,7 +195,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
                 val backgroundColor = backgroundColor.color
                 val task = UpdateProfileTaskInternal(this, accountKey, user, name, url, location,
                         description, linkColor, backgroundColor)
-                TaskStarter.execute(task)
+                task.promise()
                 this.currentTask = task
                 return true
             }
@@ -260,7 +259,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
         executeAfterFragmentResumed {
             val task = currentTask
             if (task != null && !task.isFinished) {
-                TaskStarter.execute(task)
+                task.promise()
             }
         }
     }

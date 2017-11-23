@@ -34,6 +34,7 @@ import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.ObjectId
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
+import org.mariotaku.twidere.promise.UpdateStatusPromise
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 
 abstract class AbsAccountRequestTask<Params, Result, Callback>(context: Context, val accountKey: UserKey?) :
@@ -51,7 +52,7 @@ abstract class AbsAccountRequestTask<Params, Result, Callback>(context: Context,
             draftId = uri?.lastPathSegment.toLongOr(-1)
         }
         if (draftId != -1L) {
-            microBlogWrapper.addSendingDraftId(draftId)
+            UpdateStatusPromise.addSendingDraftId(context.contentResolver, draftId)
         }
         try {
             val result = onExecute(account, params)
@@ -68,7 +69,7 @@ abstract class AbsAccountRequestTask<Params, Result, Callback>(context: Context,
             throw e
         } finally {
             if (draftId != -1L) {
-                microBlogWrapper.removeSendingDraftId(draftId)
+                UpdateStatusPromise.removeSendingDraftId(context.contentResolver, draftId)
             }
         }
     }

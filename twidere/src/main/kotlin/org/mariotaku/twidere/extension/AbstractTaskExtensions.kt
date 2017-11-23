@@ -17,21 +17,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util
+package org.mariotaku.twidere.extension
 
-import nl.komponents.kovenant.task
+import nl.komponents.kovenant.Promise
+import nl.komponents.kovenant.then
+import nl.komponents.kovenant.ui.promiseOnUi
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.abstask.library.AbstractTask
-import org.mariotaku.abstask.library.TaskEngine
+import org.mariotaku.abstask.library.ManualTaskStarter
 
-object PromiseTaskEngine : TaskEngine() {
-    override fun <Params : Any?, Result : Any?, Callback : Any?> execute(t: AbstractTask<Params, Result, Callback>?) {
-        val dispatcher = getDispatcher<Params, Result, Callback>(t)
-        task {
-            dispatcher.invokeExecute()
-        }.successUi {
-            dispatcher.invokeAfterExecute(it)
-        }
+fun <P, R, C> AbstractTask<P, R, C>.promise(): Promise<R, Exception> {
+    return promiseOnUi {
+        ManualTaskStarter.invokeBeforeExecute(this)
+    }.then {
+        return@then ManualTaskStarter.invokeExecute(this)
+    }.successUi { result ->
+        ManualTaskStarter.invokeAfterExecute(this, result)
     }
-
 }

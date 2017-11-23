@@ -23,7 +23,6 @@ import android.app.Dialog
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
-import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
 import org.mariotaku.twidere.R
@@ -59,7 +58,7 @@ class UserTimelineFragment : AbsTimelineFragment() {
         val task = GetUserTimelineTask(context!!)
         task.params = UserRelatedContentRefreshParam(arguments!!.userKey,
                 arguments!!.screenName, param)
-        TaskStarter.execute(task)
+        task.promise()
         return true
     }
 
