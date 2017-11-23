@@ -189,7 +189,7 @@ class GeneralModule(private val application: Application) {
     @Singleton
     fun asyncTwitterWrapper(bus: Bus, preferences: SharedPreferences,
             notificationManagerWrapper: NotificationManagerWrapper): AsyncTwitterWrapper {
-        return AsyncTwitterWrapper(application, bus, preferences, notificationManagerWrapper)
+        return AsyncTwitterWrapper(application, preferences, notificationManagerWrapper)
     }
 
     @Provides

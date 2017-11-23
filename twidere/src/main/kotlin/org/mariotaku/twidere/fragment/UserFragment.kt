@@ -1330,16 +1330,20 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     private fun setupUserPages() {
         val args = arguments!!
         val user = args.user
-        val accountKey = user?.account_key ?: args.accountKey
+        fun hasFavoriteTab(): Boolean {
+            val accountKey = user?.account_key ?: args.accountKey
+            return account?.type != AccountType.MASTODON || account?.key == accountKey
+        }
+
         val tabArgs = Bundle {
             if (user != null) {
-                this.accountKey = accountKey
+                this.accountKey = user.account_key
                 this.userKey = user.key
                 this.screenName = user.screen_name
                 this.profileUrl = user.extras?.statusnet_profile_url
             } else {
-                this.accountKey = accountKey
-                this.userKey = accountKey
+                this.accountKey = args.accountKey
+                this.userKey = args.userKey
                 this.screenName = args.screenName
                 this.profileUrl = args.profileUrl
             }
@@ -1352,7 +1356,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         pagerAdapter.add(cls = UserMediaTimelineFragment::class.java, args = Bundle(tabArgs) {
             this[EXTRA_TIMELINE_STYLE] = TimelineStyle.STAGGERED
         }, name = getString(R.string.media), type = TAB_TYPE_MEDIA, position = TAB_POSITION_MEDIA)
-        if (account?.type != AccountType.MASTODON || account?.key == accountKey) {
+
+        if (hasFavoriteTab()) {
             if (preferences[iWantMyStarsBackKey]) {
                 pagerAdapter.add(cls = FavoritesTimelineFragment::class.java, args = tabArgs,
                         name = getString(R.string.title_favorites), type = TAB_TYPE_FAVORITES,

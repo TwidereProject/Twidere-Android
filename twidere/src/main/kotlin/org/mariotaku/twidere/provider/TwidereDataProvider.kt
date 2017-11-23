@@ -44,16 +44,17 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.TableIds
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.model.AccountPreferences
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.UnreadCountUpdatedEvent
+import org.mariotaku.twidere.promise.UpdateStatusPromise
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.SQLiteDatabaseWrapper.LazyLoadCallback
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
-import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.util.database.CachedUsersQueryBuilder
 import org.mariotaku.twidere.util.database.SuggestionsCursorCreator
 import org.mariotaku.twidere.util.notification.ContentNotificationManager
@@ -191,8 +192,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                     return c
                 }
                 TableIds.VIRTUAL_DRAFTS_UNSENT -> {
-                    val twitter = twitterWrapper
-                    val sendingIds = RawItemArray(twitter.getSendingDraftIds())
+                    val sendingIds = RawItemArray(UpdateStatusPromise.getSendingDraftIds())
                     val where: Expression
                     if (selection != null) {
                         where = Expression.and(Expression(selection),

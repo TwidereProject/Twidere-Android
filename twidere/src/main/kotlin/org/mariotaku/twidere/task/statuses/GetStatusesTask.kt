@@ -61,6 +61,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.collection.CompactHashSet
 import org.mariotaku.twidere.util.sync.SyncTaskRunner
 import org.mariotaku.twidere.util.sync.TimelineSyncManager
 
@@ -142,12 +143,14 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
         context.contentResolver.notifyChange(contentUri, null)
         val exception = results.firstOrNull { it.second != null }?.second
         bus.post(GetStatusesTaskEvent(contentUri, false, exception))
+        getStatusTasks.remove(contentUri)
         cacheItems(context, results)
         handler?.invoke(true)
     }
 
 
     override fun beforeExecute() {
+        getStatusTasks.add(contentUri)
         bus.post(GetStatusesTaskEvent(contentUri, true, null))
     }
 
@@ -315,6 +318,10 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
     companion object {
 
         const val ERROR_LOAD_GAP = 1
+
+        private val getStatusTasks = CompactHashSet<Uri>()
+
+        fun isRefreshing(uri: Uri) = uri in getStatusTasks
 
         fun getPositionKey(timestamp: Long, sortId: Long, lastSortId: Long, sortDiff: Long,
                 position: Int, count: Int): Long {

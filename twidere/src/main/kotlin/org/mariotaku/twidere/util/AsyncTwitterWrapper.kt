@@ -21,10 +21,7 @@ package org.mariotaku.twidere.util
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.net.Uri
 import android.widget.Toast
-import com.squareup.otto.Bus
-import com.squareup.otto.Subscribe
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.task
 import org.mariotaku.abstask.library.TaskStarter
@@ -53,48 +50,20 @@ import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableRelationshipUtils
-import org.mariotaku.twidere.provider.TwidereDataStore.*
+import org.mariotaku.twidere.provider.TwidereDataStore.Activities
+import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.*
 import org.mariotaku.twidere.task.statuses.GetHomeTimelineTask
 import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
 import org.mariotaku.twidere.task.twitter.GetSavedSearchesTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
-import org.mariotaku.twidere.util.collection.CompactHashSet
 
 class AsyncTwitterWrapper(
         val context: Context,
-        private val bus: Bus,
         private val preferences: SharedPreferences,
         private val notificationManager: NotificationManagerWrapper
 ) {
-    private val resolver = context.contentResolver
 
-    private val sendingDraftIds = ArrayList<Long>()
-
-    private val getMessageTasks = CompactHashSet<Uri>()
-    private val getStatusTasks = CompactHashSet<Uri>()
-
-    init {
-        bus.register(object : Any() {
-            @Subscribe
-            fun onGetDirectMessagesTaskEvent(event: GetMessagesTaskEvent) {
-                if (event.running) {
-                    getMessageTasks.add(event.uri)
-                } else {
-                    getMessageTasks.remove(event.uri)
-                }
-            }
-
-            @Subscribe
-            fun onGetStatusesTaskEvent(event: GetStatusesTaskEvent) {
-                if (event.running) {
-                    getStatusTasks.add(event.uri)
-                } else {
-                    getStatusTasks.remove(event.uri)
-                }
-            }
-        })
-    }
 
     fun addUserListMembersAsync(accountKey: UserKey, listId: String, vararg users: ParcelableUser) {
         val task = AddUserListMembersTask(context, accountKey, listId, users)
@@ -175,14 +144,6 @@ class AsyncTwitterWrapper(
     fun getSavedSearchesAsync(accountKeys: Array<UserKey>): Promise<List<Unit>, Exception> {
         val task = GetSavedSearchesTask(context)
         return task.toPromise(accountKeys)
-    }
-
-    fun getSendingDraftIds(): LongArray {
-        return sendingDraftIds.toLongArray()
-    }
-
-    fun isStatusTimelineRefreshing(uri: Uri): Boolean {
-        return getStatusTasks.contains(uri)
     }
 
     fun refreshAll() {

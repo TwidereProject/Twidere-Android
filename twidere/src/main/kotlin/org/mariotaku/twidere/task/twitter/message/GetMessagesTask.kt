@@ -22,6 +22,7 @@ package org.mariotaku.twidere.task.twitter.message
 import android.accounts.AccountManager
 import android.content.ContentValues
 import android.content.Context
+import android.net.Uri
 import org.mariotaku.commons.logansquare.LoganSquareMapperFinder
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.toIntOr
@@ -57,6 +58,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.UriUtils
+import org.mariotaku.twidere.util.collection.CompactHashSet
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import java.util.*
 
@@ -89,9 +91,15 @@ class GetMessagesTask(
         }
     }
 
+    override fun beforeExecute() {
+        getMessageTasks.add(Messages.CONTENT_URI)
+        bus.post(GetMessagesTaskEvent(Messages.CONTENT_URI, params?.taskTag, true, null))
+    }
+
     override fun afterExecute(callback: ((Boolean) -> Unit)?, result: Unit) {
         callback?.invoke(true)
         bus.post(GetMessagesTaskEvent(Messages.CONTENT_URI, params?.taskTag, false, null))
+        getMessageTasks.remove(Messages.CONTENT_URI)
     }
 
     private fun getMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesParam, index: Int): DatabaseUpdateData {
@@ -363,8 +371,9 @@ class GetMessagesTask(
     }
 
     companion object {
-
         private const val KEY_FIRST_FETCH = "state_first_fetch_direct_messages"
+
+        private val getMessageTasks = CompactHashSet<Uri>()
 
         fun createDatabaseUpdateData(context: Context, account: AccountDetails,
                 response: DMResponse, profileImageSize: String = "normal"): DatabaseUpdateData {
@@ -600,5 +609,6 @@ class GetMessagesTask(
             }
         }
     }
+
 }
 

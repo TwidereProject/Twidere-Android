@@ -1131,6 +1131,10 @@ class UpdateStatusPromise(
                 resolver.notifyChange(Drafts.CONTENT_URI_UNSENT, null)
             }
         }
+
+        fun getSendingDraftIds(): LongArray {
+            return sendingDraftIds.toLongArray()
+        }
     }
 
 }

@@ -466,7 +466,6 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
     private inner class BusEventHandler {
 
-
         @Subscribe
         fun notifyGetStatusesTaskChanged(event: GetStatusesTaskEvent) {
             val context = context ?: return
