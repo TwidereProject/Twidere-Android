@@ -12,11 +12,11 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.content.FavoriteConfirmDialogActivity
 import org.mariotaku.twidere.activity.content.RetweetQuoteDialogActivity
 import org.mariotaku.twidere.app.TwidereApplication
+import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.ThemeUtils
-import org.mariotaku.twidere.dagger.DependencyHolder
 import java.util.*
 
 class WebLinkHandlerActivity : Activity() {

@@ -31,7 +31,7 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.nameFirstKey
-import org.mariotaku.twidere.dagger.component.PromisesComponent
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.insert
@@ -61,7 +61,7 @@ class BlockPromises private constructor(private val application: Application) {
     lateinit var bus: Bus
 
     init {
-        PromisesComponent.get(application).inject(this)
+        GeneralComponent.get(application).inject(this)
     }
 
     fun block(accountKey: UserKey, userKey: UserKey, filterEverywhere: Boolean = false): Promise<ParcelableUser, Exception>

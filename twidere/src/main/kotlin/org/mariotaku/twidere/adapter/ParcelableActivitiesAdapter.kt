@@ -39,7 +39,6 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IActivitiesAdapter
 import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.annotation.TimelineStyle
 import org.mariotaku.twidere.constant.newDocumentApiKey

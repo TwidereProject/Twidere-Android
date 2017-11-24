@@ -40,6 +40,7 @@ import org.mariotaku.twidere.annotation.ImageShapeStyle
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
+import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.extension.dismissProgressDialog
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.showProgressDialog
@@ -48,7 +49,6 @@ import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.IntentUtils
-import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.util.glide.DeferredTarget
 import java.lang.ref.WeakReference
 

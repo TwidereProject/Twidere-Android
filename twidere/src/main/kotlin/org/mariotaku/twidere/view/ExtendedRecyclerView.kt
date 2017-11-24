@@ -31,9 +31,6 @@ import org.mariotaku.twidere.R
 
 import org.mariotaku.twidere.util.MouseScrollDirectionDecider
 
-/**
- * Created by mariotaku on 15/3/30.
- */
 class ExtendedRecyclerView(context: Context, attrs: AttributeSet? = null) :
         RecyclerView(context, attrs, 0) {
 

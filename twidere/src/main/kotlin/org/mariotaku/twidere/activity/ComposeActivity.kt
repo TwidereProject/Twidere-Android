@@ -79,6 +79,7 @@ import org.mariotaku.twidere.adapter.MediaPreviewAdapter
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_SCREEN_NAME
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.text.twitter.ReplyTextAndMentions
@@ -92,14 +93,13 @@ import org.mariotaku.twidere.model.schedule.ScheduleInfo
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.preference.ComponentPickerPreference
+import org.mariotaku.twidere.promise.UpdateStatusPromise
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.service.LengthyOperationsService
-import org.mariotaku.twidere.promise.UpdateStatusPromise
 import org.mariotaku.twidere.text.MarkForDeleteSpan
 import org.mariotaku.twidere.text.style.EmojiSpan
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.EditTextEnterHandler.EnterListener
-import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.text.StatusTextValidator
 import org.mariotaku.twidere.util.view.SimpleTextWatcher

@@ -28,7 +28,7 @@ import org.mariotaku.kpreferences.set
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.constant.defaultFeatureLastUpdated
-import org.mariotaku.twidere.dagger.component.PromisesComponent
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.loadRemoteSettings
 import org.mariotaku.twidere.extension.model.save
@@ -49,7 +49,7 @@ class DefaultFeaturesPromises(private val application: Application) {
     lateinit var restHttpClient: RestHttpClient
 
     init {
-        PromisesComponent.get(application).inject(this)
+        GeneralComponent.get(application).inject(this)
     }
 
     fun fetch(): Promise<Boolean, Exception> = task {

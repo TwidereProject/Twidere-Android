@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.alias.ItemClickListener
 import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.annotation.TimelineStyle
@@ -17,9 +16,9 @@ import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler
 import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.view.holder.HashtagViewHolder
-import org.mariotaku.twidere.view.holder.status.StatusViewHolder
 import org.mariotaku.twidere.view.holder.UserListViewHolder
 import org.mariotaku.twidere.view.holder.UserViewHolder
+import org.mariotaku.twidere.view.holder.status.StatusViewHolder
 
 /**
  * Created by mariotaku on 16/3/20.

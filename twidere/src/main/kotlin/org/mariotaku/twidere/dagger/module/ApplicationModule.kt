@@ -73,13 +73,17 @@ import java.io.File
 import javax.inject.Singleton
 
 @Module
-class GeneralModule(private val application: Application) {
+class ApplicationModule(private val application: Application) {
 
     init {
         if (Thread.currentThread() !== Looper.getMainLooper().thread) {
             throw RuntimeException("Module must be created inside main thread")
         }
     }
+
+    @Provides
+    @Singleton
+    fun bus(): Bus = Bus(ThreadEnforcer.MAIN)
 
     @Provides
     @Singleton
@@ -175,12 +179,6 @@ class GeneralModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun bus(): Bus {
-        return Bus(ThreadEnforcer.MAIN)
-    }
-
-    @Provides
-    @Singleton
     fun activityTracker(): ActivityTracker {
         return ActivityTracker()
     }
@@ -264,6 +262,7 @@ class GeneralModule(private val application: Application) {
     }
 
     @Provides
+    @Singleton
     fun provideBidiFormatter(): BidiFormatter {
         return BidiFormatter.getInstance()
     }
@@ -319,16 +318,19 @@ class GeneralModule(private val application: Application) {
     }
 
     @Provides
+    @Singleton
     fun locationManager(): LocationManager {
         return application.getSystemService(Context.LOCATION_SERVICE) as LocationManager
     }
 
     @Provides
+    @Singleton
     fun connectivityManager(): ConnectivityManager {
         return application.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     }
 
     @Provides
+    @Singleton
     fun okHttpClient(preferences: SharedPreferences, dns: Dns, connectionPool: ConnectionPool,
             cache: Cache): OkHttpClient {
         val conf = HttpClientFactory.HttpClientConfiguration(preferences)
@@ -385,7 +387,7 @@ class GeneralModule(private val application: Application) {
                 Utils.getInternalCacheDir(application, dirName)
     }
 
-    companion object : SingletonHolder<GeneralModule, Application>(::GeneralModule)
+    companion object : SingletonHolder<ApplicationModule, Application>(::ApplicationModule)
 
 }
 

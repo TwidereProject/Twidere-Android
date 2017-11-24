@@ -33,7 +33,7 @@ import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.twitter.model.ErrorInfo
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.dagger.component.PromisesComponent
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
@@ -53,7 +53,7 @@ class StatusPromises private constructor(private val application: Application) {
     lateinit var bus: Bus
 
     init {
-        PromisesComponent.get(application).inject(this)
+        GeneralComponent.get(application).inject(this)
     }
 
     fun destroy(accountKey: UserKey, id: String): Promise<ParcelableStatus, Exception> = (promiseOnUi {

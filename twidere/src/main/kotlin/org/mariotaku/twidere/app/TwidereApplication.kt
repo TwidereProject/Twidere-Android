@@ -39,7 +39,7 @@ import org.mariotaku.twidere.activity.AssistLauncherActivity
 import org.mariotaku.twidere.activity.MainActivity
 import org.mariotaku.twidere.activity.MainHondaJOJOActivity
 import org.mariotaku.twidere.constant.*
-import org.mariotaku.twidere.dagger.component.ApplicationComponent
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.firstLanguage
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.setLocale
@@ -95,7 +95,7 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
 
         updateEasterEggIcon()
 
-        ApplicationComponent.get(this).inject(this)
+        GeneralComponent.get(this).inject(this)
 
         refreshTaskController.appStarted()
         syncTaskController.appStarted()

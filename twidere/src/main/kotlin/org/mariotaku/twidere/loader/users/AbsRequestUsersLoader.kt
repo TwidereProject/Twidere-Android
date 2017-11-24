@@ -26,6 +26,7 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.loadItemLimitKey
+import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.extension.model.api.applyLoadLimit
 import org.mariotaku.twidere.loader.iface.IPaginationLoader
@@ -37,7 +38,6 @@ import org.mariotaku.twidere.model.pagination.PaginatedList
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.DebugLog
-import org.mariotaku.twidere.dagger.DependencyHolder
 import java.util.*
 
 abstract class AbsRequestUsersLoader(

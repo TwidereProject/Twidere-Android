@@ -29,10 +29,10 @@ import org.mariotaku.twidere.annotation.NotificationType
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.IntentConstants.BROADCAST_NOTIFICATION_DELETED
 import org.mariotaku.twidere.constant.promotionsEnabledKey
+import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.promise.MessagePromises
 import org.mariotaku.twidere.util.Utils
-import org.mariotaku.twidere.dagger.DependencyHolder
 
 /**
  * Created by mariotaku on 15/4/4.

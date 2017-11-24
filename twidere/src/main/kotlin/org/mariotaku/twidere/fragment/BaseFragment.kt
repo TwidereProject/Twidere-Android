@@ -31,7 +31,7 @@ import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
 import okhttp3.Dns
 import org.mariotaku.restfu.http.RestHttpClient
-import org.mariotaku.twidere.dagger.component.FragmentComponent
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.model.DefaultFeatures
@@ -123,7 +123,7 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        FragmentComponent.get(context).inject(this)
+        GeneralComponent.get(context).inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

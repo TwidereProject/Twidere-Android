@@ -26,7 +26,7 @@ import org.mariotaku.restfu.annotation.method.GET
 import org.mariotaku.restfu.http.HttpRequest
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.BuildConfig
-import org.mariotaku.twidere.dagger.component.PromisesComponent
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.presentation.LaunchPresentation
 import org.mariotaku.twidere.util.JsonSerializer
@@ -43,7 +43,7 @@ class LaunchPresentationsPromises private constructor(context: Context) {
     lateinit var jsonCache: JsonCache
 
     init {
-        PromisesComponent.get(context).inject(this)
+        GeneralComponent.get(context).inject(this)
     }
 
     fun promise(): Promise<Boolean, Exception> = task {

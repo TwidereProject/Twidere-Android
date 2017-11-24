@@ -32,7 +32,7 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.nameFirstKey
-import org.mariotaku.twidere.dagger.component.PromisesComponent
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
@@ -59,7 +59,7 @@ class FriendshipPromises private constructor(val application: Application) {
     lateinit var bus: Bus
 
     init {
-        PromisesComponent.get(application).inject(this)
+        GeneralComponent.get(application).inject(this)
     }
 
     fun accept(accountKey: UserKey, userKey: UserKey): Promise<ParcelableUser, Exception>

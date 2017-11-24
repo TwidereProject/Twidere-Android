@@ -7,10 +7,10 @@ import android.util.AttributeSet
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.REQUEST_PURCHASE_EXTRA_FEATURES
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.findParent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
-import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import javax.inject.Inject
 

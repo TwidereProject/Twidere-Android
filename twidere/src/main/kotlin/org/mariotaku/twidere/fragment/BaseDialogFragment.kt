@@ -28,12 +28,12 @@ import com.bumptech.glide.RequestManager
 import com.squareup.otto.Bus
 import okhttp3.Dns
 import org.mariotaku.restfu.http.RestHttpClient
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.DebugModeUtils
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.dagger.component.FragmentComponent
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.sync.DataSyncProvider
 import javax.inject.Inject
@@ -85,7 +85,7 @@ open class BaseDialogFragment : DialogFragment() {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        FragmentComponent.get(context!!).inject(this)
+        GeneralComponent.get(context!!).inject(this)
     }
 
 }

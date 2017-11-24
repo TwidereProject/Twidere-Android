@@ -33,6 +33,7 @@ import org.mariotaku.microblog.library.twitter.model.UserList
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.constant.loadItemLimitKey
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
@@ -43,7 +44,6 @@ import org.mariotaku.twidere.model.pagination.CursorPagination
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.collection.NoDuplicatesArrayList
-import org.mariotaku.twidere.dagger.component.GeneralComponent
 import java.util.*
 import javax.inject.Inject
 

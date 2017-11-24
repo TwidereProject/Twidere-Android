@@ -28,8 +28,8 @@ import android.os.SystemClock
 import android.support.v4.util.ArrayMap
 import org.mariotaku.twidere.service.JobTaskService
 import org.mariotaku.twidere.service.LegacyTaskService
-import org.mariotaku.twidere.util.TaskServiceRunner
 import org.mariotaku.twidere.taskcontroller.refresh.LegacyRefreshTaskController
+import org.mariotaku.twidere.util.TaskServiceRunner
 import org.mariotaku.twidere.util.sync.DataSyncProvider
 import java.util.concurrent.TimeUnit
 

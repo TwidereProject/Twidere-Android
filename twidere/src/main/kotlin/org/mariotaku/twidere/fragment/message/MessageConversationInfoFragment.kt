@@ -91,8 +91,8 @@ import org.mariotaku.twidere.model.ParcelableMessageConversation.ExtrasType
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.promise.ConversationPromises
 import org.mariotaku.twidere.promise.MessagePromises
-import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.promise.UpdateStatusPromise
+import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.view.holder.SimpleUserViewHolder
 

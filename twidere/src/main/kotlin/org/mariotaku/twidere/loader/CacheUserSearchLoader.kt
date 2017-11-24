@@ -5,6 +5,7 @@ import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.sqliteqb.library.Columns
 import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.queryReference
 import org.mariotaku.twidere.loader.users.UserSearchLoader
@@ -16,7 +17,6 @@ import org.mariotaku.twidere.model.pagination.PaginatedList
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.Utils
-import org.mariotaku.twidere.dagger.component.GeneralComponent
 import java.text.Collator
 import java.util.*
 import javax.inject.Inject

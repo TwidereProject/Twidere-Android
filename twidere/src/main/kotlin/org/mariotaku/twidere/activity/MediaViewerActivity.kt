@@ -51,6 +51,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarShowHideHelper
 import org.mariotaku.twidere.annotation.CacheFileType
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.fragment.PermissionRequestDialogFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
@@ -65,7 +66,6 @@ import org.mariotaku.twidere.task.SaveMediaToGalleryTask
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.PermissionUtils
 import org.mariotaku.twidere.util.ThemeUtils
-import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.util.support.WindowSupport
 import org.mariotaku.twidere.view.viewer.MediaSwipeCloseContainer
 import java.io.File

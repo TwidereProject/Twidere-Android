@@ -33,9 +33,7 @@ import java.io.IOException
 import java.net.InetAddress
 import java.net.UnknownHostException
 import java.util.*
-import javax.inject.Singleton
 
-@Singleton
 class TwidereDns(val context: Context, private val preferences: SharedPreferences) : Dns {
 
     private val hostMapping = context.getSharedPreferences(HOST_MAPPING_PREFERENCES_NAME,

@@ -20,13 +20,10 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map.Entry;
 
-import javax.inject.Singleton;
-
 import static org.mariotaku.twidere.TwidereConstants.KEYBOARD_SHORTCUTS_PREFERENCES_NAME;
 import static org.mariotaku.twidere.constant.IntentConstants.INTENT_ACTION_COMPOSE;
 import static org.mariotaku.twidere.constant.IntentConstants.INTENT_ACTION_QUICK_SEARCH;
 
-@Singleton
 public class KeyboardShortcutsHandler implements KeyboardShortcutConstants {
 
     public static final int MODIFIER_FLAG_CTRL = 0x00000001;
@@ -288,13 +285,13 @@ public class KeyboardShortcutsHandler implements KeyboardShortcutConstants {
     public interface KeyboardShortcutCallback extends KeyboardShortcutConstants {
 
         boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode,
-                                             int repeatCount, @NonNull KeyEvent event, int metaState);
+                int repeatCount, @NonNull KeyEvent event, int metaState);
 
         boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode,
-                                             @NonNull KeyEvent event, int metaState);
+                @NonNull KeyEvent event, int metaState);
 
         boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode,
-                                          @NonNull KeyEvent event, int metaState);
+                @NonNull KeyEvent event, int metaState);
     }
 
     public interface TakeAllKeyboardShortcut {

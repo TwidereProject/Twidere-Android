@@ -36,6 +36,7 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.api.tryShowUser
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
@@ -53,7 +54,6 @@ import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
 import org.mariotaku.twidere.task.UpdateAccountInfoTask
 import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.dagger.component.GeneralComponent
 import javax.inject.Inject
 
 class ParcelableUserLoader(

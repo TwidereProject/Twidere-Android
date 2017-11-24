@@ -29,6 +29,7 @@ import org.mariotaku.microblog.library.twitter.model.ErrorInfo
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.updateExtraInformation
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -37,7 +38,6 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.util.deleteActivityStatus
 import org.mariotaku.twidere.util.deleteStatus
 import javax.inject.Inject

@@ -19,8 +19,8 @@
 
 package org.mariotaku.twidere.extension.model
 
-import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
+import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 
 fun ContentRefreshParam.getMaxId(index: Int): String? {
     return (pagination?.get(index) as? SinceMaxPagination)?.maxId

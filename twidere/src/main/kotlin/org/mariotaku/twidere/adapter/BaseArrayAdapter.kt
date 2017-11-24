@@ -30,10 +30,10 @@ import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.constant.*
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.dagger.component.GeneralComponent
 import javax.inject.Inject
 
 open class BaseArrayAdapter<T>(

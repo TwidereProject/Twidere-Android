@@ -25,6 +25,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.TabAccountFlags
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
+import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.fragment.timeline.FavoritesTimelineFragment
 import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.tab.DrawableHolder
@@ -32,7 +33,6 @@ import org.mariotaku.twidere.model.tab.StringHolder
 import org.mariotaku.twidere.model.tab.TabConfiguration
 import org.mariotaku.twidere.model.tab.argument.UserArguments
 import org.mariotaku.twidere.model.tab.conf.UserExtraConfiguration
-import org.mariotaku.twidere.dagger.DependencyHolder
 
 /**
  * Created by mariotaku on 2016/11/27.

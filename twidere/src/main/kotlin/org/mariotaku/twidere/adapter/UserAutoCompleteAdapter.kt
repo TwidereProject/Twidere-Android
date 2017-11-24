@@ -37,6 +37,7 @@ import org.mariotaku.sqliteqb.library.OrderBy
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.displayProfileImageKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.ParcelableLiteUser
@@ -44,7 +45,6 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.Utils
-import org.mariotaku.twidere.dagger.component.AdapterComponent
 import org.mariotaku.twidere.view.ProfileImageView
 import javax.inject.Inject
 
@@ -67,7 +67,7 @@ class UserAutoCompleteAdapter(
     var accountKey: UserKey? = null
 
     init {
-        AdapterComponent.get(context).inject(this)
+        GeneralComponent.get(context).inject(this)
         displayProfileImage = preferences[displayProfileImageKey]
         profileImageStyle = preferences[profileImageStyleKey]
     }

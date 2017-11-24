@@ -464,7 +464,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         }
     }
 
-    private inner class BusEventHandler {
+    internal inner class BusEventHandler {
 
         @Subscribe
         fun notifyGetStatusesTaskChanged(event: GetStatusesTaskEvent) {

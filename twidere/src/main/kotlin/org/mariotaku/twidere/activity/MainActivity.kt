@@ -55,6 +55,7 @@ import org.mariotaku.twidere.constant.lastLaunchTimeKey
 import org.mariotaku.twidere.constant.promotionsEnabledKey
 import org.mariotaku.twidere.constant.themeColorKey
 import org.mariotaku.twidere.constant.themeKey
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.hasInvalidAccount
 import org.mariotaku.twidere.extension.model.displayingScore
@@ -67,7 +68,6 @@ import org.mariotaku.twidere.util.OnLinkClickHandler
 import org.mariotaku.twidere.util.StrictModeUtils
 import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.cache.JsonCache
-import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.util.support.ViewSupport
 import org.mariotaku.twidere.util.support.view.ViewOutlineProviderCompat
 import org.mariotaku.twidere.util.theme.getCurrentThemeResource

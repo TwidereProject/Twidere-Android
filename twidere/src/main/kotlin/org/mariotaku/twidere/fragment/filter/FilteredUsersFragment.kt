@@ -33,6 +33,7 @@ import org.mariotaku.twidere.activity.LinkHandlerActivity
 import org.mariotaku.twidere.activity.UserSelectorActivity
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_HOST
 import org.mariotaku.twidere.constant.nameFirstKey
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.extension.dismissProgressDialog
 import org.mariotaku.twidere.extension.get
@@ -43,6 +44,7 @@ import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.model.util.AccountUtils
+import org.mariotaku.twidere.promise.MutePromises
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.text.style.EmojiSpan
 import org.mariotaku.twidere.util.Analyzer
@@ -50,8 +52,6 @@ import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.content.ContentResolverUtils
-import org.mariotaku.twidere.dagger.component.GeneralComponent
-import org.mariotaku.twidere.promise.MutePromises
 import javax.inject.Inject
 
 class FilteredUsersFragment : BaseFiltersFragment() {

@@ -62,7 +62,7 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.alias.MastodonStatusUpdate
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.app.TwidereApplication
-import org.mariotaku.twidere.dagger.component.PromisesComponent
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.calculateInSampleSize
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.*
@@ -106,7 +106,7 @@ class UpdateStatusPromise(
     lateinit var scheduleProvider: StatusScheduleProvider
 
     init {
-        PromisesComponent.get(context).inject(this)
+        GeneralComponent.get(context).inject(this)
     }
 
     fun create(update: ParcelableStatusUpdate, info: ScheduleInfo?): Promise<UpdateStatusResult, Exception> = promiseOnUi {

@@ -22,14 +22,19 @@ package org.mariotaku.twidere.dagger.component
 import android.support.v7.widget.RecyclerView
 import dagger.Component
 import org.mariotaku.twidere.activity.*
-import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter
-import org.mariotaku.twidere.adapter.BaseArrayAdapter
-import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter
-import org.mariotaku.twidere.adapter.DraftsAdapter
+import org.mariotaku.twidere.adapter.*
+import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.dagger.DependencyHolder
+import org.mariotaku.twidere.dagger.module.ApplicationModule
 import org.mariotaku.twidere.dagger.module.ChannelModule
-import org.mariotaku.twidere.dagger.module.GeneralModule
+import org.mariotaku.twidere.extension.get
+import org.mariotaku.twidere.fragment.BaseDialogFragment
+import org.mariotaku.twidere.fragment.BaseFragment
+import org.mariotaku.twidere.fragment.BasePreferenceFragment
 import org.mariotaku.twidere.fragment.filter.FilteredUsersFragment
+import org.mariotaku.twidere.fragment.media.ExoPlayerPageFragment
+import org.mariotaku.twidere.fragment.media.VideoPageFragment
+import org.mariotaku.twidere.fragment.preference.ThemedPreferenceDialogFragmentCompat
 import org.mariotaku.twidere.loader.CacheUserSearchLoader
 import org.mariotaku.twidere.loader.DefaultAPIConfigLoader
 import org.mariotaku.twidere.loader.ParcelableStatusLoader
@@ -41,6 +46,7 @@ import org.mariotaku.twidere.preference.KeyboardShortcutPreference
 import org.mariotaku.twidere.preference.PremiumEntryPreference
 import org.mariotaku.twidere.preference.PremiumEntryPreferenceCategory
 import org.mariotaku.twidere.preference.sync.SyncItemPreference
+import org.mariotaku.twidere.promise.*
 import org.mariotaku.twidere.provider.CacheProvider
 import org.mariotaku.twidere.provider.TwidereDataProvider
 import org.mariotaku.twidere.service.*
@@ -54,8 +60,9 @@ import org.mariotaku.twidere.util.sync.SyncTaskRunner
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = arrayOf(GeneralModule::class, ChannelModule::class))
+@Component(modules = arrayOf(ApplicationModule::class, ChannelModule::class))
 interface GeneralComponent {
+    fun inject(application: TwidereApplication)
 
     fun inject(obj: MultiSelectEventHandler)
 
@@ -127,10 +134,48 @@ interface GeneralComponent {
 
     fun inject(activity: MainActivity)
 
+    fun inject(promises: MessagePromises)
+
+    fun inject(promises: StatusPromises)
+
+    fun inject(promises: FriendshipPromises)
+
+    fun inject(promises: BlockPromises)
+
+    fun inject(promises: MutePromises)
+
+    fun inject(promises: DefaultFeaturesPromises)
+
+    fun inject(promises: LaunchPresentationsPromises)
+
+    fun inject(promise: UpdateStatusPromise)
+
+    fun inject(promise: GetTrendsPromise)
+
+    fun inject(fragment: BaseFragment)
+
+    fun inject(fragment: BaseDialogFragment)
+
+    fun inject(fragment: BasePreferenceFragment)
+
+    fun inject(fragment: ExoPlayerPageFragment)
+
+    fun inject(fragment: VideoPageFragment)
+
+    fun inject(fragment: ThemedPreferenceDialogFragmentCompat)
+
+    fun inject(adapter: DummyItemAdapter)
+
+    fun inject(obj: AccountDetailsAdapter)
+
+    fun inject(obj: ComposeAutoCompleteAdapter)
+
+    fun inject(obj: UserAutoCompleteAdapter)
+
     companion object : ApplicationContextSingletonHolder<GeneralComponent>(creation@ { application ->
         return@creation DaggerGeneralComponent.builder()
-                .generalModule(GeneralModule.getInstance(application))
-                .channelModule(ChannelModule.getInstance(application))
+                .applicationModule(ApplicationModule.get(application))
+                .channelModule(ChannelModule.get(application))
                 .build()
     })
 }

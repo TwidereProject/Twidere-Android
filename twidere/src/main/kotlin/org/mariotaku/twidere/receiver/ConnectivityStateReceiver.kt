@@ -24,8 +24,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.support.v4.net.ConnectivityManagerCompat
-import org.mariotaku.twidere.service.StreamingService
 import org.mariotaku.twidere.dagger.DependencyHolder
+import org.mariotaku.twidere.service.StreamingService
 
 class ConnectivityStateReceiver : BroadcastReceiver() {
 

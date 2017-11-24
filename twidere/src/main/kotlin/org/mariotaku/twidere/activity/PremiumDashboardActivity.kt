@@ -29,11 +29,11 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.REQUEST_PURCHASE_EXTRA_FEATURES
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter
 import org.mariotaku.twidere.constant.promotionsEnabledKey
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.util.Analyzer
-import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.promotion.PromotionService
 import org.mariotaku.twidere.util.schedule.StatusScheduleProvider

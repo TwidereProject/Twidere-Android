@@ -23,6 +23,7 @@ import org.mariotaku.restfu.oauth.OAuthToken
 import org.mariotaku.restfu.oauth2.OAuth2Authorization
 import org.mariotaku.twidere.TwidereConstants.DEFAULT_TWITTER_API_URL_FORMAT
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.model.account.cred.*
 import org.mariotaku.twidere.util.HttpClientFactory
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
@@ -30,7 +31,6 @@ import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import org.mariotaku.twidere.util.MicroBlogAPIFactory.sFanfouConstantPool
 import org.mariotaku.twidere.util.MicroBlogAPIFactory.sTwitterConstantPool
 import org.mariotaku.twidere.util.api.*
-import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.util.media.TwidereMediaDownloader
 
 /**

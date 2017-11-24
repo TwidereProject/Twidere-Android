@@ -32,6 +32,7 @@ import org.mariotaku.twidere.Constants.DEFAULT_TWITTER_API_URL_FORMAT
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.*
+import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.extension.model.getEndpoint
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.restfu.headers
@@ -40,7 +41,6 @@ import org.mariotaku.twidere.model.account.cred.OAuthCredentials
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.MicroBlogAPIFactory
-import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.util.net.SystemDnsFetcher
 import org.mariotaku.twidere.util.net.TwidereDns
 import java.io.IOException

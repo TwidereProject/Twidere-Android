@@ -33,7 +33,6 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.sqliteqb.library.SQLFunctions
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_LIMIT
 import org.mariotaku.twidere.model.CursorReference
-import org.mariotaku.twidere.provider.TwidereDataStore
 import org.mariotaku.twidere.util.TwidereQueryBuilder
 import org.mariotaku.twidere.util.content.ContentResolverUtils.MAX_BULK_COUNT
 import java.io.FileNotFoundException

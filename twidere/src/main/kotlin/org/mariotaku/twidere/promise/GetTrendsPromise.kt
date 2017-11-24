@@ -33,7 +33,7 @@ import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.sqliteqb.library.Expression.and
 import org.mariotaku.sqliteqb.library.Expression.equalsArgs
 import org.mariotaku.twidere.annotation.AccountType.FANFOU
-import org.mariotaku.twidere.dagger.component.PromisesComponent
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.getDetailsOrThrow
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
@@ -57,7 +57,7 @@ class GetTrendsPromise private constructor(private val application: Context) {
     lateinit var bus: Bus
 
     init {
-        PromisesComponent.get(application).inject(this)
+        GeneralComponent.get(application).inject(this)
     }
 
     fun local(accountKey: UserKey, woeId: Int): Promise<Boolean, Exception> = task {

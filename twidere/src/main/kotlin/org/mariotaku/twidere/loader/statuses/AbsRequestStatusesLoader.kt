@@ -29,6 +29,7 @@ import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.loadItemLimitKey
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.api.applyLoadLimit
 import org.mariotaku.twidere.loader.iface.IPaginationLoader
@@ -44,7 +45,6 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.task.statuses.GetStatusesTask
 import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.dagger.component.GeneralComponent
 import java.util.*
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject

@@ -34,6 +34,7 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.displayProfileImageKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.appendQueryParameterIgnoreNull
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.loadProfileImage
@@ -42,7 +43,6 @@ import org.mariotaku.twidere.model.SuggestionItem
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Suggestions
 import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.dagger.component.AdapterComponent
 import org.mariotaku.twidere.view.ProfileImageView
 import javax.inject.Inject
 
@@ -63,7 +63,7 @@ class ComposeAutoCompleteAdapter(context: Context, val requestManager: RequestMa
     private var token: Char = ' '
 
     init {
-        AdapterComponent.get(context).inject(this)
+        GeneralComponent.get(context).inject(this)
         displayProfileImage = preferences[displayProfileImageKey]
         profileImageStyle = preferences[profileImageStyleKey]
     }

@@ -31,8 +31,8 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
 import org.mariotaku.twidere.adapter.DummyItemAdapter
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
-import org.mariotaku.twidere.view.holder.status.StatusViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
+import org.mariotaku.twidere.view.holder.status.StatusViewHolder
 
 class CardPreviewPreference(
         context: Context,

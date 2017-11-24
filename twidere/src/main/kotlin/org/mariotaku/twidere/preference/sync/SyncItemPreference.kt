@@ -7,9 +7,9 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.TextView
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.util.Utils
-import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.util.sync.SyncPreferences
 import javax.inject.Inject
 

@@ -27,10 +27,10 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.constant.mediaPreloadKey
 import org.mariotaku.twidere.constant.mediaPreloadOnWifiOnlyKey
 import org.mariotaku.twidere.extension.loadProfileImage
+import org.mariotaku.twidere.extension.model.activityStatus
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.extension.model.activityStatus
 
 class MediaPreloader(val context: Context) {
 
