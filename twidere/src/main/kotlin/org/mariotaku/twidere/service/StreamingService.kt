@@ -289,9 +289,8 @@ class StreamingService : BaseService() {
                 lastStatusTimestamps[0] = parcelableStatus.position_key
                 lastStatusTimestamps[1] = currentTimeMillis
 
-                val values = ObjectCursor.valuesCreatorFrom(ParcelableStatus::class.java)
-                        .create(parcelableStatus)
-                context.contentResolver.insert(Statuses.HomeTimeline.CONTENT_URI, values)
+                context.contentResolver.insert(Statuses.HomeTimeline.CONTENT_URI, parcelableStatus,
+                        ParcelableStatus::class.java)
                 homeInsertGap = false
                 return true
             }

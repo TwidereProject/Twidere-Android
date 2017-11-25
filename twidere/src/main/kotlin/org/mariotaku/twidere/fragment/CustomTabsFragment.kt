@@ -60,7 +60,9 @@ import org.mariotaku.twidere.adapter.ArrayAdapter
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.TabAccountFlags
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.insert
 import org.mariotaku.twidere.extension.model.isOfficial
+import org.mariotaku.twidere.extension.update
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.tab.DrawableHolder
@@ -375,15 +377,14 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
                         return@setOnClickListener
                     }
                 }
-                val valuesCreator = ObjectCursor.valuesCreatorFrom(Tab::class.java)
                 when (tag) {
                     TAG_EDIT_TAB -> {
                         val where = Expression.equals(Tabs._ID, tab.id).sql
-                        context!!.contentResolver.update(Tabs.CONTENT_URI, valuesCreator.create(tab),
-                                where, null)
+                        context!!.contentResolver.update(Tabs.CONTENT_URI, Tabs.COLUMNS,
+                                where, null, cls = Tab::class.java) { return@update tab }
                     }
                     TAG_ADD_TAB -> {
-                        context!!.contentResolver.insert(Tabs.CONTENT_URI, valuesCreator.create(tab))
+                        context!!.contentResolver.insert(Tabs.CONTENT_URI, tab, Tab::class.java)
                     }
                 }
                 SettingsActivity.setShouldRestart(activity!!)

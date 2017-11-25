@@ -33,6 +33,7 @@ import android.net.Uri
 import android.nfc.NdefMessage
 import android.nfc.NdefRecord
 import android.nfc.NfcAdapter.CreateNdefMessageCallback
+import android.os.Build
 import android.os.Bundle
 import android.support.annotation.ColorRes
 import android.support.annotation.DrawableRes
@@ -41,10 +42,8 @@ import android.support.annotation.UiThread
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
-import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FixedAsyncTaskLoader
-import android.support.v4.content.Loader
 import android.support.v4.content.pm.ShortcutManagerCompat
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v4.graphics.ColorUtils
@@ -77,7 +76,6 @@ import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
-import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.mastodon.Mastodon
@@ -97,6 +95,8 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.TimelineStyle
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
+import org.mariotaku.twidere.data.impl.RelationshipLiveData
+import org.mariotaku.twidere.data.impl.UserLiveData
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
@@ -111,7 +111,6 @@ import org.mariotaku.twidere.fragment.timeline.UserMediaTimelineFragment
 import org.mariotaku.twidere.fragment.timeline.UserTimelineFragment
 import org.mariotaku.twidere.graphic.ActionIconDrawable
 import org.mariotaku.twidere.graphic.drawable.userprofile.ActionBarDrawable
-import org.mariotaku.twidere.loader.ParcelableUserLoader
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 import org.mariotaku.twidere.model.event.FriendshipUpdatedEvent
@@ -148,13 +147,21 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         KeyboardShortcutCallback, UserColorChangedListener, UserNicknameChangedListener,
         IToolBarSupportFragment, AbsContentRecyclerViewFragment.RefreshCompleteListener {
 
+    override val currentVisibleFragment: Fragment?
+        get() {
+            val currentItem = viewPager.currentItem
+            if (currentItem < 0 || currentItem >= pagerAdapter.count) return null
+            return pagerAdapter.instantiateItem(viewPager, currentItem)
+        }
+
     override val fragmentToolbar: Toolbar
         get() = toolbar
 
+    override val controlBarHeight: Int
+        get() = toolbar.height
+
     override var controlBarOffset: Float
-        get() {
-            return 1 + toolbar.translationY / 0.98f / controlBarHeight
-        }
+        get() = 1 + toolbar.translationY / 0.98f / controlBarHeight
         set(offset) {
             val translationY = (offset - 1) * controlBarHeight
             toolbar.translationY = translationY * 0.98f
@@ -162,179 +169,22 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             tabsShadow.translationY = translationY
         }
 
-    override val controlBarHeight: Int
-        get() = toolbar.height
+    private val keyboardShortcutRecipient: Fragment?
+        get() = currentVisibleFragment
 
     private lateinit var profileBirthdayBanner: View
     private lateinit var pagerAdapter: SupportTabsAdapter
 
     // Data fields
-    private var user: ParcelableUser? = null
-    private var account: AccountDetails? = null
-    private var relationship: ParcelableRelationship? = null
+    private lateinit var liveUser: UserLiveData
+    private lateinit var liveRelationship: RelationshipLiveData
 
-    private var userInfoLoaderInitialized: Boolean = false
-    private var friendShipLoaderInitialized: Boolean = false
     private var cardBackgroundColor: Int = 0
     private var actionBarShadowColor: Int = 0
     private var uiColor: Int = 0
     private var primaryColor: Int = 0
     private var nameFirst: Boolean = false
     private var hideBirthdayView: Boolean = false
-
-    private val friendshipLoaderCallbacks = object : LoaderCallbacks<SingleResponse<ParcelableRelationship>> {
-
-        override fun onCreateLoader(id: Int, args: Bundle): Loader<SingleResponse<ParcelableRelationship>> {
-            val activity = activity!!
-            activity.invalidateOptionsMenu()
-            val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-            val user = args.getParcelable<ParcelableUser>(EXTRA_USER)
-            if (user != null && user.key == accountKey) {
-                followingYouIndicator.visibility = View.GONE
-                followContainer.follow.visibility = View.VISIBLE
-                followProgress.visibility = View.VISIBLE
-            } else {
-                followingYouIndicator.visibility = View.GONE
-                followContainer.follow.visibility = View.GONE
-                followProgress.visibility = View.VISIBLE
-            }
-            return UserRelationshipLoader(activity, accountKey, user)
-        }
-
-        override fun onLoaderReset(loader: Loader<SingleResponse<ParcelableRelationship>>) {
-
-        }
-
-        override fun onLoadFinished(loader: Loader<SingleResponse<ParcelableRelationship>>,
-                data: SingleResponse<ParcelableRelationship>) {
-            followProgress.visibility = View.GONE
-            displayRelationship(data.data)
-            updateOptionsMenuVisibility()
-        }
-
-    }
-    private val userInfoLoaderCallbacks = object : LoaderCallbacks<SingleResponse<ParcelableUser>> {
-
-        override fun onCreateLoader(id: Int, args: Bundle): Loader<SingleResponse<ParcelableUser>> {
-            val omitIntentExtra = args.getBoolean(EXTRA_OMIT_INTENT_EXTRA, true)
-            val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
-            val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
-            val screenName = args.getString(EXTRA_SCREEN_NAME)
-            if (user == null && (!omitIntentExtra || !args.containsKey(EXTRA_USER))) {
-                errorContainer.visibility = View.GONE
-                progressContainer.visibility = View.VISIBLE
-                errorText.text = null
-                errorText.visibility = View.GONE
-            }
-            val user = this@UserFragment.user
-            val loadFromCache = user == null || !user.is_cache && user.key.maybeEquals(userKey)
-            return ParcelableUserLoader(activity!!, accountKey, userKey, screenName, arguments,
-                    omitIntentExtra, loadFromCache)
-        }
-
-        override fun onLoaderReset(loader: Loader<SingleResponse<ParcelableUser>>) {
-
-        }
-
-        override fun onLoadFinished(loader: Loader<SingleResponse<ParcelableUser>>,
-                data: SingleResponse<ParcelableUser>) {
-            val activity = activity ?: return
-            if (data.data != null) {
-                val user = data.data
-                errorContainer.visibility = View.GONE
-                progressContainer.visibility = View.GONE
-                val account: AccountDetails = data.extras.getParcelable(EXTRA_ACCOUNT)
-                displayUser(user, account)
-                if (user.is_cache) {
-                    val args = Bundle()
-                    args.putParcelable(EXTRA_ACCOUNT_KEY, user.account_key)
-                    args.putParcelable(EXTRA_USER_KEY, user.key)
-                    args.putString(EXTRA_SCREEN_NAME, user.screen_name)
-                    args.putBoolean(EXTRA_OMIT_INTENT_EXTRA, true)
-                    loaderManager.restartLoader(LOADER_ID_USER, args, this)
-                }
-                updateOptionsMenuVisibility()
-            } else if (user?.is_cache == true) {
-                errorContainer.visibility = View.GONE
-                progressContainer.visibility = View.GONE
-                displayUser(user, account)
-                updateOptionsMenuVisibility()
-            } else {
-                if (data.hasException()) {
-                    errorText.text = data.exception?.getErrorMessage(activity)
-                    errorText.visibility = View.VISIBLE
-                }
-                errorContainer.visibility = View.VISIBLE
-                progressContainer.visibility = View.GONE
-                displayUser(null, null)
-                updateOptionsMenuVisibility()
-            }
-        }
-
-    }
-
-    private fun updateOptionsMenuVisibility() {
-        setHasOptionsMenu(user != null && relationship != null)
-    }
-
-    private fun displayRelationship(relationship: ParcelableRelationship?) {
-        val activity = activity ?: return
-        val user = this.user ?: run {
-            this.relationship = null
-            return
-        }
-        if (user.key.maybeEquals(user.account_key)) {
-            setFollowEditButton(R.drawable.ic_action_edit, R.color.material_light_blue,
-                    R.string.action_edit)
-            followContainer.follow.visibility = View.VISIBLE
-            this.relationship = relationship
-            return
-        }
-        if (relationship == null || !relationship.check(user)) {
-            this.relationship = null
-            return
-        } else {
-            this.relationship = relationship
-        }
-        activity.invalidateOptionsMenu()
-        when {
-            relationship.blocked_by -> {
-                pagesErrorContainer.visibility = View.GONE
-                pagesErrorText.text = null
-            }
-            !relationship.following && user.hide_protected_contents -> {
-                pagesErrorContainer.visibility = View.VISIBLE
-                pagesErrorText.setText(R.string.user_protected_summary)
-                pagesErrorIcon.setImageResource(R.drawable.ic_info_locked)
-            }
-            else -> {
-                pagesErrorContainer.visibility = View.GONE
-                pagesErrorText.text = null
-            }
-        }
-        when {
-            relationship.blocking -> setFollowEditButton(R.drawable.ic_action_block, R.color.material_red,
-                    R.string.action_unblock)
-            relationship.blocked_by -> setFollowEditButton(R.drawable.ic_action_block, R.color.material_grey,
-                    R.string.action_block)
-            relationship.following -> setFollowEditButton(R.drawable.ic_action_confirm, R.color.material_light_blue,
-                    R.string.action_unfollow)
-            user.is_follow_request_sent -> setFollowEditButton(R.drawable.ic_action_time, R.color.material_light_blue,
-                    R.string.label_follow_request_sent)
-            else -> setFollowEditButton(R.drawable.ic_action_add, android.R.color.white,
-                    R.string.action_follow)
-        }
-        followingYouIndicator.visibility = if (relationship.followed_by) View.VISIBLE else View.GONE
-
-        val weakThis by weak(this)
-        task {
-            val resolver = weakThis?.context?.contentResolver ?: throw InterruptedException()
-            resolver.insert(CachedUsers.CONTENT_URI, user, ParcelableUser::class.java)
-            resolver.insert(CachedRelationships.CONTENT_URI, relationship, ParcelableRelationship::class.java)
-        }
-        followContainer.follow.visibility = View.VISIBLE
-    }
-
 
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
 
@@ -348,157 +198,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         (activity as? IControlBarActivity)?.setControlBarVisibleAnimate(true)
     }
 
-    @UiThread
-    fun displayUser(user: ParcelableUser?, account: AccountDetails?) {
-        val activity = activity ?: return
-        this.user = user
-        this.account = account
-        if (user?.key == null) {
-            profileImage.visibility = View.GONE
-            profileType.visibility = View.GONE
-            val theme = Chameleon.getOverrideTheme(activity, activity)
-            setUiColor(theme.colorPrimary)
-            return
-        }
-        val adapter = pagerAdapter
-        (0 until adapter.count).forEach { i ->
-            val sf = adapter.instantiateItem(viewPager, i) as? AbsTimelineFragment ?: return@forEach
-            if (sf.view == null) return@forEach
-        }
-        profileImage.visibility = View.VISIBLE
-        val resources = resources
-        val lm = loaderManager
-        lm.destroyLoader(LOADER_ID_USER)
-        lm.destroyLoader(LOADER_ID_FRIENDSHIP)
-        errorContainer.visibility = View.GONE
-        progressContainer.visibility = View.GONE
-        this.user = user
-        profileImage.setBorderColor(if (user.color != 0) user.color else Color.WHITE)
-        followContainer.drawEnd(user.account_color)
-        nameContainer.name.setText(bidiFormatter.unicodeWrap(when {
-            user.nickname.isNullOrEmpty() -> user.name
-            else -> getString(R.string.name_with_nickname, user.name, user.nickname)
-        }), TextView.BufferType.SPANNABLE)
-        val typeIconRes = Utils.getUserTypeIconRes(user.is_verified, user.is_protected)
-        if (typeIconRes != 0) {
-            profileType.setImageResource(typeIconRes)
-            profileType.visibility = View.VISIBLE
-        } else {
-            profileType.setImageDrawable(null)
-            profileType.visibility = View.GONE
-        }
-        @SuppressLint("SetTextI18n")
-        nameContainer.screenName.spannable = "@${user.acct}"
-        val linkHighlightOption = preferences[linkHighlightOptionKey]
-        val linkify = TwidereLinkify(this, linkHighlightOption)
-
-        if (user.description_unescaped != null) {
-            val text = SpannableStringBuilder.valueOf(user.description_unescaped).apply {
-                user.description_spans?.applyTo(this, null, requestManager, description)
-                linkify.applyAllLinks(this, user.account_key, false, false)
-            }
-            description.spannable = text
-        } else {
-            description.spannable = user.description_plain
-            Linkify.addLinks(description, Linkify.WEB_URLS)
-        }
-        description.hideIfEmpty()
-
-        location.spannable = user.location
-        location.hideIfEmpty()
-
-        url.spannable = user.urlPreferred?.let {
-            val ssb = SpannableStringBuilder(it)
-            ssb.setSpan(TwidereURLSpan(it, highlightStyle = linkHighlightOption), 0, ssb.length,
-                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            return@let ssb
-        }
-        this.url.hideIfEmpty()
-
-        if (user.created_at >= 0) {
-            val createdAt = Utils.formatToLongTimeString(activity, user.created_at)
-            val daysSinceCreation = (System.currentTimeMillis() - user.created_at) / 1000 / 60 / 60 / 24.toFloat()
-            val dailyTweets = Math.round(user.statuses_count / Math.max(1f, daysSinceCreation))
-            this.createdAt.text = resources.getQuantityString(R.plurals.created_at_with_N_tweets_per_day, dailyTweets,
-                    createdAt, dailyTweets)
-        } else {
-            this.createdAt.text = null
-        }
-        this.createdAt.hideIfEmpty()
-
-        val locale = Locale.getDefault()
-
-        listedCount.primaryText = Utils.getLocalizedNumber(locale, user.listed_count)
-        groupsCount.primaryText = Utils.getLocalizedNumber(locale, user.groups_count)
-        followersCount.primaryText = Utils.getLocalizedNumber(locale, user.followers_count)
-        friendsCount.primaryText = Utils.getLocalizedNumber(locale, user.friends_count)
-
-        listedCount.updateText()
-        groupsCount.updateText()
-        followersCount.updateText()
-        friendsCount.updateText()
-
-        listedCount.visibility = if (user.listed_count < 0) View.GONE else View.VISIBLE
-        groupsCount.visibility = if (user.groups_count < 0) View.GONE else View.VISIBLE
-
-        if (user.color != 0) {
-            setUiColor(user.color)
-        } else if (user.link_color != 0) {
-            setUiColor(user.link_color)
-        } else {
-            val theme = Chameleon.getOverrideTheme(activity, activity)
-            setUiColor(theme.colorPrimary)
-        }
-        val defWidth = resources.displayMetrics.widthPixels
-        requestManager.loadProfileBanner(activity, user, defWidth).into(profileBanner)
-        requestManager.loadOriginalProfileImage(activity, user, profileImage.style,
-                profileImage.cornerRadius, profileImage.cornerRadiusRatio)
-                .thumbnail(requestManager.loadProfileImage(activity, user, profileImage.style,
-                        profileImage.cornerRadius, profileImage.cornerRadiusRatio,
-                        getString(R.string.profile_image_size))).into(profileImage)
-        val relationship = relationship
-        if (relationship == null) {
-            getFriendship()
-        }
-        activity.title = SpannableStringBuilder.valueOf(UserColorNameManager.decideDisplayName(user.nickname, user.name,
-                user.screen_name, nameFirst)).also {
-            externalThemeManager.emoji?.applyTo(it)
-        }
-
-        val userCreationDay = condition@ if (user.created_at >= 0) {
-            val cal = Calendar.getInstance()
-            val currentMonth = cal.get(Calendar.MONTH)
-            val currentDay = cal.get(Calendar.DAY_OF_MONTH)
-            cal.timeInMillis = user.created_at
-            cal.get(Calendar.MONTH) == currentMonth && cal.get(Calendar.DAY_OF_MONTH) == currentDay
-        } else {
-            false
-        }
-
-        if (userCreationDay && !hideBirthdayView) {
-            if (profileBirthdayStub != null) {
-                profileBirthdayBanner = profileBirthdayStub.inflate()
-                profileBirthdayBanner.setOnClickListener(this)
-            } else {
-                profileBirthdayBanner.visibility = View.VISIBLE
-            }
-        } else if (profileBirthdayStub == null) {
-            profileBirthdayBanner.visibility = View.GONE
-        }
-
-        url.movementMethod = null
-
-        activity.invalidateOptionsMenu()
-        updateSubtitle()
-    }
-
-    override val currentVisibleFragment: Fragment?
-        get() {
-            val currentItem = viewPager.currentItem
-            if (currentItem < 0 || currentItem >= pagerAdapter.count) return null
-            return pagerAdapter.instantiateItem(viewPager, currentItem)
-        }
-
     override fun triggerRefresh(position: Int): Boolean {
         return false
     }
@@ -511,29 +210,9 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         return true
     }
 
-    fun getUserInfo(accountKey: UserKey, userKey: UserKey?, screenName: String?,
-            omitIntentExtra: Boolean) {
-        val lm = loaderManager
-        lm.destroyLoader(LOADER_ID_USER)
-        lm.destroyLoader(LOADER_ID_FRIENDSHIP)
-        val args = Bundle()
-        args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey)
-        args.putParcelable(EXTRA_USER_KEY, userKey)
-        args.putString(EXTRA_SCREEN_NAME, screenName)
-        args.putBoolean(EXTRA_OMIT_INTENT_EXTRA, omitIntentExtra)
-        if (!userInfoLoaderInitialized) {
-            lm.initLoader(LOADER_ID_USER, args, userInfoLoaderCallbacks)
-            userInfoLoaderInitialized = true
-        } else {
-            lm.restartLoader(LOADER_ID_USER, args, userInfoLoaderCallbacks)
-        }
-        if (userKey == null && screenName == null) {
-        }
-    }
-
     @Subscribe
     fun notifyFriendshipUpdated(event: FriendshipUpdatedEvent) {
-        val user = user
+        val user = liveUser.user
         if (user == null || !event.isAccount(user.account_key) || !event.isUser(user.key.id))
             return
         getFriendship()
@@ -541,17 +220,17 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
     @Subscribe
     fun notifyFriendshipUserUpdated(event: FriendshipTaskEvent) {
-        val user = user
+        val user = liveUser.user
         if (user == null || !event.isSucceeded || !event.isUser(user)) return
         getFriendship()
     }
 
     @Subscribe
     fun notifyProfileUpdated(event: ProfileUpdatedEvent) {
-        val user = user
+        val user = liveUser.user
         // TODO check account status
         if (user == null || user != event.user) return
-        displayUser(event.user, account)
+        displayUser(event.user)
     }
 
     @Subscribe
@@ -560,7 +239,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        val user = user ?: return
+        val user = liveUser.user ?: return
         val accountKey = user.account_key ?: return
         when (requestCode) {
             REQUEST_SET_COLOR -> {
@@ -583,7 +262,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     if (data == null || !data.hasExtra(EXTRA_ID)) return
                     val selectedAccountKey: UserKey = data.getParcelableExtra(EXTRA_ACCOUNT_KEY) ?: return
                     var userKey = user.key
-                    if (account?.type == AccountType.MASTODON && account?.key?.host != selectedAccountKey.host) {
+                    if (liveUser.account?.type == AccountType.MASTODON && liveUser.account?.key?.host != selectedAccountKey.host) {
                         userKey = AcctPlaceholderUserKey(user.key.host)
                     }
                     IntentUtils.openUserProfile(context!!, selectedAccountKey, userKey, user.screen_name,
@@ -599,6 +278,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         return inflater.inflate(R.layout.fragment_user, container, false)
     }
 
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         linkHandlerTitle = null
@@ -609,19 +289,19 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         cardBackgroundColor = ThemeUtils.getCardBackgroundColor(activity,
                 preferences[themeBackgroundOptionKey], preferences[themeBackgroundAlphaKey])
         actionBarShadowColor = 0xA0000000.toInt()
-        val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY) ?: run {
+        val accountKey = args.accountKey ?: run {
             activity.finish()
             return
         }
-        val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
-        val screenName = args.getString(EXTRA_SCREEN_NAME)
 
         Utils.setNdefPushMessageCallback(activity, CreateNdefMessageCallback {
-            val user = user ?: return@CreateNdefMessageCallback null
+            val user = liveUser.user ?: return@CreateNdefMessageCallback null
             NdefMessage(arrayOf(NdefRecord.createUri(LinkCreator.getUserWebLink(user))))
         })
 
         pagerAdapter = SupportTabsAdapter(activity, childFragmentManager)
+        liveUser = UserLiveData(activity, accountKey, args.userKey, args.screenName)
+        liveRelationship = RelationshipLiveData(activity, accountKey)
 
         viewPager.offscreenPageLimit = 3
         viewPager.adapter = pagerAdapter
@@ -646,7 +326,35 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         setupViewSettings()
         setupUserPages()
 
-        getUserInfo(accountKey, userKey, screenName, false)
+        liveUser.observe(this, success = { (account, user) ->
+            errorContainer.visibility = View.GONE
+            progressContainer.visibility = View.GONE
+            displayUser(user)
+            updateOptionsMenuVisibility()
+            if (liveRelationship.value == null) {
+                getFriendship()
+            }
+            if (user.is_cache) {
+                getUserInfo(true)
+            }
+        }, fail = { exception ->
+            errorText.text = exception.getErrorMessage(activity)
+            errorText.visibility = View.VISIBLE
+            errorContainer.visibility = View.VISIBLE
+            progressContainer.visibility = View.GONE
+            updateOptionsMenuVisibility()
+        })
+        liveRelationship.observe(this, success = { relationship ->
+            followProgress.visibility = View.GONE
+            displayRelationship(relationship)
+            updateOptionsMenuVisibility()
+        }, fail = {
+            followContainer.follow.visibility = View.GONE
+            followingYouIndicator.visibility = View.GONE
+            followProgress.visibility = View.VISIBLE
+        })
+
+        getUserInfo(false)
     }
 
     override fun onStart() {
@@ -670,17 +378,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelable(EXTRA_USER, user)
+        outState.putParcelable(EXTRA_USER, liveUser.user)
         super.onSaveInstanceState(outState)
-    }
-
-    override fun onDestroyView() {
-        user = null
-        relationship = null
-        val lm = loaderManager
-        lm.destroyLoader(LOADER_ID_USER)
-        lm.destroyLoader(LOADER_ID_FRIENDSHIP)
-        super.onDestroyView()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -690,12 +389,11 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     @UiThread
     override fun onPrepareOptionsMenu(menu: Menu) {
         val context = context ?: return
-        val user = this.user ?: return
-        val accountKey = user.account_key ?: return
-        val account = this.account
-        val relationship = this.relationship
+        val user = this.liveUser.user ?: return
+        val account = this.liveUser.account
+        val relationship = this.liveRelationship.relationship
 
-        val isMyself = accountKey.maybeEquals(user.key)
+        val isMyself = user.isSelf
         val mentionItem = menu.findItem(R.id.mention)
         if (mentionItem != null) {
             val displayName = UserColorNameManager.decideDisplayName(user.nickname,
@@ -780,9 +478,9 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val context = context ?: return false
         val fragmentManager = fragmentManager ?: return false
-        val user = user ?: return false
+        val user = liveUser.user ?: return false
         val accountKey = user.account_key ?: return false
-        val userRelationship = relationship
+        val userRelationship = liveRelationship.relationship
         when (item.itemId) {
             R.id.block -> {
                 if (userRelationship == null) return true
@@ -809,7 +507,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             R.id.mute_user -> {
                 if (userRelationship == null) return true
                 if (userRelationship.muting) {
-                    MutePromises.get(context!!).unmute(accountKey, user.key)
+                    MutePromises.get(context).unmute(accountKey, user.key)
                 } else {
                     CreateUserMuteDialogFragment.show(fragmentManager, user)
                 }
@@ -857,7 +555,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 val intent = Intent(INTENT_ACTION_SELECT_ACCOUNT)
                 intent.setClass(activity, AccountSelectorActivity::class.java)
                 intent.putExtra(EXTRA_SINGLE_SELECTION, true)
-                when (account?.type) {
+                when (liveUser.account?.type) {
                     AccountType.MASTODON -> intent.putExtra(EXTRA_ACCOUNT_TYPE, AccountType.MASTODON)
                     else -> intent.putExtra(EXTRA_ACCOUNT_HOST, user.key.host)
                 }
@@ -1011,7 +709,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     private fun updateSubtitle() {
         val activity = activity as AppCompatActivity
         val actionBar = activity.supportActionBar ?: return
-        val user = this.user
+        val user = this.liveUser.user
         if (user == null) {
             actionBar.subtitle = null
             return
@@ -1079,9 +777,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         return false
     }
 
-    private val keyboardShortcutRecipient: Fragment?
-        get() = currentVisibleFragment
-
     override fun onApplySystemWindowInsets(insets: Rect) {
     }
 
@@ -1091,7 +786,9 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             activity.supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_MODE_OVERLAY)
         }
         val window = activity.window
-        window.requestFeature(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            window.requestFeature(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        }
         WindowSupport.setStatusBarColor(window, Color.TRANSPARENT)
         return true
     }
@@ -1099,7 +796,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     override fun onClick(view: View) {
         val context = activity ?: return
         val fragmentManager = fragmentManager ?: return
-        val user = user ?: return
+        val user = liveUser.user ?: return
         val accountKey = user.account_key ?: return
         when (view.id) {
             R.id.errorContainer -> {
@@ -1109,7 +806,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 if (accountKey.maybeEquals(user.key)) {
                     IntentUtils.openProfileEditor(context, accountKey)
                 } else {
-                    val userRelationship = relationship ?: return
+                    val userRelationship = liveRelationship.relationship ?: return
                     when {
                         userRelationship.blocking -> {
                             BlockPromises.getInstance(context).unblock(accountKey, user.key)
@@ -1176,7 +873,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             extraId: Long, type: Int, sensitive: Boolean,
             start: Int, end: Int): Boolean {
         val activity = activity ?: return false
-        val user = user ?: return false
+        val user = liveUser.user ?: return false
         when (type) {
             TwidereLinkify.LINK_TYPE_MENTION -> {
                 IntentUtils.openUserProfile(activity, user.account_key, null, link, null,
@@ -1210,13 +907,15 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     override fun onUserNicknameChanged(userKey: UserKey, nick: String?) {
-        if (user?.key != userKey) return
-        displayUser(user, account)
+        val user = liveUser.user ?: return
+        if (user.key != userKey) return
+        displayUser(user)
     }
 
     override fun onUserColorChanged(userKey: UserKey, color: Int) {
-        if (user?.key != userKey) return
-        displayUser(user, account)
+        val user = liveUser.user ?: return
+        if (user.key != userKey) return
+        displayUser(user)
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -1243,25 +942,31 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     private fun getFriendship() {
-        val user = user ?: return
-        relationship = null
-        val lm = loaderManager
-        lm.destroyLoader(LOADER_ID_FRIENDSHIP)
-        val args = Bundle()
-        args.putParcelable(EXTRA_ACCOUNT_KEY, user.account_key)
-        args.putParcelable(EXTRA_USER, user)
-        if (!friendShipLoaderInitialized) {
-            lm.initLoader(LOADER_ID_FRIENDSHIP, args, friendshipLoaderCallbacks)
-            friendShipLoaderInitialized = true
+        val user = liveUser.user ?: return
+        liveRelationship.user = user
+        liveRelationship.load()
+        if (user.isSelf) {
+            followContainer.follow.visibility = View.VISIBLE
         } else {
-            lm.restartLoader(LOADER_ID_FRIENDSHIP, args, friendshipLoaderCallbacks)
+            followContainer.follow.visibility = View.GONE
         }
+        followingYouIndicator.visibility = View.GONE
+        followProgress.visibility = View.VISIBLE
     }
 
     private fun getUserInfo(omitIntentExtra: Boolean) {
-        val user = this.user ?: return
-        val accountKey = user.account_key ?: return
-        getUserInfo(accountKey, user.key, user.screen_name, omitIntentExtra)
+        if (liveUser.user != null || omitIntentExtra) {
+            liveUser.extraUser = null
+        } else {
+            liveUser.extraUser = arguments?.user
+        }
+        liveUser.load()
+        if (liveUser.user == null) {
+            errorContainer.visibility = View.GONE
+            progressContainer.visibility = View.VISIBLE
+            errorText.text = null
+            errorText.visibility = View.GONE
+        }
     }
 
     private fun setUiColor(color: Int) {
@@ -1279,7 +984,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         } else {
             ColorUtils.setAlphaComponent(theme.colorToolbar, 0xFF)
         }
-        val user = this.user
+        val user = this.liveUser.user
         if (user != null) {
             val name = userColorNameManager.getDisplayName(user, nameFirst)
             ActivitySupport.setTaskDescription(activity, TaskDescriptionCompat(name, null, taskColor))
@@ -1331,7 +1036,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val user = args.user
         fun hasFavoriteTab(): Boolean {
             val accountKey = user?.account_key ?: args.accountKey
-            return account?.type != AccountType.MASTODON || account?.key == accountKey
+            return liveUser.account?.type != AccountType.MASTODON || liveUser.account?.key == accountKey
         }
 
         val tabArgs = Bundle {
@@ -1383,6 +1088,188 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         ViewCompat.setBackgroundTintList(followButton, ContextCompat.getColorStateList(context!!, color))
         followButton.contentDescription = getString(label)
     }
+
+    private fun updateOptionsMenuVisibility() {
+        setHasOptionsMenu(liveUser.user != null && liveRelationship.relationship != null)
+    }
+
+    @UiThread
+    private fun displayUser(user: ParcelableUser) {
+        val activity = activity ?: return
+        val adapter = pagerAdapter
+        (0 until adapter.count).forEach { i ->
+            val sf = adapter.instantiateItem(viewPager, i) as? AbsTimelineFragment ?: return@forEach
+            if (sf.view == null) return@forEach
+        }
+        profileImage.visibility = View.VISIBLE
+        errorContainer.visibility = View.GONE
+        progressContainer.visibility = View.GONE
+        profileImage.setBorderColor(if (user.color != 0) user.color else Color.WHITE)
+        followContainer.drawEnd(user.account_color)
+        nameContainer.name.setText(bidiFormatter.unicodeWrap(when {
+            user.nickname.isNullOrEmpty() -> user.name
+            else -> getString(R.string.name_with_nickname, user.name, user.nickname)
+        }), TextView.BufferType.SPANNABLE)
+        val typeIconRes = Utils.getUserTypeIconRes(user.is_verified, user.is_protected)
+        if (typeIconRes != 0) {
+            profileType.setImageResource(typeIconRes)
+            profileType.visibility = View.VISIBLE
+        } else {
+            profileType.setImageDrawable(null)
+            profileType.visibility = View.GONE
+        }
+        @SuppressLint("SetTextI18n")
+        nameContainer.screenName.spannable = "@${user.acct}"
+        val linkHighlightOption = preferences[linkHighlightOptionKey]
+        val linkify = TwidereLinkify(this, linkHighlightOption)
+
+        if (user.description_unescaped != null) {
+            val text = SpannableStringBuilder.valueOf(user.description_unescaped).apply {
+                user.description_spans?.applyTo(this, null, requestManager, description)
+                linkify.applyAllLinks(this, user.account_key, false, false)
+            }
+            description.spannable = text
+        } else {
+            description.spannable = user.description_plain
+            Linkify.addLinks(description, Linkify.WEB_URLS)
+        }
+        description.hideIfEmpty()
+
+        location.spannable = user.location
+        location.hideIfEmpty()
+
+        url.spannable = user.urlPreferred?.let {
+            val ssb = SpannableStringBuilder(it)
+            ssb.setSpan(TwidereURLSpan(it, highlightStyle = linkHighlightOption), 0, ssb.length,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            return@let ssb
+        }
+        this.url.hideIfEmpty()
+
+        if (user.created_at >= 0) {
+            val createdAt = Utils.formatToLongTimeString(activity, user.created_at)
+            val daysSinceCreation = (System.currentTimeMillis() - user.created_at) / 1000 / 60 / 60 / 24.toFloat()
+            val dailyTweets = Math.round(user.statuses_count / Math.max(1f, daysSinceCreation))
+            this.createdAt.text = resources.getQuantityString(R.plurals.created_at_with_N_tweets_per_day, dailyTweets,
+                    createdAt, dailyTweets)
+        } else {
+            this.createdAt.text = null
+        }
+        this.createdAt.hideIfEmpty()
+
+        val locale = Locale.getDefault()
+
+        listedCount.primaryText = Utils.getLocalizedNumber(locale, user.listed_count)
+        groupsCount.primaryText = Utils.getLocalizedNumber(locale, user.groupsCount)
+        followersCount.primaryText = Utils.getLocalizedNumber(locale, user.followers_count)
+        friendsCount.primaryText = Utils.getLocalizedNumber(locale, user.friends_count)
+
+        listedCount.updateText()
+        groupsCount.updateText()
+        followersCount.updateText()
+        friendsCount.updateText()
+
+        listedCount.visibility = if (user.listed_count < 0) View.GONE else View.VISIBLE
+        groupsCount.visibility = if (user.groupsCount < 0) View.GONE else View.VISIBLE
+
+        if (user.color != 0) {
+            setUiColor(user.color)
+        } else if (user.link_color != 0) {
+            setUiColor(user.link_color)
+        } else {
+            val theme = Chameleon.getOverrideTheme(activity, activity)
+            setUiColor(theme.colorPrimary)
+        }
+        val defWidth = resources.displayMetrics.widthPixels
+        requestManager.loadProfileBanner(activity, user, defWidth).into(profileBanner)
+        requestManager.loadOriginalProfileImage(activity, user, profileImage.style,
+                profileImage.cornerRadius, profileImage.cornerRadiusRatio)
+                .thumbnail(requestManager.loadProfileImage(activity, user, profileImage.style,
+                        profileImage.cornerRadius, profileImage.cornerRadiusRatio,
+                        getString(R.string.profile_image_size))).into(profileImage)
+        activity.title = SpannableStringBuilder.valueOf(UserColorNameManager.decideDisplayName(user.nickname, user.name,
+                user.screen_name, nameFirst)).also {
+            externalThemeManager.emoji?.applyTo(it)
+        }
+
+        val userCreationDay = condition@ if (user.created_at >= 0) {
+            val cal = Calendar.getInstance()
+            val currentMonth = cal.get(Calendar.MONTH)
+            val currentDay = cal.get(Calendar.DAY_OF_MONTH)
+            cal.timeInMillis = user.created_at
+            cal.get(Calendar.MONTH) == currentMonth && cal.get(Calendar.DAY_OF_MONTH) == currentDay
+        } else {
+            false
+        }
+
+        if (userCreationDay && !hideBirthdayView) {
+            if (profileBirthdayStub != null) {
+                profileBirthdayBanner = profileBirthdayStub.inflate()
+                profileBirthdayBanner.setOnClickListener(this)
+            } else {
+                profileBirthdayBanner.visibility = View.VISIBLE
+            }
+        } else if (profileBirthdayStub == null) {
+            profileBirthdayBanner.visibility = View.GONE
+        }
+
+        url.movementMethod = null
+
+        activity.invalidateOptionsMenu()
+        updateSubtitle()
+    }
+
+    private fun displayRelationship(relationship: ParcelableRelationship) {
+        val activity = activity ?: return
+        val user = this.liveUser.user ?: return
+        if (user.isSelf) {
+            setFollowEditButton(R.drawable.ic_action_edit, R.color.material_light_blue,
+                    R.string.action_edit)
+            followContainer.follow.visibility = View.VISIBLE
+            return
+        }
+        if (!relationship.check(user)) {
+            return
+        }
+        activity.invalidateOptionsMenu()
+        when {
+            relationship.blocked_by -> {
+                pagesErrorContainer.visibility = View.GONE
+                pagesErrorText.text = null
+            }
+            !relationship.following && user.hide_protected_contents -> {
+                pagesErrorContainer.visibility = View.VISIBLE
+                pagesErrorText.setText(R.string.user_protected_summary)
+                pagesErrorIcon.setImageResource(R.drawable.ic_info_locked)
+            }
+            else -> {
+                pagesErrorContainer.visibility = View.GONE
+                pagesErrorText.text = null
+            }
+        }
+        when {
+            relationship.blocking -> setFollowEditButton(R.drawable.ic_action_block, R.color.material_red,
+                    R.string.action_unblock)
+            relationship.blocked_by -> setFollowEditButton(R.drawable.ic_action_block, R.color.material_grey,
+                    R.string.action_block)
+            relationship.following -> setFollowEditButton(R.drawable.ic_action_confirm, R.color.material_light_blue,
+                    R.string.action_unfollow)
+            user.is_follow_request_sent -> setFollowEditButton(R.drawable.ic_action_time, R.color.material_light_blue,
+                    R.string.label_follow_request_sent)
+            else -> setFollowEditButton(R.drawable.ic_action_add, android.R.color.white,
+                    R.string.action_follow)
+        }
+        followingYouIndicator.visibility = if (relationship.followed_by) View.VISIBLE else View.GONE
+
+        val weakThis by weak(this)
+        task {
+            val resolver = weakThis?.context?.contentResolver ?: throw InterruptedException()
+            resolver.insert(CachedUsers.CONTENT_URI, user, ParcelableUser::class.java)
+            resolver.insert(CachedRelationships.CONTENT_URI, relationship, ParcelableRelationship::class.java)
+        }
+        followContainer.follow.visibility = View.VISIBLE
+    }
+
 
     private fun showAddToListDialog(user: ParcelableUser) {
         val accountKey = user.account_key ?: return
@@ -1493,8 +1380,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     Utils.setLastSeen(context, userKey, System.currentTimeMillis())
                 }
                 val resolver = context.contentResolver
-                val values = ObjectCursor.valuesCreatorFrom(ParcelableRelationship::class.java).create(data)
-                resolver.insert(CachedRelationships.CONTENT_URI, values)
+                resolver.insert(CachedRelationships.CONTENT_URI, data, ParcelableRelationship::class.java)
                 return SingleResponse(data)
             } catch (e: MicroBlogException) {
                 return SingleResponse(e)
@@ -1593,9 +1479,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     companion object {
-
-        private val LOADER_ID_USER = 1
-        private val LOADER_ID_FRIENDSHIP = 2
 
         private const val TAB_POSITION_STATUSES = 0
         private const val TAB_POSITION_MEDIA = 1

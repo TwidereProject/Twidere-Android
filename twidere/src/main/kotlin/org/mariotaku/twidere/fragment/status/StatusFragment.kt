@@ -53,7 +53,6 @@ import nl.komponents.kovenant.ui.alwaysUi
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
-import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
@@ -733,8 +732,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     return@updateStatusInfo item
                 }
                 val pStatus = status.toParcelable(details)
-                cr.insert(CachedStatuses.CONTENT_URI, ObjectCursor
-                        .valuesCreatorFrom(ParcelableStatus::class.java).create(pStatus))
+                cr.insert(CachedStatuses.CONTENT_URI, pStatus, ParcelableStatus::class.java)
 
                 return activitySummary
             } catch (e: MicroBlogException) {

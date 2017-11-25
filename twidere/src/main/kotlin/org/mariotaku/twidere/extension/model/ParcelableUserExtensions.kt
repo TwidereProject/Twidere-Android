@@ -74,7 +74,6 @@ val ParcelableUser.host: String
     get() {
         if (this.isFanfouUser) return USER_TYPE_FANFOU_COM
         if (extras == null) return USER_TYPE_TWITTER_COM
-
         return getUserHost(extras?.statusnet_profile_url, USER_TYPE_TWITTER_COM)
     }
 
@@ -99,4 +98,6 @@ inline val ParcelableUser.acct: String
         }
     }
 
-inline val ParcelableUser.groups_count: Long get() = extras?.groups_count ?: -1
+inline val ParcelableUser.groupsCount: Long get() = extras?.groups_count ?: -1
+
+inline val ParcelableUser.isSelf: Boolean get() = key.maybeEquals(account_key)

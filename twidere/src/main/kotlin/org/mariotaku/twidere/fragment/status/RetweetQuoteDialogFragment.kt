@@ -33,7 +33,6 @@ import android.widget.RelativeLayout
 import android.widget.Toast
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
-import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.content.RetweetQuoteDialogActivity
 import org.mariotaku.twidere.annotation.AccountType
@@ -280,9 +279,8 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
             this.status = this@RetweetQuoteDialogFragment.status
             this.isQuoteOriginalStatus = quoteOriginal.isChecked
         }
-        val values = ObjectCursor.valuesCreatorFrom(Draft::class.java).create(draft)
         val contentResolver = context.contentResolver
-        val draftUri = contentResolver.insert(Drafts.CONTENT_URI, values)
+        val draftUri = contentResolver.insert(Drafts.CONTENT_URI, draft, Draft::class.java)!!
         displayNewDraftNotification(draftUri)
     }
 

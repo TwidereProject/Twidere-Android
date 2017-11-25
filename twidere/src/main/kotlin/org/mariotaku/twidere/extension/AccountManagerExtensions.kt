@@ -21,7 +21,6 @@ package org.mariotaku.twidere.extension
 
 import android.accounts.*
 import android.app.Activity
-import android.content.ActivityNotFoundException
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -33,6 +32,7 @@ import nl.komponents.kovenant.thenApply
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
@@ -137,7 +137,18 @@ fun AccountManager.getDetails(account: Account, getCredentials: Boolean): Accoun
 }
 
 fun AccountManager.getDetailsOrThrow(key: UserKey, getCredentials: Boolean): AccountDetails {
-    return getDetails(key, getCredentials) ?: throw ActivityNotFoundException()
+    return getDetails(key, getCredentials) ?: throw AccountNotFoundException()
+}
+
+fun AccountManager.findMatchingDetailsOrThrow(key: UserKey): AccountDetails {
+    return AccountUtils.getAllAccountDetails(this, ownedAccounts, true).firstOrNull {
+        if (it.key == key) {
+            return@firstOrNull true
+        } else if (it.user.account_key == key) {
+            return@firstOrNull true
+        }
+        return@firstOrNull false
+    } ?: throw AccountNotFoundException()
 }
 
 val AccountManager.ownedAccounts: Array<Account> get() = getAccountsByType(ACCOUNT_TYPE)

@@ -286,8 +286,8 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
                 subscription.setupUrl(editUrl.text.toString())
                 val component = subscription.instantiateComponent(context!!) ?: return@setPositiveButton
                 component.firstAdded()
-                val vc = ObjectCursor.valuesCreatorFrom(FiltersSubscription::class.java)
-                context!!.contentResolver.insert(Filters.Subscriptions.CONTENT_URI, vc.create(subscription))
+                context!!.contentResolver.insert(Filters.Subscriptions.CONTENT_URI, subscription,
+                        FiltersSubscription::class.java)
             }
             builder.setNegativeButton(android.R.string.cancel, null)
             val dialog = builder.create()

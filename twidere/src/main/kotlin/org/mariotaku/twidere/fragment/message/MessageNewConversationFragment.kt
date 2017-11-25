@@ -38,13 +38,13 @@ import android.view.*
 import kotlinx.android.synthetic.main.fragment_messages_conversation_new.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
-import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.SelectableUsersAdapter
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.accountKey
+import org.mariotaku.twidere.extension.insert
 import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.queryOne
@@ -277,8 +277,7 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
             }
         }
 
-        val values = ObjectCursor.valuesCreatorFrom(ParcelableMessageConversation::class.java).create(conversation)
-        activity.contentResolver.insert(Conversations.CONTENT_URI, values)
+        activity.contentResolver.insert(Conversations.CONTENT_URI, conversation, ParcelableMessageConversation::class.java)
         activity.startActivity(IntentUtils.messageConversation(accountKey, conversation.id))
         activity.finish()
     }

@@ -39,6 +39,7 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.api.tryShowUser
 import org.mariotaku.twidere.extension.get
+import org.mariotaku.twidere.extension.insert
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.host
@@ -146,9 +147,7 @@ class ParcelableUserLoader(
                 AccountType.MASTODON -> showMastodonUser(details)
                 else -> showMicroBlogUser(details)
             }
-            val creator = ObjectCursor.valuesCreatorFrom(ParcelableUser::class.java)
-            val cachedUserValues = creator.create(user)
-            resolver.insert(CachedUsers.CONTENT_URI, cachedUserValues)
+            resolver.insert(CachedUsers.CONTENT_URI, user, ParcelableUser::class.java)
             ParcelableUserUtils.updateExtraInformation(user, details, userColorNameManager)
             return SingleResponse(user).apply {
                 extras[EXTRA_ACCOUNT] = details

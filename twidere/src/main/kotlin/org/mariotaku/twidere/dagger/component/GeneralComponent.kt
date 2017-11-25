@@ -27,6 +27,7 @@ import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.dagger.module.ApplicationModule
 import org.mariotaku.twidere.dagger.module.ChannelModule
+import org.mariotaku.twidere.data.impl.UserLiveData
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BaseFragment
@@ -54,7 +55,6 @@ import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.text.util.EmojiEditableFactory
 import org.mariotaku.twidere.text.util.EmojiSpannableFactory
 import org.mariotaku.twidere.util.MultiSelectEventHandler
-import org.mariotaku.twidere.promise.RefreshPromises
 import org.mariotaku.twidere.util.filter.UrlFiltersSubscriptionProvider
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 import org.mariotaku.twidere.util.sync.SyncTaskRunner
@@ -178,6 +178,8 @@ interface GeneralComponent {
     fun inject(promises: SavedSearchPromises)
 
     fun inject(promises: RefreshPromises)
+
+    fun inject(liveData: UserLiveData)
 
     companion object : ApplicationContextSingletonHolder<GeneralComponent>(creation@ { application ->
         return@creation DaggerGeneralComponent.builder()

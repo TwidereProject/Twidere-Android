@@ -867,7 +867,7 @@ object DataStoreUtils {
         val whereArgs = arrayOf(accountKey.toString(), statusId)
         val resolver = context.contentResolver
         resolver.delete(CachedStatuses.CONTENT_URI, where, whereArgs)
-        resolver.insert(CachedStatuses.CONTENT_URI, ObjectCursor.valuesCreatorFrom(ParcelableStatus::class.java).create(status))
+        resolver.insert(CachedStatuses.CONTENT_URI, status, ParcelableStatus::class.java)
         return status
     }
 

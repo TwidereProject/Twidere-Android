@@ -41,7 +41,6 @@ import nl.komponents.kovenant.then
 import nl.komponents.kovenant.ui.promiseOnUi
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.ktextension.*
-import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.fanfou.model.PhotoStatusUpdate
@@ -65,6 +64,7 @@ import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.calculateInSampleSize
 import org.mariotaku.twidere.extension.get
+import org.mariotaku.twidere.extension.insert
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
@@ -1112,8 +1112,7 @@ class UpdateStatusPromise(
         fun saveDraft(context: Context, @Draft.Action action: String, config: Draft.() -> Unit): Long {
             val draft = createDraft(action, config)
             val resolver = context.contentResolver
-            val creator = ObjectCursor.valuesCreatorFrom(Draft::class.java)
-            val draftUri = resolver.insert(Drafts.CONTENT_URI, creator.create(draft)) ?: return -1
+            val draftUri = resolver.insert(Drafts.CONTENT_URI, draft, Draft::class.java) ?: return -1
             return draftUri.lastPathSegment.toLongOr(-1)
         }
 

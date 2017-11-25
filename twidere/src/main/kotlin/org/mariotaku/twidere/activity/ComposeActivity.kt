@@ -1694,9 +1694,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val draft = UpdateStatusPromise.createDraft(draftAction) {
             applyUpdateStatus(statusUpdate)
         }
-        val values = ObjectCursor.valuesCreatorFrom(Draft::class.java).create(draft)
-        val draftUri = contentResolver.insert(Drafts.CONTENT_URI, values)
-        displayNewDraftNotification(draftUri)
+        val draftUri = contentResolver.insert(Drafts.CONTENT_URI, draft, Draft::class.java)
+        displayNewDraftNotification(draftUri!!)
         return draftUri
     }
 
