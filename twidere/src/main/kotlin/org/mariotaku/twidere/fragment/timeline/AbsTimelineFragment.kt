@@ -65,6 +65,7 @@ import org.mariotaku.twidere.data.ExtendedPagedListProvider
 import org.mariotaku.twidere.data.StatusesLivePagedListProvider
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.extension.adapter.removeStatuses
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.extension.promise
 import org.mariotaku.twidere.extension.queryOne
@@ -89,6 +90,7 @@ import org.mariotaku.twidere.model.refresh.BaseContentRefreshParam
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.timeline.TimelineFilter
 import org.mariotaku.twidere.model.util.AccountUtils
+import org.mariotaku.twidere.promise.StatusPromises
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.CreateFavoriteTask
 import org.mariotaku.twidere.task.statuses.GetStatusesTask
@@ -231,7 +233,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                 return true
             }
             else -> return MenuUtils.handleStatusClick(context, this, fragmentManager!!,
-                    preferences, userColorNameManager, twitterWrapper, status, item)
+                    preferences, userColorNameManager, status, item)
         }
     }
 
@@ -628,7 +630,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                             FavoriteConfirmDialogFragment.show(it.childFragmentManager,
                                     status.account_key, status.id, status)
                         }
-                        status.is_favorite -> fragment.twitterWrapper.destroyFavoriteAsync(status.account_key, status.id)
+                        status.is_favorite -> StatusPromises.get(fragment.context!!).unfavorite(status.account_key, status.id)
                         else -> holder.playLikeAnimation(DefaultOnLikedListener(fragment.context!!, status))
                     }
                 }
@@ -665,7 +667,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                                     accountKey, status.id, status)
                         }
                     } else {
-                        fragment.twitterWrapper.createFavoriteAsync(accountKey, status)
+                        StatusPromises.get(fragment.context!!).favorite(accountKey, status)
                     }
                 }
                 REQUEST_RETWEET_SELECT_ACCOUNT -> {
@@ -711,7 +713,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                                     status.account_key, status.id, status)
                         }
                     } else if (status.is_favorite) {
-                        fragment.twitterWrapper.destroyFavoriteAsync(status.account_key, status.id)
+                        StatusPromises.get(fragment.context!!).unfavorite(status.account_key, status.id)
                     } else {
                         val holder = fragment.recyclerView.findViewHolderForLayoutPosition(position) as StatusViewHolder
                         holder.playLikeAnimation(DefaultOnLikedListener(fragment.context!!, status))

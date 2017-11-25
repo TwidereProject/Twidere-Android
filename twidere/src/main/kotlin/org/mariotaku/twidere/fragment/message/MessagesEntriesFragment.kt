@@ -51,6 +51,7 @@ import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.model.getTitle
 import org.mariotaku.twidere.extension.model.user
+import org.mariotaku.twidere.extension.promise
 import org.mariotaku.twidere.fragment.AbsContentListRecyclerViewFragment
 import org.mariotaku.twidere.fragment.iface.IFloatingActionButtonFragment
 import org.mariotaku.twidere.fragment.iface.IFloatingActionButtonFragment.ActionInfo
@@ -158,9 +159,11 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
 
     override fun triggerRefresh(): Boolean {
         super.triggerRefresh()
-        twitterWrapper.getMessagesAsync(object : GetMessagesTask.RefreshNewParam(context!!) {
+        val task = GetMessagesTask(context!!)
+        task.params = object : GetMessagesTask.RefreshNewParam(context!!) {
             override val accountKeys: Array<UserKey> = this@MessagesEntriesFragment.accountKeys
-        })
+        }
+        task.promise()
         return true
     }
 
@@ -169,9 +172,11 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
             return
         }
         setLoadMoreIndicatorPosition(LoadMorePosition.END)
-        twitterWrapper.getMessagesAsync(object : GetMessagesTask.LoadMoreEntriesParam(context!!) {
+        val task = GetMessagesTask(context!!)
+        task.params = object : GetMessagesTask.LoadMoreEntriesParam(context!!) {
             override val accountKeys: Array<UserKey> = this@MessagesEntriesFragment.accountKeys
-        })
+        }
+        task.promise()
     }
 
     override fun onConversationClick(position: Int) {

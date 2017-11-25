@@ -20,30 +20,19 @@
 package org.mariotaku.twidere.fragment
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.Loader
-import android.text.TextUtils
 import android.text.TextUtils.isEmpty
 import android.view.*
 import android.view.View.OnClickListener
-import android.widget.Toast
 import com.twitter.Validator
 import kotlinx.android.synthetic.main.fragment_user_profile_editor.*
+import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.combine.and
-import nl.komponents.kovenant.ui.promiseOnUi
-import org.mariotaku.abstask.library.AbstractTask
-import org.mariotaku.ktextension.dismissDialogFragment
-import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.mastodon.Mastodon
-import org.mariotaku.microblog.library.mastodon.model.AccountUpdate
-import org.mariotaku.microblog.library.twitter.model.ProfileUpdate
+import org.mariotaku.ktextension.string
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity
@@ -51,26 +40,27 @@ import org.mariotaku.twidere.activity.ThemedMediaPickerActivity
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.ImageShapeStyle
 import org.mariotaku.twidere.extension.*
-import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
-import org.mariotaku.twidere.extension.model.api.toParcelable
-import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.extension.model.urlPreferred
 import org.mariotaku.twidere.loader.ParcelableUserLoader
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
-import org.mariotaku.twidere.task.*
-import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.promise.UserProfilePromises
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler
+import org.mariotaku.twidere.util.ParseUtils
+import org.mariotaku.twidere.util.TwitterValidatorMETLengthChecker
+import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener
 
 class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
         OnClickListener, LoaderCallbacks<SingleResponse<ParcelableUser>>,
         KeyboardShortcutsHandler.TakeAllKeyboardShortcut {
 
-    private var currentTask: AbstractTask<*, *, UserProfileEditorFragment>? = null
     private val accountKey: UserKey
         get() = arguments!!.accountKey!!
+    private var runningPromise: Promise<Any, Exception>? = null
     private var user: ParcelableUser? = null
     private var account: AccountDetails? = null
     private var userInfoLoaderInitialized: Boolean = false
@@ -117,8 +107,8 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
     override fun onClick(view: View) {
         val user = user ?: return
         val account = account ?: return
-        val task = currentTask
-        if (task != null && !task.isFinished) return
+        val task = runningPromise
+        if (task != null && !task.isDone()) return
         when (view.id) {
             R.id.editProfileImage -> {
                 val intent = ThemedMediaPickerActivity.withThemed(activity!!)
@@ -187,16 +177,14 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.save -> {
-                val name = ParseUtils.parseString(editName.text)
-                val url = ParseUtils.parseString(editUrl.text)
-                val location = ParseUtils.parseString(editLocation.text)
-                val description = ParseUtils.parseString(editDescription.text)
-                val linkColor = linkColor.color
-                val backgroundColor = backgroundColor.color
-                val task = UpdateProfileTaskInternal(this, accountKey, user, name, url, location,
-                        description, linkColor, backgroundColor)
-                task.promise()
-                this.currentTask = task
+                val user = this.user ?: return true
+                if (!profileChanged(user)) return true
+                val update = UserProfilePromises.ProfileUpdate(editName.string.orEmpty(),
+                        editUrl.string.orEmpty(), editLocation.string.orEmpty(),
+                        editDescription.string.orEmpty(), linkColor.color, backgroundColor.color)
+                runningPromise = showProgressDialog(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG)
+                        .and(UserProfilePromises.get(context!!).updateProfile(accountKey, update))
+                        .and(dismissProgressDialog(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG))
                 return true
             }
         }
@@ -222,28 +210,29 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == FragmentActivity.RESULT_CANCELED || data == null) return
+        val promise = runningPromise
+        if (promise != null && !promise.isDone()) return
         when (requestCode) {
             REQUEST_UPLOAD_PROFILE_BANNER_IMAGE -> {
-                val task = currentTask
-                if (task != null && !task.isFinished) return
-                if (resultCode == RESULT_REMOVE_BANNER) {
-                    currentTask = RemoveProfileBannerTaskInternal(context!!, accountKey)
+                runningPromise = if (resultCode == RESULT_REMOVE_BANNER) {
+                    showProgressDialog(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG)
+                            .and(UserProfilePromises.get(context!!).removeBanner(accountKey))
+                            .and(dismissProgressDialog(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG))
                 } else {
-                    currentTask = UpdateProfileBannerImageTaskInternal(this, accountKey,
-                            data.data, true)
+                    showProgressDialog(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG)
+                            .and(UserProfilePromises.get(context!!).updateBanner(accountKey, data.data, true))
+                            .and(dismissProgressDialog(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG))
                 }
             }
             REQUEST_UPLOAD_PROFILE_BACKGROUND_IMAGE -> {
-                val task = currentTask
-                if (task != null && !task.isFinished) return
-                currentTask = UpdateProfileBackgroundImageTaskInternal(this, accountKey,
-                        data.data, false, true)
+                runningPromise = showProgressDialog(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG)
+                        .and(UserProfilePromises.get(context!!).updateBackground(accountKey, data.data, false, true))
+                        .and(dismissProgressDialog(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG))
             }
             REQUEST_UPLOAD_PROFILE_IMAGE -> {
-                val task = currentTask
-                if (task != null && !task.isFinished) return
-                currentTask = UpdateProfileImageTaskInternal(this, accountKey,
-                        data.data, true)
+                runningPromise = showProgressDialog(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG)
+                        .and(UserProfilePromises.get(context!!).updateProfileImage(accountKey, data.data, true))
+                        .and(dismissProgressDialog(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG))
             }
             REQUEST_PICK_LINK_COLOR -> {
                 if (resultCode == Activity.RESULT_OK) {
@@ -254,12 +243,6 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
                 if (resultCode == Activity.RESULT_OK) {
                     backgroundColor.color = data.getIntExtra(EXTRA_COLOR, 0)
                 }
-            }
-        }
-        executeAfterFragmentResumed {
-            val task = currentTask
-            if (task != null && !task.isFinished) {
-                task.promise()
             }
         }
     }
@@ -340,215 +323,14 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
         }
     }
 
-    private fun dismissDialogFragment(tag: String) {
-        executeAfterFragmentResumed {
-            val fm = childFragmentManager
-            val f = fm.findFragmentByTag(tag)
-            if (f is DialogFragment) {
-                f.dismiss()
-            }
-        }
-    }
-
-    private fun setUpdateState(start: Boolean) {
-        if (!start) {
-            dismissDialogFragment(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG)
-            return
-        }
-        executeAfterFragmentResumed {
-            val fm = childFragmentManager
-            val df = ProgressDialogFragment()
-            df.show(fm, UPDATE_PROFILE_DIALOG_FRAGMENT_TAG)
-            df.isCancelable = false
-        }
-    }
-
-    internal class UpdateProfileTaskInternal(
-            fragment: UserProfileEditorFragment,
-            accountKey: UserKey,
-            private val original: ParcelableUser?,
-            private val name: String,
-            private val url: String,
-            private val location: String,
-            private val description: String,
-            private val linkColor: Int,
-            private val backgroundColor: Int
-    ) : AbsAccountRequestTask<Any?, Pair<ParcelableUser, AccountDetails>,
-            UserProfileEditorFragment>(fragment.context!!, accountKey) {
-
-        init {
-            this.callback = fragment
-        }
-
-        override fun onExecute(account: AccountDetails, params: Any?): Pair<ParcelableUser, AccountDetails> {
-            val orig = this.original
-            if (orig != null && !orig.isProfileChanged()) {
-                return Pair(orig, account)
-            }
-            return Pair(when (account.type) {
-                AccountType.MASTODON -> updateMastodonProfile(account)
-                else -> updateMicroBlogProfile(account)
-            }, account)
-        }
-
-
-        override fun onSucceed(callback: UserProfileEditorFragment?, result: Pair<ParcelableUser, AccountDetails>) {
-            if (callback == null) return
-            promiseOnUi {
-                val context = this.callback?.context ?: return@promiseOnUi
-                val (user, account) = result
-                val task = UpdateAccountInfoTask(context)
-                task.toPromise(Pair(account, user))
-            } and callback.executeAfterFragmentResumed { fragment ->
-                fragment.childFragmentManager.dismissDialogFragment(DIALOG_FRAGMENT_TAG)
-                fragment.activity!!.finish()
-            }
-
-        }
-
-        override fun beforeExecute() {
-            super.beforeExecute()
-            callback?.executeAfterFragmentResumed { fragment ->
-                val df = ProgressDialogFragment.show(fragment.childFragmentManager, DIALOG_FRAGMENT_TAG)
-                df.isCancelable = false
-            }
-        }
-
-        private fun updateMicroBlogProfile(account: AccountDetails): ParcelableUser {
-            val microBlog = account.newMicroBlogInstance(context = context, cls = MicroBlog::class.java)
-            val profileUpdate = ProfileUpdate()
-            profileUpdate.name(HtmlEscapeHelper.escapeBasic(name))
-            profileUpdate.location(HtmlEscapeHelper.escapeBasic(location))
-            profileUpdate.description(HtmlEscapeHelper.escapeBasic(description))
-            profileUpdate.url(url)
-            profileUpdate.linkColor(linkColor)
-            profileUpdate.backgroundColor(backgroundColor)
-            val profileImageSize = context.getString(R.string.profile_image_size)
-            return microBlog.updateProfile(profileUpdate).toParcelable(account,
-                    profileImageSize = profileImageSize)
-        }
-
-        private fun updateMastodonProfile(account: AccountDetails): ParcelableUser {
-            val mastodon = account.newMicroBlogInstance(context = context, cls = Mastodon::class.java)
-            val accountUpdate = AccountUpdate()
-            accountUpdate.displayName(name)
-            accountUpdate.note(HtmlEscapeHelper.escapeBasic(description))
-            return mastodon.updateCredentials(accountUpdate).toParcelable(account)
-        }
-
-        private fun ParcelableUser.isProfileChanged(): Boolean {
-            if (linkColor != link_color) return true
-            if (backgroundColor != background_color) return true
-            if (!TextUtils.equals(this@UpdateProfileTaskInternal.name, name)) return true
-            if (!TextUtils.equals(description, ParcelableUserUtils.getExpandedDescription(this)))
-                return true
-            if (!TextUtils.equals(this@UpdateProfileTaskInternal.location, location)) return true
-            if (!TextUtils.equals(this@UpdateProfileTaskInternal.url, if (isEmpty(url_expanded)) url else url_expanded))
-                return true
-            return false
-        }
-
-        companion object {
-
-            private val DIALOG_FRAGMENT_TAG = "updating_user_profile"
-        }
-
-    }
-
-    internal class RemoveProfileBannerTaskInternal(
-            context: Context,
-            accountKey: UserKey
-    ) : AbsAccountRequestTask<Any?, Boolean, UserProfileEditorFragment>(context, accountKey) {
-        override fun onExecute(account: AccountDetails, params: Any?): Boolean {
-            return account.newMicroBlogInstance(context, MicroBlog::class.java)
-                    .removeProfileBannerImage().isSuccessful
-        }
-
-        override fun onSucceed(callback: UserProfileEditorFragment?, result: Boolean) {
-            if (callback == null) return
-            val context = callback.context
-            callback.getUserInfo()
-            Toast.makeText(context, R.string.message_toast_profile_banner_image_updated,
-                    Toast.LENGTH_SHORT).show()
-        }
-
-        override fun beforeExecute() {
-            super.beforeExecute()
-            callback?.setUpdateState(true)
-        }
-
-    }
-
-    private class UpdateProfileBannerImageTaskInternal(
-            fragment: UserProfileEditorFragment,
-            accountKey: UserKey,
-            imageUri: Uri,
-            deleteImage: Boolean
-    ) : UpdateProfileBannerImageTask<UserProfileEditorFragment>(fragment.context!!, accountKey, imageUri, deleteImage) {
-
-        init {
-            callback = fragment
-        }
-
-        override fun afterExecute(callback: UserProfileEditorFragment?, result: ParcelableUser?, exception: MicroBlogException?) {
-            callback?.setUpdateState(false)
-            callback?.getUserInfo()
-        }
-
-        override fun beforeExecute() {
-            callback?.setUpdateState(true)
-        }
-
-    }
-
-    private class UpdateProfileBackgroundImageTaskInternal(
-            fragment: UserProfileEditorFragment,
-            accountKey: UserKey,
-            imageUri: Uri,
-            tile: Boolean,
-            deleteImage: Boolean
-    ) : UpdateProfileBackgroundImageTask<UserProfileEditorFragment>(fragment.context!!, accountKey, imageUri,
-            tile, deleteImage) {
-
-        init {
-            callback = fragment
-        }
-
-        override fun afterExecute(callback: UserProfileEditorFragment?, result: ParcelableUser?, exception: MicroBlogException?) {
-            super.afterExecute(callback, result, exception)
-            callback?.setUpdateState(false)
-            callback?.getUserInfo()
-        }
-
-        override fun beforeExecute() {
-            super.beforeExecute()
-            callback?.setUpdateState(true)
-        }
-
-    }
-
-    private class UpdateProfileImageTaskInternal(
-            fragment: UserProfileEditorFragment,
-            accountKey: UserKey,
-            imageUri: Uri,
-            deleteImage: Boolean
-    ) : UpdateProfileImageTask<UserProfileEditorFragment>(fragment.context!!, accountKey, imageUri, deleteImage) {
-
-        init {
-            callback = fragment
-        }
-
-        override fun afterExecute(callback: UserProfileEditorFragment?, result: ParcelableUser?, exception: MicroBlogException?) {
-            super.afterExecute(callback, result, exception)
-            callback?.setUpdateState(false)
-            callback?.getUserInfo()
-        }
-
-        override fun beforeExecute() {
-            super.beforeExecute()
-            callback?.setUpdateState(true)
-        }
-
+    private fun profileChanged(user: ParcelableUser): Boolean {
+        if (user.link_color != linkColor.color) return true
+        if (user.background_color != backgroundColor.color) return true
+        if (user.name != editName.string) return true
+        if (ParcelableUserUtils.getExpandedDescription(user) != editDescription.string) return true
+        if (user.location != editLocation.string) return true
+        if (user.urlPreferred != editUrl.string) return true
+        return false
     }
 
     companion object {

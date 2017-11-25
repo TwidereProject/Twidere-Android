@@ -27,9 +27,14 @@ import nl.komponents.kovenant.task
 import nl.komponents.kovenant.then
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
+import org.mariotaku.microblog.library.MicroBlog
+import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.extension.getDetailsOrThrow
 import org.mariotaku.twidere.extension.getErrorMessage
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
 
 fun <T> Promise<T, Exception>.thenGetAccount(context: Context, accountKey: UserKey): Promise<AccountDetails, Exception> = then {
@@ -40,9 +45,26 @@ fun <T> accountTask(context: Context, accountKey: UserKey, body: (account: Accou
     return@task body(AccountManager.get(context).getDetailsOrThrow(accountKey, true))
 }
 
+fun <T> twitterTask(context: Context, accountKey: UserKey, action: (AccountDetails, MicroBlog) -> T): Promise<T, Exception> {
+    return accountTask(context, accountKey) { account ->
+        when (account.type) {
+            AccountType.TWITTER -> {
+                val twitter = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                return@accountTask action(account, twitter)
+            }
+            else -> throw APINotSupportedException("Unsubscribe to user list", account.type)
+        }
+    }
+}
+
 fun <T> Promise<T, Exception>.toastOnResult(context: Context, successMessage: (T) -> String): Promise<T, Exception> = successUi {
     Toast.makeText(context, successMessage(it), Toast.LENGTH_SHORT).show()
 }.failUi {
     Toast.makeText(context, it.getErrorMessage(context), Toast.LENGTH_SHORT).show()
 }
 
+
+fun <D> Promise<SingleResponse<D>, Exception>.toData(): Promise<D, Exception> = then { response ->
+    if (response.hasException()) throw response.exception!!
+    return@then response.data!!
+}

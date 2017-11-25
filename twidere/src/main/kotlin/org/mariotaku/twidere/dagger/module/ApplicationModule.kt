@@ -185,13 +185,6 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun asyncTwitterWrapper(bus: Bus, preferences: SharedPreferences,
-            notificationManagerWrapper: NotificationManagerWrapper): AsyncTwitterWrapper {
-        return AsyncTwitterWrapper(application, preferences)
-    }
-
-    @Provides
-    @Singleton
     fun readStateManager(): ReadStateManager {
         return ReadStateManager(application)
     }

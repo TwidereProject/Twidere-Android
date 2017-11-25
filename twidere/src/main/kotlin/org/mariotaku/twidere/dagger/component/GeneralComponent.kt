@@ -54,6 +54,7 @@ import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.text.util.EmojiEditableFactory
 import org.mariotaku.twidere.text.util.EmojiSpannableFactory
 import org.mariotaku.twidere.util.MultiSelectEventHandler
+import org.mariotaku.twidere.promise.RefreshPromises
 import org.mariotaku.twidere.util.filter.UrlFiltersSubscriptionProvider
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 import org.mariotaku.twidere.util.sync.SyncTaskRunner
@@ -175,6 +176,8 @@ interface GeneralComponent {
     fun inject(promises: UserListPromises)
 
     fun inject(promises: SavedSearchPromises)
+
+    fun inject(promises: RefreshPromises)
 
     companion object : ApplicationContextSingletonHolder<GeneralComponent>(creation@ { application ->
         return@creation DaggerGeneralComponent.builder()

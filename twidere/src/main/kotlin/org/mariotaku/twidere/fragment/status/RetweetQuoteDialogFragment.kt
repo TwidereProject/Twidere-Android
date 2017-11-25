@@ -197,7 +197,6 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
     @CheckResult
     private fun retweetOrQuote(account: AccountDetails, status: ParcelableStatus,
             showProtectedConfirmation: Boolean): Boolean {
-        val twitter = twitterWrapper
         val dialog = dialog ?: return false
         val editComment = dialog.editComment
         if (dialog.isQuoteRetweet(account)) {
@@ -249,7 +248,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
             }
             LengthyOperationsService.updateStatusesAsync(context!!, Draft.Action.QUOTE, update)
         } else {
-            twitter.retweetStatusAsync(account.key, status)
+            StatusPromises.get(context!!).retweet(account.key, status)
         }
         return true
     }

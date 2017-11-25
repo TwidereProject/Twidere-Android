@@ -68,10 +68,7 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_MEDIA
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
-import org.mariotaku.twidere.extension.accountKey
-import org.mariotaku.twidere.extension.conversationId
-import org.mariotaku.twidere.extension.linkHandlerTitle
-import org.mariotaku.twidere.extension.loadProfileImage
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.fragment.AbsContentListRecyclerViewFragment
 import org.mariotaku.twidere.fragment.EditAltTextDialogFragment
@@ -316,10 +313,12 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         if (LoadMorePosition.START !in position) return
         val message = adapter.getMessage(adapter.messageRange.endInclusive)
         setLoadMoreIndicatorPosition(position)
-        val param = GetMessagesTask.LoadMoreMessagesParam(context!!, accountKey, conversationId,
-                message.id)
-        param.taskTag = loadMoreTaskTag
-        twitterWrapper.getMessagesAsync(param)
+        val task = GetMessagesTask(context!!)
+        task.params = GetMessagesTask.LoadMoreMessagesParam(context!!, accountKey, conversationId,
+                message.id).apply {
+            taskTag = loadMoreTaskTag
+        }
+        task.promise()
     }
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo) {

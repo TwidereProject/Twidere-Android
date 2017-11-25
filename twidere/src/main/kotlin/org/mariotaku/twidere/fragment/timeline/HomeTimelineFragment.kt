@@ -27,12 +27,14 @@ import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_EXTRAS
 import org.mariotaku.twidere.data.fetcher.HomeTimelineFetcher
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.model.tab.applyToSelection
 import org.mariotaku.twidere.extension.promise
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.tab.extra.HomeTabExtras
+import org.mariotaku.twidere.promise.RefreshPromises
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.statuses.GetHomeTimelineTask
 import java.util.*
@@ -51,7 +53,10 @@ class HomeTimelineFragment : AbsTimelineFragment() {
     }
 
     override fun getStatuses(param: ContentRefreshParam): Boolean {
-        if (!param.hasMaxIds) return twitterWrapper.refreshAll(param.accountKeys)
+        if (!param.hasMaxIds) {
+            RefreshPromises.get(context!!).refreshAll(param.accountKeys)
+            return true
+        }
         val task = GetHomeTimelineTask(context!!)
         task.params = param
         task.promise()

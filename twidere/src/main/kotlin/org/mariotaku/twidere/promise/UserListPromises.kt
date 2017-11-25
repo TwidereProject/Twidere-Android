@@ -26,19 +26,14 @@ import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.mapToArray
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.twitter.model.UserListUpdate
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.dagger.component.GeneralComponent
-import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
-import org.mariotaku.twidere.extension.model.newMicroBlogInstance
-import org.mariotaku.twidere.extension.promise.accountTask
 import org.mariotaku.twidere.extension.promise.toastOnResult
-import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.extension.promise.twitterTask
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
@@ -63,7 +58,7 @@ class UserListPromises private constructor(private val application: Application)
     }
 
     fun create(accountKey: UserKey, update: UserListUpdate): Promise<ParcelableUserList, Exception>
-            = twitterTask(accountKey) { account, twitter ->
+            = twitterTask(application, accountKey) { account, twitter ->
         return@twitterTask twitter.createUserList(update).toParcelable(accountKey,
                 profileImageSize = profileImageSize)
     }.toastOnResult(application) { list ->
@@ -73,7 +68,7 @@ class UserListPromises private constructor(private val application: Application)
     }
 
     fun update(accountKey: UserKey, id: String, update: UserListUpdate): Promise<ParcelableUserList, Exception>
-            = twitterTask(accountKey) { account, twitter ->
+            = twitterTask(application, accountKey) { account, twitter ->
         return@twitterTask twitter.updateUserList(id, update).toParcelable(accountKey,
                 profileImageSize = profileImageSize)
     }.toastOnResult(application) { list ->
@@ -83,7 +78,7 @@ class UserListPromises private constructor(private val application: Application)
     }
 
     fun destroy(accountKey: UserKey, id: String): Promise<ParcelableUserList, Exception>
-            = twitterTask(accountKey) { account, twitter ->
+            = twitterTask(application, accountKey) { account, twitter ->
         return@twitterTask twitter.destroyUserList(id).toParcelable(accountKey,
                 profileImageSize = profileImageSize)
     }.toastOnResult(application) { list ->
@@ -93,7 +88,7 @@ class UserListPromises private constructor(private val application: Application)
     }
 
     fun subscribe(accountKey: UserKey, id: String): Promise<ParcelableUserList, Exception>
-            = twitterTask(accountKey) { account, twitter ->
+            = twitterTask(application, accountKey) { account, twitter ->
         return@twitterTask twitter.createUserListSubscription(id).toParcelable(accountKey,
                 profileImageSize = profileImageSize)
     }.toastOnResult(application) { list ->
@@ -103,7 +98,7 @@ class UserListPromises private constructor(private val application: Application)
     }
 
     fun unsubscribe(accountKey: UserKey, id: String): Promise<ParcelableUserList, Exception>
-            = twitterTask(accountKey) { account, twitter ->
+            = twitterTask(application, accountKey) { account, twitter ->
         return@twitterTask twitter.destroyUserListSubscription(id).toParcelable(accountKey,
                 profileImageSize = profileImageSize)
     }.toastOnResult(application) { list ->
@@ -113,7 +108,7 @@ class UserListPromises private constructor(private val application: Application)
     }
 
     fun addMembers(accountKey: UserKey, id: String, vararg users: ParcelableUser):
-            Promise<ParcelableUserList, Exception> = twitterTask(accountKey) { account, twitter ->
+            Promise<ParcelableUserList, Exception> = twitterTask(application, accountKey) { account, twitter ->
         val userIds = users.mapToArray { it.key.id }
         val result = twitter.addUserListMembers(id, userIds)
         return@twitterTask result.toParcelable(account.key)
@@ -135,7 +130,7 @@ class UserListPromises private constructor(private val application: Application)
     }
 
     fun deleteMembers(accountKey: UserKey, id: String, vararg users: ParcelableUser):
-            Promise<ParcelableUserList, Exception> = twitterTask(accountKey) { account, twitter ->
+            Promise<ParcelableUserList, Exception> = twitterTask(application, accountKey) { account, twitter ->
         val userIds = users.mapToArray { it.key.id }
         val result = twitter.deleteUserListMembers(id, userIds)
         return@twitterTask result.toParcelable(account.key)
@@ -154,18 +149,6 @@ class UserListPromises private constructor(private val application: Application)
         }
     }.successUi { list ->
         bus.post(UserListMembersChangedEvent(UserListMembersChangedEvent.Action.ADDED, list, users))
-    }
-
-    private fun <T> twitterTask(accountKey: UserKey, action: (AccountDetails, MicroBlog) -> T): Promise<T, Exception> {
-        return accountTask(application, accountKey) { account ->
-            when (account.type) {
-                AccountType.TWITTER -> {
-                    val twitter = account.newMicroBlogInstance(application, MicroBlog::class.java)
-                    return@accountTask action(account, twitter)
-                }
-                else -> throw APINotSupportedException("Unsubscribe to user list", account.type)
-            }
-        }
     }
 
     companion object : ApplicationContextSingletonHolder<UserListPromises>(::UserListPromises)

@@ -110,7 +110,6 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        val twitter = twitterWrapper
         when (requestCode) {
             REQUEST_SELECT_USER -> {
                 val userList = this.userList
@@ -194,7 +193,6 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val twitter = twitterWrapper
         val userList = userList ?: return false
         when (item.itemId) {
             R.id.add -> {

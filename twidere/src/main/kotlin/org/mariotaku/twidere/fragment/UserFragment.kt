@@ -780,7 +780,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val context = context ?: return false
         val fragmentManager = fragmentManager ?: return false
-        val twitter = twitterWrapper
         val user = user ?: return false
         val accountKey = user.account_key ?: return false
         val userRelationship = relationship

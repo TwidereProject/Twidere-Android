@@ -168,7 +168,7 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
                     return true
                 }
                 return MenuUtils.handleStatusClick(context, this, fragmentManager!!,
-                        preferences, userColorNameManager, twitterWrapper, status, item)
+                        preferences, userColorNameManager, status, item)
             }
         }
         return false

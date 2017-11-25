@@ -579,7 +579,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             return true
         }
         return MenuUtils.handleStatusClick(activity!!, this, fragmentManager!!,
-                preferences, userColorNameManager, twitterWrapper, status, item)
+                preferences, userColorNameManager, status, item)
     }
 
     @Subscribe

@@ -98,6 +98,7 @@ import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.UnreadCountUpdatedEvent
 import org.mariotaku.twidere.model.notification.NotificationChannelSpec
+import org.mariotaku.twidere.promise.RefreshPromises
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
@@ -315,7 +316,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
         if (savedInstanceState == null) {
             if (refreshOnStart) {
-                twitterWrapper.refreshAll(activatedAccountKeys)
+                RefreshPromises.get(this).refreshAll(activatedAccountKeys)
             }
             if (intent.getBooleanExtra(EXTRA_OPEN_ACCOUNTS_DRAWER, false)) {
                 openAccountsDrawer()
@@ -710,7 +711,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         }
         val refreshOnStart = preferences.getBoolean(SharedPreferenceConstants.KEY_REFRESH_ON_START, false)
         if (handleExtraIntent && refreshOnStart) {
-            twitterWrapper.refreshAll()
+            RefreshPromises.get(this).refreshAll()
         }
         val extraIntent = intent.getParcelableExtra<Intent>(EXTRA_EXTRA_INTENT)
 

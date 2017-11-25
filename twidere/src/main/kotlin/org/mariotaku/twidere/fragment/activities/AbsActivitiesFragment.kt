@@ -204,7 +204,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
                 return true
             }
             else -> return MenuUtils.handleStatusClick(context, this, fragmentManager!!,
-                    preferences, userColorNameManager, twitterWrapper, status, item)
+                    preferences, userColorNameManager, status, item)
         }
     }
 

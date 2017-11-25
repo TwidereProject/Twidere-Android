@@ -38,13 +38,18 @@ import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.extension.promise
 import org.mariotaku.twidere.extension.promise.accountTask
+import org.mariotaku.twidere.extension.promise.toData
 import org.mariotaku.twidere.extension.promise.toastOnResult
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.StatusDestroyedEvent
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.task.AbsAccountRequestTask
+import org.mariotaku.twidere.task.CreateFavoriteTask
+import org.mariotaku.twidere.task.DestroyFavoriteTask
+import org.mariotaku.twidere.task.RetweetStatusTask
 import org.mariotaku.twidere.util.deleteActivityStatus
 import org.mariotaku.twidere.util.deleteStatus
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
@@ -101,6 +106,15 @@ class StatusPromises private constructor(private val application: Application) {
         statusId != null -> destroy(accountKey, statusId)
         else -> Promise.ofFail(IllegalArgumentException())
     }
+
+    fun retweet(accountKey: UserKey, status: ParcelableStatus): Promise<ParcelableStatus, Exception> =
+            RetweetStatusTask(application, accountKey, status).promise().toData()
+
+    fun favorite(accountKey: UserKey, status: ParcelableStatus): Promise<ParcelableStatus, Exception> =
+            CreateFavoriteTask(application, accountKey, status).promise().toData()
+
+    fun unfavorite(accountKey: UserKey, id: String): Promise<ParcelableStatus, Exception> =
+            DestroyFavoriteTask(application, accountKey, id).promise().toData()
 
     companion object : ApplicationContextSingletonHolder<StatusPromises>(::StatusPromises)
 

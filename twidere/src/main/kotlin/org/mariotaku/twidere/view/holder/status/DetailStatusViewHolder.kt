@@ -419,10 +419,9 @@ class DetailStatusViewHolder(
         val status = adapter.getStatus(layoutPosition)
         val activity = fragment.activity!!
         val preferences = fragment.preferences
-        val twitter = fragment.twitterWrapper
         val manager = fragment.userColorNameManager
         return MenuUtils.handleStatusClick(activity, fragment, fragment.childFragmentManager,
-                preferences, manager, twitter, status, item)
+                preferences, manager, status, item)
     }
 
     internal fun updateStatusActivity(activity: StatusFragment.StatusActivity) {

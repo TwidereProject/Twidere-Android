@@ -214,7 +214,7 @@ object MenuUtils {
 
     fun handleStatusClick(context: Context, fragment: Fragment?, fm: FragmentManager,
             preferences: SharedPreferences, colorNameManager: UserColorNameManager,
-            twitter: AsyncTwitterWrapper, status: ParcelableStatus, item: MenuItem): Boolean {
+            status: ParcelableStatus, item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.copy -> {
                 if (ClipboardUtils.setText(context, status.text_plain)) {

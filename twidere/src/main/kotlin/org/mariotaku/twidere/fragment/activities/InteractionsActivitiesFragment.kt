@@ -25,11 +25,13 @@ import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_EXTRAS
 import org.mariotaku.twidere.data.CursorObjectLivePagedListProvider
 import org.mariotaku.twidere.data.predicate.ParcelableActivityProcessor
+import org.mariotaku.twidere.extension.promise
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.tab.extra.InteractionsTabExtras
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
+import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
 
 class InteractionsActivitiesFragment : AbsActivitiesFragment() {
 
@@ -40,7 +42,9 @@ class InteractionsActivitiesFragment : AbsActivitiesFragment() {
     override val readPositionTag: String? = ReadPositionTag.ACTIVITIES_ABOUT_ME
 
     override fun getActivities(param: ContentRefreshParam): Boolean {
-        twitterWrapper.getActivitiesAboutMeAsync(param)
+        val task = GetActivitiesAboutMeTask(context!!)
+        task.params = param
+        task.promise()
         return true
     }
 

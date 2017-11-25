@@ -22,19 +22,21 @@ package org.mariotaku.twidere.promise
 import android.app.Application
 import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
+import nl.komponents.kovenant.all
+import nl.komponents.kovenant.toSuccessVoid
 import nl.komponents.kovenant.ui.successUi
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.twitter.model.SavedSearch
+import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.dagger.component.GeneralComponent
-import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.extension.get
-import org.mariotaku.twidere.extension.model.newMicroBlogInstance
-import org.mariotaku.twidere.extension.promise.accountTask
 import org.mariotaku.twidere.extension.promise.toastOnResult
+import org.mariotaku.twidere.extension.promise.twitterTask
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.SavedSearchDestroyedEvent
+import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches
+import org.mariotaku.twidere.util.ContentValuesCreator
+import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 import javax.inject.Inject
 
@@ -48,31 +50,31 @@ class SavedSearchPromises(private val application: Application) {
         GeneralComponent.get(application).inject(this)
     }
 
-    fun destroy(accountKey: UserKey, id: Long): Promise<SavedSearch, Exception> = accountTask(application, accountKey) { account ->
-        when (account.type) {
-            AccountType.TWITTER -> {
-                val twitter = account.newMicroBlogInstance(application, MicroBlog::class.java)
-                return@accountTask twitter.destroySavedSearch(id)
-            }
-            else -> throw APINotSupportedException("Destroy saved search", account.type)
-        }
+    fun destroy(accountKey: UserKey, id: Long): Promise<SavedSearch, Exception> = twitterTask(application, accountKey) { account, twitter ->
+        return@twitterTask twitter.destroySavedSearch(id)
     }.toastOnResult(application) { search ->
         return@toastOnResult application.getString(R.string.destroy_saved_search, search.name)
     }.successUi {
         bus.post(SavedSearchDestroyedEvent(accountKey, id))
     }
 
-    fun create(accountKey: UserKey, query: String): Promise<SavedSearch, Exception> = accountTask(application, accountKey) { account ->
-        when (account.type) {
-            AccountType.TWITTER -> {
-                val twitter = account.newMicroBlogInstance(application, MicroBlog::class.java)
-                return@accountTask twitter.createSavedSearch(query)
-            }
-            else -> throw APINotSupportedException("Create saved search", account.type)
-        }
+    fun create(accountKey: UserKey, query: String): Promise<SavedSearch, Exception> = twitterTask(application, accountKey) { account, twitter ->
+        return@twitterTask twitter.createSavedSearch(query)
     }.toastOnResult(application) { search ->
         return@toastOnResult application.getString(R.string.message_toast_search_name_saved, search.name)
     }
+
+    fun refresh(accountKeys: Array<UserKey>): Promise<Unit, Exception> = all(accountKeys.map { accountKey ->
+        twitterTask(application, accountKey) { account, twitter ->
+            val cr = application.contentResolver
+            val searches = twitter.savedSearches
+            val values = ContentValuesCreator.createSavedSearches(searches, accountKey)
+            val where = Expression.equalsArgs(SavedSearches.ACCOUNT_KEY)
+            val whereArgs = arrayOf(accountKey.toString())
+            cr.delete(SavedSearches.CONTENT_URI, where.sql, whereArgs)
+            ContentResolverUtils.bulkInsert(cr, SavedSearches.CONTENT_URI, values)
+        }
+    }).toSuccessVoid()
 
     companion object : ApplicationContextSingletonHolder<SavedSearchPromises>(::SavedSearchPromises)
 }

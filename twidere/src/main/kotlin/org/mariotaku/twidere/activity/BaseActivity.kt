@@ -95,8 +95,6 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     @Inject
     lateinit var keyboardShortcutsHandler: KeyboardShortcutsHandler
     @Inject
-    lateinit var twitterWrapper: AsyncTwitterWrapper
-    @Inject
     lateinit var readStateManager: ReadStateManager
     @Inject
     lateinit var bus: Bus

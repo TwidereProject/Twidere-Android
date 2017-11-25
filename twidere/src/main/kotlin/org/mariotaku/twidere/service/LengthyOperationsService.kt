@@ -50,6 +50,7 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.constant.refreshAfterTweetKey
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.extension.model.notificationBuilder
 import org.mariotaku.twidere.extension.queryOne
@@ -61,6 +62,7 @@ import org.mariotaku.twidere.model.notification.NotificationChannelSpec
 import org.mariotaku.twidere.model.schedule.ScheduleInfo
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUpdateUtils
+import org.mariotaku.twidere.promise.RefreshPromises
 import org.mariotaku.twidere.promise.UpdateStatusPromise
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.task.CreateFavoriteTask
@@ -312,7 +314,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
             }
         }
         if (preferences[refreshAfterTweetKey]) {
-            handler.post { twitterWrapper.refreshAll() }
+            handler.post { RefreshPromises.get(this).refreshAll() }
         }
         stopForeground(false)
         notificationManager.cancel(NOTIFICATION_ID_UPDATE_STATUS)

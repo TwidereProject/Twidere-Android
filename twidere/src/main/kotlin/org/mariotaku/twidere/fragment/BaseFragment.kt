@@ -47,8 +47,6 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
 
     // Utility classes
     @Inject
-    lateinit var twitterWrapper: AsyncTwitterWrapper
-    @Inject
     lateinit var readStateManager: ReadStateManager
     @Inject
     lateinit var bus: Bus

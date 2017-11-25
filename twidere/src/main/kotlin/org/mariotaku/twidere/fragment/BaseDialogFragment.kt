@@ -30,7 +30,6 @@ import okhttp3.Dns
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
-import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.DebugModeUtils
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.UserColorNameManager
@@ -40,8 +39,6 @@ import javax.inject.Inject
 
 open class BaseDialogFragment : DialogFragment() {
 
-    @Inject
-    lateinit var twitterWrapper: AsyncTwitterWrapper
     @Inject
     lateinit var userColorNameManager: UserColorNameManager
     @Inject
