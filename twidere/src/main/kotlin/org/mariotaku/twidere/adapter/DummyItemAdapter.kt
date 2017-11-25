@@ -17,7 +17,6 @@ import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.activityStatus
 import org.mariotaku.twidere.model.*
-import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
@@ -35,8 +34,6 @@ class DummyItemAdapter(
 
     @Inject
     lateinit var preferences: SharedPreferences
-    @Inject
-    override lateinit var twitterWrapper: AsyncTwitterWrapper
     @Inject
     override lateinit var userColorNameManager: UserColorNameManager
     @Inject

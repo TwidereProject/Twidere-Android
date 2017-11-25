@@ -293,7 +293,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             val notificationId = intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1)
             val notificationAccount = intent.getParcelableExtra<UserKey?>(EXTRA_NOTIFICATION_ACCOUNT)
             if (notificationId != -1) {
-                twitterWrapper.clearNotificationAsync(notificationId, notificationAccount)
+                notificationManager.cancelById(Utils.getNotificationId(notificationId, notificationAccount))
             }
             if (!handleIntent(intent)) {
                 handleDefaultIntent(intent)

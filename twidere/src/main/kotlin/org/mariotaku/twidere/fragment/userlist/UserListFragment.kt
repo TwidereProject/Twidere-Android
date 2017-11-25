@@ -61,12 +61,12 @@ import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
 import org.mariotaku.twidere.fragment.timeline.ListTimelineFragment
 import org.mariotaku.twidere.fragment.users.UserListMembersFragment
 import org.mariotaku.twidere.fragment.users.UserListSubscribersFragment
-import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.UserListSubscriptionEvent
 import org.mariotaku.twidere.model.event.UserListUpdatedEvent
+import org.mariotaku.twidere.promise.UserListPromises
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.shortcut.ShortcutCreator
 
@@ -116,8 +116,8 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
                 val userList = this.userList
                 if (resultCode != Activity.RESULT_OK || !data!!.hasExtra(EXTRA_USER) || userList == null)
                     return
-                val user = data.getParcelableExtra<ParcelableUser>(EXTRA_USER)
-                twitter.addUserListMembersAsync(userList.account_key, userList.id, user)
+                val user = data.extras.user!!
+                UserListPromises.get(context!!).addMembers(userList.account_key, userList.id, user)
                 return
             }
             REQUEST_SELECT_ACCOUNT -> {
@@ -224,7 +224,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
                 if (userList.is_following) {
                     DestroyUserListSubscriptionDialogFragment.show(fragmentManager!!, userList)
                 } else {
-                    twitter.createUserListSubscriptionAsync(userList.account_key, userList.id)
+                    UserListPromises.get(context!!).subscribe(userList.account_key, userList.id)
                 }
                 return true
             }

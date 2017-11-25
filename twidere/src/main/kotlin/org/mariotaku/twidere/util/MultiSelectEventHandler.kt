@@ -42,6 +42,7 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.promise.MultiOperationPromises
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import java.util.*
@@ -51,9 +52,6 @@ import javax.inject.Inject
 class MultiSelectEventHandler(
         private val activity: BaseActivity
 ) : ActionMode.Callback, MultiSelectManager.Callback {
-
-    @Inject
-    lateinit var twitterWrapper: AsyncTwitterWrapper
 
     @Inject
     lateinit var multiSelectManager: MultiSelectManager
@@ -142,17 +140,17 @@ class MultiSelectEventHandler(
             }
             R.id.block -> {
                 val accountKey = multiSelectManager.accountKey
-                val userIds = UserKey.getIds(MultiSelectManager.getSelectedUserKeys(selectedItems))
+                val userIds = MultiSelectManager.getSelectedUserKeys(selectedItems)
                 if (accountKey != null && userIds != null) {
-                    twitterWrapper.createMultiBlockAsync(accountKey, userIds)
+                    MultiOperationPromises.get(activity).block(accountKey, userIds)
                 }
                 mode.finish()
             }
             R.id.report_spam -> {
                 val accountKey = multiSelectManager.accountKey
-                val userIds = UserKey.getIds(MultiSelectManager.getSelectedUserKeys(selectedItems))
+                val userIds = MultiSelectManager.getSelectedUserKeys(selectedItems)
                 if (accountKey != null && userIds != null) {
-                    twitterWrapper.reportMultiSpam(accountKey, userIds)
+                    MultiOperationPromises.get(activity).report(accountKey, userIds)
                 }
                 mode.finish()
             }

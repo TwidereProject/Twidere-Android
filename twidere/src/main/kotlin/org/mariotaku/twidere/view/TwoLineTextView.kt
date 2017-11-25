@@ -56,7 +56,6 @@ open class TwoLineTextView(context: Context, attrs: AttributeSet? = null) : Fixe
 
     private var primaryTextSpan: TextAppearanceSpan
     private var secondaryTextSpan: TextAppearanceSpan
-    private var inAppearanceTransaction: Boolean = false
 
     init {
         ellipsize = TextUtils.TruncateAt.END
@@ -160,16 +159,15 @@ open class TwoLineTextView(context: Context, attrs: AttributeSet? = null) : Fixe
         return TextAppearance(textColor, textColorLink, textSize, style, typeface)
     }
 
-    class TextAppearance(
+    private fun TextAppearance.toSpan(): TextAppearanceSpan = TextAppearanceSpan(typeface, style, size, color, colorLink)
+
+    data class TextAppearance(
             var color: ColorStateList?,
             var colorLink: ColorStateList?,
             var size: Int,
             var style: Int,
             var typeface: String?
-    ) {
-
-        fun toSpan(): TextAppearanceSpan = TextAppearanceSpan(typeface, style, size, color, colorLink)
-    }
+    )
 
     private object Styleable {
 

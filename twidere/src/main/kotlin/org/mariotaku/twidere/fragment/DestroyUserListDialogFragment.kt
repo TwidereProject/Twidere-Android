@@ -24,38 +24,36 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AlertDialog
+import org.mariotaku.ktextension.Bundle
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER_LIST
 import org.mariotaku.twidere.extension.applyOnShow
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.userList
 import org.mariotaku.twidere.model.ParcelableUserList
+import org.mariotaku.twidere.promise.UserListPromises
 
-class DestroyUserListDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
-
-    override fun onClick(dialog: DialogInterface, which: Int) {
-        when (which) {
-            DialogInterface.BUTTON_POSITIVE -> {
-                val userList = arguments!!.userList!!
-                val twitter = twitterWrapper
-                twitter.destroyUserListAsync(userList.account_key, userList.id)
-            }
-            else -> {
-            }
-        }
-    }
+class DestroyUserListDialogFragment : BaseDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val context = activity!!
-        val builder = AlertDialog.Builder(context)
+        val builder = AlertDialog.Builder(activity!!)
         val userList = arguments!!.userList!!
         builder.setTitle(getString(R.string.delete_user_list, userList.name))
         builder.setMessage(getString(R.string.delete_user_list_confirm_message, userList.name))
-        builder.setPositiveButton(android.R.string.ok, this)
+        builder.setPositiveButton(android.R.string.ok, this::performDestroyUserList)
         builder.setNegativeButton(android.R.string.cancel, null)
         val dialog = builder.create()
         dialog.applyOnShow { applyTheme() }
         return dialog
+    }
+
+    private fun performDestroyUserList(dialog: DialogInterface, which: Int) {
+        when (which) {
+            DialogInterface.BUTTON_POSITIVE -> {
+                val userList = arguments!!.userList!!
+                UserListPromises.get(context!!).destroy(userList.account_key, userList.id)
+            }
+        }
     }
 
     companion object {
@@ -63,10 +61,10 @@ class DestroyUserListDialogFragment : BaseDialogFragment(), DialogInterface.OnCl
         private const val FRAGMENT_TAG = "destroy_user_list"
 
         fun show(fm: FragmentManager, userList: ParcelableUserList): DestroyUserListDialogFragment {
-            val args = Bundle()
-            args.putParcelable(EXTRA_USER_LIST, userList)
             val f = DestroyUserListDialogFragment()
-            f.arguments = args
+            f.arguments = Bundle {
+                this.userList = userList
+            }
             f.show(fm, FRAGMENT_TAG)
             return f
         }

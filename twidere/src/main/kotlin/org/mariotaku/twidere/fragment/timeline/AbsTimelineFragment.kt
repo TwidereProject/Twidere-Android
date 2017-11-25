@@ -66,6 +66,7 @@ import org.mariotaku.twidere.data.StatusesLivePagedListProvider
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.extension.adapter.removeStatuses
 import org.mariotaku.twidere.extension.model.getAccountType
+import org.mariotaku.twidere.extension.promise
 import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.extension.view.firstVisibleItemPosition
 import org.mariotaku.twidere.extension.view.lastVisibleItemPosition
@@ -89,6 +90,7 @@ import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.timeline.TimelineFilter
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
+import org.mariotaku.twidere.task.CreateFavoriteTask
 import org.mariotaku.twidere.task.statuses.GetStatusesTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.view.ExtendedRecyclerView
@@ -588,14 +590,14 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
     }
 
     class DefaultOnLikedListener(
-            private val twitter: AsyncTwitterWrapper,
+            private val context: Context,
             private val status: ParcelableStatus,
             private val accountKey: UserKey? = null
     ) : LikeAnimationDrawable.OnLikedListener {
 
         override fun onLiked(): Boolean {
             if (status.is_favorite) return false
-            twitter.createFavoriteAsync(accountKey ?: status.account_key, status)
+            CreateFavoriteTask(context, accountKey ?: status.account_key, status).promise()
             return true
         }
     }
@@ -627,7 +629,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                                     status.account_key, status.id, status)
                         }
                         status.is_favorite -> fragment.twitterWrapper.destroyFavoriteAsync(status.account_key, status.id)
-                        else -> holder.playLikeAnimation(DefaultOnLikedListener(fragment.twitterWrapper, status))
+                        else -> holder.playLikeAnimation(DefaultOnLikedListener(fragment.context!!, status))
                     }
                 }
             }
@@ -712,7 +714,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                         fragment.twitterWrapper.destroyFavoriteAsync(status.account_key, status.id)
                     } else {
                         val holder = fragment.recyclerView.findViewHolderForLayoutPosition(position) as StatusViewHolder
-                        holder.playLikeAnimation(DefaultOnLikedListener(fragment.twitterWrapper, status))
+                        holder.playLikeAnimation(DefaultOnLikedListener(fragment.context!!, status))
                     }
                     return true
                 }

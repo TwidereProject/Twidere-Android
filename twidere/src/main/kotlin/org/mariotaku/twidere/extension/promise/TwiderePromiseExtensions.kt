@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.promise
+package org.mariotaku.twidere.extension.promise
 
 import android.accounts.AccountManager
 import android.content.Context

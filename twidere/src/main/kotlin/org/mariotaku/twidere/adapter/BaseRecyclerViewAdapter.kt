@@ -34,7 +34,6 @@ import org.mariotaku.twidere.constant.textSizeKey
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.DefaultFeatures
-import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.MultiSelectManager
 import org.mariotaku.twidere.util.ReadStateManager
 import org.mariotaku.twidere.util.UserColorNameManager
@@ -47,9 +46,6 @@ abstract class BaseRecyclerViewAdapter<VH : RecyclerView.ViewHolder>(
         val context: Context,
         override val requestManager: RequestManager
 ) : RecyclerView.Adapter<VH>(), IContentAdapter {
-
-    @Inject
-    override final lateinit var twitterWrapper: AsyncTwitterWrapper
 
     @Inject
     override final lateinit var userColorNameManager: UserColorNameManager

@@ -27,11 +27,9 @@ import android.support.v7.app.AlertDialog
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_SEARCH_ID
-import org.mariotaku.twidere.extension.accountKey
-import org.mariotaku.twidere.extension.applyOnShow
-import org.mariotaku.twidere.extension.applyTheme
-import org.mariotaku.twidere.extension.name
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.promise.SavedSearchPromises
 
 class DestroySavedSearchDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
 
@@ -43,9 +41,8 @@ class DestroySavedSearchDialogFragment : BaseDialogFragment(), DialogInterface.O
             DialogInterface.BUTTON_POSITIVE -> {
                 val accountKey = arguments!!.accountKey!!
                 val searchId = searchId
-                val twitter = twitterWrapper
                 if (searchId <= 0) return
-                twitter.destroySavedSearchAsync(accountKey, searchId)
+                SavedSearchPromises.get(context!!).destroy(accountKey, searchId)
             }
             else -> {
             }

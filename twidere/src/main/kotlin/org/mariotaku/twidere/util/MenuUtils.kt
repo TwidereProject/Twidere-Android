@@ -55,6 +55,7 @@ import org.mariotaku.twidere.constant.favoriteConfirmationKey
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.model.isOfficial
+import org.mariotaku.twidere.extension.promise
 import org.mariotaku.twidere.fragment.AddStatusFilterDialogFragment
 import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.fragment.SetUserNicknameDialogFragment
@@ -263,13 +264,13 @@ object MenuUtils {
                                 status)
                     }
                 } else if (status.is_favorite) {
-                    twitter.destroyFavoriteAsync(status.account_key, status.id)
+                    DestroyFavoriteTask(context, status.account_key, status.id).promise()
                 } else {
                     val provider = MenuItemCompat.getActionProvider(item)
                     if (provider is FavoriteItemProvider) {
-                        provider.invokeItem(item, AbsTimelineFragment.DefaultOnLikedListener(twitter, status))
+                        provider.invokeItem(item, AbsTimelineFragment.DefaultOnLikedListener(context, status))
                     } else {
-                        twitter.createFavoriteAsync(status.account_key, status)
+                        CreateFavoriteTask(context, status.account_key, status).promise()
                     }
                 }
             }

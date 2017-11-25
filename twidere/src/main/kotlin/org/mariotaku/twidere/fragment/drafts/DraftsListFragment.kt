@@ -66,6 +66,7 @@ import org.mariotaku.twidere.model.draft.QuoteStatusActionExtras
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.service.LengthyOperationsService
 import org.mariotaku.twidere.util.Analyzer
+import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.deleteDrafts
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import java.lang.ref.WeakReference
@@ -89,7 +90,7 @@ class DraftsListFragment : AbsContentListViewFragment<DraftsAdapter>(), LoaderCa
     }
 
     override fun onStart() {
-        twitterWrapper.clearNotificationAsync(NOTIFICATION_ID_DRAFTS)
+        notificationManager.cancelById(Utils.getNotificationId(NOTIFICATION_ID_DRAFTS, null))
         super.onStart()
     }
 

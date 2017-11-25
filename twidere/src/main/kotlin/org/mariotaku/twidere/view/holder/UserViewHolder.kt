@@ -98,7 +98,6 @@ class UserViewHolder(
     fun display(user: ParcelableUser) {
         val context = itemView.context
         val manager = adapter.userColorNameManager
-        val twitter = adapter.twitterWrapper
 
         itemContent.drawStart(manager.getUserColor(user.key))
 

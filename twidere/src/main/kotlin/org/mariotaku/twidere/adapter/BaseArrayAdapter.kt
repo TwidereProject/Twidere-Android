@@ -50,8 +50,6 @@ open class BaseArrayAdapter<T>(
     @Inject
     override lateinit var bidiFormatter: BidiFormatter
     @Inject
-    override lateinit var twitterWrapper: AsyncTwitterWrapper
-    @Inject
     lateinit var multiSelectManager: MultiSelectManager
     @Inject
     lateinit var preferences: SharedPreferences

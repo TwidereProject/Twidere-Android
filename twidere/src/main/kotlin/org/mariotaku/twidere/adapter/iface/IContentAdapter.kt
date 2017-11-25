@@ -22,12 +22,8 @@ package org.mariotaku.twidere.adapter.iface
 import android.support.v4.text.BidiFormatter
 import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.annotation.ImageShapeStyle
-import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.UserColorNameManager
 
-/**
- * Created by mariotaku on 15/1/3.
- */
 interface IContentAdapter {
 
     val userColorNameManager: UserColorNameManager
@@ -42,8 +38,6 @@ interface IContentAdapter {
     val profileImageEnabled: Boolean
 
     val textSize: Float
-
-    val twitterWrapper: AsyncTwitterWrapper
 
     val requestManager: RequestManager
 

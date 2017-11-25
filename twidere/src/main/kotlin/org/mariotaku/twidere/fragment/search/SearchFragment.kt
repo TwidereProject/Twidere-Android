@@ -41,11 +41,8 @@ import org.mariotaku.twidere.activity.QuickSearchBarActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarOffsetListener
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.extension.accountKey
-import org.mariotaku.twidere.extension.linkHandlerSubtitle
-import org.mariotaku.twidere.extension.linkHandlerTitle
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.getAccountType
-import org.mariotaku.twidere.extension.query
 import org.mariotaku.twidere.fragment.AbsToolbarTabPagesFragment
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowInsetsCallback
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
@@ -57,6 +54,7 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.analyzer.Search
 import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.model.util.AccountUtils
+import org.mariotaku.twidere.promise.SavedSearchPromises
 import org.mariotaku.twidere.provider.RecentSearchProvider
 import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory
 import org.mariotaku.twidere.util.Analyzer
@@ -147,10 +145,9 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface,
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.save -> {
-                val twitter = twitterWrapper
                 val args = arguments
                 if (args != null) {
-                    twitter.createSavedSearchAsync(accountKey, query)
+                    SavedSearchPromises.get(context!!).create(accountKey, query)
                 }
                 return true
             }

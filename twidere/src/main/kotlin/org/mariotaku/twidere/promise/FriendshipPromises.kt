@@ -24,10 +24,12 @@ import android.content.SharedPreferences
 import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.then
+import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.kpreferences.get
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.mastodon.Mastodon
+import org.mariotaku.microblog.library.twitter.model.FriendshipUpdate
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
@@ -35,12 +37,17 @@ import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
+import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.extension.promise.*
 import org.mariotaku.twidere.model.ObjectId
+import org.mariotaku.twidere.model.ParcelableRelationship
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
+import org.mariotaku.twidere.model.event.FriendshipUpdatedEvent
+import org.mariotaku.twidere.model.util.ParcelableRelationshipUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.Utils
@@ -194,6 +201,26 @@ class FriendshipPromises private constructor(val application: Application) {
         return@toastOnResult application.getString(R.string.unfollowed_user,
                 manager.getDisplayName(user, nameFirst))
     }.notifyOnResult(bus, FriendshipTaskEvent.Action.UNFOLLOW, accountKey, userKey)
+
+    fun update(accountKey: UserKey, userKey: UserKey, update: FriendshipUpdate):
+            Promise<ParcelableRelationship, Exception> = accountTask(application, accountKey) { account ->
+        val microBlog = account.newMicroBlogInstance(application, MicroBlog::class.java)
+        val relationship = microBlog.updateFriendship(userKey.id, update).toParcelable(accountKey, userKey)
+        val cr = application.contentResolver
+        if (update["retweets"] == false) {
+            val where = Expression.and(
+                    Expression.equalsArgs(Statuses.ACCOUNT_KEY),
+                    Expression.equalsArgs(Statuses.RETWEETED_BY_USER_KEY)
+            )
+            val selectionArgs = arrayOf(accountKey.toString(), userKey.toString())
+            cr.delete(Statuses.HomeTimeline.CONTENT_URI, where.sql, selectionArgs)
+        }
+
+        ParcelableRelationshipUtils.insert(cr, listOf(relationship))
+        return@accountTask relationship
+    }.successUi { result ->
+        bus.post(FriendshipUpdatedEvent(accountKey, userKey, result))
+    }
 
     companion object : ApplicationContextSingletonHolder<FriendshipPromises>(::FriendshipPromises) {
 

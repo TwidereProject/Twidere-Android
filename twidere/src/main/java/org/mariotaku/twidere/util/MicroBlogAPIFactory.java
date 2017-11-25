@@ -69,14 +69,6 @@ public class MicroBlogAPIFactory implements TwidereConstants {
     }
 
     @WorkerThread
-    public static MicroBlog getDefaultTwitterInstance(final Context context) {
-        if (context == null) return null;
-        final UserKey accountKey = Utils.INSTANCE.getDefaultAccountKey(context);
-        if (accountKey == null) return null;
-        return getInstance(context, accountKey);
-    }
-
-    @WorkerThread
     public static MicroBlog getInstance(@NonNull final Context context, @NonNull final UserKey accountKey) {
         final AccountManager am = AccountManager.get(context);
         final Account account = AccountUtils.findByAccountKey(am, accountKey);

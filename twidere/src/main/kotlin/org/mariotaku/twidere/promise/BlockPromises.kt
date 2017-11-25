@@ -38,6 +38,10 @@ import org.mariotaku.twidere.extension.insert
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.extension.promise.notifyCreatePromise
+import org.mariotaku.twidere.extension.promise.notifyOnResult
+import org.mariotaku.twidere.extension.promise.thenGetAccount
+import org.mariotaku.twidere.extension.promise.toastOnResult
 import org.mariotaku.twidere.model.ParcelableRelationship
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey

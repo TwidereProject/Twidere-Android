@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.promise
+package org.mariotaku.twidere.extension.promise
 
 import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
@@ -28,6 +28,7 @@ import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
+import org.mariotaku.twidere.promise.FriendshipPromises
 
 fun notifyCreatePromise(bus: Bus, @FriendshipTaskEvent.Action action: Int, accountKey: UserKey, userKey: UserKey) = promiseOnUi {
     FriendshipPromises.addTask(accountKey, userKey)

@@ -31,9 +31,12 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.content.FavoriteConfirmDialogActivity
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
+import org.mariotaku.twidere.extension.promise
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.task.CreateFavoriteTask
+import org.mariotaku.twidere.task.DestroyFavoriteTask
 
 /**
  * Asks user to favorite a status.
@@ -75,9 +78,9 @@ class FavoriteConfirmDialogFragment : AbsStatusDialogFragment() {
         }
         positiveButton.setOnClickListener {
             if (status.is_favorite) {
-                twitterWrapper.destroyFavoriteAsync(accountKey, status.id)
+                DestroyFavoriteTask(context, accountKey, status.id).promise()
             } else {
-                twitterWrapper.createFavoriteAsync(accountKey, status)
+                CreateFavoriteTask(context, accountKey, status).promise()
             }
             dismiss()
         }

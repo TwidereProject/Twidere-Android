@@ -66,8 +66,6 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
     @Inject
     lateinit internal var readStateManager: ReadStateManager
     @Inject
-    lateinit internal var twitterWrapper: AsyncTwitterWrapper
-    @Inject
     lateinit internal var notificationManager: NotificationManagerWrapper
     @Inject
     lateinit internal var preferences: SharedPreferences

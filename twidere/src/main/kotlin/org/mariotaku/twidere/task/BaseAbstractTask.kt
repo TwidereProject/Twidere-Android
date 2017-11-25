@@ -9,7 +9,6 @@ import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.DefaultFeatures
-import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.ErrorInfoStore
 import org.mariotaku.twidere.util.ReadStateManager
 import org.mariotaku.twidere.util.UserColorNameManager
@@ -25,8 +24,6 @@ abstract class BaseAbstractTask<Params, Result, Callback>(val context: Context) 
 
     @Inject
     lateinit var bus: Bus
-    @Inject
-    lateinit var microBlogWrapper: AsyncTwitterWrapper
     @Inject
     lateinit var mediaPreloader: MediaPreloader
     @Inject

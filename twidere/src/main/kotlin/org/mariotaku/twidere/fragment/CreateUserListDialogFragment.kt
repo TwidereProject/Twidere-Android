@@ -22,18 +22,15 @@ package org.mariotaku.twidere.fragment
 import android.app.Dialog
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
-import android.text.TextUtils
-import android.widget.CheckBox
-import android.widget.EditText
-import com.rengwuxian.materialedittext.MaterialEditText
+import kotlinx.android.synthetic.main.dialog_user_list_detail_editor.*
+import org.mariotaku.ktextension.empty
+import org.mariotaku.ktextension.string
+import org.mariotaku.microblog.library.twitter.model.UserListUpdate
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
-import org.mariotaku.twidere.extension.applyOnShow
-import org.mariotaku.twidere.extension.applyTheme
-import org.mariotaku.twidere.extension.positive
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.extension.*
+import org.mariotaku.twidere.extension.model.api.twitter.setPublic
+import org.mariotaku.twidere.promise.UserListPromises
 import org.mariotaku.twidere.text.validator.UserListNameValidator
-import org.mariotaku.twidere.util.ParseUtils
 
 class CreateUserListDialogFragment : BaseDialogFragment() {
 
@@ -43,20 +40,18 @@ class CreateUserListDialogFragment : BaseDialogFragment() {
 
         builder.setTitle(R.string.new_user_list)
         builder.positive(android.R.string.ok) { dialog ->
-            val accountKey: UserKey = arguments!!.getParcelable(EXTRA_ACCOUNT_KEY)
-            val editName = dialog.findViewById<EditText>(R.id.editName)!!
-            val editDescription = dialog.findViewById<EditText>(R.id.editDescription)!!
-            val editPublic = dialog.findViewById<CheckBox>(R.id.isPublic)!!
-            val name = ParseUtils.parseString(editName.text)
-            val description = ParseUtils.parseString(editDescription.text)
-            val isPublic = editPublic.isChecked
-            if (TextUtils.isEmpty(name)) return@positive
-            twitterWrapper.createUserListAsync(accountKey, name, isPublic, description)
+            if (dialog.editName.empty) return@positive
+            val update = UserListUpdate().apply {
+                setName(dialog.editName.string)
+                setPublic(dialog.isPublic.isChecked)
+                setDescription(dialog.editDescription.string)
+            }
+            UserListPromises.get(context!!).create(arguments!!.accountKey!!, update)
         }
         val dialog = builder.create()
         dialog.applyOnShow {
             applyTheme()
-            val editName = dialog.findViewById<MaterialEditText>(R.id.editName)!!
+            val editName = dialog.editName
             editName.addValidator(UserListNameValidator(getString(R.string.invalid_list_name)))
         }
         return dialog

@@ -32,8 +32,10 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER_LIST
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.applyOnShow
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserList
+import org.mariotaku.twidere.promise.UserListPromises
 
 class DeleteUserListMembersDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
 
@@ -48,7 +50,7 @@ class DeleteUserListMembersDialogFragment : BaseDialogFragment(), DialogInterfac
             DialogInterface.BUTTON_POSITIVE -> {
                 val users = users ?: return
                 val userList = userList ?: return
-                twitterWrapper.deleteUserListMembersAsync(userList.account_key, userList.id, users)
+                UserListPromises.get(context!!).deleteMembers(userList.account_key, userList.id, *users)
             }
         }
     }

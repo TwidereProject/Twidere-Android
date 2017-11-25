@@ -28,8 +28,10 @@ import org.mariotaku.ktextension.Bundle
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.extension.applyOnShow
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.userList
 import org.mariotaku.twidere.model.ParcelableUserList
+import org.mariotaku.twidere.promise.UserListPromises
 
 class DestroyUserListSubscriptionDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
 
@@ -37,8 +39,7 @@ class DestroyUserListSubscriptionDialogFragment : BaseDialogFragment(), DialogIn
         when (which) {
             DialogInterface.BUTTON_POSITIVE -> {
                 val userList = arguments!!.userList ?: return
-                val twitter = twitterWrapper
-                twitter.destroyUserListSubscriptionAsync(userList.account_key, userList.id)
+                UserListPromises.get(context!!).unsubscribe(userList.account_key, userList.id)
             }
             else -> {
             }
@@ -64,8 +65,7 @@ class DestroyUserListSubscriptionDialogFragment : BaseDialogFragment(), DialogIn
 
         val FRAGMENT_TAG = "destroy_user_list"
 
-        fun show(fm: FragmentManager,
-                userList: ParcelableUserList): DestroyUserListSubscriptionDialogFragment {
+        fun show(fm: FragmentManager, userList: ParcelableUserList): DestroyUserListSubscriptionDialogFragment {
             val f = DestroyUserListSubscriptionDialogFragment()
             f.arguments = Bundle {
                 this.userList = userList

@@ -23,13 +23,15 @@ import android.app.Dialog
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import kotlinx.android.synthetic.main.dialog_user_list_detail_editor.*
+import org.mariotaku.ktextension.empty
 import org.mariotaku.ktextension.string
-import org.mariotaku.microblog.library.twitter.model.UserList
 import org.mariotaku.microblog.library.twitter.model.UserListUpdate
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_DESCRIPTION
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_IS_PUBLIC
 import org.mariotaku.twidere.extension.*
+import org.mariotaku.twidere.extension.model.api.twitter.setPublic
+import org.mariotaku.twidere.promise.UserListPromises
 import org.mariotaku.twidere.text.validator.UserListNameValidator
 
 class EditUserListDialogFragment : BaseDialogFragment() {
@@ -54,14 +56,13 @@ class EditUserListDialogFragment : BaseDialogFragment() {
     }
 
     private fun onPositiveClick(dialog: Dialog) {
-        val name = dialog.editName.string?.takeIf(String::isNotEmpty) ?: return
-        val description = dialog.editDescription.string
-        val isPublic = dialog.isPublic.isChecked
-        val update = UserListUpdate()
-        update.setMode(if (isPublic) UserList.Mode.PUBLIC else UserList.Mode.PRIVATE)
-        update.setName(name)
-        update.setDescription(description)
-        twitterWrapper.updateUserListDetails(arguments!!.accountKey!!, arguments!!.listId!!, update)
+        if (dialog.isPublic.empty) return
+        val update = UserListUpdate().apply {
+            setName(dialog.editName.string)
+            setPublic(dialog.isPublic.isChecked)
+            setDescription(dialog.editDescription.string)
+        }
+        UserListPromises.get(context!!).update(arguments!!.accountKey!!, arguments!!.listId!!, update)
     }
 
 }

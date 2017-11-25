@@ -172,6 +172,10 @@ interface GeneralComponent {
 
     fun inject(obj: UserAutoCompleteAdapter)
 
+    fun inject(promises: UserListPromises)
+
+    fun inject(promises: SavedSearchPromises)
+
     companion object : ApplicationContextSingletonHolder<GeneralComponent>(creation@ { application ->
         return@creation DaggerGeneralComponent.builder()
                 .applicationModule(ApplicationModule.get(application))

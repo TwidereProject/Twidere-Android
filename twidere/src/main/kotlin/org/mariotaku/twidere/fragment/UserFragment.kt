@@ -123,6 +123,7 @@ import org.mariotaku.twidere.model.util.ParcelableRelationshipUtils
 import org.mariotaku.twidere.promise.BlockPromises
 import org.mariotaku.twidere.promise.FriendshipPromises
 import org.mariotaku.twidere.promise.MutePromises
+import org.mariotaku.twidere.promise.UserListPromises
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
 import org.mariotaku.twidere.text.TwidereURLSpan
@@ -573,9 +574,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             }
             REQUEST_ADD_TO_LIST -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    val twitter = twitterWrapper
-                    val list = data.getParcelableExtra<ParcelableUserList>(EXTRA_USER_LIST) ?: return
-                    twitter.addUserListMembersAsync(accountKey, list.id, user)
+                    val list = data.extras.userList!!
+                    UserListPromises.get(context!!).addMembers(accountKey, list.id, user)
                 }
             }
             REQUEST_SELECT_ACCOUNT -> {
@@ -881,7 +881,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 val newState = !item.isChecked
                 val update = FriendshipUpdate()
                 update.retweets(newState)
-                twitter.updateFriendship(accountKey, user.key, update)
+                FriendshipPromises.get(context).update(accountKey, user.key, update)
                 item.isChecked = newState
                 return true
             }
@@ -893,7 +893,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 }
                 val update = FriendshipUpdate()
                 update.deviceNotifications(newState)
-                twitter.updateFriendship(accountKey, user.key, update)
+                FriendshipPromises.get(context).update(accountKey, user.key, update)
                 item.isChecked = newState
                 return true
             }
