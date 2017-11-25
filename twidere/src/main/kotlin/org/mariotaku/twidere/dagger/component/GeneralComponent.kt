@@ -39,7 +39,6 @@ import org.mariotaku.twidere.fragment.preference.ThemedPreferenceDialogFragmentC
 import org.mariotaku.twidere.loader.CacheUserSearchLoader
 import org.mariotaku.twidere.loader.DefaultAPIConfigLoader
 import org.mariotaku.twidere.loader.ParcelableStatusLoader
-import org.mariotaku.twidere.loader.ParcelableUserLoader
 import org.mariotaku.twidere.loader.statuses.AbsRequestStatusesLoader
 import org.mariotaku.twidere.loader.userlists.BaseUserListsLoader
 import org.mariotaku.twidere.preference.AccountsListPreference
@@ -104,8 +103,6 @@ interface GeneralComponent {
     fun inject(task: BaseAbstractTask<Any, Any, Any>)
 
     fun inject(preference: KeyboardShortcutPreference)
-
-    fun inject(loader: ParcelableUserLoader)
 
     fun inject(loader: ParcelableStatusLoader)
 

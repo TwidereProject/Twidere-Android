@@ -23,8 +23,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
-import android.support.v4.app.LoaderManager.LoaderCallbacks
-import android.support.v4.content.Loader
 import android.text.TextUtils.isEmpty
 import android.view.*
 import android.view.View.OnClickListener
@@ -39,12 +37,11 @@ import org.mariotaku.twidere.activity.ColorPickerDialogActivity
 import org.mariotaku.twidere.activity.ThemedMediaPickerActivity
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.ImageShapeStyle
+import org.mariotaku.twidere.data.impl.UserLiveData
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.urlPreferred
-import org.mariotaku.twidere.loader.ParcelableUserLoader
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
-import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.promise.UserProfilePromises
@@ -55,16 +52,14 @@ import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener
 
 class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
-        OnClickListener, LoaderCallbacks<SingleResponse<ParcelableUser>>,
-        KeyboardShortcutsHandler.TakeAllKeyboardShortcut {
+        OnClickListener, KeyboardShortcutsHandler.TakeAllKeyboardShortcut {
 
     private val accountKey: UserKey
         get() = arguments!!.accountKey!!
+
     private var runningPromise: Promise<Any, Exception>? = null
-    private var user: ParcelableUser? = null
-    private var account: AccountDetails? = null
-    private var userInfoLoaderInitialized: Boolean = false
-    private var getUserInfoCalled: Boolean = false
+
+    private lateinit var liveUser: UserLiveData
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -74,6 +69,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
             activity!!.finish()
             return
         }
+        liveUser = UserLiveData(activity!!, accountKey, accountKey, null)
 
         val lengthChecker = TwitterValidatorMETLengthChecker(Validator())
 
@@ -90,6 +86,13 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
         setLinkColor.setOnClickListener(this)
         setBackgroundColor.setOnClickListener(this)
 
+
+        liveUser.observe(this, success = { (account, user) ->
+            progressContainer.visibility = View.GONE
+            editProfileContent.visibility = View.VISIBLE
+            displayUser(user, account)
+        }, fail = { activity?.finish() })
+
         val savedUser = savedInstanceState?.user
         val savedAccount = savedInstanceState?.account
         if (savedInstanceState != null && savedUser != null && savedAccount != null) {
@@ -100,13 +103,13 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
                     ParcelableUserUtils.getExpandedDescription(savedUser)))
             editUrl.setText(savedInstanceState.getString(EXTRA_URL, savedUser.url_expanded))
         } else {
-            getUserInfo()
+            getUserInfo(false)
         }
     }
 
     override fun onClick(view: View) {
-        val user = user ?: return
-        val account = account ?: return
+        val user = liveUser.user ?: return
+        val account = liveUser.account ?: return
         val task = runningPromise
         if (task != null && !task.isDone()) return
         when (view.id) {
@@ -149,26 +152,6 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
         }
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<SingleResponse<ParcelableUser>> {
-        progressContainer.visibility = View.VISIBLE
-        editProfileContent.visibility = View.GONE
-        return ParcelableUserLoader(activity!!, accountKey, accountKey, null, arguments,
-                false, false)
-    }
-
-    override fun onLoadFinished(loader: Loader<SingleResponse<ParcelableUser>>,
-            data: SingleResponse<ParcelableUser>) {
-        val user = data.data ?: this.user ?: run {
-            activity?.finish()
-            return
-        }
-        displayUser(user, data.extras.getParcelable(EXTRA_ACCOUNT))
-    }
-
-    override fun onLoaderReset(loader: Loader<SingleResponse<ParcelableUser>>) {
-
-    }
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_profile_editor, menu)
     }
@@ -177,7 +160,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.save -> {
-                val user = this.user ?: return true
+                val user = liveUser.user ?: return true
                 if (!profileChanged(user)) return true
                 val update = UserProfilePromises.ProfileUpdate(editName.string.orEmpty(),
                         editUrl.string.orEmpty(), editLocation.string.orEmpty(),
@@ -193,8 +176,6 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelable(EXTRA_USER, user)
-        outState.putParcelable(EXTRA_ACCOUNT, account)
         outState.putString(EXTRA_NAME, ParseUtils.parseString(editName.text))
         outState.putString(EXTRA_DESCRIPTION, ParseUtils.parseString(editDescription.text))
         outState.putString(EXTRA_LOCATION, ParseUtils.parseString(editLocation.text))
@@ -247,80 +228,71 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
         }
     }
 
-    private fun displayUser(user: ParcelableUser?, account: AccountDetails?) {
-        if (!getUserInfoCalled) return
-        val activity = this.activity ?: return
-        if (isDetached || activity.isFinishing) return
-        getUserInfoCalled = false
-        this.user = user
-        this.account = account
-        if (user != null && account != null) {
-            progressContainer.visibility = View.GONE
-            editProfileContent.visibility = View.VISIBLE
-            editName.setText(user.name)
-            editDescription.setText(ParcelableUserUtils.getExpandedDescription(user))
-            editLocation.setText(user.location)
-            editUrl.setText(if (isEmpty(user.url_expanded)) user.url else user.url_expanded)
-
-            requestManager.loadProfileImage(activity, user,
-                    ImageShapeStyle.SHAPE_RECTANGLE).into(profileImage)
-            requestManager.loadProfileBanner(activity, user, resources.displayMetrics.widthPixels)
-                    .into(profileBanner)
-            requestManager.load(user.profile_background_url).into(profileBackground)
-
-            linkColor.color = user.link_color
-            backgroundColor.color = user.background_color
-
-            var canEditUrl = false
-            var canEditLocation = false
-            var canEditBanner = false
-            var canEditBackground = false
-            var canEditLinkColor = false
-            var canEditBackgroundColor = false
-
-            when (account.type) {
-                AccountType.TWITTER -> {
-                    canEditUrl = true
-                    canEditLocation = true
-                    canEditBanner = true
-                    canEditBackground = true
-                    canEditLinkColor = true
-                    canEditBackgroundColor = true
-                }
-                AccountType.MASTODON -> {
-                    canEditBanner = true
-                }
-                AccountType.FANFOU -> {
-                    canEditUrl = true
-                    canEditLocation = true
-                    canEditBackground = true
-                    canEditLinkColor = true
-                    canEditBackgroundColor = true
-                }
-            }
-            editProfileBanner.visibility = if (canEditBanner) View.VISIBLE else View.GONE
-            editProfileBackground.visibility = if (canEditBackground) View.VISIBLE else View.GONE
-            editUrl.visibility = if (canEditUrl) View.VISIBLE else View.GONE
-            editLocation.visibility = if (canEditLocation) View.VISIBLE else View.GONE
-            setLinkColor.visibility = if (canEditLinkColor) View.VISIBLE else View.GONE
-            setBackgroundColor.visibility = if (canEditBackgroundColor) View.VISIBLE else View.GONE
+    private fun getUserInfo(omitIntentExtra: Boolean) {
+        if (liveUser.user != null || omitIntentExtra) {
+            liveUser.extraUser = null
         } else {
-            progressContainer.visibility = View.GONE
+            liveUser.extraUser = arguments?.user
+        }
+        liveUser.load()
+        if (liveUser.user == null) {
+            progressContainer.visibility = View.VISIBLE
             editProfileContent.visibility = View.GONE
         }
     }
 
-    private fun getUserInfo() {
-        if (activity == null || isDetached) return
-        val lm = loaderManager
-        lm.destroyLoader(LOADER_ID_USER)
-        getUserInfoCalled = true
-        if (userInfoLoaderInitialized) {
-            lm.restartLoader(LOADER_ID_USER, null, this)
-        } else {
-            lm.initLoader(LOADER_ID_USER, null, this)
-            userInfoLoaderInitialized = true
+    private fun displayUser(user: ParcelableUser, account: AccountDetails) {
+        val activity = this.activity ?: return
+        if (isDetached || activity.isFinishing) return
+        progressContainer.visibility = View.GONE
+        editProfileContent.visibility = View.VISIBLE
+        editName.setText(user.name)
+        editDescription.setText(ParcelableUserUtils.getExpandedDescription(user))
+        editLocation.setText(user.location)
+        editUrl.setText(if (isEmpty(user.url_expanded)) user.url else user.url_expanded)
+
+        requestManager.loadProfileImage(activity, user,
+                ImageShapeStyle.SHAPE_RECTANGLE).into(profileImage)
+        requestManager.loadProfileBanner(activity, user, resources.displayMetrics.widthPixels)
+                .into(profileBanner)
+        requestManager.load(user.profile_background_url).into(profileBackground)
+
+        linkColor.color = user.link_color
+        backgroundColor.color = user.background_color
+
+        var canEditUrl = false
+        var canEditLocation = false
+        var canEditBanner = false
+        var canEditBackground = false
+        var canEditLinkColor = false
+        var canEditBackgroundColor = false
+
+        when (account.type) {
+            AccountType.TWITTER -> {
+                canEditUrl = true
+                canEditLocation = true
+                canEditBanner = true
+                canEditBackground = false
+                canEditLinkColor = true
+                canEditBackgroundColor = true
+            }
+            AccountType.MASTODON -> {
+                canEditBanner = true
+            }
+            AccountType.FANFOU -> {
+                canEditUrl = true
+                canEditLocation = true
+                canEditBackground = true
+                canEditLinkColor = true
+                canEditBackgroundColor = true
+            }
         }
+        editProfileBanner.visibility = if (canEditBanner) View.VISIBLE else View.GONE
+        editProfileBackground.visibility = if (canEditBackground) View.VISIBLE else View.GONE
+        editUrl.visibility = if (canEditUrl) View.VISIBLE else View.GONE
+        editLocation.visibility = if (canEditLocation) View.VISIBLE else View.GONE
+        setLinkColor.visibility = if (canEditLinkColor) View.VISIBLE else View.GONE
+        setBackgroundColor.visibility = if (canEditBackgroundColor) View.VISIBLE else View.GONE
     }
 
     private fun profileChanged(user: ParcelableUser): Boolean {
@@ -334,8 +306,6 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
     }
 
     companion object {
-
-        private val LOADER_ID_USER = 1
 
         private val REQUEST_UPLOAD_PROFILE_IMAGE = 1
         private val REQUEST_UPLOAD_PROFILE_BANNER_IMAGE = 2
