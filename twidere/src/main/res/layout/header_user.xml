@@ -333,7 +333,6 @@
         android:layout_marginLeft="@dimen/element_spacing_normal"
         android:layout_marginStart="@dimen/element_spacing_normal"
         android:contentDescription="@string/profile_image"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/nameContainer"
         app:layout_constraintStart_toStartOf="parent"
         tools:src="@mipmap/ic_launcher_round"

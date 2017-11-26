@@ -30,6 +30,7 @@
     tools:theme="@style/Theme.Twidere.NoActionBar">
 
     <FrameLayout
+        android:id="@+id/viewPagerContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="visible"
@@ -112,7 +113,9 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingTop="?actionBarSize"
+        app:layout_behavior="org.mariotaku.twidere.view.behavior.userprofile.ProgressErrorBehavior">
 
         <include layout="@layout/layout_content_fragment_common"/>
     </FrameLayout>

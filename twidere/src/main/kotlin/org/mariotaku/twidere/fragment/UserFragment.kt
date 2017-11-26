@@ -35,10 +35,7 @@ import android.nfc.NdefRecord
 import android.nfc.NfcAdapter.CreateNdefMessageCallback
 import android.os.Build
 import android.os.Bundle
-import android.support.annotation.ColorRes
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
-import android.support.annotation.UiThread
+import android.support.annotation.*
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
@@ -342,6 +339,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             errorText.visibility = View.VISIBLE
             errorContainer.visibility = View.VISIBLE
             progressContainer.visibility = View.GONE
+            setContentVisible(false)
             updateOptionsMenuVisibility()
         })
         liveRelationship.observe(this, success = { relationship ->
@@ -966,21 +964,23 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             progressContainer.visibility = View.VISIBLE
             errorText.text = null
             errorText.visibility = View.GONE
+            setContentVisible(false)
         }
     }
 
-    private fun setUiColor(color: Int) {
+    private fun setUiColor(@ColorInt color: Int) {
         val activity = activity as? BaseActivity ?: return
         val theme = Chameleon.getOverrideTheme(activity, activity)
-        uiColor = if (color != 0) color else theme.colorPrimary
+        val actualColor = if (color != 0) color else theme.colorPrimary
+        uiColor = actualColor
         primaryColor = if (theme.isToolbarColored) {
-            color
+            actualColor
         } else {
             theme.colorToolbar
         }
         (toolbar.background as? ActionBarDrawable)?.color = primaryColor
         val taskColor = if (theme.isToolbarColored) {
-            ColorUtils.setAlphaComponent(color, 0xFF)
+            ColorUtils.setAlphaComponent(actualColor, 0xFF)
         } else {
             ColorUtils.setAlphaComponent(theme.colorToolbar, 0xFF)
         }
@@ -991,11 +991,15 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         } else {
             ActivitySupport.setTaskDescription(activity, TaskDescriptionCompat(null, null, taskColor))
         }
-        val optimalAccentColor = ThemeUtils.getOptimalAccentColor(color, description.currentTextColor)
+
+        // This call make sure status bar color changed
+        coordinatorLayout.dispatchDependentViewsChanged(profileHeader)
+
+        val optimalAccentColor = ThemeUtils.getOptimalAccentColor(actualColor, description.currentTextColor)
         description.setLinkTextColor(optimalAccentColor)
         location.setLinkTextColor(optimalAccentColor)
         url.setLinkTextColor(optimalAccentColor)
-        profileBanner.setBackgroundColor(color)
+        profileBanner.setBackgroundColor(actualColor)
     }
 
     private fun setupViewStyle() {
@@ -1101,9 +1105,9 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             val sf = adapter.instantiateItem(viewPager, i) as? AbsTimelineFragment ?: return@forEach
             if (sf.view == null) return@forEach
         }
-        profileImage.visibility = View.VISIBLE
         errorContainer.visibility = View.GONE
         progressContainer.visibility = View.GONE
+        setContentVisible(true)
         profileImage.setBorderColor(if (user.color != 0) user.color else Color.WHITE)
         followContainer.drawEnd(user.account_color)
         nameContainer.name.setText(bidiFormatter.unicodeWrap(when {
@@ -1172,14 +1176,11 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         listedCount.visibility = if (user.listed_count < 0) View.GONE else View.VISIBLE
         groupsCount.visibility = if (user.groupsCount < 0) View.GONE else View.VISIBLE
 
-        if (user.color != 0) {
-            setUiColor(user.color)
-        } else if (user.link_color != 0) {
-            setUiColor(user.link_color)
-        } else {
-            val theme = Chameleon.getOverrideTheme(activity, activity)
-            setUiColor(theme.colorPrimary)
-        }
+        setUiColor(when {
+            user.color != 0 -> user.color
+            user.link_color != 0 -> user.link_color
+            else -> Chameleon.getOverrideTheme(activity, activity).colorPrimary
+        })
         val defWidth = resources.displayMetrics.widthPixels
         requestManager.loadProfileBanner(activity, user, defWidth).into(profileBanner)
         requestManager.loadOriginalProfileImage(activity, user, profileImage.style,
@@ -1217,6 +1218,13 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
         activity.invalidateOptionsMenu()
         updateSubtitle()
+    }
+
+    private fun setContentVisible(visible: Boolean) {
+        viewPagerContainer.setVisible(visible)
+        profileBannerContainer.setVisible(visible)
+        profileHeader.setVisible(visible)
+        tabsShadow.setVisible(visible)
     }
 
     private fun displayRelationship(relationship: ParcelableRelationship) {

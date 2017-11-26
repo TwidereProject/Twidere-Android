@@ -47,18 +47,29 @@ internal class StatusBarBehavior(context: Context, attrs: AttributeSet? = null) 
         val lastInsets = parent.lastWindowInsetsCompat ?: return true
         val height = lastInsets.systemWindowInsetTop
         child.layout(0, 0, child.measuredWidth, height)
+        updateStatusBarColor(parent, child, parent.getDependencies(child).first())
+        return true
+    }
+
+    override fun onDependentViewChanged(parent: CoordinatorLayout, child: View, dependency: View): Boolean {
+        updateStatusBarColor(parent, child, dependency)
         return true
     }
 
     @SuppressLint("RestrictedApi")
-    override fun onDependentViewChanged(parent: CoordinatorLayout, child: View, dependency: View): Boolean {
-        if (child.height == 0) return true
-        val actionBarBackground = parent.toolbar.background as? ActionBarDrawable ?: return true
-        val bannerContainer = parent.profileBannerContainer
-        val bannerBottom = dependency.top + bannerContainer.height
-        val currentOffset = bannerBottom - child.bottom
-        val maxOffset = (bannerContainer.height - child.bottom).toFloat()
-        val factor = (1 - currentOffset / maxOffset).coerceIn(0f, 1f)
+    private fun updateStatusBarColor(parent: CoordinatorLayout, child: View, dependency: View) {
+        if (child.height == 0) return
+        val actionBarBackground = parent.toolbar.background as? ActionBarDrawable ?: return
+        val factor = when {
+            dependency.visibility == View.GONE -> 1f
+            else -> {
+                val bannerContainer = parent.profileBannerContainer
+                val bannerBottom = dependency.top + bannerContainer.height
+                val currentOffset = bannerBottom - child.bottom
+                val maxOffset = (bannerContainer.height - child.bottom).toFloat()
+                (1 - currentOffset / maxOffset).coerceIn(0f, 1f)
+            }
+        }
 
         val primaryColorDark = ChameleonUtils.darkenColor(actionBarBackground.color)
         val statusBarColor = ArgbEvaluator.getInstance().evaluate(factor, 0xA0000000.toInt(),
@@ -69,7 +80,6 @@ internal class StatusBarBehavior(context: Context, attrs: AttributeSet? = null) 
             WindowSupport.setLightStatusBar(window, lightStatusBar == 1)
         }
         this.lightStatusBar = lightStatusBar
-        return true
     }
 
 }

@@ -57,19 +57,24 @@ internal class ToolbarBehavior(context: Context?, attrs: AttributeSet? = null) :
         val actionBarBackground = child.background as? ActionBarDrawable ?: return true
         val bannerContainer = parent.profileBannerContainer
         val detailsBackground = parent.profileHeaderBackground
+
         val bannerBottom = dependency.top + bannerContainer.bottom
         val detailsBottom = dependency.top + detailsBackground.bottom
         val currentOffset = bannerBottom - child.bottom
         val maxOffset = (bannerContainer.bottom - child.bottom).toFloat()
-        val colorFactor = (1 - currentOffset / maxOffset).coerceIn(0f, 1f)
-        actionBarBackground.factor = colorFactor
+        val headerHidden = dependency.visibility == View.GONE
 
-        val outlineFactor = if (colorFactor < 1) {
-            colorFactor
-        } else {
-            ((detailsBottom - child.bottom) / detailsBackground.height.toFloat()).coerceIn(0f, 1f)
+        val colorFactor = when {
+            headerHidden -> 1f
+            else -> (1 - currentOffset / maxOffset).coerceIn(0f, 1f)
+        }
+        val outlineFactor = when {
+            headerHidden -> 1f
+            colorFactor < 1 -> colorFactor
+            else -> ((detailsBottom - child.bottom) / detailsBackground.height.toFloat()).coerceIn(0f, 1f)
         }
 
+        actionBarBackground.factor = colorFactor
         actionBarBackground.outlineAlphaFactor = outlineFactor
 
         val colorPrimary = actionBarBackground.color
