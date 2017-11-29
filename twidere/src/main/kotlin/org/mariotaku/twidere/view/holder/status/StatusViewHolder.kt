@@ -388,9 +388,10 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         textView.hideIfEmpty()
 
         if (replyCount > 0) {
-            replyCountView.spannable = UnitConvertUtils.calculateProperCount(replyCount)
+            val properCount = UnitConvertUtils.calculateProperCount(replyCount)
+            replyCountView.spannable = properCount
             replyButton.contentDescription = context.resources.getQuantityString(R.plurals.N_replies_abbrev,
-                    replyCount.toInt(), replyCount)
+                    replyCount.toInt(), properCount)
         } else {
             replyCountView.spannable = null
             replyButton.contentDescription = context.getString(R.string.action_reply)
@@ -412,9 +413,10 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         retweetIcon.isActivated = isRetweetIconActivated(status)
 
         if (retweetCount > 0) {
-            retweetCountView.spannable = UnitConvertUtils.calculateProperCount(retweetCount)
+            val properCount = UnitConvertUtils.calculateProperCount(retweetCount)
+            retweetCountView.spannable = properCount
             retweetButton.contentDescription = context.resources.getQuantityString(R.plurals.N_retweets_abbrev,
-                    retweetCount.toInt(), retweetCount)
+                    retweetCount.toInt(), properCount)
         } else {
             retweetCountView.spannable = null
             retweetButton.contentDescription = context.getString(R.string.action_retweet)
@@ -424,13 +426,14 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         favoriteIcon.isActivated = isFavoriteIconActivated(status)
 
         if (favoriteCount > 0) {
-            favoriteCountView.spannable = UnitConvertUtils.calculateProperCount(favoriteCount)
+            val properCount = UnitConvertUtils.calculateProperCount(favoriteCount)
+            favoriteCountView.spannable = properCount
             if (adapter.useStarsForLikes) {
                 favoriteButton.contentDescription = context.resources.getQuantityString(R.plurals.N_favorites_abbrev,
-                        favoriteCount.toInt(), favoriteCount)
+                        favoriteCount.toInt(), properCount)
             } else {
                 favoriteButton.contentDescription = context.resources.getQuantityString(R.plurals.N_likes_abbrev,
-                        favoriteCount.toInt(), favoriteCount)
+                        favoriteCount.toInt(), properCount)
             }
         } else {
             favoriteCountView.spannable = null
