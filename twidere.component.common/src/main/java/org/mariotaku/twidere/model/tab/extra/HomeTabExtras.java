@@ -26,14 +26,13 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
-import org.mariotaku.twidere.constant.IntentConstants;
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_HIDE_QUOTES;
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_HIDE_REPLIES;
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_HIDE_RETWEETS;
 
-/**
- * Created by mariotaku on 16/6/22.
- */
 @ParcelablePlease
 @JsonObject
-public class HomeTabExtras extends TabExtras implements Parcelable {
+public class HomeTabExtras extends TimelineTabExtras implements Parcelable {
     @JsonField(name = "hide_retweets")
     boolean hideRetweets;
     @JsonField(name = "hide_quotes")
@@ -68,9 +67,9 @@ public class HomeTabExtras extends TabExtras implements Parcelable {
     @Override
     public void copyToBundle(Bundle bundle) {
         super.copyToBundle(bundle);
-        bundle.putBoolean(IntentConstants.EXTRA_HIDE_RETWEETS, hideRetweets);
-        bundle.putBoolean(IntentConstants.EXTRA_HIDE_QUOTES, hideQuotes);
-        bundle.putBoolean(IntentConstants.EXTRA_HIDE_REPLIES, hideReplies);
+        bundle.putBoolean(EXTRA_HIDE_RETWEETS, hideRetweets);
+        bundle.putBoolean(EXTRA_HIDE_QUOTES, hideQuotes);
+        bundle.putBoolean(EXTRA_HIDE_REPLIES, hideReplies);
     }
 
     @Override

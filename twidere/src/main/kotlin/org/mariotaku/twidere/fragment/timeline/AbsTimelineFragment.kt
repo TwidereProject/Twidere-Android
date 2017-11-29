@@ -88,6 +88,7 @@ import org.mariotaku.twidere.model.event.StatusRetweetedEvent
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.refresh.BaseContentRefreshParam
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
+import org.mariotaku.twidere.model.tab.extra.TimelineTabExtras
 import org.mariotaku.twidere.model.timeline.TimelineFilter
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.promise.StatusPromises
@@ -111,7 +112,11 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
     @TimelineStyle
     protected open val timelineStyle: Int
-        get() = arguments!!.getInt(EXTRA_TIMELINE_STYLE, TimelineStyle.PLAIN)
+        get() {
+            val extras = arguments?.getParcelable<TimelineTabExtras>(EXTRA_EXTRAS)
+            if (extras != null) return extras.timelineStyle
+            return arguments!!.getInt(EXTRA_TIMELINE_STYLE, TimelineStyle.PLAIN)
+        }
 
     protected open val isStandalone: Boolean
         get() = tabId <= 0

@@ -16,47 +16,43 @@
  * limitations under the License.
  */
 
-package org.mariotaku.twidere.model.tab.argument;
+package org.mariotaku.twidere.model.tab.extra;
 
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
-import org.mariotaku.twidere.model.UserKey;
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_TIMELINE_STYLE;
 
-@ParcelablePlease
 @JsonObject
-public class UserArguments extends TabArguments implements Parcelable {
-    @JsonField(name = "user_id")
-    String userId;
-    @JsonField(name = "user_key")
-    UserKey userKey;
-
-    public void setUserKey(UserKey userKey) {
-        this.userKey = userKey;
-    }
+@ParcelablePlease
+public class TimelineTabExtras extends TabExtras implements Parcelable {
+    @JsonField(name = "timeline_style")
+    int timelineStyle;
 
     @Override
-    public void copyToBundle(@NonNull Bundle bundle) {
+    public void copyToBundle(Bundle bundle) {
         super.copyToBundle(bundle);
-        if (userKey == null) {
-            bundle.putParcelable(EXTRA_USER_KEY, UserKey.valueOf(userId));
-        } else {
-            bundle.putParcelable(EXTRA_USER_KEY, userKey);
-        }
+        bundle.putInt(EXTRA_TIMELINE_STYLE, timelineStyle);
+    }
+
+    public int getTimelineStyle() {
+        return timelineStyle;
+    }
+
+    public void setTimelineStyle(int timelineStyle) {
+        this.timelineStyle = timelineStyle;
     }
 
     @Override
     public String toString() {
-        return "UserArguments{" +
-                "userId='" + userId + '\'' +
-                ", userKey=" + userKey +
-                "} " + super.toString();
+        return "TimelineTabExtras{" +
+                "timelineStyle=" + timelineStyle +
+                '}';
     }
 
     @Override
@@ -66,18 +62,18 @@ public class UserArguments extends TabArguments implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        UserArgumentsParcelablePlease.writeToParcel(this, dest, flags);
+        TimelineTabExtrasParcelablePlease.writeToParcel(this, dest, flags);
     }
 
-    public static final Creator<UserArguments> CREATOR = new Creator<UserArguments>() {
-        public UserArguments createFromParcel(Parcel source) {
-            UserArguments target = new UserArguments();
-            UserArgumentsParcelablePlease.readFromParcel(target, source);
+    public static final Creator<TimelineTabExtras> CREATOR = new Creator<TimelineTabExtras>() {
+        public TimelineTabExtras createFromParcel(Parcel source) {
+            TimelineTabExtras target = new TimelineTabExtras();
+            TimelineTabExtrasParcelablePlease.readFromParcel(target, source);
             return target;
         }
 
-        public UserArguments[] newArray(int size) {
-            return new UserArguments[size];
+        public TimelineTabExtras[] newArray(int size) {
+            return new TimelineTabExtras[size];
         }
     };
 }

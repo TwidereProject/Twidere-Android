@@ -6,10 +6,6 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
-/**
- * Created by mariotaku on 2016/11/28.
- */
-
 public abstract class StringHolder {
 
     public abstract String createString(Context context);

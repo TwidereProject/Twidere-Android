@@ -35,7 +35,7 @@ class StringExtraConfiguration(key: String, title: StringHolder, private val def
         super.onViewCreated(context, view, fragment)
         editText = view.findViewById(R.id.editText)
         editText.hint = title.createString(context)
-        editText.setText(def)
+        value = def
     }
 
     override fun showRequiredError() {

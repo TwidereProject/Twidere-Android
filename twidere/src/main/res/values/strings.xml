@@ -1380,4 +1380,8 @@
 
     <string name="users_blocked">Blocked these users.</string>
     <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>\'s lists</string>
+    <string name="label_timeline_style">Timeline style</string>
+    <string name="timeline_style_normal">Normal</string>
+    <string name="timeline_style_staggered">Staggered</string>
+    <string name="timeline_style_gallery">Gallery</string>
 </resources>

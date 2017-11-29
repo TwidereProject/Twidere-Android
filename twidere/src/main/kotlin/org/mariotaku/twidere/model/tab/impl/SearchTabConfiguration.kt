@@ -31,10 +31,6 @@ import org.mariotaku.twidere.model.tab.TabConfiguration
 import org.mariotaku.twidere.model.tab.argument.TextQueryArguments
 import org.mariotaku.twidere.model.tab.conf.StringExtraConfiguration
 
-/**
- * Created by mariotaku on 2016/11/27.
- */
-
 class SearchTabConfiguration : TabConfiguration() {
 
     override val name = StringHolder.resource(R.string.action_search)

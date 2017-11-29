@@ -22,14 +22,18 @@ package org.mariotaku.twidere.model.tab.impl
 import android.content.Context
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.TabAccountFlags
-import org.mariotaku.twidere.constant.IntentConstants
+import org.mariotaku.twidere.annotation.TimelineStyle
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_TIMELINE_STYLE
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER
 import org.mariotaku.twidere.fragment.timeline.UserMediaTimelineFragment
 import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.model.tab.StringHolder
 import org.mariotaku.twidere.model.tab.TabConfiguration
 import org.mariotaku.twidere.model.tab.argument.UserArguments
+import org.mariotaku.twidere.model.tab.conf.IntSpinnerExtraConfiguration
 import org.mariotaku.twidere.model.tab.conf.UserExtraConfiguration
+import org.mariotaku.twidere.model.tab.extra.TimelineTabExtras
 
 class UserMediaTimelineTabConfiguration : TabConfiguration() {
 
@@ -42,15 +46,34 @@ class UserMediaTimelineTabConfiguration : TabConfiguration() {
     override val fragmentClass = UserMediaTimelineFragment::class.java
 
     override fun getExtraConfigurations(context: Context) = arrayOf(
-            UserExtraConfiguration(IntentConstants.EXTRA_USER).headerTitle(R.string.title_user)
+            UserExtraConfiguration(EXTRA_USER).headerTitle(R.string.title_user),
+            IntSpinnerExtraConfiguration(EXTRA_TIMELINE_STYLE, R.string.label_timeline_style,
+                    intArrayOf(R.string.timeline_style_normal, R.string.timeline_style_staggered, R.string.timeline_style_gallery),
+                    intArrayOf(TimelineStyle.PLAIN, TimelineStyle.STAGGERED, TimelineStyle.GALLERY),
+                    TimelineStyle.PLAIN).headerTitle(R.string.label_timeline_style).mutable(true)
     )
 
     override fun applyExtraConfigurationTo(tab: Tab, extraConf: ExtraConfiguration): Boolean {
         val arguments = tab.arguments as UserArguments
+        val extras = tab.extras as? TimelineTabExtras
         when (extraConf.key) {
-            IntentConstants.EXTRA_USER -> {
+            EXTRA_USER -> {
                 val user = (extraConf as UserExtraConfiguration).value ?: return false
                 arguments.setUserKey(user.key)
+            }
+            EXTRA_TIMELINE_STYLE -> {
+                val style = (extraConf as IntSpinnerExtraConfiguration).value
+                extras?.timelineStyle = style
+            }
+        }
+        return true
+    }
+
+    override fun readExtraConfigurationFrom(tab: Tab, extraConf: ExtraConfiguration): Boolean {
+        val extras = tab.extras as? TimelineTabExtras ?: return false
+        when (extraConf.key) {
+            EXTRA_TIMELINE_STYLE -> {
+                (extraConf as IntSpinnerExtraConfiguration).value = extras.timelineStyle
             }
         }
         return true

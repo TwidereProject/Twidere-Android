@@ -48,6 +48,7 @@ import org.mariotaku.twidere.model.tab.argument.UserListArguments;
 import org.mariotaku.twidere.model.tab.extra.HomeTabExtras;
 import org.mariotaku.twidere.model.tab.extra.InteractionsTabExtras;
 import org.mariotaku.twidere.model.tab.extra.TabExtras;
+import org.mariotaku.twidere.model.tab.extra.TimelineTabExtras;
 import org.mariotaku.twidere.model.tab.extra.TrendsTabExtras;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
 
@@ -160,6 +161,9 @@ public class CustomTabUtils implements Constants {
             }
             case CustomTabType.TRENDS_SUGGESTIONS: {
                 return new TrendsTabExtras();
+            }
+            case CustomTabType.USER_MEDIA_TIMELINE: {
+                return new TimelineTabExtras();
             }
         }
         return null;

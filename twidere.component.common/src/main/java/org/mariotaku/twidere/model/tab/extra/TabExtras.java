@@ -54,6 +54,9 @@ public abstract class TabExtras implements Parcelable {
             case CustomTabType.TRENDS_SUGGESTIONS: {
                 return LoganSquare.parse(json, TrendsTabExtras.class);
             }
+            case CustomTabType.USER_MEDIA_TIMELINE: {
+                return LoganSquare.parse(json, TimelineTabExtras.class);
+            }
         }
         return null;
     }
