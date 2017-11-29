@@ -41,6 +41,8 @@ class InteractionsActivitiesFragment : AbsActivitiesFragment() {
 
     override val readPositionTag: String? = ReadPositionTag.ACTIVITIES_ABOUT_ME
 
+    override val isStandalone: Boolean = false
+
     override fun getActivities(param: ContentRefreshParam): Boolean {
         val task = GetActivitiesAboutMeTask(context!!)
         task.params = param

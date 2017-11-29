@@ -220,8 +220,8 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
 
             override val pagination by lazy {
                 val keys = accountKeys.toNulls()
-                val sinceIds = DataStoreUtils.getNewestStatusIds(context!!, contentUri, keys)
-                val sinceSortIds = DataStoreUtils.getNewestStatusSortIds(context!!, contentUri, keys)
+                val sinceIds = DataStoreUtils.getRefreshNewestActivityMaxPositions(context!!, contentUri, keys)
+                val sinceSortIds = DataStoreUtils.getRefreshNewestActivityMaxSortPositions(context!!, contentUri, keys)
                 return@lazy Array(keys.size) { idx ->
                     SinceMaxPagination.sinceId(sinceIds[idx], sinceSortIds[idx])
                 }
@@ -246,8 +246,8 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
             }
             override val pagination by lazy {
                 val keys = accountKeys.toNulls()
-                val maxIds = DataStoreUtils.getOldestStatusIds(context!!, contentUri, keys)
-                val maxSortIds = DataStoreUtils.getOldestStatusSortIds(context!!, contentUri, keys)
+                val maxIds = DataStoreUtils.getRefreshOldestActivityMaxPositions(context!!, contentUri, keys)
+                val maxSortIds = DataStoreUtils.getRefreshOldestActivityMaxSortPositions(context!!, contentUri, keys)
                 return@lazy Array(keys.size) { idx ->
                     SinceMaxPagination.maxId(maxIds[idx], maxSortIds[idx])
                 }
