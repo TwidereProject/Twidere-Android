@@ -178,6 +178,8 @@ interface GeneralComponent {
 
     fun inject(liveData: UserLiveData)
 
+    fun inject(adapter: AccountSelectorAdapter)
+
     companion object : ApplicationContextSingletonHolder<GeneralComponent>(creation@ { application ->
         return@creation DaggerGeneralComponent.builder()
                 .applicationModule(ApplicationModule.get(application))

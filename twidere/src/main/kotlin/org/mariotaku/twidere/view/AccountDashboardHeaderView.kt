@@ -6,10 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import org.mariotaku.twidere.R
 
-/**
- * Created by mariotaku on 2016/12/16.
- */
-class AccountDashboardHeaderView @JvmOverloads constructor(
+class AccountDashboardHeaderView(
         context: Context,
         attrs: AttributeSet? = null
 ) : ViewGroup(context, attrs) {

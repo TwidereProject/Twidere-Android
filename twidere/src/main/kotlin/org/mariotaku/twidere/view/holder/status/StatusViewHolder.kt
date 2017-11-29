@@ -43,10 +43,7 @@ import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE
 import org.mariotaku.twidere.extension.loadProfileImage
-import org.mariotaku.twidere.extension.model.applyTo
-import org.mariotaku.twidere.extension.model.quoted_user_acct
-import org.mariotaku.twidere.extension.model.retweeted_by_user_acct
-import org.mariotaku.twidere.extension.model.user_acct
+import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.setVisible
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
 import org.mariotaku.twidere.model.ParcelableLocation
@@ -155,9 +152,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         mediaPreview.displayMedia(R.drawable.featured_graphics)
     }
 
-    override fun display(status: ParcelableStatus, displayInReplyTo: Boolean,
-            displayPinned: Boolean) {
-
+    override fun display(status: ParcelableStatus, displayInReplyTo: Boolean, displayPinned: Boolean) {
         val context = itemView.context
         val requestManager = adapter.requestManager
         val linkify = adapter.twidereLinkify
@@ -394,8 +389,11 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
 
         if (replyCount > 0) {
             replyCountView.spannable = UnitConvertUtils.calculateProperCount(replyCount)
+            replyButton.contentDescription = context.resources.getQuantityString(R.plurals.N_replies_abbrev,
+                    replyCount.toInt(), replyCount)
         } else {
             replyCountView.spannable = null
+            replyButton.contentDescription = context.getString(R.string.action_reply)
         }
         replyCountView.hideIfEmpty()
 
@@ -415,8 +413,11 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
 
         if (retweetCount > 0) {
             retweetCountView.spannable = UnitConvertUtils.calculateProperCount(retweetCount)
+            retweetButton.contentDescription = context.resources.getQuantityString(R.plurals.N_retweets_abbrev,
+                    retweetCount.toInt(), retweetCount)
         } else {
             retweetCountView.spannable = null
+            retweetButton.contentDescription = context.getString(R.string.action_retweet)
         }
         retweetCountView.hideIfEmpty()
 
@@ -424,13 +425,33 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
 
         if (favoriteCount > 0) {
             favoriteCountView.spannable = UnitConvertUtils.calculateProperCount(favoriteCount)
+            if (adapter.useStarsForLikes) {
+                favoriteButton.contentDescription = context.resources.getQuantityString(R.plurals.N_favorites_abbrev,
+                        favoriteCount.toInt(), favoriteCount)
+            } else {
+                favoriteButton.contentDescription = context.resources.getQuantityString(R.plurals.N_likes_abbrev,
+                        favoriteCount.toInt(), favoriteCount)
+            }
         } else {
             favoriteCountView.spannable = null
+            if (adapter.useStarsForLikes) {
+                favoriteButton.contentDescription = context.getString(R.string.action_favorite)
+            } else {
+                favoriteButton.contentDescription = context.getString(R.string.action_like)
+            }
         }
         favoriteCountView.hideIfEmpty()
 
         nameView.updateText(formatter)
         quotedNameView.updateText(formatter)
+
+
+        itemView.contentDescription = status.contentDescription(context, colorNameManager,
+                nameFirst, displayInReplyTo, timeView.showAbsoluteTime)
+
+        profileImageView.contentDescription = context.getString(R.string.content_description_open_user_name_profile,
+                colorNameManager.getDisplayName(status, nameFirst))
+
 
     }
 

@@ -267,7 +267,12 @@
 
     <string name="content">Content</string>
     <string name="content_and_storage">Content &amp; Storage</string>
+    <string name="content_description_accounts_selector_current">Selected account is <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="content_description_item_status"><xliff:g id="name">%1$s</xliff:g> <xliff:g id="time_with_preposition">%2$s</xliff:g>: <xliff:g id="content">%3$s</xliff:g></string>
+    <string name="content_description_item_status_reply"><xliff:g id="name">%1$s</xliff:g> replying to <xliff:g id="in_reply_to">%2$s</xliff:g> <xliff:g id="time_with_preposition">%3$s</xliff:g>: <xliff:g id="content">%4$s</xliff:g></string>
+    <string name="content_description_item_status_retweet">Retweeted by <xliff:g id="retweeter">%1$s</xliff:g>. <xliff:g id="name">%2$s</xliff:g> <xliff:g id="time_with_preposition">%3$s</xliff:g>: <xliff:g id="content">%4$s</xliff:g></string>
     <string name="content_description_sticker">Sticker</string>
+    <string name="content_description_open_user_name_profile">Open <xliff:g id="name">%1$s</xliff:g>\'s profile</string>
     <string name="content_to_notify">Content to notify</string>
     <string name="content_to_refresh">Content to refresh</string>
 
@@ -803,7 +808,9 @@
     <string name="notification_channel_description_content_messages">Important messages like DMs</string>
     <string name="notification_channel_descriptions_content_subscriptions">User\'s tweet notifications</string>
     <string name="notification_channel_descriptions_content_updates">Updates like new tweets in home timeline</string>
+    <!-- Notifications sent by Twidere itself, like error messages -->
     <string name="notification_channel_name_app_notices">App notices</string>
+    <!-- Ongoing background operations, like notifications showing when sending tweet -->
     <string name="notification_channel_name_background_progresses">Background operations</string>
     <string name="notification_channel_name_content_interactions">Interactions</string>
     <string name="notification_channel_name_content_messages">Messages</string>

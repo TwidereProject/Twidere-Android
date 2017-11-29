@@ -19,26 +19,30 @@
 
 package org.mariotaku.twidere.adapter
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
+import org.mariotaku.twidere.dagger.component.GeneralComponent
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.fragment.AccountsDashboardFragment
 import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.view.holder.AccountProfileImageViewHolder
 import org.mariotaku.twidere.view.transformer.AccountsSelectorTransformer
 import java.util.*
+import javax.inject.Inject
 
 class AccountSelectorAdapter(
-        private val inflater: LayoutInflater,
+        context: Context,
         preferences: SharedPreferences,
         val requestManager: RequestManager
 ) : RecyclerPagerAdapter<RecyclerPagerAdapter.ViewHolder>() {
-
-    internal var profileImageStyle: Int = preferences[profileImageStyleKey]
 
     var listener: Listener? = null
 
@@ -66,11 +70,6 @@ class AccountSelectorAdapter(
             notifyPagesChanged(invalidateCache = true)
         }
 
-
-    fun getAdapterAccount(position: Int): AccountDetails? {
-        return accounts?.getOrNull(position - accountStart + 1)
-    }
-
     var selectedAccount: AccountDetails?
         get() {
             return accounts?.firstOrNull()
@@ -81,17 +80,35 @@ class AccountSelectorAdapter(
             swap(from, to)
         }
 
-    val ITEM_VIEW_TYPE_SPACE = 1
-    val ITEM_VIEW_TYPE_ICON = 2
+    @Inject
+    internal lateinit var nameColorManger: UserColorNameManager
+
+    internal var profileImageStyle: Int = preferences[profileImageStyleKey]
+    internal val nameFirst: Boolean = preferences[nameFirstKey]
+
+    private val accountStart: Int
+        get() = Math.max(0, 3 - accountsCount)
+
+    private val accountsCount: Int
+        get() {
+            val accounts = this.accounts ?: return 0
+            return Math.max(0, accounts.size - 1)
+        }
+
+    init {
+        GeneralComponent.get(context).inject(this)
+    }
 
     override fun onCreateViewHolder(container: ViewGroup, position: Int, itemViewType: Int): ViewHolder {
         when (itemViewType) {
-            ITEM_VIEW_TYPE_SPACE -> {
-                val view = inflater.inflate(R.layout.adapter_item_dashboard_account_space, container, false)
+            Companion.ITEM_VIEW_TYPE_SPACE -> {
+                val view = LayoutInflater.from(container.context)
+                        .inflate(R.layout.adapter_item_dashboard_account_space, container, false)
                 return AccountsDashboardFragment.AccountSpaceViewHolder(view)
             }
-            ITEM_VIEW_TYPE_ICON -> {
-                val view = inflater.inflate(AccountProfileImageViewHolder.layoutResource, container, false)
+            Companion.ITEM_VIEW_TYPE_ICON -> {
+                val view = LayoutInflater.from(container.context)
+                        .inflate(AccountProfileImageViewHolder.layoutResource, container, false)
                 return AccountProfileImageViewHolder(this, view)
             }
         }
@@ -100,7 +117,7 @@ class AccountSelectorAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int, itemViewType: Int) {
         when (itemViewType) {
-            ITEM_VIEW_TYPE_ICON -> {
+            Companion.ITEM_VIEW_TYPE_ICON -> {
                 val account = getAdapterAccount(position)!!
                 (holder as AccountProfileImageViewHolder).display(account)
             }
@@ -109,23 +126,14 @@ class AccountSelectorAdapter(
 
     override fun getItemViewType(position: Int): Int {
         if (position < accountStart) {
-            return ITEM_VIEW_TYPE_SPACE
+            return Companion.ITEM_VIEW_TYPE_SPACE
         }
-        return ITEM_VIEW_TYPE_ICON
+        return Companion.ITEM_VIEW_TYPE_ICON
     }
 
     override fun getCount(): Int {
         return Math.max(3, accountsCount)
     }
-
-    val accountStart: Int
-        get() = Math.max(0, 3 - accountsCount)
-
-    val accountsCount: Int
-        get() {
-            val accounts = this.accounts ?: return 0
-            return Math.max(0, accounts.size - 1)
-        }
 
     override fun getPageWidth(position: Int): Float {
         return 1f / AccountsSelectorTransformer.selectorAccountsCount
@@ -133,6 +141,10 @@ class AccountSelectorAdapter(
 
     fun dispatchItemSelected(holder: AccountProfileImageViewHolder) {
         listener?.onAccountSelected(holder, getAdapterAccount(holder.position)!!)
+    }
+
+    private fun getAdapterAccount(position: Int): AccountDetails? {
+        return accounts?.getOrNull(position - accountStart + 1)
     }
 
     private fun swap(from: AccountDetails, to: AccountDetails) {
@@ -149,5 +161,11 @@ class AccountSelectorAdapter(
     interface Listener {
         fun onAccountSelected(holder: AccountProfileImageViewHolder, details: AccountDetails)
     }
+
+    companion object {
+        const val ITEM_VIEW_TYPE_ICON = 2
+        const val ITEM_VIEW_TYPE_SPACE = 1
+    }
+
 
 }

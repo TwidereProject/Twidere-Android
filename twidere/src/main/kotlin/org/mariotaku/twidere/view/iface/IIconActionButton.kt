@@ -16,19 +16,19 @@ import org.mariotaku.twidere.R
 interface IIconActionButton : ChameleonView {
 
     var defaultColor: Int
-        @ColorInt get @ColorInt set
+        @ColorInt get
     var activatedColor: Int
-        @ColorInt get @ColorInt set
+        @ColorInt get
     var disabledColor: Int
-        @ColorInt get @ColorInt set
+        @ColorInt get
 
     class Appearance : ChameleonTextView.Appearance() {
         var defaultColor: Int = 0
-            @ColorInt get @ColorInt set
+            @ColorInt get
         var activatedColor: Int = 0
-            @ColorInt get @ColorInt set
+            @ColorInt get
         var disabledColor: Int = 0
-            @ColorInt get @ColorInt set
+            @ColorInt get
 
         companion object {
 

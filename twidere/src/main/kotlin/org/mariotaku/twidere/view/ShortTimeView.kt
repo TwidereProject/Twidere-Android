@@ -28,6 +28,7 @@ import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.util.Utils.formatSameDayTime
 import java.lang.ref.WeakReference
+import java.util.concurrent.TimeUnit
 
 class ShortTimeView(
         context: Context,
@@ -59,17 +60,7 @@ class ShortTimeView(
     }
 
     private fun invalidateTime() {
-        if (showAbsoluteTime) {
-            setTextIfChanged(formatSameDayTime(context, time))
-        } else {
-            val current = System.currentTimeMillis()
-            if (Math.abs(current - time) > 60 * 1000) {
-                setTextIfChanged(DateUtils.getRelativeTimeSpanString(time, System.currentTimeMillis(),
-                        DateUtils.MINUTE_IN_MILLIS, DateUtils.FORMAT_ABBREV_ALL))
-            } else {
-                setTextIfChanged(context.getString(R.string.just_now))
-            }
-        }
+        setTextIfChanged(getTimeLabel(context, time, showAbsoluteTime))
     }
 
     private fun setTextIfChanged(text: CharSequence?) {
@@ -94,6 +85,17 @@ class ShortTimeView(
     companion object {
 
         private const val TICKER_DURATION = 5000L
+        private val ONE_MINUTE_MILLIS = TimeUnit.MINUTES.toMillis(1)
+
+        fun getTimeLabel(context: Context, time: Long, showAbsoluteTime: Boolean): CharSequence {
+            if (showAbsoluteTime) return formatSameDayTime(context, time)
+            return if (Math.abs(System.currentTimeMillis() - time) > ONE_MINUTE_MILLIS) {
+                DateUtils.getRelativeTimeSpanString(time, System.currentTimeMillis(),
+                        DateUtils.MINUTE_IN_MILLIS, DateUtils.FORMAT_ABBREV_ALL)
+            } else {
+                context.getString(R.string.just_now)
+            }
+        }
     }
 
 }

@@ -194,7 +194,7 @@ object Utils {
         return "$accountKey:$tag"
     }
 
-    fun formatSameDayTime(context: Context, timestamp: Long): String? {
+    fun formatSameDayTime(context: Context, timestamp: Long): String {
         if (DateUtils.isToday(timestamp))
             return DateUtils.formatDateTime(context, timestamp,
                     if (DateFormat.is24HourFormat(context))

@@ -15,7 +15,7 @@
     "name": "Fanfou",
     "type": "fanfou",
     "localized_name": "@string/provider_fanfou",
-    "api_url_format": "https://api2.fanfou.com/",
+    "api_url_format": "http://api.fanfou.com/",
     "auth_type": "oauth",
     "same_oauth_url": true,
     "no_version_suffix": true,

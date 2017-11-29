@@ -57,7 +57,6 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
 import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.ktextension.setItemIcon
-import org.mariotaku.ktextension.spannable
 import org.mariotaku.twidere.Constants.EXTRA_FEATURES_NOTICE_VERSION
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
@@ -70,11 +69,8 @@ import org.mariotaku.twidere.adapter.RecyclerPagerAdapter
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.ProfileImageSize
+import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
-import org.mariotaku.twidere.constant.extraFeaturesNoticeVersionKey
-import org.mariotaku.twidere.constant.iWantMyStarsBackKey
-import org.mariotaku.twidere.constant.newDocumentApiKey
-import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.setActivated
 import org.mariotaku.twidere.fragment.AccountsDashboardFragment.AccountsInfo
@@ -108,7 +104,6 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     private val floatingProfileImageSnapshot by lazy { accountsHeader.floatingProfileImageSnapshot }
     private val accountProfileImageView by lazy { accountsHeader.profileImage }
     private val accountProfileNameView by lazy { accountsHeader.name }
-    private val accountProfileScreenNameView by lazy { accountsHeader.screenName }
     private val accountDashboardMenu by lazy { accountsHeader.accountDashboardMenu }
     private val profileContainer by lazy { accountsHeader.profileContainer }
     private val noAccountContainer by lazy { accountsHeader.noAccountContainer }
@@ -122,7 +117,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     @SuppressLint("RestrictedApi")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        accountsAdapter = AccountSelectorAdapter(layoutInflater, preferences, requestManager).also {
+        accountsAdapter = AccountSelectorAdapter(context!!, preferences, requestManager).also {
             it.listener = this
         }
         accountsSelector.adapter = accountsAdapter
@@ -185,6 +180,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             layoutInflater.inflate(R.layout.layout_account_dashboard_profile_banner,
                     accountProfileBanner, false)
         }
+        accountProfileNameView.nameFirst = preferences[nameFirstKey]
 
         navigationView.setNavigationItemSelectedListener(this)
         preferences.registerOnSharedPreferenceChangeListener(this)
@@ -548,8 +544,15 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         val activity = activity ?: return
         if (isDetached || activity.isFinishing) return
         val account = accountsAdapter.selectedAccount ?: return
-        accountProfileNameView.spannable = account.user.name
-        accountProfileScreenNameView.spannable = "@${account.user.screen_name}"
+        val user = account.user ?: return
+
+        accountProfileNameView.name = user.name
+        accountProfileNameView.screenName = "@${user.screen_name}"
+        accountProfileNameView.updateText(bidiFormatter)
+
+        profileContainer.contentDescription = getString(R.string.content_description_accounts_selector_current,
+                userColorNameManager.getDisplayName(user, preferences[nameFirstKey]))
+
         requestManager.loadProfileImage(activity, account, preferences[profileImageStyleKey],
                 accountProfileImageView.cornerRadius, accountProfileImageView.cornerRadiusRatio,
                 ProfileImageSize.REASONABLY_SMALL).placeholder(profileImageSnapshot).into(accountProfileImageView)

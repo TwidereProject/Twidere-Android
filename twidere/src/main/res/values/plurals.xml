@@ -82,5 +82,9 @@
         <item quantity="one"><xliff:g example="1" id="count">%s</xliff:g> retweet</item>
         <item quantity="other"><xliff:g example="19K" id="count">%s</xliff:g> retweets</item>
     </plurals>
+    <plurals name="N_replies_abbrev">
+        <item quantity="one"><xliff:g example="1" id="count">%s</xliff:g> reply</item>
+        <item quantity="other"><xliff:g example="19K" id="count">%s</xliff:g> replies</item>
+    </plurals>
 
 </resources>

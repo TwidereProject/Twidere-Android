@@ -25,6 +25,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants"
+    android:focusable="true"
     app:sizeMeasurementId="@+id/profileContainer"
     tools:layout_height="160dp"
     tools:layout_width="280dp">
@@ -33,10 +34,6 @@
         android:id="@+id/accountProfileBanner"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignBottom="@+id/profileContainer"
-        android:layout_alignTop="@+id/profileContainer"
-        android:contentDescription="@string/profile_banner"
-        android:focusable="false"
         android:foreground="@color/drawer_banner_foreground"
         tools:background="@drawable/nyan_stars_background"/>
 
@@ -50,7 +47,6 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusable="false"
             android:paddingBottom="@dimen/element_spacing_normal"
             android:paddingTop="@dimen/element_spacing_normal">
 
@@ -63,7 +59,6 @@
                 android:layout_marginLeft="@dimen/element_spacing_large"
                 android:layout_marginStart="@dimen/element_spacing_large"
                 android:layout_marginTop="@dimen/element_spacing_mlarge"
-                android:focusable="false"
                 app:sivBorder="true"
                 app:sivBorderWidth="2dp"
                 tools:src="@drawable/ic_profile_image_twidere"/>
@@ -79,7 +74,6 @@
                 android:layout_toLeftOf="@+id/hasNextAccountIndicator"
                 android:layout_toRightOf="@+id/hasPrevAccountIndicator"
                 android:layout_toStartOf="@+id/hasNextAccountIndicator"
-                android:focusable="false"
                 android:overScrollMode="never"
                 tools:listitem="@layout/adapter_item_dashboard_account"
                 tools:paddingStart="@dimen/element_spacing_large"
@@ -121,46 +115,27 @@
                 android:layout_marginRight="@dimen/element_spacing_large"
                 android:layout_marginStart="@dimen/element_spacing_large"
                 android:baselineAligned="false"
-                android:focusable="false"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <LinearLayout
+                <org.mariotaku.twidere.view.NameView
+                    android:id="@+id/name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:focusable="false"
-                    android:orientation="vertical">
-
-                    <org.mariotaku.twidere.view.FixedTextView
-                        android:id="@+id/name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:focusable="false"
-                        android:maxLines="1"
-                        android:textAppearance="?android:textAppearanceSmall"
-                        android:textColor="@android:color/white"
-                        android:textStyle="bold"
-                        tools:text="Name"/>
-
-                    <org.mariotaku.twidere.view.FixedTextView
-                        android:id="@+id/screenName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:focusable="false"
-                        android:maxLines="1"
-                        android:textAppearance="?android:textAppearanceSmall"
-                        android:textColor="@color/material_grey"
-                        tools:text="\@username"/>
-
-                </LinearLayout>
+                    app:tltvPrimaryTextAppearance="?android:textAppearanceSmall"
+                    app:tltvPrimaryTextColor="@android:color/white"
+                    app:tltvPrimaryTextStyle="bold"
+                    app:tltvSecondaryTextAppearance="?android:textAppearanceSmall"
+                    app:tltvSecondaryTextColor="@color/material_grey"
+                    app:tltvTwoLine="true"
+                    tools:tltvPrimaryText="Name"
+                    tools:tltvSecondaryText="\@screenname"/>
 
                 <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/element_size_normal"
-                    android:focusable="false"
+                    android:layout_weight="0"
                     android:foregroundGravity="center"
                     tools:foreground="@drawable/ic_action_status_compose">
 
@@ -178,7 +153,6 @@
             android:id="@+id/floatingProfileImageSnapshot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:focusable="false"
             android:scaleType="fitCenter"
             android:visibility="invisible"
             tools:ignore="ContentDescription"/>
@@ -188,10 +162,6 @@
         android:id="@+id/noAccountContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/profileContainer"
-        android:layout_alignTop="@+id/profileContainer"
-        android:clickable="true"
-        android:focusable="true"
         tools:visibility="gone">
 
         <org.mariotaku.twidere.view.FixedTextView

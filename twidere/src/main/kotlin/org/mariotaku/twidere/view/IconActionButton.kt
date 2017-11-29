@@ -110,13 +110,11 @@ class IconActionButton(
         val disabledState = intArrayOf(-android.R.attr.state_enabled)
 
         fun IIconActionButton.updateColorFilter() {
-            this as ImageView
-            if (isActivated) {
-                setColorFilter(activatedColor)
-            } else if (isEnabled) {
-                setColorFilter(defaultColor)
-            } else {
-                setColorFilter(disabledColor)
+            if (this !is ImageView) return
+            when {
+                isActivated -> setColorFilter(activatedColor)
+                isEnabled -> setColorFilter(defaultColor)
+                else -> setColorFilter(disabledColor)
             }
         }
     }

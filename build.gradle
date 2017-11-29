@@ -35,7 +35,7 @@ allprojects {
 subprojects {
     buildscript {
         ext {
-            kotlinVersion = '1.1.60'
+            kotlinVersion = '1.1.61'
             pluginVersions = [
                     AndroidSvgDrawable: '3.0.0',
                     PlayServices      : '3.1.1',

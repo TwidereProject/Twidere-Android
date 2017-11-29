@@ -44,7 +44,7 @@ class ActionIconThemedTextView(
             if (colors != null) return colors.defaultColor
             return currentTextColor
         }
-        set(value) {
+        set(@ColorInt value) {
             field = value
             refreshDrawableState()
         }
@@ -56,7 +56,7 @@ class ActionIconThemedTextView(
             if (colors != null) return colors.getColorForState(IntArray(0), colors.defaultColor)
             return currentTextColor
         }
-        @ColorInt set(value) {
+        set(@ColorInt value) {
             field = value
             refreshDrawableState()
         }
@@ -68,7 +68,7 @@ class ActionIconThemedTextView(
             if (colors != null) return colors.defaultColor
             return currentTextColor
         }
-        @ColorInt set(value) {
+        set(@ColorInt value) {
             field = value
             refreshDrawableState()
         }
@@ -90,17 +90,14 @@ class ActionIconThemedTextView(
         updateCompoundDrawables()
     }
 
-    private fun updateCompoundDrawables() {
+    fun updateCompoundDrawables() {
         for (d in TextViewSupport.getCompoundDrawablesRelative(this)) {
             if (d == null) continue
             d.mutate()
-            val color: Int
-            if (isActivated) {
-                color = activatedColor
-            } else if (isEnabled) {
-                color = defaultColor
-            } else {
-                color = disabledColor
+            val color = when {
+                isActivated -> activatedColor
+                isEnabled -> defaultColor
+                else -> disabledColor
             }
 
             if (iconWidth > 0 && iconHeight > 0) {

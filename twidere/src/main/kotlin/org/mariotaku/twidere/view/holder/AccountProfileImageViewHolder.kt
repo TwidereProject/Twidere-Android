@@ -45,6 +45,8 @@ class AccountProfileImageViewHolder(
     }
 
     fun display(account: AccountDetails) {
+        itemView.contentDescription = adapter.nameColorManger.getDisplayName(account.user,
+                adapter.nameFirst)
         iconView.setBorderColor(account.color)
         adapter.requestManager.loadProfileImage(itemView.context, account,
                 adapter.profileImageStyle, iconView.cornerRadius,

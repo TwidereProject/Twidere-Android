@@ -1,13 +1,17 @@
 package org.mariotaku.twidere.extension.model
 
+import android.content.Context
 import org.mariotaku.ktextension.addAllTo
 import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.microblog.library.mastodon.annotation.StatusVisibility
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.util.HtmlEscapeHelper
 import org.mariotaku.twidere.util.UriUtils
+import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.Utils
+import org.mariotaku.twidere.view.ShortTimeView
 
 
 inline val ParcelableStatus.originalId: String
@@ -196,6 +200,29 @@ fun ParcelableStatus.generateFilterLinks(): Array<String> {
 
 fun ParcelableStatus.updateExtraInformation(details: AccountDetails) {
     account_color = details.color
+}
+
+fun ParcelableStatus.contentDescription(context: Context, manager: UserColorNameManager,
+        nameFirst: Boolean, displayInReplyTo: Boolean, showAbsoluteTime: Boolean): String {
+    val displayName = manager.getDisplayName(this, nameFirst)
+    val displayTime = if (is_retweet) retweet_timestamp else timestamp
+    val timeLabel = ShortTimeView.getTimeLabel(context, displayTime, showAbsoluteTime)
+    when {
+        retweet_id != null -> {
+            val retweetedBy = manager.getDisplayName(retweeted_by_user_key!!,
+                    retweeted_by_user_name, retweeted_by_user_acct!!, nameFirst)
+            return context.getString(R.string.content_description_item_status_retweet, retweetedBy, displayName,
+                    timeLabel, text_unescaped)
+        }
+        in_reply_to_status_id != null && in_reply_to_user_key != null && displayInReplyTo -> {
+            val inReplyTo = manager.getDisplayName(in_reply_to_user_key!!,
+                    in_reply_to_name, in_reply_to_screen_name, nameFirst)
+            return context.getString(R.string.content_description_item_status_reply, displayName, inReplyTo,
+                    timeLabel, text_unescaped)
+        }
+        else -> return context.getString(R.string.content_description_item_status, displayName, timeLabel,
+                text_unescaped)
+    }
 }
 
 internal inline val String.plainText: String get() = HtmlEscapeHelper.toPlainText(this)

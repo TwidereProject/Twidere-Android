@@ -82,8 +82,8 @@
         android:layout_marginBottom="@dimen/element_spacing_normal"
         android:layout_marginEnd="@dimen/element_spacing_normal"
         android:layout_marginRight="@dimen/element_spacing_normal"
-        android:contentDescription="@string/profile_image"
         android:scaleType="centerCrop"
+        tools:ignore="ContentDescription"
         tools:src="@drawable/ic_profile_image_twidere"
         tools:visibility="visible"/>
 
