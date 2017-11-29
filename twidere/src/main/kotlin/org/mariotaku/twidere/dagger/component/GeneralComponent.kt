@@ -60,7 +60,7 @@ import org.mariotaku.twidere.util.sync.SyncTaskRunner
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = arrayOf(ApplicationModule::class, ChannelModule::class))
+@Component(modules = [ApplicationModule::class, ChannelModule::class])
 interface GeneralComponent {
     fun inject(application: TwidereApplication)
 
