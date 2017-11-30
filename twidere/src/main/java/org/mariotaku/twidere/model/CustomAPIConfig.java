@@ -10,8 +10,11 @@ import android.support.annotation.Nullable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelableNoThanks;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.model.account.cred.Credentials;
@@ -21,17 +24,27 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
-import static org.mariotaku.twidere.TwidereConstants.DEFAULT_TWITTER_API_URL_FORMAT;
-import static org.mariotaku.twidere.TwidereConstants.TWITTER_CONSUMER_KEY;
-import static org.mariotaku.twidere.TwidereConstants.TWITTER_CONSUMER_SECRET;
+import static org.mariotaku.twidere.Constants.DEFAULT_TWITTER_API_URL_FORMAT;
+import static org.mariotaku.twidere.Constants.TWITTER_CONSUMER_KEY;
+import static org.mariotaku.twidere.Constants.TWITTER_CONSUMER_SECRET;
 
-/**
- * Created by mariotaku on 16/3/12.
- */
 @ParcelablePlease
 @JsonObject
 public final class CustomAPIConfig implements Parcelable {
+
+    public static final Creator<CustomAPIConfig> CREATOR = new Creator<CustomAPIConfig>() {
+        public CustomAPIConfig createFromParcel(Parcel source) {
+            CustomAPIConfig target = new CustomAPIConfig();
+            CustomAPIConfigParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public CustomAPIConfig[] newArray(int size) {
+            return new CustomAPIConfig[size];
+        }
+    };
 
     @JsonField(name = "name")
     String name;
@@ -60,8 +73,25 @@ public final class CustomAPIConfig implements Parcelable {
     @Nullable
     @JsonField(name = "sign_up_url")
     String signUpUrl;
-
+    @Nullable
+    @JsonField(name = "overlays")
+    @ParcelableNoThanks
+    Map<String, CustomAPIConfig> overlays;
     boolean isDefault;
+    @ParcelableNoThanks
+    private boolean apiUrlFormatChanged;
+    @ParcelableNoThanks
+    private boolean credentialsTypeChanged;
+    @ParcelableNoThanks
+    private boolean sameOAuthUrlChanged;
+    @ParcelableNoThanks
+    private boolean noVersionSuffixChanged;
+    @ParcelableNoThanks
+    private boolean consumerKeyChanged;
+    @ParcelableNoThanks
+    private boolean consumerSecretChanged;
+    @ParcelableNoThanks
+    private boolean signUpUrlChanged;
 
     public CustomAPIConfig() {
     }
@@ -77,6 +107,31 @@ public final class CustomAPIConfig implements Parcelable {
         this.noVersionSuffix = noVersionSuffix;
         this.consumerKey = consumerKey;
         this.consumerSecret = consumerSecret;
+    }
+
+    @NonNull
+    public static List<CustomAPIConfig> listDefault(@NonNull Context context) {
+        final AssetManager assets = context.getAssets();
+        try (InputStream is = assets.open("data/default_api_configs.json")) {
+            return JsonSerializer.parseList(is, CustomAPIConfig.class);
+        } catch (IOException e) {
+            return listBuiltin(context);
+        }
+    }
+
+    public static CustomAPIConfig builtin(@NonNull Context context) {
+        return new CustomAPIConfig(context.getString(R.string.provider_default), AccountType.TWITTER,
+                DEFAULT_TWITTER_API_URL_FORMAT, Credentials.Type.OAUTH, true, false,
+                TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET);
+    }
+
+    public static CustomAPIConfig mastodon(@NonNull Context context) {
+        return new CustomAPIConfig(context.getString(R.string.provider_mastodon), AccountType.MASTODON,
+                null, Credentials.Type.OAUTH2, true, true, null, null);
+    }
+
+    public static List<CustomAPIConfig> listBuiltin(@NonNull Context context) {
+        return Collections.singletonList(builtin(context));
     }
 
     @Nullable
@@ -115,16 +170,36 @@ public final class CustomAPIConfig implements Parcelable {
         return apiUrlFormat;
     }
 
+    public void setApiUrlFormat(@Nullable String apiUrlFormat) {
+        this.apiUrlFormat = apiUrlFormat;
+        apiUrlFormatChanged = true;
+    }
+
     public String getCredentialsType() {
         return credentialsType;
+    }
+
+    public void setCredentialsType(String credentialsType) {
+        this.credentialsType = credentialsType;
+        credentialsTypeChanged = true;
     }
 
     public boolean isSameOAuthUrl() {
         return sameOAuthUrl;
     }
 
+    public void setSameOAuthUrl(boolean sameOAuthUrl) {
+        this.sameOAuthUrl = sameOAuthUrl;
+        sameOAuthUrlChanged = true;
+    }
+
     public boolean isNoVersionSuffix() {
         return noVersionSuffix;
+    }
+
+    public void setNoVersionSuffix(boolean noVersionSuffix) {
+        this.noVersionSuffix = noVersionSuffix;
+        noVersionSuffixChanged = true;
     }
 
     @Nullable
@@ -132,33 +207,19 @@ public final class CustomAPIConfig implements Parcelable {
         return consumerKey;
     }
 
+    public void setConsumerKey(@Nullable String consumerKey) {
+        this.consumerKey = consumerKey;
+        consumerKeyChanged = true;
+    }
+
     @Nullable
     public String getConsumerSecret() {
         return consumerSecret;
     }
 
-    public void setApiUrlFormat(@Nullable String apiUrlFormat) {
-        this.apiUrlFormat = apiUrlFormat;
-    }
-
-    public void setConsumerKey(@Nullable String consumerKey) {
-        this.consumerKey = consumerKey;
-    }
-
     public void setConsumerSecret(@Nullable String consumerSecret) {
         this.consumerSecret = consumerSecret;
-    }
-
-    public void setCredentialsType(String credentialsType) {
-        this.credentialsType = credentialsType;
-    }
-
-    public void setSameOAuthUrl(boolean sameOAuthUrl) {
-        this.sameOAuthUrl = sameOAuthUrl;
-    }
-
-    public void setNoVersionSuffix(boolean noVersionSuffix) {
-        this.noVersionSuffix = noVersionSuffix;
+        consumerSecretChanged = true;
     }
 
     @Nullable
@@ -168,6 +229,7 @@ public final class CustomAPIConfig implements Parcelable {
 
     public void setSignUpUrl(@Nullable String signUpUrl) {
         this.signUpUrl = signUpUrl;
+        signUpUrlChanged = true;
     }
 
     public boolean isDefault() {
@@ -220,40 +282,50 @@ public final class CustomAPIConfig implements Parcelable {
         return result;
     }
 
-    public static final Creator<CustomAPIConfig> CREATOR = new Creator<CustomAPIConfig>() {
-        public CustomAPIConfig createFromParcel(Parcel source) {
-            CustomAPIConfig target = new CustomAPIConfig();
-            CustomAPIConfigParcelablePlease.readFromParcel(target, source);
-            return target;
-        }
-
-        public CustomAPIConfig[] newArray(int size) {
-            return new CustomAPIConfig[size];
-        }
-    };
-
-    @NonNull
-    public static List<CustomAPIConfig> listDefault(@NonNull Context context) {
-        final AssetManager assets = context.getAssets();
-        try (InputStream is = assets.open("data/default_api_configs.json")) {
-            return JsonSerializer.parseList(is, CustomAPIConfig.class);
-        } catch (IOException e) {
-            return listBuiltin(context);
+    @OnJsonParseComplete
+    void onJsonParseComplete() {
+        if (overlays != null) {
+            String bestKey = null;
+            int maxMatchingVersion = 0;
+            for (String key : overlays.keySet()) {
+                try {
+                    int version = Integer.parseInt(key);
+                    if (version <= BuildConfig.VERSION_CODE && version > maxMatchingVersion) {
+                        bestKey = key;
+                        maxMatchingVersion = version;
+                    }
+                } catch (NumberFormatException e) {
+                    // Ignore
+                }
+            }
+            if (bestKey != null) {
+                CustomAPIConfig overlay = overlays.get(bestKey);
+                applyOverlay(overlay);
+            }
         }
     }
 
-    public static CustomAPIConfig builtin(@NonNull Context context) {
-        return new CustomAPIConfig(context.getString(R.string.provider_default), AccountType.TWITTER,
-                DEFAULT_TWITTER_API_URL_FORMAT, Credentials.Type.OAUTH, true, false,
-                TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET);
-    }
-
-    public static CustomAPIConfig mastodon(@NonNull Context context) {
-        return new CustomAPIConfig(context.getString(R.string.provider_mastodon), AccountType.MASTODON,
-                null, Credentials.Type.OAUTH2, true, true, null, null);
-    }
-
-    public static List<CustomAPIConfig> listBuiltin(@NonNull Context context) {
-        return Collections.singletonList(builtin(context));
+    private void applyOverlay(CustomAPIConfig overlay) {
+        if (overlay.apiUrlFormatChanged) {
+            apiUrlFormat = overlay.apiUrlFormat;
+        }
+        if (overlay.credentialsTypeChanged) {
+            credentialsType = overlay.credentialsType;
+        }
+        if (overlay.sameOAuthUrlChanged) {
+            sameOAuthUrl = overlay.sameOAuthUrl;
+        }
+        if (overlay.noVersionSuffixChanged) {
+            noVersionSuffix = overlay.noVersionSuffix;
+        }
+        if (overlay.consumerKeyChanged) {
+            consumerKey = overlay.consumerKey;
+        }
+        if (overlay.consumerSecretChanged) {
+            consumerSecret = overlay.consumerSecret;
+        }
+        if (overlay.signUpUrlChanged) {
+            signUpUrl = overlay.signUpUrl;
+        }
     }
 }

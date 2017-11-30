@@ -33,12 +33,12 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.*
 import org.mariotaku.twidere.dagger.DependencyHolder
+import org.mariotaku.twidere.extension.getDetails
 import org.mariotaku.twidere.extension.model.getEndpoint
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.restfu.headers
 import org.mariotaku.twidere.extension.restfu.set
 import org.mariotaku.twidere.model.account.cred.OAuthCredentials
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import org.mariotaku.twidere.util.net.SystemDnsFetcher
@@ -121,9 +121,9 @@ class NetworkDiagnosticsFragment : BaseFragment() {
             logPrintln(servers?.toString() ?: "null")
             logPrintln()
 
+            val am = AccountManager.get(context)
             for (accountKey in DataStoreUtils.getAccountKeys(context)) {
-                val details = AccountUtils.getAccountDetails(AccountManager.get(context),
-                        accountKey, true) ?: continue
+                val details = am.getDetails(accountKey, true) ?: continue
                 logPrintln(("Testing connection for account $accountKey"))
                 logPrintln()
                 logPrintln(("api_url_format: ${details.credentials.api_url_format}"))
@@ -136,7 +136,7 @@ class NetworkDiagnosticsFragment : BaseFragment() {
 
                 logPrintln(("Testing DNS functionality"))
                 logPrintln()
-                val endpoint = details.credentials.getEndpoint(MicroBlog::class.java)
+                val endpoint = details.credentials.getEndpoint(details.type, MicroBlog::class.java)
                 val uri = Uri.parse(endpoint.url)
                 val host = uri.host
                 if (host != null) {

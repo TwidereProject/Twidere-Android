@@ -341,9 +341,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
             }
         }
         if (firstVisiblePosition == 0 && !preferences[readFromBottomKey]) {
-            recyclerView.post {
-                scrollToStart()
-            }
+            scrollToStart()
         }
     }
 

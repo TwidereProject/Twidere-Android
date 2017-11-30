@@ -21,7 +21,7 @@ import org.mariotaku.restfu.oauth.OAuthAuthorization
 import org.mariotaku.restfu.oauth.OAuthEndpoint
 import org.mariotaku.restfu.oauth.OAuthToken
 import org.mariotaku.restfu.oauth2.OAuth2Authorization
-import org.mariotaku.twidere.TwidereConstants.DEFAULT_TWITTER_API_URL_FORMAT
+import org.mariotaku.twidere.Constants.DEFAULT_TWITTER_API_URL_FORMAT
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.model.account.cred.*
@@ -33,11 +33,6 @@ import org.mariotaku.twidere.util.MicroBlogAPIFactory.sTwitterConstantPool
 import org.mariotaku.twidere.util.api.*
 import org.mariotaku.twidere.util.media.TwidereMediaDownloader
 
-/**
- * Creates [MicroBlog] instances
- *
- * Created by mariotaku on 2016/12/3.
- */
 fun Credentials.getAuthorization(cls: Class<*>?): Authorization {
     if (cls != null) {
         when {
@@ -64,7 +59,7 @@ fun Credentials.getAuthorization(cls: Class<*>?): Authorization {
     throw UnsupportedOperationException()
 }
 
-fun Credentials.getEndpoint(cls: Class<*>): Endpoint {
+fun Credentials.getEndpoint(@AccountType accountType: String?, cls: Class<*>): Endpoint {
     val apiUrlFormat: String
     val noVersionSuffix = this.no_version_suffix
     if (!TextUtils.isEmpty(this.api_url_format)) {
@@ -127,11 +122,13 @@ fun Credentials.getEndpoint(cls: Class<*>): Endpoint {
     }
     val endpointUrl = MicroBlogAPIFactory.getApiUrl(apiUrlFormat, domain, versionSuffix)
     if (this is OAuthCredentials) {
-        val signEndpointUrl: String
-        if (same_oauth_signing_url) {
-            signEndpointUrl = endpointUrl
-        } else {
-            signEndpointUrl = MicroBlogAPIFactory.getApiUrl(DEFAULT_TWITTER_API_URL_FORMAT, domain, versionSuffix)
+        val signEndpointUrl = if (same_oauth_signing_url) {
+            endpointUrl
+        } else when (accountType) {
+            AccountType.TWITTER -> MicroBlogAPIFactory.getApiUrl(DEFAULT_TWITTER_API_URL_FORMAT,
+                    domain, versionSuffix)
+            AccountType.FANFOU -> "http://api.fanfou.com/"
+            else -> endpointUrl
         }
         return OAuthEndpoint(endpointUrl, signEndpointUrl)
     }
@@ -140,7 +137,7 @@ fun Credentials.getEndpoint(cls: Class<*>): Endpoint {
 
 fun <T> Credentials.newMicroBlogInstance(context: Context, @AccountType accountType: String? = null,
         cls: Class<T>): T {
-    return newMicroBlogInstance(context, getEndpoint(cls), getAuthorization(cls), accountType, cls)
+    return newMicroBlogInstance(context, getEndpoint(accountType, cls), getAuthorization(cls), accountType, cls)
 }
 
 fun <T> newMicroBlogInstance(context: Context, endpoint: Endpoint, auth: Authorization,

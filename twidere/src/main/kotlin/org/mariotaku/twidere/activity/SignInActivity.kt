@@ -327,7 +327,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val apiConfig = activity.apiConfig
             val apiUrlFormat = apiConfig.apiUrlFormat ?:
                     throw MicroBlogException("Invalid API URL format")
-            val endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(apiUrlFormat,
+            val endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(apiUrlFormat, apiConfig.type,
                     apiConfig.isSameOAuthUrl)
             val auth = apiConfig.getOAuthAuthorization() ?:
                     throw MicroBlogException("Invalid OAuth credentials")
@@ -338,7 +338,8 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val activity = weakThis.get() ?: return@successUi
             val intent = Intent(activity, BrowserSignInActivity::class.java)
             val apiConfig = activity.apiConfig
-            val endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(apiConfig.apiUrlFormat!!, true)
+            val endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(apiConfig.apiUrlFormat!!,
+                    apiConfig.type, true)
             intent.data = Uri.parse(endpoint.construct("/oauth/authorize", arrayOf("oauth_token",
                     requestToken.oauthToken)))
             intent.putExtra(EXTRA_EXTRAS, Bundle {
@@ -806,7 +807,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             var auth = apiConfig.getOAuthAuthorization() ?:
                     throw MicroBlogException("Invalid OAuth credential")
             var endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(apiUrlFormat,
-                    apiConfig.isSameOAuthUrl)
+                    apiConfig.type, apiConfig.isSameOAuthUrl)
             val oauth = newMicroBlogInstance(context, endpoint = endpoint, auth = auth,
                     accountType = apiConfig.type, cls = TwitterOAuth::class.java)
             val accessToken: OAuthToken
@@ -818,7 +819,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             auth = apiConfig.getOAuthAuthorization(accessToken) ?:
                     throw MicroBlogException("Invalid OAuth credential")
             endpoint = MicroBlogAPIFactory.getOAuthEndpoint(apiUrlFormat, "api", versionSuffix,
-                    apiConfig.isSameOAuthUrl)
+                    apiConfig.type, apiConfig.isSameOAuthUrl)
 
             val twitter = newMicroBlogInstance(context, endpoint = endpoint, auth = auth,
                     accountType = apiConfig.type, cls = MicroBlog::class.java)
@@ -906,7 +907,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         private fun authOAuth(): SignInResponse {
             val activity = activityRef.get() ?: throw InterruptedException()
             val endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(apiUrlFormat,
-                    apiConfig.isSameOAuthUrl)
+                    apiConfig.type, apiConfig.isSameOAuthUrl)
             val auth = apiConfig.getOAuthAuthorization() ?:
                     throw MicroBlogException("Invalid OAuth credential")
             val oauth = newMicroBlogInstance(activity, endpoint = endpoint, auth = auth,
@@ -922,7 +923,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         private fun authxAuth(): SignInResponse {
             val activity = activityRef.get() ?: throw InterruptedException()
             var endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(apiUrlFormat,
-                    apiConfig.isSameOAuthUrl)
+                    apiConfig.type, apiConfig.isSameOAuthUrl)
             var auth = apiConfig.getOAuthAuthorization() ?:
                     throw MicroBlogException("Invalid OAuth credential")
             val oauth = newMicroBlogInstance(activity, endpoint = endpoint, auth = auth,
@@ -933,7 +934,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                 auth = apiConfig.getOAuthAuthorization(accessToken) ?:
                         throw MicroBlogException("Invalid OAuth credential")
                 endpoint = MicroBlogAPIFactory.getOAuthRestEndpoint(apiUrlFormat,
-                        apiConfig.isSameOAuthUrl, apiConfig.isNoVersionSuffix)
+                        apiConfig.type, apiConfig.isSameOAuthUrl, apiConfig.isNoVersionSuffix)
                 val microBlog = newMicroBlogInstance(activity, endpoint = endpoint, auth = auth,
                         accountType = apiConfig.type, cls = MicroBlog::class.java)
                 return@run microBlog.verifyCredentials().id
@@ -1013,7 +1014,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                 @Credentials.Type authType: String): SignInResponse {
             val auth = apiConfig.getOAuthAuthorization(accessToken) ?:
                     throw MicroBlogException("Invalid OAuth credential")
-            val endpoint = MicroBlogAPIFactory.getOAuthRestEndpoint(apiUrlFormat,
+            val endpoint = MicroBlogAPIFactory.getOAuthRestEndpoint(apiUrlFormat, apiConfig.type,
                     apiConfig.isSameOAuthUrl, apiConfig.isNoVersionSuffix)
             val twitter = newMicroBlogInstance(activity, endpoint = endpoint, auth = auth,
                     accountType = apiConfig.type, cls = MicroBlog::class.java)
@@ -1244,7 +1245,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                 extras.setIsOfficialCredentials(true)
             } catch (e: MicroBlogException) {
                 // Ignore
-                if (e.errorCode  > 0 && e.errorCode !in ignoredTwitterErrorCodes) throw e
+                if (e.errorCode > 0 && e.errorCode !in ignoredTwitterErrorCodes) throw e
             }
             return extras
         }

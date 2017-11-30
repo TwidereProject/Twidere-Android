@@ -115,4 +115,8 @@ public interface Constants extends TwidereConstants {
     // Intent constants
     String EXTRA_PRODUCT_TYPE = "product_type";
 
+    String DEFAULT_TWITTER_API_URL_FORMAT = "https://[DOMAIN.]twitter.com/";
+
+    String TWITTER_CONSUMER_KEY = "0WEJk1x6AlgtjGRhyABXw";
+    String TWITTER_CONSUMER_SECRET = "gWXNqEFhO3fMkAqoIKpTdjK0MOJs68xnOky0FRdDTP8";
 }

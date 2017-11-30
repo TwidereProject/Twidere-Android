@@ -25,10 +25,6 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
-/**
- * Created by mariotaku on 2016/12/2.
- */
-
 @ParcelablePlease
 @JsonObject
 public class OAuthCredentials extends Credentials implements Parcelable {

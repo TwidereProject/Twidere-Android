@@ -18,7 +18,9 @@ import org.mariotaku.restfu.http.MultiValueMap;
 import org.mariotaku.restfu.http.SimpleValueMap;
 import org.mariotaku.restfu.oauth.OAuthEndpoint;
 import org.mariotaku.restfu.oauth.OAuthToken;
+import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.TwidereConstants;
+import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.extension.model.AccountExtensionsKt;
 import org.mariotaku.twidere.extension.model.CredentialsExtensionsKt;
 import org.mariotaku.twidere.model.ConsumerKeyType;
@@ -106,7 +108,7 @@ public class MicroBlogAPIFactory implements TwidereConstants {
         }
         // In case someone set invalid base url
         if (HttpUrl.parse(baseUrl) == null) {
-            return getApiBaseUrl(DEFAULT_TWITTER_API_URL_FORMAT, domain);
+            return getApiBaseUrl(Constants.DEFAULT_TWITTER_API_URL_FORMAT, domain);
         }
         return baseUrl;
     }
@@ -190,25 +192,27 @@ public class MicroBlogAPIFactory implements TwidereConstants {
         }
     }
 
-    public static Endpoint getOAuthRestEndpoint(@NonNull String apiUrlFormat, boolean sameOAuthSigningUrl, boolean noVersionSuffix) {
-        return getOAuthEndpoint(apiUrlFormat, "api", noVersionSuffix ? null : "1.1", sameOAuthSigningUrl);
+    public static Endpoint getOAuthRestEndpoint(@NonNull String apiUrlFormat, @AccountType String accountType,
+            boolean sameOAuthSigningUrl, boolean noVersionSuffix) {
+        return getOAuthEndpoint(apiUrlFormat, "api", noVersionSuffix ? null : "1.1", accountType, sameOAuthSigningUrl);
     }
 
-    public static Endpoint getOAuthSignInEndpoint(@NonNull String apiUrlFormat, boolean sameOAuthSigningUrl) {
-        return getOAuthEndpoint(apiUrlFormat, "api", null, sameOAuthSigningUrl, true);
+    public static Endpoint getOAuthSignInEndpoint(@NonNull String apiUrlFormat, @AccountType String accountType,
+            boolean sameOAuthSigningUrl) {
+        return getOAuthEndpoint(apiUrlFormat, "api", null, accountType, sameOAuthSigningUrl, true);
     }
 
     public static Endpoint getOAuthEndpoint(String apiUrlFormat, @Nullable String domain,
-            @Nullable String versionSuffix,
+            @Nullable String versionSuffix, @AccountType String accountType,
             boolean sameOAuthSigningUrl) {
-        return getOAuthEndpoint(apiUrlFormat, domain, versionSuffix, sameOAuthSigningUrl, false);
+        return getOAuthEndpoint(apiUrlFormat, domain, versionSuffix, accountType, sameOAuthSigningUrl, false);
     }
 
     public static Endpoint getOAuthEndpoint(@NonNull String apiUrlFormat, @Nullable String domain,
-            @Nullable String versionSuffix,
+            @Nullable String versionSuffix, @AccountType String accountType,
             boolean sameOAuthSigningUrl, boolean fixUrl) {
-        String endpointUrl, signEndpointUrl;
-        endpointUrl = getApiUrl(apiUrlFormat, domain, versionSuffix);
+        String endpointUrl = getApiUrl(apiUrlFormat, domain, versionSuffix);
+        String signEndpointUrl = endpointUrl;
         if (fixUrl) {
             int[] authorityRange = UriUtils.getAuthorityRange(endpointUrl);
             if (authorityRange != null && endpointUrl.regionMatches(authorityRange[0],
@@ -217,10 +221,12 @@ public class MicroBlogAPIFactory implements TwidereConstants {
                         endpointUrl.substring(authorityRange[1]);
             }
         }
-        if (!sameOAuthSigningUrl) {
-            signEndpointUrl = getApiUrl(DEFAULT_TWITTER_API_URL_FORMAT, domain, versionSuffix);
-        } else {
+        if (sameOAuthSigningUrl) {
             signEndpointUrl = endpointUrl;
+        } else if (AccountType.TWITTER.equals(accountType)) {
+            signEndpointUrl = getApiUrl(Constants.DEFAULT_TWITTER_API_URL_FORMAT, domain, versionSuffix);
+        } else if (AccountType.FANFOU.equals(accountType)) {
+            signEndpointUrl = endpointUrl.replace("https://", "http://");
         }
         return new OAuthEndpoint(endpointUrl, signEndpointUrl);
     }
@@ -228,7 +234,7 @@ public class MicroBlogAPIFactory implements TwidereConstants {
     public static OAuthToken getOAuthToken(String consumerKey, String consumerSecret) {
         if (isValidConsumerKeySecret(consumerKey) && isValidConsumerKeySecret(consumerSecret))
             return new OAuthToken(consumerKey, consumerSecret);
-        return new OAuthToken(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET);
+        return new OAuthToken(Constants.TWITTER_CONSUMER_KEY, Constants.TWITTER_CONSUMER_SECRET);
     }
 
     public static boolean isValidConsumerKeySecret(@NonNull CharSequence text) {
