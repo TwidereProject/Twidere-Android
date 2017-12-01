@@ -63,6 +63,10 @@ inline var Bundle.userList: ParcelableUserList?
     get() = getParcelable(EXTRA_USER_LIST)
     set(value) = putParcelable(EXTRA_USER_LIST, value)
 
+inline var Bundle.group: ParcelableGroup?
+    get() = getParcelable(EXTRA_GROUP)
+    set(value) = putParcelable(EXTRA_GROUP, value)
+
 inline var Bundle.status: ParcelableStatus?
     get() = getParcelable(EXTRA_STATUS)
     set(value) = putParcelable(EXTRA_STATUS, value)

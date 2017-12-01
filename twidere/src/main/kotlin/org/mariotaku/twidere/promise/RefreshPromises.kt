@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.promise
 
+import android.accounts.AccountManager
 import android.content.Context
 import android.content.SharedPreferences
 import nl.komponents.kovenant.Promise
@@ -27,11 +28,14 @@ import nl.komponents.kovenant.task
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.toNulls
+import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.twidere.constant.homeRefreshDirectMessagesKey
 import org.mariotaku.twidere.constant.homeRefreshMentionsKey
 import org.mariotaku.twidere.constant.homeRefreshSavedSearchesKey
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
+import org.mariotaku.twidere.extension.getDetailsOrThrow
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.promise
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
@@ -43,7 +47,6 @@ import org.mariotaku.twidere.task.statuses.GetHomeTimelineTask
 import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
 import org.mariotaku.twidere.util.DataStoreUtils
-import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 import javax.inject.Inject
 
@@ -108,7 +111,8 @@ class RefreshPromises private constructor(val application: Context) {
 
     fun setActivitiesAboutMeUnreadAsync(accountKeys: Array<UserKey>, cursor: Long) = task {
         for (accountKey in accountKeys) {
-            val microBlog = MicroBlogAPIFactory.getInstance(application, accountKey) ?: continue
+            val microBlog = AccountManager.get(application).getDetailsOrThrow(accountKey, true)
+                    .newMicroBlogInstance(application, MicroBlog::class.java)
             if (!AccountUtils.isOfficial(application, accountKey)) continue
             microBlog.setActivitiesAboutMeUnread(cursor)
         }

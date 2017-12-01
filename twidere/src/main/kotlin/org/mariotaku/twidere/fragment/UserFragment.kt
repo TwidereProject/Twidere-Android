@@ -1301,7 +1301,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 return result
             }
 
-            val microBlog = MicroBlogAPIFactory.getInstance(context, accountKey)
+            val microBlog = AccountManager.get(context).getDetailsOrThrow(accountKey, true)
+                    .newMicroBlogInstance(context, MicroBlog::class.java)
             val ownedLists = ArrayList<ParcelableUserList>()
             val listMemberships = microBlog.getUserListOwnerMemberships(user.key.id)
             val paging = Paging()
@@ -1431,7 +1432,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                         ProgressDialogFragment.show(it.supportFragmentManager, "update_lists_progress")
                     }.then {
                         val activity = weakActivity ?: throw IllegalStateException()
-                        val twitter = MicroBlogAPIFactory.getInstance(activity, accountKey)
+                        val twitter = AccountManager.get(activity).getDetailsOrThrow(accountKey, true)
+                                .newMicroBlogInstance(activity, MicroBlog::class.java)
                         val successfulStates = SparseBooleanArray()
                         try {
                             for (i in 0 until checkedPositions.size()) {

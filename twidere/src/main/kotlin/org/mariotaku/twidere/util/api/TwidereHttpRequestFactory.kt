@@ -40,16 +40,13 @@ class TwidereHttpRequestFactory(
             converterFactory: RestConverter.Factory<MicroBlogException>): HttpRequest {
         val restMethod = info.method
         val url = Endpoint.constructUrl(endpoint.url, info)
-        var headers: MultiValueMap<String>? = info.headers
-        if (headers == null) {
-            headers = MultiValueMap<String>()
-        }
+        val headers = info.headers ?: MultiValueMap()
 
         if (authorization != null && authorization.hasAuthorization()) {
             headers.add("Authorization", RestFuUtils.sanitizeHeader(authorization.getHeader(endpoint, info)))
         }
         if (extraHeaders != null) {
-            for ((first, second) in extraHeaders.get(info.headers)) {
+            for ((first, second) in extraHeaders[headers]) {
                 headers.add(first, RestFuUtils.sanitizeHeader(second))
             }
         }

@@ -35,9 +35,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * Created by mariotaku on 16/1/28.
- */
 public class TwidereMediaDownloader implements MediaDownloader {
 
     private final Context context;
@@ -171,7 +168,7 @@ public class TwidereMediaDownloader implements MediaDownloader {
             final String host = uri.getHost();
             final String domain = host.substring(0, host.lastIndexOf(".twitter.com"));
             final String path = uri.getPath();
-            sb.append(MicroBlogAPIFactory.getApiUrl(apiUrlFormat, domain, path));
+            sb.append(MicroBlogAPIFactory.INSTANCE.getApiUrl(apiUrlFormat, domain, path));
             final String query = uri.getQuery();
             if (!TextUtils.isEmpty(query)) {
                 sb.append("?");

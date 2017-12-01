@@ -693,15 +693,15 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
         override fun loadInBackground(): StatusActivity? {
             val context = context
-            val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?: return null
+            val details = AccountManager.get(context).getDetails(accountKey, true) ?: return null
             if (AccountType.TWITTER != details.type) {
                 return null
             }
-            val twitter = MicroBlogAPIFactory.getInstance(context, accountKey) ?: return null
             val paging = Paging()
             paging.setCount(10)
             val activitySummary = StatusActivity(statusId, emptyList())
             try {
+                val twitter = details.newMicroBlogInstance(context, MicroBlog::class.java)
                 activitySummary.retweeters = twitter.getRetweets(statusId, paging)
                         .filterNot { DataStoreUtils.isFilteringUser(context, it.user.key) }
                         .distinctBy { it.user.id }

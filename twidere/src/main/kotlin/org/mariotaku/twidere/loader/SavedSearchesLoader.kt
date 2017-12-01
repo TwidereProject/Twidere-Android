@@ -19,23 +19,27 @@
 
 package org.mariotaku.twidere.loader
 
+import android.accounts.AccountManager
 import android.content.Context
 import android.support.v4.content.FixedAsyncTaskLoader
 import android.util.Log
+import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.ResponseList
 import org.mariotaku.microblog.library.twitter.model.SavedSearch
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
+import org.mariotaku.twidere.extension.getDetailsOrThrow
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.util.MicroBlogAPIFactory
 
 class SavedSearchesLoader(context: Context, private val accountKey: UserKey) :
         FixedAsyncTaskLoader<ResponseList<SavedSearch>>(context), Constants {
 
     override fun loadInBackground(): ResponseList<SavedSearch>? {
-        val twitter = MicroBlogAPIFactory.getInstance(context, accountKey) ?: return null
         try {
+            val twitter = AccountManager.get(context).getDetailsOrThrow(accountKey, true)
+                    .newMicroBlogInstance(context, MicroBlog::class.java)
             return twitter.savedSearches
         } catch (e: MicroBlogException) {
             Log.w(LOGTAG, e)

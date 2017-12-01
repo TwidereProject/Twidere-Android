@@ -1,5 +1,6 @@
 package org.mariotaku.twidere.activity
 
+import android.accounts.AccountManager
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
@@ -26,16 +27,17 @@ import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.getTypedArray
 import org.mariotaku.ktextension.set
-import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.twitter.model.Location
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.getDetailsOrThrow
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import java.lang.ref.WeakReference
 import java.text.Collator
 import java.util.*
@@ -62,8 +64,8 @@ class TrendsLocationSelectorActivity : BaseActivity() {
             ProgressDialogFragment.show(it.supportFragmentManager, PROGRESS_FRAGMENT_TAG).isCancelable = false
         } and task {
             val activity = weakThis.get() ?: throw InterruptedException()
-            val twitter = MicroBlogAPIFactory.getInstance(activity, accountKey)
-                    ?: throw MicroBlogException("No account")
+            val twitter = AccountManager.get(activity).getDetailsOrThrow(accountKey, true)
+                    .newMicroBlogInstance(activity, MicroBlog::class.java)
             val map = LocationsMap(Locale.getDefault())
             twitter.availableTrends.forEach { location -> map.put(location) }
             return@task map.pack()

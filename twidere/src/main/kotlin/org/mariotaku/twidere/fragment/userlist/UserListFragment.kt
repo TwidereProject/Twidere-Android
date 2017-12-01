@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.fragment.userlist
 
+import android.accounts.AccountManager
 import android.app.Activity
 import android.app.Dialog
 import android.content.ActivityNotFoundException
@@ -44,8 +45,8 @@ import com.squareup.otto.Subscribe
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.setItemAvailability
+import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.twitter.model.UserList
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.AccountSelectorActivity
@@ -55,6 +56,7 @@ import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowInsetsCallback
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
@@ -67,7 +69,10 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.UserListSubscriptionEvent
 import org.mariotaku.twidere.model.event.UserListUpdatedEvent
 import org.mariotaku.twidere.promise.UserListPromises
-import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.IntentUtils
+import org.mariotaku.twidere.util.LinkCreator
+import org.mariotaku.twidere.util.MenuUtils
+import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.shortcut.ShortcutCreator
 
 class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
@@ -354,27 +359,24 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
 
         override fun loadInBackground(): SingleResponse<ParcelableUserList> {
             if (!omitIntentExtra && extras != null) {
-                val cache = extras.getParcelable<ParcelableUserList>(EXTRA_USER_LIST)
+                val cache = extras.userList
                 if (cache != null) return SingleResponse(cache)
             }
             try {
                 if (accountKey == null) throw MicroBlogException("No account")
-                val twitter = MicroBlogAPIFactory.getInstance(context, accountKey)
-                        ?: throw MicroBlogException("No account")
-                val list: UserList
-                when {
+                val twitter = AccountManager.get(context).getDetailsOrThrow(accountKey, true)
+                        .newMicroBlogInstance(context, MicroBlog::class.java)
+                val list = when {
                     listId != null -> {
-                        list = twitter.showUserList(listId)
+                        twitter.showUserList(listId)
                     }
                     listName != null && userKey != null -> {
-                        list = twitter.showUserList(listName, userKey.id)
+                        twitter.showUserList(listName, userKey.id)
                     }
                     listName != null && screenName != null -> {
-                        list = twitter.showUserListByScrenName(listName, screenName)
+                        twitter.showUserListByScrenName(listName, screenName)
                     }
-                    else -> {
-                        return SingleResponse(MicroBlogException("Invalid argument"))
-                    }
+                    else -> throw MicroBlogException("Invalid argument")
                 }
                 return SingleResponse(list.toParcelable(accountKey))
             } catch (e: MicroBlogException) {

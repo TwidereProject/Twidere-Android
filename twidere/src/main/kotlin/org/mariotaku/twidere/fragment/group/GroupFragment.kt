@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.fragment.group
 
+import android.accounts.AccountManager
 import android.content.Context
 import android.nfc.NdefMessage
 import android.nfc.NdefRecord
@@ -27,13 +28,15 @@ import android.os.Bundle
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.FixedAsyncTaskLoader
 import android.support.v4.content.Loader
+import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.statusnet.model.Group
-import org.mariotaku.twidere.Constants.*
+import org.mariotaku.twidere.Constants.EXTRA_OMIT_INTENT_EXTRA
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
-import org.mariotaku.twidere.extension.groupId
-import org.mariotaku.twidere.extension.groupName
+import org.mariotaku.twidere.exception.AccountNotFoundException
+import org.mariotaku.twidere.extension.*
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.fragment.AbsToolbarTabPagesFragment
 import org.mariotaku.twidere.fragment.timeline.GroupTimelineFragment
 import org.mariotaku.twidere.fragment.users.GroupMembersFragment
@@ -41,7 +44,6 @@ import org.mariotaku.twidere.model.ParcelableGroup
 import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableGroupUtils
-import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import org.mariotaku.twidere.util.Utils
 
 /**
@@ -69,7 +71,7 @@ class GroupFragment : AbsToolbarTabPagesFragment(), LoaderCallbacks<SingleRespon
     }
 
     override fun onCreateLoader(id: Int, args: Bundle): Loader<SingleResponse<ParcelableGroup>> {
-        val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
+        val accountKey = args.accountKey
         val groupId = args.groupId
         val groupName = args.groupName
         val omitIntentExtra = args.getBoolean(EXTRA_OMIT_INTENT_EXTRA, true)
@@ -125,13 +127,13 @@ class GroupFragment : AbsToolbarTabPagesFragment(), LoaderCallbacks<SingleRespon
 
         override fun loadInBackground(): SingleResponse<ParcelableGroup> {
             if (!omitIntentExtra && extras != null) {
-                val cache = extras.getParcelable<ParcelableGroup?>(EXTRA_GROUP)
+                val cache = extras.group
                 if (cache != null) return SingleResponse(cache)
             }
             try {
-                if (accountKey == null) throw MicroBlogException("No account")
-                val twitter = MicroBlogAPIFactory.getInstance(context, accountKey) ?:
-                        throw MicroBlogException("No account")
+                if (accountKey == null) throw AccountNotFoundException()
+                val twitter = AccountManager.get(context).getDetailsOrThrow(accountKey, true)
+                        .newMicroBlogInstance(context, MicroBlog::class.java)
                 val group: Group
                 if (groupId != null) {
                     group = twitter.showGroup(groupId)
