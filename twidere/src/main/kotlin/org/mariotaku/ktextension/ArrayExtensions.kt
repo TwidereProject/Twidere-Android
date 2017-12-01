@@ -34,6 +34,10 @@ inline fun <T> Array<T>.mapToIntArray(transform: (T) -> Int): IntArray {
     return IntArray(size) { transform(this[it]) }
 }
 
+inline fun IntArray.mapToLongArray(transform: (Int) -> Long): LongArray {
+    return LongArray(size) { transform(this[it]) }
+}
+
 inline fun <T, reified R> Array<T>.mapIndexedToArray(transform: (Int, T) -> R): Array<R> {
     return Array(size) { transform(it, this[it]) }
 }

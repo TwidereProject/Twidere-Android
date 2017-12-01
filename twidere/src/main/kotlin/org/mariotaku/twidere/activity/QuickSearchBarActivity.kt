@@ -45,6 +45,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import kotlinx.android.synthetic.main.activity_quick_search_bar.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.empty
+import org.mariotaku.ktextension.mapToLongArray
 import org.mariotaku.ktextension.spannable
 import org.mariotaku.ktextension.string
 import org.mariotaku.twidere.BuildConfig
@@ -59,6 +60,7 @@ import org.mariotaku.twidere.constant.KeyboardShortcutConstants.CONTEXT_TAG_NAVI
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.extension.appendQueryParameterIgnoreNull
+import org.mariotaku.twidere.extension.delete
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.ownedAccounts
 import org.mariotaku.twidere.model.AccountDetails
@@ -72,7 +74,6 @@ import org.mariotaku.twidere.util.EditTextEnterHandler.EnterListener
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.SwipeDismissListViewTouchListener
-import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.mariotaku.twidere.util.promotion.PromotionService
 import org.mariotaku.twidere.view.ProfileImageView
 
@@ -174,15 +175,11 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
 
     override fun onDismiss(listView: ListView, reverseSortedPositions: IntArray) {
         val adapter = suggestionsList.adapter as SuggestionsAdapter
-        val ids = LongArray(reverseSortedPositions.size)
-        for (i in 0 until reverseSortedPositions.size) {
-            val position = reverseSortedPositions[i]
-            val item = adapter.getSuggestionItem(position) ?: return
-            ids[i] = item._id
+        val ids = reverseSortedPositions.mapToLongArray {
+            adapter.getSuggestionItem(it)?._id ?: -1
         }
         adapter.addRemovedPositions(reverseSortedPositions)
-        ContentResolverUtils.bulkDelete(contentResolver, SearchHistory.CONTENT_URI, SearchHistory._ID,
-                false, ids, null, null)
+        contentResolver.delete(SearchHistory.CONTENT_URI, ids)
         supportLoaderManager.restartLoader(0, null, this)
     }
 

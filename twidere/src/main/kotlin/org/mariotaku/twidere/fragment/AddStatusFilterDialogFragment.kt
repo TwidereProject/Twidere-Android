@@ -26,10 +26,12 @@ import android.support.v4.app.FragmentManager
 import android.support.v7.app.AlertDialog
 import com.twitter.Extractor
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_STATUS
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.bulkDelete
 import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUserMention
@@ -139,12 +141,9 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
                 }
             }
             val resolver = context!!.contentResolver
-            ContentResolverUtils.bulkDelete(resolver, Filters.Users.CONTENT_URI,
-                    Filters.Users.USER_KEY, false, userKeys, null, null)
-            ContentResolverUtils.bulkDelete(resolver, Filters.Keywords.CONTENT_URI,
-                    Filters.Keywords.VALUE, false, keywords, null, null)
-            ContentResolverUtils.bulkDelete(resolver, Filters.Sources.CONTENT_URI,
-                    Filters.Sources.VALUE, false, sources, null, null)
+            resolver.bulkDelete(Filters.Users.CONTENT_URI, Filters.Users.USER_KEY, userKeys.mapToArray(UserKey::toString))
+            resolver.bulkDelete(Filters.Keywords.CONTENT_URI, Filters.Keywords.VALUE, keywords.toTypedArray())
+            resolver.bulkDelete(Filters.Sources.CONTENT_URI, Filters.Sources.VALUE, sources.toTypedArray())
             ContentResolverUtils.bulkInsert(resolver, Filters.Users.CONTENT_URI, userValues)
             ContentResolverUtils.bulkInsert(resolver, Filters.Keywords.CONTENT_URI, keywordValues)
             ContentResolverUtils.bulkInsert(resolver, Filters.Sources.CONTENT_URI, sourceValues)

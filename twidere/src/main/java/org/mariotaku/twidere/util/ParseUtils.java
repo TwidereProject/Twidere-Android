@@ -18,10 +18,6 @@
 
 package org.mariotaku.twidere.util;
 
-import android.graphics.Color;
-
-import static android.text.TextUtils.isEmpty;
-
 public final class ParseUtils {
     private ParseUtils() {
     }
@@ -33,15 +29,6 @@ public final class ParseUtils {
     public static String parseString(final Object object, final String def) {
         if (object == null) return def;
         return String.valueOf(object);
-    }
-
-    public static int parseColor(String str, int def) {
-        if (isEmpty(str)) return def;
-        try {
-            return Color.parseColor(str);
-        } catch (IllegalArgumentException e) {
-            return def;
-        }
     }
 
 }

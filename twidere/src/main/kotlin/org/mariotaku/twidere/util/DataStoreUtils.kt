@@ -818,13 +818,10 @@ object DataStoreUtils {
     fun removeFromFilter(context: Context, users: Collection<ParcelableUser>) {
         val cr = context.contentResolver
         // Delete from filtered users
-        val userKeyValues = users.map { it.key.toString() }
-        ContentResolverUtils.bulkDelete(cr, Filters.Users.CONTENT_URI, Filters.Users.USER_KEY,
-                false, userKeyValues, null, null)
-        ContentResolverUtils.bulkDelete(cr, Filters.Keywords.CONTENT_URI, Filters.Keywords.USER_KEY,
-                false, userKeyValues, null, null)
-        ContentResolverUtils.bulkDelete(cr, Filters.Links.CONTENT_URI, Filters.Links.USER_KEY,
-                false, userKeyValues, null, null)
+        val userKeyValues = users.mapToArray { it.key.toString() }
+        cr.bulkDelete(Filters.Users.CONTENT_URI, Filters.Users.USER_KEY, userKeyValues)
+        cr.bulkDelete(Filters.Keywords.CONTENT_URI, Filters.Keywords.USER_KEY, userKeyValues)
+        cr.bulkDelete(Filters.Links.CONTENT_URI, Filters.Links.USER_KEY, userKeyValues)
     }
 
     @WorkerThread

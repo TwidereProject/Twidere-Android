@@ -41,7 +41,6 @@ import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.promise.RefreshFiltersSubscriptionsPromise
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.util.Analyzer
-import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.view.SimpleTextWatcher
 
@@ -217,7 +216,7 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
         val ids = listView.checkedItemIds
         val resolver = context!!.contentResolver
         val where = Expression.inArgs(Filters.Subscriptions._ID, ids.size).sql
-        val whereArgs = ids.toStringArray()
+        val whereArgs: Array<String> = ids.toStringArray()
         resolver.queryReference(Filters.Subscriptions.CONTENT_URI, Filters.Subscriptions.COLUMNS, where,
                 whereArgs, null)?.use { (cursor) ->
             val indices = ObjectCursor.indicesFrom(cursor, FiltersSubscription::class.java)
@@ -228,16 +227,11 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
                 cursor.moveToNext()
             }
         }
-        ContentResolverUtils.bulkDelete(resolver, Filters.Subscriptions.CONTENT_URI, Filters._ID,
-                false, ids, null, null)
-        ContentResolverUtils.bulkDelete(resolver, Filters.Users.CONTENT_URI, Filters.Users.SOURCE,
-                false, ids, null, null)
-        ContentResolverUtils.bulkDelete(resolver, Filters.Keywords.CONTENT_URI, Filters.Keywords.SOURCE,
-                false, ids, null, null)
-        ContentResolverUtils.bulkDelete(resolver, Filters.Sources.CONTENT_URI, Filters.Sources.SOURCE,
-                false, ids, null, null)
-        ContentResolverUtils.bulkDelete(resolver, Filters.Links.CONTENT_URI, Filters.Links.SOURCE,
-                false, ids, null, null)
+        resolver.delete(Filters.Subscriptions.CONTENT_URI, ids)
+        resolver.bulkDelete(Filters.Users.CONTENT_URI, Filters.Users.SOURCE, whereArgs)
+        resolver.bulkDelete(Filters.Keywords.CONTENT_URI, Filters.Keywords.SOURCE, whereArgs)
+        resolver.bulkDelete(Filters.Sources.CONTENT_URI, Filters.Sources.SOURCE, whereArgs)
+        resolver.bulkDelete(Filters.Links.CONTENT_URI, Filters.Links.SOURCE, whereArgs)
     }
 
     private fun showAddUrlSubscription() {

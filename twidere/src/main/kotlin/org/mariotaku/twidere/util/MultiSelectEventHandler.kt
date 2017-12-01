@@ -29,11 +29,13 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.twitter.Extractor
+import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.supportActionProvider
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.dagger.component.GeneralComponent
+import org.mariotaku.twidere.extension.bulkDelete
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.getAccountUser
 import org.mariotaku.twidere.extension.ownedAccounts
@@ -132,8 +134,8 @@ class MultiSelectEventHandler(
                         }
                     }
                 }
-                ContentResolverUtils.bulkDelete(resolver, Filters.Users.CONTENT_URI,
-                        Filters.Users.USER_KEY, false, userKeys, null, null)
+                resolver.bulkDelete(Filters.Users.CONTENT_URI, Filters.Users.USER_KEY,
+                        userKeys.mapToArray(UserKey::toString))
                 ContentResolverUtils.bulkInsert(resolver, Filters.Users.CONTENT_URI, valuesList)
                 Toast.makeText(activity, R.string.message_toast_users_filters_added, Toast.LENGTH_SHORT).show()
                 mode.finish()

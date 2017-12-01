@@ -3,6 +3,7 @@ package org.mariotaku.twidere.extension.model
 import android.accounts.Account
 import android.accounts.AccountManager
 import android.content.Context
+import android.graphics.Color
 import org.mariotaku.ktextension.HexColorFormat
 import org.mariotaku.ktextension.toBooleanOr
 import org.mariotaku.ktextension.toHexColor
@@ -16,7 +17,6 @@ import org.mariotaku.twidere.model.account.TwitterAccountExtras
 import org.mariotaku.twidere.model.account.cred.*
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
 import org.mariotaku.twidere.util.JsonSerializer
-import org.mariotaku.twidere.util.ParseUtils
 import org.mariotaku.twidere.util.model.AccountDetailsUtils
 
 
@@ -51,7 +51,11 @@ fun Account.setAccountUser(am: AccountManager, user: ParcelableUser) {
 
 @android.support.annotation.ColorInt
 fun Account.getColor(am: AccountManager): Int {
-    return ParseUtils.parseColor(am.getUserData(this, ACCOUNT_USER_DATA_COLOR), 0)
+    return try {
+        Color.parseColor(am.getUserData(this, ACCOUNT_USER_DATA_COLOR))
+    } catch (e: IllegalArgumentException) {
+        0
+    }
 }
 
 fun Account.getPosition(am: AccountManager): Int {

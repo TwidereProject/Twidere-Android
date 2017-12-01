@@ -1,9 +1,9 @@
 package org.mariotaku.twidere.model.util
 
+import android.graphics.Color
 import android.text.TextUtils
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
-import org.mariotaku.twidere.util.ParseUtils
 import org.mariotaku.twidere.util.UserColorNameManager
 
 /**
@@ -19,7 +19,11 @@ object ParcelableUserUtils {
         if (!str.startsWith("#")) {
             str = "#" + str
         }
-        return ParseUtils.parseColor(str, 0)
+        return try {
+            Color.parseColor(str)
+        } catch (e: IllegalArgumentException) {
+            0
+        }
     }
 
     fun updateExtraInformation(user: ParcelableUser, account: AccountDetails,

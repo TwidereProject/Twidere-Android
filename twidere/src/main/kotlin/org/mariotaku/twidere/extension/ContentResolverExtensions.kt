@@ -29,7 +29,9 @@ import android.support.annotation.WorkerThread
 import android.support.v4.util.LongSparseArray
 import org.mariotaku.ktextension.map
 import org.mariotaku.library.objectcursor.ObjectCursor
+import org.mariotaku.sqliteqb.library.Columns
 import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.sqliteqb.library.RawItemArray
 import org.mariotaku.sqliteqb.library.SQLFunctions
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_LIMIT
 import org.mariotaku.twidere.model.CursorReference
@@ -157,4 +159,21 @@ fun ContentResolver.copyStream(src: Uri, dest: Uri) {
 fun ContentResolver.delete(uri: Uri, rowId: Long): Int {
     val where = Expression.equals(BaseColumns._ID, rowId).sql
     return delete(uri, where, null)
+}
+
+fun ContentResolver.delete(uri: Uri, rowIds: LongArray): Int {
+    if (rowIds.isEmpty()) return 0
+    val idColumn = Columns.Column(BaseColumns._ID)
+    return (rowIds.indices step MAX_BULK_COUNT).sumBy { i ->
+        val bulkIds = rowIds.sliceArray(i..(i + MAX_BULK_COUNT - 1).coerceAtMost(rowIds.lastIndex))
+        return@sumBy delete(uri, Expression.`in`(idColumn, RawItemArray(bulkIds)).sql, null)
+    }
+}
+
+fun ContentResolver.bulkDelete(uri: Uri, column: String, values: Array<String>): Int {
+    if (values.isEmpty()) return 0
+    return (values.indices step MAX_BULK_COUNT).sumBy { i ->
+        val bulk = values.sliceArray(i..(i + MAX_BULK_COUNT - 1).coerceAtMost(values.lastIndex))
+        return@sumBy delete(uri, Expression.inArgs(column, bulk.size).sql, bulk)
+    }
 }
