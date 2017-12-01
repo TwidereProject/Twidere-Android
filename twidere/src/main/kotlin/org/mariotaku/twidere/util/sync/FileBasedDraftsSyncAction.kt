@@ -6,6 +6,7 @@ import org.mariotaku.ktextension.map
 import org.mariotaku.ktextension.set
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.twidere.extension.bulkDelete
 import org.mariotaku.twidere.extension.model.filename
 import org.mariotaku.twidere.extension.model.unique_id_non_null
 import org.mariotaku.twidere.model.Draft
@@ -145,8 +146,8 @@ abstract class FileBasedDraftsSyncAction<RemoteFileInfo>(val context: Context) :
         if (removeLocalIdsList.isNotEmpty()) {
             val fileList = removeLocalIdsList.joinToString(",") { "$it.eml" }
             DebugLog.d(LOGTAG_SYNC, "Removing local drafts $fileList")
-            ContentResolverUtils.bulkDelete(context.contentResolver, Drafts.CONTENT_URI,
-                    Drafts.UNIQUE_ID, false, removeLocalIdsList, null, null)
+            context.contentResolver.bulkDelete(Drafts.CONTENT_URI, Drafts.UNIQUE_ID,
+                    removeLocalIdsList.toTypedArray())
         }
 
         // Remove remote items

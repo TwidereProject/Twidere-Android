@@ -170,8 +170,8 @@ fun ContentResolver.delete(uri: Uri, rowIds: LongArray): Int {
     }
 }
 
-fun ContentResolver.bulkDelete(uri: Uri, column: String, values: Array<String>): Int {
-    if (values.isEmpty()) return 0
+fun ContentResolver.bulkDelete(uri: Uri, column: String, values: Array<String>?): Int {
+    if (values == null || values.isEmpty()) return 0
     return (values.indices step MAX_BULK_COUNT).sumBy { i ->
         val bulk = values.sliceArray(i..(i + MAX_BULK_COUNT - 1).coerceAtMost(values.lastIndex))
         return@sumBy delete(uri, Expression.inArgs(column, bulk.size).sql, bulk)

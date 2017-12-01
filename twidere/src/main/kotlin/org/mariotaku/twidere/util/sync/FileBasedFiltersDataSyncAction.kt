@@ -2,11 +2,12 @@ package org.mariotaku.twidere.util.sync
 
 import android.content.Context
 import android.util.Xml
+import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.nullableContentEquals
+import org.mariotaku.twidere.extension.bulkDelete
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.model.FiltersData
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
-import org.mariotaku.twidere.util.content.ContentResolverUtils
 import java.io.Closeable
 import java.io.File
 import java.io.IOException
@@ -52,14 +53,11 @@ abstract class FileBasedFiltersDataSyncAction<DownloadSession : Closeable, Uploa
     }
 
     override fun removeFromLocal(data: FiltersData) {
-        ContentResolverUtils.bulkDelete(context.contentResolver, Filters.Users.CONTENT_URI,
-                Filters.Users.USER_KEY, false, data.users?.map { it.userKey }, null, null)
-        ContentResolverUtils.bulkDelete(context.contentResolver, Filters.Keywords.CONTENT_URI,
-                Filters.Keywords.VALUE, false, data.keywords?.map { it.value }, null, null)
-        ContentResolverUtils.bulkDelete(context.contentResolver, Filters.Sources.CONTENT_URI,
-                Filters.Sources.VALUE, false, data.sources?.map { it.value }, null, null)
-        ContentResolverUtils.bulkDelete(context.contentResolver, Filters.Links.CONTENT_URI,
-                Filters.Links.VALUE, false, data.links?.map { it.value }, null, null)
+        val cr = context.contentResolver
+        cr.bulkDelete(Filters.Users.CONTENT_URI, Filters.Users.USER_KEY, data.users?.mapToArray { it.userKey.toString() })
+        cr.bulkDelete(Filters.Keywords.CONTENT_URI, Filters.Keywords.VALUE, data.keywords?.mapToArray { it.value })
+        cr.bulkDelete(Filters.Sources.CONTENT_URI, Filters.Sources.VALUE, data.sources?.mapToArray { it.value })
+        cr.bulkDelete(Filters.Links.CONTENT_URI, Filters.Links.VALUE, data.links?.mapToArray { it.value })
     }
 
     override fun newData(): FiltersData {

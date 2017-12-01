@@ -34,6 +34,7 @@ import org.mariotaku.sqliteqb.library.Expression.and
 import org.mariotaku.sqliteqb.library.Expression.equalsArgs
 import org.mariotaku.twidere.annotation.AccountType.FANFOU
 import org.mariotaku.twidere.dagger.component.GeneralComponent
+import org.mariotaku.twidere.extension.bulkDelete
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.getDetailsOrThrow
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
@@ -42,7 +43,6 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.TrendsRefreshedEvent
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends
-import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.mariotaku.twidere.util.content.ContentResolverUtils.bulkInsert
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 import java.util.*
@@ -94,8 +94,7 @@ class GetTrendsPromise private constructor(private val application: Context) {
         }
         val creator = ObjectCursor.valuesCreatorFrom(ParcelableTrend::class.java)
         bulkInsert(cr, CachedTrends.Local.CONTENT_URI, allTrends.map(creator::create))
-        ContentResolverUtils.bulkDelete(cr, CachedHashtags.CONTENT_URI, CachedHashtags.NAME, false,
-                hashtags, null, null)
+        cr.bulkDelete(CachedHashtags.CONTENT_URI, CachedHashtags.NAME, hashtags.toTypedArray())
         bulkInsert(cr, CachedHashtags.CONTENT_URI, hashtags.map {
             val values = ContentValues()
             values.put(CachedHashtags.NAME, it)
