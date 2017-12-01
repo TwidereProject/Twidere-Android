@@ -13,6 +13,7 @@ import android.widget.*
 import com.rengwuxian.materialedittext.MaterialEditText
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
+import org.mariotaku.ktextension.string
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ArrayAdapter
 import org.mariotaku.twidere.adapter.BaseArrayAdapter
@@ -25,7 +26,6 @@ import org.mariotaku.twidere.extension.setSelectedItem
 import org.mariotaku.twidere.loader.DefaultAPIConfigLoader
 import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.model.account.cred.Credentials
-import org.mariotaku.twidere.util.ParseUtils
 import org.mariotaku.twidere.util.view.ConsumerKeySecretValidator
 
 class APIEditorDialogFragment : BaseDialogFragment() {
@@ -113,10 +113,10 @@ class APIEditorDialogFragment : BaseDialogFragment() {
 
     private fun applyCustomAPIConfig(): CustomAPIConfig {
         return apiConfig.apply {
-            apiUrlFormat = ParseUtils.parseString(editAPIUrlFormat.text)
+            apiUrlFormat = editAPIUrlFormat.string
             credentialsType = getCheckedAuthType(editAuthType.checkedRadioButtonId)
-            consumerKey = ParseUtils.parseString(editConsumerKey.text)
-            consumerSecret = ParseUtils.parseString(editConsumerSecret.text)
+            consumerKey = editConsumerKey.string
+            consumerSecret = editConsumerSecret.string
             isSameOAuthUrl = editSameOAuthSigningUrl.isChecked
             isNoVersionSuffix = editNoVersionSuffix.isChecked
             type = accountTypeSpinner.selectedItem as String
@@ -165,8 +165,8 @@ class APIEditorDialogFragment : BaseDialogFragment() {
         override fun onCreateLoader(id: Int, args: Bundle?) = DefaultAPIConfigLoader(context!!)
 
         override fun onLoadFinished(loader: Loader<List<CustomAPIConfig>>, data: List<CustomAPIConfig>) {
-                adapter.clear()
-                adapter.addAll(data)
+            adapter.clear()
+            adapter.addAll(data)
         }
 
         override fun onLoaderReset(loader: Loader<List<CustomAPIConfig>?>) {

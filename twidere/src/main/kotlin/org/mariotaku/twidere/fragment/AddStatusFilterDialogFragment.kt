@@ -37,7 +37,6 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.util.ContentValuesCreator
 import org.mariotaku.twidere.util.HtmlEscapeHelper
-import org.mariotaku.twidere.util.ParseUtils
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import java.util.*
@@ -126,13 +125,13 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
                     userKeys.add(value.key)
                     userValues.add(createFilteredUser(value))
                 } else if (info.type == FilterItemInfo.FILTER_TYPE_KEYWORD) {
-                    val keyword = ParseUtils.parseString(value)
+                    val keyword = value.toString()
                     keywords.add(keyword)
                     val values = ContentValues()
                     values.put(Filters.Keywords.VALUE, "#$keyword")
                     keywordValues.add(values)
                 } else if (info.type == FilterItemInfo.FILTER_TYPE_SOURCE) {
-                    val source = ParseUtils.parseString(value)
+                    val source = value.toString()
                     sources.add(source)
                     val values = ContentValues()
                     values.put(Filters.Sources.VALUE, source)
@@ -157,12 +156,11 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
     }
 
     private fun getName(manager: UserColorNameManager, value: Any, nameFirst: Boolean): String {
-        if (value is ParcelableUserMention) {
-            return manager.getDisplayName(value.key, value.name, value.screen_name, nameFirst)
-        } else if (value is UserItem) {
-            return manager.getDisplayName(value.key, value.name, value.screen_name, nameFirst)
-        } else
-            return ParseUtils.parseString(value)
+        return when (value) {
+            is ParcelableUserMention -> manager.getDisplayName(value.key, value.name, value.screen_name, nameFirst)
+            is UserItem -> manager.getDisplayName(value.key, value.name, value.screen_name, nameFirst)
+            else -> value.toString()
+        }
     }
 
     internal data class FilterItemInfo(

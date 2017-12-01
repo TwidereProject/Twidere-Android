@@ -1,7 +1,6 @@
 package org.mariotaku.twidere.util
 
 import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Build
 import android.support.annotation.WorkerThread
 import android.text.TextUtils
@@ -25,7 +24,6 @@ import java.util.regex.Pattern
 object MicroBlogAPIFactory {
 
     val CARDS_PLATFORM_ANDROID_12 = "Android-12"
-
 
     val sTwitterConstantPool = SimpleValueMap()
     val sFanfouConstantPool = SimpleValueMap()
@@ -117,34 +115,27 @@ object MicroBlogAPIFactory {
     }
 
     @WorkerThread
-    fun getExtraHeaders(context: Context, type: ConsumerKeyType): ExtraHeaders? {
-        when (type) {
-            ConsumerKeyType.TWITTER_FOR_ANDROID -> {
-                return TwitterAndroidExtraHeaders
-            }
-            ConsumerKeyType.TWITTER_FOR_IPHONE, ConsumerKeyType.TWITTER_FOR_IPAD -> {
-                return UserAgentExtraHeaders("Twitter/6.75.2 CFNetwork/811.4.18 Darwin/16.5.0")
-            }
-            ConsumerKeyType.TWITTER_FOR_MAC -> {
-                return TwitterMacExtraHeaders
-            }
-            ConsumerKeyType.TWEETDECK -> {
-                return UserAgentExtraHeaders(UserAgentUtils.getDefaultUserAgentStringSafe(context))
-            }
-            else -> return null
+    fun getExtraHeaders(context: Context, type: ConsumerKeyType): ExtraHeaders? = when (type) {
+        ConsumerKeyType.TWITTER_FOR_ANDROID -> {
+            TwitterAndroidExtraHeaders
         }
+        ConsumerKeyType.TWITTER_FOR_IPHONE, ConsumerKeyType.TWITTER_FOR_IPAD -> {
+            UserAgentExtraHeaders("Twitter/6.75.2 CFNetwork/811.4.18 Darwin/16.5.0")
+        }
+        ConsumerKeyType.TWITTER_FOR_MAC -> {
+            TwitterMacExtraHeaders
+        }
+        ConsumerKeyType.TWEETDECK -> {
+            UserAgentExtraHeaders(UserAgentUtils.getDefaultUserAgentStringSafe(context))
+        }
+        else -> null
     }
 
     fun getTwidereUserAgent(context: Context): String {
         val pm = context.packageManager
-        try {
-            val pi = pm.getPackageInfo(context.packageName, 0)
-            return String.format(Locale.US, "%s/%s %s Android/%s", TWIDERE_APP_NAME,
-                    pi.versionName, Version.userAgent(), Build.VERSION.RELEASE)
-        } catch (e: PackageManager.NameNotFoundException) {
-            throw AssertionError(e)
-        }
-
+        val pi = pm.getPackageInfo(context.packageName, 0)
+        return String.format(Locale.US, "%s/%s %s Android/%s", TWIDERE_APP_NAME,
+                pi.versionName, Version.userAgent(), Build.VERSION.RELEASE)
     }
 
     fun getOAuthRestEndpoint(apiUrlFormat: String, @AccountType accountType: String?,

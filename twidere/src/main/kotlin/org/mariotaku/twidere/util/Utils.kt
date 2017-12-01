@@ -71,6 +71,7 @@ import org.mariotaku.twidere.TwidereConstants.TAB_CODE_DIRECT_MESSAGES
 import org.mariotaku.twidere.TwidereConstants.TAB_CODE_HOME_TIMELINE
 import org.mariotaku.twidere.TwidereConstants.TAB_CODE_NOTIFICATIONS_TIMELINE
 import org.mariotaku.twidere.annotation.CustomTabType
+import org.mariotaku.twidere.annotation.DisplayOption
 import org.mariotaku.twidere.annotation.ProfileImageSize
 import org.mariotaku.twidere.constant.CompatibilityConstants.EXTRA_ACCOUNT_ID
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
@@ -87,7 +88,6 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
 import org.mariotaku.twidere.util.TwidereLinkify.PATTERN_TWITTER_PROFILE_IMAGES
-import org.mariotaku.twidere.view.TabPagerIndicator
 import java.io.File
 import java.util.*
 import java.util.regex.Pattern
@@ -339,10 +339,10 @@ object Utils {
 
     fun getTabDisplayOptionInt(option: String): Int {
         if (VALUE_TAB_DISPLAY_OPTION_ICON == option)
-            return TabPagerIndicator.DisplayOption.ICON
+            return DisplayOption.ICON
         else if (VALUE_TAB_DISPLAY_OPTION_LABEL == option)
-            return TabPagerIndicator.DisplayOption.LABEL
-        return TabPagerIndicator.DisplayOption.BOTH
+            return DisplayOption.LABEL
+        return DisplayOption.BOTH
     }
 
     fun hasNavBar(context: Context): Boolean {

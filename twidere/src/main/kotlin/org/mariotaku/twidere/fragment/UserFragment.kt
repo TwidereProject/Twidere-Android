@@ -89,6 +89,7 @@ import org.mariotaku.twidere.activity.iface.IBaseActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.annotation.DisplayOption
 import org.mariotaku.twidere.annotation.TimelineStyle
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
@@ -135,7 +136,6 @@ import org.mariotaku.twidere.util.support.ActivitySupport.TaskDescriptionCompat
 import org.mariotaku.twidere.util.support.ViewSupport
 import org.mariotaku.twidere.util.support.WindowSupport
 import org.mariotaku.twidere.util.support.view.ViewOutlineProviderCompat
-import org.mariotaku.twidere.view.TabPagerIndicator
 import java.util.*
 
 class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
@@ -303,7 +303,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         viewPager.offscreenPageLimit = 3
         viewPager.adapter = pagerAdapter
         toolbarTabs.setViewPager(viewPager)
-        toolbarTabs.setTabDisplayOption(TabPagerIndicator.DisplayOption.LABEL)
+        toolbarTabs.setTabDisplayOption(DisplayOption.LABEL)
         toolbarTabs.setOnPageChangeListener(this)
 
         followContainer.follow.setOnClickListener(this)

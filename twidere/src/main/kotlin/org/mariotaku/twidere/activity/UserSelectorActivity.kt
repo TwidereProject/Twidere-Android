@@ -34,6 +34,7 @@ import kotlinx.android.synthetic.main.layout_list_with_empty_view.*
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.isNotNullOrEmpty
 import org.mariotaku.ktextension.set
+import org.mariotaku.ktextension.string
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.SimpleParcelableUsersAdapter
 import org.mariotaku.twidere.app.TwidereApplication
@@ -42,7 +43,6 @@ import org.mariotaku.twidere.loader.CacheUserSearchLoader
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.EditTextEnterHandler
-import org.mariotaku.twidere.util.ParseUtils
 import org.mariotaku.twidere.util.view.SimpleTextWatcher
 
 class UserSelectorActivity : BaseActivity(), OnItemClickListener, LoaderManager.LoaderCallbacks<List<ParcelableUser>> {
@@ -64,7 +64,7 @@ class UserSelectorActivity : BaseActivity(), OnItemClickListener, LoaderManager.
 
         val enterHandler = EditTextEnterHandler.attach(editScreenName, object : EditTextEnterHandler.EnterListener {
             override fun onHitEnter(): Boolean {
-                val screenName = ParseUtils.parseString(editScreenName.text)
+                val screenName = editScreenName.string.orEmpty()
                 searchUser(accountKey, screenName, false)
                 return true
             }
@@ -82,7 +82,7 @@ class UserSelectorActivity : BaseActivity(), OnItemClickListener, LoaderManager.
         })
 
         screenNameConfirm.setOnClickListener {
-            val screenName = ParseUtils.parseString(editScreenName.text)
+            val screenName = editScreenName.string.orEmpty()
             searchUser(accountKey, screenName, false)
         }
 

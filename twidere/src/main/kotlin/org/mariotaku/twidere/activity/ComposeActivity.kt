@@ -313,7 +313,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             if (statusVisibility == null) {
                 statusVisibility = preferences[composeStatusVisibilityKey]
             }
-            originalText = ParseUtils.parseString(editText.text)
+            originalText = editText.string
         }
 
         val menu = menuBar.menu
@@ -805,7 +805,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             when (action) {
                 INTENT_ACTION_EXTENSION_COMPOSE -> {
                     val accountKeys = accountsAdapter.selectedAccountKeys
-                    intent.putExtra(EXTRA_TEXT, ParseUtils.parseString(editText.text))
+                    intent.putExtra(EXTRA_TEXT, editText.string)
                     intent.putExtra(EXTRA_ACCOUNT_KEYS, accountKeys)
                     if (accountKeys.isNotEmpty()) {
                         val accountKey = accountKeys.first()

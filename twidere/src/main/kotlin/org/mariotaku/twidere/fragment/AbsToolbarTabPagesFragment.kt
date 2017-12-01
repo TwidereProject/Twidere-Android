@@ -20,6 +20,7 @@ import org.mariotaku.twidere.activity.LinkHandlerActivity.HideUiOnScroll
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarOffsetListener
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
+import org.mariotaku.twidere.annotation.DisplayOption
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_INITIAL_TAB
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
@@ -29,7 +30,6 @@ import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.util.ThemeUtils
-import org.mariotaku.twidere.view.TabPagerIndicator
 import org.mariotaku.twidere.view.iface.IExtendedView
 
 /**
@@ -51,7 +51,7 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
         viewPager.offscreenPageLimit = 2
         viewPager.addOnPageChangeListener(this)
         toolbarTabs.setViewPager(viewPager)
-        toolbarTabs.setTabDisplayOption(TabPagerIndicator.DisplayOption.LABEL)
+        toolbarTabs.setTabDisplayOption(DisplayOption.LABEL)
 
         tabPagesFragmentView.applyWindowInsetsListener = OnApplyWindowInsetsListener listener@ { _, insets ->
             val top = insets.systemWindowInsetTop

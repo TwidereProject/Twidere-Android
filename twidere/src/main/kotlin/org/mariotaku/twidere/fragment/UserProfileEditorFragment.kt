@@ -46,7 +46,6 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.promise.UserProfilePromises
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
-import org.mariotaku.twidere.util.ParseUtils
 import org.mariotaku.twidere.util.TwitterValidatorMETLengthChecker
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener
@@ -176,10 +175,10 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(EXTRA_NAME, ParseUtils.parseString(editName.text))
-        outState.putString(EXTRA_DESCRIPTION, ParseUtils.parseString(editDescription.text))
-        outState.putString(EXTRA_LOCATION, ParseUtils.parseString(editLocation.text))
-        outState.putString(EXTRA_URL, ParseUtils.parseString(editUrl.text))
+        outState.putString(EXTRA_NAME, editName.string)
+        outState.putString(EXTRA_DESCRIPTION, editDescription.string)
+        outState.putString(EXTRA_LOCATION, editLocation.string)
+        outState.putString(EXTRA_URL, editUrl.string)
     }
 
     override fun onSizeChanged(view: View, w: Int, h: Int, oldw: Int, oldh: Int) {

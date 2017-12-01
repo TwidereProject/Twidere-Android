@@ -79,10 +79,7 @@ import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarShowHideHelper
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
-import org.mariotaku.twidere.annotation.CustomTabType
-import org.mariotaku.twidere.annotation.FilterScope
-import org.mariotaku.twidere.annotation.NavbarStyle
-import org.mariotaku.twidere.annotation.ReadPositionTag
+import org.mariotaku.twidere.annotation.*
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.notificationBuilder
@@ -278,10 +275,10 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         mainTabs.setViewPager(mainPager)
         mainTabs.setOnPageChangeListener(this)
         if (tabDisplayOptionInt == 0) {
-            tabDisplayOptionInt = TabPagerIndicator.DisplayOption.ICON
+            tabDisplayOptionInt = DisplayOption.ICON
         }
         mainTabs.setTabDisplayOption(tabDisplayOptionInt)
-        mainTabs.setTabExpandEnabled(TabPagerIndicator.DisplayOption.LABEL !in tabDisplayOptionInt)
+        mainTabs.isTabExpandEnabled = DisplayOption.LABEL !in tabDisplayOptionInt
         mainTabs.setDisplayBadge(preferences[unreadCountKey])
         mainTabs.updateAppearance()
 

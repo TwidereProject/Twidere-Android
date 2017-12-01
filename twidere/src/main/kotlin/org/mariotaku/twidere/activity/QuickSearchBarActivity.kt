@@ -35,7 +35,6 @@ import android.support.v4.view.ViewCompat
 import android.support.v4.view.WindowInsetsCompat
 import android.support.v4.widget.CursorAdapter
 import android.text.Editable
-import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.*
 import android.view.View.OnClickListener
@@ -47,6 +46,7 @@ import kotlinx.android.synthetic.main.activity_quick_search_bar.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.empty
 import org.mariotaku.ktextension.spannable
+import org.mariotaku.ktextension.string
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
@@ -67,8 +67,11 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory
 import org.mariotaku.twidere.provider.TwidereDataStore.Suggestions
-import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.EditTextEnterHandler
 import org.mariotaku.twidere.util.EditTextEnterHandler.EnterListener
+import org.mariotaku.twidere.util.IntentUtils
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler
+import org.mariotaku.twidere.util.SwipeDismissListViewTouchListener
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.mariotaku.twidere.util.promotion.PromotionService
 import org.mariotaku.twidere.view.ProfileImageView
@@ -244,7 +247,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor?> {
         val account = selectedAccountDetails
         val builder = Suggestions.Search.CONTENT_URI.buildUpon()
-        builder.appendQueryParameter(QUERY_PARAM_QUERY, ParseUtils.parseString(searchQuery.text))
+        builder.appendQueryParameter(QUERY_PARAM_QUERY, searchQuery.string)
         if (account != null) {
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, account.key.toString())
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_TYPE, account.type)
@@ -325,8 +328,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
 
     private fun doSearch() {
         if (isFinishing) return
-        val query = ParseUtils.parseString(searchQuery.text)
-        if (TextUtils.isEmpty(query)) return
+        val query = searchQuery.string?.takeIf(String::isNotEmpty) ?: return
         val details = selectedAccountDetails ?: return
         IntentUtils.openSearch(this, details.key, query)
         setResult(RESULT_SEARCH_PERFORMED)
