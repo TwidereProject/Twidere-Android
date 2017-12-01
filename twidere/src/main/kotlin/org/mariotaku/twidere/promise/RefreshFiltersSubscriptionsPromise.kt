@@ -24,8 +24,8 @@ import android.content.Context
 import android.net.Uri
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.task
-import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.twidere.extension.bulkInsert
 import org.mariotaku.twidere.extension.model.instantiateComponent
 import org.mariotaku.twidere.extension.queryAll
 import org.mariotaku.twidere.model.FiltersData
@@ -73,25 +73,17 @@ class RefreshFiltersSubscriptionsPromise(val context: Context) {
     private fun updateUserItems(resolver: ContentResolver, items: List<FiltersData.UserItem>?, sourceId: Long) {
         resolver.delete(Filters.Users.CONTENT_URI, Expression.equalsArgs(Filters.Users.SOURCE).sql,
                 arrayOf(sourceId.toString()))
-        val creator = ObjectCursor.valuesCreatorFrom(FiltersData.UserItem::class.java)
-        items?.map { item ->
-            item.source = sourceId
-            return@map creator.create(item)
-        }?.let {
-            ContentResolverUtils.bulkInsert(resolver, Filters.Users.CONTENT_URI, it)
-        }
+        if (items == null) return
+        items.forEach { it.source = sourceId }
+        resolver.bulkInsert(Filters.Users.CONTENT_URI, items, FiltersData.UserItem::class.java)
     }
 
     private fun updateBaseItems(resolver: ContentResolver, items: List<FiltersData.BaseItem>?, uri: Uri, sourceId: Long) {
         resolver.delete(uri, Expression.equalsArgs(Filters.SOURCE).sql,
                 arrayOf(sourceId.toString()))
-        val creator = ObjectCursor.valuesCreatorFrom(FiltersData.BaseItem::class.java)
-        items?.map { item ->
-            item.source = sourceId
-            return@map creator.create(item)
-        }?.let {
-            ContentResolverUtils.bulkInsert(resolver, uri, it)
-        }
+        if (items == null) return
+        items.forEach { it.source = sourceId }
+        resolver.bulkInsert(Filters.Users.CONTENT_URI, items, FiltersData.BaseItem::class.java)
     }
 
     companion object : ApplicationContextSingletonHolder<RefreshFiltersSubscriptionsPromise>(::RefreshFiltersSubscriptionsPromise)

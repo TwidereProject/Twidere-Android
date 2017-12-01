@@ -7,12 +7,12 @@ import org.mariotaku.ktextension.set
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.extension.bulkDelete
+import org.mariotaku.twidere.extension.bulkInsert
 import org.mariotaku.twidere.extension.model.filename
 import org.mariotaku.twidere.extension.model.unique_id_non_null
 import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.util.DebugLog
-import org.mariotaku.twidere.util.content.ContentResolverUtils
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -122,8 +122,8 @@ abstract class FileBasedDraftsSyncAction<RemoteFileInfo>(val context: Context) :
         if (downloadRemoteInfoList.isNotEmpty()) {
             val fileList = downloadRemoteInfoList.joinToString(",") { it.draftFileName }
             DebugLog.d(LOGTAG_SYNC, "Downloading remote drafts $fileList")
-            ContentResolverUtils.bulkInsert(context.contentResolver, Drafts.CONTENT_URI,
-                    downloadDrafts(downloadRemoteInfoList).map { ObjectCursor.valuesCreatorFrom(Draft::class.java).create(it) })
+            context.contentResolver.bulkInsert(Drafts.CONTENT_URI, downloadDrafts(downloadRemoteInfoList),
+                    Draft::class.java)
         }
 
         // Update local items

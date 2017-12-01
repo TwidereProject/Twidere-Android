@@ -59,7 +59,6 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
-import org.mariotaku.twidere.util.content.ContentResolverUtils
 import java.io.IOException
 import java.util.*
 
@@ -775,44 +774,39 @@ object DataStoreUtils {
     fun addToFilter(context: Context, users: Collection<ParcelableUser>, filterAnywhere: Boolean) {
         val cr = context.contentResolver
 
-        try {
-            val baseCreator = ObjectCursor.valuesCreatorFrom(FiltersData.BaseItem::class.java)
-            val userCreator = ObjectCursor.valuesCreatorFrom(FiltersData.UserItem::class.java)
-            val userValues = ArrayList<ContentValues>()
-            val keywordValues = ArrayList<ContentValues>()
-            val linkValues = ArrayList<ContentValues>()
-            for (user in users) {
-                val userItem = FiltersData.UserItem()
-                userItem.userKey = user.key
-                userItem.screenName = user.screen_name
-                userItem.name = user.name
-                userValues.add(userCreator.create(userItem))
+        val baseCreator = ObjectCursor.valuesCreatorFrom(FiltersData.BaseItem::class.java)
+        val userCreator = ObjectCursor.valuesCreatorFrom(FiltersData.UserItem::class.java)
+        val userValues = ArrayList<ContentValues>()
+        val keywordValues = ArrayList<ContentValues>()
+        val linkValues = ArrayList<ContentValues>()
+        for (user in users) {
+            val userItem = FiltersData.UserItem()
+            userItem.userKey = user.key
+            userItem.screenName = user.screen_name
+            userItem.name = user.name
+            userValues.add(userCreator.create(userItem))
 
-                val keywordItem = FiltersData.BaseItem()
-                keywordItem.value = "@" + user.screen_name
-                keywordItem.userKey = user.key
-                keywordValues.add(baseCreator.create(keywordItem))
+            val keywordItem = FiltersData.BaseItem()
+            keywordItem.value = "@" + user.screen_name
+            keywordItem.userKey = user.key
+            keywordValues.add(baseCreator.create(keywordItem))
 
-                // Insert user link (without scheme) to links
-                val linkItem = FiltersData.BaseItem()
-                val userLink = LinkCreator.getUserWebLink(user)
-                val linkWithoutScheme = userLink.toString().substringAfter("://")
-                linkItem.value = linkWithoutScheme
-                linkItem.userKey = user.key
-                linkValues.add(baseCreator.create(linkItem))
-            }
-
-            ContentResolverUtils.bulkInsert(cr, Filters.Users.CONTENT_URI, userValues)
-            if (filterAnywhere) {
-                // Insert to filtered users
-                ContentResolverUtils.bulkInsert(cr, Filters.Keywords.CONTENT_URI, keywordValues)
-                // Insert user mention to keywords
-                ContentResolverUtils.bulkInsert(cr, Filters.Links.CONTENT_URI, linkValues)
-            }
-        } catch (e: IOException) {
-            throw RuntimeException(e)
+            // Insert user link (without scheme) to links
+            val linkItem = FiltersData.BaseItem()
+            val userLink = LinkCreator.getUserWebLink(user)
+            val linkWithoutScheme = userLink.toString().substringAfter("://")
+            linkItem.value = linkWithoutScheme
+            linkItem.userKey = user.key
+            linkValues.add(baseCreator.create(linkItem))
         }
 
+        cr.blockBulkInsert(Filters.Users.CONTENT_URI, userValues)
+        if (filterAnywhere) {
+            // Insert to filtered users
+            cr.blockBulkInsert(Filters.Keywords.CONTENT_URI, keywordValues)
+            // Insert user mention to keywords
+            cr.blockBulkInsert(Filters.Links.CONTENT_URI, linkValues)
+        }
     }
 
     fun removeFromFilter(context: Context, users: Collection<ParcelableUser>) {

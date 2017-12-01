@@ -35,6 +35,7 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_HOST
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.exception.AccountNotFoundException
+import org.mariotaku.twidere.extension.bulkDelete
 import org.mariotaku.twidere.extension.dismissProgressDialog
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.showProgressDialog
@@ -51,7 +52,6 @@ import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.util.content.ContentResolverUtils
 import javax.inject.Inject
 
 class FilteredUsersFragment : BaseFiltersFragment() {
@@ -189,12 +189,10 @@ class FilteredUsersFragment : BaseFiltersFragment() {
         val keys = (0 until positions.size()).mapNotNull {
             if (!positions.valueAt(it)) return@mapNotNull null
             return@mapNotNull (adapter as FilterUsersListAdapter).getUserKeyString(positions.keyAt(it))
-        }
+        }.toTypedArray()
         super.performDeletion()
-        ContentResolverUtils.bulkDelete(context!!.contentResolver, Filters.Keywords.CONTENT_URI,
-                Filters.USER_KEY, false, keys, null, null)
-        ContentResolverUtils.bulkDelete(context!!.contentResolver, Filters.Links.CONTENT_URI,
-                Filters.USER_KEY, false, keys, null, null)
+        context!!.contentResolver.bulkDelete(Filters.Keywords.CONTENT_URI, Filters.USER_KEY, keys)
+        context!!.contentResolver.bulkDelete(Filters.Links.CONTENT_URI, Filters.USER_KEY, keys)
     }
 
     private fun requestExportToMutes() {

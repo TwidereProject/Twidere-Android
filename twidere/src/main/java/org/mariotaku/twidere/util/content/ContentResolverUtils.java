@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.util.content;
 
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -79,23 +78,5 @@ public class ContentResolverUtils {
         return rowsDeleted;
     }
 
-    public static int bulkInsert(@NonNull final ContentResolver resolver, @NonNull final Uri uri,
-            @NonNull final Collection<ContentValues> values) {
-        return bulkInsert(resolver, uri, values.toArray(new ContentValues[values.size()]));
-    }
-
-    public static int bulkInsert(@NonNull final ContentResolver resolver, @NonNull final Uri uri,
-            @NonNull final ContentValues[] values) {
-        if (values.length == 0) return 0;
-        final int colValuesLength = values.length, blocksCount = colValuesLength / MAX_BULK_COUNT + 1;
-        int rowsInserted = 0;
-        for (int i = 0; i < blocksCount; i++) {
-            final int start = i * MAX_BULK_COUNT, end = Math.min(start + MAX_BULK_COUNT, colValuesLength);
-            final ContentValues[] block = new ContentValues[end - start];
-            System.arraycopy(values, start, block, 0, end - start);
-            rowsInserted += resolver.bulkInsert(uri, block);
-        }
-        return rowsInserted;
-    }
 
 }

@@ -49,10 +49,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.annotation.FilterScope
-import org.mariotaku.twidere.extension.invertSelection
-import org.mariotaku.twidere.extension.selectAll
-import org.mariotaku.twidere.extension.selectNone
-import org.mariotaku.twidere.extension.updateSelectionItems
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.fragment.AbsContentListViewFragment
 import org.mariotaku.twidere.model.FiltersData
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
@@ -221,9 +218,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
     }
 
     protected open fun performDeletion() {
-        val ids = listView.checkedItemIds
-        val where = Expression.inArgs(Columns.Column(Filters._ID), ids.size)
-        context!!.contentResolver.delete(contentUri, where.sql, Array(ids.size) { ids[it].toString() })
+        context!!.contentResolver.delete(contentUri, listView.checkedItemIds)
     }
 
     protected open fun addOrEditItem(id: Long = -1, value: String? = null, scope: Int = FilterScope.DEFAULT) {

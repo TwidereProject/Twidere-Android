@@ -65,8 +65,4 @@ object ContentValuesCreator {
         return values
     }
 
-    fun createSavedSearches(savedSearches: List<SavedSearch>, accountKey: UserKey): Array<ContentValues> {
-        return savedSearches.mapToArray { createSavedSearch(it, accountKey) }
-    }
-
 }

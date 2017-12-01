@@ -29,14 +29,14 @@ import org.mariotaku.microblog.library.twitter.model.SavedSearch
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.dagger.component.GeneralComponent
+import org.mariotaku.twidere.extension.blockBulkInsert
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.promise.toastOnResult
 import org.mariotaku.twidere.extension.promise.twitterTask
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.SavedSearchDestroyedEvent
 import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches
-import org.mariotaku.twidere.util.ContentValuesCreator
-import org.mariotaku.twidere.util.content.ContentResolverUtils
+import org.mariotaku.twidere.util.ContentValuesCreator.createSavedSearch
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 import javax.inject.Inject
 
@@ -68,11 +68,11 @@ class SavedSearchPromises(private val application: Application) {
         twitterTask(application, accountKey) { account, twitter ->
             val cr = application.contentResolver
             val searches = twitter.savedSearches
-            val values = ContentValuesCreator.createSavedSearches(searches, accountKey)
+            val values = searches.map { createSavedSearch(it, accountKey) }
             val where = Expression.equalsArgs(SavedSearches.ACCOUNT_KEY)
             val whereArgs = arrayOf(accountKey.toString())
             cr.delete(SavedSearches.CONTENT_URI, where.sql, whereArgs)
-            ContentResolverUtils.bulkInsert(cr, SavedSearches.CONTENT_URI, values)
+            cr.blockBulkInsert(SavedSearches.CONTENT_URI, values)
         }
     }).toSuccessVoid()
 

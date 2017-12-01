@@ -31,6 +31,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_STATUS
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.blockBulkInsert
 import org.mariotaku.twidere.extension.bulkDelete
 import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -40,7 +41,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.util.ContentValuesCreator
 import org.mariotaku.twidere.util.HtmlEscapeHelper
 import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.util.content.ContentResolverUtils
 import java.util.*
 
 class AddStatusFilterDialogFragment : BaseDialogFragment() {
@@ -144,9 +144,9 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
             resolver.bulkDelete(Filters.Users.CONTENT_URI, Filters.Users.USER_KEY, userKeys.mapToArray(UserKey::toString))
             resolver.bulkDelete(Filters.Keywords.CONTENT_URI, Filters.Keywords.VALUE, keywords.toTypedArray())
             resolver.bulkDelete(Filters.Sources.CONTENT_URI, Filters.Sources.VALUE, sources.toTypedArray())
-            ContentResolverUtils.bulkInsert(resolver, Filters.Users.CONTENT_URI, userValues)
-            ContentResolverUtils.bulkInsert(resolver, Filters.Keywords.CONTENT_URI, keywordValues)
-            ContentResolverUtils.bulkInsert(resolver, Filters.Sources.CONTENT_URI, sourceValues)
+            resolver.blockBulkInsert(Filters.Users.CONTENT_URI, userValues)
+            resolver.blockBulkInsert(Filters.Keywords.CONTENT_URI, keywordValues)
+            resolver.blockBulkInsert(Filters.Sources.CONTENT_URI, sourceValues)
         }
         builder.setNegativeButton(android.R.string.cancel, null)
         val dialog = builder.create()

@@ -35,6 +35,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.dagger.component.GeneralComponent
+import org.mariotaku.twidere.extension.blockBulkInsert
 import org.mariotaku.twidere.extension.bulkDelete
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.getAccountUser
@@ -46,7 +47,6 @@ import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.promise.MultiOperationPromises
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
-import org.mariotaku.twidere.util.content.ContentResolverUtils
 import java.util.*
 import javax.inject.Inject
 
@@ -136,7 +136,7 @@ class MultiSelectEventHandler(
                 }
                 resolver.bulkDelete(Filters.Users.CONTENT_URI, Filters.Users.USER_KEY,
                         userKeys.mapToArray(UserKey::toString))
-                ContentResolverUtils.bulkInsert(resolver, Filters.Users.CONTENT_URI, valuesList)
+                resolver.blockBulkInsert(Filters.Users.CONTENT_URI, valuesList)
                 Toast.makeText(activity, R.string.message_toast_users_filters_added, Toast.LENGTH_SHORT).show()
                 mode.finish()
             }

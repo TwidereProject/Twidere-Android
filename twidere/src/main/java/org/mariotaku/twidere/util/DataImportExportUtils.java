@@ -39,11 +39,11 @@ import org.mariotaku.library.exportablepreferences.annotation.PreferenceType;
 import org.mariotaku.library.objectcursor.ObjectCursor;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
+import org.mariotaku.twidere.extension.ContentResolverExtensionsKt;
 import org.mariotaku.twidere.model.FiltersData;
 import org.mariotaku.twidere.model.Tab;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
-import org.mariotaku.twidere.util.content.ContentResolverUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -232,7 +232,7 @@ public class DataImportExportUtils implements Constants {
                         for (FiltersData.BaseItem item : items) {
                             values.add(baseItemCreator.create(item));
                         }
-                        ContentResolverUtils.bulkInsert(cr, uri, values);
+                        ContentResolverExtensionsKt.blockBulkInsert(cr, uri, values);
                     }
 
                     void insertUser(ContentResolver cr, Uri uri, List<FiltersData.UserItem> items) throws IOException {
@@ -243,7 +243,7 @@ public class DataImportExportUtils implements Constants {
                         for (FiltersData.UserItem item : items) {
                             values.add(userItemCreator.create(item));
                         }
-                        ContentResolverUtils.bulkInsert(cr, uri, values);
+                        ContentResolverExtensionsKt.blockBulkInsert(cr, uri, values);
                     }
                 });
             }
@@ -256,7 +256,7 @@ public class DataImportExportUtils implements Constants {
                         values.add(creator.create(item));
                     }
                     cr.delete(Tabs.CONTENT_URI, null, null);
-                    ContentResolverUtils.bulkInsert(cr, Tabs.CONTENT_URI, values);
+                    ContentResolverExtensionsKt.blockBulkInsert(cr, Tabs.CONTENT_URI, values);
                     return true;
                 });
             }

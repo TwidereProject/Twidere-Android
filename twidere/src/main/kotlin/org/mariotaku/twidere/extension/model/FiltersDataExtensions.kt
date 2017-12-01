@@ -4,22 +4,17 @@ import android.content.ContentResolver
 import android.net.Uri
 import org.mariotaku.ktextension.addAllEnhanced
 import org.mariotaku.ktextension.isNullOrEmpty
-import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.twidere.extension.bulkInsert
 import org.mariotaku.twidere.extension.queryAll
 import org.mariotaku.twidere.model.FiltersData
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.filter.FilterScopeStringMap
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
-import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlSerializer
 import java.io.IOException
 import java.util.*
-
-/**
- * Created by mariotaku on 2016/12/28.
- */
 
 fun FiltersData.read(cr: ContentResolver, loadSubscription: Boolean = false) {
     fun readBaseItems(uri: Uri): List<FiltersData.BaseItem>? {
@@ -38,31 +33,29 @@ fun FiltersData.read(cr: ContentResolver, loadSubscription: Boolean = false) {
 }
 
 fun FiltersData.write(cr: ContentResolver, deleteOld: Boolean = true) {
-    val baseCreator = ObjectCursor.valuesCreatorFrom(FiltersData.BaseItem::class.java)
-    val userCreator = ObjectCursor.valuesCreatorFrom(FiltersData.UserItem::class.java)
     if (users != null) {
         if (deleteOld) {
             cr.delete(Filters.Users.CONTENT_URI, null, null)
         }
-        ContentResolverUtils.bulkInsert(cr, Filters.Users.CONTENT_URI, users.map(userCreator::create))
+        cr.bulkInsert(Filters.Users.CONTENT_URI, users, FiltersData.UserItem::class.java)
     }
     if (keywords != null) {
         if (deleteOld) {
             cr.delete(Filters.Keywords.CONTENT_URI, null, null)
         }
-        ContentResolverUtils.bulkInsert(cr, Filters.Keywords.CONTENT_URI, keywords.map(baseCreator::create))
+        cr.bulkInsert(Filters.Keywords.CONTENT_URI, keywords, FiltersData.BaseItem::class.java)
     }
     if (sources != null) {
         if (deleteOld) {
             cr.delete(Filters.Sources.CONTENT_URI, null, null)
         }
-        ContentResolverUtils.bulkInsert(cr, Filters.Sources.CONTENT_URI, sources.map(baseCreator::create))
+        cr.bulkInsert(Filters.Sources.CONTENT_URI, sources, FiltersData.BaseItem::class.java)
     }
     if (links != null) {
         if (deleteOld) {
             cr.delete(Filters.Links.CONTENT_URI, null, null)
         }
-        ContentResolverUtils.bulkInsert(cr, Filters.Links.CONTENT_URI, links.map(baseCreator::create))
+        cr.bulkInsert(Filters.Links.CONTENT_URI, links, FiltersData.BaseItem::class.java)
     }
 }
 

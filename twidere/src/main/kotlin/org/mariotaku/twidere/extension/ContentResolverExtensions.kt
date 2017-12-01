@@ -114,9 +114,24 @@ fun <T : Any> ContentResolver.bulkInsert(uri: Uri, collection: Collection<T>, cl
     if (collection.isEmpty()) return 0
     val creator = ObjectCursor.valuesCreatorFrom(cls)
     var rowsInserted = 0
-    val block = mutableListOf<ContentValues>()
+    val block = ArrayList<ContentValues>(MAX_BULK_COUNT)
     collection.forEachIndexed { index, item ->
         block.add(creator.create(item))
+        if (index == collection.size - 1 || block.size >= MAX_BULK_COUNT) {
+            rowsInserted += bulkInsert(uri, block.toTypedArray())
+            block.clear()
+        }
+    }
+    return rowsInserted
+}
+
+
+fun ContentResolver.blockBulkInsert(uri: Uri, collection: Collection<ContentValues>): Int {
+    if (collection.isEmpty()) return 0
+    var rowsInserted = 0
+    val block = ArrayList<ContentValues>(MAX_BULK_COUNT)
+    collection.forEachIndexed { index, item ->
+        block += item
         if (index == collection.size - 1 || block.size >= MAX_BULK_COUNT) {
             rowsInserted += bulkInsert(uri, block.toTypedArray())
             block.clear()

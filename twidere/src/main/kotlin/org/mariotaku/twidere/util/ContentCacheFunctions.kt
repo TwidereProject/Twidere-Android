@@ -7,6 +7,7 @@ import nl.komponents.kovenant.task
 import org.mariotaku.ktextension.ContentValues
 import org.mariotaku.ktextension.set
 import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.twidere.extension.blockBulkInsert
 import org.mariotaku.twidere.extension.bulkInsert
 import org.mariotaku.twidere.extension.model.applyTo
 import org.mariotaku.twidere.extension.model.relationship
@@ -15,7 +16,6 @@ import org.mariotaku.twidere.model.ParcelableRelationship
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.task.GetTimelineResult
 import org.mariotaku.twidere.provider.TwidereDataStore.*
-import org.mariotaku.twidere.util.content.ContentResolverUtils
 
 fun ContentResolver.cacheTimelineResult(result: GetTimelineResult<*>, cacheRelationship: Boolean): Promise<Unit, Exception> = task {
     val account = result.account
@@ -23,7 +23,7 @@ fun ContentResolver.cacheTimelineResult(result: GetTimelineResult<*>, cacheRelat
     val hashtags = result.hashtags
 
     bulkInsert(CachedUsers.CONTENT_URI, users, ParcelableUser::class.java)
-    ContentResolverUtils.bulkInsert(this, CachedHashtags.CONTENT_URI, hashtags.map {
+    blockBulkInsert(CachedHashtags.CONTENT_URI, hashtags.map {
         ContentValues { this[CachedHashtags.NAME] = it.substringAfter("#") }
     })
 
