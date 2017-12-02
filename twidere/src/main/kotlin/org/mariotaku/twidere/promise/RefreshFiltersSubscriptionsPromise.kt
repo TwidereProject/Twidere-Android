@@ -43,7 +43,7 @@ class RefreshFiltersSubscriptionsPromise(val context: Context) {
         val resolver = context.contentResolver
         val sourceIds = ArrayList<Long>()
         resolver.queryAll(Filters.Subscriptions.CONTENT_URI, Filters.Subscriptions.COLUMNS,
-                null, null, cls = FiltersSubscription::class.java).forEach { subscription ->
+                null, null, cls = FiltersSubscription::class.java)?.forEach { subscription ->
             sourceIds.add(subscription.id)
             val component = subscription.instantiateComponent(context) ?: return@forEach
             try {

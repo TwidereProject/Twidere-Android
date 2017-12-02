@@ -39,7 +39,7 @@ fun ContentResolver.cacheTimelineResult(result: GetTimelineResult<*>, cacheRelat
             selectionArgsList.toTypedArray(), cls = ParcelableRelationship::class.java)
     val relationships = users.mapTo(ArraySet<ParcelableRelationship>()) { user ->
         val userKey = user.key
-        return@mapTo localRelationships.find {
+        return@mapTo localRelationships?.find {
             it.user_key == userKey
         }?.apply { user.applyTo(this) } ?: user.relationship
     }

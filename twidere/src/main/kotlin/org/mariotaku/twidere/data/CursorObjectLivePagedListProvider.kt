@@ -90,14 +90,14 @@ class CursorObjectLivePagedListProvider<T : Any>(
         override fun loadRange(startPosition: Int, count: Int): List<T> {
             if (processor == null) {
                 return resolver.queryAll(uri, projection, selection, selectionArgs, sortOrder,
-                        "$startPosition,$count", cls)
+                        "$startPosition,$count", cls).orEmpty()
             }
             val result = ArrayList<T>()
             var offset = filterStates.actualIndex(startPosition, startPosition)
             var limit = count
             do {
                 val list = resolver.queryAll(uri, projection, selection, selectionArgs, sortOrder,
-                        "$offset,$limit", cls)
+                        "$offset,$limit", cls).orEmpty()
                 val reachedEnd = list.size < count
                 list.mapIndexedNotNullTo(result) lambda@ { index, item ->
                     val processed = processor.process(item)

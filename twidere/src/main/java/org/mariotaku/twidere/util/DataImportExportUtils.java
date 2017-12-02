@@ -21,10 +21,8 @@ package org.mariotaku.twidere.util;
 
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
@@ -36,8 +34,6 @@ import com.fasterxml.jackson.core.JsonToken;
 
 import org.mariotaku.library.exportablepreferences.PreferencesExporter;
 import org.mariotaku.library.exportablepreferences.annotation.PreferenceType;
-import org.mariotaku.library.objectcursor.ObjectCursor;
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.extension.ContentResolverExtensionsKt;
 import org.mariotaku.twidere.model.FiltersData;
@@ -49,7 +45,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +53,13 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
-public class DataImportExportUtils implements Constants {
+import static org.mariotaku.twidere.TwidereConstants.HOST_MAPPING_PREFERENCES_NAME;
+import static org.mariotaku.twidere.TwidereConstants.KEYBOARD_SHORTCUTS_PREFERENCES_NAME;
+import static org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME;
+import static org.mariotaku.twidere.TwidereConstants.USER_COLOR_PREFERENCES_NAME;
+import static org.mariotaku.twidere.TwidereConstants.USER_NICKNAME_PREFERENCES_NAME;
+
+public class DataImportExportUtils {
 
     public static final String ENTRY_PREFERENCES = "preferences.json";
     public static final String ENTRY_NICKNAMES = "nicknames.json";
@@ -79,7 +80,7 @@ public class DataImportExportUtils implements Constants {
             | FLAG_HOST_MAPPING | FLAG_KEYBOARD_SHORTCUTS | FLAG_FILTERS | FLAG_TABS;
 
     @WorkerThread
-    public static void exportData(final Context context, @NonNull final File dst, final int flags) throws IOException {
+    public static void exportData(@NonNull final Context context, @NonNull final File dst, final int flags) throws IOException {
         dst.delete();
         try (FileOutputStream fos = new FileOutputStream(dst);
              ZipOutputStream zos = new ZipOutputStream(fos)) {
@@ -108,55 +109,27 @@ public class DataImportExportUtils implements Constants {
                 FiltersData data = new FiltersData();
 
                 final ContentResolver cr = context.getContentResolver();
-                data.setUsers(queryAll(cr, Filters.Users.CONTENT_URI, Filters.Users.COLUMNS,
-                        FiltersData.UserItem.class));
-                data.setKeywords(queryAll(cr, Filters.Keywords.CONTENT_URI, Filters.Keywords.COLUMNS,
-                        FiltersData.BaseItem.class));
-                data.setSources(queryAll(cr, Filters.Sources.CONTENT_URI, Filters.Sources.COLUMNS,
-                        FiltersData.BaseItem.class));
-                data.setLinks(queryAll(cr, Filters.Links.CONTENT_URI, Filters.Links.COLUMNS,
-                        FiltersData.BaseItem.class));
+                data.setUsers(ContentResolverExtensionsKt.queryAll(cr, Filters.Users.CONTENT_URI, Filters.Users.COLUMNS,
+                        null, null, null, null, FiltersData.UserItem.class));
+                data.setKeywords(ContentResolverExtensionsKt.queryAll(cr, Filters.Keywords.CONTENT_URI, Filters.Keywords.COLUMNS,
+                        null, null, null, null, FiltersData.BaseItem.class));
+                data.setSources(ContentResolverExtensionsKt.queryAll(cr, Filters.Sources.CONTENT_URI, Filters.Sources.COLUMNS,
+                        null, null, null, null, FiltersData.BaseItem.class));
+                data.setLinks(ContentResolverExtensionsKt.queryAll(cr, Filters.Links.CONTENT_URI, Filters.Links.COLUMNS,
+                        null, null, null, null, FiltersData.BaseItem.class));
                 exportItem(zos, ENTRY_FILTERS, FiltersData.class, data);
             }
             if (hasFlag(flags, FLAG_TABS)) {
                 // TODO export tabs
                 final ContentResolver cr = context.getContentResolver();
-                final Cursor c = cr.query(Tabs.CONTENT_URI, Tabs.COLUMNS, null, null, null);
-                if (c != null) {
-                    final List<Tab> tabs = new ArrayList<>(c.getCount());
-                    try {
-                        final ObjectCursor.CursorIndices<Tab> ci = ObjectCursor.indicesFrom(c, Tab.class);
-                        c.moveToFirst();
-                        while (!c.isAfterLast()) {
-                            tabs.add(ci.newObject(c));
-                            c.moveToNext();
-                        }
-                    } finally {
-                        c.close();
-                    }
+                List<Tab> tabs = ContentResolverExtensionsKt.queryAll(cr, Tabs.CONTENT_URI, Tabs.COLUMNS,
+                        null, null, null, null, Tab.class);
+                if (tabs != null) {
                     exportItemsList(zos, ENTRY_TABS, Tab.class, tabs);
                 }
             }
             zos.finish();
             zos.flush();
-        }
-    }
-
-    private static <T> List<T> queryAll(ContentResolver cr, Uri uri, String[] projection,
-            Class<T> cls) throws IOException {
-        Cursor c = cr.query(uri, projection, null, null, null);
-        if (c == null) return null;
-        try {
-            final ObjectCursor.CursorIndices<T> ci = ObjectCursor.indicesFrom(c, cls);
-            List<T> items = new ArrayList<>(c.getCount());
-            c.moveToFirst();
-            while (!c.isAfterLast()) {
-                items.add(ci.newObject(c));
-                c.moveToNext();
-            }
-            return items;
-        } finally {
-            c.close();
         }
     }
 
@@ -226,37 +199,20 @@ public class DataImportExportUtils implements Constants {
 
                     void insertBase(ContentResolver cr, Uri uri, List<FiltersData.BaseItem> items) throws IOException {
                         if (items == null) return;
-                        final ObjectCursor.ValuesCreator<FiltersData.BaseItem> baseItemCreator =
-                                ObjectCursor.valuesCreatorFrom(FiltersData.BaseItem.class);
-                        List<ContentValues> values = new ArrayList<>(items.size());
-                        for (FiltersData.BaseItem item : items) {
-                            values.add(baseItemCreator.create(item));
-                        }
-                        ContentResolverExtensionsKt.blockBulkInsert(cr, uri, values);
+                        ContentResolverExtensionsKt.bulkInsert(cr, uri, items, FiltersData.BaseItem.class);
                     }
 
                     void insertUser(ContentResolver cr, Uri uri, List<FiltersData.UserItem> items) throws IOException {
                         if (items == null) return;
-                        final ObjectCursor.ValuesCreator<FiltersData.UserItem> userItemCreator =
-                                ObjectCursor.valuesCreatorFrom(FiltersData.UserItem.class);
-                        List<ContentValues> values = new ArrayList<>(items.size());
-                        for (FiltersData.UserItem item : items) {
-                            values.add(userItemCreator.create(item));
-                        }
-                        ContentResolverExtensionsKt.blockBulkInsert(cr, uri, values);
+                        ContentResolverExtensionsKt.bulkInsert(cr, uri, items, FiltersData.UserItem.class);
                     }
                 });
             }
             if (hasFlag(flags, FLAG_TABS)) {
-                final ObjectCursor.ValuesCreator<Tab> creator = ObjectCursor.valuesCreatorFrom(Tab.class);
                 importItemsList(context, zipFile, ENTRY_TABS, Tab.class, (cr, items) -> {
                     if (items == null) return false;
-                    List<ContentValues> values = new ArrayList<>(items.size());
-                    for (Tab item : items) {
-                        values.add(creator.create(item));
-                    }
                     cr.delete(Tabs.CONTENT_URI, null, null);
-                    ContentResolverExtensionsKt.blockBulkInsert(cr, Tabs.CONTENT_URI, values);
+                    ContentResolverExtensionsKt.bulkInsert(cr, Tabs.CONTENT_URI, items, Tab.class);
                     return true;
                 });
             }
