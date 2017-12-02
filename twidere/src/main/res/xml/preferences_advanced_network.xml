@@ -57,12 +57,14 @@
             android:dependency="enable_proxy"
             android:key="proxy_host"
             android:singleLine="true"
+            android:summary="@string/proxy_host_summary"
             android:title="@string/proxy_host"/>
         <org.mariotaku.twidere.preference.ThemedEditTextPreference
             android:dependency="enable_proxy"
             android:inputType="number"
             android:key="proxy_port"
             android:singleLine="true"
+            android:summary="@string/proxy_port_summary"
             android:title="@string/proxy_port"/>
         <org.mariotaku.twidere.preference.ThemedEditTextPreference
             android:dependency="enable_proxy"

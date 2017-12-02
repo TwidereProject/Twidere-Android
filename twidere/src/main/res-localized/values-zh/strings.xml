@@ -822,8 +822,10 @@
   <string name="provider_quitter_se">Quitter.se</string>
   <string name="proxy">代理伺服器</string>
   <string name="proxy_host">代理伺服器主機名</string>
+  <string name="proxy_host_summary">HTTP代理：example.com\n反向代理：https://proxy.com/[SCHEME]/[AUTHORITY]/[PATH][?QUERY][#FRAGMENT]</string>
   <string name="proxy_password">代理伺服器密碼</string>
   <string name="proxy_port">代理伺服器埠</string>
+  <string name="proxy_port_summary">使用反向代理時將被忽略</string>
   <string name="proxy_summary">為所有網絡請求使用代理</string>
   <string name="proxy_type">代理伺服器類型</string>
   <string name="proxy_username">代理伺服器帳號</string>

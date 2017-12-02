@@ -986,8 +986,10 @@
 
     <string name="proxy">Proxy</string>
     <string name="proxy_host">Proxy host</string>
+    <string name="proxy_host_summary">HTTP proxy: example.com\nReverse proxy: https://proxy.com/[SCHEME]/[AUTHORITY]/[PATH][?QUERY][#FRAGMENT]</string>
     <string name="proxy_password">Proxy password</string>
     <string name="proxy_port">Proxy port</string>
+    <string name="proxy_port_summary">ignored when use reverse proxy</string>
     <string name="proxy_summary">Use proxy for all network requests.</string>
     <string name="proxy_type">Proxy type</string>
     <string name="proxy_username">Proxy username</string>
