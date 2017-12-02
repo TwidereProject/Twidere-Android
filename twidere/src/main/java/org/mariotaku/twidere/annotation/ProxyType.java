@@ -17,22 +17,16 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.preference
+package org.mariotaku.twidere.annotation;
 
-import android.content.Context
-import android.support.v7.preference.EditTextPreference
-import android.support.v7.preference.PreferenceFragmentCompat
-import android.util.AttributeSet
+import android.support.annotation.StringDef;
 
-import org.mariotaku.twidere.fragment.preference.ThemedEditTextPreferenceDialogFragmentCompat
-import org.mariotaku.twidere.preference.iface.IDialogPreference
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-open class ThemedEditTextPreference(context: Context, attrs: AttributeSet? = null) :
-        EditTextPreference(context, attrs), IDialogPreference {
-
-    override fun displayDialog(fragment: PreferenceFragmentCompat) {
-        val df = ThemedEditTextPreferenceDialogFragmentCompat.newInstance(key)
-        df.setTargetFragment(fragment, 0)
-        df.show(fragment.fragmentManager, key)
-    }
+@Retention(RetentionPolicy.SOURCE)
+@StringDef({ProxyType.HTTP, ProxyType.REVERSE})
+public @interface ProxyType {
+    String HTTP = "http";
+    String REVERSE = "reverse";
 }

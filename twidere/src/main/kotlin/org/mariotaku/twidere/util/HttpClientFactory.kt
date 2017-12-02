@@ -8,15 +8,14 @@ import android.util.Log
 import okhttp3.*
 import okhttp3.internal.platform.Platform
 import org.mariotaku.kpreferences.get
-import org.mariotaku.ktextension.toIntOr
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.restfu.okhttp3.OkHttpRestClient
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.*
+import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_CONNECTION_TIMEOUT
+import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_ENABLE_PROXY
 import org.mariotaku.twidere.constant.cacheSizeLimitKey
+import org.mariotaku.twidere.constant.proxyKey
 import org.mariotaku.twidere.util.net.TLSSocketFactory
 import java.io.IOException
-import java.net.InetSocketAddress
-import java.net.Proxy
 import java.security.KeyStore
 import java.security.NoSuchAlgorithmException
 import java.util.*
@@ -26,9 +25,6 @@ import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
 
 
-/**
- * Created by mariotaku on 16/1/27.
- */
 object HttpClientFactory {
 
     fun createRestHttpClient(conf: HttpClientConfiguration, dns: Dns, connectionPool: ConnectionPool,
@@ -201,40 +197,8 @@ object HttpClientFactory {
                 builder.readTimeout(readTimeoutSecs, TimeUnit.SECONDS)
             }
             if (prefs.getBoolean(KEY_ENABLE_PROXY, false)) {
-                configProxy(builder)
+                prefs[proxyKey]?.apply(builder)
             }
-        }
-
-        private fun configProxy(builder: OkHttpClient.Builder) {
-            val proxyType = prefs.getString(KEY_PROXY_TYPE, null) ?: return
-            val proxyHost = prefs.getString(KEY_PROXY_HOST, null)?.takeIf(String::isNotEmpty) ?: return
-            val proxyPort = prefs.getString(KEY_PROXY_PORT, null).toIntOr(-1)
-            val username = prefs.getString(KEY_PROXY_USERNAME, null)?.takeIf(String::isNotEmpty)
-            val password = prefs.getString(KEY_PROXY_PASSWORD, null)?.takeIf(String::isNotEmpty)
-            when (proxyType) {
-                "http" -> {
-                    if (proxyPort !in (0..65535)) {
-                        return
-                    }
-                    val address = InetSocketAddress.createUnresolved(proxyHost, proxyPort)
-                    builder.proxy(Proxy(Proxy.Type.HTTP, address))
-
-                    builder.authenticator { _, response ->
-                        val b = response.request().newBuilder()
-                        if (response.code() == 407) {
-                            if (username != null && password != null) {
-                                val credential = Credentials.basic(username, password)
-                                b.header("Proxy-Authorization", credential)
-                            }
-                        }
-                        b.build()
-                    }
-                }
-                "reverse" -> {
-                    builder.addInterceptor(ReverseProxyInterceptor(proxyHost, username, password))
-                }
-            }
-
         }
 
     }

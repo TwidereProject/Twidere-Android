@@ -158,7 +158,7 @@ class ApplicationModule(private val application: Application) {
             cache: Cache, notifier: PreferenceChangeNotifier): RestHttpClient {
         val conf = HttpClientFactory.HttpClientConfiguration(prefs)
         val client = HttpClientFactory.createRestHttpClient(conf, dns, connectionPool, cache)
-        notifier.register(KEY_ENABLE_PROXY, KEY_PROXY_HOST, KEY_PROXY_PORT, KEY_PROXY_TYPE,
+        notifier.register(KEY_ENABLE_PROXY, KEY_PROXY_ADDRESS, KEY_PROXY_TYPE,
                 KEY_PROXY_USERNAME, KEY_PROXY_PASSWORD, KEY_CONNECTION_TIMEOUT,
                 KEY_RETRY_ON_NETWORK_ISSUE) changed@ {
             if (client !is OkHttpRestClient) return@changed

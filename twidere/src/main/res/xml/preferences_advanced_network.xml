@@ -53,17 +53,12 @@
             android:entryValues="@array/values_proxy_type"
             android:key="proxy_type"
             android:title="@string/proxy_type"/>
-        <org.mariotaku.twidere.preference.ThemedEditTextPreference
+        <org.mariotaku.twidere.preference.network.ProxyAddressPreference
             android:dependency="enable_proxy"
-            android:key="proxy_host"
+            android:inputType="textEmailAddress"
+            android:key="proxy_address"
             android:singleLine="true"
-            android:title="@string/proxy_host"/>
-        <org.mariotaku.twidere.preference.ThemedEditTextPreference
-            android:dependency="enable_proxy"
-            android:inputType="number"
-            android:key="proxy_port"
-            android:singleLine="true"
-            android:title="@string/proxy_port"/>
+            android:title="@string/preference_title_proxy_address"/>
         <org.mariotaku.twidere.preference.ThemedEditTextPreference
             android:dependency="enable_proxy"
             android:inputType="textEmailAddress"

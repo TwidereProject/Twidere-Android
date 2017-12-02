@@ -268,11 +268,11 @@
     <string name="content">Content</string>
     <string name="content_and_storage">Content &amp; Storage</string>
     <string name="content_description_accounts_selector_current">Selected account is <xliff:g id="name">%1$s</xliff:g></string>
-    <string name="content_description_item_status"><xliff:g id="name">%1$s</xliff:g> <xliff:g id="time_with_preposition">%2$s</xliff:g>: <xliff:g id="content">%3$s</xliff:g></string>
-    <string name="content_description_item_status_reply"><xliff:g id="name">%1$s</xliff:g> replying to <xliff:g id="in_reply_to">%2$s</xliff:g> <xliff:g id="time_with_preposition">%3$s</xliff:g>: <xliff:g id="content">%4$s</xliff:g></string>
-    <string name="content_description_item_status_retweet">Retweeted by <xliff:g id="retweeter">%1$s</xliff:g>. <xliff:g id="name">%2$s</xliff:g> <xliff:g id="time_with_preposition">%3$s</xliff:g>: <xliff:g id="content">%4$s</xliff:g></string>
-    <string name="content_description_sticker">Sticker</string>
+    <string name="content_description_item_status"><xliff:g id="name">%1$s</xliff:g><xliff:g id="time_with_preposition">%2$s</xliff:g>: <xliff:g id="content">%3$s</xliff:g></string>
+    <string name="content_description_item_status_reply"><xliff:g id="name">%1$s</xliff:g> replying to <xliff:g id="in_reply_to">%2$s</xliff:g><xliff:g id="time_with_preposition">%3$s</xliff:g>: <xliff:g id="content">%4$s</xliff:g></string>
+    <string name="content_description_item_status_retweet">Retweeted by <xliff:g id="retweeter">%1$s</xliff:g>. <xliff:g id="name">%2$s</xliff:g><xliff:g id="time_with_preposition">%3$s</xliff:g>: <xliff:g id="content">%4$s</xliff:g></string>
     <string name="content_description_open_user_name_profile">Open <xliff:g id="name">%1$s</xliff:g>\'s profile</string>
+    <string name="content_description_sticker">Sticker</string>
     <string name="content_to_notify">Content to notify</string>
     <string name="content_to_refresh">Content to refresh</string>
 
@@ -585,6 +585,7 @@
     <string name="label_statuses_retweets">Tweets and retweets</string>
     <string name="label_statuses_retweets_replies">Tweets, retweets and replies</string>
     <string name="label_streaming_service">Streaming service</string>
+    <string name="label_timeline_style">Timeline style</string>
     <string name="label_translate_from_language">Translate from <xliff:g id="language">%s</xliff:g></string>
     <string name="label_translated_to_language">Translated to <xliff:g id="language">%s</xliff:g></string>
     <string name="label_translation">Translation</string>
@@ -931,6 +932,7 @@
     <string name="preference_title_notification_ringtone">Ringtone</string>
     <string name="preference_title_override_language">App language</string>
     <string name="preference_title_portrait">Portrait</string>
+    <string name="preference_title_proxy_address">Proxy address</string>
     <string name="preference_title_storage">Storage</string>
     <string name="preference_title_streaming_content">Streaming content</string>
     <string name="preference_title_streaming_enabled">Enable streaming</string>
@@ -1214,6 +1216,9 @@
     <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
 
     <string name="timeline_streaming_running">Timeline streaming running</string>
+    <string name="timeline_style_gallery">Gallery</string>
+    <string name="timeline_style_normal">Normal</string>
+    <string name="timeline_style_staggered">Staggered</string>
     <string name="timeline_sync_service">Timeline sync service</string>
 
     <string name="title_about">About</string>
@@ -1380,8 +1385,4 @@
 
     <string name="users_blocked">Blocked these users.</string>
     <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>\'s lists</string>
-    <string name="label_timeline_style">Timeline style</string>
-    <string name="timeline_style_normal">Normal</string>
-    <string name="timeline_style_staggered">Staggered</string>
-    <string name="timeline_style_gallery">Gallery</string>
 </resources>

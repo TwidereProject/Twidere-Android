@@ -125,10 +125,10 @@ public interface SharedPreferenceConstants {
     @ExportablePreference(BOOLEAN)
     String KEY_ENABLE_PROXY = "enable_proxy";
     @ExportablePreference(STRING)
-    String KEY_PROXY_HOST = "proxy_host";
-    @ExportablePreference(STRING)
     String KEY_PROXY_TYPE = "proxy_type";
     @ExportablePreference(STRING)
+    String KEY_PROXY_ADDRESS = "proxy_address";
+    String KEY_PROXY_HOST = "proxy_host";
     String KEY_PROXY_PORT = "proxy_port";
     @ExportablePreference(STRING)
     String KEY_PROXY_USERNAME = "proxy_username";
