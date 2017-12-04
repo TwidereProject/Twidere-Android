@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.adapter
 
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.RequestManager
@@ -27,6 +28,7 @@ import org.mariotaku.ktextension.contains
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IUserListsAdapter
 import org.mariotaku.twidere.annotation.LoadMorePosition
+import org.mariotaku.twidere.extension.adapter.findItemPosition
 import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.view.holder.SimpleUserListViewHolder
@@ -68,8 +70,7 @@ class SimpleParcelableUserListsAdapter(
                 return view
             }
             1 -> {
-                val view = createViewFromResource(position, convertView, parent, R.layout.list_item_load_indicator)
-                return view
+                return convertView ?: LayoutInflater.from(context).inflate(R.layout.list_item_load_indicator, parent, false)
             }
         }
         throw UnsupportedOperationException()

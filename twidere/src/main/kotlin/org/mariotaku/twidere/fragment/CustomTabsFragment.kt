@@ -56,7 +56,6 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.SettingsActivity
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter
-import org.mariotaku.twidere.adapter.ArrayAdapter
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.TabAccountFlags
 import org.mariotaku.twidere.extension.applyTheme

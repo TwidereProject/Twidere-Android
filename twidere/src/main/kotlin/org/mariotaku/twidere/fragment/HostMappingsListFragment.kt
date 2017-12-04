@@ -29,12 +29,9 @@ import android.support.v7.app.AlertDialog
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
+import android.widget.*
 import android.widget.AbsListView.MultiChoiceModeListener
-import android.widget.AdapterView
-import android.widget.CompoundButton
 import android.widget.CompoundButton.OnCheckedChangeListener
-import android.widget.ListView
-import android.widget.TextView
 import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.dialog_add_host_mapping.*
 import kotlinx.android.synthetic.main.dialog_user_list_detail_editor.*
@@ -43,7 +40,6 @@ import org.mariotaku.ktextension.empty
 import org.mariotaku.ktextension.string
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.HOST_MAPPING_PREFERENCES_NAME
-import org.mariotaku.twidere.adapter.ArrayAdapter
 import org.mariotaku.twidere.extension.applyOnShow
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.positive

@@ -35,9 +35,15 @@ class AccountsSpinnerAdapter(
         itemViewResource: Int = R.layout.list_item_simple_user,
         accounts: Collection<AccountDetails>? = null,
         requestManager: RequestManager
-) : BaseArrayAdapter<AccountDetails>(context, itemViewResource, accounts, requestManager) {
+) : BaseArrayAdapter<AccountDetails>(context, itemViewResource, requestManager=requestManager) {
 
     private var dummyItemText: String? = null
+
+    init {
+        if (accounts != null) {
+            addAll(accounts)
+        }
+    }
 
     override fun getItemId(position: Int): Long {
         return getItem(position).hashCode().toLong()

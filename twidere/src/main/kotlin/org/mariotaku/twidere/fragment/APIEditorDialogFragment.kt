@@ -15,8 +15,6 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
 import org.mariotaku.ktextension.string
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.adapter.ArrayAdapter
-import org.mariotaku.twidere.adapter.BaseArrayAdapter
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_API_CONFIG
 import org.mariotaku.twidere.constant.defaultAPIConfigKey
@@ -188,8 +186,7 @@ class APIEditorDialogFragment : BaseDialogFragment() {
 
     private class AccountTypeSpinnerAdapter(
             fragment: APIEditorDialogFragment
-    ) : BaseArrayAdapter<String>(fragment.context!!, R.layout.support_simple_spinner_dropdown_item,
-            requestManager = fragment.requestManager) {
+    ) : ArrayAdapter<String>(fragment.context!!, R.layout.support_simple_spinner_dropdown_item) {
         init {
             add(AccountType.TWITTER)
             add(AccountType.FANFOU)

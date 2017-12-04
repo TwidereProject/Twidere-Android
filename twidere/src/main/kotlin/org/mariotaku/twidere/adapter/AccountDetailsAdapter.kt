@@ -27,6 +27,7 @@ import android.widget.CompoundButton
 import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.dagger.component.GeneralComponent
+import org.mariotaku.twidere.extension.adapter.removeAt
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey

@@ -35,12 +35,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.adapter.ArrayAdapter;
 import org.mariotaku.twidere.extension.DialogExtensionsKt;
 import org.mariotaku.twidere.fragment.iface.ISupportDialogFragmentCallback;
 import org.mariotaku.twidere.util.DataImportExportUtils;
@@ -197,6 +197,7 @@ public final class DataExportImportTypeSelectorDialogFragment extends BaseDialog
             return false;
         }
 
+        @NonNull
         @Override
         public View getView(final int position, @Nullable final View convertView, final ViewGroup parent) {
             final View view = super.getView(position, convertView, parent);

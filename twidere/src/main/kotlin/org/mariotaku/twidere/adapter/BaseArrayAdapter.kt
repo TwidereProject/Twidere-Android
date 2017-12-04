@@ -22,6 +22,7 @@ package org.mariotaku.twidere.adapter
 import android.content.Context
 import android.content.SharedPreferences
 import android.support.v4.text.BidiFormatter
+import android.widget.ArrayAdapter
 import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
@@ -39,9 +40,8 @@ import javax.inject.Inject
 open class BaseArrayAdapter<T>(
         context: Context,
         layoutRes: Int,
-        collection: Collection<T>? = null,
         override val requestManager: RequestManager
-) : ArrayAdapter<T>(context, layoutRes, collection), IContentAdapter, ILoadMoreSupportAdapter,
+) : ArrayAdapter<T>(context, layoutRes), IContentAdapter, ILoadMoreSupportAdapter,
         IItemCountsAdapter {
     val linkify: TwidereLinkify
 
@@ -64,7 +64,6 @@ open class BaseArrayAdapter<T>(
     val nameFirst: Boolean
 
     override val itemCounts: ItemCounts = ItemCounts(1)
-
 
     override var loadMoreSupportedPosition: Int = 0
         set(@LoadMorePosition value) {

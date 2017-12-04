@@ -37,6 +37,7 @@ import org.mariotaku.twidere.TwidereConstants.REQUEST_SELECT_USER
 import org.mariotaku.twidere.adapter.SimpleParcelableUserListsAdapter
 import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.extension.adapter.all
 import org.mariotaku.twidere.loader.iface.IPaginationLoader
 import org.mariotaku.twidere.loader.userlists.UserListOwnershipsLoader
 import org.mariotaku.twidere.model.ParcelableUser

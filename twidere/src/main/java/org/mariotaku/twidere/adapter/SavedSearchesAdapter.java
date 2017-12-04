@@ -30,9 +30,6 @@ import org.mariotaku.microblog.library.twitter.model.ResponseList;
 import org.mariotaku.microblog.library.twitter.model.SavedSearch;
 import org.mariotaku.twidere.model.UserKey;
 
-/**
- * Created by mariotaku on 15/4/29.
- */
 public class SavedSearchesAdapter extends BaseAdapter {
 
     private ResponseList<SavedSearch> mData;
