@@ -19,33 +19,29 @@
 
 package org.mariotaku.twidere.data
 
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.Observer
+import android.arch.lifecycle.LiveData
 import android.support.annotation.WorkerThread
-import org.mariotaku.twidere.model.SingleResponse
+import nl.komponents.kovenant.task
+import nl.komponents.kovenant.ui.failUi
+import nl.komponents.kovenant.ui.successUi
 
-abstract class ExceptionComputableLiveData<T>(loadOnInstantiate: Boolean) : ComputableLiveData<SingleResponse<T>>(loadOnInstantiate) {
+abstract class ComputableLiveData<T>(loadOnInstantiate: Boolean) : LiveData<T>() {
 
-    final override fun compute(): SingleResponse<T> {
-        return try {
-            SingleResponse(data = computeChecked())
-        } catch (e: Exception) {
-            SingleResponse(exception = e)
+    init {
+        if (loadOnInstantiate) {
+            load()
+        }
+    }
+
+    fun load() {
+        task(body = this::compute).successUi {
+            postValue(it)
+        }.failUi {
+            postValue(null)
         }
     }
 
     @WorkerThread
-    @Throws(Exception::class)
-    protected abstract fun computeChecked(): T
-
-    fun observe(owner: LifecycleOwner, success: (T) -> Unit, fail: (Exception) -> Unit = { }) {
-        observe(owner, Observer { response ->
-            if (response?.data != null) {
-                success(response.data)
-            } else {
-                fail(response?.exception!!)
-            }
-        })
-    }
+    protected abstract fun compute(): T
 
 }

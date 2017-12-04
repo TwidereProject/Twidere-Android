@@ -19,9 +19,12 @@
 
 package org.mariotaku.twidere.adapter
 
+import android.arch.paging.PagedList
+import android.arch.paging.PagedListAdapterHelper
 import android.content.Context
 import android.content.res.ColorStateList
 import android.support.v4.graphics.ColorUtils
+import android.support.v7.recyclerview.extensions.ListAdapterConfig
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -31,8 +34,8 @@ import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.contains
-import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.adapter.callback.ItemCountsAdapterListUpdateCallback
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.annotation.PreviewStyle
@@ -44,10 +47,10 @@ import org.mariotaku.twidere.extension.isSameDay
 import org.mariotaku.twidere.extension.model.timestamp
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableMessage.MessageType
-import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.util.DirectMessageOnLinkClickHandler
 import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.TwidereLinkify
+import org.mariotaku.twidere.util.paging.DiffCallbacks
 import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
 import org.mariotaku.twidere.view.holder.message.AbsMessageViewHolder
@@ -83,21 +86,40 @@ class MessagesConversationAdapter(
 
     val messageRange: IntRange
         get() {
-            return itemCounts.getItemStartPosition(ITEM_START_MESSAGE) until itemCounts[ITEM_START_MESSAGE]
+            return itemCounts.getItemStartPosition(ITEM_INDEX_MESSAGE) until itemCounts[ITEM_INDEX_MESSAGE]
         }
-    var messages: List<ParcelableMessage>? = null
-        private set
+
     var conversation: ParcelableMessageConversation? = null
-        private set
+        set(value) {
+            field = value
+            updateItemCounts()
+            notifyDataSetChanged()
+        }
+
+    var messages: PagedList<ParcelableMessage>?
+        get() = pagedMessagesHelper.currentList
+        set(value) {
+            pagedMessagesHelper.setList(value)
+            if (value == null) {
+                itemCounts[0] = 0
+            }
+        }
+
     var listener: Listener? = null
 
     var displaySenderProfile: Boolean = false
-    val bubbleColorOutgoing: ColorStateList? = ThemeUtils.getColorStateListFromAttribute(context, R.attr.messageBubbleColor)
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
+    val bubbleColorOutgoing: ColorStateList? = ThemeUtils.getColorStateListFromAttribute(context, R.attr.messageBubbleColor)
     val bubbleColorIncoming: ColorStateList? = context.getIncomingMessageColor()
 
+    private var pagedMessagesHelper = PagedListAdapterHelper<ParcelableMessage>(ItemCountsAdapterListUpdateCallback(this, 0),
+            ListAdapterConfig.Builder<ParcelableMessage>().setDiffCallback(DiffCallbacks.message).build())
+
     private val calendars = Pair(Calendar.getInstance(), Calendar.getInstance())
-    private val reuseMessage = ParcelableMessage()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -132,12 +154,12 @@ class MessagesConversationAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
             ITEM_TYPE_TEXT_MESSAGE, ITEM_TYPE_STICKER_MESSAGE, ITEM_TYPE_NOTICE_MESSAGE -> {
-                val message = getMessage(position, true)
+                val message = getMessage(position)
                 // Display date for oldest item
                 var showDate = true
                 // ... or if current message is > 1 day newer than previous one
-                if (position < itemCounts.getItemStartPosition(ITEM_START_MESSAGE)
-                        + itemCounts[ITEM_START_MESSAGE] - 1) {
+                if (position < itemCounts.getItemStartPosition(ITEM_INDEX_MESSAGE)
+                        + itemCounts[ITEM_INDEX_MESSAGE] - 1) {
                     calendars.first.timeInMillis = getMessageTimestamp(position + 1)
                     calendars.second.timeInMillis = message.timestamp
                     showDate = !calendars.first.isSameDay(calendars.second)
@@ -154,59 +176,38 @@ class MessagesConversationAdapter(
 
     override fun getItemViewType(position: Int): Int {
         val countIndex = itemCounts.getItemCountIndex(position)
-        when (countIndex) {
-            ITEM_START_MESSAGE -> when (getMessage(position, reuse = true).message_type) {
+        return when (countIndex) {
+            ITEM_INDEX_MESSAGE -> when (getMessage(position).message_type) {
                 MessageType.STICKER -> {
-                    return ITEM_TYPE_STICKER_MESSAGE
+                    ITEM_TYPE_STICKER_MESSAGE
                 }
                 MessageType.CONVERSATION_CREATE, MessageType.JOIN_CONVERSATION,
                 MessageType.PARTICIPANTS_LEAVE, MessageType.PARTICIPANTS_JOIN,
                 MessageType.CONVERSATION_NAME_UPDATE, MessageType.CONVERSATION_AVATAR_UPDATE -> {
-                    return ITEM_TYPE_NOTICE_MESSAGE
+                    ITEM_TYPE_NOTICE_MESSAGE
                 }
-                else -> return ITEM_TYPE_TEXT_MESSAGE
+                else -> ITEM_TYPE_TEXT_MESSAGE
             }
-            ITEM_START_LOAD_OLDER -> return ITEM_LOAD_OLDER_INDICATOR
+            ITEM_INDEX_LOAD_OLDER -> ITEM_LOAD_OLDER_INDICATOR
             else -> throw UnsupportedCountIndexException(countIndex, position)
         }
     }
 
     override fun updateItemCounts() {
-        itemCounts[ITEM_START_MESSAGE] = messages?.size ?: 0
-        itemCounts[ITEM_START_LOAD_OLDER] = if (LoadMorePosition.START in loadMoreIndicatorPosition) 1 else 0
+        itemCounts[ITEM_INDEX_LOAD_OLDER] = if (LoadMorePosition.START in loadMoreIndicatorPosition) 1 else 0
     }
 
-    fun getMessage(position: Int, reuse: Boolean = false): ParcelableMessage {
-        val messages = this.messages!!
-        val dataPosition = position - itemCounts.getItemStartPosition(ITEM_START_MESSAGE)
-        if (reuse && messages is ObjectCursor) {
-            return messages.setInto(dataPosition, reuseMessage)
-        }
-        return messages[dataPosition]
-    }
-
-    private fun getMessageTimestamp(position: Int): Long {
-        val messages = this.messages!!
-        if (messages is ObjectCursor) {
-            val cursor = messages.cursor
-            cursor.moveToPosition(position)
-            val indices = messages.indices
-            val timestamp = cursor.getLong(indices[Messages.MESSAGE_TIMESTAMP])
-            if (timestamp > 0) return timestamp
-            return cursor.getLong(indices[Messages.LOCAL_TIMESTAMP])
-        }
-        return getMessage(position, false).timestamp
+    fun getMessage(position: Int): ParcelableMessage {
+        val dataPosition = position - itemCounts.getItemStartPosition(ITEM_INDEX_MESSAGE)
+        return pagedMessagesHelper.getItem(dataPosition)!!
     }
 
     fun findUser(key: UserKey): ParcelableUser? {
         return conversation?.participants?.firstOrNull { it.key == key }
     }
 
-    fun setData(conversation: ParcelableMessageConversation?, messages: List<ParcelableMessage>?) {
-        this.conversation = conversation
-        this.messages = messages
-        updateItemCounts()
-        notifyDataSetChanged()
+    private fun getMessageTimestamp(position: Int): Long {
+        return getMessage(position).timestamp
     }
 
     interface Listener {
@@ -218,8 +219,8 @@ class MessagesConversationAdapter(
     }
 
     companion object {
-        private const val ITEM_START_MESSAGE = 0
-        private const val ITEM_START_LOAD_OLDER = 1
+        private const val ITEM_INDEX_MESSAGE = 0
+        private const val ITEM_INDEX_LOAD_OLDER = 1
 
         private const val ITEM_TYPE_TEXT_MESSAGE = 1
         private const val ITEM_TYPE_STICKER_MESSAGE = 2

@@ -11,10 +11,6 @@ import org.mariotaku.twidere.model.message.MessageExtras
 import org.mariotaku.twidere.model.message.UserArrayExtras
 import org.mariotaku.twidere.util.UserColorNameManager
 
-/**
- * Created by mariotaku on 2017/2/9.
- */
-
 val ParcelableMessage.timestamp: Long
     get() = if (message_timestamp > 0) message_timestamp else local_timestamp
 

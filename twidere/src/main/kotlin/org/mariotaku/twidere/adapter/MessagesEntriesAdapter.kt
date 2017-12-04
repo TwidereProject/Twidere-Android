@@ -56,7 +56,7 @@ class MessagesEntriesAdapter(
     var listener: MessageConversationClickListener? = null
 
     private var pagedEntriesHelper = PagedListAdapterHelper<ParcelableMessageConversation>(ItemCountsAdapterListUpdateCallback(this, 0),
-            ListAdapterConfig.Builder<ParcelableMessageConversation>().setDiffCallback(DiffCallbacks.messageEntry).build())
+            ListAdapterConfig.Builder<ParcelableMessageConversation>().setDiffCallback(DiffCallbacks.conversation).build())
 
     override fun getItemCount(): Int {
         return itemCounts.itemCount
@@ -65,7 +65,7 @@ class MessagesEntriesAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
             ITEM_TYPE_MESSAGE_ENTRY -> {
-                val conversation = getConversation(position, reuse = true)
+                val conversation = getConversation(position)
                 (holder as MessageEntryViewHolder).display(conversation)
             }
         }
@@ -100,7 +100,7 @@ class MessagesEntriesAdapter(
         itemCounts[1] = if (LoadMorePosition.END in loadMoreIndicatorPosition) 1 else 0
     }
 
-    fun getConversation(position: Int, reuse: Boolean = false): ParcelableMessageConversation {
+    fun getConversation(position: Int): ParcelableMessageConversation {
         val dataPosition = position - itemCounts.getItemStartPosition(0)
         return pagedEntriesHelper.getItem(dataPosition)!!
     }

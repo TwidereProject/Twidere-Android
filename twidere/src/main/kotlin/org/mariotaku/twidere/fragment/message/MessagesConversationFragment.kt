@@ -21,6 +21,9 @@ package org.mariotaku.twidere.fragment.message
 
 import android.accounts.AccountManager
 import android.app.Activity
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Observer
+import android.arch.paging.PagedList
 import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
@@ -28,9 +31,7 @@ import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
-import android.support.v4.app.LoaderManager
 import android.support.v4.content.ContextCompat
-import android.support.v4.content.Loader
 import android.support.v4.widget.TextViewCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.FixedLinearLayoutManager
@@ -68,12 +69,13 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_MEDIA
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
+import org.mariotaku.twidere.data.ComputableLiveData
+import org.mariotaku.twidere.data.CursorObjectLivePagedListProvider
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.fragment.AbsContentListRecyclerViewFragment
 import org.mariotaku.twidere.fragment.EditAltTextDialogFragment
 import org.mariotaku.twidere.fragment.iface.IToolBarSupportFragment
-import org.mariotaku.twidere.loader.ObjectCursorLoader
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
 import org.mariotaku.twidere.model.event.GetMessagesTaskEvent
@@ -85,24 +87,9 @@ import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.view.ExtendedRecyclerView
 import org.mariotaku.twidere.view.holder.compose.MediaPreviewViewHolder
-import java.util.concurrent.atomic.AtomicReference
 
 class MessagesConversationFragment : AbsContentListRecyclerViewFragment<MessagesConversationAdapter>(),
-        IToolBarSupportFragment, LoaderManager.LoaderCallbacks<List<ParcelableMessage>?>,
-        EditAltTextDialogFragment.EditAltTextCallback {
-    private lateinit var mediaPreviewAdapter: MediaPreviewAdapter
-
-    private inline val accountKey: UserKey get() = arguments!!.accountKey!!
-
-    private val conversationId: String get() = arguments!!.conversationId!!
-
-    private val account: AccountDetails? by lazy {
-        AccountManager.get(context).getDetails(accountKey, true)
-    }
-
-    private val loadMoreTaskTag: String
-        get() = "loadMore:$accountKey:$conversationId"
-
+        IToolBarSupportFragment, EditAltTextDialogFragment.EditAltTextCallback {
     // Layout manager reversed, so treat start as end
     override val reachingEnd: Boolean
         get() = super.reachingStart
@@ -118,6 +105,22 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
 
     override val fragmentToolbar: Toolbar
         get() = conversationContainer.toolbar
+
+    private lateinit var mediaPreviewAdapter: MediaPreviewAdapter
+
+    private var liveMessages: LiveData<PagedList<ParcelableMessage>?>? = null
+    private var liveConversation: ComputableLiveData<ParcelableMessageConversation?>? = null
+
+    private inline val accountKey: UserKey get() = arguments!!.accountKey!!
+
+    private val conversationId: String get() = arguments!!.conversationId!!
+
+    private val account: AccountDetails? by lazy {
+        AccountManager.get(context).getDetails(accountKey, true)
+    }
+
+    private val loadMoreTaskTag: String
+        get() = "loadMore:$accountKey:$conversationId"
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -200,7 +203,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
 
         updateMediaPreview()
 
-        loaderManager.initLoader(0, null, this)
+        setupLiveData()
         showProgress()
     }
 
@@ -267,32 +270,6 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         when (item.itemId) {
         }
         return false
-    }
-
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableMessage>?> {
-        return ConversationLoader(context!!, accountKey, conversationId)
-    }
-
-    override fun onLoadFinished(loader: Loader<List<ParcelableMessage>?>, data: List<ParcelableMessage>?) {
-        val conversationLoader = loader as? ConversationLoader
-        val conversation = conversationLoader?.conversation
-        adapter.setData(conversation, data)
-        adapter.displaySenderProfile = conversation?.conversation_type == ConversationType.GROUP
-        if (conversation?.conversation_extras_type == ParcelableMessageConversation.ExtrasType.TWITTER_OFFICIAL) {
-            adapter.loadMoreSupportedPosition = LoadMorePosition.START
-        } else {
-            adapter.loadMoreSupportedPosition = LoadMorePosition.NONE
-        }
-        showContent()
-
-        if (conversation != null && !conversation.is_temp) {
-            markRead()
-        }
-        updateConversationStatus()
-    }
-
-    override fun onLoaderReset(loader: Loader<List<ParcelableMessage>?>) {
-        adapter.setData(null, null)
     }
 
     override fun onCreateAdapter(context: Context, requestManager: RequestManager): MessagesConversationAdapter {
@@ -399,7 +376,61 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         if (activity is LinkHandlerActivity) {
             activity.intent = IntentUtils.messageConversation(accountKey, newConversationId)
         }
-        loaderManager.restartLoader(0, null, this)
+        setupLiveData()
+    }
+
+    private fun setupLiveData() {
+        liveMessages = createLiveData()
+        liveConversation = object : ComputableLiveData<ParcelableMessageConversation?>(true) {
+            override fun compute(): ParcelableMessageConversation? {
+                return context?.contentResolver?.findMessageConversation(accountKey, conversationId)
+            }
+        }
+        liveMessages?.observe(this, Observer { onDataLoaded(it) })
+        liveConversation?.observe(this, Observer { onConversationLoaded(it) })
+    }
+
+    private fun createLiveData(): LiveData<PagedList<ParcelableMessage>?> {
+        val selection = Expression.and(Expression.equalsArgs(Messages.ACCOUNT_KEY),
+                Expression.equalsArgs(Messages.CONVERSATION_ID)).sql
+        val selectionArgs = arrayOf(accountKey.toString(), conversationId)
+        val sortOrder = OrderBy(Messages.SORT_ID, false).sql
+        val provider = CursorObjectLivePagedListProvider(context!!.contentResolver,
+                Messages.CONTENT_URI, Messages.COLUMNS, selection, selectionArgs, sortOrder,
+                ParcelableMessage::class.java)
+        return provider.create(null, PagedList.Config.Builder()
+                .setPageSize(50).setEnablePlaceholders(false).build())
+    }
+
+    private fun onDataLoaded(messages: PagedList<ParcelableMessage>?) {
+        adapter.messages = messages
+
+        showProgressOrContent()
+    }
+
+    private fun onConversationLoaded(conversation: ParcelableMessageConversation?) {
+        adapter.conversation = conversation
+        adapter.displaySenderProfile = conversation?.conversation_type == ConversationType.GROUP
+        if (conversation?.conversation_extras_type == ParcelableMessageConversation.ExtrasType.TWITTER_OFFICIAL) {
+            adapter.loadMoreSupportedPosition = LoadMorePosition.START
+        } else {
+            adapter.loadMoreSupportedPosition = LoadMorePosition.NONE
+        }
+
+        if (conversation != null && !conversation.is_temp) {
+            markRead()
+        }
+        updateConversationStatus()
+
+        showProgressOrContent()
+    }
+
+    private fun showProgressOrContent() {
+        if (adapter.messages != null && adapter.conversation != null) {
+            showContent()
+        } else {
+            showProgress()
+        }
     }
 
     private fun performSendMessage() {
@@ -561,31 +592,6 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         }.alwaysUi {
             weakThis?.setProgressVisible(false)
             weakThis?.removeMedia(media.toList())
-        }
-    }
-
-    internal class ConversationLoader(
-            context: Context,
-            val accountKey: UserKey,
-            val conversationId: String
-    ) : ObjectCursorLoader<ParcelableMessage>(context, ParcelableMessage::class.java) {
-
-        private val atomicConversation = AtomicReference<ParcelableMessageConversation?>()
-        val conversation: ParcelableMessageConversation? get() = atomicConversation.get()
-
-        init {
-            uri = Messages.CONTENT_URI
-            projection = Messages.COLUMNS
-            selection = Expression.and(Expression.equalsArgs(Messages.ACCOUNT_KEY),
-                    Expression.equalsArgs(Messages.CONVERSATION_ID)).sql
-            selectionArgs = arrayOf(accountKey.toString(), conversationId)
-            sortOrder = OrderBy(Messages.SORT_ID, false).sql
-            isUseCache = false
-        }
-
-        override fun onLoadInBackground(): List<ParcelableMessage>? {
-            atomicConversation.set(DataStoreUtils.findMessageConversation(context, accountKey, conversationId))
-            return super.onLoadInBackground()
         }
     }
 

@@ -5,12 +5,14 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
+import android.support.annotation.WorkerThread
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.toStringArray
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.sqliteqb.library.*
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.twidere.annotation.FilterScope
+import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.extension.queryReference
 import org.mariotaku.twidere.extension.rawQueryReference
 import org.mariotaku.twidere.extension.update
@@ -231,3 +233,13 @@ fun ContentResolver.getFilteredKeywords(@FilterScope scope: Int): Array<String> 
         }
     } ?: emptyArray()
 }
+
+@WorkerThread
+fun ContentResolver.findMessageConversation(accountKey: UserKey, conversationId: String): ParcelableMessageConversation? {
+    val where = Expression.and(Expression.equalsArgs(Conversations.ACCOUNT_KEY),
+            Expression.equalsArgs(Conversations.CONVERSATION_ID)).sql
+    val whereArgs = arrayOf(accountKey.toString(), conversationId)
+    return queryOne(Conversations.CONTENT_URI, Conversations.COLUMNS, where, whereArgs,
+            null, ParcelableMessageConversation::class.java)
+}
+

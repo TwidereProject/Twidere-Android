@@ -21,6 +21,7 @@ package org.mariotaku.twidere.util.paging
 
 import android.support.v7.recyclerview.extensions.DiffCallback
 import org.mariotaku.twidere.model.ParcelableActivity
+import org.mariotaku.twidere.model.ParcelableMessage
 import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.ParcelableStatus
 
@@ -48,12 +49,24 @@ object DiffCallbacks {
 
     }
 
-    val messageEntry: DiffCallback<ParcelableMessageConversation> = object : DiffCallback<ParcelableMessageConversation>() {
+    val conversation: DiffCallback<ParcelableMessageConversation> = object : DiffCallback<ParcelableMessageConversation>() {
         override fun areContentsTheSame(oldItem: ParcelableMessageConversation, newItem: ParcelableMessageConversation): Boolean {
             return oldItem == newItem
         }
 
         override fun areItemsTheSame(oldItem: ParcelableMessageConversation, newItem: ParcelableMessageConversation): Boolean {
+            if (oldItem._id > 0 && newItem._id > 0) return oldItem._id == newItem._id
+            return oldItem == newItem
+        }
+
+    }
+
+    val message: DiffCallback<ParcelableMessage> = object : DiffCallback<ParcelableMessage>() {
+        override fun areContentsTheSame(oldItem: ParcelableMessage, newItem: ParcelableMessage): Boolean {
+            return oldItem == newItem
+        }
+
+        override fun areItemsTheSame(oldItem: ParcelableMessage, newItem: ParcelableMessage): Boolean {
             if (oldItem._id > 0 && newItem._id > 0) return oldItem._id == newItem._id
             return oldItem == newItem
         }

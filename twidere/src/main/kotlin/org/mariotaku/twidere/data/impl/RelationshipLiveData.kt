@@ -41,21 +41,17 @@ import org.mariotaku.twidere.provider.TwidereDataStore
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.Utils
 
-/**
- * Created by mariotaku on 2017/11/26.
- */
-
 class RelationshipLiveData(
         private val context: Context,
         private val accountKey: UserKey?
-) : ExceptionComputableLiveData<ParcelableRelationship>() {
+) : ExceptionComputableLiveData<ParcelableRelationship>(false) {
 
     var user: ParcelableUser? = null
 
     val relationship: ParcelableRelationship? get() = value?.data
 
     @Throws(Exception::class)
-    override fun compute(): ParcelableRelationship {
+    override fun computeChecked(): ParcelableRelationship {
         val user = this.user ?: throw RequiredFieldNotFoundException("user")
         if (accountKey == null) throw RequiredFieldNotFoundException("account_key", "user")
         val userKey = user.key
