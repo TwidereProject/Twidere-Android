@@ -30,6 +30,7 @@ import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
+import org.mariotaku.twidere.extension.getDetails
 import org.mariotaku.twidere.extension.model.api.mastodon.getLinkPagination
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
@@ -39,7 +40,6 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.timeline.TimelineFilter
-import org.mariotaku.twidere.model.util.AccountUtils
 
 class StatusesLivePagedListProvider(
         private val context: Context,
@@ -99,8 +99,7 @@ class StatusesLivePagedListProvider(
 
         private fun load(paging: Paging): List<ParcelableStatus>? {
             val am = AccountManager.get(context)
-            val account = AccountUtils.getAccountDetails(am, accountKey, true) ?:
-                    return emptyList()
+            val account = am.getDetails(accountKey, true) ?: return emptyList()
             try {
                 when (account.type) {
                     AccountType.TWITTER -> {

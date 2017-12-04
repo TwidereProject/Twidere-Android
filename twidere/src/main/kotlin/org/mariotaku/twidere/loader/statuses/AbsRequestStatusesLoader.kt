@@ -30,7 +30,9 @@ import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.dagger.component.GeneralComponent
+import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.extension.get
+import org.mariotaku.twidere.extension.getDetailsOrThrow
 import org.mariotaku.twidere.extension.model.api.applyLoadLimit
 import org.mariotaku.twidere.loader.iface.IPaginationLoader
 import org.mariotaku.twidere.model.AccountDetails
@@ -41,7 +43,6 @@ import org.mariotaku.twidere.model.pagination.PaginatedArrayList
 import org.mariotaku.twidere.model.pagination.PaginatedList
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.task.statuses.GetStatusesTask
 import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.UserColorNameManager
@@ -90,9 +91,6 @@ abstract class AbsRequestStatusesLoader(
     override final fun loadInBackground(): ListResponse<ParcelableStatus> {
         val context = context
         val comparator = this.comparator
-        val accountKey = accountKey ?: return ListResponse.getListInstance<ParcelableStatus>(MicroBlogException("No Account"))
-        val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?:
-                return ListResponse.getListInstance<ParcelableStatus>(MicroBlogException("No Account"))
 
         if (!fromUser) {
             data.forEach { it.is_filtered = shouldFilterStatus(it) }
@@ -101,10 +99,12 @@ abstract class AbsRequestStatusesLoader(
         val noItemsBefore = data.isEmpty()
         val loadItemLimit = preferences[loadItemLimitKey]
         val statuses = try {
+            val accountKey = accountKey ?: throw AccountNotFoundException()
+            val account = AccountManager.get(context).getDetailsOrThrow(accountKey, true)
             val paging = Paging().apply {
-                processPaging(this, details, loadItemLimit)
+                processPaging(this, account, loadItemLimit)
             }
-            getStatuses(details, paging)
+            getStatuses(account, paging)
         } catch (e: MicroBlogException) {
             // mHandler.post(new ShowErrorRunnable(e));
             exception = e

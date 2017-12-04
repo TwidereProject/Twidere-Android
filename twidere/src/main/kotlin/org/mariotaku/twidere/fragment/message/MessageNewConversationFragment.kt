@@ -43,11 +43,8 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.SelectableUsersAdapter
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.nameFirstKey
-import org.mariotaku.twidere.extension.accountKey
-import org.mariotaku.twidere.extension.insert
-import org.mariotaku.twidere.extension.linkHandlerTitle
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.isOfficial
-import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.extension.text.appendCompat
 import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.loader.CacheUserSearchLoader
@@ -55,7 +52,6 @@ import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.twitter.message.SendMessageTask
 import org.mariotaku.twidere.text.MarkForDeleteSpan
@@ -63,15 +59,10 @@ import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.view.SimpleTextWatcher
 import java.lang.ref.WeakReference
 
-/**
- * Created by mariotaku on 2017/2/15.
- */
 class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<ParcelableUser>?> {
 
     private val accountKey by lazy { arguments!!.accountKey!! }
-    private val account by lazy {
-        AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)
-    }
+    private val account by lazy { AccountManager.get(context).getDetails(accountKey, true) }
 
     private var selectedRecipients: List<ParcelableUser>
         get() {

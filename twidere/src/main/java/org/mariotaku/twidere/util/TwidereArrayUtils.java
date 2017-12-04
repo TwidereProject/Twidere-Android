@@ -48,16 +48,7 @@ public final class TwidereArrayUtils {
         return true;
     }
 
-
-    public static int arraysLength(@NonNull final Object... arrays) {
-        int length = 0;
-        for (Object array : arrays) {
-            if (array == null) continue;
-            length += Array.getLength(array);
-        }
-        return length;
-    }
-
+    @Deprecated
     public static void mergeArray(final Object dest, @NonNull final Object... arrays) {
         for (int i = 0, j = arrays.length, k = 0; i < j; i++) {
             final Object array = arrays[i];
@@ -88,7 +79,8 @@ public final class TwidereArrayUtils {
         if (array == null) return null;
         final String[] stringArray = new String[end - start];
         for (int i = start; i < end; i++) {
-            stringArray[i - start] = ParseUtils.parseString(Array.get(array, i));
+            Object item = Array.get(array, i);
+            stringArray[i - start] = item != null ? item.toString() : null;
         }
         return stringArray;
     }

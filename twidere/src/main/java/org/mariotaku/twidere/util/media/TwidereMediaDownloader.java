@@ -17,13 +17,13 @@ import org.mariotaku.restfu.http.HttpResponse;
 import org.mariotaku.restfu.http.MultiValueMap;
 import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.restfu.http.mime.Body;
+import org.mariotaku.twidere.extension.AccountManagerExtensionsKt;
 import org.mariotaku.twidere.extension.model.AccountExtensionsKt;
 import org.mariotaku.twidere.extension.model.CredentialsExtensionsKt;
 import org.mariotaku.twidere.model.CacheMetadata;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.account.cred.Credentials;
-import org.mariotaku.twidere.model.util.AccountUtils;
 import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.UserAgentUtils;
@@ -92,7 +92,7 @@ public class TwidereMediaDownloader implements MediaDownloader {
             UserKey accountKey = ((MediaExtra) extra).getAccountKey();
             if (accountKey != null) {
                 final AccountManager am = AccountManager.get(context);
-                Account account = AccountUtils.findByAccountKey(am, accountKey);
+                Account account = AccountManagerExtensionsKt.findAccount(am, accountKey);
                 if (account != null) {
                     credentials = AccountExtensionsKt.getCredentials(account, am);
                 }

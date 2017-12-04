@@ -57,6 +57,7 @@ import org.mariotaku.twidere.annotation.CacheFileType
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_POSITION
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
+import org.mariotaku.twidere.extension.getDetailsOrThrow
 import org.mariotaku.twidere.extension.model.authorizationHeader
 import org.mariotaku.twidere.extension.model.bannerExtras
 import org.mariotaku.twidere.extension.model.getBestVideoUrlAndType
@@ -72,7 +73,6 @@ import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.isMutedB
 import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.media
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableMedia
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.CacheProvider
 import org.mariotaku.twidere.task.SaveFileTask
 import org.mariotaku.twidere.util.media.TwidereMediaDownloader
@@ -109,7 +109,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
     private var playerHasError: Boolean = false
 
     private val account by lazy {
-        AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)
+        AccountManager.get(context).getDetailsOrThrow(accountKey, true)
     }
 
     private val playerListener = object : Player.EventListener {

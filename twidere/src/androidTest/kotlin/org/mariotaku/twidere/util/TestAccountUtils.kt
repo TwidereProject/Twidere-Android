@@ -26,12 +26,12 @@ import com.bluelinelabs.logansquare.LoganSquare
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.all
 import org.mariotaku.ktextension.deadline
+import org.mariotaku.twidere.extension.getAllDetails
 import org.mariotaku.twidere.extension.isAccountValid
 import org.mariotaku.twidere.extension.model.updateDetails
 import org.mariotaku.twidere.extension.ownedAccounts
 import org.mariotaku.twidere.extension.removeAccount
 import org.mariotaku.twidere.model.AccountDetails
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.test.R
 import java.io.InputStream
 import java.lang.Exception
@@ -62,7 +62,7 @@ object TestAccountUtils {
             return@mapNotNull am.removeAccount(account).deadline(1, TimeUnit.SECONDS)
         }, cancelOthersOnError = false).get()
         DebugLog.d(msg = "Removed accounts: $result")
-        val existingAccounts = AccountUtils.getAllAccountDetails(am, false)
+        val existingAccounts = am.getAllDetails(false)
         testAccounts.forEach { details ->
             if (existingAccounts.any { it.account == details.account || it.key == details.key }) {
                 return@forEach
@@ -75,7 +75,7 @@ object TestAccountUtils {
     fun removeTestAccounts(): Promise<List<Bundle>, Exception> {
         val targetContext = InstrumentationRegistry.getTargetContext()
         val am = AccountManager.get(targetContext)
-        val existingAccounts = AccountUtils.getAllAccountDetails(am, false)
+        val existingAccounts = am.getAllDetails(false)
         return all(existingAccounts.mapNotNull {
             if (!it.test) return@mapNotNull null
             return@mapNotNull am.removeAccount(it.account)

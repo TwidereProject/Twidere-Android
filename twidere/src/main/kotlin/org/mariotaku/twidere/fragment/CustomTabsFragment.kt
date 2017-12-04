@@ -60,6 +60,7 @@ import org.mariotaku.twidere.adapter.ArrayAdapter
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.TabAccountFlags
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.getAllDetails
 import org.mariotaku.twidere.extension.insert
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.update
@@ -68,7 +69,6 @@ import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.model.tab.TabConfiguration
 import org.mariotaku.twidere.model.tab.iface.AccountCallback
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs
 import org.mariotaku.twidere.util.CustomTabUtils
 import org.mariotaku.twidere.util.ThemeUtils
@@ -138,7 +138,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_custom_tabs, menu)
         val context = this.context!!
-        val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(context), false)
+        val accounts = AccountManager.get(context).getAllDetails(false)
         val itemAdd = menu.findItem(R.id.add_submenu)
         val theme = Chameleon.getOverrideTheme(context, context)
         if (itemAdd != null && itemAdd.hasSubMenu()) {
@@ -295,7 +295,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
                     accountsAdapter.add(AccountDetails.dummy())
                 }
                 val officialKeyOnly = arguments!!.getBoolean(EXTRA_OFFICIAL_KEY_ONLY, false)
-                accountsAdapter.addAll(AccountUtils.getAllAccountDetails(AccountManager.get(context), true).filter {
+                accountsAdapter.addAll(AccountManager.get(context).getAllDetails(true).filter {
                     if (officialKeyOnly && !it.isOfficial(context!!)) {
                         return@filter false
                     }

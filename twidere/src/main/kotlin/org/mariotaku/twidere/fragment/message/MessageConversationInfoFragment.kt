@@ -88,7 +88,6 @@ import org.mariotaku.twidere.fragment.message.MessageConversationInfoFragment.Co
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ExtrasType
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.promise.ConversationPromises
 import org.mariotaku.twidere.promise.MessagePromises
 import org.mariotaku.twidere.promise.UpdateStatusPromise
@@ -432,8 +431,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         task {
             val fragment = weakThis ?: throw InterruptedException()
             val context = fragment.context ?: throw InterruptedException()
-            val account = AccountUtils.getAccountDetails(AccountManager.get(context),
-                    accountKey, true) ?: throw MicroBlogException("No account")
+            val account = AccountManager.get(context).getDetailsOrThrow(accountKey, true)
             val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
             return@task updateAction(fragment, account, microBlog)
         }.then { result ->

@@ -30,7 +30,6 @@ import kotlinx.android.synthetic.main.adapter_item_large_media_status_preview_it
 import org.mariotaku.ktextension.applyFontFamily
 import org.mariotaku.ktextension.hideIfEmpty
 import org.mariotaku.ktextension.spannable
-import org.mariotaku.ktextension.toLocalizedString
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.RecyclerPagerAdapter
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
@@ -124,15 +123,15 @@ class LargeMediaStatusViewHolder(private val adapter: IStatusesAdapter, itemView
         if (status.favorite_count > 0) {
             if (adapter.useStarsForLikes) {
                 countsTexts.add(context.resources.getQuantityString(R.plurals.N_favorites_abbrev,
-                        status.favorite_count.toInt(), status.favorite_count.toLocalizedString()))
+                        status.favorite_count.toInt(), status.favorite_count.toString()))
             } else {
                 countsTexts.add(context.resources.getQuantityString(R.plurals.N_likes_abbrev,
-                        status.favorite_count.toInt(), status.favorite_count.toLocalizedString()))
+                        status.favorite_count.toInt(), status.favorite_count.toString()))
             }
         }
         if (status.retweet_count > 0) {
             countsTexts.add(context.resources.getQuantityString(R.plurals.N_retweets_abbrev,
-                    status.retweet_count.toInt(), status.retweet_count.toLocalizedString()))
+                    status.retweet_count.toInt(), status.retweet_count.toString()))
         }
         countsLabel.text = countsTexts.joinToString(separator = context.getString(R.string.label_item_separator_comma_localized))
         countsLabel.hideIfEmpty()

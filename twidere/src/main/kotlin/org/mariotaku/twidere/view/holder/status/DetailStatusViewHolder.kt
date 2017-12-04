@@ -41,10 +41,7 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.adapter_item_status_count_label.view.*
 import kotlinx.android.synthetic.main.header_status.view.*
 import org.mariotaku.kpreferences.get
-import org.mariotaku.ktextension.applyFontFamily
-import org.mariotaku.ktextension.hideIfEmpty
-import org.mariotaku.ktextension.spannable
-import org.mariotaku.ktextension.supportActionProvider
+import org.mariotaku.ktextension.*
 import org.mariotaku.microblog.library.twitter.model.TranslationResult
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
@@ -60,7 +57,6 @@ import org.mariotaku.twidere.fragment.timeline.AbsTimelineFragment
 import org.mariotaku.twidere.menu.FavoriteItemProvider
 import org.mariotaku.twidere.menu.RetweetItemProvider
 import org.mariotaku.twidere.model.*
-import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.twitter.card.StatusCardViewFactory
@@ -263,14 +259,14 @@ class DetailStatusViewHolder(
         }
         textView.hideIfEmpty()
 
-        val location: ParcelableLocation? = status.location
-        val placeFullName: String? = status.place_full_name
+        val location = status.location
+        val placeFullName = status.place_full_name
 
-        if (!TextUtils.isEmpty(placeFullName)) {
+        if (placeFullName != null && placeFullName.isNotEmpty()) {
             locationView.visibility = View.VISIBLE
             locationView.spannable = placeFullName
-            locationView.isClickable = ParcelableLocationUtils.isValidLocation(location)
-        } else if (ParcelableLocationUtils.isValidLocation(location)) {
+            locationView.isClickable = location != null && location.isValid
+        } else if (location != null && location.isValid) {
             locationView.visibility = View.VISIBLE
             locationView.setText(R.string.action_view_map)
             locationView.isClickable = true
@@ -297,22 +293,26 @@ class DetailStatusViewHolder(
 
         val media = status.media
 
-        if (media?.isEmpty() != false) {
-            itemView.mediaPreviewContainer.visibility = View.GONE
-            itemView.mediaPreview.visibility = View.GONE
-            itemView.mediaPreviewLoad.visibility = View.GONE
-            itemView.mediaPreview.displayMedia()
-        } else if (adapter.isDetailMediaExpanded) {
-            itemView.mediaPreviewContainer.visibility = View.VISIBLE
-            itemView.mediaPreview.visibility = View.VISIBLE
-            itemView.mediaPreviewLoad.visibility = View.GONE
-            itemView.mediaPreview.displayMedia(adapter.requestManager, media = media,
-                    accountKey = status.account_key, mediaClickListener = adapter.fragment)
-        } else {
-            itemView.mediaPreviewContainer.visibility = View.VISIBLE
-            itemView.mediaPreview.visibility = View.GONE
-            itemView.mediaPreviewLoad.visibility = View.VISIBLE
-            itemView.mediaPreview.displayMedia()
+        when {
+            media.isNullOrEmpty() -> {
+                itemView.mediaPreviewContainer.visibility = View.GONE
+                itemView.mediaPreview.visibility = View.GONE
+                itemView.mediaPreviewLoad.visibility = View.GONE
+                itemView.mediaPreview.displayMedia()
+            }
+            adapter.isDetailMediaExpanded -> {
+                itemView.mediaPreviewContainer.visibility = View.VISIBLE
+                itemView.mediaPreview.visibility = View.VISIBLE
+                itemView.mediaPreviewLoad.visibility = View.GONE
+                itemView.mediaPreview.displayMedia(adapter.requestManager, media = media,
+                        accountKey = status.account_key, mediaClickListener = adapter.fragment)
+            }
+            else -> {
+                itemView.mediaPreviewContainer.visibility = View.VISIBLE
+                itemView.mediaPreview.visibility = View.GONE
+                itemView.mediaPreviewLoad.visibility = View.VISIBLE
+                itemView.mediaPreview.displayMedia()
+            }
         }
 
         if (TwitterCardUtils.isCardSupported(status)) {
@@ -341,7 +341,7 @@ class DetailStatusViewHolder(
 
 
         val lang = status.lang
-        if (CheckUtils.isValidLocale(lang) && account.isOfficial(context)) {
+        if (lang != null && lang.isValidLocale && account.isOfficial(context)) {
             translateContainer.visibility = View.VISIBLE
             if (translation != null) {
                 val locale = Locale(translation.translatedLang)
@@ -395,8 +395,7 @@ class DetailStatusViewHolder(
                 }
             }
             locationView -> {
-                val location = status.location
-                if (!ParcelableLocationUtils.isValidLocation(location)) return
+                val location = status.location?.takeIf { it.isValid } ?: return
                 IntentUtils.openMap(adapter.context, location.latitude, location.longitude)
             }
             itemView.quotedView -> {
@@ -801,5 +800,8 @@ class DetailStatusViewHolder(
 
         const val REQUEST_FAVORITE_SELECT_ACCOUNT = 101
         const val REQUEST_RETWEET_SELECT_ACCOUNT = 102
+
+        private val String.isValidLocale: Boolean
+            get() = !isEmpty() && this != "und"
     }
 }

@@ -24,7 +24,6 @@ import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.chromeCustomTabKey
 import org.mariotaku.twidere.fragment.SensitiveContentWarningDialogFragment
 import org.mariotaku.twidere.model.*
-import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.util.LinkCreator.getTwidereUserListRelatedLink
 import java.util.*
@@ -276,7 +275,6 @@ object IntentUtils {
     }
 
     fun openMap(context: Context, latitude: Double, longitude: Double) {
-        if (!ParcelableLocationUtils.isValidLocation(latitude, longitude)) return
         val builder = UriBuilder(AUTHORITY_MAP)
         builder.appendQueryParameter(QUERY_PARAM_LAT, latitude.toString())
         builder.appendQueryParameter(QUERY_PARAM_LNG, longitude.toString())

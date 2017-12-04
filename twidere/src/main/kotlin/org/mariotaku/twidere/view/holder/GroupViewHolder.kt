@@ -24,7 +24,6 @@ import android.view.View
 import kotlinx.android.synthetic.main.card_item_group_compact.view.*
 import org.mariotaku.ktextension.hideIfEmpty
 import org.mariotaku.ktextension.spannable
-import org.mariotaku.ktextension.toLocalizedString
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IGroupsAdapter
 import org.mariotaku.twidere.extension.loadProfileImage
@@ -77,8 +76,8 @@ class GroupViewHolder(private val adapter: IGroupsAdapter<*>, itemView: View) : 
         }
         descriptionView.spannable = formatter.unicodeWrap(group.description)
         descriptionView.hideIfEmpty()
-        membersCountView.text = group.member_count.toLocalizedString()
-        adminsCountView.text = group.admin_count.toLocalizedString()
+        membersCountView.text = group.member_count.toString()
+        adminsCountView.text = group.admin_count.toString()
     }
 
     fun setOnClickListeners() {

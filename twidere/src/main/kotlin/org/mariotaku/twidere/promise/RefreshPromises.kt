@@ -35,12 +35,12 @@ import org.mariotaku.twidere.constant.homeRefreshSavedSearchesKey
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.getDetailsOrThrow
+import org.mariotaku.twidere.extension.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.promise
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.statuses.GetHomeTimelineTask
@@ -113,7 +113,7 @@ class RefreshPromises private constructor(val application: Context) {
         for (accountKey in accountKeys) {
             val microBlog = AccountManager.get(application).getDetailsOrThrow(accountKey, true)
                     .newMicroBlogInstance(application, MicroBlog::class.java)
-            if (!AccountUtils.isOfficial(application, accountKey)) continue
+            if (!isOfficial(application, accountKey)) continue
             microBlog.setActivitiesAboutMeUnread(cursor)
         }
     }

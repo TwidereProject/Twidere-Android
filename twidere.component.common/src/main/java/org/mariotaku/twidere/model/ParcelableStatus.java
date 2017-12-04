@@ -220,6 +220,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
 
     @JsonField(name = "lang")
     @CursorField(Statuses.LANG)
+    @Nullable
     public String lang;
 
     @JsonField(name = "user_name")
@@ -282,10 +283,12 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
 
     @JsonField(name = "location")
     @CursorField(value = Statuses.LOCATION, converter = ParcelableLocation.Converter.class)
+    @Nullable
     public ParcelableLocation location;
 
     @JsonField(name = "place_full_name")
     @CursorField(value = Statuses.PLACE_FULL_NAME)
+    @Nullable
     public String place_full_name;
 
     @JsonField(name = "mentions")

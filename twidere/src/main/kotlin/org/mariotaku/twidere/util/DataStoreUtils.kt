@@ -55,7 +55,6 @@ import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.tab.extra.HomeTabExtras
 import org.mariotaku.twidere.model.tab.extra.InteractionsTabExtras
 import org.mariotaku.twidere.model.tab.extra.TabExtras
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
@@ -273,14 +272,13 @@ object DataStoreUtils {
 
     fun getAccountName(context: Context, accountKey: UserKey): String? {
         val am = AccountManager.get(context)
-        val account = AccountUtils.findByAccountKey(am, accountKey) ?: return null
-
+        val account = am.findAccount(accountKey) ?: return null
         return account.getAccountUser(am).name
     }
 
     fun getAccountScreenName(context: Context, accountKey: UserKey): String? {
         val am = AccountManager.get(context)
-        val account = AccountUtils.findByAccountKey(am, accountKey) ?: return null
+        val account = am.findAccount(accountKey) ?: return null
         return account.getAccountUser(am).screen_name
     }
 
@@ -517,7 +515,7 @@ object DataStoreUtils {
         val am = AccountManager.get(context)
         val colors = IntArray(accountKeys.size)
         for (i in accountKeys.indices) {
-            val account = AccountUtils.findByAccountKey(am, accountKeys[i])
+            val account = am.findAccount(accountKeys[i])
             if (account != null) {
                 colors[i] = account.getColor(am)
             }
@@ -841,8 +839,7 @@ object DataStoreUtils {
         val cached = findStatusInDatabases(context, accountKey, statusId)
         val profileImageSize = context.getString(R.string.profile_image_size)
         if (cached != null) return cached
-        val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey,
-                true) ?: throw MicroBlogException("No account")
+        val details = AccountManager.get(context).getDetailsOrThrow(accountKey, true)
         val status = when (details.type) {
             AccountType.MASTODON -> {
                 val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
@@ -883,14 +880,14 @@ object DataStoreUtils {
             mergeResult: (T, T) -> T, accountKeys: Array<UserKey?>): T {
         val officialKeys = Array(accountKeys.size) {
             val key = accountKeys[it] ?: return@Array null
-            if (AccountUtils.isOfficial(context, key)) {
+            if (isOfficial(context, key)) {
                 return@Array key
             }
             return@Array null
         }
         val notOfficialKeys = Array(accountKeys.size) {
             val key = accountKeys[it] ?: return@Array null
-            if (AccountUtils.isOfficial(context, key)) {
+            if (isOfficial(context, key)) {
                 return@Array null
             }
             return@Array key

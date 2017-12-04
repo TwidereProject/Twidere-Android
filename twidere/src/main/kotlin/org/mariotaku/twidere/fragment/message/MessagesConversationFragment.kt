@@ -78,7 +78,6 @@ import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
 import org.mariotaku.twidere.model.event.GetMessagesTaskEvent
 import org.mariotaku.twidere.model.event.SendMessageTaskEvent
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.promise.MessagePromises
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.service.LengthyOperationsService
@@ -98,7 +97,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
     private val conversationId: String get() = arguments!!.conversationId!!
 
     private val account: AccountDetails? by lazy {
-        AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)
+        AccountManager.get(context).getDetails(accountKey, true)
     }
 
     private val loadMoreTaskTag: String

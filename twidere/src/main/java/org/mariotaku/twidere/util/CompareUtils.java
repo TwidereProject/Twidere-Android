@@ -46,13 +46,4 @@ public class CompareUtils {
         return object1.equals(object2);
     }
 
-    public static boolean textEquals(CharSequence text1, CharSequence text2) {
-        if (text1 == null || text2 == null) return text1 == text2;
-        if (text1 == text2) return true;
-        if (text1.length() != text2.length()) return false;
-        for (int i = 0, j = text1.length(); i < j; i++) {
-            if (text1.charAt(i) != text2.charAt(i)) return false;
-        }
-        return true;
-    }
 }

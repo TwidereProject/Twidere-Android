@@ -32,7 +32,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.ACCOUNT_PREFERENCES_NAME_PREFIX
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.*
 import org.mariotaku.twidere.constant.defaultAutoRefreshKey
-import org.mariotaku.twidere.model.util.AccountUtils
+import org.mariotaku.twidere.extension.getDetails
 
 class AccountPreferences(
         private val context: Context,
@@ -43,7 +43,7 @@ class AccountPreferences(
 
     val defaultNotificationLightColor: Int
         get() {
-            val a = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)
+            val a = AccountManager.get(context).getDetails(accountKey, true)
             if (a != null) {
                 return a.color
             } else {

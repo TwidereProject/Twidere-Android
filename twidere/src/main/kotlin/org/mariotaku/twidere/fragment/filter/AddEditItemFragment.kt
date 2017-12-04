@@ -45,7 +45,6 @@ import org.mariotaku.twidere.extension.util.isAdvancedFiltersEnabled
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
 import org.mariotaku.twidere.model.filter.FilterScopesHolder
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 
@@ -116,8 +115,11 @@ class AddEditItemFragment : BaseDialogFragment() {
             editText.setAdapter(when (contentUri) {
                 Filters.Sources.CONTENT_URI -> SourceAutoCompleteAdapter(activity!!)
                 Filters.Users.CONTENT_URI -> ComposeAutoCompleteAdapter(activity!!, requestManager).apply {
-                    val am = AccountManager.get(activity)
-                    account = AccountUtils.getDefaultAccountDetails(activity!!, am, false)
+                    val accountKey = arguments!!.accountKey
+                    if (accountKey != null) {
+                        val am = AccountManager.get(activity)
+                        account = am.getDetails(accountKey, false)
+                    }
                 }
                 else -> null
             })

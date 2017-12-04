@@ -19,28 +19,15 @@
 
 package org.mariotaku.ktextension
 
-import android.text.Spannable
-import android.text.Spanned
-import org.mariotaku.twidere.text.ZeroWidthSpan
-import java.text.Normalizer
+import org.junit.Assert
+import org.junit.Test
 
-fun CharSequence.appendTo(sb: StringBuilder) {
-    sb.append(this)
-}
-
-operator fun CharSequence.times(n: Int): String = repeat(n)
-
-fun CharSequence.normalized(form: Normalizer.Form): String {
-    return Normalizer.normalize(this, form)
-}
-
-/**
- * Fix to https://github.com/TwidereProject/Twidere-Android/issues/449
- */
-fun Spannable.fixSHY() {
-    forEachIndexed { i, ch ->
-        if (ch == '\u00ad') {
-            setSpan(ZeroWidthSpan(), i, i + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
+class NumberExtensionsKtTest {
+    @Test
+    fun toPrettyDecimal() {
+        Assert.assertEquals("1", 1.0.toString(2))
+        Assert.assertEquals("1.01", 1.01.toString(2))
+        Assert.assertEquals("1.56", 1.5555555.toString(2))
     }
+
 }

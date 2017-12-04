@@ -88,7 +88,6 @@ import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedStatuses
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.AbsAccountRequestTask
@@ -572,7 +571,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             startActivity(chooser)
 
             val am = AccountManager.get(context)
-            val accountType = AccountUtils.findByAccountKey(am, status.account_key)?.getAccountType(am)
+            val accountType = am.findAccount(status.account_key)?.getAccountType(am)
 
             Analyzer.log(Share.status(accountType, status))
             return true

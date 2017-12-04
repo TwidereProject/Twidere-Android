@@ -26,12 +26,12 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.exception.AccountNotFoundException
+import org.mariotaku.twidere.extension.getDetailsOrThrow
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.ListResponse
 import org.mariotaku.twidere.model.ParcelableHashtag
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.AccountUtils
 
 class MastodonSearchLoader(
         context: Context,
@@ -42,9 +42,8 @@ class MastodonSearchLoader(
     override fun loadInBackground(): List<Any> {
         try {
             val am = AccountManager.get(context)
-            val account = accountKey?.let {
-                AccountUtils.getAccountDetails(am, it, true)
-            } ?: throw AccountNotFoundException()
+            val key = accountKey ?: throw AccountNotFoundException()
+            val account = am.getDetailsOrThrow(key, true)
             val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
             val searchResult = mastodon.search(query, true, null)
             return ListResponse(ArrayList<Any>().apply {

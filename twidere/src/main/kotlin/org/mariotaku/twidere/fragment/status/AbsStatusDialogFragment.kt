@@ -45,7 +45,6 @@ import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.view.holder.status.StatusViewHolder
 import java.lang.ref.WeakReference
 
@@ -81,7 +80,7 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
             it.applyTheme()
 
             val am = AccountManager.get(context)
-            val details = AccountUtils.getAccountDetails(am, accountKey, true) ?: run {
+            val details = am.getDetails(accountKey, true) ?: run {
                 dismiss()
                 return@onShow
             }

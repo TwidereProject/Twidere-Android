@@ -59,14 +59,10 @@ import org.mariotaku.twidere.constant.KeyboardShortcutConstants.ACTION_NAVIGATIO
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.CONTEXT_TAG_NAVIGATION
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
-import org.mariotaku.twidere.extension.appendQueryParameterIgnoreNull
-import org.mariotaku.twidere.extension.delete
-import org.mariotaku.twidere.extension.loadProfileImage
-import org.mariotaku.twidere.extension.ownedAccounts
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.SuggestionItem
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory
 import org.mariotaku.twidere.provider.TwidereDataStore.Suggestions
 import org.mariotaku.twidere.util.EditTextEnterHandler
@@ -101,11 +97,11 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
                         ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM))
 
         val am = AccountManager.get(this)
-        val accounts = AccountUtils.getAllAccountDetails(am, am.ownedAccounts, true).toList()
+        val accounts = am.getAllDetails(am.ownedAccounts, true)
         val accountsSpinnerAdapter = AccountsSpinnerAdapter(this, R.layout.spinner_item_account_icon,
                 requestManager = requestManager)
         accountsSpinnerAdapter.setDropDownViewResource(R.layout.list_item_simple_user)
-        accountsSpinnerAdapter.addAll(accounts)
+        accountsSpinnerAdapter.addAll(*accounts)
         accountSpinner.adapter = accountsSpinnerAdapter
         accountSpinner.onItemSelectedListener = this
         if (savedInstanceState == null) {

@@ -106,8 +106,8 @@ public final class TwidereLinkify implements Constants {
     }
 
     public void applyAllLinks(@Nullable Spannable text, @Nullable final UserKey accountKey,
-                              final long extraId, final boolean sensitive,
-                              final boolean skipLinksInText) {
+            final long extraId, final boolean sensitive,
+            final boolean skipLinksInText) {
         applyAllLinks(text, mOnLinkClickListener, accountKey, extraId, sensitive,
                 mHighlightOption, skipLinksInText);
     }
@@ -168,7 +168,7 @@ public final class TwidereLinkify implements Constants {
     /**
      * Applies a regex to the text of a TextView turning the matches into links.
      */
-    private void addLinks(final Spannable string, @Nullable final UserKey accountKey,
+    private void addLinks(@NonNull final Spannable string, @Nullable final UserKey accountKey,
             final long extraId, final int type, final boolean sensitive,
             final OnLinkClickListener listener, final int highlightOption) {
         switch (type) {
@@ -220,7 +220,7 @@ public final class TwidereLinkify implements Constants {
                 break;
             }
             case LINK_TYPE_LINK_IN_TEXT: {
-                final List<Extractor.Entity> urls = mExtractor.extractURLsWithIndices(ParseUtils.parseString(string));
+                final List<Extractor.Entity> urls = mExtractor.extractURLsWithIndices(string.toString());
                 for (final Extractor.Entity entity : urls) {
                     final int start = entity.getStart(), end = entity.getEnd();
                     if (entity.getType() != Extractor.Entity.Type.URL
@@ -248,7 +248,7 @@ public final class TwidereLinkify implements Constants {
     }
 
     private boolean addMentionOrListLinks(final Spannable spannable, final UserKey accountKey,
-                                          final long extraId, final int highlightOption, final OnLinkClickListener listener) {
+            final long extraId, final int highlightOption, final OnLinkClickListener listener) {
         boolean hasMatches = false;
         // Extract lists from status text
         final Matcher matcher = Regex.VALID_MENTION_OR_LIST.matcher(spannable);
@@ -293,8 +293,8 @@ public final class TwidereLinkify implements Constants {
     }
 
     private void applyLink(@NonNull final String url, @Nullable final String orig, final int start, final int end,
-                           final Spannable text, @Nullable final UserKey accountKey, final long extraId, final int type, final boolean sensitive,
-                           final int highlightOption, final OnLinkClickListener listener) {
+            final Spannable text, @Nullable final UserKey accountKey, final long extraId, final int type, final boolean sensitive,
+            final int highlightOption, final OnLinkClickListener listener) {
         final TwidereURLSpan span = new TwidereURLSpan(url, orig, accountKey, extraId, type, sensitive,
                 highlightOption, start, end, listener);
         text.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -309,6 +309,6 @@ public final class TwidereLinkify implements Constants {
 
     public interface OnLinkClickListener {
         boolean onLinkClick(@NonNull String link, @Nullable String orig, @Nullable UserKey accountKey, long extraId, int type,
-                            boolean sensitive, int start, int end);
+                boolean sensitive, int start, int end);
     }
 }

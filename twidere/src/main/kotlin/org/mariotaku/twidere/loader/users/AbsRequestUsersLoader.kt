@@ -28,6 +28,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.exception.AccountNotFoundException
+import org.mariotaku.twidere.extension.getDetailsOrThrow
 import org.mariotaku.twidere.extension.model.api.applyLoadLimit
 import org.mariotaku.twidere.loader.iface.IPaginationLoader
 import org.mariotaku.twidere.model.AccountDetails
@@ -36,7 +37,6 @@ import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.PaginatedList
 import org.mariotaku.twidere.model.pagination.Pagination
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.DebugLog
 import java.util.*
 
@@ -65,9 +65,8 @@ abstract class AbsRequestUsersLoader(
         val details: AccountDetails
         val users: List<ParcelableUser>
         try {
-            val am = AccountManager.get(context)
-            details = accountKey?.let { AccountUtils.getAccountDetails(am, it, true) } ?:
-                    throw AccountNotFoundException()
+            val accountKey = accountKey ?: throw AccountNotFoundException()
+            details = AccountManager.get(context).getDetailsOrThrow(accountKey, true)
             users = getUsersInternal(details)
         } catch (e: MicroBlogException) {
             DebugLog.w(tr = e)

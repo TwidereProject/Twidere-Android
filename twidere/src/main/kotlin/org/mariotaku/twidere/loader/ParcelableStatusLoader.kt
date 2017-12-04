@@ -30,21 +30,19 @@ import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT
 import org.mariotaku.twidere.dagger.component.GeneralComponent
+import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.extension.get
+import org.mariotaku.twidere.extension.getDetails
 import org.mariotaku.twidere.extension.model.updateExtraInformation
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.deleteActivityStatus
 import org.mariotaku.twidere.util.deleteStatus
 import javax.inject.Inject
 
-/**
- * Created by mariotaku on 14/12/5.
- */
 class ParcelableStatusLoader(
         context: Context,
         private val omitIntentExtra: Boolean,
@@ -66,7 +64,7 @@ class ParcelableStatusLoader(
         if (accountKey == null || statusId == null) {
             return SingleResponse(IllegalArgumentException())
         }
-        val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)
+        val details = AccountManager.get(context).getDetails(accountKey, true)
         if (!omitIntentExtra && extras != null) {
             val cache: ParcelableStatus? = extras.getParcelable(IntentConstants.EXTRA_STATUS)
             if (cache != null) {
@@ -75,8 +73,8 @@ class ParcelableStatusLoader(
                 return response
             }
         }
-        if (details == null) return SingleResponse(MicroBlogException("No account"))
         try {
+            if (details == null) throw AccountNotFoundException()
             val status = DataStoreUtils.findStatus(context, accountKey, statusId)
             status.updateExtraInformation(details)
             val response = SingleResponse(status)

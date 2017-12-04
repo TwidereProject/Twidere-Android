@@ -54,6 +54,7 @@ import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.favoriteConfirmationKey
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
 import org.mariotaku.twidere.constant.nameFirstKey
+import org.mariotaku.twidere.extension.getDetails
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.promise
 import org.mariotaku.twidere.fragment.AddStatusFilterDialogFragment
@@ -67,7 +68,6 @@ import org.mariotaku.twidere.menu.FavoriteItemProvider
 import org.mariotaku.twidere.menu.SupportStatusShareProvider
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.task.CreateFavoriteTask
 import org.mariotaku.twidere.task.DestroyFavoriteTask
 import org.mariotaku.twidere.task.DestroyStatusTask
@@ -104,8 +104,7 @@ object MenuUtils {
 
     fun setupForStatus(context: Context, menu: Menu, preferences: SharedPreferences,
             manager: UserColorNameManager, status: ParcelableStatus) {
-        val account = AccountUtils.getAccountDetails(AccountManager.get(context),
-                status.account_key, true) ?: return
+        val account = AccountManager.get(context).getDetails(status.account_key, true) ?: return
         setupForStatus(context, menu, preferences, manager, status, account)
     }
 

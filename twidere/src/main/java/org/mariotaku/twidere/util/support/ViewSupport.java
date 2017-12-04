@@ -24,6 +24,7 @@ import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -31,7 +32,6 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.mariotaku.twidere.util.CompareUtils;
 import org.mariotaku.twidere.util.support.view.ViewOutlineProviderCompat;
 import org.mariotaku.twidere.view.iface.IForegroundView;
 
@@ -106,7 +106,7 @@ public final class ViewSupport {
     }
 
     public static TextView findViewByText(View view, CharSequence text) {
-        if (view instanceof TextView && CompareUtils.textEquals(text, ((TextView) view).getText()))
+        if (view instanceof TextView && TextUtils.equals(text, ((TextView) view).getText()))
             return (TextView) view;
         if (view instanceof ViewGroup) {
             for (int i = 0, j = ((ViewGroup) view).getChildCount(); i < j; i++) {

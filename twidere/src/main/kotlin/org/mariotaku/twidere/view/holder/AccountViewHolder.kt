@@ -28,8 +28,8 @@ import org.mariotaku.ktextension.spannable
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.AccountDetailsAdapter
 import org.mariotaku.twidere.extension.loadProfileImage
+import org.mariotaku.twidere.extension.model.getAccountTypeIcon
 import org.mariotaku.twidere.model.AccountDetails
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.view.ProfileImageView
 import org.mariotaku.twidere.view.iface.IColorLabelView
 
@@ -66,7 +66,7 @@ class AccountViewHolder(
         profileImage.visibility = View.VISIBLE
         adapter.requestManager.loadProfileImage(adapter.context, details, adapter.profileImageStyle,
                 profileImage.cornerRadius, profileImage.cornerRadiusRatio).into(profileImage)
-        accountType.setImageResource(AccountUtils.getAccountTypeIcon(details.type))
+        accountType.setImageResource(getAccountTypeIcon(details.type))
         toggle.setOnCheckedChangeListener(null)
         toggle.isChecked = details.activated
         toggle.setOnCheckedChangeListener(adapter.checkedChangeListener)

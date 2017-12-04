@@ -28,13 +28,13 @@ import org.mariotaku.microblog.library.statusnet.model.Group
 import org.mariotaku.microblog.library.twitter.model.PageableResponseList
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.extension.getDetailsOrThrow
+import org.mariotaku.twidere.extension.model.api.gnusocial.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.loader.iface.IPaginationLoader
 import org.mariotaku.twidere.model.ParcelableGroup
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.CursorPagination
 import org.mariotaku.twidere.model.pagination.Pagination
-import org.mariotaku.twidere.model.util.ParcelableGroupUtils
 import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.collection.NoDuplicatesArrayList
 import java.util.*
@@ -83,12 +83,12 @@ abstract class BaseGroupsLoader(
                 val dataSize = data.size
                 for (i in 0 until listSize) {
                     val group = listLoaded[i]
-                    data.add(ParcelableGroupUtils.from(group, accountKey, dataSize + i, isMember(group)))
+                    data.add(group.toParcelable(accountKey, dataSize + i, isMember(group)))
                 }
             } else {
                 for (i in 0 until listSize) {
                     val list = listLoaded[i]
-                    data.add(ParcelableGroupUtils.from(listLoaded[i], accountKey, i, isMember(list)))
+                    data.add(listLoaded[i].toParcelable(accountKey, i, isMember(list)))
                 }
             }
         }

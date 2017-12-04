@@ -42,9 +42,20 @@ operator fun Int.contains(i: Int): Boolean = (this and i) == i
  */
 operator fun Long.contains(i: Long): Boolean = (this and i) == i
 
-fun Number.toLocalizedString(locale: Locale = Locale.getDefault()): String {
+fun Number.toString(locale: Locale = Locale.getDefault()): String {
     val nf = NumberFormat.getInstance(locale)
     return nf.format(this)
+}
+
+fun Double.toString(decimalDigits: Int): String {
+    var str = String.format(Locale.US, "%." + decimalDigits + "f", this)
+    val dotIdx = str.lastIndexOf('.')
+    if (dotIdx == -1) return str
+    str = str.substring(0, (dotIdx + decimalDigits + 1).coerceAtMost(str.length)).trimEnd('0')
+    if (str.endsWith('.')) {
+        str = str.substring(0, str.length - 1)
+    }
+    return str
 }
 
 val Int.nextPowerOf2: Int

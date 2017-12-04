@@ -36,6 +36,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.extension.*
+import org.mariotaku.twidere.extension.model.api.gnusocial.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.fragment.AbsToolbarTabPagesFragment
 import org.mariotaku.twidere.fragment.timeline.GroupTimelineFragment
@@ -43,7 +44,6 @@ import org.mariotaku.twidere.fragment.users.GroupMembersFragment
 import org.mariotaku.twidere.model.ParcelableGroup
 import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.ParcelableGroupUtils
 import org.mariotaku.twidere.util.Utils
 
 /**
@@ -142,8 +142,7 @@ class GroupFragment : AbsToolbarTabPagesFragment(), LoaderCallbacks<SingleRespon
                 } else {
                     return SingleResponse()
                 }
-                return SingleResponse.getInstance(ParcelableGroupUtils.from(group, accountKey, 0,
-                        group.isMember))
+                return SingleResponse.getInstance(group.toParcelable(accountKey, member = group.isMember))
             } catch (e: MicroBlogException) {
                 return SingleResponse(e)
             }

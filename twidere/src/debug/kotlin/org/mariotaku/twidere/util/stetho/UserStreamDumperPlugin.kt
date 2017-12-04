@@ -37,14 +37,14 @@ import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.microblog.library.twitter.model.DirectMessage
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.dagger.DependencyHolder
+import org.mariotaku.twidere.extension.getDetails
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ActivityTitleSummaryMessage
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.util.streaming.FanfouTimelineStreamCallback
 import org.mariotaku.twidere.util.streaming.TwitterTimelineStreamCallback
 
@@ -74,7 +74,7 @@ class UserStreamDumperPlugin(val context: Context) : DumperPlugin {
         val verboseMode = cmdLine.hasOption("verbose")
         val accountKey = UserKey.valueOf(argsList[0])
         val am = AccountManager.get(context)
-        val account = AccountUtils.getAccountDetails(am, accountKey, true) ?: return
+        val account = am.getDetails(accountKey, true) ?: return
         when (account.type) {
             AccountType.TWITTER -> {
                 beginTwitterStream(account, dumpContext, includeInteractions, includeTimeline,

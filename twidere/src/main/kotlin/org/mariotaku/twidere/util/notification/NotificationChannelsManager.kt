@@ -29,11 +29,11 @@ import android.os.Build
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.dagger.DependencyHolder
+import org.mariotaku.twidere.extension.getDetails
 import org.mariotaku.twidere.extension.model.notificationChannelGroupId
 import org.mariotaku.twidere.extension.model.notificationChannelId
 import org.mariotaku.twidere.extension.ownedAccounts
 import org.mariotaku.twidere.model.notification.NotificationChannelSpec
-import org.mariotaku.twidere.model.util.AccountUtils
 
 /**
  * Created by mariotaku on 2017/8/25.
@@ -92,11 +92,7 @@ object NotificationChannelsManager {
             val addedGroups = mutableListOf<String>()
 
             accounts.forEach { account ->
-                val details = try {
-                    AccountUtils.getAccountDetails(am, account, false)
-                } catch (e: Exception) {
-                    return@forEach
-                }
+                val details = am.getDetails(account, false) ?: return@forEach
                 val group = NotificationChannelGroup(details.key.notificationChannelGroupId(),
                         ucnm.getDisplayName(details.user, pref[nameFirstKey]))
 

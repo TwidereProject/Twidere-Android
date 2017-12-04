@@ -29,6 +29,7 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.TabAccountFlags
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_MENTIONS_ONLY
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_MY_FOLLOWING_ONLY
+import org.mariotaku.twidere.extension.getAllDetails
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.fragment.activities.InteractionsActivitiesFragment
 import org.mariotaku.twidere.model.AccountDetails
@@ -39,7 +40,6 @@ import org.mariotaku.twidere.model.tab.StringHolder
 import org.mariotaku.twidere.model.tab.TabConfiguration
 import org.mariotaku.twidere.model.tab.conf.BooleanExtraConfiguration
 import org.mariotaku.twidere.model.tab.extra.InteractionsTabExtras
-import org.mariotaku.twidere.model.util.AccountUtils
 
 /**
  * Created by mariotaku on 2016/11/27.
@@ -103,7 +103,7 @@ class InteractionsTabConfiguration : TabConfiguration() {
 
             if (account == null || account.dummy) {
                 val am = AccountManager.get(context)
-                val accounts = AccountUtils.getAllAccountDetails(am, false)
+                val accounts = am.getAllDetails(false)
                 interactionsAvailable = accounts.any { it.supportsInteractions }
                 requiresStreaming = accounts.all { it.requiresStreaming }
             } else when (account.type) {

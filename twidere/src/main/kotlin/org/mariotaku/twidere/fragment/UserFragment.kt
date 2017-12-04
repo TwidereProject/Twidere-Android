@@ -114,7 +114,6 @@ import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 import org.mariotaku.twidere.model.event.FriendshipUpdatedEvent
 import org.mariotaku.twidere.model.event.ProfileUpdatedEvent
 import org.mariotaku.twidere.model.event.TaskStateChangedEvent
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.model.util.ParcelableRelationshipUtils
 import org.mariotaku.twidere.promise.BlockPromises
@@ -526,8 +525,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
                 }
                 val intent = Intent(Intent.ACTION_VIEW, builder.build())
-                intent.putExtra(EXTRA_ACCOUNT, AccountUtils.getAccountDetails(am, accountKey,
-                        true))
+                intent.putExtra(EXTRA_ACCOUNT, am.getDetails(accountKey, true))
                 intent.putExtra(EXTRA_USERS, arrayOf(user))
                 intent.putExtra(EXTRA_OPEN_CONVERSATION, true)
                 startActivity(intent)
@@ -1361,14 +1359,14 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     filtering = isFiltering
                 })
             }
-            val details = AccountUtils.getAccountDetails(AccountManager.get(context),
-                    accountKey, true) ?: return SingleResponse(MicroBlogException("No Account"))
-            if (details.type == AccountType.TWITTER) {
-                if (!accountKey.hasSameHost(user.key)) {
-                    return SingleResponse.getInstance(ParcelableRelationshipUtils.create(user, isFiltering))
-                }
-            }
+
             try {
+                val details = AccountManager.get(context).getDetailsOrThrow(accountKey, true)
+                if (details.type == AccountType.TWITTER) {
+                    if (!accountKey.hasSameHost(user.key)) {
+                        return SingleResponse.getInstance(ParcelableRelationshipUtils.create(user, isFiltering))
+                    }
+                }
                 val data = when (details.type) {
                     AccountType.MASTODON -> {
                         val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)

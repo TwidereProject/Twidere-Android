@@ -17,30 +17,15 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.ktextension
+package org.mariotaku.twidere.extension.model
 
-import android.text.Spannable
-import android.text.Spanned
-import org.mariotaku.twidere.text.ZeroWidthSpan
-import java.text.Normalizer
+import org.mariotaku.ktextension.toString
+import org.mariotaku.twidere.model.ParcelableLocation
 
-fun CharSequence.appendTo(sb: StringBuilder) {
-    sb.append(this)
-}
+val ParcelableLocation.isValid: Boolean
+    get() = !latitude.isNaN() && !longitude.isNaN()
 
-operator fun CharSequence.times(n: Int): String = repeat(n)
-
-fun CharSequence.normalized(form: Normalizer.Form): String {
-    return Normalizer.normalize(this, form)
-}
-
-/**
- * Fix to https://github.com/TwidereProject/Twidere-Android/issues/449
- */
-fun Spannable.fixSHY() {
-    forEachIndexed { i, ch ->
-        if (ch == '\u00ad') {
-            setSpan(ZeroWidthSpan(), i, i + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
-    }
+fun ParcelableLocation.getHumanReadableString(decimalDigits: Int): String {
+    return String.format("%s,%s", latitude.toString(decimalDigits),
+            longitude.toString(decimalDigits))
 }

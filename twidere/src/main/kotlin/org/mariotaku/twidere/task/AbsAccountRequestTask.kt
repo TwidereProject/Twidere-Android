@@ -27,13 +27,13 @@ import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.extension.delete
+import org.mariotaku.twidere.extension.getDetailsOrThrow
 import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.extension.insert
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.ObjectId
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.promise.UpdateStatusPromise
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 
@@ -42,9 +42,8 @@ abstract class AbsAccountRequestTask<Params, Result, Callback>(context: Context,
     override final val exceptionClass = MicroBlogException::class.java
 
     override final fun onExecute(params: Params): Result {
-        val am = AccountManager.get(context)
-        val account = accountKey?.let { AccountUtils.getAccountDetails(am, it, true) } ?:
-                throw AccountNotFoundException()
+        if (accountKey == null) throw AccountNotFoundException()
+        val account = AccountManager.get(context).getDetailsOrThrow(accountKey, true)
         val draft = createDraft()
         var draftId = -1L
         if (draft != null) {

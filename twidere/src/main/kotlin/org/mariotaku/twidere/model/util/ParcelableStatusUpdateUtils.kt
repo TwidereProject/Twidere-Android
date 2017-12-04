@@ -4,6 +4,7 @@ import android.accounts.AccountManager
 import android.content.Context
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.getAllDetails
 import org.mariotaku.twidere.extension.model.unique_id_non_null
 import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.ParcelableStatusUpdate
@@ -20,7 +21,7 @@ object ParcelableStatusUpdateUtils {
     fun fromDraftItem(context: Context, draft: Draft): ParcelableStatusUpdate {
         val statusUpdate = ParcelableStatusUpdate()
         statusUpdate.accounts = draft.account_keys?.let {
-            AccountUtils.getAllAccountDetails(AccountManager.get(context), it, true)
+            AccountManager.get(context).getAllDetails(it, true)
         } ?: emptyArray()
         statusUpdate.text = draft.text
         statusUpdate.location = draft.location

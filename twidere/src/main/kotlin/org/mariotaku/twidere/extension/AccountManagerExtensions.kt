@@ -20,23 +20,38 @@
 package org.mariotaku.twidere.extension
 
 import android.accounts.*
+import android.annotation.TargetApi
 import android.app.Activity
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.support.annotation.RequiresApi
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.thenApply
 import org.mariotaku.ktextension.Bundle
+import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.AccountUtils
+
+
+private val ACCOUNT_USER_DATA_KEYS = arrayOf(ACCOUNT_USER_DATA_KEY, ACCOUNT_USER_DATA_TYPE,
+        ACCOUNT_USER_DATA_CREDS_TYPE, ACCOUNT_USER_DATA_ACTIVATED, ACCOUNT_USER_DATA_USER,
+        ACCOUNT_USER_DATA_EXTRAS, ACCOUNT_USER_DATA_COLOR, ACCOUNT_USER_DATA_POSITION, ACCOUNT_USER_DATA_TEST)
+
+fun AccountManager.hasPermission(): Boolean {
+    try {
+        ownedAccounts
+    } catch (e: SecurityException) {
+        return false
+    }
+    return true
+}
 
 fun AccountManager.hasInvalidAccount(): Boolean {
     val accounts = ownedAccounts
@@ -57,7 +72,7 @@ fun AccountManager.renameTwidereAccount(oldAccount: Account, newName: String,
         if (!addAccountExplicitly(newAccount, null, null)) {
             throw AccountsException()
         }
-        for (key in AccountUtils.ACCOUNT_USER_DATA_KEYS) {
+        for (key in ACCOUNT_USER_DATA_KEYS) {
             setUserData(newAccount, key, getUserData(oldAccount, key))
         }
         setAuthToken(newAccount, ACCOUNT_AUTH_TOKEN_TYPE,
@@ -111,29 +126,41 @@ fun AccountManager.findAccount(byKey: UserKey): Account? {
     return ownedAccounts.find { byKey == it.getAccountKey(this) }
 }
 
+fun AccountManager.findAccount(byScreenName: String): Account? {
+    return ownedAccounts.find { byScreenName == it.getAccountUser(this).screen_name }
+}
+
 fun AccountManager.getDetails(key: UserKey, getCredentials: Boolean): AccountDetails? {
     val account = findAccount(key) ?: return null
     return getDetails(account, getCredentials)
 }
 
-fun AccountManager.getDetails(account: Account, getCredentials: Boolean): AccountDetails {
+fun AccountManager.getDetails(account: Account, getCredentials: Boolean): AccountDetails? {
     val details = AccountDetails()
-    details.key = account.getAccountKey(this)
-    details.account = account
-    details.color = account.getColor(this)
-    details.position = account.getPosition(this)
-    details.activated = account.isActivated(this)
-    details.type = account.getAccountType(this)
-    details.credentials_type = account.getCredentialsType(this)
-    details.user = account.getAccountUser(this)
-    details.user.color = details.color
+    try {
+        details.key = account.getAccountKey(this)
+        details.account = account
+        details.color = account.getColor(this)
+        details.position = account.getPosition(this)
+        details.activated = account.isActivated(this)
+        details.type = account.getAccountType(this)
+        details.credentials_type = account.getCredentialsType(this)
+        details.user = account.getAccountUser(this)
+        details.user.color = details.color
 
-    details.extras = account.getAccountExtras(this)
+        details.extras = account.getAccountExtras(this)
 
-    if (getCredentials) {
-        details.credentials = account.getCredentials(this)
+        if (getCredentials) {
+            details.credentials = account.getCredentials(this)
+        }
+    } catch (e: Exception) {
+        return null
     }
     return details
+}
+
+fun AccountManager.getDetailsOrThrow(account: Account, getCredentials: Boolean): AccountDetails {
+    return getDetails(account, getCredentials) ?: throw AccountNotFoundException()
 }
 
 fun AccountManager.getDetailsOrThrow(key: UserKey, getCredentials: Boolean): AccountDetails {
@@ -141,7 +168,7 @@ fun AccountManager.getDetailsOrThrow(key: UserKey, getCredentials: Boolean): Acc
 }
 
 fun AccountManager.findMatchingDetailsOrThrow(key: UserKey): AccountDetails {
-    return AccountUtils.getAllAccountDetails(this, ownedAccounts, true).firstOrNull {
+    return this.getAllDetails(ownedAccounts, true).firstOrNull {
         if (it.key == key) {
             return@firstOrNull true
         } else if (it.user.account_key == key) {
@@ -151,10 +178,29 @@ fun AccountManager.findMatchingDetailsOrThrow(key: UserKey): AccountDetails {
     } ?: throw AccountNotFoundException()
 }
 
+
+fun AccountManager.getAllDetails(accounts: Array<Account>, getCredentials: Boolean): Array<AccountDetails> {
+    return accounts.mapToArray { getDetailsOrThrow(it, getCredentials) }
+}
+
+fun AccountManager.getAllDetails(accountKeys: Array<UserKey>, getCredentials: Boolean): Array<AccountDetails?> {
+    return accountKeys.mapToArray { getDetails(it, getCredentials) }
+}
+
+fun AccountManager.getAllDetails(getCredentials: Boolean): Array<AccountDetails> {
+    return ownedAccounts.map { getDetailsOrThrow(it, getCredentials) }.sorted().toTypedArray()
+}
+
+fun isOfficial(context: Context, accountKey: UserKey): Boolean {
+    val am = AccountManager.get(context)
+    val account = am.findAccount(accountKey) ?: return false
+    return account.isOfficial(am, context)
+}
+
 val AccountManager.ownedAccounts: Array<Account> get() = getAccountsByType(ACCOUNT_TYPE)
 
 private object API22 {
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP_MR1)
     internal fun removeAccount(
             am: AccountManager, account: Account,
             activity: Activity?,
@@ -166,7 +212,7 @@ private object API22 {
 }
 
 private object API21 {
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     internal fun renameAccount(am: AccountManager, account: Account,
             newName: String,
             callback: AccountManagerCallback<Account>?,

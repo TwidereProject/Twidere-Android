@@ -2,6 +2,7 @@ package org.mariotaku.twidere.extension.model
 
 import android.content.Context
 import org.mariotaku.microblog.library.twitter.annotation.MediaCategory
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.account.AccountExtras
@@ -115,3 +116,21 @@ val Array<AccountDetails>.textLimit: Int
 
 val AccountDetails.isStreamingSupported: Boolean
     get() = type == AccountType.TWITTER
+
+fun getAccountTypeIcon(@AccountType accountType: String?): Int {
+    when (accountType) {
+        AccountType.TWITTER -> {
+            return R.drawable.ic_account_logo_twitter
+        }
+        AccountType.FANFOU -> {
+            return R.drawable.ic_account_logo_fanfou
+        }
+        AccountType.STATUSNET -> {
+            return R.drawable.ic_account_logo_statusnet
+        }
+        AccountType.MASTODON -> {
+            return R.drawable.ic_account_logo_mastodon
+        }
+    }
+    return R.drawable.ic_account_logo_twitter
+}

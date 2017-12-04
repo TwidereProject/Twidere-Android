@@ -79,7 +79,6 @@ import org.mariotaku.twidere.menu.AccountToggleProvider
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.SupportTabSpec
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
@@ -749,7 +748,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         }
 
         private fun loadAccountsInfo(loadFromDb: Boolean): AccountsInfo {
-            val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(context), true)
+            val accounts = AccountManager.get(context).getAllDetails(true)
             val draftsCount = if (loadFromDb) {
                 context.contentResolver.queryCount(Drafts.CONTENT_URI_UNSENT, null,
                         null)

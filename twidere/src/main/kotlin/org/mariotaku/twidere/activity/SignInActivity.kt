@@ -103,7 +103,6 @@ import org.mariotaku.twidere.model.account.StatusNetAccountExtras
 import org.mariotaku.twidere.model.account.TwitterAccountExtras
 import org.mariotaku.twidere.model.account.cred.*
 import org.mariotaku.twidere.model.analyzer.SignIn
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.*
@@ -829,7 +828,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val accountKey = apiUser.key
             val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
             val am = AccountManager.get(context)
-            val account = AccountUtils.findByAccountKey(am, accountKey)
+            val account = am.findAccount(accountKey)
             if (account != null) {
                 color = account.getColor(am)
             }
@@ -868,7 +867,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val accountKey = UserKey(apiAccount.id, host)
             val user = apiAccount.toParcelable(accountKey)
             val am = AccountManager.get(context)
-            val account = AccountUtils.findByAccountKey(am, accountKey)
+            val account = am.findAccount(accountKey)
             if (account != null) {
                 color = account.getColor(am)
             }
@@ -968,7 +967,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val accountKey = apiUser.key
             val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
             val am = AccountManager.get(activity)
-            val account = AccountUtils.findByAccountKey(am, accountKey)
+            val account = am.findAccount(accountKey)
             if (account != null) {
                 color = account.getColor(am)
             }
@@ -997,7 +996,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val accountKey = apiUser.key
             val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
             val am = AccountManager.get(activity)
-            val account = AccountUtils.findByAccountKey(am, accountKey)
+            val account = am.findAccount(accountKey)
             if (account != null) {
                 color = account.getColor(am)
             }
@@ -1024,7 +1023,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val accountKey = apiUser.key
             val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
             val am = AccountManager.get(activity)
-            val account = AccountUtils.findByAccountKey(am, accountKey)
+            val account = am.findAccount(accountKey)
             if (account != null) {
                 color = account.getColor(am)
             }
@@ -1155,7 +1154,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         }
 
         fun updateAccount(am: AccountManager) {
-            val account = AccountUtils.findByAccountKey(am, user.key) ?: return
+            val account = am.findAccount(user.key) ?: return
             writeAccountInfo { k, v ->
                 am.setUserData(account, k, v)
             }

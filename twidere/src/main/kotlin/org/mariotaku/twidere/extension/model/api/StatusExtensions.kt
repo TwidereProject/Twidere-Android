@@ -36,7 +36,6 @@ import org.mariotaku.twidere.extension.model.updateContentFilterInfo
 import org.mariotaku.twidere.extension.model.updateFilterInfo
 import org.mariotaku.twidere.extension.toSpanItem
 import org.mariotaku.twidere.model.*
-import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.text.placeholder.CustomEmojiShortCodeSpan
 import org.mariotaku.twidere.util.EntityArrays
@@ -371,7 +370,7 @@ private val Status.parcelableLocation: ParcelableLocation?
     get() {
         val geoLocation = geoLocation
         if (geoLocation != null) {
-            return ParcelableLocationUtils.fromGeoLocation(geoLocation)
+            return ParcelableLocation(geoLocation.latitude, geoLocation.longitude)
         }
         val locationString = location ?: return null
         val location = ParcelableLocation.valueOf(locationString)

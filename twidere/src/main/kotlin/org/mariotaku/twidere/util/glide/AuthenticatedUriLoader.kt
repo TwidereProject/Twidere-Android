@@ -26,12 +26,12 @@ import com.bumptech.glide.integration.okhttp3.OkHttpStreamFetcher
 import com.bumptech.glide.load.data.DataFetcher
 import com.bumptech.glide.load.model.*
 import okhttp3.OkHttpClient
+import org.mariotaku.twidere.extension.findAccount
 import org.mariotaku.twidere.extension.model.authorizationHeader
 import org.mariotaku.twidere.extension.model.getCredentials
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.model.media.AuthenticatedUri
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.media.TwidereMediaDownloader
 import java.io.InputStream
 
@@ -50,10 +50,11 @@ class AuthenticatedUriLoader(
         return OkHttpStreamFetcher(client, glideUrl)
     }
 
-    val UserKey.credentials: Credentials? get() {
-        val am = AccountManager.get(context)
-        return AccountUtils.findByAccountKey(am, this)?.getCredentials(am)
-    }
+    val UserKey.credentials: Credentials?
+        get() {
+            val am = AccountManager.get(context)
+            return am.findAccount(this)?.getCredentials(am)
+        }
 
     internal class AuthorizationHeaderFactory(val uri: Uri, val credentials: Credentials) : LazyHeaderFactory {
         override fun buildHeader() = credentials.authorizationHeader(uri)

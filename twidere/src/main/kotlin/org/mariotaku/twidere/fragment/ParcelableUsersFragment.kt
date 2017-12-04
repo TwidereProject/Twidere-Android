@@ -43,6 +43,7 @@ import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.accountKey
+import org.mariotaku.twidere.extension.findAccount
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.extension.simpleLayout
@@ -54,7 +55,6 @@ import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 import org.mariotaku.twidere.model.pagination.Pagination
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.promise.BlockPromises
 import org.mariotaku.twidere.promise.FriendshipPromises
 import org.mariotaku.twidere.promise.MutePromises
@@ -178,7 +178,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         adapter.showFollow = showFollow
         val accountType = arguments?.accountKey?.let { key ->
             val am = AccountManager.get(context)
-            return@let AccountUtils.findByAccountKey(am, key)?.getAccountType(am)
+            return@let am.findAccount(key)?.getAccountType(am)
         }
         when (accountType) {
             AccountType.TWITTER, AccountType.FANFOU, AccountType.STATUSNET -> {

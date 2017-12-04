@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.util
 
 import android.content.ContentValues
-import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.microblog.library.twitter.model.SavedSearch
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUser

@@ -28,9 +28,6 @@ import org.mariotaku.twidere.model.CronExpression;
 import java.io.IOException;
 import java.text.ParseException;
 
-/**
- * Created by mariotaku on 2017/8/19.
- */
 public class CronExpressionConverter implements TypeConverter<CronExpression> {
 
     @Override

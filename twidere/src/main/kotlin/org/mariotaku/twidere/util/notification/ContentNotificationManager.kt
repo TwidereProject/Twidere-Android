@@ -47,6 +47,7 @@ import org.mariotaku.twidere.annotation.NotificationType
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
 import org.mariotaku.twidere.constant.nameFirstKey
+import org.mariotaku.twidere.extension.getDetails
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.formattedTextWithIndices
 import org.mariotaku.twidere.extension.queryOne
@@ -54,7 +55,6 @@ import org.mariotaku.twidere.extension.queryReference
 import org.mariotaku.twidere.extension.rawQuery
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.notification.NotificationChannelSpec
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
@@ -169,7 +169,7 @@ class ContentNotificationManager(
         val am = AccountManager.get(context)
         val cr = context.contentResolver
         val accountKey = pref.accountKey
-        val account = AccountUtils.getAccountDetails(am, accountKey, false) ?: return
+        val account = am.getDetails(accountKey, false) ?: return
         val selection = Expression.and(
                 Expression.equalsArgs(Activities.ACCOUNT_KEY),
                 Expression.greaterThan(Activities.POSITION_KEY, position),

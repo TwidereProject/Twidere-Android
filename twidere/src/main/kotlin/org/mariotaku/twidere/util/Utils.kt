@@ -56,7 +56,7 @@ import android.view.accessibility.AccessibilityManager
 import android.widget.Toast
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.getNullableTypedArray
-import org.mariotaku.ktextension.toLocalizedString
+import org.mariotaku.ktextension.toString
 import org.mariotaku.pickncrop.library.PNCUtils
 import org.mariotaku.sqliteqb.library.AllColumns
 import org.mariotaku.sqliteqb.library.Columns
@@ -81,11 +81,11 @@ import org.mariotaku.twidere.constant.SharedPreferenceConstants.*
 import org.mariotaku.twidere.constant.bandwidthSavingModeKey
 import org.mariotaku.twidere.constant.defaultAccountKey
 import org.mariotaku.twidere.constant.mediaPreviewKey
+import org.mariotaku.twidere.extension.findAccount
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUserMention
 import org.mariotaku.twidere.model.PebbleMessage
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
 import org.mariotaku.twidere.util.TwidereLinkify.PATTERN_TWITTER_PROFILE_IMAGES
 import java.io.File
@@ -285,7 +285,7 @@ object Utils {
     }
 
     fun getLocalizedNumber(locale: Locale, number: Number): String {
-        return number.toLocalizedString(locale)
+        return number.toString(locale)
     }
 
     fun getMatchedNicknameKeys(str: String, manager: UserColorNameManager): Array<String> {
@@ -404,12 +404,12 @@ object Utils {
 
     fun isMyAccount(context: Context, accountKey: UserKey): Boolean {
         val am = AccountManager.get(context)
-        return AccountUtils.findByAccountKey(am, accountKey) != null
+        return am.findAccount(accountKey) != null
     }
 
     fun isMyAccount(context: Context, screenName: String): Boolean {
         val am = AccountManager.get(context)
-        return AccountUtils.findByScreenName(am, screenName) != null
+        return am.findAccount(screenName) != null
     }
 
     fun isMyRetweet(status: ParcelableStatus?): Boolean {

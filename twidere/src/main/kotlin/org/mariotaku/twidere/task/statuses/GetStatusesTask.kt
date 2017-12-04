@@ -43,8 +43,8 @@ import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.data.syncher.TimelinePositionSyncher
-import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.extension.bulkInsert
+import org.mariotaku.twidere.extension.getDetailsOrThrow
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.applyLoadLimit
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
@@ -56,7 +56,6 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.GetStatusesTaskEvent
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.task.GetTimelineResult
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.BaseAbstractTask
@@ -85,8 +84,7 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
         val loadItemLimit = preferences[loadItemLimitKey]
         val result = accountKeys.mapIndexed { i, accountKey ->
             try {
-                val account = AccountUtils.getAccountDetails(AccountManager.get(context),
-                        accountKey, true) ?: throw AccountNotFoundException()
+                val account = AccountManager.get(context).getDetailsOrThrow(accountKey, true)
                 val paging = Paging()
                 paging.applyLoadLimit(account, loadItemLimit)
                 val maxId = param.getMaxId(i)

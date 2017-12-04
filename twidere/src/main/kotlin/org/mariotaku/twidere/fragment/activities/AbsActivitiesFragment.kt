@@ -44,7 +44,6 @@ import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
-import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter
@@ -58,6 +57,7 @@ import org.mariotaku.twidere.constant.readFromBottomKey
 import org.mariotaku.twidere.data.CursorObjectLivePagedListProvider
 import org.mariotaku.twidere.data.CursorObjectLivePagedListProvider.CursorObjectProcessor
 import org.mariotaku.twidere.data.ExtendedPagedListProvider
+import org.mariotaku.twidere.extension.findAccount
 import org.mariotaku.twidere.extension.model.activityStatus
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.extension.queryOne
@@ -65,7 +65,10 @@ import org.mariotaku.twidere.extension.view.firstVisibleItemPosition
 import org.mariotaku.twidere.extension.view.lastVisibleItemPosition
 import org.mariotaku.twidere.fragment.AbsContentRecyclerViewFragment
 import org.mariotaku.twidere.fragment.timeline.AbsTimelineFragment
-import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.model.ParcelableActivity
+import org.mariotaku.twidere.model.ParcelableMedia
+import org.mariotaku.twidere.model.ParcelableStatus
+import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.analyzer.Share
 import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.event.GetActivitiesTaskEvent
@@ -74,7 +77,6 @@ import org.mariotaku.twidere.model.event.StatusRetweetedEvent
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.refresh.BaseContentRefreshParam
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.task.statuses.GetStatusesTask
 import org.mariotaku.twidere.util.*
@@ -190,7 +192,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
                 startActivity(chooser)
 
                 val am = AccountManager.get(context)
-                val accountType = AccountUtils.findByAccountKey(am, status.account_key)?.getAccountType(am)
+                val accountType = am.findAccount(status.account_key)?.getAccountType(am)
                 Analyzer.log(Share.status(accountType, status))
                 return true
             }
@@ -304,8 +306,10 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
             }
         }
         if (firstVisiblePosition == 0 && !preferences[readFromBottomKey]) {
+            val weakThis by weak(this)
             recyclerView.post {
-                scrollToStart()
+                val f = weakThis?.takeIf { !it.isDetached } ?: return@post
+                f.scrollToStart()
             }
         }
     }
@@ -509,14 +513,6 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
         override fun onGapClick(holder: GapViewHolder, position: Int) {
             val activity = adapter.getActivity(position)
             DebugLog.v(msg = "Load activity gap $activity")
-            if (!AccountUtils.isOfficial(context!!, activity.account_key)) {
-                // Skip if item is not a status
-                if (activity.action !in Activity.Action.MENTION_ACTIONS) {
-                    adapter.removeGapLoadingId(ObjectId(activity.account_key, activity.id))
-                    adapter.notifyItemChanged(position)
-                    return
-                }
-            }
             val accountKeys = arrayOf(activity.account_key)
             val pagination = arrayOf(SinceMaxPagination.maxId(activity.min_position,
                     activity.min_sort_position))

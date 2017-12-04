@@ -28,7 +28,6 @@ import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.extension.getDetailsOrThrow
 import org.mariotaku.twidere.extension.model.addParticipants
 import org.mariotaku.twidere.extension.model.isOfficial
@@ -38,7 +37,6 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
@@ -49,8 +47,7 @@ class ConversationPromises private constructor(private val application: Applicat
 
     fun setNotificationDisabled(accountKey: UserKey, conversationId: String,
             notificationDisabled: Boolean): Promise<Boolean, Exception> = task {
-        val account = AccountUtils.getAccountDetails(AccountManager.get(application),
-                accountKey, true) ?: throw AccountNotFoundException()
+        val account = AccountManager.get(application).getDetailsOrThrow(accountKey, true)
         val addData = requestSetNotificationDisabled(account, conversationId, notificationDisabled)
         GetMessagesTask.storeMessages(application, addData, account)
         return@task true

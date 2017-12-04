@@ -58,10 +58,10 @@ import org.mariotaku.twidere.constant.themeKey
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.hasInvalidAccount
+import org.mariotaku.twidere.extension.hasPermission
 import org.mariotaku.twidere.extension.model.displayingScore
 import org.mariotaku.twidere.extension.model.shouldShow
 import org.mariotaku.twidere.model.presentation.LaunchPresentation
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.promise.LaunchPresentationsPromises
 import org.mariotaku.twidere.util.DeviceUtils
 import org.mariotaku.twidere.util.OnLinkClickHandler
@@ -270,7 +270,7 @@ open class MainActivity : ChameleonActivity(), IBaseActivity<MainActivity> {
         val am = AccountManager.get(this)
         if (!DeviceUtils.checkCompatibility()) {
             startActivity(Intent(this, IncompatibleAlertActivity::class.java))
-        } else if (!AccountUtils.hasAccountPermission(am)) {
+        } else if (!am.hasPermission()) {
             Toast.makeText(this, R.string.message_toast_no_account_permission, Toast.LENGTH_SHORT).show()
         } else if (am.hasInvalidAccount()) {
             val intent = Intent(this, InvalidAccountAlertActivity::class.java)

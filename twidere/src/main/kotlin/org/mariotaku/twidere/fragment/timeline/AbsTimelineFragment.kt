@@ -65,6 +65,7 @@ import org.mariotaku.twidere.data.ExtendedPagedListProvider
 import org.mariotaku.twidere.data.StatusesLivePagedListProvider
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.extension.adapter.removeStatuses
+import org.mariotaku.twidere.extension.findAccount
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.extension.promise
@@ -90,7 +91,6 @@ import org.mariotaku.twidere.model.refresh.BaseContentRefreshParam
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.tab.extra.TimelineTabExtras
 import org.mariotaku.twidere.model.timeline.TimelineFilter
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.promise.StatusPromises
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.CreateFavoriteTask
@@ -224,7 +224,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                 startActivity(chooser)
 
                 val am = AccountManager.get(context)
-                val accountType = AccountUtils.findByAccountKey(am, status.account_key)?.getAccountType(am)
+                val accountType = am.findAccount(status.account_key)?.getAccountType(am)
                 Analyzer.log(Share.status(accountType, status))
                 return true
             }
@@ -341,7 +341,11 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
             }
         }
         if (firstVisiblePosition == 0 && !preferences[readFromBottomKey]) {
-            scrollToStart()
+            val weakThis by weak(this)
+            recyclerView.post {
+                val f = weakThis?.takeIf { !it.isDetached } ?: return@post
+                f.scrollToStart()
+            }
         }
     }
 

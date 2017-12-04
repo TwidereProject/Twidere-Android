@@ -34,17 +34,12 @@ import org.mariotaku.twidere.activity.UserSelectorActivity
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_HOST
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.dagger.component.GeneralComponent
-import org.mariotaku.twidere.exception.AccountNotFoundException
-import org.mariotaku.twidere.extension.bulkDelete
-import org.mariotaku.twidere.extension.dismissProgressDialog
-import org.mariotaku.twidere.extension.get
-import org.mariotaku.twidere.extension.showProgressDialog
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.fragment.AddUserFilterDialogFragment
 import org.mariotaku.twidere.model.FiltersData
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.promise.MutePromises
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.text.style.EmojiSpan
@@ -218,8 +213,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
         showProgressDialog("export_to_muted").then {
             val context = weakThis?.context ?: throw InterruptedException()
             val am = AccountManager.get(context)
-            val account = AccountUtils.getAccountDetails(am, accountKey, true) ?:
-                    throw AccountNotFoundException()
+            val account = am.getDetailsOrThrow(accountKey, true)
             MutePromises.muteUsers(context, account, items)
         }.alwaysUi {
             weakThis?.dismissProgressDialog("export_to_muted")

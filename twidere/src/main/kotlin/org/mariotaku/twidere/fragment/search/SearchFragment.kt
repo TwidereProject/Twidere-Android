@@ -53,7 +53,6 @@ import org.mariotaku.twidere.fragment.users.SearchUsersFragment
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.analyzer.Search
 import org.mariotaku.twidere.model.tab.DrawableHolder
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.promise.SavedSearchPromises
 import org.mariotaku.twidere.provider.RecentSearchProvider
 import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory
@@ -80,7 +79,7 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface,
     private val accountType: String?
         get() {
             val am = AccountManager.get(context)
-            return accountKey.let { AccountUtils.findByAccountKey(am, it) }?.getAccountType(am)
+            return am.findAccount(accountKey)?.getAccountType(am)
         }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

@@ -8,13 +8,13 @@ import android.view.Menu
 import android.view.SubMenu
 import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT
+import org.mariotaku.twidere.extension.getAllDetails
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.AccountUtils
 
 class AccountActionProvider(
         context: Context,
-        var accounts: Array<AccountDetails>? = AccountUtils.getAllAccountDetails(AccountManager.get(context), false)
+        var accounts: Array<AccountDetails>? = AccountManager.get(context).getAllDetails(false)
 ) : ActionProvider(context), TwidereConstants {
 
     var selectedAccountKeys: Array<UserKey>? = null

@@ -38,7 +38,6 @@ import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.notification.NotificationChannelSpec
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
@@ -138,7 +137,7 @@ class StreamingService : BaseService() {
 
     private fun updateStreamingInstances(): Boolean {
         val am = AccountManager.get(this)
-        val supportedAccounts = AccountUtils.getAllAccountDetails(am, true).filter { it.isStreamingSupported }
+        val supportedAccounts = am.getAllDetails(true).filter { it.isStreamingSupported }
         val supportedPrefs = supportedAccounts.map { AccountPreferences(this, preferences, it.key) }
         val enabledAccounts = supportedAccounts.filter { account ->
             return@filter supportedPrefs.any {

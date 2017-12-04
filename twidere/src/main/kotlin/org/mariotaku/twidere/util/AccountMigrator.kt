@@ -16,7 +16,6 @@ import org.mariotaku.twidere.model.account.cred.BasicCredentials
 import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.model.account.cred.EmptyCredentials
 import org.mariotaku.twidere.model.account.cred.OAuthCredentials
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts
 
 /**
@@ -101,16 +100,27 @@ private fun ParcelableCredentials.toCredentials(): Credentials {
 
 }
 
+fun generateAccountName(screenName: String, accountHost: String?): String {
+    return UserKey(screenName, accountHost).toString()
+}
+
 @Credentials.Type
 @Suppress("deprecation")
 private fun ParcelableCredentials.getCredentialsType(): String {
-    return AccountUtils.getCredentialsType(auth_type)
+    return getCredentialsType(auth_type)
 }
 
 @Suppress("deprecation")
 private val ParcelableCredentials.account_name: String
     get() = generateAccountName(screen_name, account_key.host)
 
-fun generateAccountName(screenName: String, accountHost: String?): String {
-    return UserKey(screenName, accountHost).toString()
+private fun getCredentialsType(@AuthTypeInt authType: Int): String {
+    when (authType) {
+        AuthTypeInt.OAUTH -> return Credentials.Type.OAUTH
+        AuthTypeInt.BASIC -> return Credentials.Type.BASIC
+        AuthTypeInt.TWIP_O_MODE -> return Credentials.Type.EMPTY
+        AuthTypeInt.XAUTH -> return Credentials.Type.XAUTH
+        AuthTypeInt.OAUTH2 -> return Credentials.Type.OAUTH2
+    }
+    throw UnsupportedOperationException()
 }

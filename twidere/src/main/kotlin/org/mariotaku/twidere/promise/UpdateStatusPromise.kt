@@ -47,10 +47,7 @@ import org.mariotaku.microblog.library.fanfou.model.PhotoStatusUpdate
 import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.mastodon.model.Attachment
 import org.mariotaku.microblog.library.twitter.TwitterUpload
-import org.mariotaku.microblog.library.twitter.model.ErrorInfo
-import org.mariotaku.microblog.library.twitter.model.MediaUploadResponse
-import org.mariotaku.microblog.library.twitter.model.NewMediaMetadata
-import org.mariotaku.microblog.library.twitter.model.StatusUpdate
+import org.mariotaku.microblog.library.twitter.model.*
 import org.mariotaku.restfu.http.ContentType
 import org.mariotaku.restfu.http.mime.Body
 import org.mariotaku.restfu.http.mime.FileBody
@@ -72,7 +69,6 @@ import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.account.AccountExtras
 import org.mariotaku.twidere.model.analyzer.UpdateStatus
 import org.mariotaku.twidere.model.schedule.ScheduleInfo
-import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.preference.ComponentPickerPreference
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.util.*
@@ -461,8 +457,9 @@ class UpdateStatusPromise(
         if (statusUpdate.attachment_url != null) {
             status.attachmentUrl(statusUpdate.attachment_url)
         }
-        if (statusUpdate.location != null) {
-            status.location(ParcelableLocationUtils.toGeoLocation(statusUpdate.location))
+        val location = statusUpdate.location
+        if (location != null) {
+            status.location(GeoLocation(location.latitude, location.longitude))
             status.displayCoordinates(statusUpdate.display_coordinates)
         }
         val mediaIds = pendingUpdate.mediaIds[index]

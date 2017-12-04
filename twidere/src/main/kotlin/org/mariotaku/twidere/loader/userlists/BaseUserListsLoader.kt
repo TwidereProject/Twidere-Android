@@ -35,6 +35,7 @@ import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
+import org.mariotaku.twidere.extension.getDetails
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.loader.iface.IPaginationLoader
@@ -42,7 +43,6 @@ import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.CursorPagination
 import org.mariotaku.twidere.model.pagination.Pagination
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.collection.NoDuplicatesArrayList
 import java.util.*
 import javax.inject.Inject
@@ -82,7 +82,7 @@ abstract class BaseUserListsLoader(
         var listLoaded: List<UserList>? = null
         try {
             val am = AccountManager.get(context)
-            val details = AccountUtils.getAccountDetails(am, accountKey, true) ?: return data
+            val details = am.getDetails(accountKey, true) ?: return data
             val twitter = details.newMicroBlogInstance(context, MicroBlog::class.java)
             val paging = Paging()
             paging.count(preferences[loadItemLimitKey].coerceIn(0, 100))

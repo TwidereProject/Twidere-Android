@@ -86,16 +86,15 @@ public class ParcelableLocation implements Parcelable {
 
     @Nullable
     public static ParcelableLocation valueOf(@NonNull final String locationString) {
-        if (locationString == null) return null;
-        final String[] longlat = locationString.split(",");
-        if (longlat.length != 2) {
+        final String[] latLong = locationString.split(",");
+        if (latLong.length != 2) {
             return null;
         }
 
         ParcelableLocation obj = new ParcelableLocation();
         try {
-            obj.latitude = Double.parseDouble(longlat[0]);
-            obj.longitude = Double.parseDouble(longlat[1]);
+            obj.latitude = Double.parseDouble(latLong[0]);
+            obj.longitude = Double.parseDouble(latLong[1]);
         } catch (NumberFormatException e) {
             return null;
         }

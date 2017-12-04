@@ -50,17 +50,13 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.constant.refreshAfterTweetKey
-import org.mariotaku.twidere.extension.get
-import org.mariotaku.twidere.extension.getErrorMessage
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.notificationBuilder
-import org.mariotaku.twidere.extension.queryOne
-import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtras
 import org.mariotaku.twidere.model.draft.StatusObjectActionExtras
 import org.mariotaku.twidere.model.notification.NotificationChannelSpec
 import org.mariotaku.twidere.model.schedule.ScheduleInfo
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUpdateUtils
 import org.mariotaku.twidere.promise.RefreshPromises
 import org.mariotaku.twidere.promise.UpdateStatusPromise
@@ -136,7 +132,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
                 val message = ParcelableNewMessage().apply {
                     this.account = draft.account_keys?.firstOrNull()?.let { key ->
                         val am = AccountManager.get(this@LengthyOperationsService)
-                        return@let AccountUtils.getAccountDetails(am, key, true)
+                        return@let am.getDetails(key, true)
                     }
                     this.text = draft.text
                     this.media = draft.media

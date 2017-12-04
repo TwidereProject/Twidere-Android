@@ -69,7 +69,6 @@ import org.mariotaku.kpreferences.edit
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
 import org.mariotaku.ktextension.*
-import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.mastodon.annotation.StatusVisibility
 import org.mariotaku.pickncrop.library.MediaPickerActivity
 import org.mariotaku.twidere.Constants.*
@@ -90,8 +89,6 @@ import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.model.draft.UpdateStatusActionExtras
 import org.mariotaku.twidere.model.schedule.ScheduleInfo
-import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.preference.ComponentPickerPreference
 import org.mariotaku.twidere.promise.UpdateStatusPromise
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
@@ -244,7 +241,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             finish()
             return
         }
-        val accountDetails = AccountUtils.getAllAccountDetails(am, accounts, true)
+        val accountDetails = am.getAllDetails(accounts, true)
         val defaultAccountKeys = accountDetails.mapToArray(AccountDetails::key)
         menuBar.setOnMenuItemClickListener(this)
         setupEditText()
@@ -972,8 +969,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private fun handleReplyIntent(status: ParcelableStatus?): Boolean {
         if (status == null) return false
         val am = AccountManager.get(this)
-        val statusAccount = AccountUtils.getAccountDetails(am, status.account_key,
-                false) ?: return false
+        val statusAccount = am.getDetails(status.account_key, false) ?: return false
         val accountUser = statusAccount.user
         val mentions = ArrayList<String>()
         val userAcct = status.user_acct
@@ -1377,7 +1373,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         if (location == null) {
             locationLabel.setText(R.string.unknown_location)
         } else if (preferences[attachPreciseLocationKey]) {
-            locationLabel.spannable = ParcelableLocationUtils.getHumanReadableString(location, 3)
+            locationLabel.spannable = location.getHumanReadableString(3)
         } else if (locationLabel.tag == null || location != recentLocation) {
             loadPlaceName(location)
         }
@@ -1843,7 +1839,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 locationLabel.setText(R.string.no_location)
             }
             preferences[attachPreciseLocationKey] -> {
-                locationLabel.string = ParcelableLocationUtils.getHumanReadableString(location, 3)
+                locationLabel.string = location.getHumanReadableString(3)
             }
             else -> {
                 val tag = locationLabel.tag
@@ -2001,7 +1997,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         private val activity by weak(activity)
 
         override fun onLocationChanged(location: Location) {
-            activity?.setRecentLocation(ParcelableLocationUtils.fromLocation(location))
+            activity?.setRecentLocation(ParcelableLocation(location.latitude, location.longitude))
         }
 
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {

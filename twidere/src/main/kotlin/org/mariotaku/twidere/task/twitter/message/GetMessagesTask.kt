@@ -23,7 +23,6 @@ import android.accounts.AccountManager
 import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
-import org.mariotaku.commons.logansquare.LoganSquareMapperFinder
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.toIntOr
 import org.mariotaku.ktextension.toLongOr
@@ -37,11 +36,9 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_SHOW_NOTIFICATION
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.extension.blockBulkInsert
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.toParcelable
-import org.mariotaku.twidere.extension.queryCount
-import org.mariotaku.twidere.extension.queryReference
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
 import org.mariotaku.twidere.model.event.GetMessagesTaskEvent
@@ -51,8 +48,6 @@ import org.mariotaku.twidere.model.pagination.CursorPagination
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
-import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.model.util.AccountUtils.getAccountDetails
 import org.mariotaku.twidere.model.util.ParcelableMessageUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
@@ -77,11 +72,7 @@ class GetMessagesTask(
         val accountKeys = param.accountKeys
         val am = android.accounts.AccountManager.get(context)
         accountKeys.forEachIndexed { i, accountKey ->
-            val details = try {
-                getAccountDetails(am, accountKey, true) ?: return@forEachIndexed
-            } catch (e: LoganSquareMapperFinder.ClassLoaderDeadLockException) {
-                return
-            }
+            val details = am.getDetails(accountKey, true) ?: return@forEachIndexed
             val microBlog = details.newMicroBlogInstance(context, cls = MicroBlog::class.java)
             val messages = try {
                 getMessages(microBlog, details, param, i)
@@ -346,7 +337,7 @@ class GetMessagesTask(
         var taskTag: String? = null
 
         protected val accounts: Array<AccountDetails?> by lazy {
-            AccountUtils.getAllAccountDetails(AccountManager.get(context), accountKeys, false)
+            AccountManager.get(context).getAllDetails(accountKeys, false)
         }
 
         protected val defaultKeys: Array<UserKey?> by lazy {

@@ -39,11 +39,12 @@ import org.json.JSONObject
 import org.mariotaku.ktextension.subArray
 import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.exception.NoAccountException
+import org.mariotaku.twidere.extension.getAllDetails
+import org.mariotaku.twidere.extension.getDetails
 import org.mariotaku.twidere.extension.model.updateDetails
 import org.mariotaku.twidere.extension.ownedAccounts
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.JsonSerializer
 import java.io.InputStream
@@ -260,7 +261,7 @@ class AccountsDumperPlugin(val context: Context) : DumperPlugin {
 
             val gz = GZIPOutputStream(CipherOutputStream(base64, cipher))
             // write accounts
-            val accounts = AccountUtils.getAllAccountDetails(this, true).toList()
+            val accounts = this.getAllDetails(true).toList()
             JsonSerializer.serialize(accounts, gz, AccountDetails::class.java)
         }
 
@@ -310,7 +311,7 @@ class AccountsDumperPlugin(val context: Context) : DumperPlugin {
 
         private fun AccountManager.docContext(forKey: String): DocumentContext {
             val accountKey = UserKey.valueOf(forKey)
-            val details = AccountUtils.getAccountDetails(this, accountKey, true)
+            val details = getDetails(accountKey, true)
                     ?: throw AccountNotFoundException()
             val configuration = Configuration.builder()
                     .jsonProvider(JsonOrgJsonProvider())

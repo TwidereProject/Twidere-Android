@@ -5,9 +5,9 @@ import android.accounts.OnAccountsUpdateListener
 import android.content.Context
 import android.support.v4.content.FixedAsyncTaskLoader
 import org.mariotaku.twidere.extension.addOnAccountsUpdatedListenerSafe
+import org.mariotaku.twidere.extension.getAllDetails
 import org.mariotaku.twidere.extension.removeOnAccountsUpdatedListenerSafe
 import org.mariotaku.twidere.model.AccountDetails
-import org.mariotaku.twidere.model.util.AccountUtils
 import java.lang.ref.WeakReference
 
 /**
@@ -31,7 +31,7 @@ class AccountDetailsLoader(
 
     override fun loadInBackground(): List<AccountDetails> {
         val am: AccountManager = AccountManager.get(context)
-        return AccountUtils.getAllAccountDetails(am, true).filter {
+        return am.getAllDetails(true).filter {
             filter?.invoke(it) ?: true
         }.sortedBy(AccountDetails::position)
     }
