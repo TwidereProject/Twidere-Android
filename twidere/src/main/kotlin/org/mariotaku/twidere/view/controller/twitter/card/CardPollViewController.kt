@@ -23,6 +23,7 @@ import android.accounts.AccountManager
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
+import android.support.v4.view.ViewCompat
 import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -155,11 +156,11 @@ class CardPollViewController : ContainerView.ViewController() {
             if (showResult) {
                 choicePercentView.visibility = View.VISIBLE
                 choiceRadioButton.visibility = if (hasChoice && isSelected) View.VISIBLE else View.INVISIBLE
-                ViewSupport.setBackground(choiceLabelView, PercentDrawable(choicePercent, radius, color))
+                ViewCompat.setBackground(choiceLabelView, PercentDrawable(choicePercent, radius, color))
             } else {
                 choicePercentView.visibility = View.GONE
                 choiceRadioButton.visibility = View.VISIBLE
-                ViewSupport.setBackground(choiceLabelView, null)
+                ViewCompat.setBackground(choiceLabelView, null)
             }
 
             choiceRadioButton.isChecked = isSelected

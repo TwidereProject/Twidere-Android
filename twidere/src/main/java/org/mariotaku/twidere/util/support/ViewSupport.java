@@ -20,16 +20,13 @@
 package org.mariotaku.twidere.util.support;
 
 import android.annotation.TargetApi;
-import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.mariotaku.twidere.util.support.view.ViewOutlineProviderCompat;
@@ -48,49 +45,15 @@ public final class ViewSupport {
         }
     }
 
-    @SuppressWarnings("deprecation")
-    public static void setBackground(final View view, final Drawable background) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            view.setBackgroundDrawable(background);
-        } else {
-            ViewAccessorJB.setBackground(view, background);
-        }
-    }
-
-    public static void setButtonTintList(CompoundButton view, ColorStateList list) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
-        ViewAccessorL.setButtonTintList(view, list);
-    }
-
-    public static ColorStateList getButtonTintList(CompoundButton view) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return null;
-        return ViewAccessorL.getButtonTintList(view);
-    }
-
     public static void setClipToOutline(View view, boolean clipToOutline) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
         ViewAccessorL.setClipToOutline(view, clipToOutline);
-    }
-
-    public static void setIndeterminateTintList(ProgressBar view, ColorStateList list) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
-        ViewAccessorL.setIndeterminateTintList(view, list);
     }
 
     public static void setOutlineProvider(View view, ViewOutlineProviderCompat outlineProvider) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
         ViewAccessorL.setOutlineProvider(view, outlineProvider);
 
-    }
-
-    public static void setProgressBackgroundTintList(ProgressBar view, ColorStateList list) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
-        ViewAccessorL.setProgressBackgroundTintList(view, list);
-    }
-
-    public static void setProgressTintList(ProgressBar view, ColorStateList list) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
-        ViewAccessorL.setProgressTintList(view, list);
     }
 
     @SuppressWarnings("unchecked")
@@ -122,17 +85,6 @@ public final class ViewSupport {
             ViewAccessorICS.setForeground(view, foreground);
         } else {
             view.setForeground(foreground);
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    static class ViewAccessorJB {
-        private ViewAccessorJB() {
-        }
-
-        static void setBackground(final View view, final Drawable background) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) return;
-            view.setBackground(background);
         }
     }
 
@@ -179,30 +131,6 @@ public final class ViewSupport {
         }
 
 
-        static void setButtonTintList(final CompoundButton view, final ColorStateList list) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
-            view.setButtonTintList(list);
-        }
-
-        static void setIndeterminateTintList(final ProgressBar view, final ColorStateList list) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
-            view.setIndeterminateTintList(list);
-        }
-
-        static void setProgressBackgroundTintList(final ProgressBar view, final ColorStateList list) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
-            view.setProgressBackgroundTintList(list);
-        }
-
-        static void setProgressTintList(final ProgressBar view, final ColorStateList list) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
-            view.setProgressTintList(list);
-        }
-
-        public static ColorStateList getButtonTintList(CompoundButton view) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return null;
-            return view.getButtonTintList();
-        }
     }
 
 

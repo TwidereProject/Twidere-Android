@@ -17,22 +17,27 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<org.mariotaku.twidere.view.SquareFrameLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:padding="@dimen/element_spacing_small"
-    tools:layout_width="48dp">
+    tools:layout_height="48dp">
 
     <org.mariotaku.twidere.view.ProfileImageView
         android:id="@+id/profileImage"
         style="?profileImageStyle"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:contentDescription="@string/profile_image"
         android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="H,1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/ic_profile_image_twidere"/>
 
-</org.mariotaku.twidere.view.SquareFrameLayout>
+</android.support.constraint.ConstraintLayout>

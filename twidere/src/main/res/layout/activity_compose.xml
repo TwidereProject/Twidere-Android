@@ -229,7 +229,7 @@
             </LinearLayout>
         </RelativeLayout>
 
-        <RelativeLayout
+        <android.support.constraint.ConstraintLayout
             android:id="@+id/accountSelectorButton"
             style="?actionButtonStyle"
             android:layout_width="wrap_content"
@@ -245,10 +245,13 @@
             android:paddingStart="@dimen/element_spacing_msmall"
             android:paddingTop="@dimen/element_spacing_msmall">
 
-            <org.mariotaku.twidere.view.SquareFrameLayout
+            <FrameLayout
                 android:id="@+id/accountProfileImageFrame"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="H,1"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <org.mariotaku.twidere.view.ProfileImageView
                     android:id="@+id/accountProfileImage"
@@ -260,23 +263,20 @@
                     app:sivBorder="true"
                     app:sivBorderWidth="@dimen/line_width_compose_account_profile_image"
                     tools:src="@drawable/ic_profile_image_twidere"/>
-            </org.mariotaku.twidere.view.SquareFrameLayout>
+            </FrameLayout>
 
             <org.mariotaku.twidere.view.BadgeView
                 android:id="@+id/accountsCount"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignBottom="@+id/accountProfileImageFrame"
-                android:layout_alignEnd="@+id/accountProfileImageFrame"
-                android:layout_alignLeft="@+id/accountProfileImageFrame"
-                android:layout_alignRight="@+id/accountProfileImageFrame"
-                android:layout_alignStart="@+id/accountProfileImageFrame"
-                android:layout_alignTop="@+id/accountProfileImageFrame"
-                android:layout_gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:contentDescription="@string/select_accounts_for_compose"
-                android:textColor="?android:colorForeground"/>
+                android:textColor="?android:colorForeground"
+                app:layout_constraintBottom_toBottomOf="@+id/accountProfileImageFrame"
+                app:layout_constraintEnd_toEndOf="@+id/accountProfileImageFrame"
+                app:layout_constraintStart_toStartOf="@+id/accountProfileImageFrame"
+                app:layout_constraintTop_toTopOf="@+id/accountProfileImageFrame"/>
 
-        </RelativeLayout>
+        </android.support.constraint.ConstraintLayout>
 
     </RelativeLayout>
 </LinearLayout>

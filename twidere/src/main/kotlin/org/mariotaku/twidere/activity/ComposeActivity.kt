@@ -52,7 +52,7 @@ import android.text.style.*
 import android.view.*
 import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
-import android.view.animation.DecelerateInterpolator
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import android.widget.Toast
 import com.bumptech.glide.Glide
@@ -1360,7 +1360,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         menu.setItemAvailability(R.id.attachment_visibility_submenu, hasAttachmentStatusVisibility)
         menu.setItemAvailability(R.id.location_submenu, hasLocationOption)
 
-        ThemeUtils.wrapMenuIcon(menuBar, excludeGroups = MENU_GROUP_IMAGE_EXTENSION)
+        ThemeUtils.wrapMenuIcon(menuBar, excludeGroups = *intArrayOf(MENU_GROUP_IMAGE_EXTENSION))
         ThemeUtils.resetCheatSheet(menuBar)
     }
 
@@ -1490,8 +1490,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             return
         }
 
-        LengthyOperationsService.updateStatusesAsync(this, update.draft_action, statuses = update,
-                scheduleInfo = scheduleInfo)
+        LengthyOperationsService.updateStatusesAsync(this, update.draft_action,
+                statuses = *arrayOf(update), scheduleInfo = scheduleInfo)
         finishComposing()
     }
 
@@ -1702,8 +1702,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private fun ViewAnimator.setupViews() {
         fun AnimatorSet.setup() {
-            interpolator = DecelerateInterpolator()
-            duration = 250
+            interpolator = AccelerateDecelerateInterpolator()
+            duration = 300
         }
 
         addView(accountSelector) { view ->

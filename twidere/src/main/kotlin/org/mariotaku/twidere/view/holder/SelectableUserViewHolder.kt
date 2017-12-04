@@ -19,12 +19,12 @@
 
 package org.mariotaku.twidere.view.holder
 
+import android.support.v4.view.ViewCompat
 import android.view.View
 import android.widget.CompoundButton
 import org.mariotaku.twidere.adapter.SelectableUsersAdapter
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.util.ThemeUtils
-import org.mariotaku.twidere.util.support.ViewSupport
 
 class SelectableUserViewHolder(
         itemView: View,
@@ -35,7 +35,7 @@ class SelectableUserViewHolder(
     }
 
     init {
-        ViewSupport.setBackground(itemView, ThemeUtils.getSelectableItemBackgroundDrawable(itemView.context))
+        ViewCompat.setBackground(itemView, ThemeUtils.getSelectableItemBackgroundDrawable(itemView.context))
         checkBox.visibility = View.VISIBLE
         itemView.setOnClickListener {
             checkBox.toggle()

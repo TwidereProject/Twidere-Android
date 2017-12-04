@@ -17,7 +17,7 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<org.mariotaku.twidere.view.SquareFrameLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -28,9 +28,14 @@
 
     <org.mariotaku.twidere.view.HighlightImageView
         android:id="@+id/image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="H,1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/nyan_stars_background_tile"/>
 
     <ProgressBar
@@ -38,27 +43,34 @@
         style="?android:progressBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
         android:id="@+id/videoIndicator"
         android:layout_width="@dimen/element_size_msmall"
         android:layout_height="@dimen/element_size_msmall"
-        android:layout_gravity="center"
         android:contentDescription="@string/label_video"
-        android:src="@drawable/ic_card_media_play"/>
+        android:src="@drawable/ic_card_media_play"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <com.lnikkila.extendedtouchview.ExtendedTouchView
         android:id="@+id/remove"
         style="?borderlessButtonStyle"
         android:layout_width="@dimen/element_size_normal"
         android:layout_height="@dimen/element_size_normal"
-        android:layout_gravity="end|top"
         android:layout_marginEnd="@dimen/element_spacing_minus_mlarge"
         android:layout_marginRight="@dimen/element_spacing_minus_mlarge"
         android:layout_marginTop="@dimen/element_spacing_minus_mlarge"
         android:background="?selectableItemBackgroundBorderless"
         android:contentDescription="@string/remove"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:touchHeight="@dimen/element_size_normal"
         app:touchWidth="@dimen/element_size_normal">
 
@@ -76,12 +88,10 @@
         style="?borderlessButtonStyle"
         android:layout_width="@dimen/element_size_normal"
         android:layout_height="@dimen/element_size_normal"
-        android:layout_gravity="end|bottom"
-        android:layout_marginBottom="@dimen/element_spacing_minus_mlarge"
-        android:layout_marginEnd="@dimen/element_spacing_minus_mlarge"
-        android:layout_marginRight="@dimen/element_spacing_minus_mlarge"
         android:background="?selectableItemBackgroundBorderless"
         android:contentDescription="@string/action_edit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:touchHeight="@dimen/element_size_normal"
         app:touchWidth="@dimen/element_size_normal">
 
@@ -93,4 +103,4 @@
             android:scaleType="center"
             android:src="@drawable/ic_btn_grid_item_edit"/>
     </com.lnikkila.extendedtouchview.ExtendedTouchView>
-</org.mariotaku.twidere.view.SquareFrameLayout>
+</android.support.constraint.ConstraintLayout>

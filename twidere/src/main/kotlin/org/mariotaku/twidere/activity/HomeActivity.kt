@@ -54,10 +54,7 @@ import android.support.v7.app.AppCompatDelegate
 import android.support.v7.graphics.drawable.DrawerArrowDrawable
 import android.support.v7.widget.TintTypedArray
 import android.util.SparseIntArray
-import android.view.Gravity
-import android.view.KeyEvent
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
 import android.view.ViewGroup.MarginLayoutParams
@@ -870,12 +867,14 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         homeMenu.setDrawerShadow(R.drawable.drawer_shadow_start, GravityCompat.START)
         homeMenu.addDrawerListener(drawerToggle)
         homeMenu.addDrawerListener(this)
-        homeMenu.setShouldDisableDecider(HomeDrawerLayout.ShouldDisableDecider { e ->
-            val fragment = leftDrawerFragment
-            if (fragment is AccountsDashboardFragment) {
-                return@ShouldDisableDecider fragment.shouldDisableDrawerSlide(e)
+        homeMenu.setShouldDisableDecider(object : HomeDrawerLayout.ShouldDisableDecider {
+            override fun shouldDisableTouch(e: MotionEvent): Boolean {
+                val fragment = leftDrawerFragment
+                if (fragment is AccountsDashboardFragment) {
+                    return fragment.shouldDisableDrawerSlide(e)
+                }
+                return false
             }
-            false
         })
     }
 

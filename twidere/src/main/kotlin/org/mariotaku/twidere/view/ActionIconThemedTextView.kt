@@ -23,11 +23,11 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PorterDuff.Mode
 import android.support.annotation.ColorInt
+import android.support.v4.widget.TextViewCompat
 import android.util.AttributeSet
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonView
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.util.support.TextViewSupport
 import org.mariotaku.twidere.view.iface.IIconActionButton
 
 class ActionIconThemedTextView(
@@ -91,7 +91,7 @@ class ActionIconThemedTextView(
     }
 
     fun updateCompoundDrawables() {
-        for (d in TextViewSupport.getCompoundDrawablesRelative(this)) {
+        for (d in TextViewCompat.getCompoundDrawablesRelative(this)) {
             if (d == null) continue
             d.mutate()
             val color = when {

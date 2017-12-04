@@ -21,11 +21,14 @@ package org.mariotaku.twidere.fragment
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.text.TextUtils.isEmpty
 import android.view.*
 import android.view.View.OnClickListener
+import android.widget.ImageView
 import com.twitter.Validator
 import kotlinx.android.synthetic.main.fragment_user_profile_editor.*
 import nl.komponents.kovenant.Promise
@@ -314,6 +317,10 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
 
         private val RESULT_REMOVE_BANNER = 101
         private val UPDATE_PROFILE_DIALOG_FRAGMENT_TAG = "update_profile"
+
+        private var ImageView.color: Int
+            get() = (drawable as? ColorDrawable)?.color ?: Color.TRANSPARENT
+            set(value) = setImageDrawable(ColorDrawable(value))
 
     }
 }

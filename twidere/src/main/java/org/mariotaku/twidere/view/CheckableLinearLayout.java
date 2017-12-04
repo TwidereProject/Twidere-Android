@@ -10,9 +10,6 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Checkable;
 import android.widget.LinearLayout;
 
-/**
- * Created by mariotaku on 16/2/1.
- */
 public class CheckableLinearLayout extends LinearLayout implements Checkable {
     private boolean mChecked;
 

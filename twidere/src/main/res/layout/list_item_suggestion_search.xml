@@ -63,7 +63,7 @@
             android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="?android:textColorPrimary"
-            tools:text="Mariotaku"/>
+            tools:text="Title"/>
 
     </LinearLayout>
 

@@ -224,12 +224,14 @@
                     android:orientation="horizontal"
                     android:padding="@dimen/element_spacing_normal">
 
-                    <org.mariotaku.twidere.view.ForegroundColorView
+                    <ImageView
                         android:id="@+id/linkColor"
                         android:layout_width="@dimen/element_size_normal"
                         android:layout_height="@dimen/element_size_normal"
                         android:layout_weight="0"
-                        tools:color="@color/branding_color"/>
+                        android:focusable="false"
+                        tools:ignore="ContentDescription"
+                        tools:src="@color/branding_color"/>
 
                     <org.mariotaku.twidere.view.FixedTextView
                         android:layout_width="match_parent"
@@ -254,12 +256,14 @@
                     android:orientation="horizontal"
                     android:padding="@dimen/element_spacing_normal">
 
-                    <org.mariotaku.twidere.view.ForegroundColorView
+                    <ImageView
                         android:id="@+id/backgroundColor"
                         android:layout_width="@dimen/element_size_normal"
                         android:layout_height="@dimen/element_size_normal"
                         android:layout_weight="0"
-                        tools:color="@color/branding_color"/>
+                        android:focusable="false"
+                        tools:ignore="ContentDescription"
+                        tools:src="@color/branding_color"/>
 
                     <org.mariotaku.twidere.view.FixedTextView
                         android:layout_width="match_parent"

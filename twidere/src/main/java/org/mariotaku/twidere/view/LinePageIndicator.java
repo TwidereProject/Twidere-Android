@@ -26,6 +26,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -33,7 +34,6 @@ import android.view.View;
 import android.view.ViewConfiguration;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.util.support.ViewSupport;
 import org.mariotaku.twidere.view.iface.PagerIndicator;
 
 /**
@@ -85,7 +85,7 @@ public class LinePageIndicator extends View implements PagerIndicator {
 
         final Drawable background = a.getDrawable(R.styleable.LinePageIndicator_android_background);
         if (background != null) {
-            ViewSupport.setBackground(this, background);
+            ViewCompat.setBackground(this, background);
         }
 
         a.recycle();

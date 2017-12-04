@@ -32,9 +32,6 @@ import org.mariotaku.sprite.library.LayeredCanvasView;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.Utils;
 
-/**
- * Created by mariotaku on 15/6/26.
- */
 public final class BirthdayView extends LayeredCanvasView {
     public BirthdayView(final Context context) {
         super(context);
