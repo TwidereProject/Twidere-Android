@@ -17,15 +17,19 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.provider;
+package org.mariotaku.twidere.receiver
 
-import android.content.SearchRecentSuggestionsProvider;
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import org.mariotaku.twidere.activity.HiddenSettingsActivity
 
-public class RecentSearchProvider extends SearchRecentSuggestionsProvider {
-	public final static String AUTHORITY = "org.mariotaku.twidere.provider.SearchRecentSuggestions";
-	public final static int MODE = DATABASE_MODE_QUERIES;
+class SecretCodeBroadcastReceiver : BroadcastReceiver() {
 
-	public RecentSearchProvider() {
-		setupSuggestions(AUTHORITY, MODE);
-	}
+    override fun onReceive(context: Context, intent: Intent) {
+        val testIntent = Intent(context, HiddenSettingsActivity::class.java)
+        testIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        context.startActivity(testIntent)
+    }
+
 }

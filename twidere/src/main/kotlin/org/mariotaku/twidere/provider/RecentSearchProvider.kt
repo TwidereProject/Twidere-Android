@@ -17,22 +17,17 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.receiver;
+package org.mariotaku.twidere.provider
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
+import android.content.SearchRecentSuggestionsProvider
 
-import org.mariotaku.twidere.activity.HiddenSettingsActivity;
-import org.mariotaku.twidere.constant.IntentConstants;
-
-public class SecretCodeBroadcastReceiver extends BroadcastReceiver implements IntentConstants {
-
-    @Override
-    public void onReceive(final Context context, final Intent intent) {
-        final Intent testIntent = new Intent(context, HiddenSettingsActivity.class);
-        testIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(testIntent);
+class RecentSearchProvider : SearchRecentSuggestionsProvider() {
+    init {
+        setupSuggestions(AUTHORITY, MODE)
     }
 
+    companion object {
+        const val AUTHORITY = "org.mariotaku.twidere.provider.SearchRecentSuggestions"
+        const val MODE = SearchRecentSuggestionsProvider.DATABASE_MODE_QUERIES
+    }
 }
