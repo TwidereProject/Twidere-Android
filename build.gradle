@@ -70,7 +70,7 @@ subprojects {
                     ParcelablePlease       : '1.0.2',
                     Chameleon              : '0.9.23',
                     UniqR                  : '0.9.4',
-                    SQLiteQB               : '0.9.15',
+                    SQLiteQB               : '0.9.16',
                     Glide                  : '3.7.0',
                     GlideOkHttp3           : '1.4.0',
                     GlideTransformations   : '2.0.2',

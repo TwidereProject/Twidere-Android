@@ -5,10 +5,6 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 
-/**
- * Created by mariotaku on 2017/1/25.
- */
-
 open class ContainerView(context: Context, attrs: AttributeSet? = null) : FrameLayout(context, attrs) {
 
     private var attachedToWindow: Boolean = false

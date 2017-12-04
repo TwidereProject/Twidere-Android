@@ -63,6 +63,13 @@ class MessagesConversationAdapter(
         IItemCountsAdapter {
     override val itemCounts: ItemCounts = ItemCounts(2)
 
+    override var loadMoreIndicatorPosition: Int
+        get() = super.loadMoreIndicatorPosition
+        set(value) {
+            super.loadMoreIndicatorPosition = value
+            updateItemCounts()
+        }
+
     @PreviewStyle
     val mediaPreviewStyle: Int = preferences[mediaPreviewStyleKey]
     val linkHighlightingStyle: Int = preferences[linkHighlightOptionKey]
@@ -73,27 +80,21 @@ class MessagesConversationAdapter(
             listener?.onMediaClick(id.toInt(), current, accountKey)
         }
     }
+
     val messageRange: IntRange
         get() {
             return itemCounts.getItemStartPosition(ITEM_START_MESSAGE) until itemCounts[ITEM_START_MESSAGE]
         }
-
     var messages: List<ParcelableMessage>? = null
         private set
     var conversation: ParcelableMessageConversation? = null
         private set
     var listener: Listener? = null
+
     var displaySenderProfile: Boolean = false
-
     val bubbleColorOutgoing: ColorStateList? = ThemeUtils.getColorStateListFromAttribute(context, R.attr.messageBubbleColor)
-    val bubbleColorIncoming: ColorStateList? = context.getIncomingMessageColor()
 
-    override var loadMoreIndicatorPosition: Int
-        get() = super.loadMoreIndicatorPosition
-        set(value) {
-            super.loadMoreIndicatorPosition = value
-            updateItemCounts()
-        }
+    val bubbleColorIncoming: ColorStateList? = context.getIncomingMessageColor()
 
     private val calendars = Pair(Calendar.getInstance(), Calendar.getInstance())
     private val reuseMessage = ParcelableMessage()
@@ -170,6 +171,11 @@ class MessagesConversationAdapter(
         }
     }
 
+    override fun updateItemCounts() {
+        itemCounts[ITEM_START_MESSAGE] = messages?.size ?: 0
+        itemCounts[ITEM_START_LOAD_OLDER] = if (LoadMorePosition.START in loadMoreIndicatorPosition) 1 else 0
+    }
+
     fun getMessage(position: Int, reuse: Boolean = false): ParcelableMessage {
         val messages = this.messages!!
         val dataPosition = position - itemCounts.getItemStartPosition(ITEM_START_MESSAGE)
@@ -201,11 +207,6 @@ class MessagesConversationAdapter(
         this.messages = messages
         updateItemCounts()
         notifyDataSetChanged()
-    }
-
-    private fun updateItemCounts() {
-        itemCounts[ITEM_START_MESSAGE] = messages?.size ?: 0
-        itemCounts[ITEM_START_LOAD_OLDER] = if (LoadMorePosition.START in loadMoreIndicatorPosition) 1 else 0
     }
 
     interface Listener {

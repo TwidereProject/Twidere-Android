@@ -30,9 +30,6 @@ import org.mariotaku.chameleon.view.ChameleonSwipeRefreshLayout
 import org.mariotaku.ktextension.systemWindowInsets
 import org.mariotaku.twidere.view.iface.IExtendedView
 
-/**
- * Created by mariotaku on 15/4/25.
- */
 class ExtendedSwipeRefreshLayout(context: Context, attrs: AttributeSet? = null) :
         ChameleonSwipeRefreshLayout(context, attrs), IExtendedView {
 

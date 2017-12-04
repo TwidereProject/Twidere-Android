@@ -39,13 +39,13 @@ class CursorObjectLivePagedListProvider<T : Any>(
         val selectionArgs: Array<String>? = null,
         val sortOrder: String? = null,
         val cls: Class<T>,
-        val predicate: CursorObjectLivePagedListProvider.CursorObjectProcessor<T>? = null
+        val processor: CursorObjectLivePagedListProvider.CursorObjectProcessor<T>? = null
 ) : ExtendedPagedListProvider<Int, T>() {
 
     @WorkerThread
     override fun onCreateDataSource(): DataSource<Int, T> {
         return CursorObjectTiledDataSource(resolver, uri, projection,
-                selection, selectionArgs, sortOrder, cls, predicate)
+                selection, selectionArgs, sortOrder, cls, processor)
     }
 
     interface CursorObjectProcessor<T> {

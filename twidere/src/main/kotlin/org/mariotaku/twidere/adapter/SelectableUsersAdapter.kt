@@ -113,7 +113,7 @@ class SelectableUsersAdapter(
         holder.displayUser(getUser(position))
     }
 
-    private fun updateItemCounts() {
+    override fun updateItemCounts() {
         val position = loadMoreIndicatorPosition
         itemCounts[ITEM_TYPE_START_INDICATOR] = if (LoadMorePosition.START in position) 1 else 0
         itemCounts[ITEM_TYPE_USER] = userCount

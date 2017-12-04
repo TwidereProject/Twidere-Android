@@ -140,6 +140,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
 
     override fun query(uri: Uri, projection: Array<String>?, selection: String?, selectionArgs: Array<String>?,
             sortOrder: String?): Cursor? {
+        val limit = uri.getQueryParameter(QUERY_PARAM_LIMIT)
         try {
             val tableId = DataStoreUtils.getTableId(uri)
             val table = DataStoreUtils.getTableNameById(tableId)
@@ -221,7 +222,11 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                     if (projection != null || selection != null || sortOrder != null) {
                         throw IllegalArgumentException()
                     }
-                    val c = databaseWrapper.rawQuery(uri.lastPathSegment, selectionArgs)
+                    var rawQuery = uri.lastPathSegment
+                    if (limit != null) {
+                        rawQuery = rawQuery.replace(PLACEHOLDER_LIMIT, limit)
+                    }
+                    val c = databaseWrapper.rawQuery(rawQuery, selectionArgs)
                     uri.getQueryParameter(QUERY_PARAM_NOTIFY_URI)?.let {
                         c?.setNotificationUri(context.contentResolver, Uri.parse(it))
                     }
@@ -229,7 +234,6 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                 }
             }
             if (table == null) return null
-            val limit = uri.getQueryParameter(QUERY_PARAM_LIMIT)
             val c = databaseWrapper.query(table, projection, selection, selectionArgs,
                     null, null, sortOrder, limit)
             c?.setNotificationUri(context.contentResolver, uri)
@@ -513,6 +517,8 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
     }
 
     companion object {
+
+        const val PLACEHOLDER_LIMIT = "{limit}"
 
         private fun getConflictAlgorithm(tableId: Int): Int {
             when (tableId) {

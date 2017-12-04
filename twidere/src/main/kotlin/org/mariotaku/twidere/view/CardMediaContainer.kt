@@ -39,7 +39,6 @@ import java.lang.ref.WeakReference
 
 /**
  * Dynamic layout for media preview
- * Created by mariotaku on 14/12/17.
  */
 class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGroup(context, attrs) {
 
@@ -48,9 +47,8 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
     private var childIndices: IntArray = IntArray(0)
     private var videoViewIds: IntArray = IntArray(0)
 
+    @PreviewStyle
     var style: Int = PreviewStyle.NONE
-        @PreviewStyle set
-        @PreviewStyle get
 
     init {
         val a = context.obtainStyledAttributes(attrs, R.styleable.CardMediaContainer)

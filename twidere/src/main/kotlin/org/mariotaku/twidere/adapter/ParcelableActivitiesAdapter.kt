@@ -24,7 +24,6 @@ import android.arch.paging.PagedList
 import android.arch.paging.PagedListAdapterHelper
 import android.content.Context
 import android.support.v7.recyclerview.extensions.ListAdapterConfig
-import android.support.v7.util.ListUpdateCallback
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -36,6 +35,7 @@ import org.mariotaku.ktextension.contains
 import org.mariotaku.ktextension.rangeOfSize
 import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.adapter.callback.ItemCountsAdapterListUpdateCallback
 import org.mariotaku.twidere.adapter.iface.IActivitiesAdapter
 import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
@@ -69,14 +69,14 @@ class ParcelableActivitiesAdapter(
         get() = super.loadMoreIndicatorPosition
         set(value) {
             super.loadMoreIndicatorPosition = value
-            updateItemCount()
+            updateItemCounts()
         }
 
     override var loadMoreSupportedPosition: Int
         get() = super.loadMoreSupportedPosition
         set(value) {
             super.loadMoreSupportedPosition = value
-            updateItemCount()
+            updateItemCounts()
         }
 
     override val activityEventListener: IActivitiesAdapter.ActivityEventListener?
@@ -125,30 +125,8 @@ class ParcelableActivitiesAdapter(
     private val eventListener: EventListener
     private val gapLoadingIds: MutableSet<ObjectId<String>> = HashSet()
 
-    private var pagedActivitiesHelper = PagedListAdapterHelper<ParcelableActivity>(object : ListUpdateCallback {
-        override fun onInserted(position: Int, count: Int) {
-            itemCounts[ITEM_INDEX_ACTIVITY] += count
-            updateItemCount()
-            notifyItemRangeInserted(position, count)
-        }
-
-        override fun onRemoved(position: Int, count: Int) {
-            itemCounts[ITEM_INDEX_ACTIVITY] -= count
-            updateItemCount()
-            notifyItemRangeRemoved(position, count)
-        }
-
-        override fun onMoved(fromPosition: Int, toPosition: Int) {
-            updateItemCount()
-            notifyItemMoved(fromPosition, toPosition)
-        }
-
-        override fun onChanged(position: Int, count: Int, payload: Any?) {
-            updateItemCount()
-            notifyItemRangeChanged(position, count, payload)
-        }
-
-    }, ListAdapterConfig.Builder<ParcelableActivity>().setDiffCallback(DiffCallbacks.activity).build())
+    private var pagedActivitiesHelper = PagedListAdapterHelper<ParcelableActivity>(ItemCountsAdapterListUpdateCallback(this, ITEM_INDEX_ACTIVITY),
+            ListAdapterConfig.Builder<ParcelableActivity>().setDiffCallback(DiffCallbacks.activity).build())
 
     init {
         eventListener = EventListener(this)
@@ -276,6 +254,10 @@ class ParcelableActivitiesAdapter(
         return itemCounts.itemCount
     }
 
+    override fun updateItemCounts() {
+        itemCounts[1] = if (LoadMorePosition.END in loadMoreIndicatorPosition) 1 else 0
+    }
+
     fun setListener(listener: ActivityAdapterListener) {
         activityClickListener = listener
     }
@@ -304,10 +286,6 @@ class ParcelableActivitiesAdapter(
 
     fun getRowId(adapterPosition: Int, raw: Boolean = false): Long {
         return getActivity(adapterPosition, raw)._id
-    }
-
-    private fun updateItemCount() {
-        itemCounts[1] = if (LoadMorePosition.END in loadMoreIndicatorPosition) 1 else 0
     }
 
     private fun getActivityInternal(position: Int, raw: Boolean): ParcelableActivity? {

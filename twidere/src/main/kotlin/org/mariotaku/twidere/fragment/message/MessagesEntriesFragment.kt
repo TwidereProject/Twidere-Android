@@ -20,11 +20,12 @@
 package org.mariotaku.twidere.fragment.message
 
 import android.app.Activity
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Observer
+import android.arch.paging.PagedList
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.LoaderManager.LoaderCallbacks
-import android.support.v4.content.Loader
 import android.view.ContextMenu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -48,6 +49,7 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_TYPES
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
+import org.mariotaku.twidere.data.CursorObjectLivePagedListProvider
 import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.model.getTitle
 import org.mariotaku.twidere.extension.model.user
@@ -55,11 +57,11 @@ import org.mariotaku.twidere.extension.promise
 import org.mariotaku.twidere.fragment.AbsContentListRecyclerViewFragment
 import org.mariotaku.twidere.fragment.iface.IFloatingActionButtonFragment
 import org.mariotaku.twidere.fragment.iface.IFloatingActionButtonFragment.ActionInfo
-import org.mariotaku.twidere.loader.ObjectCursorLoader
 import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.GetMessagesTaskEvent
 import org.mariotaku.twidere.promise.MessagePromises
+import org.mariotaku.twidere.provider.TwidereDataProvider
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
@@ -71,8 +73,13 @@ import org.mariotaku.twidere.view.ExtendedRecyclerView
  * Created by mariotaku on 16/3/28.
  */
 class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntriesAdapter>(),
-        LoaderCallbacks<List<ParcelableMessageConversation>?>, MessageConversationClickListener,
-        IFloatingActionButtonFragment {
+        MessageConversationClickListener, IFloatingActionButtonFragment {
+
+    private var entries: LiveData<PagedList<ParcelableMessageConversation>?>? = null
+        private set(value) {
+            field?.removeObservers(this)
+            field = value
+        }
 
     private val accountKeys: Array<UserKey> by lazy {
         Utils.getAccountKeys(context!!, arguments) ?: DataStoreUtils.getActivatedAccountKeys(context!!)
@@ -80,16 +87,14 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
 
     private val errorInfoKey: String = ErrorInfoStore.KEY_DIRECT_MESSAGES
 
-    private val loaderId: Int
-        get() = tabId.toInt().coerceIn(0..Int.MAX_VALUE)
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         linkHandlerTitle = getString(R.string.title_direct_messages)
         adapter.listener = this
         adapter.loadMoreSupportedPosition = LoadMorePosition.END
-        loaderManager.initLoader(loaderId, null, this)
         registerForContextMenu(recyclerView)
+
+        setupLiveData()
     }
 
     override fun onStart() {
@@ -113,44 +118,6 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
                 super.onActivityResult(requestCode, resultCode, data)
             }
         }
-    }
-
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableMessageConversation>?> {
-        val loader = ObjectCursorLoader(context, ParcelableMessageConversation::class.java)
-        val projection = (Conversations.COLUMNS + Conversations.UNREAD_COUNT).map {
-            TwidereQueryBuilder.mapConversationsProjection(it)
-        }.toTypedArray()
-        val qb = SQLQueryBuilder.select(Columns(*projection))
-        qb.from(Table(Conversations.TABLE_NAME))
-        qb.join(Join(false, Join.Operation.LEFT_OUTER, Table(Messages.TABLE_NAME),
-                Expression.and(
-                        Expression.equals(
-                                Column(Table(Conversations.TABLE_NAME), Conversations.CONVERSATION_ID),
-                                Column(Table(Messages.TABLE_NAME), Messages.CONVERSATION_ID)
-                        ),
-                        Expression.equals(
-                                Column(Table(Conversations.TABLE_NAME), Conversations.ACCOUNT_KEY),
-                                Column(Table(Messages.TABLE_NAME), Messages.ACCOUNT_KEY))
-                )
-        ))
-        qb.where(Expression.inArgs(Column(Table(Conversations.TABLE_NAME), Conversations.ACCOUNT_KEY), accountKeys.size))
-        qb.groupBy(Column(Table(Messages.TABLE_NAME), Messages.CONVERSATION_ID))
-        qb.orderBy(OrderBy(arrayOf(Conversations.LOCAL_TIMESTAMP, Conversations.SORT_ID), booleanArrayOf(false, false)))
-        loader.uri = TwidereQueryBuilder.rawQuery(qb.buildSQL(), Conversations.CONTENT_URI)
-        loader.selectionArgs = accountKeys.toStringArray()
-        loader.isUseCache = false
-        return loader
-    }
-
-    override fun onLoaderReset(loader: Loader<List<ParcelableMessageConversation>?>?) {
-        adapter.conversations = null
-    }
-
-    override fun onLoadFinished(loader: Loader<List<ParcelableMessageConversation>?>?, data: List<ParcelableMessageConversation>?) {
-        adapter.conversations = data
-        adapter.drawAccountColors = accountKeys.size > 1
-        setLoadMoreIndicatorPosition(LoadMorePosition.NONE)
-        showContentOrError()
     }
 
     override fun onCreateAdapter(context: Context, requestManager: RequestManager): MessagesEntriesAdapter {
@@ -242,6 +209,47 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
         if (!event.running) {
             refreshing = false
         }
+    }
+
+    private fun setupLiveData() {
+        entries = createLiveData()
+        entries?.observe(this, Observer { onDataLoaded(it) })
+    }
+
+    private fun createLiveData(): LiveData<PagedList<ParcelableMessageConversation>?> {
+        val projection = (Conversations.COLUMNS + Conversations.UNREAD_COUNT).map {
+            TwidereQueryBuilder.mapConversationsProjection(it)
+        }.toTypedArray()
+        val qb = SQLQueryBuilder.select(Columns(*projection))
+        qb.from(Table(Conversations.TABLE_NAME))
+        qb.join(Join(false, Join.Operation.LEFT_OUTER, Table(Messages.TABLE_NAME),
+                Expression.and(
+                        Expression.equals(
+                                Column(Table(Conversations.TABLE_NAME), Conversations.CONVERSATION_ID),
+                                Column(Table(Messages.TABLE_NAME), Messages.CONVERSATION_ID)
+                        ),
+                        Expression.equals(
+                                Column(Table(Conversations.TABLE_NAME), Conversations.ACCOUNT_KEY),
+                                Column(Table(Messages.TABLE_NAME), Messages.ACCOUNT_KEY))
+                )
+        ))
+        qb.where(Expression.inArgs(Column(Table(Conversations.TABLE_NAME), Conversations.ACCOUNT_KEY), accountKeys.size))
+        qb.groupBy(Column(Table(Messages.TABLE_NAME), Messages.CONVERSATION_ID))
+        qb.orderBy(OrderBy(arrayOf(Conversations.LOCAL_TIMESTAMP, Conversations.SORT_ID), booleanArrayOf(false, false)))
+        qb.limit(RawSQLLang(TwidereDataProvider.PLACEHOLDER_LIMIT))
+        val provider = CursorObjectLivePagedListProvider(context!!.contentResolver,
+                TwidereQueryBuilder.rawQuery(qb.buildSQL(), Conversations.CONTENT_URI),
+                selectionArgs = accountKeys.toStringArray(),
+                cls = ParcelableMessageConversation::class.java)
+        return provider.create(null, PagedList.Config.Builder()
+                .setPageSize(50).setEnablePlaceholders(false).build())
+    }
+
+    private fun onDataLoaded(data: PagedList<ParcelableMessageConversation>?) {
+        adapter.conversations = data
+        adapter.drawAccountColors = accountKeys.size > 1
+        setLoadMoreIndicatorPosition(LoadMorePosition.NONE)
+        showContentOrError()
     }
 
     private fun showContentOrError() {

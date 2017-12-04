@@ -70,7 +70,7 @@ open class ContentScrollHandler<A>(
         val adapter = contentListSupport.adapter as? ILoadMoreSupportAdapter ?: return
         if (!contentListSupport.refreshing && adapter.loadMoreSupportedPosition != LoadMorePosition.NONE
                 && adapter.loadMoreIndicatorPosition == LoadMorePosition.NONE) {
-            var position: Int = 0
+            var position = 0
             if (contentListSupport.reachingEnd && scrollDirection < 0) {
                 position = position or LoadMorePosition.END
             }

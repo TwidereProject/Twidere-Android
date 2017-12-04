@@ -24,6 +24,7 @@ import org.mariotaku.ktextension.addTo
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.sqliteqb.library.*
 import org.mariotaku.sqliteqb.library.query.SQLSelectQuery
+import org.mariotaku.twidere.extension.sqliteqb.limit
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers

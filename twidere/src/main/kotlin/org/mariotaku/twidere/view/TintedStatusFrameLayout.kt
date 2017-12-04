@@ -35,9 +35,6 @@ import org.mariotaku.chameleon.internal.SupportMethods
 import org.mariotaku.twidere.R
 import android.support.v4.view.OnApplyWindowInsetsListener as OnApplyWindowInsetsListenerCompat
 
-/**
- * Created by mariotaku on 14/11/26.
- */
 class TintedStatusFrameLayout(context: Context, attrs: AttributeSet? = null) :
         ExtendedFrameLayout(context, attrs), TintedStatusLayout, ChameleonView,
         ChameleonView.StatusBarThemeable {

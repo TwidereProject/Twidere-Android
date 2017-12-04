@@ -1,7 +1,7 @@
 /*
- * Twidere - Twitter client for Android
+ *             Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,17 +17,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.view
+package org.mariotaku.twidere.extension.sqliteqb
 
-import android.content.Context
-import android.graphics.Canvas
-import android.support.v7.widget.AppCompatImageView
-import android.util.AttributeSet
+import org.mariotaku.sqliteqb.library.RawSQLLang
+import org.mariotaku.sqliteqb.library.query.SQLSelectQuery
 
-class BoundsImageView(context: Context, attrs: AttributeSet? = null) : AppCompatImageView(context, attrs) {
-
-    override fun onDraw(canvas: Canvas) {
-        setFrame(left, top, right, bottom)
-        super.onDraw(canvas)
-    }
+fun SQLSelectQuery.Builder.limit(limit: Int): SQLSelectQuery.Builder {
+    return limit(RawSQLLang(limit.toString()))
 }

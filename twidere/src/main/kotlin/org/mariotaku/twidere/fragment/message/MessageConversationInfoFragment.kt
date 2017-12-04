@@ -583,12 +583,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             }
         }
 
-        fun getUser(position: Int): ParcelableUser? {
-            val itemPos = position - itemCounts.getItemStartPosition(ITEM_INDEX_ITEM)
-            return conversation?.participants?.getOrNull(itemPos)
-        }
-
-        private fun updateItemCounts() {
+        override fun updateItemCounts() {
             val conversation = this.conversation ?: run {
                 itemCounts.clear()
                 return
@@ -611,6 +606,11 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             }
 
             itemCounts[ITEM_INDEX_SPACE] = 1
+        }
+
+        fun getUser(position: Int): ParcelableUser? {
+            val itemPos = position - itemCounts.getItemStartPosition(ITEM_INDEX_ITEM)
+            return conversation?.participants?.getOrNull(itemPos)
         }
 
         interface Listener {

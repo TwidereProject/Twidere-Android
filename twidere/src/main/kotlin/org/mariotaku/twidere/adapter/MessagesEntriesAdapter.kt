@@ -1,25 +1,25 @@
 package org.mariotaku.twidere.adapter
 
+import android.arch.paging.PagedList
+import android.arch.paging.PagedListAdapterHelper
 import android.content.Context
+import android.support.v7.recyclerview.extensions.ListAdapterConfig
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.contains
-import org.mariotaku.library.objectcursor.ObjectCursor
+import org.mariotaku.twidere.adapter.callback.ItemCountsAdapterListUpdateCallback
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.exception.UnsupportedCountIndexException
 import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.model.ParcelableMessageConversation
+import org.mariotaku.twidere.util.paging.DiffCallbacks
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
 import org.mariotaku.twidere.view.holder.message.MessageEntryViewHolder
-
-/**
- * Created by mariotaku on 2017/2/9.
- */
 
 class MessagesEntriesAdapter(
         context: Context,
@@ -28,11 +28,20 @@ class MessagesEntriesAdapter(
         IItemCountsAdapter {
     override val itemCounts: ItemCounts = ItemCounts(2)
 
-    var conversations: List<ParcelableMessageConversation>? = null
+    override var loadMoreIndicatorPosition: Int
+        get() = super.loadMoreIndicatorPosition
         set(value) {
-            field = value
+            super.loadMoreIndicatorPosition = value
             updateItemCounts()
-            notifyDataSetChanged()
+        }
+
+    var conversations: PagedList<ParcelableMessageConversation>?
+        get() = pagedEntriesHelper.currentList
+        set(value) {
+            pagedEntriesHelper.setList(value)
+            if (value == null) {
+                itemCounts[0] = 0
+            }
         }
 
     var drawAccountColors: Boolean = false
@@ -46,7 +55,8 @@ class MessagesEntriesAdapter(
 
     var listener: MessageConversationClickListener? = null
 
-    private val reuseEntry = ParcelableMessageConversation()
+    private var pagedEntriesHelper = PagedListAdapterHelper<ParcelableMessageConversation>(ItemCountsAdapterListUpdateCallback(this, 0),
+            ListAdapterConfig.Builder<ParcelableMessageConversation>().setDiffCallback(DiffCallbacks.messageEntry).build())
 
     override fun getItemCount(): Int {
         return itemCounts.itemCount
@@ -86,18 +96,13 @@ class MessagesEntriesAdapter(
         }
     }
 
-    private fun updateItemCounts() {
-        itemCounts[0] = conversations?.size ?: 0
+    override fun updateItemCounts() {
         itemCounts[1] = if (LoadMorePosition.END in loadMoreIndicatorPosition) 1 else 0
     }
 
     fun getConversation(position: Int, reuse: Boolean = false): ParcelableMessageConversation {
-        val conversations = this.conversations!!
         val dataPosition = position - itemCounts.getItemStartPosition(0)
-        if (reuse && conversations is ObjectCursor) {
-            return conversations.setInto(dataPosition, reuseEntry)
-        }
-        return conversations[dataPosition]
+        return pagedEntriesHelper.getItem(dataPosition)!!
     }
 
     interface MessageConversationClickListener {

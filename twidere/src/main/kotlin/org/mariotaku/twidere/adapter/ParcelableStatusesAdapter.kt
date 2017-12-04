@@ -24,7 +24,6 @@ import android.arch.paging.PagedListAdapterHelper
 import android.content.Context
 import android.support.v4.widget.Space
 import android.support.v7.recyclerview.extensions.ListAdapterConfig
-import android.support.v7.util.ListUpdateCallback
 import android.support.v7.widget.RecyclerView
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
@@ -35,6 +34,7 @@ import org.mariotaku.ktextension.contains
 import org.mariotaku.ktextension.findPositionByItemId
 import org.mariotaku.ktextension.rangeOfSize
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.adapter.callback.ItemCountsAdapterListUpdateCallback
 import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter
 import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter.Companion.ITEM_VIEW_TYPE_GAP
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
@@ -109,14 +109,14 @@ class ParcelableStatusesAdapter(
         set(value) {
             field = value
             value?.forEach { it.is_pinned_status = true }
-            updateItemCount()
+            updateItemCounts()
             notifyDataSetChanged()
         }
 
     var timelineFilter: TimelineFilter? = null
         set(value) {
             field = value
-            updateItemCount()
+            updateItemCounts()
             notifyDataSetChanged()
         }
 
@@ -137,14 +137,14 @@ class ParcelableStatusesAdapter(
         get() = super.loadMoreIndicatorPosition
         set(value) {
             super.loadMoreIndicatorPosition = value
-            updateItemCount()
+            updateItemCounts()
         }
 
     override var loadMoreSupportedPosition: Int
         get() = super.loadMoreSupportedPosition
         set(value) {
             super.loadMoreSupportedPosition = value
-            updateItemCount()
+            updateItemCounts()
         }
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -156,28 +156,8 @@ class ParcelableStatusesAdapter(
 
     private val showingFullTextStates = SparseBooleanArray()
 
-    private var pagedStatusesHelper = PagedListAdapterHelper<ParcelableStatus>(object : ListUpdateCallback {
-        override fun onInserted(position: Int, count: Int) {
-            itemCounts[ITEM_INDEX_STATUS] += count
-            updateItemCount()
-            notifyItemRangeInserted(position, count)
-        }
-
-        override fun onRemoved(position: Int, count: Int) {
-            itemCounts[ITEM_INDEX_STATUS] -= count
-            updateItemCount()
-            notifyItemRangeRemoved(position, count)
-        }
-
-        override fun onMoved(fromPosition: Int, toPosition: Int) {
-            notifyItemMoved(fromPosition, toPosition)
-        }
-
-        override fun onChanged(position: Int, count: Int, payload: Any?) {
-            notifyItemRangeChanged(position, count, payload)
-        }
-
-    }, ListAdapterConfig.Builder<ParcelableStatus>().setDiffCallback(DiffCallbacks.status).build())
+    private var pagedStatusesHelper = PagedListAdapterHelper<ParcelableStatus>(ItemCountsAdapterListUpdateCallback(this, ITEM_INDEX_STATUS),
+            ListAdapterConfig.Builder<ParcelableStatus>().setDiffCallback(DiffCallbacks.status).build())
 
     init {
         val handler = StatusAdapterLinkClickHandler<List<ParcelableStatus>>(context, preferences)
@@ -435,7 +415,7 @@ class ParcelableStatusesAdapter(
         throw IndexOutOfBoundsException("index: $position, valid range is $validStart..$validEnd")
     }
 
-    private fun updateItemCount() {
+    override fun updateItemCounts() {
         itemCounts[ITEM_INDEX_LOAD_START_INDICATOR] = if (LoadMorePosition.START in loadMoreIndicatorPosition) 1 else 0
         itemCounts[ITEM_INDEX_FILTER_HEADER] = if (timelineFilter != null) 1 else 0
         itemCounts[ITEM_INDEX_PINNED_STATUS] = pinnedStatuses?.size ?: 0

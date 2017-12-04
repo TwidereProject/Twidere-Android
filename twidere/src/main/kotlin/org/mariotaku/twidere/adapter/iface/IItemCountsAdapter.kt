@@ -9,6 +9,10 @@ interface IItemCountsAdapter {
 
     val itemCounts: ItemCounts
 
+    fun updateItemCounts() {
+
+    }
+
     fun getItemCountIndex(position: Int): Int {
         return itemCounts.getItemCountIndex(position)
     }

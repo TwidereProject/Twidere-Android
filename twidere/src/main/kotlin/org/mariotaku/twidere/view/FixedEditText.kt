@@ -5,10 +5,6 @@ import android.util.AttributeSet
 import org.mariotaku.chameleon.view.ChameleonEditText
 import org.mariotaku.twidere.extension.setupEmojiFactory
 
-/**
- * Created by mariotaku on 2017/2/3.
- */
-
 class FixedEditText(context: Context, attrs: AttributeSet? = null) : ChameleonEditText(context, attrs) {
 
     init {
