@@ -36,7 +36,8 @@ import org.mariotaku.twidere.view.holder.AccountViewHolder
 class AccountDetailsAdapter(
         context: Context,
         requestManager: RequestManager
-) : BaseArrayAdapter<AccountDetails>(context, R.layout.list_item_account, requestManager = requestManager) {
+) : BaseArrayAdapter<AccountDetails>(context, R.layout.list_item_account, android.R.id.text1,
+        requestManager = requestManager) {
 
     var sortEnabled: Boolean = false
         set(value) {

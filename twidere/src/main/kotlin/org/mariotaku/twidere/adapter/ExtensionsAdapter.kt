@@ -32,7 +32,8 @@ import org.mariotaku.twidere.view.holder.TwoLineWithIconViewHolder
 class ExtensionsAdapter(
         context: Context,
         requestManager: RequestManager
-) : BaseArrayAdapter<ExtensionInfo>(context, R.layout.list_item_two_line, requestManager = requestManager) {
+) : BaseArrayAdapter<ExtensionInfo>(context, R.layout.list_item_two_line, android.R.id.text1,
+        requestManager = requestManager) {
 
     override fun getItemId(position: Int): Long {
         return getItem(position).hashCode().toLong()

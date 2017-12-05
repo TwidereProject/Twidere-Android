@@ -36,7 +36,7 @@ import org.mariotaku.twidere.view.holder.SimpleUserListViewHolder
 class SimpleParcelableUserListsAdapter(
         context: Context,
         requestManager: RequestManager
-) : BaseArrayAdapter<ParcelableUserList>(context, R.layout.list_item_simple_user_list,
+) : BaseArrayAdapter<ParcelableUserList>(context, R.layout.list_item_simple_user_list, R.id.name,
         requestManager = requestManager), IUserListsAdapter<List<ParcelableUserList>> {
     override val itemCounts: ItemCounts = ItemCounts(2)
 

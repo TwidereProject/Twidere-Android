@@ -113,7 +113,7 @@ object overrideLanguageKey : KSimpleKey<Locale?>(KEY_OVERRIDE_LANGUAGE, null) {
 
 val themeBackgroundOptionKey = KStringKey(KEY_THEME_BACKGROUND, VALUE_THEME_BACKGROUND_DEFAULT)
 
-object themeBackgroundAlphaKey : KSimpleKey<Int>(KEY_THEME_BACKGROUND_ALPHA, 0xFF) {
+val themeBackgroundAlphaKey = object : KSimpleKey<Int>(KEY_THEME_BACKGROUND_ALPHA, 0xFF) {
     override fun read(preferences: SharedPreferences): Int {
         return preferences.getInt(KEY_THEME_BACKGROUND_ALPHA, DEFAULT_THEME_BACKGROUND_ALPHA)
                 .coerceIn(ThemeBackgroundPreference.MIN_ALPHA, ThemeBackgroundPreference.MAX_ALPHA)
@@ -126,7 +126,7 @@ object themeBackgroundAlphaKey : KSimpleKey<Int>(KEY_THEME_BACKGROUND_ALPHA, 0xF
     }
 }
 
-object profileImageStyleKey : KSimpleKey<Int>(KEY_PROFILE_IMAGE_STYLE, ImageShapeStyle.SHAPE_CIRCLE) {
+val profileImageStyleKey = object : KSimpleKey<Int>(KEY_PROFILE_IMAGE_STYLE, ImageShapeStyle.SHAPE_CIRCLE) {
     override fun read(preferences: SharedPreferences): Int {
         if (preferences.getString(key, null) == VALUE_PROFILE_IMAGE_STYLE_SQUARE) return ImageShapeStyle.SHAPE_RECTANGLE
         return ImageShapeStyle.SHAPE_CIRCLE

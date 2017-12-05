@@ -25,9 +25,6 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
-/**
- * Created by mariotaku on 15/5/13.
- */
 @ParcelablePlease
 @JsonObject
 public class AccountSettings extends TwitterResponseObject implements Parcelable {

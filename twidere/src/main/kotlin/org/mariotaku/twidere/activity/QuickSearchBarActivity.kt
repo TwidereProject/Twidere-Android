@@ -99,9 +99,8 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         val am = AccountManager.get(this)
         val accounts = am.getAllDetails(am.ownedAccounts, true)
         val accountsSpinnerAdapter = AccountsSpinnerAdapter(this, R.layout.spinner_item_account_icon,
-                requestManager = requestManager)
-        accountsSpinnerAdapter.setDropDownViewResource(R.layout.list_item_simple_user)
-        accountsSpinnerAdapter.addAll(*accounts)
+                R.layout.list_item_simple_user, requestManager = requestManager)
+        accountsSpinnerAdapter.accounts = accounts.toList()
         accountSpinner.adapter = accountsSpinnerAdapter
         accountSpinner.onItemSelectedListener = this
         if (savedInstanceState == null) {

@@ -234,7 +234,7 @@ class HostMappingsListFragment : AbsContentListViewFragment<HostMappingsListFrag
     }
 
     class HostMappingAdapter(context: Context) : ArrayAdapter<Pair<String, String>>(context,
-            android.R.layout.simple_list_item_activated_2) {
+            android.R.layout.simple_list_item_activated_2, android.R.id.text1) {
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val view = super.getView(position, convertView, parent)

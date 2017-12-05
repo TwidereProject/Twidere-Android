@@ -31,8 +31,9 @@ import org.mariotaku.twidere.view.holder.SimpleUserViewHolder
 class SimpleParcelableUsersAdapter(
         context: Context,
         layoutRes: Int = R.layout.list_item_simple_user,
+        textViewId: Int = R.id.name,
         requestManager: RequestManager
-) : BaseArrayAdapter<ParcelableUser>(context, layoutRes, requestManager = requestManager) {
+) : BaseArrayAdapter<ParcelableUser>(context, layoutRes, textViewId, requestManager = requestManager) {
 
     override fun getItemId(position: Int): Long {
         val item = getItem(position)

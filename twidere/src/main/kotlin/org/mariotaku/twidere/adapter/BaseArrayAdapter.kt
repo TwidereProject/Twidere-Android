@@ -40,8 +40,9 @@ import javax.inject.Inject
 open class BaseArrayAdapter<T>(
         context: Context,
         layoutRes: Int,
+        textViewResId: Int,
         override val requestManager: RequestManager
-) : ArrayAdapter<T>(context, layoutRes), IContentAdapter, ILoadMoreSupportAdapter,
+) : ArrayAdapter<T>(context, layoutRes, textViewResId), IContentAdapter, ILoadMoreSupportAdapter,
         IItemCountsAdapter {
     val linkify: TwidereLinkify
 

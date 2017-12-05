@@ -56,6 +56,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.SettingsActivity
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter
+import org.mariotaku.twidere.adapter.ViewHolderListAdapter
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.TabAccountFlags
 import org.mariotaku.twidere.extension.applyTheme
@@ -276,7 +277,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
             iconSpinner.adapter = iconsAdapter
             accountSpinner.adapter = accountsAdapter
 
-            iconsAdapter.setData(DrawableHolder.builtins())
+            iconsAdapter.data = DrawableHolder.builtins()
 
             tabName.hint = conf.name.createString(context)
             tabName.setText(tab.name)
@@ -289,18 +290,19 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
             if (hasAccount && (accountMutable || !editMode)) {
                 accountContainer.visibility = View.VISIBLE
                 val accountRequired = TabAccountFlags.FLAG_ACCOUNT_REQUIRED in conf.accountFlags
-                accountsAdapter.clear()
+                val accounts = mutableListOf<AccountDetails>()
                 if (!accountRequired) {
-                    accountsAdapter.add(AccountDetails.dummy())
+                    accounts += AccountDetails.dummy()
                 }
                 val officialKeyOnly = arguments!!.getBoolean(EXTRA_OFFICIAL_KEY_ONLY, false)
-                accountsAdapter.addAll(AccountManager.get(context).getAllDetails(true).filter {
+                AccountManager.get(context).getAllDetails(true).filterTo(accounts) {
                     if (officialKeyOnly && !it.isOfficial(context!!)) {
-                        return@filter false
+                        return@filterTo false
                     }
-                    return@filter conf.checkAccountAvailability(it)
-                })
-                accountsAdapter.setDummyItemText(R.string.activated_accounts)
+                    return@filterTo conf.checkAccountAvailability(it)
+                }
+                accountsAdapter.dummyItemText = getString(R.string.activated_accounts)
+                accountsAdapter.accounts = accounts
 
                 tab.arguments?.accountKeys?.firstOrNull()?.let { key ->
                     accountSpinner.setSelection(accountsAdapter.findPositionByKey(key))
@@ -424,46 +426,67 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
         }
     }
 
-    internal class TabIconsAdapter(context: Context) : ArrayAdapter<DrawableHolder>(context, R.layout.spinner_item_custom_tab_icon) {
+    internal class TabIconsAdapter(context: Context) : ViewHolderListAdapter<TabIconsAdapter.TabIconViewHolder>() {
 
         private val iconColor: Int = ThemeUtils.getThemeForegroundColor(context)
 
-        init {
-            setDropDownViewResource(R.layout.list_item_two_line_small)
+        private var itemViewResource = R.layout.spinner_item_custom_tab_icon
+        private var dropDownViewResource = R.layout.list_item_two_line_small
+
+        var data: List<DrawableHolder>? = null
+            set(value) {
+                field = value
+                notifyDataSetChanged()
+            }
+
+        override fun getItemId(position: Int): Long {
+            return position.toLong()
         }
 
-        override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-            val view = super.getDropDownView(position, convertView, parent)
-            view.findViewById<View>(android.R.id.text2).visibility = View.GONE
-            val text1 = view.findViewById<TextView>(android.R.id.text1)
-            val item = getItem(position)
-            text1.spannable = item.name
-            bindIconView(item, view)
-            return view
+        override fun getItem(position: Int): DrawableHolder {
+            return data!![position]
         }
 
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-            val view = super.getView(position, convertView, parent)
-            bindIconView(getItem(position), view)
-            return view
+        override fun getCount(): Int {
+            return data?.size ?: 0
         }
 
-        fun setData(list: List<DrawableHolder>?) {
-            clear()
-            if (list == null) return
-            addAll(list)
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TabIconViewHolder {
+            val view = LayoutInflater.from(parent.context).inflate(itemViewResource, parent, false)
+            return TabIconViewHolder(this, view)
         }
 
-        private fun bindIconView(item: DrawableHolder, view: View) {
-            val icon = view.findViewById<ImageView>(android.R.id.icon)
-            icon.setColorFilter(iconColor, Mode.SRC_ATOP)
-            icon.setImageDrawable(item.createDrawable(icon.context))
+        override fun onCreateDropDownViewHolder(parent: ViewGroup, viewType: Int): TabIconViewHolder {
+            val view = LayoutInflater.from(parent.context).inflate(dropDownViewResource, parent, false)
+            return TabDropdownViewHolder(this, view)
+        }
+
+        override fun onBindViewHolder(holder: TabIconViewHolder, position: Int) {
+            holder.display(getItem(position))
         }
 
         fun findPositionByKey(key: String): Int {
             return (0 until count).indexOfFirst { getItem(it).persistentKey == key }
         }
 
+        open class TabIconViewHolder(val adapter: TabIconsAdapter, itemView: View) : ViewHolder(itemView) {
+            private val icon: ImageView = itemView.findViewById(android.R.id.icon)
+
+            open fun display(item: DrawableHolder) {
+                icon.setColorFilter(adapter.iconColor, Mode.SRC_ATOP)
+                icon.setImageDrawable(item.createDrawable(icon.context))
+            }
+        }
+
+        class TabDropdownViewHolder(adapter: TabIconsAdapter, itemView: View) : TabIconViewHolder(adapter, itemView) {
+            private val text1: TextView = itemView.findViewById(android.R.id.text1)
+            private val text2: TextView = itemView.findViewById(android.R.id.text2)
+            override fun display(item: DrawableHolder) {
+                super.display(item)
+                text1.spannable = item.name
+                text2.visibility = View.GONE
+            }
+        }
     }
 
     class CustomTabsAdapter(context: Context) : SimpleDragSortCursorAdapter(context,
