@@ -54,7 +54,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.UriUtils
-import org.mariotaku.twidere.util.collection.CompactHashSet
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import java.util.*
 
@@ -365,7 +364,7 @@ class GetMessagesTask(
     companion object {
         private const val KEY_FIRST_FETCH = "state_first_fetch_direct_messages"
 
-        private val getMessageTasks = CompactHashSet<Uri>()
+        private val getMessageTasks = mutableSetOf<Uri>()
 
         fun createDatabaseUpdateData(context: Context, account: AccountDetails,
                 response: DMResponse, profileImageSize: String = "normal"): DatabaseUpdateData {

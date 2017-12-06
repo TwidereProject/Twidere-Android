@@ -27,7 +27,6 @@ import android.os.Process;
 import android.text.TextUtils;
 
 import org.mariotaku.twidere.BuildConfig;
-import org.mariotaku.twidere.Constants;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,8 +34,11 @@ import java.util.Map;
 import kotlin.collections.ArraysKt;
 
 import static android.text.TextUtils.isEmpty;
+import static org.mariotaku.twidere.TwidereConstants.PERMISSION_DENIED;
+import static org.mariotaku.twidere.TwidereConstants.PERMISSION_PREFERENCES_NAME;
+import static org.mariotaku.twidere.TwidereConstants.SEPARATOR_PERMISSION_REGEX;
 
-public class PermissionsManager implements Constants {
+public class PermissionsManager {
 
     private static final String[] PERMISSIONS_DENIED = {PERMISSION_DENIED};
 

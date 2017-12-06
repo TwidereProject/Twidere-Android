@@ -26,7 +26,6 @@ import org.mariotaku.twidere.model.Draft.Action
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtras
 import org.mariotaku.twidere.model.draft.UpdateStatusActionExtras
 import org.mariotaku.twidere.util.JsonSerializer
-import org.mariotaku.twidere.util.collection.NonEmptyHashMap
 import org.mariotaku.twidere.util.sync.mkdirIfNotExists
 import java.io.File
 import java.io.FileOutputStream
@@ -88,7 +87,7 @@ fun Draft.writeMimeMessageTo(context: Context, st: OutputStream) {
             multipart.addBodyPart(BodyPart().apply {
                 val uri = Uri.parse(mediaItem.uri)
                 val mimeType = mediaItem.getMimeType(contentResolver) ?: "application/octet-stream"
-                val parameters = NonEmptyHashMap<String, String?>()
+                val parameters = mutableMapOf<String, String?>()
                 parameters["alt_text"] = mediaItem.alt_text
                 parameters["media_type"] = mediaItem.type.toString()
                 parameters["delete_on_success"] = mediaItem.delete_on_success.toString()
@@ -96,7 +95,7 @@ fun Draft.writeMimeMessageTo(context: Context, st: OutputStream) {
                 val storage = contentResolver.openInputStream(uri).use { storageProvider.store(it) }
                 this.filename = uri.lastPathSegment
                 this.contentTransferEncoding = MimeUtil.ENC_BASE64
-                this.setBody(bodyFactory.binaryBody(storage), mimeType, parameters)
+                this.setBody(bodyFactory.binaryBody(storage), mimeType, parameters.filterValues { it != null })
                 storageList.add(storage)
             })
         }

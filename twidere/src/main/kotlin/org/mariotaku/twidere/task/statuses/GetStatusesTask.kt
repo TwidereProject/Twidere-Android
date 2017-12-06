@@ -60,7 +60,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.util.collection.CompactHashSet
 import org.mariotaku.twidere.util.sync.SyncTaskRunner
 import org.mariotaku.twidere.util.sync.TimelineSyncManager
 
@@ -317,7 +316,7 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
 
         const val ERROR_LOAD_GAP = 1
 
-        private val getStatusTasks = CompactHashSet<Uri>()
+        private val getStatusTasks = mutableSetOf<Uri>()
 
         fun isRefreshing(uri: Uri) = uri in getStatusTasks
 

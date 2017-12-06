@@ -33,10 +33,10 @@ import org.mariotaku.ktextension.checkAllSelfPermissionsGranted
 import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.REQUEST_REQUEST_PERMISSIONS
+import org.mariotaku.twidere.alias.AndroidPermissions
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.fragment.FileSelectorDialogFragment
 import java.io.File
-import android.Manifest.permission as AndroidPermissions
 
 class FileSelectorActivity : BaseActivity(), FileSelectorDialogFragment.Callback {
 

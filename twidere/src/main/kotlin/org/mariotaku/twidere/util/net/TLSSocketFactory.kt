@@ -52,34 +52,35 @@ class TLSSocketFactory : SSLSocketFactory() {
 
     @Throws(IOException::class)
     override fun createSocket(s: Socket, host: String, port: Int, autoClose: Boolean): Socket {
-        return delegate.createSocket(s, host, port, autoClose).applyTLS()
+        return delegate.createSocket(s, host, port, autoClose).config()
     }
 
     @Throws(IOException::class)
     override fun createSocket(host: String, port: Int): Socket {
-        return delegate.createSocket(host, port).applyTLS()
+        return delegate.createSocket(host, port).config()
     }
 
     @Throws(IOException::class)
     override fun createSocket(host: String, port: Int, localHost: InetAddress, localPort: Int): Socket {
-        return delegate.createSocket(host, port, localHost, localPort).applyTLS()
+        return delegate.createSocket(host, port, localHost, localPort).config()
     }
 
     @Throws(IOException::class)
     override fun createSocket(host: InetAddress, port: Int): Socket {
-        return delegate.createSocket(host, port).applyTLS()
+        return delegate.createSocket(host, port).config()
     }
 
     @Throws(IOException::class)
     override fun createSocket(address: InetAddress, port: Int, localAddress: InetAddress, localPort: Int): Socket {
-        return delegate.createSocket(address, port, localAddress, localPort).applyTLS()
+        return delegate.createSocket(address, port, localAddress, localPort).config()
     }
 
-    private fun Socket.applyTLS(): Socket {
-        if (this !is SSLSocket) return this
-        this.enabledProtocols = this.supportedProtocols
-        this.enabledCipherSuites = this.enabledCipherSuites
-        Internal.instance.apply(ConnectionSpec.MODERN_TLS, this, false)
+    private fun Socket.config(): Socket {
+        if (this is SSLSocket) {
+            this.enabledProtocols = this.supportedProtocols
+            this.enabledCipherSuites = this.enabledCipherSuites
+            Internal.instance.apply(ConnectionSpec.MODERN_TLS, this, false)
+        }
         return this
     }
 
