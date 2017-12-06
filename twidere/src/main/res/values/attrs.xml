@@ -41,22 +41,6 @@
         <attr name="tabShowDivider" format="boolean"/>
         <attr name="tabDisplayOption"/>
     </declare-styleable>
-    <declare-styleable name="LinePageIndicator">
-        <!-- Whether or not the indicators should be centered. -->
-        <attr name="centered" format="boolean"/>
-        <!-- Color of the unselected lines that represent the pages. -->
-        <attr name="unselectedColor" format="color"/>
-        <!-- Color of the selected line that represents the current page. -->
-        <attr name="selectedColor" format="color"/>
-        <!-- Width of each indicator line. -->
-        <attr name="lineWidth" format="dimension"/>
-        <!-- Width of each indicator line's stroke. -->
-        <attr name="strokeWidth" format="dimension"/>
-        <!-- Width of the gap between each indicator line. -->
-        <attr name="gapWidth" format="dimension"/>
-        <!-- View background -->
-        <attr name="android:background"/>
-    </declare-styleable>
     <declare-styleable name="NameView">
         <attr name="nvNameFirst" format="boolean"/>
     </declare-styleable>

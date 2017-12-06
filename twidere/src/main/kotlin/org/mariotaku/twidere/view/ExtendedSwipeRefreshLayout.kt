@@ -64,9 +64,7 @@ class ExtendedSwipeRefreshLayout(context: Context, attrs: AttributeSet? = null) 
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        if (onSizeChangedListener != null) {
-            onSizeChangedListener!!.onSizeChanged(this, w, h, oldw, oldh)
-        }
+        onSizeChangedListener?.onSizeChanged(this, w, h, oldw, oldh)
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
