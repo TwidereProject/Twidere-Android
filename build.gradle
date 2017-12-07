@@ -83,6 +83,7 @@ subprojects {
                     ArchLifecycleExtensions: '1.0.0',
                     ArchPaging             : '1.0.0-alpha3',
                     ConstraintLayout       : '1.0.2',
+                    MessageBubbleView      : '2.1',
             ]
 
         }
