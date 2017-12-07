@@ -101,7 +101,7 @@
   <string name="copy_link">Kopírovat odkaz</string>
   <!-- [noun] Count label for retweets, e.g. (N retweets)-->
   <string name="count_label_retweets">Retweety</string>
-  <string name="created_by">Vytvořil(a) <xliff:g id="created_by">%s </xliff:g></string>
+  <string name="label_created_by_name">Vytvořil(a) <xliff:g id="created_by">%s </xliff:g></string>
   <string name="current_status">Aktuální tweet</string>
   <string name="dark_theme">Tmavý motiv</string>
   <string name="default_account">Výchozí účet</string>

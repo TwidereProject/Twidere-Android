@@ -78,6 +78,7 @@
     <string name="action_leave_conversation">Leave conversation</string>
     <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
     <string name="action_like">Like</string>
+    <string name="action_list_creator">List creator</string>
     <string name="action_location">Location</string>
     <string name="action_manage_in_buffer">Manage in Buffer</string>
     <string name="action_mark_as_read">Mark as read</string>
@@ -268,9 +269,9 @@
     <string name="content">Content</string>
     <string name="content_and_storage">Content &amp; Storage</string>
     <string name="content_description_accounts_selector_current">Selected account is <xliff:g id="name">%1$s</xliff:g></string>
-    <string name="content_description_item_status"><xliff:g id="name">%1$s</xliff:g><xliff:g id="time_with_preposition">%2$s</xliff:g>: <xliff:g id="content">%3$s</xliff:g></string>
-    <string name="content_description_item_status_reply"><xliff:g id="name">%1$s</xliff:g> replying to <xliff:g id="in_reply_to">%2$s</xliff:g><xliff:g id="time_with_preposition">%3$s</xliff:g>: <xliff:g id="content">%4$s</xliff:g></string>
-    <string name="content_description_item_status_retweet">Retweeted by <xliff:g id="retweeter">%1$s</xliff:g>. <xliff:g id="name">%2$s</xliff:g><xliff:g id="time_with_preposition">%3$s</xliff:g>: <xliff:g id="content">%4$s</xliff:g></string>
+    <string name="content_description_item_status"><xliff:g id="name">%1$s</xliff:g>, <xliff:g id="time_with_preposition">%2$s</xliff:g>: <xliff:g id="content">%3$s</xliff:g></string>
+    <string name="content_description_item_status_reply"><xliff:g id="name">%1$s</xliff:g> replying to <xliff:g id="in_reply_to">%2$s</xliff:g>, <xliff:g id="time_with_preposition">%3$s</xliff:g>: <xliff:g id="content">%4$s</xliff:g></string>
+    <string name="content_description_item_status_retweet">Retweeted by <xliff:g id="retweeter">%1$s</xliff:g>. <xliff:g id="name">%2$s</xliff:g>, <xliff:g id="time_with_preposition">%3$s</xliff:g>: <xliff:g id="content">%4$s</xliff:g></string>
     <string name="content_description_open_user_name_profile">Open <xliff:g id="name">%1$s</xliff:g>\'s profile</string>
     <string name="content_description_sticker">Sticker</string>
     <string name="content_to_notify">Content to notify</string>
@@ -526,6 +527,7 @@
     <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
     <string name="label_content_rating_r">R</string>
     <string name="label_content_warning">Content warning</string>
+    <string name="label_created_by_name">Created by <xliff:g id="created_by">%s</xliff:g></string>
     <string name="label_data_provider">Twidere database provider</string>
     <string name="label_drafts_all">All</string>
     <string name="label_drafts_others">Others</string>

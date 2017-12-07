@@ -154,7 +154,7 @@
   <string name="contributors_list_summary">Jeżeli na liście nie ma Twojego imienia, powiadom nas przez Twittera.</string>
   <!-- [noun] Count label for retweets, e.g. (N retweets)-->
   <string name="count_label_retweets">Przesłane dalej</string>
-  <string name="created_by">Utworzone przez <xliff:g id="created_by">%s</xliff:g></string>
+  <string name="label_created_by_name">Utworzone przez <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">Utworzono listę \"<xliff:g id="list">%s</xliff:g>\".</string>
   <string name="custom_host_mapping">Ustawianie mapowania hosta</string>
   <string name="custom_host_mapping_summary">Mapowanie hostów, nie wymaga żadnych dodatkowych uprawnień.</string>

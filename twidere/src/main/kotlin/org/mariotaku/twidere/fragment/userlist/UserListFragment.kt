@@ -53,6 +53,7 @@ import org.mariotaku.twidere.activity.AccountSelectorActivity
 import org.mariotaku.twidere.activity.UserSelectorActivity
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.app.TwidereApplication
+import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
@@ -394,10 +395,22 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
     class UserListDetailsDialogFragment : BaseDialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val userList = arguments!!.userList!!
+            val messageBuilder = StringBuilder()
+            val description = userList.description?.takeIf(String::isNotEmpty)
+            if (description != null) {
+                messageBuilder.append(description)
+                messageBuilder.append('\n')
+            }
+            messageBuilder.append(getString(R.string.label_created_by_name,
+                    userColorNameManager.getDisplayName(userList, preferences[nameFirstKey])))
             val builder = AlertDialog.Builder(context!!)
             builder.setTitle(userList.name)
-            builder.setMessage(userList.description)
+            builder.setMessage(messageBuilder)
             builder.setPositiveButton(android.R.string.ok, null)
+            builder.neutral(R.string.action_list_creator) {
+                startActivity(IntentUtils.userProfile(userList.account_key, userList.user_key,
+                        userList.user_screen_name))
+            }
             val dialog = builder.create()
             dialog.onShow { it.applyTheme() }
             return dialog

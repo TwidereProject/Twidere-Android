@@ -126,7 +126,7 @@
   <string name="copy_link">Kopier lenke</string>
   <!-- [noun] Count label for retweets, e.g. (N retweets)-->
   <string name="count_label_retweets">Retweets</string>
-  <string name="created_by">Opprettet av <xliff:g id="created_by">%s</xliff:g></string>
+  <string name="label_created_by_name">Opprettet av <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">Opprettet listen «<xliff:g id="list">%s</xliff:g>».</string>
   <string name="current_status">Gjeldende tweet</string>
   <string name="custom_host_mapping">Tilpasset vertskobling</string>

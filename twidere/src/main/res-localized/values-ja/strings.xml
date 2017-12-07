@@ -241,7 +241,7 @@
   <string name="copy_link">リンクをコピー</string>
   <!-- [noun] Count label for retweets, e.g. (N retweets)-->
   <string name="count_label_retweets">リツイート</string>
-  <string name="created_by"><xliff:g id="created_by">%s</xliff:g>により作成</string>
+  <string name="label_created_by_name"><xliff:g id="created_by">%s</xliff:g>により作成</string>
   <string name="created_list">リスト\"<xliff:g id="list">%s</xliff:g>\"を作成しました。</string>
   <string name="current_status">現在のツイート</string>
   <string name="custom_host_mapping">ホストマッピングの設定</string>

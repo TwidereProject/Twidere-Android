@@ -224,7 +224,7 @@
   <string name="copy_link">Copy link</string>
   <!-- [noun] Count label for retweets, e.g. (N retweets)-->
   <string name="count_label_retweets">Retweets</string>
-  <string name="created_by">Created by <xliff:g id="created_by">%s</xliff:g></string>
+  <string name="label_created_by_name">Created by <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">Created list \"<xliff:g id="list">%s</xliff:g>\".</string>
   <string name="current_status">Current tweet</string>
   <string name="custom_host_mapping">Custom host mapping</string>

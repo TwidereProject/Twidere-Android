@@ -91,7 +91,7 @@
   <string name="contributors_list_summary">אם לא מצאת את שמך, אנא פנה/י לחשבון הפרוייקט שלנו.</string>
   <!-- [noun] Count label for retweets, e.g. (N retweets)-->
   <string name="count_label_retweets">ציוצים מחדש</string>
-  <string name="created_by">נוצר ע\"י <xliff:g id="created_by">%s </xliff:g></string>
+  <string name="label_created_by_name">נוצר ע\"י <xliff:g id="created_by">%s </xliff:g></string>
   <string name="created_list">הרשימה \"<xliff:g id="list">%s</xliff:g>\" נוצרה.</string>
   <string name="default_account">חשבון ברירת המחדל</string>
   <string name="default_api_settings">הגדרות API ראשוניות</string>

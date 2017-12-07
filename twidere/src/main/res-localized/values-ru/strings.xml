@@ -204,7 +204,7 @@
   <string name="copy_link">Копировать ссылку</string>
   <!-- [noun] Count label for retweets, e.g. (N retweets)-->
   <string name="count_label_retweets">Ретвиты</string>
-  <string name="created_by">Создано пользователем <xliff:g id="created_by">%s</xliff:g></string>
+  <string name="label_created_by_name">Создано пользователем <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">Созданный список \"<xliff:g id="list">%s</xliff:g>\".</string>
   <string name="current_status">Текущий твит</string>
   <string name="custom_host_mapping">Перенаправление узлов</string>

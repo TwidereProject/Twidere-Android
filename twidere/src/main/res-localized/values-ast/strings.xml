@@ -223,7 +223,7 @@
   <string name="copy_link">Copiar enllaz</string>
   <!-- [noun] Count label for retweets, e.g. (N retweets)-->
   <string name="count_label_retweets">Retuits</string>
-  <string name="created_by">Creáu por <xliff:g id="created_by">%s</xliff:g></string>
+  <string name="label_created_by_name">Creáu por <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">Creóse\'l llistáu «<xliff:g id="list">%s</xliff:g>».</string>
   <string name="current_status">Tuit actual</string>
   <string name="custom_host_mapping">Mapeáu d\'agospiu personalizáu</string>

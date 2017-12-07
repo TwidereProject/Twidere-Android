@@ -224,7 +224,7 @@
   <string name="copy_link">링크 복사</string>
   <!-- [noun] Count label for retweets, e.g. (N retweets)-->
   <string name="count_label_retweets">리트윗</string>
-  <string name="created_by"><xliff:g id="created_by">%s</xliff:g>님이 만듦</string>
+  <string name="label_created_by_name"><xliff:g id="created_by">%s</xliff:g>님이 만듦</string>
   <string name="created_list">\"<xliff:g id="list">%s</xliff:g>\" 리스트를 만들었습니다.</string>
   <string name="current_status">현재 트윗</string>
   <string name="custom_host_mapping">커스텀 호스트 매핑</string>

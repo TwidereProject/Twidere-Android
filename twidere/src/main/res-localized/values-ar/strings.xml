@@ -154,7 +154,7 @@
   <string name="copy_link">انسخ الرابط</string>
   <!-- [noun] Count label for retweets, e.g. (N retweets)-->
   <string name="count_label_retweets">من إعادات التغريد</string>
-  <string name="created_by">أنشأها <xliff:g id="created_by">%s</xliff:g></string>
+  <string name="label_created_by_name">أنشأها <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">أُنشأت القائمة <xliff:g id="list">%s</xliff:g>.</string>
   <string name="current_status">التغريدة الحالية</string>
   <string name="custom_host_mapping">تعيين مضيف مخصص</string>

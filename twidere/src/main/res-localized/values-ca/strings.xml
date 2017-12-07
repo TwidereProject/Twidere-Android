@@ -134,7 +134,7 @@
   <string name="copy_link">Copia l\'enllaç</string>
   <!-- [noun] Count label for retweets, e.g. (N retweets)-->
   <string name="count_label_retweets">Repiulades</string>
-  <string name="created_by">Creat per <xliff:g id="created_by">%s</xliff:g></string>
+  <string name="label_created_by_name">Creat per <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">Heu creat la llista «<xliff:g id="list">%s</xliff:g>».</string>
   <string name="current_status">Piulada actual</string>
   <string name="custom_host_mapping">Associacions de servidors personalitzades</string>

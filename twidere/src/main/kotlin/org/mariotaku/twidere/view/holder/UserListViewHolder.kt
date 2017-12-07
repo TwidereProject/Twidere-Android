@@ -64,7 +64,7 @@ class UserListViewHolder(
         nameView.spannable = userList.name
         val nameFirst = adapter.nameFirst
         val createdByDisplayName = manager.getDisplayName(userList, nameFirst)
-        createdByView.spannable = context.getString(R.string.created_by, createdByDisplayName)
+        createdByView.spannable = context.getString(R.string.label_created_by_name, createdByDisplayName)
 
         if (adapter.profileImageEnabled) {
             profileImageView.visibility = View.VISIBLE
