@@ -41,6 +41,9 @@ val AccountExtras.official: Boolean
 val AccountDetails.official: Boolean
     get() = extras?.official == true
 
+val AccountDetails.hasDm: Boolean
+    get() = type in arrayOf(AccountType.FANFOU, AccountType.TWITTER)
+
 fun <T> AccountDetails.newMicroBlogInstance(context: Context, cls: Class<T>): T {
     return credentials.newMicroBlogInstance(context, type, cls)
 }
