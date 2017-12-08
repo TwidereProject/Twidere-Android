@@ -48,7 +48,7 @@
         android:summary="@string/compose_now_summary"
         android:title="@string/compose_now"/>
 
-    <org.mariotaku.twidere.preference.EntrySummaryListPreference
+    <org.mariotaku.twidere.preference.EntrySummaryDropDownPreference
         android:defaultValue="compose"
         android:dependency="compose_now"
         android:entries="@array/entries_compose_now_action"

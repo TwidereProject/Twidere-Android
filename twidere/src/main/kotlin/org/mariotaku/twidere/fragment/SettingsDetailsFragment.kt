@@ -19,18 +19,18 @@
 
 package org.mariotaku.twidere.fragment
 
-import android.content.SharedPreferences
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
 import android.support.v4.view.ViewCompat
 import android.support.v7.preference.PreferenceScreen
+import android.support.v7.widget.RecyclerView
 import android.view.View
+import org.mariotaku.ktextension.restart
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.activity.SettingsActivity
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_SHOULD_TERMINATE
+import org.mariotaku.twidere.extension.preference.setOnPreferenceChangeListenerRecursive
 import org.mariotaku.twidere.util.Utils
 
-class SettingsDetailsFragment : BasePreferenceFragment(), OnSharedPreferenceChangeListener {
+class SettingsDetailsFragment : BasePreferenceFragment() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceManager.sharedPreferencesName = SHARED_PREFERENCES_NAME
@@ -65,31 +65,22 @@ class SettingsDetailsFragment : BasePreferenceFragment(), OnSharedPreferenceChan
         ViewCompat.requestApplyInsets(listView)
     }
 
-    override fun onStart() {
-        super.onStart()
-        preferenceManager.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
-    }
-
-    override fun onStop() {
-        preferenceManager.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
-        super.onStop()
-    }
-
-    override fun onSharedPreferenceChanged(preferences: SharedPreferences, key: String) {
-        val preference = findPreference(key) ?: return
-        val extras = preference.extras ?: return
-        val activity = activity ?: return
-        if (extras.containsKey(EXTRA_SHOULD_RESTART)) {
-            SettingsActivity.setShouldRestart(activity)
-        } else if (extras.containsKey(EXTRA_SHOULD_RECREATE)) {
-            SettingsActivity.setShouldRecreate(activity)
-        } else if (extras.containsKey(EXTRA_SHOULD_TERMINATE)) {
-            SettingsActivity.setShouldTerminate(activity)
+    override fun onCreateAdapter(screen: PreferenceScreen): RecyclerView.Adapter<*> {
+        screen.setOnPreferenceChangeListenerRecursive { preference, _ ->
+            val activity = activity ?: return@setOnPreferenceChangeListenerRecursive false
+            val extras = preference.extras ?: return@setOnPreferenceChangeListenerRecursive false
+            when {
+                extras.containsKey(EXTRA_SHOULD_RESTART) -> SettingsActivity.setShouldRestart(activity)
+                extras.containsKey(EXTRA_SHOULD_RECREATE) -> SettingsActivity.setShouldRecreate(activity)
+                extras.containsKey(EXTRA_SHOULD_TERMINATE) -> SettingsActivity.setShouldTerminate(activity)
+            }
+            when {
+                extras.containsKey(EXTRA_RECREATE_ACTIVITY) -> activity.recreate()
+                extras.containsKey(EXTRA_RESTART_ACTIVITY) -> activity.restart()
+            }
+            return@setOnPreferenceChangeListenerRecursive true
         }
-        if (extras.containsKey(EXTRA_RECREATE_ACTIVITY)) {
-            activity.recreate()
-        }
+        return super.onCreateAdapter(screen)
     }
-
 
 }

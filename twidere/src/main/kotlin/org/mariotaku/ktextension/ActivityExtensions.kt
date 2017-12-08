@@ -48,3 +48,14 @@ val Activity.activityLabel: CharSequence?
 
 val Activity.activityInfo: ActivityInfo
     get() = packageManager.getActivityInfo(ComponentName(this, javaClass), 0)
+
+
+fun Activity.restart() {
+    val enterAnim = android.R.anim.fade_in
+    val exitAnim = android.R.anim.fade_out
+    val intent = intent
+    finish()
+    overridePendingTransition(enterAnim, exitAnim)
+    startActivity(intent)
+    overridePendingTransition(enterAnim, exitAnim)
+}

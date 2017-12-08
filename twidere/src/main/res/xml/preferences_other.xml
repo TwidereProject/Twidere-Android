@@ -25,7 +25,7 @@
             android:value="true"/>
     </SwitchPreferenceCompat>
 
-    <org.mariotaku.twidere.preference.EntrySummaryListPreference
+    <org.mariotaku.twidere.preference.EntrySummaryDropDownPreference
         android:defaultValue=""
         android:entries="@array/values_app_languages"
         android:entryValues="@array/entries_app_languages"
@@ -34,7 +34,7 @@
         <extra
             android:name="should_restart"
             android:value="true"/>
-    </org.mariotaku.twidere.preference.EntrySummaryListPreference>
+    </org.mariotaku.twidere.preference.EntrySummaryDropDownPreference>
 
     <Preference
         android:fragment="org.mariotaku.twidere.fragment.NetworkDiagnosticsFragment"

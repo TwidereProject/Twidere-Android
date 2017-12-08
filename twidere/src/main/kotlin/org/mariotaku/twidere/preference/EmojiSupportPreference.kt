@@ -25,9 +25,6 @@ import android.util.AttributeSet
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants
 
-/**
- * Created by mariotaku on 15/12/22.
- */
 class EmojiSupportPreference(context: Context, attrs: AttributeSet? = null) :
         ActivityPickerPreference(context, attrs) {
 

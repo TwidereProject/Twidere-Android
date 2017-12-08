@@ -26,7 +26,8 @@ import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.util.AttributeSet
 
-abstract class ComponentPickerPreference(context: Context, attrs: AttributeSet? = null) : ThemedListPreference(context, attrs) {
+abstract class ComponentPickerPreference(context: Context, attrs: AttributeSet? = null) :
+        ThemedDropDownPreference(context, attrs) {
 
     protected val packageManager: PackageManager = context.packageManager
 

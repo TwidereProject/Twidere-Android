@@ -46,6 +46,8 @@ import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.annotation.ThemeBackgroundOption.MAX_ALPHA
+import org.mariotaku.twidere.annotation.ThemeBackgroundOption.MIN_ALPHA
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_THEME_BACKGROUND_SOLID
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_THEME_BACKGROUND_TRANSPARENT
 import org.mariotaku.twidere.constant.themeBackgroundAlphaKey
@@ -54,8 +56,6 @@ import org.mariotaku.twidere.constant.themeColorKey
 import org.mariotaku.twidere.graphic.ActionIconDrawable
 import org.mariotaku.twidere.graphic.WindowBackgroundDrawable
 import org.mariotaku.twidere.graphic.iface.DoNotWrapDrawable
-import org.mariotaku.twidere.preference.ThemeBackgroundPreference.MAX_ALPHA
-import org.mariotaku.twidere.preference.ThemeBackgroundPreference.MIN_ALPHA
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo
 import org.mariotaku.twidere.util.support.ViewSupport
 

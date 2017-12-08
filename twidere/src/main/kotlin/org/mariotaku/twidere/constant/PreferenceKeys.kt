@@ -19,7 +19,6 @@ import org.mariotaku.twidere.model.ProxySettings
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.model.timeline.UserTimelineFilter
-import org.mariotaku.twidere.preference.ThemeBackgroundPreference
 import java.util.*
 
 /**
@@ -116,12 +115,12 @@ val themeBackgroundOptionKey = KStringKey(KEY_THEME_BACKGROUND, VALUE_THEME_BACK
 val themeBackgroundAlphaKey = object : KSimpleKey<Int>(KEY_THEME_BACKGROUND_ALPHA, 0xFF) {
     override fun read(preferences: SharedPreferences): Int {
         return preferences.getInt(KEY_THEME_BACKGROUND_ALPHA, DEFAULT_THEME_BACKGROUND_ALPHA)
-                .coerceIn(ThemeBackgroundPreference.MIN_ALPHA, ThemeBackgroundPreference.MAX_ALPHA)
+                .coerceIn(ThemeBackgroundOption.MIN_ALPHA, ThemeBackgroundOption.MAX_ALPHA)
     }
 
     override fun write(editor: SharedPreferences.Editor, value: Int): Boolean {
-        editor.putInt(key, value.coerceIn(ThemeBackgroundPreference.MIN_ALPHA,
-                ThemeBackgroundPreference.MAX_ALPHA))
+        editor.putInt(key, value.coerceIn(ThemeBackgroundOption.MIN_ALPHA,
+                ThemeBackgroundOption.MAX_ALPHA))
         return true
     }
 }

@@ -19,6 +19,7 @@
 package org.mariotaku.twidere.constant;
 
 import org.mariotaku.library.exportablepreferences.annotation.ExportablePreference;
+import org.mariotaku.twidere.annotation.ThemeBackgroundOption;
 
 import static org.mariotaku.library.exportablepreferences.annotation.PreferenceType.BOOLEAN;
 import static org.mariotaku.library.exportablepreferences.annotation.PreferenceType.INT;
@@ -56,9 +57,9 @@ public interface SharedPreferenceConstants {
     String VALUE_TAB_DISPLAY_OPTION_LABEL = "label";
     String VALUE_TAB_DISPLAY_OPTION_BOTH = "both";
 
-    String VALUE_THEME_BACKGROUND_DEFAULT = "default";
-    String VALUE_THEME_BACKGROUND_SOLID = "solid";
-    String VALUE_THEME_BACKGROUND_TRANSPARENT = "transparent";
+    String VALUE_THEME_BACKGROUND_DEFAULT = ThemeBackgroundOption.DEFAULT;
+    String VALUE_THEME_BACKGROUND_SOLID = ThemeBackgroundOption.SOLID;
+    String VALUE_THEME_BACKGROUND_TRANSPARENT = ThemeBackgroundOption.TRANSPARENT;
 
     String VALUE_THEME_NAME_AUTO = "auto";
     String VALUE_THEME_NAME_DARK = "dark";

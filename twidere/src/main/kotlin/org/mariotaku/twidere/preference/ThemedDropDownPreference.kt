@@ -20,15 +20,14 @@
 package org.mariotaku.twidere.preference
 
 import android.content.Context
+import android.support.v7.preference.DropDownPreference
 import android.util.AttributeSet
+import android.widget.ArrayAdapter
 
-/**
- * Created by mariotaku on 16/3/22.
- */
-open class EntrySummaryListPreference(
+open class ThemedDropDownPreference(
         context: Context, attrs: AttributeSet? = null
-) : ThemedListPreference(context, attrs) {
-
-    override fun getSummary(): CharSequence? = entry
-
+) : DropDownPreference(context, attrs) {
+    override fun createAdapter(): ArrayAdapter<*> {
+        return ArrayAdapter<Any>(context, android.R.layout.simple_spinner_dropdown_item)
+    }
 }

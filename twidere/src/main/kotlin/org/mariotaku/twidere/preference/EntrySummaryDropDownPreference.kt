@@ -22,15 +22,10 @@ package org.mariotaku.twidere.preference
 import android.content.Context
 import android.util.AttributeSet
 
+open class EntrySummaryDropDownPreference(
+        context: Context, attrs: AttributeSet? = null
+) : ThemedDropDownPreference(context, attrs) {
 
-/**
- * Created by mariotaku on 2017/3/22.
- */
+    override fun getSummary(): CharSequence? = entry
 
-class LanguageSelectorPreference(context: Context, attrs: AttributeSet? = null) : ThemedListPreference(context, attrs) {
-    init {
-        val locales = context.assets.locales
-        entries = locales
-        entryValues = locales
-    }
 }

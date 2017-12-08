@@ -554,6 +554,7 @@
     <string name="label_location_your_coarse_location">Your coarse location</string>
     <string name="label_mastodon_host">Mastodon site</string>
     <string name="label_media">Media</string>
+    <string name="label_opacity">Opacity</string>
     <string name="label_original_status">Original tweet</string>
     <string name="label_password">Password</string>
     <string name="label_password_sign_in">Password sign in</string>

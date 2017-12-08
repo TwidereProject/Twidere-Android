@@ -55,6 +55,7 @@ import kotlinx.android.synthetic.main.header_drawer_account_selector.view.*
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
+import org.mariotaku.ktextension.restart
 import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.ktextension.setItemIcon
 import org.mariotaku.twidere.Constants.EXTRA_FEATURES_NOTICE_VERSION
@@ -210,7 +211,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             REQUEST_SETTINGS -> {
                 if (data == null) return
                 if (data.getBooleanExtra(EXTRA_SHOULD_RESTART, false)) {
-                    Utils.restartActivity(activity)
+                    activity!!.restart()
                 } else if (data.getBooleanExtra(EXTRA_SHOULD_RECREATE, false)) {
                     activity!!.recreate()
                 }

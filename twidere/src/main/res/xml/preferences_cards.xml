@@ -36,7 +36,7 @@
             android:value="true"/>
     </SwitchPreferenceCompat>
 
-    <org.mariotaku.twidere.preference.EntrySummaryListPreference
+    <org.mariotaku.twidere.preference.EntrySummaryDropDownPreference
         android:defaultValue="@string/default_profile_image_style"
         android:entries="@array/entries_profile_image_style"
         android:entryValues="@array/values_profile_image_style"
@@ -46,7 +46,7 @@
         <extra
             android:name="should_recreate"
             android:value="true"/>
-    </org.mariotaku.twidere.preference.EntrySummaryListPreference>
+    </org.mariotaku.twidere.preference.EntrySummaryDropDownPreference>
 
     <SwitchPreferenceCompat
         android:defaultValue="false"
@@ -58,7 +58,7 @@
             android:value="true"/>
     </SwitchPreferenceCompat>
 
-    <org.mariotaku.twidere.preference.EntrySummaryListPreference
+    <org.mariotaku.twidere.preference.EntrySummaryDropDownPreference
         android:defaultValue="crop"
         android:entries="@array/entries_media_preview_style"
         android:entryValues="@array/values_media_preview_style"
@@ -68,7 +68,7 @@
         <extra
             android:name="should_recreate"
             android:value="true"/>
-    </org.mariotaku.twidere.preference.EntrySummaryListPreference>
+    </org.mariotaku.twidere.preference.EntrySummaryDropDownPreference>
 
     <org.mariotaku.twidere.preference.LinkHighlightPreference
         android:defaultValue="none"

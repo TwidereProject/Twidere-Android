@@ -11,12 +11,9 @@ import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.twidere.constant.autoRefreshCompatibilityModeKey
 import java.util.concurrent.TimeUnit
 
-/**
- * Created by mariotaku on 2017/2/8.
- */
 class RefreshIntervalPreference(
         context: Context, attrs: AttributeSet? = null
-) : EntrySummaryListPreference(context, attrs) {
+) : EntrySummaryDropDownPreference(context, attrs) {
 
     private val entriesBackup = entries
     private val valuesBackup = entryValues
@@ -58,7 +55,7 @@ class RefreshIntervalPreference(
         }
         val valueMinutes = value.toLongOr(-1)
         val minValue = entryValues.firstOrNull()?.toString().toLongOr(-1)
-        if (valueMinutes > 0 && valueMinutes < minValue) {
+        if (valueMinutes in 1 until minValue) {
             value = minValue.toString()
         }
     }

@@ -28,10 +28,10 @@ import org.mariotaku.twidere.text.TwidereHighLightStyle
 
 class LinkHighlightPreference(
         context: Context, attrs: AttributeSet?
-) : EntrySummaryListPreference(context, attrs) {
+) : EntrySummaryDropDownPreference(context, attrs) {
 
     init {
-        entries = Array<CharSequence>(VALUES.size) { i ->
+        entries = Array(VALUES.size) { i ->
             getStyledEntry(OPTIONS[i], context.getString(ENTRIES_RES[i]))
         }
         entryValues = VALUES

@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:title="@string/theme">
 
-    <org.mariotaku.twidere.preference.EntrySummaryListPreference
+    <org.mariotaku.twidere.preference.EntrySummaryDropDownPreference
         android:defaultValue="light"
         android:entries="@array/entries_theme"
         android:entryValues="@array/values_theme"
@@ -18,19 +18,20 @@
         <extra
             android:name="recreate_activity"
             android:value="true"/>
-    </org.mariotaku.twidere.preference.EntrySummaryListPreference>
+    </org.mariotaku.twidere.preference.EntrySummaryDropDownPreference>
 
-    <org.mariotaku.twidere.preference.ThemeBackgroundPreference
+    <org.mariotaku.twidere.preference.theme.ThemeBackgroundPreference
         android:defaultValue="default"
+        android:key="theme_background"
         android:order="22"
         android:title="@string/background">
         <extra
             android:name="should_restart"
             android:value="true"/>
         <extra
-            android:name="recreate_activity"
+            android:name="restart_activity"
             android:value="true"/>
-    </org.mariotaku.twidere.preference.ThemeBackgroundPreference>
+    </org.mariotaku.twidere.preference.theme.ThemeBackgroundPreference>
 
     <org.mariotaku.twidere.preference.ColorPickerPreference
         android:key="theme_color"
@@ -45,7 +46,7 @@
             android:value="true"/>
     </org.mariotaku.twidere.preference.ColorPickerPreference>
 
-    <org.mariotaku.twidere.preference.EntrySummaryListPreference
+    <org.mariotaku.twidere.preference.EntrySummaryDropDownPreference
         android:entries="@array/entries_navbar_style"
         android:entryValues="@array/values_navbar_style"
         android:key="navbar_style"
@@ -57,7 +58,7 @@
         <extra
             android:name="recreate_activity"
             android:value="true"/>
-    </org.mariotaku.twidere.preference.EntrySummaryListPreference>
+    </org.mariotaku.twidere.preference.EntrySummaryDropDownPreference>
 
     <org.mariotaku.twidere.preference.EmojiSupportPreference
         android:key="emoji_support"

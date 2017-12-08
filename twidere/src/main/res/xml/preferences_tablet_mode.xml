@@ -23,7 +23,7 @@
                 android:value="true"/>
         </SwitchPreferenceCompat>
     </org.mariotaku.twidere.preference.TintedPreferenceCategory>
-    <org.mariotaku.twidere.preference.EntrySummaryListPreference
+    <org.mariotaku.twidere.preference.EntrySummaryDropDownPreference
         android:defaultValue="normal"
         android:entries="@array/entries_tab_column_width"
         android:entryValues="@array/values_tab_column_width"
@@ -33,7 +33,7 @@
         <extra
             android:name="should_recreate"
             android:value="true"/>
-    </org.mariotaku.twidere.preference.EntrySummaryListPreference>
+    </org.mariotaku.twidere.preference.EntrySummaryDropDownPreference>
 
     <SwitchPreferenceCompat
         android:defaultValue="true"
