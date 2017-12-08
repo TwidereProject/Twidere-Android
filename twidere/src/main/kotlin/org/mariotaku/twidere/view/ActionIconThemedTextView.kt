@@ -25,19 +25,16 @@ import android.graphics.PorterDuff.Mode
 import android.support.annotation.ColorInt
 import android.support.v4.widget.TextViewCompat
 import android.util.AttributeSet
-import org.mariotaku.chameleon.Chameleon
-import org.mariotaku.chameleon.ChameleonView
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.view.iface.IIconActionButton
 
 class ActionIconThemedTextView(
         context: Context, attrs: AttributeSet? = null
-) : FixedTextView(context, attrs), IIconActionButton {
+) : FixedTextView(context, attrs) {
 
     private var iconWidth: Int = 0
     private var iconHeight: Int = 0
 
-    override var defaultColor: Int = 0
+    var defaultColor: Int = 0
         @ColorInt get() {
             if (field != 0) return field
             val colors = textColors
@@ -49,7 +46,7 @@ class ActionIconThemedTextView(
             refreshDrawableState()
         }
 
-    override var disabledColor: Int = 0
+    var disabledColor: Int = 0
         @ColorInt get() {
             if (field != 0) return field
             val colors = textColors
@@ -61,7 +58,7 @@ class ActionIconThemedTextView(
             refreshDrawableState()
         }
 
-    override var activatedColor: Int = 0
+    var activatedColor: Int = 0
         @ColorInt get() {
             if (field != 0) return field
             val colors = linkTextColors
@@ -75,13 +72,13 @@ class ActionIconThemedTextView(
 
     init {
         @SuppressLint("CustomViewStyleable")
-        val a = context.obtainStyledAttributes(attrs, R.styleable.IconActionButton,
+        val a = context.obtainStyledAttributes(attrs, R.styleable.ActionIconThemedTextView,
                 R.attr.cardActionButtonStyle, R.style.Widget_CardActionButton)
-        defaultColor = a.getColor(R.styleable.IconActionButton_iabColor, 0)
-        disabledColor = a.getColor(R.styleable.IconActionButton_iabDisabledColor, 0)
-        activatedColor = a.getColor(R.styleable.IconActionButton_iabActivatedColor, 0)
-        iconWidth = a.getDimensionPixelSize(R.styleable.IconActionButton_iabIconWidth, 0)
-        iconHeight = a.getDimensionPixelSize(R.styleable.IconActionButton_iabIconHeight, 0)
+        defaultColor = a.getColor(R.styleable.ActionIconThemedTextView_iabColor, 0)
+        disabledColor = a.getColor(R.styleable.ActionIconThemedTextView_iabDisabledColor, 0)
+        activatedColor = a.getColor(R.styleable.ActionIconThemedTextView_iabActivatedColor, 0)
+        iconWidth = a.getDimensionPixelSize(R.styleable.ActionIconThemedTextView_iabIconWidth, 0)
+        iconHeight = a.getDimensionPixelSize(R.styleable.ActionIconThemedTextView_iabIconHeight, 0)
         a.recycle()
     }
 
@@ -110,16 +107,5 @@ class ActionIconThemedTextView(
         }
     }
 
-    override fun isPostApplyTheme(): Boolean {
-        return false
-    }
-
-    override fun createAppearance(context: Context, attributeSet: AttributeSet, theme: Chameleon.Theme): Appearance? {
-        return IIconActionButton.Appearance.create(context, attributeSet, theme)
-    }
-
-    override fun applyAppearance(appearance: ChameleonView.Appearance) {
-        IIconActionButton.Appearance.apply(this, appearance as IIconActionButton.Appearance)
-    }
 
 }

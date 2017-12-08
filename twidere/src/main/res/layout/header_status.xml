@@ -344,14 +344,13 @@
             android:orientation="horizontal"
             tools:visibility="gone">
 
-            <org.mariotaku.twidere.view.IconActionView
+            <android.support.v7.widget.AppCompatImageView
                 android:layout_width="@dimen/element_size_small"
                 android:layout_height="@dimen/element_size_small"
                 android:layout_weight="0"
-                android:color="?android:textColorSecondary"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_action_gallery"
-                tools:tint="?android:textColorSecondary"/>
+                app:srcCompat="@drawable/ic_action_gallery"
+                app:tint="?android:textColorSecondary"/>
 
             <org.mariotaku.twidere.view.FixedTextView
                 android:id="@+id/quotedMediaLabelText"

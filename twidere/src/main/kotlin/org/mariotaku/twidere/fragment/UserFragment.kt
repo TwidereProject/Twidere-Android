@@ -23,9 +23,9 @@ import android.accounts.AccountManager
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.Rect
@@ -40,13 +40,13 @@ import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
-import android.support.v4.content.FixedAsyncTaskLoader
 import android.support.v4.content.pm.ShortcutManagerCompat
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v4.graphics.ColorUtils
 import android.support.v4.view.ViewCompat
 import android.support.v4.view.ViewPager.OnPageChangeListener
 import android.support.v4.view.WindowCompat
+import android.support.v4.widget.ImageViewCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -75,7 +75,6 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.twitter.model.FriendshipUpdate
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.UserList
@@ -97,7 +96,6 @@ import org.mariotaku.twidere.data.impl.RelationshipLiveData
 import org.mariotaku.twidere.data.impl.UserLiveData
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.*
-import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowInsetsCallback
 import org.mariotaku.twidere.fragment.iface.IToolBarSupportFragment
@@ -115,13 +113,13 @@ import org.mariotaku.twidere.model.event.FriendshipUpdatedEvent
 import org.mariotaku.twidere.model.event.ProfileUpdatedEvent
 import org.mariotaku.twidere.model.event.TaskStateChangedEvent
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
-import org.mariotaku.twidere.model.util.ParcelableRelationshipUtils
 import org.mariotaku.twidere.promise.BlockPromises
 import org.mariotaku.twidere.promise.FriendshipPromises
 import org.mariotaku.twidere.promise.MutePromises
 import org.mariotaku.twidere.promise.UserListPromises
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
+import org.mariotaku.twidere.task.UpdateAccountInfoPromise
 import org.mariotaku.twidere.text.TwidereURLSpan
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
@@ -332,6 +330,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             }
             if (user.is_cache) {
                 getUserInfo(true)
+            } else {
+                UpdateAccountInfoPromise(context!!).promise(account, user)
             }
         }, fail = { exception ->
             errorText.text = exception.getErrorMessage(activity)
@@ -1087,7 +1087,11 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val followButton = followContainer.follow
         followButton.setImageResource(icon)
         ViewCompat.setBackgroundTintMode(followButton, PorterDuff.Mode.SRC_ATOP)
-        ViewCompat.setBackgroundTintList(followButton, ContextCompat.getColorStateList(context!!, color))
+        val backgroundTintList = ContextCompat.getColorStateList(context!!, color)!!
+        ViewCompat.setBackgroundTintList(followButton, backgroundTintList)
+        ImageViewCompat.setImageTintList(followButton,
+                ColorStateList.valueOf(ThemeUtils.getContrastColor(backgroundTintList.defaultColor,
+                        Color.BLACK, Color.WHITE)))
         followButton.contentDescription = getString(label)
     }
 
@@ -1336,67 +1340,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         }.failUi {
             val context = weakThis?.context ?: return@failUi
             Toast.makeText(context, it.getErrorMessage(context), Toast.LENGTH_SHORT).show()
-        }
-    }
-
-
-    internal class UserRelationshipLoader(
-            context: Context,
-            private val accountKey: UserKey?,
-            private val user: ParcelableUser?
-    ) : FixedAsyncTaskLoader<SingleResponse<ParcelableRelationship>>(context) {
-
-        override fun loadInBackground(): SingleResponse<ParcelableRelationship> {
-            if (accountKey == null || user == null) {
-                return SingleResponse(MicroBlogException("Null parameters"))
-            }
-            val userKey = user.key
-            val isFiltering = DataStoreUtils.isFilteringUser(context, userKey)
-            if (accountKey == user.key) {
-                return SingleResponse(ParcelableRelationship().apply {
-                    account_key = accountKey
-                    user_key = userKey
-                    filtering = isFiltering
-                })
-            }
-
-            try {
-                val details = AccountManager.get(context).getDetailsOrThrow(accountKey, true)
-                if (details.type == AccountType.TWITTER) {
-                    if (!accountKey.hasSameHost(user.key)) {
-                        return SingleResponse.getInstance(ParcelableRelationshipUtils.create(user, isFiltering))
-                    }
-                }
-                val data = when (details.type) {
-                    AccountType.MASTODON -> {
-                        val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
-                        mastodon.getRelationships(arrayOf(userKey.id))?.firstOrNull()
-                                ?.toParcelable(accountKey, userKey, isFiltering)
-                                ?: throw MicroBlogException("No relationship")
-                    }
-                    else -> {
-                        val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
-                        microBlog.showFriendship(user.key.id).toParcelable(accountKey, userKey,
-                                isFiltering)
-                    }
-                }
-
-                if (data.blocking || data.blocked_by) {
-                    Utils.setLastSeen(context, userKey, -1)
-                } else {
-                    Utils.setLastSeen(context, userKey, System.currentTimeMillis())
-                }
-                val resolver = context.contentResolver
-                resolver.insert(CachedRelationships.CONTENT_URI, data, ParcelableRelationship::class.java)
-                return SingleResponse(data)
-            } catch (e: MicroBlogException) {
-                return SingleResponse(e)
-            }
-
-        }
-
-        override fun onStartLoading() {
-            forceLoad()
         }
     }
 

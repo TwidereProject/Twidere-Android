@@ -162,7 +162,7 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     // Registered listeners
     private val controlBarOffsetListeners = ArrayList<IControlBarActivity.ControlBarOffsetListener>()
 
-    private val userTheme: Chameleon.Theme by lazy {
+    protected val userTheme: Chameleon.Theme by lazy {
         return@lazy ThemeUtils.getUserTheme(this, themePreferences)
     }
 

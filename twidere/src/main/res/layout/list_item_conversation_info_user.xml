@@ -35,15 +35,15 @@
         android:background="?selectableItemBackground"
         android:clickable="true">
 
-        <org.mariotaku.twidere.view.IconActionView
+        <android.support.v7.widget.AppCompatImageView
             android:id="@+id/headerIcon"
             android:layout_width="@dimen/icon_size_list_item_small"
             android:layout_height="@dimen/icon_size_list_item_small"
             android:layout_centerVertical="true"
             android:layout_margin="@dimen/element_spacing_normal"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_action_users"
-            app:iabColor="?android:textColorSecondary"/>
+            app:srcCompat="@drawable/ic_action_users"
+            app:tint="?android:textColorSecondary"/>
 
         <include
             layout="@layout/list_item_simple_user"

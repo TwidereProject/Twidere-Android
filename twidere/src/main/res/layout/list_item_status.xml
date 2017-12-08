@@ -33,7 +33,7 @@
     android:paddingStart="@dimen/element_spacing_normal"
     app:ignorePadding="true">
 
-    <org.mariotaku.twidere.view.IconActionView
+    <android.support.v7.widget.AppCompatImageView
         android:id="@+id/statusInfoIcon"
         style="?profileImageStyle"
         android:layout_width="@dimen/element_size_small"
@@ -42,12 +42,11 @@
         android:layout_alignEnd="@+id/profileImage"
         android:layout_alignRight="@+id/profileImage"
         android:layout_alignTop="@+id/statusInfoLabel"
-        android:color="?android:textColorSecondary"
         android:padding="@dimen/element_spacing_small"
         android:scaleType="centerInside"
         android:visibility="gone"
+        app:tint="?android:textColorSecondary"
         tools:src="@drawable/ic_activity_action_retweet"
-        tools:tint="?android:textColorSecondary"
         tools:visibility="visible"/>
 
     <org.mariotaku.twidere.view.FixedTextView
@@ -336,121 +335,64 @@
         android:orientation="horizontal"
         tools:visibility="visible">
 
-        <LinearLayout
+        <org.mariotaku.twidere.view.LabeledImageButton
             android:id="@+id/reply"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="?borderlessButtonStyle"
+            android:layout_width="@dimen/button_size_content_card_action"
+            android:layout_height="@dimen/button_size_content_card_action"
             android:background="?selectableItemBackgroundBorderless"
-            android:focusable="false">
+            android:contentDescription="@string/action_reply"
+            android:focusable="false"
+            android:gravity="center"
+            android:padding="@dimen/element_spacing_small"
+            android:scaleType="centerInside"
+            android:textAppearance="?android:textAppearanceSmall"
+            app:srcCompat="@drawable/ic_action_reply"
+            app:tint="?android:textColorSecondary"
+            app:tintMode="multiply"
+            tools:text="255"/>
 
-            <org.mariotaku.twidere.view.IconActionView
-                android:id="@+id/replyIcon"
-                android:layout_width="@dimen/button_size_content_card_action"
-                android:layout_height="@dimen/button_size_content_card_action"
-                android:contentDescription="@string/action_reply"
-                android:focusable="false"
-                android:gravity="center"
-                android:padding="@dimen/element_spacing_small"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_action_reply"
-                app:iabActivatedColor="@color/highlight_reply"
-                app:iabColor="?android:textColorSecondary"
-                tools:tint="?android:textColorSecondary"/>
-
-            <org.mariotaku.twidere.view.ActionIconThemedTextView
-                android:id="@+id/replyCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/element_spacing_minus_xsmall"
-                android:layout_marginStart="@dimen/element_spacing_minus_xsmall"
-                android:ellipsize="end"
-                android:focusable="false"
-                android:gravity="center"
-                android:maxLines="1"
-                android:minHeight="@dimen/button_size_content_card_action"
-                android:textAppearance="?android:textAppearanceSmall"
-                tools:text="255"/>
-        </LinearLayout>
-
-        <LinearLayout
+        <org.mariotaku.twidere.view.LabeledImageButton
             android:id="@+id/retweet"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="?borderlessButtonStyle"
+            android:layout_width="@dimen/button_size_content_card_action"
+            android:layout_height="@dimen/button_size_content_card_action"
             android:layout_marginLeft="@dimen/element_spacing_small"
             android:layout_marginStart="@dimen/element_spacing_small"
             android:background="?selectableItemBackgroundBorderless"
-            android:focusable="false">
+            android:contentDescription="@string/action_retweet"
+            android:focusable="false"
+            android:gravity="center"
+            android:padding="@dimen/element_spacing_small"
+            android:scaleType="centerInside"
+            android:textAppearance="?android:textAppearanceSmall"
+            app:srcCompat="@drawable/ic_action_retweet"
+            app:tint="@color/btn_tint_retweet_stateful"
+            app:tintMode="multiply"
+            tools:text="255"/>
 
-            <org.mariotaku.twidere.view.IconActionView
-                android:id="@+id/retweetIcon"
-                android:layout_width="@dimen/button_size_content_card_action"
-                android:layout_height="@dimen/button_size_content_card_action"
-                android:contentDescription="@string/action_retweet"
-                android:focusable="false"
-                android:gravity="center"
-                android:padding="@dimen/element_spacing_small"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_action_retweet"
-                app:iabActivatedColor="@color/highlight_retweet"
-                app:iabColor="?android:textColorSecondary"
-                tools:tint="?android:textColorSecondary"/>
-
-            <org.mariotaku.twidere.view.ActionIconThemedTextView
-                android:id="@+id/retweetCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/element_spacing_minus_xsmall"
-                android:layout_marginStart="@dimen/element_spacing_minus_xsmall"
-                android:ellipsize="end"
-                android:focusable="false"
-                android:gravity="center"
-                android:maxLines="1"
-                android:minHeight="@dimen/button_size_content_card_action"
-                android:textAppearance="?android:textAppearanceSmall"
-                tools:text="255"/>
-
-        </LinearLayout>
-
-        <LinearLayout
+        <org.mariotaku.twidere.view.LabeledImageButton
             android:id="@+id/favorite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="?borderlessButtonStyle"
+            android:layout_width="@dimen/button_size_content_card_action"
+            android:layout_height="@dimen/button_size_content_card_action"
             android:layout_marginLeft="@dimen/element_spacing_small"
             android:layout_marginStart="@dimen/element_spacing_small"
             android:background="?selectableItemBackgroundBorderless"
-            android:focusable="false">
+            android:contentDescription="@string/action_like"
+            android:focusable="false"
+            android:gravity="center"
+            android:padding="@dimen/element_spacing_small"
+            android:scaleType="centerInside"
+            android:textAppearance="?android:textAppearanceSmall"
+            app:srcCompat="@drawable/ic_action_heart"
+            app:tint="@color/btn_tint_like_stateful"
+            app:tintMode="multiply"
+            tools:text="255"/>
 
-            <org.mariotaku.twidere.view.IconActionView
-                android:id="@+id/favoriteIcon"
-                android:layout_width="@dimen/button_size_content_card_action"
-                android:layout_height="@dimen/button_size_content_card_action"
-                android:contentDescription="@string/action_like"
-                android:focusable="false"
-                android:gravity="center"
-                android:padding="@dimen/element_spacing_small"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_action_heart"
-                app:iabActivatedColor="@color/highlight_like"
-                app:iabColor="?android:textColorSecondary"
-                tools:tint="?android:textColorSecondary"/>
-
-            <org.mariotaku.twidere.view.ActionIconThemedTextView
-                android:id="@+id/favoriteCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/element_spacing_minus_xsmall"
-                android:layout_marginStart="@dimen/element_spacing_minus_xsmall"
-                android:ellipsize="end"
-                android:focusable="false"
-                android:gravity="center"
-                android:maxLines="1"
-                android:minHeight="@dimen/button_size_content_card_action"
-                android:textAppearance="?android:textAppearanceSmall"
-                tools:text="255"/>
-        </LinearLayout>
     </LinearLayout>
 
-    <org.mariotaku.twidere.view.IconActionButton
+    <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/itemMenu"
         style="?cardActionButtonStyle"
         android:layout_width="@dimen/button_size_content_card_action"
@@ -461,8 +403,9 @@
         android:layout_alignTop="@+id/actionButtons"
         android:contentDescription="@string/action_more_actions"
         android:focusable="false"
-        android:src="@drawable/ic_action_more_horizontal"
-        tools:tint="?android:textColorSecondary"
+        app:srcCompat="@drawable/ic_action_more_horizontal"
+        app:tint="?android:textColorSecondary"
+        app:tintMode="multiply"
         tools:visibility="visible"/>
 
 </org.mariotaku.twidere.view.ColorLabelRelativeLayout>

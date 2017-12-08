@@ -28,7 +28,7 @@
     android:orientation="horizontal"
     app:backgroundTint="?colorControlActivated">
 
-    <org.mariotaku.twidere.view.PreferencesItemIconView
+    <android.support.v7.widget.AppCompatImageView
         android:id="@android:id/icon"
         android:layout_width="@dimen/header_icon_width"
         android:layout_height="@dimen/header_icon_width"
@@ -39,8 +39,8 @@
         android:layout_marginStart="@dimen/element_spacing_normal"
         android:layout_weight="0"
         android:contentDescription="@string/icon"
-        app:iabColor="?android:colorForeground"
-        tools:src="@drawable/ic_action_settings"/>
+        app:tint="?android:colorForeground"
+        tools:srcCompat="@drawable/ic_action_settings"/>
 
     <org.mariotaku.twidere.view.PreferencesItemTextView
         android:id="@android:id/title"

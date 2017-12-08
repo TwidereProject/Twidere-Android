@@ -52,13 +52,13 @@
             android:orientation="horizontal"
             android:padding="@dimen/element_spacing_normal">
 
-            <org.mariotaku.twidere.view.IconActionView
+            <android.support.v7.widget.AppCompatImageView
                 android:layout_width="@dimen/icon_size_list_item_small"
                 android:layout_height="@dimen/icon_size_list_item_small"
                 android:layout_weight="0"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_action_add"
-                app:iabColor="?android:textColorPrimary"/>
+                app:srcCompat="@drawable/ic_action_add"
+                app:tint="?android:textColorPrimary"/>
 
             <TextView
                 android:layout_width="0dp"

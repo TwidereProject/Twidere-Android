@@ -810,13 +810,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
     @SuppressLint("ResourceType")
     private fun setupBars() {
-        val backgroundOption = currentThemeBackgroundOption
-        val isTransparent = ThemeUtils.isTransparentBackground(backgroundOption)
-        val actionBarAlpha = if (isTransparent) {
-            ThemeUtils.getActionBarAlpha(preferences[themeBackgroundAlphaKey])
-        } else {
-            0xFF
-        }
+        val actionBarAlpha = userTheme.colorToolbar
         actionsButton.alpha = actionBarAlpha / 255f
 
         mainTabsContainer.setVisible(useTabNavigation)

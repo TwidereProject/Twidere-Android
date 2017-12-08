@@ -54,7 +54,7 @@ class FavoriteItemProvider(context: Context) : ActionProvider(context) {
     fun init(menuBar: ActionMenuView, item: MenuItem) {
         assert(MenuItemCompat.getActionProvider(item) === this)
         val icon = ContextCompat.getDrawable(context, this.icon)
-        val drawable = LikeAnimationDrawable(icon, defaultColor, activatedColor,
+        val drawable = LikeAnimationDrawable(icon,
                 if (useStar) Style.FAVORITE else Style.LIKE)
         drawable.mutate()
         drawable.callback = ViewCallback(menuBar)

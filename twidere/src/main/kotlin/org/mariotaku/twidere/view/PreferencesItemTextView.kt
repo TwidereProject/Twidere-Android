@@ -7,10 +7,6 @@ import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.chameleon.view.ChameleonTextView
 
-/**
- * Created by mariotaku on 2016/12/23.
- */
-
 class PreferencesItemTextView(context: Context, attrs: AttributeSet? = null) : FixedTextView(context, attrs) {
 
     override fun createAppearance(context: Context, attributeSet: AttributeSet, theme: Chameleon.Theme): ChameleonTextView.Appearance? {

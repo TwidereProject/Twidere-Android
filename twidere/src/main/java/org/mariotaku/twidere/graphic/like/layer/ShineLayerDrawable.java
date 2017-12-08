@@ -60,7 +60,7 @@ public class ShineLayerDrawable extends AnimationLayerDrawable {
 
     @Override
     protected ShineLayerState createConstantState(final int intrinsicWidth, final int intrinsicHeight,
-                                                  final LikeAnimationDrawable.Palette palette) {
+            final LikeAnimationDrawable.Palette palette) {
         return new ShineLayerState(intrinsicWidth, intrinsicHeight, palette);
     }
 
@@ -108,15 +108,11 @@ public class ShineLayerDrawable extends AnimationLayerDrawable {
         private int mFullRadius;
         private float mLineWidth;
 
-        public ShineLayerState(int intrinsicWidth, int intrinsicHeight, LikeAnimationDrawable.Palette palette) {
+        ShineLayerState(int intrinsicWidth, int intrinsicHeight, LikeAnimationDrawable.Palette palette) {
             super(intrinsicWidth, intrinsicHeight, palette);
             mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             mPaint.setStrokeCap(Paint.Cap.ROUND);
             setProgress(-1);
-        }
-
-        public Paint getPaint() {
-            return mPaint;
         }
 
         @NonNull
@@ -130,16 +126,20 @@ public class ShineLayerDrawable extends AnimationLayerDrawable {
             return 0;
         }
 
-        public int getFullRadius() {
+        Paint getPaint() {
+            return mPaint;
+        }
+
+        int getFullRadius() {
             return mFullRadius;
         }
 
-        public void setFullRadius(int fullRadius) {
+        void setFullRadius(int fullRadius) {
             mFullRadius = fullRadius;
             mLineWidth = fullRadius / 10f;
         }
 
-        public float getLineWidth() {
+        float getLineWidth() {
             return mLineWidth;
         }
 

@@ -29,6 +29,7 @@ import android.support.annotation.DrawableRes
 import android.support.annotation.XmlRes
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewCompat
+import android.support.v4.widget.ImageViewCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
@@ -375,8 +376,13 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
     ) : Entry() {
 
         override fun bind(view: View) {
-            view.findViewById<ImageView>(android.R.id.icon).setImageResource(icon)
-            view.findViewById<TextView>(android.R.id.title).text = title
+            val textView: TextView = view.findViewById(android.R.id.title)
+            val iconView: ImageView = view.findViewById(android.R.id.icon)
+
+            textView.text = title
+
+            iconView.setImageResource(icon)
+            ImageViewCompat.setImageTintList(iconView, textView.textColors)
         }
 
     }
@@ -386,9 +392,11 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
         override fun bind(view: View) {
             val theme = Chameleon.getOverrideTheme(view.context, view.context)
             val textView: TextView = view.findViewById(android.R.id.title)
+
             textView.setTextColor(ThemeUtils.getOptimalAccentColor(theme.colorAccent,
                     theme.colorForeground))
             textView.text = title
+
         }
     }
 

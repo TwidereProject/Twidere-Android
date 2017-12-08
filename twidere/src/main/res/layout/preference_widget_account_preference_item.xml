@@ -20,6 +20,7 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:descendantFocusability="blocksDescendants"
@@ -33,12 +34,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <org.mariotaku.twidere.view.IconActionButton
+    <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/settings"
         android:layout_width="@dimen/element_size_normal"
         android:layout_height="@dimen/element_size_normal"
         android:background="?selectableItemBackground"
-        android:src="@drawable/ic_action_settings"/>
+        app:srcCompat="@drawable/ic_action_settings"
+        app:tint="?android:textColorSecondary"/>
 
 
 </LinearLayout>

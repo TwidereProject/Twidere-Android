@@ -19,8 +19,10 @@
 
 package org.mariotaku.twidere.view.holder.status
 
+import android.content.res.ColorStateList
 import android.support.annotation.DrawableRes
 import android.support.v4.content.ContextCompat
+import android.support.v4.widget.ImageViewCompat
 import android.support.v4.widget.TextViewCompat
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.ViewHolder
@@ -83,8 +85,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
     private val statusInfoIcon by lazy { itemView.statusInfoIcon }
     private val quotedNameView by lazy { itemView.quotedName }
     private val timeView by lazy { itemView.time }
-    private val replyCountView by lazy { itemView.replyCount }
-    private val retweetCountView by lazy { itemView.retweetCount }
     private val quotedView by lazy { itemView.quotedView }
     private val quotedTextView by lazy { itemView.quotedText }
     private val actionButtons by lazy { itemView.actionButtons }
@@ -92,9 +92,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
     private val quotedMediaLabel by lazy { itemView.quotedMediaLabel }
     private val statusContentLowerSpace by lazy { itemView.statusContentLowerSpace }
     private val quotedMediaPreview by lazy { itemView.quotedMediaPreview }
-    private val favoriteIcon by lazy { itemView.favoriteIcon }
-    private val retweetIcon by lazy { itemView.retweetIcon }
-    private val favoriteCountView by lazy { itemView.favoriteCount }
     private val replyButton by lazy { itemView.reply }
     private val retweetButton by lazy { itemView.retweet }
     private val favoriteButton by lazy { itemView.favorite }
@@ -389,45 +386,43 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
 
         if (replyCount > 0) {
             val properCount = UnitConvertUtils.calculateProperCount(replyCount)
-            replyCountView.spannable = properCount
+            replyButton.text = properCount
             replyButton.contentDescription = context.resources.getQuantityString(R.plurals.N_replies_abbrev,
                     replyCount.toInt(), properCount)
         } else {
-            replyCountView.spannable = null
+            replyButton.text = null
             replyButton.contentDescription = context.getString(R.string.action_reply)
         }
-        replyCountView.hideIfEmpty()
 
         when (status.extras?.visibility) {
             StatusVisibility.PRIVATE -> {
-                retweetIcon.setImageResource(R.drawable.ic_action_lock)
+                retweetButton.setImageResource(R.drawable.ic_action_lock)
             }
             StatusVisibility.DIRECT -> {
-                retweetIcon.setImageResource(R.drawable.ic_action_message)
+                retweetButton.setImageResource(R.drawable.ic_action_message)
             }
             else -> {
-                retweetIcon.setImageResource(R.drawable.ic_action_retweet)
+                retweetButton.setImageResource(R.drawable.ic_action_retweet)
             }
         }
 
-        retweetIcon.isActivated = isRetweetIconActivated(status)
+        retweetButton.isActivated = isRetweetIconActivated(status)
 
         if (retweetCount > 0) {
             val properCount = UnitConvertUtils.calculateProperCount(retweetCount)
-            retweetCountView.spannable = properCount
+            retweetButton.text = properCount
             retweetButton.contentDescription = context.resources.getQuantityString(R.plurals.N_retweets_abbrev,
                     retweetCount.toInt(), properCount)
         } else {
-            retweetCountView.spannable = null
+            retweetButton.text = null
             retweetButton.contentDescription = context.getString(R.string.action_retweet)
         }
-        retweetCountView.hideIfEmpty()
 
-        favoriteIcon.isActivated = isFavoriteIconActivated(status)
+        favoriteButton.isActivated = isFavoriteIconActivated(status)
 
         if (favoriteCount > 0) {
             val properCount = UnitConvertUtils.calculateProperCount(favoriteCount)
-            favoriteCountView.spannable = properCount
+            favoriteButton.text = properCount
             if (adapter.useStarsForLikes) {
                 favoriteButton.contentDescription = context.resources.getQuantityString(R.plurals.N_favorites_abbrev,
                         favoriteCount.toInt(), properCount)
@@ -436,14 +431,13 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
                         favoriteCount.toInt(), properCount)
             }
         } else {
-            favoriteCountView.spannable = null
+            favoriteButton.text = null
             if (adapter.useStarsForLikes) {
                 favoriteButton.contentDescription = context.getString(R.string.action_favorite)
             } else {
                 favoriteButton.contentDescription = context.getString(R.string.action_like)
             }
         }
-        favoriteCountView.hideIfEmpty()
 
         nameView.updateText(formatter)
         quotedNameView.updateText(formatter)
@@ -538,9 +532,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         mediaLabel.textSize = textSize * 0.95f
         quotedMediaLabel.textSize = textSize * 0.95f
 
-        replyCountView.textSize = textSize
-        retweetCountView.textSize = textSize
-        favoriteCountView.textSize = textSize
+        replyButton.textSize = textSize
+        retweetButton.textSize = textSize
+        favoriteButton.textSize = textSize
 
         nameView.updateTextAppearance()
         quotedNameView.updateTextAppearance()
@@ -560,21 +554,22 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         quotedNameView.nameFirst = nameFirst
 
         val context = itemView.context
-        val drawable = if (adapter.useStarsForLikes) {
-            LikeAnimationDrawable(ContextCompat.getDrawable(context, R.drawable.ic_action_star),
-                    favoriteIcon.defaultColor, ContextCompat.getColor(context, R.color.highlight_favorite),
+        val favoriteTint: ColorStateList
+        val drawable: LikeAnimationDrawable
+        if (adapter.useStarsForLikes) {
+            favoriteTint = ContextCompat.getColorStateList(context, R.color.btn_tint_like_stateful)!!
+            drawable = LikeAnimationDrawable(ContextCompat.getDrawable(context, R.drawable.ic_action_star),
                     LikeAnimationDrawable.Style.FAVORITE)
         } else {
-            LikeAnimationDrawable(ContextCompat.getDrawable(context, R.drawable.ic_action_heart),
-                    favoriteIcon.defaultColor, ContextCompat.getColor(context, R.color.highlight_like),
+            favoriteTint = ContextCompat.getColorStateList(context, R.color.btn_tint_like_stateful)!!
+            drawable = LikeAnimationDrawable(ContextCompat.getDrawable(context, R.drawable.ic_action_heart),
                     LikeAnimationDrawable.Style.LIKE)
         }
         drawable.mutate()
-        favoriteIcon.setImageDrawable(drawable)
-        favoriteIcon.activatedColor = drawable.activatedColor
+        favoriteButton.setImageDrawable(drawable)
+        ImageViewCompat.setImageTintList(favoriteButton, favoriteTint)
 
         timeView.showAbsoluteTime = adapter.showAbsoluteTime
-
 
         nameView.applyFontFamily(adapter.lightFont)
         timeView.applyFontFamily(adapter.lightFont)
@@ -589,7 +584,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
 
     override fun playLikeAnimation(listener: LikeAnimationDrawable.OnLikedListener) {
         var handled = false
-        val drawable = favoriteIcon.drawable
+        val drawable = favoriteButton.drawable
         if (drawable is LikeAnimationDrawable) {
             drawable.setOnLikedListener(listener)
             drawable.start()

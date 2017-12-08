@@ -106,7 +106,8 @@ public interface Constants extends TwidereConstants {
             R.color.material_blue, R.color.material_light_blue, R.color.material_cyan,
             R.color.material_teal, R.color.material_green, R.color.material_light_green,
             R.color.material_lime, R.color.material_yellow, R.color.material_amber,
-            R.color.material_orange, R.color.material_deep_orange};
+            R.color.material_orange, R.color.material_deep_orange, R.color.material_grey,
+            android.R.color.black, android.R.color.white};
 
     // SharedPreferences constants
     String KEY_USAGE_STATISTICS = "usage_statistics";

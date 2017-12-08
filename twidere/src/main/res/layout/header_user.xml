@@ -62,14 +62,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/nameContainer">
 
-        <org.mariotaku.twidere.view.IconActionButton
+        <android.support.v7.widget.AppCompatImageButton
             android:id="@+id/follow"
             style="?buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:visibility="gone"
-            app:iabColor="@android:color/transparent"
+            app:tint="@android:color/black"
             tools:backgroundTint="@color/color_stateful_follow"
             tools:contentDescription="@string/action_follow"
             tools:src="@drawable/ic_action_add"

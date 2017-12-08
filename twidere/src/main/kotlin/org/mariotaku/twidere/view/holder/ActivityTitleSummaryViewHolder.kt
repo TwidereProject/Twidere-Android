@@ -19,8 +19,9 @@
 
 package org.mariotaku.twidere.view.holder
 
-import android.graphics.PorterDuff
+import android.content.res.ColorStateList
 import android.support.v4.view.MarginLayoutParamsCompat
+import android.support.v4.widget.ImageViewCompat
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.View
 import android.view.ViewGroup
@@ -82,13 +83,14 @@ class ActivityTitleSummaryViewHolder(
             return
         }
         val message = ActivityTitleSummaryMessage.get(context, adapter.userColorNameManager,
-                activity, sources, activityTypeView.defaultColor, adapter.useStarsForLikes,
+                activity, sources, summaryView.currentTextColor, adapter.useStarsForLikes,
                 adapter.isNameFirst)
         if (message == null) {
             showNotSupported()
             return
         }
-        activityTypeView.setColorFilter(message.color, PorterDuff.Mode.SRC_ATOP)
+
+        ImageViewCompat.setImageTintList(activityTypeView, ColorStateList.valueOf(message.color))
         activityTypeView.setImageResource(message.icon)
         titleView.spannable = message.title
         summaryView.spannable = message.summary

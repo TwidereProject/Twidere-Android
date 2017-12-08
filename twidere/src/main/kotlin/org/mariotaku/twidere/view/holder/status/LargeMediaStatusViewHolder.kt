@@ -37,11 +37,13 @@ import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_LINK_HIGHL
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.applyTo
 import org.mariotaku.twidere.extension.model.aspect_ratio
+import org.mariotaku.twidere.extension.model.contentDescription
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
+import org.mariotaku.twidere.util.UnitConvertUtils
 import org.mariotaku.twidere.view.ProfileImageView
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 
@@ -55,7 +57,6 @@ class LargeMediaStatusViewHolder(private val adapter: IStatusesAdapter, itemView
     private val nameView = itemView.nameView
     private val textView = itemView.text
     private val timeView = itemView.time
-    private val countsLabel = itemView.countsLabel
     private val replyButton = itemView.reply
     private val favoriteButton = itemView.favorite
     private val retweetButton = itemView.retweet
@@ -119,26 +120,47 @@ class LargeMediaStatusViewHolder(private val adapter: IStatusesAdapter, itemView
             return@fold (acc + media.aspect_ratio) / 2
         } ?: Double.NaN
 
-        val countsTexts = mutableListOf<String>()
         if (status.favorite_count > 0) {
+            favoriteButton.text = UnitConvertUtils.calculateProperCount(status.favorite_count)
             if (adapter.useStarsForLikes) {
-                countsTexts.add(context.resources.getQuantityString(R.plurals.N_favorites_abbrev,
-                        status.favorite_count.toInt(), status.favorite_count.toString()))
+                favoriteButton.contentDescription = context.resources.getQuantityString(R.plurals.N_favorites_abbrev,
+                        status.favorite_count.toInt(), status.favorite_count.toString())
             } else {
-                countsTexts.add(context.resources.getQuantityString(R.plurals.N_likes_abbrev,
-                        status.favorite_count.toInt(), status.favorite_count.toString()))
+                favoriteButton.contentDescription = context.resources.getQuantityString(R.plurals.N_likes_abbrev,
+                        status.favorite_count.toInt(), status.favorite_count.toString())
+            }
+        } else {
+            favoriteButton.text = null
+            if (adapter.useStarsForLikes) {
+                favoriteButton.contentDescription = context.getString(R.string.action_favorite)
+            } else {
+                favoriteButton.contentDescription = context.getString(R.string.action_like)
             }
         }
         if (status.retweet_count > 0) {
-            countsTexts.add(context.resources.getQuantityString(R.plurals.N_retweets_abbrev,
-                    status.retweet_count.toInt(), status.retweet_count.toString()))
+            retweetButton.text = UnitConvertUtils.calculateProperCount(status.retweet_count)
+            retweetButton.contentDescription = context.resources.getQuantityString(R.plurals.N_retweets_abbrev,
+                    status.retweet_count.toInt(), status.retweet_count.toString())
+        } else {
+            retweetButton.text = null
+            retweetButton.contentDescription = context.getString(R.string.action_retweet)
         }
-        countsLabel.text = countsTexts.joinToString(separator = context.getString(R.string.label_item_separator_comma_localized))
-        countsLabel.hideIfEmpty()
+
+        if (status.reply_count > 0) {
+            replyButton.text = UnitConvertUtils.calculateProperCount(status.reply_count)
+            replyButton.contentDescription = context.resources.getQuantityString(R.plurals.N_replies_abbrev,
+                    status.reply_count.toInt(), status.reply_count.toString())
+        } else {
+            replyButton.text = null
+            replyButton.contentDescription = context.getString(R.string.action_reply)
+        }
 
         mediaPreviewPager.setAspectRatio(if (aspectRatio > 0) (1 / aspectRatio).coerceIn(0.5, 1.5) else 1.0)
 
         mediaPreviewAdapter.media = status.media
+
+        itemView.contentDescription = status.contentDescription(context, adapter.userColorNameManager,
+                adapter.nameFirst, false, timeView.showAbsoluteTime)
     }
 
     override fun onMediaClick(view: View, current: ParcelableMedia, accountKey: UserKey?, id: Long) {
@@ -157,7 +179,6 @@ class LargeMediaStatusViewHolder(private val adapter: IStatusesAdapter, itemView
         nameView.setPrimaryTextSize(textSize * 0.85f)
         nameView.setSecondaryTextSize(textSize * 0.75f)
         textView.textSize = textSize * 0.9f
-        countsLabel.textSize = textSize * 0.85f
         timeView.textSize = textSize * 0.8f
 
         nameView.updateTextAppearance()
@@ -188,21 +209,18 @@ class LargeMediaStatusViewHolder(private val adapter: IStatusesAdapter, itemView
         val context = itemView.context
         val drawable = if (adapter.useStarsForLikes) {
             LikeAnimationDrawable(ContextCompat.getDrawable(context, R.drawable.ic_action_star),
-                    favoriteButton.defaultColor, ContextCompat.getColor(context, R.color.highlight_favorite),
                     LikeAnimationDrawable.Style.FAVORITE)
         } else {
             LikeAnimationDrawable(ContextCompat.getDrawable(context, R.drawable.ic_action_heart),
-                    favoriteButton.defaultColor, ContextCompat.getColor(context, R.color.highlight_like),
                     LikeAnimationDrawable.Style.LIKE)
         }
         drawable.mutate()
 
         favoriteButton.setImageDrawable(drawable.mutate())
-        favoriteButton.activatedColor = drawable.activatedColor
+        // TODO: Set tint list
 
         nameView.applyFontFamily(adapter.lightFont)
         textView.applyFontFamily(adapter.lightFont)
-        countsLabel.applyFontFamily(adapter.lightFont)
         timeView.applyFontFamily(adapter.lightFont)
 
         setTextSize(adapter.textSize)

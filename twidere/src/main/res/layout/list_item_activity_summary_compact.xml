@@ -12,7 +12,7 @@
     android:padding="@dimen/element_spacing_normal"
     app:ignorePadding="true">
 
-    <org.mariotaku.twidere.view.IconActionView
+    <android.support.v7.widget.AppCompatImageView
         android:id="@+id/activityType"
         android:layout_width="@dimen/element_size_small"
         android:layout_height="@dimen/element_size_small"

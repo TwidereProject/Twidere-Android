@@ -70,7 +70,7 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <org.mariotaku.twidere.view.IconActionView
+            <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/typeIndicator"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
@@ -79,8 +79,8 @@
                 android:layout_weight="0"
                 android:adjustViewBounds="true"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_message_convertion_type_group"
-                tools:tint="?android:textColorSecondary"/>
+                app:srcCompat="@drawable/ic_message_convertion_type_group"
+                app:tint="?android:textColorSecondary"/>
 
             <org.mariotaku.twidere.view.NameView
                 android:id="@+id/name"
@@ -93,7 +93,7 @@
                 app:tltvSecondaryTextColor="?android:textColorSecondary"
                 app:tltvTwoLine="false"/>
 
-            <org.mariotaku.twidere.view.IconActionView
+            <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/stateIndicator"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
@@ -102,8 +102,8 @@
                 android:layout_weight="0"
                 android:adjustViewBounds="true"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_message_type_speaker_muted"
-                tools:tint="?android:textColorSecondary"/>
+                app:srcCompat="@drawable/ic_message_type_speaker_muted"
+                app:tint="?android:textColorSecondary"/>
 
             <org.mariotaku.twidere.view.ShortTimeView
                 android:id="@+id/time"
@@ -125,7 +125,7 @@
             android:minHeight="24dp"
             android:orientation="horizontal">
 
-            <org.mariotaku.twidere.view.IconActionView
+            <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/readIndicator"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
@@ -134,8 +134,8 @@
                 android:layout_weight="0"
                 android:adjustViewBounds="true"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_message_type_outgoing"
-                tools:tint="?android:textColorSecondary"/>
+                app:srcCompat="@drawable/ic_message_type_outgoing"
+                app:tint="?android:textColorSecondary"/>
 
             <org.mariotaku.twidere.view.TimelineContentTextView
                 android:id="@+id/text"

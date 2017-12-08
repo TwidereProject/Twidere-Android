@@ -4,16 +4,19 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.TargetApi;
+import android.content.res.ColorStateList;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.ColorInt;
+import android.os.Build;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.view.menu.TwidereActionMenuItemView;
 import android.util.Property;
 import android.view.animation.AccelerateInterpolator;
@@ -30,9 +33,6 @@ import org.mariotaku.twidere.graphic.like.palette.LikePalette;
 
 import java.lang.ref.WeakReference;
 
-/**
- * Created by mariotaku on 15/11/4.
- */
 public class LikeAnimationDrawable extends Drawable implements Animatable, Drawable.Callback,
         DoNotWrapDrawable, TwidereActionMenuItemView.IgnoreTinting {
 
@@ -40,15 +40,135 @@ public class LikeAnimationDrawable extends Drawable implements Animatable, Drawa
     private LikeAnimationState mState;
     private boolean mMutated;
 
-    public LikeAnimationDrawable(final Drawable icon, @ColorInt final int defaultColor,
-            @ColorInt final int activatedColor,
-            @Style final int style) {
-        mState = new LikeAnimationState(icon, defaultColor, activatedColor, style, this);
+    public LikeAnimationDrawable(final Drawable icon, @Style final int style) {
+        mState = new LikeAnimationState(icon, style, this);
     }
 
 
     LikeAnimationDrawable(@NonNull LikeAnimationState state) {
         mState = state;
+    }
+
+    @Override
+    public int getIntrinsicWidth() {
+        return mState.mIconDrawable.getIntrinsicWidth();
+    }
+
+    @Override
+    public int getIntrinsicHeight() {
+        return mState.mIconDrawable.getIntrinsicHeight();
+    }
+
+    @Override
+    public void draw(@NonNull Canvas canvas) {
+        mState.mCircleLayer.draw(canvas);
+        mState.mParticleLayer.draw(canvas);
+        mState.mIconDrawable.draw(canvas);
+    }
+
+    @Override
+    public void setBounds(int left, int top, int right, int bottom) {
+        super.setBounds(left, top, right, bottom);
+        mState.setBounds(left, top, right, bottom);
+    }
+
+    @Override
+    public void setAlpha(int alpha) {
+        mState.setIconAlpha(alpha);
+    }
+
+    @Override
+    public void setColorFilter(ColorFilter colorFilter) {
+        mState.mIconDrawable.setColorFilter(colorFilter);
+    }
+
+    @Override
+    public void setColorFilter(int color, @NonNull PorterDuff.Mode mode) {
+        mState.mIconDrawable.setColorFilter(color, mode);
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void setTintList(@Nullable ColorStateList tint) {
+        mState.mIconDrawable.setTintList(tint);
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void setTintMode(@NonNull PorterDuff.Mode tintMode) {
+        mState.mIconDrawable.setTintMode(tintMode);
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void setTint(int tintColor) {
+        mState.mIconDrawable.setTint(tintColor);
+    }
+
+    @Override
+    public int getOpacity() {
+        return PixelFormat.TRANSLUCENT;
+    }
+
+    @Override
+    public void invalidateDrawable(@NonNull Drawable who) {
+        invalidateSelf();
+    }
+
+    @Override
+    public void scheduleDrawable(@NonNull Drawable who, @NonNull Runnable what, long when) {
+        scheduleSelf(what, when);
+    }
+
+    @Override
+    public void unscheduleDrawable(@NonNull Drawable who, @NonNull Runnable what) {
+        unscheduleSelf(what);
+    }
+
+    @Override
+    public ConstantState getConstantState() {
+        return mState;
+    }
+
+    @Override
+    public int getChangingConfigurations() {
+        return super.getChangingConfigurations() | mState.getChangingConfigurations();
+    }
+
+    @NonNull
+    @Override
+    public Drawable mutate() {
+        if (!mMutated) {
+            mState = new LikeAnimationState(mState, this);
+            mMutated = true;
+        }
+        return this;
+    }
+
+    @Override
+    public boolean isStateful() {
+        return mState.mIconDrawable.isStateful();
+    }
+
+    @NonNull
+    @Override
+    public int[] getState() {
+        return mState.mIconDrawable.getState();
+    }
+
+    @Override
+    public void jumpToCurrentState() {
+        mState.mIconDrawable.jumpToCurrentState();
+    }
+
+    @Override
+    public boolean setState(@NonNull int[] stateSet) {
+        return mState.mIconDrawable.setState(stateSet);
+    }
+
+    @Override
+    protected boolean onStateChange(int[] state) {
+        return true;
     }
 
     @Override
@@ -96,7 +216,7 @@ public class LikeAnimationDrawable extends Drawable implements Animatable, Drawa
             }
 
             private void resetState() {
-                setColorFilter(mState.mDefaultColor, PorterDuff.Mode.SRC_ATOP);
+                // TODO: reset icon drawable state
                 particleLayer.setProgress(-1);
             }
         });
@@ -115,89 +235,12 @@ public class LikeAnimationDrawable extends Drawable implements Animatable, Drawa
         return mState.mCurrentAnimator != null && mState.mCurrentAnimator.isRunning();
     }
 
-    @Override
-    public int getIntrinsicWidth() {
-        return mState.mIconDrawable.getIntrinsicWidth();
-    }
-
-    @Override
-    public int getIntrinsicHeight() {
-        return mState.mIconDrawable.getIntrinsicHeight();
-    }
-
-    @Override
-    public void draw(@NonNull Canvas canvas) {
-        mState.mCircleLayer.draw(canvas);
-        mState.mParticleLayer.draw(canvas);
-        mState.mIconDrawable.draw(canvas);
-    }
-
-    @Override
-    public void setBounds(int left, int top, int right, int bottom) {
-        super.setBounds(left, top, right, bottom);
-        mState.setBounds(left, top, right, bottom);
-    }
-
-    @Override
-    public void setAlpha(int alpha) {
-        mState.mIconDrawable.setAlpha(alpha);
-    }
-
-    @Override
-    public void setColorFilter(ColorFilter colorFilter) {
-        mState.setIconColorFilter(colorFilter);
-    }
-
-    @Override
-    public int getOpacity() {
-        return PixelFormat.TRANSLUCENT;
-    }
-
-    @Override
-    public void invalidateDrawable(@NonNull Drawable who) {
-        invalidateSelf();
-    }
-
-    @Override
-    public void scheduleDrawable(@NonNull Drawable who, @NonNull Runnable what, long when) {
-        scheduleSelf(what, when);
-    }
-
-    @Override
-    public void unscheduleDrawable(@NonNull Drawable who, @NonNull Runnable what) {
-        unscheduleSelf(what);
-    }
-
-    @Override
-    public ConstantState getConstantState() {
-        return mState;
-    }
-
-    @Override
-    public int getChangingConfigurations() {
-        return super.getChangingConfigurations() | mState.getChangingConfigurations();
-    }
-
-    @NonNull
-    @Override
-    public Drawable mutate() {
-        if (!mMutated && super.mutate() == this) {
-            mState = new LikeAnimationState(mState, this);
-            mMutated = true;
-        }
-        return this;
-    }
-
     public long getDuration() {
         return mState.mDuration;
     }
 
     public void setDuration(long duration) {
         mState.mDuration = duration;
-    }
-
-    public int getActivatedColor() {
-        return mState.getActivatedColor();
     }
 
     public void setOnLikedListener(OnLikedListener listener) {
@@ -226,7 +269,8 @@ public class LikeAnimationDrawable extends Drawable implements Animatable, Drawa
         iconScaleDown.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
-                setColorFilter(mState.mDefaultColor, PorterDuff.Mode.SRC_ATOP);
+                // Normal state
+                setState(new int[0]);
             }
 
         });
@@ -240,7 +284,7 @@ public class LikeAnimationDrawable extends Drawable implements Animatable, Drawa
         iconExpand.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
-                setColorFilter(mState.mActivatedColor, PorterDuff.Mode.SRC_ATOP);
+                setState(new int[]{android.R.attr.state_activated});
             }
 
         });
@@ -279,10 +323,6 @@ public class LikeAnimationDrawable extends Drawable implements Animatable, Drawa
         int FAVORITE = 2;
     }
 
-
-    /**
-     * Created by mariotaku on 16/2/22.
-     */
     public interface Layer {
 
         float getProgress();
@@ -290,9 +330,6 @@ public class LikeAnimationDrawable extends Drawable implements Animatable, Drawa
         void setProgress(float progress);
     }
 
-    /**
-     * Created by mariotaku on 16/2/22.
-     */
     public interface Palette {
         int getParticleColor(int count, int index, float progress);
 
@@ -301,9 +338,6 @@ public class LikeAnimationDrawable extends Drawable implements Animatable, Drawa
 
     static class LikeAnimationState extends ConstantState {
 
-        // Default values
-        private final int mDefaultColor;
-        private final int mActivatedColor;
         @Style
         private final int mStyle;
         // Layers
@@ -316,16 +350,12 @@ public class LikeAnimationDrawable extends Drawable implements Animatable, Drawa
         private AnimatorSet mCurrentAnimator;
         private WeakReference<OnLikedListener> mListenerRef;
 
-        public LikeAnimationState(final Drawable icon, final int defaultColor, final int activatedColor,
-                @Style final int style, Callback callback) {
-            mDefaultColor = defaultColor;
-            mActivatedColor = activatedColor;
+        LikeAnimationState(final Drawable icon, @Style final int style, Callback callback) {
             mStyle = style;
 
             final int intrinsicWidth = icon.getIntrinsicWidth();
             final int intrinsicHeight = icon.getIntrinsicHeight();
             mIconDrawable = new ScalableDrawable(icon);
-            setIconColorFilter(new PorterDuffColorFilter(defaultColor, PorterDuff.Mode.SRC_ATOP));
             final Palette palette;
             switch (style) {
                 case Style.FAVORITE: {
@@ -352,21 +382,11 @@ public class LikeAnimationDrawable extends Drawable implements Animatable, Drawa
             mCircleLayer.setCallback(callback);
         }
 
-        public LikeAnimationState(LikeAnimationState state, LikeAnimationDrawable owner) {
-            mDefaultColor = state.mDefaultColor;
-            mActivatedColor = state.mActivatedColor;
+        LikeAnimationState(LikeAnimationState state, LikeAnimationDrawable owner) {
             mStyle = state.mStyle;
             mCircleLayer = (AnimationLayerDrawable) clone(state.mCircleLayer, owner);
             mParticleLayer = (AnimationLayerDrawable) clone(state.mParticleLayer, owner);
             mIconDrawable = (ScalableDrawable) clone(state.mIconDrawable, owner);
-        }
-
-        public void setIconColorFilter(ColorFilter cf) {
-            mIconDrawable.setColorFilter(cf);
-        }
-
-        public int getActivatedColor() {
-            return mActivatedColor;
         }
 
         public void setBounds(int left, int top, int right, int bottom) {
@@ -388,8 +408,17 @@ public class LikeAnimationDrawable extends Drawable implements Animatable, Drawa
                     mIconDrawable.getChangingConfigurations();
         }
 
+        void setIconColorTint(int tint) {
+            DrawableCompat.setTint(mIconDrawable.getDrawable(), tint);
+        }
+
+        void setIconAlpha(int alpha) {
+            mIconDrawable.setAlpha(alpha);
+        }
+
         private static Drawable clone(Drawable orig, LikeAnimationDrawable owner) {
-            final Drawable clone = orig.getConstantState().newDrawable();
+            ConstantState state = orig.getConstantState();
+            final Drawable clone = state.newDrawable();
             clone.mutate();
             clone.setCallback(owner);
             clone.setBounds(orig.getBounds());

@@ -52,7 +52,7 @@
         app:tltvPrimaryTextStyle="bold"
         app:tltvSecondaryTextColor="?android:textColorSecondary"
         app:tltvSecondaryTextSize="11sp"
-        app:tltvTwoLine="true"/>
+        app:tltvTwoLine="false"/>
 
     <org.mariotaku.twidere.view.ShortTimeView
         android:id="@+id/time"
@@ -78,7 +78,7 @@
         tools:background="@drawable/nyan_stars_background"/>
 
 
-    <org.mariotaku.twidere.view.IconActionButton
+    <org.mariotaku.twidere.view.LabeledImageButton
         android:id="@+id/favorite"
         style="?borderlessButtonStyle"
         android:layout_width="@dimen/button_size_content_card_action"
@@ -88,13 +88,15 @@
         android:layout_marginTop="@dimen/element_spacing_small"
         android:background="?selectableItemBackgroundBorderless"
         android:contentDescription="@string/action_like"
-        android:src="@drawable/ic_action_heart"
-        app:iabActivatedColor="@color/highlight_like"
-        app:iabColor="?android:textColorSecondary"
+        android:padding="@dimen/element_spacing_small"
+        android:scaleType="centerInside"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mediaPreviewPager"/>
+        app:layout_constraintTop_toBottomOf="@id/mediaPreviewPager"
+        app:srcCompat="@drawable/ic_action_heart"
+        app:tint="@color/btn_tint_like_stateful"
+        app:tintMode="multiply"/>
 
-    <org.mariotaku.twidere.view.IconActionButton
+    <org.mariotaku.twidere.view.LabeledImageButton
         android:id="@+id/reply"
         style="?borderlessButtonStyle"
         android:layout_width="@dimen/button_size_content_card_action"
@@ -104,13 +106,15 @@
         android:layout_marginTop="@dimen/element_spacing_small"
         android:background="?selectableItemBackgroundBorderless"
         android:contentDescription="@string/action_reply"
-        android:src="@drawable/ic_action_reply"
-        app:iabActivatedColor="@color/highlight_reply"
-        app:iabColor="?android:textColorSecondary"
+        android:padding="@dimen/element_spacing_small"
+        android:scaleType="centerInside"
         app:layout_constraintStart_toEndOf="@+id/favorite"
-        app:layout_constraintTop_toBottomOf="@id/mediaPreviewPager"/>
+        app:layout_constraintTop_toBottomOf="@id/mediaPreviewPager"
+        app:srcCompat="@drawable/ic_action_reply"
+        app:tint="?android:textColorSecondary"
+        app:tintMode="multiply"/>
 
-    <org.mariotaku.twidere.view.IconActionButton
+    <org.mariotaku.twidere.view.LabeledImageButton
         android:id="@+id/retweet"
         style="?borderlessButtonStyle"
         android:layout_width="@dimen/button_size_content_card_action"
@@ -120,13 +124,15 @@
         android:layout_marginTop="@dimen/element_spacing_small"
         android:background="?selectableItemBackgroundBorderless"
         android:contentDescription="@string/action_retweet"
-        android:src="@drawable/ic_action_retweet"
-        app:iabActivatedColor="@color/highlight_retweet"
-        app:iabColor="?android:textColorSecondary"
+        android:padding="@dimen/element_spacing_small"
+        android:scaleType="centerInside"
         app:layout_constraintStart_toEndOf="@+id/reply"
-        app:layout_constraintTop_toBottomOf="@id/mediaPreviewPager"/>
+        app:layout_constraintTop_toBottomOf="@id/mediaPreviewPager"
+        app:srcCompat="@drawable/ic_action_retweet"
+        app:tint="@color/btn_tint_retweet_stateful"
+        app:tintMode="multiply"/>
 
-    <org.mariotaku.twidere.view.IconActionButton
+    <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/itemMenu"
         style="?borderlessButtonStyle"
         android:layout_width="@dimen/button_size_content_card_action"
@@ -136,26 +142,11 @@
         android:layout_marginTop="@dimen/element_spacing_small"
         android:background="?selectableItemBackgroundBorderless"
         android:contentDescription="@string/action_more_actions"
-        android:src="@drawable/ic_action_more_horizontal"
-        app:iabColor="?android:textColorSecondary"
+        android:padding="@dimen/element_spacing_small"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mediaPreviewPager"/>
-
-    <org.mariotaku.twidere.view.FixedTextView
-        android:id="@+id/countsLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/element_spacing_normal"
-        android:paddingRight="@dimen/element_spacing_normal"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="?android:textColorSecondary"
-        app:layout_constraintBottom_toTopOf="@+id/text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/favorite"
-        app:layout_goneMarginBottom="@dimen/element_spacing_normal"
-        app:layout_goneMarginTop="@dimen/element_spacing_normal"
-        tools:text="114 likes, 514 retweets"/>
+        app:layout_constraintTop_toBottomOf="@id/mediaPreviewPager"
+        app:srcCompat="@drawable/ic_action_more_horizontal"
+        app:tint="?android:textColorSecondary"/>
 
     <org.mariotaku.twidere.view.TimelineContentTextView
         android:id="@+id/text"
@@ -167,13 +158,15 @@
         android:maxLines="2"
         android:paddingLeft="@dimen/element_spacing_normal"
         android:paddingRight="@dimen/element_spacing_normal"
+        android:scaleType="centerInside"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="?android:attr/textColorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/countsLabel"
+        app:layout_constraintTop_toBottomOf="@+id/favorite"
         app:layout_goneMarginTop="@dimen/element_spacing_small"
+        app:tintMode="multiply"
         tools:text="@string/sample_status_text"
         tools:visibility="visible"/>
 

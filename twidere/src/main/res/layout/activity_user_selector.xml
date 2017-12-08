@@ -46,16 +46,15 @@
             android:maxLines="1"
             app:backgroundTint="?colorControlStateful"/>
 
-        <org.mariotaku.twidere.view.IconActionButton
+        <android.support.v7.widget.AppCompatImageButton
             android:id="@+id/screenNameConfirm"
             android:layout_width="@dimen/minimum_element_size"
             android:layout_height="@dimen/minimum_element_size"
             android:layout_weight="0"
             android:background="?selectableItemBackground"
-            android:color="?menuIconColor"
             android:contentDescription="@string/action_search"
-            android:src="@drawable/ic_action_search"
-            tools:tint="?menuIconColor"/>
+            app:srcCompat="@drawable/ic_action_search"
+            app:tint="?menuIconColor"/>
     </LinearLayout>
 
     <include

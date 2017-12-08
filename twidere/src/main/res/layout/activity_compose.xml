@@ -214,7 +214,7 @@
                     android:textColor="?android:textColorSecondary"
                     tools:text="140"/>
 
-                <org.mariotaku.twidere.view.IconActionView
+                <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/updateStatusIcon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -222,9 +222,8 @@
                     android:cropToPadding="false"
                     android:padding="@dimen/element_spacing_xsmall"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_action_send"
-                    app:iabColor="?android:textColorSecondary"
-                    tools:tint="?android:textColorSecondary"/>
+                    app:srcCompat="@drawable/ic_action_send"
+                    app:tint="?android:textColorSecondary"/>
 
             </LinearLayout>
         </RelativeLayout>

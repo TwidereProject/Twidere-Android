@@ -158,7 +158,6 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
         inflater.inflate(R.menu.menu_profile_editor, menu)
     }
 
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.save -> {

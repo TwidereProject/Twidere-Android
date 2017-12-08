@@ -19,13 +19,12 @@ import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 
-class UpdateAccountInfoTask(
+class UpdateAccountInfoPromise(
         private val context: Context
-) : PromiseTask<Pair<AccountDetails, ParcelableUser>, Unit> {
+) {
 
-    override fun toPromise(param: Pair<AccountDetails, ParcelableUser>): Promise<Unit, Exception> {
+    fun promise(details: AccountDetails, user: ParcelableUser): Promise<Unit, Exception> {
         val resolver = context.contentResolver
-        val (details, user) = param
         if (user.is_cache) {
             return Promise.ofSuccess(Unit)
         }

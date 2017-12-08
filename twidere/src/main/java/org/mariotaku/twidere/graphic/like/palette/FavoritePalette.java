@@ -4,9 +4,6 @@ import android.animation.ArgbEvaluator;
 
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable;
 
-/**
- * Created by mariotaku on 16/2/22.
- */
 public final class FavoritePalette implements LikeAnimationDrawable.Palette {
 
     private final ArgbEvaluator evaluator = new ArgbEvaluator();

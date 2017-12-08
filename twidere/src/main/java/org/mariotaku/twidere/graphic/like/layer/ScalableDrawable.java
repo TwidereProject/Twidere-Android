@@ -1,10 +1,16 @@
 package org.mariotaku.twidere.graphic.like.layer;
 
+import android.annotation.TargetApi;
+import android.content.res.ColorStateList;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.Gravity;
 
 /**
@@ -82,8 +88,31 @@ public class ScalableDrawable extends Drawable implements Drawable.Callback {
     }
 
     @Override
-    public void setColorFilter(ColorFilter cf) {
-        mState.mDrawable.setColorFilter(cf);
+    public void setColorFilter(ColorFilter colorFilter) {
+        mState.mDrawable.setColorFilter(colorFilter);
+    }
+
+    @Override
+    public void setColorFilter(int color, @NonNull PorterDuff.Mode mode) {
+        mState.mDrawable.setColorFilter(new PorterDuffColorFilter(color, mode));
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void setTintList(@Nullable ColorStateList tint) {
+        mState.mDrawable.setTintList(tint);
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void setTintMode(@NonNull PorterDuff.Mode tintMode) {
+        mState.mDrawable.setTintMode(tintMode);
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void setTint(int tintColor) {
+        mState.mDrawable.setTint(tintColor);
     }
 
     @Override

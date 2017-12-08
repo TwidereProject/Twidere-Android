@@ -18,13 +18,13 @@
 
     <TableRow android:layout_margin="@dimen/element_spacing_normal">
 
-        <org.mariotaku.twidere.view.IconActionView
+        <android.support.v7.widget.AppCompatImageView
             android:id="@+id/featureIcon"
             android:layout_width="@dimen/element_size_small"
             android:layout_height="@dimen/element_size_small"
             android:layout_weight="0"
-            app:iabColor="?android:textColorSecondary"
-            tools:src="@drawable/ic_action_refresh"/>
+            app:tint="?android:textColorSecondary"
+            tools:srcCompat="@drawable/ic_action_refresh"/>
 
         <org.mariotaku.twidere.view.FixedTextView
             android:id="@+id/featureDescription"

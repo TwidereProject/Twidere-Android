@@ -73,15 +73,14 @@
                     <requestFocus/>
                 </org.mariotaku.twidere.view.FixedEditText>
 
-                <org.mariotaku.twidere.view.IconActionButton
+                <android.support.v7.widget.AppCompatImageButton
                     android:id="@+id/searchSubmit"
                     android:layout_width="@dimen/element_size_normal"
                     android:layout_height="match_parent"
                     android:layout_weight="0"
                     android:background="?actionBarItemBackground"
-                    android:color="?menuIconColor"
-                    android:src="@drawable/ic_action_search"
-                    tools:tint="?menuIconColor"/>
+                    app:srcCompat="@drawable/ic_action_search"
+                    app:tint="?menuIconColor"/>
 
             </LinearLayout>
 

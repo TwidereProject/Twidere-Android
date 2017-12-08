@@ -56,7 +56,7 @@
         android:padding="@dimen/element_spacing_normal"
         tools:ignore="UnusedAttribute">
 
-        <org.mariotaku.twidere.view.IconActionView
+        <android.support.v7.widget.AppCompatImageButton
             android:id="@+id/addMedia"
             android:layout_width="@dimen/element_size_normal"
             android:layout_height="@dimen/element_size_normal"
@@ -65,13 +65,11 @@
             android:layout_marginEnd="@dimen/element_spacing_normal"
             android:layout_marginRight="@dimen/element_spacing_normal"
             android:background="?selectableItemBackgroundBorderless"
-            android:clickable="true"
             android:contentDescription="@string/add_image"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_action_gallery"
             android:visibility="gone"
-            app:iabColor="?android:textColorSecondary"
-            tools:tint="?android:textColorSecondary"
+            app:srcCompat="@drawable/ic_action_gallery"
+            app:tint="?android:textColorSecondary"
             tools:visibility="visible"/>
 
         <FrameLayout
@@ -81,17 +79,15 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true">
 
-            <org.mariotaku.twidere.view.IconActionView
+            <android.support.v7.widget.AppCompatImageButton
                 android:id="@+id/sendMessage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="?selectableItemBackgroundBorderless"
-                android:clickable="true"
                 android:contentDescription="@string/action_send"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_action_send"
-                app:iabColor="?android:textColorSecondary"
-                tools:tint="?android:textColorSecondary"/>
+                app:srcCompat="@drawable/ic_action_send"
+                app:tint="?android:textColorSecondary"/>
 
             <com.pnikosis.materialishprogress.ProgressWheel
                 android:id="@+id/sendProgress"

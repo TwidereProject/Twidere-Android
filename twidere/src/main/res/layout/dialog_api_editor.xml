@@ -53,13 +53,14 @@
                 android:text="@string/api_url_format"
                 android:textAppearance="?android:attr/textAppearanceSmall"/>
 
-            <org.mariotaku.twidere.view.IconActionView
+            <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/apiUrlFormatHelp"
                 android:layout_width="@dimen/element_size_small"
                 android:layout_height="@dimen/element_size_small"
                 android:layout_weight="0"
                 android:background="?selectableItemBackground"
-                android:src="@drawable/ic_action_info"/>
+                app:srcCompat="@drawable/ic_action_info"
+                app:tint="?android:textColorSecondary"/>
         </LinearLayout>
 
         <org.mariotaku.twidere.view.FixedEditText

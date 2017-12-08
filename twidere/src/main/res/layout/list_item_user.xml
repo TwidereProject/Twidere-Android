@@ -105,55 +105,55 @@
             android:orientation="horizontal"
             tools:visibility="visible">
 
-            <org.mariotaku.twidere.view.IconActionButton
+            <android.support.v7.widget.AppCompatImageButton
                 android:id="@+id/unmute"
                 style="?buttonStyleSmall"
                 android:layout_width="@dimen/button_size_content_card"
                 android:layout_height="@dimen/button_size_content_card"
                 android:contentDescription="@string/action_follow"
-                android:src="@drawable/ic_action_visibility_off"
                 app:backgroundTint="@color/material_grey"
-                app:iabColor="@android:color/transparent"/>
+                app:srcCompat="@drawable/ic_action_visibility_off"
+                app:tint="@android:color/white"/>
 
-            <org.mariotaku.twidere.view.IconActionButton
+            <android.support.v7.widget.AppCompatImageButton
                 android:id="@+id/follow"
                 style="?buttonStyleSmall"
                 android:layout_width="@dimen/button_size_content_card"
                 android:layout_height="@dimen/button_size_content_card"
                 android:contentDescription="@string/action_follow"
-                android:src="@drawable/ic_action_add"
                 app:backgroundTint="@color/color_stateful_follow"
-                app:iabColor="@android:color/transparent"/>
+                app:srcCompat="@drawable/ic_action_add"
+                app:tint="@android:color/black"/>
 
-            <org.mariotaku.twidere.view.IconActionButton
+            <android.support.v7.widget.AppCompatImageButton
                 android:id="@+id/acceptRequest"
                 style="?buttonStyleSmall"
                 android:layout_width="@dimen/button_size_content_card"
                 android:layout_height="@dimen/button_size_content_card"
                 android:contentDescription="@string/action_accept_friend_request"
-                android:src="@drawable/ic_action_confirm"
                 app:backgroundTint="@color/material_light_green"
-                app:iabColor="@android:color/transparent"/>
+                app:srcCompat="@drawable/ic_action_confirm"
+                app:tint="@android:color/white"/>
 
-            <org.mariotaku.twidere.view.IconActionButton
+            <android.support.v7.widget.AppCompatImageButton
                 android:id="@+id/denyRequest"
                 style="?buttonStyleSmall"
                 android:layout_width="@dimen/button_size_content_card"
                 android:layout_height="@dimen/button_size_content_card"
                 android:contentDescription="@string/deny"
-                android:src="@drawable/ic_action_cancel"
                 app:backgroundTint="@color/material_red"
-                app:iabColor="@android:color/transparent"/>
+                app:srcCompat="@drawable/ic_action_cancel"
+                app:tint="@android:color/white"/>
 
-            <org.mariotaku.twidere.view.IconActionButton
+            <android.support.v7.widget.AppCompatImageButton
                 android:id="@+id/unblock"
                 style="?buttonStyleSmall"
                 android:layout_width="@dimen/button_size_content_card"
                 android:layout_height="@dimen/button_size_content_card"
                 android:contentDescription="@string/deny"
-                android:src="@drawable/ic_action_block"
                 app:backgroundTint="@color/material_red"
-                app:iabColor="@android:color/transparent"/>
+                app:srcCompat="@drawable/ic_action_block"
+                app:tint="@android:color/white"/>
 
         </LinearLayout>
 
@@ -162,7 +162,8 @@
             style="?android:progressBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:visibility="gone"/>
 
     </FrameLayout>
 

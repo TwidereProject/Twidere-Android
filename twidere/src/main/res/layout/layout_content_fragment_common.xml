@@ -18,6 +18,7 @@
   -->
 
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:app="http://schemas.android.com/apk/res-auto"
        xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
@@ -46,12 +47,12 @@
         android:visibility="gone"
         tools:visibility="gone">
 
-        <org.mariotaku.twidere.view.IconActionView
+        <android.support.v7.widget.AppCompatImageView
             android:id="@+id/errorIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:color="?android:textColorSecondary"
-            android:src="@drawable/ic_info_error_generic"/>
+            app:srcCompat="@drawable/ic_info_error_generic"
+            app:tint="?android:textColorSecondary"/>
 
         <org.mariotaku.twidere.view.FixedTextView
             android:id="@+id/errorText"

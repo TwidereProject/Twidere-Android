@@ -39,14 +39,14 @@
             android:layout_height="wrap_content"
             android:minHeight="?listPreferredItemHeight">
 
-            <org.mariotaku.twidere.view.IconActionView
+            <android.support.v7.widget.AppCompatImageView
                 android:layout_width="@dimen/icon_size_list_item_small"
                 android:layout_height="@dimen/icon_size_list_item_small"
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/element_spacing_normal"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_action_list"
-                app:iabColor="?android:textColorSecondary"/>
+                app:srcCompat="@drawable/ic_action_list"
+                app:tint="?android:textColorSecondary"/>
         </FrameLayout>
 
         <LinearLayout

@@ -82,7 +82,7 @@ object ThemeUtils {
 
         if (isTransparentBackground(backgroundOption)) {
             theme.colorToolbar = ColorUtils.setAlphaComponent(theme.colorToolbar,
-                    getActionBarAlpha(preferences[themeBackgroundAlphaKey]))
+                    (preferences[themeBackgroundAlphaKey] * 1.25f).toInt().coerceIn(MIN_ALPHA, MAX_ALPHA))
         }
         theme.statusBarColor = ChameleonUtils.darkenColor(theme.colorToolbar)
         theme.lightStatusBarMode = Chameleon.Theme.LightStatusBarMode.AUTO
@@ -317,9 +317,7 @@ object ThemeUtils {
 
 
     fun getActionBarAlpha(alpha: Int): Int {
-        val normalizedAlpha = alpha.coerceIn(0, 0xFF)
-        val delta = MAX_ALPHA - normalizedAlpha
-        return (MAX_ALPHA - delta / 2).coerceIn(MIN_ALPHA, MAX_ALPHA)
+        return (alpha * 1.25f).toInt().coerceIn(MIN_ALPHA, MAX_ALPHA)
     }
 
     fun getActionBarHeight(context: Context): Int {

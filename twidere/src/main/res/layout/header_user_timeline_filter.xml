@@ -38,13 +38,13 @@
         android:padding="@dimen/element_spacing_normal"
         tools:text="Tweets, retweets, replies"/>
 
-    <org.mariotaku.twidere.view.IconActionButton
+    <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/filterButton"
         android:layout_width="@dimen/element_size_msmall"
         android:layout_height="@dimen/element_size_msmall"
         android:layout_weight="0"
         android:background="?selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_action_filter"
-        app:iabColor="?android:textColorSecondary"/>
+        app:srcCompat="@drawable/ic_action_filter"
+        app:tint="?android:textColorSecondary"/>
 
 </LinearLayout>

@@ -19,6 +19,7 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -31,19 +32,18 @@
     android:paddingRight="@dimen/element_spacing_small"
     android:paddingTop="@dimen/element_spacing_xsmall">
 
-    <org.mariotaku.twidere.view.IconActionButton
+    <android.support.v7.widget.AppCompatImageButton
         android:id="@android:id/icon"
         android:layout_width="@dimen/element_size_quick_search_bar_item_icon"
         android:layout_height="@dimen/element_size_quick_search_bar_item_icon"
         android:layout_weight="0"
         android:background="@null"
         android:clickable="false"
-        android:color="?menuIconColor"
         android:contentDescription="@string/icon"
         android:focusable="false"
         android:scaleType="centerInside"
-        tools:src="@drawable/ic_action_search"
-        tools:tint="?android:textColorSecondary"/>
+        app:tint="?menuIconColor"
+        tools:src="@drawable/ic_action_search"/>
 
     <LinearLayout
         android:layout_width="0dp"
@@ -67,16 +67,16 @@
 
     </LinearLayout>
 
-    <org.mariotaku.twidere.view.IconActionButton
+    <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/edit_query"
         android:layout_width="@dimen/element_size_normal"
         android:layout_height="@dimen/element_size_normal"
         android:layout_weight="0"
         android:background="?actionBarItemBackground"
         android:clickable="true"
-        android:color="?menuIconColor"
         android:focusable="true"
         android:scaleType="centerInside"
-        android:src="@drawable/ic_action_edit_query"/>
+        app:srcCompat="@drawable/ic_action_edit_query"
+        app:tint="?menuIconColor"/>
 
 </LinearLayout>
