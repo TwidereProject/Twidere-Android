@@ -516,8 +516,6 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         }
 
         override fun onStatusLongClick(holder: IStatusViewHolder, position: Int): Boolean {
-            val status = adapter.getStatus(position)
-            System.identityHashCode(status)
             return false
         }
 

@@ -313,6 +313,8 @@ class ParcelableActivitiesAdapter(
 
         fun onStatusClick(holder: IStatusViewHolder, position: Int)
 
+        fun onStatusLongClick(holder: IStatusViewHolder, position: Int): Boolean
+
         fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int)
 
     }
@@ -358,10 +360,6 @@ class ParcelableActivitiesAdapter(
             return listener.onStatusActionLongClick(holder as IStatusViewHolder, id, position)
         }
 
-        override fun onStatusLongClick(holder: IStatusViewHolder, position: Int): Boolean {
-            return true
-        }
-
         override fun onUserProfileClick(holder: IStatusViewHolder, position: Int) {
             val adapter = adapterRef.get() ?: return
             val status = adapter.getActivity(position).activityStatus ?: return
@@ -373,6 +371,11 @@ class ParcelableActivitiesAdapter(
         override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
             val adapter = adapterRef.get() ?: return
             adapter.activityClickListener?.onStatusClick(holder, position)
+        }
+
+        override fun onStatusLongClick(holder: IStatusViewHolder, position: Int): Boolean {
+            val listener = adapterRef.get()?.activityClickListener ?: return false
+            return listener.onStatusLongClick(holder, position)
         }
 
 

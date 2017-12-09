@@ -475,7 +475,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
         override fun onStatusActionClick(holder: IStatusViewHolder, id: Int, position: Int) {
             val status = getActivityStatus(position) ?: return
             AbsTimelineFragment.handleActionClick(this@AbsActivitiesFragment, id, status,
-                    holder as IStatusViewHolder)
+                    holder)
         }
 
         override fun onStatusActionLongClick(holder: IStatusViewHolder, id: Int, position: Int): Boolean {
@@ -497,6 +497,10 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
         override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
             val status = getActivityStatus(position) ?: return
             IntentUtils.openStatus(context!!, status, null)
+        }
+
+        override fun onStatusLongClick(holder: IStatusViewHolder, position: Int): Boolean {
+            return false
         }
 
         override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
