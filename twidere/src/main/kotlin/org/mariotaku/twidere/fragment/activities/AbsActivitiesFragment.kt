@@ -61,6 +61,7 @@ import org.mariotaku.twidere.extension.findAccount
 import org.mariotaku.twidere.extension.model.activityStatus
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.extension.queryOne
+import org.mariotaku.twidere.extension.showContextMenuForChild
 import org.mariotaku.twidere.extension.view.firstVisibleItemPosition
 import org.mariotaku.twidere.extension.view.lastVisibleItemPosition
 import org.mariotaku.twidere.fragment.AbsContentRecyclerViewFragment
@@ -490,7 +491,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
             if (lm.getItemViewType(view) != ITEM_VIEW_TYPE_STATUS) {
                 return
             }
-            recyclerView.showContextMenuForChild(view)
+            recyclerView.showContextMenuForChild(view, menuView)
         }
 
         override fun onStatusClick(holder: IStatusViewHolder, position: Int) {

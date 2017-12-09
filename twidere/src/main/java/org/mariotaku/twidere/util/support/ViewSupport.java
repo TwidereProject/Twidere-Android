@@ -23,11 +23,9 @@ import android.annotation.TargetApi;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import org.mariotaku.twidere.util.support.view.ViewOutlineProviderCompat;
 import org.mariotaku.twidere.view.iface.IForegroundView;
@@ -35,14 +33,6 @@ import org.mariotaku.twidere.view.iface.IForegroundView;
 public final class ViewSupport {
 
     private ViewSupport() {
-    }
-
-    public static boolean isInLayout(View view) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            return false;
-        } else {
-            return ViewAccessorJBMR2.isInLayout(view);
-        }
     }
 
     public static void setClipToOutline(View view, boolean clipToOutline) {
@@ -63,18 +53,6 @@ public final class ViewSupport {
             for (int i = 0, j = ((ViewGroup) view).getChildCount(); i < j; i++) {
                 final View found = findViewByType(((ViewGroup) view).getChildAt(i), cls);
                 if (found != null) return (T) found;
-            }
-        }
-        return null;
-    }
-
-    public static TextView findViewByText(View view, CharSequence text) {
-        if (view instanceof TextView && TextUtils.equals(text, ((TextView) view).getText()))
-            return (TextView) view;
-        if (view instanceof ViewGroup) {
-            for (int i = 0, j = ((ViewGroup) view).getChildCount(); i < j; i++) {
-                final TextView found = findViewByText(((ViewGroup) view).getChildAt(i), text);
-                if (found != null) return found;
             }
         }
         return null;
@@ -101,17 +79,6 @@ public final class ViewSupport {
                 //noinspection RedundantCast
                 ((IForegroundView) view).setForeground(foreground);
             }
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-    static class ViewAccessorJBMR2 {
-        private ViewAccessorJBMR2() {
-        }
-
-        static boolean isInLayout(final View view) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) return false;
-            return view.isInLayout();
         }
     }
 

@@ -131,6 +131,7 @@ class LabeledImageButton(context: Context, attrs: AttributeSet?) : AppCompatImag
         val text = this.text
         if (text == null) {
             textLayout = null
+            requestLayout()
             return
         }
         val paint = TextPaint(Paint.ANTI_ALIAS_FLAG).also {

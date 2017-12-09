@@ -20,9 +20,9 @@
 package org.mariotaku.twidere.view
 
 import android.content.Context
+import android.support.v4.view.ViewCompat
 import android.util.AttributeSet
 import android.view.View
-import org.mariotaku.twidere.util.support.ViewSupport
 
 /**
  * Created by mariotaku on 15/1/1.
@@ -35,7 +35,7 @@ class TwitterCardContainer(context: Context, attrs: AttributeSet? = null) : Cont
     fun setCardSize(width: Int, height: Int) {
         cardWidth = width
         cardHeight = height
-        if (!ViewSupport.isInLayout(this)) {
+        if (!ViewCompat.isInLayout(this)) {
             requestLayout()
         }
     }

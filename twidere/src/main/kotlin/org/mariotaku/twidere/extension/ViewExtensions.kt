@@ -19,8 +19,10 @@
 
 package org.mariotaku.twidere.extension
 
+import android.annotation.TargetApi
 import android.graphics.Rect
 import android.graphics.RectF
+import android.os.Build
 import android.support.annotation.UiThread
 import android.view.View
 import android.view.ViewGroup
@@ -94,10 +96,34 @@ fun <T : ViewGroup.LayoutParams> View.setupLayoutParams(action: (T) -> Unit): Bo
     return true
 }
 
+fun ViewGroup.showContextMenuForChild(originalView: View, anchor: View): Boolean {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+        return showContextMenuForChild(originalView)
+    }
+    val rect = Rect()
+    anchor.getFrameRelatedTo(rect, originalView)
+    return ViewExtensionsN.showContextMenuForChild(this, originalView,
+            rect.centerX().toFloat(), rect.centerY().toFloat())
+}
+
+fun ViewGroup.showContextMenuForChildCompat(originalView: View, x: Float, y: Float): Boolean {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+        return showContextMenuForChild(originalView)
+    }
+    return ViewExtensionsN.showContextMenuForChild(this, originalView, x, y)
+}
+
 private fun offsetToRoot(view: View, rect: Rect) {
     var parent = view.parent as? View
     while (parent != null) {
         rect.offset(parent.left, parent.top)
         parent = parent.parent as? View
+    }
+}
+
+@TargetApi(Build.VERSION_CODES.N)
+private object ViewExtensionsN {
+    fun showContextMenuForChild(viewGroup: ViewGroup, originalView: View, x: Float, y: Float): Boolean {
+        return viewGroup.showContextMenuForChild(originalView, x, y)
     }
 }

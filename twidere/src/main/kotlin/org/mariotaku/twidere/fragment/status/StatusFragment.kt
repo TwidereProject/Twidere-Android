@@ -295,7 +295,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     override fun onItemMenuClick(holder: ViewHolder, menuView: View, position: Int) {
         if (activity == null) return
         val view = layoutManager.findViewByPosition(position) ?: return
-        recyclerView.showContextMenuForChild(view)
+        recyclerView.showContextMenuForChild(view, menuView)
     }
 
     override fun onUserProfileClick(holder: IStatusViewHolder, position: Int) {

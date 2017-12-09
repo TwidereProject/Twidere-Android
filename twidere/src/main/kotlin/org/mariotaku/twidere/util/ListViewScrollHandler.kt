@@ -1,9 +1,8 @@
 package org.mariotaku.twidere.util
 
+import android.support.v4.view.ViewCompat
 import android.widget.AbsListView
 import android.widget.ListView
-
-import org.mariotaku.twidere.util.support.ViewSupport
 
 /**
  * Created by mariotaku on 16/3/1.
@@ -52,7 +51,7 @@ class ListViewScrollHandler<A>(
     class ListViewCallback(private val listView: AbsListView) : ContentScrollHandler.ViewCallback {
 
         override val computingLayout: Boolean
-            get() = ViewSupport.isInLayout(listView)
+            get() = ViewCompat.isInLayout(listView)
 
         override fun post(runnable: Runnable) {
             listView.post(runnable)

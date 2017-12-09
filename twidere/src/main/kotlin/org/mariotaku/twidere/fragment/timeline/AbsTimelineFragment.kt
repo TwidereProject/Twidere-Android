@@ -64,12 +64,9 @@ import org.mariotaku.twidere.data.CursorObjectLivePagedListProvider
 import org.mariotaku.twidere.data.ExtendedPagedListProvider
 import org.mariotaku.twidere.data.StatusesLivePagedListProvider
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.adapter.removeStatuses
-import org.mariotaku.twidere.extension.findAccount
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.getAccountType
-import org.mariotaku.twidere.extension.promise
-import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.extension.view.firstVisibleItemPosition
 import org.mariotaku.twidere.extension.view.lastVisibleItemPosition
 import org.mariotaku.twidere.fragment.AbsContentRecyclerViewFragment
@@ -573,7 +570,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         override fun onItemMenuClick(holder: RecyclerView.ViewHolder, menuView: View, position: Int) {
             if (activity == null) return
             val view = layoutManager.findViewByPosition(position) ?: return
-            recyclerView.showContextMenuForChild(view)
+            recyclerView.showContextMenuForChild(view, menuView)
         }
 
         override fun onGapClick(holder: GapViewHolder, position: Int) {
