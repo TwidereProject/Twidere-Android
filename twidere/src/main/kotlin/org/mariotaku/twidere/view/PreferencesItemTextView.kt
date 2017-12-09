@@ -9,11 +9,12 @@ import org.mariotaku.chameleon.view.ChameleonTextView
 
 class PreferencesItemTextView(context: Context, attrs: AttributeSet? = null) : FixedTextView(context, attrs) {
 
-    override fun createAppearance(context: Context, attributeSet: AttributeSet, theme: Chameleon.Theme): ChameleonTextView.Appearance? {
+    override fun createAppearance(context: Context, attributeSet: AttributeSet, theme: Chameleon.Theme): ChameleonTextView.Appearance {
         val appearance = ChameleonTextView.Appearance()
         val activatedColor = ChameleonUtils.getColorDependent(theme.colorControlActivated)
         val defaultColor = theme.textColorPrimary
-        appearance.textColor = ColorStateList(arrayOf(ACTIVATED_STATE_SET, EMPTY_STATE_SET), intArrayOf(activatedColor, defaultColor))
+        appearance.textColor = ColorStateList(arrayOf(ACTIVATED_STATE_SET, EMPTY_STATE_SET),
+                intArrayOf(activatedColor, defaultColor))
         return appearance
     }
 

@@ -70,6 +70,7 @@ import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.overriding
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowInsetsCallback
 import org.mariotaku.twidere.model.DefaultFeatures
+import org.mariotaku.twidere.model.theme.UserTheme
 import org.mariotaku.twidere.preference.iface.IDialogPreference
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
@@ -163,7 +164,7 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     private val controlBarOffsetListeners = ArrayList<IControlBarActivity.ControlBarOffsetListener>()
 
     protected val userTheme: Chameleon.Theme by lazy {
-        return@lazy ThemeUtils.getUserTheme(this, themePreferences)
+        return@lazy UserTheme.get(this, themePreferences)
     }
 
     private val nightTimeChangedReceiver = object : BroadcastReceiver() {

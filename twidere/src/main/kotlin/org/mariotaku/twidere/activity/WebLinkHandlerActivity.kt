@@ -14,16 +14,16 @@ import org.mariotaku.twidere.activity.content.RetweetQuoteDialogActivity
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.theme.UserTheme
 import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.IntentUtils
-import org.mariotaku.twidere.util.ThemeUtils
 import java.util.*
 
 class WebLinkHandlerActivity : Activity() {
 
     private val userTheme: Chameleon.Theme by lazy {
         val preferences = DependencyHolder.get(this).preferences
-        return@lazy ThemeUtils.getUserTheme(this, preferences)
+        return@lazy UserTheme.get(this, preferences)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

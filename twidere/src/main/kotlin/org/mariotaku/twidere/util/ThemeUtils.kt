@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.util
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.ColorStateList
@@ -42,16 +43,14 @@ import android.support.v7.widget.TwidereToolbar
 import android.util.TypedValue
 import android.view.*
 import android.widget.FrameLayout
-import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.annotation.ThemeBackgroundOption
 import org.mariotaku.twidere.annotation.ThemeBackgroundOption.MAX_ALPHA
 import org.mariotaku.twidere.annotation.ThemeBackgroundOption.MIN_ALPHA
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_THEME_BACKGROUND_SOLID
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_THEME_BACKGROUND_TRANSPARENT
-import org.mariotaku.twidere.constant.themeBackgroundAlphaKey
-import org.mariotaku.twidere.constant.themeBackgroundOptionKey
 import org.mariotaku.twidere.constant.themeColorKey
 import org.mariotaku.twidere.graphic.ActionIconDrawable
 import org.mariotaku.twidere.graphic.WindowBackgroundDrawable
@@ -63,33 +62,6 @@ object ThemeUtils {
 
     const val ACCENT_COLOR_THRESHOLD = 192
     const val DARK_COLOR_THRESHOLD = 128
-
-    fun getUserTheme(context: Context, preferences: SharedPreferences): Chameleon.Theme {
-        val theme = Chameleon.Theme.from(context)
-        val userColor = getUserAccentColor(context, preferences)
-        theme.colorAccent = userColor
-        theme.colorPrimary = userColor
-        val backgroundOption = preferences[themeBackgroundOptionKey]
-        if (theme.isToolbarColored) {
-            theme.colorToolbar = theme.colorPrimary
-        } else if (backgroundOption == VALUE_THEME_BACKGROUND_SOLID) {
-            theme.colorToolbar = if (isLightTheme(context)) {
-                Color.WHITE
-            } else {
-                Color.BLACK
-            }
-        }
-
-        if (isTransparentBackground(backgroundOption)) {
-            theme.colorToolbar = ColorUtils.setAlphaComponent(theme.colorToolbar,
-                    (preferences[themeBackgroundAlphaKey] * 1.25f).toInt().coerceIn(MIN_ALPHA, MAX_ALPHA))
-        }
-        theme.statusBarColor = ChameleonUtils.darkenColor(theme.colorToolbar)
-        theme.lightStatusBarMode = Chameleon.Theme.LightStatusBarMode.AUTO
-        theme.textColorLink = getOptimalAccentColor(theme.colorAccent, theme.colorForeground)
-
-        return theme
-    }
 
     @StyleRes
     fun getCurrentThemeResource(context: Context, @StyleRes lightTheme: Int, @StyleRes darkTheme: Int): Int {
@@ -147,7 +119,7 @@ object ThemeUtils {
     }
 
     fun isTransparentBackground(option: String): Boolean {
-        return VALUE_THEME_BACKGROUND_TRANSPARENT == option
+        return ThemeBackgroundOption.TRANSPARENT == option
     }
 
     fun getColorBackground(context: Context, backgroundOption: String, alpha: Int): Int {
@@ -339,6 +311,7 @@ object ThemeUtils {
         return darkColor
     }
 
+    @SuppressLint("RestrictedApi")
     fun resetCheatSheet(menuView: ActionMenuView) {
         val listener = View.OnLongClickListener { v ->
             if ((v as ActionMenuItemView).hasText()) return@OnLongClickListener false
@@ -475,6 +448,7 @@ object ThemeUtils {
         }
     }
 
+    @SuppressLint("RestrictedApi")
     fun getDrawableFromThemeAttribute(context: Context, @AttrRes attr: Int): Drawable {
         val a = TintTypedArray.obtainStyledAttributes(context, null, intArrayOf(attr))
         try {
@@ -484,7 +458,7 @@ object ThemeUtils {
         }
     }
 
-    private fun getUserAccentColor(context: Context, preferences: SharedPreferences): Int {
+    fun getUserAccentColor(context: Context, preferences: SharedPreferences): Int {
         val color = preferences[themeColorKey]
         if (color == 0) return ContextCompat.getColor(context, R.color.branding_color)
         return color

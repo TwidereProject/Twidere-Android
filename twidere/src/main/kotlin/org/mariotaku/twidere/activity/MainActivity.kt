@@ -62,11 +62,11 @@ import org.mariotaku.twidere.extension.hasPermission
 import org.mariotaku.twidere.extension.model.displayingScore
 import org.mariotaku.twidere.extension.model.shouldShow
 import org.mariotaku.twidere.model.presentation.LaunchPresentation
+import org.mariotaku.twidere.model.theme.UserTheme
 import org.mariotaku.twidere.promise.LaunchPresentationsPromises
 import org.mariotaku.twidere.util.DeviceUtils
 import org.mariotaku.twidere.util.OnLinkClickHandler
 import org.mariotaku.twidere.util.StrictModeUtils
-import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.cache.JsonCache
 import org.mariotaku.twidere.util.support.ViewSupport
 import org.mariotaku.twidere.util.support.view.ViewOutlineProviderCompat
@@ -97,7 +97,7 @@ open class MainActivity : ChameleonActivity(), IBaseActivity<MainActivity> {
     }
 
     private val userTheme: Chameleon.Theme by lazy {
-        return@lazy ThemeUtils.getUserTheme(this, themePreferences)
+        return@lazy UserTheme.get(this, themePreferences)
     }
 
     private lateinit var requestManager: RequestManager
