@@ -19,10 +19,10 @@
 
 package org.mariotaku.twidere.view.behavior.userprofile
 
+import android.animation.ArgbEvaluator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.support.design.widget.CoordinatorLayout
-import android.support.graphics.drawable.ArgbEvaluator
 import android.support.v7.widget.Toolbar
 import android.util.AttributeSet
 import android.view.View
@@ -36,6 +36,8 @@ internal class ToolbarBehavior(context: Context?, attrs: AttributeSet? = null) :
 
     private val actionBarShadowColor: Int = 0xA0000000.toInt()
     private var actionItemIsDark: Int = 0
+
+    private val argbEvaluator = ArgbEvaluator()
 
     override fun layoutDependsOn(parent: CoordinatorLayout, child: Toolbar, dependency: View): Boolean {
         return dependency.id == R.id.profileHeader
@@ -57,17 +59,11 @@ internal class ToolbarBehavior(context: Context?, attrs: AttributeSet? = null) :
         val actionBarBackground = child.background as? ActionBarDrawable ?: return true
         val bannerContainer = parent.profileBannerContainer
         val detailsBackground = parent.profileHeaderBackground
-
-        val bannerBottom = dependency.top + bannerContainer.bottom
         val detailsBottom = dependency.top + detailsBackground.bottom
-        val currentOffset = bannerBottom - child.bottom
-        val maxOffset = (bannerContainer.bottom - child.bottom).toFloat()
         val headerHidden = dependency.visibility == View.GONE
 
-        val colorFactor = when {
-            headerHidden -> 1f
-            else -> (1 - currentOffset / maxOffset).coerceIn(0f, 1f)
-        }
+        val colorFactor = colorFactor(dependency, bannerContainer, child)
+
         val outlineFactor = when {
             headerHidden -> 1f
             colorFactor < 1 -> colorFactor
@@ -78,7 +74,7 @@ internal class ToolbarBehavior(context: Context?, attrs: AttributeSet? = null) :
         actionBarBackground.outlineAlphaFactor = outlineFactor
 
         val colorPrimary = actionBarBackground.color
-        val currentActionBarColor = ArgbEvaluator.getInstance().evaluate(colorFactor, actionBarShadowColor,
+        val currentActionBarColor = argbEvaluator.evaluate(colorFactor, actionBarShadowColor,
                 colorPrimary) as Int
         val actionItemIsDark = if (ThemeUtils.isLightColor(currentActionBarColor)) 1 else -1
         if (this.actionItemIsDark != actionItemIsDark) {
@@ -88,4 +84,19 @@ internal class ToolbarBehavior(context: Context?, attrs: AttributeSet? = null) :
         return false
     }
 
+    companion object {
+
+        fun colorFactor(header: View, banner: View, toolbar: View): Float {
+            val bannerTop = header.top
+            val bannerHeight = banner.measuredHeight
+            val colorFactorOffsetMin = toolbar.bottom - bannerHeight
+
+            val headerHidden = header.visibility == View.GONE
+
+            return when {
+                headerHidden -> 1f
+                else -> (bannerTop.toFloat() / colorFactorOffsetMin).coerceIn(0f, 1f)
+            }
+        }
+    }
 }

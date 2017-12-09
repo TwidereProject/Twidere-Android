@@ -19,11 +19,10 @@
 
 package org.mariotaku.twidere.view.behavior.userprofile
 
-import android.annotation.SuppressLint
+import android.animation.ArgbEvaluator
 import android.content.Context
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.lastWindowInsetsCompat
-import android.support.graphics.drawable.ArgbEvaluator
 import android.util.AttributeSet
 import android.view.View
 import android.view.Window
@@ -36,7 +35,10 @@ import org.mariotaku.twidere.util.support.WindowSupport
 
 internal class StatusBarBehavior(context: Context, attrs: AttributeSet? = null) : CoordinatorLayout.Behavior<View>(context, attrs) {
 
+    private val argbEvaluator = ArgbEvaluator()
+
     private val window: Window = ChameleonUtils.getActivity(context)!!.window
+
     private var lightStatusBar: Int = 0
 
     override fun layoutDependsOn(parent: CoordinatorLayout, child: View, dependency: View): Boolean {
@@ -56,23 +58,13 @@ internal class StatusBarBehavior(context: Context, attrs: AttributeSet? = null) 
         return true
     }
 
-    @SuppressLint("RestrictedApi")
     private fun updateStatusBarColor(parent: CoordinatorLayout, child: View, dependency: View) {
         if (child.height == 0) return
-        val actionBarBackground = parent.toolbar.background as? ActionBarDrawable ?: return
-        val factor = when {
-            dependency.visibility == View.GONE -> 1f
-            else -> {
-                val bannerContainer = parent.profileBannerContainer
-                val bannerBottom = dependency.top + bannerContainer.height
-                val currentOffset = bannerBottom - child.bottom
-                val maxOffset = (bannerContainer.height - child.bottom).toFloat()
-                (1 - currentOffset / maxOffset).coerceIn(0f, 1f)
-            }
-        }
-
+        val toolbar = parent.toolbar
+        val actionBarBackground = toolbar.background as? ActionBarDrawable ?: return
+        val factor = ToolbarBehavior.colorFactor(dependency, parent.profileBannerContainer, toolbar)
         val primaryColorDark = ChameleonUtils.darkenColor(actionBarBackground.color)
-        val statusBarColor = ArgbEvaluator.getInstance().evaluate(factor, 0xA0000000.toInt(),
+        val statusBarColor = argbEvaluator.evaluate(factor, 0xA0000000.toInt(),
                 ChameleonUtils.darkenColor(primaryColorDark))
         child.setBackgroundColor(statusBarColor as Int)
         val lightStatusBar = if (ThemeUtils.isLightColor(statusBarColor)) 1 else -1

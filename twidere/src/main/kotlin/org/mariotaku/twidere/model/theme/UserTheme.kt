@@ -52,8 +52,9 @@ class UserTheme : Chameleon.Theme() {
                 }
             }
 
-            if (ThemeUtils.isTransparentBackground(backgroundOption)) {
-                theme.backgroundAlpha = (preferences[themeBackgroundAlphaKey] * 1.25f).toInt().coerceIn(ThemeBackgroundOption.MIN_ALPHA, ThemeBackgroundOption.MAX_ALPHA)
+            if (ThemeBackgroundOption.TRANSPARENT == backgroundOption) {
+                theme.backgroundAlpha = (preferences[themeBackgroundAlphaKey] * 1.25f).toInt()
+                        .coerceIn(ThemeBackgroundOption.MIN_ALPHA, ThemeBackgroundOption.MAX_ALPHA)
                 theme.colorToolbar = ColorUtils.setAlphaComponent(theme.colorToolbar,
                         theme.backgroundAlpha)
             }

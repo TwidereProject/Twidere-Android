@@ -68,29 +68,27 @@
 
     </FrameLayout>
 
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/profileBannerContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
+        app:bannerAspectRatio="@fraction/aspect_ratio_profile_banner"
         app:layout_behavior="org.mariotaku.twidere.view.behavior.userprofile.BannerBehavior">
 
-        <org.mariotaku.twidere.view.ProfileBannerImageView
+        <org.mariotaku.twidere.view.ForegroundImageView
             android:id="@+id/profileBanner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            app:bannerAspectRatio="@fraction/aspect_ratio_profile_banner"
             tools:src="@drawable/nyan_stars_background"/>
 
         <ViewStub
             android:id="@+id/profileBirthdayStub"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/profileBanner"
-            android:layout_alignTop="@+id/profileBanner"
+            android:layout_height="match_parent"
             android:layout="@layout/layout_user_profile_birthday_stub"/>
-    </RelativeLayout>
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/profileHeader"

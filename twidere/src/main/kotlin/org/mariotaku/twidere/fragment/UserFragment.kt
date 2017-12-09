@@ -112,6 +112,7 @@ import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 import org.mariotaku.twidere.model.event.FriendshipUpdatedEvent
 import org.mariotaku.twidere.model.event.ProfileUpdatedEvent
 import org.mariotaku.twidere.model.event.TaskStateChangedEvent
+import org.mariotaku.twidere.model.theme.UserTheme
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.promise.BlockPromises
 import org.mariotaku.twidere.promise.FriendshipPromises
@@ -1003,8 +1004,9 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     private fun setupViewStyle() {
         val activity = activity as? LinkHandlerActivity ?: return
         val actionBar = activity.supportActionBar ?: return
-        if (!ThemeUtils.isWindowFloating(activity) && ThemeUtils.isTransparentBackground(activity.currentThemeBackgroundOption)) {
-            profileBanner.alpha = activity.currentThemeBackgroundAlpha / 255f
+        val theme = Chameleon.getOverrideTheme(activity, activity)
+        if (!ThemeUtils.isWindowFloating(activity) && theme is UserTheme) {
+            profileBanner.alpha = theme.backgroundAlpha / 255f
         }
 
         actionBar.setBackgroundDrawable(ActionBarDrawable(ResourcesCompat.getDrawable(activity.resources,

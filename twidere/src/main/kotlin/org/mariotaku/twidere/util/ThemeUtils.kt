@@ -88,12 +88,10 @@ object ThemeUtils {
 
     fun getCardBackgroundColor(context: Context, backgroundOption: String, themeAlpha: Int): Int {
         val color = getColorFromAttribute(context, R.attr.cardItemBackgroundColor)
-        if (isTransparentBackground(backgroundOption)) {
-            return ColorUtils.setAlphaComponent(color, themeAlpha)
-        } else if (isSolidBackground(backgroundOption)) {
-            return TwidereColorUtils.getContrastYIQ(color, Color.WHITE, Color.BLACK)
-        } else {
-            return color
+        return when (backgroundOption) {
+            ThemeBackgroundOption.TRANSPARENT -> ColorUtils.setAlphaComponent(color, themeAlpha)
+            ThemeBackgroundOption.SOLID -> TwidereColorUtils.getContrastYIQ(color, Color.WHITE, Color.BLACK)
+            else -> color
         }
     }
 
@@ -103,10 +101,6 @@ object ThemeUtils {
 
     fun getColorDependent(color: Int): Int {
         return ChameleonUtils.getColorDependent(color)
-    }
-
-    fun isSolidBackground(option: String): Boolean {
-        return VALUE_THEME_BACKGROUND_SOLID == option
     }
 
     fun isWindowFloating(context: Context): Boolean {

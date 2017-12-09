@@ -180,6 +180,9 @@
         <attr name="android:textSize"/>
         <attr name="android:textStyle"/>
     </declare-styleable>
+    <declare-styleable name="BannerBehavior">
+        <attr name="bannerAspectRatio"/>
+    </declare-styleable>
     <attr name="behavior_alignmentRule">
         <flag name="left" value="0x00000001"/>
         <flag name="right" value="0x00000002"/>
