@@ -30,6 +30,7 @@ import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
+import android.util.TypedValue
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
@@ -532,9 +533,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         mediaLabel.textSize = textSize * 0.95f
         quotedMediaLabel.textSize = textSize * 0.95f
 
-        replyButton.textSize = textSize
-        retweetButton.textSize = textSize
-        favoriteButton.textSize = textSize
+        replyButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize)
+        retweetButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize)
+        favoriteButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize)
 
         nameView.updateTextAppearance()
         quotedNameView.updateTextAppearance()

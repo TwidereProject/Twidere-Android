@@ -1259,6 +1259,7 @@
     <string name="title_gif_sharing">GIF sharing</string>
     <string name="title_group_timeline">Group timeline</string>
     <string name="title_home">Home</string>
+    <string name="title_interactions">Interactions</string>
     <string name="title_like_confirm">Like this tweet?</string>
     <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
     <string name="title_likes">Likes</string>

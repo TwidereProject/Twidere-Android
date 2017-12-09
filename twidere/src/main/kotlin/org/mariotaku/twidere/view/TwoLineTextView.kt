@@ -20,11 +20,8 @@
 package org.mariotaku.twidere.view
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.content.res.Resources
-import android.graphics.Typeface
 import android.support.annotation.Dimension
-import android.support.annotation.StyleableRes
 import android.support.v4.text.BidiFormatter
 import android.text.SpannableStringBuilder
 import android.text.Spanned
@@ -33,6 +30,7 @@ import android.text.style.TextAppearanceSpan
 import android.util.AttributeSet
 import android.util.TypedValue
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.model.theme.TextAppearance
 
 open class TwoLineTextView(context: Context, attrs: AttributeSet? = null) : FixedTextView(context, attrs) {
 
@@ -64,16 +62,20 @@ open class TwoLineTextView(context: Context, attrs: AttributeSet? = null) : Fixe
         primaryText = a.getText(R.styleable.TwoLineTextView_tltvPrimaryText)
         secondaryText = a.getText(R.styleable.TwoLineTextView_tltvSecondaryText)
 
-        primaryTextAppearance = createTextAppearance(a.getResourceId(R.styleable.TwoLineTextView_tltvPrimaryTextAppearance, 0),
-                a.getColorStateList(R.styleable.TwoLineTextView_tltvPrimaryTextColor),
-                a.getColorStateList(R.styleable.TwoLineTextView_tltvPrimaryLinkTextColor),
-                a.getDimensionPixelSize(R.styleable.TwoLineTextView_tltvPrimaryTextSize, 0),
-                a.getInt(R.styleable.TwoLineTextView_tltvPrimaryTextStyle, -1))
-        secondaryTextAppearance = createTextAppearance(a.getResourceId(R.styleable.TwoLineTextView_tltvSecondaryTextAppearance, 0),
-                a.getColorStateList(R.styleable.TwoLineTextView_tltvSecondaryTextColor),
-                a.getColorStateList(R.styleable.TwoLineTextView_tltvSecondaryLinkTextColor),
-                a.getDimensionPixelSize(R.styleable.TwoLineTextView_tltvSecondaryTextSize, 0),
-                a.getInt(R.styleable.TwoLineTextView_tltvSecondaryTextStyle, -1))
+        primaryTextAppearance = TextAppearance.create(context,
+                a.getResourceId(R.styleable.TwoLineTextView_tltvPrimaryTextAppearance, 0),
+                a,
+                R.styleable.TwoLineTextView_tltvPrimaryTextColor,
+                R.styleable.TwoLineTextView_tltvPrimaryLinkTextColor,
+                R.styleable.TwoLineTextView_tltvPrimaryTextSize,
+                R.styleable.TwoLineTextView_tltvPrimaryTextStyle)
+        secondaryTextAppearance = TextAppearance.create(context,
+                a.getResourceId(R.styleable.TwoLineTextView_tltvSecondaryTextAppearance, 0),
+                a,
+                R.styleable.TwoLineTextView_tltvSecondaryTextColor,
+                R.styleable.TwoLineTextView_tltvSecondaryLinkTextColor,
+                R.styleable.TwoLineTextView_tltvSecondaryTextSize,
+                R.styleable.TwoLineTextView_tltvSecondaryTextStyle)
         a.recycle()
 
         primaryTextSpan = primaryTextAppearance.toSpan()
@@ -135,65 +137,6 @@ open class TwoLineTextView(context: Context, attrs: AttributeSet? = null) : Fixe
     private fun calculateTextSize(size: Float, unit: Int): Float {
         val r = context.resources ?: Resources.getSystem()
         return TypedValue.applyDimension(unit, size, r.displayMetrics)
-    }
-
-    private fun updatePrimaryTextSpan() {
-        primaryTextSpan = primaryTextAppearance.toSpan()
-    }
-
-    private fun updateSecondaryTextSpan() {
-        secondaryTextSpan = secondaryTextAppearance.toSpan()
-    }
-
-    private fun createTextAppearance(appearanceId: Int, overrideColor: ColorStateList?,
-            overrideColorLink: ColorStateList?, overrideSize: Int, overrideStyle: Int): TextAppearance {
-        val a = context.obtainStyledAttributes(appearanceId, Styleable.TextAppearance)
-
-        val textColor = overrideColor ?: a.getColorStateList(Styleable.TextAppearance_textColor)
-        val textColorLink = overrideColorLink ?: a.getColorStateList(Styleable.TextAppearance_textColorLink) ?: overrideColorLink
-        val textSize = if (overrideSize > 0) overrideSize else a.getDimensionPixelSize(Styleable.TextAppearance_textSize, 0)
-        val style = if (overrideStyle != -1) overrideStyle else a.getInt(Styleable.TextAppearance_textStyle, Typeface.NORMAL)
-        val typeface = a.getString(Styleable.TextAppearance_fontFamily) ?: mapTypeface(a.getInt(Styleable.TextAppearance_typeface, 0))
-
-        a.recycle()
-        return TextAppearance(textColor, textColorLink, textSize, style, typeface)
-    }
-
-    private fun TextAppearance.toSpan(): TextAppearanceSpan = TextAppearanceSpan(typeface, style, size, color, colorLink)
-
-    data class TextAppearance(
-            var color: ColorStateList?,
-            var colorLink: ColorStateList?,
-            var size: Int,
-            var style: Int,
-            var typeface: String?
-    )
-
-    private object Styleable {
-
-        @StyleableRes
-        val TextAppearance = intArrayOf(android.R.attr.textColor, android.R.attr.textColorLink,
-                android.R.attr.textSize, android.R.attr.textStyle, android.R.attr.fontFamily,
-                android.R.attr.typeface)
-
-        @StyleableRes const val TextAppearance_textColor = 0
-        @StyleableRes const val TextAppearance_textColorLink = 1
-        @StyleableRes const val TextAppearance_textSize = 2
-        @StyleableRes const val TextAppearance_textStyle = 3
-        @StyleableRes const val TextAppearance_fontFamily = 4
-        @StyleableRes const val TextAppearance_typeface = 5
-
-    }
-
-    companion object {
-
-
-        private fun mapTypeface(tf: Int) = when (tf) {
-            1 -> "sans"
-            2 -> "serif"
-            3 -> "monospace"
-            else -> null
-        }
     }
 
 }

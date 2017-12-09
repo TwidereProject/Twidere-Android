@@ -20,11 +20,14 @@
 package org.mariotaku.twidere.fragment.activities
 
 import android.net.Uri
+import android.os.Bundle
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_EXTRAS
 import org.mariotaku.twidere.data.CursorObjectLivePagedListProvider
 import org.mariotaku.twidere.data.predicate.ParcelableActivityProcessor
+import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.promise
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.UserKey
@@ -42,6 +45,10 @@ class InteractionsActivitiesFragment : AbsActivitiesFragment() {
     override val readPositionTag: String? = ReadPositionTag.ACTIVITIES_ABOUT_ME
 
     override val isStandalone: Boolean = false
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        linkHandlerTitle = getString(R.string.title_interactions)
+    }
 
     override fun getActivities(param: ContentRefreshParam): Boolean {
         val task = GetActivitiesAboutMeTask(context!!)

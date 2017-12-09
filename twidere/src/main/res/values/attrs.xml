@@ -179,6 +179,7 @@
         <attr name="android:textColor"/>
         <attr name="android:textSize"/>
         <attr name="android:textStyle"/>
+        <attr name="android:drawablePadding"/>
     </declare-styleable>
     <declare-styleable name="BannerBehavior">
         <attr name="bannerAspectRatio"/>
