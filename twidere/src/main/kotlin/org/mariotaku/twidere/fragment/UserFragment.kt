@@ -145,7 +145,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     override val currentVisibleFragment: Fragment?
         get() {
             val currentItem = viewPager.currentItem
-            if (currentItem < 0 || currentItem >= pagerAdapter.count) return null
+            if (currentItem < 0 || currentItem >= pagerAdapter.getCount()) return null
             return pagerAdapter.instantiateItem(viewPager, currentItem)
         }
 
@@ -669,14 +669,14 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             when (action) {
                 ACTION_NAVIGATION_PREVIOUS_TAB -> {
                     val previous = viewPager.currentItem - 1
-                    if (previous >= 0 && previous < pagerAdapter.count) {
+                    if (previous >= 0 && previous < pagerAdapter.getCount()) {
                         viewPager.setCurrentItem(previous, true)
                     }
                     return true
                 }
                 ACTION_NAVIGATION_NEXT_TAB -> {
                     val next = viewPager.currentItem + 1
-                    if (next >= 0 && next < pagerAdapter.count) {
+                    if (next >= 0 && next < pagerAdapter.getCount()) {
                         viewPager.setCurrentItem(next, true)
                     }
                     return true
@@ -1105,7 +1105,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     private fun displayUser(user: ParcelableUser) {
         val activity = activity ?: return
         val adapter = pagerAdapter
-        (0 until adapter.count).forEach { i ->
+        (0 until adapter.getCount()).forEach { i ->
             val sf = adapter.instantiateItem(viewPager, i) as? AbsTimelineFragment ?: return@forEach
             if (sf.view == null) return@forEach
         }

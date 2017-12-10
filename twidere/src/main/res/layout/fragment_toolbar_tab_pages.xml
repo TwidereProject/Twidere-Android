@@ -47,7 +47,7 @@
             tools:navigationIcon="@drawable/ic_action_back"
             tools:title="Twidere"/>
 
-        <org.mariotaku.twidere.view.TabPagerIndicator
+        <org.mariotaku.twidere.view.pagerindicator.TabPagerIndicator
             android:id="@+id/toolbarTabs"
             android:layout_width="match_parent"
             android:layout_height="@dimen/element_size_normal"

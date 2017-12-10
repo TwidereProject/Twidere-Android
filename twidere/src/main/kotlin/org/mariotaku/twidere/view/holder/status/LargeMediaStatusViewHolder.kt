@@ -181,6 +181,10 @@ class LargeMediaStatusViewHolder(private val adapter: IStatusesAdapter, itemView
         textView.textSize = textSize * 0.9f
         timeView.textSize = textSize * 0.8f
 
+        replyButton.setTextSize(size = textSize * 0.9f)
+        retweetButton.setTextSize(size = textSize * 0.9f)
+        favoriteButton.setTextSize(size = textSize * 0.9f)
+
         nameView.updateTextAppearance()
     }
 

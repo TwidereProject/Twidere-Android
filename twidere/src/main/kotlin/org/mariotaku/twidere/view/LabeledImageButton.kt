@@ -73,6 +73,7 @@ class LabeledImageButton(context: Context, attrs: AttributeSet?) : AppCompatImag
                 R.styleable.LabeledImageButton_android_textStyle
         )
         drawablePadding = a.getDimensionPixelSize(R.styleable.LabeledImageButton_android_drawablePadding, 0)
+        text = a.getString(R.styleable.LabeledImageButton_android_text)
         a.recycle()
 
         updateLayout()
@@ -123,7 +124,7 @@ class LabeledImageButton(context: Context, attrs: AttributeSet?) : AppCompatImag
         }
     }
 
-    fun setTextSize(unit: Int, size: Float) {
+    fun setTextSize(unit: Int = TypedValue.COMPLEX_UNIT_SP, size: Float) {
         textSize = TypedValue.applyDimension(unit, size, resources.displayMetrics)
     }
 

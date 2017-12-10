@@ -77,7 +77,7 @@ class SupportTabsAdapter(
     }
 
     override fun getPageWidth(position: Int): Float {
-        val columnCount = count
+        val columnCount = getCount()
         if (columnCount == 0) return 1f
         if (hasMultipleColumns && preferredColumnWidth > 0) {
             val resources = context.resources
@@ -105,7 +105,7 @@ class SupportTabsAdapter(
         return getTabIconDrawable(context, this.tabs[position].icon)
     }
 
-    override fun onPageReselected(position: Int) {
+    override fun onSelectedTabClick(position: Int) {
         if (context !is SupportFragmentCallback) return
         val f = context.currentVisibleFragment
         if (f is RefreshScrollTopInterface) {
@@ -113,8 +113,8 @@ class SupportTabsAdapter(
         }
     }
 
-    override fun onPageSelected(position: Int) {
-        if (position < 0 || position >= count) return
+    override fun onTabClick(position: Int) {
+        if (position < 0 || position >= getCount()) return
         val text = getPageTitle(position) ?: return
         val view = indicator as? View ?: return
         announceForAccessibilityCompat(context, view, text, javaClass)

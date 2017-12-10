@@ -18,35 +18,29 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<android.support.constraint.ConstraintLayout
+<com.commonsware.cwac.layouts.AspectLockedFrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/qrContainer"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    tools:layout_height="320dp"
+    tools:layout_width="320dp">
 
     <ImageView
         android:id="@+id/qrView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@android:color/white"
         android:padding="@dimen/element_spacing_xlarge"
         android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="W,1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription"/>
 
     <ProgressBar
         android:id="@+id/qrProgress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:layout_gravity="center"/>
 
-</android.support.constraint.ConstraintLayout>
+</com.commonsware.cwac.layouts.AspectLockedFrameLayout>

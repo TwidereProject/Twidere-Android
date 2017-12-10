@@ -102,7 +102,7 @@ import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.view.HomeDrawerLayout
-import org.mariotaku.twidere.view.TabPagerIndicator
+import org.mariotaku.twidere.view.pagerindicator.TabPagerIndicator
 import java.lang.ref.WeakReference
 
 class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, SupportFragmentCallback,
@@ -122,7 +122,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     private var updateUnreadCountTask: UpdateUnreadCountTask? = null
     private val readStateChangeListener = OnSharedPreferenceChangeListener { _, _ -> updateUnreadCount() }
     private val controlBarShowHideHelper = ControlBarShowHideHelper(this)
-    private val useTabNavigation get() = pagerAdapter.count > 1
+    private val useTabNavigation get() = pagerAdapter.getCount() > 1
 
     override val controlBarHeight: Int
         get() {
@@ -162,7 +162,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     override val currentVisibleFragment: Fragment?
         get() {
             val currentItem = mainPager.currentItem
-            if (currentItem < 0 || currentItem >= pagerAdapter.count) return null
+            if (currentItem < 0 || currentItem >= pagerAdapter.getCount()) return null
             return pagerAdapter.instantiateItem(mainPager, currentItem)
         }
 
@@ -466,7 +466,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     override fun onNewIntent(intent: Intent) {
         val tabPosition = handleIntent(intent, false)
         if (tabPosition >= 0) {
-            mainPager.currentItem = tabPosition.coerceInOr(0 until pagerAdapter.count, 0)
+            mainPager.currentItem = tabPosition.coerceInOr(0 until pagerAdapter.getCount(), 0)
         }
     }
 
@@ -529,7 +529,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                     if (previous < 0 && DrawerLayoutAccessor.findDrawerWithGravity(homeMenu, Gravity.START) != null) {
                         homeMenu.openDrawer(GravityCompat.START)
                         setControlBarVisibleAnimate(true)
-                    } else if (previous < pagerAdapter.count) {
+                    } else if (previous < pagerAdapter.getCount()) {
                         if (homeMenu.isDrawerOpen(GravityCompat.END)) {
                             homeMenu.closeDrawers()
                         } else {
@@ -540,7 +540,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                 }
                 KeyboardShortcutConstants.ACTION_NAVIGATION_NEXT_TAB -> {
                     val next = mainPager.currentItem + 1
-                    if (next >= pagerAdapter.count && DrawerLayoutAccessor.findDrawerWithGravity(homeMenu, Gravity.END) != null) {
+                    if (next >= pagerAdapter.getCount() && DrawerLayoutAccessor.findDrawerWithGravity(homeMenu, Gravity.END) != null) {
                         homeMenu.openDrawer(GravityCompat.END)
                         setControlBarVisibleAnimate(true)
                     } else if (next >= 0) {
@@ -716,7 +716,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         if (tabType != null) {
             val accountKey = uri?.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY)?.let(UserKey::valueOf)
             val adapter = pagerAdapter
-            for (i in 0 until adapter.count) {
+            for (i in 0 until adapter.getCount()) {
                 val tab = adapter.get(i)
                 if (tabType == Tab.getTypeAlias(tab.type)) {
                     val args = tab.args
@@ -801,10 +801,10 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     private fun setTabPosition(initialTab: Int) {
         val rememberPosition = preferences.getBoolean(SharedPreferenceConstants.KEY_REMEMBER_POSITION, true)
         if (initialTab >= 0) {
-            mainPager.currentItem = initialTab.coerceInOr(0 until pagerAdapter.count, 0)
+            mainPager.currentItem = initialTab.coerceInOr(0 until pagerAdapter.getCount(), 0)
         } else if (rememberPosition) {
             val position = preferences.getInt(SharedPreferenceConstants.KEY_SAVED_TAB_POSITION, 0)
-            mainPager.currentItem = position.coerceInOr(0 until pagerAdapter.count, 0)
+            mainPager.currentItem = position.coerceInOr(0 until pagerAdapter.getCount(), 0)
         }
     }
 
@@ -835,7 +835,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     private fun setupHomeTabs() {
         pagerAdapter.clear()
         pagerAdapter.addAll(CustomTabUtils.getHomeTabs(this))
-        val hasNoTab = pagerAdapter.count == 0
+        val hasNoTab = pagerAdapter.getCount() == 0
         emptyTabHint.visibility = if (hasNoTab) View.VISIBLE else View.GONE
         mainPager.visibility = if (hasNoTab) View.GONE else View.VISIBLE
         val useTabNavigation = useTabNavigation
@@ -908,7 +908,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
     private fun triggerActionsClick() {
         val position = mainPager.currentItem
-        if (pagerAdapter.count == 0) return
+        if (pagerAdapter.getCount() == 0) return
         val fragment = pagerAdapter.instantiateItem(mainPager, position) as? IFloatingActionButtonFragment
         val handled = fragment?.onActionClick("home") ?: false
         if (!handled) {
@@ -919,7 +919,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     private fun updateActionsButton() {
         if (!propertiesInitialized) return
         val fragment = run {
-            if (pagerAdapter.count == 0) return@run null
+            if (pagerAdapter.getCount() == 0) return@run null
             val position = mainPager.currentItem
             val f = pagerAdapter.instantiateItem(mainPager, position) as? IFloatingActionButtonFragment
             if (f is Fragment && (f.isDetached || f.host == null)) {

@@ -15,56 +15,53 @@
  * limitations under the License.
  */
 
-package org.mariotaku.twidere.view.iface;
+package org.mariotaku.twidere.view.iface
 
-import android.graphics.drawable.Drawable;
-import android.support.v4.view.ViewPager;
+import android.graphics.drawable.Drawable
+import android.support.v4.view.ViewPager
 
 /**
  * A PageIndicator is responsible to show an visual indicator on the total views
  * number and the current visible view.
  */
-@SuppressWarnings("unused")
-public interface PagerIndicator extends ViewPager.OnPageChangeListener {
+interface PagerIndicator : ViewPager.OnPageChangeListener {
     /**
      * Notify the indicator that the fragment list has changed.
      */
-    void notifyDataSetChanged();
+    fun notifyDataSetChanged()
 
     /**
-     * <p>
+     *
+     *
      * Set the current page of both the ViewPager and indicator.
-     * </p>
-     * <p/>
-     * <p>
-     * This <strong>must</strong> be used if you need to set the page before the
+     *
+     *
+     *
+     *
+     *
+     * This **must** be used if you need to set the page before the
      * views are drawn on screen (e.g., default start page).
-     * </p>
+     *
      */
-    void setCurrentItem(int item);
+    fun setCurrentItem(item: Int)
 
     /**
      * Set a page change listener which will receive forwarded events.
      */
-    void setOnPageChangeListener(ViewPager.OnPageChangeListener listener);
+    fun setOnPageChangeListener(listener: ViewPager.OnPageChangeListener?)
 
     /**
      * Bind the indicator to a ViewPager.
      */
-    void setViewPager(ViewPager view);
-
-    /**
-     * Bind the indicator to a ViewPager.
-     */
-    void setViewPager(ViewPager view, int initialPosition);
+    fun setViewPager(view: ViewPager, initialPosition: Int = view.currentItem)
 
     interface TabListener {
 
-        void onPageReselected(int position);
+        fun onTabClick(position: Int)
 
-        void onPageSelected(int position);
+        fun onSelectedTabClick(position: Int)
 
-        boolean onTabLongClick(int position);
+        fun onTabLongClick(position: Int): Boolean
     }
 
     /**
@@ -72,18 +69,18 @@ public interface PagerIndicator extends ViewPager.OnPageChangeListener {
      */
     interface TabProvider {
 
-        int getCount();
+        fun getCount(): Int
 
         /**
          * Returns the icon of the view at position
          */
-        Drawable getPageIcon(int position);
+        fun getPageIcon(position: Int): Drawable?
 
         /**
          * Returns the title of the view at position
          */
-        CharSequence getPageTitle(int position);
+        fun getPageTitle(position: Int): CharSequence?
 
-        float getPageWidth(int position);
+        fun getPageWidth(position: Int): Float
     }
 }

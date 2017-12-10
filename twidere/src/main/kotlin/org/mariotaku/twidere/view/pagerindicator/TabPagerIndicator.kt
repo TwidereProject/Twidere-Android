@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.view
+package org.mariotaku.twidere.view.pagerindicator
 
 import android.content.Context
 import android.graphics.Canvas
@@ -46,6 +46,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.decorator.ExtendedDividerItemDecoration
 import org.mariotaku.twidere.annotation.DisplayOption
 import org.mariotaku.twidere.util.ThemeUtils
+import org.mariotaku.twidere.view.BadgeView
 import org.mariotaku.twidere.view.iface.PagerIndicator
 
 class TabPagerIndicator(context: Context, attrs: AttributeSet? = null) : RecyclerView(context, attrs),
@@ -71,10 +72,9 @@ class TabPagerIndicator(context: Context, attrs: AttributeSet? = null) : Recycle
             notifyDataSetChanged()
         }
 
+    private var pageChangeListener: OnPageChangeListener? = null
     private val itemDecoration: ExtendedDividerItemDecoration
     private lateinit var viewPager: ViewPager
-    private lateinit var tabProvider: PagerIndicator.TabProvider
-    private lateinit var pageChangeListener: OnPageChangeListener
 
     private var option: Int = 0
     private var tabHorizontalPadding: Int = 0
@@ -89,6 +89,9 @@ class TabPagerIndicator(context: Context, attrs: AttributeSet? = null) : Recycle
 
     private val isLabelDisplayed: Boolean
         get() = DisplayOption.LABEL in option
+
+    private val indicatorAdapter: TabPagerIndicatorAdapter
+        get() = adapter as TabPagerIndicatorAdapter
 
     var isTabExpandEnabled: Boolean
         get() = (layoutManager as TabLayoutManager).isTabExpandEnabled
@@ -126,49 +129,40 @@ class TabPagerIndicator(context: Context, attrs: AttributeSet? = null) : Recycle
         a.recycle()
 
         if (isInEditMode) {
-            tabProvider = DemoTabProvider()
+            indicatorAdapter.tabProvider = DemoTabProvider()
         }
     }
 
     override fun notifyDataSetChanged() {
-        (adapter as TabPagerIndicatorAdapter).notifyDataSetChanged()
+        indicatorAdapter.notifyDataSetChanged()
     }
 
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-        if (!this::pageChangeListener.isInitialized) return
-        pageChangeListener.onPageScrolled(position, positionOffset, positionOffsetPixels)
+        pageChangeListener?.onPageScrolled(position, positionOffset, positionOffsetPixels)
     }
 
     override fun onPageSelected(position: Int) {
         notifyDataSetChanged()
-        if (!this::pageChangeListener.isInitialized) return
         smoothScrollToPosition(position)
-        pageChangeListener.onPageSelected(position)
+        pageChangeListener?.onPageSelected(position)
     }
 
     override fun onPageScrollStateChanged(state: Int) {
-        if (!this::pageChangeListener.isInitialized) return
-        pageChangeListener.onPageScrollStateChanged(state)
+        pageChangeListener?.onPageScrollStateChanged(state)
     }
 
     override fun setCurrentItem(item: Int) {
         viewPager.currentItem = item
     }
 
-    override fun setOnPageChangeListener(listener: OnPageChangeListener) {
+    override fun setOnPageChangeListener(listener: OnPageChangeListener?) {
         pageChangeListener = listener
     }
 
-    override fun setViewPager(view: ViewPager) {
-        setViewPager(view, view.currentItem)
-    }
-
     override fun setViewPager(view: ViewPager, initialPosition: Int) {
-        val adapter = view.adapter as? PagerIndicator.TabProvider ?: throw IllegalArgumentException()
         viewPager = view
-        tabProvider = adapter
+        indicatorAdapter.tabProvider = view.adapter as PagerIndicator.TabProvider
         view.addOnPageChangeListener(this)
-        (this.adapter as TabPagerIndicatorAdapter).setTabProvider(adapter)
     }
 
     override fun isPostApplyTheme(): Boolean {
@@ -234,18 +228,20 @@ class TabPagerIndicator(context: Context, attrs: AttributeSet? = null) : Recycle
     private fun dispatchTabClick(position: Int) {
         val currentItem = currentItem
         setCurrentItem(position)
+        val tabProvider = indicatorAdapter.tabProvider
         if (tabProvider is PagerIndicator.TabListener) {
             if (currentItem != position) {
-                (tabProvider as PagerIndicator.TabListener).onPageSelected(position)
+                tabProvider.onTabClick(position)
             } else {
-                (tabProvider as PagerIndicator.TabListener).onPageReselected(position)
+                tabProvider.onSelectedTabClick(position)
             }
         }
     }
 
     private fun dispatchTabLongClick(position: Int): Boolean {
+        val tabProvider = indicatorAdapter.tabProvider
         return if (tabProvider is PagerIndicator.TabListener) {
-            (tabProvider as PagerIndicator.TabListener).onTabLongClick(position)
+            tabProvider.onTabLongClick(position)
         } else false
     }
 
@@ -383,7 +379,7 @@ class TabPagerIndicator(context: Context, attrs: AttributeSet? = null) : Recycle
             (itemView as ItemLayout).setStripHeight(stripHeight)
         }
 
-        internal fun setTabData(icon: Drawable, title: CharSequence, activated: Boolean) {
+        internal fun setTabData(icon: Drawable?, title: CharSequence?, activated: Boolean) {
             itemView.contentDescription = title
             iconView.setImageDrawable(icon)
             labelView.text = title
@@ -424,92 +420,86 @@ class TabPagerIndicator(context: Context, attrs: AttributeSet? = null) : Recycle
         }
     }
 
-    private class TabPagerIndicatorAdapter internal constructor(private val mIndicator: TabPagerIndicator?) : RecyclerView.Adapter<TabItemHolder>() {
-        private val mUnreadCounts: SparseIntArray
-        internal var itemContext: Context? = null
+    private class TabPagerIndicatorAdapter internal constructor(private val indicator: TabPagerIndicator?) : RecyclerView.Adapter<TabItemHolder>() {
+        var itemContext: Context? = null
             set(itemContext) {
                 field = itemContext
-                mInflater = LayoutInflater.from(itemContext)
+                inflater = LayoutInflater.from(itemContext)
             }
-        private var mInflater: LayoutInflater? = null
 
-        private var mTabProvider: PagerIndicator.TabProvider? = null
-        private var mStripColor: Int = 0
-        private var mIconColor: Int = 0
-        private var mLabelColor: Int = 0
-        private var mDisplayBadge: Boolean = false
+        lateinit var tabProvider: PagerIndicator.TabProvider
 
-        init {
-            mUnreadCounts = SparseIntArray()
-        }
+        private val unreadCounts = SparseIntArray()
+
+        private var inflater: LayoutInflater? = null
+        private var stripColor: Int = 0
+        private var iconColor: Int = 0
+        private var labelColor: Int = 0
+        private var displayBadge: Boolean = false
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TabItemHolder {
-            if (mIndicator == null) throw IllegalStateException("item context not set")
-            val view = mInflater!!.inflate(R.layout.layout_tab_item, parent, false)
-            val holder = TabItemHolder(mIndicator, view)
-            holder.setStripHeight(mIndicator.stripHeight)
-            holder.setPadding(mIndicator.tabHorizontalPadding, mIndicator.tabVerticalPadding)
-            holder.setDisplayOption(mIndicator.isIconDisplayed, mIndicator.isLabelDisplayed)
+            if (indicator == null) throw IllegalStateException("item context not set")
+            val view = inflater!!.inflate(R.layout.layout_tab_item, parent, false)
+            val holder = TabItemHolder(indicator, view)
+            holder.setStripHeight(indicator.stripHeight)
+            holder.setPadding(indicator.tabHorizontalPadding, indicator.tabVerticalPadding)
+            holder.setDisplayOption(indicator.isIconDisplayed, indicator.isLabelDisplayed)
             return holder
         }
 
         override fun onBindViewHolder(holder: TabItemHolder, position: Int) {
-            val icon = mTabProvider!!.getPageIcon(position)
-            val title = mTabProvider!!.getPageTitle(position)
-            holder.setTabData(icon, title, mIndicator!!.isTabSelected(position))
-            holder.setBadge(mUnreadCounts.get(position, 0), mDisplayBadge)
+            val icon = tabProvider.getPageIcon(position)
+            val title = tabProvider.getPageTitle(position)
+            holder.setTabData(icon, title, indicator!!.isTabSelected(position))
+            holder.setBadge(unreadCounts.get(position, 0), displayBadge)
 
-            holder.setStripColor(mStripColor)
-            holder.setIconColor(mIconColor)
-            holder.setLabelColor(mLabelColor)
+            holder.setStripColor(stripColor)
+            holder.setIconColor(iconColor)
+            holder.setLabelColor(labelColor)
         }
 
         override fun getItemCount(): Int {
-            return if (mTabProvider == null) 0 else mTabProvider!!.count
+            if (!this::tabProvider.isInitialized) return 0
+            return tabProvider.getCount()
         }
 
         internal fun setBadge(position: Int, count: Int) {
-            mUnreadCounts.put(position, count)
+            unreadCounts.put(position, count)
             notifyItemChanged(position)
         }
 
         internal fun clearBadge() {
-            mUnreadCounts.clear()
+            unreadCounts.clear()
             notifyDataSetChanged()
         }
 
         internal fun setDisplayBadge(display: Boolean) {
-            mDisplayBadge = display
+            displayBadge = display
         }
 
         internal fun setIconColor(color: Int) {
-            mIconColor = color
+            iconColor = color
         }
 
         internal fun setLabelColor(color: Int) {
-            mLabelColor = color
+            labelColor = color
         }
 
         internal fun setStripColor(color: Int) {
-            mStripColor = color
+            stripColor = color
         }
 
-        internal fun setTabProvider(tabProvider: PagerIndicator.TabProvider) {
-            mTabProvider = tabProvider
-        }
     }
 
     private class DemoTabProvider : PagerIndicator.TabProvider {
 
-        override fun getCount(): Int {
-            return 4
-        }
+        override fun getCount(): Int = 4
 
         override fun getPageIcon(position: Int): Drawable? {
             return null
         }
 
-        override fun getPageTitle(position: Int): CharSequence {
+        override fun getPageTitle(position: Int): CharSequence? {
             return "Title " + position
         }
 

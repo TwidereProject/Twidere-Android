@@ -76,6 +76,7 @@ class UserQrDialogFragment : BaseDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        qrContainer.setAspectRatio(1.0)
         val weakThis = WeakReference(this)
 
         promiseOnUi {

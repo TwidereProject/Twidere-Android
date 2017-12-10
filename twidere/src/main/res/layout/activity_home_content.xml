@@ -58,7 +58,7 @@
                 android:background="?actionBarItemBackground"
                 android:contentDescription="@string/open_accounts_dashboard"/>
 
-            <org.mariotaku.twidere.view.TabPagerIndicator
+            <org.mariotaku.twidere.view.pagerindicator.TabPagerIndicator
                 android:id="@+id/mainTabs"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
