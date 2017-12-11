@@ -63,8 +63,7 @@
             android:layout_gravity="end|center_vertical"
             android:contentDescription="@string/action_search"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_action_search"
-            app:backgroundTintMode="src_atop"/>
+            android:src="@drawable/ic_action_search"/>
     </FrameLayout>
 
 </RelativeLayout>

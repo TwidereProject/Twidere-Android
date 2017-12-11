@@ -20,24 +20,24 @@
 package org.mariotaku.twidere.menu
 
 import android.content.Context
-import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
+import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v4.view.ActionProvider
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.widget.ActionMenuView
 import android.view.MenuItem
 import android.view.View
 import org.mariotaku.ktextension.toWeak
+import org.mariotaku.twidere.extension.isActivated
 import org.mariotaku.twidere.extension.view.findItemView
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable.Style
 
 class FavoriteItemProvider(context: Context) : ActionProvider(context) {
-    var defaultColor: Int = 0
-    var activatedColor: Int = 0
     var useStar: Boolean = false
     var icon: Int = 0
+    var tint: Int = 0
     var longClickListener: (() -> Boolean)? = null
 
     override fun onCreateActionView() = null
@@ -54,8 +54,10 @@ class FavoriteItemProvider(context: Context) : ActionProvider(context) {
     fun init(menuBar: ActionMenuView, item: MenuItem) {
         assert(MenuItemCompat.getActionProvider(item) === this)
         val icon = ContextCompat.getDrawable(context, this.icon)
-        val drawable = LikeAnimationDrawable(icon,
-                if (useStar) Style.FAVORITE else Style.LIKE)
+        val drawable = LikeAnimationDrawable(icon, if (useStar) Style.FAVORITE else Style.LIKE)
+        if (tint != 0) {
+            DrawableCompat.setTintList(drawable, ContextCompat.getColorStateList(context, tint))
+        }
         drawable.mutate()
         drawable.callback = ViewCallback(menuBar)
         item.icon = drawable
@@ -69,8 +71,7 @@ class FavoriteItemProvider(context: Context) : ActionProvider(context) {
         if (MenuItemCompat.getActionProvider(item) !== this) throw IllegalArgumentException()
         val icon = item.icon
         if (icon is LikeAnimationDrawable) {
-            icon.mutate()
-            icon.setColorFilter(if (isFavorite) activatedColor else defaultColor, PorterDuff.Mode.SRC_ATOP)
+            icon.isActivated = isFavorite
         }
     }
 

@@ -42,3 +42,9 @@ fun Drawable.setBoundsFitCenter(left: Int, top: Int, right: Int, bottom: Int) {
                 boundsHeight / 2 + actualHeight / 2)
     }
 }
+
+var Drawable.isActivated: Boolean
+    get() = android.R.attr.state_activated in state
+    set(value) {
+        state = if (value) intArrayOf(android.R.attr.state_activated) else intArrayOf()
+    }

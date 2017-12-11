@@ -23,13 +23,13 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.DialogInterface.OnClickListener
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.os.Environment.getExternalStorageDirectory
 import android.support.v4.app.LoaderManager.LoaderCallbacks
+import android.support.v4.content.ContextCompat
 import android.support.v4.content.FixedAsyncTaskLoader
 import android.support.v4.content.Loader
-import android.support.v4.content.res.ResourcesCompat
+import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.app.AlertDialog
 import android.text.TextUtils.TruncateAt
 import android.view.View
@@ -194,19 +194,19 @@ class FileSelectorDialogFragment : BaseDialogFragment(), LoaderCallbacks<List<Fi
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val view = super.getView(position, convertView, parent)
             val text = (view as? TextView ?: view.findViewById<View>(android.R.id.text1)) as TextView
-            val file = getItem(position)
+            val file = getItem(position)!!
             if (file == currentPath?.parentFile) {
-                text.text = "build/generated/source/rs/androidTest"
+                text.text = ".."
             } else {
-                text.text = file!!.name
+                text.text = file.name
             }
             text.setSingleLine(true)
             text.ellipsize = TruncateAt.MARQUEE
             text.setPadding(padding, padding, position, padding)
-            val icon = ResourcesCompat.getDrawable(resources,
-                    if (file!!.isDirectory) R.drawable.ic_folder else R.drawable.ic_file, null)!!
-            icon.mutate()
-            icon.setColorFilter(actionIconColor, PorterDuff.Mode.SRC_ATOP)
+            val icon = ContextCompat.getDrawable(context, file.icon)!!.apply {
+                mutate()
+                DrawableCompat.setTint(this, actionIconColor)
+            }
             text.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null)
             return view
         }
@@ -219,6 +219,8 @@ class FileSelectorDialogFragment : BaseDialogFragment(), LoaderCallbacks<List<Fi
             }
         }
 
+        private val File.icon: Int
+            get() = if (isDirectory) R.drawable.ic_folder else R.drawable.ic_file
     }
 
     private class FilesLoader(context: Context, private val path: File?, private val extensions: Array<String>?) : FixedAsyncTaskLoader<List<File>>(context) {

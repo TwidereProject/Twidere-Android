@@ -73,8 +73,8 @@ import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.isMutedB
 import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.media
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableMedia
+import org.mariotaku.twidere.model.SaveFileInfo
 import org.mariotaku.twidere.provider.CacheProvider
-import org.mariotaku.twidere.task.SaveFileTask
 import org.mariotaku.twidere.util.media.TwidereMediaDownloader
 import org.mariotaku.twidere.util.promotion.PromotionService
 import java.io.InputStream
@@ -396,20 +396,20 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
             val uri: Uri,
             val account: AccountDetails?,
             val okHttpClient: OkHttpClient
-    ) : SaveFileTask.FileInfo, CacheProvider.CacheFileTypeSupport {
+    ) : SaveFileInfo, CacheProvider.CacheFileTypeSupport {
 
         private var response: Response? = null
 
         override val cacheFileType: String? = CacheFileType.VIDEO
 
-        override val fileName: String? = uri.lastPathSegment
+        override val name: String = uri.lastPathSegment ?: "media_file"
 
         override val mimeType: String?
             get() = request().body()?.contentType()?.toString()
 
         override val specialCharacter: Char = '_'
 
-        override fun inputStream(): InputStream {
+        override fun stream(): InputStream {
             return request().body()!!.byteStream()
         }
 

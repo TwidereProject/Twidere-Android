@@ -25,15 +25,15 @@ import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.Color
-import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.support.annotation.AttrRes
-import android.support.annotation.ColorInt
 import android.support.annotation.StyleRes
 import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.ColorUtils
+import android.support.v4.graphics.drawable.DrawableCompat
+import android.support.v4.view.MenuItemCompat
 import android.support.v7.app.TwilightManagerAccessor
 import android.support.v7.view.menu.ActionMenuItemView
 import android.support.v7.widget.ActionMenuView
@@ -52,10 +52,7 @@ import org.mariotaku.twidere.annotation.ThemeBackgroundOption.MIN_ALPHA
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_THEME_BACKGROUND_SOLID
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_THEME_BACKGROUND_TRANSPARENT
 import org.mariotaku.twidere.constant.themeColorKey
-import org.mariotaku.twidere.graphic.ActionIconDrawable
 import org.mariotaku.twidere.graphic.WindowBackgroundDrawable
-import org.mariotaku.twidere.graphic.iface.DoNotWrapDrawable
-import org.mariotaku.twidere.util.menu.TwidereMenuInfo
 import org.mariotaku.twidere.util.support.ViewSupport
 
 object ThemeUtils {
@@ -145,7 +142,7 @@ object ThemeUtils {
     fun wrapMenuIcon(menu: Menu, itemColor: Int, subItemColor: Int, vararg excludeGroups: Int) {
         for (i in 0 until menu.size()) {
             val item = menu.getItem(i)
-            wrapMenuItemIcon(item, itemColor, *excludeGroups)
+            setTint(item, itemColor, *excludeGroups)
             if (item.hasSubMenu()) {
                 wrapMenuIcon(item.subMenu, subItemColor, subItemColor, *excludeGroups)
             }
@@ -165,7 +162,7 @@ object ThemeUtils {
         var k = 0
         for (i in 0 until menu.size()) {
             val item = menu.getItem(i)
-            wrapMenuItemIcon(item, itemColor, *excludeGroups)
+            setTint(item, itemColor, *excludeGroups)
             if (item.hasSubMenu()) {
                 wrapMenuIcon(item.subMenu, popupItemColor, popupItemColor, *excludeGroups)
             }
@@ -181,7 +178,7 @@ object ThemeUtils {
         var k = 0
         for (i in 0 until menu.size()) {
             val item = menu.getItem(i)
-            wrapMenuItemIcon(item, itemColor, *excludeGroups)
+            setTint(item, itemColor, *excludeGroups)
             if (item.hasSubMenu()) {
                 wrapMenuIcon(item.subMenu, popupItemColor, popupItemColor, *excludeGroups)
             }
@@ -191,24 +188,9 @@ object ThemeUtils {
         }
     }
 
-    fun wrapMenuItemIcon(item: MenuItem, itemColor: Int, vararg excludeGroups: Int) {
+    fun setTint(item: MenuItem, itemColor: Int, vararg excludeGroups: Int) {
         if (item.groupId in excludeGroups) return
-        val icon = item.icon?.takeUnless { it is DoNotWrapDrawable } ?: return
-        if (icon is ActionIconDrawable) {
-            icon.defaultColor = itemColor
-            item.icon = icon
-            return
-        }
-        icon.mutate()
-        val callback = icon.callback
-        val newIcon = ActionIconDrawable(icon, itemColor)
-        newIcon.callback = callback
-        item.icon = newIcon
-    }
-
-    fun getActionIconColor(context: Context): Int {
-        val itemBackgroundColor = getColorBackground(context)
-        return getActionIconColor(context, itemBackgroundColor)
+        MenuItemCompat.setIconTintList(item, ColorStateList.valueOf(itemColor))
     }
 
     fun getActionIconColor(context: Context, backgroundColor: Int): Int {
@@ -354,39 +336,9 @@ object ThemeUtils {
         if (toolbar is TwidereToolbar) {
             toolbar.setItemColor(itemColor)
         }
-        val overflowIcon = toolbar.overflowIcon
-        if (overflowIcon != null) {
-            overflowIcon.setColorFilter(itemColor, PorterDuff.Mode.SRC_ATOP)
-            toolbar.overflowIcon = overflowIcon
-        }
-    }
-
-    fun applyColorFilterToMenuIcon(menu: Menu, @ColorInt color: Int,
-            @ColorInt popupColor: Int, @ColorInt highlightColor: Int, mode: PorterDuff.Mode,
-            vararg excludedGroups: Int) {
-        var i = 0
-        val j = menu.size()
-        while (i < j) {
-            val item = menu.getItem(i)
-            val icon = item.icon
-            val info = item.menuInfo
-            if (icon != null && item.groupId !in excludedGroups) {
-                icon.mutate()
-                if (info is TwidereMenuInfo) {
-                    val sInfo = info
-                    val stateColor = if (sInfo.isHighlight) sInfo.getHighlightColor(highlightColor) else color
-                    if (stateColor != 0) {
-                        icon.setColorFilter(stateColor, mode)
-                    }
-                } else if (color != 0) {
-                    icon.setColorFilter(color, mode)
-                }
-            }
-            if (item.hasSubMenu()) {
-                // SubMenu item is always in popup
-                applyColorFilterToMenuIcon(item.subMenu, popupColor, popupColor, highlightColor, mode, *excludedGroups)
-            }
-            i++
+        toolbar.overflowIcon = toolbar.overflowIcon?.apply {
+            mutate()
+            DrawableCompat.setTint(this, itemColor)
         }
     }
 
@@ -394,17 +346,14 @@ object ThemeUtils {
         val contrastForegroundColor = getColorDependent(toolbarColor)
         toolbar.setTitleTextColor(contrastForegroundColor)
         toolbar.setSubtitleTextColor(contrastForegroundColor)
-        val popupItemColor: Int
         val popupTheme = toolbar.popupTheme
-        if (popupTheme != 0) {
-            popupItemColor = getThemeForegroundColor(context, popupTheme)
+        val popupItemColor = if (popupTheme != 0) {
+            getThemeForegroundColor(context, popupTheme)
         } else {
-            popupItemColor = getThemeForegroundColor(context)
+            getThemeForegroundColor(context)
         }
-        val navigationIcon = toolbar.navigationIcon
-        if (navigationIcon != null) {
-            navigationIcon.setColorFilter(contrastForegroundColor, PorterDuff.Mode.SRC_ATOP)
-            toolbar.navigationIcon = navigationIcon
+        toolbar.navigationIcon = toolbar.navigationIcon?.apply {
+            DrawableCompat.setTint(this, contrastForegroundColor)
         }
         getThemeForegroundColor(context)
         setActionBarOverflowColor(toolbar, contrastForegroundColor)

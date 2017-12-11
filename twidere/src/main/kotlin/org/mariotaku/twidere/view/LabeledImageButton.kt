@@ -21,6 +21,7 @@ package org.mariotaku.twidere.view
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.ColorFilter
 import android.graphics.Paint
 import android.support.annotation.Dimension
 import android.support.v4.view.ViewCompat
@@ -126,6 +127,10 @@ class LabeledImageButton(context: Context, attrs: AttributeSet?) : AppCompatImag
 
     fun setTextSize(unit: Int = TypedValue.COMPLEX_UNIT_SP, size: Float) {
         textSize = TypedValue.applyDimension(unit, size, resources.displayMetrics)
+    }
+
+    override fun setColorFilter(cf: ColorFilter?) {
+        super.setColorFilter(cf)
     }
 
     private fun updateLayout() {

@@ -27,12 +27,13 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.database.Cursor
 import android.graphics.Paint
-import android.graphics.PorterDuff.Mode
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.CursorLoader
 import android.support.v4.content.Loader
+import android.support.v4.graphics.drawable.DrawableCompat
+import android.support.v4.widget.ImageViewCompat
 import android.support.v7.app.AlertDialog
 import android.util.SparseArray
 import android.view.*
@@ -152,9 +153,10 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
                 val shouldDisable = disabledByDuplicateTab || disabledByNoAccount
                 subItem.isVisible = !shouldDisable
                 subItem.isEnabled = !shouldDisable
-                val icon = conf.icon.createDrawable(context)
-                icon.mutate().setColorFilter(theme.textColorPrimary, Mode.SRC_ATOP)
-                subItem.icon = icon
+                subItem.icon = conf.icon.createDrawable(context).apply {
+                    mutate()
+                    DrawableCompat.setTint(this, theme.textColorPrimary)
+                }
                 val weakFragment = WeakReference(this)
                 subItem.setOnMenuItemClickListener {
                     val fragment = weakFragment.get()?.takeUnless(Fragment::isDetached) ?:
@@ -470,10 +472,9 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
         }
 
         open class TabIconViewHolder(val adapter: TabIconsAdapter, itemView: View) : ViewHolder(itemView) {
-            private val icon: ImageView = itemView.findViewById(android.R.id.icon)
+            protected val icon: ImageView = itemView.findViewById(android.R.id.icon)
 
             open fun display(item: DrawableHolder) {
-                icon.setColorFilter(adapter.iconColor, Mode.SRC_ATOP)
                 icon.setImageDrawable(item.createDrawable(icon.context))
             }
         }
@@ -483,6 +484,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
             private val text2: TextView = itemView.findViewById(android.R.id.text2)
             override fun display(item: DrawableHolder) {
                 super.display(item)
+                ImageViewCompat.setImageTintList(icon, text1.textColors)
                 text1.spannable = item.name
                 text2.visibility = View.GONE
             }
@@ -492,7 +494,6 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
     class CustomTabsAdapter(context: Context) : SimpleDragSortCursorAdapter(context,
             R.layout.list_item_custom_tab, null, emptyArray(), intArrayOf(), 0) {
 
-        private val iconColor: Int = ThemeUtils.getThemeForegroundColor(context)
         private val tempTab: Tab = Tab()
         private var indices: ObjectCursor.CursorIndices<Tab>? = null
 
@@ -521,7 +522,6 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
             } else {
                 holder.icon.setImageResource(R.drawable.ic_action_list)
             }
-            holder.icon.setColorFilter(iconColor, Mode.SRC_ATOP)
         }
 
         override fun changeCursor(cursor: Cursor?) {

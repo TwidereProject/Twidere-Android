@@ -26,12 +26,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.graphics.PorterDuff
+import android.content.res.ColorStateList
 import android.os.Parcelable
 import android.support.annotation.UiThread
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.content.ContextCompat
+import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.widget.ShareActionProvider
 import android.util.Log
@@ -42,7 +43,6 @@ import android.widget.Toast
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
-import org.mariotaku.ktextension.setActionIcon
 import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.microblog.library.mastodon.annotation.StatusVisibility
 import org.mariotaku.twidere.Constants.*
@@ -62,7 +62,6 @@ import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.fragment.SetUserNicknameDialogFragment
 import org.mariotaku.twidere.fragment.status.*
 import org.mariotaku.twidere.fragment.timeline.AbsTimelineFragment
-import org.mariotaku.twidere.graphic.ActionIconDrawable
 import org.mariotaku.twidere.graphic.PaddingDrawable
 import org.mariotaku.twidere.menu.FavoriteItemProvider
 import org.mariotaku.twidere.menu.SupportStatusShareProvider
@@ -72,7 +71,6 @@ import org.mariotaku.twidere.task.CreateFavoriteTask
 import org.mariotaku.twidere.task.DestroyFavoriteTask
 import org.mariotaku.twidere.task.DestroyStatusTask
 import org.mariotaku.twidere.task.RetweetStatusTask
-import org.mariotaku.twidere.util.menu.TwidereMenuInfo
 import java.io.IOException
 
 object MenuUtils {
@@ -140,47 +138,42 @@ object MenuUtils {
 
             when (status.extras?.visibility) {
                 StatusVisibility.PRIVATE -> {
-                    retweet.setActionIcon(context, R.drawable.ic_action_lock)
+                    retweet.setIcon(R.drawable.ic_action_lock)
                 }
                 StatusVisibility.DIRECT -> {
-                    retweet.setActionIcon(context, R.drawable.ic_action_message)
                     retweet.setIcon(R.drawable.ic_action_message)
                 }
                 else -> {
-                    retweet.setActionIcon(context, R.drawable.ic_action_retweet)
+                    retweet.setIcon(R.drawable.ic_action_retweet)
                 }
             }
-
+            MenuItemCompat.setIconTintList(retweet, if (isMyRetweet) ColorStateList.valueOf(retweetHighlight) else null)
             retweet.setTitle(if (isMyRetweet) R.string.action_cancel_retweet else R.string.action_retweet)
-
-            ActionIconDrawable.setMenuHighlight(retweet, TwidereMenuInfo(isMyRetweet, retweetHighlight))
         }
         val favorite = menu.findItem(R.id.favorite)
         if (favorite != null) {
-            val isFavorite: Boolean
-            if (CreateFavoriteTask.isRunning(status.account_key, status.id)) {
-                isFavorite = true
-            } else if (DestroyFavoriteTask.isRunning(status.account_key, status.id)) {
-                isFavorite = false
-            } else {
-                isFavorite = status.is_favorite
+            val isFavorite = when {
+                CreateFavoriteTask.isRunning(status.account_key, status.id) -> true
+                DestroyFavoriteTask.isRunning(status.account_key, status.id) -> false
+                else -> status.is_favorite
             }
             val provider = MenuItemCompat.getActionProvider(favorite)
             val useStar = preferences[iWantMyStarsBackKey]
             if (provider is FavoriteItemProvider) {
                 provider.setIsFavorite(favorite, isFavorite)
             } else {
-                if (useStar) {
-                    favorite.setActionIcon(context, R.drawable.ic_action_star)
-                    ActionIconDrawable.setMenuHighlight(favorite, TwidereMenuInfo(isFavorite, favoriteHighlight))
-                } else {
-                    ActionIconDrawable.setMenuHighlight(favorite, TwidereMenuInfo(isFavorite, likeHighlight))
-                }
+                MenuItemCompat.setIconTintList(retweet, when {
+                    !isFavorite -> null
+                    useStar -> ColorStateList.valueOf(favoriteHighlight)
+                    else -> ColorStateList.valueOf(likeHighlight)
+                })
             }
             if (useStar) {
                 favorite.setTitle(if (isFavorite) R.string.action_unfavorite else R.string.action_favorite)
+                favorite.setIcon(R.drawable.ic_action_star)
             } else {
                 favorite.setTitle(if (isFavorite) R.string.action_undo_like else R.string.action_like)
+                favorite.setIcon(R.drawable.ic_action_heart)
             }
         }
         val translate = menu.findItem(R.id.translate)
@@ -397,7 +390,7 @@ object MenuUtils {
             val actionIconColor = ThemeUtils.getThemeForegroundColor(context)
             if (metaDataDrawable != null) {
                 metaDataDrawable.mutate()
-                metaDataDrawable.setColorFilter(actionIconColor, PorterDuff.Mode.SRC_ATOP)
+                DrawableCompat.setTint(metaDataDrawable, actionIconColor)
                 item.icon = metaDataDrawable
             } else {
                 val icon = info.loadIcon(pm)

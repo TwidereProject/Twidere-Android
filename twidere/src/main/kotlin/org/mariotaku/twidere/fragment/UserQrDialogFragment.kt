@@ -54,7 +54,6 @@ import org.mariotaku.twidere.util.TwidereColorUtils
 import org.mariotaku.twidere.util.qr.QrCodeData
 import org.mariotaku.uniqr.AndroidPlatform
 import org.mariotaku.uniqr.UniqR
-import java.lang.ref.WeakReference
 import java.util.concurrent.ExecutionException
 
 /**
@@ -66,8 +65,9 @@ class UserQrDialogFragment : BaseDialogFragment() {
     private val user: ParcelableUser
         get() = arguments!!.user!!
 
-    init {
-        setStyle(STYLE_NO_TITLE, 0)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(STYLE_NO_FRAME, R.style.Theme_Twidere_Dark_Dialog_NoFrame)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -76,15 +76,19 @@ class UserQrDialogFragment : BaseDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        qrContainer.setAspectRatio(1.0)
-        val weakThis = WeakReference(this)
-
+        val weakThis by weak(this)
+        qrShare.setOnClickListener {
+            shareQrImage()
+        }
+        qrSave.setOnClickListener {
+            saveQrImage()
+        }
         promiseOnUi {
-            val fragment = weakThis.get()?.takeIf { it.view != null } ?: return@promiseOnUi
+            val fragment = weakThis?.takeIf { it.view != null } ?: return@promiseOnUi
             fragment.qrView.visibility = View.INVISIBLE
             fragment.qrProgress.visibility = View.VISIBLE
         } and loadProfileImage().then { drawable ->
-            val fragment = weakThis.get()?.takeIf { it.context != null } ?: throw InterruptedException()
+            val fragment = weakThis?.takeIf { it.context != null } ?: throw InterruptedException()
             val background = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight,
                     Bitmap.Config.ARGB_8888)
             val canvas = Canvas(background)
@@ -104,7 +108,7 @@ class UserQrDialogFragment : BaseDialogFragment() {
             background.recycle()
             return@then result
         }.successUi { bitmap ->
-            val fragment = weakThis.get()?.takeIf { it.context != null && it.view != null } ?: return@successUi
+            val fragment = weakThis?.takeIf { it.context != null && it.view != null } ?: return@successUi
             fragment.qrView.visibility = View.VISIBLE
             fragment.qrProgress.visibility = View.GONE
             fragment.qrView.setImageDrawable(BitmapDrawable(fragment.resources, bitmap).apply {
@@ -112,10 +116,17 @@ class UserQrDialogFragment : BaseDialogFragment() {
                 this.isFilterBitmap = false
             })
         }.failUi {
-            val fragment = weakThis.get()?.takeIf { it.dialog != null } ?: return@failUi
+            val fragment = weakThis?.takeIf { it.dialog != null } ?: return@failUi
             Toast.makeText(fragment.context, R.string.message_toast_error_occurred, Toast.LENGTH_SHORT).show()
             fragment.dismiss()
         }
+    }
+
+    private fun saveQrImage() {
+
+    }
+
+    private fun shareQrImage() {
     }
 
     private fun loadProfileImage(): Promise<GlideDrawable, Exception> {
@@ -153,18 +164,19 @@ class UserQrDialogFragment : BaseDialogFragment() {
             return color
         }
 
-        private val Palette.patternColor: Int get() {
-            var color = getDarkVibrantColor(0)
-            if (color == 0) {
-                color = getDominantColor(0)
+        private val Palette.patternColor: Int
+            get() {
+                var color = getDarkVibrantColor(0)
+                if (color == 0) {
+                    color = getDominantColor(0)
+                }
+                if (color == 0) {
+                    color = getDarkMutedColor(0)
+                }
+                if (color == 0) {
+                    return Color.BLACK
+                }
+                return getOptimalPatternColor(color)
             }
-            if (color == 0) {
-                color = getDarkMutedColor(0)
-            }
-            if (color == 0) {
-                return Color.BLACK
-            }
-            return getOptimalPatternColor(color)
-        }
     }
 }

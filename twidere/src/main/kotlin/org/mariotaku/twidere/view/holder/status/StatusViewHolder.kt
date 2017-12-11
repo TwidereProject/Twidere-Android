@@ -394,6 +394,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
             replyButton.text = null
             replyButton.contentDescription = context.getString(R.string.action_reply)
         }
+        replyButton.drawable?.mutate()
 
         when (status.extras?.visibility) {
             StatusVisibility.PRIVATE -> {
@@ -406,6 +407,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
                 retweetButton.setImageResource(R.drawable.ic_action_retweet)
             }
         }
+        retweetButton.drawable?.mutate()
 
         retweetButton.isActivated = isRetweetIconActivated(status)
 
@@ -548,7 +550,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
 
         mediaPreview.style = adapter.mediaPreviewStyle
         quotedMediaPreview.style = adapter.mediaPreviewStyle
-        //        profileImageView.setStyle(adapter.getProfileImageStyle());
 
         val nameFirst = adapter.nameFirst
         nameView.nameFirst = nameFirst

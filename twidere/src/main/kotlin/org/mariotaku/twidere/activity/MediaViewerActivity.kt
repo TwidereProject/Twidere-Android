@@ -60,6 +60,7 @@ import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.fragment.media.*
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
+import org.mariotaku.twidere.model.SaveFileInfo
 import org.mariotaku.twidere.provider.CacheProvider
 import org.mariotaku.twidere.provider.ShareProvider
 import org.mariotaku.twidere.task.SaveFileTask
@@ -106,7 +107,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
             return adapter.instantiateItem(viewPager, currentItem) as? MediaViewerFragment
         }
 
-    private fun getCurrentCacheFileInfo(position: Int): SaveFileTask.FileInfo? {
+    private fun getCurrentCacheFileInfo(position: Int): SaveFileInfo? {
         if (position == -1) return null
         val viewPager = findViewPager()
         val adapter = viewPager.adapter ?: return null
@@ -521,11 +522,11 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
         intent.type = fileInfo.mimeType ?: "*/*"
         intent.addCategory(Intent.CATEGORY_OPENABLE)
-        val extension = fileInfo.fileExtension
+        val extension = fileInfo.extension
         val saveFileName = if (extension != null) {
-            "${fileInfo.fileName?.removeSuffix("_$extension")}.$extension"
+            "${fileInfo.name?.removeSuffix("_$extension")}.$extension"
         } else {
-            fileInfo.fileName
+            fileInfo.name
         }
         intent.putExtra(Intent.EXTRA_TITLE, saveFileName)
         startActivityForResult(intent, REQUEST_SELECT_SAVE_MEDIA)
@@ -536,7 +537,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         val weakThis = toWeak()
         (showProgressDialog("save_media_to_progress") and task {
             val a = weakThis.get() ?: throw InterruptedException()
-            fileInfo.inputStream().use { st ->
+            fileInfo.stream().use { st ->
                 st.copyTo(a.contentResolver.openOutputStream(data))
             }
         }).successUi {
@@ -548,7 +549,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         }
     }
 
-    private fun MediaViewerFragment.cacheFileInfo(): SaveFileTask.FileInfo? {
+    private fun MediaViewerFragment.cacheFileInfo(): SaveFileInfo? {
         val context = this.context ?: return null
         return when (this) {
             is CacheDownloadMediaViewerFragment -> {
@@ -568,7 +569,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         }
     }
 
-    class SaveMediaTask(activity: MediaViewerActivity, destination: File, fileInfo: FileInfo) :
+    class SaveMediaTask(activity: MediaViewerActivity, destination: File, fileInfo: SaveFileInfo) :
             SaveFileTask(activity, destination, fileInfo) {
         private val PROGRESS_FRAGMENT_TAG = "progress"
 

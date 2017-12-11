@@ -128,6 +128,18 @@
         <item name="android:windowActionModeOverlay">false</item>
     </style>
 
+    <style name="Theme.Twidere.Light.Dialog.NoFrame" parent="Theme.Twidere.Light.Dialog">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionModeOverlay">false</item>
+
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
+        <item name="android:windowActionBarOverlay">false</item>
+        <item name="android:windowActionModeOverlay">false</item>
+    </style>
+
     <style name="Theme.Twidere.Light.Launcher" parent="Theme.Twidere.Light.NoActionBar"/>
 
 </resources>

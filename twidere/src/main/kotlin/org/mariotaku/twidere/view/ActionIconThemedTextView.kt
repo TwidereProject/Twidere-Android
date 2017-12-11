@@ -21,7 +21,6 @@ package org.mariotaku.twidere.view
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.PorterDuff.Mode
 import android.support.annotation.ColorInt
 import android.support.v4.widget.TextViewCompat
 import android.util.AttributeSet
@@ -103,7 +102,7 @@ class ActionIconThemedTextView(
                 d.setBounds(left, top, left + iconWidth, top + iconHeight)
             }
 
-            d.setColorFilter(color, Mode.SRC_ATOP)
+//            d.setColorFilter(color, Mode.SRC_ATOP)
         }
     }
 

@@ -22,6 +22,7 @@ package android.support.v7.widget
 import android.content.Context
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
+import android.support.v4.graphics.drawable.DrawableCompat
 import android.util.AttributeSet
 import android.view.Menu
 import android.view.View
@@ -58,7 +59,7 @@ class TwidereToolbar(context: Context, attrs: AttributeSet?) : Toolbar(context, 
 
     override fun setNavigationIcon(icon: Drawable?) {
         if (icon != null && itemColor != 0) {
-            icon.setColorFilter(itemColor, PorterDuff.Mode.SRC_ATOP)
+            DrawableCompat.setTint(icon, itemColor)
         }
         super.setNavigationIcon(icon)
     }

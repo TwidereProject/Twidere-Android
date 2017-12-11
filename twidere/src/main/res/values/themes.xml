@@ -32,6 +32,11 @@
         <item name="lightThemeResource">@style/Theme.Twidere.Light.QuickSearchBar</item>
     </style>
 
+    <style name="Theme.Twidere.Dialog.NoFrame" parent="Theme.Twidere.Dialog.NoFrame.DayNight">
+        <item name="darkThemeResource">@style/Theme.Twidere.Dark.Dialog.NoFrame</item>
+        <item name="lightThemeResource">@style/Theme.Twidere.Light.Dialog.NoFrame</item>
+    </style>
+
     <style name="Theme.Twidere.NoDisplay" parent="Theme.Twidere.NoDisplay.DayNight">
         <item name="darkThemeResource">@style/Theme.Twidere.Dark.NoDisplay</item>
         <item name="lightThemeResource">@style/Theme.Twidere.Light.NoDisplay</item>

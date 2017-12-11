@@ -26,12 +26,12 @@ import android.arch.lifecycle.Observer
 import android.arch.paging.PagedList
 import android.content.Context
 import android.content.Intent
-import android.graphics.PorterDuff
 import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
+import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v4.widget.TextViewCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.FixedLinearLayoutManager
@@ -541,7 +541,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         val stateIcon = if (conversation.notificationDisabled) {
             ContextCompat.getDrawable(activity, R.drawable.ic_message_type_speaker_muted)?.apply {
                 mutate()
-                setColorFilter(conversationTitle.currentTextColor, PorterDuff.Mode.SRC_ATOP)
+                DrawableCompat.setTint(this, conversationTitle.currentTextColor)
             }
         } else {
             null

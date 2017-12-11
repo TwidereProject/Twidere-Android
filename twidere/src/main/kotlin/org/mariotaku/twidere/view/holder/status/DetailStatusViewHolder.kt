@@ -23,7 +23,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Rect
 import android.support.annotation.UiThread
-import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewCompat
 import android.support.v7.widget.ActionMenuView
 import android.support.v7.widget.LinearLayoutManager
@@ -43,7 +42,7 @@ import kotlinx.android.synthetic.main.header_status.view.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
 import org.mariotaku.microblog.library.twitter.model.TranslationResult
-import org.mariotaku.twidere.Constants
+import org.mariotaku.twidere.Constants.MENU_GROUP_STATUS_SHARE
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter
 import org.mariotaku.twidere.adapter.StatusDetailsAdapter
@@ -440,13 +439,9 @@ class DetailStatusViewHolder(
         val favoriteItem = menu.findItem(R.id.favorite)
         val favoriteProvider = favoriteItem?.supportActionProvider
         if (favoriteProvider is FavoriteItemProvider) {
-            val defaultColor = ThemeUtils.getActionIconColor(activity)
-            favoriteProvider.defaultColor = defaultColor
-            val favoriteHighlight = ContextCompat.getColor(activity, R.color.highlight_favorite)
-            val likeHighlight = ContextCompat.getColor(activity, R.color.highlight_like)
             val useStar = adapter.useStarsForLikes
-            favoriteProvider.activatedColor = if (useStar) favoriteHighlight else likeHighlight
             favoriteProvider.icon = if (useStar) R.drawable.ic_action_star else R.drawable.ic_action_heart
+            favoriteProvider.tint = if (useStar) R.color.btn_tint_favorite_stateful else R.color.btn_tint_like_stateful
             favoriteProvider.useStar = useStar
             favoriteProvider.longClickListener = {
                 val status = adapter.getStatus(layoutPosition)
@@ -467,7 +462,7 @@ class DetailStatusViewHolder(
             retweetProvider.init(itemView.menuBar, retweetItem)
         }
 
-        ThemeUtils.wrapMenuIcon(itemView.menuBar, excludeGroups = Constants.MENU_GROUP_STATUS_SHARE)
+        ThemeUtils.wrapMenuIcon(itemView.menuBar, excludeGroups = *intArrayOf(MENU_GROUP_STATUS_SHARE))
         itemView.mediaPreviewLoad.setOnClickListener(this)
         itemView.profileContainer.setOnClickListener(this)
         retweetedByView.setOnClickListener(this)

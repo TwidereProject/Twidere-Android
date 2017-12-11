@@ -6,13 +6,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.database.Cursor
-import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.CursorLoader
 import android.support.v4.content.Loader
+import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v4.widget.SimpleCursorAdapter
 import android.text.SpannableStringBuilder
 import android.text.Spanned
@@ -261,8 +261,9 @@ class FilteredUsersFragment : BaseFiltersFragment() {
                 val start = ssb.length
                 ssb.append("*")
                 val end = start + 1
-                val drawable = ContextCompat.getDrawable(context, R.drawable.ic_action_sync)!!
-                drawable.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_ATOP)
+                val drawable = ContextCompat.getDrawable(context, R.drawable.ic_action_sync)!!.apply {
+                    DrawableCompat.setTint(this, secondaryTextColor)
+                }
                 ssb.setSpan(EmojiSpan(drawable), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             text1.spannable = ssb

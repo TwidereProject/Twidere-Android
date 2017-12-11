@@ -13,6 +13,8 @@
 
     <style name="Theme.Twidere.QuickSearchBar.DayNight" parent="Theme.Twidere.Light.QuickSearchBar"/>
 
+    <style name="Theme.Twidere.Dialog.NoFrame.DayNight" parent="Theme.Twidere.Light.Dialog.NoFrame"/>
+
     <style name="Theme.Twidere.NoDisplay.DayNight" parent="Theme.Twidere.Light.NoDisplay"/>
 
 </resources>

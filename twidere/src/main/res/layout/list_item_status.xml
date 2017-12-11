@@ -351,7 +351,6 @@
             android:textColor="?android:textColorSecondary"
             app:srcCompat="@drawable/ic_action_reply"
             app:tint="?android:textColorSecondary"
-            app:tintMode="multiply"
             tools:text="255"/>
 
         <org.mariotaku.twidere.view.LabeledImageButton
@@ -372,7 +371,6 @@
             android:textColor="?android:textColorSecondary"
             app:srcCompat="@drawable/ic_action_retweet"
             app:tint="@color/btn_tint_retweet_stateful"
-            app:tintMode="multiply"
             tools:text="255"/>
 
         <org.mariotaku.twidere.view.LabeledImageButton
@@ -393,7 +391,6 @@
             android:textColor="?android:textColorSecondary"
             app:srcCompat="@drawable/ic_action_heart"
             app:tint="@color/btn_tint_like_stateful"
-            app:tintMode="multiply"
             tools:text="255"/>
 
     </LinearLayout>
@@ -411,7 +408,6 @@
         android:focusable="false"
         app:srcCompat="@drawable/ic_action_more_horizontal"
         app:tint="?android:textColorSecondary"
-        app:tintMode="multiply"
         tools:visibility="visible"/>
 
 </org.mariotaku.twidere.view.ColorLabelRelativeLayout>

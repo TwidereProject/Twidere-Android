@@ -42,12 +42,12 @@ subprojects {
             ]
             libVersions = [
                     Kotlin                 : "${kotlinVersion}",
-                    SupportLib             : '27.0.1',
+                    SupportLib             : '27.0.2',
                     SupportTest            : '1.0.0',
                     MariotakuCommons       : '0.9.21',
                     RestFu                 : '0.9.61',
                     ObjectCursor           : '0.9.21',
-                    PlayServices           : '11.6.0',
+                    PlayServices           : '11.6.2',
                     PlayBilling            : '1.0',
                     MapsUtils              : '0.5',
                     DropboxCoreSdk         : '3.0.3',

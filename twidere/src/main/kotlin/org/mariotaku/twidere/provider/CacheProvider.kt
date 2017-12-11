@@ -16,7 +16,7 @@ import org.mariotaku.twidere.annotation.CacheFileType
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.CacheMetadata
-import org.mariotaku.twidere.task.SaveFileTask
+import org.mariotaku.twidere.model.SaveFileInfo
 import org.mariotaku.twidere.util.JsonSerializer
 import java.io.ByteArrayInputStream
 import java.io.FileNotFoundException
@@ -106,8 +106,8 @@ class CacheProvider : ContentProvider() {
             private val context: Context,
             private val uri: Uri,
             @CacheFileType override val cacheFileType: String?
-    ) : SaveFileTask.FileInfo, CacheFileTypeSupport {
-        override val fileName: String by lazy {
+    ) : SaveFileInfo, CacheFileTypeSupport {
+        override val name: String by lazy {
             var cacheKey = getCacheKey(uri)
             val indexOfSsp = cacheKey.indexOf("://")
             if (indexOfSsp != -1) {
@@ -128,7 +128,7 @@ class CacheProvider : ContentProvider() {
         override val specialCharacter: Char
             get() = '_'
 
-        override fun inputStream(): InputStream {
+        override fun stream(): InputStream {
             return context.contentResolver.openInputStream(uri)
         }
 

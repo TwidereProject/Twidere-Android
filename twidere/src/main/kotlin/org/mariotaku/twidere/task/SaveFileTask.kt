@@ -23,20 +23,18 @@ import android.content.Context
 import android.os.AsyncTask
 import android.text.TextUtils.isEmpty
 import android.util.Log
-import android.webkit.MimeTypeMap
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
-import java.io.Closeable
+import org.mariotaku.twidere.model.SaveFileInfo
+import org.mariotaku.twidere.model.SaveFileResult
 import java.io.File
 import java.io.IOException
-import java.io.InputStream
 import java.lang.ref.WeakReference
-import java.util.*
 
 abstract class SaveFileTask(
         context: Context,
         private val destination: File,
-        private val fileInfo: FileInfo
-) : AsyncTask<Any, Any, SaveFileTask.SaveFileResult>() {
+        private val fileInfo: SaveFileInfo
+) : AsyncTask<Any, Any, SaveFileResult>() {
 
     private val contextRef = WeakReference(context)
 
@@ -54,8 +52,8 @@ abstract class SaveFileTask(
 
     override fun onPostExecute(result: SaveFileResult?) {
         dismissProgress()
-        if (result != null && result.savedFile != null) {
-            onFileSaved(result.savedFile!!, result.mimeType)
+        if (result != null) {
+            onFileSaved(result.savedFile, result.mimeType)
         } else {
             onFileSaveFailed()
         }
@@ -74,48 +72,17 @@ abstract class SaveFileTask(
     protected val context: Context?
         get() = contextRef.get()
 
-    interface FileInfo : Closeable {
-        val fileName: String?
-
-        val mimeType: String?
-
-        val fileExtension: String? get() {
-            val typeLowered = mimeType?.toLowerCase(Locale.US) ?: return null
-            return when (typeLowered) {
-            // Hack for fanfou image type
-                "image/jpg" -> "jpg"
-                else -> MimeTypeMap.getSingleton().getExtensionFromMimeType(typeLowered)
-            }
-        }
-
-        val specialCharacter: Char
-
-        fun inputStream(): InputStream
-    }
-
-    class SaveFileResult(savedFile: File, mimeType: String) {
-        var savedFile: File? = null
-            internal set
-        var mimeType: String
-            internal set
-
-        init {
-            this.savedFile = savedFile
-            this.mimeType = mimeType
-        }
-    }
-
     companion object {
 
-        fun saveFile(fileInfo: FileInfo, destinationDir: File, requiresValidExtension: Boolean) = try {
+        fun saveFile(fileInfo: SaveFileInfo, destinationDir: File, requiresValidExtension: Boolean) = try {
             fileInfo.use {
-                var name: String = it.fileName ?: return null
+                var name: String = it.name
                 if (isEmpty(name)) return null
                 if (name.length > 32) {
                     name = name.substring(0, 32)
                 }
                 val mimeType = it.mimeType ?: return null
-                val extension = it.fileExtension
+                val extension = it.extension
                 if (requiresValidExtension && extension == null) {
                     return null
                 }
@@ -130,7 +97,7 @@ abstract class SaveFileTask(
                     saveFile = File(destinationDir, nameToSave)
                 }
                 saveFile.outputStream().use { output ->
-                    it.inputStream().use { input ->
+                    it.stream().use { input ->
                         input.copyTo(output)
                     }
                 }

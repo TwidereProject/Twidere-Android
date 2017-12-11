@@ -22,7 +22,7 @@ package org.mariotaku.twidere.adapter
 import android.content.Context
 import android.content.SharedPreferences
 import android.database.Cursor
-import android.graphics.PorterDuff.Mode
+import android.support.v4.widget.ImageViewCompat
 import android.support.v4.widget.SimpleCursorAdapter
 import android.view.View
 import android.widget.TextView
@@ -99,7 +99,7 @@ class ComposeAutoCompleteAdapter(context: Context, val requestManager: RequestMa
             text2.setText(R.string.hashtag)
 
             icon.setImageResource(R.drawable.ic_action_hashtag)
-            icon.setColorFilter(text1.currentTextColor, Mode.SRC_ATOP)
+            ImageViewCompat.setImageTintList(icon, text1.textColors)
         }
         icon.visibility = if (displayProfileImage) View.VISIBLE else View.GONE
         super.bindView(view, context, cursor)

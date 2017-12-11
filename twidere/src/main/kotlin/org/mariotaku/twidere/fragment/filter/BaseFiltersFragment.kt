@@ -21,13 +21,13 @@ package org.mariotaku.twidere.fragment.filter
 
 import android.content.Context
 import android.database.Cursor
-import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.CursorLoader
 import android.support.v4.content.Loader
+import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v4.view.ViewCompat
 import android.support.v4.widget.SimpleCursorAdapter
 import android.text.SpannableStringBuilder
@@ -54,7 +54,6 @@ import org.mariotaku.twidere.fragment.AbsContentListViewFragment
 import org.mariotaku.twidere.model.FiltersData
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.text.style.EmojiSpan
-import org.mariotaku.twidere.util.ThemeUtils
 
 
 abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdapter>(),
@@ -250,7 +249,6 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
             emptyArray(), intArrayOf(), 0), IFilterAdapter {
 
         private var indices: ObjectCursor.CursorIndices<FiltersData.BaseItem>? = null
-        private val secondaryTextColor = ThemeUtils.getTextColorSecondary(context)
 
         override fun swapCursor(c: Cursor?): Cursor? {
             indices = c?.let { ObjectCursor.indicesFrom(it, FiltersData.BaseItem::class.java) }
@@ -267,8 +265,8 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
                 val start = ssb.length
                 ssb.append("*")
                 val end = start + 1
-                val drawable = ContextCompat.getDrawable(context, R.drawable.ic_action_sync)
-                drawable!!.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_ATOP)
+                val drawable = ContextCompat.getDrawable(context, R.drawable.ic_action_sync)!!
+                DrawableCompat.setTintList(drawable, text1.textColors)
                 ssb.setSpan(EmojiSpan(drawable), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             text1.text = ssb

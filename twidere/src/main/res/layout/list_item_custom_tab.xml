@@ -38,14 +38,15 @@
         android:layout_weight="0"
         android:background="@drawable/list_drag_handle"/>
 
-    <ImageView
+    <android.support.v7.widget.AppCompatImageView
         android:id="@android:id/icon"
         android:layout_width="48dip"
         android:layout_height="48dip"
         android:layout_margin="4dip"
         android:layout_weight="0"
         android:contentDescription="@string/icon"
-        android:scaleType="fitCenter"/>
+        android:scaleType="fitCenter"
+        app:tint="?android:colorForeground"/>
 
     <LinearLayout
         android:layout_width="match_parent"

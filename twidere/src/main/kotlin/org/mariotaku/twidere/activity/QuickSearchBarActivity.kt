@@ -34,6 +34,7 @@ import android.support.v4.content.Loader
 import android.support.v4.view.ViewCompat
 import android.support.v4.view.WindowInsetsCompat
 import android.support.v4.widget.CursorAdapter
+import android.support.v4.widget.ImageViewCompat
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
@@ -417,7 +418,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
                             cursor.getString(indices.title))
                     holder.text2.visibility = View.VISIBLE
                     holder.text2.spannable = "@${cursor.getString(indices.summary)}"
-                    holder.icon.clearColorFilter()
+                    ImageViewCompat.setImageTintList(holder.icon, null)
                     requestManager.loadProfileImage(context, cursor.getString(indices.icon),
                             profileImageStyle, cornerRadius = holder.icon.cornerRadius,
                             cornerRadiusRatio = holder.icon.cornerRadiusRatio,
@@ -427,7 +428,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
                     val holder = view.tag as UserViewHolder
                     holder.text1.spannable = "@${cursor.getString(indices.title)}"
                     holder.text2.visibility = View.GONE
-                    holder.icon.setColorFilter(holder.text1.currentTextColor, Mode.SRC_ATOP)
+                    ImageViewCompat.setImageTintList(holder.icon, holder.text1.textColors)
                     //TODO cancel image load
                     holder.icon.setImageResource(R.drawable.ic_action_user)
                 }

@@ -27,7 +27,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.PorterDuff
 import android.graphics.Rect
 import android.net.Uri
 import android.nfc.NdefMessage
@@ -105,7 +104,6 @@ import org.mariotaku.twidere.fragment.timeline.AbsTimelineFragment
 import org.mariotaku.twidere.fragment.timeline.FavoritesTimelineFragment
 import org.mariotaku.twidere.fragment.timeline.UserMediaTimelineFragment
 import org.mariotaku.twidere.fragment.timeline.UserTimelineFragment
-import org.mariotaku.twidere.graphic.ActionIconDrawable
 import org.mariotaku.twidere.graphic.drawable.userprofile.ActionBarDrawable
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
@@ -127,7 +125,6 @@ import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallb
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener
 import org.mariotaku.twidere.util.UserColorNameManager.UserColorChangedListener
 import org.mariotaku.twidere.util.UserColorNameManager.UserNicknameChangedListener
-import org.mariotaku.twidere.util.menu.TwidereMenuInfo
 import org.mariotaku.twidere.util.shortcut.ShortcutCreator
 import org.mariotaku.twidere.util.support.ActivitySupport
 import org.mariotaku.twidere.util.support.ActivitySupport.TaskDescriptionCompat
@@ -145,7 +142,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     override val currentVisibleFragment: Fragment?
         get() {
             val currentItem = viewPager.currentItem
-            if (currentItem < 0 || currentItem >= pagerAdapter.getCount()) return null
+            if (currentItem < 0 || currentItem >= pagerAdapter.count) return null
             return pagerAdapter.instantiateItem(viewPager, currentItem)
         }
 
@@ -447,7 +444,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                         relationship.following)
 
                 menu.findItem(R.id.block)?.apply {
-                    ActionIconDrawable.setMenuHighlight(this, TwidereMenuInfo(relationship.blocking))
+                    icon?.isActivated = relationship.blocking
                     this.setTitle(if (relationship.blocking) R.string.action_unblock else R.string.action_block)
                 }
                 menu.findItem(R.id.mute_user)?.apply {
@@ -669,14 +666,14 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             when (action) {
                 ACTION_NAVIGATION_PREVIOUS_TAB -> {
                     val previous = viewPager.currentItem - 1
-                    if (previous >= 0 && previous < pagerAdapter.getCount()) {
+                    if (previous >= 0 && previous < pagerAdapter.count) {
                         viewPager.setCurrentItem(previous, true)
                     }
                     return true
                 }
                 ACTION_NAVIGATION_NEXT_TAB -> {
                     val next = viewPager.currentItem + 1
-                    if (next >= 0 && next < pagerAdapter.getCount()) {
+                    if (next >= 0 && next < pagerAdapter.count) {
                         viewPager.setCurrentItem(next, true)
                     }
                     return true
@@ -859,7 +856,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             }
             R.id.profileBirthdayBanner -> {
                 hideBirthdayView = true
-                profileBirthdayBanner.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out))
+                profileBirthdayBanner.startAnimation(AnimationUtils.loadAnimation(activity, android.R.anim.fade_out))
                 profileBirthdayBanner.visibility = View.GONE
             }
         }
@@ -1088,7 +1085,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     private fun setFollowEditButton(@DrawableRes icon: Int, @ColorRes color: Int, @StringRes label: Int) {
         val followButton = followContainer.follow
         followButton.setImageResource(icon)
-        ViewCompat.setBackgroundTintMode(followButton, PorterDuff.Mode.SRC_ATOP)
         val backgroundTintList = ContextCompat.getColorStateList(context!!, color)!!
         ViewCompat.setBackgroundTintList(followButton, backgroundTintList)
         ImageViewCompat.setImageTintList(followButton,
@@ -1105,7 +1101,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     private fun displayUser(user: ParcelableUser) {
         val activity = activity ?: return
         val adapter = pagerAdapter
-        (0 until adapter.getCount()).forEach { i ->
+        (0 until adapter.count).forEach { i ->
             val sf = adapter.instantiateItem(viewPager, i) as? AbsTimelineFragment ?: return@forEach
             if (sf.view == null) return@forEach
         }

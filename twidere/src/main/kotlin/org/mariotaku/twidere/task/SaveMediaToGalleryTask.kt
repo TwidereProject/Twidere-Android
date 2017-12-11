@@ -23,6 +23,7 @@ import android.app.Activity
 import android.media.MediaScannerConnection
 import android.widget.Toast
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.model.SaveFileInfo
 import java.io.File
 
 /**
@@ -30,7 +31,7 @@ import java.io.File
  */
 class SaveMediaToGalleryTask(
         activity: Activity,
-        fileInfo: FileInfo,
+        fileInfo: SaveFileInfo,
         destination: File
 ) : ProgressSaveFileTask(activity, destination, fileInfo) {
 

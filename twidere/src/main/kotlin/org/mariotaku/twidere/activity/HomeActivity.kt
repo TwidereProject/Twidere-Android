@@ -919,7 +919,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     private fun updateActionsButton() {
         if (!propertiesInitialized) return
         val fragment = run {
-            if (pagerAdapter.getCount() == 0) return@run null
+            if (pagerAdapter.count == 0) return@run null
             val position = mainPager.currentItem
             val f = pagerAdapter.instantiateItem(mainPager, position) as? IFloatingActionButtonFragment
             if (f is Fragment && (f.isDetached || f.host == null)) {
