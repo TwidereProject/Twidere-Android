@@ -26,14 +26,15 @@ import android.os.Bundle
 import android.provider.SearchRecentSuggestions
 import android.support.v4.view.ViewPager.OnPageChangeListener
 import android.support.v7.app.AppCompatActivity
-import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.TextView
 import org.mariotaku.chameleon.Chameleon
+import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.spannable
-import org.mariotaku.twidere.Constants.*
+import org.mariotaku.twidere.Constants.EXTRA_ACCOUNT_KEY
+import org.mariotaku.twidere.Constants.INTENT_ACTION_COMPOSE
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.ComposeActivity
 import org.mariotaku.twidere.activity.LinkHandlerActivity
@@ -86,11 +87,14 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface,
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
 
-        linkHandlerTitle = getString(R.string.title_search)
-        linkHandlerSubtitle = query
         val activity = this.activity!!
 
-        if (savedInstanceState == null && !TextUtils.isEmpty(query)) {
+        val query = arguments!!.query
+
+        linkHandlerTitle = getString(R.string.title_search)
+        linkHandlerSubtitle = query
+
+        if (savedInstanceState == null && query != null) {
             val suggestions = SearchRecentSuggestions(activity, RecentSearchProvider.AUTHORITY,
                     RecentSearchProvider.MODE)
             suggestions.saveRecentQuery(query, null)
@@ -112,9 +116,10 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface,
                 editQuery.setTextColor(ThemeUtils.getColorDependent(theme.colorToolbar))
                 editQuery.spannable = query
                 customView.setOnClickListener {
-                    val searchIntent = Intent(context, QuickSearchBarActivity::class.java).apply {
-                        putExtra(EXTRA_QUERY, query)
-                    }
+                    val searchIntent = Intent(context, QuickSearchBarActivity::class.java).putExtras(Bundle {
+                        this.accountKey = arguments!!.accountKey
+                        this.query = arguments!!.query
+                    })
                     startActivityForResult(searchIntent, REQUEST_OPEN_SEARCH)
                 }
             }
