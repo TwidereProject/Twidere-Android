@@ -173,7 +173,7 @@
             tools:text="@string/sample_status_text"
             tools:visibility="visible"/>
 
-        <org.mariotaku.twidere.view.ActionIconThemedTextView
+        <org.mariotaku.twidere.view.DrawableTintTextView
             android:id="@+id/mediaLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -190,7 +190,7 @@
             android:minHeight="@dimen/element_size_small"
             android:textAppearance="?android:textAppearanceSmall"
             android:textStyle="bold"
-            app:iabColor="?android:textColorSecondary"
+            app:drawableTint="?android:textColorSecondary"
             tools:text="@string/label_media"/>
 
         <org.mariotaku.twidere.view.CardMediaContainer
@@ -274,7 +274,7 @@
                 tools:text="@string/sample_status_text"
                 tools:visibility="visible"/>
 
-            <org.mariotaku.twidere.view.ActionIconThemedTextView
+            <org.mariotaku.twidere.view.DrawableTintTextView
                 android:id="@+id/quotedMediaLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -289,7 +289,7 @@
                 android:gravity="center_vertical"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textStyle="bold"
-                app:iabColor="?android:textColorSecondary"
+                app:drawableTint="?android:textColorSecondary"
                 tools:text="@string/label_media"
                 tools:visibility="gone"/>
 

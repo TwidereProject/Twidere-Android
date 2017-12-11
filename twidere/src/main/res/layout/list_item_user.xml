@@ -167,7 +167,7 @@
 
     </FrameLayout>
 
-    <org.mariotaku.twidere.view.ActionIconThemedTextView
+    <org.mariotaku.twidere.view.FixedTextView
         android:id="@+id/externalIndicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -180,7 +180,7 @@
         android:textStyle="italic"
         tools:text="External user at twitter.com"/>
 
-    <org.mariotaku.twidere.view.ActionIconThemedTextView
+    <org.mariotaku.twidere.view.FixedTextView
         android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -192,7 +192,7 @@
         android:textColor="?android:attr/textColorSecondary"
         tools:text="@string/sample_status_text"/>
 
-    <org.mariotaku.twidere.view.ActionIconThemedTextView
+    <org.mariotaku.twidere.view.DrawableTintTextView
         android:id="@+id/location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -206,9 +206,10 @@
         android:maxLines="1"
         android:paddingTop="@dimen/element_spacing_small"
         android:textAppearance="?android:attr/textAppearanceSmall"
+        app:drawableTint="?android:textColorSecondary"
         tools:text="Earth"/>
 
-    <org.mariotaku.twidere.view.ActionIconThemedTextView
+    <org.mariotaku.twidere.view.DrawableTintTextView
         android:id="@+id/url"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -222,6 +223,7 @@
         android:maxLines="1"
         android:paddingTop="@dimen/element_spacing_small"
         android:textAppearance="?android:attr/textAppearanceSmall"
+        app:drawableTint="?android:textColorSecondary"
         tools:text="https://github.com/TwidereProject"/>
 
     <LinearLayout
@@ -234,7 +236,7 @@
         android:orientation="horizontal"
         android:paddingTop="@dimen/element_spacing_small">
 
-        <org.mariotaku.twidere.view.ActionIconThemedTextView
+        <org.mariotaku.twidere.view.DrawableTintTextView
             android:id="@+id/statusesCount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -245,9 +247,10 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceSmall"
+            app:drawableTint="?android:textColorSecondary"
             tools:text="255"/>
 
-        <org.mariotaku.twidere.view.ActionIconThemedTextView
+        <org.mariotaku.twidere.view.DrawableTintTextView
             android:id="@+id/followersCount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -258,9 +261,10 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceSmall"
+            app:drawableTint="?android:textColorSecondary"
             tools:text="255"/>
 
-        <org.mariotaku.twidere.view.ActionIconThemedTextView
+        <org.mariotaku.twidere.view.DrawableTintTextView
             android:id="@+id/friendsCount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -271,6 +275,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceSmall"
+            app:drawableTint="?android:textColorSecondary"
             tools:text="255"/>
     </LinearLayout>
 

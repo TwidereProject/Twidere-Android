@@ -83,15 +83,6 @@ open class TwoLineTextView(context: Context, attrs: AttributeSet? = null) : Fixe
         updateText()
     }
 
-    override fun onTextContextMenuItem(id: Int): Boolean {
-        return try {
-            super.onTextContextMenuItem(id)
-        } catch (e: AbstractMethodError) {
-            // http://crashes.to/s/69acd0ea0de
-            true
-        }
-    }
-
     fun setPrimaryTextSize(size: Float, unit: Int = TypedValue.COMPLEX_UNIT_SP) {
         primaryTextAppearance.size = calculateTextSize(size, unit).toInt()
     }

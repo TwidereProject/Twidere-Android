@@ -94,7 +94,7 @@
                     android:paddingRight="@dimen/element_spacing_small"
                     tools:listitem="@layout/grid_item_media_editor"/>
 
-                <org.mariotaku.twidere.view.ActionIconThemedTextView
+                <org.mariotaku.twidere.view.DrawableTintTextView
                     android:id="@+id/locationLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -103,12 +103,12 @@
                     android:gravity="center_vertical"
                     android:maxLines="1"
                     android:textColor="?android:textColorSecondary"
-                    app:iabColor="?android:textColorSecondary"
+                    app:drawableTint="?android:textColorSecondary"
                     app:iabIconHeight="20dp"
                     app:iabIconWidth="20dp"
                     tools:text="11.4, 51.4"/>
 
-                <org.mariotaku.twidere.view.ActionIconThemedTextView
+                <org.mariotaku.twidere.view.DrawableTintTextView
                     android:id="@+id/visibilityLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -117,7 +117,7 @@
                     android:gravity="center_vertical"
                     android:maxLines="1"
                     android:textColor="?android:textColorSecondary"
-                    app:iabColor="?android:textColorSecondary"
+                    app:drawableTint="?android:textColorSecondary"
                     app:iabIconHeight="20dp"
                     app:iabIconWidth="20dp"
                     tools:text="@string/label_status_visibility_public"/>

@@ -194,7 +194,7 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <org.mariotaku.twidere.view.ActionIconThemedTextView
+        <org.mariotaku.twidere.view.DrawableTintTextView
             android:id="@+id/translateLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -211,7 +211,8 @@
             android:padding="@dimen/element_spacing_normal"
             android:text="@string/unknown_language"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="?android:textColorSecondary"/>
+            android:textColor="?android:textColorSecondary"
+            app:drawableTint="?android:textColorSecondary"/>
 
         <org.mariotaku.twidere.view.FixedTextView
             android:id="@+id/translateResult"
@@ -278,7 +279,7 @@
             android:visibility="gone"
             tools:visibility="visible">
 
-            <org.mariotaku.twidere.view.ActionIconThemedTextView
+            <org.mariotaku.twidere.view.DrawableTintTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -379,7 +380,7 @@
 
     </org.mariotaku.twidere.view.ColorLabelLinearLayout>
 
-    <org.mariotaku.twidere.view.ActionIconThemedTextView
+    <org.mariotaku.twidere.view.DrawableTintTextView
         android:id="@+id/locationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

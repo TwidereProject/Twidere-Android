@@ -84,10 +84,8 @@
     <declare-styleable name="SyncItemPreference">
         <attr name="syncType" format="string"/>
     </declare-styleable>
-    <declare-styleable name="ActionIconThemedTextView">
-        <attr name="iabColor" format="color"/>
-        <attr name="iabActivatedColor" format="color"/>
-        <attr name="iabDisabledColor" format="color"/>
+    <declare-styleable name="DrawableTintTextView">
+        <attr name="drawableTint" format="reference"/>
         <attr name="iabIconWidth" format="dimension"/>
         <attr name="iabIconHeight" format="dimension"/>
     </declare-styleable>
