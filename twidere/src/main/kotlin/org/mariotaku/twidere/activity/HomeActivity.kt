@@ -32,6 +32,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.content.res.Configuration
+import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.AsyncTask
@@ -810,8 +811,8 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
     @SuppressLint("ResourceType")
     private fun setupBars() {
-        val actionBarAlpha = userTheme.colorToolbar
-        actionsButton.alpha = actionBarAlpha / 255f
+        val actionBarAlpha = Color.alpha(userTheme.colorToolbar)
+        actionsButton.alpha = (actionBarAlpha * 2 / 255f).coerceIn(0f, 1f)
 
         mainTabsContainer.setVisible(useTabNavigation)
         if (useTabNavigation) {

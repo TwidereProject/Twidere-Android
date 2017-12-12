@@ -20,7 +20,7 @@ allprojects {
         projectVersionName = '4.0.0-SNAPSHOT'
 
         globalCompileSdkVersion = 27
-        globalBuildToolsVersion = '27.0.1'
+        globalBuildToolsVersion = '27.0.2'
     }
 
     repositories {
@@ -68,7 +68,7 @@ subprojects {
                     KPreferences           : '0.9.7',
                     Kovenant               : '3.3.0',
                     ParcelablePlease       : '1.0.2',
-                    Chameleon              : '0.9.24',
+                    Chameleon              : '0.9.25',
                     UniqR                  : '0.9.4',
                     SQLiteQB               : '0.9.16',
                     Glide                  : '3.7.0',
