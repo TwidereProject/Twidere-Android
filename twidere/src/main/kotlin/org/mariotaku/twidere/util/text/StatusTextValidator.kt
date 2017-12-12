@@ -21,6 +21,7 @@ package org.mariotaku.twidere.util.text
 
 import org.mariotaku.ktextension.mapToIntArray
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.model.textLimit
 import org.mariotaku.twidere.extension.text.twitter.getTweetLength
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -52,6 +53,16 @@ object StatusTextValidator {
         return accounts.mapToIntArray {
             calculateLength(it.type, it.key, summary, text, ignoreMentions, inReplyTo)
         }
+    }
+
+    fun calculateRemaining(accounts: Array<AccountDetails>, summary: String?, text: String,
+            ignoreMentions: Boolean = false, inReplyTo: ParcelableStatus? = null): Int? {
+        return accounts.mapNotNull {
+            val textLimit = it.textLimit
+            if (textLimit == 0) return@mapNotNull null
+            return@mapNotNull textLimit - calculateLength(it.type, it.key, summary, text,
+                    ignoreMentions, inReplyTo)
+        }.min()
     }
 
     fun calculateLength(accounts: Array<AccountDetails>, summary: String?, text: String,

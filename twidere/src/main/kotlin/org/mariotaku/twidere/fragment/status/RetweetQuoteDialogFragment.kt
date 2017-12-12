@@ -41,7 +41,6 @@ import org.mariotaku.twidere.constant.quickSendKey
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.can_retweet
 import org.mariotaku.twidere.extension.model.is_my_retweet
-import org.mariotaku.twidere.extension.model.textLimit
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.draft.QuoteStatusActionExtras
@@ -84,8 +83,6 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
 
     override fun AlertDialog.onStatusLoaded(account: AccountDetails, status: ParcelableStatus,
             savedInstanceState: Bundle?) {
-        textCountView.maxLength = account.textLimit
-
         val canQuoteRetweet = canQuoteRetweet(account)
 
         commentContainer.visibility = if (canQuoteRetweet) View.VISIBLE else View.GONE
@@ -183,7 +180,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
             positiveButton.setText(R.string.action_retweet)
             positiveButton.isEnabled = status.can_retweet
         }
-        textCountView.textCount = StatusTextValidator.calculateLength(account.type, account.key,
+        textCountView.remaining = StatusTextValidator.calculateRemaining(arrayOf(account),
                 null, text.toString())
     }
 

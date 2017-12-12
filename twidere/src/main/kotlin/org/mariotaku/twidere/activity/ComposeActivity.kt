@@ -1228,7 +1228,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         displaySelectedAccountsIcon()
         val accounts = accountsAdapter.selectedAccounts
         editText.account = accounts.firstOrNull()
-        statusTextCount.maxLength = accounts.textLimit
         val singleAccount = accounts.singleOrNull()
         val allMastodon = accounts.isNotEmpty() && accounts.all { it.type == AccountType.MASTODON }
         val anyMastodon = accounts.any { it.type == AccountType.MASTODON }
@@ -1533,7 +1532,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val media = this.media
         val summary = editSummary.textIfVisible?.normalized(Normalizer.Form.NFC)
         val text = editText.text?.normalized(Normalizer.Form.NFC).orEmpty()
-        val maxLength = statusTextCount.maxLength
+        val maxLength = accounts.textLimit
         val inReplyTo = inReplyToStatus
         val replyTextAndMentions = getTwitterReplyTextAndMentions(text, accounts)
         if (inReplyTo != null && replyTextAndMentions != null) {
@@ -1602,7 +1601,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         if (textAndMentions == null) {
             hintLabel.visibility = View.GONE
             editable.clearSpans(MentionColorSpan::class.java)
-            statusTextCount.textCount = StatusTextValidator.calculateLength(accounts, summary, text,
+            statusTextCount.remaining = StatusTextValidator.calculateRemaining(accounts, summary, text,
                     false, null)
         } else if (textAndMentions.replyToOriginalUser || replyToSelf) {
             hintLabel.visibility = View.GONE
@@ -1610,12 +1609,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             editable.clearSpans(MentionColorSpan::class.java)
             editable.setSpan(MentionColorSpan(mentionColor), 0, textAndMentions.replyStartIndex,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            statusTextCount.textCount = StatusTextValidator.calculateLength(accounts, summary,
+            statusTextCount.remaining = StatusTextValidator.calculateRemaining(accounts, summary,
                     textAndMentions.replyText, false, null)
         } else {
             hintLabel.visibility = View.VISIBLE
             editable.clearSpans(MentionColorSpan::class.java)
-            statusTextCount.textCount = StatusTextValidator.calculateLength(accounts, summary,
+            statusTextCount.remaining = StatusTextValidator.calculateRemaining(accounts, summary,
                     textAndMentions.replyText, false, null)
         }
     }
@@ -2099,6 +2098,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             val account = accounts!![position]
             selection.put(account.key, true != selection[account.key])
             activity.updateAccountSelectionState()
+            activity.updateTextCount()
             activity.updateVisibilityState()
             activity.updateSummaryTextState()
             activity.setMenu()
@@ -2111,6 +2111,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             selection.clear()
             selection.put(account.key, true != selection[account.key])
             activity.updateAccountSelectionState()
+            activity.updateTextCount()
             activity.updateVisibilityState()
             activity.updateSummaryTextState()
             activity.setMenu()

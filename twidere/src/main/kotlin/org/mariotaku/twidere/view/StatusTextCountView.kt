@@ -33,35 +33,31 @@ class StatusTextCountView(context: Context, attrs: AttributeSet? = null) : AppCo
     @ColorInt
     private val defaultTextColor = currentTextColor
 
-    var textCount: Int = 0
+    private val warnLimit = 10
+
+    var remaining: Int? = null
         set(count) {
             field = count
             updateTextCount()
         }
-    var maxLength: Int = 0
-        set(maxLength) {
-            field = maxLength
-            updateTextCount()
-        }
 
-    fun updateTextCount() {
-        if (this.maxLength <= 0) {
+    private fun updateTextCount() {
+        val remaining = this.remaining
+        if (remaining == null) {
             text = null
             return
         }
-        val count = this.textCount
-        val maxLength = this.maxLength
-        text = getLocalizedNumber(Locale.getDefault(), maxLength - count)
-        val exceededLimit = count < maxLength
-        val nearLimit = count >= maxLength - 10
-        val hue = (if (exceededLimit) if (nearLimit) 5 * (maxLength - count) else 50 else 0).toFloat()
+        text = getLocalizedNumber(Locale.getDefault(), remaining)
+        val exceededLimit = remaining < 0
+        val nearLimit = remaining <= warnLimit
+        val hue = (if (exceededLimit) if (nearLimit) 5 * remaining else 50 else 0).toFloat()
         val textColorHsv = FloatArray(3)
         Color.colorToHSV(defaultTextColor, textColorHsv)
         val errorColorHsv = FloatArray(3)
         errorColorHsv[0] = hue
         errorColorHsv[1] = 1f
         errorColorHsv[2] = 0.75f + textColorHsv[2] / 4
-        if (count >= maxLength - 10) {
+        if (remaining <= warnLimit) {
             setTextColor(Color.HSVToColor(errorColorHsv))
         } else {
             setTextColor(defaultTextColor)
