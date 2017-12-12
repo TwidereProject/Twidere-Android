@@ -37,8 +37,7 @@ class HtmlBuilder(
     constructor(source: String, strict: Boolean, sourceIsEscaped: Boolean, shouldReEscape: Boolean)
             : this(CodePointArray(source), strict, sourceIsEscaped, shouldReEscape)
 
-    fun addLink(link: String, display: String, start: Int, end: Int,
-            displayIsHtml: Boolean = false): Boolean {
+    fun addLink(link: String, display: String, start: Int, end: Int, displayIsHtml: Boolean = false): Boolean {
         if (start < 0 || end < 0 || start > end || end > sourceLength) {
             if (throwExceptions) {
                 val message = "text:$source, length:$sourceLength, start:$start, end:$end"

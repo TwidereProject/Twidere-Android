@@ -20,6 +20,7 @@ package org.mariotaku.microblog.library.twitter.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
@@ -41,6 +42,7 @@ public class UrlEntity implements Parcelable {
     @JsonField(name = "url")
     String url;
 
+    @Nullable
     public String getDisplayUrl() {
         return displayUrl;
     }

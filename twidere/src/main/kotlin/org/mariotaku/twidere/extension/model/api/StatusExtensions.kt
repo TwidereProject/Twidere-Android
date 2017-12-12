@@ -41,9 +41,6 @@ import org.mariotaku.twidere.text.placeholder.CustomEmojiShortCodeSpan
 import org.mariotaku.twidere.util.EntityArrays
 import org.mariotaku.twidere.util.HtmlBuilder
 import org.mariotaku.twidere.util.HtmlSpanBuilder
-import org.mariotaku.twidere.util.InternalTwitterContentUtils
-import org.mariotaku.twidere.util.InternalTwitterContentUtils.getMediaUrl
-import org.mariotaku.twidere.util.InternalTwitterContentUtils.getStartEndForEntity
 
 fun Status.toParcelable(details: AccountDetails, profileImageSize: String = "normal",
         updateFilterInfoAction: (Status, ParcelableStatus) -> Unit = ::updateFilterInfoDefault): ParcelableStatus {
@@ -251,16 +248,19 @@ fun HtmlBuilder.addEntities(entities: EntitySupport) {
     }
     val startEnd = IntArray(2)
     mediaEntities?.forEach { mediaEntity ->
-        val mediaUrl = getMediaUrl(mediaEntity)
-        if (mediaUrl != null && getStartEndForEntity(mediaEntity, startEnd)) {
-            addLink(mediaEntity.expandedUrl, mediaEntity.displayUrl,
+        val mediaUrl = mediaEntity.bestMediaUrl
+        val expandedUrl = mediaEntity.expandedUrl
+        val displayUrl = mediaEntity.displayUrl
+        if (mediaUrl != null && displayUrl != null && mediaEntity.getStartEndForEntity(startEnd)) {
+            addLink(expandedUrl, displayUrl,
                     startEnd[0], startEnd[1], false)
         }
     }
     entities.urlEntities?.forEach { urlEntity ->
         val expandedUrl = urlEntity.expandedUrl
-        if (expandedUrl != null && getStartEndForEntity(urlEntity, startEnd)) {
-            addLink(expandedUrl, urlEntity.displayUrl, startEnd[0],
+        val displayUrl = urlEntity.displayUrl
+        if (expandedUrl != null && displayUrl != null && urlEntity.getStartEndForEntity(startEnd)) {
+            addLink(expandedUrl, displayUrl, startEnd[0],
                     startEnd[1], false)
         }
     }
@@ -314,7 +314,7 @@ private fun String.twitterUnescaped(): String {
 }
 
 private inline val Status.userDescriptionUnescaped: String?
-    get() = user?.let { InternalTwitterContentUtils.formatUserDescription(it)?.first }
+    get() = user?.let { it.formatUserDescription()?.first }
 
 private inline val Status.userUrlExpanded: String?
     get() = user?.urlEntities?.firstOrNull()?.expandedUrl

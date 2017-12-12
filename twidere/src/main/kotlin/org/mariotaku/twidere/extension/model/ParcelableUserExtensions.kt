@@ -25,17 +25,35 @@ import org.mariotaku.twidere.extension.model.api.getUserHost
 import org.mariotaku.twidere.model.ParcelableLiteUser
 import org.mariotaku.twidere.model.ParcelableRelationship
 import org.mariotaku.twidere.model.ParcelableUser
-import org.mariotaku.twidere.util.InternalTwitterContentUtils
+import org.mariotaku.twidere.util.UriUtils
 import org.mariotaku.twidere.util.Utils
 
 fun ParcelableUser.getBestProfileBanner(width: Int, height: Int = 0): String? {
-    return profile_banner_url?.let {
-        InternalTwitterContentUtils.getBestBannerUrl(it, width, height)
-    } ?: if (USER_TYPE_FANFOU_COM == key?.host) {
-        profile_background_url
-    } else {
-        null
+    val bannerUrl = profile_banner_url
+    if (bannerUrl == null) {
+        if (USER_TYPE_FANFOU_COM == key?.host) {
+            return profile_background_url
+        }
+        return null
     }
+    val type = if (width <= 0) {
+        "1500x500"
+    } else if (height > 0 && width / height >= 3) {
+        when {
+            width <= 300 -> "300x100"
+            width <= 600 -> "600x200"
+            else -> "1500x500"
+        }
+    } else when {
+        width <= 320 -> "mobile"
+        width <= 520 -> "web"
+        width <= 626 -> "ipad"
+        width <= 640 -> "mobile_retina"
+        width <= 1040 -> "web_retina"
+        else -> "ipad_retina"
+    }
+    val authority = UriUtils.getAuthority(bannerUrl) ?: return bannerUrl
+    return if (authority.endsWith(".twimg.com")) "$bannerUrl/$type" else bannerUrl
 }
 
 fun ParcelableUser.toLite(): ParcelableLiteUser {

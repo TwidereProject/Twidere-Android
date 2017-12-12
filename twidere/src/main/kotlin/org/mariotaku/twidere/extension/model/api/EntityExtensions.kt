@@ -19,16 +19,15 @@
 
 package org.mariotaku.twidere.extension.model.api
 
-import org.mariotaku.microblog.library.twitter.model.EntitySupport
-import org.mariotaku.microblog.library.twitter.model.ExtendedEntitySupport
-import org.mariotaku.microblog.library.twitter.model.MediaEntity
-import org.mariotaku.microblog.library.twitter.model.UserMentionEntity
+import org.mariotaku.microblog.library.twitter.model.*
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableUserMention
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils.getTypeInt
-import org.mariotaku.twidere.util.InternalTwitterContentUtils.getMediaUrl
 import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor.fromLink
+
+inline val MediaEntity.bestMediaUrl: String?
+    get() = mediaUrlHttps ?: mediaUrl
 
 fun UserMentionEntity.toParcelable(host: String?): ParcelableUserMention {
     val obj = ParcelableUserMention()
@@ -56,8 +55,8 @@ fun EntitySupport.getEntityMedia(): Array<ParcelableMedia> {
 
 fun MediaEntity.toParcelable(): ParcelableMedia {
     val media = ParcelableMedia()
-    val mediaUrl = getMediaUrl(this)
-    media.url = mediaUrl
+    val mediaUrl = bestMediaUrl
+    media.url = mediaUrl.orEmpty()
     media.media_url = mediaUrl
     media.preview_url = mediaUrl
     media.page_url = expandedUrl
@@ -73,4 +72,10 @@ fun MediaEntity.toParcelable(): ParcelableMedia {
     }
     media.video_info = ParcelableMedia.VideoInfo.fromMediaEntityInfo(videoInfo)
     return media
+}
+
+fun UrlEntity.getStartEndForEntity(out: IntArray): Boolean {
+    out[0] = start
+    out[1] = end
+    return true
 }

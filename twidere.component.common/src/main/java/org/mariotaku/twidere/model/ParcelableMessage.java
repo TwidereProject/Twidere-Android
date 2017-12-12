@@ -157,7 +157,9 @@ public class ParcelableMessage implements Parcelable {
 
 
     @StringDef({MessageType.TEXT, MessageType.STICKER, MessageType.CONVERSATION_CREATE,
-            MessageType.JOIN_CONVERSATION, MessageType.PARTICIPANTS_LEAVE})
+            MessageType.JOIN_CONVERSATION, MessageType.PARTICIPANTS_LEAVE,
+            MessageType.PARTICIPANTS_JOIN, MessageType.CONVERSATION_NAME_UPDATE,
+            MessageType.CONVERSATION_AVATAR_UPDATE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface MessageType {
         String CONVERSATION_CREATE = "conversation_create";

@@ -6,18 +6,20 @@ import org.mariotaku.microblog.library.twitter.model.DMResponse.Entry.Message
 import org.mariotaku.microblog.library.twitter.model.DMResponse.Entry.Message.Data
 import org.mariotaku.microblog.library.twitter.model.DirectMessage
 import org.mariotaku.microblog.library.twitter.model.User
+import org.mariotaku.twidere.extension.model.api.addEntities
 import org.mariotaku.twidere.extension.model.api.getEntityMedia
 import org.mariotaku.twidere.extension.model.api.key
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableMessage
 import org.mariotaku.twidere.model.ParcelableMessage.MessageType
+import org.mariotaku.twidere.model.SpanItem
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.message.ConversationInfoUpdatedExtras
 import org.mariotaku.twidere.model.message.MessageExtras
 import org.mariotaku.twidere.model.message.StickerExtras
 import org.mariotaku.twidere.model.message.UserArrayExtras
-import org.mariotaku.twidere.util.InternalTwitterContentUtils
+import org.mariotaku.twidere.util.HtmlBuilder
 
 /**
  * Created by mariotaku on 2017/2/9.
@@ -90,12 +92,22 @@ object ParcelableMessageUtils {
 
         val data = message.messageData
         val (type, extras, media) = typeAndExtras(data)
-        val (text, spans) = InternalTwitterContentUtils.formatDirectMessageText(data)
+        val (text, spans) = formatDirectMessageText(data)
         this.message_type = type
         this.text_unescaped = text
         this.extras = extras
         this.spans = spans
         this.media = media
+    }
+
+    private fun formatDirectMessageText(message: DMResponse.Entry.Message.Data): Pair<String, Array<SpanItem>> {
+        var text: String? = message.text
+        if (text == null) {
+            text = ""
+        }
+        val builder = HtmlBuilder(text, false, true, false)
+        builder.addEntities(message)
+        return builder.buildWithIndices()
     }
 
     private fun ParcelableMessage.applyConversationCreate(accountKey: UserKey, message: Message) {
@@ -165,12 +177,18 @@ object ParcelableMessageUtils {
         this.sort_id = this.message_timestamp + (499 * sortIdAdj).toLong()
 
         val (type, extras) = typeAndExtras(message)
-        val (text, spans) = InternalTwitterContentUtils.formatDirectMessageText(message)
+        val (text, spans) = formatDirectMessageText(message)
         this.message_type = type
         this.extras = extras
         this.text_unescaped = text
         this.spans = spans
         this.media = message.getEntityMedia()
+    }
+
+    private fun formatDirectMessageText(message: DirectMessage): Pair<String, Array<SpanItem>> {
+        val builder = HtmlBuilder(message.text, false, true, false)
+        builder.addEntities(message)
+        return builder.buildWithIndices()
     }
 
     private fun typeAndExtras(message: DirectMessage): Pair<String, MessageExtras?> {

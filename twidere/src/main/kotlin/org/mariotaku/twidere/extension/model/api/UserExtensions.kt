@@ -27,9 +27,10 @@ import org.mariotaku.twidere.TwidereConstants.USER_TYPE_TWITTER_COM
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
+import org.mariotaku.twidere.model.SpanItem
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
-import org.mariotaku.twidere.util.InternalTwitterContentUtils
+import org.mariotaku.twidere.util.HtmlBuilder
 import org.mariotaku.twidere.util.UriUtils
 import org.mariotaku.twidere.util.Utils
 
@@ -70,7 +71,7 @@ fun User.toParcelableInternal(accountKey: UserKey?, @AccountType accountType: St
     obj.name = name
     obj.screen_name = screenName
     obj.description_plain = description
-    val userDescription = InternalTwitterContentUtils.formatUserDescription(this)
+    val userDescription = formatUserDescription()
     if (userDescription != null) {
         obj.description_unescaped = userDescription.first
         obj.description_spans = userDescription.second
@@ -134,4 +135,20 @@ fun getUserHost(uri: String?, def: String?): String {
     if (uri == null) return nonNullDef
     val authority = UriUtils.getAuthority(uri) ?: return nonNullDef
     return authority.replace("[^\\w\\d.]".toRegex(), "-")
+}
+
+fun User.formatUserDescription(): Pair<String, Array<SpanItem>>? {
+    val text = description ?: return null
+    val builder = HtmlBuilder(text, false, true, false)
+    val urls = descriptionEntities
+    if (urls != null) {
+        for (url in urls) {
+            val expandedUrl = url.expandedUrl
+            val displayUrl = url.displayUrl
+            if (expandedUrl != null && displayUrl != null) {
+                builder.addLink(expandedUrl, displayUrl, url.start, url.end, false)
+            }
+        }
+    }
+    return builder.buildWithIndices()
 }
