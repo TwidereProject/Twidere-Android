@@ -26,10 +26,12 @@ import android.support.v4.app.DialogFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.squareup.otto.Bus
+import nl.komponents.kovenant.Promise
 import okhttp3.Dns
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
+import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.util.DebugModeUtils
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.UserColorNameManager
@@ -37,7 +39,7 @@ import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.sync.DataSyncProvider
 import javax.inject.Inject
 
-open class BaseDialogFragment : DialogFragment() {
+open class BaseDialogFragment : DialogFragment(), IBaseFragment<BaseDialogFragment> {
 
     @Inject
     lateinit var userColorNameManager: UserColorNameManager
@@ -59,6 +61,8 @@ open class BaseDialogFragment : DialogFragment() {
     lateinit var requestManager: RequestManager
         private set
 
+    private val actionHelper = IBaseFragment.ActionHelper<BaseDialogFragment>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestManager = Glide.with(this)
@@ -74,6 +78,16 @@ open class BaseDialogFragment : DialogFragment() {
         super.onStop()
     }
 
+    override fun onResume() {
+        super.onResume()
+        actionHelper.dispatchOnResumeFragments(this)
+    }
+
+    override fun onPause() {
+        actionHelper.dispatchOnPause()
+        super.onPause()
+    }
+
     override fun onDestroy() {
         requestManager.onDestroy()
         super.onDestroy()
@@ -84,5 +98,11 @@ open class BaseDialogFragment : DialogFragment() {
         super.onAttach(context)
         GeneralComponent.get(context!!).inject(this)
     }
+
+    override fun executeAfterFragmentResumed(useHandler: Boolean, action: (BaseDialogFragment) -> Unit)
+            : Promise<Unit, Exception> {
+        return actionHelper.executeAfterFragmentResumed(this, useHandler, action)
+    }
+
 
 }

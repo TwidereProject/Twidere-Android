@@ -25,9 +25,6 @@ import org.mariotaku.ktextension.dismissDialogFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 
-/**
- * Created by mariotaku on 2017/8/23.
- */
 fun <F : Fragment> IBaseFragment<F>.showProgressDialog(tag: String): Promise<Unit, Exception> {
     return executeAfterFragmentResumed {
         ProgressDialogFragment.show(it.childFragmentManager, tag)

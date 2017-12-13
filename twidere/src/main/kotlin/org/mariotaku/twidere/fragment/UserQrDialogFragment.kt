@@ -19,11 +19,15 @@
 
 package org.mariotaku.twidere.fragment
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
+import android.media.MediaScannerConnection
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.support.v7.graphics.Palette
 import android.view.LayoutInflater
 import android.view.View
@@ -39,21 +43,26 @@ import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.then
+import nl.komponents.kovenant.ui.alwaysUi
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.promiseOnUi
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.ktextension.weak
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.annotation.ImageShapeStyle
-import org.mariotaku.twidere.extension.loadOriginalProfileImage
-import org.mariotaku.twidere.extension.loadProfileImage
-import org.mariotaku.twidere.extension.user
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.model.ParcelableUser
+import org.mariotaku.twidere.model.SaveFileResult
+import org.mariotaku.twidere.provider.ShareProvider
 import org.mariotaku.twidere.util.LinkCreator
 import org.mariotaku.twidere.util.TwidereColorUtils
 import org.mariotaku.twidere.util.qr.QrCodeData
+import org.mariotaku.twidere.util.sync.mkdirIfNotExists
 import org.mariotaku.uniqr.AndroidPlatform
 import org.mariotaku.uniqr.UniqR
+import java.io.File
+import java.io.IOException
 import java.util.concurrent.ExecutionException
 
 /**
@@ -102,6 +111,7 @@ class UserQrDialogFragment : BaseDialogFragment() {
             val qrCode = QrCode.encodeSegments(segments, QrCode.Ecc.HIGH, 5, 40, -1, true)
             val uniqr = UniqR(AndroidPlatform(), background, QrCodeData(qrCode))
             uniqr.scale = 3
+            uniqr.padding = 16
             uniqr.dotSize = 1
             uniqr.qrPatternColor = palette.patternColor
             val result = uniqr.build().produceResult()
@@ -122,11 +132,60 @@ class UserQrDialogFragment : BaseDialogFragment() {
         }
     }
 
-    private fun saveQrImage() {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            REQUEST_SHARE_MEDIA -> {
+                ShareProvider.clearTempFiles(context!!)
+            }
+        }
+    }
 
+    private fun saveQrImage() {
+        val weakThis by weak(this)
+        val pubDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        val saveDir = File(pubDir, "Twidere")
+        val bitmap = (qrView.drawable as? BitmapDrawable)?.bitmap ?: return
+        showProgressDialog("save_qr") and saveQrBitmap(bitmap, saveDir).successUi { (savedFile, _) ->
+            val context = weakThis?.context ?: return@successUi
+            MediaScannerConnection.scanFile(context, arrayOf(savedFile.absolutePath), arrayOf("image/png"), null)
+            Toast.makeText(context, R.string.message_toast_saved_to_gallery, Toast.LENGTH_SHORT).show()
+        }.alwaysUi {
+            weakThis?.dismissProgressDialog("save_qr")
+        }
     }
 
     private fun shareQrImage() {
+        val weakThis by weak(this)
+        val saveDir = ShareProvider.getFilesDir(context!!) ?: return
+        val bitmap = (qrView.drawable as? BitmapDrawable)?.bitmap ?: return
+
+        showProgressDialog("share_qr") and saveQrBitmap(bitmap, saveDir).successUi { (savedFile, mimeType) ->
+            val activity = weakThis?.activity ?: return@successUi
+
+            val fileUri = ShareProvider.getUriForFile(activity, TwidereConstants.AUTHORITY_TWIDERE_SHARE,
+                    savedFile)
+
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.setDataAndType(fileUri, mimeType)
+            intent.putExtra(Intent.EXTRA_STREAM, fileUri)
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                intent.addFlags(Intent.FLAG_GRANT_PREFIX_URI_PERMISSION)
+            }
+            activity.startActivityForResult(Intent.createChooser(intent, activity.getString(R.string.action_share)),
+                    REQUEST_SHARE_MEDIA)
+        }.alwaysUi {
+            weakThis?.dismissProgressDialog("share_qr")
+        }
+    }
+
+    private fun saveQrBitmap(bitmap: Bitmap, saveDir: File) = task {
+        if (saveDir.mkdirIfNotExists() == null) throw IOException()
+        val saveFile = File(saveDir, "qr_${user.screen_name}_${System.currentTimeMillis()}.png")
+        saveFile.outputStream().use {
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+        }
+        return@task SaveFileResult(saveFile, "image/png")
     }
 
     private fun loadProfileImage(): Promise<GlideDrawable, Exception> {
@@ -154,6 +213,9 @@ class UserQrDialogFragment : BaseDialogFragment() {
     }
 
     companion object {
+
+        private val REQUEST_SHARE_MEDIA = 201
+
         private fun getOptimalPatternColor(color: Int): Int {
             val yiq = IntArray(3)
             TwidereColorUtils.colorToYIQ(color, yiq)

@@ -38,9 +38,7 @@ import java.io.IOException
 
 class ShareProvider : ContentProvider() {
 
-    override fun onCreate(): Boolean {
-        return true
-    }
+    override fun onCreate(): Boolean = true
 
     override fun query(uri: Uri, projection: Array<String>?, selection: String?,
             selectionArgs: Array<String>?, sortOrder: String?): Cursor? {
@@ -64,13 +62,13 @@ class ShareProvider : ContentProvider() {
         return ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
     }
 
-    override fun getType(uri: Uri): String? = null
-
     override fun insert(uri: Uri, values: ContentValues?): Uri? = null
 
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int = 0
 
     override fun update(uri: Uri, values: ContentValues?, selection: String?, selectionArgs: Array<String>?): Int = 0
+
+    override fun getType(uri: Uri): String? = null
 
     private fun writeValue(columns: Array<String>, values: Array<Any?>, column: String, value: Any) {
         val idx = columns.indexOf(column)
@@ -88,15 +86,16 @@ class ShareProvider : ContentProvider() {
     companion object {
         private val defaultColumns = arrayOf(MediaColumns.DATA, MediaColumns.DISPLAY_NAME, MediaColumns.SIZE, MediaColumns.MIME_TYPE)
 
-        fun getFilesDir(context: Context?): File? {
-            var cacheDir: File? = context!!.cacheDir
+        fun getFilesDir(context: Context): File? {
+            var cacheDir = context.cacheDir
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 val externalCacheDir = context.externalCacheDir
                 if (externalCacheDir != null && externalCacheDir.canWrite()) {
                     cacheDir = externalCacheDir
                 }
             }
-            return if (cacheDir == null) null else File(cacheDir, "shared_files")
+            if (cacheDir == null) return null
+            return File(cacheDir, "shared_files")
         }
 
         fun getUriForFile(context: Context, authority: String, file: File): Uri? {
@@ -105,15 +104,8 @@ class ShareProvider : ContentProvider() {
         }
 
         fun clearTempFiles(context: Context): Boolean {
-            val externalCacheDir = context.externalCacheDir ?: return false
-            val files = externalCacheDir.listFiles()
-            for (file in files) {
-                if (file.isFile) {
-
-                    file.delete()
-                }
-            }
-            return true
+            val externalCacheDir = getFilesDir(context) ?: return false
+            return externalCacheDir.deleteRecursively()
         }
     }
 }
