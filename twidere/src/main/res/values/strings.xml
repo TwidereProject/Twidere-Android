@@ -979,8 +979,7 @@
 
     <string name="projects_we_took_part">Projects we took part</string>
 
-    <!-- Normally you don't need to translate this -->
-    <string name="provider_default">Twidere</string>
+    <string name="provider_default">App default</string>
     <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
     <string name="provider_fanfou">Fanfou</string>
     <string name="provider_gnusocial_de">GNU Social.de</string>

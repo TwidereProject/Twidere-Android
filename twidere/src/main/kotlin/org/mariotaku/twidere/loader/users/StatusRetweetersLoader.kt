@@ -27,7 +27,9 @@ import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
+import org.mariotaku.twidere.extension.model.api.microblog.mapToPaginated
 import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
@@ -57,11 +59,16 @@ class StatusRetweetersLoader(
             }
             AccountType.TWITTER -> {
                 val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
-                val ids = microBlog.getRetweetersIDs(statusId, paging).iDs
-                val response = microBlog.lookupUsers(ids)
-                return PaginatedArrayList<ParcelableUser>(response.size).apply {
-                    response.mapTo(this) { user ->
-                        user.toParcelable(details, profileImageSize = profileImageSize)
+                return if (details.isOfficial(context)) {
+                    microBlog.getRetweetedBy(statusId, paging).mapToPaginated {
+                        it.toParcelable(details, profileImageSize = profileImageSize)
+                    }
+                } else {
+                    val response = microBlog.lookupUsers(microBlog.getRetweetersIDs(statusId, paging).iDs)
+                    PaginatedArrayList<ParcelableUser>(response.size).apply {
+                        response.mapTo(this) { user ->
+                            user.toParcelable(details, profileImageSize = profileImageSize)
+                        }
                     }
                 }
             }

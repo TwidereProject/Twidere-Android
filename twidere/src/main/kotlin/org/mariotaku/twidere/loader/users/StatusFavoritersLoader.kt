@@ -35,6 +35,7 @@ import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.extension.api.lookupUsersMapPaginated
 import org.mariotaku.twidere.extension.model.api.mastodon.mapToPaginated
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
+import org.mariotaku.twidere.extension.model.api.microblog.mapToPaginated
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
@@ -63,15 +64,17 @@ class StatusFavoritersLoader(
             }
             AccountType.TWITTER -> {
                 val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
-                val ids = if (details.isOfficial(context)) {
-                    microBlog.getStatusActivitySummary(statusId).favoriters
+                return if (details.isOfficial(context)) {
+                    microBlog.getFavoritedBy(statusId, paging).mapToPaginated {
+                        it.toParcelable(details, profileImageSize = profileImageSize)
+                    }
                 } else {
                     val web = details.newMicroBlogInstance(context, TwitterWeb::class.java)
                     val htmlUsers = web.getFavoritedPopup(statusId).htmlUsers
-                    IDsAccessor.setIds(IDs(), parseUserIds(htmlUsers))
-                }
-                return microBlog.lookupUsersMapPaginated(ids) {
-                    it.toParcelable(details, profileImageSize = profileImageSize)
+                    val ids = IDsAccessor.setIds(IDs(), parseUserIds(htmlUsers))
+                    microBlog.lookupUsersMapPaginated(ids) {
+                        it.toParcelable(details, profileImageSize = profileImageSize)
+                    }
                 }
             }
             else -> {
@@ -88,7 +91,7 @@ class StatusFavoritersLoader(
             override fun handleOpenElement(elementName: String, attributes: Map<String, String>?,
                     line: Int, col: Int) {
                 if (elementName == "div" && attributes != null) {
-                    if (attributes["class"]?.split(" ")?.contains("account") ?: false) {
+                    if (attributes["class"]?.split(" ")?.contains("account") == true) {
                         attributes["data-user-id"]?.let { userIds.add(it) }
                     }
                 }

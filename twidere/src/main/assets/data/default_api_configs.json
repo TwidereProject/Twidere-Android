@@ -1,6 +1,6 @@
 [
   {
-    "name": "Twidere",
+    "name": "App default",
     "type": "twitter",
     "localized_name": "@string/provider_default",
     "api_url_format": "https://[DOMAIN.]twitter.com/",

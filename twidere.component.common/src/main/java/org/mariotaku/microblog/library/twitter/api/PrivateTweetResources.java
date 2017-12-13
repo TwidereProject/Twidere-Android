@@ -19,11 +19,13 @@
 package org.mariotaku.microblog.library.twitter.api;
 
 import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.PageableResponseList;
 import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.microblog.library.twitter.model.ResponseList;
 import org.mariotaku.microblog.library.twitter.model.Status;
 import org.mariotaku.microblog.library.twitter.model.StatusActivitySummary;
 import org.mariotaku.microblog.library.twitter.model.TranslationResult;
+import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.microblog.library.twitter.template.StatusAnnotationTemplate;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.param.Params;
@@ -36,6 +38,12 @@ public interface PrivateTweetResources extends PrivateResources {
 
     @GET("/statuses/{id}/activity/summary.json")
     StatusActivitySummary getStatusActivitySummary(@Path("id") String statusId) throws MicroBlogException;
+
+    @GET("/statuses/favorited_by.json")
+    PageableResponseList<User> getFavoritedBy(@Query("id") String statusId, @Query Paging paging) throws MicroBlogException;
+
+    @GET("/statuses/retweeted_by.json")
+    PageableResponseList<User> getRetweetedBy(@Query("id") String statusId, @Query Paging paging) throws MicroBlogException;
 
     @GET("/conversation/show.json")
     ResponseList<Status> showConversation(@Query("id") String statusId, @Query Paging paging) throws MicroBlogException;
