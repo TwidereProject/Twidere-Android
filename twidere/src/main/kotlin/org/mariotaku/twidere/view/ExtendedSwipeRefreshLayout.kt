@@ -72,4 +72,5 @@ class ExtendedSwipeRefreshLayout(context: Context, attrs: AttributeSet? = null) 
         onApplySystemWindowInsetsListener?.onApplySystemWindowInsets(insets.systemWindowInsets)
         return super.onApplyWindowInsets(insets)
     }
+
 }

@@ -42,6 +42,7 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.ImageShapeStyle
 import org.mariotaku.twidere.data.impl.UserLiveData
 import org.mariotaku.twidere.extension.*
+import org.mariotaku.twidere.extension.data.observe
 import org.mariotaku.twidere.extension.model.urlPreferred
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser

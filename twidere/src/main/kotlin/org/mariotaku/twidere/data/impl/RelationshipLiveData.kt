@@ -25,7 +25,7 @@ import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.data.ExceptionComputableLiveData
+import org.mariotaku.twidere.data.ComputableExceptionLiveData
 import org.mariotaku.twidere.exception.RequiredFieldNotFoundException
 import org.mariotaku.twidere.extension.getDetailsOrThrow
 import org.mariotaku.twidere.extension.insert
@@ -44,14 +44,14 @@ import org.mariotaku.twidere.util.Utils
 class RelationshipLiveData(
         private val context: Context,
         private val accountKey: UserKey?
-) : ExceptionComputableLiveData<ParcelableRelationship>(false) {
+) : ComputableExceptionLiveData<ParcelableRelationship>(false) {
 
     var user: ParcelableUser? = null
 
     val relationship: ParcelableRelationship? get() = value?.data
 
     @Throws(Exception::class)
-    override fun computeChecked(): ParcelableRelationship {
+    override fun compute(): ParcelableRelationship {
         val user = this.user ?: throw RequiredFieldNotFoundException("user")
         if (accountKey == null) throw RequiredFieldNotFoundException("account_key", "user")
         val userKey = user.key

@@ -22,7 +22,8 @@ package org.mariotaku.twidere.fragment.timeline
 import android.accounts.AccountManager
 import android.app.Activity
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Observer
+import android.arch.lifecycle.MediatorLiveData
+import android.arch.lifecycle.MutableLiveData
 import android.arch.paging.PagedList
 import android.content.ContentValues
 import android.content.Context
@@ -61,11 +62,13 @@ import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.data.CursorObjectLivePagedListProvider
+import org.mariotaku.twidere.data.ExceptionLiveData
 import org.mariotaku.twidere.data.ExtendedPagedListProvider
 import org.mariotaku.twidere.data.StatusesLivePagedListProvider
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.adapter.removeStatuses
+import org.mariotaku.twidere.extension.data.observe
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.extension.view.firstVisibleItemPosition
 import org.mariotaku.twidere.extension.view.lastVisibleItemPosition
@@ -74,10 +77,7 @@ import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.fragment.status.FavoriteConfirmDialogFragment
 import org.mariotaku.twidere.fragment.status.RetweetQuoteDialogFragment
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
-import org.mariotaku.twidere.model.ObjectId
-import org.mariotaku.twidere.model.ParcelableMedia
-import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.analyzer.Share
 import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.event.GetStatusesTaskEvent
@@ -136,7 +136,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
      */
     protected abstract val contentUri: Uri
 
-    protected var statuses: LiveData<PagedList<ParcelableStatus>?>? = null
+    protected var statuses: LiveData<SingleResponse<PagedList<ParcelableStatus>?>>? = null
         private set(value) {
             field?.removeObservers(this)
             field = value
@@ -400,26 +400,42 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
     private fun setupLiveData() {
         statuses = if (isStandalone) onCreateStandaloneLiveData() else onCreateDatabaseLiveData()
-        statuses?.observe(this, Observer { onDataLoaded(it) })
+        statuses?.observe(this, success = { onDataLoaded(it) }, fail = {
+            showError(R.drawable.ic_info_error_generic, it.getErrorMessage(context!!))
+        })
     }
 
-    private fun onCreateStandaloneLiveData(): LiveData<PagedList<ParcelableStatus>?> {
+    private fun onCreateStandaloneLiveData(): LiveData<SingleResponse<PagedList<ParcelableStatus>?>> {
+        val merger = MediatorLiveData<SingleResponse<PagedList<ParcelableStatus>?>>()
         val context = context!!
         val accountKey = accountKeys.singleOrNull()!!
+
+        val errorLiveData = MutableLiveData<SingleResponse<PagedList<ParcelableStatus>?>>()
         val provider = StatusesLivePagedListProvider(context.applicationContext,
-                onCreateStatusesFetcher(), accountKey, timelineFilter)
+                onCreateStatusesFetcher(), accountKey, timelineFilter) {
+            errorLiveData.postValue(SingleResponse(it))
+        }
         val maxLoadLimit = getMaxLoadItemLimit(accountKey)
         val loadLimit = preferences[loadItemLimitKey]
         // We don't use dataController since it's not supported
         dataController = null
-        return provider.create(null, PagedList.Config.Builder()
+        val apiLiveData = ExceptionLiveData.wrap(provider.create(null, PagedList.Config.Builder()
                 .setPageSize(loadLimit.coerceAtMost(maxLoadLimit))
                 .setInitialLoadSizeHint(loadLimit.coerceAtMost(maxLoadLimit))
-                .build())
+                .build()))
+        merger.addSource(errorLiveData) {
+            merger.removeSource(apiLiveData)
+            merger.removeSource(errorLiveData)
+            merger.value = it
+        }
+        merger.addSource(apiLiveData) {
+            merger.value = it
+        }
+        return merger
     }
 
 
-    private fun onCreateDatabaseLiveData(): LiveData<PagedList<ParcelableStatus>?> {
+    private fun onCreateDatabaseLiveData(): LiveData<SingleResponse<PagedList<ParcelableStatus>?>> {
         val context = context!!
         val table = DataStoreUtils.getTableNameByUri(contentUri)!!
         val accountKeys = accountKeys
@@ -439,8 +455,8 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                 expressionArgs.toTypedArray(), Statuses.DEFAULT_SORT_ORDER,
                 ParcelableStatus::class.java)
         dataController = provider.obtainDataController()
-        return provider.create(null, PagedList.Config.Builder()
-                .setPageSize(50).setEnablePlaceholders(false).build())
+        return ExceptionLiveData.wrap(provider.create(null, PagedList.Config.Builder()
+                .setPageSize(50).setEnablePlaceholders(false).build()))
     }
 
     private fun getFullStatus(position: Int): ParcelableStatus? {

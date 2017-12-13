@@ -30,7 +30,7 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.dagger.component.GeneralComponent
-import org.mariotaku.twidere.data.ExceptionComputableLiveData
+import org.mariotaku.twidere.data.ComputableExceptionLiveData
 import org.mariotaku.twidere.exception.RequiredFieldNotFoundException
 import org.mariotaku.twidere.extension.api.tryShowUser
 import org.mariotaku.twidere.extension.findMatchingDetailsOrThrow
@@ -57,7 +57,7 @@ class UserLiveData(
         val screenName: String?,
         val profileUrl: String? = null,
         val isAccountProfile: Boolean = false
-) : ExceptionComputableLiveData<Pair<AccountDetails, ParcelableUser>>(false) {
+) : ComputableExceptionLiveData<Pair<AccountDetails, ParcelableUser>>(false) {
 
     var loadFromCache: Boolean = false
     var extraUser: ParcelableUser? = null
@@ -76,7 +76,7 @@ class UserLiveData(
         GeneralComponent.get(context).inject(this)
     }
 
-    override fun computeChecked(): Pair<AccountDetails, ParcelableUser> {
+    override fun compute(): Pair<AccountDetails, ParcelableUser> {
         val context = context
         val resolver = context.contentResolver
         val accountKey = accountKey

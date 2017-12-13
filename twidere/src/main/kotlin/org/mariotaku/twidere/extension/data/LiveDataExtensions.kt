@@ -17,28 +17,19 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util.preference
+package org.mariotaku.twidere.extension.data
 
-import android.content.SharedPreferences
-import org.mariotaku.commons.collection.MultiMap
+import android.arch.lifecycle.LifecycleOwner
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Observer
+import org.mariotaku.twidere.model.SingleResponse
 
-class PreferenceChangeNotifier(val preferences: SharedPreferences) {
-
-    private val listenersMap = MultiMap<String, (String) -> Unit>()
-    private val changeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-        listenersMap[key]?.forEach { it.invoke(key) }
-    }
-
-    init {
-        preferences.registerOnSharedPreferenceChangeListener(changeListener)
-    }
-
-    fun register(key: String, callback: (String) -> Unit) {
-        listenersMap.add(key, callback)
-    }
-
-    fun register(vararg keys: String, callback: (String) -> Unit) {
-        keys.forEach { key -> listenersMap.add(key, callback) }
-    }
-
+fun <T> LiveData<SingleResponse<T>>.observe(owner: LifecycleOwner, success: (T) -> Unit, fail: (Exception) -> Unit = { }) {
+    observe(owner, Observer { response ->
+        if (response?.data != null) {
+            success(response.data)
+        } else {
+            fail(response?.exception!!)
+        }
+    })
 }

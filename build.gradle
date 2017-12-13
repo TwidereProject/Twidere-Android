@@ -44,7 +44,7 @@ subprojects {
                     Kotlin                 : "${kotlinVersion}",
                     SupportLib             : '27.0.2',
                     SupportTest            : '1.0.0',
-                    MariotakuCommons       : '0.9.21',
+                    MariotakuCommons       : '0.9.22',
                     RestFu                 : '0.9.61',
                     ObjectCursor           : '0.9.21',
                     PlayServices           : '11.6.2',

@@ -108,7 +108,7 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface,
             val actionBar = activity.supportActionBar
             val theme = Chameleon.getOverrideTheme(activity, activity)
             if (actionBar != null) {
-                actionBar.setCustomView(R.layout.layout_actionbar_search)
+                actionBar.setCustomView(R.layout.layout_toolbar_search)
                 actionBar.setDisplayShowTitleEnabled(false)
                 actionBar.setDisplayShowCustomEnabled(true)
                 val customView = actionBar.customView

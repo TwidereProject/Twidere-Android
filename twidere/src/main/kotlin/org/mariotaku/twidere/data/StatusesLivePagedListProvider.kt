@@ -21,6 +21,7 @@ package org.mariotaku.twidere.data
 
 
 import android.accounts.AccountManager
+import android.arch.paging.DataSource
 import android.arch.paging.KeyedDataSource
 import android.content.Context
 import org.mariotaku.microblog.library.MicroBlog
@@ -30,6 +31,7 @@ import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
+import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.extension.getDetails
 import org.mariotaku.twidere.extension.model.api.mastodon.getLinkPagination
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
@@ -45,18 +47,20 @@ class StatusesLivePagedListProvider(
         private val context: Context,
         private val fetcher: StatusesFetcher,
         private val accountKey: UserKey,
-        private val timelineFilter: TimelineFilter?
+        private val timelineFilter: TimelineFilter?,
+        private val errorHandler: (Exception) -> Unit
 ) : ExtendedPagedListProvider<Pagination, ParcelableStatus>() {
 
-    override fun onCreateDataSource(): StatusesDataSource {
-        return StatusesDataSource(context, fetcher, accountKey, timelineFilter)
+    override fun onCreateDataSource(): DataSource<Pagination, ParcelableStatus> {
+        return StatusesDataSource(context, fetcher, accountKey, timelineFilter, errorHandler)
     }
 
-    class StatusesDataSource(
+    private class StatusesDataSource(
             private val context: Context,
             private val fetcher: StatusesFetcher,
             private val accountKey: UserKey,
-            private val timelineFilter: TimelineFilter?
+            private val timelineFilter: TimelineFilter?,
+            val errorHandler: (Exception) -> Unit
     ) : KeyedDataSource<Pagination, ParcelableStatus>() {
 
         private val profileImageSize = context.getString(R.string.profile_image_size)
@@ -73,14 +77,20 @@ class StatusesLivePagedListProvider(
         }
 
         override fun loadInitial(pageSize: Int): List<ParcelableStatus>? {
-            return load(Paging().count(pageSize))?.filter {
+            val loaded = try {
+                load(Paging().count(pageSize))
+            } catch (e: MicroBlogException) {
+                errorHandler(e)
+                return emptyList()
+            }
+            return loaded.filter {
                 timelineFilter?.check(it) != false
             }
         }
 
         override fun loadBefore(currentBeginKey: Pagination, pageSize: Int): List<ParcelableStatus>? {
             val sinceId = (currentBeginKey as? SinceMaxPagination)?.sinceId ?: return null
-            return load(Paging().count(pageSize).sinceId(sinceId))?.filter {
+            return loadOrNull(Paging().count(pageSize).sinceId(sinceId))?.filter {
                 it.id != sinceId && timelineFilter?.check(it) != false
             }
         }
@@ -90,58 +100,61 @@ class StatusesLivePagedListProvider(
             if (lastEndKey == maxId) {
                 return null
             }
-            val loadResult = load(Paging().count(pageSize).maxId(maxId)) ?: return null
+            val loadResult = loadOrNull(Paging().count(pageSize).maxId(maxId)) ?: return null
             lastEndKey = loadResult.singleOrNull()?.id
             return loadResult.filter {
                 it.id != maxId && timelineFilter?.check(it) != false
             }
         }
 
-        private fun load(paging: Paging): List<ParcelableStatus>? {
+        private fun load(paging: Paging): List<ParcelableStatus> {
             val am = AccountManager.get(context)
             val account = am.getDetails(accountKey, true) ?: return emptyList()
-            try {
-                when (account.type) {
-                    AccountType.TWITTER -> {
-                        val twitter = account.newMicroBlogInstance(context, MicroBlog::class.java)
-                        val timeline = fetcher.forTwitter(account, twitter, paging, timelineFilter)
-                        return timeline.map {
-                            it.toParcelable(account, profileImageSize)
-                        }
+            when (account.type) {
+                AccountType.TWITTER -> {
+                    val twitter = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                    val timeline = fetcher.forTwitter(account, twitter, paging, timelineFilter)
+                    return timeline.map {
+                        it.toParcelable(account, profileImageSize)
                     }
-                    AccountType.STATUSNET -> {
-                        val statusnet = account.newMicroBlogInstance(context, MicroBlog::class.java)
-                        val timeline = fetcher.forStatusNet(account, statusnet, paging, timelineFilter)
-                        return timeline.map {
-                            it.toParcelable(account, profileImageSize)
-                        }
-                    }
-                    AccountType.FANFOU -> {
-                        val fanfou = account.newMicroBlogInstance(context, MicroBlog::class.java)
-                        val timeline = fetcher.forFanfou(account, fanfou, paging, timelineFilter)
-                        return timeline.map {
-                            it.toParcelable(account, profileImageSize)
-                        }
-                    }
-                    AccountType.MASTODON -> {
-                        val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
-                        val timeline = fetcher.forMastodon(account, mastodon, paging, timelineFilter)
-                        val prevPagination = timeline.getLinkPagination("prev") as? SinceMaxPagination
-                        val nextPagination = timeline.getLinkPagination("next") as? SinceMaxPagination
-                        return timeline.map {
-                            val status = it.toParcelable(account)
-                            status.extras?.prev_key = prevPagination?.sinceId
-                            status.extras?.next_key = nextPagination?.maxId
-                            return@map status
-                        }
-                    }
-                    else -> throw UnsupportedOperationException()
                 }
-            } catch (e: MicroBlogException) {
-                return null
+                AccountType.STATUSNET -> {
+                    val statusnet = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                    val timeline = fetcher.forStatusNet(account, statusnet, paging, timelineFilter)
+                    return timeline.map {
+                        it.toParcelable(account, profileImageSize)
+                    }
+                }
+                AccountType.FANFOU -> {
+                    val fanfou = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                    val timeline = fetcher.forFanfou(account, fanfou, paging, timelineFilter)
+                    return timeline.map {
+                        it.toParcelable(account, profileImageSize)
+                    }
+                }
+                AccountType.MASTODON -> {
+                    val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
+                    val timeline = fetcher.forMastodon(account, mastodon, paging, timelineFilter)
+                    val prevPagination = timeline.getLinkPagination("prev") as? SinceMaxPagination
+                    val nextPagination = timeline.getLinkPagination("next") as? SinceMaxPagination
+                    return timeline.map {
+                        val status = it.toParcelable(account)
+                        status.extras?.prev_key = prevPagination?.sinceId
+                        status.extras?.next_key = nextPagination?.maxId
+                        return@map status
+                    }
+                }
+                else -> throw APINotSupportedException(platform = account.type)
             }
         }
 
+        private fun loadOrNull(paging: Paging): List<ParcelableStatus>? {
+            return try {
+                load(paging)
+            } catch (e: MicroBlogException) {
+                null
+            }
+        }
     }
 
 }

@@ -42,8 +42,8 @@
         android:layout_marginTop="@dimen/element_spacing_small"
         android:ellipsize="end"
         android:gravity="center_vertical"
-        android:maxLines="1"
         android:minHeight="32dp"
+        android:singleLine="true"
         android:textAppearance="?android:textAppearanceMedium"
         android:textColor="?android:textColorPrimary"
         tools:text="Search query"/>

@@ -39,6 +39,7 @@ import org.mariotaku.twidere.preference.RingtonePreference
 import org.mariotaku.twidere.taskcontroller.sync.SyncTaskController
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.UserColorNameManager
+import org.mariotaku.twidere.util.preference.PreferenceChangeNotifier
 import org.mariotaku.twidere.util.sync.DataSyncProvider
 import javax.inject.Inject
 
@@ -57,6 +58,8 @@ abstract class BasePreferenceFragment : PreferenceFragmentCompat(), IBaseFragmen
     lateinit var bus: Bus
     @Inject
     lateinit var dataSyncProvider: DataSyncProvider
+    @Inject
+    lateinit var preferenceChangeNotifier: PreferenceChangeNotifier
 
     private val actionHelper = IBaseFragment.ActionHelper<BasePreferenceFragment>()
 

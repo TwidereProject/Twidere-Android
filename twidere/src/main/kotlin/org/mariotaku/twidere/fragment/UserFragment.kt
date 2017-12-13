@@ -94,6 +94,7 @@ import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.data.impl.RelationshipLiveData
 import org.mariotaku.twidere.data.impl.UserLiveData
 import org.mariotaku.twidere.extension.*
+import org.mariotaku.twidere.extension.data.observe
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowInsetsCallback
