@@ -451,7 +451,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
             extraSelection.second?.addAllTo(expressionArgs)
         }
         val provider = CursorObjectLivePagedListProvider(context.contentResolver, contentUri,
-                Statuses.COLUMNS, Expression.and(*expressions.toTypedArray()).sql,
+                statusColumnsLite, Expression.and(*expressions.toTypedArray()).sql,
                 expressionArgs.toTypedArray(), Statuses.DEFAULT_SORT_ORDER,
                 ParcelableStatus::class.java)
         dataController = provider.obtainDataController()
@@ -459,15 +459,13 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                 .setPageSize(50).setEnablePlaceholders(false).build()))
     }
 
-    private fun getFullStatus(position: Int): ParcelableStatus? {
+    private fun getFullStatus(position: Int): ParcelableStatus {
         if (isStandalone) {
             return adapter.getStatus(position, false)
         }
         val context = context!!
         val rowId = adapter.getRowId(position)
-        val where = Expression.equals(Statuses._ID, rowId).sql
-        return context.contentResolver.queryOne(contentUri, Statuses.COLUMNS, where, null, null,
-                ParcelableStatus::class.java)
+        return context.contentResolver.queryOne(contentUri, Statuses.COLUMNS, rowId, ParcelableStatus::class.java)!!
     }
 
     private fun replaceStatusStates(status: ParcelableStatus) {
@@ -553,14 +551,14 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
         override fun onMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia, statusPosition: Int) {
             val context = context ?: return
-            val status = adapter.getStatus(statusPosition)
+            val status = getFullStatus(statusPosition)
             IntentUtils.openMedia(context, status, current, preferences[newDocumentApiKey],
                     preferences[displaySensitiveContentsKey])
         }
 
         override fun onQuotedMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia, statusPosition: Int) {
             val context = context ?: return
-            val status = adapter.getStatus(statusPosition)
+            val status = getFullStatus(statusPosition)
             val quotedMedia = status.quoted_media ?: return
             IntentUtils.openMedia(context, status.account_key, status.is_possibly_sensitive, status,
                     current, quotedMedia, preferences[newDocumentApiKey], preferences[displaySensitiveContentsKey])
@@ -568,13 +566,13 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
         override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
             val context = context ?: return
-            val status = adapter.getStatus(position)
+            val status = getFullStatus(position)
             val quotedId = status.quoted_id ?: return
             IntentUtils.openStatus(context, status.account_key, quotedId)
         }
 
         override fun onUserProfileClick(holder: IStatusViewHolder, position: Int) {
-            val status = adapter.getStatus(position)
+            val status = getFullStatus(position)
             val intent = IntentUtils.userProfile(status.account_key, status.user_key,
                     status.user_screen_name, status.extras?.user_statusnet_profile_url)
             IntentUtils.applyNewDocument(intent, preferences[newDocumentApiKey])
@@ -588,7 +586,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         }
 
         override fun onGapClick(holder: GapViewHolder, position: Int) {
-            val status = adapter.getStatus(position)
+            val status = getFullStatus(position)
             DebugLog.v(msg = "Load activity gap $status")
             adapter.addGapLoadingId(ObjectId(status.account_key, status.id))
             val accountKeys = arrayOf(status.account_key)
@@ -626,6 +624,11 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
         const val REQUEST_FAVORITE_SELECT_ACCOUNT = 101
         const val REQUEST_RETWEET_SELECT_ACCOUNT = 102
+
+        val statusColumnsLite = Statuses.COLUMNS - arrayOf(Statuses.MENTIONS_JSON,
+                Statuses.CARD, Statuses.FILTER_FLAGS, Statuses.FILTER_USERS, Statuses.FILTER_LINKS,
+                Statuses.FILTER_SOURCES, Statuses.FILTER_NAMES, Statuses.FILTER_TEXTS,
+                Statuses.FILTER_DESCRIPTIONS)
 
         fun handleActionClick(fragment: BaseFragment, id: Int, status: ParcelableStatus,
                 holder: IStatusViewHolder) {

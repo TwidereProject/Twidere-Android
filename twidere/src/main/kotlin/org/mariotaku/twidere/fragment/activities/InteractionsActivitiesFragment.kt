@@ -25,8 +25,8 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_EXTRAS
-import org.mariotaku.twidere.data.CursorObjectLivePagedListProvider
 import org.mariotaku.twidere.data.predicate.ParcelableActivityProcessor
+import org.mariotaku.twidere.data.processor.DataSourceItemProcessor
 import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.promise
 import org.mariotaku.twidere.model.ParcelableActivity
@@ -57,7 +57,7 @@ class InteractionsActivitiesFragment : AbsActivitiesFragment() {
         return true
     }
 
-    override fun onCreateCursorObjectProcessor(): CursorObjectLivePagedListProvider.CursorObjectProcessor<ParcelableActivity> {
+    override fun onCreateCursorObjectProcessor(): DataSourceItemProcessor<ParcelableActivity> {
         val extras: InteractionsTabExtras? = arguments!!.getParcelable(EXTRA_EXTRAS)
         var followingOnly = false
         var mentionsOnly = false

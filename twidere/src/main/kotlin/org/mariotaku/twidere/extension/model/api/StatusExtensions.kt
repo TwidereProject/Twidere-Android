@@ -29,11 +29,9 @@ import org.mariotaku.microblog.library.twitter.model.EntitySupport
 import org.mariotaku.microblog.library.twitter.model.ExtendedEntitySupport
 import org.mariotaku.microblog.library.twitter.model.MediaEntity
 import org.mariotaku.microblog.library.twitter.model.Status
+import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.exception.MalformedResponseException
-import org.mariotaku.twidere.extension.model.addFilterFlag
-import org.mariotaku.twidere.extension.model.toParcelable
-import org.mariotaku.twidere.extension.model.updateContentFilterInfo
-import org.mariotaku.twidere.extension.model.updateFilterInfo
+import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.toSpanItem
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
@@ -77,7 +75,7 @@ fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: S
     val status: Status
     if (retweetedStatus != null) {
         status = retweetedStatus
-        val retweetUser = user
+        val retweetUser = this.user
         result.retweet_id = retweetedStatus.id
         result.retweet_timestamp = retweetedStatus.createdAt?.time ?: 0
         result.retweeted_by_user_key = retweetUser.key
@@ -86,21 +84,19 @@ fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: S
         result.retweeted_by_user_profile_image = retweetUser.getProfileImageOfSize(profileImageSize)
 
         extras.retweeted_external_url = retweetedStatus.inferredExternalUrl
-
-        if (retweetUser.isBlocking == true) {
-            result.addFilterFlag(ParcelableStatus.FilterFlags.BLOCKING_USER)
-        }
-        if (retweetUser.isBlockedBy == true) {
-            result.addFilterFlag(ParcelableStatus.FilterFlags.BLOCKED_BY_USER)
-        }
-        if (retweetedStatus.isPossiblySensitive) {
-            result.addFilterFlag(ParcelableStatus.FilterFlags.POSSIBLY_SENSITIVE)
-        }
     } else {
         status = this
-        if (status.isPossiblySensitive) {
-            result.addFilterFlag(ParcelableStatus.FilterFlags.POSSIBLY_SENSITIVE)
-        }
+    }
+
+    val user = status.user ?: throw MalformedResponseException()
+    if (user.isBlocking == true) {
+        result.addFilterFlag(ParcelableStatus.FilterFlags.BLOCKING_USER)
+    }
+    if (user.isBlockedBy == true) {
+        result.addFilterFlag(ParcelableStatus.FilterFlags.BLOCKED_BY_USER)
+    }
+    if (status.isPossiblySensitive) {
+        result.addFilterFlag(ParcelableStatus.FilterFlags.POSSIBLY_SENSITIVE)
     }
 
     val quoted = status.quotedStatus
@@ -154,7 +150,6 @@ fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: S
     result.in_reply_to_status_id = status.inReplyToStatusId
     result.in_reply_to_user_key = status.getInReplyToUserKey(accountKey)
 
-    val user = status.user ?: throw MalformedResponseException()
     result.user_key = user.key
     result.user_name = user.name
     result.user_screen_name = user.screenName
@@ -199,6 +194,12 @@ fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: S
 
     if (result.media.isNotNullOrEmpty() || result.quoted_media.isNotNullOrEmpty()) {
         result.addFilterFlag(ParcelableStatus.FilterFlags.HAS_MEDIA)
+    }
+    if (user.isFollowing == false) {
+        result.addFilterFlag(ParcelableStatus.FilterFlags.NOT_FRIEND)
+    }
+    if (user.isFollowedBy == false) {
+        result.addFilterFlag(ParcelableStatus.FilterFlags.NOT_FOLLOWER)
     }
 
     updateFilterInfoAction(this, result)

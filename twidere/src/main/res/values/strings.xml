@@ -536,6 +536,9 @@
     <string name="label_feedback_title">Title</string>
     <string name="label_filter_apply_to">Apply to…</string>
     <string name="label_filter_for">For…</string>
+    <string name="label_filter_option_include_followers">Include followers</string>
+    <string name="label_filter_option_include_friends">Include friends</string>
+    <string name="label_filter_options">Options</string>
     <string name="label_filter_scope_home">Home</string>
     <string name="label_filter_scope_interactions">Interactions</string>
     <string name="label_filter_scope_messages">Messages</string>

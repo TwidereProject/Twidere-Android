@@ -720,6 +720,7 @@ public interface TwidereDataStore {
         String ACCOUNT_COLOR = "account_color";
 
         String FILTER_FLAGS = "filter_flags";
+        String FILTER_SCOPES = "filter_scopes";
         String FILTER_USERS = "filter_users";
         String FILTER_LINKS = "filter_links";
         String FILTER_SOURCES = "filter_sources";

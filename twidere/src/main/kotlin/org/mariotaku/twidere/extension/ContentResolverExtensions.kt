@@ -68,6 +68,10 @@ fun ContentResolver.rawQueryReference(sql: String, selectionArgs: Array<String>?
     return queryReference(rawUri, null, null, selectionArgs, null)
 }
 
+fun <T> ContentResolver.queryOne(uri: Uri, projection: Array<String>?, rowId: Long, cls: Class<T>): T? {
+    val where = Expression.equals(BaseColumns._ID, rowId).sql
+    return queryOne(uri, projection, where, null, null, cls)
+}
 
 fun <T> ContentResolver.queryOne(uri: Uri, projection: Array<String>?, selection: String?,
         selectionArgs: Array<String>?, sortOrder: String? = null, cls: Class<T>): T? {

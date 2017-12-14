@@ -36,6 +36,8 @@ object FilterScopeStringMap {
                 Mapping(FilterScope.TARGET_NAME, "target_name"),
                 Mapping(FilterScope.TARGET_DESCRIPTION, "target_description"),
                 Mapping(FilterScope.TARGET_TEXT, "target_text"),
+                Mapping(FilterScope.OPTION_INCLUDE_FRIENDS, "option_include_friends"),
+                Mapping(FilterScope.OPTION_INCLUDE_FOLLOWERS, "option_include_followers"),
                 Mapping(FilterScope.HOME, "home"),
                 Mapping(FilterScope.INTERACTIONS, "interactions"),
                 Mapping(FilterScope.MESSAGES, "messages"),
@@ -47,7 +49,7 @@ object FilterScopeStringMap {
         )
     }
 
-    fun toString(scope: Int): String {
+    fun toString(@FilterScope scope: Int): String {
         val result = StringBuilder()
         var tmp = scope
         while (tmp != 0) {
@@ -61,6 +63,7 @@ object FilterScopeStringMap {
         return result.toString()
     }
 
+    @FilterScope
     fun fromString(str: String): Int {
         return str.split('|').mapNotNull { seg ->
             mappings.firstOrNull { (_, n) -> n == seg }

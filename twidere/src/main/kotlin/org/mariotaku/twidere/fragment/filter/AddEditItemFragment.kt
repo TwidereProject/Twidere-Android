@@ -29,6 +29,7 @@ import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.CheckBox
+import android.widget.Checkable
 import android.widget.Toast
 import kotlinx.android.synthetic.main.dialog_filter_rule_editor.*
 import org.mariotaku.ktextension.ContentValues
@@ -129,17 +130,17 @@ class AddEditItemFragment : BaseDialogFragment() {
                 advancedExpanded = !advancedExpanded
             }
             positiveButton.setOnClickListener(this@AddEditItemFragment::handlePositiveClick)
+            val optionClicked: (View) -> Unit = lambda@ { v ->
+                if (extraFeaturesService.isAdvancedFiltersEnabled || v !is Checkable) return@lambda
+                // Revert check state
+                v.isChecked = !v.isChecked
+                val df = ExtraFeaturesIntroductionDialogFragment.create(
+                        ExtraFeaturesService.FEATURE_ADVANCED_FILTERS)
+                df.setTargetFragment(this@AddEditItemFragment, REQUEST_CHANGE_SCOPE_PURCHASE)
+                df.show(fragmentManager, ExtraFeaturesIntroductionDialogFragment.FRAGMENT_TAG)
+            }
             advancedContainer.children.filter { it is CheckBox }.forEach {
-                val checkBox = it as CheckBox
-                checkBox.setOnClickListener onClick@ {
-                    if (extraFeaturesService.isAdvancedFiltersEnabled) return@onClick
-                    // Revert check state
-                    checkBox.isChecked = !checkBox.isChecked
-                    val df = ExtraFeaturesIntroductionDialogFragment.create(
-                            ExtraFeaturesService.FEATURE_ADVANCED_FILTERS)
-                    df.setTargetFragment(this@AddEditItemFragment, REQUEST_CHANGE_SCOPE_PURCHASE)
-                    df.show(fragmentManager, ExtraFeaturesIntroductionDialogFragment.FRAGMENT_TAG)
-                }
+                it.setOnClickListener(optionClicked)
             }
 
             if (savedInstanceState == null) {
@@ -170,6 +171,10 @@ class AddEditItemFragment : BaseDialogFragment() {
         targetText.saveScope(scopes, FilterScope.TARGET_TEXT)
         targetName.saveScope(scopes, FilterScope.TARGET_NAME)
         targetDescription.saveScope(scopes, FilterScope.TARGET_DESCRIPTION)
+
+        optionIncludeFriend.saveScope(scopes, FilterScope.OPTION_INCLUDE_FRIENDS)
+        optionIncludeFollowers.saveScope(scopes, FilterScope.OPTION_INCLUDE_FOLLOWERS)
+
         scopeHome.saveScope(scopes, FilterScope.HOME)
         scopeInteractions.saveScope(scopes, FilterScope.INTERACTIONS)
         scopeMessages.saveScope(scopes, FilterScope.MESSAGES)
@@ -179,11 +184,17 @@ class AddEditItemFragment : BaseDialogFragment() {
 
     private fun Dialog.loadScopes(scopes: FilterScopesHolder) {
         labelTarget.setVisible(scopes.hasMask(FilterScope.MASK_TARGET))
+
         targetText.loadScope(scopes, FilterScope.TARGET_TEXT)
         targetName.loadScope(scopes, FilterScope.TARGET_NAME)
         targetDescription.loadScope(scopes, FilterScope.TARGET_DESCRIPTION)
 
+        labelOptions.setVisible(scopes.hasMask(FilterScope.MASK_OPTION))
+        optionIncludeFriend.loadScope(scopes, FilterScope.OPTION_INCLUDE_FRIENDS)
+        optionIncludeFollowers.loadScope(scopes, FilterScope.OPTION_INCLUDE_FOLLOWERS)
+
         labelScope.setVisible(scopes.hasMask(FilterScope.MASK_SCOPE))
+
         scopeHome.loadScope(scopes, FilterScope.HOME)
         scopeInteractions.loadScope(scopes, FilterScope.INTERACTIONS)
         scopeMessages.loadScope(scopes, FilterScope.MESSAGES)

@@ -702,8 +702,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     override fun handleKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler,
-            keyCode: Int, repeatCount: Int,
-            event: KeyEvent, metaState: Int): Boolean {
+            keyCode: Int, repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
         return handleFragmentKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
     }
 

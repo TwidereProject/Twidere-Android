@@ -55,8 +55,8 @@ import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.readFromBottomKey
 import org.mariotaku.twidere.data.CursorObjectLivePagedListProvider
-import org.mariotaku.twidere.data.CursorObjectLivePagedListProvider.CursorObjectProcessor
 import org.mariotaku.twidere.data.ExtendedPagedListProvider
+import org.mariotaku.twidere.data.processor.DataSourceItemProcessor
 import org.mariotaku.twidere.extension.findAccount
 import org.mariotaku.twidere.extension.model.activityStatus
 import org.mariotaku.twidere.extension.model.getAccountType
@@ -360,7 +360,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
         }
     }
 
-    protected abstract fun onCreateCursorObjectProcessor(): CursorObjectProcessor<ParcelableActivity>
+    protected abstract fun onCreateCursorObjectProcessor(): DataSourceItemProcessor<ParcelableActivity>
 
     private fun setupLiveData() {
         activities = if (isStandalone) onCreateStandaloneLiveData() else onCreateDatabaseLiveData()
@@ -386,7 +386,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
             extraSelection.second?.addAllTo(expressionArgs)
         }
         val provider = CursorObjectLivePagedListProvider(context!!.contentResolver, contentUri,
-                Activities.COLUMNS, Expression.and(*expressions.toTypedArray()).sql,
+                activityColumnsLite, Expression.and(*expressions.toTypedArray()).sql,
                 expressionArgs.toTypedArray(), Activities.DEFAULT_SORT_ORDER,
                 ParcelableActivity::class.java, onCreateCursorObjectProcessor())
         dataController = provider.obtainDataController()
@@ -394,14 +394,14 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
                 .setPageSize(50).setEnablePlaceholders(false).build())
     }
 
-    private fun getFullActivity(position: Int): ParcelableActivity? {
+    private fun getFullActivity(position: Int): ParcelableActivity {
         if (isStandalone) {
             return adapter.getActivity(position, false)
         }
         val _id = adapter.getRowId(position)
         val where = Expression.equals(Activities._ID, _id).sql
         return context!!.contentResolver.queryOne(contentUri, Activities.COLUMNS, where,
-                null, null, ParcelableActivity::class.java)
+                null, null, ParcelableActivity::class.java)!!
     }
 
     private fun replaceStatusStates(status: ParcelableStatus) {
@@ -461,7 +461,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
 
     private inner class ActivityClickHandler : ParcelableActivitiesAdapter.ActivityAdapterListener {
         override fun onActivityClick(holder: ActivityTitleSummaryViewHolder, position: Int) {
-            val activity = adapter.getActivity(position)
+            val activity = getFullActivity(position)
             val list = ArrayList<Parcelable>()
             if (activity.target_objects?.statuses.isNotNullOrEmpty()) {
                 activity.target_objects?.statuses?.addAllTo(list)
@@ -516,7 +516,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
         }
 
         override fun onGapClick(holder: GapViewHolder, position: Int) {
-            val activity = adapter.getActivity(position)
+            val activity = getFullActivity(position)
             DebugLog.v(msg = "Load activity gap $activity")
             val accountKeys = arrayOf(activity.account_key)
             val pagination = arrayOf(SinceMaxPagination.maxId(activity.min_position,
@@ -527,7 +527,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
         }
 
         private fun getActivityStatus(position: Int): ParcelableStatus? {
-            return adapter.getActivity(position).activityStatus
+            return getFullActivity(position).activityStatus
         }
     }
 
@@ -541,4 +541,12 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
         }
     }
 
+    companion object {
+        val activityColumnsLite = Activities.COLUMNS - arrayOf(Activities.SOURCES, Activities.TARGETS,
+                Activities.TARGET_OBJECTS, Activities.MENTIONS_JSON, Activities.CARD,
+                Activities.FILTER_FLAGS, Activities.FILTER_USERS, Activities.FILTER_LINKS,
+                Activities.FILTER_SOURCES, Activities.FILTER_NAMES, Activities.FILTER_TEXTS,
+                Activities.FILTER_DESCRIPTIONS)
+
+    }
 }

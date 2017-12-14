@@ -605,7 +605,10 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
             FilterFlags.QUOTE_NOT_AVAILABLE,
             FilterFlags.BLOCKING_USER,
             FilterFlags.BLOCKED_BY_USER,
-            FilterFlags.POSSIBLY_SENSITIVE
+            FilterFlags.POSSIBLY_SENSITIVE,
+            FilterFlags.HAS_MEDIA,
+            FilterFlags.NOT_FRIEND,
+            FilterFlags.NOT_FOLLOWER,
     }, flag = true)
     @Retention(RetentionPolicy.SOURCE)
     public @interface FilterFlags {
@@ -636,5 +639,16 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
          * Status (or quote) has media
          */
         long HAS_MEDIA = 0x10;
+        /**
+         * Not following status user
+         */
+        long NOT_FRIEND = 0x1000000000L;
+        /**
+         * Not followed by status user
+         */
+        long NOT_FOLLOWER = 0x2000000000L;
+
+        int FILTER_SCOPE_OPTION_SHIFT = 20;
     }
+
 }

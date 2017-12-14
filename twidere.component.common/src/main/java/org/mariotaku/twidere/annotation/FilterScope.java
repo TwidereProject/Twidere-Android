@@ -28,6 +28,7 @@ import java.lang.annotation.RetentionPolicy;
         FilterScope.SEARCH_RESULTS, FilterScope.LIST_GROUP_TIMELINE, FilterScope.FAVORITES,
         FilterScope.USER_TIMELINE, FilterScope.PUBLIC_TIMELINE, FilterScope.UGC_TIMELINE,
         FilterScope.TARGET_NAME, FilterScope.TARGET_TEXT, FilterScope.TARGET_DESCRIPTION,
+        FilterScope.OPTION_INCLUDE_FRIENDS, FilterScope.OPTION_INCLUDE_FOLLOWERS,
         FilterScope.ALL, FilterScope.DEFAULT}, flag = true)
 @Retention(RetentionPolicy.SOURCE)
 public @interface FilterScope {
@@ -40,19 +41,25 @@ public @interface FilterScope {
     int USER_TIMELINE = 0x40;
     int PUBLIC_TIMELINE = 0x80;
 
+    int SCOPE_MAX = 0x8000;
+
     int UGC_TIMELINE = LIST_GROUP_TIMELINE | FAVORITES | USER_TIMELINE | PUBLIC_TIMELINE;
+
+    int OPTION_INCLUDE_FRIENDS = 0x00010000;
+    int OPTION_INCLUDE_FOLLOWERS = 0x00020000;
 
     int TARGET_NAME = 0x80000000;
     int TARGET_TEXT = 0x40000000;
     int TARGET_DESCRIPTION = 0x20000000;
 
     int MASK_TARGET = 0xFF000000;
-    int MASK_SCOPE = 0x00FFFFFF;
+    int MASK_OPTION = 0x00FF0000;
+    int MASK_SCOPE = 0x0000FFFF;
 
-    int VALID_MASKS_USERS = MASK_SCOPE;
-    int VALID_MASKS_KEYWORDS = MASK_SCOPE | MASK_TARGET;
-    int VALID_MASKS_SOURCES = MASK_SCOPE & ~MESSAGES;
-    int VALID_MASKS_LINKS = MASK_SCOPE;
+    int VALID_MASKS_USERS = MASK_SCOPE | MASK_OPTION;
+    int VALID_MASKS_KEYWORDS = MASK_SCOPE | MASK_OPTION | MASK_TARGET;
+    int VALID_MASKS_SOURCES = (MASK_SCOPE & ~MESSAGES) | MASK_OPTION;
+    int VALID_MASKS_LINKS = MASK_SCOPE | MASK_OPTION;
 
     // Contains all flags
     int ALL = 0xFFFFFFFF;

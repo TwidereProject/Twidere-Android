@@ -28,8 +28,10 @@ import android.os.Handler
 import android.os.Looper
 import android.support.annotation.WorkerThread
 import org.mariotaku.ktextension.toWeak
+import org.mariotaku.twidere.data.processor.DataSourceItemProcessor
 import org.mariotaku.twidere.extension.queryAll
 import org.mariotaku.twidere.extension.queryCount
+import org.mariotaku.twidere.util.DebugLog
 
 class CursorObjectLivePagedListProvider<T : Any>(
         private val resolver: ContentResolver,
@@ -39,24 +41,13 @@ class CursorObjectLivePagedListProvider<T : Any>(
         val selectionArgs: Array<String>? = null,
         val sortOrder: String? = null,
         val cls: Class<T>,
-        val processor: CursorObjectLivePagedListProvider.CursorObjectProcessor<T>? = null
+        val processor: DataSourceItemProcessor<T>? = null
 ) : ExtendedPagedListProvider<Int, T>() {
 
     @WorkerThread
     override fun onCreateDataSource(): DataSource<Int, T> {
         return CursorObjectTiledDataSource(resolver, uri, projection,
                 selection, selectionArgs, sortOrder, cls, processor)
-    }
-
-    interface CursorObjectProcessor<T> {
-        fun init(resolver: ContentResolver)
-
-        fun invalidate()
-
-        /**
-         * @return Processed object, `null` if this item should be discarded
-         */
-        fun process(obj: T): T?
     }
 
     private class CursorObjectTiledDataSource<T : Any>(
@@ -67,7 +58,7 @@ class CursorObjectLivePagedListProvider<T : Any>(
             val selectionArgs: Array<String>? = null,
             val sortOrder: String? = null,
             val cls: Class<T>,
-            val processor: CursorObjectProcessor<T>?
+            val processor: DataSourceItemProcessor<T>?
     ) : TiledDataSource<T>() {
 
         private val lazyCount: Int by lazy { resolver.queryCount(uri, selection, selectionArgs) }
@@ -89,15 +80,20 @@ class CursorObjectLivePagedListProvider<T : Any>(
 
         override fun loadRange(startPosition: Int, count: Int): List<T> {
             if (processor == null) {
-                return resolver.queryAll(uri, projection, selection, selectionArgs, sortOrder,
-                        "$startPosition,$count", cls).orEmpty()
+                val start = System.currentTimeMillis()
+                val result = resolver.queryAll(uri, projection, selection, selectionArgs, sortOrder,
+                        "$startPosition,$count", cls)
+                DebugLog.d(msg = "Querying $uri took ${System.currentTimeMillis() - start} ms.")
+                return result.orEmpty()
             }
             val result = ArrayList<T>()
             var offset = filterStates.actualIndex(startPosition, startPosition)
             var limit = count
             do {
+                val start = System.currentTimeMillis()
                 val list = resolver.queryAll(uri, projection, selection, selectionArgs, sortOrder,
                         "$offset,$limit", cls).orEmpty()
+                DebugLog.d(msg = "Querying $uri took ${System.currentTimeMillis() - start} ms.")
                 val reachedEnd = list.size < count
                 list.mapIndexedNotNullTo(result) lambda@ { index, item ->
                     val processed = processor.process(item)

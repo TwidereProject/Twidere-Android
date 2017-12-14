@@ -23,7 +23,7 @@ import android.content.ContentResolver
 import org.mariotaku.ktextension.isNullOrEmpty
 import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.twidere.annotation.FilterScope
-import org.mariotaku.twidere.data.CursorObjectLivePagedListProvider
+import org.mariotaku.twidere.data.processor.DataSourceItemProcessor
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils
@@ -35,7 +35,7 @@ class ParcelableActivityProcessor(
         @FilterScope val filterScope: Int,
         val followingOnly: Boolean,
         val mentionsOnly: Boolean
-) : CursorObjectLivePagedListProvider.CursorObjectProcessor<ParcelableActivity> {
+) : DataSourceItemProcessor<ParcelableActivity> {
     private var filteredUserKeys: Array<UserKey>? = null
     private var filteredNameKeywords: Array<String>? = null
     private var filteredDescriptionKeywords: Array<String>? = null

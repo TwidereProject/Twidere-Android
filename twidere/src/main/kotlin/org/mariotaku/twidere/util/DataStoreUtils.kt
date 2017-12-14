@@ -428,27 +428,30 @@ object DataStoreUtils {
     fun buildStatusFilterWhereClause(preferences: SharedPreferences, table: String,
             extraSelection: Expression?, @FilterScope filterScopes: Int): Expression {
 
-        fun ScopeMatchesExpression(scopeTable: String, scopeField: String) = Expression.or(
+        fun scopeMatchesExpression(scopeTable: String, scopeField: String) = Expression.or(
                 Expression.equals("$scopeTable.$scopeField & ${FilterScope.MASK_SCOPE}", 0),
-                Expression.notEquals("$scopeTable.$scopeField & $filterScopes", 0)
+                Expression.and(
+                        Expression.notEquals("$scopeTable.$scopeField & $filterScopes", 0),
+                        Expression.equals("($scopeTable.$scopeField | (${Statuses.FILTER_FLAGS} >> ${ParcelableStatus.FilterFlags.FILTER_SCOPE_OPTION_SHIFT})) & ${FilterScope.MASK_OPTION}", FilterScope.MASK_OPTION)
+                )
         )
 
-        fun ContainsExpression(dataField: String, filterTable: String, filterField: String) =
+        fun containsExpression(dataField: String, filterTable: String, filterField: String) =
                 Expression.likeRaw(Column(Table(table), dataField), "'%'||$filterTable.$filterField||'%'")
 
-        fun LineContainsExpression(dataField: String, filterTable: String, filterField: String) =
+        fun lineContainsExpression(dataField: String, filterTable: String, filterField: String) =
                 Expression.likeRaw(Column(Table(table), dataField), "'\\%'||$filterTable.$filterField||'%\\'")
 
-        fun LineMatchExpression(dataField: String, filterTable: String, filterField: String) =
+        fun lineMatchExpression(dataField: String, filterTable: String, filterField: String) =
                 Expression.likeRaw(Column(Table(table), dataField), "'%\\'||$filterTable.$filterField||'\\%'")
 
         val filteredUsersWhere = Expression.and(
-                ScopeMatchesExpression(Filters.Users.TABLE_NAME, Filters.Users.SCOPE),
-                LineMatchExpression(Statuses.FILTER_USERS, Filters.Users.TABLE_NAME, Filters.Users.USER_KEY)
+                scopeMatchesExpression(Filters.Users.TABLE_NAME, Filters.Users.SCOPE),
+                lineMatchExpression(Statuses.FILTER_USERS, Filters.Users.TABLE_NAME, Filters.Users.USER_KEY)
         )
         val filteredSourcesWhere = Expression.and(
-                ScopeMatchesExpression(Filters.Sources.TABLE_NAME, Filters.Sources.SCOPE),
-                LineMatchExpression(Statuses.FILTER_SOURCES, Filters.Sources.TABLE_NAME, Filters.Sources.VALUE)
+                scopeMatchesExpression(Filters.Sources.TABLE_NAME, Filters.Sources.SCOPE),
+                lineMatchExpression(Statuses.FILTER_SOURCES, Filters.Sources.TABLE_NAME, Filters.Sources.VALUE)
         )
         val filteredTextKeywordsWhere = Expression.or(
                 Expression.and(
@@ -456,23 +459,23 @@ object DataStoreUtils {
                                 Expression.equals("${Filters.Keywords.TABLE_NAME}.${Filters.Keywords.SCOPE} & ${FilterScope.MASK_TARGET}", 0),
                                 Expression.notEquals("${Filters.Keywords.TABLE_NAME}.${Filters.Keywords.SCOPE} & ${FilterScope.TARGET_TEXT}", 0)
                         ),
-                        ScopeMatchesExpression(Filters.Keywords.TABLE_NAME, Filters.Keywords.SCOPE),
-                        ContainsExpression(Statuses.FILTER_TEXTS, Filters.Keywords.TABLE_NAME, Filters.Keywords.VALUE)
+                        scopeMatchesExpression(Filters.Keywords.TABLE_NAME, Filters.Keywords.SCOPE),
+                        containsExpression(Statuses.FILTER_TEXTS, Filters.Keywords.TABLE_NAME, Filters.Keywords.VALUE)
                 ),
                 Expression.and(
                         Expression.notEquals("${Filters.Keywords.TABLE_NAME}.${Filters.Keywords.SCOPE} & ${FilterScope.TARGET_NAME}", 0),
-                        ScopeMatchesExpression(Filters.Keywords.TABLE_NAME, Filters.Keywords.SCOPE),
-                        LineMatchExpression(Statuses.FILTER_NAMES, Filters.Keywords.TABLE_NAME, Filters.Keywords.VALUE)
+                        scopeMatchesExpression(Filters.Keywords.TABLE_NAME, Filters.Keywords.SCOPE),
+                        lineMatchExpression(Statuses.FILTER_NAMES, Filters.Keywords.TABLE_NAME, Filters.Keywords.VALUE)
                 ),
                 Expression.and(
                         Expression.notEquals("${Filters.Keywords.TABLE_NAME}.${Filters.Keywords.SCOPE} & ${FilterScope.TARGET_DESCRIPTION}", 0),
-                        ScopeMatchesExpression(Filters.Keywords.TABLE_NAME, Filters.Keywords.SCOPE),
-                        ContainsExpression(Statuses.FILTER_DESCRIPTIONS, Filters.Keywords.TABLE_NAME, Filters.Keywords.VALUE)
+                        scopeMatchesExpression(Filters.Keywords.TABLE_NAME, Filters.Keywords.SCOPE),
+                        containsExpression(Statuses.FILTER_DESCRIPTIONS, Filters.Keywords.TABLE_NAME, Filters.Keywords.VALUE)
                 )
         )
         val filteredLinksWhere = Expression.and(
-                ScopeMatchesExpression(Filters.Links.TABLE_NAME, Filters.Links.SCOPE),
-                LineContainsExpression(Statuses.FILTER_LINKS, Filters.Links.TABLE_NAME, Filters.Links.VALUE)
+                scopeMatchesExpression(Filters.Links.TABLE_NAME, Filters.Links.SCOPE),
+                lineContainsExpression(Statuses.FILTER_LINKS, Filters.Links.TABLE_NAME, Filters.Links.VALUE)
         )
         val filteredIdsQueryBuilder = SQLQueryBuilder
                 .select(Column(Table(table), Statuses._ID))

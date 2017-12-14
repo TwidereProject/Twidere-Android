@@ -72,6 +72,30 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/labelOptions"
+                style="?android:listSeparatorTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/element_spacing_small"
+                android:text="@string/label_filter_options"
+                android:textAllCaps="true"
+                android:textColor="?colorAccent"/>
+
+            <CheckBox
+                android:id="@+id/optionIncludeFriend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/element_spacing_small"
+                android:text="@string/label_filter_option_include_friends"/>
+
+            <CheckBox
+                android:id="@+id/optionIncludeFollowers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/element_spacing_small"
+                android:text="@string/label_filter_option_include_followers"/>
+
+            <TextView
                 android:id="@+id/labelTarget"
                 style="?android:listSeparatorTextViewStyle"
                 android:layout_width="match_parent"

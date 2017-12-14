@@ -45,11 +45,11 @@ import org.mariotaku.twidere.adapter.MessagesEntriesAdapter
 import org.mariotaku.twidere.adapter.MessagesEntriesAdapter.MessageConversationClickListener
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.LoadMorePosition
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_TYPES
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.data.CursorObjectLivePagedListProvider
+import org.mariotaku.twidere.extension.accountKey
 import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.model.getTitle
 import org.mariotaku.twidere.extension.model.user
@@ -111,7 +111,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
         when (requestCode) {
             REQUEST_SELECT_ACCOUNT -> {
                 if (resultCode != Activity.RESULT_OK) return
-                val accountKey = data!!.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
+                val accountKey = data!!.extras!!.accountKey!!
                 startActivity(IntentUtils.newMessageConversation(accountKey))
             }
             else -> {
