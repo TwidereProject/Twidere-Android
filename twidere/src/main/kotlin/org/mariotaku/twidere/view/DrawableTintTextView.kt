@@ -21,7 +21,6 @@ package org.mariotaku.twidere.view
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.drawable.Drawable
 import android.os.Build
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.util.AttributeSet
@@ -48,25 +47,29 @@ class DrawableTintTextView(
         val a = context.obtainStyledAttributes(attrs, R.styleable.DrawableTintTextView)
         if (a.hasValue(R.styleable.DrawableTintTextView_drawableTint)) {
             compoundDrawableTintListCompat = a.getColorStateList(R.styleable.DrawableTintTextView_drawableTint)
+            iconWidth = a.getDimensionPixelSize(R.styleable.DrawableTintTextView_iabIconWidth, 0)
+            iconHeight = a.getDimensionPixelSize(R.styleable.DrawableTintTextView_iabIconHeight, 0)
         }
         a.recycle()
+        updateDrawableCompat()
     }
 
-    override fun setCompoundDrawablesRelative(start: Drawable?, top: Drawable?, end: Drawable?, bottom: Drawable?) {
-        super.setCompoundDrawablesRelative(start, top, end, bottom)
-        updateDrawableTintCompat()
+    override fun drawableStateChanged() {
+        super.drawableStateChanged()
+        updateDrawableCompat()
     }
 
-    override fun setCompoundDrawables(left: Drawable?, top: Drawable?, right: Drawable?, bottom: Drawable?) {
-        super.setCompoundDrawables(left, top, right, bottom)
-        updateDrawableTintCompat()
-    }
-
-    private fun updateDrawableTintCompat() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) return
+    private fun updateDrawableCompat() {
         compoundDrawables.forEach { drawable ->
             if (drawable == null) return@forEach
-            DrawableCompat.setTintList(drawable, compoundDrawableTintListCompat)
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                DrawableCompat.setTintList(drawable, compoundDrawableTintListCompat)
+            }
+            if (iconWidth > 0 && iconHeight > 0) {
+                val top = (drawable.intrinsicHeight - iconHeight) / 2
+                val left = (drawable.intrinsicWidth - iconWidth) / 2
+                drawable.setBounds(left, top, left + iconWidth, top + iconHeight)
+            }
         }
     }
 }
