@@ -166,7 +166,7 @@ class APIEditorDialogFragment : BaseDialogFragment() {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val view = super.getView(position, convertView, parent)
                 val type = getItem(position)
-                view.findViewById<TextView>(android.R.id.text1).text = type.getLocalizedName(context)
+                view.findViewById<TextView>(android.R.id.text1).text = type.name
                 return view
             }
 

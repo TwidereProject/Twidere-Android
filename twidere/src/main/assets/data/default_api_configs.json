@@ -1,20 +1,19 @@
 [
   {
-    "name": "App default",
+    "name": "Twitter",
     "type": "twitter",
-    "localized_name": "@string/provider_default",
     "api_url_format": "https://[DOMAIN.]twitter.com/",
     "auth_type": "oauth",
     "same_oauth_url": true,
     "no_version_suffix": false,
-    "consumer_key": "i5XtSVfoWjLjKlnrvhiLPMZC0",
-    "consumer_secret": "sQncmZ2atQR6tKbqnnAtqjrECqN8k6FD4p4OoNS0XTDkUz3HGH",
-    "sign_up_url": "https://twitter.com/signup"
+    "consumer_key": "MUUBibXUognm6e9vbzrUIqPkt",
+    "consumer_secret": "l2uWAgQkoHvDfM2PrRFx2WN4h7QIUIktmxyeTAqRo6TkGCtNKy",
+    "sign_up_url": "https://twitter.com/signup",
+    "is_builtin": true
   },
   {
     "name": "Fanfou",
     "type": "fanfou",
-    "localized_name": "@string/provider_fanfou",
     "api_url_format": "http://api.fanfou.com/",
     "auth_type": "oauth",
     "same_oauth_url": true,
@@ -22,6 +21,7 @@
     "consumer_key": "86d1146dda1d21d59351008a1d1058fd",
     "consumer_secret": "c00f4b83dbfc52e2ed78a21d4edfc3cc",
     "sign_up_url": "https://fanfou.com/register",
+    "is_builtin": true,
     "overlays": {
       "398": {
         "api_url_format": "https://api.fanfou.com/",
@@ -32,7 +32,6 @@
   {
     "name": "Quitter.se",
     "type": "statusnet",
-    "localized_name": "@string/provider_quitter_se",
     "api_url_format": "https://quitter.se/api/",
     "auth_type": "oauth",
     "same_oauth_url": true,
@@ -44,7 +43,6 @@
   {
     "name": "LoadAverage.org",
     "type": "statusnet",
-    "localized_name": "@string/provider_loadaverage_org",
     "api_url_format": "https://loadaverage.org/api/",
     "auth_type": "oauth",
     "same_oauth_url": true,
@@ -55,7 +53,6 @@
   {
     "name": "GNU Social.net",
     "type": "statusnet",
-    "localized_name": "@string/provider_gnusocial_net",
     "api_url_format": "https://gnusocial.net/api/",
     "auth_type": "oauth",
     "same_oauth_url": true,
@@ -66,7 +63,6 @@
   {
     "name": "GNU Social.de",
     "type": "statusnet",
-    "localized_name": "@string/provider_gnusocial_de",
     "api_url_format": "https://gnusocial.de/api/",
     "auth_type": "oauth",
     "same_oauth_url": true,

@@ -682,7 +682,11 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                 val view = convertView ?: inflater.inflate(android.R.layout.simple_list_item_1, parent, false)
                 val config = getChild(groupPosition, childPosition)
                 val text1 = view.findViewById<TextView>(android.R.id.text1)
-                text1.text = config.name
+                if (config.isBuiltIn) {
+                    text1.text = context.getString(R.string.provider_app_default)
+                } else {
+                    text1.text = config.name
+                }
                 return view
             }
 

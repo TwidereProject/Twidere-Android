@@ -2,7 +2,6 @@ package org.mariotaku.twidere.model;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.content.res.Resources;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -52,8 +51,6 @@ public final class CustomAPIConfig implements Parcelable {
     @JsonField(name = "type")
     @Nullable
     String type;
-    @JsonField(name = "localized_name")
-    String localizedName;
     @JsonField(name = "api_url_format")
     @Nullable
     String apiUrlFormat;
@@ -73,6 +70,8 @@ public final class CustomAPIConfig implements Parcelable {
     @Nullable
     @JsonField(name = "sign_up_url")
     String signUpUrl;
+    @JsonField(name = "is_builtin")
+    boolean isBuiltIn;
     @Nullable
     @JsonField(name = "overlays")
     @ParcelableNoThanks
@@ -119,8 +118,8 @@ public final class CustomAPIConfig implements Parcelable {
         }
     }
 
-    public static CustomAPIConfig builtin(@NonNull Context context) {
-        return new CustomAPIConfig(context.getString(R.string.provider_default), AccountType.TWITTER,
+    public static CustomAPIConfig twitter(@NonNull Context context) {
+        return new CustomAPIConfig(context.getString(R.string.provider_twitter), AccountType.TWITTER,
                 DEFAULT_TWITTER_API_URL_FORMAT, Credentials.Type.OAUTH, true, false,
                 TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET);
     }
@@ -131,7 +130,7 @@ public final class CustomAPIConfig implements Parcelable {
     }
 
     public static List<CustomAPIConfig> listBuiltin(@NonNull Context context) {
-        return Collections.singletonList(builtin(context));
+        return Collections.singletonList(twitter(context));
     }
 
     @Nullable
@@ -149,20 +148,6 @@ public final class CustomAPIConfig implements Parcelable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getLocalizedName(Context context) {
-        if (localizedName == null) return name;
-        final Resources res = context.getResources();
-        int id = res.getIdentifier(localizedName, "string", context.getPackageName());
-        if (id != 0) {
-            return res.getString(id);
-        }
-        return name;
-    }
-
-    public void setLocalizedName(String localizedName) {
-        this.localizedName = localizedName;
     }
 
     @Nullable
@@ -238,6 +223,14 @@ public final class CustomAPIConfig implements Parcelable {
 
     public void setDefault(boolean isDefault) {
         this.isDefault = isDefault;
+    }
+
+    public boolean isBuiltIn() {
+        return isBuiltIn;
+    }
+
+    public void setBuiltIn(boolean builtIn) {
+        isBuiltIn = builtIn;
     }
 
     @Override

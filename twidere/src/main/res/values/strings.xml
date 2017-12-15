@@ -983,13 +983,11 @@
     <string name="projects_we_took_part">Projects we took part</string>
 
     <string name="provider_default">App default</string>
+    <string name="provider_app_default">App default</string>
+    <string name="provider_twitter">Twitter</string>
     <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
     <string name="provider_fanfou">Fanfou</string>
-    <string name="provider_gnusocial_de">GNU Social.de</string>
-    <string name="provider_gnusocial_net">GNU Social.net</string>
-    <string name="provider_loadaverage_org">LoadAverage.org</string>
     <string name="provider_mastodon">Mastodon</string>
-    <string name="provider_quitter_se">Quitter.se</string>
 
     <string name="proxy">Proxy</string>
     <string name="proxy_host">Proxy host</string>
