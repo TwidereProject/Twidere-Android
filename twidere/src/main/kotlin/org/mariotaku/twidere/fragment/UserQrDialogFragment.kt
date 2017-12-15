@@ -47,10 +47,13 @@ import nl.komponents.kovenant.ui.alwaysUi
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.promiseOnUi
 import nl.komponents.kovenant.ui.successUi
+import org.mariotaku.kpreferences.get
+import org.mariotaku.kpreferences.set
 import org.mariotaku.ktextension.weak
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.annotation.ImageShapeStyle
+import org.mariotaku.twidere.constant.qrArtEnabledKey
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.SaveFileResult
@@ -85,13 +88,25 @@ class UserQrDialogFragment : BaseDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val weakThis by weak(this)
         qrShare.setOnClickListener {
             shareQrImage()
         }
         qrSave.setOnClickListener {
             saveQrImage()
         }
+        qrContainer.setOnClickListener {
+            val artEnabled = !preferences[qrArtEnabledKey]
+            preferences[qrArtEnabledKey] = artEnabled
+            displayQrCode(artEnabled)
+        }
+        view.setOnClickListener {
+            dismiss()
+        }
+        displayQrCode(preferences[qrArtEnabledKey])
+    }
+
+    private fun displayQrCode(art: Boolean) {
+        val weakThis by weak(this)
         promiseOnUi {
             val fragment = weakThis?.takeIf { it.view != null } ?: return@promiseOnUi
             fragment.qrView.visibility = View.INVISIBLE
@@ -109,7 +124,7 @@ class UserQrDialogFragment : BaseDialogFragment() {
             val link = LinkCreator.getUserWebLink(fragment.user)
             val segments = QrSegment.makeSegments(link.toString())
             val qrCode = QrCode.encodeSegments(segments, QrCode.Ecc.HIGH, 5, 40, -1, true)
-            val uniqr = UniqR(AndroidPlatform(), background, QrCodeData(qrCode))
+            val uniqr = UniqR(AndroidPlatform(), if (art) background else null, QrCodeData(qrCode))
             uniqr.scale = 3
             uniqr.padding = 16
             uniqr.dotSize = 1
