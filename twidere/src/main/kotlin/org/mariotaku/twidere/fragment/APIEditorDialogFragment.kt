@@ -9,8 +9,10 @@ import android.support.v4.content.Loader
 import android.support.v7.app.AlertDialog
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
-import com.rengwuxian.materialedittext.MaterialEditText
+import android.widget.ArrayAdapter
+import android.widget.TextView
+import kotlinx.android.synthetic.main.dialog_api_editor.*
+import kotlinx.android.synthetic.main.layout_api_editor_advanced_fields.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
 import org.mariotaku.ktextension.string
@@ -28,17 +30,6 @@ import org.mariotaku.twidere.util.view.ConsumerKeySecretValidator
 
 class APIEditorDialogFragment : BaseDialogFragment() {
 
-    private val loadDefaults by lazy { dialog.findViewById<View>(R.id.loadDefaults) }
-    private val editAPIUrlFormat by lazy { dialog.findViewById<EditText>(R.id.editApiUrlFormat) }
-    private val editSameOAuthSigningUrl by lazy { dialog.findViewById<CheckBox>(R.id.editSameOAuthSigningUrl) }
-    private val editNoVersionSuffix by lazy { dialog.findViewById<CheckBox>(R.id.editNoVersionSuffix) }
-    private val editConsumerKey by lazy { dialog.findViewById<MaterialEditText>(R.id.editConsumerKey) }
-    private val editConsumerSecret by lazy { dialog.findViewById<MaterialEditText>(R.id.editConsumerSecret) }
-    private val editAuthType by lazy { dialog.findViewById<RadioGroup>(R.id.editAuthType) }
-    private val apiFormatHelpButton by lazy { dialog.findViewById<View>(R.id.apiUrlFormatHelp) }
-    private val accountTypeSpinner by lazy { dialog.findViewById<Spinner>(R.id.accountTypeSpinner) }
-
-    private var editNoVersionSuffixChanged: Boolean = false
     private lateinit var apiConfig: CustomAPIConfig
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -64,32 +55,28 @@ class APIEditorDialogFragment : BaseDialogFragment() {
         dialog.onShow {
             it.applyTheme()
             if (arguments?.getBoolean(EXTRA_SHOW_LOAD_DEFAULTS) == true) {
-                loadDefaults.visibility = View.VISIBLE
+                it.loadDefaults.visibility = View.VISIBLE
             } else {
-                loadDefaults.visibility = View.GONE
+                it.loadDefaults.visibility = View.GONE
             }
-            loadDefaults.setOnClickListener {
+            it.loadDefaults.setOnClickListener {
                 val df = LoadDefaultsChooserDialogFragment()
                 df.show(childFragmentManager, "load_defaults")
             }
 
-            accountTypeSpinner.adapter = AccountTypeSpinnerAdapter(this)
+            it.accountTypeSpinner.adapter = AccountTypeSpinnerAdapter(this)
 
-            editConsumerKey.addValidator(ConsumerKeySecretValidator(getString(R.string.invalid_consumer_key)))
-            editConsumerSecret.addValidator(ConsumerKeySecretValidator(getString(R.string.invalid_consumer_secret)))
+            it.editConsumerKey.addValidator(ConsumerKeySecretValidator(getString(R.string.invalid_consumer_key)))
+            it.editConsumerSecret.addValidator(ConsumerKeySecretValidator(getString(R.string.invalid_consumer_secret)))
 
-            editNoVersionSuffix.setOnCheckedChangeListener { _, _ -> editNoVersionSuffixChanged = true }
-            editAuthType.setOnCheckedChangeListener { _, checkedId ->
+            it.editAuthType.setOnCheckedChangeListener { _, checkedId ->
                 val authType = getCheckedAuthType(checkedId)
                 val isOAuth = Credentials.Type.OAUTH == authType || Credentials.Type.XAUTH == authType
-                editSameOAuthSigningUrl.visibility = if (isOAuth) View.VISIBLE else View.GONE
-                editConsumerKey.visibility = if (isOAuth) View.VISIBLE else View.GONE
-                editConsumerSecret.visibility = if (isOAuth) View.VISIBLE else View.GONE
-                if (!editNoVersionSuffixChanged) {
-                    editNoVersionSuffix.isChecked = Credentials.Type.EMPTY == authType
-                }
+                it.editSameOAuthSigningUrl.visibility = if (isOAuth) View.VISIBLE else View.GONE
+                it.editConsumerKey.visibility = if (isOAuth) View.VISIBLE else View.GONE
+                it.editConsumerSecret.visibility = if (isOAuth) View.VISIBLE else View.GONE
             }
-            apiFormatHelpButton.setOnClickListener {
+            it.apiUrlFormatHelp.setOnClickListener {
                 MessageDialogFragment.show(childFragmentManager, message = getString(R.string.message_api_url_format_help),
                         tag = "api_url_format_help")
             }
@@ -110,28 +97,30 @@ class APIEditorDialogFragment : BaseDialogFragment() {
     }
 
     private fun applyCustomAPIConfig(): CustomAPIConfig {
+        val dialog = dialog!!
         return apiConfig.apply {
-            apiUrlFormat = editAPIUrlFormat.string
-            credentialsType = getCheckedAuthType(editAuthType.checkedRadioButtonId)
-            consumerKey = editConsumerKey.string
-            consumerSecret = editConsumerSecret.string
-            isSameOAuthUrl = editSameOAuthSigningUrl.isChecked
-            isNoVersionSuffix = editNoVersionSuffix.isChecked
-            type = accountTypeSpinner.selectedItem as String
+            apiUrlFormat = dialog.editApiUrlFormat.string
+            credentialsType = getCheckedAuthType(dialog.editAuthType.checkedRadioButtonId)
+            consumerKey = dialog.editConsumerKey.string
+            consumerSecret = dialog.editConsumerSecret.string
+            isSameOAuthUrl = dialog.editSameOAuthSigningUrl.isChecked
+            isNoVersionSuffix = dialog.editNoVersionSuffix.isChecked
+            type = dialog.accountTypeSpinner.selectedItem as String
         }
     }
 
     private fun displayCustomApiConfig() {
-        editAPIUrlFormat.setText(apiConfig.apiUrlFormat)
-        editSameOAuthSigningUrl.isChecked = apiConfig.isSameOAuthUrl
-        editNoVersionSuffix.isChecked = apiConfig.isNoVersionSuffix
-        editConsumerKey.setText(apiConfig.consumerKey)
-        editConsumerSecret.setText(apiConfig.consumerSecret)
-        editAuthType.check(getAuthTypeId(apiConfig.credentialsType))
-        if (editAuthType.checkedRadioButtonId == -1) {
-            editAuthType.check(R.id.oauth)
+        val dialog = dialog!!
+        dialog.editApiUrlFormat.setText(apiConfig.apiUrlFormat)
+        dialog.editSameOAuthSigningUrl.isChecked = apiConfig.isSameOAuthUrl
+        dialog.editNoVersionSuffix.isChecked = apiConfig.isNoVersionSuffix
+        dialog.editConsumerKey.setText(apiConfig.consumerKey)
+        dialog.editConsumerSecret.setText(apiConfig.consumerSecret)
+        dialog.editAuthType.check(getAuthTypeId(apiConfig.credentialsType))
+        if (dialog.editAuthType.checkedRadioButtonId == -1) {
+            dialog.editAuthType.check(R.id.oauth)
         }
-        accountTypeSpinner.setSelectedItem(apiConfig.type)
+        dialog.accountTypeSpinner.setSelectedItem(apiConfig.type)
     }
 
     interface APIEditorCallback {
