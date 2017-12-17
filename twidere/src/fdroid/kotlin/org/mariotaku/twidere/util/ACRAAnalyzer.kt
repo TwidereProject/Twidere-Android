@@ -45,9 +45,6 @@ class ACRAAnalyzer : Analyzer() {
 
     }
 
-    override fun log(event: Event) {
-    }
-
     override fun logException(throwable: Throwable) {
     }
 
