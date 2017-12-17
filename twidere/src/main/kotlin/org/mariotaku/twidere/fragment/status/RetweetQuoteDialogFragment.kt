@@ -231,7 +231,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
                     } else {
                         LinkCreator.getQuotedStatusWebLink(status)
                     }
-                    update.attachment_url = statusLink.toString()
+                    update.attachment_url = statusLink?.toString()
                     commentText = editingComment
                 }
             }

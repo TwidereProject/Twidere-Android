@@ -67,7 +67,6 @@ import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.account.AccountExtras
-import org.mariotaku.twidere.model.analyzer.UpdateStatus
 import org.mariotaku.twidere.model.schedule.ScheduleInfo
 import org.mariotaku.twidere.preference.ComponentPickerPreference
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
@@ -121,20 +120,8 @@ class UpdateStatusPromise(
         } finally {
             removeSendingDraftId(context.contentResolver, draftId)
         }
-    }.then { result ->
-        logUpdateStatus(update, result)
-        return@then result
     }.successUi { result ->
         stateCallback.afterExecute(result)
-    }
-
-    private fun logUpdateStatus(statusUpdate: ParcelableStatusUpdate, result: UpdateStatusResult) {
-        val mediaType = statusUpdate.media?.firstOrNull()?.type ?: ParcelableMedia.Type.UNKNOWN
-        val hasLocation = statusUpdate.location != null
-        val preciseLocation = statusUpdate.display_coordinates
-        Analyzer.log(UpdateStatus(result.accountTypes.firstOrNull(), statusUpdate.draft_action,
-                mediaType, hasLocation, preciseLocation, result.succeed,
-                result.exceptions.firstOrNull() ?: result.exception))
     }
 
     @Throws(UpdateStatusException::class)

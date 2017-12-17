@@ -260,7 +260,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         ThemeUtils.setCompatContentViewOverlay(window, EmptyDrawable())
 
         val refreshOnStart = preferences[refreshOnStartKey]
-        var tabDisplayOptionInt = Utils.getTabDisplayOptionInt(this)
+        var tabDisplayOptionInt = Utils.getTabDisplayOption(this, preferences)
 
         ViewCompat.setOnApplyWindowInsetsListener(homeContent, this)
         homeMenu.fitsSystemWindows = Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ||
@@ -699,7 +699,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             val accountKey = if (appSearchData != null && appSearchData.containsKey(EXTRA_ACCOUNT_KEY)) {
                 appSearchData.getParcelable(EXTRA_ACCOUNT_KEY)
             } else {
-                Utils.getDefaultAccountKey(this)
+                Utils.getDefaultAccountKey(this, preferences)
             }
             IntentUtils.openSearch(this, accountKey, query)
             return -1

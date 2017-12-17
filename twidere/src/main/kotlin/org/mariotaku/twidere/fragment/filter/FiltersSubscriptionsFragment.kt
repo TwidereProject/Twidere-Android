@@ -37,17 +37,12 @@ import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
 import org.mariotaku.twidere.model.FiltersSubscription
-import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.promise.RefreshFiltersSubscriptionsPromise
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
-import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.view.SimpleTextWatcher
 
 
-/**
- * Created by mariotaku on 2016/12/31.
- */
 class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor>,
         AbsListView.MultiChoiceModeListener {
 
@@ -102,7 +97,6 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
         when (requestCode) {
             REQUEST_ADD_URL_SUBSCRIPTION_PURCHASE -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    Analyzer.log(PurchaseFinished.create(data!!))
                     executeAfterFragmentResumed { fragment ->
                         (fragment as FiltersSubscriptionsFragment).showAddUrlSubscription()
                     }
@@ -111,9 +105,7 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
                 }
             }
             REQUEST_PURCHASE_EXTRA_FEATURES -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    Analyzer.log(PurchaseFinished.create(data!!))
-                } else {
+                if (resultCode != Activity.RESULT_OK) {
                     activity?.finish()
                 }
             }

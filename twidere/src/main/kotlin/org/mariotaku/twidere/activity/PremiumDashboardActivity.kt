@@ -1,6 +1,5 @@
 package org.mariotaku.twidere.activity
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -32,8 +31,6 @@ import org.mariotaku.twidere.constant.promotionsEnabledKey
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
-import org.mariotaku.twidere.model.analyzer.PurchaseFinished
-import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.promotion.PromotionService
 import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
@@ -92,9 +89,6 @@ class PremiumDashboardActivity : BaseActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (resultCode) {
             REQUEST_PURCHASE_EXTRA_FEATURES -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    Analyzer.log(PurchaseFinished.create(data!!))
-                }
             }
             else -> {
                 val position = ((requestCode and 0xFF00) shr 8) - 1

@@ -22,13 +22,10 @@ package org.mariotaku.twidere.util
 import android.app.Activity
 import android.app.Application
 import android.content.SharedPreferences
-import org.mariotaku.twidere.annotation.AccountType
 
 abstract class Analyzer {
 
     protected abstract fun log(priority: Int, tag: String, msg: String)
-
-    protected abstract fun log(event: Event)
 
     protected abstract fun logException(throwable: Throwable)
 
@@ -38,28 +35,12 @@ abstract class Analyzer {
 
     protected abstract fun activityResumed(activity: Activity)
 
-    interface Event {
-        val name: String
-            get() = "Custom Event"
-        @AccountType val accountType: String?
-        @AccountType val accountHost: String?
-            get() = null
-
-        fun forEachValues(action: (key: String, value: String?) -> Unit) {
-
-        }
-    }
-
     companion object {
 
         var implementation: Analyzer? = null
 
         fun init(application: Application) {
             implementation?.init(application)
-        }
-
-        fun log(event: Event) {
-            implementation?.log(event)
         }
 
         fun log(priority: Int, tag: String, msg: String) {

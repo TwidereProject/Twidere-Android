@@ -62,7 +62,7 @@ object ParcelableStatusUpdateUtils {
                             } else {
                                 LinkCreator.getQuotedStatusWebLink(status)
                             }
-                            statusUpdate.attachment_url = statusLink.toString()
+                            statusUpdate.attachment_url = statusLink?.toString()
                             statusUpdate.text = draft.text
                         }
                     }
@@ -71,8 +71,7 @@ object ParcelableStatusUpdateUtils {
             is StatusObjectActionExtras -> {
                 when (draft.action_type) {
                     Draft.Action.QUOTE -> {
-                        val link = LinkCreator.getStatusWebLink(actionExtras.status)
-                        statusUpdate.attachment_url = link.toString()
+                        statusUpdate.attachment_url = LinkCreator.getStatusWebLink(actionExtras.status)?.toString()
                     }
                 }
             }

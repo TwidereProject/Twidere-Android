@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.fragment.timeline
 
-import android.accounts.AccountManager
 import android.app.Activity
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
@@ -69,7 +68,6 @@ import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.adapter.removeStatuses
 import org.mariotaku.twidere.extension.data.observe
-import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.extension.view.firstVisibleItemPosition
 import org.mariotaku.twidere.extension.view.lastVisibleItemPosition
 import org.mariotaku.twidere.fragment.AbsContentRecyclerViewFragment
@@ -78,7 +76,6 @@ import org.mariotaku.twidere.fragment.status.FavoriteConfirmDialogFragment
 import org.mariotaku.twidere.fragment.status.RetweetQuoteDialogFragment
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
 import org.mariotaku.twidere.model.*
-import org.mariotaku.twidere.model.analyzer.Share
 import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.event.GetStatusesTaskEvent
 import org.mariotaku.twidere.model.event.StatusDestroyedEvent
@@ -219,10 +216,6 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                 val shareIntent = Utils.createStatusShareIntent(context, status)
                 val chooser = Intent.createChooser(shareIntent, getString(R.string.share_status))
                 startActivity(chooser)
-
-                val am = AccountManager.get(context)
-                val accountType = am.findAccount(status.account_key)?.getAccountType(am)
-                Analyzer.log(Share.status(accountType, status))
                 return true
             }
             R.id.make_gap -> {
@@ -693,12 +686,17 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                 }
                 REQUEST_RETWEET_SELECT_ACCOUNT -> {
                     if (resultCode != Activity.RESULT_OK || data == null) return
-                    val accountKey = data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
+                    val accountKey = data.extras!!.accountKey!!
                     val extras = data.getBundleExtra(EXTRA_EXTRAS)
-                    val status = extras.getParcelable<ParcelableStatus>(EXTRA_STATUS)
+                    val status = extras.status!!
                     if (status.account_key.host != accountKey.host) {
                         val composeIntent = Intent(fragment.context, ComposeActivity::class.java)
-                        composeIntent.putExtra(Intent.EXTRA_TEXT, "${status.text_plain} ${LinkCreator.getStatusWebLink(status)}")
+                        val link = LinkCreator.getStatusWebLink(status)
+                        if (link == null) {
+                            Toast.makeText(fragment.context, R.string.message_toast_retweet_not_supported, Toast.LENGTH_SHORT).show()
+                            return
+                        }
+                        composeIntent.putExtra(Intent.EXTRA_TEXT, "${status.text_plain} $link")
                         composeIntent.putExtra(EXTRA_ACCOUNT_KEY, accountKey)
                         composeIntent.putExtra(EXTRA_SELECTION, 0)
                         fragment.startActivity(composeIntent)

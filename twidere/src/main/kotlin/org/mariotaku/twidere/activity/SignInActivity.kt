@@ -84,11 +84,14 @@ import org.mariotaku.twidere.constant.apiLastChangeKey
 import org.mariotaku.twidere.constant.defaultAPIConfigKey
 import org.mariotaku.twidere.constant.randomizeAccountNameKey
 import org.mariotaku.twidere.extension.*
-import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.isFanfouUser
 import org.mariotaku.twidere.extension.model.api.key
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.model.getColor
+import org.mariotaku.twidere.extension.model.getOAuthAuthorization
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.extension.model.safeType
 import org.mariotaku.twidere.fragment.APIEditorDialogFragment
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
@@ -102,7 +105,6 @@ import org.mariotaku.twidere.model.account.MastodonAccountExtras
 import org.mariotaku.twidere.model.account.StatusNetAccountExtras
 import org.mariotaku.twidere.model.account.TwitterAccountExtras
 import org.mariotaku.twidere.model.account.cred.*
-import org.mariotaku.twidere.model.analyzer.SignIn
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.*
@@ -415,9 +417,6 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             Toast.makeText(this, R.string.message_toast_already_logged_in, Toast.LENGTH_SHORT).show()
         } else {
             result.addAccount(am, preferences[randomizeAccountNameKey])
-            Analyzer.log(SignIn(true, accountType = result.type,
-                    credentialsType = apiConfig.credentialsType,
-                    officialKey = result.extras?.official == true))
             finishSignIn()
         }
     }
@@ -449,8 +448,6 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         } else {
             Toast.makeText(this, exception.getErrorMessage(this), Toast.LENGTH_SHORT).show()
         }
-        Analyzer.log(SignIn(false, credentialsType = apiConfig.credentialsType,
-                errorReason = errorReason, accountType = apiConfig.type))
     }
 
 

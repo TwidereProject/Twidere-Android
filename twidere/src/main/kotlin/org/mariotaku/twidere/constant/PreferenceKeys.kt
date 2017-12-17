@@ -16,6 +16,7 @@ import org.mariotaku.twidere.annotation.*
 import org.mariotaku.twidere.extension.getNonEmptyString
 import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.model.ProxySettings
+import org.mariotaku.twidere.model.QuoteFormat
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.model.timeline.UserTimelineFilter
@@ -86,6 +87,20 @@ val lastLaunchTimeKey = KLongKey("last_launch_time", -1)
 val promotionsEnabledKey = KBooleanKey("promotions_enabled", false)
 val qrArtEnabledKey = KBooleanKey("qr_art_enabled", true)
 val translationDestinationKey = KNullableStringKey(KEY_TRANSLATION_DESTINATION, null)
+val quoteFormatKey = object : KSimpleKey<QuoteFormat>(KEY_QUOTE_FORMAT, QuoteFormat()) {
+    override fun read(preferences: SharedPreferences): QuoteFormat {
+        val format = preferences.getString(key, null)
+        if (format == null || format.isEmpty()) return def
+        return QuoteFormat(format)
+    }
+
+    override fun write(editor: SharedPreferences.Editor, value: QuoteFormat): Boolean {
+        editor.putString(key, value.format)
+        return true
+    }
+
+}
+val pebbleNotificationKey = KBooleanKey(KEY_PEBBLE_NOTIFICATIONS, true)
 
 object cacheSizeLimitKey : KSimpleKey<Int>(KEY_CACHE_SIZE_LIMIT, 300) {
     override fun read(preferences: SharedPreferences) = preferences.getInt(key, def).coerceIn(100,

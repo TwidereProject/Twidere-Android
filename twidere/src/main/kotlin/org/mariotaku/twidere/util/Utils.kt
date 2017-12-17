@@ -42,7 +42,6 @@ import android.support.v4.net.ConnectivityManagerCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.accessibility.AccessibilityEventCompat
 import android.support.v7.app.AppCompatActivity
-import android.text.TextUtils
 import android.text.format.DateFormat
 import android.text.format.DateUtils
 import android.util.Log
@@ -66,7 +65,6 @@ import org.mariotaku.sqliteqb.library.Selectable
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.TwidereConstants.METADATA_KEY_EXTENSION_USE_JSON
-import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
 import org.mariotaku.twidere.TwidereConstants.TAB_CODE_DIRECT_MESSAGES
 import org.mariotaku.twidere.TwidereConstants.TAB_CODE_HOME_TIMELINE
 import org.mariotaku.twidere.TwidereConstants.TAB_CODE_NOTIFICATIONS_TIMELINE
@@ -249,9 +247,8 @@ object Utils {
         return Columns(*columns)
     }
 
-    fun getDefaultAccountKey(context: Context): UserKey? {
-        val prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-        val accountKey = prefs[defaultAccountKey]
+    fun getDefaultAccountKey(context: Context, preferences: SharedPreferences): UserKey? {
+        val accountKey = preferences[defaultAccountKey]
         val accountKeys = DataStoreUtils.getAccountKeys(context)
 
         return accountKeys.find { it.maybeEquals(accountKey) } ?: run {
@@ -303,19 +300,6 @@ object Utils {
         return url
     }
 
-    fun getQuoteStatus(context: Context?, status: ParcelableStatus): String? {
-        if (context == null) return null
-        var quoteFormat: String = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).getString(
-                KEY_QUOTE_FORMAT, DEFAULT_QUOTE_FORMAT)
-        if (TextUtils.isEmpty(quoteFormat)) {
-            quoteFormat = DEFAULT_QUOTE_FORMAT
-        }
-        var result = quoteFormat.replace(FORMAT_PATTERN_LINK, LinkCreator.getStatusWebLink(status).toString())
-        result = result.replace(FORMAT_PATTERN_NAME, status.user_screen_name)
-        result = result.replace(FORMAT_PATTERN_TEXT, status.text_plain)
-        return result
-    }
-
     fun getResId(context: Context?, string: String?): Int {
         if (context == null || string == null) return 0
         var m = PATTERN_RESOURCE_IDENTIFIER.matcher(string)
@@ -327,22 +311,14 @@ object Utils {
     }
 
 
-    fun getTabDisplayOption(context: Context): String {
+    fun getTabDisplayOption(context: Context, preferences: SharedPreferences): Int {
         val defaultOption = context.getString(R.string.default_tab_display_option)
-        val prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-        return prefs.getString(KEY_TAB_DISPLAY_OPTION, defaultOption) ?: defaultOption
-    }
-
-    fun getTabDisplayOptionInt(context: Context): Int {
-        return getTabDisplayOptionInt(getTabDisplayOption(context))
-    }
-
-    fun getTabDisplayOptionInt(option: String): Int {
-        if (VALUE_TAB_DISPLAY_OPTION_ICON == option)
-            return DisplayOption.ICON
-        else if (VALUE_TAB_DISPLAY_OPTION_LABEL == option)
-            return DisplayOption.LABEL
-        return DisplayOption.BOTH
+        val option = preferences.getString(KEY_TAB_DISPLAY_OPTION, defaultOption) ?: defaultOption
+        return when (option) {
+            VALUE_TAB_DISPLAY_OPTION_ICON -> DisplayOption.ICON
+            VALUE_TAB_DISPLAY_OPTION_LABEL -> DisplayOption.LABEL
+            else -> DisplayOption.BOTH
+        }
     }
 
     fun hasNavBar(context: Context): Boolean {
@@ -573,38 +549,27 @@ object Utils {
 
     /**
      * Send Notifications to Pebble smart watches
-
+     *
      * @param context Context
-     * *
      * @param title   String
-     * *
      * @param message String
      */
     fun sendPebbleNotification(context: Context, title: String?, message: String) {
-        val appName: String
-
-        if (title == null) {
-            appName = context.getString(R.string.app_name)
+        val appName = if (title == null) {
+            context.getString(R.string.app_name)
         } else {
-            appName = "${context.getString(R.string.app_name)} - $title"
+            "${context.getString(R.string.app_name)} - $title"
         }
 
-        if (TextUtils.isEmpty(message)) return
-        val prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+        if (message.isEmpty()) return
 
-        if (prefs.getBoolean(KEY_PEBBLE_NOTIFICATIONS, false)) {
+        val intent = Intent(INTENT_ACTION_PEBBLE_NOTIFICATION)
+        intent.putExtra("messageType", "PEBBLE_ALERT")
+        intent.putExtra("sender", appName)
+        intent.putExtra("notificationData", JsonSerializer.serializeList(listOf(PebbleMessage(appName, message)),
+                PebbleMessage::class.java))
 
-            val messages = ArrayList<PebbleMessage>()
-            messages.add(PebbleMessage(appName, message))
-
-            val intent = Intent(INTENT_ACTION_PEBBLE_NOTIFICATION)
-            intent.putExtra("messageType", "PEBBLE_ALERT")
-            intent.putExtra("sender", appName)
-            intent.putExtra("notificationData", JsonSerializer.serializeList(messages, PebbleMessage::class.java))
-
-            context.applicationContext.sendBroadcast(intent)
-        }
-
+        context.applicationContext.sendBroadcast(intent)
     }
 
 }

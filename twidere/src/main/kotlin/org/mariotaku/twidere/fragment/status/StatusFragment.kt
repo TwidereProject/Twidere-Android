@@ -71,8 +71,6 @@ import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.api.key
 import org.mariotaku.twidere.extension.model.api.toParcelable
-import org.mariotaku.twidere.extension.model.getAccountType
-import org.mariotaku.twidere.extension.model.media_type
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.model.originalId
 import org.mariotaku.twidere.extension.view.calculateSpaceItemHeight
@@ -82,8 +80,6 @@ import org.mariotaku.twidere.fragment.timeline.AbsTimelineFragment
 import org.mariotaku.twidere.loader.ParcelableStatusLoader
 import org.mariotaku.twidere.loader.statuses.ConversationLoader
 import org.mariotaku.twidere.model.*
-import org.mariotaku.twidere.model.analyzer.Share
-import org.mariotaku.twidere.model.analyzer.StatusView
 import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.model.pagination.Pagination
@@ -223,9 +219,10 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
         linkHandlerTitle = getString(R.string.title_status)
-        Utils.setNdefPushMessageCallback(activity!!, CreateNdefMessageCallback {
-            val status = status ?: return@CreateNdefMessageCallback null
-            NdefMessage(arrayOf(NdefRecord.createUri(LinkCreator.getStatusWebLink(status))))
+        Utils.setNdefPushMessageCallback(activity!!, CreateNdefMessageCallback cb@ {
+            val status = status ?: return@cb null
+            val link = LinkCreator.getStatusWebLink(status) ?: return@cb null
+            return@cb NdefMessage(arrayOf(NdefRecord.createUri(link)))
         })
         adapter = StatusDetailsAdapter(this)
         layoutManager = StatusListLinearLayoutManager(context!!, recyclerView)
@@ -374,11 +371,6 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 if (position != RecyclerView.NO_POSITION) {
                     layoutManager.scrollToPositionWithOffset(position, 0)
                 }
-
-                Analyzer.log(StatusView(details?.type, status.media_type).apply {
-                    this.type = StatusView.getStatusType(status)
-                    this.source = status.source?.let(HtmlEscapeHelper::toPlainText)
-                })
             } else if (readPosition != null) {
                 restoreReadPosition(readPosition)
             }
@@ -569,11 +561,6 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             val chooser = Intent.createChooser(shareIntent, getString(R.string.share_status))
 
             startActivity(chooser)
-
-            val am = AccountManager.get(context)
-            val accountType = am.findAccount(status.account_key)?.getAccountType(am)
-
-            Analyzer.log(Share.status(accountType, status))
             return true
         }
         return MenuUtils.handleStatusClick(activity!!, this, fragmentManager!!,

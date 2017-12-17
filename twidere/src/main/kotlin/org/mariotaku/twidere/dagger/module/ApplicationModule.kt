@@ -45,8 +45,7 @@ import org.mariotaku.mediaviewer.library.FileCache
 import org.mariotaku.mediaviewer.library.MediaDownloader
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.restfu.okhttp3.OkHttpRestClient
-import org.mariotaku.twidere.Constants
-import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_CACHE_SIZE_LIMIT
 import org.mariotaku.twidere.constant.autoRefreshCompatibilityModeKey
 import org.mariotaku.twidere.extension.model.load
@@ -125,7 +124,7 @@ class ApplicationModule(private val application: Application) {
     @Provides
     @Singleton
     fun sharedPreferences(): SharedPreferences {
-        return application.getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+        return application.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
     }
 
     @Provides

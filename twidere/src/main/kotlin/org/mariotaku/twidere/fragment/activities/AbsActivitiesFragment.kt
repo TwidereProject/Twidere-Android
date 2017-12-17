@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.fragment.activities
 
-import android.accounts.AccountManager
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
 import android.arch.paging.PagedList
@@ -57,9 +56,7 @@ import org.mariotaku.twidere.constant.readFromBottomKey
 import org.mariotaku.twidere.data.CursorObjectLivePagedListProvider
 import org.mariotaku.twidere.data.ExtendedPagedListProvider
 import org.mariotaku.twidere.data.processor.DataSourceItemProcessor
-import org.mariotaku.twidere.extension.findAccount
 import org.mariotaku.twidere.extension.model.activityStatus
-import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.extension.showContextMenuForChild
 import org.mariotaku.twidere.extension.view.firstVisibleItemPosition
@@ -70,7 +67,6 @@ import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.analyzer.Share
 import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.event.GetActivitiesTaskEvent
 import org.mariotaku.twidere.model.event.StatusDestroyedEvent
@@ -191,10 +187,6 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
                 val shareIntent = Utils.createStatusShareIntent(context, status)
                 val chooser = Intent.createChooser(shareIntent, getString(R.string.share_status))
                 startActivity(chooser)
-
-                val am = AccountManager.get(context)
-                val accountType = am.findAccount(status.account_key)?.getAccountType(am)
-                Analyzer.log(Share.status(accountType, status))
                 return true
             }
             R.id.make_gap -> {

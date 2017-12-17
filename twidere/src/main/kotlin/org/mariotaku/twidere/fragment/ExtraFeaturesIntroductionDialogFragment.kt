@@ -15,10 +15,6 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_REQUEST_CODE
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.onShow
-import org.mariotaku.twidere.model.analyzer.PurchaseConfirm
-import org.mariotaku.twidere.model.analyzer.PurchaseFinished
-import org.mariotaku.twidere.model.analyzer.PurchaseIntroduction
-import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 
 /**
@@ -37,7 +33,6 @@ class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
         builder.setView(R.layout.dialog_extra_features_introduction)
         builder.setPositiveButton(R.string.action_purchase) { _, _ ->
             startPurchase(feature)
-            Analyzer.log(PurchaseConfirm(PurchaseFinished.NAME_EXTRA_FEATURES))
         }
         builder.setNegativeButton(R.string.action_later) { _, _ ->
             onDialogCancelled()
@@ -65,9 +60,6 @@ class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
                 startPurchase(ExtraFeaturesService.FEATURE_FEATURES_PACK)
                 dismiss()
             }
-        }
-        if (savedInstanceState == null) {
-            Analyzer.log(PurchaseIntroduction(feature, source))
         }
         return dialog
     }

@@ -1,7 +1,6 @@
 package org.mariotaku.twidere.fragment.filter
 
 import android.accounts.AccountManager
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -39,11 +38,9 @@ import org.mariotaku.twidere.fragment.AddUserFilterDialogFragment
 import org.mariotaku.twidere.model.FiltersData
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.promise.MutePromises
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.text.style.EmojiSpan
-import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.UserColorNameManager
@@ -97,9 +94,6 @@ class FilteredUsersFragment : BaseFiltersFragment() {
                 exportToMutedUsers(accountKey, userKeys)
             }
             REQUEST_PURCHASE_EXTRA_FEATURES -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    Analyzer.log(PurchaseFinished.create(data!!))
-                }
             }
         }
     }

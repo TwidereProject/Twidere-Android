@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.fragment.drafts
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
@@ -61,11 +60,9 @@ import org.mariotaku.twidere.fragment.AbsContentListViewFragment
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.model.Draft
-import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.model.draft.QuoteStatusActionExtras
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.service.LengthyOperationsService
-import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.deleteDrafts
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
@@ -97,9 +94,6 @@ class DraftsListFragment : AbsContentListViewFragment<DraftsAdapter>(), LoaderCa
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             REQUEST_PURCHASE_EXTRA_FEATURES -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    Analyzer.log(PurchaseFinished.create(data!!))
-                }
             }
         }
     }

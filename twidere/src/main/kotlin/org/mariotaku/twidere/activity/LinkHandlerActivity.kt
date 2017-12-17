@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.activity
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -82,9 +81,11 @@ import org.mariotaku.twidere.fragment.users.*
 import org.mariotaku.twidere.graphic.ActionBarColorDrawable
 import org.mariotaku.twidere.graphic.EmptyDrawable
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.analyzer.PurchaseFinished
-import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.DataStoreUtils
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
+import org.mariotaku.twidere.util.MultiSelectEventHandler
+import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.linkhandler.TwidereLinkMatcher
 import org.mariotaku.twidere.util.theme.getCurrentThemeResource
 
@@ -218,9 +219,6 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             REQUEST_PURCHASE_EXTRA_FEATURES -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    Analyzer.log(PurchaseFinished.create(data!!))
-                }
             }
             else -> {
                 super.onActivityResult(requestCode, resultCode, data)

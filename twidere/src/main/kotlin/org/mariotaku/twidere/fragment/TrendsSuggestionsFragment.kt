@@ -60,7 +60,7 @@ class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), L
     private val accountKey: UserKey?
         get() {
             return Utils.getAccountKeys(context!!, arguments)?.firstOrNull()
-                    ?: Utils.getDefaultAccountKey(context!!)
+                    ?: Utils.getDefaultAccountKey(context!!, preferences)
         }
 
     private val woeId: Int

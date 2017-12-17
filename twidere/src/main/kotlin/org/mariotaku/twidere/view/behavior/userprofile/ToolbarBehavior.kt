@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.view.behavior.userprofile
 
 import android.animation.ArgbEvaluator
-import android.annotation.SuppressLint
 import android.content.Context
 import android.support.design.widget.CoordinatorLayout
 import android.support.v7.widget.Toolbar
@@ -54,7 +53,6 @@ internal class ToolbarBehavior(context: Context?, attrs: AttributeSet? = null) :
         return false
     }
 
-    @SuppressLint("RestrictedApi")
     private fun updateToolbarFactor(parent: CoordinatorLayout, child: Toolbar, dependency: View): Boolean {
         val actionBarBackground = child.background as? ActionBarDrawable ?: return true
         val bannerContainer = parent.profileBannerContainer

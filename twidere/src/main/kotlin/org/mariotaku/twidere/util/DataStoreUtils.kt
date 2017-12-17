@@ -789,13 +789,13 @@ object DataStoreUtils {
             userValues.add(userCreator.create(userItem))
 
             val keywordItem = FiltersData.BaseItem()
-            keywordItem.value = "@" + user.screen_name
+            keywordItem.value = "@${user.screen_name}"
             keywordItem.userKey = user.key
             keywordValues.add(baseCreator.create(keywordItem))
 
             // Insert user link (without scheme) to links
             val linkItem = FiltersData.BaseItem()
-            val userLink = LinkCreator.getUserWebLink(user)
+            val userLink = LinkCreator.getUserWebLink(user) ?: continue
             val linkWithoutScheme = userLink.toString().substringAfter("://")
             linkItem.value = linkWithoutScheme
             linkItem.userKey = user.key

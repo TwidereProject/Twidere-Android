@@ -121,7 +121,7 @@ class UserQrDialogFragment : BaseDialogFragment() {
 
             val palette = Palette.from(background).generate()
 
-            val link = LinkCreator.getUserWebLink(fragment.user)
+            val link = LinkCreator.getUserWebLink(fragment.user)!!
             val segments = QrSegment.makeSegments(link.toString())
             val qrCode = QrCode.encodeSegments(segments, QrCode.Ecc.HIGH, 5, 40, -1, true)
             val uniqr = UniqR(AndroidPlatform(), if (art) background else null, QrCodeData(qrCode))

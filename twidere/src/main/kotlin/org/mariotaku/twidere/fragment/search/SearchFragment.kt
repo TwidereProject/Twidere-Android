@@ -52,12 +52,10 @@ import org.mariotaku.twidere.fragment.timeline.MediaSearchTimelineFragment
 import org.mariotaku.twidere.fragment.timeline.SearchTimelineFragment
 import org.mariotaku.twidere.fragment.users.SearchUsersFragment
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.analyzer.Search
 import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.promise.SavedSearchPromises
 import org.mariotaku.twidere.provider.RecentSearchProvider
 import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory
-import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.ThemeUtils
 
 class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface,
@@ -101,7 +99,6 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface,
             val values = ContentValues()
             values.put(SearchHistory.QUERY, query)
             activity.contentResolver.insert(SearchHistory.CONTENT_URI, values)
-            Analyzer.log(Search(query, accountType))
         }
 
         if (activity is AppCompatActivity) {

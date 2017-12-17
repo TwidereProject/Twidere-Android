@@ -47,6 +47,7 @@ import org.mariotaku.twidere.annotation.NotificationType
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
 import org.mariotaku.twidere.constant.nameFirstKey
+import org.mariotaku.twidere.constant.pebbleNotificationKey
 import org.mariotaku.twidere.extension.getDetails
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.formattedTextWithIndices
@@ -154,7 +155,9 @@ class ContentNotificationManager(
             try {
                 val notificationId = Utils.getNotificationId(NOTIFICATION_ID_HOME_TIMELINE, accountKey)
                 notificationManager.notify("home", notificationId, builder.build())
-                Utils.sendPebbleNotification(context, null, notificationContent)
+                if (preferences[pebbleNotificationKey]) {
+                    Utils.sendPebbleNotification(context, null, notificationContent)
+                }
             } catch (e: SecurityException) {
                 // Silently ignore
             }
@@ -268,7 +271,9 @@ class ContentNotificationManager(
 
         val notificationId = Utils.getNotificationId(NOTIFICATION_ID_INTERACTIONS_TIMELINE, accountKey)
         notificationManager.notify("interactions", notificationId, builder.build())
-        Utils.sendPebbleNotification(context, context.getString(R.string.interactions), pebbleNotificationStringBuilder.toString())
+        if (preferences[pebbleNotificationKey]) {
+            Utils.sendPebbleNotification(context, context.getString(R.string.interactions), pebbleNotificationStringBuilder.toString())
+        }
     }
 
     fun showMessages(pref: AccountPreferences) {

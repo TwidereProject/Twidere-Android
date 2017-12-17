@@ -287,9 +287,10 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             return
         }
 
-        Utils.setNdefPushMessageCallback(activity, CreateNdefMessageCallback {
-            val user = liveUser.user ?: return@CreateNdefMessageCallback null
-            NdefMessage(arrayOf(NdefRecord.createUri(LinkCreator.getUserWebLink(user))))
+        Utils.setNdefPushMessageCallback(activity, CreateNdefMessageCallback cb@ {
+            val user = liveUser.user ?: return@cb null
+            val link = LinkCreator.getUserWebLink(user) ?: return@cb null
+            return@cb NdefMessage(arrayOf(NdefRecord.createUri(link)))
         })
 
         pagerAdapter = SupportTabsAdapter(activity, childFragmentManager)
@@ -388,7 +389,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val user = this.liveUser.user ?: return
         val account = this.liveUser.account
         val relationship = this.liveRelationship.relationship
-
+        val linkAvailable = LinkCreator.hasWebLink(user)
         val isMyself = user.isSelf
         val mentionItem = menu.findItem(R.id.mention)
         if (mentionItem != null) {
@@ -396,6 +397,11 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     user.name, user.screen_name, nameFirst)
             mentionItem.title = getString(R.string.mention_user_name, displayName)
         }
+
+        menu.setItemAvailability(R.id.qr_code, linkAvailable)
+        menu.setItemAvailability(R.id.copy_url, linkAvailable)
+        menu.setItemAvailability(R.id.open_in_browser, linkAvailable)
+
         menu.setItemAvailability(R.id.mention, !isMyself)
         menu.setItemAvailability(R.id.incoming_friendships, isMyself)
         menu.setItemAvailability(R.id.saved_searches, isMyself)
@@ -610,7 +616,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 return true
             }
             R.id.open_in_browser -> {
-                val uri = LinkCreator.getUserWebLink(user)
+                val uri = LinkCreator.getUserWebLink(user) ?: return true
                 val intent = Intent(Intent.ACTION_VIEW, uri)
                 intent.addCategory(Intent.CATEGORY_BROWSABLE)
                 intent.`package` = IntentUtils.getDefaultBrowserPackage(context, uri, true)
@@ -620,7 +626,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 return true
             }
             R.id.copy_url -> {
-                val uri = LinkCreator.getUserWebLink(user)
+                val uri = LinkCreator.getUserWebLink(user) ?: return true
                 ClipboardUtils.setText(context, uri.toString())
                 Toast.makeText(context, R.string.message_toast_link_copied_to_clipboard, Toast.LENGTH_SHORT).show()
                 return true
@@ -962,6 +968,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         }
         liveUser.load()
         if (liveUser.user == null) {
+            linkHandlerTitle = getString(R.string.title_user)
             errorContainer.visibility = View.GONE
             progressContainer.visibility = View.VISIBLE
             errorText.text = null

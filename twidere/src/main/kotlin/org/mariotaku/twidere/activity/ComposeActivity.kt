@@ -86,7 +86,6 @@ import org.mariotaku.twidere.extension.text.twitter.extractReplyTextAndMentions
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.fragment.PermissionRequestDialogFragment.PermissionRequestCancelCallback
 import org.mariotaku.twidere.model.*
-import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.model.draft.UpdateStatusActionExtras
 import org.mariotaku.twidere.model.schedule.ScheduleInfo
 import org.mariotaku.twidere.preference.ComponentPickerPreference
@@ -434,9 +433,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 }
             }
             REQUEST_PURCHASE_EXTRA_FEATURES -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    Analyzer.log(PurchaseFinished.create(data!!))
-                }
             }
             REQUEST_SET_SCHEDULE -> {
                 if (resultCode == Activity.RESULT_OK) {
@@ -959,7 +955,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private fun handleQuoteIntent(status: ParcelableStatus?): Boolean {
         if (status == null) return false
-        editText.setText(Utils.getQuoteStatus(this, status))
+        editText.setText(preferences[quoteFormatKey].get(status))
         editText.setSelection(0)
         accountsAdapter.selectedAccountKeys = arrayOf(status.account_key)
         showQuoteLabelAndHint(status)
@@ -1555,7 +1551,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             val replyToSelf = accounts.singleOrNull()?.key == inReplyTo.user_key
             // Fix status to at least make mentioned user know what status it is
             if (!replyToOriginalUser && !replyToSelf) {
-                update.attachment_url = LinkCreator.getStatusWebLink(inReplyTo).toString()
+                update.attachment_url = LinkCreator.getStatusWebLink(inReplyTo)?.toString()
             }
         } else {
             if (text.isEmpty() && media.isEmpty()) throw NoContentException()

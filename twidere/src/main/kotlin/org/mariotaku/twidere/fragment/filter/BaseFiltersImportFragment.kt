@@ -33,16 +33,10 @@ import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
 import org.mariotaku.twidere.model.ParcelableUser
-import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.model.pagination.Pagination
-import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import java.lang.ref.WeakReference
-
-/**
- * Created by mariotaku on 2016/12/26.
- */
 
 abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<SelectableUsersAdapter>(),
         LoaderManager.LoaderCallbacks<List<ParcelableUser>?> {
@@ -64,7 +58,6 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
         when (requestCode) {
             REQUEST_PURCHASE_EXTRA_FEATURES -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    Analyzer.log(PurchaseFinished.create(data!!))
                 }
             }
         }
