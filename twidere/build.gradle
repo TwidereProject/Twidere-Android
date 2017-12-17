@@ -50,6 +50,8 @@ android {
     }
 
     dexOptions {
+        // This may break application!
+        keepRuntimeAnnotatedClasses false
     }
 
     aaptOptions {
