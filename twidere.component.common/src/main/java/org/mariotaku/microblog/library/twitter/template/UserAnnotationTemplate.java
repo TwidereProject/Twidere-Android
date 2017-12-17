@@ -27,7 +27,7 @@ import org.mariotaku.restfu.annotation.param.Params;
 @Params({@KeyValue(key = "include_entities", valueKey = "include_entities"),
         @KeyValue(key = "include_cards", valueKey = "include_cards"),
         @KeyValue(key = "cards_platform", valueKey = "cards_platform"),
-        @KeyValue(key = "include_blocking", value = "true"),
-        @KeyValue(key = "include_blocked_by", value = "true")})
+        @KeyValue(key = "include_blocking", valueKey = "include_blocking"),
+        @KeyValue(key = "include_blocked_by", valueKey = "include_blocked_by")})
 public class UserAnnotationTemplate {
 }

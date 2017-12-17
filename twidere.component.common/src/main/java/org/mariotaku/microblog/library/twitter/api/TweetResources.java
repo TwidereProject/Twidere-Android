@@ -27,7 +27,6 @@ import org.mariotaku.microblog.library.twitter.model.StatusUpdate;
 import org.mariotaku.microblog.library.twitter.template.StatusAnnotationTemplate;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
-import org.mariotaku.restfu.annotation.param.KeyValue;
 import org.mariotaku.restfu.annotation.param.Param;
 import org.mariotaku.restfu.annotation.param.Params;
 import org.mariotaku.restfu.annotation.param.Path;
@@ -55,7 +54,6 @@ public interface TweetResources {
     Status showStatus(@Query("id") String id) throws MicroBlogException;
 
     @POST("/statuses/update.json")
-    @Params({@KeyValue(key = "tweet_mode", valueKey = "tweet_mode")})
     Status updateStatus(@Param StatusUpdate latestStatus) throws MicroBlogException;
 
     @POST("/statuses/lookup.json")

@@ -40,6 +40,8 @@ object MicroBlogAPIFactory {
         sTwitterConstantPool.put("skip_aggregation", "false")
         sTwitterConstantPool.put("include_ext_alt_text", "true")
         sTwitterConstantPool.put("tweet_mode", "extended")
+        sTwitterConstantPool.put("include_blocking", "true")
+        sTwitterConstantPool.put("include_blocked_by", "true")
 
         sFanfouConstantPool.put("format", "html")
     }
