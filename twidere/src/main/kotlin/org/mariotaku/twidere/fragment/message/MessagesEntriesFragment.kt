@@ -22,6 +22,7 @@ package org.mariotaku.twidere.fragment.message
 import android.app.Activity
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
+import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import android.content.Context
 import android.content.Intent
@@ -35,8 +36,10 @@ import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.activity_premium_dashboard.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.toStringArray
-import org.mariotaku.sqliteqb.library.*
-import org.mariotaku.sqliteqb.library.Columns.Column
+import org.mariotaku.sqliteqb.library.Columns
+import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.sqliteqb.library.OrderBy
+import org.mariotaku.sqliteqb.library.Table
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.EXTRA_ACCOUNT_KEYS
 import org.mariotaku.twidere.TwidereConstants.REQUEST_SELECT_ACCOUNT
@@ -48,7 +51,7 @@ import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_TYPES
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
-import org.mariotaku.twidere.data.CursorObjectLivePagedListProvider
+import org.mariotaku.twidere.data.CursorObjectDataSourceFactory
 import org.mariotaku.twidere.extension.accountKey
 import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.model.getTitle
@@ -61,11 +64,11 @@ import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.GetMessagesTaskEvent
 import org.mariotaku.twidere.promise.MessagePromises
-import org.mariotaku.twidere.provider.TwidereDataProvider
-import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
-import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.DataStoreUtils
+import org.mariotaku.twidere.util.ErrorInfoStore
+import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.view.ExtendedRecyclerView
 
@@ -217,32 +220,16 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
     }
 
     private fun createLiveData(): LiveData<PagedList<ParcelableMessageConversation>?> {
-        val projection = (Conversations.COLUMNS + Conversations.UNREAD_COUNT).map {
-            TwidereQueryBuilder.mapConversationsProjection(it)
-        }.toTypedArray()
-        val qb = SQLQueryBuilder.select(Columns(*projection))
-        qb.from(Table(Conversations.TABLE_NAME))
-        qb.join(Join(false, Join.Operation.LEFT_OUTER, Table(Messages.TABLE_NAME),
-                Expression.and(
-                        Expression.equals(
-                                Column(Table(Conversations.TABLE_NAME), Conversations.CONVERSATION_ID),
-                                Column(Table(Messages.TABLE_NAME), Messages.CONVERSATION_ID)
-                        ),
-                        Expression.equals(
-                                Column(Table(Conversations.TABLE_NAME), Conversations.ACCOUNT_KEY),
-                                Column(Table(Messages.TABLE_NAME), Messages.ACCOUNT_KEY))
-                )
-        ))
-        qb.where(Expression.inArgs(Column(Table(Conversations.TABLE_NAME), Conversations.ACCOUNT_KEY), accountKeys.size))
-        qb.groupBy(Column(Table(Messages.TABLE_NAME), Messages.CONVERSATION_ID))
-        qb.orderBy(OrderBy(arrayOf(Conversations.LOCAL_TIMESTAMP, Conversations.SORT_ID), booleanArrayOf(false, false)))
-        qb.limit(RawSQLLang(TwidereDataProvider.PLACEHOLDER_LIMIT))
-        val provider = CursorObjectLivePagedListProvider(context!!.contentResolver,
-                TwidereQueryBuilder.rawQuery(qb.buildSQL(), Conversations.CONTENT_URI),
+        val projection = Conversations.COLUMNS + Conversations.UNREAD_COUNT
+        val factory = CursorObjectDataSourceFactory(context!!.contentResolver,
+                Conversations.CONTENT_URI,
+                projection = projection,
+                selection = Expression.inArgs(Columns.Column(Table(Conversations.TABLE_NAME), Conversations.ACCOUNT_KEY), accountKeys.size).sql,
                 selectionArgs = accountKeys.toStringArray(),
+                sortOrder = OrderBy(arrayOf(Conversations.LOCAL_TIMESTAMP, Conversations.SORT_ID), booleanArrayOf(false, false)).sql,
                 cls = ParcelableMessageConversation::class.java)
-        return provider.create(null, PagedList.Config.Builder()
-                .setPageSize(50).setEnablePlaceholders(false).build())
+        return LivePagedListBuilder(factory, PagedList.Config.Builder()
+                .setPageSize(50).setEnablePlaceholders(false).build()).build()
     }
 
     private fun onDataLoaded(data: PagedList<ParcelableMessageConversation>?) {

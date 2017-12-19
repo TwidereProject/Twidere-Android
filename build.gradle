@@ -35,7 +35,7 @@ allprojects {
 subprojects {
     buildscript {
         ext {
-            kotlinVersion = '1.2.0'
+            kotlinVersion = '1.2.10'
             pluginVersions = [
                     AndroidSvgDrawable: '3.0.0',
                     PlayServices      : '3.1.1',
@@ -70,7 +70,7 @@ subprojects {
                     ParcelablePlease       : '1.0.2',
                     Chameleon              : '0.9.25',
                     UniqR                  : '0.9.6',
-                    SQLiteQB               : '0.9.16',
+                    SQLiteQB               : '0.9.18',
                     Glide                  : '3.7.0',
                     GlideOkHttp3           : '1.4.0',
                     GlideTransformations   : '2.0.2',
@@ -81,7 +81,7 @@ subprojects {
                     Dagger                 : '2.11',
                     StethoBeanShellREPL    : '0.3',
                     ArchLifecycleExtensions: '1.0.0',
-                    ArchPaging             : '1.0.0-alpha3',
+                    ArchPaging             : '1.0.0-alpha4-1',
                     ConstraintLayout       : '1.0.2',
                     MessageBubbleView      : '2.1',
             ]

@@ -23,10 +23,6 @@ import android.os.Parcelable;
 
 import org.mariotaku.microblog.library.twitter.model.Paging;
 
-/**
- * Created by mariotaku on 2017/4/21.
- */
-
 public interface Pagination extends Parcelable {
 
     void applyTo(Paging paging);

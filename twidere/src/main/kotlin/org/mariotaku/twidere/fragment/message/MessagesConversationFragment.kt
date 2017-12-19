@@ -23,6 +23,7 @@ import android.accounts.AccountManager
 import android.app.Activity
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
+import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import android.content.Context
 import android.content.Intent
@@ -70,7 +71,7 @@ import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.data.ComputableLiveData
-import org.mariotaku.twidere.data.CursorObjectLivePagedListProvider
+import org.mariotaku.twidere.data.CursorObjectDataSourceFactory
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.fragment.AbsContentListRecyclerViewFragment
@@ -395,11 +396,11 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
                 Expression.equalsArgs(Messages.CONVERSATION_ID)).sql
         val selectionArgs = arrayOf(accountKey.toString(), conversationId)
         val sortOrder = OrderBy(Messages.SORT_ID, false).sql
-        val provider = CursorObjectLivePagedListProvider(context!!.contentResolver,
+        val factory = CursorObjectDataSourceFactory(context!!.contentResolver,
                 Messages.CONTENT_URI, Messages.COLUMNS, selection, selectionArgs, sortOrder,
                 ParcelableMessage::class.java)
-        return provider.create(null, PagedList.Config.Builder()
-                .setPageSize(50).setEnablePlaceholders(false).build())
+        return LivePagedListBuilder(factory, PagedList.Config.Builder()
+                .setPageSize(50).setEnablePlaceholders(false).build()).build()
     }
 
     private fun onDataLoaded(messages: PagedList<ParcelableMessage>?) {

@@ -21,6 +21,7 @@ package org.mariotaku.twidere.fragment.activities
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
+import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import android.content.ContentValues
 import android.content.Context
@@ -53,7 +54,7 @@ import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.readFromBottomKey
-import org.mariotaku.twidere.data.CursorObjectLivePagedListProvider
+import org.mariotaku.twidere.data.CursorObjectDataSourceFactory
 import org.mariotaku.twidere.data.ExtendedPagedListProvider
 import org.mariotaku.twidere.data.processor.DataSourceItemProcessor
 import org.mariotaku.twidere.extension.model.activityStatus
@@ -377,13 +378,13 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
             extraSelection.first.addTo(expressions)
             extraSelection.second?.addAllTo(expressionArgs)
         }
-        val provider = CursorObjectLivePagedListProvider(context!!.contentResolver, contentUri,
+        val factory = CursorObjectDataSourceFactory(context!!.contentResolver, contentUri,
                 activityColumnsLite, Expression.and(*expressions.toTypedArray()).sql,
                 expressionArgs.toTypedArray(), Activities.DEFAULT_SORT_ORDER,
                 ParcelableActivity::class.java, onCreateCursorObjectProcessor())
-        dataController = provider.obtainDataController()
-        return provider.create(null, PagedList.Config.Builder()
-                .setPageSize(50).setEnablePlaceholders(false).build())
+//        dataController = factory.obtainDataController()
+        return LivePagedListBuilder(factory, PagedList.Config.Builder()
+                .setPageSize(50).setEnablePlaceholders(false).build()).build()
     }
 
     private fun getFullActivity(position: Int): ParcelableActivity {

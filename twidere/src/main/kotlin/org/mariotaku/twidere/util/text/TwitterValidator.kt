@@ -20,10 +20,15 @@
 package org.mariotaku.twidere.util.text
 
 import com.twitter.Extractor
-import com.twitter.Validator
+import org.mariotaku.twidere.extension.text.twitter.extractReplyTextAndMentions
+import org.mariotaku.twidere.model.ParcelableStatus
+import org.mariotaku.twidere.model.UserKey
 import java.text.Normalizer
 
-object TwitterValidator : Validator() {
+object TwitterValidator {
+
+    const val shortUrlLength = 23
+    const val shortUrlLengthHttps = 23
 
     const val maxWeightedTweetLength: Int = 280
 
@@ -38,7 +43,7 @@ object TwitterValidator : Validator() {
 
     private val extractor = Extractor()
 
-    override fun getTweetLength(text: String): Int {
+    fun getTweetLength(text: String): Int {
         val normalized = Normalizer.normalize(text, Normalizer.Form.NFC)
         var weightedLength = 0
         val inputLength = normalized.length
@@ -60,20 +65,24 @@ object TwitterValidator : Validator() {
         return length
     }
 
-    override fun isValidTweet(text: String?): Boolean {
-        if (text == null || text.isEmpty()) {
-            return false
+    fun getTweetLength(text: String, ignoreMentions: Boolean, inReplyTo: ParcelableStatus?,
+            accountKey: UserKey? = inReplyTo?.account_key): Int {
+        if (!ignoreMentions || inReplyTo == null || accountKey == null) {
+            return getTweetLength(text)
         }
 
-        for (c in text.toCharArray()) {
-            if (c == '\uFFFE' || c == '\uFEFF' ||   // BOM
-                    c == '\uFFFF' ||                     // Special
-                    c in '\u202A'..'\u202E') {  // Direction change
-                return false
-            }
-        }
+        val (_, replyText, _, _, _) = extractor.extractReplyTextAndMentions(text, inReplyTo,
+                accountKey)
+        return getTweetLength(replyText)
+    }
 
-        return getTweetLength(text) <= maxWeightedTweetLength
+    fun isValidTweet(text: String): Boolean {
+        // BOM: uFFFE, uFEFF
+        // Special : uFFFF
+        // Direction change [u202A, u202E]
+        return text.none { c ->
+            c == '\uFFFE' || c == '\uFEFF' || c == '\uFFFF' || c in '\u202A'..'\u202E'
+        } && getTweetLength(text) in 0..maxWeightedTweetLength
     }
 
     private fun weightForCodePoint(codePoint: Int): Int {

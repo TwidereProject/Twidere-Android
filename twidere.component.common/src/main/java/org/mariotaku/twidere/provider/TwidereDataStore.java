@@ -398,6 +398,7 @@ public interface TwidereDataStore {
 
             String TABLE_NAME = "messages_conversations";
             String CONTENT_PATH = "messages/conversations";
+
             Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
         }
     }

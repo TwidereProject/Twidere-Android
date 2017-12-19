@@ -22,7 +22,6 @@ package org.mariotaku.twidere.util.text
 import org.mariotaku.ktextension.mapToIntArray
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.textLimit
-import org.mariotaku.twidere.extension.text.twitter.getTweetLength
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey

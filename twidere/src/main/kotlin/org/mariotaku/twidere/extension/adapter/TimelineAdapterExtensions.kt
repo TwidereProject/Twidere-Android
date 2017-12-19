@@ -19,15 +19,9 @@
 
 package org.mariotaku.twidere.extension.adapter
 
-import android.arch.paging.NullPaddedList
-import android.arch.paging.rawList
 import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter
 import org.mariotaku.twidere.model.ParcelableStatus
 
 fun ParcelableStatusesAdapter.removeStatuses(predicate: (ParcelableStatus?) -> Boolean) {
-    val statuses = statuses as? NullPaddedList ?: return
-    // FIXME: Dirty hack, may break in future versions
-    if (statuses.rawList.removeAll(predicate = predicate)) {
-        notifyDataSetChanged()
-    }
+    // TODO: It really broke as of 1.0-alpha4-1. Try make it work.
 }

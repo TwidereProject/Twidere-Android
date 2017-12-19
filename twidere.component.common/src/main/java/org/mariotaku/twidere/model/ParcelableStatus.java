@@ -576,14 +576,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         @Nullable
         public Map<String, CustomEmoji> emojis;
 
-        @JsonField(name = "next_key")
-        @Nullable
-        public String next_key;
-
-        @JsonField(name = "prev_key")
-        @Nullable
-        public String prev_key;
-
         @Override
         public int describeContents() {
             return 0;

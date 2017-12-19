@@ -23,6 +23,7 @@ import android.app.Activity
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
+import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import android.content.ContentValues
 import android.content.Context
@@ -60,10 +61,10 @@ import org.mariotaku.twidere.annotation.TimelineStyle
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
-import org.mariotaku.twidere.data.CursorObjectLivePagedListProvider
+import org.mariotaku.twidere.data.CursorObjectDataSourceFactory
 import org.mariotaku.twidere.data.ExceptionLiveData
 import org.mariotaku.twidere.data.ExtendedPagedListProvider
-import org.mariotaku.twidere.data.StatusesLivePagedListProvider
+import org.mariotaku.twidere.data.StatusesDataSourceFactory
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.adapter.removeStatuses
@@ -404,7 +405,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         val accountKey = accountKeys.singleOrNull()!!
 
         val errorLiveData = MutableLiveData<SingleResponse<PagedList<ParcelableStatus>?>>()
-        val provider = StatusesLivePagedListProvider(context.applicationContext,
+        val factory = StatusesDataSourceFactory(context.applicationContext,
                 onCreateStatusesFetcher(), accountKey, timelineFilter) {
             errorLiveData.postValue(SingleResponse(it))
         }
@@ -412,10 +413,11 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         val loadLimit = preferences[loadItemLimitKey]
         // We don't use dataController since it's not supported
         dataController = null
-        val apiLiveData = ExceptionLiveData.wrap(provider.create(null, PagedList.Config.Builder()
+
+        val apiLiveData = ExceptionLiveData.wrap(LivePagedListBuilder(factory, PagedList.Config.Builder()
                 .setPageSize(loadLimit.coerceAtMost(maxLoadLimit))
                 .setInitialLoadSizeHint(loadLimit.coerceAtMost(maxLoadLimit))
-                .build()))
+                .build()).build())
         merger.addSource(errorLiveData) {
             merger.removeSource(apiLiveData)
             merger.removeSource(errorLiveData)
@@ -443,13 +445,13 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
             extraSelection.first.addTo(expressions)
             extraSelection.second?.addAllTo(expressionArgs)
         }
-        val provider = CursorObjectLivePagedListProvider(context.contentResolver, contentUri,
+        val factory = CursorObjectDataSourceFactory(context.contentResolver, contentUri,
                 statusColumnsLite, Expression.and(*expressions.toTypedArray()).sql,
                 expressionArgs.toTypedArray(), Statuses.DEFAULT_SORT_ORDER,
                 ParcelableStatus::class.java)
-        dataController = provider.obtainDataController()
-        return ExceptionLiveData.wrap(provider.create(null, PagedList.Config.Builder()
-                .setPageSize(50).setEnablePlaceholders(false).build()))
+//        dataController = factory.obtainDataController()
+        return ExceptionLiveData.wrap(LivePagedListBuilder(factory, PagedList.Config.Builder()
+                .setPageSize(50).setEnablePlaceholders(false).build()).build())
     }
 
     private fun getFullStatus(position: Int): ParcelableStatus {

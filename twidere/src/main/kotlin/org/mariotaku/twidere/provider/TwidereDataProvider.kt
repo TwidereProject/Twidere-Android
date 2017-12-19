@@ -36,10 +36,10 @@ import android.support.v4.text.BidiFormatter
 import com.squareup.otto.Bus
 import okhttp3.Dns
 import org.mariotaku.ktextension.isNullOrEmpty
+import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.toNulls
+import org.mariotaku.sqliteqb.library.*
 import org.mariotaku.sqliteqb.library.Columns.Column
-import org.mariotaku.sqliteqb.library.Expression
-import org.mariotaku.sqliteqb.library.RawItemArray
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.ReadPositionTag
@@ -54,6 +54,7 @@ import org.mariotaku.twidere.promise.UpdateStatusPromise
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.SQLiteDatabaseWrapper.LazyLoadCallback
+import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
 import org.mariotaku.twidere.util.database.CachedUsersQueryBuilder
 import org.mariotaku.twidere.util.database.SuggestionsCursorCreator
@@ -222,14 +223,39 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                     if (projection != null || selection != null || sortOrder != null) {
                         throw IllegalArgumentException()
                     }
-                    var rawQuery = uri.lastPathSegment
-                    if (limit != null) {
-                        rawQuery = rawQuery.replace(PLACEHOLDER_LIMIT, limit)
-                    }
-                    val c = databaseWrapper.rawQuery(rawQuery, selectionArgs)
+                    val c = databaseWrapper.rawQuery(uri.lastPathSegment, selectionArgs)
                     uri.getQueryParameter(QUERY_PARAM_NOTIFY_URI)?.let {
                         c?.setNotificationUri(context.contentResolver, Uri.parse(it))
                     }
+                    return c
+                }
+                TableIds.MESSAGES_CONVERSATIONS -> if (projection?.contains(Messages.Conversations.UNREAD_COUNT) == true) {
+                    val mappedProjection = projection.mapToArray(TwidereQueryBuilder::mapConversationsProjection)
+                    val qb = SQLQueryBuilder.select(Columns(*mappedProjection))
+                    qb.from(Table(Messages.Conversations.TABLE_NAME))
+                    qb.join(Join(false, Join.Operation.LEFT_OUTER, Table(Messages.TABLE_NAME),
+                            Expression.and(
+                                    Expression.equals(
+                                            Column(Table(Messages.Conversations.TABLE_NAME), Messages.Conversations.CONVERSATION_ID),
+                                            Column(Table(Messages.TABLE_NAME), Messages.CONVERSATION_ID)
+                                    ),
+                                    Expression.equals(
+                                            Column(Table(Messages.Conversations.TABLE_NAME), Messages.Conversations.ACCOUNT_KEY),
+                                            Column(Table(Messages.TABLE_NAME), Messages.ACCOUNT_KEY))
+                            )
+                    ))
+                    if (selection != null) {
+                        qb.where(Expression(selection))
+                    }
+                    qb.groupBy(Column(Table(Messages.TABLE_NAME), Messages.CONVERSATION_ID))
+                    if (sortOrder != null) {
+                        qb.orderBy(RawSQLLang(sortOrder))
+                    }
+                    if (limit != null) {
+                        qb.limit(RawSQLLang(limit))
+                    }
+                    val c = databaseWrapper.rawQuery(qb.buildSQL(), selectionArgs)
+                    c?.setNotificationUri(context.contentResolver, uri)
                     return c
                 }
             }
@@ -517,8 +543,6 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
     }
 
     companion object {
-
-        const val PLACEHOLDER_LIMIT = "{limit}"
 
         private fun getConflictAlgorithm(tableId: Int): Int {
             when (tableId) {

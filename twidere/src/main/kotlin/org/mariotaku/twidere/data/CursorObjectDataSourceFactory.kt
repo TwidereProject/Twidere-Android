@@ -20,20 +20,20 @@
 package org.mariotaku.twidere.data
 
 import android.arch.paging.DataSource
-import android.arch.paging.TiledDataSource
+import android.arch.paging.PositionalDataSource
 import android.content.ContentResolver
 import android.database.ContentObserver
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.support.annotation.WorkerThread
-import org.mariotaku.ktextension.toWeak
+import org.mariotaku.ktextension.weak
 import org.mariotaku.twidere.data.processor.DataSourceItemProcessor
 import org.mariotaku.twidere.extension.queryAll
 import org.mariotaku.twidere.extension.queryCount
 import org.mariotaku.twidere.util.DebugLog
 
-class CursorObjectLivePagedListProvider<T : Any>(
+class CursorObjectDataSourceFactory<T : Any>(
         private val resolver: ContentResolver,
         val uri: Uri,
         val projection: Array<String>? = null,
@@ -42,15 +42,15 @@ class CursorObjectLivePagedListProvider<T : Any>(
         val sortOrder: String? = null,
         val cls: Class<T>,
         val processor: DataSourceItemProcessor<T>? = null
-) : ExtendedPagedListProvider<Int, T>() {
+) : DataSource.Factory<Int, T> {
 
     @WorkerThread
-    override fun onCreateDataSource(): DataSource<Int, T> {
-        return CursorObjectTiledDataSource(resolver, uri, projection,
-                selection, selectionArgs, sortOrder, cls, processor)
+    override fun create(): DataSource<Int, T> {
+        return CursorObjectDataSource(resolver, uri, projection, selection, selectionArgs,
+                sortOrder, cls, processor)
     }
 
-    private class CursorObjectTiledDataSource<T : Any>(
+    private class CursorObjectDataSource<T : Any>(
             val resolver: ContentResolver,
             val uri: Uri,
             val projection: Array<String>? = null,
@@ -59,32 +59,41 @@ class CursorObjectLivePagedListProvider<T : Any>(
             val sortOrder: String? = null,
             val cls: Class<T>,
             val processor: DataSourceItemProcessor<T>?
-    ) : TiledDataSource<T>() {
+    ) : PositionalDataSource<T>() {
 
         private val lazyCount: Int by lazy { resolver.queryCount(uri, selection, selectionArgs) }
         private val filterStates: BooleanArray by lazy { BooleanArray(lazyCount) }
 
         init {
-            val weakThis = toWeak()
+            val weakThis by weak(this)
             val observer: ContentObserver = object : ContentObserver(MainHandler) {
                 override fun onChange(selfChange: Boolean) {
                     resolver.unregisterContentObserver(this)
-                    weakThis.get()?.invalidate()
+                    weakThis?.invalidate()
                 }
             }
             resolver.registerContentObserver(uri, false, observer)
             processor?.init(resolver)
         }
 
-        override fun countItems() = lazyCount
+        override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<T>) {
+            loadRange(0, params.pageSize) { data ->
+                callback.onResult(data, 0, lazyCount)
+            }
+        }
 
-        override fun loadRange(startPosition: Int, count: Int): List<T> {
+        override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<T>) {
+            loadRange(params.startPosition, params.loadSize, callback::onResult)
+        }
+
+        private fun loadRange(startPosition: Int, count: Int, callback: (List<T>) -> Unit) {
             if (processor == null) {
                 val start = System.currentTimeMillis()
                 val result = resolver.queryAll(uri, projection, selection, selectionArgs, sortOrder,
-                        "$startPosition,$count", cls)
+                        "$startPosition,$count", cls)!!
                 DebugLog.d(msg = "Querying $uri took ${System.currentTimeMillis() - start} ms.")
-                return result.orEmpty()
+                callback(result)
+                return
             }
             val result = ArrayList<T>()
             var offset = filterStates.actualIndex(startPosition, startPosition)
@@ -104,7 +113,7 @@ class CursorObjectLivePagedListProvider<T : Any>(
                 offset += limit
                 limit = count - result.size
             } while (result.size < count)
-            return result
+            callback(result)
         }
 
         override fun invalidate() {

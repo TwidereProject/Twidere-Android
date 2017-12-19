@@ -23,10 +23,6 @@ import org.mariotaku.microblog.library.mastodon.model.Results
 import org.mariotaku.twidere.model.pagination.PaginatedArrayList
 import org.mariotaku.twidere.model.pagination.PaginatedList
 
-/**
- * Created by mariotaku on 2017/4/23.
- */
-
 inline fun <T, R> Results.mapToPaginated(listSelector: (Results) -> List<T>?, transform: (T) -> R): PaginatedList<R> {
     val list = listSelector(this) ?: return PaginatedArrayList()
     val result = list.mapTo(PaginatedArrayList(list.size), transform)
