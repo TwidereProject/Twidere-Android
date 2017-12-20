@@ -31,7 +31,7 @@ class SimpleUserListViewHolder(
     fun display(userList: ParcelableUserList) {
         nameView.spannable = userList.name
         createdByView.spannable = createdByView.context.getString(R.string.label_created_by_name,
-                adapter.userColorNameManager.getDisplayName(userList, false))
+                adapter.userColorNameManager.getDisplayName(userList))
         if (adapter.profileImageEnabled) {
             profileImageView.visibility = View.VISIBLE
             val context = itemView.context

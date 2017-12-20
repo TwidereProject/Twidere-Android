@@ -44,9 +44,9 @@ import org.mariotaku.ktextension.*
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.fanfou.model.PhotoStatusUpdate
-import org.mariotaku.microblog.library.mastodon.Mastodon
+import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.microblog.library.mastodon.model.Attachment
-import org.mariotaku.microblog.library.twitter.TwitterUpload
+import org.mariotaku.microblog.library.TwitterUpload
 import org.mariotaku.microblog.library.twitter.model.*
 import org.mariotaku.restfu.http.ContentType
 import org.mariotaku.restfu.http.mime.Body

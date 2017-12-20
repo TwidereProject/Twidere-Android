@@ -53,7 +53,6 @@ import org.mariotaku.twidere.activity.ColorPickerDialogActivity
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.favoriteConfirmationKey
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
-import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.getDetails
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.promise
@@ -111,7 +110,7 @@ object MenuUtils {
             manager: UserColorNameManager, status: ParcelableStatus, details: AccountDetails) {
         if (menu is ContextMenu) {
             val displayName = manager.getDisplayName(status.user_key, status.user_name,
-                    status.user_screen_name, preferences[nameFirstKey])
+                    status.user_screen_name)
             menu.setHeaderTitle(context.getString(R.string.status_menu_title_format, displayName,
                     status.text_unescaped))
         }

@@ -36,7 +36,7 @@ import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.ktextension.spannable
 import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.ktextension.weak
-import org.mariotaku.microblog.library.twitter.TwitterCaps
+import org.mariotaku.microblog.library.TwitterCaps
 import org.mariotaku.microblog.library.twitter.model.CardDataMap
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.extension.getDetailsOrThrow
@@ -45,7 +45,6 @@ import org.mariotaku.twidere.model.ParcelableCardEntity
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import org.mariotaku.twidere.util.TwitterCardUtils
-import org.mariotaku.twidere.util.support.ViewSupport
 import org.mariotaku.twidere.view.ContainerView
 import java.util.*
 

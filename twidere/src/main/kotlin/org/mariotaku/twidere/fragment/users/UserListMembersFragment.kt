@@ -27,10 +27,8 @@ import android.view.MenuItem
 import android.view.View
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
-import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
-import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.fragment.DeleteUserListMembersDialogFragment
 import org.mariotaku.twidere.fragment.ParcelableUsersFragment
@@ -105,7 +103,7 @@ class UserListMembersFragment : ParcelableUsersFragment() {
         val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo?
         val user = adapter.getUser(contextMenuInfo!!.position) ?: return
         inflater.inflate(R.menu.action_user_list_member, menu)
-        menu.setHeaderTitle(userColorNameManager.getDisplayName(user, preferences[nameFirstKey]))
+        menu.setHeaderTitle(userColorNameManager.getDisplayName(user))
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {

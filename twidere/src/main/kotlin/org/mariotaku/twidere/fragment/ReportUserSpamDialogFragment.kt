@@ -20,23 +20,21 @@
 package org.mariotaku.twidere.fragment
 
 import android.support.v4.app.FragmentManager
-import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER
-import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.promise.BlockPromises
 
 class ReportUserSpamDialogFragment : AbsUserMuteBlockDialogFragment() {
     override fun getMessage(user: ParcelableUser): String {
-        val displayName = userColorNameManager.getDisplayName(user, preferences[nameFirstKey])
+        val displayName = userColorNameManager.getDisplayName(user)
         return getString(R.string.report_user_confirm_message, displayName)
     }
 
     override fun getTitle(user: ParcelableUser): String {
-        val displayName = userColorNameManager.getDisplayName(user, preferences[nameFirstKey])
+        val displayName = userColorNameManager.getDisplayName(user)
         return getString(R.string.report_user, displayName)
     }
 

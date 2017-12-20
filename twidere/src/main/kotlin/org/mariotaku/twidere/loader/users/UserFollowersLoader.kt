@@ -22,7 +22,7 @@ package org.mariotaku.twidere.loader.users
 import android.content.Context
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.mastodon.Mastodon
+import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.api.mastodon.mapToPaginated

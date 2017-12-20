@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.extension.api
 
 import org.mariotaku.ktextension.subArray
-import org.mariotaku.microblog.library.mastodon.Mastodon
+import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.microblog.library.mastodon.model.Relationship
 
 

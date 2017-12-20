@@ -62,7 +62,7 @@ class DeleteUserListMembersDialogFragment : BaseDialogFragment(), DialogInterfac
         if (users.size == 1) {
             val user = users[0]
             val nameFirst = preferences[nameFirstKey]
-            val displayName = userColorNameManager.getDisplayName(user, nameFirst)
+            val displayName = userColorNameManager.getDisplayName(user)
             builder.setTitle(getString(R.string.delete_user, displayName))
             builder.setMessage(getString(R.string.delete_user_from_list_confirm, displayName, userList.name))
         } else {

@@ -156,8 +156,8 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
 
     private fun getName(manager: UserColorNameManager, value: Any, nameFirst: Boolean): String {
         return when (value) {
-            is ParcelableUserMention -> manager.getDisplayName(value.key, value.name, value.screen_name, nameFirst)
-            is UserItem -> manager.getDisplayName(value.key, value.name, value.screen_name, nameFirst)
+            is ParcelableUserMention -> manager.getDisplayName(value.key, value.name, value.screen_name)
+            is UserItem -> manager.getDisplayName(value.key, value.name, value.screen_name)
             else -> value.toString()
         }
     }

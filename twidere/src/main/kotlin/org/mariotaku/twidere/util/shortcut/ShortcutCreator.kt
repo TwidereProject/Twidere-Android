@@ -38,7 +38,6 @@ import org.mariotaku.ktextension.weak
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.ImageShapeStyle
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
-import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.extension.dismissProgressDialog
@@ -78,7 +77,7 @@ object ShortcutCreator {
             val ctx = weakContext.get() ?: throw InterruptedException()
             val builder = ShortcutInfoCompat.Builder(ctx, "$accountKey:user:${user.key}")
             builder.setIcon(drawable.toProfileImageIcon(ctx))
-            builder.setShortLabel(userColorNameManager.getDisplayName(user, preferences[nameFirstKey]))
+            builder.setShortLabel(userColorNameManager.getDisplayName(user))
             val launchIntent = IntentUtils.userProfile(accountKey, user.key,
                     user.screen_name, profileUrl = user.extras?.statusnet_profile_url)
             builder.setIntent(launchIntent)
@@ -95,7 +94,7 @@ object ShortcutCreator {
                 user.screen_name, profileUrl = user.extras?.statusnet_profile_url)
         val builder = ShortcutInfoCompat.Builder(context, "$accountKey:user-favorites:${user.key}")
         builder.setIntent(launchIntent)
-        builder.setShortLabel(userColorNameManager.getDisplayName(user, preferences[nameFirstKey]))
+        builder.setShortLabel(userColorNameManager.getDisplayName(user))
         if (preferences[iWantMyStarsBackKey]) {
             builder.setIcon(IconCompat.createWithResource(context, R.mipmap.ic_shortcut_favorite))
         } else {
@@ -113,7 +112,7 @@ object ShortcutCreator {
                 user.screen_name, profileUrl = user.extras?.statusnet_profile_url)
         val builder = ShortcutInfoCompat.Builder(context, "$accountKey:user-timeline:${user.key}")
         builder.setIntent(launchIntent)
-        builder.setShortLabel(userColorNameManager.getDisplayName(user, preferences[nameFirstKey]))
+        builder.setShortLabel(userColorNameManager.getDisplayName(user))
         builder.setIcon(IconCompat.createWithResource(context, R.mipmap.ic_shortcut_quote))
         return Promise.of(builder.build())
     }
@@ -127,7 +126,7 @@ object ShortcutCreator {
                 user.screen_name, profileUrl = user.extras?.statusnet_profile_url)
         val builder = ShortcutInfoCompat.Builder(context, "$accountKey:user-media-timeline:${user.key}")
         builder.setIntent(launchIntent)
-        builder.setShortLabel(userColorNameManager.getDisplayName(user, preferences[nameFirstKey]))
+        builder.setShortLabel(userColorNameManager.getDisplayName(user))
         builder.setIcon(IconCompat.createWithResource(context, R.mipmap.ic_shortcut_gallery))
         return Promise.of(builder.build())
     }

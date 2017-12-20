@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.mariotaku.microblog.library.statusnet;
+package org.mariotaku.microblog.library;
 
 import org.mariotaku.microblog.library.statusnet.api.TimelineResources;
 import org.mariotaku.restfu.annotation.method.GET;

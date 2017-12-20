@@ -75,7 +75,7 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
             val nameFirst = preferences[nameFirstKey]
             editParticipants.text = SpannableStringBuilder().apply {
                 value.forEach { user ->
-                    val displayName = userColorNameManager.getDisplayName(user, nameFirst)
+                    val displayName = userColorNameManager.getDisplayName(user)
                     val span = ParticipantSpan(user, displayName, roundRadius, spanPadding)
                     appendCompat(user.screen_name, span, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                     append(" ")
@@ -157,7 +157,7 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
                     if (start < 0 || end < 0 || end < start) return@forEach
                     text.delete(start, end)
                 }
-                val displayName = userColorNameManager.getDisplayName(user, nameFirst)
+                val displayName = userColorNameManager.getDisplayName(user)
                 val span = ParticipantSpan(user, displayName, roundRadius, spanPadding)
                 text.appendCompat(user.screen_name, span, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 text.append(" ")

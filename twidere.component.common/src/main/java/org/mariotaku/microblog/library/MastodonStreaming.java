@@ -16,23 +16,17 @@
  * limitations under the License.
  */
 
-package org.mariotaku.microblog.library.mastodon;
+package org.mariotaku.microblog.library;
 
 import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.twitter.auth.OAuth2Token;
-import org.mariotaku.restfu.annotation.method.POST;
-import org.mariotaku.restfu.annotation.param.KeyValue;
-import org.mariotaku.restfu.annotation.param.Param;
-import org.mariotaku.restfu.annotation.param.Params;
+import org.mariotaku.microblog.library.mastodon.callback.MastodonUserStreamCallback;
+import org.mariotaku.restfu.annotation.method.GET;
 
 /**
- * Created by mariotaku on 2017/4/18.
+ * Created by mariotaku on 2017/4/17.
  */
 
-public interface MastodonOAuth2 {
-
-    @POST("/oauth/token")
-    @Params({@KeyValue(key = "grant_type", value = "authorization_code")})
-    OAuth2Token getToken(@Param("client_id") String clientId, @Param("client_secret") String clientSecret,
-            @Param("code") String code, @Param("redirect_uri") String redirectUri) throws MicroBlogException;
+public interface MastodonStreaming {
+    @GET("/v1/streaming/public")
+    void getUserStream(MastodonUserStreamCallback callback) throws MicroBlogException;
 }

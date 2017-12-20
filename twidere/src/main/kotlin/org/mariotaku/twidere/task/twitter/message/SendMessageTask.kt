@@ -23,7 +23,7 @@ import android.content.Context
 import org.mariotaku.ktextension.isNotNullOrEmpty
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.twitter.TwitterUpload
+import org.mariotaku.microblog.library.TwitterUpload
 import org.mariotaku.microblog.library.twitter.annotation.MediaCategory
 import org.mariotaku.microblog.library.twitter.model.DirectMessage
 import org.mariotaku.microblog.library.twitter.model.NewDm

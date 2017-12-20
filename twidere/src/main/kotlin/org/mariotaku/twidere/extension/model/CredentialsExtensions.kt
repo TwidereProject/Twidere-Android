@@ -3,12 +3,11 @@ package org.mariotaku.twidere.extension.model
 import android.content.Context
 import android.net.Uri
 import android.text.TextUtils
-import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.fanfou.FanfouStream
-import org.mariotaku.microblog.library.mastodon.Mastodon
-import org.mariotaku.microblog.library.mastodon.MastodonOAuth2
-import org.mariotaku.microblog.library.mastodon.MastodonStreaming
+import org.mariotaku.microblog.library.*
+import org.mariotaku.microblog.library.FanfouStream
+import org.mariotaku.microblog.library.Mastodon
+import org.mariotaku.microblog.library.MastodonOAuth2
+import org.mariotaku.microblog.library.MastodonStreaming
 import org.mariotaku.microblog.library.twitter.*
 import org.mariotaku.microblog.library.twitter.auth.BasicAuthorization
 import org.mariotaku.microblog.library.twitter.auth.EmptyAuthorization

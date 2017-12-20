@@ -53,7 +53,6 @@ import org.mariotaku.twidere.activity.AccountSelectorActivity
 import org.mariotaku.twidere.activity.UserSelectorActivity
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.app.TwidereApplication
-import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
@@ -402,7 +401,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
                 messageBuilder.append('\n')
             }
             messageBuilder.append(getString(R.string.label_created_by_name,
-                    userColorNameManager.getDisplayName(userList, preferences[nameFirstKey])))
+                    userColorNameManager.getDisplayName(userList)))
             val builder = AlertDialog.Builder(context!!)
             builder.setTitle(userList.name)
             builder.setMessage(messageBuilder)

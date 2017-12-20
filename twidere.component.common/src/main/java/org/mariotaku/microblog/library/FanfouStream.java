@@ -18,8 +18,14 @@
 
 package org.mariotaku.microblog.library;
 
-import org.mariotaku.microblog.library.microblog.api.DirectMessagesResources;
+import org.mariotaku.microblog.library.fanfou.callback.FanfouUserStreamCallback;
+import org.mariotaku.restfu.annotation.method.GET;
 
-@Deprecated
-public interface MicroBlog extends Twitter, StatusNet, Fanfou, DirectMessagesResources {
+/**
+ * Created by mariotaku on 2017/3/11.
+ */
+
+public interface FanfouStream {
+    @GET("/1/user.json")
+    void getUserStream(FanfouUserStreamCallback callback);
 }

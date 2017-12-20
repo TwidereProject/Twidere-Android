@@ -35,6 +35,7 @@ import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.promiseOnUi
 import nl.komponents.kovenant.ui.successUi
+import org.mariotaku.ktextension.weak
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.DummyItemAdapter
@@ -46,7 +47,6 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.view.holder.status.StatusViewHolder
-import java.lang.ref.WeakReference
 
 abstract class AbsStatusDialogFragment : BaseDialogFragment() {
 
@@ -84,20 +84,20 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
                 dismiss()
                 return@onShow
             }
-            val weakThis = WeakReference(this)
-            val weakHolder = WeakReference(StatusViewHolder(adapter = adapter, itemView = it.itemContent).apply {
+            val weakThis by weak(this)
+            val weakHolder by weak(StatusViewHolder(adapter = adapter, itemView = it.itemContent).apply {
                 setupViewOptions()
             })
             val extraStatus = status
             if (extraStatus != null) {
-                showStatus(weakHolder.get()!!, extraStatus, details, savedInstanceState)
+                showStatus(weakHolder!!, extraStatus, details, savedInstanceState)
             } else promiseOnUi {
-                weakThis.get()?.showProgress()
-            } and AbsStatusDialogFragment.showStatus(context, details, statusId, extraStatus).successUi { status ->
-                val holder = weakHolder.get() ?: return@successUi
-                weakThis.get()?.showStatus(holder, status, details, savedInstanceState)
+                weakThis?.showProgress()
+            } and AbsStatusDialogFragment.showStatus(context, details, statusId).successUi { status ->
+                val holder = weakHolder ?: return@successUi
+                weakThis?.showStatus(holder, status, details, savedInstanceState)
             }.failUi {
-                val fragment = weakThis.get()?.takeIf { it.dialog != null } ?: return@failUi
+                val fragment = weakThis?.takeIf { it.dialog != null } ?: return@failUi
                 Toast.makeText(fragment.context, R.string.message_toast_error_occurred,
                         Toast.LENGTH_SHORT).show()
                 fragment.dismiss()
@@ -141,11 +141,7 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
 
     companion object {
 
-        fun showStatus(context: Context, details: AccountDetails, statusId: String,
-                status: ParcelableStatus?): Promise<ParcelableStatus, Exception> {
-            if (status != null) {
-                return Promise.ofSuccess(status)
-            }
+        fun showStatus(context: Context, details: AccountDetails, statusId: String): Promise<ParcelableStatus, Exception> {
             val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
             val profileImageSize = context.getString(R.string.profile_image_size)
             return task { microBlog.showStatus(statusId).toParcelable(details, profileImageSize) }

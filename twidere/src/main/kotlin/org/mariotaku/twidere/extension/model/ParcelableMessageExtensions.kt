@@ -38,13 +38,13 @@ internal fun getSummaryText(context: Context, manager: UserColorNameManager, nam
             val sender = conversation?.participants?.firstOrNull { senderKey == it.key }
             val res = context.resources
             val joinName = if (users.size == 1) {
-                manager.getDisplayName(users[0], nameFirst)
+                manager.getDisplayName(users[0])
             } else {
                 res.getQuantityString(R.plurals.N_users, users.size, users.size)
             }
             if (sender != null) {
                 return res.getString(R.string.message_format_participants_join_added,
-                        manager.getDisplayName(sender, nameFirst), joinName)
+                        manager.getDisplayName(sender), joinName)
             } else {
                 return res.getString(R.string.message_format_participants_join, joinName)
             }
@@ -53,7 +53,7 @@ internal fun getSummaryText(context: Context, manager: UserColorNameManager, nam
             val users = (extras as UserArrayExtras).users
             val res = context.resources
             if (users.size == 1) {
-                val displayName = manager.getDisplayName(users[0], nameFirst)
+                val displayName = manager.getDisplayName(users[0])
                 return res.getString(R.string.message_format_participants_leave, displayName)
             } else {
                 val usersName = res.getQuantityString(R.plurals.N_users, users.size, users.size)
@@ -65,7 +65,7 @@ internal fun getSummaryText(context: Context, manager: UserColorNameManager, nam
             val res = context.resources
             if (extras.user != null) {
                 return res.getString(R.string.message_format_conversation_name_update_by_user,
-                        manager.getDisplayName(extras.user, nameFirst), extras.name)
+                        manager.getDisplayName(extras.user), extras.name)
             } else {
                 return res.getString(R.string.message_format_conversation_name_update, extras.name)
             }
@@ -75,7 +75,7 @@ internal fun getSummaryText(context: Context, manager: UserColorNameManager, nam
             val res = context.resources
             if (extras.user != null) {
                 return res.getString(R.string.message_format_conversation_avatar_update_by_user,
-                        manager.getDisplayName(extras.user, nameFirst))
+                        manager.getDisplayName(extras.user))
             } else {
                 return res.getString(R.string.message_format_conversation_avatar_update)
             }

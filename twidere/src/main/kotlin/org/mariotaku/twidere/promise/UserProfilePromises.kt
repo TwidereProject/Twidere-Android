@@ -23,7 +23,7 @@ import android.app.Application
 import android.net.Uri
 import nl.komponents.kovenant.Promise
 import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.mastodon.Mastodon
+import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.microblog.library.mastodon.model.AccountUpdate
 import org.mariotaku.microblog.library.twitter.model.ProfileUpdate
 import org.mariotaku.twidere.R

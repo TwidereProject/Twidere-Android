@@ -204,19 +204,19 @@ fun ParcelableStatus.updateExtraInformation(details: AccountDetails) {
 
 fun ParcelableStatus.contentDescription(context: Context, manager: UserColorNameManager,
         nameFirst: Boolean, displayInReplyTo: Boolean, showAbsoluteTime: Boolean): String {
-    val displayName = manager.getDisplayName(this, nameFirst)
+    val displayName = manager.getDisplayName(this)
     val displayTime = if (is_retweet) retweet_timestamp else timestamp
     val timeLabel = ShortTimeView.getTimeLabel(context, displayTime, showAbsoluteTime)
     when {
         retweet_id != null -> {
             val retweetedBy = manager.getDisplayName(retweeted_by_user_key!!,
-                    retweeted_by_user_name, retweeted_by_user_acct!!, nameFirst)
+                    retweeted_by_user_name, retweeted_by_user_acct!!)
             return context.getString(R.string.content_description_item_status_retweet, retweetedBy, displayName,
                     timeLabel, text_unescaped)
         }
         in_reply_to_status_id != null && in_reply_to_user_key != null && displayInReplyTo -> {
             val inReplyTo = manager.getDisplayName(in_reply_to_user_key!!,
-                    in_reply_to_name, in_reply_to_screen_name, nameFirst)
+                    in_reply_to_name, in_reply_to_screen_name)
             return context.getString(R.string.content_description_item_status_reply, displayName, inReplyTo,
                     timeLabel, text_unescaped)
         }

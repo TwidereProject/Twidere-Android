@@ -28,7 +28,7 @@ import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.kpreferences.get
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.mastodon.Mastodon
+import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.microblog.library.twitter.model.FriendshipUpdate
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
@@ -94,7 +94,7 @@ class FriendshipPromises private constructor(val application: Application) {
     }.toastOnResult(application) { user ->
         val nameFirst = preferences[nameFirstKey]
         return@toastOnResult application.getString(R.string.message_toast_accepted_users_follow_request,
-                manager.getDisplayName(user, nameFirst))
+                manager.getDisplayName(user))
     }.notifyOnResult(bus, FriendshipTaskEvent.Action.ACCEPT, accountKey, userKey)
 
     fun deny(accountKey: UserKey, userKey: UserKey): Promise<ParcelableUser, Exception>
@@ -122,7 +122,7 @@ class FriendshipPromises private constructor(val application: Application) {
     }.toastOnResult(application) { user ->
         val nameFirst = preferences[nameFirstKey]
         return@toastOnResult application.getString(R.string.denied_users_follow_request,
-                manager.getDisplayName(user, nameFirst))
+                manager.getDisplayName(user))
     }.notifyOnResult(bus, FriendshipTaskEvent.Action.DENY, accountKey, userKey)
 
     fun create(accountKey: UserKey, userKey: UserKey, screenName: String?): Promise<ParcelableUser, Exception>
@@ -159,10 +159,10 @@ class FriendshipPromises private constructor(val application: Application) {
         val nameFirst = preferences[nameFirstKey]
         return@toastOnResult if (user.is_protected) {
             application.getString(R.string.sent_follow_request_to_user,
-                    manager.getDisplayName(user, nameFirst))
+                    manager.getDisplayName(user))
         } else {
             application.getString(R.string.followed_user,
-                    manager.getDisplayName(user, nameFirst))
+                    manager.getDisplayName(user))
         }
     }.notifyOnResult(bus, FriendshipTaskEvent.Action.FOLLOW, accountKey, userKey)
 
@@ -199,7 +199,7 @@ class FriendshipPromises private constructor(val application: Application) {
     }.toastOnResult(application) { user ->
         val nameFirst = preferences[nameFirstKey]
         return@toastOnResult application.getString(R.string.unfollowed_user,
-                manager.getDisplayName(user, nameFirst))
+                manager.getDisplayName(user))
     }.notifyOnResult(bus, FriendshipTaskEvent.Action.UNFOLLOW, accountKey, userKey)
 
     fun update(accountKey: UserKey, userKey: UserKey, update: FriendshipUpdate):

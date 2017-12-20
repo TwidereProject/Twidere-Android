@@ -23,7 +23,7 @@ import android.accounts.AccountManager
 import android.content.Context
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.mastodon.Mastodon
+import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.data.ComputableExceptionLiveData
 import org.mariotaku.twidere.exception.RequiredFieldNotFoundException

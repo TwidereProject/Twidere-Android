@@ -16,22 +16,23 @@
  * limitations under the License.
  */
 
-package org.mariotaku.microblog.library.twitter;
+package org.mariotaku.microblog.library;
 
-import org.mariotaku.microblog.library.twitter.annotation.StreamWith;
-import org.mariotaku.microblog.library.twitter.callback.UserStreamCallback;
-import org.mariotaku.microblog.library.twitter.template.StatusAnnotationTemplate;
-import org.mariotaku.restfu.annotation.method.GET;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.auth.OAuth2Token;
+import org.mariotaku.restfu.annotation.method.POST;
+import org.mariotaku.restfu.annotation.param.KeyValue;
+import org.mariotaku.restfu.annotation.param.Param;
 import org.mariotaku.restfu.annotation.param.Params;
 
 /**
- * Twitter UserStream API
- * Created by mariotaku on 15/5/26.
+ * Created by mariotaku on 2017/4/18.
  */
-@Params(template = StatusAnnotationTemplate.class)
-public interface TwitterUserStream {
 
-    @GET("/user.json")
-    void getUserStream(@StreamWith String with, UserStreamCallback callback);
+public interface MastodonOAuth2 {
 
+    @POST("/oauth/token")
+    @Params({@KeyValue(key = "grant_type", value = "authorization_code")})
+    OAuth2Token getToken(@Param("client_id") String clientId, @Param("client_secret") String clientSecret,
+            @Param("code") String code, @Param("redirect_uri") String redirectUri) throws MicroBlogException;
 }

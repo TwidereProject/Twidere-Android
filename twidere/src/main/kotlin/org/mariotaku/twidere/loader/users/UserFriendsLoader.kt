@@ -20,11 +20,14 @@
 package org.mariotaku.twidere.loader.users
 
 import android.content.Context
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.mastodon.Mastodon
+import org.mariotaku.microblog.library.Fanfou
+import org.mariotaku.microblog.library.Mastodon
+import org.mariotaku.microblog.library.StatusNet
+import org.mariotaku.microblog.library.Twitter
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.extension.model.api.mastodon.mapToPaginated
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.microblog.mapToPaginated
@@ -54,23 +57,24 @@ class UserFriendsLoader(
                 }
             }
             AccountType.STATUSNET -> {
-                val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
-                return microBlog.getStatusesFriendsList(userKey.id, paging).mapToPaginated {
+                val statusNet = details.newMicroBlogInstance(context, StatusNet::class.java)
+                return statusNet.getStatusesFriendsList(userKey.id, paging).mapToPaginated {
                     it.toParcelable(details, profileImageSize = profileImageSize)
                 }
             }
             AccountType.FANFOU -> {
-                val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
-                return microBlog.getUsersFriends(userKey.id, paging).mapToPaginated(pagination) {
+                val fanfou = details.newMicroBlogInstance(context, Fanfou::class.java)
+                return fanfou.getUsersFriends(userKey.id, paging).mapToPaginated(pagination) {
                     it.toParcelable(details, profileImageSize = profileImageSize)
                 }
             }
-            else -> {
-                val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
+            AccountType.TWITTER -> {
+                val microBlog = details.newMicroBlogInstance(context, Twitter::class.java)
                 return microBlog.getFriendsList(userKey.id, paging).mapToPaginated {
                     it.toParcelable(details, profileImageSize = profileImageSize)
                 }
             }
+            else -> throw APINotSupportedException(platform = details.type)
         }
     }
 
@@ -81,23 +85,24 @@ class UserFriendsLoader(
                 throw MicroBlogException("Only ID supported")
             }
             AccountType.STATUSNET -> {
-                val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
-                return microBlog.getStatusesFriendsListByScreenName(screenName, paging).mapToPaginated {
+                val statusNet = details.newMicroBlogInstance(context, StatusNet::class.java)
+                return statusNet.getStatusesFriendsListByScreenName(screenName, paging).mapToPaginated {
                     it.toParcelable(details, profileImageSize = profileImageSize)
                 }
             }
             AccountType.FANFOU -> {
-                val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
+                val microBlog = details.newMicroBlogInstance(context, Fanfou::class.java)
                 return microBlog.getUsersFriends(screenName, paging).mapToPaginated(pagination) {
                     it.toParcelable(details, profileImageSize = profileImageSize)
                 }
             }
-            else -> {
-                val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
+            AccountType.TWITTER -> {
+                val microBlog = details.newMicroBlogInstance(context, Twitter::class.java)
                 return microBlog.getFriendsListByScreenName(screenName, paging).mapToPaginated {
                     it.toParcelable(details, profileImageSize = profileImageSize)
                 }
             }
+            else -> throw APINotSupportedException(platform = details.type)
         }
     }
 

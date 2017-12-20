@@ -26,13 +26,11 @@ import android.content.SharedPreferences
 import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.then
-import org.mariotaku.kpreferences.get
 import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.mastodon.Mastodon
+import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.extension.get
@@ -117,8 +115,7 @@ class MutePromises(private val application: Application) {
         }
         return@then user
     }.toastOnResult(application) { user ->
-        return@toastOnResult application.getString(R.string.muted_user, manager.getDisplayName(user,
-                preferences[nameFirstKey]))
+        return@toastOnResult application.getString(R.string.muted_user, manager.getDisplayName(user))
     }.notifyOnResult(bus, FriendshipTaskEvent.Action.MUTE, accountKey, userKey)
 
     fun unmute(accountKey: UserKey, userKey: UserKey): Promise<ParcelableUser, Exception>
@@ -148,7 +145,7 @@ class MutePromises(private val application: Application) {
         return@then user
     }.toastOnResult(application) { user ->
         return@toastOnResult application.getString(R.string.unmuted_user,
-                manager.getDisplayName(user, preferences[nameFirstKey]))
+                manager.getDisplayName(user))
     }.notifyOnResult(bus, FriendshipTaskEvent.Action.UNMUTE, accountKey, userKey)
 
     companion object : ApplicationContextSingletonHolder<MutePromises>(::MutePromises) {

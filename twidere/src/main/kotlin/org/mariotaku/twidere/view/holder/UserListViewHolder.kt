@@ -63,7 +63,7 @@ class UserListViewHolder(
         itemContent.drawStart(manager.getUserColor(userList.user_key))
         nameView.spannable = userList.name
         val nameFirst = adapter.nameFirst
-        val createdByDisplayName = manager.getDisplayName(userList, nameFirst)
+        val createdByDisplayName = manager.getDisplayName(userList)
         createdByView.spannable = context.getString(R.string.label_created_by_name, createdByDisplayName)
 
         if (adapter.profileImageEnabled) {

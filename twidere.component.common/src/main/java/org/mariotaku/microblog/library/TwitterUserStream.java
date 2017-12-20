@@ -16,16 +16,22 @@
  * limitations under the License.
  */
 
-package org.mariotaku.microblog.library.fanfou;
+package org.mariotaku.microblog.library;
 
-import org.mariotaku.microblog.library.fanfou.callback.FanfouUserStreamCallback;
+import org.mariotaku.microblog.library.twitter.annotation.StreamWith;
+import org.mariotaku.microblog.library.twitter.callback.UserStreamCallback;
+import org.mariotaku.microblog.library.twitter.template.StatusAnnotationTemplate;
 import org.mariotaku.restfu.annotation.method.GET;
+import org.mariotaku.restfu.annotation.param.Params;
 
 /**
- * Created by mariotaku on 2017/3/11.
+ * Twitter UserStream API
+ * Created by mariotaku on 15/5/26.
  */
+@Params(template = StatusAnnotationTemplate.class)
+public interface TwitterUserStream {
 
-public interface FanfouStream {
-    @GET("/1/user.json")
-    void getUserStream(FanfouUserStreamCallback callback);
+    @GET("/user.json")
+    void getUserStream(@StreamWith String with, UserStreamCallback callback);
+
 }

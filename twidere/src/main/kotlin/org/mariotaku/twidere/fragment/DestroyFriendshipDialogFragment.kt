@@ -52,7 +52,7 @@ class DestroyFriendshipDialogFragment : BaseDialogFragment(), DialogInterface.On
         val builder = AlertDialog.Builder(context!!)
         val nameFirst = preferences[nameFirstKey]
         val user = arguments!!.user!!
-        val displayName = userColorNameManager.getDisplayName(user, nameFirst)
+        val displayName = userColorNameManager.getDisplayName(user)
         builder.setTitle(getString(R.string.unfollow_user, displayName))
         builder.setMessage(getString(R.string.unfollow_user_confirm_message, displayName))
         builder.setPositiveButton(android.R.string.ok, this)

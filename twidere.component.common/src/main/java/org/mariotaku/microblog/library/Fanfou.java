@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.mariotaku.microblog.library.fanfou;
+package org.mariotaku.microblog.library;
 
 import org.mariotaku.microblog.library.fanfou.api.BlocksResources;
 import org.mariotaku.microblog.library.fanfou.api.DirectMessagesResources;

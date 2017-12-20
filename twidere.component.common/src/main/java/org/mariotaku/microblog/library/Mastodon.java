@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.mariotaku.microblog.library.mastodon;
+package org.mariotaku.microblog.library;
 
 import org.mariotaku.microblog.library.mastodon.api.AccountsResources;
 import org.mariotaku.microblog.library.mastodon.api.AppsResources;
@@ -25,6 +25,7 @@ import org.mariotaku.microblog.library.mastodon.api.FavouritesResources;
 import org.mariotaku.microblog.library.mastodon.api.FollowRequestsResources;
 import org.mariotaku.microblog.library.mastodon.api.FollowsResources;
 import org.mariotaku.microblog.library.mastodon.api.InstancesResources;
+import org.mariotaku.microblog.library.mastodon.api.ListsResources;
 import org.mariotaku.microblog.library.mastodon.api.MediaResources;
 import org.mariotaku.microblog.library.mastodon.api.MutesResources;
 import org.mariotaku.microblog.library.mastodon.api.NotificationsResources;
@@ -33,12 +34,9 @@ import org.mariotaku.microblog.library.mastodon.api.SearchResources;
 import org.mariotaku.microblog.library.mastodon.api.StatusesResources;
 import org.mariotaku.microblog.library.mastodon.api.TimelinesResources;
 
-/**
- * Created by mariotaku on 2017/4/17.
- */
 public interface Mastodon extends AccountsResources, AppsResources, BlocksResources,
         FavouritesResources, FollowRequestsResources, FollowsResources, InstancesResources,
         MediaResources, MutesResources, NotificationsResources, ReportsResources, SearchResources,
-        StatusesResources, TimelinesResources {
+        StatusesResources, TimelinesResources, ListsResources {
 
 }

@@ -121,7 +121,7 @@ class ActivityTitleSummaryMessage private constructor(val icon: Int, val color: 
                     val icon = R.drawable.ic_activity_action_list_added
                     if (sources.size == 1 && activity.summary_line?.size == 1) {
                         val firstDisplayName = SpannableString(manager.getDisplayName(
-                                sources[0], nameFirst))
+                                sources[0]))
                         val listName = SpannableString(activity.summary_line[0].content)
                         firstDisplayName.setSpan(StyleSpan(Typeface.BOLD), 0, firstDisplayName.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                         listName.setSpan(StyleSpan(Typeface.BOLD), 0, listName.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -135,8 +135,7 @@ class ActivityTitleSummaryMessage private constructor(val icon: Int, val color: 
                 }
                 Activity.Action.MENTION, Activity.Action.REPLY, Activity.Action.QUOTE -> {
                     val status = activity.activityStatus ?: return null
-                    val title = SpannableString(manager.getDisplayName(status,
-                            nameFirst))
+                    val title = SpannableString(manager.getDisplayName(status))
                     title.setSpan(StyleSpan(Typeface.BOLD), 0, title.length,
                             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                     return ActivityTitleSummaryMessage(0, 0, title, status.text_unescaped)
@@ -194,7 +193,7 @@ class ActivityTitleSummaryMessage private constructor(val icon: Int, val color: 
                 statuses: Array<ParcelableActivity.SummaryLine>?, nameFirst: Boolean): Spanned? {
             return statuses?.joinTo(SpannableStringBuilder(), separator = "\n") { status ->
                 val displayName = SpannableString(manager.getDisplayName(status.key,
-                        status.name, status.screen_name, nameFirst)).also {
+                        status.name, status.screen_name)).also {
                     it.setSpan(StyleSpan(Typeface.BOLD), 0, it.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                 }
 
@@ -225,8 +224,7 @@ class ActivityTitleSummaryMessage private constructor(val icon: Int, val color: 
         private fun getTitleStringAboutMe(resources: Resources, manager: UserColorNameManager,
                 stringRes: Int, stringResMulti: Int, sources: Array<ParcelableLiteUser>,
                 nameFirst: Boolean): CharSequence {
-            val firstDisplayName = SpannableString(manager.getDisplayName(sources[0],
-                    nameFirst))
+            val firstDisplayName = SpannableString(manager.getDisplayName(sources[0]))
             firstDisplayName.setSpan(StyleSpan(Typeface.BOLD), 0, firstDisplayName.length,
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             if (sources.size == 1) {
@@ -234,8 +232,7 @@ class ActivityTitleSummaryMessage private constructor(val icon: Int, val color: 
                 return SpanFormatter.format(format, firstDisplayName)
             } else if (sources.size == 2) {
                 val format = resources.getString(stringResMulti)
-                val secondDisplayName = SpannableString(manager.getDisplayName(sources[1],
-                        nameFirst))
+                val secondDisplayName = SpannableString(manager.getDisplayName(sources[1]))
                 secondDisplayName.setSpan(StyleSpan(Typeface.BOLD), 0, secondDisplayName.length,
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                 return SpanFormatter.format(format, firstDisplayName,

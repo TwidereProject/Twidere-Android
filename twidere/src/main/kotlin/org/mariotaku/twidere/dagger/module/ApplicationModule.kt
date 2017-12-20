@@ -48,6 +48,7 @@ import org.mariotaku.restfu.okhttp3.OkHttpRestClient
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_CACHE_SIZE_LIMIT
 import org.mariotaku.twidere.constant.autoRefreshCompatibilityModeKey
+import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.model.load
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.taskcontroller.refresh.JobSchedulerRefreshTaskController
@@ -141,8 +142,13 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun userColorNameManager(): UserColorNameManager {
-        return UserColorNameManager(application)
+    fun userColorNameManager(preferences: SharedPreferences, notifier: PreferenceChangeNotifier): UserColorNameManager {
+        val manager = UserColorNameManager(application)
+        notifier.register(KEY_NAME_FIRST) changed@ {
+            manager.nameFirst = preferences[nameFirstKey]
+        }
+        manager.nameFirst = preferences[nameFirstKey]
+        return manager
     }
 
     @Provides

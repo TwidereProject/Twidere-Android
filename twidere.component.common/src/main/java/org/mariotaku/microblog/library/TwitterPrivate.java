@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.mariotaku.microblog.library.twitter;
+package org.mariotaku.microblog.library;
 
 import org.mariotaku.microblog.library.twitter.api.PrivateAccountResources;
 import org.mariotaku.microblog.library.twitter.api.PrivateActivityResources;

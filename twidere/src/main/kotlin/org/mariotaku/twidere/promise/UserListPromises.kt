@@ -117,7 +117,7 @@ class UserListPromises private constructor(private val application: Application)
             val user = users.first()
             val nameFirst = preferences[nameFirstKey]
             val displayName = userColorNameManager.getDisplayName(user.key, user.name,
-                    user.screen_name, nameFirst)
+                    user.screen_name)
             return@toastOnResult application.getString(R.string.message_toast_added_user_to_list,
                     displayName, list.name)
         } else {
@@ -139,7 +139,7 @@ class UserListPromises private constructor(private val application: Application)
             val user = users.first()
             val nameFirst = preferences[nameFirstKey]
             val displayName = userColorNameManager.getDisplayName(user.key, user.name,
-                    user.screen_name, nameFirst)
+                    user.screen_name)
             return@toastOnResult application.getString(R.string.deleted_user_from_list,
                     displayName, list.name)
         } else {

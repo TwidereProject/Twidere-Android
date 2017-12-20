@@ -122,15 +122,13 @@ class ContentNotificationManager(
             val notificationContent: String
             userCursor.moveToFirst()
             val displayName = userColorNameManager.getDisplayName(userCursor.getString(userIndices[Statuses.USER_KEY]),
-                    userCursor.getString(userIndices[Statuses.USER_NAME]), userCursor.getString(userIndices[Statuses.USER_SCREEN_NAME]),
-                    nameFirst)
+                    userCursor.getString(userIndices[Statuses.USER_NAME]), userCursor.getString(userIndices[Statuses.USER_SCREEN_NAME]))
             if (usersCount == 1) {
                 notificationContent = context.getString(R.string.from_name, displayName)
             } else if (usersCount == 2) {
                 userCursor.moveToPosition(1)
                 val othersName = userColorNameManager.getDisplayName(userCursor.getString(userIndices[Statuses.USER_KEY]),
-                        userCursor.getString(userIndices[Statuses.USER_NAME]), userCursor.getString(userIndices[Statuses.USER_SCREEN_NAME]),
-                        nameFirst)
+                        userCursor.getString(userIndices[Statuses.USER_NAME]), userCursor.getString(userIndices[Statuses.USER_SCREEN_NAME]))
                 notificationContent = resources.getString(R.string.from_name_and_name, displayName, othersName)
             } else {
                 notificationContent = resources.getString(R.string.from_name_and_N_others, displayName, usersCount - 1)
@@ -192,7 +190,7 @@ class ContentNotificationManager(
         applyNotificationPreferences(builder, pref, pref.mentionsNotificationType)
 
         val resources = context.resources
-        val accountName = userColorNameManager.getDisplayName(account.user, nameFirst)
+        val accountName = userColorNameManager.getDisplayName(account.user)
         builder.setContentText(accountName)
         val style = NotificationCompat.InboxStyle()
         builder.setStyle(style)
@@ -346,8 +344,7 @@ class ContentNotificationManager(
 
     fun showUserNotification(accountKey: UserKey, status: Status, userKey: UserKey) {
         // Build favorited user notifications
-        val userDisplayName = userColorNameManager.getDisplayName(status.user,
-                preferences[nameFirstKey])
+        val userDisplayName = userColorNameManager.getDisplayName(status.user)
         val statusUri = LinkCreator.getTwidereStatusLink(accountKey, status.id)
         val builder = NotificationChannelSpec.contentSubscriptions.accountNotificationBuilder(context,
                 accountKey)

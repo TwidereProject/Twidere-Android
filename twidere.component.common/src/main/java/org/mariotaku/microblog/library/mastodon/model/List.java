@@ -16,17 +16,37 @@
  * limitations under the License.
  */
 
-package org.mariotaku.microblog.library.mastodon;
+package org.mariotaku.microblog.library.mastodon.model;
 
-import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.mastodon.callback.MastodonUserStreamCallback;
-import org.mariotaku.restfu.annotation.method.GET;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-/**
- * Created by mariotaku on 2017/4/17.
- */
+@JsonObject
+public class List {
+    /**
+     * ID of the list
+     */
+    @JsonField(name = "id")
+    String id;
+    /**
+     * Title of the list
+     */
+    @JsonField(name = "title")
+    String title;
 
-public interface MastodonStreaming {
-    @GET("/v1/streaming/public")
-    void getUserStream(MastodonUserStreamCallback callback) throws MicroBlogException;
+    public String getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    @Override
+    public String toString() {
+        return "List{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                '}';
+    }
 }

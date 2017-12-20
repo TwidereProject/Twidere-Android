@@ -163,8 +163,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
         val adapter = this.adapter as FilterUsersListAdapter
         val item = adapter.getFilterItem(position) ?: return
         if (item.source >= 0) return
-        addOrEditItem(item.id, userColorNameManager.getDisplayName(item,
-                preferences[nameFirstKey]), item.scope)
+        addOrEditItem(item.id, userColorNameManager.getDisplayName(item), item.scope)
     }
 
     override fun addOrEditItem(id: Long, value: String?, scope: Int) {
@@ -246,8 +245,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
             val userKey = UserKey.valueOf(cursor.getString(indices[Filters.Users.USER_KEY]))
             val name = cursor.getString(indices[Filters.Users.NAME])
             val screenName = cursor.getString(indices[Filters.Users.SCREEN_NAME])
-            val displayName = userColorNameManager.getDisplayName(userKey, name, screenName,
-                    nameFirst)
+            val displayName = userColorNameManager.getDisplayName(userKey, name, screenName)
             text1.spannable = displayName
 
             val ssb = SpannableStringBuilder(displayName)

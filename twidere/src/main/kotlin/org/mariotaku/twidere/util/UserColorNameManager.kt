@@ -39,6 +39,8 @@ class UserColorNameManager(context: Context) {
     val nicknames: Map<String, Any?>
         get() = nicknamePreferences.all
 
+    var nameFirst: Boolean = false
+
     private val colorCache = LruCache<String, Int>(512)
     private val nicknameCache = LruCache<String, String>(256)
 
@@ -77,35 +79,35 @@ class UserColorNameManager(context: Context) {
         editor.apply()
     }
 
-    fun getDisplayName(user: ParcelableUser, nameFirst: Boolean): String {
-        return getDisplayName(user.key, user.name, user.screen_name, nameFirst)
+    fun getDisplayName(user: ParcelableUser): String {
+        return getDisplayName(user.key, user.name, user.screen_name)
     }
 
-    fun getDisplayName(user: ParcelableLiteUser, nameFirst: Boolean): String {
-        return getDisplayName(user.key, user.name, user.screen_name, nameFirst)
+    fun getDisplayName(user: ParcelableLiteUser): String {
+        return getDisplayName(user.key, user.name, user.screen_name)
     }
 
-    fun getDisplayName(user: User, nameFirst: Boolean): String {
-        return getDisplayName(user.key, user.name, user.screenName, nameFirst)
+    fun getDisplayName(user: User): String {
+        return getDisplayName(user.key, user.name, user.screenName)
     }
 
-    fun getDisplayName(user: ParcelableUserList, nameFirst: Boolean): String {
-        return getDisplayName(user.user_key, user.user_name, user.user_screen_name, nameFirst)
+    fun getDisplayName(user: ParcelableUserList): String {
+        return getDisplayName(user.user_key, user.user_name, user.user_screen_name)
     }
 
-    fun getDisplayName(status: ParcelableStatus, nameFirst: Boolean): String {
-        return getDisplayName(status.user_key, status.user_name, status.user_screen_name, nameFirst)
+    fun getDisplayName(status: ParcelableStatus): String {
+        return getDisplayName(status.user_key, status.user_name, status.user_screen_name)
     }
 
-    fun getDisplayName(user: FiltersData.UserItem, nameFirst: Boolean): String {
-        return getDisplayName(user.userKey, user.name, user.screenName, nameFirst)
+    fun getDisplayName(user: FiltersData.UserItem): String {
+        return getDisplayName(user.userKey, user.name, user.screenName)
     }
 
-    fun getDisplayName(userKey: UserKey, name: String, screenName: String, nameFirst: Boolean): String {
-        return getDisplayName(userKey.toString(), name, screenName, nameFirst)
+    fun getDisplayName(userKey: UserKey, name: String, screenName: String): String {
+        return getDisplayName(userKey.toString(), name, screenName)
     }
 
-    fun getDisplayName(key: String, name: String, screenName: String, nameFirst: Boolean): String {
+    fun getDisplayName(key: String, name: String, screenName: String): String {
         val nick = getUserNicknameInternal(key)
         return decideDisplayName(nick, name, screenName, nameFirst)
     }
@@ -207,4 +209,5 @@ class UserColorNameManager(context: Context) {
 
         fun decideNickname(nick: String?, name: String) = nick ?: name
     }
+
 }

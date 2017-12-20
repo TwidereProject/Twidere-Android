@@ -176,7 +176,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
             statusContentUpperSpace.visibility = View.GONE
         } else if (status.retweet_id != null) {
             val retweetedBy = colorNameManager.getDisplayName(status.retweeted_by_user_key!!,
-                    status.retweeted_by_user_name, status.retweeted_by_user_acct!!, nameFirst)
+                    status.retweeted_by_user_name, status.retweeted_by_user_acct!!)
             statusInfoLabel.spannable = context.getString(R.string.name_retweeted, formatter.unicodeWrap(retweetedBy))
             statusInfoIcon.setImageResource(R.drawable.ic_activity_action_retweet)
             statusInfoLabel.visibility = View.VISIBLE
@@ -186,7 +186,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         } else if (status.in_reply_to_status_id != null && status.in_reply_to_user_key != null && displayInReplyTo) {
             if (status.in_reply_to_name != null && status.in_reply_to_screen_name != null) {
                 val inReplyTo = colorNameManager.getDisplayName(status.in_reply_to_user_key!!,
-                        status.in_reply_to_name, status.in_reply_to_screen_name, nameFirst)
+                        status.in_reply_to_name, status.in_reply_to_screen_name)
                 statusInfoLabel.spannable = context.getString(R.string.in_reply_to_name, formatter.unicodeWrap(inReplyTo))
             } else {
                 statusInfoLabel.spannable = context.getString(R.string.label_status_type_reply)
@@ -450,7 +450,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
                 nameFirst, displayInReplyTo, timeView.showAbsoluteTime)
 
         profileImageView.contentDescription = context.getString(R.string.content_description_open_user_name_profile,
-                colorNameManager.getDisplayName(status, nameFirst))
+                colorNameManager.getDisplayName(status))
 
 
     }

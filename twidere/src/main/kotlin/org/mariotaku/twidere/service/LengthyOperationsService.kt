@@ -40,7 +40,7 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.getNullableTypedArrayExtra
 import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.twitter.TwitterUpload
+import org.mariotaku.microblog.library.TwitterUpload
 import org.mariotaku.microblog.library.twitter.model.MediaUploadResponse
 import org.mariotaku.microblog.library.twitter.model.MediaUploadResponse.ProcessingInfo
 import org.mariotaku.restfu.http.ContentType

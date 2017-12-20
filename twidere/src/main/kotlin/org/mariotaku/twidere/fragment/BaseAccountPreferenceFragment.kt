@@ -69,7 +69,7 @@ abstract class BaseAccountPreferenceFragment : BasePreferenceFragment() {
         if (intent.hasExtra(EXTRA_SHOW_FRAGMENT)) {
             val nameFirst = prefs.getBoolean(KEY_NAME_FIRST, true)
             val name = userColorNameManager.getDisplayName(account.key,
-                    account.user.name, account.user.screen_name, nameFirst)
+                    account.user.name, account.user.screen_name)
             activity.title = name
         }
         updatePreferenceScreen()

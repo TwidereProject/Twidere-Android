@@ -28,6 +28,7 @@ import android.view.View
 import kotlinx.android.synthetic.main.fragment_user.view.*
 import kotlinx.android.synthetic.main.header_user.view.*
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.extension.findViewByText
 import org.mariotaku.twidere.graphic.drawable.userprofile.ActionBarDrawable
 import org.mariotaku.twidere.util.ThemeUtils
 
@@ -53,19 +54,19 @@ internal class ToolbarBehavior(context: Context?, attrs: AttributeSet? = null) :
         return false
     }
 
-    private fun updateToolbarFactor(parent: CoordinatorLayout, child: Toolbar, dependency: View): Boolean {
-        val actionBarBackground = child.background as? ActionBarDrawable ?: return true
+    private fun updateToolbarFactor(parent: CoordinatorLayout, toolbar: Toolbar, header: View): Boolean {
+        val actionBarBackground = toolbar.background as? ActionBarDrawable ?: return true
         val bannerContainer = parent.profileBannerContainer
         val detailsBackground = parent.profileHeaderBackground
-        val detailsBottom = dependency.top + detailsBackground.bottom
-        val headerHidden = dependency.visibility == View.GONE
+        val backgroundBottom = header.top + detailsBackground.bottom
+        val headerHidden = header.visibility == View.GONE
 
-        val colorFactor = colorFactor(dependency, bannerContainer, child)
+        val colorFactor = colorFactor(header, bannerContainer, toolbar)
 
         val outlineFactor = when {
             headerHidden -> 1f
             colorFactor < 1 -> colorFactor
-            else -> ((detailsBottom - child.bottom) / detailsBackground.height.toFloat()).coerceIn(0f, 1f)
+            else -> ((backgroundBottom - toolbar.bottom) / detailsBackground.height.toFloat()).coerceIn(0f, 1f)
         }
 
         actionBarBackground.factor = colorFactor
@@ -76,9 +77,21 @@ internal class ToolbarBehavior(context: Context?, attrs: AttributeSet? = null) :
                 colorPrimary) as Int
         val actionItemIsDark = if (ThemeUtils.isLightColor(currentActionBarColor)) 1 else -1
         if (this.actionItemIsDark != actionItemIsDark) {
-            ThemeUtils.applyToolbarItemColor(parent.context, child, currentActionBarColor)
+            ThemeUtils.applyToolbarItemColor(parent.context, toolbar, currentActionBarColor)
         }
         this.actionItemIsDark = actionItemIsDark
+
+        @Suppress("UnnecessaryVariable")
+        val titleAlpha = colorFactor
+        val titleView = toolbar.findViewByText(toolbar.title)
+        if (titleView != null) {
+            titleView.alpha = titleAlpha
+        }
+        val subtitleView = toolbar.findViewByText(toolbar.subtitle)
+        if (subtitleView != null) {
+            subtitleView.alpha = titleAlpha
+        }
+
         return false
     }
 

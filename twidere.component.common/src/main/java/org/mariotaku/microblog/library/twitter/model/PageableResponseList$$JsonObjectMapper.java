@@ -66,7 +66,8 @@ public final class PageableResponseList$$JsonObjectMapper<T> extends JsonMapper<
         switch (fieldName) {
             case "users":
             case "statuses":
-            case "lists": {
+            case "lists":
+            case "events":{
                 instance.addAll(m84ClassJsonMapper.parseList(jsonParser));
                 break;
             }

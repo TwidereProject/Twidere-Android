@@ -72,7 +72,7 @@ abstract class AbsMessageViewHolder(itemView: View, val adapter: MessagesConvers
             if (message.is_outgoing) {
                 this.text = time
             } else if (adapter.displaySenderProfile && sender != null) {
-                val senderName = manager.getDisplayName(sender, adapter.nameFirst)
+                val senderName = manager.getDisplayName(sender)
                 this.text = context.getString(R.string.message_format_sender_time, senderName, time)
             } else {
                 this.text = time

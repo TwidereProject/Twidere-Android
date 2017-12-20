@@ -25,7 +25,7 @@ import org.attoparser.simple.AbstractSimpleMarkupHandler
 import org.attoparser.simple.SimpleMarkupParser
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.mastodon.Mastodon
+import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.microblog.library.twitter.TwitterWeb
 import org.mariotaku.microblog.library.twitter.model.IDs
 import org.mariotaku.microblog.library.twitter.model.IDsAccessor

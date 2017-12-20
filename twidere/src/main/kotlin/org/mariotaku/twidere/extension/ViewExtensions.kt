@@ -24,6 +24,7 @@ import android.graphics.Rect
 import android.graphics.RectF
 import android.os.Build
 import android.support.annotation.UiThread
+import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -111,6 +112,17 @@ fun ViewGroup.showContextMenuForChildCompat(originalView: View, x: Float, y: Flo
         return showContextMenuForChild(originalView)
     }
     return ViewExtensionsN.showContextMenuForChild(this, originalView, x, y)
+}
+
+fun View.findViewByText(text: CharSequence?): TextView? {
+    if (this is TextView && TextUtils.equals(text, this.text))
+        return this
+    if (this is ViewGroup) {
+        return (0 until childCount)
+                .mapNotNull { getChildAt(it).findViewByText(text) }
+                .firstOrNull()
+    }
+    return null
 }
 
 private fun offsetToRoot(view: View, rect: Rect) {

@@ -64,10 +64,10 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.mastodon.Mastodon
-import org.mariotaku.microblog.library.mastodon.MastodonOAuth2
+import org.mariotaku.microblog.library.Mastodon
+import org.mariotaku.microblog.library.MastodonOAuth2
 import org.mariotaku.microblog.library.mastodon.annotation.AuthScope
-import org.mariotaku.microblog.library.twitter.TwitterOAuth
+import org.mariotaku.microblog.library.TwitterOAuth
 import org.mariotaku.microblog.library.twitter.auth.BasicAuthorization
 import org.mariotaku.microblog.library.twitter.auth.EmptyAuthorization
 import org.mariotaku.microblog.library.twitter.model.ErrorInfo

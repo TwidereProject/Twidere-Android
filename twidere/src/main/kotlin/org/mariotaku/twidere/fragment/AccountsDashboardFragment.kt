@@ -551,7 +551,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         accountProfileNameView.updateText(bidiFormatter)
 
         profileContainer.contentDescription = getString(R.string.content_description_accounts_selector_current,
-                userColorNameManager.getDisplayName(user, preferences[nameFirstKey]))
+                userColorNameManager.getDisplayName(user))
 
         requestManager.loadProfileImage(activity, account, preferences[profileImageStyleKey],
                 accountProfileImageView.cornerRadius, accountProfileImageView.cornerRadiusRatio,

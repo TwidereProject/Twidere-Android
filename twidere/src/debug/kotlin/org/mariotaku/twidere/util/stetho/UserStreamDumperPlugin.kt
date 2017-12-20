@@ -27,11 +27,11 @@ import org.apache.commons.cli.GnuParser
 import org.apache.commons.cli.HelpFormatter
 import org.apache.commons.cli.Options
 import org.mariotaku.ktextension.subArray
-import org.mariotaku.microblog.library.fanfou.FanfouStream
-import org.mariotaku.microblog.library.mastodon.MastodonStreaming
+import org.mariotaku.microblog.library.FanfouStream
+import org.mariotaku.microblog.library.MastodonStreaming
 import org.mariotaku.microblog.library.mastodon.callback.MastodonUserStreamCallback
 import org.mariotaku.microblog.library.mastodon.model.Notification
-import org.mariotaku.microblog.library.twitter.TwitterUserStream
+import org.mariotaku.microblog.library.TwitterUserStream
 import org.mariotaku.microblog.library.twitter.annotation.StreamWith
 import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.microblog.library.twitter.model.DirectMessage

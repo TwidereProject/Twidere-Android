@@ -393,9 +393,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val isMyself = user.isSelf
         val mentionItem = menu.findItem(R.id.mention)
         if (mentionItem != null) {
-            val displayName = UserColorNameManager.decideDisplayName(user.nickname,
-                    user.name, user.screen_name, nameFirst)
-            mentionItem.title = getString(R.string.mention_user_name, displayName)
+            mentionItem.title = getString(R.string.mention_user_name,
+                    userColorNameManager.getDisplayName(user))
         }
 
         menu.setItemAvailability(R.id.qr_code, linkAvailable)
@@ -995,7 +994,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         }
         val user = this.liveUser.user
         if (user != null) {
-            val name = userColorNameManager.getDisplayName(user, nameFirst)
+            val name = userColorNameManager.getDisplayName(user)
             ActivitySupport.setTaskDescription(activity, TaskDescriptionCompat(name, null, taskColor))
         } else {
             ActivitySupport.setTaskDescription(activity, TaskDescriptionCompat(null, null, taskColor))
@@ -1114,6 +1113,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     private fun displayUser(user: ParcelableUser) {
         val activity = activity ?: return
         val adapter = pagerAdapter
+
         (0 until adapter.count).forEach { i ->
             val sf = adapter.instantiateItem(viewPager, i) as? AbsTimelineFragment ?: return@forEach
             if (sf.view == null) return@forEach
@@ -1123,6 +1123,15 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         setContentVisible(true)
         profileImage.setBorderColor(if (user.color != 0) user.color else Color.WHITE)
         followContainer.drawEnd(user.account_color)
+
+        linkHandlerTitle = run {
+            val nameNoNick = UserColorNameManager.decideDisplayName(null, user.name,
+                    user.screen_name, userColorNameManager.nameFirst)
+            return@run bidiFormatter.unicodeWrap(when {
+                user.nickname.isNullOrEmpty() -> nameNoNick
+                else -> getString(R.string.name_with_nickname, nameNoNick, user.nickname)
+            })
+        }
         nameContainer.name.setText(bidiFormatter.unicodeWrap(when {
             user.nickname.isNullOrEmpty() -> user.name
             else -> getString(R.string.name_with_nickname, user.name, user.nickname)
@@ -1201,10 +1210,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 .thumbnail(requestManager.loadProfileImage(activity, user, profileImage.style,
                         profileImage.cornerRadius, profileImage.cornerRadiusRatio,
                         getString(R.string.profile_image_size))).into(profileImage)
-        activity.title = SpannableStringBuilder.valueOf(UserColorNameManager.decideDisplayName(user.nickname, user.name,
-                user.screen_name, nameFirst)).also {
-            externalThemeManager.emoji?.applyTo(it)
-        }
 
         val userCreationDay = condition@ if (user.created_at >= 0) {
             val cal = Calendar.getInstance()

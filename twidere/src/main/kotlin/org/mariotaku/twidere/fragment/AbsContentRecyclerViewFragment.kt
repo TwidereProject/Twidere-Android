@@ -256,13 +256,13 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
     protected fun showProgress() {
         errorContainer.visibility = View.GONE
         progressContainer.visibility = View.VISIBLE
-        recyclerView.visibility = View.GONE
+        recyclerView.visibility = View.VISIBLE
     }
 
     protected fun showError(icon: Int, text: CharSequence) {
         errorContainer.visibility = View.VISIBLE
         progressContainer.visibility = View.GONE
-        recyclerView.visibility = View.GONE
+        recyclerView.visibility = View.VISIBLE
         errorIcon.setImageResource(icon)
         errorText.text = text
     }

@@ -1157,7 +1157,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             showDefaultLabelAndHint()
             return false
         }
-        val replyToName = userColorNameManager.getDisplayName(status, nameFirst)
+        val replyToName = userColorNameManager.getDisplayName(status)
         replyLabel.spannable = getString(R.string.label_quote_name_text, replyToName, status.text_unescaped)
         replyLabel.visibility = View.VISIBLE
         editText.hint = getString(R.string.label_quote_name, replyToName)
@@ -1169,7 +1169,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             showDefaultLabelAndHint()
             return false
         }
-        val replyToName = userColorNameManager.getDisplayName(status, nameFirst)
+        val replyToName = userColorNameManager.getDisplayName(status)
         replyLabel.spannable = getString(R.string.label_reply_name_text, replyToName, status.text_unescaped)
         replyLabel.visibility = View.VISIBLE
         editText.hint = getString(R.string.label_reply_name, replyToName)

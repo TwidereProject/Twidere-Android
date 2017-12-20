@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.fragment_network_diagnostics.*
 import okhttp3.Dns
 import org.mariotaku.ktextension.weak
 import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.mastodon.Mastodon
+import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.restfu.RestFuUtils
 import org.mariotaku.restfu.annotation.method.GET

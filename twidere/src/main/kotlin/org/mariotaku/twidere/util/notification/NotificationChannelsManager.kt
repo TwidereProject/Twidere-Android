@@ -26,8 +26,6 @@ import android.app.NotificationChannelGroup
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
-import org.mariotaku.kpreferences.get
-import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.extension.getDetails
 import org.mariotaku.twidere.extension.model.notificationChannelGroupId
@@ -94,7 +92,7 @@ object NotificationChannelsManager {
             accounts.forEach { account ->
                 val details = am.getDetails(account, false) ?: return@forEach
                 val group = NotificationChannelGroup(details.key.notificationChannelGroupId(),
-                        ucnm.getDisplayName(details.user, pref[nameFirstKey]))
+                        ucnm.getDisplayName(details.user))
 
                 addedGroups.add(group.id)
                 nm.createNotificationChannelGroup(group)

@@ -92,7 +92,7 @@ fun ParcelableMessageConversation.getTitle(context: Context, manager: UserColorN
     if (conversation_name != null) {
         return Pair(conversation_name, null)
     }
-    return Pair(participants.joinToString(separator = ", ") { manager.getDisplayName(it, nameFirst) }, null)
+    return Pair(participants.joinToString(separator = ", ") { manager.getDisplayName(it) }, null)
 }
 
 fun ParcelableMessageConversation.getSubtitle(context: Context): String? {

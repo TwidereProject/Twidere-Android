@@ -32,10 +32,6 @@ import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.Param;
 import org.mariotaku.restfu.annotation.param.Path;
 
-/**
- * Created by mariotaku on 2017/4/17.
- */
-
 public interface StatusesResources {
     @GET("/v1/statuses/{id}")
     Status fetchStatus(@Path("id") String id) throws MicroBlogException;

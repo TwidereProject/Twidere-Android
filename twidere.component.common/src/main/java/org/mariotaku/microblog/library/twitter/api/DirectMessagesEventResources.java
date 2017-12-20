@@ -20,21 +20,37 @@ package org.mariotaku.microblog.library.twitter.api;
 
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.DirectMessageEventObject;
+import org.mariotaku.microblog.library.twitter.model.PageableResponseList;
+import org.mariotaku.microblog.library.twitter.model.Paging;
+import org.mariotaku.microblog.library.twitter.model.ResponseCode;
 import org.mariotaku.microblog.library.twitter.template.DirectMessageAnnotationTemplate;
+import org.mariotaku.restfu.annotation.method.DELETE;
+import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
+import org.mariotaku.restfu.annotation.param.Param;
 import org.mariotaku.restfu.annotation.param.Params;
+import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.restfu.annotation.param.Raw;
 import org.mariotaku.restfu.http.BodyType;
 
-/**
- * Created by mariotaku on 2017/5/11.
- */
 @Params(template = DirectMessageAnnotationTemplate.class)
 public interface DirectMessagesEventResources {
+
+    @GET("/direct_messages/events/list.json")
+    @BodyType(BodyType.FORM)
+    PageableResponseList<DirectMessageEventObject> getDirectMessageEvents(@Query Paging paging)
+            throws MicroBlogException;
 
     @POST("/direct_messages/events/new.json")
     @BodyType(BodyType.RAW)
     DirectMessageEventObject newDirectMessageEvent(@Raw(contentType = "application/json", encoding = "UTF-8")
             DirectMessageEventObject event) throws MicroBlogException;
 
+    @GET("/direct_messages/events/show.json")
+    DirectMessageEventObject showDirectMessageEvent(@Query("id") String id)
+            throws MicroBlogException;
+
+    @DELETE("/direct_messages/events/destroy.json")
+    @BodyType(BodyType.FORM)
+    ResponseCode destroyDirectMessageEvent(@Param("id") String id) throws MicroBlogException;
 }

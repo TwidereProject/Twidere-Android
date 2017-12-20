@@ -43,7 +43,7 @@ class BlockStatusUsersDialogFragment : BaseDialogFragment() {
         val referencedUsers = status.referencedUsers
         val nameFirst = preferences[nameFirstKey]
         val displayNames = referencedUsers.map {
-            userColorNameManager.getDisplayName(it, nameFirst)
+            userColorNameManager.getDisplayName(it)
         }.toTypedArray()
         builder.setTitle(R.string.action_status_block_users)
         builder.setItems(displayNames) { _, which ->

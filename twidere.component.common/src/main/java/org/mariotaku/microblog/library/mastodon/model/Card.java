@@ -18,12 +18,14 @@
 
 package org.mariotaku.microblog.library.mastodon.model;
 
+import android.support.annotation.StringDef;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 /**
  * {@see https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#card}
- *
+ * <p>
  * Created by mariotaku on 2017/4/17.
  */
 @JsonObject
@@ -49,6 +51,10 @@ public class Card {
     @JsonField(name = "image")
     String image;
 
+    @Type
+    @JsonField(name = "type")
+    String type;
+
     public String getUrl() {
         return url;
     }
@@ -65,6 +71,10 @@ public class Card {
         return image;
     }
 
+    public String getType() {
+        return type;
+    }
+
     @Override
     public String toString() {
         return "Card{" +
@@ -72,6 +82,15 @@ public class Card {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", image='" + image + '\'' +
+                ", type='" + type + '\'' +
                 '}';
+    }
+
+    @StringDef({Type.LINK, Type.PHOTO, Type.VIDEO, Type.RICH})
+    public @interface Type {
+        String LINK = "link";
+        String PHOTO = "photo";
+        String VIDEO = "video";
+        String RICH = "rich";
     }
 }

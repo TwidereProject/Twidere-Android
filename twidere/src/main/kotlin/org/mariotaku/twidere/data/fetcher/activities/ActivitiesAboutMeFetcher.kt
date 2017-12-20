@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.data.fetcher.activities
 
 import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.mastodon.Mastodon
+import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.microblog.library.mastodon.model.LinkHeaderList
 import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.microblog.library.twitter.model.Paging

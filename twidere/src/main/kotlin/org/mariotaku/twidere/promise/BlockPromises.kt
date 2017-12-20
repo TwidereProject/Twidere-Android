@@ -26,7 +26,9 @@ import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.then
 import org.mariotaku.kpreferences.get
 import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.mastodon.Mastodon
+import org.mariotaku.microblog.library.Fanfou
+import org.mariotaku.microblog.library.Mastodon
+import org.mariotaku.microblog.library.Twitter
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
@@ -78,12 +80,12 @@ class BlockPromises private constructor(private val application: Application) {
                 return@then mastodon.getAccount(userKey.id).toParcelable(account)
             }
             AccountType.FANFOU -> {
-                val fanfou = account.newMicroBlogInstance(application, MicroBlog::class.java)
+                val fanfou = account.newMicroBlogInstance(application, Fanfou::class.java)
                 return@then fanfou.createFanfouBlock(userKey.id).toParcelable(account,
                         profileImageSize = profileImageSize)
             }
             else -> {
-                val twitter = account.newMicroBlogInstance(application, MicroBlog::class.java)
+                val twitter = account.newMicroBlogInstance(application, Twitter::class.java)
                 return@then twitter.createBlock(userKey.id).toParcelable(account,
                         profileImageSize = profileImageSize)
             }
@@ -101,7 +103,7 @@ class BlockPromises private constructor(private val application: Application) {
         return@then user
     }.toastOnResult(application) { user ->
         return@toastOnResult application.getString(R.string.message_blocked_user,
-                manager.getDisplayName(user, preferences[nameFirstKey]))
+                manager.getDisplayName(user))
     }.notifyOnResult(bus, FriendshipTaskEvent.Action.BLOCK, accountKey, userKey)
 
     fun unblock(accountKey: UserKey, userKey: UserKey): Promise<ParcelableUser, Exception>
@@ -114,12 +116,12 @@ class BlockPromises private constructor(private val application: Application) {
                 return@then mastodon.getAccount(userKey.id).toParcelable(account)
             }
             AccountType.FANFOU -> {
-                val fanfou = account.newMicroBlogInstance(application, MicroBlog::class.java)
+                val fanfou = account.newMicroBlogInstance(application, Fanfou::class.java)
                 return@then fanfou.destroyFanfouBlock(userKey.id).toParcelable(account,
                         profileImageSize = profileImageSize)
             }
             else -> {
-                val twitter = account.newMicroBlogInstance(application, MicroBlog::class.java)
+                val twitter = account.newMicroBlogInstance(application, Twitter::class.java)
                 return@then twitter.destroyBlock(userKey.id).toParcelable(account,
                         profileImageSize = profileImageSize)
             }
@@ -133,7 +135,7 @@ class BlockPromises private constructor(private val application: Application) {
     }.toastOnResult(application) { user ->
         val nameFirst = preferences[nameFirstKey]
         return@toastOnResult application.getString(R.string.unblocked_user,
-                manager.getDisplayName(user, nameFirst))
+                manager.getDisplayName(user))
     }.notifyOnResult(bus, FriendshipTaskEvent.Action.UNBLOCK, accountKey, userKey)
 
     fun report(accountKey: UserKey, userKey: UserKey, filterEverywhere: Boolean = false): Promise<ParcelableUser, Exception>
@@ -162,7 +164,7 @@ class BlockPromises private constructor(private val application: Application) {
         return@then user
     }.toastOnResult(application) { user ->
         return@toastOnResult application.getString(R.string.message_toast_reported_user_for_spam,
-                manager.getDisplayName(user, preferences[nameFirstKey]))
+                manager.getDisplayName(user))
     }.notifyOnResult(bus, FriendshipTaskEvent.Action.BLOCK, accountKey, userKey)
 
     private fun Promise<ParcelableUser, Exception>.thenUpdateRelationship(accountKey: UserKey,

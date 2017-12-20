@@ -18,6 +18,8 @@
 
 package org.mariotaku.microblog.library.mastodon.api;
 
+import android.support.annotation.NonNull;
+
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.mastodon.model.LinkHeaderList;
 import org.mariotaku.microblog.library.mastodon.model.Status;
@@ -41,7 +43,11 @@ public interface TimelinesResources {
             throws MicroBlogException;
 
     @GET("/v1/timelines/tag/{tag}")
-    LinkHeaderList<Status> getHashtagTimeline(@Path("tag") String hashtag, @Query Paging paging,
+    LinkHeaderList<Status> getHashtagTimeline(@Path("tag") @NonNull String hashtag, @Query Paging paging,
             @Query(value = "local", booleanEncoding = BooleanEncoding.IGNORE_IF_FALSE) boolean local)
+            throws MicroBlogException;
+
+    @GET("/v1/timelines/list/{list_id}")
+    LinkHeaderList<Status> getListTimeline(@Path("list_id") @NonNull String listId, @Query Paging paging)
             throws MicroBlogException;
 }

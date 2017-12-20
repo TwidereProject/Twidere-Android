@@ -28,7 +28,7 @@ import org.attoparser.config.ParseConfiguration
 import org.attoparser.simple.AbstractSimpleMarkupHandler
 import org.attoparser.simple.SimpleMarkupParser
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.twitter.TwitterOAuth
+import org.mariotaku.microblog.library.TwitterOAuth
 import org.mariotaku.restfu.RestAPIFactory
 import org.mariotaku.restfu.annotation.method.GET
 import org.mariotaku.restfu.annotation.method.POST
