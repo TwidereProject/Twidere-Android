@@ -24,9 +24,9 @@ import org.mariotaku.ktextension.isNotNullOrEmpty
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.TwitterUpload
-import org.mariotaku.microblog.library.twitter.annotation.MediaCategory
-import org.mariotaku.microblog.library.twitter.model.DirectMessage
-import org.mariotaku.microblog.library.twitter.model.NewDm
+import org.mariotaku.microblog.library.annotation.twitter.MediaCategory
+import org.mariotaku.microblog.library.model.microblog.DirectMessage
+import org.mariotaku.microblog.library.model.microblog.NewDm
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType

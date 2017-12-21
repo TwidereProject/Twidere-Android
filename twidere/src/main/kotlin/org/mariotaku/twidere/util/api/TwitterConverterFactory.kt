@@ -23,11 +23,11 @@ import android.support.v4.util.SimpleArrayMap
 import com.bluelinelabs.logansquare.JsonMapper
 import com.bluelinelabs.logansquare.ParameterizedType
 import org.mariotaku.commons.logansquare.LoganSquareMapperFinder
-
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.mastodon.model.LinkHeaderList
-import org.mariotaku.microblog.library.twitter.model.ResponseCode
-import org.mariotaku.microblog.library.twitter.model.TwitterResponse
+import org.mariotaku.microblog.library.model.mastodon.LinkHeaderList
+import org.mariotaku.microblog.library.model.microblog.ResponseCode
+import org.mariotaku.microblog.library.model.microblog.ResponseCode.ResponseConverter
+import org.mariotaku.microblog.library.model.microblog.TwitterResponse
 import org.mariotaku.microblog.library.twitter.util.OAuthTokenResponseConverter
 import org.mariotaku.restfu.RestConverter
 import org.mariotaku.restfu.http.HttpResponse
@@ -35,7 +35,6 @@ import org.mariotaku.restfu.http.mime.Body
 import org.mariotaku.restfu.http.mime.SimpleBody
 import org.mariotaku.restfu.logansqaure.LoganSquareConverterFactory
 import org.mariotaku.restfu.oauth.OAuthToken
-
 import java.lang.reflect.Type
 
 /**
@@ -49,7 +48,7 @@ object TwitterConverterFactory : LoganSquareConverterFactory<MicroBlogException>
     private val bodyConverters = SimpleArrayMap<Type, RestConverter<*, Body, MicroBlogException>>()
 
     init {
-        responseConverters.put(ResponseCode::class.java, ResponseCode.ResponseConverter())
+        responseConverters.put(ResponseCode::class.java, ResponseConverter())
         responseConverters.put(OAuthToken::class.java, OAuthTokenResponseConverter())
     }
 

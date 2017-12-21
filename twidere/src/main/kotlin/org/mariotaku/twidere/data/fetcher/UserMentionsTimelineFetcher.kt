@@ -21,10 +21,10 @@ package org.mariotaku.twidere.data.fetcher
 
 import android.support.v4.util.ArrayMap
 import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.twitter.model.Paging
-import org.mariotaku.microblog.library.twitter.model.SearchQuery
-import org.mariotaku.microblog.library.twitter.model.Status
-import org.mariotaku.microblog.library.twitter.model.UniversalSearchQuery
+import org.mariotaku.microblog.library.model.microblog.Paging
+import org.mariotaku.microblog.library.model.microblog.SearchQuery
+import org.mariotaku.microblog.library.model.microblog.Status
+import org.mariotaku.microblog.library.model.microblog.UniversalSearchQuery
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.exception.RequiredFieldNotFoundException
 import org.mariotaku.twidere.extension.api.tryShowUser
@@ -38,14 +38,14 @@ class UserMentionsTimelineFetcher(val userKey: UserKey?, val userScreenName: Str
     override fun forTwitter(account: AccountDetails, twitter: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
         val screenName = getSearchScreenName(twitter, account.type)
         if (!account.official) {
-            val searchQuery = SearchQuery("@$screenName exclude:retweets")
-            searchQuery.paging(paging)
+            val searchQuery = SearchQuery("@$screenName exclude:retweets").paging(paging)
             return twitter.search(searchQuery)
         }
-        val universalQuery = UniversalSearchQuery(SearchTimelineFetcher.smQuery("@$screenName", paging))
-        universalQuery.setModules(UniversalSearchQuery.Module.TWEET)
-        universalQuery.setResultType(UniversalSearchQuery.ResultType.RECENT)
-        universalQuery.setPaging(paging)
+        val universalQuery = UniversalSearchQuery(SearchTimelineFetcher.smQuery("@$screenName", paging)).apply {
+            setModules(UniversalSearchQuery.Module.TWEET)
+            setResultType(UniversalSearchQuery.ResultType.RECENT)
+            setPaging(paging)
+        }
         val searchResult = twitter.universalSearch(universalQuery)
         return searchResult.modules.mapNotNull { it.status?.data }
     }

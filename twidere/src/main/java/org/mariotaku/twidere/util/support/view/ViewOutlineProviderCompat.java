@@ -31,14 +31,14 @@ import org.mariotaku.twidere.util.support.DrawableSupport;
 import org.mariotaku.twidere.util.support.graphics.OutlineCompat;
 
 /**
- * Interface by which a View builds its {@link org.mariotaku.twidere.util.support.graphics.OutlineCompat}, used for shadow casting and clipping.
+ * Interface by which a View builds its {@link OutlineCompat}, used for shadow casting and clipping.
  */
 public abstract class ViewOutlineProviderCompat {
     /**
      * Called to get the provider to populate the Outline.
      * <p/>
      * This method will be called by a View when its owned Drawables are invalidated, when the
-     * View's size changes, or if {@link android.view.View#invalidateOutline()} is called
+     * View's size changes, or if {@link View#invalidateOutline()} is called
      * explicitly.
      * <p/>
      * The input outline is empty and has an alpha of <code>1.0f</code>.
@@ -66,7 +66,7 @@ public abstract class ViewOutlineProviderCompat {
      * or generates a 0 alpha, rectangular Outline the size of the View if a background
      * isn't present.
      *
-     * @see android.graphics.drawable.Drawable#getOutline(android.graphics.Outline)
+     * @see Drawable#getOutline(Outline)
      */
     public static final ViewOutlineProviderCompat BACKGROUND = new ViewOutlineProviderCompat() {
         @Override

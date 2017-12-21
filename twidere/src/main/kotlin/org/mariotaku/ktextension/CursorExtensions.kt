@@ -4,34 +4,6 @@ import android.database.Cursor
 import org.mariotaku.library.objectcursor.ObjectCursor
 import java.util.*
 
-/**
- * Created by mariotaku on 16/6/29.
- */
-
-fun Cursor.safeMoveToPosition(pos: Int) = try {
-    moveToPosition(pos)
-} catch (e: IllegalStateException) {
-    false
-}
-
-fun Cursor.safeGetLong(columnIndex: Int, def: Long = -1) = try {
-    getLong(columnIndex)
-} catch (e: IllegalStateException) {
-    def
-}
-
-fun Cursor.safeGetInt(columnIndex: Int, def: Int = -1) = try {
-    getInt(columnIndex)
-} catch (e: IllegalStateException) {
-    def
-}
-
-fun Cursor.safeGetString(columnIndex: Int, def: String = "") = try {
-    getString(columnIndex)
-} catch (e: IllegalStateException) {
-    def
-}
-
 fun <T> Cursor.map(indices: ObjectCursor.CursorIndices<T>): List<T> {
     val list = ArrayList<T>()
     moveToFirst()
@@ -42,7 +14,7 @@ fun <T> Cursor.map(indices: ObjectCursor.CursorIndices<T>): List<T> {
     return list
 }
 
-val Cursor.isEmpty: Boolean
+inline val Cursor.isEmpty: Boolean
     get() = count == 0
 
 

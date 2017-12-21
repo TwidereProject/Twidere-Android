@@ -20,10 +20,12 @@
 package org.mariotaku.twidere.data.fetcher
 
 import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.twitter.model.Paging
-import org.mariotaku.microblog.library.twitter.model.SearchQuery
-import org.mariotaku.microblog.library.twitter.model.Status
-import org.mariotaku.microblog.library.twitter.model.UniversalSearchQuery
+import org.mariotaku.microblog.library.model.microblog.Paging
+import org.mariotaku.microblog.library.model.microblog.SearchQuery
+import org.mariotaku.microblog.library.model.microblog.Status
+import org.mariotaku.microblog.library.model.microblog.UniversalSearchQuery
+import org.mariotaku.microblog.library.model.microblog.UniversalSearchQuery.Module
+import org.mariotaku.microblog.library.model.microblog.UniversalSearchQuery.ResultType
 import org.mariotaku.twidere.exception.RequiredFieldNotFoundException
 import org.mariotaku.twidere.extension.model.official
 import org.mariotaku.twidere.model.AccountDetails
@@ -35,15 +37,14 @@ class MediaSearchTimelineFetcher(val query: String?) : StatusesFetcher {
         if (account.official) {
             val searchQuery = SearchTimelineFetcher.smQuery("$query filter:media", paging)
             val universalQuery = UniversalSearchQuery(searchQuery)
-            universalQuery.setModules(UniversalSearchQuery.Module.TWEET)
-            universalQuery.setResultType(UniversalSearchQuery.ResultType.RECENT)
+            universalQuery.setModules(Module.TWEET)
+            universalQuery.setResultType(ResultType.RECENT)
             universalQuery.setPaging(paging)
             val searchResult = twitter.universalSearch(universalQuery)
             return searchResult.modules.mapNotNull { it.status?.data }
         }
 
-        val searchQuery = SearchQuery("$query filter:media exclude:retweets")
-        searchQuery.paging(paging)
+        val searchQuery = SearchQuery("$query filter:media exclude:retweets").paging(paging)
         return twitter.search(searchQuery)
     }
 }

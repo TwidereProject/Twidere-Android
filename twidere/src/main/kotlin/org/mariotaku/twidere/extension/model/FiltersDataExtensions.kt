@@ -16,6 +16,18 @@ import org.xmlpull.v1.XmlSerializer
 import java.io.IOException
 import java.util.*
 
+private const val TAG_FILTERS = "filters"
+private const val TAG_KEYWORD = "keyword"
+private const val TAG_SOURCE = "source"
+private const val TAG_LINK = "link"
+private const val TAG_USER = "user"
+
+private const val ATTR_SCREEN_NAME = "screenName"
+private const val ATTR_NAME = "name"
+private const val ATTR_KEY = "key"
+private const val ATTR_SCOPE = "scope"
+private const val ATTR_USER_KEY = "userKey"
+
 fun FiltersData.read(cr: ContentResolver, loadSubscription: Boolean = false) {
     fun readBaseItems(uri: Uri): List<FiltersData.BaseItem>? {
         val where = if (loadSubscription) null else Expression.lesserThan(Filters.SOURCE, 0).sql
@@ -58,19 +70,6 @@ fun FiltersData.write(cr: ContentResolver, deleteOld: Boolean = true) {
         cr.bulkInsert(Filters.Links.CONTENT_URI, links, FiltersData.BaseItem::class.java)
     }
 }
-
-private const val TAG_FILTERS = "filters"
-private const val TAG_KEYWORD = "keyword"
-private const val TAG_SOURCE = "source"
-private const val TAG_LINK = "link"
-private const val TAG_USER = "user"
-
-private const val ATTR_SCREEN_NAME = "screenName"
-private const val ATTR_NAME = "name"
-private const val ATTR_KEY = "key"
-private const val ATTR_SCOPE = "scope"
-private const val ATTR_USER_KEY = "userKey"
-
 
 @Throws(IOException::class)
 fun FiltersData.serialize(serializer: XmlSerializer) {

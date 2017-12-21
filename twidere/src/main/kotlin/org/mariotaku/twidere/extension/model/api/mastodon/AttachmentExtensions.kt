@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.extension.model.api.mastodon
 
-import org.mariotaku.microblog.library.mastodon.model.Attachment
+import org.mariotaku.microblog.library.model.mastodon.Attachment
 import org.mariotaku.twidere.model.ParcelableMedia
 
 /**

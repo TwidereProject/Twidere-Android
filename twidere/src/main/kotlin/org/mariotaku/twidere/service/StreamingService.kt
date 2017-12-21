@@ -17,8 +17,8 @@ import org.mariotaku.ktextension.toNulls
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.TwitterUserStream
-import org.mariotaku.microblog.library.twitter.annotation.StreamWith
-import org.mariotaku.microblog.library.twitter.model.*
+import org.mariotaku.microblog.library.annotation.twitter.StreamWith
+import org.mariotaku.microblog.library.model.microblog.*
 import org.mariotaku.sqliteqb.library.Columns
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R

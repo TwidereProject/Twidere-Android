@@ -22,9 +22,9 @@ package org.mariotaku.twidere.util
 import android.content.Context
 import android.text.TextUtils
 import android.util.SparseIntArray
-
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.twitter.model.ErrorInfo
+import org.mariotaku.microblog.library.model.microblog.ErrorInfo
+import org.mariotaku.microblog.library.model.microblog.ErrorInfo.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.util.ErrorInfoStore.DisplayErrorInfo
 
@@ -38,8 +38,8 @@ object StatusCodeMessageUtils {
 
     init {
         TWITTER_ERROR_CODE_MESSAGES.put(32, R.string.error_twitter_32)
-        TWITTER_ERROR_CODE_MESSAGES.put(ErrorInfo.PAGE_NOT_FOUND, R.string.error_twitter_34)
-        TWITTER_ERROR_CODE_MESSAGES.put(ErrorInfo.RATE_LIMIT_EXCEEDED, R.string.error_twitter_88)
+        TWITTER_ERROR_CODE_MESSAGES.put(PAGE_NOT_FOUND, R.string.error_twitter_34)
+        TWITTER_ERROR_CODE_MESSAGES.put(RATE_LIMIT_EXCEEDED, R.string.error_twitter_88)
         TWITTER_ERROR_CODE_MESSAGES.put(89, R.string.error_twitter_89)
         TWITTER_ERROR_CODE_MESSAGES.put(64, R.string.error_twitter_64)
         TWITTER_ERROR_CODE_MESSAGES.put(130, R.string.error_twitter_130)
@@ -50,9 +50,9 @@ object StatusCodeMessageUtils {
         TWITTER_ERROR_CODE_MESSAGES.put(144, R.string.error_twitter_144)
         TWITTER_ERROR_CODE_MESSAGES.put(161, R.string.error_twitter_161)
         TWITTER_ERROR_CODE_MESSAGES.put(162, R.string.error_twitter_162)
-        TWITTER_ERROR_CODE_MESSAGES.put(ErrorInfo.SEARCH_ALREADY_SAVED, R.string.error_twitter_172)
-        TWITTER_ERROR_CODE_MESSAGES.put(ErrorInfo.NOT_AUTHORIZED, R.string.error_twitter_179)
-        TWITTER_ERROR_CODE_MESSAGES.put(ErrorInfo.STATUS_IS_DUPLICATE, R.string.error_twitter_187)
+        TWITTER_ERROR_CODE_MESSAGES.put(SEARCH_ALREADY_SAVED, R.string.error_twitter_172)
+        TWITTER_ERROR_CODE_MESSAGES.put(NOT_AUTHORIZED, R.string.error_twitter_179)
+        TWITTER_ERROR_CODE_MESSAGES.put(STATUS_IS_DUPLICATE, R.string.error_twitter_187)
         TWITTER_ERROR_CODE_MESSAGES.put(193, R.string.error_twitter_193)
         TWITTER_ERROR_CODE_MESSAGES.put(215, R.string.error_twitter_215)
         TWITTER_ERROR_CODE_MESSAGES.put(326, R.string.error_twitter_326)
@@ -104,8 +104,7 @@ object StatusCodeMessageUtils {
     }
 
 
-    private fun getErrorInfo(context: Context, statusCode: Int,
-            errors: Array<ErrorInfo>?): DisplayErrorInfo? {
+    private fun getErrorInfo(context: Context, statusCode: Int, errors: Array<ErrorInfo>?): DisplayErrorInfo? {
         var errorCode = -1
         if (errors != null)
             for (error in errors) {

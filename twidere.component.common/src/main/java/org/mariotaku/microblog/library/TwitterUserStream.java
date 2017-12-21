@@ -18,8 +18,8 @@
 
 package org.mariotaku.microblog.library;
 
-import org.mariotaku.microblog.library.twitter.annotation.StreamWith;
-import org.mariotaku.microblog.library.twitter.callback.UserStreamCallback;
+import org.mariotaku.microblog.library.annotation.twitter.StreamWith;
+import org.mariotaku.microblog.library.callback.twitter.UserStreamCallback;
 import org.mariotaku.microblog.library.twitter.template.StatusAnnotationTemplate;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.param.Params;

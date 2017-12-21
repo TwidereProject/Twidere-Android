@@ -21,7 +21,6 @@ import java.io.Writer;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -59,10 +58,8 @@ public class LookupTranslator extends CharSequenceTranslator {
         this.prefixSet = new HashSet<>();
         int currentShortest = Integer.MAX_VALUE;
         int currentLongest = 0;
-        Iterator<Map.Entry<CharSequence, CharSequence>> it = lookupMap.entrySet().iterator();
 
-        while (it.hasNext()) {
-            Map.Entry<CharSequence, CharSequence> pair = it.next();
+        for (Map.Entry<CharSequence, CharSequence> pair : lookupMap.entrySet()) {
             this.lookupMap.put(pair.getKey().toString(), pair.getValue().toString());
             this.prefixSet.add(pair.getKey().charAt(0));
             final int sz = pair.getKey().length();

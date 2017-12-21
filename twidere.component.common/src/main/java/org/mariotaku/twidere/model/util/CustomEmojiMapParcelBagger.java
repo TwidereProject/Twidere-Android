@@ -18,7 +18,7 @@
 
 package org.mariotaku.twidere.model.util;
 
-import org.mariotaku.microblog.library.twitter.model.util.ParcelMapBagger;
+import org.mariotaku.microblog.library.model.util.ParcelMapBagger;
 import org.mariotaku.twidere.model.CustomEmoji;
 
 public final class CustomEmojiMapParcelBagger extends ParcelMapBagger<CustomEmoji> {

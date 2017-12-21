@@ -19,13 +19,9 @@
 
 package org.mariotaku.twidere.extension.model.api
 
-import org.mariotaku.microblog.library.twitter.model.Paging
+import org.mariotaku.microblog.library.model.microblog.Paging
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.model.AccountDetails
-
-/**
- * Created by mariotaku on 2017/4/21.
- */
 
 fun Paging.applyLoadLimit(account: AccountDetails, limit: Int) {
     when (account.type) {

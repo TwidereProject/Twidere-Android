@@ -20,15 +20,12 @@
 package org.mariotaku.twidere.extension.model
 
 import org.mariotaku.ktextension.addAllTo
-import org.mariotaku.microblog.library.twitter.model.Activity
+import org.mariotaku.microblog.library.model.microblog.Activity.Action
 import org.mariotaku.twidere.model.ParcelableActivity
 import java.util.*
 
 val ParcelableActivity.activityStatus: ParcelableActivity?
-    get() = when (action) {
-        Activity.Action.MENTION, Activity.Action.REPLY, Activity.Action.QUOTE -> this
-        else -> null
-    }
+    get() = takeIf { action in Action.MENTION_ACTIONS }
 
 val ParcelableActivity.reachedCountLimit: Boolean
     get() {

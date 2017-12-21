@@ -23,13 +23,13 @@ import android.content.Context
 import org.attoparser.config.ParseConfiguration
 import org.attoparser.simple.AbstractSimpleMarkupHandler
 import org.attoparser.simple.SimpleMarkupParser
+import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.Mastodon
+import org.mariotaku.microblog.library.model.microblog.IDs
+import org.mariotaku.microblog.library.model.microblog.Paging
+import org.mariotaku.microblog.library.model.microblog.setIds
 import org.mariotaku.microblog.library.twitter.TwitterWeb
-import org.mariotaku.microblog.library.twitter.model.IDs
-import org.mariotaku.microblog.library.twitter.model.IDsAccessor
-import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.extension.api.lookupUsersMapPaginated
@@ -71,7 +71,7 @@ class StatusFavoritersLoader(
                 } else {
                     val web = details.newMicroBlogInstance(context, TwitterWeb::class.java)
                     val htmlUsers = web.getFavoritedPopup(statusId).htmlUsers
-                    val ids = IDsAccessor.setIds(IDs(), parseUserIds(htmlUsers))
+                    val ids = IDs().setIds(parseUserIds(htmlUsers))
                     microBlog.lookupUsersMapPaginated(ids) {
                         it.toParcelable(details, profileImageSize = profileImageSize)
                     }

@@ -18,7 +18,7 @@
 
 package org.mariotaku.microblog.library;
 
-import org.mariotaku.microblog.library.fanfou.callback.FanfouUserStreamCallback;
+import org.mariotaku.microblog.library.callback.fanfou.FanfouUserStreamCallback;
 import org.mariotaku.restfu.annotation.method.GET;
 
 /**

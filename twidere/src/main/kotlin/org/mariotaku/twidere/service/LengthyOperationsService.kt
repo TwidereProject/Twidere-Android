@@ -41,8 +41,8 @@ import org.mariotaku.ktextension.getNullableTypedArrayExtra
 import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.TwitterUpload
-import org.mariotaku.microblog.library.twitter.model.MediaUploadResponse
-import org.mariotaku.microblog.library.twitter.model.MediaUploadResponse.ProcessingInfo
+import org.mariotaku.microblog.library.model.microblog.MediaUploadResponse
+import org.mariotaku.microblog.library.model.microblog.MediaUploadResponse.ProcessingInfo
 import org.mariotaku.restfu.http.ContentType
 import org.mariotaku.restfu.http.mime.Body
 import org.mariotaku.restfu.http.mime.SimpleBody

@@ -110,7 +110,7 @@ public class TwidereColorUtils {
      * Get most contrasting color
      *
      * @param color Input color, alpha channel will be disposed.
-     * @return {@link android.graphics.Color#WHITE} or {@link android.graphics.Color#BLACK}
+     * @return {@link Color#WHITE} or {@link Color#BLACK}
      * @see <a href='http://24ways.org/2010/calculating-color-contrast/'>Calculating Color Contrast</a>
      */
     public static int getContrastYIQ(int color, int threshold, int colorDark, int colorLight) {

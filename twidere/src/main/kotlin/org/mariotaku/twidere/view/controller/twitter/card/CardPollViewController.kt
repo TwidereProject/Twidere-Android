@@ -37,7 +37,7 @@ import org.mariotaku.ktextension.spannable
 import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.ktextension.weak
 import org.mariotaku.microblog.library.TwitterCaps
-import org.mariotaku.microblog.library.twitter.model.CardDataMap
+import org.mariotaku.microblog.library.model.microblog.CardDataMap
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.extension.getDetailsOrThrow
 import org.mariotaku.twidere.extension.model.*
@@ -92,10 +92,11 @@ class CardPollViewController : ContainerView.ViewController() {
             val vc = weakThis ?: throw IllegalStateException()
             val details = AccountManager.get(vc.context).getDetailsOrThrow(card.account_key, true)
             val caps = details.newMicroBlogInstance(vc.context, cls = TwitterCaps::class.java)
-            val params = CardDataMap()
-            params.putString("card_uri", card.url)
-            params.putString("cards_platform", MicroBlogAPIFactory.CARDS_PLATFORM_ANDROID_12)
-            params.putString("response_card_name", card.name)
+            val params = CardDataMap().apply {
+                putString("card_uri", card.url)
+                putString("cards_platform", MicroBlogAPIFactory.CARDS_PLATFORM_ANDROID_12)
+                putString("response_card_name", card.name)
+            }
             val cardResponse = caps.getPassThrough(params).card
             if (cardResponse == null || cardResponse.name == null) {
                 throw IllegalStateException()

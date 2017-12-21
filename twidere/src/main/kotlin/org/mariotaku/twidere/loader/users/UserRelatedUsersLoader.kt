@@ -21,7 +21,7 @@ package org.mariotaku.twidere.loader.users
 
 import android.content.Context
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.twitter.model.Paging
+import org.mariotaku.microblog.library.model.microblog.Paging
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey

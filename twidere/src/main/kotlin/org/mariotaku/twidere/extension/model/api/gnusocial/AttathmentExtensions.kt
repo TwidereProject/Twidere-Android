@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.extension.model.api.gnusocial
 
-import org.mariotaku.microblog.library.gnusocial.model.Attachment
+import org.mariotaku.microblog.library.model.gnusocial.Attachment
 import org.mariotaku.twidere.model.ParcelableMedia
 
 /**

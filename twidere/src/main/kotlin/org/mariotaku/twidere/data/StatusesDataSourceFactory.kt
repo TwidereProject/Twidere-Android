@@ -24,9 +24,9 @@ import android.accounts.AccountManager
 import android.arch.paging.DataSource
 import android.arch.paging.PageKeyedDataSource
 import android.content.Context
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.twitter.model.Paging
+import org.mariotaku.microblog.library.MicroBlog
+import org.mariotaku.microblog.library.model.microblog.Paging
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher

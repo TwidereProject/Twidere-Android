@@ -9,8 +9,8 @@ import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.microblog.library.MastodonOAuth2
 import org.mariotaku.microblog.library.MastodonStreaming
 import org.mariotaku.microblog.library.twitter.*
-import org.mariotaku.microblog.library.twitter.auth.BasicAuthorization
-import org.mariotaku.microblog.library.twitter.auth.EmptyAuthorization
+import org.mariotaku.microblog.library.auth.BasicAuthorization
+import org.mariotaku.microblog.library.auth.EmptyAuthorization
 import org.mariotaku.restfu.RestAPIFactory
 import org.mariotaku.restfu.RestRequest
 import org.mariotaku.restfu.http.Authorization

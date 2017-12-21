@@ -22,9 +22,9 @@ package org.mariotaku.twidere.loader.users
 import android.content.Context
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.twitter.model.Paging
-import org.mariotaku.microblog.library.twitter.model.ResponseList
-import org.mariotaku.microblog.library.twitter.model.User
+import org.mariotaku.microblog.library.model.microblog.Paging
+import org.mariotaku.microblog.library.model.microblog.ResponseList
+import org.mariotaku.microblog.library.model.microblog.User
 import org.mariotaku.twidere.extension.model.api.microblog.mapToPaginated
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance

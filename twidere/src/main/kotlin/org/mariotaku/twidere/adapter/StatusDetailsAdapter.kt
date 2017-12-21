@@ -30,7 +30,7 @@ import android.widget.Space
 import android.widget.TextView
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.contains
-import org.mariotaku.microblog.library.twitter.model.TranslationResult
+import org.mariotaku.microblog.library.model.microblog.TranslationResult
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
@@ -79,10 +79,10 @@ class StatusDetailsAdapter(
         internal set
     var translationResult: TranslationResult? = null
         internal set(translation) {
-            if (translation == null || status?.originalId != translation.id) {
-                field = null
+            field = if (translation == null || status?.originalId != translation.id) {
+                null
             } else {
-                field = translation
+                translation
             }
             notifyDataSetChanged()
         }

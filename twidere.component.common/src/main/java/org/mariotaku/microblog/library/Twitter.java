@@ -18,20 +18,20 @@
 
 package org.mariotaku.microblog.library;
 
-import org.mariotaku.microblog.library.twitter.api.DirectMessagesEventResources;
-import org.mariotaku.microblog.library.twitter.api.FavoritesResources;
-import org.mariotaku.microblog.library.twitter.api.FriendsFollowersResources;
-import org.mariotaku.microblog.library.twitter.api.HelpResources;
-import org.mariotaku.microblog.library.twitter.api.ListResources;
-import org.mariotaku.microblog.library.twitter.api.MutesResources;
-import org.mariotaku.microblog.library.twitter.api.PlacesGeoResources;
-import org.mariotaku.microblog.library.twitter.api.SavedSearchesResources;
-import org.mariotaku.microblog.library.twitter.api.SearchResources;
-import org.mariotaku.microblog.library.twitter.api.SpamReportingResources;
-import org.mariotaku.microblog.library.twitter.api.TimelineResources;
-import org.mariotaku.microblog.library.twitter.api.TrendsResources;
-import org.mariotaku.microblog.library.twitter.api.TweetResources;
-import org.mariotaku.microblog.library.twitter.api.UsersResources;
+import org.mariotaku.microblog.library.api.twitter.DirectMessagesEventResources;
+import org.mariotaku.microblog.library.api.twitter.FavoritesResources;
+import org.mariotaku.microblog.library.api.twitter.FriendsFollowersResources;
+import org.mariotaku.microblog.library.api.twitter.HelpResources;
+import org.mariotaku.microblog.library.api.twitter.ListResources;
+import org.mariotaku.microblog.library.api.twitter.MutesResources;
+import org.mariotaku.microblog.library.api.twitter.PlacesGeoResources;
+import org.mariotaku.microblog.library.api.twitter.SavedSearchesResources;
+import org.mariotaku.microblog.library.api.twitter.SearchResources;
+import org.mariotaku.microblog.library.api.twitter.SpamReportingResources;
+import org.mariotaku.microblog.library.api.twitter.TimelineResources;
+import org.mariotaku.microblog.library.api.twitter.TrendsResources;
+import org.mariotaku.microblog.library.api.twitter.TweetResources;
+import org.mariotaku.microblog.library.api.twitter.UsersResources;
 
 /**
  * Created by mariotaku on 16/5/13.

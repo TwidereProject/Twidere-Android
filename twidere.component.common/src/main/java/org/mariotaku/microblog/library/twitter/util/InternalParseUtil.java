@@ -19,7 +19,7 @@
 package org.mariotaku.microblog.library.twitter.util;
 
 import org.mariotaku.restfu.http.HttpResponse;
-import org.mariotaku.microblog.library.twitter.model.TwitterResponse;
+import org.mariotaku.microblog.library.model.microblog.TwitterResponse;
 
 /**
  * A tiny parse utility class.

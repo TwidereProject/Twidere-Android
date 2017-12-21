@@ -1,11 +1,11 @@
 package org.mariotaku.twidere.model.util
 
 import android.support.annotation.FloatRange
-import org.mariotaku.microblog.library.twitter.model.DMResponse
-import org.mariotaku.microblog.library.twitter.model.DMResponse.Entry.Message
-import org.mariotaku.microblog.library.twitter.model.DMResponse.Entry.Message.Data
-import org.mariotaku.microblog.library.twitter.model.DirectMessage
-import org.mariotaku.microblog.library.twitter.model.User
+import org.mariotaku.microblog.library.model.microblog.DMResponse
+import org.mariotaku.microblog.library.model.microblog.DMResponse.Entry.Message
+import org.mariotaku.microblog.library.model.microblog.DMResponse.Entry.Message.Data
+import org.mariotaku.microblog.library.model.microblog.DirectMessage
+import org.mariotaku.microblog.library.model.microblog.User
 import org.mariotaku.twidere.extension.model.api.addEntities
 import org.mariotaku.twidere.extension.model.api.getEntityMedia
 import org.mariotaku.twidere.extension.model.api.key

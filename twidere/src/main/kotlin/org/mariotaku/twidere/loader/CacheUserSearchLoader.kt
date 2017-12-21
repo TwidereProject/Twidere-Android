@@ -2,7 +2,7 @@ package org.mariotaku.twidere.loader
 
 import android.content.Context
 import org.mariotaku.library.objectcursor.ObjectCursor
-import org.mariotaku.microblog.library.twitter.model.Paging
+import org.mariotaku.microblog.library.model.microblog.Paging
 import org.mariotaku.sqliteqb.library.Columns
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.dagger.component.GeneralComponent

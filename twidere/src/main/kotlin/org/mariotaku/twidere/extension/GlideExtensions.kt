@@ -161,6 +161,9 @@ internal inline fun <T> configureLoadProfileImage(context: Context, @ImageShapeS
             builder.bitmapTransform(RoundedRectTransformation(context, cornerRadius,
                     cornerRadiusRatio))
         }
+        ImageShapeStyle.SHAPE_NONE -> {
+            // No-op
+        }
     }
     return builder
 }

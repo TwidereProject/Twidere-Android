@@ -25,8 +25,8 @@ import android.support.v4.content.FixedAsyncTaskLoader
 import android.util.Log
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.twitter.model.ResponseList
-import org.mariotaku.microblog.library.twitter.model.SavedSearch
+import org.mariotaku.microblog.library.model.microblog.ResponseList
+import org.mariotaku.microblog.library.model.microblog.SavedSearch
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.extension.getDetailsOrThrow

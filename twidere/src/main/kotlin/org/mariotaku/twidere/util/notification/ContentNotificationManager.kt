@@ -32,8 +32,8 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.forEachRow
 import org.mariotaku.ktextension.isEmpty
 import org.mariotaku.library.objectcursor.ObjectCursor
-import org.mariotaku.microblog.library.twitter.model.Activity
-import org.mariotaku.microblog.library.twitter.model.Status
+import org.mariotaku.microblog.library.model.microblog.Activity.Action
+import org.mariotaku.microblog.library.model.microblog.Status
 import org.mariotaku.sqliteqb.library.*
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.twidere.BuildConfig
@@ -217,7 +217,7 @@ class ContentNotificationManager(
                     newMaxPositionKey = activity.position_key
                 }
 
-                if (pref.isNotificationMentionsOnly && activity.action !in Activity.Action.MENTION_ACTIONS) {
+                if (pref.isNotificationMentionsOnly && activity.action !in Action.MENTION_ACTIONS) {
                     return@forEachRow false
                 }
                 if (ContentFiltersUtils.isFiltered(cr, activity, true, FilterScope.INTERACTIONS)) {

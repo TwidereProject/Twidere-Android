@@ -73,37 +73,37 @@
     <!-- Used for account sync -->
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
-    <uses-permission android:name="org.mariotaku.twidere.permission.SHORTEN_STATUS"/>
-    <uses-permission android:name="org.mariotaku.twidere.permission.UPLOAD_MEDIA"/>
-    <uses-permission android:name="org.mariotaku.twidere.permission.SYNC_TIMELINE"/>
-    <uses-permission android:name="org.mariotaku.twidere.permission.ACCESS_DATABASE"/>
+    <uses-permission android:name="${applicationId}.permission.SHORTEN_STATUS"/>
+    <uses-permission android:name="${applicationId}.permission.UPLOAD_MEDIA"/>
+    <uses-permission android:name="${applicationId}.permission.SYNC_TIMELINE"/>
+    <uses-permission android:name="${applicationId}.permission.ACCESS_DATABASE"/>
     <uses-permission
         android:name="android.permission.READ_PHONE_STATE"
         tools:node="remove"/>
 
     <permission-group
-        android:name="org.mariotaku.twidere.permission.PERMISSION_GROUP"
+        android:name="${applicationId}.permission.PERMISSION_GROUP"
         android:label="@string/app_name"/>
 
     <permission
-        android:name="org.mariotaku.twidere.permission.ACCESS_DATABASE"
-        android:permissionGroup="org.mariotaku.twidere.permission.PERMISSION_GROUP"
+        android:name="${applicationId}.permission.ACCESS_DATABASE"
+        android:permissionGroup="${applicationId}.permission.PERMISSION_GROUP"
         android:protectionLevel="signature"/>
     <permission
-        android:name="org.mariotaku.twidere.permission.SHORTEN_STATUS"
+        android:name="${applicationId}.permission.SHORTEN_STATUS"
         android:description="@string/permission_description_shorten_status"
         android:label="@string/permission_label_shorten_status"
-        android:permissionGroup="org.mariotaku.twidere.permission.PERMISSION_GROUP"/>
+        android:permissionGroup="${applicationId}.permission.PERMISSION_GROUP"/>
     <permission
-        android:name="org.mariotaku.twidere.permission.UPLOAD_MEDIA"
+        android:name="${applicationId}.permission.UPLOAD_MEDIA"
         android:description="@string/permission_description_upload_media"
         android:label="@string/permission_label_upload_media"
-        android:permissionGroup="org.mariotaku.twidere.permission.PERMISSION_GROUP"/>
+        android:permissionGroup="${applicationId}.permission.PERMISSION_GROUP"/>
     <permission
-        android:name="org.mariotaku.twidere.permission.SYNC_TIMELINE"
+        android:name="${applicationId}.permission.SYNC_TIMELINE"
         android:description="@string/permission_description_sync_timeline"
         android:label="@string/permission_label_sync_timeline"
-        android:permissionGroup="org.mariotaku.twidere.permission.PERMISSION_GROUP"/>
+        android:permissionGroup="${applicationId}.permission.PERMISSION_GROUP"/>
 
     <application
         android:name=".app.TwidereApplication"
@@ -685,10 +685,10 @@
             android:authorities="twidere"
             android:exported="true"
             android:label="@string/label_data_provider"
-            android:permission="org.mariotaku.twidere.permission.ACCESS_DATABASE"/>
+            android:permission="${applicationId}.permission.ACCESS_DATABASE"/>
         <provider
             android:name=".provider.RecentSearchProvider"
-            android:authorities="org.mariotaku.twidere.provider.SearchRecentSuggestions"
+            android:authorities="${applicationId}.recentsearch"
             tools:ignore="ExportedContentProvider"/>
         <provider
             android:name=".provider.CacheProvider"
@@ -701,7 +701,7 @@
             tools:ignore="ExportedContentProvider"/>
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="org.mariotaku.twidere.pncfileprovider"
+            android:authorities="${applicationId}.pncfileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

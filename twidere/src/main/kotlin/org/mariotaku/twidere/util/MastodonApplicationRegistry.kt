@@ -22,8 +22,8 @@ package org.mariotaku.twidere.util
 import android.content.Context
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.mastodon.model.RegisteredApplication
-import org.mariotaku.microblog.library.twitter.auth.EmptyAuthorization
+import org.mariotaku.microblog.library.model.mastodon.RegisteredApplication
+import org.mariotaku.microblog.library.auth.EmptyAuthorization
 import org.mariotaku.restfu.http.Endpoint
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType

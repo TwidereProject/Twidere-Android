@@ -29,9 +29,10 @@ import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.twitter.model.DMResponse
-import org.mariotaku.microblog.library.twitter.model.DirectMessage
-import org.mariotaku.microblog.library.twitter.model.Paging
+import org.mariotaku.microblog.library.model.microblog.DMResponse
+import org.mariotaku.microblog.library.model.microblog.DMResponse.Conversation
+import org.mariotaku.microblog.library.model.microblog.DirectMessage
+import org.mariotaku.microblog.library.model.microblog.Paging
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_SHOW_NOTIFICATION
@@ -414,8 +415,8 @@ class GetMessagesTask(
                     it.toParcelable(account, profileImageSize = profileImageSize)
                 }
                 val conversationType = when (v.type?.toUpperCase(Locale.US)) {
-                    DMResponse.Conversation.Type.ONE_TO_ONE -> ConversationType.ONE_TO_ONE
-                    DMResponse.Conversation.Type.GROUP_DM -> ConversationType.GROUP
+                    Conversation.Type.ONE_TO_ONE -> ConversationType.ONE_TO_ONE
+                    Conversation.Type.GROUP_DM -> ConversationType.GROUP
                     else -> ConversationType.ONE_TO_ONE
                 }
                 val conversation = conversations.addConversation(k, account, recentMessage, participants,

@@ -69,7 +69,7 @@ import org.mariotaku.kpreferences.edit
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
 import org.mariotaku.ktextension.*
-import org.mariotaku.microblog.library.mastodon.annotation.StatusVisibility
+import org.mariotaku.microblog.library.annotation.mastodon.StatusVisibility
 import org.mariotaku.pickncrop.library.MediaPickerActivity
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R

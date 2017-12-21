@@ -28,7 +28,7 @@ import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.getTypedArray
 import org.mariotaku.ktextension.set
 import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.twitter.model.Location
+import org.mariotaku.microblog.library.model.microblog.Location
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.extension.applyTheme

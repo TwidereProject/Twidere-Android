@@ -7,12 +7,12 @@ import android.net.Uri
 import android.support.annotation.UiThread
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.addTo
+import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.twitter.model.Activity
-import org.mariotaku.microblog.library.twitter.model.InternalActivityCreator
-import org.mariotaku.microblog.library.twitter.model.Paging
+import org.mariotaku.microblog.library.model.microblog.Activity.Action
+import org.mariotaku.microblog.library.model.microblog.InternalActivityCreator
+import org.mariotaku.microblog.library.model.microblog.Paging
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
@@ -139,7 +139,7 @@ abstract class GetActivitiesTask(
                 val relationships = mastodon.batchGetRelationships(userIds)
                 val activities = notifications.mapNotNull {
                     val activity = it.toParcelable(account, relationships)
-                    if (activity.action == Activity.Action.INVALID) return@mapNotNull null
+                    if (activity.action == Action.INVALID) return@mapNotNull null
                     return@mapNotNull activity
                 }
                 return GetTimelineResult(account, activities, activities.flatMap {

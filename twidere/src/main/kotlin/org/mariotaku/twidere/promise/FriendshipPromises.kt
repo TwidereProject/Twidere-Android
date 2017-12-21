@@ -26,10 +26,10 @@ import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.then
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.kpreferences.get
+import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.twitter.model.FriendshipUpdate
+import org.mariotaku.microblog.library.model.microblog.FriendshipUpdate
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType

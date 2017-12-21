@@ -22,10 +22,10 @@ package org.mariotaku.twidere.promise
 import android.app.Application
 import android.net.Uri
 import nl.komponents.kovenant.Promise
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.mastodon.model.AccountUpdate
-import org.mariotaku.microblog.library.twitter.model.ProfileUpdate
+import org.mariotaku.microblog.library.MicroBlog
+import org.mariotaku.microblog.library.model.mastodon.AccountUpdate
+import org.mariotaku.microblog.library.model.microblog.ProfileUpdate
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.exception.APINotSupportedException

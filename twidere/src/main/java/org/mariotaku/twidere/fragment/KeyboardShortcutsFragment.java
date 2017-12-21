@@ -24,13 +24,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AlertDialog.Builder;
 import android.support.v7.preference.Preference;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -90,12 +90,7 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
             mAction = action;
             setPersistent(false);
             setTitle(KeyboardShortcutsHandler.getActionLabel(context, action));
-            mPreferencesChangeListener = new OnSharedPreferenceChangeListener() {
-                @Override
-                public void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
-                    updateSummary();
-                }
-            };
+            mPreferencesChangeListener = (preferences, key) -> updateSummary();
             updateSummary();
         }
 
@@ -148,12 +143,7 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
             builder.setPositiveButton(android.R.string.ok, this);
             builder.setNegativeButton(android.R.string.cancel, this);
             final AlertDialog dialog = builder.create();
-            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                @Override
-                public void onShow(final DialogInterface dialog) {
-                    DialogExtensionsKt.applyTheme((AlertDialog) dialog);
-                }
-            });
+            dialog.setOnShowListener(dialog1 -> DialogExtensionsKt.applyTheme((AlertDialog) dialog1));
             return dialog;
         }
     }

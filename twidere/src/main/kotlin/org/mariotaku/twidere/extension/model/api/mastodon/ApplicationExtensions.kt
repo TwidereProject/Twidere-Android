@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.extension.model.api.mastodon
 
-import org.mariotaku.microblog.library.mastodon.model.Application
+import org.mariotaku.microblog.library.model.mastodon.Application
 import org.mariotaku.twidere.util.HtmlEscapeHelper
 
 /**

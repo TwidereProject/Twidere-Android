@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.extension.model.api.mastodon
 
-import org.mariotaku.microblog.library.mastodon.model.Results
+import org.mariotaku.microblog.library.model.mastodon.Results
 import org.mariotaku.twidere.model.pagination.PaginatedArrayList
 import org.mariotaku.twidere.model.pagination.PaginatedList
 

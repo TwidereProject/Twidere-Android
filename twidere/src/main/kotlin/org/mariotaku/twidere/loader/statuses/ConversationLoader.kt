@@ -24,13 +24,13 @@ import android.support.annotation.WorkerThread
 import org.attoparser.config.ParseConfiguration
 import org.attoparser.dom.DOMMarkupParser
 import org.mariotaku.commons.parcel.ParcelUtils
+import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.Mastodon
+import org.mariotaku.microblog.library.model.microblog.Paging
+import org.mariotaku.microblog.library.model.microblog.SearchQuery
+import org.mariotaku.microblog.library.model.microblog.Status
 import org.mariotaku.microblog.library.twitter.TwitterWeb
-import org.mariotaku.microblog.library.twitter.model.Paging
-import org.mariotaku.microblog.library.twitter.model.SearchQuery
-import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.alias.MastodonStatus
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.exception.APINotSupportedException

@@ -18,7 +18,7 @@
 
 package org.mariotaku.microblog.library;
 
-import org.mariotaku.microblog.library.microblog.api.DirectMessagesResources;
+import org.mariotaku.microblog.library.api.microblog.DirectMessagesResources;
 
 @Deprecated
 public interface MicroBlog extends Twitter, StatusNet, Fanfou, DirectMessagesResources {

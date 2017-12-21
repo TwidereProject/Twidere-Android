@@ -18,11 +18,10 @@
 
 package org.mariotaku.microblog.library;
 
-import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.twitter.annotation.MediaCategory;
-import org.mariotaku.microblog.library.twitter.model.MediaUploadResponse;
-import org.mariotaku.microblog.library.twitter.model.NewMediaMetadata;
-import org.mariotaku.microblog.library.twitter.model.ResponseCode;
+import org.mariotaku.microblog.library.annotation.twitter.MediaCategory;
+import org.mariotaku.microblog.library.model.microblog.MediaUploadResponse;
+import org.mariotaku.microblog.library.model.microblog.NewMediaMetadata;
+import org.mariotaku.microblog.library.model.microblog.ResponseCode;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.KeyValue;

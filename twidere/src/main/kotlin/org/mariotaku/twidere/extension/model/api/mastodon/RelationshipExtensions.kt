@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.extension.model.api.mastodon
 
-import org.mariotaku.microblog.library.mastodon.model.Relationship
+import org.mariotaku.microblog.library.model.mastodon.Relationship
 import org.mariotaku.twidere.model.ParcelableRelationship
 import org.mariotaku.twidere.model.UserKey
 

@@ -21,10 +21,10 @@ package org.mariotaku.microblog.library;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.mariotaku.microblog.library.twitter.http.HttpResponseCode;
-import org.mariotaku.microblog.library.twitter.model.ErrorInfo;
-import org.mariotaku.microblog.library.twitter.model.RateLimitStatus;
-import org.mariotaku.microblog.library.twitter.model.TwitterResponse;
+import org.mariotaku.microblog.library.http.HttpResponseCode;
+import org.mariotaku.microblog.library.model.microblog.ErrorInfo;
+import org.mariotaku.microblog.library.model.microblog.RateLimitStatus;
+import org.mariotaku.microblog.library.model.microblog.TwitterResponse;
 import org.mariotaku.microblog.library.twitter.util.InternalParseUtil;
 import org.mariotaku.restfu.http.HttpRequest;
 import org.mariotaku.restfu.http.HttpResponse;

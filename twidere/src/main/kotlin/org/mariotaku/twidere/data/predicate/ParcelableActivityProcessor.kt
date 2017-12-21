@@ -21,7 +21,7 @@ package org.mariotaku.twidere.data.predicate
 
 import android.content.ContentResolver
 import org.mariotaku.ktextension.isNullOrEmpty
-import org.mariotaku.microblog.library.twitter.model.Activity
+import org.mariotaku.microblog.library.model.microblog.Activity.Action
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.data.processor.DataSourceItemProcessor
 import org.mariotaku.twidere.model.ParcelableActivity
@@ -50,7 +50,7 @@ class ParcelableActivityProcessor(
     }
 
     override fun process(obj: ParcelableActivity): ParcelableActivity? {
-        if (mentionsOnly && obj.action !in Activity.Action.MENTION_ACTIONS) return null
+        if (mentionsOnly && obj.action !in Action.MENTION_ACTIONS) return null
         val sources = ParcelableActivityUtils.filterSources(obj.sources_lite, filteredUserKeys,
                 filteredNameKeywords, filteredDescriptionKeywords, followingOnly)
         obj.after_filtered_sources = sources

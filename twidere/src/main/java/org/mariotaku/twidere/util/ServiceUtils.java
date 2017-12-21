@@ -24,6 +24,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.IBinder;
 
 import java.util.HashMap;
 
@@ -76,7 +77,7 @@ public final class ServiceUtils {
         }
 
         @Override
-        public void onServiceConnected(final ComponentName className, final android.os.IBinder service) {
+        public void onServiceConnected(final ComponentName className, final IBinder service) {
             if (mCallback != null) {
                 mCallback.onServiceConnected(className, service);
             }

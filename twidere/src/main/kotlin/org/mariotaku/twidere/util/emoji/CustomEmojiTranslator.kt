@@ -17,7 +17,7 @@
 package org.mariotaku.twidere.util.emoji
 
 import org.apache.commons.text.translate.CharSequenceTranslator
-import org.mariotaku.microblog.library.mastodon.model.Emoji
+import org.mariotaku.microblog.library.model.mastodon.Emoji
 import java.io.IOException
 import java.io.Writer
 import java.util.*

@@ -25,7 +25,7 @@ import android.support.v7.app.AlertDialog
 import kotlinx.android.synthetic.main.dialog_user_list_detail_editor.*
 import org.mariotaku.ktextension.empty
 import org.mariotaku.ktextension.string
-import org.mariotaku.microblog.library.twitter.model.UserListUpdate
+import org.mariotaku.microblog.library.model.microblog.UserListUpdate
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_DESCRIPTION
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_IS_PUBLIC

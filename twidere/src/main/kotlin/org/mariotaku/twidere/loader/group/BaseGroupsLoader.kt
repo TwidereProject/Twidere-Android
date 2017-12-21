@@ -24,8 +24,8 @@ import android.content.Context
 import android.support.v4.content.FixedAsyncTaskLoader
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.statusnet.model.Group
-import org.mariotaku.microblog.library.twitter.model.PageableResponseList
+import org.mariotaku.microblog.library.model.microblog.PageableResponseList
+import org.mariotaku.microblog.library.model.statusnet.Group
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.extension.getDetailsOrThrow
 import org.mariotaku.twidere.extension.model.api.gnusocial.toParcelable

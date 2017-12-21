@@ -23,9 +23,6 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-/**
- * Created by mariotaku on 14/12/10.
- */
 public class GetMessagesTaskEvent {
 
     @NonNull

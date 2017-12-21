@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import org.mariotaku.microblog.library.twitter.model.Location
+import org.mariotaku.microblog.library.model.microblog.Location
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.TrendsLocationSelectorActivity
 import org.mariotaku.twidere.annotation.AccountType

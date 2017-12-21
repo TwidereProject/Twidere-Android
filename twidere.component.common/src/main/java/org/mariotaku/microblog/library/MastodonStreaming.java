@@ -18,8 +18,7 @@
 
 package org.mariotaku.microblog.library;
 
-import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.mastodon.callback.MastodonUserStreamCallback;
+import org.mariotaku.microblog.library.callback.mastodon.MastodonUserStreamCallback;
 import org.mariotaku.restfu.annotation.method.GET;
 
 /**

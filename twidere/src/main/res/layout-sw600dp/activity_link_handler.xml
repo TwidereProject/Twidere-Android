@@ -34,6 +34,7 @@
         android:layout_alignParentRight="true"
         android:layout_margin="@dimen/element_spacing_large"
         android:clickable="true"
+        android:focusable="true"
         android:src="@drawable/ic_action_status_compose"
         app:backgroundTint="?colorToolbar"
         app:elevation="6dp"

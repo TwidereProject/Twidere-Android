@@ -25,7 +25,7 @@ import android.support.annotation.Nullable;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.mariotaku.microblog.library.twitter.annotation.MediaCategory;
+import org.mariotaku.microblog.library.annotation.twitter.MediaCategory;
 
 /**
  * Created by mariotaku on 16/2/26.

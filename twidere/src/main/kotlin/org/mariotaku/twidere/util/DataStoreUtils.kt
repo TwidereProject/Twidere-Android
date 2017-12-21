@@ -34,10 +34,10 @@ import android.text.TextUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.library.objectcursor.ObjectCursor
+import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.twitter.model.Activity
+import org.mariotaku.microblog.library.model.microblog.Activity.Action
 import org.mariotaku.sqliteqb.library.*
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.query.SQLSelectQuery
@@ -762,7 +762,7 @@ object DataStoreUtils {
             if (extras is InteractionsTabExtras) {
                 if (extras.isMentionsOnly) {
                     extraWhere = Expression.inArgs(Activities.ACTION, 3)
-                    extraWhereArgs = arrayOf(Activity.Action.MENTION, Activity.Action.REPLY, Activity.Action.QUOTE)
+                    extraWhereArgs = arrayOf(Action.MENTION, Action.REPLY, Action.QUOTE)
                 }
                 if (extras.isMyFollowingOnly) {
                     followingOnly = true
@@ -876,8 +876,7 @@ object DataStoreUtils {
 
     private fun getIdsWhere(official: Boolean): Pair<Expression?, Array<String>?> {
         if (official) return Pair(null, null)
-        return Pair(Expression.inArgs(Activities.ACTION, Activity.Action.MENTION_ACTIONS.size)
-                , Activity.Action.MENTION_ACTIONS)
+        return Pair(Expression.inArgs(Activities.ACTION, Action.MENTION_ACTIONS.size), Action.MENTION_ACTIONS)
     }
 
     private fun <T> getOfficialSeparatedIds(context: Context, getFromDatabase: (Array<UserKey?>, Boolean) -> T,

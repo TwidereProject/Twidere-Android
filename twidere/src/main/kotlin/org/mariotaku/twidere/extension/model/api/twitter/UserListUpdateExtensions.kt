@@ -19,9 +19,9 @@
 
 package org.mariotaku.twidere.extension.model.api.twitter
 
-import org.mariotaku.microblog.library.twitter.model.UserList
-import org.mariotaku.microblog.library.twitter.model.UserListUpdate
+import org.mariotaku.microblog.library.model.microblog.UserList.Mode
+import org.mariotaku.microblog.library.model.microblog.UserListUpdate
 
 fun UserListUpdate.setPublic(isPublic: Boolean) {
-    setMode(if (isPublic) UserList.Mode.PUBLIC else UserList.Mode.PRIVATE)
+    setMode(if (isPublic) Mode.PUBLIC else Mode.PRIVATE)
 }

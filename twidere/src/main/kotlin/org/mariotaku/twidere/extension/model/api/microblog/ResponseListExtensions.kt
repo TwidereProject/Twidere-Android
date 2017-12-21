@@ -19,8 +19,8 @@
 
 package org.mariotaku.twidere.extension.model.api.microblog
 
-import org.mariotaku.microblog.library.twitter.model.PageableResponseList
-import org.mariotaku.microblog.library.twitter.model.ResponseList
+import org.mariotaku.microblog.library.model.microblog.PageableResponseList
+import org.mariotaku.microblog.library.model.microblog.ResponseList
 import org.mariotaku.twidere.model.pagination.*
 
 /**

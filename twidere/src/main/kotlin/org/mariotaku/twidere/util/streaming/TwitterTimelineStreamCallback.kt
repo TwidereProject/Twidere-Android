@@ -20,8 +20,8 @@
 package org.mariotaku.twidere.util.streaming
 
 import android.support.annotation.WorkerThread
-import org.mariotaku.microblog.library.twitter.callback.SimpleUserStreamCallback
-import org.mariotaku.microblog.library.twitter.model.*
+import org.mariotaku.microblog.library.callback.twitter.SimpleUserStreamCallback
+import org.mariotaku.microblog.library.model.microblog.*
 import java.util.*
 
 /**

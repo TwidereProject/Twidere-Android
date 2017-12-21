@@ -1,7 +1,7 @@
 package org.mariotaku.twidere.extension.model
 
 import android.content.Context
-import org.mariotaku.microblog.library.twitter.annotation.MediaCategory
+import org.mariotaku.microblog.library.annotation.twitter.MediaCategory
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.model.AccountDetails

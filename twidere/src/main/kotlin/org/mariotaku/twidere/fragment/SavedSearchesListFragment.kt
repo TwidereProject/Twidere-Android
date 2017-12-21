@@ -29,8 +29,8 @@ import android.widget.AdapterView
 import com.bumptech.glide.RequestManager
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_listview.*
-import org.mariotaku.microblog.library.twitter.model.ResponseList
-import org.mariotaku.microblog.library.twitter.model.SavedSearch
+import org.mariotaku.microblog.library.model.microblog.ResponseList
+import org.mariotaku.microblog.library.model.microblog.SavedSearch
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.SavedSearchesAdapter
 import org.mariotaku.twidere.extension.accountKey
@@ -53,6 +53,8 @@ class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapte
 
     val accountKey: UserKey
         get() = arguments!!.accountKey!!
+
+    private val positionComparator = Comparator<SavedSearch> { object1, object2 -> object1.position - object2.position }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -99,7 +101,7 @@ class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapte
 
     override fun onLoadFinished(loader: Loader<ResponseList<SavedSearch>?>, data: ResponseList<SavedSearch>?) {
         if (data != null) {
-            Collections.sort(data, POSITION_COMPARATOR)
+            Collections.sort(data, positionComparator)
         }
         adapter.setData(data)
         showContent()
@@ -117,8 +119,4 @@ class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapte
         adapter.removeItem(event.accountKey, event.searchId)
     }
 
-    companion object {
-
-        private val POSITION_COMPARATOR = Comparator<SavedSearch> { object1, object2 -> object1.position - object2.position }
-    }
 }

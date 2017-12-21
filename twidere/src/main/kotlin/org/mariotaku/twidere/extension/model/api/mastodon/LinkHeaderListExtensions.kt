@@ -20,8 +20,8 @@
 package org.mariotaku.twidere.extension.model.api.mastodon
 
 import android.net.Uri
-import org.mariotaku.microblog.library.mastodon.model.LinkHeaderList
-import org.mariotaku.microblog.library.mastodon.model.LinkHeaderResponse
+import org.mariotaku.microblog.library.model.mastodon.LinkHeaderList
+import org.mariotaku.microblog.library.model.mastodon.LinkHeaderResponse
 import org.mariotaku.twidere.model.pagination.PaginatedArrayList
 import org.mariotaku.twidere.model.pagination.PaginatedList
 import org.mariotaku.twidere.model.pagination.Pagination

@@ -24,8 +24,8 @@ import android.text.Editable
 import android.text.Spanned
 import org.mariotaku.ktextension.isNotNullOrEmpty
 import org.mariotaku.ktextension.mapToArray
-import org.mariotaku.microblog.library.mastodon.model.Emoji
-import org.mariotaku.microblog.library.mastodon.model.Status
+import org.mariotaku.microblog.library.model.mastodon.Emoji
+import org.mariotaku.microblog.library.model.mastodon.Status
 import org.mariotaku.twidere.extension.model.addFilterFlag
 import org.mariotaku.twidere.extension.model.api.isHtml
 import org.mariotaku.twidere.extension.model.api.spanItems

@@ -20,9 +20,9 @@
 package org.mariotaku.twidere.extension.model.api.mastodon
 
 import org.mariotaku.ktextension.mapToArray
-import org.mariotaku.microblog.library.mastodon.model.Notification
-import org.mariotaku.microblog.library.mastodon.model.Relationship
-import org.mariotaku.microblog.library.twitter.model.Activity
+import org.mariotaku.microblog.library.model.mastodon.Notification
+import org.mariotaku.microblog.library.model.mastodon.Relationship
+import org.mariotaku.microblog.library.model.microblog.Activity.Action
 import org.mariotaku.twidere.extension.model.toLite
 import org.mariotaku.twidere.extension.model.toSummaryLine
 import org.mariotaku.twidere.extension.model.updateActivityFilterInfo
@@ -56,34 +56,34 @@ fun Notification.toParcelable(accountKey: UserKey, relationships: Map<String, Re
     when (type) {
         Notification.Type.MENTION -> {
             if (status == null) {
-                result.action = Activity.Action.INVALID
+                result.action = Action.INVALID
                 return result
             }
-            result.action = Activity.Action.MENTION
+            result.action = Action.MENTION
             status.applyTo(accountKey, result)
         }
         Notification.Type.REBLOG -> {
             if (status == null) {
-                result.action = Activity.Action.INVALID
+                result.action = Action.INVALID
                 return result
             }
-            result.action = Activity.Action.RETWEET
+            result.action = Action.RETWEET
             val parcelableStatus = status.toParcelable(accountKey)
             result.target_objects = ParcelableActivity.RelatedObject.statuses(parcelableStatus)
             result.summary_line = arrayOf(parcelableStatus.toSummaryLine())
         }
         Notification.Type.FAVOURITE -> {
             if (status == null) {
-                result.action = Activity.Action.INVALID
+                result.action = Action.INVALID
                 return result
             }
-            result.action = Activity.Action.FAVORITE
+            result.action = Action.FAVORITE
             val parcelableStatus = status.toParcelable(accountKey)
             result.targets = ParcelableActivity.RelatedObject.statuses(parcelableStatus)
             result.summary_line = arrayOf(parcelableStatus.toSummaryLine())
         }
         Notification.Type.FOLLOW -> {
-            result.action = Activity.Action.FOLLOW
+            result.action = Action.FOLLOW
         }
         else -> {
             result.action = type

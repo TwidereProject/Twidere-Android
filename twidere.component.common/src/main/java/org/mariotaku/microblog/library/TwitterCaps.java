@@ -24,10 +24,10 @@ import org.mariotaku.restfu.annotation.param.Param;
 import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.restfu.http.BodyType;
 import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.twitter.model.CardDataMap;
-import org.mariotaku.microblog.library.twitter.model.CardResponse;
-import org.mariotaku.microblog.library.twitter.model.CreateCardData;
-import org.mariotaku.microblog.library.twitter.model.CreateCardResult;
+import org.mariotaku.microblog.library.model.microblog.CardDataMap;
+import org.mariotaku.microblog.library.model.microblog.CardResponse;
+import org.mariotaku.microblog.library.model.microblog.CreateCardData;
+import org.mariotaku.microblog.library.model.microblog.CreateCardResult;
 
 /**
  * Card API maybe??

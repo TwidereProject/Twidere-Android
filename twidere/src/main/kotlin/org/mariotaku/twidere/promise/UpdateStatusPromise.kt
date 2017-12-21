@@ -41,13 +41,14 @@ import nl.komponents.kovenant.then
 import nl.komponents.kovenant.ui.promiseOnUi
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.ktextension.*
+import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.fanfou.model.PhotoStatusUpdate
-import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.mastodon.model.Attachment
 import org.mariotaku.microblog.library.TwitterUpload
-import org.mariotaku.microblog.library.twitter.model.*
+import org.mariotaku.microblog.library.model.fanfou.PhotoStatusUpdate
+import org.mariotaku.microblog.library.model.mastodon.Attachment
+import org.mariotaku.microblog.library.model.microblog.*
+import org.mariotaku.microblog.library.model.microblog.MediaUploadResponse.ProcessingInfo
 import org.mariotaku.restfu.http.ContentType
 import org.mariotaku.restfu.http.mime.Body
 import org.mariotaku.restfu.http.mime.FileBody
@@ -870,7 +871,7 @@ class UpdateStatusPromise(
                 upload.appendUploadMedia(response.id, segmentIndex, bulk)
             }
             response = upload.finalizeUploadMedia(response.id)
-            var info: MediaUploadResponse.ProcessingInfo? = response.processingInfo
+            var info = response.processingInfo
             while (info != null && shouldWaitForProcess(info)) {
                 val checkAfterSecs = info.checkAfterSecs
                 if (checkAfterSecs <= 0) {
@@ -885,7 +886,7 @@ class UpdateStatusPromise(
                 response = upload.getUploadMediaStatus(response.id)
                 info = response.processingInfo
             }
-            if (info != null && MediaUploadResponse.ProcessingInfo.State.FAILED == info.state) {
+            if (info != null && ProcessingInfo.State.FAILED == info.state) {
                 val exception = MicroBlogException()
                 val errorInfo = info.error
                 if (errorInfo != null) {
@@ -898,7 +899,7 @@ class UpdateStatusPromise(
 
         private fun shouldWaitForProcess(info: MediaUploadResponse.ProcessingInfo): Boolean {
             when (info.state) {
-                MediaUploadResponse.ProcessingInfo.State.PENDING, MediaUploadResponse.ProcessingInfo.State.IN_PROGRESS -> return true
+                ProcessingInfo.State.PENDING, ProcessingInfo.State.IN_PROGRESS -> return true
                 else -> return false
             }
         }

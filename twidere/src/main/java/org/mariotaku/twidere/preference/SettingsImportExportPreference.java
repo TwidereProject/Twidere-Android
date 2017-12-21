@@ -21,7 +21,6 @@ package org.mariotaku.twidere.preference;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -78,19 +77,9 @@ public class SettingsImportExportPreference extends DialogPreference implements 
             entries[1] = context.getString(R.string.export_settings);
             values[0] = new Intent(context, DataImportActivity.class);
             values[1] = new Intent(context, DataExportActivity.class);
-            builder.setItems(entries, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    startActivity(values[which]);
-                }
-            });
+            builder.setItems(entries, (dialog, which) -> startActivity(values[which]));
             final AlertDialog dialog = builder.create();
-            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                @Override
-                public void onShow(final DialogInterface dialog) {
-                    DialogExtensionsKt.applyTheme((AlertDialog) dialog);
-                }
-            });
+            dialog.setOnShowListener(dialog1 -> DialogExtensionsKt.applyTheme((AlertDialog) dialog1));
             return dialog;
         }
 

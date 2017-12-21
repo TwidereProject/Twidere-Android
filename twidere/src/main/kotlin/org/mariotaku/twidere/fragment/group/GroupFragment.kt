@@ -30,7 +30,7 @@ import android.support.v4.content.FixedAsyncTaskLoader
 import android.support.v4.content.Loader
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.statusnet.model.Group
+import org.mariotaku.microblog.library.model.statusnet.Group
 import org.mariotaku.twidere.Constants.EXTRA_OMIT_INTENT_EXTRA
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.SupportTabsAdapter

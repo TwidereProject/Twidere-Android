@@ -33,7 +33,7 @@ import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.contains
 import org.mariotaku.ktextension.rangeOfSize
-import org.mariotaku.microblog.library.twitter.model.Activity
+import org.mariotaku.microblog.library.model.microblog.Activity.Action
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.callback.ItemCountsAdapterListUpdateCallback
 import org.mariotaku.twidere.adapter.iface.IActivitiesAdapter
@@ -221,15 +221,15 @@ class ParcelableActivitiesAdapter(
                 }
                 val action = getAction(position)
                 when (action) {
-                    Activity.Action.MENTION, Activity.Action.QUOTE, Activity.Action.REPLY -> {
+                    Action.MENTION, Action.QUOTE, Action.REPLY -> {
                         return ITEM_VIEW_TYPE_STATUS
                     }
-                    Activity.Action.FOLLOW, Activity.Action.FAVORITE, Activity.Action.RETWEET,
-                    Activity.Action.FAVORITED_RETWEET, Activity.Action.RETWEETED_RETWEET,
-                    Activity.Action.RETWEETED_MENTION, Activity.Action.FAVORITED_MENTION,
-                    Activity.Action.LIST_CREATED, Activity.Action.LIST_MEMBER_ADDED,
-                    Activity.Action.MEDIA_TAGGED, Activity.Action.RETWEETED_MEDIA_TAGGED,
-                    Activity.Action.FAVORITED_MEDIA_TAGGED, Activity.Action.JOINED_TWITTER -> {
+                    Action.FOLLOW, Action.FAVORITE, Action.RETWEET,
+                    Action.FAVORITED_RETWEET, Action.RETWEETED_RETWEET,
+                    Action.RETWEETED_MENTION, Action.FAVORITED_MENTION,
+                    Action.LIST_CREATED, Action.LIST_MEMBER_ADDED,
+                    Action.MEDIA_TAGGED, Action.RETWEETED_MEDIA_TAGGED,
+                    Action.FAVORITED_MEDIA_TAGGED, Action.JOINED_TWITTER -> {
                         return ITEM_VIEW_TYPE_TITLE_SUMMARY
                     }
                 }

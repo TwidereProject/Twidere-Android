@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.extension.model.api.microblog
 
-import org.mariotaku.microblog.library.twitter.model.Relationship
+import org.mariotaku.microblog.library.model.microblog.Relationship
 import org.mariotaku.twidere.model.ParcelableRelationship
 import org.mariotaku.twidere.model.UserKey
 

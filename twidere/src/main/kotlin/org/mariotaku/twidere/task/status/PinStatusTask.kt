@@ -22,7 +22,7 @@ package org.mariotaku.twidere.task.status
 import android.content.Context
 import android.widget.Toast
 import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.twitter.model.PinTweetResult
+import org.mariotaku.microblog.library.model.microblog.PinTweetResult
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails

@@ -18,15 +18,14 @@
 
 package org.mariotaku.microblog.library;
 
-import org.mariotaku.microblog.library.statusnet.api.TimelineResources;
+import org.mariotaku.microblog.library.api.statusnet.TimelineResources;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.param.Query;
-import org.mariotaku.microblog.library.statusnet.api.GroupResources;
-import org.mariotaku.microblog.library.statusnet.api.SearchResources;
-import org.mariotaku.microblog.library.statusnet.api.StatusNetResources;
-import org.mariotaku.microblog.library.statusnet.api.UserResources;
-import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.twitter.model.User;
+import org.mariotaku.microblog.library.api.statusnet.GroupResources;
+import org.mariotaku.microblog.library.api.statusnet.SearchResources;
+import org.mariotaku.microblog.library.api.statusnet.StatusNetResources;
+import org.mariotaku.microblog.library.api.statusnet.UserResources;
+import org.mariotaku.microblog.library.model.microblog.User;
 
 /**
  * Created by mariotaku on 16/3/4.

@@ -25,7 +25,7 @@ import android.os.Bundle
 import android.support.v4.content.FixedAsyncTaskLoader
 import org.mariotaku.ktextension.set
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.twitter.model.ErrorInfo
+import org.mariotaku.microblog.library.model.microblog.ErrorInfo
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT

@@ -3,10 +3,10 @@ package org.mariotaku.twidere.model.util
 import org.mariotaku.ktextension.addAllTo
 import org.mariotaku.ktextension.isNullOrEmpty
 import org.mariotaku.ktextension.toIntOr
-import org.mariotaku.microblog.library.twitter.model.CardEntity
-import org.mariotaku.microblog.library.twitter.model.MediaEntity
-import org.mariotaku.microblog.library.twitter.model.Status
-import org.mariotaku.microblog.library.twitter.model.UrlEntity
+import org.mariotaku.microblog.library.model.microblog.CardEntity
+import org.mariotaku.microblog.library.model.microblog.MediaEntity
+import org.mariotaku.microblog.library.model.microblog.Status
+import org.mariotaku.microblog.library.model.microblog.UrlEntity
 import org.mariotaku.twidere.extension.model.api.getEntityMedia
 import org.mariotaku.twidere.extension.model.api.gnusocial.toParcelable
 import org.mariotaku.twidere.extension.model.toParcelable

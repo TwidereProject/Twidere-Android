@@ -26,7 +26,7 @@ import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.mapToArray
-import org.mariotaku.microblog.library.twitter.model.UserListUpdate
+import org.mariotaku.microblog.library.model.microblog.UserListUpdate
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.dagger.component.GeneralComponent

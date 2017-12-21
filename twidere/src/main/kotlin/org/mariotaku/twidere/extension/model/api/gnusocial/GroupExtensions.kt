@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.extension.model.api.gnusocial
 
-import org.mariotaku.microblog.library.statusnet.model.Group
+import org.mariotaku.microblog.library.model.statusnet.Group
 import org.mariotaku.twidere.model.ParcelableGroup
 import org.mariotaku.twidere.model.UserKey
 

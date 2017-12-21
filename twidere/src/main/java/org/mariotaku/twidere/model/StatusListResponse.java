@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.model;
 
-import org.mariotaku.microblog.library.twitter.model.Status;
+import org.mariotaku.microblog.library.model.microblog.Status;
 
 import java.util.List;
 

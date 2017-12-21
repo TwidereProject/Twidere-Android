@@ -27,7 +27,9 @@ import android.net.Uri
 import android.os.Bundle
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+import com.davemorrissey.labs.subscaleview.decoder.DecoderFactory
 import com.davemorrissey.labs.subscaleview.decoder.SkiaImageDecoder
+import com.davemorrissey.labs.subscaleview.decoder.SkiaImageRegionDecoder
 import org.mariotaku.ktextension.nextPowerOf2
 import org.mariotaku.mediaviewer.library.CacheDownloadLoader
 import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewerFragment
@@ -42,7 +44,6 @@ import java.io.IOException
 import java.lang.ref.WeakReference
 
 class ImagePageFragment : SubsampleImageViewerFragment() {
-
 
     private val media: ParcelableMedia?
         get() = arguments!!.getParcelable<ParcelableMedia?>(EXTRA_MEDIA)
@@ -92,8 +93,8 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
 
     override fun setupImageView(imageView: SubsamplingScaleImageView) {
         imageView.maxScale = resources.displayMetrics.density
-        imageView.setBitmapDecoderClass(PreviewBitmapDecoder::class.java)
-        imageView.setParallelLoadingEnabled(true)
+        imageView.setBitmapDecoderFactory(PreviewBitmapDecoder.Factory)
+        imageView.setRegionDecoderFactory(RegionDecoderFactory)
         imageView.setOnClickListener {
             val activity = activity as? MediaViewerActivity ?: return@setOnClickListener
             activity.toggleBar()
@@ -155,15 +156,26 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
                 val cr = context.contentResolver
                 decodeBitmap(cr, uri, o)
                 val dm = context.resources.displayMetrics
-                val targetSize = Math.min(1024, Math.max(dm.widthPixels, dm.heightPixels))
+                val targetSize = Math.max(dm.widthPixels, dm.heightPixels).coerceAtMost(1024)
                 val sizeRatio = Math.ceil(Math.max(o.outHeight, o.outWidth) / targetSize.toDouble())
-                o.inSampleSize = Math.max(1.0, sizeRatio).toInt().nextPowerOf2
+                o.inSampleSize = sizeRatio.coerceAtLeast(1.0).toInt().nextPowerOf2
                 o.inJustDecodeBounds = false
                 return decodeBitmap(cr, uri, o) ?: throw IOException()
             }
             return super.decode(context, uri)
         }
 
+        object Factory : DecoderFactory<PreviewBitmapDecoder> {
+            override fun make(): PreviewBitmapDecoder {
+                return PreviewBitmapDecoder()
+            }
+
+        }
+
+    }
+
+    object RegionDecoderFactory : DecoderFactory<SkiaImageRegionDecoder> {
+        override fun make() = SkiaImageRegionDecoder(Bitmap.Config.ARGB_8888)
     }
 
     companion object {

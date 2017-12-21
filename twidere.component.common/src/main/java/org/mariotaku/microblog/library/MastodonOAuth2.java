@@ -18,8 +18,7 @@
 
 package org.mariotaku.microblog.library;
 
-import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.twitter.auth.OAuth2Token;
+import org.mariotaku.microblog.library.auth.OAuth2Token;
 import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.KeyValue;
 import org.mariotaku.restfu.annotation.param.Param;

@@ -19,8 +19,8 @@
 
 package org.mariotaku.twidere.extension.model.api.mastodon
 
-import org.mariotaku.microblog.library.mastodon.model.Account
-import org.mariotaku.microblog.library.mastodon.model.Relationship
+import org.mariotaku.microblog.library.model.mastodon.Account
+import org.mariotaku.microblog.library.model.mastodon.Relationship
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.api.isHtml
 import org.mariotaku.twidere.extension.model.api.spanItems

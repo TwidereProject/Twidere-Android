@@ -18,21 +18,21 @@
 
 package org.mariotaku.microblog.library;
 
-import org.mariotaku.microblog.library.mastodon.api.AccountsResources;
-import org.mariotaku.microblog.library.mastodon.api.AppsResources;
-import org.mariotaku.microblog.library.mastodon.api.BlocksResources;
-import org.mariotaku.microblog.library.mastodon.api.FavouritesResources;
-import org.mariotaku.microblog.library.mastodon.api.FollowRequestsResources;
-import org.mariotaku.microblog.library.mastodon.api.FollowsResources;
-import org.mariotaku.microblog.library.mastodon.api.InstancesResources;
-import org.mariotaku.microblog.library.mastodon.api.ListsResources;
-import org.mariotaku.microblog.library.mastodon.api.MediaResources;
-import org.mariotaku.microblog.library.mastodon.api.MutesResources;
-import org.mariotaku.microblog.library.mastodon.api.NotificationsResources;
-import org.mariotaku.microblog.library.mastodon.api.ReportsResources;
-import org.mariotaku.microblog.library.mastodon.api.SearchResources;
-import org.mariotaku.microblog.library.mastodon.api.StatusesResources;
-import org.mariotaku.microblog.library.mastodon.api.TimelinesResources;
+import org.mariotaku.microblog.library.api.mastodon.AccountsResources;
+import org.mariotaku.microblog.library.api.mastodon.AppsResources;
+import org.mariotaku.microblog.library.api.mastodon.BlocksResources;
+import org.mariotaku.microblog.library.api.mastodon.FavouritesResources;
+import org.mariotaku.microblog.library.api.mastodon.FollowRequestsResources;
+import org.mariotaku.microblog.library.api.mastodon.FollowsResources;
+import org.mariotaku.microblog.library.api.mastodon.InstancesResources;
+import org.mariotaku.microblog.library.api.mastodon.ListsResources;
+import org.mariotaku.microblog.library.api.mastodon.MediaResources;
+import org.mariotaku.microblog.library.api.mastodon.MutesResources;
+import org.mariotaku.microblog.library.api.mastodon.NotificationsResources;
+import org.mariotaku.microblog.library.api.mastodon.ReportsResources;
+import org.mariotaku.microblog.library.api.mastodon.SearchResources;
+import org.mariotaku.microblog.library.api.mastodon.StatusesResources;
+import org.mariotaku.microblog.library.api.mastodon.TimelinesResources;
 
 public interface Mastodon extends AccountsResources, AppsResources, BlocksResources,
         FavouritesResources, FollowRequestsResources, FollowsResources, InstancesResources,

@@ -19,45 +19,47 @@
 
 package org.mariotaku.twidere.extension.model.api
 
-import org.mariotaku.microblog.library.twitter.model.DirectMessageEventObject
+import org.mariotaku.microblog.library.model.microblog.DirectMessageEventObject
+import org.mariotaku.microblog.library.model.microblog.DirectMessageEventObject.Event
+import org.mariotaku.microblog.library.model.microblog.DirectMessageEventObject.Event.MessageCreate
 
 /**
  * Created by mariotaku on 2017/5/11.
  */
-fun DirectMessageEventObject(action: DirectMessageEventObject.Event.() -> Unit): DirectMessageEventObject {
+fun DirectMessageEventObject(action: Event.() -> Unit): DirectMessageEventObject {
     val obj = DirectMessageEventObject()
-    val event = DirectMessageEventObject.Event()
+    val event = Event()
     action(event)
     obj.event = event
     return obj
 }
 
-fun DirectMessageEventObject.Event.messageCreate(action: DirectMessageEventObject.Event.MessageCreate.() -> Unit) {
-    val messageCreate = DirectMessageEventObject.Event.MessageCreate()
+fun Event.messageCreate(action: MessageCreate.() -> Unit) {
+    val messageCreate = MessageCreate()
     action(messageCreate)
     this.messageCreate = messageCreate
 }
 
-fun DirectMessageEventObject.Event.MessageCreate.target(action: DirectMessageEventObject.Event.MessageCreate.Target.() -> Unit) {
-    val target = DirectMessageEventObject.Event.MessageCreate.Target()
+fun MessageCreate.target(action: MessageCreate.Target.() -> Unit) {
+    val target = MessageCreate.Target()
     action(target)
     this.target = target
 }
 
-fun DirectMessageEventObject.Event.MessageCreate.messageData(action: DirectMessageEventObject.Event.MessageCreate.MessageData.() -> Unit) {
-    val messageData = DirectMessageEventObject.Event.MessageCreate.MessageData()
+fun MessageCreate.messageData(action: MessageCreate.MessageData.() -> Unit) {
+    val messageData = MessageCreate.MessageData()
     action(messageData)
     this.messageData = messageData
 }
 
-fun DirectMessageEventObject.Event.MessageCreate.MessageData.attachment(action: DirectMessageEventObject.Event.MessageCreate.MessageData.Attachment.() -> Unit) {
-    val attachment = DirectMessageEventObject.Event.MessageCreate.MessageData.Attachment()
+fun MessageCreate.MessageData.attachment(action: MessageCreate.MessageData.Attachment.() -> Unit) {
+    val attachment = MessageCreate.MessageData.Attachment()
     action(attachment)
     this.attachment = attachment
 }
 
-fun DirectMessageEventObject.Event.MessageCreate.MessageData.Attachment.media(action: DirectMessageEventObject.Event.MessageCreate.MessageData.Attachment.Media.() -> Unit) {
-    val media = DirectMessageEventObject.Event.MessageCreate.MessageData.Attachment.Media()
+fun MessageCreate.MessageData.Attachment.media(action: MessageCreate.MessageData.Attachment.Media.() -> Unit) {
+    val media = MessageCreate.MessageData.Attachment.Media()
     action(media)
     this.media = media
 }

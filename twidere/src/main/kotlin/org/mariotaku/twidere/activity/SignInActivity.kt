@@ -62,17 +62,13 @@ import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
-import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.MastodonOAuth2
-import org.mariotaku.microblog.library.mastodon.annotation.AuthScope
-import org.mariotaku.microblog.library.TwitterOAuth
-import org.mariotaku.microblog.library.twitter.auth.BasicAuthorization
-import org.mariotaku.microblog.library.twitter.auth.EmptyAuthorization
-import org.mariotaku.microblog.library.twitter.model.ErrorInfo
-import org.mariotaku.microblog.library.twitter.model.Paging
-import org.mariotaku.microblog.library.twitter.model.User
+import org.mariotaku.microblog.library.*
+import org.mariotaku.microblog.library.annotation.mastodon.AuthScope
+import org.mariotaku.microblog.library.auth.BasicAuthorization
+import org.mariotaku.microblog.library.auth.EmptyAuthorization
+import org.mariotaku.microblog.library.model.microblog.ErrorInfo
+import org.mariotaku.microblog.library.model.microblog.Paging
+import org.mariotaku.microblog.library.model.microblog.User
 import org.mariotaku.restfu.http.Endpoint
 import org.mariotaku.restfu.oauth.OAuthToken
 import org.mariotaku.restfu.oauth2.OAuth2Authorization
@@ -951,16 +947,14 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val auth = BasicAuthorization(username, password)
             val twitter = newMicroBlogInstance(activity, endpoint = endpoint, auth = auth,
                     accountType = apiConfig.type, cls = MicroBlog::class.java)
-            val apiUser: User
-            try {
-                apiUser = twitter.verifyCredentials()
+            val apiUser = try {
+                twitter.verifyCredentials()
             } catch (e: MicroBlogException) {
-                if (e.statusCode == 401) {
-                    throw WrongBasicCredentialException()
-                } else if (e.statusCode == 404) {
-                    throw WrongAPIURLFormatException()
+                when (e.statusCode) {
+                    401 -> throw WrongBasicCredentialException()
+                    404 -> throw WrongAPIURLFormatException()
+                    else -> throw e
                 }
-                throw e
             }
 
             var color = analyseUserProfileColor(apiUser)

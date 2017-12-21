@@ -20,11 +20,10 @@
 package org.mariotaku.twidere.loader.group
 
 import android.content.Context
-
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.statusnet.model.Group
-import org.mariotaku.microblog.library.twitter.model.ResponseList
+import org.mariotaku.microblog.library.model.microblog.ResponseList
+import org.mariotaku.microblog.library.model.statusnet.Group
 import org.mariotaku.twidere.model.ParcelableGroup
 import org.mariotaku.twidere.model.UserKey
 

@@ -21,7 +21,7 @@ package org.mariotaku.twidere.extension.model.api
 
 import android.text.TextUtils
 import org.mariotaku.ktextension.isNotNullOrEmpty
-import org.mariotaku.microblog.library.twitter.model.User
+import org.mariotaku.microblog.library.model.microblog.User
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_TWITTER_COM
 import org.mariotaku.twidere.annotation.AccountType

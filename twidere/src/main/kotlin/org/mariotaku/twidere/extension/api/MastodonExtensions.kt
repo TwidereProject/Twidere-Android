@@ -21,7 +21,7 @@ package org.mariotaku.twidere.extension.api
 
 import org.mariotaku.ktextension.subArray
 import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.mastodon.model.Relationship
+import org.mariotaku.microblog.library.model.mastodon.Relationship
 
 
 fun Mastodon.batchGetRelationships(ids: Collection<String>): Map<String, Relationship> {

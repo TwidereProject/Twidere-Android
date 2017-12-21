@@ -21,7 +21,7 @@ package org.mariotaku.twidere.model.pagination;
 
 import android.os.Parcelable;
 
-import org.mariotaku.microblog.library.twitter.model.Paging;
+import org.mariotaku.microblog.library.model.microblog.Paging;
 
 public interface Pagination extends Parcelable {
 

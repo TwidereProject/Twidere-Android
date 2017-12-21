@@ -19,13 +19,13 @@
 
 package org.mariotaku.twidere.data.fetcher
 
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.mastodon.model.LinkHeaderList
-import org.mariotaku.microblog.library.twitter.model.Paging
-import org.mariotaku.microblog.library.twitter.model.ResponseList
-import org.mariotaku.microblog.library.twitter.model.SearchQuery
-import org.mariotaku.microblog.library.twitter.model.Status
+import org.mariotaku.microblog.library.MicroBlog
+import org.mariotaku.microblog.library.model.mastodon.LinkHeaderList
+import org.mariotaku.microblog.library.model.microblog.Paging
+import org.mariotaku.microblog.library.model.microblog.ResponseList
+import org.mariotaku.microblog.library.model.microblog.SearchQuery
+import org.mariotaku.microblog.library.model.microblog.Status
 import org.mariotaku.twidere.alias.MastodonStatus
 import org.mariotaku.twidere.alias.MastodonTimelineOption
 import org.mariotaku.twidere.annotation.AccountType
@@ -53,8 +53,7 @@ class UserMediaTimelineFetcher(
             userKey != null -> UserMentionsTimelineFetcher.findScreenName(twitter, userKey, AccountType.TWITTER)
             else -> throw RequiredFieldNotFoundException("user_id", "screen_name")
         }
-        val query = SearchQuery("from:$screenName filter:media exclude:retweets")
-        query.paging(paging)
+        val query = SearchQuery("from:$screenName filter:media exclude:retweets").paging(paging)
         val result = ResponseList<Status>()
         twitter.search(query).filterTo(result) { status ->
             val user = status.user

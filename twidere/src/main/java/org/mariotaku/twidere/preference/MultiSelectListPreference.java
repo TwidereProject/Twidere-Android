@@ -100,12 +100,7 @@ abstract class MultiSelectListPreference extends DialogPreference implements IDi
             builder.setNegativeButton(android.R.string.cancel, null);
             builder.setMultiChoiceItems(mNames, mValues, this);
             final AlertDialog dialog = builder.create();
-            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                @Override
-                public void onShow(final DialogInterface dialog) {
-                    DialogExtensionsKt.applyTheme((AlertDialog) dialog);
-                }
-            });
+            dialog.setOnShowListener(dialog1 -> DialogExtensionsKt.applyTheme((AlertDialog) dialog1));
             return dialog;
         }
 

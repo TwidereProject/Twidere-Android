@@ -56,7 +56,7 @@ public interface IForegroundView {
     /**
      * Describes how the foreground is positioned. Defaults to START and TOP.
      *
-     * @param foregroundGravity See {@link android.view.Gravity}
+     * @param foregroundGravity See {@link Gravity}
      */
     void setForegroundGravity(int foregroundGravity);
 

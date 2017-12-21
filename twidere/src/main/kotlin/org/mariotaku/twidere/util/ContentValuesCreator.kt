@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.util
 
 import android.content.ContentValues
-import org.mariotaku.microblog.library.twitter.model.SavedSearch
+import org.mariotaku.microblog.library.model.microblog.SavedSearch
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserMention

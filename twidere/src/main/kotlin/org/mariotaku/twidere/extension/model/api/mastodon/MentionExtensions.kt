@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.extension.model.api.mastodon
 
-import org.mariotaku.microblog.library.mastodon.model.Mention
+import org.mariotaku.microblog.library.model.mastodon.Mention
 import org.mariotaku.twidere.model.ParcelableUserMention
 import org.mariotaku.twidere.model.UserKey
 

@@ -1,5 +1,6 @@
 package org.mariotaku.twidere.preference.sync
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.support.v7.preference.SwitchPreferenceCompat
@@ -36,6 +37,7 @@ class SyncItemPreference(
         a.recycle()
     }
 
+    @SuppressLint("RestrictedApi")
     override fun syncSummaryView(view: View?) {
         if (view !is TextView) return
         if (summary != null || summaryOn != null || summaryOff != null) {

@@ -22,7 +22,7 @@ package org.mariotaku.twidere.extension.model
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.toIntOr
 import org.mariotaku.ktextension.toLongOr
-import org.mariotaku.microblog.library.twitter.model.CardEntity
+import org.mariotaku.microblog.library.model.microblog.CardEntity
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.model.ParcelableCardEntity
 import org.mariotaku.twidere.model.UserKey

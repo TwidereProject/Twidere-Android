@@ -21,9 +21,9 @@ package org.mariotaku.twidere.extension.api
 
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.twitter.model.IDs
-import org.mariotaku.microblog.library.twitter.model.Paging
-import org.mariotaku.microblog.library.twitter.model.User
+import org.mariotaku.microblog.library.model.microblog.IDs
+import org.mariotaku.microblog.library.model.microblog.Paging
+import org.mariotaku.microblog.library.model.microblog.User
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.model.pagination.CursorPagination
 import org.mariotaku.twidere.model.pagination.PaginatedArrayList

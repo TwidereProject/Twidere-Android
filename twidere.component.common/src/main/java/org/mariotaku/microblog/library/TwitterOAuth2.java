@@ -22,9 +22,8 @@ import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.Header;
 import org.mariotaku.restfu.annotation.param.KeyValue;
 import org.mariotaku.restfu.annotation.param.Params;
-import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.twitter.auth.OAuth2GetTokenHeader;
-import org.mariotaku.microblog.library.twitter.auth.OAuth2Token;
+import org.mariotaku.microblog.library.auth.OAuth2GetTokenHeader;
+import org.mariotaku.microblog.library.auth.OAuth2Token;
 
 /**
  * Created by mariotaku on 16/1/4.

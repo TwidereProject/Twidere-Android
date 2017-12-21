@@ -18,13 +18,13 @@
 
 package org.mariotaku.microblog.library;
 
-import org.mariotaku.microblog.library.twitter.api.PrivateAccountResources;
-import org.mariotaku.microblog.library.twitter.api.PrivateActivityResources;
-import org.mariotaku.microblog.library.twitter.api.PrivateDirectMessagesResources;
-import org.mariotaku.microblog.library.twitter.api.PrivateFriendsFollowersResources;
-import org.mariotaku.microblog.library.twitter.api.PrivateSearchResources;
-import org.mariotaku.microblog.library.twitter.api.PrivateTimelineResources;
-import org.mariotaku.microblog.library.twitter.api.PrivateTweetResources;
+import org.mariotaku.microblog.library.api.twitter.PrivateAccountResources;
+import org.mariotaku.microblog.library.api.twitter.PrivateActivityResources;
+import org.mariotaku.microblog.library.api.twitter.PrivateDirectMessagesResources;
+import org.mariotaku.microblog.library.api.twitter.PrivateFriendsFollowersResources;
+import org.mariotaku.microblog.library.api.twitter.PrivateSearchResources;
+import org.mariotaku.microblog.library.api.twitter.PrivateTimelineResources;
+import org.mariotaku.microblog.library.api.twitter.PrivateTweetResources;
 
 /**
  * Created by mariotaku on 16/3/4.

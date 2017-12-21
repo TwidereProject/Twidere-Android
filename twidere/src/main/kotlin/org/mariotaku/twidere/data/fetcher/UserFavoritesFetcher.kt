@@ -19,11 +19,11 @@
 
 package org.mariotaku.twidere.data.fetcher
 
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.mastodon.model.LinkHeaderList
-import org.mariotaku.microblog.library.twitter.model.Paging
-import org.mariotaku.microblog.library.twitter.model.Status
+import org.mariotaku.microblog.library.MicroBlog
+import org.mariotaku.microblog.library.model.mastodon.LinkHeaderList
+import org.mariotaku.microblog.library.model.microblog.Paging
+import org.mariotaku.microblog.library.model.microblog.Status
 import org.mariotaku.twidere.alias.MastodonStatus
 import org.mariotaku.twidere.exception.RequiredFieldNotFoundException
 import org.mariotaku.twidere.model.AccountDetails

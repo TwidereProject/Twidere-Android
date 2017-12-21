@@ -8,7 +8,7 @@ import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.StyleSpan
-import org.mariotaku.microblog.library.twitter.model.Activity
+import org.mariotaku.microblog.library.model.microblog.Activity.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.extension.model.activityStatus
 import org.mariotaku.twidere.text.style.NonBreakEllipseSpan
@@ -26,14 +26,14 @@ class ActivityTitleSummaryMessage private constructor(val icon: Int, val color: 
                 nameFirst: Boolean): ActivityTitleSummaryMessage? {
             val resources = context.resources
             when (activity.action) {
-                Activity.Action.FOLLOW -> {
+                Action.FOLLOW -> {
                     val typeIcon = R.drawable.ic_activity_action_follow
                     val color = ContextCompat.getColor(context, R.color.highlight_follow)
                     val title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_follow,
                             R.string.activity_about_me_follow_multi, sources, nameFirst)
                     return ActivityTitleSummaryMessage(typeIcon, color, title, null)
                 }
-                Activity.Action.FAVORITE -> {
+                Action.FAVORITE -> {
                     val typeIcon: Int
                     val color: Int
                     val title: CharSequence
@@ -52,7 +52,7 @@ class ActivityTitleSummaryMessage private constructor(val icon: Int, val color: 
                     val summary = generateTextOnlySummary(activity.summary_line)
                     return ActivityTitleSummaryMessage(typeIcon, color, title, summary)
                 }
-                Activity.Action.RETWEET -> {
+                Action.RETWEET -> {
                     val typeIcon = R.drawable.ic_activity_action_retweet
                     val color = ContextCompat.getColor(context, R.color.highlight_retweet)
                     val title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_retweet,
@@ -60,7 +60,7 @@ class ActivityTitleSummaryMessage private constructor(val icon: Int, val color: 
                     val summary = generateTextOnlySummary(activity.summary_line)
                     return ActivityTitleSummaryMessage(typeIcon, color, title, summary)
                 }
-                Activity.Action.FAVORITED_RETWEET -> {
+                Action.FAVORITED_RETWEET -> {
                     val typeIcon: Int
                     val color: Int
                     val title: CharSequence
@@ -79,7 +79,7 @@ class ActivityTitleSummaryMessage private constructor(val icon: Int, val color: 
                             nameFirst)
                     return ActivityTitleSummaryMessage(typeIcon, color, title, summary)
                 }
-                Activity.Action.RETWEETED_RETWEET -> {
+                Action.RETWEETED_RETWEET -> {
                     val typeIcon = R.drawable.ic_activity_action_retweet
                     val color = ContextCompat.getColor(context, R.color.highlight_retweet)
                     val title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_retweeted_retweet,
@@ -88,7 +88,7 @@ class ActivityTitleSummaryMessage private constructor(val icon: Int, val color: 
                             nameFirst)
                     return ActivityTitleSummaryMessage(typeIcon, color, title, summary)
                 }
-                Activity.Action.RETWEETED_MENTION -> {
+                Action.RETWEETED_MENTION -> {
                     val typeIcon = R.drawable.ic_activity_action_retweet
                     val color = ContextCompat.getColor(context, R.color.highlight_retweet)
                     val title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_retweeted_mention,
@@ -97,7 +97,7 @@ class ActivityTitleSummaryMessage private constructor(val icon: Int, val color: 
                             nameFirst)
                     return ActivityTitleSummaryMessage(typeIcon, color, title, summary)
                 }
-                Activity.Action.FAVORITED_MENTION -> {
+                Action.FAVORITED_MENTION -> {
                     val typeIcon: Int
                     val color: Int
                     val title: CharSequence
@@ -116,7 +116,7 @@ class ActivityTitleSummaryMessage private constructor(val icon: Int, val color: 
                             nameFirst)
                     return ActivityTitleSummaryMessage(typeIcon, color, title, summary)
                 }
-                Activity.Action.LIST_MEMBER_ADDED -> {
+                Action.LIST_MEMBER_ADDED -> {
                     val title: CharSequence
                     val icon = R.drawable.ic_activity_action_list_added
                     if (sources.size == 1 && activity.summary_line?.size == 1) {
@@ -133,14 +133,14 @@ class ActivityTitleSummaryMessage private constructor(val icon: Int, val color: 
                     }
                     return ActivityTitleSummaryMessage(icon, defaultColor, title, null)
                 }
-                Activity.Action.MENTION, Activity.Action.REPLY, Activity.Action.QUOTE -> {
+                Action.MENTION, Action.REPLY, Action.QUOTE -> {
                     val status = activity.activityStatus ?: return null
                     val title = SpannableString(manager.getDisplayName(status))
                     title.setSpan(StyleSpan(Typeface.BOLD), 0, title.length,
                             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                     return ActivityTitleSummaryMessage(0, 0, title, status.text_unescaped)
                 }
-                Activity.Action.JOINED_TWITTER -> {
+                Action.JOINED_TWITTER -> {
                     val typeIcon = R.drawable.ic_activity_action_follow
                     val color = ContextCompat.getColor(context, R.color.highlight_follow)
                     val title = getTitleStringAboutMe(resources, manager,
@@ -148,7 +148,7 @@ class ActivityTitleSummaryMessage private constructor(val icon: Int, val color: 
                             sources, nameFirst)
                     return ActivityTitleSummaryMessage(typeIcon, color, title, null)
                 }
-                Activity.Action.MEDIA_TAGGED -> {
+                Action.MEDIA_TAGGED -> {
                     val typeIcon = R.drawable.ic_activity_action_media_tagged
                     val color = ContextCompat.getColor(context, R.color.highlight_tagged)
                     val title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_media_tagged,
@@ -157,7 +157,7 @@ class ActivityTitleSummaryMessage private constructor(val icon: Int, val color: 
                             nameFirst)
                     return ActivityTitleSummaryMessage(typeIcon, color, title, summary)
                 }
-                Activity.Action.FAVORITED_MEDIA_TAGGED -> {
+                Action.FAVORITED_MEDIA_TAGGED -> {
                     val typeIcon: Int
                     val color: Int
                     val title: CharSequence
@@ -176,7 +176,7 @@ class ActivityTitleSummaryMessage private constructor(val icon: Int, val color: 
                             nameFirst)
                     return ActivityTitleSummaryMessage(typeIcon, color, title, summary)
                 }
-                Activity.Action.RETWEETED_MEDIA_TAGGED -> {
+                Action.RETWEETED_MEDIA_TAGGED -> {
                     val typeIcon = R.drawable.ic_activity_action_retweet
                     val color = ContextCompat.getColor(context, R.color.highlight_retweet)
                     val title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_retweeted_media_tagged,

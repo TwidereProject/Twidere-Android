@@ -25,7 +25,7 @@ import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.all
 import nl.komponents.kovenant.toSuccessVoid
 import nl.komponents.kovenant.ui.successUi
-import org.mariotaku.microblog.library.twitter.model.SavedSearch
+import org.mariotaku.microblog.library.model.microblog.SavedSearch
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.dagger.component.GeneralComponent

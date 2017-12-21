@@ -19,10 +19,10 @@
 
 package org.mariotaku.twidere.alias
 
-import org.mariotaku.microblog.library.mastodon.model.Notification
-import org.mariotaku.microblog.library.mastodon.model.Status
-import org.mariotaku.microblog.library.mastodon.model.StatusUpdate
-import org.mariotaku.microblog.library.mastodon.model.TimelineOption
+import org.mariotaku.microblog.library.model.mastodon.Notification
+import org.mariotaku.microblog.library.model.mastodon.Status
+import org.mariotaku.microblog.library.model.mastodon.StatusUpdate
+import org.mariotaku.microblog.library.model.mastodon.TimelineOption
 
 typealias MastodonStatus = Status
 typealias MastodonTimelineOption = TimelineOption

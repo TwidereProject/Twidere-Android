@@ -19,14 +19,14 @@
 
 package org.mariotaku.twidere.data.fetcher
 
+import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.mastodon.model.LinkHeaderList
-import org.mariotaku.microblog.library.twitter.model.Paging
-import org.mariotaku.microblog.library.twitter.model.SearchQuery
-import org.mariotaku.microblog.library.twitter.model.Status
-import org.mariotaku.microblog.library.twitter.model.UniversalSearchQuery
+import org.mariotaku.microblog.library.model.mastodon.LinkHeaderList
+import org.mariotaku.microblog.library.model.microblog.Paging
+import org.mariotaku.microblog.library.model.microblog.SearchQuery
+import org.mariotaku.microblog.library.model.microblog.Status
+import org.mariotaku.microblog.library.model.microblog.UniversalSearchQuery
 import org.mariotaku.twidere.alias.MastodonStatus
 import org.mariotaku.twidere.extension.model.official
 import org.mariotaku.twidere.model.AccountDetails
@@ -41,10 +41,11 @@ class SearchTimelineFetcher(val query: String?, val local: Boolean) : StatusesFe
             searchQuery.paging(paging)
             return twitter.search(searchQuery)
         }
-        val universalQuery = UniversalSearchQuery(smQuery(query, paging))
-        universalQuery.setModules(UniversalSearchQuery.Module.TWEET)
-        universalQuery.setResultType(UniversalSearchQuery.ResultType.RECENT)
-        universalQuery.setPaging(paging)
+        val universalQuery = UniversalSearchQuery(smQuery(query, paging)).apply {
+            setModules(UniversalSearchQuery.Module.TWEET)
+            setResultType(UniversalSearchQuery.ResultType.RECENT)
+            setPaging(paging)
+        }
         val searchResult = twitter.universalSearch(universalQuery)
         return searchResult.modules.mapNotNull { it.status?.data }
     }

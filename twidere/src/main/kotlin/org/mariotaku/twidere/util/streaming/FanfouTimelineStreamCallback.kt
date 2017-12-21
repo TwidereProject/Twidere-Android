@@ -19,11 +19,11 @@
 
 package org.mariotaku.twidere.util.streaming
 
-import org.mariotaku.microblog.library.fanfou.callback.SimpleFanfouUserStreamCallback
-import org.mariotaku.microblog.library.twitter.model.Activity
-import org.mariotaku.microblog.library.twitter.model.InternalActivityCreator
-import org.mariotaku.microblog.library.twitter.model.Status
-import org.mariotaku.microblog.library.twitter.model.User
+import org.mariotaku.microblog.library.callback.fanfou.SimpleFanfouUserStreamCallback
+import org.mariotaku.microblog.library.model.microblog.Activity
+import org.mariotaku.microblog.library.model.microblog.InternalActivityCreator
+import org.mariotaku.microblog.library.model.microblog.Status
+import org.mariotaku.microblog.library.model.microblog.User
 import java.util.*
 
 /**

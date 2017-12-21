@@ -22,9 +22,6 @@ package org.mariotaku.twidere.model.event;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-/**
- * Created by mariotaku on 14/12/10.
- */
 public class GetStatusesTaskEvent {
 
     @NonNull

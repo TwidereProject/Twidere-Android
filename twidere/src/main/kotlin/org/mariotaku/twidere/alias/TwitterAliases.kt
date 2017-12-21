@@ -19,4 +19,7 @@
 
 package org.mariotaku.twidere.alias
 
+
 typealias TwitterRegex = com.twitter.Regex
+typealias TwitterActivity = org.mariotaku.microblog.library.model.microblog.Activity
+typealias TwitterStatus = org.mariotaku.microblog.library.model.microblog.Status

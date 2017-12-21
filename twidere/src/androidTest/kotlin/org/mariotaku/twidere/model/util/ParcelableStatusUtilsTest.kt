@@ -5,7 +5,7 @@ import android.support.test.runner.AndroidJUnit4
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mariotaku.microblog.library.twitter.model.Status
+import org.mariotaku.microblog.library.model.microblog.Status
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.model.UserKey

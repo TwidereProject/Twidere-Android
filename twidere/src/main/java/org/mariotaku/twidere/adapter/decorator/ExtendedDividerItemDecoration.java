@@ -84,12 +84,9 @@ public class ExtendedDividerItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     public void setPadding(final int left, final int top, final int right, final int bottom) {
-        mPadding = new Padding() {
-            @Override
-            public boolean get(int position, Rect rect) {
-                rect.set(left, top, right, bottom);
-                return true;
-            }
+        mPadding = (position, rect) -> {
+            rect.set(left, top, right, bottom);
+            return true;
         };
     }
 
