@@ -21,6 +21,7 @@ package org.mariotaku.twidere.view.controller.premium
 
 import android.view.View
 import org.mariotaku.chameleon.ChameleonUtils
+import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.PremiumDashboardActivity
@@ -33,29 +34,30 @@ class PromotionOfferViewController : PremiumDashboardActivity.ExtraFeatureViewCo
         super.onCreate()
         titleView.setText(R.string.title_promotions_reward)
         messageView.text = context.getString(R.string.message_promotions_reward)
-        button1.setText(R.string.action_enable)
+        if (preferences[promotionsEnabledKey]) {
+            button1.setText(R.string.action_disable)
+        } else {
+            button1.setText(R.string.action_enable)
+        }
 
         button1.visibility = View.VISIBLE
         button2.visibility = View.GONE
 
         button1.setOnClickListener {
-            enablePromotions()
+            togglePromotions()
         }
     }
 
     override fun onViewCreated(view: View) {
-        if (extraFeaturesService.isEnabled(ExtraFeaturesService.FEATURE_FEATURES_PACK)) {
-            view.visibility = View.GONE
-        } else {
+        if (preferences[promotionsEnabledKey] || !extraFeaturesService.isPurchased(ExtraFeaturesService.FEATURE_FEATURES_PACK)) {
             view.visibility = View.VISIBLE
+        } else {
+            view.visibility = View.GONE
         }
     }
 
-    private fun enablePromotions() {
-        preferences[promotionsEnabledKey] = true
-        val activity = ChameleonUtils.getActivity(context)
-        if (activity != null) {
-            activity.recreate()
-        }
+    private fun togglePromotions() {
+        preferences[promotionsEnabledKey] = !preferences[promotionsEnabledKey]
+        ChameleonUtils.getActivity(context)?.recreate()
     }
 }

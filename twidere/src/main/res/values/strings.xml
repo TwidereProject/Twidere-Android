@@ -49,6 +49,7 @@
     <!-- [verb] Action for deleting a file or a twitter object like tweet-->
     <string name="action_delete">Delete</string>
     <string name="action_delete_messages">Delete messages</string>
+    <string name="action_disable">Disable</string>
     <string name="action_disable_promotions">Disable promotions</string>
     <string name="action_dont_restart">Don\'t restart</string>
     <string name="action_dont_terminate">Don\'t quit</string>
@@ -737,6 +738,7 @@
     <string name="message_toast_remove_account_failed">Unable to remove account</string>
     <string name="message_toast_reported_user_for_spam">Reported <xliff:g id="name">%s</xliff:g> for spam</string>
     <string name="message_toast_retweet_cancelled">Retweet cancelled</string>
+    <string name="message_toast_retweet_not_supported">Not supported to retweet this</string>
     <string name="message_toast_save_media_no_storage_permission">Storage permission is needed to save media</string>
     <string name="message_toast_saved_to_gallery">Saved to gallery</string>
     <string name="message_toast_schedule_future_time_required">Date/time should be in future</string>
@@ -982,12 +984,12 @@
 
     <string name="projects_we_took_part">Projects we took part</string>
 
-    <string name="provider_default">App default</string>
     <string name="provider_app_default">App default</string>
-    <string name="provider_twitter">Twitter</string>
+    <string name="provider_default">App default</string>
     <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
     <string name="provider_fanfou">Fanfou</string>
     <string name="provider_mastodon">Mastodon</string>
+    <string name="provider_twitter">Twitter</string>
 
     <string name="proxy">Proxy</string>
     <string name="proxy_host">Proxy host</string>
@@ -1389,5 +1391,4 @@
 
     <string name="users_blocked">Blocked these users.</string>
     <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>\'s lists</string>
-    <string name="message_toast_retweet_not_supported">Not supported to retweet this</string>
 </resources>
