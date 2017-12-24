@@ -31,7 +31,7 @@ import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableMediaUpdate
 import java.lang.Exception
 
-class MediaPreviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnLongClickListener, View.OnClickListener {
+class MediaPreviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
     private val imageView = itemView.image
     private val videoIndicatorView = itemView.videoIndicator
@@ -58,7 +58,10 @@ class MediaPreviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     var adapter: MediaPreviewAdapter? = null
 
     init {
-        itemView.setOnLongClickListener(this)
+        itemView.setOnLongClickListener listener@ {
+            adapter?.listener?.onStartDrag(this)
+            return@listener true
+        }
         itemView.setOnClickListener(this)
         removeView.setOnClickListener(this)
         editView.setOnClickListener(this)
@@ -72,11 +75,6 @@ class MediaPreviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         } else {
             View.GONE
         }
-    }
-
-    override fun onLongClick(v: View): Boolean {
-        adapter?.listener?.onStartDrag(this)
-        return false
     }
 
     override fun onClick(v: View) {

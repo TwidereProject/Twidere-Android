@@ -59,18 +59,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
+    <Space
+        android:id="@+id/removeSpace"
+        android:layout_width="@dimen/element_spacing_mlarge"
+        android:layout_height="@dimen/element_spacing_mlarge"
+        android:layout_marginEnd="@dimen/element_spacing_xlarge"
+        android:layout_marginRight="@dimen/element_spacing_xlarge"
+        android:layout_marginTop="@dimen/element_spacing_xlarge"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <com.lnikkila.extendedtouchview.ExtendedTouchView
         android:id="@+id/remove"
         style="?borderlessButtonStyle"
         android:layout_width="@dimen/element_size_normal"
         android:layout_height="@dimen/element_size_normal"
-        android:layout_marginEnd="@dimen/element_spacing_minus_mlarge"
-        android:layout_marginRight="@dimen/element_spacing_minus_mlarge"
-        android:layout_marginTop="@dimen/element_spacing_minus_mlarge"
         android:background="?selectableItemBackgroundBorderless"
         android:contentDescription="@string/remove"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/removeSpace"
+        app:layout_constraintStart_toStartOf="@+id/removeSpace"
         app:touchHeight="@dimen/element_size_normal"
         app:touchWidth="@dimen/element_size_normal">
 
@@ -83,6 +90,16 @@
             android:src="@drawable/ic_btn_grid_item_remove"/>
     </com.lnikkila.extendedtouchview.ExtendedTouchView>
 
+    <Space
+        android:id="@+id/editSpace"
+        android:layout_width="@dimen/element_spacing_mlarge"
+        android:layout_height="@dimen/element_spacing_mlarge"
+        android:layout_marginBottom="@dimen/element_spacing_xlarge"
+        android:layout_marginEnd="@dimen/element_spacing_xlarge"
+        android:layout_marginRight="@dimen/element_spacing_xlarge"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
     <com.lnikkila.extendedtouchview.ExtendedTouchView
         android:id="@+id/edit"
         style="?borderlessButtonStyle"
@@ -90,8 +107,8 @@
         android:layout_height="@dimen/element_size_normal"
         android:background="?selectableItemBackgroundBorderless"
         android:contentDescription="@string/action_edit"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/editSpace"
+        app:layout_constraintTop_toTopOf="@+id/editSpace"
         app:touchHeight="@dimen/element_size_normal"
         app:touchWidth="@dimen/element_size_normal">
 
