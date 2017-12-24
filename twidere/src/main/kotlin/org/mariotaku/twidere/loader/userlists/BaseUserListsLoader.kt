@@ -25,10 +25,10 @@ import android.content.SharedPreferences
 import android.support.v4.content.FixedAsyncTaskLoader
 import android.util.Log
 import org.mariotaku.kpreferences.get
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.Twitter
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.microblog.PageableResponseList
-import org.mariotaku.microblog.library.model.microblog.Paging
 import org.mariotaku.microblog.library.model.microblog.UserList
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
@@ -75,7 +75,7 @@ abstract class BaseUserListsLoader(
     }
 
     @Throws(MicroBlogException::class)
-    abstract fun getUserLists(twitter: MicroBlog, paging: Paging): List<UserList>
+    abstract fun getUserLists(twitter: Twitter, paging: Paging): List<UserList>
 
     override fun loadInBackground(): List<ParcelableUserList> {
         if (accountKey == null) return emptyList()
@@ -83,7 +83,7 @@ abstract class BaseUserListsLoader(
         try {
             val am = AccountManager.get(context)
             val details = am.getDetails(accountKey, true) ?: return data
-            val twitter = details.newMicroBlogInstance(context, MicroBlog::class.java)
+            val twitter = details.newMicroBlogInstance(context, Twitter::class.java)
             val paging = Paging()
             paging.count(preferences[loadItemLimitKey].coerceIn(0, 100))
             pagination?.applyTo(paging)

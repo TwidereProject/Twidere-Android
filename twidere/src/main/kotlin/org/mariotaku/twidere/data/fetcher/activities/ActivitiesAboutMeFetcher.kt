@@ -19,30 +19,32 @@
 
 package org.mariotaku.twidere.data.fetcher.activities
 
+import org.mariotaku.microblog.library.Fanfou
 import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.MicroBlog
+import org.mariotaku.microblog.library.StatusNet
+import org.mariotaku.microblog.library.Twitter
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.mastodon.LinkHeaderList
-import org.mariotaku.microblog.library.model.microblog.Activity
-import org.mariotaku.microblog.library.model.microblog.Paging
 import org.mariotaku.microblog.library.model.microblog.Status
+import org.mariotaku.microblog.library.model.twitter.Activity
 import org.mariotaku.twidere.alias.MastodonNotification
 import org.mariotaku.twidere.data.fetcher.ActivitiesFetcher
 import org.mariotaku.twidere.model.AccountDetails
 
 class ActivitiesAboutMeFetcher : ActivitiesFetcher {
-    override fun forTwitterOfficial(account: AccountDetails, twitter: MicroBlog, paging: Paging): List<Activity> {
+    override fun forTwitterOfficial(account: AccountDetails, twitter: Twitter, paging: Paging): List<Activity> {
         return twitter.getActivitiesAboutMe(paging)
     }
 
-    override fun forTwitter(account: AccountDetails, twitter: MicroBlog, paging: Paging): List<Status> {
+    override fun forTwitter(account: AccountDetails, twitter: Twitter, paging: Paging): List<Status> {
         return twitter.getMentionsTimeline(paging)
     }
 
-    override fun forStatusNet(account: AccountDetails, statusNet: MicroBlog, paging: Paging): List<Status> {
+    override fun forStatusNet(account: AccountDetails, statusNet: StatusNet, paging: Paging): List<Status> {
         return statusNet.getMentionsTimeline(paging)
     }
 
-    override fun forFanfou(account: AccountDetails, fanfou: MicroBlog, paging: Paging): List<Status> {
+    override fun forFanfou(account: AccountDetails, fanfou: Fanfou, paging: Paging): List<Status> {
         return fanfou.getMentions(paging)
     }
 

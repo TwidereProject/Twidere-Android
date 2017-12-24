@@ -27,12 +27,14 @@ import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.toIntOr
 import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.library.objectcursor.ObjectCursor
+import org.mariotaku.microblog.library.Fanfou
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.Twitter
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.microblog.DMResponse
 import org.mariotaku.microblog.library.model.microblog.DMResponse.Conversation
 import org.mariotaku.microblog.library.model.microblog.DirectMessage
-import org.mariotaku.microblog.library.model.microblog.Paging
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_SHOW_NOTIFICATION
@@ -59,10 +61,6 @@ import org.mariotaku.twidere.util.UriUtils
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import java.util.*
 
-/**
- * Created by mariotaku on 2017/2/8.
- */
-
 class GetMessagesTask(
         context: Context
 ) : BaseAbstractTask<GetMessagesTask.RefreshMessagesParam, Unit, (Boolean) -> Unit>(context) {
@@ -74,10 +72,9 @@ class GetMessagesTask(
         val am = android.accounts.AccountManager.get(context)
         accountKeys.forEachIndexed { i, accountKey ->
             val details = am.getDetails(accountKey, true) ?: return@forEachIndexed
-            val microBlog = details.newMicroBlogInstance(context, cls = MicroBlog::class.java)
             val messages = try {
                 if (!details.hasDm) throw APINotSupportedException("DM", details.type)
-                getMessages(microBlog, details, param, i)
+                getMessages(details, param, i)
             } catch (e: MicroBlogException) {
                 return@forEachIndexed
             }
@@ -96,37 +93,39 @@ class GetMessagesTask(
         getMessageTasks.remove(Messages.CONTENT_URI)
     }
 
-    private fun getMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesParam, index: Int): DatabaseUpdateData {
+    private fun getMessages(details: AccountDetails, param: RefreshMessagesParam, index: Int): DatabaseUpdateData {
         when (details.type) {
             AccountType.FANFOU -> {
                 // Use fanfou DM api, disabled since it's conversation api is not suitable for paging
                 // return getFanfouMessages(microBlog, details, param, index)
             }
             AccountType.TWITTER -> {
+                val twitter = details.newMicroBlogInstance(context, cls = Twitter::class.java)
                 // Use official DM api
                 if (details.isOfficial(context)) {
-                    return getTwitterOfficialMessages(microBlog, details, param, index)
+                    return getTwitterOfficialMessages(twitter, details, param, index)
                 }
             }
         }
         // Use default method
+        val microBlog = details.newMicroBlogInstance(context, cls = MicroBlog::class.java)
         return getDefaultMessages(microBlog, details, param, index)
     }
 
-    private fun getTwitterOfficialMessages(microBlog: MicroBlog, details: AccountDetails,
+    private fun getTwitterOfficialMessages(twitter: Twitter, details: AccountDetails,
             param: RefreshMessagesParam, index: Int): DatabaseUpdateData {
         val conversationId = param.conversationId
         if (conversationId == null) {
-            return getTwitterOfficialUserInbox(microBlog, details, param, index)
+            return getTwitterOfficialUserInbox(twitter, details, param, index)
         } else {
-            return getTwitterOfficialConversation(microBlog, details, conversationId, param, index)
+            return getTwitterOfficialConversation(twitter, details, conversationId, param, index)
         }
     }
 
-    private fun getFanfouMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesParam, index: Int): DatabaseUpdateData {
+    private fun getFanfouMessages(fanfou: Fanfou, details: AccountDetails, param: RefreshMessagesParam, index: Int): DatabaseUpdateData {
         val conversationId = param.conversationId
         if (conversationId == null) {
-            return getFanfouConversations(microBlog, details, param, index)
+            return getFanfouConversations(fanfou, details, param, index)
         } else {
             return DatabaseUpdateData(emptyList(), emptyList())
         }
@@ -198,7 +197,7 @@ class GetMessagesTask(
     }
 
 
-    private fun getTwitterOfficialConversation(microBlog: MicroBlog, details: AccountDetails,
+    private fun getTwitterOfficialConversation(twitter: Twitter, details: AccountDetails,
             conversationId: String, param: RefreshMessagesParam, index: Int): DatabaseUpdateData {
         val maxId = (param.pagination?.get(index) as? SinceMaxPagination)?.maxId
                 ?: return DatabaseUpdateData(emptyList(), emptyList())
@@ -206,18 +205,18 @@ class GetMessagesTask(
             maxId(maxId)
         }
 
-        val response = microBlog.getDmConversation(conversationId, paging).conversationTimeline
+        val response = twitter.getDmConversation(conversationId, paging).conversationTimeline
         return createDatabaseUpdateData(context, details, response, profileImageSize)
     }
 
-    private fun getTwitterOfficialUserInbox(microBlog: MicroBlog, details: AccountDetails,
+    private fun getTwitterOfficialUserInbox(twitter: Twitter, details: AccountDetails,
             param: RefreshMessagesParam, index: Int): DatabaseUpdateData {
         val maxId = (param.pagination?.get(index) as? SinceMaxPagination)?.maxId
         val cursor = (param.pagination?.get(index) as? CursorPagination)?.cursor
         val response = if (cursor != null) {
-            microBlog.getUserUpdates(cursor).userEvents
+            twitter.getUserUpdates(cursor).userEvents
         } else {
-            microBlog.getUserInbox(Paging().apply {
+            twitter.getUserInbox(Paging().apply {
                 if (maxId != null) {
                     maxId(maxId)
                 }
@@ -227,13 +226,13 @@ class GetMessagesTask(
     }
 
 
-    private fun getFanfouConversations(microBlog: MicroBlog, details: AccountDetails,
+    private fun getFanfouConversations(fanfou: Fanfou, details: AccountDetails,
             param: RefreshMessagesParam, index: Int): DatabaseUpdateData {
         val accountKey = details.key
         val accountType = details.type
         val cursor = (param.pagination?.get(index) as? CursorPagination)?.cursor
         val page = cursor?.substringAfter("page:").toIntOr(-1)
-        val result = microBlog.getConversationList(Paging().apply {
+        val result = fanfou.getConversationList(Paging().apply {
             count(60)
             if (page >= 0) {
                 page(page)

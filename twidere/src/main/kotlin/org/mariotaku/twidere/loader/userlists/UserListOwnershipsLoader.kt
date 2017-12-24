@@ -20,9 +20,9 @@
 package org.mariotaku.twidere.loader.userlists
 
 import android.content.Context
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.model.microblog.Paging
+import org.mariotaku.microblog.library.Twitter
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.microblog.UserList
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
@@ -36,7 +36,7 @@ class UserListOwnershipsLoader(
 ) : BaseUserListsLoader(context, accountKey, data) {
 
     @Throws(MicroBlogException::class)
-    override fun getUserLists(twitter: MicroBlog, paging: Paging): List<UserList> {
+    override fun getUserLists(twitter: Twitter, paging: Paging): List<UserList> {
         if (userKey != null) {
             return twitter.getUserListOwnerships(userKey.id, paging)
         } else if (screenName != null) {

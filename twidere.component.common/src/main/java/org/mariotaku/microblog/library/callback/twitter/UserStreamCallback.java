@@ -22,17 +22,15 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.model.microblog.DeletionEvent;
 import org.mariotaku.microblog.library.model.microblog.DirectMessage;
 import org.mariotaku.microblog.library.model.microblog.Status;
-import org.mariotaku.microblog.library.model.microblog.StatusTargetObjectEvent;
-import org.mariotaku.microblog.library.model.microblog.StreamEvent;
-import org.mariotaku.microblog.library.model.microblog.TwitterStreamObject;
-import org.mariotaku.microblog.library.model.microblog.TwitterStreamObject.Type;
+import org.mariotaku.microblog.library.model.twitter.StatusTargetObjectEvent;
+import org.mariotaku.microblog.library.model.twitter.StreamEvent;
+import org.mariotaku.microblog.library.model.twitter.TwitterStreamObject;
+import org.mariotaku.microblog.library.model.twitter.TwitterStreamObject.Type;
 import org.mariotaku.microblog.library.model.microblog.User;
 import org.mariotaku.microblog.library.model.microblog.UserList;
-import org.mariotaku.microblog.library.model.microblog.UserListTargetObjectEvent;
-import org.mariotaku.microblog.library.model.microblog.Warning;
+import org.mariotaku.microblog.library.model.twitter.UserListTargetObjectEvent;
 import org.mariotaku.microblog.library.util.CRLFLineReader;
 import org.mariotaku.restfu.callback.RawCallback;
 import org.mariotaku.restfu.http.HttpResponse;
@@ -42,9 +40,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Date;
 
-/**
- * Created by mariotaku on 15/5/26.
- */
+@Deprecated
 @SuppressWarnings({"WeakerAccess"})
 public abstract class UserStreamCallback implements RawCallback<MicroBlogException> {
 
@@ -220,9 +216,9 @@ public abstract class UserStreamCallback implements RawCallback<MicroBlogExcepti
 
     protected abstract boolean onBlock(Date createdAt, User source, User blockedUser);
 
-    protected abstract boolean onDirectMessageDeleted(@NonNull DeletionEvent event);
+    protected abstract boolean onDirectMessageDeleted(@NonNull TwitterStreamObject.DeletionEvent event);
 
-    protected abstract boolean onStatusDeleted(@NonNull DeletionEvent event);
+    protected abstract boolean onStatusDeleted(@NonNull TwitterStreamObject.DeletionEvent event);
 
     protected abstract boolean onFavorite(@NonNull Date createdAt, @NonNull User source,
             @NonNull User target, @NonNull Status targetObject);
@@ -237,7 +233,7 @@ public abstract class UserStreamCallback implements RawCallback<MicroBlogExcepti
 
     protected abstract boolean onScrubGeo(String userId, String upToStatusId);
 
-    protected abstract boolean onStallWarning(Warning warn);
+    protected abstract boolean onStallWarning(TwitterStreamObject.Warning warn);
 
     protected abstract boolean onTrackLimitationNotice(int numberOfLimitedStatuses);
 

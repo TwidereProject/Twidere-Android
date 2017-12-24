@@ -28,7 +28,8 @@ import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.then
 import nl.komponents.kovenant.ui.successUi
-import org.mariotaku.microblog.library.MicroBlog
+import org.mariotaku.microblog.library.Fanfou
+import org.mariotaku.microblog.library.Twitter
 import org.mariotaku.sqliteqb.library.Expression.and
 import org.mariotaku.sqliteqb.library.Expression.equalsArgs
 import org.mariotaku.twidere.annotation.AccountType.FANFOU
@@ -60,11 +61,11 @@ class GetTrendsPromise private constructor(private val application: Context) {
         val details = AccountManager.get(application).getDetailsOrThrow(accountKey, true)
         when (details.type) {
             FANFOU -> {
-                val twitter = details.newMicroBlogInstance(application, cls = MicroBlog::class.java)
+                val twitter = details.newMicroBlogInstance(application, cls = Fanfou::class.java)
                 return@task twitter.fanfouTrends
             }
             else -> {
-                val twitter = details.newMicroBlogInstance(application, cls = MicroBlog::class.java)
+                val twitter = details.newMicroBlogInstance(application, cls = Twitter::class.java)
                 return@task twitter.getLocationTrends(woeId).first()
             }
         }

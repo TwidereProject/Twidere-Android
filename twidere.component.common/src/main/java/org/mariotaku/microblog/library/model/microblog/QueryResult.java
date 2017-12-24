@@ -21,8 +21,7 @@ package org.mariotaku.microblog.library.model.microblog;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.mariotaku.microblog.library.model.microblog.Status;
-import org.mariotaku.microblog.library.twitter.util.InternalParseUtil;
+import org.mariotaku.microblog.library.util.InternalParseUtil;
 import org.mariotaku.restfu.http.HttpResponse;
 
 import java.util.AbstractList;
@@ -32,7 +31,7 @@ import java.util.ArrayList;
  * Created by mariotaku on 15/5/7.
  */
 @JsonObject
-public class QueryResult extends AbstractList<Status> implements TwitterResponse, CursorSupport {
+public class QueryResult extends AbstractList<Status> implements MicroBlogResponse, CursorSupport {
 
     @JsonField(name = "previous_cursor")
     long previousCursor;

@@ -24,8 +24,8 @@ import android.app.Application
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.task
 import org.mariotaku.ktextension.mapToArray
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.Twitter
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.getDetailsOrThrow
@@ -75,7 +75,7 @@ class ConversationPromises private constructor(private val application: Applicat
         when (account.type) {
             AccountType.TWITTER -> {
                 if (account.isOfficial(application)) {
-                    val microBlog = account.newMicroBlogInstance(application, cls = MicroBlog::class.java)
+                    val microBlog = account.newMicroBlogInstance(application, cls = Twitter::class.java)
                     val ids = participants.mapToArray { it.key.id }
                     val response = microBlog.addParticipants(conversationId, ids)
                     if (conversation != null) {
@@ -96,12 +96,12 @@ class ConversationPromises private constructor(private val application: Applicat
             GetMessagesTask.DatabaseUpdateData {
         when (account.type) {
             AccountType.TWITTER -> {
-                val microBlog = account.newMicroBlogInstance(application, cls = MicroBlog::class.java)
                 if (account.isOfficial(application)) {
+                    val twitter = account.newMicroBlogInstance(application, cls = Twitter::class.java)
                     val response = if (notificationDisabled) {
-                        microBlog.disableDmConversations(conversationId)
+                        twitter.disableDmConversations(conversationId)
                     } else {
-                        microBlog.enableDmConversations(conversationId)
+                        twitter.enableDmConversations(conversationId)
                     }
                     val conversation = DataStoreUtils.findMessageConversation(application, account.key,
                             conversationId) ?: return GetMessagesTask.DatabaseUpdateData(emptyList(), emptyList())

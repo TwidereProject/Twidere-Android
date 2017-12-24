@@ -24,9 +24,8 @@ import android.accounts.AccountManager
 import android.arch.paging.DataSource
 import android.arch.paging.PageKeyedDataSource
 import android.content.Context
-import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.model.microblog.Paging
+import org.mariotaku.microblog.library.*
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
@@ -108,17 +107,17 @@ class StatusesDataSourceFactory(
             val account = am.getDetailsOrThrow(accountKey, true)
             when (account.type) {
                 AccountType.TWITTER -> {
-                    val twitter = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                    val twitter = account.newMicroBlogInstance(context, Twitter::class.java)
                     val timeline = fetcher.forTwitter(account, twitter, paging, timelineFilter)
                     return timeline.mapToPaginated { it.toParcelable(account, profileImageSize) }
                 }
                 AccountType.STATUSNET -> {
-                    val statusnet = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                    val statusnet = account.newMicroBlogInstance(context, StatusNet::class.java)
                     val timeline = fetcher.forStatusNet(account, statusnet, paging, timelineFilter)
                     return timeline.mapToPaginated { it.toParcelable(account, profileImageSize) }
                 }
                 AccountType.FANFOU -> {
-                    val fanfou = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                    val fanfou = account.newMicroBlogInstance(context, Fanfou::class.java)
                     val timeline = fetcher.forFanfou(account, fanfou, paging, timelineFilter)
                     return timeline.mapToPaginated { it.toParcelable(account, profileImageSize) }
                 }

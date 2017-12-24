@@ -20,9 +20,9 @@
 package org.mariotaku.twidere.loader.users
 
 import android.content.Context
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.model.microblog.Paging
+import org.mariotaku.microblog.library.StatusNet
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.microblog.ResponseList
 import org.mariotaku.microblog.library.model.microblog.User
 import org.mariotaku.twidere.extension.model.api.microblog.mapToPaginated
@@ -50,10 +50,10 @@ class GroupMembersLoader(
     }
 
     private fun getMicroBlogUsers(details: AccountDetails, paging: Paging): ResponseList<User> {
-        val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
-        when {
-            groupId != null -> return microBlog.getGroupMembers(groupId, paging)
-            groupName != null -> return microBlog.getGroupMembersByName(groupName, paging)
+        val microBlog = details.newMicroBlogInstance(context, StatusNet::class.java)
+        return when {
+            groupId != null -> microBlog.getGroupMembers(groupId, paging)
+            groupName != null -> microBlog.getGroupMembersByName(groupName, paging)
             else -> throw MicroBlogException("groupId or groupName required")
         }
     }

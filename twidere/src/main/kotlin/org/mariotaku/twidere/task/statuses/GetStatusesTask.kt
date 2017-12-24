@@ -28,10 +28,8 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.addTo
 import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.library.objectcursor.ObjectCursor
-import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.model.microblog.Paging
+import org.mariotaku.microblog.library.*
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.microblog.Status
 import org.mariotaku.sqliteqb.library.Columns
 import org.mariotaku.sqliteqb.library.Expression
@@ -156,7 +154,7 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
         val fetcher = getStatusesFetcher(params)
         when (account.type) {
             AccountType.TWITTER -> {
-                val twitter = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                val twitter = account.newMicroBlogInstance(context, Twitter::class.java)
                 val timeline = fetcher.forTwitter(account, twitter, paging, null)
                 val statuses = timeline.map {
                     it.toParcelable(account, profileImageSize)
@@ -167,7 +165,7 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
                 return GetTimelineResult(account, statuses, extractMicroBlogUsers(timeline, account), hashtags)
             }
             AccountType.STATUSNET -> {
-                val statusnet = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                val statusnet = account.newMicroBlogInstance(context, StatusNet::class.java)
                 val timeline = fetcher.forStatusNet(account, statusnet, paging, null)
                 val statuses = timeline.map {
                     it.toParcelable(account, profileImageSize)
@@ -178,7 +176,7 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
                 return GetTimelineResult(account, statuses, extractMicroBlogUsers(timeline, account), hashtags)
             }
             AccountType.FANFOU -> {
-                val fanfou = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                val fanfou = account.newMicroBlogInstance(context, Fanfou::class.java)
                 val timeline = fetcher.forFanfou(account, fanfou, paging, null)
                 val statuses = timeline.map {
                     it.toParcelable(account, profileImageSize)

@@ -20,8 +20,8 @@
 package org.mariotaku.twidere.extension.model.api.microblog
 
 import org.mariotaku.ktextension.mapToArray
-import org.mariotaku.microblog.library.model.microblog.Activity
-import org.mariotaku.microblog.library.model.microblog.Activity.Action
+import org.mariotaku.microblog.library.model.twitter.Activity
+import org.mariotaku.microblog.library.model.twitter.Activity.Action
 import org.mariotaku.microblog.library.model.microblog.Status
 import org.mariotaku.twidere.extension.model.api.applyTo
 import org.mariotaku.twidere.extension.model.api.toParcelable

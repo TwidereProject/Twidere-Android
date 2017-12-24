@@ -25,7 +25,7 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
  * Created by mariotaku on 15/5/7.
  */
 @JsonObject
-public class Relationship extends TwitterResponseObject implements TwitterResponse {
+public class Relationship extends MicroBlogResponseObject implements MicroBlogResponse {
 
     @JsonField(name = "relationship")
     RelationshipObject object;

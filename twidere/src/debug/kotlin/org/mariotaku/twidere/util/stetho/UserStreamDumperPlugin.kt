@@ -33,7 +33,7 @@ import org.mariotaku.microblog.library.TwitterUserStream
 import org.mariotaku.microblog.library.annotation.twitter.StreamWith
 import org.mariotaku.microblog.library.callback.mastodon.MastodonUserStreamCallback
 import org.mariotaku.microblog.library.model.mastodon.Notification
-import org.mariotaku.microblog.library.model.microblog.Activity
+import org.mariotaku.microblog.library.model.twitter.Activity
 import org.mariotaku.microblog.library.model.microblog.DirectMessage
 import org.mariotaku.microblog.library.model.microblog.Status
 import org.mariotaku.twidere.annotation.AccountType

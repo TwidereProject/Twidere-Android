@@ -7,12 +7,10 @@ import android.net.Uri
 import android.support.annotation.UiThread
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.addTo
-import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.model.microblog.Activity.Action
-import org.mariotaku.microblog.library.model.microblog.InternalActivityCreator
-import org.mariotaku.microblog.library.model.microblog.Paging
+import org.mariotaku.microblog.library.*
+import org.mariotaku.microblog.library.model.twitter.Activity.Action
+import org.mariotaku.microblog.library.model.twitter.InternalActivityCreator
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
@@ -149,9 +147,9 @@ abstract class GetActivitiesTask(
                 })
             }
             AccountType.TWITTER -> {
-                val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                val twitter = account.newMicroBlogInstance(context, Twitter::class.java)
                 if (account.isOfficial(context)) {
-                    val timeline = fetcher.forTwitterOfficial(account, microBlog, paging)
+                    val timeline = fetcher.forTwitterOfficial(account, twitter, paging)
                     val activities = timeline.map {
                         it.toParcelable(account, profileImageSize = profileImageSize)
                     }
@@ -169,7 +167,7 @@ abstract class GetActivitiesTask(
                         return@flatMapTo mapResult
                     })
                 } else {
-                    val timeline = fetcher.forTwitter(account, microBlog, paging)
+                    val timeline = fetcher.forTwitter(account, twitter, paging)
                     val activities = timeline.map {
                         InternalActivityCreator.status(it, account.key.id).toParcelable(account,
                                 profileImageSize = profileImageSize)
@@ -182,8 +180,8 @@ abstract class GetActivitiesTask(
                 }
             }
             AccountType.FANFOU -> {
-                val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
-                val activities = fetcher.forFanfou(account, microBlog, paging).map {
+                val fanfou = account.newMicroBlogInstance(context, Fanfou::class.java)
+                val activities = fetcher.forFanfou(account, fanfou, paging).map {
                     InternalActivityCreator.status(it, account.key.id).toParcelable(account,
                             profileImageSize = profileImageSize)
                 }
@@ -192,8 +190,8 @@ abstract class GetActivitiesTask(
                 }, activities.flatMap { it.extractFanfouHashtags() })
             }
             AccountType.STATUSNET -> {
-                val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
-                val timeline = fetcher.forStatusNet(account, microBlog, paging)
+                val statusNet = account.newMicroBlogInstance(context, StatusNet::class.java)
+                val timeline = fetcher.forStatusNet(account, statusNet, paging)
                 val activities = timeline.map {
                     InternalActivityCreator.status(it, account.key.id).toParcelable(account,
                             profileImageSize = profileImageSize)

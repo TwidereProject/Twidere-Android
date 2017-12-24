@@ -26,15 +26,14 @@ import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.then
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.kpreferences.get
-import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.*
 import org.mariotaku.microblog.library.model.microblog.FriendshipUpdate
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.dagger.component.GeneralComponent
+import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
@@ -74,7 +73,7 @@ class FriendshipPromises private constructor(val application: Application) {
             .thenGetAccount(application, accountKey).then { details ->
         when (details.type) {
             AccountType.FANFOU -> {
-                val fanfou = details.newMicroBlogInstance(application, MicroBlog::class.java)
+                val fanfou = details.newMicroBlogInstance(application, Fanfou::class.java)
                 return@then fanfou.acceptFanfouFriendship(userKey.id).toParcelable(details,
                         profileImageSize = profileImageSize)
             }
@@ -83,11 +82,12 @@ class FriendshipPromises private constructor(val application: Application) {
                 mastodon.authorizeFollowRequest(userKey.id)
                 return@then mastodon.getAccount(userKey.id).toParcelable(details)
             }
-            else -> {
-                val twitter = details.newMicroBlogInstance(application, MicroBlog::class.java)
+            AccountType.TWITTER -> {
+                val twitter = details.newMicroBlogInstance(application, Twitter::class.java)
                 return@then twitter.acceptFriendship(userKey.id).toParcelable(details,
                         profileImageSize = profileImageSize)
             }
+            else -> throw APINotSupportedException(platform = details.type)
         }
     }.success {
         Utils.setLastSeen(application, userKey, System.currentTimeMillis())
@@ -102,7 +102,7 @@ class FriendshipPromises private constructor(val application: Application) {
             .thenGetAccount(application, accountKey).then { account ->
         when (account.type) {
             AccountType.FANFOU -> {
-                val fanfou = account.newMicroBlogInstance(application, MicroBlog::class.java)
+                val fanfou = account.newMicroBlogInstance(application, Fanfou::class.java)
                 return@then fanfou.denyFanfouFriendship(userKey.id).toParcelable(account,
                         profileImageSize = profileImageSize)
             }
@@ -112,7 +112,7 @@ class FriendshipPromises private constructor(val application: Application) {
                 return@then mastodon.getAccount(userKey.id).toParcelable(account)
             }
             else -> {
-                val twitter = account.newMicroBlogInstance(application, MicroBlog::class.java)
+                val twitter = account.newMicroBlogInstance(application, Twitter::class.java)
                 return@then twitter.denyFriendship(userKey.id).toParcelable(account,
                         profileImageSize = profileImageSize)
             }
@@ -130,7 +130,7 @@ class FriendshipPromises private constructor(val application: Application) {
             .thenGetAccount(application, accountKey).then { account ->
         when (account.type) {
             AccountType.FANFOU -> {
-                val fanfou = account.newMicroBlogInstance(application, MicroBlog::class.java)
+                val fanfou = account.newMicroBlogInstance(application, Fanfou::class.java)
                 return@then fanfou.createFanfouFriendship(userKey.id).toParcelable(account,
                         profileImageSize = profileImageSize)
             }
@@ -171,7 +171,7 @@ class FriendshipPromises private constructor(val application: Application) {
             .thenGetAccount(application, accountKey).then { account ->
         when (account.type) {
             AccountType.FANFOU -> {
-                val fanfou = account.newMicroBlogInstance(application, MicroBlog::class.java)
+                val fanfou = account.newMicroBlogInstance(application, Fanfou::class.java)
                 return@then fanfou.destroyFanfouFriendship(userKey.id).toParcelable(account,
                         profileImageSize = profileImageSize)
             }

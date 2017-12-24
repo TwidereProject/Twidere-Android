@@ -27,7 +27,7 @@ import org.mariotaku.microblog.library.model.mastodon.LinkHeaderList;
 import org.mariotaku.microblog.library.model.mastodon.Relationship;
 import org.mariotaku.microblog.library.model.mastodon.Status;
 import org.mariotaku.microblog.library.model.mastodon.TimelineOption;
-import org.mariotaku.microblog.library.model.microblog.Paging;
+import org.mariotaku.microblog.library.model.Paging;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.PATCH;
 import org.mariotaku.restfu.annotation.method.POST;

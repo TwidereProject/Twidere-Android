@@ -22,14 +22,14 @@ import android.support.annotation.NonNull;
 
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.model.microblog.PageableResponseList;
-import org.mariotaku.microblog.library.model.microblog.Paging;
+import org.mariotaku.microblog.library.model.Paging;
 import org.mariotaku.microblog.library.model.microblog.ResponseList;
 import org.mariotaku.microblog.library.model.microblog.Status;
 import org.mariotaku.microblog.library.model.microblog.User;
 import org.mariotaku.microblog.library.model.microblog.UserList;
 import org.mariotaku.microblog.library.model.microblog.UserListUpdate;
-import org.mariotaku.microblog.library.twitter.template.StatusAnnotationTemplate;
-import org.mariotaku.microblog.library.twitter.template.UserAnnotationTemplate;
+import org.mariotaku.microblog.library.template.twitter.StatusAnnotationTemplate;
+import org.mariotaku.microblog.library.template.twitter.UserAnnotationTemplate;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.Param;

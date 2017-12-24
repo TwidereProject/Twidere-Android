@@ -20,7 +20,7 @@ package org.mariotaku.microblog.library.model.microblog;
 
 import java.util.Map;
 
-public class TwitterAPIConfiguration extends TwitterResponseObject implements TwitterResponse {
+public class TwitterAPIConfiguration extends MicroBlogResponseObject implements MicroBlogResponse {
     public int getCharactersReservedPerMedia() {
         throw new UnsupportedOperationException();
     }

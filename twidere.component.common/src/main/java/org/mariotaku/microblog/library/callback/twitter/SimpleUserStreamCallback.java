@@ -20,13 +20,11 @@ package org.mariotaku.microblog.library.callback.twitter;
 
 import android.support.annotation.NonNull;
 
-import org.mariotaku.microblog.library.model.microblog.DeletionEvent;
 import org.mariotaku.microblog.library.model.microblog.DirectMessage;
 import org.mariotaku.microblog.library.model.microblog.Status;
-import org.mariotaku.microblog.library.model.microblog.TwitterStreamObject;
+import org.mariotaku.microblog.library.model.twitter.TwitterStreamObject;
 import org.mariotaku.microblog.library.model.microblog.User;
 import org.mariotaku.microblog.library.model.microblog.UserList;
-import org.mariotaku.microblog.library.model.microblog.Warning;
 
 import java.io.IOException;
 import java.util.Date;
@@ -67,12 +65,12 @@ public abstract class SimpleUserStreamCallback extends UserStreamCallback {
     }
 
     @Override
-    protected boolean onDirectMessageDeleted(@NonNull final DeletionEvent event) {
+    protected boolean onDirectMessageDeleted(@NonNull final TwitterStreamObject.DeletionEvent event) {
         return false;
     }
 
     @Override
-    protected boolean onStatusDeleted(@NonNull final DeletionEvent event) {
+    protected boolean onStatusDeleted(@NonNull final TwitterStreamObject.DeletionEvent event) {
         return false;
     }
 
@@ -102,7 +100,7 @@ public abstract class SimpleUserStreamCallback extends UserStreamCallback {
     }
 
     @Override
-    protected boolean onStallWarning(final Warning warn) {
+    protected boolean onStallWarning(final TwitterStreamObject.Warning warn) {
         return false;
     }
 

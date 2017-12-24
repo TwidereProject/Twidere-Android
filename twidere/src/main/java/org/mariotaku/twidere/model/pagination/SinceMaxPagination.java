@@ -25,7 +25,7 @@ import android.support.annotation.Nullable;
 
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
-import org.mariotaku.microblog.library.model.microblog.Paging;
+import org.mariotaku.microblog.library.model.Paging;
 
 @ParcelablePlease
 public class SinceMaxPagination implements Pagination, Parcelable {

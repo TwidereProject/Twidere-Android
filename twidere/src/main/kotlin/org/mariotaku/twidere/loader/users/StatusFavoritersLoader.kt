@@ -24,10 +24,10 @@ import org.attoparser.config.ParseConfiguration
 import org.attoparser.simple.AbstractSimpleMarkupHandler
 import org.attoparser.simple.SimpleMarkupParser
 import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.Twitter
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.microblog.IDs
-import org.mariotaku.microblog.library.model.microblog.Paging
 import org.mariotaku.microblog.library.model.microblog.setIds
 import org.mariotaku.microblog.library.twitter.TwitterWeb
 import org.mariotaku.twidere.annotation.AccountType
@@ -63,7 +63,7 @@ class StatusFavoritersLoader(
                 }
             }
             AccountType.TWITTER -> {
-                val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
+                val microBlog = details.newMicroBlogInstance(context, Twitter::class.java)
                 return if (details.isOfficial(context)) {
                     microBlog.getFavoritedBy(statusId, paging).mapToPaginated {
                         it.toParcelable(details, profileImageSize = profileImageSize)

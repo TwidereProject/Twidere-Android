@@ -20,7 +20,8 @@ package org.mariotaku.microblog.library.model.microblog;
 
 import android.support.annotation.StringDef;
 
-import org.mariotaku.microblog.library.twitter.util.InternalArrayUtil;
+import org.mariotaku.microblog.library.model.Paging;
+import org.mariotaku.microblog.library.util.InternalArrayUtil;
 import org.mariotaku.restfu.http.SimpleValueMap;
 
 import java.lang.annotation.Retention;

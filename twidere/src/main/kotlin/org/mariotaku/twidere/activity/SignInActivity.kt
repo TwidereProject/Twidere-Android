@@ -66,9 +66,10 @@ import org.mariotaku.microblog.library.*
 import org.mariotaku.microblog.library.annotation.mastodon.AuthScope
 import org.mariotaku.microblog.library.auth.BasicAuthorization
 import org.mariotaku.microblog.library.auth.EmptyAuthorization
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.microblog.ErrorInfo
-import org.mariotaku.microblog.library.model.microblog.Paging
 import org.mariotaku.microblog.library.model.microblog.User
+import org.mariotaku.restfu.http.Authorization
 import org.mariotaku.restfu.http.Endpoint
 import org.mariotaku.restfu.oauth.OAuthToken
 import org.mariotaku.restfu.oauth2.OAuth2Authorization
@@ -821,7 +822,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                     accountType = apiConfig.type, cls = MicroBlog::class.java)
             val apiUser = twitter.verifyCredentials()
             var color = analyseUserProfileColor(apiUser)
-            val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
+            val (type, extras) = detectAccountType(context, apiUser, endpoint, auth, apiConfig.type)
             val accountKey = apiUser.key
             val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
             val am = AccountManager.get(context)
@@ -874,7 +875,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
 
             credentials.access_token = token.accessToken
             return SignInResponse(account != null, Credentials.Type.OAUTH2, credentials, user,
-                    color, AccountType.MASTODON, getMastodonAccountExtras(mastodon))
+                    color, AccountType.MASTODON, mastodon.getMastodonAccountExtras())
         }
     }
 
@@ -958,7 +959,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             }
 
             var color = analyseUserProfileColor(apiUser)
-            val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
+            val (type, extras) = detectAccountType(activity, apiUser, endpoint, auth, apiConfig.type)
             val accountKey = apiUser.key
             val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
             val am = AccountManager.get(activity)
@@ -987,7 +988,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                     accountType = apiConfig.type, cls = MicroBlog::class.java)
             val apiUser = twitter.verifyCredentials()
             var color = analyseUserProfileColor(apiUser)
-            val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
+            val (type, extras) = detectAccountType(activity, apiUser, endpoint, auth, apiConfig.type)
             val accountKey = apiUser.key
             val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
             val am = AccountManager.get(activity)
@@ -1014,7 +1015,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                     accountType = apiConfig.type, cls = MicroBlog::class.java)
             val apiUser = twitter.verifyCredentials()
             var color = analyseUserProfileColor(apiUser)
-            val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
+            val (type, extras) = detectAccountType(activity, apiUser, endpoint, auth, apiConfig.type)
             val accountKey = apiUser.key
             val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
             val am = AccountManager.get(activity)
@@ -1200,13 +1201,17 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             }
 
         @Throws(IOException::class)
-        internal fun detectAccountType(twitter: MicroBlog, user: User, type: String?): Pair<String, AccountExtras?> {
+        internal fun detectAccountType(context: Context, user: User, endpoint: Endpoint, auth: Authorization, type: String?): Pair<String, AccountExtras?> {
             when (type) {
                 AccountType.STATUSNET -> {
-                    return Pair(type, getStatusNetAccountExtras(twitter))
+                    val statusNet = newMicroBlogInstance(context, endpoint, auth, type,
+                            StatusNet::class.java)
+                    return Pair(type, statusNet.accountExtras)
                 }
                 AccountType.TWITTER -> {
-                    return Pair(type, getTwitterAccountExtras(twitter))
+                    val twitter = newMicroBlogInstance(context, endpoint, auth, type,
+                            Twitter::class.java)
+                    return Pair(type, twitter.accountExtras)
                 }
                 AccountType.FANFOU -> {
                     return Pair(AccountType.FANFOU, null)
@@ -1220,31 +1225,33 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             return Pair(AccountType.TWITTER, null)
         }
 
-        private fun getStatusNetAccountExtras(twitter: MicroBlog): StatusNetAccountExtras {
-            // Get StatusNet specific resource
-            val config = twitter.statusNetConfig
-            return StatusNetAccountExtras().apply {
-                textLimit = config.site?.textLimit ?: -1
-                uploadLimit = config.attachments?.fileQuota ?: -1L
+        private val StatusNet.accountExtras: StatusNetAccountExtras
+            get() {
+                // Get StatusNet specific resource
+                val config = statusNetConfig
+                return StatusNetAccountExtras().apply {
+                    textLimit = config.site?.textLimit ?: -1
+                    uploadLimit = config.attachments?.fileQuota ?: -1L
+                }
             }
-        }
 
-        private fun getTwitterAccountExtras(twitter: MicroBlog): TwitterAccountExtras {
-            val extras = TwitterAccountExtras()
-            try {
-                // Get Twitter official only resource
-                val paging = Paging()
-                paging.count(1)
-                twitter.getActivitiesAboutMe(paging)
-                extras.setIsOfficialCredentials(true)
-            } catch (e: MicroBlogException) {
-                // Ignore
-                if (e.errorCode > 0 && e.errorCode !in ignoredTwitterErrorCodes) throw e
+        private val Twitter.accountExtras: TwitterAccountExtras
+            get() {
+                val extras = TwitterAccountExtras()
+                try {
+                    // Get Twitter official only resource
+                    val paging = Paging()
+                    paging.count(1)
+                    getActivitiesAboutMe(paging)
+                    extras.setIsOfficialCredentials(true)
+                } catch (e: MicroBlogException) {
+                    // Ignore
+                    if (e.errorCode > 0 && e.errorCode !in ignoredTwitterErrorCodes) throw e
+                }
+                return extras
             }
-            return extras
-        }
 
-        private fun getMastodonAccountExtras(mastodon: Mastodon): MastodonAccountExtras {
+        private fun Mastodon.getMastodonAccountExtras(): MastodonAccountExtras {
             return MastodonAccountExtras()
         }
 

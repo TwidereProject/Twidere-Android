@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.extension.model.api
 
-import org.mariotaku.microblog.library.model.microblog.Paging
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.model.AccountDetails
 

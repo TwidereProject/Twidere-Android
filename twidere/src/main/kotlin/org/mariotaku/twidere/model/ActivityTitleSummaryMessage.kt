@@ -8,7 +8,7 @@ import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.StyleSpan
-import org.mariotaku.microblog.library.model.microblog.Activity.*
+import org.mariotaku.microblog.library.model.twitter.Activity.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.extension.model.activityStatus
 import org.mariotaku.twidere.text.style.NonBreakEllipseSpan

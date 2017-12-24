@@ -23,7 +23,7 @@ import org.mariotaku.restfu.annotation.param.Path;
 import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.microblog.library.model.statusnet.StatusNetConfig;
 import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.model.microblog.Paging;
+import org.mariotaku.microblog.library.model.Paging;
 import org.mariotaku.microblog.library.model.microblog.ResponseList;
 import org.mariotaku.microblog.library.model.microblog.Status;
 

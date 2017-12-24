@@ -25,12 +25,9 @@ import org.attoparser.ParseException
 import org.attoparser.config.ParseConfiguration
 import org.attoparser.simple.AbstractSimpleMarkupHandler
 import org.attoparser.simple.SimpleMarkupParser
-import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.StatusNet
+import org.mariotaku.microblog.library.*
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.mastodon.LinkHeaderList
-import org.mariotaku.microblog.library.model.microblog.Paging
 import org.mariotaku.microblog.library.model.microblog.Status
 import org.mariotaku.microblog.library.model.microblog.TimelineOption
 import org.mariotaku.restfu.RestAPIFactory
@@ -55,7 +52,7 @@ class UserTimelineFetcher(
         private val profileUrl: String?
 ) : StatusesFetcher {
 
-    override fun forTwitter(account: AccountDetails, twitter: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
+    override fun forTwitter(account: AccountDetails, twitter: Twitter, paging: Paging, filter: TimelineFilter?): List<Status> {
         val option = (filter as? UserTimelineFilter)?.toTwitterTimelineOption()
         return when {
             userKey != null -> twitter.getUserTimeline(userKey.id, paging, option)
@@ -64,7 +61,7 @@ class UserTimelineFetcher(
         }
     }
 
-    override fun forStatusNet(account: AccountDetails, statusNet: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
+    override fun forStatusNet(account: AccountDetails, statusNet: StatusNet, paging: Paging, filter: TimelineFilter?): List<Status> {
         if (userKey?.host != account.key.host && profileUrl != null) {
             return statusNet.showStatusNetExternalTimeline(profileUrl, paging)
         }
@@ -75,7 +72,7 @@ class UserTimelineFetcher(
         }
     }
 
-    override fun forFanfou(account: AccountDetails, fanfou: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
+    override fun forFanfou(account: AccountDetails, fanfou: Fanfou, paging: Paging, filter: TimelineFilter?): List<Status> {
         return when {
             userKey != null -> fanfou.getUserTimeline(userKey.id, paging, null)
             userScreenName != null -> fanfou.getUserTimelineByScreenName(userScreenName, paging, null)
@@ -87,15 +84,6 @@ class UserTimelineFetcher(
         val id = userKey?.id ?: throw MicroBlogException("Only ID are supported at this moment")
         val option = (filter as? UserTimelineFilter)?.toMastodonTimelineOption()
         return mastodon.getStatuses(id, paging, option)
-    }
-
-    private fun getMicroBlogUserFavorites(microBlog: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
-        val option = (filter as? UserTimelineFilter)?.toTwitterTimelineOption()
-        return when {
-            userKey != null -> microBlog.getUserTimeline(userKey.id, paging, option)
-            userScreenName != null -> microBlog.getUserTimelineByScreenName(userScreenName, paging, option)
-            else -> throw RequiredFieldNotFoundException("user_id", "screen_name")
-        }
     }
 
     private fun UserTimelineFilter.toTwitterTimelineOption() = TimelineOption().apply {

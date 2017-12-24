@@ -41,7 +41,7 @@ import java.util.Date;
 
 @ParcelablePlease
 @JsonObject
-public class Status extends TwitterResponseObject implements Comparable<Status>, TwitterResponse,
+public class Status extends MicroBlogResponseObject implements Comparable<Status>, MicroBlogResponse,
         ExtendedEntitySupport, Parcelable {
 
     @JsonField(name = "created_at", typeConverter = TwitterDateConverter.class)

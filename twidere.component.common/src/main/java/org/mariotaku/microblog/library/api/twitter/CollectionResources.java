@@ -18,7 +18,7 @@
 
 package org.mariotaku.microblog.library.api.twitter;
 
-import org.mariotaku.microblog.library.twitter.template.StatusAnnotationTemplate;
+import org.mariotaku.microblog.library.template.twitter.StatusAnnotationTemplate;
 import org.mariotaku.restfu.annotation.param.Params;
 
 /**

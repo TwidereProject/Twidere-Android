@@ -27,7 +27,7 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 @ParcelablePlease
 @JsonObject
-public class AccountSettings extends TwitterResponseObject implements Parcelable {
+public class AccountSettings extends MicroBlogResponseObject implements Parcelable {
 
     @JsonField(name = "geo_enabled")
     boolean geoEnabled;

@@ -21,16 +21,15 @@ package org.mariotaku.twidere.data.impl
 
 import android.accounts.AccountManager
 import android.content.Context
-import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.model.microblog.Paging
+import org.mariotaku.microblog.library.*
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.sqliteqb.library.Columns
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.data.ComputableExceptionLiveData
+import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.exception.RequiredFieldNotFoundException
 import org.mariotaku.twidere.extension.api.tryShowUser
 import org.mariotaku.twidere.extension.findMatchingDetailsOrThrow
@@ -141,15 +140,30 @@ class UserLiveData(
     }
 
     private fun showMicroBlogUser(details: AccountDetails): ParcelableUser {
-        val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
         val response = if (isAccountProfile) {
-            microBlog.verifyCredentials()
-        } else if (details.type == AccountType.STATUSNET && userKey != null && profileUrl != null
-                && details.key.host != userKey.host) {
-            microBlog.showExternalProfile(profileUrl)
-        } else {
-            microBlog.tryShowUser(userKey?.id, screenName, details.type)
+            details.newMicroBlogInstance(context, MicroBlog::class.java).verifyCredentials()
+        } else when (details.type) {
+            AccountType.TWITTER -> details.newMicroBlogInstance(context, Twitter::class.java).tryShowUser(userKey?.id, screenName)
+            AccountType.FANFOU -> details.newMicroBlogInstance(context, Fanfou::class.java).showFanfouUser(userKey?.id ?: screenName)
+            AccountType.STATUSNET -> {
+                val statusNet = details.newMicroBlogInstance(context, StatusNet::class.java)
+                when {
+                    isRemoteUser(details) -> statusNet.showExternalProfile(profileUrl)
+                    userKey != null -> {
+                        statusNet.showUser(userKey.id)
+                    }
+                    screenName != null -> {
+                        statusNet.showUserByScreenName(screenName)
+                    }
+                    else -> throw RequiredFieldNotFoundException("id", "screen_name")
+                }
+            }
+            else -> throw APINotSupportedException(platform = details.type)
         }
         return response.toParcelable(details, profileImageSize = profileImageSize)
     }
+
+    private fun isRemoteUser(details: AccountDetails) =
+            (details.type == AccountType.STATUSNET && userKey != null && profileUrl != null
+                    && details.key.host != userKey.host)
 }

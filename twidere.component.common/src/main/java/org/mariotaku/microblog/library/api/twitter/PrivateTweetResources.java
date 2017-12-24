@@ -20,13 +20,13 @@ package org.mariotaku.microblog.library.api.twitter;
 
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.model.microblog.PageableResponseList;
-import org.mariotaku.microblog.library.model.microblog.Paging;
+import org.mariotaku.microblog.library.model.Paging;
 import org.mariotaku.microblog.library.model.microblog.ResponseList;
 import org.mariotaku.microblog.library.model.microblog.Status;
-import org.mariotaku.microblog.library.model.microblog.StatusActivitySummary;
-import org.mariotaku.microblog.library.model.microblog.TranslationResult;
+import org.mariotaku.microblog.library.model.twitter.StatusActivitySummary;
+import org.mariotaku.microblog.library.model.twitter.TranslationResult;
 import org.mariotaku.microblog.library.model.microblog.User;
-import org.mariotaku.microblog.library.twitter.template.StatusAnnotationTemplate;
+import org.mariotaku.microblog.library.template.twitter.StatusAnnotationTemplate;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.param.Params;
 import org.mariotaku.restfu.annotation.param.Path;

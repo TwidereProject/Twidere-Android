@@ -55,8 +55,9 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.model.microblog.Paging
-import org.mariotaku.microblog.library.model.microblog.TranslationResult
+import org.mariotaku.microblog.library.Twitter
+import org.mariotaku.microblog.library.model.Paging
+import org.mariotaku.microblog.library.model.twitter.TranslationResult
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
@@ -597,7 +598,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         val weakThis by weak(this)
         (showProgressDialog("get_language_settings") and task {
             val context = weakThis?.context ?: throw InterruptedException()
-            val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
+            val microBlog = account.newMicroBlogInstance(context, Twitter::class.java)
             return@task Pair(microBlog.accountSettings.language,
                     microBlog.languages.map { TranslationDestinationDialogFragment.DisplayLanguage(it.name, it.code) })
         }).successUi { (_, settings) ->
@@ -646,7 +647,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         private val weakFragment = WeakReference(fragment)
 
         override fun onExecute(account: AccountDetails, params: Any?): TranslationResult {
-            val twitter = account.newMicroBlogInstance(context, MicroBlog::class.java)
+            val twitter = account.newMicroBlogInstance(context, Twitter::class.java)
             val prefDest = preferences.getString(KEY_TRANSLATION_DESTINATION, null)
             val dest: String
             if (TextUtils.isEmpty(prefDest)) {

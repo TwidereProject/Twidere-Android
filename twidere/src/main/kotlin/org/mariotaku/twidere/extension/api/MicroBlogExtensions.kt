@@ -21,18 +21,23 @@ package org.mariotaku.twidere.extension.api
 
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.Twitter
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.microblog.IDs
-import org.mariotaku.microblog.library.model.microblog.Paging
 import org.mariotaku.microblog.library.model.microblog.User
-import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.exception.RequiredFieldNotFoundException
 import org.mariotaku.twidere.model.pagination.CursorPagination
 import org.mariotaku.twidere.model.pagination.PaginatedArrayList
 import org.mariotaku.twidere.model.pagination.PaginatedList
 
 @Throws(MicroBlogException::class)
-fun MicroBlog.tryShowUser(id: String?, screenName: String?, accountType: String?): User {
-    try {
-        return showUser(id, screenName, accountType)
+fun Twitter.tryShowUser(id: String?, screenName: String?): User {
+    return try {
+        when {
+            id != null -> showUser(id)
+            screenName != null -> showUserByScreenName(screenName)
+            else -> throw RequiredFieldNotFoundException("id", "screen_name")
+        }
     } catch (e: MicroBlogException) {
         // Twitter specific error for private API calling through proxy
         if (e.statusCode == 200) {
@@ -50,17 +55,6 @@ inline fun <R> MicroBlog.lookupUsersMapPaginated(ids: IDs, transform: (User) -> 
     result.previousPage = CursorPagination.valueOf(ids.previousCursor)
     result.nextPage = CursorPagination.valueOf(ids.nextCursor)
     return result
-}
-
-@Throws(MicroBlogException::class)
-private fun MicroBlog.showUser(id: String?, screenName: String?, accountType: String?): User {
-    return when {
-        accountType == AccountType.FANFOU -> showFanfouUser(id ?: screenName ?:
-                throw MicroBlogException("Invalid user id or screen name"))
-        id != null -> showUser(id)
-        screenName != null -> showUserByScreenName(screenName)
-        else -> throw MicroBlogException("Invalid user id or screen name")
-    }
 }
 
 @Throws(MicroBlogException::class)

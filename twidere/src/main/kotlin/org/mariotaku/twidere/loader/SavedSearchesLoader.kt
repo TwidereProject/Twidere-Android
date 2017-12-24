@@ -23,8 +23,8 @@ import android.accounts.AccountManager
 import android.content.Context
 import android.support.v4.content.FixedAsyncTaskLoader
 import android.util.Log
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.Twitter
 import org.mariotaku.microblog.library.model.microblog.ResponseList
 import org.mariotaku.microblog.library.model.microblog.SavedSearch
 import org.mariotaku.twidere.Constants
@@ -39,7 +39,7 @@ class SavedSearchesLoader(context: Context, private val accountKey: UserKey) :
     override fun loadInBackground(): ResponseList<SavedSearch>? {
         try {
             val twitter = AccountManager.get(context).getDetailsOrThrow(accountKey, true)
-                    .newMicroBlogInstance(context, MicroBlog::class.java)
+                    .newMicroBlogInstance(context, Twitter::class.java)
             return twitter.savedSearches
         } catch (e: MicroBlogException) {
             Log.w(LOGTAG, e)

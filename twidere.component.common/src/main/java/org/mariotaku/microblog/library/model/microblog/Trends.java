@@ -26,13 +26,13 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
-import org.mariotaku.microblog.library.twitter.util.TwitterTrendsDateConverter;
+import org.mariotaku.microblog.library.util.TwitterTrendsDateConverter;
 
 import java.util.Date;
 
 @ParcelablePlease
 @JsonObject
-public class Trends extends TwitterResponseObject implements TwitterResponse, Comparable<Trends>,
+public class Trends extends MicroBlogResponseObject implements MicroBlogResponse, Comparable<Trends>,
         Parcelable {
 
     @JsonField(name = "as_of", typeConverter = TwitterTrendsDateConverter.class)

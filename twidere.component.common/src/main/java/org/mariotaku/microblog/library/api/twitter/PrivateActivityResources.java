@@ -19,11 +19,11 @@
 package org.mariotaku.microblog.library.api.twitter;
 
 import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.model.microblog.Activity;
+import org.mariotaku.microblog.library.model.twitter.Activity;
 import org.mariotaku.microblog.library.model.microblog.CursorTimestampResponse;
-import org.mariotaku.microblog.library.model.microblog.Paging;
+import org.mariotaku.microblog.library.model.Paging;
 import org.mariotaku.microblog.library.model.microblog.ResponseList;
-import org.mariotaku.microblog.library.twitter.template.StatusAnnotationTemplate;
+import org.mariotaku.microblog.library.template.twitter.StatusAnnotationTemplate;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.Param;

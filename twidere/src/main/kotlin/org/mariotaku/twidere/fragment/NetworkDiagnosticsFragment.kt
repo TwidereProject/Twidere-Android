@@ -22,7 +22,7 @@ import okhttp3.Dns
 import org.mariotaku.ktextension.weak
 import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.model.microblog.Paging
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.restfu.RestFuUtils
 import org.mariotaku.restfu.annotation.method.GET
 import org.mariotaku.restfu.http.HttpRequest

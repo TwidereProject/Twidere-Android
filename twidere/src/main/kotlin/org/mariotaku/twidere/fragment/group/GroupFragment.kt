@@ -28,13 +28,13 @@ import android.os.Bundle
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.FixedAsyncTaskLoader
 import android.support.v4.content.Loader
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.model.statusnet.Group
+import org.mariotaku.microblog.library.StatusNet
 import org.mariotaku.twidere.Constants.EXTRA_OMIT_INTENT_EXTRA
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.exception.AccountNotFoundException
+import org.mariotaku.twidere.exception.RequiredFieldNotFoundException
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.api.gnusocial.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
@@ -130,21 +130,18 @@ class GroupFragment : AbsToolbarTabPagesFragment(), LoaderCallbacks<SingleRespon
                 val cache = extras.group
                 if (cache != null) return SingleResponse(cache)
             }
-            try {
+            return try {
                 if (accountKey == null) throw AccountNotFoundException()
-                val twitter = AccountManager.get(context).getDetailsOrThrow(accountKey, true)
-                        .newMicroBlogInstance(context, MicroBlog::class.java)
-                val group: Group
-                if (groupId != null) {
-                    group = twitter.showGroup(groupId)
-                } else if (groupName != null) {
-                    group = twitter.showGroupByName(groupName)
-                } else {
-                    return SingleResponse()
+                val statusNet = AccountManager.get(context).getDetailsOrThrow(accountKey, true)
+                        .newMicroBlogInstance(context, StatusNet::class.java)
+                val group = when {
+                    groupId != null -> statusNet.showGroup(groupId)
+                    groupName != null -> statusNet.showGroupByName(groupName)
+                    else -> throw RequiredFieldNotFoundException("group_id", "group_name")
                 }
-                return SingleResponse.getInstance(group.toParcelable(accountKey, member = group.isMember))
+                SingleResponse.getInstance(group.toParcelable(accountKey, member = group.isMember))
             } catch (e: MicroBlogException) {
-                return SingleResponse(e)
+                SingleResponse(e)
             }
 
         }

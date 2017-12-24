@@ -57,8 +57,8 @@ import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
 import org.mariotaku.library.objectcursor.ObjectCursor
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.Twitter
 import org.mariotaku.microblog.library.TwitterUpload
 import org.mariotaku.pickncrop.library.MediaPickerActivity
 import org.mariotaku.sqliteqb.library.Expression
@@ -354,12 +354,13 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     private fun performSetConversationName(name: String) {
         val conversationId = this.conversationId
-        performUpdateInfo("set_name_progress", updateAction = updateAction@ { fragment, account, microBlog ->
+        performUpdateInfo("set_name_progress", updateAction = updateAction@ { fragment, account ->
             val context = fragment.context!!
             when (account.type) {
                 AccountType.TWITTER -> {
+                    val twitter = account.newMicroBlogInstance(context, cls = Twitter::class.java)
                     if (account.isOfficial(context)) {
-                        return@updateAction microBlog.updateDmConversationName(conversationId, name).isSuccessful
+                        return@updateAction twitter.updateDmConversationName(conversationId, name).isSuccessful
                     }
                 }
             }
@@ -371,16 +372,17 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     private fun performSetConversationAvatar(uri: Uri?) {
         val conversationId = this.conversationId
-        performUpdateInfo("set_avatar_progress", updateAction = updateAction@ { fragment, account, microBlog ->
+        performUpdateInfo("set_avatar_progress", updateAction = updateAction@ { fragment, account ->
             val context = fragment.context!!
             when (account.type) {
                 AccountType.TWITTER -> {
+                    val twitter = account.newMicroBlogInstance(context, cls = Twitter::class.java)
                     if (account.isOfficial(context)) {
                         val upload = account.newMicroBlogInstance(context, cls = TwitterUpload::class.java)
                         if (uri == null) {
-                            val result = microBlog.updateDmConversationAvatar(conversationId, null)
+                            val result = twitter.updateDmConversationAvatar(conversationId, null)
                             if (result.isSuccessful) {
-                                val dmResponse = microBlog.getDmConversation(conversationId, null).conversationTimeline
+                                val dmResponse = twitter.getDmConversation(conversationId, null).conversationTimeline
                                 return@updateAction dmResponse.conversations[conversationId]?.avatarImageHttps
                             }
                             throw MicroBlogException("Error ${result.responseCode}")
@@ -395,10 +397,10 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
                                     upload, account, media, null, null, true, null)
                             deleteAlways = uploadResult.deleteAlways
                             val avatarId = uploadResult.ids.first()
-                            val result = microBlog.updateDmConversationAvatar(conversationId, avatarId)
+                            val result = twitter.updateDmConversationAvatar(conversationId, avatarId)
                             if (result.isSuccessful) {
                                 uploadResult.deleteOnSuccess.forEach { it.delete(context) }
-                                val dmResponse = microBlog.getDmConversation(conversationId, null).conversationTimeline
+                                val dmResponse = twitter.getDmConversation(conversationId, null).conversationTimeline
                                 return@updateAction dmResponse.conversations[conversationId]?.avatarImageHttps
                             }
                             throw MicroBlogException("Error ${result.responseCode}")
@@ -421,7 +423,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     private inline fun <T> performUpdateInfo(
             tag: String,
-            crossinline updateAction: (MessageConversationInfoFragment, AccountDetails, MicroBlog) -> T,
+            crossinline updateAction: (MessageConversationInfoFragment, AccountDetails) -> T,
             crossinline successAction: ContentValues.(T) -> Unit
     ) {
         ProgressDialogFragment.show(childFragmentManager, tag)
@@ -432,8 +434,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             val fragment = weakThis ?: throw InterruptedException()
             val context = fragment.context ?: throw InterruptedException()
             val account = AccountManager.get(context).getDetailsOrThrow(accountKey, true)
-            val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
-            return@task updateAction(fragment, account, microBlog)
+            return@task updateAction(fragment, account)
         }.then { result ->
             val fragment = weakThis ?: throw InterruptedException()
             val context = fragment.context ?: throw InterruptedException()

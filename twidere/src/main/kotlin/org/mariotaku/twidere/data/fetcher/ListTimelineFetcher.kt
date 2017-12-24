@@ -20,10 +20,10 @@
 package org.mariotaku.twidere.data.fetcher
 
 import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.Twitter
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.mastodon.LinkHeaderList
-import org.mariotaku.microblog.library.model.microblog.Paging
 import org.mariotaku.microblog.library.model.microblog.Status
 import org.mariotaku.twidere.alias.MastodonStatus
 import org.mariotaku.twidere.exception.APINotSupportedException
@@ -37,7 +37,7 @@ class ListTimelineFetcher(
         private val ownerScreenName: String?
 ) : StatusesFetcher {
 
-    override fun forTwitter(account: AccountDetails, twitter: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
+    override fun forTwitter(account: AccountDetails, twitter: Twitter, paging: Paging, filter: TimelineFilter?): List<Status> {
         return when {
             listId != null -> {
                 twitter.getUserListStatuses(listId, paging)
@@ -52,14 +52,6 @@ class ListTimelineFetcher(
                 throw MicroBlogException("listId or listName + ownerId/ownerScreenName needed")
             }
         }
-    }
-
-    override fun forStatusNet(account: AccountDetails, statusNet: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
-        throw APINotSupportedException("List timeline", account.type)
-    }
-
-    override fun forFanfou(account: AccountDetails, fanfou: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
-        throw APINotSupportedException("List timeline", account.type)
     }
 
     override fun forMastodon(account: AccountDetails, mastodon: Mastodon, paging: Paging, filter: TimelineFilter?): LinkHeaderList<MastodonStatus> {

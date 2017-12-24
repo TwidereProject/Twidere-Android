@@ -24,8 +24,8 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import org.mariotaku.microblog.library.http.HttpResponseCode;
 import org.mariotaku.microblog.library.model.microblog.ErrorInfo;
 import org.mariotaku.microblog.library.model.microblog.RateLimitStatus;
-import org.mariotaku.microblog.library.model.microblog.TwitterResponse;
-import org.mariotaku.microblog.library.twitter.util.InternalParseUtil;
+import org.mariotaku.microblog.library.model.microblog.MicroBlogResponse;
+import org.mariotaku.microblog.library.util.InternalParseUtil;
 import org.mariotaku.restfu.http.HttpRequest;
 import org.mariotaku.restfu.http.HttpResponse;
 
@@ -40,7 +40,7 @@ import java.util.Locale;
  * @author Yusuke Yamamoto - yusuke at mac.com
  */
 @JsonObject
-public class MicroBlogException extends Exception implements TwitterResponse, HttpResponseCode {
+public class MicroBlogException extends Exception implements MicroBlogResponse, HttpResponseCode {
 
     private static final long serialVersionUID = -2623309261327598087L;
     @JsonField(name = "errors")

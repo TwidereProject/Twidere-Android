@@ -25,7 +25,6 @@ import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.then
 import org.mariotaku.kpreferences.get
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.Fanfou
 import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.microblog.library.Twitter
@@ -145,11 +144,12 @@ class BlockPromises private constructor(private val application: Application) {
             AccountType.MASTODON -> {
                 throw APINotSupportedException(api = "Report spam", platform = account.type)
             }
-            else -> {
-                val twitter = account.newMicroBlogInstance(application, MicroBlog::class.java)
+            AccountType.TWITTER -> {
+                val twitter = account.newMicroBlogInstance(application, Twitter::class.java)
                 return@then twitter.reportSpam(userKey.id).toParcelable(account,
                         profileImageSize = profileImageSize)
             }
+            else -> throw APINotSupportedException(platform = account.type)
         }
     }.thenUpdateRelationship(accountKey, userKey) { relationship ->
         relationship.account_key = accountKey

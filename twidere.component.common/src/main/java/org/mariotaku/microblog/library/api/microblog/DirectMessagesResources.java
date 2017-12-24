@@ -20,9 +20,9 @@ package org.mariotaku.microblog.library.api.microblog;
 
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.model.microblog.DirectMessage;
-import org.mariotaku.microblog.library.model.microblog.Paging;
+import org.mariotaku.microblog.library.model.Paging;
 import org.mariotaku.microblog.library.model.microblog.ResponseList;
-import org.mariotaku.microblog.library.twitter.template.DirectMessageAnnotationTemplate;
+import org.mariotaku.microblog.library.template.twitter.DirectMessageAnnotationTemplate;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.Param;

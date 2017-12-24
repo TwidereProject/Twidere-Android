@@ -35,7 +35,7 @@ import java.util.Date;
 
 @ParcelablePlease
 @JsonObject
-public class UserList extends TwitterResponseObject implements Comparable<UserList>, TwitterResponse,
+public class UserList extends MicroBlogResponseObject implements Comparable<UserList>, MicroBlogResponse,
         Parcelable {
     @JsonField(name = "id")
     String id;

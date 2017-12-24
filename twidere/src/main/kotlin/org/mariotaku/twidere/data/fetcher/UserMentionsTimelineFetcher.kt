@@ -20,12 +20,14 @@
 package org.mariotaku.twidere.data.fetcher
 
 import android.support.v4.util.ArrayMap
+import org.mariotaku.microblog.library.Fanfou
 import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.model.microblog.Paging
+import org.mariotaku.microblog.library.StatusNet
+import org.mariotaku.microblog.library.Twitter
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.microblog.SearchQuery
 import org.mariotaku.microblog.library.model.microblog.Status
 import org.mariotaku.microblog.library.model.microblog.UniversalSearchQuery
-import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.exception.RequiredFieldNotFoundException
 import org.mariotaku.twidere.extension.api.tryShowUser
 import org.mariotaku.twidere.extension.model.official
@@ -35,8 +37,8 @@ import org.mariotaku.twidere.model.timeline.TimelineFilter
 
 class UserMentionsTimelineFetcher(val userKey: UserKey?, val userScreenName: String?) : StatusesFetcher {
 
-    override fun forTwitter(account: AccountDetails, twitter: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
-        val screenName = getSearchScreenName(twitter, account.type)
+    override fun forTwitter(account: AccountDetails, twitter: Twitter, paging: Paging, filter: TimelineFilter?): List<Status> {
+        val screenName = twitter.getSearchScreenName { tryShowUser(it.id, null).screenName }
         if (!account.official) {
             val searchQuery = SearchQuery("@$screenName exclude:retweets").paging(paging)
             return twitter.search(searchQuery)
@@ -50,31 +52,34 @@ class UserMentionsTimelineFetcher(val userKey: UserKey?, val userScreenName: Str
         return searchResult.modules.mapNotNull { it.status?.data }
     }
 
-    override fun forStatusNet(account: AccountDetails, statusNet: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
-        val screenName = getSearchScreenName(statusNet, account.type)
+    override fun forStatusNet(account: AccountDetails, statusNet: StatusNet, paging: Paging, filter: TimelineFilter?): List<Status> {
+        val screenName = statusNet.getSearchScreenName { showUser(it.id).screenName }
         return statusNet.searchStatuses("@$screenName", paging)
     }
 
-    override fun forFanfou(account: AccountDetails, fanfou: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
-        val screenName = getSearchScreenName(fanfou, account.type)
+    override fun forFanfou(account: AccountDetails, fanfou: Fanfou, paging: Paging, filter: TimelineFilter?): List<Status> {
+        val screenName = fanfou.getSearchScreenName { showFanfouUser(it.id).screenName }
         return fanfou.searchPublicTimeline("@$screenName", paging)
     }
 
-    private fun getSearchScreenName(microBlog: MicroBlog, @AccountType type: String?): String {
-        return userScreenName ?: findScreenName(microBlog, userKey ?:
-                throw RequiredFieldNotFoundException("user_id", "screen_name"), type)
+    private fun <MB : MicroBlog> MB.getSearchScreenName(findAction: MB.(UserKey) -> String): String {
+        if (userScreenName != null) return userScreenName
+        val key = userKey ?: throw RequiredFieldNotFoundException("user_id", "screen_name")
+        return findScreenName(this, key) { mb ->
+            findAction(mb, key)
+        }
     }
 
     companion object {
 
         private val userKeyCache = ArrayMap<UserKey, String>()
 
-        fun findScreenName(microBlog: MicroBlog, key: UserKey, @AccountType type: String?): String {
+        fun <MB : MicroBlog> findScreenName(mb: MB, key: UserKey, findAction: (MB) -> String): String {
             val cached = userKeyCache[key]
             if (cached != null) return cached
-            val user = microBlog.tryShowUser(key.id, null, type)
-            userKeyCache[key] = user.screenName
-            return user.screenName
+            val screenName = findAction(mb)
+            userKeyCache[key] = screenName
+            return screenName
         }
     }
 }

@@ -20,8 +20,8 @@
 package org.mariotaku.twidere.loader.group
 
 import android.content.Context
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.StatusNet
 import org.mariotaku.microblog.library.model.microblog.ResponseList
 import org.mariotaku.microblog.library.model.statusnet.Group
 import org.mariotaku.twidere.model.ParcelableGroup
@@ -36,7 +36,7 @@ class UserGroupsLoader(
 ) : BaseGroupsLoader(context, accountKey, data) {
 
     @Throws(MicroBlogException::class)
-    override fun getGroups(twitter: MicroBlog): ResponseList<Group> {
+    override fun getGroups(twitter: StatusNet): ResponseList<Group> {
         if (userKey != null) {
             return twitter.getGroups(userKey.id)
         } else if (screenName != null) {

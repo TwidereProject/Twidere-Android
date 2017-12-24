@@ -25,7 +25,7 @@ import android.support.annotation.Keep;
  * Created by mariotaku on 15/5/7.
  */
 @Keep
-public class PageableResponseList<T> extends ResponseList<T> implements TwitterResponse, CursorSupport {
+public class PageableResponseList<T> extends ResponseList<T> implements MicroBlogResponse, CursorSupport {
 
     long previousCursor;
     long nextCursor;

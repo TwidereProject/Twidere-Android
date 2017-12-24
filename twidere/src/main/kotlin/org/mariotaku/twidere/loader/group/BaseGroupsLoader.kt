@@ -22,8 +22,8 @@ package org.mariotaku.twidere.loader.group
 import android.accounts.AccountManager
 import android.content.Context
 import android.support.v4.content.FixedAsyncTaskLoader
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.StatusNet
 import org.mariotaku.microblog.library.model.microblog.PageableResponseList
 import org.mariotaku.microblog.library.model.statusnet.Group
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
@@ -63,14 +63,14 @@ abstract class BaseGroupsLoader(
     }
 
     @Throws(MicroBlogException::class)
-    abstract fun getGroups(twitter: MicroBlog): List<Group>
+    abstract fun getGroups(twitter: StatusNet): List<Group>
 
     override fun loadInBackground(): List<ParcelableGroup> {
         var listLoaded: List<Group>? = null
         try {
-            val twitter = AccountManager.get(context).getDetailsOrThrow(accountKey, true)
-                    .newMicroBlogInstance(context, MicroBlog::class.java)
-            listLoaded = getGroups(twitter)
+            val statusNet = AccountManager.get(context).getDetailsOrThrow(accountKey, true)
+                    .newMicroBlogInstance(context, StatusNet::class.java)
+            listLoaded = getGroups(statusNet)
         } catch (e: MicroBlogException) {
             DebugLog.w(LOGTAG, tr = e)
         }

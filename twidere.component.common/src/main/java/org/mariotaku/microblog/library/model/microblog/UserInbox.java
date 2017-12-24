@@ -27,7 +27,7 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 @ParcelablePlease
 @JsonObject
-public class UserInbox extends TwitterResponseObject implements Parcelable {
+public class UserInbox extends MicroBlogResponseObject implements Parcelable {
 
     @JsonField(name = "user_inbox")
     DMResponse userInbox;

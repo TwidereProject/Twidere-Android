@@ -21,11 +21,12 @@ package org.mariotaku.twidere.loader.users
 
 import android.content.Context
 import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.model.microblog.Paging
+import org.mariotaku.microblog.library.Twitter
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.FilterScope
+import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.extension.model.api.mastodon.mapToPaginated
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.microblog.mapToPaginated
@@ -55,12 +56,13 @@ class MutesUsersLoader(
                     it.toParcelable(details)
                 }
             }
-            else -> {
-                val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
+            AccountType.TWITTER -> {
+                val microBlog = details.newMicroBlogInstance(context, Twitter::class.java)
                 return microBlog.getMutesUsersList(paging).mapToPaginated {
                     it.toParcelable(details, profileImageSize = profileImageSize)
                 }
             }
+            else -> throw APINotSupportedException(platform = details.type)
         }
     }
 

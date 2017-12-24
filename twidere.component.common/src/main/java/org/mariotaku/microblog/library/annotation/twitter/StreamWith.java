@@ -23,9 +23,7 @@ import android.support.annotation.StringDef;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/**
- * Created by mariotaku on 2017/3/11.
- */
+@Deprecated
 @Retention(RetentionPolicy.SOURCE)
 @StringDef({StreamWith.USER, StreamWith.FOLLOWING})
 public @interface StreamWith {

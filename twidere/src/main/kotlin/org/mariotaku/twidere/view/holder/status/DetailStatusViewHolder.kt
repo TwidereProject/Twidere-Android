@@ -41,7 +41,7 @@ import kotlinx.android.synthetic.main.adapter_item_status_count_label.view.*
 import kotlinx.android.synthetic.main.header_status.view.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
-import org.mariotaku.microblog.library.model.microblog.TranslationResult
+import org.mariotaku.microblog.library.model.twitter.TranslationResult
 import org.mariotaku.twidere.Constants.MENU_GROUP_STATUS_SHARE
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter

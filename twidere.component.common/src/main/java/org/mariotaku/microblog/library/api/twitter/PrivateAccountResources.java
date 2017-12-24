@@ -19,13 +19,10 @@
 package org.mariotaku.microblog.library.api.twitter;
 
 import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.model.microblog.PinTweetResult;
+import org.mariotaku.microblog.library.model.twitter.PinTweetResult;
 import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.Param;
 
-/**
- * Created by mariotaku on 16/8/20.
- */
 public interface PrivateAccountResources extends PrivateResources {
 
     @POST("/account/pin_tweet.json")

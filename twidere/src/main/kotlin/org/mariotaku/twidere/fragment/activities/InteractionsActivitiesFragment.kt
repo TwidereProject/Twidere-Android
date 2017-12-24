@@ -25,7 +25,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_EXTRAS
-import org.mariotaku.twidere.data.predicate.ParcelableActivityProcessor
+import org.mariotaku.twidere.data.processor.ParcelableActivityProcessor
 import org.mariotaku.twidere.data.processor.DataSourceItemProcessor
 import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.promise

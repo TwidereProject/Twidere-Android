@@ -26,8 +26,8 @@ import android.content.SharedPreferences
 import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.then
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.Mastodon
+import org.mariotaku.microblog.library.Twitter
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
@@ -72,7 +72,7 @@ class MutePromises(private val application: Application) {
             .thenGetAccount(application, accountKey).then { account ->
         when (account.type) {
             AccountType.TWITTER -> {
-                val twitter = account.newMicroBlogInstance(application, MicroBlog::class.java)
+                val twitter = account.newMicroBlogInstance(application, Twitter::class.java)
                 return@then twitter.createMute(userKey.id).toParcelable(account,
                         profileImageSize = profileImageSize)
             }
@@ -123,7 +123,7 @@ class MutePromises(private val application: Application) {
             .thenGetAccount(application, accountKey).then { account ->
         when (account.type) {
             AccountType.TWITTER -> {
-                val twitter = account.newMicroBlogInstance(application, MicroBlog::class.java)
+                val twitter = account.newMicroBlogInstance(application, Twitter::class.java)
                 return@then twitter.destroyMute(userKey.id).toParcelable(account,
                         profileImageSize = profileImageSize)
             }
@@ -152,7 +152,7 @@ class MutePromises(private val application: Application) {
         fun muteUsers(context: Context, account: AccountDetails, userKeys: Array<UserKey>) {
             when (account.type) {
                 AccountType.TWITTER -> {
-                    val twitter = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                    val twitter = account.newMicroBlogInstance(context, Twitter::class.java)
                     userKeys.forEach { userKey ->
                         twitter.createMute(userKey.id).toParcelable(account)
                     }

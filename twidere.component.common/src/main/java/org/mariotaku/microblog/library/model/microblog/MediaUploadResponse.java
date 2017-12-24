@@ -31,7 +31,7 @@ import java.lang.annotation.RetentionPolicy;
  * Created by mariotaku on 15/5/7.
  */
 @JsonObject
-public class MediaUploadResponse extends TwitterResponseObject implements TwitterResponse {
+public class MediaUploadResponse extends MicroBlogResponseObject implements MicroBlogResponse {
 
     @JsonField(name = "media_id")
     String mediaId;

@@ -30,7 +30,7 @@ import android.widget.Space
 import android.widget.TextView
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.contains
-import org.mariotaku.microblog.library.model.microblog.TranslationResult
+import org.mariotaku.microblog.library.model.twitter.TranslationResult
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter

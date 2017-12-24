@@ -37,7 +37,7 @@ import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.model.microblog.Activity.Action
+import org.mariotaku.microblog.library.model.twitter.Activity.Action
 import org.mariotaku.sqliteqb.library.*
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.query.SQLSelectQuery
@@ -440,10 +440,10 @@ object DataStoreUtils {
                 Expression.likeRaw(Column(Table(table), dataField), "'%'||$filterTable.$filterField||'%'")
 
         fun lineContainsExpression(dataField: String, filterTable: String, filterField: String) =
-                Expression.likeRaw(Column(Table(table), dataField), "'\\%'||$filterTable.$filterField||'%\\'")
+                Expression.likeRaw(Column(Table(table), dataField), "'\\\\%'||$filterTable.$filterField||'%\\\\'")
 
         fun lineMatchExpression(dataField: String, filterTable: String, filterField: String) =
-                Expression.likeRaw(Column(Table(table), dataField), "'%\\'||$filterTable.$filterField||'\\%'")
+                Expression.likeRaw(Column(Table(table), dataField), "'%\\\\'||$filterTable.$filterField||'\\\\%'")
 
         val filteredUsersWhere = Expression.and(
                 scopeMatchesExpression(Filters.Users.TABLE_NAME, Filters.Users.SCOPE),
@@ -699,11 +699,10 @@ object DataStoreUtils {
         val nonNullKeys = keys.mapNotNull { it?.toString() }.toTypedArray()
         val tableName = getTableNameByUri(uri) ?: throw NullPointerException()
         val having = Expression.inArgs(keyField, nonNullKeys.size)
-        val bindingArgs: Array<String>
-        if (extraWhereArgs != null) {
-            bindingArgs = extraWhereArgs + nonNullKeys
+        val bindingArgs = if (extraWhereArgs != null) {
+            extraWhereArgs + nonNullKeys
         } else {
-            bindingArgs = nonNullKeys
+            nonNullKeys
         }
         val builder = SQLQueryBuilder.select(Columns(keyField, *valueFields))
         builder.from(Table(tableName))

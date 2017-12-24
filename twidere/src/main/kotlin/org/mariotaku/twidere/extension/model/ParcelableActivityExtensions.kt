@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.extension.model
 
 import org.mariotaku.ktextension.addAllTo
-import org.mariotaku.microblog.library.model.microblog.Activity.Action
+import org.mariotaku.microblog.library.model.twitter.Activity.Action
 import org.mariotaku.twidere.model.ParcelableActivity
 import java.util.*
 

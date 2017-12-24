@@ -25,7 +25,7 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
  * Created by mariotaku on 15/7/5.
  */
 @JsonObject
-public class ConversationTimeline extends TwitterResponseObject {
+public class ConversationTimeline extends MicroBlogResponseObject {
 
     @JsonField(name = "conversation_timeline")
     DMResponse conversationTimeline;

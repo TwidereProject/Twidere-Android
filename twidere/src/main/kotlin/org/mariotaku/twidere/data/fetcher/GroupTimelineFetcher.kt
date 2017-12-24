@@ -19,24 +19,17 @@
 
 package org.mariotaku.twidere.data.fetcher
 
-import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.model.mastodon.LinkHeaderList
-import org.mariotaku.microblog.library.model.microblog.Paging
+import org.mariotaku.microblog.library.StatusNet
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.microblog.Status
-import org.mariotaku.twidere.alias.MastodonStatus
-import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.timeline.TimelineFilter
 
 
 class GroupTimelineFetcher(val groupId: String?, val groupName: String?) : StatusesFetcher {
-    override fun forTwitter(account: AccountDetails, twitter: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
-        throw APINotSupportedException("Group timeline", account.type)
-    }
 
-    override fun forStatusNet(account: AccountDetails, statusNet: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
+    override fun forStatusNet(account: AccountDetails, statusNet: StatusNet, paging: Paging, filter: TimelineFilter?): List<Status> {
         return when {
             groupId != null -> {
                 statusNet.getGroupStatuses(groupId, paging)
@@ -48,14 +41,6 @@ class GroupTimelineFetcher(val groupId: String?, val groupName: String?) : Statu
                 throw MicroBlogException("No group name or id given")
             }
         }
-    }
-
-    override fun forFanfou(account: AccountDetails, fanfou: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
-        throw APINotSupportedException("Group timeline", account.type)
-    }
-
-    override fun forMastodon(account: AccountDetails, mastodon: Mastodon, paging: Paging, filter: TimelineFilter?): LinkHeaderList<MastodonStatus> {
-        throw APINotSupportedException("Group timeline", account.type)
     }
 
 }

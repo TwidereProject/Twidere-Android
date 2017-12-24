@@ -20,10 +20,10 @@
 package org.mariotaku.twidere.loader.userlists
 
 import android.content.Context
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.Twitter
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.microblog.PageableResponseList
-import org.mariotaku.microblog.library.model.microblog.Paging
 import org.mariotaku.microblog.library.model.microblog.UserList
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
@@ -37,7 +37,7 @@ class UserListSubscriptionsLoader(
 ) : BaseUserListsLoader(context, accountKey, data) {
 
     @Throws(MicroBlogException::class)
-    override fun getUserLists(twitter: MicroBlog, paging: Paging): PageableResponseList<UserList> {
+    override fun getUserLists(twitter: Twitter, paging: Paging): PageableResponseList<UserList> {
         if (userKey != null) {
             return twitter.getUserListSubscriptions(userKey.id, paging)
         } else if (screenName != null) {

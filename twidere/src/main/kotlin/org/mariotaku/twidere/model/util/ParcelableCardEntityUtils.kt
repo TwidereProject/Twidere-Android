@@ -1,6 +1,6 @@
 package org.mariotaku.twidere.model.util
 
-import org.mariotaku.microblog.library.twitter.util.ThreadLocalSimpleDateFormat
+import org.mariotaku.microblog.library.util.ThreadLocalSimpleDateFormat
 import java.text.DateFormat
 import java.util.*
 

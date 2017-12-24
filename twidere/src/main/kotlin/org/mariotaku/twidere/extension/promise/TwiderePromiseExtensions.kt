@@ -27,7 +27,7 @@ import nl.komponents.kovenant.task
 import nl.komponents.kovenant.then
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
-import org.mariotaku.microblog.library.MicroBlog
+import org.mariotaku.microblog.library.Twitter
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.extension.getDetailsOrThrow
@@ -45,14 +45,14 @@ fun <T> accountTask(context: Context, accountKey: UserKey, body: (account: Accou
     return@task body(AccountManager.get(context).getDetailsOrThrow(accountKey, true))
 }
 
-fun <T> twitterTask(context: Context, accountKey: UserKey, action: (AccountDetails, MicroBlog) -> T): Promise<T, Exception> {
+fun <T> twitterTask(context: Context, accountKey: UserKey, action: (AccountDetails, Twitter) -> T): Promise<T, Exception> {
     return accountTask(context, accountKey) { account ->
         when (account.type) {
             AccountType.TWITTER -> {
-                val twitter = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                val twitter = account.newMicroBlogInstance(context, Twitter::class.java)
                 return@accountTask action(account, twitter)
             }
-            else -> throw APINotSupportedException("Unsubscribe to user list", account.type)
+            else -> throw APINotSupportedException("Twitter task", account.type)
         }
     }
 }

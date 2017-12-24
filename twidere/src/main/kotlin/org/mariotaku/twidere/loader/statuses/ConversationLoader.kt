@@ -24,11 +24,8 @@ import android.support.annotation.WorkerThread
 import org.attoparser.config.ParseConfiguration
 import org.attoparser.dom.DOMMarkupParser
 import org.mariotaku.commons.parcel.ParcelUtils
-import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.model.microblog.Paging
-import org.mariotaku.microblog.library.model.microblog.SearchQuery
+import org.mariotaku.microblog.library.*
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.microblog.Status
 import org.mariotaku.microblog.library.twitter.TwitterWeb
 import org.mariotaku.twidere.alias.MastodonStatus
@@ -47,7 +44,7 @@ import org.mariotaku.twidere.model.pagination.PaginatedArrayList
 import org.mariotaku.twidere.model.pagination.PaginatedList
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
-import org.mariotaku.twidere.util.database.ContentFiltersUtils
+import org.mariotaku.twidere.util.database.StatusFilterMatcher
 import java.text.ParseException
 import java.util.*
 
@@ -85,30 +82,32 @@ class ConversationLoader(
 
     @Throws(MicroBlogException::class)
     private fun getMicroBlogStatuses(account: AccountDetails, paging: Paging): PaginatedList<ParcelableStatus> {
-        val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
         canLoadAllReplies = false
         when (account.type) {
             AccountType.TWITTER -> {
+                val twitter = account.newMicroBlogInstance(context, Twitter::class.java)
                 val isOfficial = account.isOfficial(context)
                 canLoadAllReplies = isOfficial
                 if (isOfficial) {
-                    return microBlog.showConversation(status.id, paging).mapMicroBlogToPaginated {
+                    return twitter.showConversation(status.id, paging).mapMicroBlogToPaginated {
                         it.toParcelable(account, profileImageSize)
                     }
                 }
-                return showConversationCompat(microBlog, account, status, true)
+                return showConversationCompat(twitter, account, status, true)
             }
             AccountType.STATUSNET -> {
+                val statusNet = account.newMicroBlogInstance(context, StatusNet::class.java)
                 canLoadAllReplies = true
                 status.extras?.statusnet_conversation_id?.let {
-                    return microBlog.getStatusNetConversation(it, paging).mapMicroBlogToPaginated {
+                    return statusNet.getStatusNetConversation(it, paging).mapMicroBlogToPaginated {
                         it.toParcelable(account, profileImageSize)
                     }
                 }
             }
             AccountType.FANFOU -> {
+                val fanfou = account.newMicroBlogInstance(context, Fanfou::class.java)
                 canLoadAllReplies = true
-                return microBlog.getContextTimeline(status.id, paging).mapMicroBlogToPaginated {
+                return fanfou.getContextTimeline(status.id, paging).mapMicroBlogToPaginated {
                     it.toParcelable(account, profileImageSize)
                 }
             }
@@ -117,12 +116,13 @@ class ConversationLoader(
             }
         }
         canLoadAllReplies = true
+        val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
         return showConversationCompat(microBlog, account, status, true)
     }
 
     @WorkerThread
     override fun shouldFilterStatus(status: ParcelableStatus): Boolean {
-        return ContentFiltersUtils.isFiltered(context.contentResolver, status, false, 0)
+        return StatusFilterMatcher.isFiltered(context.contentResolver, status, 0)
     }
 
     @Throws(MicroBlogException::class)
@@ -163,24 +163,24 @@ class ConversationLoader(
                 // Ignore
             }
             if (!repliesLoaded) {
-                val query = SearchQuery()
-                query.count(100)
-                if (details.type == AccountType.TWITTER) {
-                    query.query("to:${status.user_screen_name} since_id:${status.id}")
-                } else {
-                    query.query("@${status.user_screen_name}")
-                }
-                query.sinceId(sinceId ?: status.id)
-                try {
-                    val queryResult = twitter.search(query)
-                    val firstId = queryResult.firstOrNull()?.id
-                    if (firstId != null) {
-                        nextPagination = SinceMaxPagination.sinceId(firstId, 0)
-                    }
-                    queryResult.filterTo(statuses) { it.inReplyToStatusId == status.id }
-                } catch (e: MicroBlogException) {
-                    // Ignore for now
-                }
+//                val query = SearchQuery()
+//                query.count(100)
+//                if (details.type == AccountType.TWITTER) {
+//                    query.query("to:${status.user_screen_name} since_id:${status.id}")
+//                } else {
+//                    query.query("@${status.user_screen_name}")
+//                }
+//                query.sinceId(sinceId ?: status.id)
+//                try {
+//                    val queryResult = twitter.search(query)
+//                    val firstId = queryResult.firstOrNull()?.id
+//                    if (firstId != null) {
+//                        nextPagination = SinceMaxPagination.sinceId(firstId, 0)
+//                    }
+//                    queryResult.filterTo(statuses) { it.inReplyToStatusId == status.id }
+//                } catch (e: MicroBlogException) {
+//                    // Ignore for now
+//                }
             }
         }
         return statuses.mapTo(PaginatedArrayList()) {

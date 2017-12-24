@@ -20,7 +20,7 @@ package org.mariotaku.microblog.library;
 
 import org.mariotaku.microblog.library.annotation.twitter.StreamWith;
 import org.mariotaku.microblog.library.callback.twitter.UserStreamCallback;
-import org.mariotaku.microblog.library.twitter.template.StatusAnnotationTemplate;
+import org.mariotaku.microblog.library.template.twitter.StatusAnnotationTemplate;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.param.Params;
 
@@ -28,6 +28,7 @@ import org.mariotaku.restfu.annotation.param.Params;
  * Twitter UserStream API
  * Created by mariotaku on 15/5/26.
  */
+@Deprecated
 @Params(template = StatusAnnotationTemplate.class)
 public interface TwitterUserStream {
 

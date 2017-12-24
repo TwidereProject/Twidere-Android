@@ -33,7 +33,7 @@ import java.io.IOException;
 
 @ParcelablePlease
 @Keep
-public class IDs extends TwitterResponseObject implements TwitterResponse, CursorSupport, Parcelable {
+public class IDs extends MicroBlogResponseObject implements MicroBlogResponse, CursorSupport, Parcelable {
 
     long previousCursor;
     long nextCursor;

@@ -19,8 +19,6 @@
 package org.mariotaku.microblog.library;
 
 import org.mariotaku.microblog.library.api.twitter.DirectMessagesEventResources;
-import org.mariotaku.microblog.library.api.twitter.FavoritesResources;
-import org.mariotaku.microblog.library.api.twitter.FriendsFollowersResources;
 import org.mariotaku.microblog.library.api.twitter.HelpResources;
 import org.mariotaku.microblog.library.api.twitter.ListResources;
 import org.mariotaku.microblog.library.api.twitter.MutesResources;
@@ -28,17 +26,11 @@ import org.mariotaku.microblog.library.api.twitter.PlacesGeoResources;
 import org.mariotaku.microblog.library.api.twitter.SavedSearchesResources;
 import org.mariotaku.microblog.library.api.twitter.SearchResources;
 import org.mariotaku.microblog.library.api.twitter.SpamReportingResources;
-import org.mariotaku.microblog.library.api.twitter.TimelineResources;
 import org.mariotaku.microblog.library.api.twitter.TrendsResources;
-import org.mariotaku.microblog.library.api.twitter.TweetResources;
-import org.mariotaku.microblog.library.api.twitter.UsersResources;
+import org.mariotaku.microblog.library.api.microblog.StatusesResources;
 
-/**
- * Created by mariotaku on 16/5/13.
- */
-public interface Twitter extends SearchResources, TimelineResources, TweetResources, UsersResources,
-        ListResources, DirectMessagesEventResources,
-        FriendsFollowersResources, FavoritesResources, SpamReportingResources,
+public interface Twitter extends MicroBlog, SearchResources, StatusesResources, ListResources,
+        DirectMessagesEventResources, SpamReportingResources,
         SavedSearchesResources, TrendsResources, PlacesGeoResources,
         HelpResources, MutesResources, TwitterPrivate {
 }

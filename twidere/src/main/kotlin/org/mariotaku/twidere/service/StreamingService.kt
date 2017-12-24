@@ -19,6 +19,8 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.TwitterUserStream
 import org.mariotaku.microblog.library.annotation.twitter.StreamWith
 import org.mariotaku.microblog.library.model.microblog.*
+import org.mariotaku.microblog.library.model.twitter.Activity
+import org.mariotaku.microblog.library.model.twitter.TwitterStreamObject
 import org.mariotaku.sqliteqb.library.Columns
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
@@ -395,7 +397,7 @@ class StreamingService : BaseService() {
                 contentNotificationManager.showUserNotification(account.key, status, userKey)
             }
 
-            override fun onStatusDeleted(event: DeletionEvent): Boolean {
+            override fun onStatusDeleted(event: TwitterStreamObject.DeletionEvent): Boolean {
                 val deleteWhere = Expression.and(Expression.likeRaw(Columns.Column(Statuses.ACCOUNT_KEY), "'%@'||?"),
                         Expression.equalsArgs(Columns.Column(Statuses.ID))).sql
                 val deleteWhereArgs = arrayOf(account.key.host, event.id)

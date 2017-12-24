@@ -41,10 +41,7 @@ import nl.komponents.kovenant.then
 import nl.komponents.kovenant.ui.promiseOnUi
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.ktextension.*
-import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.TwitterUpload
+import org.mariotaku.microblog.library.*
 import org.mariotaku.microblog.library.model.fanfou.PhotoStatusUpdate
 import org.mariotaku.microblog.library.model.mastodon.Attachment
 import org.mariotaku.microblog.library.model.microblog.*
@@ -314,7 +311,7 @@ class UpdateStatusPromise(
             try {
                 val status = when (account.type) {
                     AccountType.FANFOU -> {
-                        val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                        val microBlog = account.newMicroBlogInstance(context, Fanfou::class.java)
                         // Call uploadPhoto if media present
                         if (statusUpdate.media.isNotNullOrEmpty()) {
                             // Fanfou only allow one photo
@@ -342,7 +339,7 @@ class UpdateStatusPromise(
     }
 
     @Throws(MicroBlogException::class, UploadException::class)
-    private fun fanfouUpdateStatusWithPhoto(microBlog: MicroBlog, statusUpdate: ParcelableStatusUpdate,
+    private fun fanfouUpdateStatusWithPhoto(microBlog: Fanfou, statusUpdate: ParcelableStatusUpdate,
             pendingUpdate: PendingStatusUpdate, sizeLimit: SizeLimit?, updateIndex: Int): ParcelableStatus {
         if (statusUpdate.media.size > 1) {
             throw MicroBlogException(context.getString(R.string.error_too_many_photos_fanfou))

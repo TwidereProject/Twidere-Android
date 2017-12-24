@@ -31,7 +31,7 @@ import java.util.Date;
  * Created by mariotaku on 15/5/7.
  */
 @JsonObject
-public class SavedSearch extends TwitterResponseObject implements Comparable<SavedSearch>, TwitterResponse {
+public class SavedSearch extends MicroBlogResponseObject implements Comparable<SavedSearch>, MicroBlogResponse {
 
     public long getId() {
         return id;

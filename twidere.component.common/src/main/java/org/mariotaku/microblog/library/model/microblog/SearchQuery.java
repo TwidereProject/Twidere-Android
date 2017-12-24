@@ -20,6 +20,7 @@ package org.mariotaku.microblog.library.model.microblog;
 
 import android.support.annotation.NonNull;
 
+import org.mariotaku.microblog.library.model.Paging;
 import org.mariotaku.restfu.http.SimpleValueMap;
 
 /**

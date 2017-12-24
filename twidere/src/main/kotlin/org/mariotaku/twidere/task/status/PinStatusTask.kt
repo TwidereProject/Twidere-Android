@@ -21,8 +21,8 @@ package org.mariotaku.twidere.task.status
 
 import android.content.Context
 import android.widget.Toast
-import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.model.microblog.PinTweetResult
+import org.mariotaku.microblog.library.Twitter
+import org.mariotaku.microblog.library.model.twitter.PinTweetResult
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
@@ -34,7 +34,7 @@ class PinStatusTask(context: Context, accountKey: UserKey, val id: String) : Abs
         PinTweetResult, Any?>(context, accountKey) {
 
     override fun onExecute(account: AccountDetails, params: Any?): PinTweetResult {
-        val twitter = account.newMicroBlogInstance(context, MicroBlog::class.java)
+        val twitter = account.newMicroBlogInstance(context, Twitter::class.java)
         return twitter.pinTweet(id)
     }
 

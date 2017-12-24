@@ -2,9 +2,10 @@ package org.mariotaku.twidere.task
 
 import android.content.Context
 import android.widget.Toast
+import org.mariotaku.microblog.library.Fanfou
+import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.getErrorMessage
@@ -32,8 +33,8 @@ class DestroyFavoriteTask(
         val resolver = context.contentResolver
         val result = when (account.type) {
             AccountType.FANFOU -> {
-                val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
-                microBlog.destroyFanfouFavorite(statusId).toParcelable(account)
+                val fanfou = account.newMicroBlogInstance(context, cls = Fanfou::class.java)
+                fanfou.destroyFanfouFavorite(statusId).toParcelable(account)
             }
             AccountType.MASTODON -> {
                 val mastodon = account.newMicroBlogInstance(context, cls = Mastodon::class.java)

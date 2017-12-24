@@ -20,10 +20,10 @@
 package org.mariotaku.twidere.loader.users
 
 import android.content.Context
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.Twitter
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.microblog.PageableResponseList
-import org.mariotaku.microblog.library.model.microblog.Paging
 import org.mariotaku.microblog.library.model.microblog.User
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.exception.APINotSupportedException
@@ -58,15 +58,15 @@ abstract class UserListRelatedUsersLoader(
         }
     }
 
-    protected abstract fun getByListId(microBlog: MicroBlog, listId: String, paging: Paging): PageableResponseList<User>
+    protected abstract fun getByListId(microBlog: Twitter, listId: String, paging: Paging): PageableResponseList<User>
 
-    protected abstract fun getByUserKey(microBlog: MicroBlog, listName: String, userKey: UserKey, paging: Paging): PageableResponseList<User>
+    protected abstract fun getByUserKey(microBlog: Twitter, listName: String, userKey: UserKey, paging: Paging): PageableResponseList<User>
 
-    protected abstract fun getByScreenName(microBlog: MicroBlog, listName: String, screenName: String, paging: Paging): PageableResponseList<User>
+    protected abstract fun getByScreenName(microBlog: Twitter, listName: String, screenName: String, paging: Paging): PageableResponseList<User>
 
     @Throws(MicroBlogException::class)
     private fun getTwitterUsers(details: AccountDetails, paging: Paging): PageableResponseList<User> {
-        val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
+        val microBlog = details.newMicroBlogInstance(context, Twitter::class.java)
         when {
             listId != null -> {
                 return getByListId(microBlog, listId, paging)

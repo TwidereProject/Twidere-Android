@@ -23,7 +23,7 @@ import android.support.annotation.NonNull;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.model.mastodon.LinkHeaderList;
 import org.mariotaku.microblog.library.model.mastodon.Status;
-import org.mariotaku.microblog.library.model.microblog.Paging;
+import org.mariotaku.microblog.library.model.Paging;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.param.BooleanEncoding;
 import org.mariotaku.restfu.annotation.param.Path;

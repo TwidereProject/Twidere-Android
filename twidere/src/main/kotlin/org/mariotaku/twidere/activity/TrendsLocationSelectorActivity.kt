@@ -27,10 +27,12 @@ import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.getTypedArray
 import org.mariotaku.ktextension.set
-import org.mariotaku.microblog.library.MicroBlog
+import org.mariotaku.microblog.library.Twitter
 import org.mariotaku.microblog.library.model.microblog.Location
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_DATA
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_LOCATION
+import org.mariotaku.twidere.extension.accountKey
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.getDetailsOrThrow
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
@@ -49,7 +51,7 @@ import java.util.*
 class TrendsLocationSelectorActivity : BaseActivity() {
 
     private val accountKey: UserKey?
-        get() = intent.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
+        get() = intent.extras?.accountKey
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +67,7 @@ class TrendsLocationSelectorActivity : BaseActivity() {
         } and task {
             val activity = weakThis.get() ?: throw InterruptedException()
             val twitter = AccountManager.get(activity).getDetailsOrThrow(accountKey, true)
-                    .newMicroBlogInstance(activity, MicroBlog::class.java)
+                    .newMicroBlogInstance(activity, Twitter::class.java)
             val map = LocationsMap(Locale.getDefault())
             twitter.availableTrends.forEach { location -> map.put(location) }
             return@task map.pack()

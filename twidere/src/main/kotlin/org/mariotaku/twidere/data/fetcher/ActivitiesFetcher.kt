@@ -19,28 +19,30 @@
 
 package org.mariotaku.twidere.data.fetcher
 
+import org.mariotaku.microblog.library.Fanfou
 import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.MicroBlog
+import org.mariotaku.microblog.library.StatusNet
+import org.mariotaku.microblog.library.Twitter
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.mastodon.LinkHeaderList
-import org.mariotaku.microblog.library.model.microblog.Activity
-import org.mariotaku.microblog.library.model.microblog.Paging
 import org.mariotaku.microblog.library.model.microblog.Status
+import org.mariotaku.microblog.library.model.twitter.Activity
 import org.mariotaku.twidere.alias.MastodonNotification
 import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.model.AccountDetails
 
 interface ActivitiesFetcher {
 
-    fun forTwitterOfficial(account: AccountDetails, twitter: MicroBlog, paging: Paging): List<Activity>
+    fun forTwitterOfficial(account: AccountDetails, twitter: Twitter, paging: Paging): List<Activity>
             = throw APINotSupportedException(account.type)
 
-    fun forTwitter(account: AccountDetails, twitter: MicroBlog, paging: Paging): List<Status>
+    fun forTwitter(account: AccountDetails, twitter: Twitter, paging: Paging): List<Status>
             = throw APINotSupportedException(account.type)
 
-    fun forStatusNet(account: AccountDetails, statusNet: MicroBlog, paging: Paging): List<Status>
+    fun forStatusNet(account: AccountDetails, statusNet: StatusNet, paging: Paging): List<Status>
             = throw APINotSupportedException(account.type)
 
-    fun forFanfou(account: AccountDetails, fanfou: MicroBlog, paging: Paging): List<Status>
+    fun forFanfou(account: AccountDetails, fanfou: Fanfou, paging: Paging): List<Status>
             = throw APINotSupportedException(account.type)
 
     fun forMastodon(account: AccountDetails, mastodon: Mastodon, paging: Paging): LinkHeaderList<MastodonNotification>

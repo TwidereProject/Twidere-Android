@@ -20,10 +20,10 @@ package org.mariotaku.microblog.library.api.twitter;
 
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.model.microblog.IDs;
-import org.mariotaku.microblog.library.model.microblog.MutedKeyword;
+import org.mariotaku.microblog.library.model.twitter.MutedKeyword;
 import org.mariotaku.microblog.library.model.microblog.PageableResponseList;
-import org.mariotaku.microblog.library.model.microblog.Paging;
-import org.mariotaku.microblog.library.twitter.template.UserAnnotationTemplate;
+import org.mariotaku.microblog.library.model.Paging;
+import org.mariotaku.microblog.library.template.twitter.UserAnnotationTemplate;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.param.Params;
 import org.mariotaku.restfu.annotation.param.Query;

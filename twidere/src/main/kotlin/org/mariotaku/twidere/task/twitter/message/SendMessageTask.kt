@@ -21,12 +21,10 @@ package org.mariotaku.twidere.task.twitter.message
 
 import android.content.Context
 import org.mariotaku.ktextension.isNotNullOrEmpty
-import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.TwitterUpload
+import org.mariotaku.microblog.library.*
 import org.mariotaku.microblog.library.annotation.twitter.MediaCategory
 import org.mariotaku.microblog.library.model.microblog.DirectMessage
-import org.mariotaku.microblog.library.model.microblog.NewDm
+import org.mariotaku.microblog.library.model.twitter.NewDm
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
@@ -59,8 +57,7 @@ class SendMessageTask(
 
     override fun onExecute(params: ParcelableNewMessage): SendMessageResult {
         val account = params.account ?: throw MicroBlogException("No account")
-        val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
-        val updateData = requestSendMessage(microBlog, account, params)
+        val updateData = requestSendMessage(account, params)
         if (params.is_temp_conversation && params.conversation_id != null) {
             val deleteTempWhere = Expression.and(Expression.equalsArgs(Conversations.ACCOUNT_KEY),
                     Expression.equalsArgs(Conversations.CONVERSATION_ID)).sql
@@ -81,24 +78,26 @@ class SendMessageTask(
                 result.conversationIds.singleOrNull(), true))
     }
 
-    private fun requestSendMessage(microBlog: MicroBlog, account: AccountDetails,
-            message: ParcelableNewMessage): GetMessagesTask.DatabaseUpdateData {
+    private fun requestSendMessage(account: AccountDetails, message: ParcelableNewMessage): GetMessagesTask.DatabaseUpdateData {
         when (account.type) {
             AccountType.TWITTER -> {
+                val twitter = account.newMicroBlogInstance(context, cls = Twitter::class.java)
                 if (account.isOfficial(context)) {
-                    return sendTwitterOfficialDM(microBlog, account, message)
+                    return sendTwitterOfficialDM(twitter, account, message)
                 } else {
-                    return sendTwitterMessageEvent(microBlog, account, message)
+                    return sendTwitterMessageEvent(twitter, account, message)
                 }
             }
             AccountType.FANFOU -> {
-                return sendFanfouDM(microBlog, account, message)
+                val fanfou = account.newMicroBlogInstance(context, cls = Fanfou::class.java)
+                return sendFanfouDM(fanfou, account, message)
             }
         }
+        val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
         return sendDefaultDM(microBlog, account, message)
     }
 
-    private fun sendTwitterOfficialDM(microBlog: MicroBlog, account: AccountDetails,
+    private fun sendTwitterOfficialDM(twitter: Twitter, account: AccountDetails,
             message: ParcelableNewMessage): GetMessagesTask.DatabaseUpdateData {
         var deleteOnSuccess: List<UpdateStatusPromise.MediaDeletionItem>? = null
         var deleteAlways: List<UpdateStatusPromise.MediaDeletionItem>? = null
@@ -122,7 +121,7 @@ class SendMessageTask(
                 deleteAlways = uploadResult.deleteAlways
                 deleteOnSuccess = uploadResult.deleteOnSuccess
             }
-            microBlog.sendDm(newDm)
+            twitter.sendDm(newDm)
         } catch (e: UpdateStatusPromise.UploadException) {
             e.deleteAlways?.forEach {
                 it.delete(context)
@@ -135,11 +134,11 @@ class SendMessageTask(
         val conversationId = sendResponse.entries?.firstOrNull {
             it.message != null
         }?.message?.conversationId
-        val response = microBlog.getDmConversation(conversationId, null).conversationTimeline
+        val response = twitter.getDmConversation(conversationId, null).conversationTimeline
         return GetMessagesTask.createDatabaseUpdateData(context, account, response, profileImageSize)
     }
 
-    private fun sendTwitterMessageEvent(microBlog: MicroBlog, account: AccountDetails,
+    private fun sendTwitterMessageEvent(twitter: Twitter, account: AccountDetails,
             message: ParcelableNewMessage): GetMessagesTask.DatabaseUpdateData {
         val recipientId = message.recipient_ids.singleOrNull() ?: throw MicroBlogException("No recipient")
         val category = when (message.media?.firstOrNull()?.type) {
@@ -166,14 +165,14 @@ class SendMessageTask(
                     }
                 }
             }
-            return@uploadMediaThen microBlog.newDirectMessageEvent(obj)
+            return@uploadMediaThen twitter.newDirectMessageEvent(obj)
         }
-        return createDatabaseUpdateData(account, microBlog.showDirectMessage(response.event.id))
+        return createDatabaseUpdateData(account, twitter.showDirectMessage(response.event.id))
     }
 
-    private fun sendFanfouDM(microBlog: MicroBlog, account: AccountDetails, message: ParcelableNewMessage): GetMessagesTask.DatabaseUpdateData {
+    private fun sendFanfouDM(fanfou: Fanfou, account: AccountDetails, message: ParcelableNewMessage): GetMessagesTask.DatabaseUpdateData {
         val recipientId = message.recipient_ids.singleOrNull() ?: throw MicroBlogException("No recipient")
-        val response = microBlog.sendFanfouDirectMessage(recipientId, message.text)
+        val response = fanfou.sendFanfouDirectMessage(recipientId, message.text)
         return createDatabaseUpdateData(account, response)
     }
 

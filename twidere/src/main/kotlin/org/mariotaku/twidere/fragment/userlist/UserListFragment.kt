@@ -47,6 +47,7 @@ import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.Twitter
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.AccountSelectorActivity
@@ -365,7 +366,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
             try {
                 if (accountKey == null) throw MicroBlogException("No account")
                 val twitter = AccountManager.get(context).getDetailsOrThrow(accountKey, true)
-                        .newMicroBlogInstance(context, MicroBlog::class.java)
+                        .newMicroBlogInstance(context, Twitter::class.java)
                 val list = when {
                     listId != null -> {
                         twitter.showUserList(listId)

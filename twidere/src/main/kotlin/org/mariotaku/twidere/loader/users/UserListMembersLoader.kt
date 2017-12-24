@@ -20,9 +20,9 @@
 package org.mariotaku.twidere.loader.users
 
 import android.content.Context
-import org.mariotaku.microblog.library.MicroBlog
+import org.mariotaku.microblog.library.Twitter
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.microblog.PageableResponseList
-import org.mariotaku.microblog.library.model.microblog.Paging
 import org.mariotaku.microblog.library.model.microblog.User
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
@@ -38,15 +38,15 @@ class UserListMembersLoader(
         fromUser: Boolean
 ) : UserListRelatedUsersLoader(context, accountKey, listId, userKey, screenName, listName, data, fromUser) {
 
-    override fun getByListId(microBlog: MicroBlog, listId: String, paging: Paging): PageableResponseList<User> {
+    override fun getByListId(microBlog: Twitter, listId: String, paging: Paging): PageableResponseList<User> {
         return microBlog.getUserListMembers(listId, paging)
     }
 
-    override fun getByUserKey(microBlog: MicroBlog, listName: String, userKey: UserKey, paging: Paging): PageableResponseList<User> {
+    override fun getByUserKey(microBlog: Twitter, listName: String, userKey: UserKey, paging: Paging): PageableResponseList<User> {
         return microBlog.getUserListMembers(listName, userKey.id, paging)
     }
 
-    override fun getByScreenName(microBlog: MicroBlog, listName: String, screenName: String, paging: Paging): PageableResponseList<User> {
+    override fun getByScreenName(microBlog: Twitter, listName: String, screenName: String, paging: Paging): PageableResponseList<User> {
         return microBlog.getUserListMembersByScreenName(listName, screenName, paging)
     }
 

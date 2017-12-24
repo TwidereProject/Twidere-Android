@@ -31,6 +31,7 @@ import org.mariotaku.ktextension.forEachRow
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.Twitter
 import org.mariotaku.sqliteqb.library.Columns
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.sqliteqb.library.OrderBy
@@ -218,7 +219,7 @@ class MessagePromises private constructor(private val application: Application) 
         when (account.type) {
             AccountType.TWITTER -> {
                 if (account.isOfficial(application)) {
-                    val twitter = account.newMicroBlogInstance(application, MicroBlog::class.java)
+                    val twitter = account.newMicroBlogInstance(application, Twitter::class.java)
                     return twitter.deleteDmConversation(conversationId).isSuccessful
                 }
             }
@@ -229,7 +230,7 @@ class MessagePromises private constructor(private val application: Application) 
     private fun requestDestroyMessage(account: AccountDetails, messageId: String): Boolean {
         when (account.type) {
             AccountType.TWITTER -> {
-                val twitter = account.newMicroBlogInstance(application, cls = MicroBlog::class.java)
+                val twitter = account.newMicroBlogInstance(application, cls = Twitter::class.java)
                 if (account.isOfficial(application)) {
                     return twitter.destroyDm(messageId).isSuccessful
                 }
@@ -245,7 +246,7 @@ class MessagePromises private constructor(private val application: Application) 
         val cr = application.contentResolver
         when (account.type) {
             AccountType.TWITTER -> {
-                val microBlog = account.newMicroBlogInstance(application, cls = MicroBlog::class.java)
+                val microBlog = account.newMicroBlogInstance(application, cls = Twitter::class.java)
                 if (account.isOfficial(application)) {
                     val event = (conversation.conversation_extras as? TwitterOfficialConversationExtras)?.maxReadEvent ?: run {
                         val message = cr.findRecentMessage(account.key, conversation.id) ?: return null

@@ -3,9 +3,10 @@ package org.mariotaku.twidere.task
 import android.content.Context
 import android.widget.Toast
 import org.mariotaku.kpreferences.get
+import org.mariotaku.microblog.library.Fanfou
+import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.TWITTER_ERROR_ALREADY_FAVORITED
@@ -39,8 +40,8 @@ class CreateFavoriteTask(context: Context, accountKey: UserKey, private val stat
         val resolver = context.contentResolver
         val result = when (account.type) {
             AccountType.FANFOU -> {
-                val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
-                microBlog.createFanfouFavorite(statusId).toParcelable(account)
+                val fanfou = account.newMicroBlogInstance(context, cls = Fanfou::class.java)
+                fanfou.createFanfouFavorite(statusId).toParcelable(account)
             }
             AccountType.MASTODON -> {
                 val mastodon = account.newMicroBlogInstance(context, cls = Mastodon::class.java)

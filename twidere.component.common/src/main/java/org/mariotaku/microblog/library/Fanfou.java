@@ -20,18 +20,15 @@ package org.mariotaku.microblog.library;
 
 import org.mariotaku.microblog.library.api.fanfou.BlocksResources;
 import org.mariotaku.microblog.library.api.fanfou.DirectMessagesResources;
+import org.mariotaku.microblog.library.api.fanfou.FanfouSearchResources;
+import org.mariotaku.microblog.library.api.fanfou.FanfouStatusesResources;
 import org.mariotaku.microblog.library.api.fanfou.FavoritesResources;
 import org.mariotaku.microblog.library.api.fanfou.FriendshipsResources;
 import org.mariotaku.microblog.library.api.fanfou.PhotosResources;
-import org.mariotaku.microblog.library.api.fanfou.SearchResources;
-import org.mariotaku.microblog.library.api.fanfou.StatusesResources;
 import org.mariotaku.microblog.library.api.fanfou.TrendsResources;
 import org.mariotaku.microblog.library.api.fanfou.UsersResources;
 
-/**
- * Created by mariotaku on 16/3/10.
- */
-public interface Fanfou extends StatusesResources, SearchResources, UsersResources, PhotosResources,
+public interface Fanfou extends MicroBlog, FanfouStatusesResources, FanfouSearchResources, UsersResources, PhotosResources,
         FriendshipsResources, BlocksResources, FavoritesResources, DirectMessagesResources,
         TrendsResources {
 }

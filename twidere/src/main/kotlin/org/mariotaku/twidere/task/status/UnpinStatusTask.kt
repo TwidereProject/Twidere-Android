@@ -21,8 +21,8 @@ package org.mariotaku.twidere.task.status
 
 import android.content.Context
 import android.widget.Toast
-import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.model.microblog.PinTweetResult
+import org.mariotaku.microblog.library.Twitter
+import org.mariotaku.microblog.library.model.twitter.PinTweetResult
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
@@ -30,15 +30,11 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.StatusPinEvent
 import org.mariotaku.twidere.task.AbsAccountRequestTask
 
-/**
- * Created by mariotaku on 2017/4/28.
- */
-
 class UnpinStatusTask(context: Context, accountKey: UserKey, val id: String) : AbsAccountRequestTask<Any?,
         PinTweetResult, Any?>(context, accountKey) {
 
     override fun onExecute(account: AccountDetails, params: Any?): PinTweetResult {
-        val twitter = account.newMicroBlogInstance(context, MicroBlog::class.java)
+        val twitter = account.newMicroBlogInstance(context, Twitter::class.java)
         return twitter.unpinTweet(id)
     }
 

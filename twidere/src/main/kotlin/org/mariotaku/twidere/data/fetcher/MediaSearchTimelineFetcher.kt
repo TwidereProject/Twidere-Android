@@ -19,8 +19,8 @@
 
 package org.mariotaku.twidere.data.fetcher
 
-import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.model.microblog.Paging
+import org.mariotaku.microblog.library.Twitter
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.microblog.SearchQuery
 import org.mariotaku.microblog.library.model.microblog.Status
 import org.mariotaku.microblog.library.model.microblog.UniversalSearchQuery
@@ -32,7 +32,7 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.timeline.TimelineFilter
 
 class MediaSearchTimelineFetcher(val query: String?) : StatusesFetcher {
-    override fun forTwitter(account: AccountDetails, twitter: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
+    override fun forTwitter(account: AccountDetails, twitter: Twitter, paging: Paging, filter: TimelineFilter?): List<Status> {
         if (query == null) throw RequiredFieldNotFoundException("query")
         if (account.official) {
             val searchQuery = SearchTimelineFetcher.smQuery("$query filter:media", paging)

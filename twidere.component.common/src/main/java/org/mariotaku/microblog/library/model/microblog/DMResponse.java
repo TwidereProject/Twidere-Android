@@ -27,6 +27,7 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.Bagger;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
+import org.mariotaku.microblog.library.model.twitter.StickerEntity;
 import org.mariotaku.microblog.library.model.util.ParcelMapBagger;
 
 import java.lang.annotation.Retention;

@@ -33,7 +33,7 @@ import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.contains
 import org.mariotaku.ktextension.rangeOfSize
-import org.mariotaku.microblog.library.model.microblog.Activity.Action
+import org.mariotaku.microblog.library.model.twitter.Activity.Action
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.callback.ItemCountsAdapterListUpdateCallback
 import org.mariotaku.twidere.adapter.iface.IActivitiesAdapter

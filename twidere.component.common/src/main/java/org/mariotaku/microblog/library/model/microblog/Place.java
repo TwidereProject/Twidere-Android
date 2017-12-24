@@ -28,7 +28,7 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 @ParcelablePlease
 @JsonObject
-public class Place extends TwitterResponseObject implements TwitterResponse, Comparable<Place>, Parcelable {
+public class Place extends MicroBlogResponseObject implements MicroBlogResponse, Comparable<Place>, Parcelable {
 
     @JsonField(name = "full_name")
     String fullName;

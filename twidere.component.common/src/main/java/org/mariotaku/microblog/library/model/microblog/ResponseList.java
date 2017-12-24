@@ -20,7 +20,7 @@ package org.mariotaku.microblog.library.model.microblog;
 
 import android.support.annotation.Keep;
 
-import org.mariotaku.microblog.library.twitter.util.InternalParseUtil;
+import org.mariotaku.microblog.library.util.InternalParseUtil;
 import org.mariotaku.restfu.http.HttpResponse;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ import java.util.List;
  * Created by mariotaku on 15/5/7.
  */
 @Keep
-public class ResponseList<T> extends ArrayList<T> implements TwitterResponse {
+public class ResponseList<T> extends ArrayList<T> implements MicroBlogResponse {
 
     private int accessLevel;
     private RateLimitStatus rateLimitStatus;

@@ -27,8 +27,8 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.model.mastodon.LinkHeaderList
 import org.mariotaku.microblog.library.model.microblog.ResponseCode
 import org.mariotaku.microblog.library.model.microblog.ResponseCode.ResponseConverter
-import org.mariotaku.microblog.library.model.microblog.TwitterResponse
-import org.mariotaku.microblog.library.twitter.util.OAuthTokenResponseConverter
+import org.mariotaku.microblog.library.model.microblog.MicroBlogResponse
+import org.mariotaku.microblog.library.util.OAuthTokenResponseConverter
 import org.mariotaku.restfu.RestConverter
 import org.mariotaku.restfu.http.HttpResponse
 import org.mariotaku.restfu.http.mime.Body
@@ -83,7 +83,7 @@ object TwitterConverterFactory : LoganSquareConverterFactory<MicroBlogException>
 
     override fun processParsedObject(obj: Any, httpResponse: HttpResponse) {
         when (obj) {
-            is TwitterResponse -> obj.processResponseHeader(httpResponse)
+            is MicroBlogResponse -> obj.processResponseHeader(httpResponse)
             is LinkHeaderList<*> -> obj.processResponseHeader(httpResponse)
         }
     }

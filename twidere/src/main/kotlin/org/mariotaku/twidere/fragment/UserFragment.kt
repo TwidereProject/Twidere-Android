@@ -72,10 +72,10 @@ import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.Twitter
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.microblog.FriendshipUpdate
-import org.mariotaku.microblog.library.model.microblog.Paging
 import org.mariotaku.microblog.library.model.microblog.UserList
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
@@ -1304,7 +1304,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             ProgressDialogFragment.show(it.childFragmentManager, "get_list_progress")
         }.then {
             val context = weakThis?.context ?: throw InterruptedException()
-            fun MicroBlog.getUserListOwnerMemberships(id: String): ArrayList<UserList> {
+            fun Twitter.getUserListOwnerMemberships(id: String): ArrayList<UserList> {
                 val result = ArrayList<UserList>()
                 var nextCursor: Long
                 val paging = Paging()
@@ -1319,15 +1319,15 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 return result
             }
 
-            val microBlog = AccountManager.get(context).getDetailsOrThrow(accountKey, true)
-                    .newMicroBlogInstance(context, MicroBlog::class.java)
+            val twitter = AccountManager.get(context).getDetailsOrThrow(accountKey, true)
+                    .newMicroBlogInstance(context, Twitter::class.java)
             val ownedLists = ArrayList<ParcelableUserList>()
-            val listMemberships = microBlog.getUserListOwnerMemberships(user.key.id)
+            val listMemberships = twitter.getUserListOwnerMemberships(user.key.id)
             val paging = Paging()
             paging.count(100)
             var nextCursor: Long
             do {
-                val resp = microBlog.getUserListOwnerships(paging)
+                val resp = twitter.getUserListOwnerships(paging)
                 resp.mapTo(ownedLists) { item ->
                     val userList = item.toParcelable(accountKey)
                     userList.is_user_inside = listMemberships.any { it.id == item.id }
@@ -1390,7 +1390,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     }.then {
                         val activity = weakActivity ?: throw IllegalStateException()
                         val twitter = AccountManager.get(activity).getDetailsOrThrow(accountKey, true)
-                                .newMicroBlogInstance(activity, MicroBlog::class.java)
+                                .newMicroBlogInstance(activity, Twitter::class.java)
                         val successfulStates = SparseBooleanArray()
                         try {
                             for (i in 0 until checkedPositions.size()) {

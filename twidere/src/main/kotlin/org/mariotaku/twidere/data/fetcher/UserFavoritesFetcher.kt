@@ -19,10 +19,9 @@
 
 package org.mariotaku.twidere.data.fetcher
 
-import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.MicroBlog
+import org.mariotaku.microblog.library.*
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.mastodon.LinkHeaderList
-import org.mariotaku.microblog.library.model.microblog.Paging
 import org.mariotaku.microblog.library.model.microblog.Status
 import org.mariotaku.twidere.alias.MastodonStatus
 import org.mariotaku.twidere.exception.RequiredFieldNotFoundException
@@ -32,15 +31,15 @@ import org.mariotaku.twidere.model.timeline.TimelineFilter
 
 class UserFavoritesFetcher(val userKey: UserKey?, val userScreenName: String?) : StatusesFetcher {
 
-    override fun forTwitter(account: AccountDetails, twitter: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
+    override fun forTwitter(account: AccountDetails, twitter: Twitter, paging: Paging, filter: TimelineFilter?): List<Status> {
         return getMicroBlogUserFavorites(twitter, paging)
     }
 
-    override fun forStatusNet(account: AccountDetails, statusNet: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
+    override fun forStatusNet(account: AccountDetails, statusNet: StatusNet, paging: Paging, filter: TimelineFilter?): List<Status> {
         return getMicroBlogUserFavorites(statusNet, paging)
     }
 
-    override fun forFanfou(account: AccountDetails, fanfou: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
+    override fun forFanfou(account: AccountDetails, fanfou: Fanfou, paging: Paging, filter: TimelineFilter?): List<Status> {
         return getMicroBlogUserFavorites(fanfou, paging)
     }
 

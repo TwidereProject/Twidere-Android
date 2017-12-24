@@ -32,7 +32,7 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.forEachRow
 import org.mariotaku.ktextension.isEmpty
 import org.mariotaku.library.objectcursor.ObjectCursor
-import org.mariotaku.microblog.library.model.microblog.Activity.Action
+import org.mariotaku.microblog.library.model.twitter.Activity.Action
 import org.mariotaku.microblog.library.model.microblog.Status
 import org.mariotaku.sqliteqb.library.*
 import org.mariotaku.sqliteqb.library.Columns.Column
@@ -63,7 +63,7 @@ import org.mariotaku.twidere.receiver.NotificationReceiver
 import org.mariotaku.twidere.service.LengthyOperationsService
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.Utils
-import org.mariotaku.twidere.util.database.ContentFiltersUtils
+import org.mariotaku.twidere.util.database.StatusFilterMatcher
 import org.oshkimaadziig.george.androidutils.SpanFormatter
 
 class ContentNotificationManager(
@@ -220,7 +220,7 @@ class ContentNotificationManager(
                 if (pref.isNotificationMentionsOnly && activity.action !in Action.MENTION_ACTIONS) {
                     return@forEachRow false
                 }
-                if (ContentFiltersUtils.isFiltered(cr, activity, true, FilterScope.INTERACTIONS)) {
+                if (StatusFilterMatcher.isFiltered(cr, activity, FilterScope.INTERACTIONS)) {
                     return@forEachRow false
                 }
                 val sources = ParcelableActivityUtils.filterSources(activity.sources_lite,

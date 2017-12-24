@@ -20,10 +20,8 @@
 package org.mariotaku.twidere.loader.users
 
 import android.content.Context
-import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.model.microblog.Paging
+import org.mariotaku.microblog.library.*
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.api.mastodon.mapToPaginated
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
@@ -54,13 +52,13 @@ class UserFollowersLoader(
                 }
             }
             AccountType.STATUSNET -> {
-                val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
+                val microBlog = details.newMicroBlogInstance(context, StatusNet::class.java)
                 return microBlog.getStatusesFollowersList(userKey.id, paging).mapToPaginated {
                     it.toParcelable(details, profileImageSize = profileImageSize)
                 }
             }
             AccountType.FANFOU -> {
-                val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
+                val microBlog = details.newMicroBlogInstance(context, Fanfou::class.java)
                 return microBlog.getUsersFollowers(userKey.id, paging).mapToPaginated(pagination) {
                     it.toParcelable(details, profileImageSize = profileImageSize)
                 }
@@ -81,13 +79,13 @@ class UserFollowersLoader(
                 throw MicroBlogException("Only ID supported")
             }
             AccountType.STATUSNET -> {
-                val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
+                val microBlog = details.newMicroBlogInstance(context, StatusNet::class.java)
                 return microBlog.getStatusesFollowersListByScreenName(screenName, paging).mapToPaginated {
                     it.toParcelable(details, profileImageSize = profileImageSize)
                 }
             }
             AccountType.FANFOU -> {
-                val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
+                val microBlog = details.newMicroBlogInstance(context, Fanfou::class.java)
                 return microBlog.getUsersFollowers(screenName, paging).mapToPaginated(pagination) {
                     it.toParcelable(details, profileImageSize = profileImageSize)
                 }

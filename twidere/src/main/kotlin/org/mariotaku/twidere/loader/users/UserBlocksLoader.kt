@@ -20,10 +20,11 @@
 package org.mariotaku.twidere.loader.users
 
 import android.content.Context
+import org.mariotaku.microblog.library.Fanfou
 import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.model.microblog.Paging
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.extension.model.api.mastodon.mapToPaginated
@@ -56,7 +57,7 @@ class UserBlocksLoader(
                 }
             }
             AccountType.FANFOU -> {
-                val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
+                val microBlog = details.newMicroBlogInstance(context, Fanfou::class.java)
                 return microBlog.getFanfouBlocking(paging).mapToPaginated(pagination) {
                     it.toParcelable(details, profileImageSize = profileImageSize)
                 }

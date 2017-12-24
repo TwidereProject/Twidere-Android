@@ -18,20 +18,18 @@
 
 package org.mariotaku.microblog.library;
 
-import org.mariotaku.microblog.library.api.statusnet.TimelineResources;
-import org.mariotaku.restfu.annotation.method.GET;
-import org.mariotaku.restfu.annotation.param.Query;
+import org.mariotaku.microblog.library.api.microblog.TimelineResources;
 import org.mariotaku.microblog.library.api.statusnet.GroupResources;
 import org.mariotaku.microblog.library.api.statusnet.SearchResources;
 import org.mariotaku.microblog.library.api.statusnet.StatusNetResources;
+import org.mariotaku.microblog.library.api.statusnet.StatusNetTimelineResources;
 import org.mariotaku.microblog.library.api.statusnet.UserResources;
 import org.mariotaku.microblog.library.model.microblog.User;
+import org.mariotaku.restfu.annotation.method.GET;
+import org.mariotaku.restfu.annotation.param.Query;
 
-/**
- * Created by mariotaku on 16/3/4.
- */
-public interface StatusNet extends StatusNetResources, GroupResources, SearchResources,
-        UserResources, TimelineResources {
+public interface StatusNet extends MicroBlog, TimelineResources, StatusNetResources, GroupResources, SearchResources,
+        UserResources, StatusNetTimelineResources {
 
     @GET("/externalprofile/show.json")
     User showExternalProfile(@Query("profileurl") String profileUrl) throws MicroBlogException;

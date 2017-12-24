@@ -25,7 +25,7 @@ import android.content.SharedPreferences
 import android.support.annotation.WorkerThread
 import org.mariotaku.kpreferences.get
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.model.microblog.Paging
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.microblog.Status
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.loadItemLimitKey

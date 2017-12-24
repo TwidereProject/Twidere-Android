@@ -21,7 +21,7 @@ package org.mariotaku.microblog.library.api.mastodon;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.model.mastodon.LinkHeaderList;
 import org.mariotaku.microblog.library.model.mastodon.Notification;
-import org.mariotaku.microblog.library.model.microblog.Paging;
+import org.mariotaku.microblog.library.model.Paging;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.param.Query;
 

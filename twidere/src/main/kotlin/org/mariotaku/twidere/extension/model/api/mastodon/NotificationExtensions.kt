@@ -22,7 +22,7 @@ package org.mariotaku.twidere.extension.model.api.mastodon
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.microblog.library.model.mastodon.Notification
 import org.mariotaku.microblog.library.model.mastodon.Relationship
-import org.mariotaku.microblog.library.model.microblog.Activity.Action
+import org.mariotaku.microblog.library.model.twitter.Activity.Action
 import org.mariotaku.twidere.extension.model.toLite
 import org.mariotaku.twidere.extension.model.toSummaryLine
 import org.mariotaku.twidere.extension.model.updateActivityFilterInfo

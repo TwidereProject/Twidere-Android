@@ -33,7 +33,7 @@ import java.util.Date;
 
 @ParcelablePlease
 @JsonObject
-public class DirectMessage extends TwitterResponseObject implements TwitterResponse, EntitySupport,
+public class DirectMessage extends MicroBlogResponseObject implements MicroBlogResponse, EntitySupport,
         Parcelable {
 
     @JsonField(name = "created_at", typeConverter = TwitterDateConverter.class)

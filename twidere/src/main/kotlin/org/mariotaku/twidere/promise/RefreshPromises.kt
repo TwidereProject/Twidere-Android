@@ -19,24 +19,18 @@
 
 package org.mariotaku.twidere.promise
 
-import android.accounts.AccountManager
 import android.content.Context
 import android.content.SharedPreferences
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.all
-import nl.komponents.kovenant.task
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.toNulls
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.twidere.constant.homeRefreshDirectMessagesKey
 import org.mariotaku.twidere.constant.homeRefreshMentionsKey
 import org.mariotaku.twidere.constant.homeRefreshSavedSearchesKey
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
-import org.mariotaku.twidere.extension.getDetailsOrThrow
-import org.mariotaku.twidere.extension.isOfficial
-import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.promise
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
@@ -107,15 +101,6 @@ class RefreshPromises private constructor(val application: Context) {
             promises += SavedSearchPromises.get(application).refresh(lazyAccountKeys.value)
         }
         return all(promises)
-    }
-
-    fun setActivitiesAboutMeUnreadAsync(accountKeys: Array<UserKey>, cursor: Long) = task {
-        for (accountKey in accountKeys) {
-            val microBlog = AccountManager.get(application).getDetailsOrThrow(accountKey, true)
-                    .newMicroBlogInstance(application, MicroBlog::class.java)
-            if (!isOfficial(application, accountKey)) continue
-            microBlog.setActivitiesAboutMeUnread(cursor)
-        }
     }
 
     companion object : ApplicationContextSingletonHolder<RefreshPromises>(::RefreshPromises)

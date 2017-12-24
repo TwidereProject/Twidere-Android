@@ -19,18 +19,20 @@
 
 package org.mariotaku.twidere.data.fetcher
 
+import org.mariotaku.microblog.library.Fanfou
 import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.MicroBlog
+import org.mariotaku.microblog.library.StatusNet
+import org.mariotaku.microblog.library.Twitter
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.mastodon.LinkHeaderList
-import org.mariotaku.microblog.library.model.microblog.Paging
 import org.mariotaku.microblog.library.model.microblog.ResponseList
 import org.mariotaku.microblog.library.model.microblog.SearchQuery
 import org.mariotaku.microblog.library.model.microblog.Status
 import org.mariotaku.twidere.alias.MastodonStatus
 import org.mariotaku.twidere.alias.MastodonTimelineOption
-import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.exception.RequiredFieldNotFoundException
+import org.mariotaku.twidere.extension.api.tryShowUser
 import org.mariotaku.twidere.extension.model.official
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
@@ -40,7 +42,7 @@ class UserMediaTimelineFetcher(
         private val userKey: UserKey?,
         private val userScreenName: String?
 ) : StatusesFetcher {
-    override fun forTwitter(account: AccountDetails, twitter: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
+    override fun forTwitter(account: AccountDetails, twitter: Twitter, paging: Paging, filter: TimelineFilter?): List<Status> {
         if (account.official) {
             return when {
                 userKey != null -> twitter.getMediaTimeline(userKey.id, paging)
@@ -50,7 +52,9 @@ class UserMediaTimelineFetcher(
         }
         val screenName = when {
             userScreenName != null -> userScreenName
-            userKey != null -> UserMentionsTimelineFetcher.findScreenName(twitter, userKey, AccountType.TWITTER)
+            userKey != null -> UserMentionsTimelineFetcher.findScreenName(twitter, userKey) {
+                it.tryShowUser(userKey.id, null).screenName
+            }
             else -> throw RequiredFieldNotFoundException("user_id", "screen_name")
         }
         val query = SearchQuery("from:$screenName filter:media exclude:retweets").paging(paging)
@@ -62,7 +66,7 @@ class UserMediaTimelineFetcher(
         return result
     }
 
-    override fun forFanfou(account: AccountDetails, fanfou: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
+    override fun forFanfou(account: AccountDetails, fanfou: Fanfou, paging: Paging, filter: TimelineFilter?): List<Status> {
         return when {
             userKey != null -> fanfou.getPhotosUserTimeline(userKey.id, paging)
             userScreenName != null -> fanfou.getPhotosUserTimeline(userScreenName, paging)
@@ -70,7 +74,7 @@ class UserMediaTimelineFetcher(
         }
     }
 
-    override fun forStatusNet(account: AccountDetails, statusNet: MicroBlog, paging: Paging, filter: TimelineFilter?): List<Status> {
+    override fun forStatusNet(account: AccountDetails, statusNet: StatusNet, paging: Paging, filter: TimelineFilter?): List<Status> {
         throw APINotSupportedException("Media timeline", account.type)
     }
 
