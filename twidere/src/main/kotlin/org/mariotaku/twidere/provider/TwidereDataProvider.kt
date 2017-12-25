@@ -37,6 +37,7 @@ import com.squareup.otto.Bus
 import okhttp3.Dns
 import org.mariotaku.ktextension.isNullOrEmpty
 import org.mariotaku.ktextension.mapToArray
+import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.ktextension.toNulls
 import org.mariotaku.sqliteqb.library.*
 import org.mariotaku.sqliteqb.library.Columns.Column
@@ -142,6 +143,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
     override fun query(uri: Uri, projection: Array<String>?, selection: String?, selectionArgs: Array<String>?,
             sortOrder: String?): Cursor? {
         val limit = uri.getQueryParameter(QUERY_PARAM_LIMIT)
+        var querySelection = selection
         try {
             val tableId = DataStoreUtils.getTableId(uri)
             val table = DataStoreUtils.getTableNameById(tableId)
@@ -223,44 +225,21 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                     if (projection != null || selection != null || sortOrder != null) {
                         throw IllegalArgumentException()
                     }
-                    val c = databaseWrapper.rawQuery(uri.lastPathSegment, selectionArgs)
-                    uri.getQueryParameter(QUERY_PARAM_NOTIFY_URI)?.let {
-                        c?.setNotificationUri(context.contentResolver, Uri.parse(it))
-                    }
-                    return c
+                    return rawQuery(uri, selectionArgs)
                 }
                 TableIds.MESSAGES_CONVERSATIONS -> if (projection?.contains(Messages.Conversations.UNREAD_COUNT) == true) {
-                    val mappedProjection = projection.mapToArray(TwidereQueryBuilder::mapConversationsProjection)
-                    val qb = SQLQueryBuilder.select(Columns(*mappedProjection))
-                    qb.from(Table(Messages.Conversations.TABLE_NAME))
-                    qb.join(Join(false, Join.Operation.LEFT_OUTER, Table(Messages.TABLE_NAME),
-                            Expression.and(
-                                    Expression.equals(
-                                            Column(Table(Messages.Conversations.TABLE_NAME), Messages.Conversations.CONVERSATION_ID),
-                                            Column(Table(Messages.TABLE_NAME), Messages.CONVERSATION_ID)
-                                    ),
-                                    Expression.equals(
-                                            Column(Table(Messages.Conversations.TABLE_NAME), Messages.Conversations.ACCOUNT_KEY),
-                                            Column(Table(Messages.TABLE_NAME), Messages.ACCOUNT_KEY))
-                            )
-                    ))
-                    if (selection != null) {
-                        qb.where(Expression(selection))
+                    return queryMessagesConversationWithUnreadCount(projection, selection, sortOrder, limit, selectionArgs, uri)
+                }
+                in TableIds.RANGE_CUSTOM_TIMELINE -> if (uri.pathSegments.size == 3) {
+                    val tabId = uri.lastPathSegment.toLongOr(-1)
+                    if (tabId > 0) {
+                        val tabIdWhere = Expression.equals(Statuses.TAB_ID, tabId).sql
+                        querySelection = if (querySelection == null) tabIdWhere else "$querySelection AND $tabIdWhere"
                     }
-                    qb.groupBy(Column(Table(Messages.TABLE_NAME), Messages.CONVERSATION_ID))
-                    if (sortOrder != null) {
-                        qb.orderBy(RawSQLLang(sortOrder))
-                    }
-                    if (limit != null) {
-                        qb.limit(RawSQLLang(limit))
-                    }
-                    val c = databaseWrapper.rawQuery(qb.buildSQL(), selectionArgs)
-                    c?.setNotificationUri(context.contentResolver, uri)
-                    return c
                 }
             }
             if (table == null) return null
-            val c = databaseWrapper.query(table, projection, selection, selectionArgs,
+            val c = databaseWrapper.query(table, projection, querySelection, selectionArgs,
                     null, null, sortOrder, limit)
             c?.setNotificationUri(context.contentResolver, uri)
             return c
@@ -306,6 +285,45 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
 
     override fun getType(uri: Uri): String? {
         return null
+    }
+
+    private fun rawQuery(uri: Uri, selectionArgs: Array<String>?): Cursor {
+        val c = databaseWrapper.rawQuery(uri.lastPathSegment, selectionArgs)
+        uri.getQueryParameter(QUERY_PARAM_NOTIFY_URI)?.let {
+            c?.setNotificationUri(context.contentResolver, Uri.parse(it))
+        }
+        return c
+    }
+
+    private fun queryMessagesConversationWithUnreadCount(projection: Array<String>, selection: String?,
+            sortOrder: String?, limit: String?, selectionArgs: Array<String>?, uri: Uri): Cursor? {
+        val mappedProjection = projection.mapToArray(TwidereQueryBuilder::mapConversationsProjection)
+        val qb = SQLQueryBuilder.select(Columns(*mappedProjection))
+        qb.from(Table(Messages.Conversations.TABLE_NAME))
+        qb.join(Join(false, Join.Operation.LEFT_OUTER, Table(Messages.TABLE_NAME),
+                Expression.and(
+                        Expression.equals(
+                                Column(Table(Messages.Conversations.TABLE_NAME), Messages.Conversations.CONVERSATION_ID),
+                                Column(Table(Messages.TABLE_NAME), Messages.CONVERSATION_ID)
+                        ),
+                        Expression.equals(
+                                Column(Table(Messages.Conversations.TABLE_NAME), Messages.Conversations.ACCOUNT_KEY),
+                                Column(Table(Messages.TABLE_NAME), Messages.ACCOUNT_KEY))
+                )
+        ))
+        if (selection != null) {
+            qb.where(Expression(selection))
+        }
+        qb.groupBy(Column(Table(Messages.TABLE_NAME), Messages.CONVERSATION_ID))
+        if (sortOrder != null) {
+            qb.orderBy(RawSQLLang(sortOrder))
+        }
+        if (limit != null) {
+            qb.limit(RawSQLLang(limit))
+        }
+        val c = databaseWrapper.rawQuery(qb.buildSQL(), selectionArgs)
+        c?.setNotificationUri(context.contentResolver, uri)
+        return c
     }
 
     private fun handleSQLException(e: SQLException): Boolean {

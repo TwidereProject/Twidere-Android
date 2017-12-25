@@ -39,8 +39,8 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.quickSendKey
 import org.mariotaku.twidere.extension.*
-import org.mariotaku.twidere.extension.model.can_retweet
-import org.mariotaku.twidere.extension.model.is_my_retweet
+import org.mariotaku.twidere.extension.model.canRetweet
+import org.mariotaku.twidere.extension.model.isAccountRetweet
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.draft.QuoteStatusActionExtras
@@ -115,7 +115,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
         }
 
         getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
-            if (!shouldQuoteRetweet(account) && status.is_my_retweet) {
+            if (!shouldQuoteRetweet(account) && status.isAccountRetweet) {
                 StatusPromises.getInstance(context).cancelRetweet(account.key, status.id, status.my_retweet_id)
                 dismiss()
             } else if (retweetOrQuote(account, status, showProtectedConfirm)) {
@@ -166,19 +166,19 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
             if (!editComment.empty) {
                 positiveButton.setText(R.string.action_comment)
                 positiveButton.isEnabled = true
-            } else if (status.is_my_retweet) {
+            } else if (status.isAccountRetweet) {
                 positiveButton.setText(R.string.action_cancel_retweet)
                 positiveButton.isEnabled = true
             } else {
                 positiveButton.setText(R.string.action_retweet)
-                positiveButton.isEnabled = status.can_retweet
+                positiveButton.isEnabled = status.canRetweet
             }
-        } else if (status.is_my_retweet) {
+        } else if (status.isAccountRetweet) {
             positiveButton.setText(R.string.action_cancel_retweet)
             positiveButton.isEnabled = true
         } else {
             positiveButton.setText(R.string.action_retweet)
-            positiveButton.isEnabled = status.can_retweet
+            positiveButton.isEnabled = status.canRetweet
         }
         textCountView.remaining = StatusTextValidator.calculateRemaining(arrayOf(account),
                 null, text.toString())

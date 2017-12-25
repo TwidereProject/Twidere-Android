@@ -33,6 +33,8 @@ object TableIds {
     const val SEARCH_TIMELINE = 26
     const val MEDIA_SEARCH_TIMELINE = 27
 
+    val RANGE_CUSTOM_TIMELINE = FAVORITES..MEDIA_SEARCH_TIMELINE
+
     const val ACTIVITIES_ABOUT_ME = 51
     const val ACTIVITIES_BY_FRIENDS = 52
     const val MESSAGES = 71

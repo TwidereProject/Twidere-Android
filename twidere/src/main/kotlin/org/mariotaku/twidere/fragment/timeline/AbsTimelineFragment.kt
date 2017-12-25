@@ -48,6 +48,7 @@ import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
 import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.AccountSelectorActivity
 import org.mariotaku.twidere.activity.ComposeActivity
@@ -73,6 +74,7 @@ import org.mariotaku.twidere.extension.view.firstVisibleItemPosition
 import org.mariotaku.twidere.extension.view.lastVisibleItemPosition
 import org.mariotaku.twidere.fragment.AbsContentRecyclerViewFragment
 import org.mariotaku.twidere.fragment.BaseFragment
+import org.mariotaku.twidere.fragment.iface.IFloatingActionButtonFragment
 import org.mariotaku.twidere.fragment.status.FavoriteConfirmDialogFragment
 import org.mariotaku.twidere.fragment.status.RetweetQuoteDialogFragment
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
@@ -97,7 +99,8 @@ import org.mariotaku.twidere.view.holder.TimelineFilterHeaderViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 import org.mariotaku.twidere.view.holder.status.StatusViewHolder
 
-abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableStatusesAdapter, LayoutManager>() {
+abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableStatusesAdapter, LayoutManager>(),
+        IFloatingActionButtonFragment {
 
     override val reachingStart: Boolean
         get() = recyclerView.layoutManager.firstVisibleItemPosition <= 0
@@ -304,6 +307,21 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         val result = super.scrollToStart()
         if (result) saveReadPosition(0)
         return result
+    }
+
+    override fun onActionClick(tag: String): Boolean {
+        when (tag) {
+            "home" -> {
+                val intent = Intent(INTENT_ACTION_COMPOSE).setPackage(BuildConfig.APPLICATION_ID)
+                val accountKeys = Utils.getAccountKeys(context!!, arguments)
+                if (accountKeys != null) {
+                    intent.putExtra(EXTRA_ACCOUNT_KEYS, accountKeys)
+                }
+                startActivity(intent)
+                return true
+            }
+        }
+        return false
     }
 
     fun reloadAll() {

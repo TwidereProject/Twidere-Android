@@ -18,7 +18,8 @@ import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.TwitterUserStream
 import org.mariotaku.microblog.library.annotation.twitter.StreamWith
-import org.mariotaku.microblog.library.model.microblog.*
+import org.mariotaku.microblog.library.model.microblog.DirectMessage
+import org.mariotaku.microblog.library.model.microblog.Status
 import org.mariotaku.microblog.library.model.twitter.Activity
 import org.mariotaku.microblog.library.model.twitter.TwitterStreamObject
 import org.mariotaku.sqliteqb.library.Columns
@@ -43,10 +44,10 @@ import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
+import org.mariotaku.twidere.util.BatteryManagerCompat
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.IntentUtils
-import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.streaming.TwitterTimelineStreamCallback
 import java.util.*
 import java.util.concurrent.ExecutorService
@@ -125,7 +126,7 @@ class StreamingService : BaseService() {
             return false
         }
         // Quit if not charging (with preference)
-        val isCharging = Utils.isCharging(this)
+        val isCharging = BatteryManagerCompat.isCharging(this)
         if (preferences[streamingPowerSavingKey] && !isCharging) {
             return false
         }

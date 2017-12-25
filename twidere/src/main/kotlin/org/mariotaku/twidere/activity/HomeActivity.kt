@@ -54,11 +54,13 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.graphics.drawable.DrawerArrowDrawable
 import android.support.v7.widget.TintTypedArray
+import android.support.v7.widget.TooltipCompat
 import android.util.SparseIntArray
 import android.view.*
 import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
 import android.view.ViewGroup.MarginLayoutParams
+import android.widget.Toast
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetView
 import com.squareup.otto.Subscribe
@@ -73,6 +75,7 @@ import org.mariotaku.kpreferences.set
 import org.mariotaku.ktextension.coerceInOr
 import org.mariotaku.ktextension.contains
 import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarShowHideHelper
@@ -87,10 +90,7 @@ import org.mariotaku.twidere.fragment.iface.IFloatingActionButtonFragment
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
 import org.mariotaku.twidere.graphic.EmptyDrawable
-import org.mariotaku.twidere.model.AccountDetails
-import org.mariotaku.twidere.model.SupportTabSpec
-import org.mariotaku.twidere.model.Tab
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.event.UnreadCountUpdatedEvent
 import org.mariotaku.twidere.model.notification.NotificationChannelSpec
 import org.mariotaku.twidere.promise.RefreshPromises
@@ -123,7 +123,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     private var updateUnreadCountTask: UpdateUnreadCountTask? = null
     private val readStateChangeListener = OnSharedPreferenceChangeListener { _, _ -> updateUnreadCount() }
     private val controlBarShowHideHelper = ControlBarShowHideHelper(this)
-    private val useTabNavigation get() = pagerAdapter.getCount() > 1
+    private val useTabNavigation get() = pagerAdapter.count > 1
 
     override val controlBarHeight: Int
         get() {
@@ -163,7 +163,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     override val currentVisibleFragment: Fragment?
         get() {
             val currentItem = mainPager.currentItem
-            if (currentItem < 0 || currentItem >= pagerAdapter.getCount()) return null
+            if (currentItem < 0 || currentItem >= pagerAdapter.count) return null
             return pagerAdapter.instantiateItem(mainPager, currentItem)
         }
 
@@ -408,7 +408,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     override fun onLongClick(v: View): Boolean {
         when (v) {
             actionsButton -> {
-                Utils.showMenuItemToast(v, v.contentDescription, true)
+                Toast.makeText(v.context, v.contentDescription, Toast.LENGTH_SHORT).show()
                 return true
             }
         }
@@ -467,7 +467,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     override fun onNewIntent(intent: Intent) {
         val tabPosition = handleIntent(intent, false)
         if (tabPosition >= 0) {
-            mainPager.currentItem = tabPosition.coerceInOr(0 until pagerAdapter.getCount(), 0)
+            mainPager.currentItem = tabPosition.coerceInOr(0 until pagerAdapter.count, 0)
         }
     }
 
@@ -530,7 +530,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                     if (previous < 0 && DrawerLayoutAccessor.findDrawerWithGravity(homeMenu, Gravity.START) != null) {
                         homeMenu.openDrawer(GravityCompat.START)
                         setControlBarVisibleAnimate(true)
-                    } else if (previous < pagerAdapter.getCount()) {
+                    } else if (previous < pagerAdapter.count) {
                         if (homeMenu.isDrawerOpen(GravityCompat.END)) {
                             homeMenu.closeDrawers()
                         } else {
@@ -541,7 +541,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                 }
                 KeyboardShortcutConstants.ACTION_NAVIGATION_NEXT_TAB -> {
                     val next = mainPager.currentItem + 1
-                    if (next >= pagerAdapter.getCount() && DrawerLayoutAccessor.findDrawerWithGravity(homeMenu, Gravity.END) != null) {
+                    if (next >= pagerAdapter.count && DrawerLayoutAccessor.findDrawerWithGravity(homeMenu, Gravity.END) != null) {
                         homeMenu.openDrawer(GravityCompat.END)
                         setControlBarVisibleAnimate(true)
                     } else if (next >= 0) {
@@ -717,7 +717,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         if (tabType != null) {
             val accountKey = uri?.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY)?.let(UserKey::valueOf)
             val adapter = pagerAdapter
-            for (i in 0 until adapter.getCount()) {
+            for (i in 0 until adapter.count) {
                 val tab = adapter.get(i)
                 if (tabType == Tab.getTypeAlias(tab.type)) {
                     val args = tab.args
@@ -802,10 +802,10 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     private fun setTabPosition(initialTab: Int) {
         val rememberPosition = preferences.getBoolean(SharedPreferenceConstants.KEY_REMEMBER_POSITION, true)
         if (initialTab >= 0) {
-            mainPager.currentItem = initialTab.coerceInOr(0 until pagerAdapter.getCount(), 0)
+            mainPager.currentItem = initialTab.coerceInOr(0 until pagerAdapter.count, 0)
         } else if (rememberPosition) {
             val position = preferences.getInt(SharedPreferenceConstants.KEY_SAVED_TAB_POSITION, 0)
-            mainPager.currentItem = position.coerceInOr(0 until pagerAdapter.getCount(), 0)
+            mainPager.currentItem = position.coerceInOr(0 until pagerAdapter.count, 0)
         }
     }
 
@@ -836,7 +836,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     private fun setupHomeTabs() {
         pagerAdapter.clear()
         pagerAdapter.addAll(CustomTabUtils.getHomeTabs(this))
-        val hasNoTab = pagerAdapter.getCount() == 0
+        val hasNoTab = pagerAdapter.count == 0
         emptyTabHint.visibility = if (hasNoTab) View.VISIBLE else View.GONE
         mainPager.visibility = if (hasNoTab) View.GONE else View.VISIBLE
         val useTabNavigation = useTabNavigation
@@ -909,11 +909,11 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
     private fun triggerActionsClick() {
         val position = mainPager.currentItem
-        if (pagerAdapter.getCount() == 0) return
+        if (pagerAdapter.count == 0) return
         val fragment = pagerAdapter.instantiateItem(mainPager, position) as? IFloatingActionButtonFragment
         val handled = fragment?.onActionClick("home") ?: false
         if (!handled) {
-            startActivity(Intent(INTENT_ACTION_COMPOSE))
+            startActivity(Intent(INTENT_ACTION_COMPOSE).setPackage(BuildConfig.APPLICATION_ID))
         }
     }
 
@@ -928,14 +928,12 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             }
             return@run f
         }
-        val info = fragment?.getActionInfo("home") ?: run {
-            actionsButton.setImageResource(R.drawable.ic_action_status_compose)
-            actionsButton.contentDescription = getString(R.string.action_compose)
-            return
-        }
+        val info = fragment?.getActionInfo("home") ?: FloatingActionButtonInfo(R.drawable.ic_action_status_compose,
+                getString(R.string.action_compose))
 
         actionsButton.setImageResource(info.icon)
         actionsButton.contentDescription = info.title
+        TooltipCompat.setTooltipText(actionsButton, info.title)
     }
 
 

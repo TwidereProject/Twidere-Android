@@ -55,6 +55,8 @@ import org.mariotaku.twidere.constant.favoriteConfirmationKey
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
 import org.mariotaku.twidere.extension.getDetails
 import org.mariotaku.twidere.extension.model.isOfficial
+import org.mariotaku.twidere.extension.model.isAccountRetweet
+import org.mariotaku.twidere.extension.model.isAccountStatus
 import org.mariotaku.twidere.extension.promise
 import org.mariotaku.twidere.fragment.AddStatusFilterDialogFragment
 import org.mariotaku.twidere.fragment.BaseFragment
@@ -120,9 +122,9 @@ object MenuUtils {
         val isMyRetweet = when {
             RetweetStatusTask.isRunning(status.account_key, status.id) -> true
             DestroyStatusTask.isRunning(status.account_key, status.id) -> false
-            else -> status.retweeted || Utils.isMyRetweet(status)
+            else -> status.retweeted || status.isAccountRetweet
         }
-        val isMyStatus = Utils.isMyStatus(status)
+        val isMyStatus = status.isAccountRetweet || status.isAccountStatus
         menu.setItemAvailability(R.id.delete, isMyStatus)
         if (isMyStatus) {
             val isPinned = status.is_pinned_status

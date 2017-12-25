@@ -20,14 +20,12 @@
 package org.mariotaku.twidere.util
 
 import android.accounts.AccountManager
-import android.annotation.SuppressLint
 import android.app.ActionBar
 import android.app.Activity
 import android.content.*
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
-import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.net.Uri
@@ -39,23 +37,15 @@ import android.os.Bundle
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 import android.support.v4.net.ConnectivityManagerCompat
-import android.support.v4.view.GravityCompat
-import android.support.v4.view.accessibility.AccessibilityEventCompat
 import android.support.v7.app.AppCompatActivity
 import android.text.format.DateFormat
 import android.text.format.DateUtils
 import android.util.Log
 import android.util.TypedValue
-import android.view.Gravity
 import android.view.KeyCharacterMap
 import android.view.KeyEvent
-import android.view.View
-import android.view.accessibility.AccessibilityEvent
-import android.view.accessibility.AccessibilityManager
-import android.widget.Toast
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.getNullableTypedArray
-import org.mariotaku.ktextension.toString
 import org.mariotaku.pickncrop.library.PNCUtils
 import org.mariotaku.sqliteqb.library.AllColumns
 import org.mariotaku.sqliteqb.library.Columns
@@ -87,7 +77,6 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
 import org.mariotaku.twidere.util.TwidereLinkify.PATTERN_TWITTER_PROFILE_IMAGES
 import java.io.File
-import java.util.*
 import java.util.regex.Pattern
 
 object Utils {
@@ -105,40 +94,11 @@ object Utils {
     }
 
 
-    fun announceForAccessibilityCompat(context: Context, view: View, text: CharSequence,
-            cls: Class<*>) {
-        val accessibilityManager = context
-                .getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
-        if (!accessibilityManager.isEnabled) return
-        // Prior to SDK 16, announcements could only be made through FOCUSED
-        // events. Jelly Bean (SDK 16) added support for speaking text verbatim
-        // using the ANNOUNCEMENT event type.
-        val eventType: Int
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            eventType = AccessibilityEvent.TYPE_VIEW_FOCUSED
-        } else {
-            eventType = AccessibilityEventCompat.TYPE_ANNOUNCEMENT
-        }
-
-        // Construct an accessibility event with the minimum recommended
-        // attributes. An event without a class name or package may be dropped.
-        val event = AccessibilityEvent.obtain(eventType)
-        event.text.add(text)
-        event.className = cls.name
-        event.packageName = context.packageName
-        event.setSource(view)
-
-        // Sends the event directly through the accessibility manager. If your
-        // application only targets SDK 14+, you should just call
-        // getParent().requestSendAccessibilityEvent(this, event);
-        accessibilityManager.sendAccessibilityEvent(event)
-    }
-
     fun deleteMedia(context: Context, uri: Uri): Boolean {
-        try {
-            return PNCUtils.deleteMedia(context, uri)
+        return try {
+            PNCUtils.deleteMedia(context, uri)
         } catch (e: SecurityException) {
-            return false
+            false
         }
 
     }
@@ -162,25 +122,27 @@ object Utils {
 
     fun getAccountKeys(context: Context, args: Bundle?): Array<UserKey>? {
         if (args == null) return null
-        if (args.containsKey(EXTRA_ACCOUNT_KEYS)) {
-            return args.getNullableTypedArray(EXTRA_ACCOUNT_KEYS)
-        } else if (args.containsKey(EXTRA_ACCOUNT_KEY)) {
-            val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY) ?: return emptyArray()
-            return arrayOf(accountKey)
-        } else if (args.containsKey(EXTRA_ACCOUNT_ID)) {
-            val accountId = args.get(EXTRA_ACCOUNT_ID).toString()
-            try {
-                if (java.lang.Long.parseLong(accountId) <= 0) return null
-            } catch (e: NumberFormatException) {
-                // Ignore
+        when {
+            args.containsKey(EXTRA_ACCOUNT_KEYS) -> return args.getNullableTypedArray(EXTRA_ACCOUNT_KEYS)
+            args.containsKey(EXTRA_ACCOUNT_KEY) -> {
+                val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY) ?: return emptyArray()
+                return arrayOf(accountKey)
             }
+            args.containsKey(EXTRA_ACCOUNT_ID) -> {
+                val accountId = args.get(EXTRA_ACCOUNT_ID)?.toString().orEmpty()
+                try {
+                    if (java.lang.Long.parseLong(accountId) <= 0) return null
+                } catch (e: NumberFormatException) {
+                    // Ignore
+                }
 
-            val accountKey = DataStoreUtils.findAccountKey(context, accountId)
-            args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey)
-            if (accountKey == null) return arrayOf(UserKey(accountId, null))
-            return arrayOf(accountKey)
+                val accountKey = DataStoreUtils.findAccountKey(context, accountId)
+                args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey)
+                if (accountKey == null) return arrayOf(UserKey(accountId, null))
+                return arrayOf(accountKey)
+            }
+            else -> return null
         }
-        return null
     }
 
     fun getAccountKey(context: Context, args: Bundle?): UserKey? {
@@ -281,10 +243,6 @@ object Utils {
         return null
     }
 
-    fun getLocalizedNumber(locale: Locale, number: Number): String {
-        return number.toString(locale)
-    }
-
     fun getMatchedNicknameKeys(str: String, manager: UserColorNameManager): Array<String> {
         if (str.isEmpty()) return emptyArray()
         return manager.nicknames.filter { (_, value) ->
@@ -346,18 +304,20 @@ object Utils {
 
     @DrawableRes
     fun getUserTypeIconRes(isVerified: Boolean, isProtected: Boolean): Int {
-        if (isVerified)
-            return R.drawable.ic_user_type_verified
-        else if (isProtected) return R.drawable.ic_user_type_protected
-        return 0
+        return when {
+            isVerified -> R.drawable.ic_user_type_verified
+            isProtected -> R.drawable.ic_user_type_protected
+            else -> 0
+        }
     }
 
     @StringRes
     fun getUserTypeDescriptionRes(isVerified: Boolean, isProtected: Boolean): Int {
-        if (isVerified)
-            return R.string.user_type_verified
-        else if (isProtected) return R.string.user_type_protected
-        return 0
+        return when {
+            isVerified -> R.string.user_type_verified
+            isProtected -> R.string.user_type_protected
+            else -> 0
+        }
     }
 
     fun isBatteryOkay(context: Context?): Boolean {
@@ -386,15 +346,6 @@ object Utils {
     fun isMyAccount(context: Context, screenName: String): Boolean {
         val am = AccountManager.get(context)
         return am.findAccount(screenName) != null
-    }
-
-    fun isMyRetweet(status: ParcelableStatus?): Boolean {
-        return status != null && isMyRetweet(status.account_key, status.retweeted_by_user_key,
-                status.my_retweet_id)
-    }
-
-    fun isMyRetweet(accountKey: UserKey, retweetedByKey: UserKey?, myRetweetId: String?): Boolean {
-        return accountKey == retweetedByKey || myRetweetId != null
     }
 
     fun matchTabCode(uri: Uri): Int {
@@ -451,40 +402,6 @@ object Utils {
         return top - actionBarHeight
     }
 
-    fun restartActivity(activity: Activity?) {
-        if (activity == null) return
-        val enterAnim = android.R.anim.fade_in
-        val exitAnim = android.R.anim.fade_out
-        activity.finish()
-        activity.overridePendingTransition(enterAnim, exitAnim)
-        activity.startActivity(activity.intent)
-        activity.overridePendingTransition(enterAnim, exitAnim)
-    }
-
-    internal fun isMyStatus(status: ParcelableStatus): Boolean {
-        if (isMyRetweet(status)) return true
-        return status.account_key.maybeEquals(status.user_key)
-    }
-
-    fun showMenuItemToast(v: View, text: CharSequence, isBottomBar: Boolean) {
-        val screenPos = IntArray(2)
-        val displayFrame = Rect()
-        v.getLocationOnScreen(screenPos)
-        v.getWindowVisibleDisplayFrame(displayFrame)
-        val width = v.width
-        val height = v.height
-        val screenWidth = v.resources.displayMetrics.widthPixels
-        val cheatSheet = Toast.makeText(v.context.applicationContext, text, Toast.LENGTH_SHORT)
-        if (isBottomBar) {
-            // Show along the bottom center
-            cheatSheet.setGravity(Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL, 0, height)
-        } else {
-            // Show along the top; follow action buttons
-            cheatSheet.setGravity(Gravity.TOP or GravityCompat.END, screenWidth - screenPos[0] - width / 2, height)
-        }
-        cheatSheet.show()
-    }
-
     internal fun getMetadataDrawable(pm: PackageManager?, info: ActivityInfo?, key: String?): Drawable? {
         if (pm == null || info == null || info.metaData == null || key == null || !info.metaData.containsKey(key))
             return null
@@ -492,8 +409,7 @@ object Utils {
     }
 
     internal fun isExtensionUseJSON(info: ResolveInfo?): Boolean {
-        if (info == null || info.activityInfo == null) return false
-        val activityInfo = info.activityInfo
+        val activityInfo = info?.activityInfo ?: return false
         if (activityInfo.metaData != null && activityInfo.metaData.containsKey(METADATA_KEY_EXTENSION_USE_JSON))
             return activityInfo.metaData.getBoolean(METADATA_KEY_EXTENSION_USE_JSON)
         val appInfo = activityInfo.applicationInfo ?: return false
@@ -528,16 +444,6 @@ object Utils {
         var result = baseId
         result = 31 * result + (accountKey?.hashCode() ?: 0)
         return result
-    }
-
-    @SuppressLint("InlinedApi")
-    fun isCharging(context: Context?): Boolean {
-        if (context == null) return false
-        val intent = context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED)) ?: return false
-        val plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1)
-        return plugged == BatteryManager.BATTERY_PLUGGED_AC
-                || plugged == BatteryManager.BATTERY_PLUGGED_USB
-                || plugged == BatteryManager.BATTERY_PLUGGED_WIRELESS
     }
 
     fun isMediaPreviewEnabled(context: Context, preferences: SharedPreferences): Boolean {

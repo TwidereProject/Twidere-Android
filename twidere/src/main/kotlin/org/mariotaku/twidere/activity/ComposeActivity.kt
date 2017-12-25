@@ -42,6 +42,7 @@ import android.support.v7.widget.FixedLinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.ViewHolder
+import android.support.v7.widget.TooltipCompat
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.text.Editable
 import android.text.Spannable
@@ -51,7 +52,6 @@ import android.text.method.LinkMovementMethod
 import android.text.style.*
 import android.view.*
 import android.view.View.OnClickListener
-import android.view.View.OnLongClickListener
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import android.widget.Toast
@@ -114,7 +114,7 @@ import kotlin.collections.ArrayList
 import android.Manifest.permission as AndroidPermission
 
 @SuppressLint("RestrictedApi")
-class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener, OnLongClickListener,
+class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener,
         ActionMode.Callback, PermissionRequestCancelCallback, EditAltTextDialogFragment.EditAltTextCallback {
 
     // Utility classes
@@ -200,7 +200,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         get() {
             val status = inReplyToStatus
             if (!isQuote || status == null) return false
-            return !status.can_retweet && status.account_key != status.user_key
+            return !status.canRetweet && status.account_key != status.user_key
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -317,8 +317,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         ThemeUtils.wrapMenuIcon(menuBar)
 
         updateStatus.setOnClickListener(this)
-        updateStatus.setOnLongClickListener(this)
-
+        TooltipCompat.setTooltipText(updateStatus, updateStatus.contentDescription)
 
         val composeExtensionsIntent = Intent(INTENT_ACTION_EXTENSION_COMPOSE)
         val imageExtensionsIntent = Intent(INTENT_ACTION_EXTENSION_EDIT_IMAGE)
@@ -525,16 +524,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val contentView = window.findViewById<View>(android.R.id.content)
         contentView.setPadding(contentView.paddingLeft, 0,
                 contentView.paddingRight, contentView.paddingBottom)
-    }
-
-    override fun onLongClick(v: View): Boolean {
-        when (v) {
-            updateStatus -> {
-                Utils.showMenuItemToast(v, getString(R.string.action_send), true)
-                return true
-            }
-        }
-        return false
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
@@ -1356,7 +1345,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         menu.setItemAvailability(R.id.location_submenu, hasLocationOption)
 
         ThemeUtils.wrapMenuIcon(menuBar, excludeGroups = *intArrayOf(MENU_GROUP_IMAGE_EXTENSION))
-        ThemeUtils.resetCheatSheet(menuBar)
     }
 
     private fun setProgressVisible(visible: Boolean) {

@@ -10,7 +10,6 @@ import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.util.HtmlEscapeHelper
 import org.mariotaku.twidere.util.UriUtils
 import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.view.ShortTimeView
 
 
@@ -74,10 +73,13 @@ inline val ParcelableStatus.quoted_user_acct: String?
         "$quoted_user_screen_name@${quoted_user_key?.host}"
     }
 
-inline val ParcelableStatus.is_my_retweet: Boolean
-    get() = Utils.isMyRetweet(account_key, retweeted_by_user_key, my_retweet_id)
+inline val ParcelableStatus.isAccountRetweet: Boolean
+    get() = account_key == retweeted_by_user_key || my_retweet_id != null
 
-inline val ParcelableStatus.can_retweet: Boolean
+inline val ParcelableStatus.isAccountStatus: Boolean
+    get() = account_key.maybeEquals(user_key)
+
+inline val ParcelableStatus.canRetweet: Boolean
     get() {
         if (user_key.host == USER_TYPE_FANFOU_COM) return true
         val visibility = extras?.visibility ?: return !user_is_protected
@@ -203,7 +205,7 @@ fun ParcelableStatus.updateExtraInformation(details: AccountDetails) {
 }
 
 fun ParcelableStatus.contentDescription(context: Context, manager: UserColorNameManager,
-        nameFirst: Boolean, displayInReplyTo: Boolean, showAbsoluteTime: Boolean): String {
+        displayInReplyTo: Boolean, showAbsoluteTime: Boolean): String {
     val displayName = manager.getDisplayName(this)
     val displayTime = if (is_retweet) retweet_timestamp else timestamp
     val timeLabel = ShortTimeView.getTimeLabel(context, displayTime, showAbsoluteTime)

@@ -40,6 +40,7 @@ fun Context.deleteDrafts(draftIds: LongArray): Int {
     return contentResolver.delete(Drafts.CONTENT_URI, where, whereArgs)
 }
 
+@WorkerThread
 fun ContentResolver.deleteAccountData(accountKey: UserKey) {
     val where = Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY).sql
     val whereArgs = arrayOf(accountKey.toString())

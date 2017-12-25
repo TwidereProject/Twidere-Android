@@ -35,13 +35,15 @@ import android.support.v4.graphics.ColorUtils
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.app.TwilightManagerAccessor
-import android.support.v7.view.menu.ActionMenuItemView
 import android.support.v7.widget.ActionMenuView
 import android.support.v7.widget.TintTypedArray
 import android.support.v7.widget.Toolbar
 import android.support.v7.widget.TwidereToolbar
 import android.util.TypedValue
-import android.view.*
+import android.view.Menu
+import android.view.MenuItem
+import android.view.Window
+import android.view.WindowManager
 import android.widget.FrameLayout
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
@@ -285,21 +287,6 @@ object ThemeUtils {
         }
         //return dark text color
         return darkColor
-    }
-
-    @SuppressLint("RestrictedApi")
-    fun resetCheatSheet(menuView: ActionMenuView) {
-        val listener = View.OnLongClickListener { v ->
-            if ((v as ActionMenuItemView).hasText()) return@OnLongClickListener false
-            val menuItem = v.itemData
-            Utils.showMenuItemToast(v, menuItem.title, true)
-            return@OnLongClickListener true
-        }
-        (0 until menuView.childCount).forEach { i ->
-            val child = menuView.getChildAt(i) as? ActionMenuItemView ?: return@forEach
-            if (child.itemData.hasSubMenu()) return@forEach
-            child.setOnLongClickListener(listener)
-        }
     }
 
     fun getOptimalAccentColor(accentColor: Int, foregroundColor: Int): Int {

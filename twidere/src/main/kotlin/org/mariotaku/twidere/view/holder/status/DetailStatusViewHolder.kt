@@ -722,7 +722,7 @@ class DetailStatusViewHolder(
                         throw UnsupportedOperationException("Unsupported type " + count.type)
                     }
                 }
-                labelView.primaryText = Utils.getLocalizedNumber(Locale.getDefault(), count.count)
+                labelView.primaryText = count.count.toString(Locale.getDefault())
                 labelView.secondaryText = label
 
                 labelView.updateText(adapter.bidiFormatter)

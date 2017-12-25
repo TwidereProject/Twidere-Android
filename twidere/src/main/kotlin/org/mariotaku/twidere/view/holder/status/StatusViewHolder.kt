@@ -62,7 +62,6 @@ import org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText
 import org.mariotaku.twidere.util.HtmlSpanBuilder
 import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.UnitConvertUtils
-import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.Utils.getUserTypeIconRes
 import org.mariotaku.twidere.view.ShapedImageView
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
@@ -447,7 +446,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
 
 
         itemView.contentDescription = status.contentDescription(context, colorNameManager,
-                nameFirst, displayInReplyTo, timeView.showAbsoluteTime)
+                displayInReplyTo, timeView.showAbsoluteTime)
 
         profileImageView.contentDescription = context.getString(R.string.content_description_open_user_name_profile,
                 colorNameManager.getDisplayName(status))
@@ -749,8 +748,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         fun isRetweetIconActivated(status: ParcelableStatus): Boolean {
             return !DestroyStatusTask.isRunning(status.account_key, status.my_retweet_id) &&
                     (RetweetStatusTask.isRunning(status.account_key, status.id) ||
-                            status.retweeted || Utils.isMyRetweet(status.account_key,
-                            status.retweeted_by_user_key, status.my_retweet_id))
+                            status.retweeted || status.account_key == status.retweeted_by_user_key ||
+                            status.my_retweet_id != null)
         }
 
         fun isFavoriteIconActivated(status: ParcelableStatus): Boolean {

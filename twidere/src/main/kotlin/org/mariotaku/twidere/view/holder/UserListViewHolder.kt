@@ -25,11 +25,11 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.list_item_user_list.view.*
 import org.mariotaku.ktextension.hideIfEmpty
 import org.mariotaku.ktextension.spannable
+import org.mariotaku.ktextension.toString
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IUserListsAdapter
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.ParcelableUserList
-import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.view.ColorLabelRelativeLayout
 import org.mariotaku.twidere.view.ProfileImageView
 import java.util.*
@@ -75,8 +75,8 @@ class UserListViewHolder(
         }
         descriptionView.spannable = userList.description
         descriptionView.hideIfEmpty()
-        membersCountView.text = Utils.getLocalizedNumber(Locale.getDefault(), userList.members_count)
-        subscribersCountView.text = Utils.getLocalizedNumber(Locale.getDefault(), userList.subscribers_count)
+        membersCountView.text = userList.members_count.toString(Locale.getDefault())
+        subscribersCountView.text = userList.subscribers_count.toString(Locale.getDefault())
     }
 
     fun setOnClickListeners() {

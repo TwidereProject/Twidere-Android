@@ -160,7 +160,7 @@ class LargeMediaStatusViewHolder(private val adapter: IStatusesAdapter, itemView
         mediaPreviewAdapter.media = status.media
 
         itemView.contentDescription = status.contentDescription(context, adapter.userColorNameManager,
-                adapter.nameFirst, false, timeView.showAbsoluteTime)
+                false, timeView.showAbsoluteTime)
     }
 
     override fun onMediaClick(view: View, current: ParcelableMedia, accountKey: UserKey?, id: Long) {

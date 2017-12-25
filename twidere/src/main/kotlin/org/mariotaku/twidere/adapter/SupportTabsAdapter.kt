@@ -27,12 +27,12 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.view.PagerAdapter
 import android.view.View
 import android.view.ViewGroup
+import org.mariotaku.twidere.extension.announceForAccessibilityCompat
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
 import org.mariotaku.twidere.model.SupportTabSpec
 import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.util.CustomTabUtils.getTabIconDrawable
-import org.mariotaku.twidere.util.Utils.announceForAccessibilityCompat
 import org.mariotaku.twidere.view.iface.PagerIndicator
 import org.mariotaku.twidere.view.iface.PagerIndicator.TabListener
 import org.mariotaku.twidere.view.iface.PagerIndicator.TabProvider
@@ -77,7 +77,7 @@ class SupportTabsAdapter(
     }
 
     override fun getPageWidth(position: Int): Float {
-        val columnCount = getCount()
+        val columnCount = count
         if (columnCount == 0) return 1f
         if (hasMultipleColumns && preferredColumnWidth > 0) {
             val resources = context.resources
@@ -114,10 +114,10 @@ class SupportTabsAdapter(
     }
 
     override fun onTabClick(position: Int) {
-        if (position < 0 || position >= getCount()) return
+        if (position < 0 || position >= count) return
         val text = getPageTitle(position) ?: return
         val view = indicator as? View ?: return
-        announceForAccessibilityCompat(context, view, text, javaClass)
+        view.announceForAccessibilityCompat(text)
     }
 
     override fun onTabLongClick(position: Int): Boolean {

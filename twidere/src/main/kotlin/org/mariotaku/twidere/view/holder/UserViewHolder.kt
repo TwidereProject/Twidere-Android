@@ -27,6 +27,7 @@ import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.list_item_user.view.*
 import org.mariotaku.ktextension.hideIfEmpty
 import org.mariotaku.ktextension.spannable
+import org.mariotaku.ktextension.toString
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.*
@@ -34,7 +35,6 @@ import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.hasSameHost
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.promise.FriendshipPromises
-import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.Utils.getUserTypeIconRes
 import java.util.*
 
@@ -174,9 +174,9 @@ class UserViewHolder(
             urlView.spannable = user.url_expanded
             urlView.hideIfEmpty()
             val locale = Locale.getDefault()
-            statusesCountView.text = Utils.getLocalizedNumber(locale, user.statuses_count)
-            followersCountView.text = Utils.getLocalizedNumber(locale, user.followers_count)
-            friendsCountView.text = Utils.getLocalizedNumber(locale, user.friends_count)
+            statusesCountView.text = user.statuses_count.toString(locale)
+            followersCountView.text = user.followers_count.toString(locale)
+            friendsCountView.text = user.friends_count.toString(locale)
         }
     }
 

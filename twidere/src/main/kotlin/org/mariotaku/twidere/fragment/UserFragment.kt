@@ -1185,10 +1185,10 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
         val locale = Locale.getDefault()
 
-        listedCount.primaryText = Utils.getLocalizedNumber(locale, user.listed_count)
-        groupsCount.primaryText = Utils.getLocalizedNumber(locale, user.groupsCount)
-        followersCount.primaryText = Utils.getLocalizedNumber(locale, user.followers_count)
-        friendsCount.primaryText = Utils.getLocalizedNumber(locale, user.friends_count)
+        listedCount.primaryText = user.listed_count.toString(locale)
+        groupsCount.primaryText = user.groupsCount.toString(locale)
+        followersCount.primaryText = user.followers_count.toString(locale)
+        friendsCount.primaryText = user.friends_count.toString(locale)
 
         listedCount.updateText()
         groupsCount.updateText()

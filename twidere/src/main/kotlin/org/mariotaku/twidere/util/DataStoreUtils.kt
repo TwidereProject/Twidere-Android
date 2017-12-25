@@ -32,7 +32,9 @@ import android.provider.BaseColumns
 import android.support.annotation.WorkerThread
 import android.text.TextUtils
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.addTo
 import org.mariotaku.ktextension.mapToArray
+import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.microblog.library.MicroBlog
@@ -129,9 +131,16 @@ object DataStoreUtils {
         tableMatcher.addPath("${TwidereDataStore.CONTENT_PATH_RAW_QUERY}/*", TableIds.VIRTUAL_RAW_QUERY)
     }
 
+    fun getStatusTabId(uri: Uri): Long {
+        if (getTableId(uri) in TableIds.RANGE_CUSTOM_TIMELINE) {
+            return uri.lastPathSegment.toLongOr(-1)
+        }
+        return -1
+    }
+
     fun getNewestStatusIds(context: Context, uri: Uri, accountKeys: Array<UserKey?>): Array<String?> {
         return getStringFieldArray(context, uri, accountKeys, Statuses.ACCOUNT_KEY, Statuses.ID,
-                OrderBy(SQLFunctions.MAX(Statuses.TIMESTAMP)), null, null)
+                OrderBy(SQLFunctions.MAX(Statuses.TIMESTAMP)), getStatusesWhere(uri), null)
     }
 
     fun getNewestMessageIds(context: Context, uri: Uri, accountKeys: Array<UserKey?>, outgoing: Boolean): Array<String?> {
@@ -166,19 +175,19 @@ object DataStoreUtils {
 
     fun getNewestStatusSortIds(context: Context, uri: Uri, accountKeys: Array<UserKey?>): LongArray {
         return getLongFieldArray(context, uri, accountKeys, Statuses.ACCOUNT_KEY, Statuses.SORT_ID,
-                OrderBy(SQLFunctions.MAX(Statuses.TIMESTAMP)), null, null)
+                OrderBy(SQLFunctions.MAX(Statuses.TIMESTAMP)), getStatusesWhere(uri), null)
     }
 
 
     fun getOldestStatusIds(context: Context, uri: Uri, accountKeys: Array<UserKey?>): Array<String?> {
         return getStringFieldArray(context, uri, accountKeys, Statuses.ACCOUNT_KEY, Statuses.ID,
-                OrderBy(SQLFunctions.MIN(Statuses.TIMESTAMP)), null, null)
+                OrderBy(SQLFunctions.MIN(Statuses.TIMESTAMP)), getStatusesWhere(uri), null)
     }
 
 
     fun getOldestStatusSortIds(context: Context, uri: Uri, accountKeys: Array<UserKey?>): LongArray {
         return getLongFieldArray(context, uri, accountKeys, Statuses.ACCOUNT_KEY, Statuses.SORT_ID,
-                OrderBy(SQLFunctions.MIN(Statuses.TIMESTAMP)), null, null)
+                OrderBy(SQLFunctions.MIN(Statuses.TIMESTAMP)), getStatusesWhere(uri), null)
     }
 
     fun getNewestActivityMaxPositions(context: Context, uri: Uri, accountKeys: Array<UserKey?>,
@@ -297,9 +306,9 @@ object DataStoreUtils {
         val expressionArgs = ArrayList<String>()
 
         expressions.add(Expression.inArgs(Column(Statuses.ACCOUNT_KEY), keys.size))
-        for (accountKey in keys) {
-            expressionArgs.add(accountKey.toString())
-        }
+        keys.mapTo(expressionArgs) { it.toString() }
+
+        getStatusesWhere(uri)?.addTo(expressions)
 
         if (greaterThan) {
             expressions.add(Expression.greaterThan(compareColumn, compare))
@@ -742,14 +751,6 @@ object DataStoreUtils {
         }
     }
 
-    internal interface FieldArrayCreator<T, I> {
-        fun newArray(size: Int): T
-
-        fun newIndex(cur: Cursor): I
-
-        fun assign(array: T, arrayIdx: Int, cur: Cursor, colIdx: I)
-    }
-
     fun getInteractionsCount(context: Context, preferences: SharedPreferences, extraArgs: Bundle?,
             accountKeys: Array<UserKey>, since: Long, sinceColumn: String,
             @FilterScope filterScopes: Int): Int {
@@ -770,6 +771,14 @@ object DataStoreUtils {
         }
         return getActivitiesCount(context, preferences, Activities.AboutMe.CONTENT_URI, extraWhere,
                 extraWhereArgs, sinceColumn, since, followingOnly, accountKeys, filterScopes)
+    }
+
+    internal interface FieldArrayCreator<T, I> {
+        fun newArray(size: Int): T
+
+        fun newIndex(cur: Cursor): I
+
+        fun assign(array: T, arrayIdx: Int, cur: Cursor, colIdx: I)
     }
 
     fun addToFilter(context: Context, users: Collection<ParcelableUser>, filterAnywhere: Boolean) {
@@ -902,5 +911,13 @@ object DataStoreUtils {
 
     private fun UriMatcher.addPath(path: String, code: Int) {
         addURI(TwidereDataStore.AUTHORITY, path, code)
+    }
+
+    private fun getStatusesWhere(uri: Uri): Expression? {
+        val tabId = getStatusTabId(uri)
+        if (tabId > 0) {
+            return Expression.equals(Statuses.TAB_ID, tabId)
+        }
+        return null
     }
 }

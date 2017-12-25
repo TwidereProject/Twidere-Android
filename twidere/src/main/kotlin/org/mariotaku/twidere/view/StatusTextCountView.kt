@@ -24,7 +24,7 @@ import android.graphics.Color
 import android.support.annotation.ColorInt
 import android.support.v7.widget.AppCompatTextView
 import android.util.AttributeSet
-import org.mariotaku.twidere.util.Utils.getLocalizedNumber
+import org.mariotaku.ktextension.toString
 import java.util.*
 
 class StatusTextCountView(context: Context, attrs: AttributeSet? = null) : AppCompatTextView(context,
@@ -47,7 +47,7 @@ class StatusTextCountView(context: Context, attrs: AttributeSet? = null) : AppCo
             text = null
             return
         }
-        text = getLocalizedNumber(Locale.getDefault(), remaining)
+        text = remaining.toString(Locale.getDefault())
         val exceededLimit = remaining < 0
         val nearLimit = remaining <= warnLimit
         val hue = (if (exceededLimit) if (nearLimit) 5 * remaining else 50 else 0).toFloat()

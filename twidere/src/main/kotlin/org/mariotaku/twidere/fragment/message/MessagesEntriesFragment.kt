@@ -59,7 +59,7 @@ import org.mariotaku.twidere.extension.model.user
 import org.mariotaku.twidere.extension.promise
 import org.mariotaku.twidere.fragment.AbsContentListRecyclerViewFragment
 import org.mariotaku.twidere.fragment.iface.IFloatingActionButtonFragment
-import org.mariotaku.twidere.fragment.iface.IFloatingActionButtonFragment.ActionInfo
+import org.mariotaku.twidere.model.FloatingActionButtonInfo
 import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.GetMessagesTaskEvent
@@ -166,8 +166,8 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
         IntentUtils.openUserProfile(context!!, user, preferences[newDocumentApiKey])
     }
 
-    override fun getActionInfo(tag: String): ActionInfo? {
-        return ActionInfo(R.drawable.ic_action_add, getString(R.string.new_direct_message))
+    override fun getActionInfo(tag: String): FloatingActionButtonInfo? {
+        return FloatingActionButtonInfo(R.drawable.ic_action_add, getString(R.string.new_direct_message))
     }
 
     override fun onActionClick(tag: String): Boolean {

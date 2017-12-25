@@ -20,13 +20,17 @@
 package org.mariotaku.twidere.extension
 
 import android.annotation.TargetApi
+import android.content.Context
 import android.graphics.Rect
 import android.graphics.RectF
 import android.os.Build
 import android.support.annotation.UiThread
+import android.support.v4.view.accessibility.AccessibilityEventCompat
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityEvent
+import android.view.accessibility.AccessibilityManager
 import android.widget.TextView
 import org.mariotaku.ktextension.empty
 
@@ -113,6 +117,35 @@ fun ViewGroup.showContextMenuForChildCompat(originalView: View, x: Float, y: Flo
     }
     return ViewExtensionsN.showContextMenuForChild(this, originalView, x, y)
 }
+
+
+fun View.announceForAccessibilityCompat(text: CharSequence) {
+    val accessibilityManager = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+    if (!accessibilityManager.isEnabled) return
+    // Prior to SDK 16, announcements could only be made through FOCUSED
+    // events. Jelly Bean (SDK 16) added support for speaking text verbatim
+    // using the ANNOUNCEMENT event type.
+    val eventType: Int
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+        eventType = AccessibilityEvent.TYPE_VIEW_FOCUSED
+    } else {
+        eventType = AccessibilityEventCompat.TYPE_ANNOUNCEMENT
+    }
+
+    // Construct an accessibility event with the minimum recommended
+    // attributes. An event without a class name or package may be dropped.
+    val event = AccessibilityEvent.obtain(eventType)
+    event.text.add(text)
+    event.className = javaClass.name
+    event.packageName = context.packageName
+    event.setSource(this)
+
+    // Sends the event directly through the accessibility manager. If your
+    // application only targets SDK 14+, you should just call
+    // getParent().requestSendAccessibilityEvent(this, event);
+    accessibilityManager.sendAccessibilityEvent(event)
+}
+
 
 fun View.findViewByText(text: CharSequence?): TextView? {
     if (this is TextView && TextUtils.equals(text, this.text))

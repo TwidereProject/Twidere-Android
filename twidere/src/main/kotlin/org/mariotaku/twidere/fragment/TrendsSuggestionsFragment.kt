@@ -42,7 +42,7 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_EXTRAS
 import org.mariotaku.twidere.constant.localTrendsWoeIdKey
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.fragment.iface.IFloatingActionButtonFragment
-import org.mariotaku.twidere.fragment.iface.IFloatingActionButtonFragment.ActionInfo
+import org.mariotaku.twidere.model.FloatingActionButtonInfo
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.TrendsRefreshedEvent
 import org.mariotaku.twidere.model.tab.extra.TrendsTabExtras
@@ -142,10 +142,10 @@ class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), L
         refreshing = false
     }
 
-    override fun getActionInfo(tag: String): ActionInfo? {
+    override fun getActionInfo(tag: String): FloatingActionButtonInfo? {
         when (tag) {
             "home" -> {
-                return ActionInfo(R.drawable.ic_action_search, getString(R.string.action_search))
+                return FloatingActionButtonInfo(R.drawable.ic_action_search, getString(R.string.action_search))
             }
         }
         return null
