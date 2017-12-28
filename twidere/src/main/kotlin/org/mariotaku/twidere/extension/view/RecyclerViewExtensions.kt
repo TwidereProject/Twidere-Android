@@ -53,9 +53,31 @@ val RecyclerView.LayoutManager.firstVisibleItemPosition: Int
         else -> throw UnsupportedOperationException()
     }
 
+
+val RecyclerView.LayoutManager.firstVisibleItemPositionWithOffset: PositionWithOffset?
+    get() {
+        when (this) {
+            is LinearLayoutManager -> {
+                val pos = findFirstVisibleItemPosition()
+                if (pos < 0) return null
+                val offset = findViewByPosition(pos).top
+                return PositionWithOffset(pos, offset)
+            }
+            is StaggeredGridLayoutManager -> {
+                val pos = findFirstVisibleItemPositions(null).firstOrNull() ?: return null
+                if (pos < 0) return null
+                val offset = findViewByPosition(pos).top
+                return PositionWithOffset(pos, offset)
+            }
+            else -> throw UnsupportedOperationException()
+        }
+    }
+
 val RecyclerView.LayoutManager.lastVisibleItemPosition: Int
     get() = when (this) {
         is LinearLayoutManager -> findLastVisibleItemPosition()
         is StaggeredGridLayoutManager -> findLastVisibleItemPositions(null).lastOrNull() ?: -1
         else -> throw UnsupportedOperationException()
     }
+
+data class PositionWithOffset(val position: Int, val offset: Int)

@@ -41,7 +41,7 @@ class NameView(context: Context, attrs: AttributeSet? = null) : TwoLineTextView(
         val a = context.obtainStyledAttributes(attrs, R.styleable.NameView, 0, 0)
         nameFirst = a.getBoolean(R.styleable.NameView_nvNameFirst, true)
         a.recycle()
-        if (isInEditMode && text.isNullOrEmpty()) {
+        if (isInEditMode) {
             name = "Name"
             screenName = "@screenname"
             updateText()

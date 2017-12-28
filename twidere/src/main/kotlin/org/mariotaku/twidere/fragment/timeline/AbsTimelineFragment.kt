@@ -71,6 +71,7 @@ import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.adapter.removeStatuses
 import org.mariotaku.twidere.extension.data.observe
 import org.mariotaku.twidere.extension.view.firstVisibleItemPosition
+import org.mariotaku.twidere.extension.view.firstVisibleItemPositionWithOffset
 import org.mariotaku.twidere.extension.view.lastVisibleItemPosition
 import org.mariotaku.twidere.fragment.AbsContentRecyclerViewFragment
 import org.mariotaku.twidere.fragment.BaseFragment
@@ -318,7 +319,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
 
     protected open fun onDataLoaded(data: PagedList<ParcelableStatus>?) {
-        val firstVisiblePosition = layoutManager.firstVisibleItemPosition
+        val firstVisiblePosition = layoutManager.firstVisibleItemPositionWithOffset
         adapter.showAccountsColor = accountKeys.size > 1
         adapter.statuses = data
         adapter.timelineFilter = timelineFilter
@@ -330,11 +331,17 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                 showContent()
             }
         }
-        if (firstVisiblePosition == 0 && !preferences[readFromBottomKey]) {
+        if (firstVisiblePosition == null) return
+        if (firstVisiblePosition.position == 0 && !preferences[readFromBottomKey]) {
             val weakThis by weak(this)
             recyclerView.post {
-                val f = weakThis?.takeIf { !it.isDetached } ?: return@post
+                val f = weakThis?.takeIf { !it.isDetached && it.view != null } ?: return@post
                 f.scrollToStart()
+            }
+        } else {
+            val lm = loaderManager
+            if (lm is LinearLayoutManager) {
+                lm.scrollToPositionWithOffset(firstVisiblePosition.position, firstVisiblePosition.offset)
             }
         }
     }
@@ -603,25 +610,27 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
     private inner class StatusesBoundaryCallback : PagedList.BoundaryCallback<ParcelableStatus>() {
         override fun onItemAtEndLoaded(itemAtEnd: ParcelableStatus) {
-            adapter.loadMoreIndicatorPosition = LoadMorePosition.END
-//            val started = getStatuses(object : ContentRefreshParam {
-//                override val accountKeys by lazy {
-//                    this@AbsTimelineFragment.accountKeys
-//                }
-//                override val pagination by lazy {
-//                    val context = context!!
-//                    val keys = accountKeys.toNulls()
-//                    val maxIds = DataStoreUtils.getOldestStatusIds(context, contentUri, keys)
-//                    val maxSortIds = DataStoreUtils.getOldestStatusSortIds(context, contentUri, keys)
-//                    return@lazy Array(keys.size) { idx ->
-//                        SinceMaxPagination.maxId(maxIds[idx], maxSortIds[idx])
-//                    }
-//                }
-//
-//                override val tabId: Long
-//                    get() = this@AbsTimelineFragment.tabId
-//
-//            })
+            val started = getStatuses(object : ContentRefreshParam {
+                override val accountKeys by lazy {
+                    this@AbsTimelineFragment.accountKeys
+                }
+                override val pagination by lazy {
+                    val context = context!!
+                    val keys = accountKeys.toNulls()
+                    val maxIds = DataStoreUtils.getOldestStatusIds(context, contentUri, keys)
+                    val maxSortIds = DataStoreUtils.getOldestStatusSortIds(context, contentUri, keys)
+                    return@lazy Array(keys.size) { idx ->
+                        SinceMaxPagination.maxId(maxIds[idx], maxSortIds[idx])
+                    }
+                }
+
+                override val tabId: Long
+                    get() = this@AbsTimelineFragment.tabId
+
+            })
+            if (started) {
+                adapter.loadMoreIndicatorPosition = LoadMorePosition.END
+            }
         }
     }
 
@@ -817,7 +826,8 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         val databasePagedListConfig: PagedList.Config = PagedList.Config.Builder()
                 .setPageSize(50)
                 .setInitialLoadSizeHint(50)
-                .setEnablePlaceholders(false)
+                .setPrefetchDistance(15)
+                .setEnablePlaceholders(true)
                 .build()
 
 

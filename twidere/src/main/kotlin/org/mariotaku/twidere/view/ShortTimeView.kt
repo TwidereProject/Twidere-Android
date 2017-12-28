@@ -20,6 +20,8 @@
 package org.mariotaku.twidere.view
 
 import android.content.Context
+import android.os.Handler
+import android.os.HandlerThread
 import android.os.SystemClock
 import android.support.v7.widget.AppCompatTextView
 import android.text.format.DateUtils
@@ -36,6 +38,13 @@ class ShortTimeView(
 ) : AppCompatTextView(context, attrs, android.R.attr.textViewStyle), Constants {
 
     private val ticker = TickerRunnable(this)
+
+    private val invalidateTimeRunnable = Runnable {
+        val label = getTimeLabel(context, time, showAbsoluteTime)
+        post {
+            setTextIfChanged(label)
+        }
+    }
 
     var showAbsoluteTime: Boolean = false
         set(value) {
@@ -60,7 +69,7 @@ class ShortTimeView(
     }
 
     private fun invalidateTime() {
-        setTextIfChanged(getTimeLabel(context, time, showAbsoluteTime))
+        updateHandler.post(invalidateTimeRunnable)
     }
 
     private fun setTextIfChanged(text: CharSequence?) {
@@ -86,6 +95,12 @@ class ShortTimeView(
 
         private const val TICKER_DURATION = 5000L
         private val ONE_MINUTE_MILLIS = TimeUnit.MINUTES.toMillis(1)
+
+        // TODO: Use an universal executor across app
+        private val updateThread = HandlerThread("ShortTimeUpdate").apply {
+            start()
+        }
+        private val updateHandler = Handler(updateThread.looper)
 
         fun getTimeLabel(context: Context, time: Long, showAbsoluteTime: Boolean): CharSequence {
             if (showAbsoluteTime) return formatSameDayTime(context, time)

@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.data
 
 import android.arch.paging.DataSource
-import android.arch.paging.PageKeyedDataSource
+import android.arch.paging.PositionalDataSource
 import android.content.ContentResolver
 import android.database.ContentObserver
 import android.net.Uri
@@ -59,7 +59,7 @@ class CursorObjectDataSourceFactory<T : Any>(
             val sortOrder: String? = null,
             val cls: Class<T>,
             val processor: DataSourceItemProcessor<T>?
-    ) : PageKeyedDataSource<Int, T>() {
+    ) : PositionalDataSource<T>() {
 
         private val totalCount: Int by lazy { resolver.queryCount(uri, selection, selectionArgs) }
         private val filterStates: BooleanArray by lazy { BooleanArray(totalCount) }
@@ -76,55 +76,31 @@ class CursorObjectDataSourceFactory<T : Any>(
             processor?.init(resolver)
         }
 
-        override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, T>) {
+        override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<T>) {
             val totalCount = this.totalCount
-            val data = loadRange(0, params.requestedLoadSize)
-            if (data == null) {
+            val firstLoadPosition = computeInitialLoadPosition(params, totalCount)
+            val firstLoadSize = computeInitialLoadSize(params, firstLoadPosition, totalCount)
+            val valid = loadRange(firstLoadPosition, firstLoadSize) { data ->
+                callback.onResult(data, firstLoadPosition, totalCount)
+            }
+            if (!valid) {
                 invalidate()
-                return
             }
-            callback.onResult(data, 0, totalCount, null, params.requestedLoadSize)
         }
 
-        override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, T>) {
-            val data = loadRange(params.key, params.requestedLoadSize)
-            if (data == null) {
+        override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<T>) {
+            val valid = loadRange(params.startPosition, params.loadSize, callback::onResult)
+            if (!valid) {
                 invalidate()
-                return
-            }
-            if (params.key == 0) {
-                callback.onResult(data, null)
-            } else {
-                callback.onResult(data, (params.key - params.requestedLoadSize).coerceAtLeast(0))
             }
         }
 
-        override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, T>) {
-            val data = loadRange(params.key, params.requestedLoadSize)
-            if (data == null) {
-                invalidate()
-                return
-            }
-            val nextKey = params.key + params.requestedLoadSize
-            if (nextKey >= totalCount) {
-                callback.onResult(data, null)
-            } else {
-                callback.onResult(data, nextKey)
-            }
+        override fun invalidate() {
+            processor?.invalidate()
+            super.invalidate()
         }
 
-        private fun loadRange(startPosition: Int, count: Int): List<T>? {
-            val start = System.currentTimeMillis()
-            val result = resolver.queryAll(uri, projection, selection, selectionArgs, sortOrder,
-                    "$startPosition,$count", cls) ?: return null
-            DebugLog.d(msg = "Querying $uri:$startPosition,$count took ${System.currentTimeMillis() - start} ms.")
-            if (processor != null) {
-                return result.mapNotNull(processor::process)
-            }
-            return result
-        }
-
-        private fun loadRangePositional(startPosition: Int, count: Int, callback: (List<T>) -> Unit): Boolean {
+        private fun loadRange(startPosition: Int, count: Int, callback: (List<T>) -> Unit): Boolean {
             if (processor == null) {
                 val start = System.currentTimeMillis()
                 val result = resolver.queryAll(uri, projection, selection, selectionArgs, sortOrder,
@@ -153,11 +129,6 @@ class CursorObjectDataSourceFactory<T : Any>(
             } while (result.size < count)
             callback(result)
             return true
-        }
-
-        override fun invalidate() {
-            processor?.invalidate()
-            super.invalidate()
         }
 
         private fun BooleanArray.actualIndex(index: Int, def: Int): Int {

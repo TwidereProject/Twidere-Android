@@ -80,6 +80,7 @@ open class TwoLineTextView(context: Context, attrs: AttributeSet? = null) : Fixe
 
         primaryTextSpan = primaryTextAppearance.toSpan()
         secondaryTextSpan = secondaryTextAppearance.toSpan()
+
         updateText()
     }
 

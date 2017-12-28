@@ -231,7 +231,6 @@
             app:ignorePadding="true"
             tools:visibility="visible">
 
-
             <org.mariotaku.twidere.view.NameView
                 android:id="@+id/quotedName"
                 android:layout_width="match_parent"
@@ -291,7 +290,7 @@
                 android:textStyle="bold"
                 app:drawableTint="?android:textColorSecondary"
                 tools:text="@string/label_media"
-                tools:visibility="gone"/>
+                tools:visibility="visible"/>
 
             <org.mariotaku.twidere.view.CardMediaContainer
                 android:id="@+id/quotedMediaPreview"
@@ -304,12 +303,7 @@
                 android:layout_below="@+id/quotedMediaLabel"
                 android:horizontalSpacing="@dimen/element_spacing_xsmall"
                 android:verticalSpacing="@dimen/element_spacing_xsmall"
-                tools:visibility="visible">
-
-                <!-- Child views will be inflated if media preview enabled in ViewHolder -->
-                <include layout="@layout/layout_card_media_preview"/>
-
-            </org.mariotaku.twidere.view.CardMediaContainer>
+                tools:visibility="gone"/>
         </org.mariotaku.twidere.view.ColorLabelRelativeLayout>
 
     </RelativeLayout>

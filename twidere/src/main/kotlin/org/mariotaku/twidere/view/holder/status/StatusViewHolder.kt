@@ -155,7 +155,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         val linkify = adapter.twidereLinkify
         val formatter = adapter.bidiFormatter
         val colorNameManager = adapter.userColorNameManager
-        val nameFirst = adapter.nameFirst
         val showCardActions = isCardActionsShown
 
         actionButtons.visibility = if (showCardActions) View.VISIBLE else View.GONE
