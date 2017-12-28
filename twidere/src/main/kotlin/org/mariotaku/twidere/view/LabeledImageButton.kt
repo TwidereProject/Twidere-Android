@@ -21,7 +21,6 @@ package org.mariotaku.twidere.view
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.ColorFilter
 import android.graphics.Paint
 import android.support.annotation.Dimension
 import android.support.v4.view.ViewCompat
@@ -99,7 +98,7 @@ class LabeledImageButton(context: Context, attrs: AttributeSet?) : AppCompatImag
             } else {
                 // Draw original image content, but translate it back `text.width / 2f` px.
                 canvas.save()
-                canvas.translate(-layout.width / 2f, 0f)
+                canvas.translate(-layout.width / 2f - drawablePadding, 0f)
                 super.onDraw(canvas)
                 canvas.restore()
 
@@ -120,17 +119,13 @@ class LabeledImageButton(context: Context, attrs: AttributeSet?) : AppCompatImag
         imageMeasuredHeight = measuredHeight
         val layout = textLayout
         if (layout != null) {
-            setMeasuredDimension(imageMeasuredWidth + layout.width + drawablePadding,
+            setMeasuredDimension(imageMeasuredWidth + layout.width + drawablePadding * 2,
                     measuredHeight)
         }
     }
 
     fun setTextSize(unit: Int = TypedValue.COMPLEX_UNIT_SP, size: Float) {
         textSize = TypedValue.applyDimension(unit, size, resources.displayMetrics)
-    }
-
-    override fun setColorFilter(cf: ColorFilter?) {
-        super.setColorFilter(cf)
     }
 
     private fun updateLayout() {
