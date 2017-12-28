@@ -16,7 +16,7 @@ allprojects {
 
     ext {
         projectGroupId = 'org.mariotaku.twidere'
-        projectVersionCode = 398
+        projectVersionCode = 397
         projectVersionName = '4.0.0-SNAPSHOT'
 
         globalCompileSdkVersion = 27
@@ -47,7 +47,7 @@ subprojects {
                     MariotakuCommons       : '0.9.22',
                     RestFu                 : '0.9.61',
                     ObjectCursor           : '0.9.21',
-                    PlayServices           : '11.6.2',
+                    PlayServices           : '11.8.0',
                     PlayBilling            : '1.0',
                     MapsUtils              : '0.5',
                     DropboxCoreSdk         : '3.0.3',

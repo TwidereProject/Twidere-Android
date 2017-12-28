@@ -152,6 +152,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
     private val busEventHandler = BusEventHandler()
     private val scrollHandler = ScrollHandler()
+    private val timelineBoundaryCallback = StatusesBoundaryCallback()
     private var dataController: ExtendedPagedListProvider.DataController? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -268,27 +269,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
     }
 
     override fun onLoadMoreContents(position: Int) {
-        if (isStandalone || !refreshEnabled || position != LoadMorePosition.END) return
-        val started = getStatuses(object : ContentRefreshParam {
-            override val accountKeys by lazy {
-                this@AbsTimelineFragment.accountKeys
-            }
-            override val pagination by lazy {
-                val context = context!!
-                val keys = accountKeys.toNulls()
-                val maxIds = DataStoreUtils.getOldestStatusIds(context, contentUri, keys)
-                val maxSortIds = DataStoreUtils.getOldestStatusSortIds(context, contentUri, keys)
-                return@lazy Array(keys.size) { idx ->
-                    SinceMaxPagination.maxId(maxIds[idx], maxSortIds[idx])
-                }
-            }
-
-            override val tabId: Long
-                get() = this@AbsTimelineFragment.tabId
-
-        })
-        if (!started) return
-        super.onLoadMoreContents(position)
+        // No-op
     }
 
     override fun scrollToPositionWithOffset(position: Int, offset: Int) {
@@ -468,8 +449,8 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                 expressionArgs.toTypedArray(), Statuses.DEFAULT_SORT_ORDER,
                 ParcelableStatus::class.java)
 //        dataController = factory.obtainDataController()
-        return ExceptionLiveData.wrap(LivePagedListBuilder(factory, PagedList.Config.Builder()
-                .setPageSize(50).setEnablePlaceholders(false).build()).build())
+        return ExceptionLiveData.wrap(LivePagedListBuilder(factory, databasePagedListConfig)
+                .setBoundaryCallback(timelineBoundaryCallback).build())
     }
 
     private fun getFullStatus(position: Int): ParcelableStatus {
@@ -617,6 +598,30 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                 val layoutManager = layoutManager
                 saveReadPosition(layoutManager.firstVisibleItemPosition)
             }
+        }
+    }
+
+    private inner class StatusesBoundaryCallback : PagedList.BoundaryCallback<ParcelableStatus>() {
+        override fun onItemAtEndLoaded(itemAtEnd: ParcelableStatus) {
+            adapter.loadMoreIndicatorPosition = LoadMorePosition.END
+//            val started = getStatuses(object : ContentRefreshParam {
+//                override val accountKeys by lazy {
+//                    this@AbsTimelineFragment.accountKeys
+//                }
+//                override val pagination by lazy {
+//                    val context = context!!
+//                    val keys = accountKeys.toNulls()
+//                    val maxIds = DataStoreUtils.getOldestStatusIds(context, contentUri, keys)
+//                    val maxSortIds = DataStoreUtils.getOldestStatusSortIds(context, contentUri, keys)
+//                    return@lazy Array(keys.size) { idx ->
+//                        SinceMaxPagination.maxId(maxIds[idx], maxSortIds[idx])
+//                    }
+//                }
+//
+//                override val tabId: Long
+//                    get() = this@AbsTimelineFragment.tabId
+//
+//            })
         }
     }
 
@@ -808,6 +813,12 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
             })
             return intent
         }
+
+        val databasePagedListConfig: PagedList.Config = PagedList.Config.Builder()
+                .setPageSize(50)
+                .setInitialLoadSizeHint(50)
+                .setEnablePlaceholders(false)
+                .build()
 
 
     }

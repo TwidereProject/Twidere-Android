@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.data
 
 import android.arch.paging.DataSource
-import android.arch.paging.PositionalDataSource
+import android.arch.paging.PageKeyedDataSource
 import android.content.ContentResolver
 import android.database.ContentObserver
 import android.net.Uri
@@ -59,10 +59,10 @@ class CursorObjectDataSourceFactory<T : Any>(
             val sortOrder: String? = null,
             val cls: Class<T>,
             val processor: DataSourceItemProcessor<T>?
-    ) : PositionalDataSource<T>() {
+    ) : PageKeyedDataSource<Int, T>() {
 
-        private val lazyCount: Int by lazy { resolver.queryCount(uri, selection, selectionArgs) }
-        private val filterStates: BooleanArray by lazy { BooleanArray(lazyCount) }
+        private val totalCount: Int by lazy { resolver.queryCount(uri, selection, selectionArgs) }
+        private val filterStates: BooleanArray by lazy { BooleanArray(totalCount) }
 
         init {
             val weakThis by weak(this)
@@ -76,24 +76,62 @@ class CursorObjectDataSourceFactory<T : Any>(
             processor?.init(resolver)
         }
 
-        override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<T>) {
-            loadRange(0, params.pageSize) { data ->
-                callback.onResult(data, 0, lazyCount)
+        override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, T>) {
+            val totalCount = this.totalCount
+            val data = loadRange(0, params.requestedLoadSize)
+            if (data == null) {
+                invalidate()
+                return
+            }
+            callback.onResult(data, 0, totalCount, null, params.requestedLoadSize)
+        }
+
+        override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, T>) {
+            val data = loadRange(params.key, params.requestedLoadSize)
+            if (data == null) {
+                invalidate()
+                return
+            }
+            if (params.key == 0) {
+                callback.onResult(data, null)
+            } else {
+                callback.onResult(data, (params.key - params.requestedLoadSize).coerceAtLeast(0))
             }
         }
 
-        override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<T>) {
-            loadRange(params.startPosition, params.loadSize, callback::onResult)
+        override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, T>) {
+            val data = loadRange(params.key, params.requestedLoadSize)
+            if (data == null) {
+                invalidate()
+                return
+            }
+            val nextKey = params.key + params.requestedLoadSize
+            if (nextKey >= totalCount) {
+                callback.onResult(data, null)
+            } else {
+                callback.onResult(data, nextKey)
+            }
         }
 
-        private fun loadRange(startPosition: Int, count: Int, callback: (List<T>) -> Unit) {
+        private fun loadRange(startPosition: Int, count: Int): List<T>? {
+            val start = System.currentTimeMillis()
+            val result = resolver.queryAll(uri, projection, selection, selectionArgs, sortOrder,
+                    "$startPosition,$count", cls) ?: return null
+            DebugLog.d(msg = "Querying $uri:$startPosition,$count took ${System.currentTimeMillis() - start} ms.")
+            if (processor != null) {
+                return result.mapNotNull(processor::process)
+            }
+            return result
+        }
+
+        private fun loadRangePositional(startPosition: Int, count: Int, callback: (List<T>) -> Unit): Boolean {
             if (processor == null) {
                 val start = System.currentTimeMillis()
                 val result = resolver.queryAll(uri, projection, selection, selectionArgs, sortOrder,
-                        "$startPosition,$count", cls)!!
-                DebugLog.d(msg = "Querying $uri took ${System.currentTimeMillis() - start} ms.")
+                        "$startPosition,$count", cls) ?: return false
+                DebugLog.d(msg = "Querying $uri:$startPosition,$count took ${System.currentTimeMillis() - start} ms.")
                 callback(result)
-                return
+                return true
             }
             val result = ArrayList<T>()
             var offset = filterStates.actualIndex(startPosition, startPosition)
@@ -101,8 +139,8 @@ class CursorObjectDataSourceFactory<T : Any>(
             do {
                 val start = System.currentTimeMillis()
                 val list = resolver.queryAll(uri, projection, selection, selectionArgs, sortOrder,
-                        "$offset,$limit", cls).orEmpty()
-                DebugLog.d(msg = "Querying $uri took ${System.currentTimeMillis() - start} ms.")
+                        "$offset,$limit", cls) ?: return false
+                DebugLog.d(msg = "Querying $uri:$startPosition,$count took ${System.currentTimeMillis() - start} ms.")
                 val reachedEnd = list.size < count
                 list.mapIndexedNotNullTo(result) lambda@ { index, item ->
                     val processed = processor.process(item)
@@ -114,6 +152,7 @@ class CursorObjectDataSourceFactory<T : Any>(
                 limit = count - result.size
             } while (result.size < count)
             callback(result)
+            return true
         }
 
         override fun invalidate() {

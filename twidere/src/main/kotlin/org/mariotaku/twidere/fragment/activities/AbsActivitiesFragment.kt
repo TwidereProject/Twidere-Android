@@ -383,8 +383,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
                 expressionArgs.toTypedArray(), Activities.DEFAULT_SORT_ORDER,
                 ParcelableActivity::class.java, onCreateCursorObjectProcessor())
 //        dataController = factory.obtainDataController()
-        return LivePagedListBuilder(factory, PagedList.Config.Builder()
-                .setPageSize(50).setEnablePlaceholders(false).build()).build()
+        return LivePagedListBuilder(factory, AbsTimelineFragment.databasePagedListConfig).build()
     }
 
     private fun getFullActivity(position: Int): ParcelableActivity {

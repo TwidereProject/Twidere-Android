@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.data
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Observer
 import org.mariotaku.twidere.model.SingleResponse
 
 abstract class ExceptionLiveData<T> : LiveData<SingleResponse<T>>() {
@@ -42,15 +43,23 @@ abstract class ExceptionLiveData<T> : LiveData<SingleResponse<T>>() {
 
     companion object {
         fun <T> wrap(liveData: LiveData<T>): ExceptionLiveData<T> {
-            val wrapped = object : ExceptionLiveData<T>() {}
-            liveData.observeForever {
-                if (it != null) {
-                    wrapped.postData(it)
-                } else {
-                    wrapped.postException(NullPointerException())
+            return object : ExceptionLiveData<T>() {
+                val observer = Observer<T> {
+                    if (it != null) {
+                        setData(it)
+                    } else {
+                        setException(NullPointerException())
+                    }
+                }
+
+                override fun onActive() {
+                    liveData.observeForever(observer)
+                }
+
+                override fun onInactive() {
+                    liveData.removeObserver(observer)
                 }
             }
-            return wrapped
         }
     }
 
