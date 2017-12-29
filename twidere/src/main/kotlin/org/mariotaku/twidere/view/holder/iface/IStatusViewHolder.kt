@@ -30,9 +30,6 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.view.CardMediaContainer
 import org.mariotaku.twidere.view.holder.TimelineFilterHeaderViewHolder
 
-/**
- * Created by mariotaku on 15/10/26.
- */
 interface IStatusViewHolder : CardMediaContainer.OnMediaClickListener {
 
     fun display(status: ParcelableStatus, displayInReplyTo: Boolean = true,

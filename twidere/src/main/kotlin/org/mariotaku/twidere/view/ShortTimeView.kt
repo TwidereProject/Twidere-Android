@@ -24,10 +24,13 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
 import android.support.v7.widget.AppCompatTextView
+import android.text.Spannable
+import android.text.SpannableString
 import android.text.format.DateUtils
 import android.util.AttributeSet
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.text.style.PlaceholderLineSpan
 import org.mariotaku.twidere.util.Utils.formatSameDayTime
 import java.lang.ref.WeakReference
 import java.util.concurrent.TimeUnit
@@ -40,6 +43,8 @@ class ShortTimeView(
     private val ticker = TickerRunnable(this)
 
     private val invalidateTimeRunnable = Runnable {
+        val time = this.time
+        if (time < 0) return@Runnable
         val label = getTimeLabel(context, time, showAbsoluteTime)
         post {
             setTextIfChanged(label)
@@ -52,7 +57,7 @@ class ShortTimeView(
             invalidateTime()
         }
 
-    var time: Long = 0
+    var time: Long = -1
         set(value) {
             field = value
             invalidateTime()
@@ -69,7 +74,11 @@ class ShortTimeView(
     }
 
     private fun invalidateTime() {
-        updateHandler.post(invalidateTimeRunnable)
+        if (time == PLACEHOLDER) {
+            text = placeholderText
+        } else {
+            updateHandler.post(invalidateTimeRunnable)
+        }
     }
 
     private fun setTextIfChanged(text: CharSequence?) {
@@ -92,6 +101,13 @@ class ShortTimeView(
     }
 
     companion object {
+
+        const val INVALID: Long = -1
+        const val PLACEHOLDER: Long = -2
+
+        private val placeholderText = SpannableString(" ").apply {
+            setSpan(PlaceholderLineSpan(3.5f, true), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
 
         private const val TICKER_DURATION = 5000L
         private val ONE_MINUTE_MILLIS = TimeUnit.MINUTES.toMillis(1)

@@ -114,6 +114,7 @@ android {
     sourceSets.each {
         it.res.srcDirs += project.files("src/${it.name}/res-localized")
         it.res.srcDirs += project.files("src/${it.name}/res-svg2png")
+        it.res.srcDirs += project.files("src/${it.name}/res-preview")
         it.java.srcDirs += "src/${it.name}/kotlin"
     }
 

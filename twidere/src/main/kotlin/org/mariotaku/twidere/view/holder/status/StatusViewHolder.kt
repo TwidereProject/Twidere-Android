@@ -48,22 +48,26 @@ import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_LINK_HIGHL
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.setVisible
+import org.mariotaku.twidere.extension.text.appendCompat
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
 import org.mariotaku.twidere.model.ParcelableLocation
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.placeholder.ParcelableStatusPlaceholder
 import org.mariotaku.twidere.task.CreateFavoriteTask
 import org.mariotaku.twidere.task.DestroyFavoriteTask
 import org.mariotaku.twidere.task.DestroyStatusTask
 import org.mariotaku.twidere.task.RetweetStatusTask
 import org.mariotaku.twidere.text.TwidereClickableSpan
+import org.mariotaku.twidere.text.style.PlaceholderLineSpan
 import org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText
 import org.mariotaku.twidere.util.HtmlSpanBuilder
 import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.UnitConvertUtils
 import org.mariotaku.twidere.util.Utils.getUserTypeIconRes
 import org.mariotaku.twidere.view.ShapedImageView
+import org.mariotaku.twidere.view.ShortTimeView
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 
 /**
@@ -71,34 +75,39 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
  */
 class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : ViewHolder(itemView), IStatusViewHolder {
 
-    override val profileImageView: ShapedImageView by lazy { itemView.profileImage }
-    override val profileTypeView: ImageView by lazy { itemView.profileType }
+    override val profileImageView: ShapedImageView = itemView.profileImage
+    override val profileTypeView: ImageView = itemView.profileType
 
-    private val itemContent by lazy { itemView.itemContent }
-    private val mediaPreview by lazy { itemView.mediaPreview }
-    private val statusContentUpperSpace by lazy { itemView.statusContentUpperSpace }
-    private val summaryView by lazy { itemView.summary }
-    private val textView by lazy { itemView.text }
-    private val nameView by lazy { itemView.name }
-    private val itemMenu by lazy { itemView.itemMenu }
-    private val statusInfoLabel by lazy { itemView.statusInfoLabel }
-    private val statusInfoIcon by lazy { itemView.statusInfoIcon }
-    private val quotedNameView by lazy { itemView.quotedName }
-    private val timeView by lazy { itemView.time }
-    private val quotedView by lazy { itemView.quotedView }
-    private val quotedTextView by lazy { itemView.quotedText }
-    private val actionButtons by lazy { itemView.actionButtons }
-    private val mediaLabel by lazy { itemView.mediaLabel }
-    private val quotedMediaLabel by lazy { itemView.quotedMediaLabel }
-    private val statusContentLowerSpace by lazy { itemView.statusContentLowerSpace }
-    private val quotedMediaPreview by lazy { itemView.quotedMediaPreview }
-    private val replyButton by lazy { itemView.reply }
-    private val retweetButton by lazy { itemView.retweet }
-    private val favoriteButton by lazy { itemView.favorite }
+    private val itemContent = itemView.itemContent
+    private val mediaPreview = itemView.mediaPreview
+    private val summaryView = itemView.summary
+    private val textView = itemView.text
+    private val nameView = itemView.name
+    private val itemMenu = itemView.itemMenu
+    private val statusInfoLabel = itemView.statusInfoLabel
+    private val statusInfoIcon = itemView.statusInfoIcon
+    private val quotedNameView = itemView.quotedName
+    private val timeView = itemView.time
+    private val quotedView = itemView.quotedView
+    private val quotedTextView = itemView.quotedText
+    private val mediaLabel = itemView.mediaLabel
+    private val quotedMediaLabel = itemView.quotedMediaLabel
+    private val quotedMediaPreview = itemView.quotedMediaPreview
+    private val replyButton = itemView.reply
+    private val retweetButton = itemView.retweet
+    private val favoriteButton = itemView.favorite
 
     private val eventHandler = EventHandler()
 
     private var statusClickListener: IStatusViewHolder.StatusClickListener? = null
+
+    private val toggleFullTextSpan = TwidereClickableSpan(adapter.linkHighlightingStyle) {
+        if (adapter.isFullTextVisible(layoutPosition)) {
+            hideFullText()
+        } else {
+            showFullText()
+        }
+    }
 
 
     init {
@@ -111,11 +120,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
 
     }
 
-
-    fun displaySampleStatus() {
+    fun preview() {
         val profileImageEnabled = adapter.profileImageEnabled
         profileImageView.visibility = if (profileImageEnabled) View.VISIBLE else View.GONE
-        statusContentUpperSpace.visibility = View.VISIBLE
 
         adapter.requestManager.loadProfileImage(itemView.context, R.drawable.ic_profile_image_twidere,
                 adapter.profileImageStyle, profileImageView.cornerRadius,
@@ -141,15 +148,57 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
             mediaPreview.visibility = View.GONE
             mediaLabel.visibility = View.VISIBLE
         }
-        actionButtons.visibility = if (showCardActions) View.VISIBLE else View.GONE
-        itemMenu.visibility = if (showCardActions) View.VISIBLE else View.GONE
-        statusContentLowerSpace.visibility = if (showCardActions) View.GONE else View.VISIBLE
-        quotedMediaPreview.visibility = View.GONE
-        quotedMediaLabel.visibility = View.GONE
+
+        replyButton.setVisible(showCardActions)
+        retweetButton.setVisible(showCardActions)
+        favoriteButton.setVisible(showCardActions)
+        itemMenu.setVisible(showCardActions)
+
+        quotedView.visibility = View.GONE
+
         mediaPreview.displayMedia(R.drawable.featured_graphics)
     }
 
+    fun placeholder() {
+        val context = itemView.context
+        val requestManager = adapter.requestManager
+        requestManager.loadProfileImage(context, R.drawable.ic_profile_image_placeholder, adapter.profileImageStyle,
+                profileImageView.cornerRadius, profileImageView.cornerRadiusRatio).into(profileImageView)
+
+        timeView.time = ShortTimeView.PLACEHOLDER
+        textView.spannable = placeholderText
+        nameView.placeholder = true
+        nameView.updateText()
+
+        val actionButtonsAlpha = PlaceholderLineSpan.placeholderAlpha / 255f
+
+        replyButton.alpha = actionButtonsAlpha
+        retweetButton.alpha = actionButtonsAlpha
+        favoriteButton.alpha = actionButtonsAlpha
+        itemMenu.alpha = actionButtonsAlpha
+
+        replyButton.isActivated = false
+        retweetButton.isActivated = false
+        favoriteButton.isActivated = false
+
+        replyButton.text = null
+        retweetButton.text = null
+        favoriteButton.text = null
+
+        profileTypeView.visibility = View.GONE
+        summaryView.visibility = View.GONE
+        mediaLabel.visibility = View.GONE
+        mediaPreview.visibility = View.GONE
+        quotedView.visibility = View.GONE
+        statusInfoIcon.visibility = View.GONE
+        statusInfoLabel.visibility = View.GONE
+    }
+
     override fun display(status: ParcelableStatus, displayInReplyTo: Boolean, displayPinned: Boolean) {
+        if (status === ParcelableStatusPlaceholder) {
+            placeholder()
+            return
+        }
         val context = itemView.context
         val requestManager = adapter.requestManager
         val linkify = adapter.twidereLinkify
@@ -157,9 +206,15 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         val colorNameManager = adapter.userColorNameManager
         val showCardActions = isCardActionsShown
 
-        actionButtons.visibility = if (showCardActions) View.VISIBLE else View.GONE
-        itemMenu.visibility = if (showCardActions) View.VISIBLE else View.GONE
-        statusContentLowerSpace.visibility = if (showCardActions) View.GONE else View.VISIBLE
+        replyButton.alpha = 1f
+        retweetButton.alpha = 1f
+        favoriteButton.alpha = 1f
+        itemMenu.alpha = 1f
+
+        replyButton.setVisible(showCardActions)
+        retweetButton.setVisible(showCardActions)
+        favoriteButton.setVisible(showCardActions)
+        itemMenu.setVisible(showCardActions)
 
         val replyCount = status.reply_count
         val retweetCount = status.retweet_count
@@ -170,8 +225,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
             statusInfoIcon.setImageResource(R.drawable.ic_activity_action_pinned)
             statusInfoLabel.visibility = View.VISIBLE
             statusInfoIcon.visibility = View.VISIBLE
-
-            statusContentUpperSpace.visibility = View.GONE
         } else if (status.retweet_id != null) {
             val retweetedBy = colorNameManager.getDisplayName(status.retweeted_by_user_key!!,
                     status.retweeted_by_user_name, status.retweeted_by_user_acct!!)
@@ -179,8 +232,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
             statusInfoIcon.setImageResource(R.drawable.ic_activity_action_retweet)
             statusInfoLabel.visibility = View.VISIBLE
             statusInfoIcon.visibility = View.VISIBLE
-
-            statusContentUpperSpace.visibility = View.GONE
         } else if (status.in_reply_to_status_id != null && status.in_reply_to_user_key != null && displayInReplyTo) {
             if (status.in_reply_to_name != null && status.in_reply_to_screen_name != null) {
                 val inReplyTo = colorNameManager.getDisplayName(status.in_reply_to_user_key!!,
@@ -192,13 +243,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
             statusInfoIcon.setImageResource(R.drawable.ic_activity_action_reply)
             statusInfoLabel.visibility = View.VISIBLE
             statusInfoIcon.visibility = View.VISIBLE
-
-            statusContentUpperSpace.visibility = View.GONE
         } else {
             statusInfoLabel.visibility = View.GONE
             statusInfoIcon.visibility = View.GONE
-
-            statusContentUpperSpace.visibility = View.VISIBLE
         }
 
         val skipLinksInText = status.extras?.support_entities ?: false
@@ -296,6 +343,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
             status.timestamp
         }
 
+        nameView.placeholder = false
         nameView.name = colorNameManager.getUserNickname(status.user_key, status.user_name)
         nameView.screenName = "@${status.user_acct}"
 
@@ -356,11 +404,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         val displayEnd: Int
         if (!summaryView.empty && !isFullTextVisible) {
             text = SpannableStringBuilder.valueOf(context.getString(R.string.label_status_show_more)).apply {
-                setSpan(object : TwidereClickableSpan(adapter.linkHighlightingStyle) {
-                    override fun onClick(widget: View?) {
-                        showFullText()
-                    }
-                }, 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                setSpan(toggleFullTextSpan, 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             displayEnd = -1
         } else if (adapter.linkHighlightingStyle != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
@@ -665,8 +709,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
     }
 
     private fun TextView.setLabelIcon(@DrawableRes icon: Int) {
-        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(this, icon, 0,
-                0, 0)
+        TextViewCompat.setCompoundDrawablesRelative(this, ContextCompat.getDrawable(context, icon),
+                null, null, null)
     }
 
     private val Array<ParcelableMedia?>.type: Int
@@ -743,6 +787,16 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
 
         private val videoTypes = intArrayOf(ParcelableMedia.Type.VIDEO, ParcelableMedia.Type.ANIMATED_GIF,
                 ParcelableMedia.Type.EXTERNAL_PLAYER)
+
+        private val placeholderText = SpannableStringBuilder().apply {
+            appendCompat(" ", PlaceholderLineSpan(1f), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            appendln()
+            appendCompat(" ", PlaceholderLineSpan(1f), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            appendln()
+            appendCompat(" ", PlaceholderLineSpan(1f), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            appendln()
+            appendCompat(" ", PlaceholderLineSpan(.5f), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
 
         fun isRetweetIconActivated(status: ParcelableStatus): Boolean {
             return !DestroyStatusTask.isRunning(status.account_key, status.my_retweet_id) &&

@@ -23,14 +23,13 @@ import android.content.Context
 import android.content.res.Resources
 import android.support.annotation.Dimension
 import android.support.v4.text.BidiFormatter
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.TextUtils
+import android.text.*
 import android.text.style.TextAppearanceSpan
 import android.util.AttributeSet
 import android.util.TypedValue
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.model.theme.TextAppearance
+import org.mariotaku.twidere.text.style.PlaceholderLineSpan
 
 open class TwoLineTextView(context: Context, attrs: AttributeSet? = null) : FixedTextView(context, attrs) {
 
@@ -45,6 +44,8 @@ open class TwoLineTextView(context: Context, attrs: AttributeSet? = null) : Fixe
 
     var primaryText: CharSequence? = null
     var secondaryText: CharSequence? = null
+
+    var placeholder: Boolean = false
 
     protected open val displayPrimaryText: CharSequence?
         get() = primaryText
@@ -93,6 +94,10 @@ open class TwoLineTextView(context: Context, attrs: AttributeSet? = null) : Fixe
     }
 
     fun updateText(formatter: BidiFormatter? = null) {
+        if (placeholder) {
+            text = placeholderText
+            return
+        }
         val sb = SpannableStringBuilder()
         val primaryText = displayPrimaryText
         val secondaryText = displaySecondaryText
@@ -129,6 +134,12 @@ open class TwoLineTextView(context: Context, attrs: AttributeSet? = null) : Fixe
     private fun calculateTextSize(size: Float, unit: Int): Float {
         val r = context.resources ?: Resources.getSystem()
         return TypedValue.applyDimension(unit, size, r.displayMetrics)
+    }
+
+    companion object {
+        private val placeholderText = SpannableString(" ").apply {
+            setSpan(PlaceholderLineSpan(0.6f), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
     }
 
 }

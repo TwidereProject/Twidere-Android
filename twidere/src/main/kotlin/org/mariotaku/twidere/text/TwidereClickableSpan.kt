@@ -2,14 +2,11 @@ package org.mariotaku.twidere.text
 
 import android.text.TextPaint
 import android.text.style.ClickableSpan
+import android.view.View
 import org.mariotaku.ktextension.contains
 import org.mariotaku.twidere.constant.SharedPreferenceConstants
 
-/**
- * Created by Mariotaku on 2017/5/21.
- */
-
-abstract class TwidereClickableSpan(val highlightStyle: Int): ClickableSpan() {
+class TwidereClickableSpan(val highlightStyle: Int, val callback: () -> Unit) : ClickableSpan() {
 
     override fun updateDrawState(ds: TextPaint) {
         if (SharedPreferenceConstants.VALUE_LINK_HIGHLIGHT_OPTION_CODE_UNDERLINE in highlightStyle) {
@@ -18,5 +15,9 @@ abstract class TwidereClickableSpan(val highlightStyle: Int): ClickableSpan() {
         if (SharedPreferenceConstants.VALUE_LINK_HIGHLIGHT_OPTION_CODE_HIGHLIGHT in highlightStyle) {
             ds.color = ds.linkColor
         }
+    }
+
+    override fun onClick(widget: View?) {
+        callback()
     }
 }

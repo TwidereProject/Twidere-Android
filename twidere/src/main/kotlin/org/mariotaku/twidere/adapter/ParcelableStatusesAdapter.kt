@@ -50,6 +50,7 @@ import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.model.ObjectId
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.placeholder.ParcelableStatusPlaceholder
 import org.mariotaku.twidere.model.timeline.TimelineFilter
 import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler
 import org.mariotaku.twidere.util.TwidereLinkify
@@ -168,11 +169,11 @@ class ParcelableStatusesAdapter(
     }
 
     override fun isGapItem(position: Int): Boolean {
-        return getStatusInternal(false, false, position = position)?.is_gap == true
+        return getStatusInternal(false, false, position = position).is_gap
     }
 
     override fun getStatus(position: Int, raw: Boolean): ParcelableStatus {
-        return getStatusInternal(raw, position = position) ?: ParcelableStatusPlaceholder
+        return getStatusInternal(raw, position = position)
     }
 
     override fun getStatusCount(raw: Boolean): Int {
@@ -290,7 +291,7 @@ class ParcelableStatusesAdapter(
                 holder as IStatusViewHolder
                 val countIndex: Int = getItemCountIndex(position)
                 val status = getStatusInternal(loadAround = true, position = position,
-                        countIndex = countIndex) ?: return
+                        countIndex = countIndex)
                 holder.display(status, displayInReplyTo = isShowInReplyTo,
                         displayPinned = countIndex == ITEM_INDEX_PINNED_STATUS)
             }
@@ -298,7 +299,7 @@ class ParcelableStatusesAdapter(
                 (holder as TimelineFilterHeaderViewHolder).display(timelineFilter!!)
             }
             ITEM_VIEW_TYPE_GAP -> {
-                val status = getStatusInternal(loadAround = true, position = position) ?: return
+                val status = getStatusInternal(loadAround = true, position = position)
                 val loading = gapLoadingIds.any { it.accountKey == status.account_key && it.id == status.id }
                 (holder as GapViewHolder).display(loading)
             }
@@ -396,7 +397,7 @@ class ParcelableStatusesAdapter(
     }
 
     private fun getStatusInternal(raw: Boolean = false, loadAround: Boolean = false,
-            position: Int, countIndex: Int = getItemCountIndex(position, raw)): ParcelableStatus? {
+            position: Int, countIndex: Int = getItemCountIndex(position, raw)): ParcelableStatus {
         when (countIndex) {
             ITEM_INDEX_PINNED_STATUS -> {
                 return pinnedStatuses!![position - getItemStartPosition(ITEM_INDEX_PINNED_STATUS)]
@@ -404,9 +405,9 @@ class ParcelableStatusesAdapter(
             ITEM_INDEX_STATUS -> {
                 val dataPosition = position - statusStartIndex
                 return if (loadAround) {
-                    pagedStatusesHelper.getItem(dataPosition)
+                    pagedStatusesHelper.getItem(dataPosition) ?: ParcelableStatusPlaceholder
                 } else {
-                    pagedStatusesHelper.currentList?.get(dataPosition)
+                    pagedStatusesHelper.currentList?.get(dataPosition) ?: ParcelableStatusPlaceholder
                 }
             }
         }
@@ -420,18 +421,6 @@ class ParcelableStatusesAdapter(
         itemCounts[ITEM_INDEX_FILTER_HEADER] = if (timelineFilter != null) 1 else 0
         itemCounts[ITEM_INDEX_PINNED_STATUS] = pinnedStatuses?.size ?: 0
         itemCounts[ITEM_INDEX_LOAD_END_INDICATOR] = if (LoadMorePosition.END in loadMoreIndicatorPosition) 1 else 0
-    }
-
-    object ParcelableStatusPlaceholder : ParcelableStatus() {
-        init {
-            id = "none"
-            account_key = UserKey.INVALID
-            user_key = UserKey.INVALID
-        }
-
-        override fun hashCode(): Int {
-            return -1
-        }
     }
 
     companion object {
