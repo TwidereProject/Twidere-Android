@@ -49,6 +49,7 @@ import org.mariotaku.twidere.adapter.StatusDetailsAdapter
 import org.mariotaku.twidere.annotation.ProfileImageSize
 import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
+import org.mariotaku.twidere.data.status.StatusActivitySummaryLiveData
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.fragment.status.StatusFragment
@@ -94,7 +95,7 @@ class DetailStatusViewHolder(
 
     @UiThread
     fun displayStatus(account: AccountDetails?, status: ParcelableStatus?,
-            statusActivity: StatusFragment.StatusActivity?, translation: TranslationResult?) {
+            statusActivity: StatusActivitySummaryLiveData.StatusActivity?, translation: TranslationResult?) {
         if (account == null || status == null) return
         val fragment = adapter.fragment
         val context = adapter.context
@@ -422,9 +423,9 @@ class DetailStatusViewHolder(
                 preferences, manager, status, item)
     }
 
-    internal fun updateStatusActivity(activity: StatusFragment.StatusActivity) {
+    internal fun updateStatusActivity(activity: StatusActivitySummaryLiveData.StatusActivity) {
         val adapter = itemView.countsUsers.adapter as CountsUsersAdapter
-        adapter.setUsers(activity.retweeters)
+        adapter.setUsers(activity.relatedUsers)
         adapter.setCounts(activity)
     }
 
@@ -585,7 +586,7 @@ class DetailStatusViewHolder(
             notifyDataSetChanged()
         }
 
-        fun setCounts(activity: StatusFragment.StatusActivity?) {
+        fun setCounts(activity: StatusActivitySummaryLiveData.StatusActivity?) {
             if (activity != null) {
                 val counts = ArrayList<LabeledCount>()
                 val replyCount = activity.replyCount

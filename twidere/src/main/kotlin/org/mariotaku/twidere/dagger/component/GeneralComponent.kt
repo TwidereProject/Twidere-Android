@@ -27,7 +27,7 @@ import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.dagger.module.ApplicationModule
 import org.mariotaku.twidere.dagger.module.ChannelModule
-import org.mariotaku.twidere.data.impl.UserLiveData
+import org.mariotaku.twidere.data.user.UserLiveData
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BaseFragment

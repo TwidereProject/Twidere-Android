@@ -143,7 +143,7 @@ fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: S
         result.addFilterFlag(ParcelableStatus.FilterFlags.QUOTE_NOT_AVAILABLE)
     }
 
-    result.reply_count = status.replyCount
+    result.reply_count = status.descendentReplyCount
     result.retweet_count = status.retweetCount
     result.favorite_count = status.favoriteCount
 

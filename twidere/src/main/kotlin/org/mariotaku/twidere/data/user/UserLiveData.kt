@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.data.impl
+package org.mariotaku.twidere.data.user
 
 import android.accounts.AccountManager
 import android.content.Context

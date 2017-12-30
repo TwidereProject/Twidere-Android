@@ -23,6 +23,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Build
 import android.support.v4.graphics.drawable.DrawableCompat
+import android.support.v4.widget.TextViewCompat
 import android.util.AttributeSet
 import org.mariotaku.twidere.R
 
@@ -47,9 +48,9 @@ class DrawableTintTextView(
         val a = context.obtainStyledAttributes(attrs, R.styleable.DrawableTintTextView)
         if (a.hasValue(R.styleable.DrawableTintTextView_drawableTint)) {
             compoundDrawableTintListCompat = a.getColorStateList(R.styleable.DrawableTintTextView_drawableTint)
-            iconWidth = a.getDimensionPixelSize(R.styleable.DrawableTintTextView_iabIconWidth, 0)
-            iconHeight = a.getDimensionPixelSize(R.styleable.DrawableTintTextView_iabIconHeight, 0)
         }
+        iconWidth = a.getDimensionPixelSize(R.styleable.DrawableTintTextView_iabIconWidth, 0)
+        iconHeight = a.getDimensionPixelSize(R.styleable.DrawableTintTextView_iabIconHeight, 0)
         a.recycle()
         updateDrawableCompat()
     }
@@ -60,16 +61,19 @@ class DrawableTintTextView(
     }
 
     private fun updateDrawableCompat() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) return
         compoundDrawables.forEach { drawable ->
-            if (drawable == null) return@forEach
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                DrawableCompat.setTintList(drawable, compoundDrawableTintListCompat)
+            if (drawable == null) {
+                return@forEach
             }
-            if (iconWidth > 0 && iconHeight > 0) {
-                val top = (drawable.intrinsicHeight - iconHeight) / 2
-                val left = (drawable.intrinsicWidth - iconWidth) / 2
-                drawable.setBounds(left, top, left + iconWidth, top + iconHeight)
+            DrawableCompat.setTintList(drawable, compoundDrawableTintListCompat)
+        }
+        TextViewCompat.getCompoundDrawablesRelative(this).forEach { drawable ->
+            if (drawable == null) {
+                return@forEach
             }
+            DrawableCompat.setTintList(drawable, compoundDrawableTintListCompat)
         }
     }
+
 }

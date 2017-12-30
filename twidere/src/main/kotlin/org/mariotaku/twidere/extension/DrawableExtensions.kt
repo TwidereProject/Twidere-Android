@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.extension
 
 import android.graphics.drawable.Drawable
+import android.widget.TextView
 
 fun Drawable.setBoundsFitCenter(left: Int, top: Int, right: Int, bottom: Int) {
     val boundsWidth = right - left
@@ -41,6 +42,13 @@ fun Drawable.setBoundsFitCenter(left: Int, top: Int, right: Int, bottom: Int) {
         setBounds(left, boundsHeight / 2 - actualHeight / 2, right,
                 boundsHeight / 2 + actualHeight / 2)
     }
+}
+
+fun Drawable.applyCompoundDrawableBounds(textView: TextView) {
+    val iconSize = textView.textSize.toInt()
+    val top = (intrinsicHeight - iconSize) / 2
+    val left = (intrinsicWidth - iconSize) / 2
+    setBounds(left, top, left + iconSize, top + iconSize)
 }
 
 var Drawable.isActivated: Boolean

@@ -19,10 +19,8 @@
 
 package org.mariotaku.twidere.fragment.status
 
-import android.accounts.AccountManager
 import android.app.Activity
 import android.app.Dialog
-import android.content.ContentValues
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -34,7 +32,6 @@ import android.nfc.NfcAdapter.CreateNdefMessageCallback
 import android.os.Bundle
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.app.hasRunningLoadersSafe
-import android.support.v4.content.FixedAsyncTaskLoader
 import android.support.v4.content.Loader
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.FixedLinearLayoutManager
@@ -53,25 +50,21 @@ import nl.komponents.kovenant.ui.alwaysUi
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.Twitter
-import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.twitter.TranslationResult
-import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity
 import org.mariotaku.twidere.adapter.StatusDetailsAdapter
 import org.mariotaku.twidere.adapter.decorator.ExtendedDividerItemDecoration
-import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
+import org.mariotaku.twidere.data.status.StatusActivitySummaryLiveData
 import org.mariotaku.twidere.extension.*
-import org.mariotaku.twidere.extension.model.api.key
-import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.data.observe
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.model.originalId
 import org.mariotaku.twidere.extension.view.calculateSpaceItemHeight
@@ -85,8 +78,6 @@ import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
-import org.mariotaku.twidere.provider.TwidereDataStore.CachedStatuses
-import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.AbsAccountRequestTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.ContentScrollHandler.ContentListSupport
@@ -118,7 +109,6 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     // Data fields
     private var conversationLoaderInitialized: Boolean = false
 
-    private var activityLoaderInitialized: Boolean = false
     private var hasMoreConversation = true
 
     // Listeners
@@ -139,7 +129,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             val adapter = this@StatusFragment.adapter
             adapter.updateItemDecoration()
             val conversationLoader = loader as ConversationLoader
-            var supportedPositions: Int = 0
+            var supportedPositions = 0
             if (data != null && !data.isEmpty()) {
                 val sinceSortId = (conversationLoader.pagination as? SinceMaxPagination)?.sinceSortId ?: -1
                 if (sinceSortId < data[data.size - 1].sort_id) {
@@ -166,22 +156,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         }
     }
 
-    private val statusActivityLoaderCallback = object : LoaderCallbacks<StatusActivity?> {
-        override fun onCreateLoader(id: Int, args: Bundle): Loader<StatusActivity?> {
-            val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-            val statusId = args.getString(EXTRA_STATUS_ID)
-            return StatusActivitySummaryLoader(activity!!, accountKey, statusId)
-        }
-
-        override fun onLoadFinished(loader: Loader<StatusActivity?>, data: StatusActivity?) {
-            adapter.updateItemDecoration()
-            adapter.statusActivity = data
-        }
-
-        override fun onLoaderReset(loader: Loader<StatusActivity?>) {
-
-        }
-    }
+    private lateinit var statusActivitySummaryLiveData: StatusActivitySummaryLiveData
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         val activity = activity ?: return
@@ -244,6 +219,13 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
         setState(STATE_LOADING)
 
+        statusActivitySummaryLiveData = StatusActivitySummaryLiveData(context!!)
+        statusActivitySummaryLiveData.observe(this, success = { data ->
+            adapter.updateItemDecoration()
+            adapter.statusActivity = data
+        }, fail = {
+            DebugLog.w(tr = it)
+        })
         loaderManager.initLoader(LOADER_ID_DETAIL_STATUS, arguments, this)
     }
 
@@ -460,16 +442,9 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     private fun loadActivity(status: ParcelableStatus?) {
         if (status == null || host == null || isDetached) return
-        val args = Bundle {
-            this[EXTRA_ACCOUNT_KEY] = status.account_key
-            this[EXTRA_STATUS_ID] = status.originalId
-        }
-        if (activityLoaderInitialized) {
-            loaderManager.restartLoader(LOADER_ID_STATUS_ACTIVITY, args, statusActivityLoaderCallback)
-            return
-        }
-        loaderManager.initLoader(LOADER_ID_STATUS_ACTIVITY, args, statusActivityLoaderCallback)
-        activityLoaderInitialized = true
+        statusActivitySummaryLiveData.accountKey = status.account_key
+        statusActivitySummaryLiveData.statusId = status.id
+        statusActivitySummaryLiveData.load()
     }
 
     internal fun loadTranslation(status: ParcelableStatus?) {
@@ -671,81 +646,6 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         }
     }
 
-
-    class StatusActivitySummaryLoader(
-            context: Context,
-            private val accountKey: UserKey,
-            private val statusId: String
-    ) : FixedAsyncTaskLoader<StatusActivity>(context) {
-
-        override fun loadInBackground(): StatusActivity? {
-            val context = context
-            val details = AccountManager.get(context).getDetails(accountKey, true) ?: return null
-            if (AccountType.TWITTER != details.type) {
-                return null
-            }
-            val paging = Paging()
-            paging.setCount(10)
-            val activitySummary = StatusActivity(statusId, emptyList())
-            try {
-                val twitter = details.newMicroBlogInstance(context, MicroBlog::class.java)
-                activitySummary.retweeters = twitter.getRetweets(statusId, paging)
-                        .filterNot { DataStoreUtils.isFilteringUser(context, it.user.key) }
-                        .distinctBy { it.user.id }
-                        .map { it.user.toParcelable(details) }
-                val countValues = ContentValues()
-                val status = twitter.showStatus(statusId)
-                activitySummary.favoriteCount = status.favoriteCount
-                activitySummary.retweetCount = status.retweetCount
-                activitySummary.replyCount = status.replyCount
-
-                countValues.put(Statuses.REPLY_COUNT, activitySummary.replyCount)
-                countValues.put(Statuses.FAVORITE_COUNT, activitySummary.favoriteCount)
-                countValues.put(Statuses.RETWEET_COUNT, activitySummary.retweetCount)
-
-                val cr = context.contentResolver
-                val statusWhere = Expression.and(
-                        Expression.equalsArgs(Statuses.ACCOUNT_KEY),
-                        Expression.or(
-                                Expression.equalsArgs(Statuses.ID),
-                                Expression.equalsArgs(Statuses.RETWEET_ID)))
-                val statusWhereArgs = arrayOf(accountKey.toString(), statusId, statusId)
-                cr.update(Statuses.HomeTimeline.CONTENT_URI, countValues, statusWhere.sql, statusWhereArgs)
-                cr.updateStatusInfo(DataStoreUtils.STATUSES_ACTIVITIES_URIS, Statuses.COLUMNS,
-                        accountKey, statusId, ParcelableStatus::class.java) { item ->
-                    item.favorite_count = activitySummary.favoriteCount
-                    item.reply_count = activitySummary.replyCount
-                    item.retweet_count = activitySummary.retweetCount
-                    return@updateStatusInfo item
-                }
-                val pStatus = status.toParcelable(details)
-                cr.insert(CachedStatuses.CONTENT_URI, pStatus, ParcelableStatus::class.java)
-
-                return activitySummary
-            } catch (e: MicroBlogException) {
-                return null
-            }
-
-        }
-
-        override fun onStartLoading() {
-            forceLoad()
-        }
-    }
-
-    data class StatusActivity(
-            var statusId: String,
-            var retweeters: List<ParcelableUser>,
-            var favoriteCount: Long = 0,
-            var replyCount: Long = -1,
-            var retweetCount: Long = 0
-    ) {
-
-        fun isStatus(status: ParcelableStatus): Boolean {
-            return statusId == status.retweet_id ?: status.id
-        }
-    }
-
     data class ReadPosition(var statusId: Long, var offsetTop: Int)
 
     private class StatusListLinearLayoutManager(context: Context, private val recyclerView: RecyclerView) : FixedLinearLayoutManager(context) {
@@ -901,7 +801,6 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         // Constants
         private val LOADER_ID_DETAIL_STATUS = 1
         private val LOADER_ID_STATUS_CONVERSATIONS = 2
-        private val LOADER_ID_STATUS_ACTIVITY = 3
         private val STATE_LOADED = 1
         private val STATE_LOADING = 2
         private val STATE_ERROR = 3

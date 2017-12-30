@@ -38,6 +38,7 @@ import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.annotation.TimelineStyle
 import org.mariotaku.twidere.constant.*
+import org.mariotaku.twidere.data.status.StatusActivitySummaryLiveData
 import org.mariotaku.twidere.extension.model.originalId
 import org.mariotaku.twidere.extension.model.retweet_sort_id
 import org.mariotaku.twidere.fragment.status.StatusFragment
@@ -86,7 +87,7 @@ class StatusDetailsAdapter(
             }
             notifyDataSetChanged()
         }
-    var statusActivity: StatusFragment.StatusActivity? = null
+    var statusActivity: StatusActivitySummaryLiveData.StatusActivity? = null
         internal set(value) {
             val status = status ?: return
             if (value != null && !value.isStatus(status)) {
@@ -302,7 +303,7 @@ class StatusDetailsAdapter(
                 holder as DetailStatusViewHolder
                 payloads.forEach { it ->
                     when (it) {
-                        is StatusFragment.StatusActivity -> {
+                        is StatusActivitySummaryLiveData.StatusActivity -> {
                             holder.updateStatusActivity(it)
                         }
                         is ParcelableStatus -> {

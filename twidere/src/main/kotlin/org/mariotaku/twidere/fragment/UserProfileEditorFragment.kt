@@ -40,7 +40,7 @@ import org.mariotaku.twidere.activity.ColorPickerDialogActivity
 import org.mariotaku.twidere.activity.ThemedMediaPickerActivity
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.ImageShapeStyle
-import org.mariotaku.twidere.data.impl.UserLiveData
+import org.mariotaku.twidere.data.user.UserLiveData
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.data.observe
 import org.mariotaku.twidere.extension.model.urlPreferred
