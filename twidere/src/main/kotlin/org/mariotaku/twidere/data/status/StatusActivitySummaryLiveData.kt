@@ -22,7 +22,6 @@ package org.mariotaku.twidere.data.status
 import android.accounts.AccountManager
 import android.content.ContentValues
 import android.content.Context
-import org.mariotaku.ktextension.addAllTo
 import org.mariotaku.microblog.library.Twitter
 import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.sqliteqb.library.Expression
@@ -96,28 +95,22 @@ class StatusActivitySummaryLiveData(val context: Context) : ComputableExceptionL
         val status = showStatus(statusId)
         result.favoriteCount = status.favoriteCount
         result.retweetCount = status.retweetCount
-        result.replyCount = status.descendentReplyCount
+        result.replyCount = status.replyCount
         return result
     }
 
     private fun Twitter.getActivitySummaryOfficial(statusId: String, account: AccountDetails): StatusActivity {
-        val summary = getStatusActivitySummary(statusId)
-        val relatedIds = mutableSetOf<String>()
-        summary.favoriters?.iDs?.let {
-            it.slice(0 until (10.coerceAtMost(it.size)))
-        }?.addAllTo(relatedIds)
-        summary.retweeters?.iDs?.let {
-            it.slice(0 until (10.coerceAtMost(it.size)))
-        }?.addAllTo(relatedIds)
-
-        val relatedUsers = lookupUsers(relatedIds.toTypedArray())
+        val paging = Paging().count(5)
+        val relatedUsers = (getRetweetedBy(statusId, paging) + getFavoritedBy(statusId, paging))
                 .filterNot { DataStoreUtils.isFilteringUser(context, it.key) }
                 .map { it.toParcelable(account) }
+
         val result = StatusActivity(statusId, relatedUsers)
 
-        result.favoriteCount = summary.favoritersCount
-        result.retweetCount = summary.retweetersCount
-        result.replyCount = summary.descendentReplyCount
+        val status = showStatus(statusId)
+        result.favoriteCount = status.favoriteCount
+        result.retweetCount = status.retweetCount
+        result.replyCount = status.replyCount
         return result
     }
 

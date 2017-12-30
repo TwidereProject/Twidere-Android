@@ -46,8 +46,6 @@ public class StatusActivitySummary extends MicroBlogResponseObject implements Mi
     long repliersCount;
     @JsonField(name = "retweeters_count")
     long retweetersCount;
-    @JsonField(name = "descendent_reply_count")
-    long descendentReplyCount;
 
     public IDs getFavoriters() {
         return favoriters;
@@ -71,10 +69,6 @@ public class StatusActivitySummary extends MicroBlogResponseObject implements Mi
 
     public long getRetweetersCount() {
         return retweetersCount;
-    }
-
-    public long getDescendentReplyCount() {
-        return descendentReplyCount;
     }
 
     @Override

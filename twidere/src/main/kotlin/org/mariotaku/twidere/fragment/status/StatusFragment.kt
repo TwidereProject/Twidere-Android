@@ -443,7 +443,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     private fun loadActivity(status: ParcelableStatus?) {
         if (status == null || host == null || isDetached) return
         statusActivitySummaryLiveData.accountKey = status.account_key
-        statusActivitySummaryLiveData.statusId = status.id
+        statusActivitySummaryLiveData.statusId = status.originalId
         statusActivitySummaryLiveData.load()
     }
 
