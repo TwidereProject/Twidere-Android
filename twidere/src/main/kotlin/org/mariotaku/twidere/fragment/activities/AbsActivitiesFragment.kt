@@ -60,7 +60,9 @@ import org.mariotaku.twidere.data.processor.DataSourceItemProcessor
 import org.mariotaku.twidere.extension.model.activityStatus
 import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.extension.showContextMenuForChild
+import org.mariotaku.twidere.extension.view.PositionWithOffset
 import org.mariotaku.twidere.extension.view.firstVisibleItemPosition
+import org.mariotaku.twidere.extension.view.firstVisibleItemPositionWithOffset
 import org.mariotaku.twidere.extension.view.lastVisibleItemPosition
 import org.mariotaku.twidere.fragment.AbsContentRecyclerViewFragment
 import org.mariotaku.twidere.fragment.timeline.AbsTimelineFragment
@@ -82,6 +84,7 @@ import org.mariotaku.twidere.view.ExtendedRecyclerView
 import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder
 import org.mariotaku.twidere.view.holder.GapViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
+import java.util.concurrent.atomic.AtomicReference
 
 abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<ParcelableActivitiesAdapter, RecyclerView.LayoutManager>() {
 
@@ -125,12 +128,15 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
 
     private val busEventHandler = BusEventHandler()
     private val scrollHandler = ScrollHandler()
+    private val timelineBoundaryCallback = ActivitiesBoundaryCallback()
+    private val positionBackup: AtomicReference<PositionWithOffset> = AtomicReference()
     private var dataController: ExtendedPagedListProvider.DataController? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         registerForContextMenu(recyclerView)
         adapter.activityClickListener = ActivityClickHandler()
+        adapter.pagedListListener = this::onPagedListChanged
         adapter.loadMoreSupportedPosition = if (isStandalone) {
             LoadMorePosition.NONE
         } else {
@@ -235,26 +241,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
     }
 
     override fun onLoadMoreContents(position: Int) {
-        if (isStandalone || !refreshEnabled || position != LoadMorePosition.END) return
-        val started = getActivities(object : ContentRefreshParam {
-            override val accountKeys by lazy {
-                this@AbsActivitiesFragment.accountKeys
-            }
-            override val pagination by lazy {
-                val keys = accountKeys.toNulls()
-                val maxIds = DataStoreUtils.getRefreshOldestActivityMaxPositions(context!!, contentUri, keys)
-                val maxSortIds = DataStoreUtils.getRefreshOldestActivityMaxSortPositions(context!!, contentUri, keys)
-                return@lazy Array(keys.size) { idx ->
-                    SinceMaxPagination.maxId(maxIds[idx], maxSortIds[idx])
-                }
-            }
-
-            override val tabId: Long
-                get() = this@AbsActivitiesFragment.tabId
-
-        })
-        if (!started) return
-        super.onLoadMoreContents(position)
+        // No-op
     }
 
     override fun scrollToPositionWithOffset(position: Int, offset: Int) {
@@ -269,6 +256,9 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
         }
     }
 
+    /**
+     * Scroll to start of the timeline. This also updates read position
+     */
     override fun scrollToStart(): Boolean {
         val result = super.scrollToStart()
         if (result) saveReadPosition(0)
@@ -288,7 +278,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
 
 
     protected open fun onDataLoaded(data: PagedList<ParcelableActivity>?) {
-        val firstVisiblePosition = layoutManager.firstVisibleItemPosition
+        val firstVisiblePosition = layoutManager.firstVisibleItemPositionWithOffset
         adapter.showAccountsColor = accountKeys.size > 1
         adapter.activities = data
         when {
@@ -299,12 +289,15 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
                 showContent()
             }
         }
-        if (firstVisiblePosition == 0 && !preferences[readFromBottomKey]) {
-            val weakThis by weak(this)
-            recyclerView.post {
-                val f = weakThis?.takeIf { !it.isDetached } ?: return@post
-                f.scrollToStart()
-            }
+        positionBackup.set(firstVisiblePosition)
+    }
+
+    protected open fun onPagedListChanged(data: PagedList<ParcelableActivity>?) {
+        val firstVisiblePosition = positionBackup.getAndSet(null) ?: return
+        if (firstVisiblePosition.position == 0 && !preferences[readFromBottomKey]) {
+            scrollToPositionWithOffset(0, 0)
+        } else {
+            scrollToPositionWithOffset(firstVisiblePosition.position, firstVisiblePosition.offset)
         }
     }
 
@@ -529,6 +522,31 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                 val layoutManager = layoutManager
                 saveReadPosition(layoutManager.firstVisibleItemPosition)
+            }
+        }
+    }
+
+    private inner class ActivitiesBoundaryCallback : PagedList.BoundaryCallback<ParcelableStatus>() {
+        override fun onItemAtEndLoaded(itemAtEnd: ParcelableStatus) {
+            val started = getActivities(object : ContentRefreshParam {
+                override val accountKeys by lazy {
+                    this@AbsActivitiesFragment.accountKeys
+                }
+                override val pagination by lazy {
+                    val keys = accountKeys.toNulls()
+                    val maxIds = DataStoreUtils.getRefreshOldestActivityMaxPositions(context!!, contentUri, keys)
+                    val maxSortIds = DataStoreUtils.getRefreshOldestActivityMaxSortPositions(context!!, contentUri, keys)
+                    return@lazy Array(keys.size) { idx ->
+                        SinceMaxPagination.maxId(maxIds[idx], maxSortIds[idx])
+                    }
+                }
+
+                override val tabId: Long
+                    get() = this@AbsActivitiesFragment.tabId
+
+            })
+            if (started) {
+                adapter.loadMoreIndicatorPosition = LoadMorePosition.END
             }
         }
     }

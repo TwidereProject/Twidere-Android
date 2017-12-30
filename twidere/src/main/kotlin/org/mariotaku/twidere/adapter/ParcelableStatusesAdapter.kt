@@ -21,6 +21,7 @@ package org.mariotaku.twidere.adapter
 
 import android.arch.paging.PagedList
 import android.arch.paging.PagedListAdapterHelper
+import android.arch.paging.setPagedListListener
 import android.content.Context
 import android.support.v4.widget.Space
 import android.support.v7.recyclerview.extensions.ListAdapterConfig
@@ -99,6 +100,20 @@ class ParcelableStatusesAdapter(
 
     override val itemCounts = ItemCounts(5)
 
+    override var loadMoreIndicatorPosition: Int
+        get() = super.loadMoreIndicatorPosition
+        set(value) {
+            super.loadMoreIndicatorPosition = value
+            updateItemCounts()
+        }
+
+    override var loadMoreSupportedPosition: Int
+        get() = super.loadMoreSupportedPosition
+        set(value) {
+            super.loadMoreSupportedPosition = value
+            updateItemCounts()
+        }
+
     var isShowInReplyTo: Boolean = false
         set(value) {
             if (field == value) return
@@ -134,18 +149,10 @@ class ParcelableStatusesAdapter(
     val statusStartIndex: Int
         get() = getItemStartPosition(ITEM_INDEX_STATUS)
 
-    override var loadMoreIndicatorPosition: Int
-        get() = super.loadMoreIndicatorPosition
+    var pagedListListener: ((list: PagedList<ParcelableStatus>?) -> Unit)? = null
         set(value) {
-            super.loadMoreIndicatorPosition = value
-            updateItemCounts()
-        }
-
-    override var loadMoreSupportedPosition: Int
-        get() = super.loadMoreSupportedPosition
-        set(value) {
-            super.loadMoreSupportedPosition = value
-            updateItemCounts()
+            field = value
+            pagedStatusesHelper.setPagedListListener(value)
         }
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)

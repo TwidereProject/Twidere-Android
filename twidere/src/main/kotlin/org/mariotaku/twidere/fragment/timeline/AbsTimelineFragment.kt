@@ -70,6 +70,7 @@ import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.adapter.removeStatuses
 import org.mariotaku.twidere.extension.data.observe
+import org.mariotaku.twidere.extension.view.PositionWithOffset
 import org.mariotaku.twidere.extension.view.firstVisibleItemPosition
 import org.mariotaku.twidere.extension.view.firstVisibleItemPositionWithOffset
 import org.mariotaku.twidere.extension.view.lastVisibleItemPosition
@@ -99,6 +100,7 @@ import org.mariotaku.twidere.view.holder.GapViewHolder
 import org.mariotaku.twidere.view.holder.TimelineFilterHeaderViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 import org.mariotaku.twidere.view.holder.status.StatusViewHolder
+import java.util.concurrent.atomic.AtomicReference
 
 abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableStatusesAdapter, LayoutManager>(),
         IFloatingActionButtonFragment {
@@ -154,12 +156,14 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
     private val busEventHandler = BusEventHandler()
     private val scrollHandler = ScrollHandler()
     private val timelineBoundaryCallback = StatusesBoundaryCallback()
+    private val positionBackup: AtomicReference<PositionWithOffset> = AtomicReference()
     private var dataController: ExtendedPagedListProvider.DataController? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         registerForContextMenu(recyclerView)
         adapter.statusClickListener = StatusClickHandler()
+        adapter.pagedListListener = this::onPagedListChanged
         adapter.loadMoreSupportedPosition = if (isStandalone) {
             LoadMorePosition.NONE
         } else {
@@ -285,6 +289,9 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         }
     }
 
+    /**
+     * Scroll to start of the timeline. This also updates read position
+     */
     override fun scrollToStart(): Boolean {
         val result = super.scrollToStart()
         if (result) saveReadPosition(0)
@@ -317,7 +324,6 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         showProgress()
     }
 
-
     protected open fun onDataLoaded(data: PagedList<ParcelableStatus>?) {
         val firstVisiblePosition = layoutManager.firstVisibleItemPositionWithOffset
         adapter.showAccountsColor = accountKeys.size > 1
@@ -331,18 +337,15 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                 showContent()
             }
         }
-        if (firstVisiblePosition == null) return
+        positionBackup.set(firstVisiblePosition)
+    }
+
+    protected open fun onPagedListChanged(data: PagedList<ParcelableStatus>?) {
+        val firstVisiblePosition = positionBackup.getAndSet(null) ?: return
         if (firstVisiblePosition.position == 0 && !preferences[readFromBottomKey]) {
-            val weakThis by weak(this)
-            recyclerView.post {
-                val f = weakThis?.takeIf { !it.isDetached && it.view != null } ?: return@post
-                f.scrollToStart()
-            }
+            scrollToPositionWithOffset(0, 0)
         } else {
-            val lm = loaderManager
-            if (lm is LinearLayoutManager) {
-                lm.scrollToPositionWithOffset(firstVisiblePosition.position, firstVisiblePosition.offset)
-            }
+            scrollToPositionWithOffset(firstVisiblePosition.position, firstVisiblePosition.offset)
         }
     }
 
@@ -400,7 +403,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
     private fun setupLiveData() {
         statuses = if (isStandalone) onCreateStandaloneLiveData() else onCreateDatabaseLiveData()
-        statuses?.observe(this, success = { onDataLoaded(it) }, fail = {
+        statuses?.observe(this, success = this::onDataLoaded, fail = {
             showError(R.drawable.ic_info_error_generic, it.getErrorMessage(context!!))
         })
     }
@@ -484,6 +487,19 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
             if (index in range) {
                 adapter.notifyItemRangeChanged(index, 1)
             }
+        }
+    }
+
+    class DefaultOnLikedListener(
+            private val context: Context,
+            private val status: ParcelableStatus,
+            private val accountKey: UserKey? = null
+    ) : LikeAnimationDrawable.OnLikedListener {
+
+        override fun onLiked(): Boolean {
+            if (status.is_favorite) return false
+            CreateFavoriteTask(context, accountKey ?: status.account_key, status).promise()
+            return true
         }
     }
 
@@ -631,19 +647,6 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
             if (started) {
                 adapter.loadMoreIndicatorPosition = LoadMorePosition.END
             }
-        }
-    }
-
-    class DefaultOnLikedListener(
-            private val context: Context,
-            private val status: ParcelableStatus,
-            private val accountKey: UserKey? = null
-    ) : LikeAnimationDrawable.OnLikedListener {
-
-        override fun onLiked(): Boolean {
-            if (status.is_favorite) return false
-            CreateFavoriteTask(context, accountKey ?: status.account_key, status).promise()
-            return true
         }
     }
 

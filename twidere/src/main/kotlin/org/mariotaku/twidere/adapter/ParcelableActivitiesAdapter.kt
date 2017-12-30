@@ -22,6 +22,7 @@ package org.mariotaku.twidere.adapter
 import android.annotation.SuppressLint
 import android.arch.paging.PagedList
 import android.arch.paging.PagedListAdapterHelper
+import android.arch.paging.setPagedListListener
 import android.content.Context
 import android.support.v7.recyclerview.extensions.ListAdapterConfig
 import android.support.v7.widget.RecyclerView
@@ -44,7 +45,11 @@ import org.mariotaku.twidere.annotation.TimelineStyle
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.exception.UnsupportedCountIndexException
 import org.mariotaku.twidere.extension.model.activityStatus
-import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.model.ItemCounts
+import org.mariotaku.twidere.model.ObjectId
+import org.mariotaku.twidere.model.ParcelableActivity
+import org.mariotaku.twidere.model.ParcelableMedia
+import org.mariotaku.twidere.model.placeholder.ParcelableActivityPlaceholder
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.OnLinkClickHandler
 import org.mariotaku.twidere.util.TwidereLinkify
@@ -118,6 +123,12 @@ class ParcelableActivitiesAdapter(
         }
 
     var activityClickListener: ActivityAdapterListener? = null
+
+    var pagedListListener: ((list: PagedList<ParcelableActivity>?) -> Unit)? = null
+        set(value) {
+            field = value
+            pagedActivitiesHelper.setPagedListListener(value)
+        }
 
     private val inflater = LayoutInflater.from(context)
     private val twidereLinkify = TwidereLinkify(OnLinkClickHandler(context, null, preferences))
@@ -397,18 +408,6 @@ class ParcelableActivitiesAdapter(
         override fun onItemMenuClick(holder: RecyclerView.ViewHolder, menuView: View, position: Int) {
             val adapter = adapterRef.get() ?: return
             adapter.activityClickListener?.onStatusMenuClick(holder as StatusViewHolder, menuView, position)
-        }
-    }
-
-    object ParcelableActivityPlaceholder : ParcelableActivity() {
-        init {
-            id = "none"
-            account_key = UserKey.INVALID
-            user_key = UserKey.INVALID
-        }
-
-        override fun hashCode(): Int {
-            return -1
         }
     }
 
