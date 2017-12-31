@@ -86,8 +86,6 @@
     </declare-styleable>
     <declare-styleable name="DrawableTintTextView">
         <attr name="drawableTint" format="reference"/>
-        <attr name="iabIconWidth" format="dimension"/>
-        <attr name="iabIconHeight" format="dimension"/>
     </declare-styleable>
     <declare-styleable name="ShapedImageView">
         <attr name="sivBorder" format="boolean"/>

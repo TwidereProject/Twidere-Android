@@ -1631,22 +1631,22 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             StatusVisibility.UNLISTED -> {
                 visibilityLabel.setText(R.string.label_status_visibility_unlisted)
                 TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(visibilityLabel,
-                        R.drawable.ic_action_web_lock, 0, 0, 0)
+                        R.drawable.ic_label_web_lock, 0, 0, 0)
             }
             StatusVisibility.PRIVATE -> {
                 visibilityLabel.setText(R.string.label_status_visibility_private)
                 TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(visibilityLabel,
-                        R.drawable.ic_action_lock, 0, 0, 0)
+                        R.drawable.ic_label_lock, 0, 0, 0)
             }
             StatusVisibility.DIRECT -> {
                 visibilityLabel.setText(R.string.label_status_visibility_direct)
                 TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(visibilityLabel,
-                        R.drawable.ic_action_message, 0, 0, 0)
+                        R.drawable.ic_stat_label_message, 0, 0, 0)
             }
             else -> { // Default to public
                 visibilityLabel.setText(R.string.label_status_visibility_public)
                 TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(visibilityLabel,
-                        R.drawable.ic_action_web, 0, 0, 0)
+                        R.drawable.ic_label_web, 0, 0, 0)
             }
         }
         visibilityLabel.refreshDrawableState()

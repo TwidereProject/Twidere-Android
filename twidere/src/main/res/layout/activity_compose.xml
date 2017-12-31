@@ -98,28 +98,30 @@
                     android:id="@+id/locationLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/ic_action_location"
-                    android:drawableStart="@drawable/ic_action_location"
+                    android:drawableLeft="@drawable/ic_label_location"
+                    android:drawablePadding="@dimen/element_spacing_small"
+                    android:drawableStart="@drawable/ic_label_location"
                     android:gravity="center_vertical"
                     android:maxLines="1"
+                    android:paddingLeft="@dimen/element_spacing_small"
+                    android:paddingRight="@dimen/element_spacing_small"
                     android:textColor="?android:textColorSecondary"
                     app:drawableTint="?android:textColorSecondary"
-                    app:iabIconHeight="20dp"
-                    app:iabIconWidth="20dp"
                     tools:text="11.4, 51.4"/>
 
                 <org.mariotaku.twidere.view.DrawableTintTextView
                     android:id="@+id/visibilityLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/ic_action_web"
-                    android:drawableStart="@drawable/ic_action_web"
+                    android:drawableLeft="@drawable/ic_label_web"
+                    android:drawablePadding="@dimen/element_spacing_small"
+                    android:drawableStart="@drawable/ic_label_web"
                     android:gravity="center_vertical"
                     android:maxLines="1"
+                    android:paddingLeft="@dimen/element_spacing_small"
+                    android:paddingRight="@dimen/element_spacing_small"
                     android:textColor="?android:textColorSecondary"
                     app:drawableTint="?android:textColorSecondary"
-                    app:iabIconHeight="20dp"
-                    app:iabIconWidth="20dp"
                     tools:text="@string/label_status_visibility_public"/>
 
             </org.mariotaku.twidere.view.ExtendedLinearLayout>

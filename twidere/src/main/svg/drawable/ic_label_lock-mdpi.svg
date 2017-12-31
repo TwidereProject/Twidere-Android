@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>ic_label_lock-mdpi</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Action-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic_label_lock-mdpi">
+            <polygon id="Shape" points="3 3 21 3 21 21 3 21"></polygon>
+            <path d="M15.75,10.5 L15.75,8.25 C15.75,6.18 14.07,4.5 12,4.5 C9.93,4.5 8.25,6.18 8.25,8.25 L8.25,10.5 C7.425,10.5 6.75,11.175 6.75,12 L6.75,18 C6.75,18.825 7.425,19.5 8.25,19.5 L15.75,19.5 C16.575,19.5 17.25,18.825 17.25,18 L17.25,12 C17.25,11.175 16.575,10.5 15.75,10.5 Z M14.25,10.5 L9.75,10.5 L9.75,8.25 C9.75,7.005 10.755,6 12,6 C13.245,6 14.25,7.005 14.25,8.25 L14.25,10.5 Z" id="Shape" fill="#FFFFFF" fill-rule="nonzero"></path>
+        </g>
+    </g>
+</svg>

@@ -31,9 +31,6 @@ class DrawableTintTextView(
         context: Context, attrs: AttributeSet? = null
 ) : FixedTextView(context, attrs) {
 
-    private var iconWidth: Int = 0
-    private var iconHeight: Int = 0
-
     var compoundDrawableTintListCompat: ColorStateList? = null
         get() = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) field else compoundDrawableTintList
         set(value) {
@@ -49,8 +46,6 @@ class DrawableTintTextView(
         if (a.hasValue(R.styleable.DrawableTintTextView_drawableTint)) {
             compoundDrawableTintListCompat = a.getColorStateList(R.styleable.DrawableTintTextView_drawableTint)
         }
-        iconWidth = a.getDimensionPixelSize(R.styleable.DrawableTintTextView_iabIconWidth, 0)
-        iconHeight = a.getDimensionPixelSize(R.styleable.DrawableTintTextView_iabIconHeight, 0)
         a.recycle()
         updateDrawableCompat()
     }

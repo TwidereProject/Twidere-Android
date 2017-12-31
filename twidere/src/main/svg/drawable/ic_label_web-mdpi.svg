@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>ic_label_web-mdpi</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Action-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic_label_web-mdpi" fill="#FFFFFF">
+            <path d="M12,4.5 C7.86,4.5 4.5,7.86 4.5,12 C4.5,16.14 7.86,19.5 12,19.5 C16.14,19.5 19.5,16.14 19.5,12 C19.5,7.86 16.14,4.5 12,4.5 L12,4.5 Z M11.25,17.9475 C8.2875,17.58 6,15.06 6,12 C6,11.535 6.06,11.0925 6.1575,10.6575 L9.75,14.25 L9.75,15 C9.75,15.825 10.425,16.5 11.25,16.5 L11.25,17.9475 L11.25,17.9475 Z M16.425,16.0425 C16.23,15.435 15.675,15 15,15 L14.25,15 L14.25,12.75 C14.25,12.3375 13.9125,12 13.5,12 L9,12 L9,10.5 L10.5,10.5 C10.9125,10.5 11.25,10.1625 11.25,9.75 L11.25,8.25 L12.75,8.25 C13.575,8.25 14.25,7.575 14.25,6.75 L14.25,6.4425 C16.4475,7.335 18,9.4875 18,12 C18,13.56 17.4,14.9775 16.425,16.0425 L16.425,16.0425 Z" id="Shape"></path>
+        </g>
+    </g>
+</svg>

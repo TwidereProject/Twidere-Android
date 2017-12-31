@@ -172,8 +172,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?selectableItemBackground"
-        android:drawableLeft="@drawable/ic_action_location"
-        android:drawableStart="@drawable/ic_action_location"
+        android:drawableLeft="@drawable/ic_label_location"
+        android:drawableStart="@drawable/ic_label_location"
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
@@ -182,8 +182,7 @@
         android:paddingRight="@dimen/element_spacing_small"
         android:textAppearance="?android:textAppearanceSmall"
         android:textColor="?android:textColorPrimary"
-        app:iabIconHeight="@dimen/element_size_small"
-        app:iabIconWidth="@dimen/element_size_small"
+        app:drawableTint="?android:textColorPrimary"
         app:layout_constraintTop_toBottomOf="@+id/description"
         tools:text="Zhengzhou China"/>
 
@@ -192,8 +191,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?selectableItemBackground"
-        android:drawableLeft="@drawable/ic_action_web"
-        android:drawableStart="@drawable/ic_action_web"
+        android:drawableLeft="@drawable/ic_label_web"
+        android:drawableStart="@drawable/ic_label_web"
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
@@ -202,8 +201,7 @@
         android:paddingRight="@dimen/element_spacing_small"
         android:textAppearance="?android:textAppearanceSmall"
         android:textColor="?android:textColorPrimary"
-        app:iabIconHeight="@dimen/element_size_small"
-        app:iabIconWidth="@dimen/element_size_small"
+        app:drawableTint="?android:textColorPrimary"
         app:layout_constraintTop_toBottomOf="@+id/location"
         tools:text="mariotaku.org"/>
 
@@ -212,8 +210,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?selectableItemBackground"
-        android:drawableLeft="@drawable/ic_action_time"
-        android:drawableStart="@drawable/ic_action_time"
+        android:drawableLeft="@drawable/ic_label_time"
+        android:drawableStart="@drawable/ic_label_time"
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
@@ -222,8 +220,7 @@
         android:paddingRight="@dimen/element_spacing_small"
         android:textAppearance="?android:textAppearanceSmall"
         android:textColor="?android:textColorPrimary"
-        app:iabIconHeight="@dimen/element_size_small"
-        app:iabIconWidth="@dimen/element_size_small"
+        app:drawableTint="?android:textColorPrimary"
         app:layout_constraintTop_toBottomOf="@+id/url"
         tools:text="July 17, 2009 18:35 (20 tweets per day)"/>
 

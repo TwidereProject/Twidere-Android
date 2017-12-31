@@ -709,10 +709,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
     }
 
     private fun TextView.setLabelIcon(@DrawableRes icon: Int) {
-        val drawable = ContextCompat.getDrawable(context, icon)?.also {
-//            it.applyCompoundDrawableBounds(this)
-        }
-        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(this, drawable, null, null, null)
+        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(this, icon, 0, 0, 0)
     }
 
     private val Array<ParcelableMedia?>.type: Int
