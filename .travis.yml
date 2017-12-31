@@ -38,6 +38,8 @@ cache:
 
 before_install:
   - ./travis/scripts/decode_private_configs.sh
+  # https://github.com/travis-ci/travis-ci/issues/8651
+  - yes | sdkmanager "platforms;android-27"
 
 install:
   - rvm default exec gem install fastlane
