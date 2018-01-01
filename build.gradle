@@ -82,7 +82,7 @@ subprojects {
                     StethoBeanShellREPL    : '0.3',
                     ArchLifecycleExtensions: '1.0.0',
                     ArchPaging             : '1.0.0-alpha4-1',
-                    ConstraintLayout       : '1.0.2',
+                    ConstraintLayout       : '1.1.0-beta4',
                     MessageBubbleView      : '2.1',
             ]
 

@@ -96,6 +96,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
     private val replyButton = itemView.reply
     private val retweetButton = itemView.retweet
     private val favoriteButton = itemView.favorite
+    private val itemActionsGroup = itemView.itemActionsGroup
 
     private val eventHandler = EventHandler()
 
@@ -149,10 +150,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
             mediaLabel.visibility = View.VISIBLE
         }
 
-        replyButton.setVisible(showCardActions)
-        retweetButton.setVisible(showCardActions)
-        favoriteButton.setVisible(showCardActions)
-        itemMenu.setVisible(showCardActions)
+        itemActionsGroup.setVisible(showCardActions)
 
         quotedView.visibility = View.GONE
 
@@ -162,6 +160,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
     fun placeholder() {
         val context = itemView.context
         val requestManager = adapter.requestManager
+        val showCardActions = isCardActionsShown
+        val actionButtonsAlpha = PlaceholderLineSpan.placeholderAlpha / 255f
+
         requestManager.loadProfileImage(context, R.drawable.ic_profile_image_placeholder, adapter.profileImageStyle,
                 profileImageView.cornerRadius, profileImageView.cornerRadiusRatio).into(profileImageView)
 
@@ -170,7 +171,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         nameView.placeholder = true
         nameView.updateText()
 
-        val actionButtonsAlpha = PlaceholderLineSpan.placeholderAlpha / 255f
 
         replyButton.alpha = actionButtonsAlpha
         retweetButton.alpha = actionButtonsAlpha
@@ -184,6 +184,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         replyButton.text = null
         retweetButton.text = null
         favoriteButton.text = null
+
+        itemActionsGroup.setVisible(showCardActions)
 
         profileTypeView.visibility = View.GONE
         summaryView.visibility = View.GONE
@@ -211,10 +213,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         favoriteButton.alpha = 1f
         itemMenu.alpha = 1f
 
-        replyButton.setVisible(showCardActions)
-        retweetButton.setVisible(showCardActions)
-        favoriteButton.setVisible(showCardActions)
-        itemMenu.setVisible(showCardActions)
+        itemActionsGroup.setVisible(showCardActions)
 
         val replyCount = status.reply_count
         val retweetCount = status.retweet_count

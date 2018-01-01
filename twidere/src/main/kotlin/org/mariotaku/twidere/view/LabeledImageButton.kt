@@ -86,7 +86,7 @@ class LabeledImageButton(context: Context, attrs: AttributeSet?) : AppCompatImag
             if (ViewCompat.getLayoutDirection(this) == View.LAYOUT_DIRECTION_RTL) {
                 // Draw original image content, but translate it back `text.width / 2f` px.
                 canvas.save()
-                canvas.translate(layout.width / 2f + drawablePadding, 0f)
+                canvas.translate((layout.width + drawablePadding) / 2f, 0f)
                 super.onDraw(canvas)
                 canvas.restore()
 
@@ -98,7 +98,7 @@ class LabeledImageButton(context: Context, attrs: AttributeSet?) : AppCompatImag
             } else {
                 // Draw original image content, but translate it back `text.width / 2f` px.
                 canvas.save()
-                canvas.translate(-layout.width / 2f - drawablePadding, 0f)
+                canvas.translate((-layout.width - drawablePadding) / 2f, 0f)
                 super.onDraw(canvas)
                 canvas.restore()
 
@@ -119,7 +119,7 @@ class LabeledImageButton(context: Context, attrs: AttributeSet?) : AppCompatImag
         imageMeasuredHeight = measuredHeight
         val layout = textLayout
         if (layout != null) {
-            setMeasuredDimension(imageMeasuredWidth + layout.width + drawablePadding * 2,
+            setMeasuredDimension(imageMeasuredWidth + layout.width + drawablePadding,
                     measuredHeight)
         }
     }

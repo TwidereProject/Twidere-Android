@@ -54,6 +54,10 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         val a = context.obtainStyledAttributes(attrs, R.styleable.CardMediaContainer)
         horizontalSpacing = a.getDimensionPixelSize(R.styleable.CardMediaContainer_android_horizontalSpacing, 0)
         verticalSpacing = a.getDimensionPixelSize(R.styleable.CardMediaContainer_android_verticalSpacing, 0)
+        val layoutId = a.getResourceId(R.styleable.CardMediaContainer_android_layout, 0)
+        if (layoutId != 0) {
+            View.inflate(context, layoutId, this)
+        }
         a.recycle()
     }
 

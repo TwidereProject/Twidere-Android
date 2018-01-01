@@ -108,6 +108,7 @@
     <declare-styleable name="CardMediaContainer">
         <attr name="android:horizontalSpacing"/>
         <attr name="android:verticalSpacing"/>
+        <attr name="android:layout"/>
     </declare-styleable>
     <declare-styleable name="MessageViewHolder">
         <attr name="android:textColorPrimary"/>
