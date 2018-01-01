@@ -1523,8 +1523,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             val (replyStartIndex, replyText, _, excludedMentions, replyToOriginalUser) =
                     replyTextAndMentions
             if (replyText.isEmpty() && media.isEmpty()) throw NoContentException()
-            val totalLength = StatusTextValidator.calculateLength(accounts, summary, replyText)
-            if (checkLength && !statusShortenerUsed && maxLength > 0 && totalLength > maxLength) {
+            val remainingLength = StatusTextValidator.calculateRemaining(accounts, summary, text)
+            if (checkLength && !statusShortenerUsed && maxLength > 0 && remainingLength != null &&
+                    remainingLength < 0) {
                 val summaryLength = StatusTextValidator.calculateSummaryLength(accounts, summary)
                 if (summary != null && summaryLength > maxLength) {
                     throw StatusTooLongException(summary.offsetByCodePoints(0, maxLength),
@@ -1543,8 +1544,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
         } else {
             if (text.isEmpty() && media.isEmpty()) throw NoContentException()
-            val totalLength = StatusTextValidator.calculateLength(accounts, summary, text)
-            if (checkLength && !statusShortenerUsed && maxLength > 0 && totalLength > maxLength) {
+            val remainingLength = StatusTextValidator.calculateRemaining(accounts, summary, text)
+            if (checkLength && !statusShortenerUsed && maxLength > 0 && remainingLength != null &&
+                    remainingLength < 0) {
                 val summaryLength = StatusTextValidator.calculateSummaryLength(accounts, summary)
                 if (summary != null && summaryLength > maxLength) {
                     throw StatusTooLongException(summary.offsetByCodePoints(0, maxLength),
