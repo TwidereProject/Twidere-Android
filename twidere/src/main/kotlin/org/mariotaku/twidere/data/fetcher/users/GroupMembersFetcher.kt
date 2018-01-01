@@ -17,26 +17,25 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.fragment.users
+package org.mariotaku.twidere.data.fetcher.users
 
-import android.os.Bundle
-import org.mariotaku.twidere.R
+import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.StatusNet
+import org.mariotaku.microblog.library.model.Paging
+import org.mariotaku.microblog.library.model.microblog.User
 import org.mariotaku.twidere.data.fetcher.UsersFetcher
-import org.mariotaku.twidere.extension.linkHandlerTitle
-import org.mariotaku.twidere.extension.statusId
-import org.mariotaku.twidere.fragment.AbsUsersFragment
-import org.mariotaku.twidere.data.fetcher.users.StatusRetweetersFetcher
+import org.mariotaku.twidere.model.AccountDetails
 
-class StatusRetweetersListFragment : AbsUsersFragment() {
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        linkHandlerTitle = getString(R.string.title_users_retweeted_this)
-    }
-
-    override fun onCreateUsersFetcher(): UsersFetcher {
-        val statusId = arguments!!.statusId!!
-        return StatusRetweetersFetcher(statusId)
+class GroupMembersFetcher(
+        private val groupId: String?,
+        private val groupName: String?
+) : UsersFetcher {
+    override fun forStatusNet(account: AccountDetails, statusNet: StatusNet, paging: Paging): List<User> {
+        return when {
+            groupId != null -> statusNet.getGroupMembers(groupId, paging)
+            groupName != null -> statusNet.getGroupMembersByName(groupName, paging)
+            else -> throw MicroBlogException("groupId or groupName required")
+        }
     }
 
 }

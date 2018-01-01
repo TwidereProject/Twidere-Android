@@ -1,7 +1,7 @@
 /*
  *             Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2018 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,36 +17,31 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.loader.users
+package org.mariotaku.twidere.data.fetcher.users
 
-import android.content.Context
 import org.mariotaku.microblog.library.Twitter
-import org.mariotaku.microblog.library.model.microblog.PageableResponseList
 import org.mariotaku.microblog.library.model.Paging
+import org.mariotaku.microblog.library.model.microblog.PageableResponseList
 import org.mariotaku.microblog.library.model.microblog.User
-import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 
-class UserListSubscribersLoader(
-        context: Context,
-        accountKey: UserKey?,
+class UserListMembersFetcher(
         listId: String?,
         userKey: UserKey?,
         screenName: String?,
-        listName: String?,
-        data: List<ParcelableUser>?,
-        fromUser: Boolean
-) : UserListRelatedUsersLoader(context, accountKey, listId, userKey, screenName, listName, data, fromUser) {
+        listName: String?
+) : UserListRelatedUsersFetcher(listId, userKey, screenName, listName) {
 
     override fun getByListId(microBlog: Twitter, listId: String, paging: Paging): PageableResponseList<User> {
-        return microBlog.getUserListSubscribers(listId, paging)
+        return microBlog.getUserListMembers(listId, paging)
     }
 
     override fun getByUserKey(microBlog: Twitter, listName: String, userKey: UserKey, paging: Paging): PageableResponseList<User> {
-        return microBlog.getUserListSubscribers(listName, userKey.id, paging)
+        return microBlog.getUserListMembers(listName, userKey.id, paging)
     }
 
     override fun getByScreenName(microBlog: Twitter, listName: String, screenName: String, paging: Paging): PageableResponseList<User> {
-        return microBlog.getUserListSubscribersByScreenName(listName, screenName, paging)
+        return microBlog.getUserListMembersByScreenName(listName, screenName, paging)
     }
+
 }

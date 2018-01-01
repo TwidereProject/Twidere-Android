@@ -19,23 +19,17 @@
 
 package org.mariotaku.twidere.fragment.users
 
-import android.content.Context
-import android.os.Bundle
-import org.mariotaku.twidere.extension.accountKey
+import org.mariotaku.twidere.data.fetcher.UsersFetcher
 import org.mariotaku.twidere.extension.groupId
 import org.mariotaku.twidere.extension.groupName
-import org.mariotaku.twidere.fragment.ParcelableUsersFragment
-import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
-import org.mariotaku.twidere.loader.users.GroupMembersLoader
+import org.mariotaku.twidere.fragment.AbsUsersFragment
+import org.mariotaku.twidere.data.fetcher.users.GroupMembersFetcher
 
-class GroupMembersFragment : ParcelableUsersFragment() {
-
-    override fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean):
-            AbsRequestUsersLoader {
-        val accountKey = args.accountKey
+class GroupMembersFragment : AbsUsersFragment() {
+    override fun onCreateUsersFetcher(): UsersFetcher {
+        val args = arguments!!
         val groupId = args.groupId
         val groupName = args.groupName
-        return GroupMembersLoader(context, accountKey, groupId, groupName, adapter.getData(),
-                fromUser)
+        return GroupMembersFetcher(groupId, groupName)
     }
 }

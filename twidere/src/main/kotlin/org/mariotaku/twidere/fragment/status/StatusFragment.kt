@@ -378,12 +378,12 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         if (!hasMoreConversation) return
         if (LoadMorePosition.START in position) {
             val start = adapter.getIndexStart(StatusDetailsAdapter.ITEM_IDX_CONVERSATION)
-            val first = adapter.getStatus(start, true)
+            val first = adapter.getStatus(start)
             if (first.in_reply_to_status_id == null) return
             loadConversation(status, null, first.id)
         } else if (LoadMorePosition.END in position) {
             val start = adapter.getIndexStart(StatusDetailsAdapter.ITEM_IDX_CONVERSATION)
-            val last = adapter.getStatus(start + adapter.getStatusCount(true) - 1, true)
+            val last = adapter.getStatus(start + adapter.getStatusCount() - 1)
             loadConversation(status, last.id, null)
         }
         adapter.loadMoreIndicatorPosition = position

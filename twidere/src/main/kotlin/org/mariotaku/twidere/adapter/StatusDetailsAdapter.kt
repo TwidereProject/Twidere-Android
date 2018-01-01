@@ -163,8 +163,8 @@ class StatusDetailsAdapter(
         twidereLinkify = TwidereLinkify(listener)
     }
 
-    override fun getStatus(position: Int, raw: Boolean): ParcelableStatus {
-        when (getItemCountIndex(position, raw)) {
+    override fun getStatus(position: Int): ParcelableStatus {
+        when (getItemCountIndex(position)) {
             ITEM_IDX_CONVERSATION -> {
                 var idx = position - getIndexStart(ITEM_IDX_CONVERSATION)
                 if (data!![idx].is_filtered) idx++
@@ -189,20 +189,20 @@ class StatusDetailsAdapter(
         return itemCounts.getItemStartPosition(index)
     }
 
-    override fun getStatusId(position: Int, raw: Boolean): String {
-        return getStatus(position, raw).id
+    override fun getStatusId(position: Int): String {
+        return getStatus(position).id
     }
 
-    override fun getStatusTimestamp(position: Int, raw: Boolean): Long {
-        return getStatus(position, raw).timestamp
+    override fun getStatusTimestamp(position: Int): Long {
+        return getStatus(position).timestamp
     }
 
-    override fun getStatusPositionKey(position: Int, raw: Boolean): Long {
-        val status = getStatus(position, raw)
-        return if (status.position_key > 0) status.timestamp else getStatusTimestamp(position, raw)
+    override fun getStatusPositionKey(position: Int): Long {
+        val status = getStatus(position)
+        return if (status.position_key > 0) status.timestamp else getStatusTimestamp(position)
     }
 
-    override fun getAccountKey(position: Int, raw: Boolean) = getStatus(position, raw).account_key
+    override fun getAccountKey(position: Int) = getStatus(position).account_key
 
     override fun findStatusById(accountKey: UserKey, statusId: String): ParcelableStatus? {
         if (status != null && accountKey == status!!.account_key && TextUtils.equals(statusId, status!!.id)) {
@@ -211,7 +211,7 @@ class StatusDetailsAdapter(
         return data?.firstOrNull { accountKey == it.account_key && TextUtils.equals(it.id, statusId) }
     }
 
-    override fun getStatusCount(raw: Boolean): Int {
+    override fun getStatusCount(): Int {
         return getTypeCount(ITEM_IDX_CONVERSATION) + getTypeCount(ITEM_IDX_STATUS) + getTypeCount(ITEM_IDX_REPLY)
     }
 

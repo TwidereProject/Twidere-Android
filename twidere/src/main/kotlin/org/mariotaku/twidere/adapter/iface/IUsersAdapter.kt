@@ -22,10 +22,7 @@ package org.mariotaku.twidere.adapter.iface
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.view.holder.UserViewHolder
 
-/**
- * Created by mariotaku on 15/4/16.
- */
-interface IUsersAdapter<in Data> : IContentAdapter {
+interface IUsersAdapter : IContentAdapter {
 
     val userCount: Int
 
@@ -40,8 +37,6 @@ interface IUsersAdapter<in Data> : IContentAdapter {
     val simpleLayout: Boolean
 
     val showFollow: Boolean
-
-    fun setData(data: Data?): Boolean
 
     fun getUser(position: Int): ParcelableUser?
 

@@ -1,18 +1,18 @@
 /*
- * 				Twidere - Twitter client for Android
- * 
- *  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
- * 
+ *             Twidere - Twitter client for Android
+ *
+ *  Copyright (C) 2012-2018 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -20,11 +20,13 @@
 package org.mariotaku.twidere.fragment
 
 import android.accounts.AccountManager
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MediatorLiveData
+import android.arch.lifecycle.MutableLiveData
+import android.arch.paging.LivePagedListBuilder
+import android.arch.paging.PagedList
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.LoaderManager.LoaderCallbacks
-import android.support.v4.app.hasRunningLoadersSafe
-import android.support.v4.content.Loader
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.KeyEvent
@@ -40,18 +42,18 @@ import org.mariotaku.twidere.adapter.iface.IUsersAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.UserClickListener
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.LoadMorePosition
-import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_NEXT_PAGINATION
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_PREV_PAGINATION
+import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
-import org.mariotaku.twidere.extension.accountKey
-import org.mariotaku.twidere.extension.findAccount
-import org.mariotaku.twidere.extension.get
+import org.mariotaku.twidere.data.ExceptionLiveData
+import org.mariotaku.twidere.data.UsersDataSourceFactory
+import org.mariotaku.twidere.data.fetcher.UsersFetcher
+import org.mariotaku.twidere.extension.*
+import org.mariotaku.twidere.extension.data.observe
 import org.mariotaku.twidere.extension.model.getAccountType
-import org.mariotaku.twidere.extension.simpleLayout
-import org.mariotaku.twidere.loader.iface.IExtendedLoader
-import org.mariotaku.twidere.loader.iface.IPaginationLoader
-import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
-import org.mariotaku.twidere.model.ListResponse
 import org.mariotaku.twidere.model.ParcelableUser
+import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 import org.mariotaku.twidere.model.pagination.Pagination
@@ -64,18 +66,8 @@ import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallb
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper
 import org.mariotaku.twidere.view.holder.UserViewHolder
 
-abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<ParcelableUsersAdapter>(),
-        LoaderCallbacks<List<ParcelableUser>?>, UserClickListener, KeyboardShortcutCallback,
-        IUsersAdapter.FriendshipClickListener {
-
-    override var refreshing: Boolean
-        get() {
-            if (context == null || isDetached) return false
-            return loaderManager.hasRunningLoadersSafe()
-        }
-        set(value) {
-            super.refreshing = value
-        }
+abstract class AbsUsersFragment : AbsContentListRecyclerViewFragment<ParcelableUsersAdapter>(),
+        UserClickListener, KeyboardShortcutCallback, IUsersAdapter.FriendshipClickListener {
 
     protected open val simpleLayout: Boolean
         get() = arguments!!.simpleLayout
@@ -91,6 +83,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
 
     private lateinit var navigationHelper: RecyclerViewNavigationHelper
     private val usersBusCallback: Any
+    private var users: LiveData<SingleResponse<PagedList<ParcelableUser>?>>? = null
 
     init {
         usersBusCallback = createMessageBusCallback()
@@ -106,9 +99,9 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
 
         navigationHelper = RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter,
                 this)
-        val loaderArgs = Bundle(arguments)
-        loaderArgs.putBoolean(EXTRA_FROM_USER, true)
-        loaderManager.initLoader(0, loaderArgs, this)
+
+        setupLiveData()
+        showProgress()
     }
 
     override fun onStart() {
@@ -127,49 +120,8 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         outState.putParcelable(EXTRA_PREV_PAGINATION, prevPagination)
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableUser>?> {
-        val fromUser = args.getBoolean(EXTRA_FROM_USER)
-        args.remove(EXTRA_FROM_USER)
-        return onCreateUsersLoader(activity!!, args, fromUser).apply {
-            if (this is AbsRequestUsersLoader) {
-                pagination = args.getParcelable(EXTRA_PAGINATION)
-            }
-        }
-    }
-
-    override fun onLoadFinished(loader: Loader<List<ParcelableUser>?>, data: List<ParcelableUser>?) {
-        adapter.setData(data)
-        if (loader !is IExtendedLoader || loader.fromUser) {
-            adapter.loadMoreSupportedPosition = if (hasMoreData(data)) LoadMorePosition.END else LoadMorePosition.NONE
-            refreshEnabled = true
-        }
-        if (loader is IExtendedLoader) {
-            loader.fromUser = false
-        }
-        if (loader is IPaginationLoader && data?.loadSuccess() ?: false) {
-            nextPagination = loader.nextPagination
-            prevPagination = loader.prevPagination
-        }
-        showContent()
-        refreshEnabled = true
-        refreshing = false
-        setLoadMoreIndicatorPosition(LoadMorePosition.NONE)
-    }
-
-    override fun onLoaderReset(loader: Loader<List<ParcelableUser>?>) {
-        if (loader is IExtendedLoader) {
-            loader.fromUser = false
-        }
-    }
-
     override fun onLoadMoreContents(@LoadMorePosition position: Int) {
-        // Only supports load from end, skip START flag
-        if (position != LoadMorePosition.END) return
-        super.onLoadMoreContents(position)
-        val loaderArgs = Bundle(arguments)
-        loaderArgs.putBoolean(EXTRA_FROM_USER, true)
-        loaderArgs.putParcelable(EXTRA_PAGINATION, nextPagination)
-        loaderManager.restartLoader(0, loaderArgs, this)
+        // No-op
     }
 
     override fun onCreateAdapter(context: Context, requestManager: RequestManager): ParcelableUsersAdapter {
@@ -267,8 +219,51 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         return itemDecoration
     }
 
-    abstract fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean):
-            Loader<List<ParcelableUser>?>
+    fun onDataLoaded(data: PagedList<ParcelableUser>?) {
+        adapter.users = data
+        when {
+            data == null || data.isEmpty() -> {
+                showEmpty(R.drawable.ic_info_refresh, getString(R.string.swipe_down_to_refresh))
+            }
+            else -> {
+                showContent()
+            }
+        }
+    }
+
+
+    protected open fun getMaxLoadItemLimit(forAccount: UserKey): Int {
+        return 200
+    }
+
+    private fun onCreateLiveData(): LiveData<SingleResponse<PagedList<ParcelableUser>?>>? {
+        val merger = MediatorLiveData<SingleResponse<PagedList<ParcelableUser>?>>()
+        val context = context!!
+        val accountKey = arguments!!.accountKey!!
+
+        val errorLiveData = MutableLiveData<SingleResponse<PagedList<ParcelableUser>?>>()
+        val factory = UsersDataSourceFactory(context.applicationContext,
+                onCreateUsersFetcher(), accountKey) {
+            errorLiveData.postValue(SingleResponse(it))
+        }
+        val maxLoadLimit = getMaxLoadItemLimit(accountKey)
+        val loadLimit = preferences[loadItemLimitKey]
+        val apiLiveData = ExceptionLiveData.wrap(LivePagedListBuilder(factory, PagedList.Config.Builder()
+                .setPageSize(loadLimit.coerceAtMost(maxLoadLimit))
+                .setInitialLoadSizeHint(loadLimit.coerceAtMost(maxLoadLimit))
+                .build()).build())
+        merger.addSource(errorLiveData) {
+            merger.removeSource(apiLiveData)
+            merger.removeSource(errorLiveData)
+            merger.value = it
+        }
+        merger.addSource(apiLiveData) {
+            merger.value = it
+        }
+        return merger
+    }
+
+    protected abstract fun onCreateUsersFetcher(): UsersFetcher
 
     protected open fun shouldRemoveUser(position: Int, event: FriendshipTaskEvent): Boolean {
         return false
@@ -286,8 +281,11 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         return adapter.findPosition(accountKey, userKey)
     }
 
-    private fun List<ParcelableUser>.loadSuccess(): Boolean {
-        return this !is ListResponse<*> || !this.hasException()
+    private fun setupLiveData() {
+        users = onCreateLiveData()
+        users?.observe(this, success = this::onDataLoaded, fail = {
+            showError(R.drawable.ic_info_error_generic, it.getErrorMessage(context!!))
+        })
     }
 
     protected inner class UsersBusCallback {
@@ -295,12 +293,12 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         @Subscribe
         fun onFriendshipTaskEvent(event: FriendshipTaskEvent) {
             val position = findPosition(event.accountKey, event.userKey)
-            val data = adapter.getData() ?: return
+            val data = adapter.users ?: return
             if (position < 0 || position >= data.size) return
             if (shouldRemoveUser(position, event)) {
                 adapter.removeUserAt(position)
             } else {
-                val adapterUser = data[position]
+                val adapterUser = data[position] ?: return
                 val eventUser = event.user
                 if (eventUser != null) {
                     if (adapterUser.account_key == eventUser.account_key) {

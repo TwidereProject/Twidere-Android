@@ -17,26 +17,24 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.fragment.users
+package org.mariotaku.twidere.data.fetcher.users
 
-import android.os.Bundle
-import org.mariotaku.twidere.R
+import org.mariotaku.microblog.library.Mastodon
+import org.mariotaku.microblog.library.Twitter
+import org.mariotaku.microblog.library.model.Paging
+import org.mariotaku.microblog.library.model.mastodon.Account
+import org.mariotaku.microblog.library.model.mastodon.LinkHeaderList
+import org.mariotaku.microblog.library.model.microblog.User
 import org.mariotaku.twidere.data.fetcher.UsersFetcher
-import org.mariotaku.twidere.extension.linkHandlerTitle
-import org.mariotaku.twidere.extension.statusId
-import org.mariotaku.twidere.fragment.AbsUsersFragment
-import org.mariotaku.twidere.data.fetcher.users.StatusRetweetersFetcher
+import org.mariotaku.twidere.model.AccountDetails
 
-class StatusRetweetersListFragment : AbsUsersFragment() {
+class MutesUsersFetcher : UsersFetcher {
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        linkHandlerTitle = getString(R.string.title_users_retweeted_this)
+    override fun forMastodon(account: AccountDetails, mastodon: Mastodon, paging: Paging): LinkHeaderList<Account> {
+        return mastodon.getMutes(paging)
     }
 
-    override fun onCreateUsersFetcher(): UsersFetcher {
-        val statusId = arguments!!.statusId!!
-        return StatusRetweetersFetcher(statusId)
+    override fun forTwitter(account: AccountDetails, twitter: Twitter, paging: Paging): List<User> {
+        return twitter.getMutesUsersList(paging)
     }
-
 }

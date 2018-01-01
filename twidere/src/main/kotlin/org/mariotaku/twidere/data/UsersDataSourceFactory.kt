@@ -1,7 +1,7 @@
 /*
  *             Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2018 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,60 +31,56 @@ import org.mariotaku.microblog.library.Twitter
 import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.data.fetcher.StatusesFetcher
+import org.mariotaku.twidere.data.fetcher.UsersFetcher
 import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.extension.getDetailsOrThrow
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
-import org.mariotaku.twidere.model.ParcelableStatus
+import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.PaginatedArrayList
 import org.mariotaku.twidere.model.pagination.PaginatedList
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
-import org.mariotaku.twidere.model.timeline.TimelineFilter
 
-class StatusesDataSourceFactory(
+class UsersDataSourceFactory(
         private val context: Context,
-        private val fetcher: StatusesFetcher,
+        private val fetcher: UsersFetcher,
         private val accountKey: UserKey,
-        private val timelineFilter: TimelineFilter?,
         private val errorHandler: (Exception) -> Unit
-) : DataSource.Factory<Pagination, ParcelableStatus> {
+) : DataSource.Factory<Pagination, ParcelableUser> {
 
-    override fun create(): DataSource<Pagination, ParcelableStatus> {
-        return StatusesDataSource(context, fetcher, accountKey, timelineFilter, errorHandler)
+    override fun create(): DataSource<Pagination, ParcelableUser> {
+        return UsersDataSource(context, fetcher, accountKey, errorHandler)
     }
 
-    private class StatusesDataSource(
+    private class UsersDataSource(
             private val context: Context,
-            private val fetcher: StatusesFetcher,
+            private val fetcher: UsersFetcher,
             private val accountKey: UserKey,
-            private val timelineFilter: TimelineFilter?,
             val errorHandler: (Exception) -> Unit
-    ) : PageKeyedDataSource<Pagination, ParcelableStatus>() {
+    ) : PageKeyedDataSource<Pagination, ParcelableUser>() {
 
         private val profileImageSize = context.getString(R.string.profile_image_size)
 
-        override fun loadInitial(params: LoadInitialParams<Pagination>, callback: LoadInitialCallback<Pagination, ParcelableStatus>) {
+        override fun loadInitial(params: LoadInitialParams<Pagination>, callback: LoadInitialCallback<Pagination, ParcelableUser>) {
             val paging = Paging().count(params.requestedLoadSize)
             try {
                 val loaded = load(paging)
-                val filtered = loaded.filter(::filterCheck)
-                callback.onResult(filtered, null, loaded.nextPage)
+                callback.onResult(loaded, null, loaded.nextPage)
             } catch (e: Exception) {
                 errorHandler(e)
                 invalidate()
             }
         }
 
-        override fun loadBefore(params: LoadParams<Pagination>, callback: LoadCallback<Pagination, ParcelableStatus>) {
+        override fun loadBefore(params: LoadParams<Pagination>, callback: LoadCallback<Pagination, ParcelableUser>) {
             val paging = Paging().count(params.requestedLoadSize)
             params.key.applyTo(paging)
             try {
                 val loaded = load(paging)
-                val filtered = loaded.filter(::filterCheck).filterNot { params.key.isFromStatus(it) }
+                val filtered = loaded.filterNot { params.key == it.key }
                 callback.onResult(filtered, null)
             } catch (e: Exception) {
                 errorHandler(e)
@@ -92,12 +88,12 @@ class StatusesDataSourceFactory(
             }
         }
 
-        override fun loadAfter(params: LoadParams<Pagination>, callback: LoadCallback<Pagination, ParcelableStatus>) {
+        override fun loadAfter(params: LoadParams<Pagination>, callback: LoadCallback<Pagination, ParcelableUser>) {
             val paging = Paging().count(params.requestedLoadSize)
             params.key.applyTo(paging)
             try {
                 val loaded = load(paging)
-                val filtered = loaded.filter(::filterCheck).filterNot { params.key.isFromStatus(it) }
+                val filtered = loaded.filterNot { params.key == it.key }
                 callback.onResult(filtered, loaded.nextPage)
             } catch (e: Exception) {
                 errorHandler(e)
@@ -105,50 +101,43 @@ class StatusesDataSourceFactory(
             }
         }
 
-        private fun load(paging: Paging): PaginatedList<ParcelableStatus> {
+        private fun load(paging: Paging): PaginatedList<ParcelableUser> {
             val am = AccountManager.get(context)
             val account = am.getDetailsOrThrow(accountKey, true)
             when (account.type) {
                 AccountType.TWITTER -> {
                     val twitter = account.newMicroBlogInstance(context, Twitter::class.java)
-                    val timeline = fetcher.forTwitter(account, twitter, paging, timelineFilter)
-                    return timeline.mapToPaginated { it.toParcelable(account, profileImageSize) }
+                    val timeline = fetcher.forTwitter(account, twitter, paging)
+                    return timeline.mapToPaginated { it.toParcelable(account, profileImageSize = profileImageSize) }
                 }
                 AccountType.STATUSNET -> {
                     val statusnet = account.newMicroBlogInstance(context, StatusNet::class.java)
-                    val timeline = fetcher.forStatusNet(account, statusnet, paging, timelineFilter)
-                    return timeline.mapToPaginated { it.toParcelable(account, profileImageSize) }
+                    val timeline = fetcher.forStatusNet(account, statusnet, paging)
+                    return timeline.mapToPaginated { it.toParcelable(account, profileImageSize = profileImageSize) }
                 }
                 AccountType.FANFOU -> {
                     val fanfou = account.newMicroBlogInstance(context, Fanfou::class.java)
-                    val timeline = fetcher.forFanfou(account, fanfou, paging, timelineFilter)
-                    return timeline.mapToPaginated { it.toParcelable(account, profileImageSize) }
+                    val timeline = fetcher.forFanfou(account, fanfou, paging)
+                    return timeline.mapToPaginated { it.toParcelable(account, profileImageSize = profileImageSize) }
                 }
                 AccountType.MASTODON -> {
                     val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
-                    val timeline = fetcher.forMastodon(account, mastodon, paging, timelineFilter)
+                    val timeline = fetcher.forMastodon(account, mastodon, paging)
                     return timeline.mapToPaginated { it.toParcelable(account) }
                 }
                 else -> throw APINotSupportedException(platform = account.type)
             }
         }
 
-        private fun filterCheck(item: ParcelableStatus) = timelineFilter?.check(item) != false
-
-        private fun <T> List<T>.mapToPaginated(transform: (T) -> ParcelableStatus) = mapTo(PaginatedArrayList(), transform).apply {
+        private fun <T> List<T>.mapToPaginated(transform: (T) -> ParcelableUser) = mapTo(PaginatedArrayList(), transform).apply {
             val first = firstOrNull()
             if (first != null) {
-                previousPage = SinceMaxPagination.sinceId(first.id, first.sort_id)
+                previousPage = SinceMaxPagination.sinceId(first.key.id, -1)
             }
             val last = lastOrNull()
             if (last != null) {
-                nextPage = SinceMaxPagination.maxId(last.id, last.sort_id)
+                nextPage = SinceMaxPagination.maxId(last.key.id, -1)
             }
-        }
-
-        private fun Pagination.isFromStatus(status: ParcelableStatus) = when (this) {
-            is SinceMaxPagination -> sinceId == status.id || maxId == status.id
-            else -> false
         }
 
     }

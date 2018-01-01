@@ -26,16 +26,14 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ParcelableUsersAdapter
 import org.mariotaku.twidere.annotation.LoadMorePosition
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_STATUS_ID
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
+import org.mariotaku.twidere.data.fetcher.UsersFetcher
 import org.mariotaku.twidere.extension.linkHandlerTitle
-import org.mariotaku.twidere.fragment.ParcelableUsersFragment
-import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
-import org.mariotaku.twidere.loader.users.StatusFavoritersLoader
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.extension.statusId
+import org.mariotaku.twidere.fragment.AbsUsersFragment
+import org.mariotaku.twidere.data.fetcher.users.StatusFavoritersFetcher
 
-class StatusFavoritersListFragment : ParcelableUsersFragment() {
+class StatusFavoritersListFragment : AbsUsersFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         linkHandlerTitle = if (preferences[iWantMyStarsBackKey]) {
@@ -45,11 +43,10 @@ class StatusFavoritersListFragment : ParcelableUsersFragment() {
         }
     }
 
-    override fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean):
-            AbsRequestUsersLoader {
-        val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-        val statusId = args.getString(EXTRA_STATUS_ID)
-        return StatusFavoritersLoader(context, accountKey, statusId, adapter.getData(), false)
+    override fun onCreateUsersFetcher(): UsersFetcher {
+        val args = arguments!!
+        val statusId = args.statusId!!
+        return StatusFavoritersFetcher(context!!, statusId)
     }
 
     override fun onCreateAdapter(context: Context, requestManager: RequestManager): ParcelableUsersAdapter {

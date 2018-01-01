@@ -22,8 +22,6 @@ package org.mariotaku.twidere.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.LoaderManager
-import android.support.v4.content.Loader
 import android.text.TextUtils.isEmpty
 import android.view.View
 import android.widget.AdapterView
@@ -31,6 +29,7 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.ListView
 import kotlinx.android.synthetic.main.activity_user_selector.*
 import kotlinx.android.synthetic.main.layout_list_with_empty_view.*
+import kotlinx.android.synthetic.main.layout_toolbar_search.*
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.isNotNullOrEmpty
 import org.mariotaku.ktextension.set
@@ -39,13 +38,12 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.SimpleParcelableUsersAdapter
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.IntentConstants.*
-import org.mariotaku.twidere.loader.CacheUserSearchLoader
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.EditTextEnterHandler
 import org.mariotaku.twidere.util.view.SimpleTextWatcher
 
-class UserSelectorActivity : BaseActivity(), OnItemClickListener, LoaderManager.LoaderCallbacks<List<ParcelableUser>> {
+class UserSelectorActivity : BaseActivity(), OnItemClickListener {
 
     private lateinit var adapter: SimpleParcelableUsersAdapter
 
@@ -107,28 +105,14 @@ class UserSelectorActivity : BaseActivity(), OnItemClickListener, LoaderManager.
         finish()
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableUser>> {
-        val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-        val query = args.getString(EXTRA_QUERY)
-        val fromCache = args.getBoolean(EXTRA_FROM_CACHE)
-        if (!fromCache) {
-            showProgress()
-        }
-        return CacheUserSearchLoader(this, accountKey, query, !fromCache, true, true)
-    }
-
-    override fun onLoaderReset(loader: Loader<List<ParcelableUser>>) {
-        adapter.setData(null, true)
-    }
-
-    override fun onLoadFinished(loader: Loader<List<ParcelableUser>>, data: List<ParcelableUser>?) {
+    fun onDataLoaded(data: List<ParcelableUser>?) {
         progressContainer.visibility = View.GONE
         listContainer.visibility = View.VISIBLE
         adapter.setData(data, true)
-        loader as CacheUserSearchLoader
+        val query = editQuery.text
         if (data.isNotNullOrEmpty()) {
             showList()
-        } else if (loader.query.isEmpty()) {
+        } else if (query.isEmpty()) {
             showSearchHint()
         } else {
             showNotFound()
@@ -144,12 +128,6 @@ class UserSelectorActivity : BaseActivity(), OnItemClickListener, LoaderManager.
             this[EXTRA_ACCOUNT_KEY] = accountKey
             this[EXTRA_QUERY] = query
             this[EXTRA_FROM_CACHE] = fromCache
-        }
-        if (loaderInitialized) {
-            supportLoaderManager.initLoader(0, args, this)
-            loaderInitialized = true
-        } else {
-            supportLoaderManager.restartLoader(0, args, this)
         }
     }
 

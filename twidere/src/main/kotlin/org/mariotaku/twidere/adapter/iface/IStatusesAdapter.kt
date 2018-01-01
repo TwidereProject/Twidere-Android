@@ -6,9 +6,6 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 
-/**
- * Created by mariotaku on 14/11/18.
- */
 interface IStatusesAdapter : IContentAdapter, IGapSupportedAdapter {
 
     @TwidereLinkify.HighlightStyle
@@ -44,17 +41,17 @@ interface IStatusesAdapter : IContentAdapter, IGapSupportedAdapter {
     /**
      * @param raw Count hidden (filtered) item if `true `
      */
-    fun getStatusCount(raw: Boolean = false): Int
+    fun getStatusCount(): Int
 
-    fun getStatus(position: Int, raw: Boolean = false): ParcelableStatus
+    fun getStatus(position: Int): ParcelableStatus
 
-    fun getStatusId(position: Int, raw: Boolean = false): String
+    fun getStatusId(position: Int): String
 
-    fun getStatusTimestamp(position: Int, raw: Boolean = false): Long
+    fun getStatusTimestamp(position: Int): Long
 
-    fun getStatusPositionKey(position: Int, raw: Boolean = false): Long
+    fun getStatusPositionKey(position: Int): Long
 
-    fun getAccountKey(position: Int, raw: Boolean = false): UserKey
+    fun getAccountKey(position: Int): UserKey
 
     fun findStatusById(accountKey: UserKey, statusId: String): ParcelableStatus?
 

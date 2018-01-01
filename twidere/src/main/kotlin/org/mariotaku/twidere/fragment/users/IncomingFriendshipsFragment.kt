@@ -27,17 +27,17 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
 import org.mariotaku.twidere.adapter.ParcelableUsersAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter
+import org.mariotaku.twidere.data.fetcher.UsersFetcher
 import org.mariotaku.twidere.extension.accountKey
 import org.mariotaku.twidere.extension.isOfficial
 import org.mariotaku.twidere.extension.linkHandlerTitle
-import org.mariotaku.twidere.fragment.ParcelableUsersFragment
-import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
-import org.mariotaku.twidere.loader.users.IncomingFriendshipsLoader
+import org.mariotaku.twidere.fragment.AbsUsersFragment
+import org.mariotaku.twidere.data.fetcher.users.IncomingFriendshipsFetcher
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 import org.mariotaku.twidere.promise.FriendshipPromises
 import org.mariotaku.twidere.view.holder.UserViewHolder
 
-class IncomingFriendshipsFragment : ParcelableUsersFragment(), IUsersAdapter.RequestClickListener {
+class IncomingFriendshipsFragment : AbsUsersFragment(), IUsersAdapter.RequestClickListener {
     override val showFollow: Boolean = false
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -45,9 +45,8 @@ class IncomingFriendshipsFragment : ParcelableUsersFragment(), IUsersAdapter.Req
         linkHandlerTitle = getString(R.string.incoming_friendships)
     }
 
-    override fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean):
-            AbsRequestUsersLoader {
-        return IncomingFriendshipsLoader(context, args.accountKey, adapter.getData(), fromUser)
+    override fun onCreateUsersFetcher(): UsersFetcher {
+        return IncomingFriendshipsFetcher()
     }
 
     override fun onCreateAdapter(context: Context, requestManager: RequestManager): ParcelableUsersAdapter {

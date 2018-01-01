@@ -41,7 +41,7 @@ import java.util.*
 
 class UserViewHolder(
         itemView: View,
-        private val adapter: IUsersAdapter<*>,
+        private val adapter: IUsersAdapter,
         private val simple: Boolean = false,
         private val showFollow: Boolean = false
 ) : ViewHolder(itemView), OnClickListener, OnLongClickListener {

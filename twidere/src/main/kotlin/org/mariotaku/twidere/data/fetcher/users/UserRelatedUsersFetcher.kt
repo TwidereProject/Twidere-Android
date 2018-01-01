@@ -1,7 +1,7 @@
 /*
  *             Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2018 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,17 +17,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.loader.users
+package org.mariotaku.twidere.data.fetcher.users
 
 import android.content.Context
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.model.Paging
+import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.PaginatedList
 
-abstract class UserRelatedUsersLoader(
+abstract class UserRelatedUsersFetcher(
         context: Context,
         accountKey: UserKey?,
         private val userKey: UserKey?,

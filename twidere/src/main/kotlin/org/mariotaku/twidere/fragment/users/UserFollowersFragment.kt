@@ -19,31 +19,28 @@
 
 package org.mariotaku.twidere.fragment.users
 
-import android.content.Context
 import android.os.Bundle
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.data.fetcher.UsersFetcher
 import org.mariotaku.twidere.extension.linkHandlerTitle
-import org.mariotaku.twidere.fragment.ParcelableUsersFragment
-import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
-import org.mariotaku.twidere.loader.users.UserFollowersLoader
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.extension.screenName
+import org.mariotaku.twidere.extension.userKey
+import org.mariotaku.twidere.fragment.AbsUsersFragment
+import org.mariotaku.twidere.data.fetcher.users.UserFollowersFetcher
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 
-class UserFollowersFragment : ParcelableUsersFragment() {
+class UserFollowersFragment : AbsUsersFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         linkHandlerTitle = getString(R.string.title_followers)
     }
 
-    override fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean):
-            AbsRequestUsersLoader {
-        val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
-        val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
-        val screenName = args.getString(EXTRA_SCREEN_NAME)
-        return UserFollowersLoader(context, accountKey, userKey, screenName, adapter.getData(),
-                fromUser)
+    override fun onCreateUsersFetcher(): UsersFetcher {
+        val args = arguments!!
+        val userKey = args.userKey
+        val screenName = args.screenName
+        return UserFollowersFetcher(userKey, screenName)
     }
 
     override fun shouldRemoveUser(position: Int, event: FriendshipTaskEvent): Boolean {

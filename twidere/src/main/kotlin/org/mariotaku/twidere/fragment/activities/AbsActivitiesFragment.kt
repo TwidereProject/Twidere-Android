@@ -55,7 +55,6 @@ import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.readFromBottomKey
 import org.mariotaku.twidere.data.CursorObjectDataSourceFactory
-import org.mariotaku.twidere.data.ExtendedPagedListProvider
 import org.mariotaku.twidere.data.processor.DataSourceItemProcessor
 import org.mariotaku.twidere.extension.model.activityStatus
 import org.mariotaku.twidere.extension.queryOne
@@ -130,7 +129,6 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
     private val scrollHandler = ScrollHandler()
     private val timelineBoundaryCallback = ActivitiesBoundaryCallback()
     private val positionBackup: AtomicReference<PositionWithOffset> = AtomicReference()
-    private var dataController: ExtendedPagedListProvider.DataController? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -266,13 +264,8 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
     }
 
     fun reloadAll() {
-        val controller = dataController
-        if (controller != null) {
-            if (!controller.invalidate()) return
-        } else {
-            adapter.activities = null
-            setupLiveData()
-        }
+        adapter.activities = null
+        setupLiveData()
         showProgress()
     }
 

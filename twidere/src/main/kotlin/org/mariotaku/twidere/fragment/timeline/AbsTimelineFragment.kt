@@ -64,7 +64,6 @@ import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.data.CursorObjectDataSourceFactory
 import org.mariotaku.twidere.data.ExceptionLiveData
-import org.mariotaku.twidere.data.ExtendedPagedListProvider
 import org.mariotaku.twidere.data.StatusesDataSourceFactory
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.extension.*
@@ -157,7 +156,6 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
     private val scrollHandler = ScrollHandler()
     private val timelineBoundaryCallback = StatusesBoundaryCallback()
     private val positionBackup: AtomicReference<PositionWithOffset> = AtomicReference()
-    private var dataController: ExtendedPagedListProvider.DataController? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -314,13 +312,8 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
     }
 
     fun reloadAll() {
-        val controller = dataController
-        if (controller != null) {
-            if (!controller.invalidate()) return
-        } else {
-            adapter.statuses = null
-            setupLiveData()
-        }
+        adapter.statuses = null
+        setupLiveData()
         showProgress()
     }
 
@@ -384,9 +377,9 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
     @CallSuper
     protected open fun saveReadPosition(position: Int) {
         if (host == null) return
-        if (position == RecyclerView.NO_POSITION || adapter.getStatusCount(false) <= 0) return
+        if (position == RecyclerView.NO_POSITION || adapter.getStatusCount() <= 0) return
         val status = adapter.getStatus(position.coerceIn(rangeOfSize(adapter.statusStartIndex,
-                adapter.getStatusCount(false))))
+                adapter.getStatusCount())))
         val readPosition = if (isStandalone) {
             status.sort_id
         } else {
@@ -420,9 +413,6 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         }
         val maxLoadLimit = getMaxLoadItemLimit(accountKey)
         val loadLimit = preferences[loadItemLimitKey]
-        // We don't use dataController since it's not supported
-        dataController = null
-
         val apiLiveData = ExceptionLiveData.wrap(LivePagedListBuilder(factory, PagedList.Config.Builder()
                 .setPageSize(loadLimit.coerceAtMost(maxLoadLimit))
                 .setInitialLoadSizeHint(loadLimit.coerceAtMost(maxLoadLimit))
@@ -465,7 +455,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
     private fun getFullStatus(position: Int): ParcelableStatus {
         if (isStandalone) {
-            return adapter.getStatus(position, false)
+            return adapter.getStatus(position)
         }
         val context = context!!
         val rowId = adapter.getRowId(position)

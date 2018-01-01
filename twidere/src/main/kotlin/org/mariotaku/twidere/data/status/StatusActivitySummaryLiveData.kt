@@ -32,8 +32,8 @@ import org.mariotaku.twidere.exception.RequiredFieldNotFoundException
 import org.mariotaku.twidere.extension.getDetailsOrThrow
 import org.mariotaku.twidere.extension.model.api.key
 import org.mariotaku.twidere.extension.model.api.toParcelable
-import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.extension.model.official
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUser
@@ -56,7 +56,7 @@ class StatusActivitySummaryLiveData(val context: Context) : ComputableExceptionL
             throw APINotSupportedException()
         }
         val twitter = account.newMicroBlogInstance(context, Twitter::class.java)
-        val activitySummary = if (account.isOfficial(context)) {
+        val activitySummary = if (account.official) {
             twitter.getActivitySummaryOfficial(statusId, account)
         } else {
             twitter.getActivitySummary(statusId, account)

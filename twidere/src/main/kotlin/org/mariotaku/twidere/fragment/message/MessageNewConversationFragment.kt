@@ -26,8 +26,6 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.os.Bundle
 import android.support.annotation.WorkerThread
-import android.support.v4.app.LoaderManager.LoaderCallbacks
-import android.support.v4.content.Loader
 import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.Spannable
@@ -47,7 +45,6 @@ import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.text.appendCompat
 import org.mariotaku.twidere.fragment.BaseFragment
-import org.mariotaku.twidere.loader.CacheUserSearchLoader
 import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
 import org.mariotaku.twidere.model.ParcelableUser
@@ -59,7 +56,7 @@ import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.view.SimpleTextWatcher
 import java.lang.ref.WeakReference
 
-class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<ParcelableUser>?> {
+class MessageNewConversationFragment : BaseFragment() {
 
     private val accountKey by lazy { arguments!!.accountKey!! }
     private val account by lazy { AccountManager.get(context).getDetails(accountKey, true) }
@@ -197,18 +194,7 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
         return inflater.inflate(R.layout.fragment_messages_conversation_new, container, false)
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableUser>?> {
-        val query = args.getString(EXTRA_QUERY)
-        val fromCache = args.getBoolean(EXTRA_FROM_CACHE)
-        val fromUser = args.getBoolean(EXTRA_FROM_USER)
-        return CacheUserSearchLoader(context!!, accountKey, query, !fromCache, true, fromUser)
-    }
-
-    override fun onLoaderReset(loader: Loader<List<ParcelableUser>?>) {
-        usersAdapter.data = null
-    }
-
-    override fun onLoadFinished(loader: Loader<List<ParcelableUser>?>, data: List<ParcelableUser>?) {
+    fun onDataLoaded(data: List<ParcelableUser>?) {
         usersAdapter.data = data
         updateCheckState()
     }
@@ -294,12 +280,6 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
             this[EXTRA_ACCOUNT_KEY] = accountKey
             this[EXTRA_QUERY] = query
             this[EXTRA_FROM_CACHE] = fromType
-        }
-        if (loaderInitialized) {
-            loaderManager.initLoader(0, args, this)
-            loaderInitialized = true
-        } else {
-            loaderManager.restartLoader(0, args, this)
         }
         if (performSearchRequestRunnable != null) {
             editParticipants.removeCallbacks(performSearchRequestRunnable)

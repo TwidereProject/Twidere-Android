@@ -19,30 +19,27 @@
 
 package org.mariotaku.twidere.fragment.users
 
-import android.content.Context
 import android.os.Bundle
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.data.fetcher.UsersFetcher
 import org.mariotaku.twidere.extension.*
-import org.mariotaku.twidere.fragment.ParcelableUsersFragment
-import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
-import org.mariotaku.twidere.loader.users.UserListSubscribersLoader
+import org.mariotaku.twidere.fragment.AbsUsersFragment
+import org.mariotaku.twidere.data.fetcher.users.UserListSubscribersFetcher
 
-class UserListSubscribersFragment : ParcelableUsersFragment() {
+class UserListSubscribersFragment : AbsUsersFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         linkHandlerTitle = getString(R.string.list_subscribers)
     }
 
-    override fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean):
-            AbsRequestUsersLoader {
-        val accountKey = args.accountKey
+    override fun onCreateUsersFetcher(): UsersFetcher {
+        val args = arguments!!
         val listId = args.listId
         val listName = args.listName
         val userKey = args.userKey
         val screenName = args.screenName
-        return UserListSubscribersLoader(context, accountKey, listId, userKey, screenName, listName,
-                adapter.getData(), fromUser)
+        return UserListSubscribersFetcher(listId, userKey, screenName, listName)
     }
 
 }

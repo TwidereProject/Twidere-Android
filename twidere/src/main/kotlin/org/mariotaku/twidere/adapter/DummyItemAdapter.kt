@@ -30,7 +30,7 @@ class DummyItemAdapter(
         override val twidereLinkify: TwidereLinkify = TwidereLinkify(null),
         private val adapter: RecyclerView.Adapter<out RecyclerView.ViewHolder>? = null,
         override val requestManager: RequestManager
-) : IStatusesAdapter, IUsersAdapter<Any>, IUserListsAdapter<Any> {
+) : IStatusesAdapter, IUsersAdapter, IUserListsAdapter<Any> {
 
     @Inject
     lateinit var preferences: SharedPreferences
@@ -73,9 +73,9 @@ class DummyItemAdapter(
         return 0
     }
 
-    override fun getStatus(position: Int, raw: Boolean): ParcelableStatus {
+    override fun getStatus(position: Int): ParcelableStatus {
         if (adapter is ParcelableStatusesAdapter) {
-            return adapter.getStatus(position, raw)
+            return adapter.getStatus(position)
         } else if (adapter is VariousItemsAdapter) {
             return adapter.getItem(position) as ParcelableStatus
         } else if (adapter is ParcelableActivitiesAdapter) {
@@ -84,15 +84,15 @@ class DummyItemAdapter(
         throw IndexOutOfBoundsException()
     }
 
-    override fun getStatusCount(raw: Boolean) = 0
+    override fun getStatusCount() = 0
 
-    override fun getStatusId(position: Int, raw: Boolean) = ""
+    override fun getStatusId(position: Int) = ""
 
-    override fun getStatusTimestamp(position: Int, raw: Boolean) = -1L
+    override fun getStatusTimestamp(position: Int) = -1L
 
-    override fun getStatusPositionKey(position: Int, raw: Boolean) = -1L
+    override fun getStatusPositionKey(position: Int) = -1L
 
-    override fun getAccountKey(position: Int, raw: Boolean) = UserKey.INVALID
+    override fun getAccountKey(position: Int) = UserKey.INVALID
 
     override fun findStatusById(accountKey: UserKey, statusId: String) = null
 

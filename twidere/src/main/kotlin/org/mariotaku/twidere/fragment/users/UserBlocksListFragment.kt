@@ -19,28 +19,23 @@
 
 package org.mariotaku.twidere.fragment.users
 
-import android.content.Context
 import android.os.Bundle
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
+import org.mariotaku.twidere.data.fetcher.UsersFetcher
 import org.mariotaku.twidere.extension.linkHandlerTitle
-import org.mariotaku.twidere.fragment.ParcelableUsersFragment
-import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
-import org.mariotaku.twidere.loader.users.UserBlocksLoader
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.fragment.AbsUsersFragment
+import org.mariotaku.twidere.data.fetcher.users.UserBlocksFetcher
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 
-class UserBlocksListFragment : ParcelableUsersFragment() {
+class UserBlocksListFragment : AbsUsersFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         linkHandlerTitle = getString(R.string.title_blocked_users)
     }
 
-    override fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean):
-            AbsRequestUsersLoader {
-        val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
-        return UserBlocksLoader(context, accountKey, adapter.getData(), fromUser)
+    override fun onCreateUsersFetcher(): UsersFetcher {
+        return UserBlocksFetcher()
     }
 
     override fun shouldRemoveUser(position: Int, event: FriendshipTaskEvent): Boolean {

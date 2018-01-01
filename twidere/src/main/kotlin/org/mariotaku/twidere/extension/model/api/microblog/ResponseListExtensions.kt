@@ -23,10 +23,6 @@ import org.mariotaku.microblog.library.model.microblog.PageableResponseList
 import org.mariotaku.microblog.library.model.microblog.ResponseList
 import org.mariotaku.twidere.model.pagination.*
 
-/**
- * Created by mariotaku on 2017/4/21.
- */
-
 inline fun <T, R> ResponseList<T>.mapToPaginated(current: Pagination?, transform: (T) -> R): PaginatedList<R> {
     val result = mapTo(PaginatedArrayList(size), transform)
     if (current == null) {

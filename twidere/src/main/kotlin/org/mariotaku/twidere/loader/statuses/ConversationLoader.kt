@@ -35,9 +35,9 @@ import org.mariotaku.twidere.extension.atto.filter
 import org.mariotaku.twidere.extension.atto.firstElementOrNull
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
-import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.makeOriginal
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.extension.model.official
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.pagination.PaginatedArrayList
@@ -86,7 +86,7 @@ class ConversationLoader(
         when (account.type) {
             AccountType.TWITTER -> {
                 val twitter = account.newMicroBlogInstance(context, Twitter::class.java)
-                val isOfficial = account.isOfficial(context)
+                val isOfficial = account.official
                 canLoadAllReplies = isOfficial
                 if (isOfficial) {
                     return twitter.showConversation(status.id, paging).mapMicroBlogToPaginated {

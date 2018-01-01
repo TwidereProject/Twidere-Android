@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.fragment.users
 
-import android.content.Context
 import android.os.Bundle
 import android.view.ContextMenu
 import android.view.MenuInflater
@@ -29,12 +28,12 @@ import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.data.fetcher.UsersFetcher
 import org.mariotaku.twidere.extension.*
+import org.mariotaku.twidere.fragment.AbsUsersFragment
 import org.mariotaku.twidere.fragment.DeleteUserListMembersDialogFragment
-import org.mariotaku.twidere.fragment.ParcelableUsersFragment
 import org.mariotaku.twidere.fragment.userlist.UserListFragment
-import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
-import org.mariotaku.twidere.loader.users.UserListMembersLoader
+import org.mariotaku.twidere.data.fetcher.users.UserListMembersFetcher
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.UserListMembersChangedEvent
@@ -43,7 +42,7 @@ import org.mariotaku.twidere.view.ExtendedRecyclerView
 import org.mariotaku.twidere.view.holder.UserViewHolder
 import java.util.*
 
-class UserListMembersFragment : ParcelableUsersFragment() {
+class UserListMembersFragment : AbsUsersFragment() {
 
     val userList: ParcelableUserList?
         get() {
@@ -80,15 +79,13 @@ class UserListMembersFragment : ParcelableUsersFragment() {
         super.onStop()
     }
 
-    override fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean):
-            AbsRequestUsersLoader {
-        val accountKey = args.accountKey
+    override fun onCreateUsersFetcher(): UsersFetcher {
+        val args = arguments!!
         val listId = args.listId
         val userKey = args.userKey
         val screenName = args.screenName
         val listName = args.listName
-        return UserListMembersLoader(context, accountKey, listId, userKey, screenName, listName,
-                adapter.getData(), fromUser)
+        return UserListMembersFetcher(listId, userKey, screenName, listName)
     }
 
     override fun onUserLongClick(holder: UserViewHolder, position: Int): Boolean {
@@ -134,20 +131,20 @@ class UserListMembersFragment : ParcelableUsersFragment() {
         when (event.action) {
             UserListMembersChangedEvent.Action.ADDED -> {
                 val newUsers = Arrays.asList(*event.users)
-                val users = adapter.getData() ?: return
-                if (users is MutableList) {
-                    users.removeAll(newUsers)
-                    users.addAll(0, newUsers)
-                }
+                val users = adapter.users ?: return
+//                if (users is MutableList) {
+//                    users.removeAll(newUsers)
+//                    users.addAll(0, newUsers)
+//                }
                 users.forEachIndexed { idx, user -> user.position = idx.toLong() }
                 adapter.notifyDataSetChanged()
             }
             UserListMembersChangedEvent.Action.REMOVED -> {
                 val removedUsers = Arrays.asList(*event.users)
-                val users = adapter.getData() ?: return
-                if (users is MutableList) {
-                    users.removeAll(removedUsers)
-                }
+                val users = adapter.users ?: return
+//                if (users is MutableList) {
+//                    users.removeAll(removedUsers)
+//                }
                 users.forEachIndexed { idx, user -> user.position = idx.toLong() }
                 adapter.notifyDataSetChanged()
             }

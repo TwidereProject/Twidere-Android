@@ -2,12 +2,11 @@ package org.mariotaku.twidere.fragment.filter
 
 import android.app.Activity
 import android.app.Dialog
+import android.arch.paging.PagedList
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.LoaderManager
-import android.support.v4.content.Loader
 import android.support.v7.app.AlertDialog
 import android.view.Menu
 import android.view.MenuInflater
@@ -25,21 +24,19 @@ import org.mariotaku.twidere.TwidereConstants.REQUEST_PURCHASE_EXTRA_FEATURES
 import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.adapter.SelectableUsersAdapter
 import org.mariotaku.twidere.annotation.LoadMorePosition
-import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_COUNT
+import org.mariotaku.twidere.data.fetcher.UsersFetcher
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.extension.util.isAdvancedFiltersEnabled
 import org.mariotaku.twidere.fragment.*
-import org.mariotaku.twidere.loader.iface.IExtendedLoader
-import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import java.lang.ref.WeakReference
 
-abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<SelectableUsersAdapter>(),
-        LoaderManager.LoaderCallbacks<List<ParcelableUser>?> {
+abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<SelectableUsersAdapter>() {
 
     protected var nextPagination: Pagination? = null
         private set
@@ -49,9 +46,6 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
-        val loaderArgs = Bundle(arguments)
-        loaderArgs.putBoolean(EXTRA_FROM_USER, true)
-        loaderManager.initLoader(0, loaderArgs, this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -117,61 +111,8 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
         return true
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableUser>?> {
-        val fromUser = args.getBoolean(EXTRA_FROM_USER)
-        args.remove(EXTRA_FROM_USER)
-        return onCreateUsersLoader(context!!, args, fromUser)
-    }
-
-    override fun onLoaderReset(loader: Loader<List<ParcelableUser>?>) {
-        adapter.data = null
-    }
-
-    override fun onLoadFinished(loader: Loader<List<ParcelableUser>?>, data: List<ParcelableUser>?) {
-        val hasMoreData = run {
-            val previousCount = adapter.data?.size
-            if (previousCount != data?.size) return@run true
-            val previousFirst = adapter.data?.firstOrNull()
-            val previousLast = adapter.data?.lastOrNull()
-            // If first and last data not changed, assume no more data
-            return@run previousFirst != data?.firstOrNull() && previousLast != data?.lastOrNull()
-        }
-        adapter.clearLockedState()
-        data?.forEach { user ->
-            if (user.is_filtered) {
-                adapter.setLockedState(user.key, true)
-            }
-        }
-        adapter.data = data
-        if (loader !is IExtendedLoader || loader.fromUser) {
-            adapter.loadMoreSupportedPosition = if (hasMoreData) {
-                LoadMorePosition.END
-            } else {
-                LoadMorePosition.NONE
-            }
-            refreshEnabled = true
-        }
-        if (loader is IExtendedLoader) {
-            loader.fromUser = false
-        }
-        showContent()
-        refreshEnabled = data.isNullOrEmpty()
-        refreshing = false
-        setLoadMoreIndicatorPosition(LoadMorePosition.NONE)
-        val cursorLoader = loader as AbsRequestUsersLoader
-        nextPagination = cursorLoader.nextPagination
-        prevPagination = cursorLoader.prevPagination
-        activity!!.invalidateOptionsMenu()
-    }
-
     override fun onLoadMoreContents(@LoadMorePosition position: Int) {
-        // Only supports load from end, skip START flag
-        if (LoadMorePosition.END != position) return
-        super.onLoadMoreContents(position)
-        val loaderArgs = Bundle(arguments)
-        loaderArgs.putBoolean(EXTRA_FROM_USER, true)
-        loaderArgs.putParcelable(EXTRA_NEXT_PAGINATION, nextPagination)
-        loaderManager.restartLoader(0, loaderArgs, this)
+        // No-op
     }
 
     override fun onCreateAdapter(context: Context, requestManager: RequestManager): SelectableUsersAdapter {
@@ -196,8 +137,30 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
         return adapter
     }
 
-    protected abstract fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean):
-            Loader<List<ParcelableUser>?>
+    protected abstract fun onCreateUsersFetcher(): UsersFetcher
+
+    fun onDataLoaded(data: PagedList<ParcelableUser>?) {
+        val hasMoreData = run {
+            val previousCount = adapter.data?.size
+            if (previousCount != data?.size) return@run true
+            val previousFirst = adapter.data?.firstOrNull()
+            val previousLast = adapter.data?.lastOrNull()
+            // If first and last data not changed, assume no more data
+            return@run previousFirst != data?.firstOrNull() && previousLast != data?.lastOrNull()
+        }
+        adapter.clearLockedState()
+        data?.forEach { user ->
+            if (user.is_filtered) {
+                adapter.setLockedState(user.key, true)
+            }
+        }
+        adapter.data = data
+        showContent()
+        refreshEnabled = data.isNullOrEmpty()
+        refreshing = false
+        setLoadMoreIndicatorPosition(LoadMorePosition.NONE)
+        activity!!.invalidateOptionsMenu()
+    }
 
     private fun performImport(filterEverywhere: Boolean) {
         val selectedUsers = rangeOfSize(adapter.userStartIndex, adapter.userCount)

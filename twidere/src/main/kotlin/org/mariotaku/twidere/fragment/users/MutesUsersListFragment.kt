@@ -19,28 +19,23 @@
 
 package org.mariotaku.twidere.fragment.users
 
-import android.content.Context
 import android.os.Bundle
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
+import org.mariotaku.twidere.data.fetcher.UsersFetcher
 import org.mariotaku.twidere.extension.linkHandlerTitle
-import org.mariotaku.twidere.fragment.ParcelableUsersFragment
-import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
-import org.mariotaku.twidere.loader.users.MutesUsersLoader
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.fragment.AbsUsersFragment
+import org.mariotaku.twidere.data.fetcher.users.MutesUsersFetcher
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 
-class MutesUsersListFragment : ParcelableUsersFragment() {
+class MutesUsersListFragment : AbsUsersFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         linkHandlerTitle = getString(R.string.action_twitter_muted_users)
     }
 
-    override fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean):
-            AbsRequestUsersLoader {
-        val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
-        return MutesUsersLoader(context, accountKey, adapter.getData(), fromUser)
+    override fun onCreateUsersFetcher(): UsersFetcher {
+        return MutesUsersFetcher()
     }
 
     override fun shouldRemoveUser(position: Int, event: FriendshipTaskEvent): Boolean {

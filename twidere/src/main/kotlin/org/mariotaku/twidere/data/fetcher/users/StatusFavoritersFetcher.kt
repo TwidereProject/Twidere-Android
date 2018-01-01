@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.loader.users
+package org.mariotaku.twidere.data.fetcher.users
 
 import android.content.Context
 import org.attoparser.config.ParseConfiguration
@@ -27,59 +27,34 @@ import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.Twitter
 import org.mariotaku.microblog.library.model.Paging
+import org.mariotaku.microblog.library.model.mastodon.Account
+import org.mariotaku.microblog.library.model.mastodon.LinkHeaderList
 import org.mariotaku.microblog.library.model.microblog.IDs
+import org.mariotaku.microblog.library.model.microblog.User
 import org.mariotaku.microblog.library.model.microblog.setIds
 import org.mariotaku.microblog.library.twitter.TwitterWeb
-import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.exception.APINotSupportedException
-import org.mariotaku.twidere.extension.api.lookupUsersMapPaginated
-import org.mariotaku.twidere.extension.model.api.mastodon.mapToPaginated
-import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
-import org.mariotaku.twidere.extension.model.api.microblog.mapToPaginated
-import org.mariotaku.twidere.extension.model.api.toParcelable
-import org.mariotaku.twidere.extension.model.isOfficial
+import org.mariotaku.twidere.data.fetcher.UsersFetcher
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.extension.model.official
 import org.mariotaku.twidere.model.AccountDetails
-import org.mariotaku.twidere.model.ParcelableUser
-import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.pagination.PaginatedList
 import java.text.ParseException
 
-class StatusFavoritersLoader(
-        context: Context,
-        accountKey: UserKey,
-        private val statusId: String,
-        data: List<ParcelableUser>?,
-        fromUser: Boolean
-) : AbsRequestUsersLoader(context, accountKey, data, fromUser) {
+class StatusFavoritersFetcher(
+        val context: Context,
+        private val statusId: String
+) : UsersFetcher {
+    override fun forMastodon(account: AccountDetails, mastodon: Mastodon, paging: Paging): LinkHeaderList<Account> {
+        return mastodon.getStatusFavouritedBy(statusId)
+    }
 
-    @Throws(MicroBlogException::class)
-    override fun getUsers(details: AccountDetails, paging: Paging): PaginatedList<ParcelableUser> {
-        when (details.type) {
-            AccountType.MASTODON -> {
-                val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
-                return mastodon.getStatusFavouritedBy(statusId).mapToPaginated {
-                    it.toParcelable(details)
-                }
-            }
-            AccountType.TWITTER -> {
-                val microBlog = details.newMicroBlogInstance(context, Twitter::class.java)
-                return if (details.isOfficial(context)) {
-                    microBlog.getFavoritedBy(statusId, paging).mapToPaginated {
-                        it.toParcelable(details, profileImageSize = profileImageSize)
-                    }
-                } else {
-                    val web = details.newMicroBlogInstance(context, TwitterWeb::class.java)
-                    val htmlUsers = web.getFavoritedPopup(statusId).htmlUsers
-                    val ids = IDs().setIds(parseUserIds(htmlUsers))
-                    microBlog.lookupUsersMapPaginated(ids) {
-                        it.toParcelable(details, profileImageSize = profileImageSize)
-                    }
-                }
-            }
-            else -> {
-                throw APINotSupportedException("API", details.type)
-            }
+    override fun forTwitter(account: AccountDetails, twitter: Twitter, paging: Paging): List<User> {
+        return if (account.extras?.official == true) {
+            twitter.getFavoritedBy(statusId, paging)
+        } else {
+            val web = account.newMicroBlogInstance(context, TwitterWeb::class.java)
+            val htmlUsers = web.getFavoritedPopup(statusId).htmlUsers
+            val ids = IDs().setIds(parseUserIds(htmlUsers))
+            twitter.lookupUsers(ids.iDs)
         }
     }
 

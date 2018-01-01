@@ -1,7 +1,7 @@
 /*
  *             Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2018 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,18 +17,19 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.fragment.users
+package org.mariotaku.twidere.model.placeholder
 
-import org.mariotaku.twidere.data.fetcher.UsersFetcher
-import org.mariotaku.twidere.extension.query
-import org.mariotaku.twidere.fragment.AbsUsersFragment
-import org.mariotaku.twidere.data.fetcher.users.UserSearchFetcher
+import org.mariotaku.twidere.model.ParcelableUser
+import org.mariotaku.twidere.model.UserKey
 
-class SearchUsersFragment : AbsUsersFragment() {
-
-    override fun onCreateUsersFetcher(): UsersFetcher {
-        val query = arguments!!.query!!
-        return UserSearchFetcher(query)
+object ParcelableUserPlaceholder : ParcelableUser() {
+    init {
+        key = UserKey.INVALID
+        account_key = UserKey.INVALID
+        screen_name = "none"
     }
 
+    override fun hashCode(): Int {
+        return -1
+    }
 }

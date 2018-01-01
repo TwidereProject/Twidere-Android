@@ -176,14 +176,14 @@ class ParcelableStatusesAdapter(
     }
 
     override fun isGapItem(position: Int): Boolean {
-        return getStatusInternal(false, false, position = position).is_gap
+        return getStatusInternal(false, position = position).is_gap
     }
 
-    override fun getStatus(position: Int, raw: Boolean): ParcelableStatus {
-        return getStatusInternal(raw, position = position)
+    override fun getStatus(position: Int): ParcelableStatus {
+        return getStatusInternal(position = position)
     }
 
-    override fun getStatusCount(raw: Boolean): Int {
+    override fun getStatusCount(): Int {
         return itemCounts[ITEM_INDEX_STATUS]
     }
 
@@ -200,7 +200,7 @@ class ParcelableStatusesAdapter(
          */
         when (countIndex) {
             ITEM_INDEX_STATUS -> {
-                val status = getStatus(position, false)
+                val status = getStatus(position)
                 if (status._id > 0) return status._id
                 return status.hashCode().toLong()
             }
@@ -217,24 +217,24 @@ class ParcelableStatusesAdapter(
         }
     }
 
-    override fun getStatusId(position: Int, raw: Boolean): String {
-        return getStatus(position, raw).id
+    override fun getStatusId(position: Int): String {
+        return getStatus(position).id
     }
 
-    fun getStatusSortId(position: Int, raw: Boolean): Long {
-        return getStatus(position, raw).sort_id
+    fun getStatusSortId(position: Int): Long {
+        return getStatus(position).sort_id
     }
 
-    override fun getStatusTimestamp(position: Int, raw: Boolean): Long {
-        return getStatus(position, raw).timestamp
+    override fun getStatusTimestamp(position: Int): Long {
+        return getStatus(position).timestamp
     }
 
-    override fun getStatusPositionKey(position: Int, raw: Boolean): Long {
-        return getStatus(position, raw).position_key
+    override fun getStatusPositionKey(position: Int): Long {
+        return getStatus(position).position_key
     }
 
-    override fun getAccountKey(position: Int, raw: Boolean): UserKey {
-        return getStatus(position, raw).account_key
+    override fun getAccountKey(position: Int): UserKey {
+        return getStatus(position).account_key
     }
 
     override fun isCardActionsShown(position: Int): Boolean {
@@ -347,64 +347,49 @@ class ParcelableStatusesAdapter(
     }
 
     override fun findStatusById(accountKey: UserKey, statusId: String): ParcelableStatus? {
-        for (i in 0 until getStatusCount(true)) {
-            if (accountKey == getAccountKey(i, true) && statusId == getStatusId(i, true)) {
-                return getStatus(i, true)
+        for (i in 0 until getStatusCount()) {
+            if (accountKey == getAccountKey(i) && statusId == getStatusId(i)) {
+                return getStatus(i)
             }
         }
         return null
     }
 
-    fun isStatus(position: Int, raw: Boolean = false): Boolean {
-        return position < getStatusCount(raw)
+    fun isStatus(position: Int): Boolean {
+        return position < getStatusCount()
     }
 
-    fun getRowId(adapterPosition: Int, raw: Boolean = false): Long {
-        val status = getStatus(adapterPosition, raw)
+    fun getRowId(adapterPosition: Int): Long {
+        val status = getStatus(adapterPosition)
         return if (status._id < 0) status.hashCode().toLong() else status._id
     }
 
-    fun findPositionByPositionKey(positionKey: Long, raw: Boolean = false): Int {
+    fun findPositionByPositionKey(positionKey: Long): Int {
         // Assume statuses are descend sorted by id, so break at first status with id
         // lesser equals than read position
         if (positionKey <= 0) return RecyclerView.NO_POSITION
-        val range = rangeOfSize(statusStartIndex, getStatusCount(raw))
+        val range = rangeOfSize(statusStartIndex, getStatusCount())
         if (range.isEmpty() || range.start < 0) return RecyclerView.NO_POSITION
-        if (positionKey < getStatusPositionKey(range.last, raw)) {
+        if (positionKey < getStatusPositionKey(range.last)) {
             return range.last
         }
-        return range.indexOfFirst { positionKey >= getStatusPositionKey(it, raw) }
+        return range.indexOfFirst { positionKey >= getStatusPositionKey(it) }
     }
 
-    fun findPositionBySortId(sortId: Long, raw: Boolean = false): Int {
+    fun findPositionBySortId(sortId: Long): Int {
         // Assume statuses are descend sorted by id, so break at first status with id
         // lesser equals than read position
         if (sortId <= 0) return RecyclerView.NO_POSITION
-        val range = rangeOfSize(statusStartIndex, getStatusCount(raw))
+        val range = rangeOfSize(statusStartIndex, getStatusCount())
         if (range.isEmpty() || range.start < 0) return RecyclerView.NO_POSITION
-        if (sortId < getStatusSortId(range.last, raw)) {
+        if (sortId < getStatusSortId(range.last)) {
             return range.last
         }
-        return range.indexOfFirst { sortId >= getStatusSortId(it, raw) }
+        return range.indexOfFirst { sortId >= getStatusSortId(it) }
     }
 
-    private fun getItemCountIndex(position: Int, raw: Boolean): Int {
-        if (!raw) return itemCounts.getItemCountIndex(position)
-        var sum = 0
-        for (i in 0 until itemCounts.size) {
-            sum += when (i) {
-                ITEM_INDEX_STATUS -> statuses?.size ?: 0
-                else -> itemCounts[i]
-            }
-            if (position < sum) {
-                return i
-            }
-        }
-        return -1
-    }
-
-    private fun getStatusInternal(raw: Boolean = false, loadAround: Boolean = false,
-            position: Int, countIndex: Int = getItemCountIndex(position, raw)): ParcelableStatus {
+    private fun getStatusInternal(loadAround: Boolean = false, position: Int,
+            countIndex: Int = getItemCountIndex(position)): ParcelableStatus {
         when (countIndex) {
             ITEM_INDEX_PINNED_STATUS -> {
                 return pinnedStatuses!![position - getItemStartPosition(ITEM_INDEX_PINNED_STATUS)]
@@ -419,7 +404,7 @@ class ParcelableStatusesAdapter(
             }
         }
         val validStart = getItemStartPosition(ITEM_INDEX_PINNED_STATUS)
-        val validEnd = getItemStartPosition(ITEM_INDEX_STATUS) + getStatusCount(raw) - 1
+        val validEnd = getItemStartPosition(ITEM_INDEX_STATUS) + getStatusCount() - 1
         throw IndexOutOfBoundsException("index: $position, valid range is $validStart..$validEnd")
     }
 
