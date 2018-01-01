@@ -33,6 +33,7 @@ import org.mariotaku.twidere.adapter.iface.IUsersAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.*
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.hasSameHost
+import org.mariotaku.twidere.extension.setVisible
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.promise.FriendshipPromises
 import org.mariotaku.twidere.util.Utils.getUserTypeIconRes
@@ -62,14 +63,11 @@ class UserViewHolder(
     private val unblockButton = itemView.unblock
     private val unmuteButton = itemView.unmute
     private val followButton = itemView.follow
-    private val actionsProgressContainer = itemView.actionsProgressContainer
-    private val actionsContainer = itemView.actionsContainer
     private val processingRequestProgress = itemView.processingRequest
     private val countsContainer = itemView.countsContainer
 
     private var userClickListener: UserClickListener? = null
     private var requestClickListener: RequestClickListener? = null
-
     private var friendshipClickListener: FriendshipClickListener? = null
 
     init {
@@ -79,19 +77,6 @@ class UserViewHolder(
             locationView.visibility = View.GONE
             urlView.visibility = View.GONE
             countsContainer.visibility = View.GONE
-
-            itemView.profileImageContainer.layoutParams.apply {
-                (this as RelativeLayout.LayoutParams).clearVerticalRules()
-                this.addRule(RelativeLayout.CENTER_VERTICAL)
-            }
-            nameView.layoutParams.apply {
-                (this as RelativeLayout.LayoutParams).clearVerticalRules()
-                this.addRule(RelativeLayout.CENTER_VERTICAL)
-            }
-            actionsProgressContainer.layoutParams.apply {
-                (this as RelativeLayout.LayoutParams).clearVerticalRules()
-                this.addRule(RelativeLayout.CENTER_VERTICAL)
-            }
         }
     }
 
@@ -112,26 +97,27 @@ class UserViewHolder(
         nameView.updateText(adapter.bidiFormatter)
 
         if (adapter.profileImageEnabled) {
-            profileImageView.visibility = View.VISIBLE
+            profileImageView.setVisible(true)
             adapter.requestManager.loadProfileImage(context, user, adapter.profileImageStyle,
                     profileImageView.cornerRadius, profileImageView.cornerRadiusRatio,
                     adapter.profileImageSize).into(profileImageView)
         } else {
-            profileImageView.visibility = View.GONE
+            profileImageView.setVisible(false)
         }
 
         val accountKey = user.account_key
+        val showRelationshipButtons: Boolean
         if (accountKey != null && FriendshipPromises.isRunning(accountKey, user.key)) {
-            processingRequestProgress.visibility = View.VISIBLE
-            actionsContainer.visibility = View.GONE
+            processingRequestProgress.setVisible(true)
+            showRelationshipButtons = false
         } else {
-            processingRequestProgress.visibility = View.GONE
-            actionsContainer.visibility = View.VISIBLE
+            processingRequestProgress.setVisible(false)
+            showRelationshipButtons = true
         }
         if (accountKey != null && user.key.hasSameHost(accountKey)) {
-            externalIndicator.visibility = View.GONE
+            externalIndicator.setVisible(false)
         } else {
-            externalIndicator.visibility = View.VISIBLE
+            externalIndicator.setVisible(true)
             externalIndicator.text = context.getString(R.string.external_user_host_format, user.key.host)
         }
 
@@ -140,30 +126,26 @@ class UserViewHolder(
 
         val isMySelf = accountKey == user.key
 
-        if (requestClickListener != null && !isMySelf) {
-            acceptRequestButton.visibility = View.VISIBLE
-            denyRequestButton.visibility = View.VISIBLE
+        if (showRelationshipButtons && requestClickListener != null && !isMySelf) {
+            acceptRequestButton.setVisible(true)
+            denyRequestButton.setVisible(true)
         } else {
-            acceptRequestButton.visibility = View.GONE
-            denyRequestButton.visibility = View.GONE
+            acceptRequestButton.setVisible(false)
+            denyRequestButton.setVisible(false)
         }
-        if (friendshipClickListener != null && !isMySelf) {
-            if (user.extras?.blocking ?: false) {
-                followButton.visibility = View.GONE
-                unblockButton.visibility = View.VISIBLE
+        if (showRelationshipButtons && friendshipClickListener != null && !isMySelf) {
+            if (user.extras?.blocking == true) {
+                followButton.setVisible(false)
+                unblockButton.setVisible(true)
             } else {
-                if (showFollow) {
-                    followButton.visibility = View.VISIBLE
-                } else {
-                    followButton.visibility = View.GONE
-                }
-                unblockButton.visibility = View.GONE
+                followButton.setVisible(showFollow)
+                unblockButton.setVisible(false)
             }
-            unmuteButton.visibility = if (user.extras?.muting ?: false) View.VISIBLE else View.GONE
+            unmuteButton.setVisible(user.extras?.muting == true)
         } else {
-            followButton.visibility = View.GONE
-            unblockButton.visibility = View.GONE
-            unmuteButton.visibility = View.GONE
+            followButton.setVisible(false)
+            unblockButton.setVisible(false)
+            unmuteButton.setVisible(false)
         }
 
         if (!simple) {
@@ -223,10 +205,10 @@ class UserViewHolder(
         this.friendshipClickListener = friendshipClickListener
         if (requestClickListener != null || friendshipClickListener != null) {
             nameView.twoLine = true
-            actionsProgressContainer.visibility = View.VISIBLE
+            processingRequestProgress.visibility = View.VISIBLE
         } else {
             nameView.twoLine = false
-            actionsProgressContainer.visibility = View.GONE
+            processingRequestProgress.visibility = View.GONE
         }
         nameView.updateText()
         acceptRequestButton.setOnClickListener(this)
