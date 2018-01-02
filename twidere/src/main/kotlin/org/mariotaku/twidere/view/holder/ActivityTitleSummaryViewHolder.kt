@@ -23,8 +23,11 @@ import android.content.res.ColorStateList
 import android.support.v4.view.MarginLayoutParamsCompat
 import android.support.v4.widget.ImageViewCompat
 import android.support.v7.widget.RecyclerView.ViewHolder
+import android.text.SpannableString
+import android.text.Spanned
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.list_item_activity_summary_compact.view.*
 import org.mariotaku.ktextension.applyFontFamily
 import org.mariotaku.ktextension.spannable
@@ -35,10 +38,11 @@ import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.ActivityTitleSummaryMessage
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.ParcelableLiteUser
+import org.mariotaku.twidere.model.placeholder.PlaceholderObject
+import org.mariotaku.twidere.text.style.PlaceholderLineSpan
+import org.mariotaku.twidere.view.ShortTimeView
+import org.mariotaku.twidere.view.holder.status.StatusViewHolder
 
-/**
- * Created by mariotaku on 15/1/3.
- */
 class ActivityTitleSummaryViewHolder(
         itemView: View,
         private val adapter: ParcelableActivitiesAdapter
@@ -74,7 +78,24 @@ class ActivityTitleSummaryViewHolder(
         timeView.applyFontFamily(adapter.lightFont)
     }
 
-    fun displayActivity(activity: ParcelableActivity) {
+    fun placeholder() {
+        activityTypeView.setImageResource(R.drawable.ic_activity_type_placeholder)
+        titleView.text = placeholderTitleText
+        summaryView.text = StatusViewHolder.placeholderText
+        timeView.time = ShortTimeView.PLACEHOLDER
+        profileImageMoreNumber.visibility = View.GONE
+
+        profileImageViews.forEach {
+            Glide.clear(it)
+            it.setImageDrawable(null)
+        }
+    }
+
+    fun display(activity: ParcelableActivity) {
+        if (activity is PlaceholderObject) {
+            placeholder()
+            return
+        }
         val context = adapter.context
         val sources = (activity.after_filtered_sources ?: activity.sources_lite).takeIf {
             it.isNotEmpty()
@@ -170,6 +191,12 @@ class ActivityTitleSummaryViewHolder(
             R.id.itemContent -> {
                 activityEventListener!!.onActivityClick(this, position)
             }
+        }
+    }
+
+    companion object {
+        private val placeholderTitleText: Spanned = SpannableString(" ").apply {
+            setSpan(PlaceholderLineSpan(0.8f), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
     }
 

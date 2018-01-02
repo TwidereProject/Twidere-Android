@@ -175,10 +175,6 @@ class ParcelableStatusesAdapter(
         setHasStableIds(true)
     }
 
-    override fun isGapItem(position: Int): Boolean {
-        return getStatusInternal(false, position = position).is_gap
-    }
-
     override fun getStatus(position: Int): ParcelableStatus {
         return getStatusInternal(position = position)
     }
@@ -322,7 +318,7 @@ class ParcelableStatusesAdapter(
             ITEM_INDEX_PINNED_STATUS -> {
                 return VIEW_TYPE_STATUS
             }
-            ITEM_INDEX_STATUS -> return if (isGapItem(position)) {
+            ITEM_INDEX_STATUS -> return if (getStatus(position).is_gap) {
                 ITEM_VIEW_TYPE_GAP
             } else {
                 VIEW_TYPE_STATUS

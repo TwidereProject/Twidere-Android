@@ -42,8 +42,6 @@ import org.mariotaku.twidere.adapter.iface.IUsersAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.UserClickListener
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.LoadMorePosition
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_NEXT_PAGINATION
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_PREV_PAGINATION
 import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.data.ExceptionLiveData
@@ -56,7 +54,6 @@ import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
-import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.promise.BlockPromises
 import org.mariotaku.twidere.promise.FriendshipPromises
 import org.mariotaku.twidere.promise.MutePromises
@@ -75,12 +72,6 @@ abstract class AbsUsersFragment : AbsContentListRecyclerViewFragment<ParcelableU
     protected open val showFollow: Boolean
         get() = true
 
-    protected var nextPagination: Pagination? = null
-        private set
-
-    protected var prevPagination: Pagination? = null
-        private set
-
     private lateinit var navigationHelper: RecyclerViewNavigationHelper
     private val usersBusCallback: Any
     private var users: LiveData<SingleResponse<PagedList<ParcelableUser>?>>? = null
@@ -91,10 +82,6 @@ abstract class AbsUsersFragment : AbsContentListRecyclerViewFragment<ParcelableU
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if (savedInstanceState != null) {
-            nextPagination = savedInstanceState.getParcelable(EXTRA_NEXT_PAGINATION)
-            prevPagination = savedInstanceState.getParcelable(EXTRA_PREV_PAGINATION)
-        }
         adapter.userClickListener = this
 
         navigationHelper = RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter,
@@ -112,12 +99,6 @@ abstract class AbsUsersFragment : AbsContentListRecyclerViewFragment<ParcelableU
     override fun onStop() {
         bus.unregister(usersBusCallback)
         super.onStop()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putParcelable(EXTRA_NEXT_PAGINATION, nextPagination)
-        outState.putParcelable(EXTRA_PREV_PAGINATION, prevPagination)
     }
 
     override fun onLoadMoreContents(@LoadMorePosition position: Int) {
@@ -219,7 +200,7 @@ abstract class AbsUsersFragment : AbsContentListRecyclerViewFragment<ParcelableU
         return itemDecoration
     }
 
-    fun onDataLoaded(data: PagedList<ParcelableUser>?) {
+    protected open fun onDataLoaded(data: PagedList<ParcelableUser>?) {
         adapter.users = data
         when {
             data == null || data.isEmpty() -> {
@@ -230,7 +211,6 @@ abstract class AbsUsersFragment : AbsContentListRecyclerViewFragment<ParcelableU
             }
         }
     }
-
 
     protected open fun getMaxLoadItemLimit(forAccount: UserKey): Int {
         return 200
@@ -267,10 +247,6 @@ abstract class AbsUsersFragment : AbsContentListRecyclerViewFragment<ParcelableU
 
     protected open fun shouldRemoveUser(position: Int, event: FriendshipTaskEvent): Boolean {
         return false
-    }
-
-    protected fun hasMoreData(data: List<ParcelableUser>?): Boolean {
-        return data == null || !data.isEmpty()
     }
 
     protected fun createMessageBusCallback(): Any {

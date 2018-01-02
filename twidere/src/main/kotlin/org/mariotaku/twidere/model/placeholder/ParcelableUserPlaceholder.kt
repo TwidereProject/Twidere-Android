@@ -22,7 +22,7 @@ package org.mariotaku.twidere.model.placeholder
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 
-object ParcelableUserPlaceholder : ParcelableUser() {
+object ParcelableUserPlaceholder : ParcelableUser(), PlaceholderObject {
     init {
         key = UserKey.INVALID
         account_key = UserKey.INVALID

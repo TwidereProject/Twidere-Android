@@ -1,7 +1,7 @@
 /*
  *             Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2018 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,17 +19,4 @@
 
 package org.mariotaku.twidere.model.placeholder
 
-import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.UserKey
-
-object ParcelableStatusPlaceholder : ParcelableStatus() ,PlaceholderObject{
-    init {
-        id = "none"
-        account_key = UserKey.INVALID
-        user_key = UserKey.INVALID
-    }
-
-    override fun hashCode(): Int {
-        return -1
-    }
-}
+interface PlaceholderObject

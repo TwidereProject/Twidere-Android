@@ -27,7 +27,8 @@
     android:background="?selectableItemBackground"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:padding="@dimen/element_spacing_normal"
+    android:paddingBottom="@dimen/element_spacing_normal"
+    android:paddingTop="@dimen/element_spacing_normal"
     app:ignorePadding="true"
     tools:context=".adapter.ParcelableUsersAdapter">
 
@@ -37,6 +38,8 @@
         android:layout_width="@dimen/icon_size_card_list_item"
         android:layout_height="@dimen/icon_size_card_list_item"
         android:layout_centerInParent="true"
+        android:layout_marginLeft="@dimen/element_spacing_normal"
+        android:layout_marginStart="@dimen/element_spacing_normal"
         android:contentDescription="@string/profile_image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -142,7 +145,7 @@
         android:contentDescription="@string/deny"
         app:backgroundTint="@color/material_red"
         app:layout_constraintBottom_toBottomOf="@+id/name"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/checkBox"
         app:layout_constraintTop_toTopOf="@+id/name"
         app:srcCompat="@drawable/ic_action_block"
         app:tint="@android:color/white"
@@ -154,10 +157,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginEnd="@dimen/element_spacing_normal"
+        android:layout_marginRight="@dimen/element_spacing_normal"
         android:visibility="visible"
         app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="@+id/name"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/checkBoxBarrier"
         app:layout_constraintTop_toTopOf="@+id/name"
         app:layout_constraintWidth_min="@dimen/button_size_content_card"/>
 
@@ -165,66 +170,78 @@
         android:id="@+id/externalIndicator"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/element_spacing_normal"
+        android:layout_marginRight="@dimen/element_spacing_normal"
         android:paddingTop="@dimen/element_spacing_small"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="?android:attr/textColorSecondary"
+
         android:textStyle="italic"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/checkBoxBarrier"
         app:layout_constraintStart_toStartOf="@+id/name"
         app:layout_constraintTop_toBottomOf="@+id/name"
         tools:text="External user at twitter.com"
-        tools:visibility="gone"/>
+        tools:visibility="visible"/>
 
     <org.mariotaku.twidere.view.FixedTextView
         android:id="@+id/description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/element_spacing_normal"
+        android:layout_marginRight="@dimen/element_spacing_normal"
         android:paddingTop="@dimen/element_spacing_small"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="?android:attr/textColorSecondary"
-        app:layout_constraintEnd_toEndOf="parent"
+
+        app:layout_constraintEnd_toStartOf="@+id/checkBoxBarrier"
         app:layout_constraintStart_toStartOf="@+id/name"
         app:layout_constraintTop_toBottomOf="@+id/externalIndicator"
         tools:text="@string/sample_status_text"
-        tools:visibility="gone"/>
+        tools:visibility="visible"/>
 
     <org.mariotaku.twidere.view.DrawableTintTextView
         android:id="@+id/location"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/element_spacing_normal"
+        android:layout_marginRight="@dimen/element_spacing_normal"
         android:drawableLeft="@drawable/ic_label_location"
         android:drawablePadding="@dimen/element_spacing_small"
         android:drawableStart="@drawable/ic_label_location"
         android:ellipsize="end"
+
         android:gravity="center_vertical"
         android:maxLines="1"
         android:paddingTop="@dimen/element_spacing_small"
         android:textAppearance="?android:attr/textAppearanceSmall"
         app:drawableTint="?android:textColorSecondary"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/checkBoxBarrier"
         app:layout_constraintStart_toStartOf="@+id/name"
         app:layout_constraintTop_toBottomOf="@+id/description"
         tools:text="Earth"
-        tools:visibility="gone"/>
+        tools:visibility="visible"/>
 
     <org.mariotaku.twidere.view.DrawableTintTextView
         android:id="@+id/url"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/element_spacing_normal"
+        android:layout_marginRight="@dimen/element_spacing_normal"
         android:drawableLeft="@drawable/ic_label_web"
         android:drawablePadding="@dimen/element_spacing_small"
         android:drawableStart="@drawable/ic_label_web"
         android:ellipsize="end"
+
         android:gravity="center_vertical"
         android:maxLines="1"
         android:paddingTop="@dimen/element_spacing_small"
         android:textAppearance="?android:attr/textAppearanceSmall"
         app:drawableTint="?android:textColorSecondary"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/checkBoxBarrier"
         app:layout_constraintStart_toStartOf="@+id/name"
         app:layout_constraintTop_toBottomOf="@+id/location"
         tools:text="https://github.com/TwidereProject"
-        tools:visibility="gone"/>
+        tools:visibility="visible"/>
 
     <org.mariotaku.twidere.view.DrawableTintTextView
         android:id="@+id/statusesCount"
@@ -266,6 +283,8 @@
         android:id="@+id/friendsCount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/element_spacing_normal"
+        android:layout_marginRight="@dimen/element_spacing_normal"
         android:drawableLeft="@drawable/ic_indicator_following"
         android:drawablePadding="@dimen/element_spacing_small"
         android:drawableStart="@drawable/ic_indicator_following"
@@ -274,17 +293,39 @@
         android:padding="@dimen/element_spacing_small"
         android:textAppearance="?android:attr/textAppearanceSmall"
         app:drawableTint="?android:textColorSecondary"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/checkBoxBarrier"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toEndOf="@+id/followersCount"
         app:layout_constraintTop_toBottomOf="@+id/url"
         tools:text="255"/>
+
+    <android.support.constraint.Barrier
+        android:id="@+id/checkBoxBarrier"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:barrierDirection="start"
+        app:constraint_referenced_ids="checkBox"/>
+
+    <org.mariotaku.twidere.view.ActivatedCheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/element_spacing_normal"
+        android:layout_marginRight="@dimen/element_spacing_normal"
+        android:layout_weight="0"
+        android:clickable="false"
+        android:focusable="false"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible"/>
 
     <android.support.constraint.Group
         android:id="@+id/countsContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:constraint_referenced_ids="statusesCount,followersCount,friendsCount"
-        tools:visibility="gone"/>
+        tools:visibility="visible"/>
 
 </org.mariotaku.twidere.view.ColorLabelConstraintLayout>

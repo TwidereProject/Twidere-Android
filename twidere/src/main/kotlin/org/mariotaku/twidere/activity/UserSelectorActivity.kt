@@ -38,6 +38,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.SimpleParcelableUsersAdapter
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.extension.accountKey
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.EditTextEnterHandler
@@ -48,9 +49,7 @@ class UserSelectorActivity : BaseActivity(), OnItemClickListener {
     private lateinit var adapter: SimpleParcelableUsersAdapter
 
     private val accountKey: UserKey?
-        get() = intent.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
-
-    private var loaderInitialized: Boolean = false
+        get() = intent.extras?.accountKey
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

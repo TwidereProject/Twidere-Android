@@ -22,26 +22,19 @@ import org.mariotaku.ktextension.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.REQUEST_PURCHASE_EXTRA_FEATURES
 import org.mariotaku.twidere.activity.BaseActivity
-import org.mariotaku.twidere.adapter.SelectableUsersAdapter
+import org.mariotaku.twidere.adapter.ParcelableUsersAdapter
 import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_COUNT
-import org.mariotaku.twidere.data.fetcher.UsersFetcher
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.extension.util.isAdvancedFiltersEnabled
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.model.ParcelableUser
-import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import java.lang.ref.WeakReference
 
-abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<SelectableUsersAdapter>() {
-
-    protected var nextPagination: Pagination? = null
-        private set
-    protected var prevPagination: Pagination? = null
-        private set
+abstract class BaseFiltersImportFragment : AbsUsersFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -72,7 +65,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.select_none -> {
-                adapter.clearSelection()
+                adapter.clearCheckState()
                 adapter.notifyDataSetChanged()
             }
             R.id.select_all -> {
@@ -115,8 +108,8 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
         // No-op
     }
 
-    override fun onCreateAdapter(context: Context, requestManager: RequestManager): SelectableUsersAdapter {
-        val adapter = SelectableUsersAdapter(context, this.requestManager)
+    override fun onCreateAdapter(context: Context, requestManager: RequestManager): ParcelableUsersAdapter {
+        val adapter = super.onCreateAdapter(context, requestManager)
         adapter.itemCheckedListener = listener@ { _, _ ->
             if (!extraFeaturesService.isAdvancedFiltersEnabled) {
                 ExtraFeaturesIntroductionDialogFragment.show(fragmentManager!!,
@@ -137,29 +130,14 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
         return adapter
     }
 
-    protected abstract fun onCreateUsersFetcher(): UsersFetcher
-
-    fun onDataLoaded(data: PagedList<ParcelableUser>?) {
-        val hasMoreData = run {
-            val previousCount = adapter.data?.size
-            if (previousCount != data?.size) return@run true
-            val previousFirst = adapter.data?.firstOrNull()
-            val previousLast = adapter.data?.lastOrNull()
-            // If first and last data not changed, assume no more data
-            return@run previousFirst != data?.firstOrNull() && previousLast != data?.lastOrNull()
-        }
+    override fun onDataLoaded(data: PagedList<ParcelableUser>?) {
+        super.onDataLoaded(data)
         adapter.clearLockedState()
-        data?.forEach { user ->
+        adapter.users?.forEach { user ->
             if (user.is_filtered) {
                 adapter.setLockedState(user.key, true)
             }
         }
-        adapter.data = data
-        showContent()
-        refreshEnabled = data.isNullOrEmpty()
-        refreshing = false
-        setLoadMoreIndicatorPosition(LoadMorePosition.NONE)
-        activity!!.invalidateOptionsMenu()
     }
 
     private fun performImport(filterEverywhere: Boolean) {

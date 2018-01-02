@@ -36,6 +36,7 @@ import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.list_item_status.view.*
 import org.mariotaku.ktextension.*
@@ -54,7 +55,7 @@ import org.mariotaku.twidere.model.ParcelableLocation
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.placeholder.ParcelableStatusPlaceholder
+import org.mariotaku.twidere.model.placeholder.PlaceholderObject
 import org.mariotaku.twidere.task.CreateFavoriteTask
 import org.mariotaku.twidere.task.DestroyFavoriteTask
 import org.mariotaku.twidere.task.DestroyStatusTask
@@ -158,13 +159,11 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
     }
 
     fun placeholder() {
-        val context = itemView.context
-        val requestManager = adapter.requestManager
         val showCardActions = isCardActionsShown
         val actionButtonsAlpha = PlaceholderLineSpan.placeholderAlpha / 255f
 
-        requestManager.loadProfileImage(context, R.drawable.ic_profile_image_placeholder, adapter.profileImageStyle,
-                profileImageView.cornerRadius, profileImageView.cornerRadiusRatio).into(profileImageView)
+        Glide.clear(profileImageView)
+        profileImageView.setImageDrawable(null)
 
         timeView.time = ShortTimeView.PLACEHOLDER
         textView.spannable = placeholderText
@@ -197,7 +196,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
     }
 
     override fun display(status: ParcelableStatus, displayInReplyTo: Boolean, displayPinned: Boolean) {
-        if (status === ParcelableStatusPlaceholder) {
+        if (status is PlaceholderObject) {
             placeholder()
             return
         }
@@ -786,7 +785,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         private val videoTypes = intArrayOf(ParcelableMedia.Type.VIDEO, ParcelableMedia.Type.ANIMATED_GIF,
                 ParcelableMedia.Type.EXTERNAL_PLAYER)
 
-        private val placeholderText = SpannableStringBuilder().apply {
+        val placeholderText: Spanned = SpannableStringBuilder().apply {
             appendCompat(" ", PlaceholderLineSpan(1f), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             appendln()
             appendCompat(" ", PlaceholderLineSpan(1f), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)

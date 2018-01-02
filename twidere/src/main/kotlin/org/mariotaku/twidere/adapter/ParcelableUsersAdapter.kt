@@ -22,13 +22,13 @@ package org.mariotaku.twidere.adapter
 import android.arch.paging.PagedList
 import android.arch.paging.PagedListAdapterHelper
 import android.content.Context
+import android.support.v4.util.ArrayMap
 import android.support.v7.recyclerview.extensions.ListAdapterConfig
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.RequestManager
-import org.mariotaku.ktextension.contains
-import org.mariotaku.ktextension.rangeOfSize
+import org.mariotaku.ktextension.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.callback.ItemCountsAdapterListUpdateCallback
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
@@ -58,11 +58,6 @@ class ParcelableUsersAdapter(
     override var showFollow: Boolean = false
     override val itemCounts: ItemCounts = ItemCounts(3)
 
-    private val inflater = LayoutInflater.from(context)
-
-    private var pagedStatusesHelper = PagedListAdapterHelper<ParcelableUser>(ItemCountsAdapterListUpdateCallback(this, ITEM_INDEX_USER),
-            ListAdapterConfig.Builder<ParcelableUser>().setDiffCallback(DiffCallbacks.user).build())
-
     var users: PagedList<ParcelableUser>?
         get() = pagedStatusesHelper.currentList
         set(value) {
@@ -71,6 +66,21 @@ class ParcelableUsersAdapter(
                 itemCounts[ITEM_INDEX_USER] = 0
             }
         }
+
+    var itemCheckedListener: ((Int, Boolean) -> Boolean)? = null
+
+    val userStartIndex: Int
+        get() = getItemStartPosition(ITEM_INDEX_USER)
+
+    val checkedCount: Int
+        get() = states.count { (_, v) -> !v.locked && v.checked == yes }
+
+    private val states: MutableMap<UserKey, UserSelectionState> = ArrayMap()
+
+    private val inflater = LayoutInflater.from(context)
+
+    private var pagedStatusesHelper = PagedListAdapterHelper<ParcelableUser>(ItemCountsAdapterListUpdateCallback(this, ITEM_INDEX_USER),
+            ListAdapterConfig.Builder<ParcelableUser>().setDiffCallback(DiffCallbacks.user).build())
 
     override fun getItemCount(): Int {
         val position = loadMoreIndicatorPosition
@@ -143,13 +153,64 @@ class ParcelableUsersAdapter(
 
     fun findPosition(accountKey: UserKey, userKey: UserKey): Int {
         if (users == null) return RecyclerView.NO_POSITION
-        for (i in rangeOfSize(getItemStartPosition(ITEM_INDEX_USER), userCount)) {
+        for (i in rangeOfSize(userStartIndex, userCount)) {
             val user = getUserInternal(false, i)
             if (accountKey == user.account_key && userKey == user.key) {
                 return i
             }
         }
         return RecyclerView.NO_POSITION
+    }
+
+    fun setItemChecked(position: Int, value: Boolean) {
+        val userKey = getUserKey(position)
+        setCheckState(userKey, value)
+        if (!(itemCheckedListener?.invoke(position, value) ?: true)) {
+            setCheckState(userKey, !value)
+            notifyItemChanged(position)
+        }
+    }
+
+    fun clearCheckState() {
+        states.values.forEach { it.checked = unspecified }
+    }
+
+    fun clearLockedState() {
+        states.values.forEach { it.locked = false }
+    }
+
+    fun setCheckState(userKey: UserKey, value: Boolean) {
+        obtainState(userKey).checked = value.trilean
+    }
+
+    fun setLockedState(userKey: UserKey, locked: Boolean) {
+        obtainState(userKey).locked = locked
+    }
+
+    fun removeLockedState(userKey: UserKey) {
+        states[userKey]?.locked = false
+    }
+
+    fun isItemChecked(position: Int): Boolean {
+        return isItemChecked(getUser(position).key)
+    }
+
+    fun isItemChecked(userKey: UserKey): Boolean {
+        return states[userKey]?.checked == yes
+    }
+
+    fun isItemLocked(position: Int): Boolean {
+        return isItemLocked(getUserKey(position))
+    }
+
+    fun isItemLocked(userKey: UserKey): Boolean {
+        return states[userKey]?.locked == true
+    }
+
+    private fun getUserKey(position: Int) = getUser(position).key
+
+    private fun obtainState(userKey: UserKey): UserSelectionState {
+        return states.getOrPut(userKey, { UserSelectionState() })
     }
 
     private fun bindUser(holder: UserViewHolder, position: Int) {
@@ -160,7 +221,7 @@ class ParcelableUsersAdapter(
             countIndex: Int = getItemCountIndex(position)): ParcelableUser {
         when (countIndex) {
             ITEM_INDEX_USER -> {
-                val dataPosition = position - getItemStartPosition(ITEM_INDEX_USER)
+                val dataPosition = position - userStartIndex
                 return if (loadAround) {
                     pagedStatusesHelper.getItem(dataPosition) ?: ParcelableUserPlaceholder
                 } else {
@@ -168,11 +229,12 @@ class ParcelableUsersAdapter(
                 }
             }
         }
-        val validStart = getItemStartPosition(ITEM_INDEX_USER)
+        val validStart = userStartIndex
         val validEnd = validStart + userCount
         throw IndexOutOfBoundsException("index: $position, valid range is $validStart..$validEnd")
     }
 
+    private data class UserSelectionState(var locked: Boolean = false, var checked: Trilean = unspecified)
 
     companion object {
 

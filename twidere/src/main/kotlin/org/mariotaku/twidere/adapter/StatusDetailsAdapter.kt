@@ -260,10 +260,6 @@ class StatusDetailsAdapter(
             updateItemDecoration()
         }
 
-    override fun isGapItem(position: Int): Boolean {
-        return false
-    }
-
     override val gapClickListener: IGapSupportedAdapter.GapClickListener?
         get() = statusClickListener
 

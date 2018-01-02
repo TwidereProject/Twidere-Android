@@ -36,9 +36,9 @@ interface IActivitiesAdapter : IContentAdapter, IGapSupportedAdapter {
 
     val lightFont: Boolean
 
-    fun getActivityCount(raw: Boolean = false): Int
+    fun getActivityCount(): Int
 
-    fun getActivity(position: Int, raw: Boolean = false): ParcelableActivity
+    fun getActivity(position: Int): ParcelableActivity
 
     interface ActivityEventListener {
 

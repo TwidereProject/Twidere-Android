@@ -27,7 +27,7 @@ interface DataSourceItemProcessor<T> {
     fun invalidate()
 
     /**
-     * @return Processed object, `null` if this item should be discarded
+     * @return Processed object
      */
-    fun process(obj: T): T?
+    fun process(obj: T): T
 }

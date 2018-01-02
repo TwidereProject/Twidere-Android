@@ -2,7 +2,7 @@
 <!--
   ~             Twidere - Twitter client for Android
   ~
-  ~  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~  Copyright (C) 2012-2018 Mariotaku Lee <mariotaku.lee@gmail.com>
   ~
   ~  This program is free software: you can redistribute it and/or modify
   ~  it under the terms of the GNU General Public License as published by
@@ -20,9 +20,9 @@
 
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
        android:shape="rectangle">
-    <solid android:color="@color/material_blue_grey"/>
+    <solid android:color="#33808080"/>
     <size
-        android:width="72dp"
-        android:height="72dp"/>
+        android:width="18dp"
+        android:height="18dp"/>
 
 </shape>

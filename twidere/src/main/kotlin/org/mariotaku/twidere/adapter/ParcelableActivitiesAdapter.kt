@@ -50,6 +50,7 @@ import org.mariotaku.twidere.model.ObjectId
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.placeholder.ParcelableActivityPlaceholder
+import org.mariotaku.twidere.model.placeholder.PlaceholderObject
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.OnLinkClickHandler
 import org.mariotaku.twidere.util.TwidereLinkify
@@ -145,15 +146,11 @@ class ParcelableActivitiesAdapter(
         setHasStableIds(true)
     }
 
-    override fun isGapItem(position: Int): Boolean {
-        return getActivity(position, false).is_gap
-    }
-
     override fun getItemId(position: Int): Long {
         val countIndex = itemCounts.getItemCountIndex(position)
         return when (countIndex) {
             ITEM_INDEX_ACTIVITY -> {
-                getRowId(position, false)
+                getRowId(position)
             }
             else -> {
                 (countIndex.toLong() shl 32) or getItemViewType(position).toLong()
@@ -161,11 +158,11 @@ class ParcelableActivitiesAdapter(
         }
     }
 
-    override fun getActivity(position: Int, raw: Boolean): ParcelableActivity {
-        return getActivityInternal(position, raw) ?: ParcelableActivityPlaceholder
+    override fun getActivity(position: Int): ParcelableActivity {
+        return getActivityInternal(position = position)
     }
 
-    override fun getActivityCount(raw: Boolean): Int {
+    override fun getActivityCount(): Int {
         return itemCounts[ITEM_INDEX_ACTIVITY]
     }
 
@@ -204,19 +201,19 @@ class ParcelableActivitiesAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
             ITEM_VIEW_TYPE_STATUS -> {
-                val activity = getActivityInternal(position, raw = false) ?: return
+                val activity = getActivityInternal(true, position)
                 (holder as IStatusViewHolder).display(activity, displayInReplyTo = true)
             }
             ITEM_VIEW_TYPE_TITLE_SUMMARY -> {
-                val activity = getActivityInternal(position, raw = false) ?: return
-                (holder as ActivityTitleSummaryViewHolder).displayActivity(activity)
+                val activity = getActivityInternal(true, position)
+                (holder as ActivityTitleSummaryViewHolder).display(activity)
             }
             ITEM_VIEW_TYPE_STUB -> {
-                val activity = getActivityInternal(position, raw = false) ?: return
-                (holder as StubViewHolder).displayActivity(activity)
+                val activity = getActivityInternal(true, position)
+                (holder as StubViewHolder).display(activity)
             }
             ITEM_VIEW_TYPE_GAP -> {
-                val activity = getActivityInternal(position, raw = false) ?: return
+                val activity = getActivityInternal(true, position)
                 val loading = gapLoadingIds.any { it.accountKey == activity.account_key && it.id == activity.id }
                 (holder as GapViewHolder).display(loading)
             }
@@ -227,24 +224,21 @@ class ParcelableActivitiesAdapter(
         val countIndex = getItemCountIndex(position)
         when (countIndex) {
             ITEM_INDEX_ACTIVITY -> {
-                if (isGapItem(position)) {
-                    return ITEM_VIEW_TYPE_GAP
-                }
-                val action = getAction(position)
-                when (action) {
-                    Action.MENTION, Action.QUOTE, Action.REPLY -> {
-                        return ITEM_VIEW_TYPE_STATUS
-                    }
-                    Action.FOLLOW, Action.FAVORITE, Action.RETWEET,
-                    Action.FAVORITED_RETWEET, Action.RETWEETED_RETWEET,
-                    Action.RETWEETED_MENTION, Action.FAVORITED_MENTION,
-                    Action.LIST_CREATED, Action.LIST_MEMBER_ADDED,
-                    Action.MEDIA_TAGGED, Action.RETWEETED_MEDIA_TAGGED,
-                    Action.FAVORITED_MEDIA_TAGGED, Action.JOINED_TWITTER -> {
-                        return ITEM_VIEW_TYPE_TITLE_SUMMARY
+                val activity = getActivity(position)
+                return when {
+                    activity is PlaceholderObject -> ITEM_VIEW_TYPE_TITLE_SUMMARY
+                    activity.is_gap -> ITEM_VIEW_TYPE_GAP
+                    else -> when (activity.action) {
+                        Action.MENTION, Action.QUOTE, Action.REPLY -> ITEM_VIEW_TYPE_STATUS
+                        Action.FOLLOW, Action.FAVORITE, Action.RETWEET,
+                        Action.FAVORITED_RETWEET, Action.RETWEETED_RETWEET,
+                        Action.RETWEETED_MENTION, Action.FAVORITED_MENTION,
+                        Action.LIST_CREATED, Action.LIST_MEMBER_ADDED,
+                        Action.MEDIA_TAGGED, Action.RETWEETED_MEDIA_TAGGED,
+                        Action.FAVORITED_MEDIA_TAGGED, Action.JOINED_TWITTER -> ITEM_VIEW_TYPE_TITLE_SUMMARY
+                        else -> ITEM_VIEW_TYPE_STUB
                     }
                 }
-                return ITEM_VIEW_TYPE_STUB
             }
             ITEM_INDEX_LOAD_MORE_INDICATOR -> {
                 return ITEM_VIEW_TYPE_LOAD_INDICATOR
@@ -273,40 +267,36 @@ class ParcelableActivitiesAdapter(
         activityClickListener = listener
     }
 
-    fun isActivity(position: Int, raw: Boolean = false): Boolean {
-        return position < getActivityCount(raw)
-    }
-
-    fun findPositionBySortTimestamp(timestamp: Long, raw: Boolean = false): Int {
+    fun findPositionBySortTimestamp(timestamp: Long): Int {
         if (timestamp <= 0) return RecyclerView.NO_POSITION
-        val range = rangeOfSize(activityStartIndex, getActivityCount(raw))
+        val range = rangeOfSize(activityStartIndex, getActivityCount())
         if (range.isEmpty()) return RecyclerView.NO_POSITION
-        if (timestamp < getTimestamp(range.last, raw)) {
+        if (timestamp < getTimestamp(range.last)) {
             return range.last
         }
-        return range.indexOfFirst { timestamp >= getTimestamp(it, raw) }
+        return range.indexOfFirst { timestamp >= getTimestamp(it) }
     }
 
-    fun getTimestamp(adapterPosition: Int, raw: Boolean = false): Long {
-        return getActivity(adapterPosition, raw).timestamp
+    fun getTimestamp(adapterPosition: Int): Long {
+        return getActivity(adapterPosition).timestamp
     }
 
-    fun getAction(adapterPosition: Int, raw: Boolean = false): String? {
-        return getActivity(adapterPosition, raw).action
+    fun getRowId(adapterPosition: Int): Long {
+        return getActivity(adapterPosition)._id
     }
 
-    fun getRowId(adapterPosition: Int, raw: Boolean = false): Long {
-        return getActivity(adapterPosition, raw)._id
-    }
-
-    private fun getActivityInternal(position: Int, raw: Boolean): ParcelableActivity? {
+    private fun getActivityInternal(loadAround: Boolean = false, position: Int): ParcelableActivity {
         val dataPosition = position - activityStartIndex
-        val activityCount = getActivityCount(raw)
+        val activityCount = getActivityCount()
         if (dataPosition < 0 || dataPosition >= activityCount) {
-            val validRange = rangeOfSize(activityStartIndex, getActivityCount(raw))
+            val validRange = rangeOfSize(activityStartIndex, getActivityCount())
             throw IndexOutOfBoundsException("index: $position, valid range is $validRange")
         }
-        return activities?.get(dataPosition)
+        return if (loadAround) {
+            pagedActivitiesHelper.getItem(dataPosition)
+        } else {
+            pagedActivitiesHelper.currentList?.get(dataPosition)
+        } ?: ParcelableActivityPlaceholder
     }
 
     interface ActivityAdapterListener {
@@ -340,7 +330,7 @@ class ParcelableActivitiesAdapter(
         }
 
         @SuppressLint("SetTextI18n")
-        fun displayActivity(activity: ParcelableActivity) {
+        fun display(activity: ParcelableActivity) {
             text1.text = text1.resources.getString(R.string.unsupported_activity_action_title,
                     activity.action)
             text2.text = "host: ${activity.account_key.host}, id: ${activity.id}\n"

@@ -22,7 +22,7 @@ package org.mariotaku.twidere.model.placeholder
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.UserKey
 
-object ParcelableActivityPlaceholder : ParcelableActivity() {
+object ParcelableActivityPlaceholder : ParcelableActivity(), PlaceholderObject {
     init {
         id = "none"
         account_key = UserKey.INVALID

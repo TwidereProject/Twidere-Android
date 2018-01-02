@@ -24,8 +24,6 @@ import org.mariotaku.twidere.view.holder.GapViewHolder
 
 interface IGapSupportedAdapter {
 
-    fun isGapItem(position: Int): Boolean
-
     fun addGapLoadingId(id: ObjectId<String>)
 
     fun removeGapLoadingId(id: ObjectId<String>)

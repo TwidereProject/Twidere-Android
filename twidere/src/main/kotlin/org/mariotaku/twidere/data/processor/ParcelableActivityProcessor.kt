@@ -21,7 +21,6 @@ package org.mariotaku.twidere.data.processor
 
 import android.content.ContentResolver
 import org.mariotaku.ktextension.isNullOrEmpty
-import org.mariotaku.microblog.library.model.twitter.Activity.Action
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.UserKey
@@ -32,8 +31,7 @@ import org.mariotaku.twidere.util.getFilteredUserKeys
 
 class ParcelableActivityProcessor(
         @FilterScope val filterScope: Int,
-        val followingOnly: Boolean,
-        val mentionsOnly: Boolean
+        val followingOnly: Boolean
 ) : DataSourceItemProcessor<ParcelableActivity> {
     private var filteredUserKeys: Array<UserKey>? = null
     private var filteredNameKeywords: Array<String>? = null
@@ -48,12 +46,13 @@ class ParcelableActivityProcessor(
     override fun invalidate() {
     }
 
-    override fun process(obj: ParcelableActivity): ParcelableActivity? {
-        if (mentionsOnly && obj.action !in Action.MENTION_ACTIONS) return null
+    override fun process(obj: ParcelableActivity): ParcelableActivity {
         val sources = ParcelableActivityUtils.filterSources(obj.sources_lite, filteredUserKeys,
                 filteredNameKeywords, filteredDescriptionKeywords, followingOnly)
         obj.after_filtered_sources = sources
-        if (sources.isNullOrEmpty()) return null
+        if (sources.isNullOrEmpty()) {
+            obj.is_filtered = true
+        }
         return obj
     }
 

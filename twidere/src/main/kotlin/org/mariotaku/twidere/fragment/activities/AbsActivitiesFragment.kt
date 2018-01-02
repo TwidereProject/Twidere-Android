@@ -322,9 +322,9 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
     @CallSuper
     protected open fun saveReadPosition(position: Int) {
         if (host == null) return
-        if (position == RecyclerView.NO_POSITION || adapter.getActivityCount(false) <= 0) return
+        if (position == RecyclerView.NO_POSITION || adapter.getActivityCount() <= 0) return
         val status = adapter.getActivity(position.coerceIn(rangeOfSize(adapter.activityStartIndex,
-                adapter.getActivityCount(false))))
+                adapter.getActivityCount())))
         val readPosition = if (isStandalone) {
             status.sort_id
         } else {
@@ -374,7 +374,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
 
     private fun getFullActivity(position: Int): ParcelableActivity {
         if (isStandalone) {
-            return adapter.getActivity(position, false)
+            return adapter.getActivity(position)
         }
         val _id = adapter.getRowId(position)
         val where = Expression.equals(Activities._ID, _id).sql

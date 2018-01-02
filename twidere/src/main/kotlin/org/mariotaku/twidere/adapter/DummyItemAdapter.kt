@@ -158,10 +158,6 @@ class DummyItemAdapter(
         return false
     }
 
-    override fun isGapItem(position: Int): Boolean {
-        return false
-    }
-
     override fun addGapLoadingId(id: ObjectId<String>) {
 
     }

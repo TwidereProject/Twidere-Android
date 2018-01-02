@@ -21,12 +21,14 @@ package org.mariotaku.twidere.fragment.activities
 
 import android.net.Uri
 import android.os.Bundle
+import org.mariotaku.microblog.library.model.twitter.Activity
+import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_EXTRAS
-import org.mariotaku.twidere.data.processor.ParcelableActivityProcessor
 import org.mariotaku.twidere.data.processor.DataSourceItemProcessor
+import org.mariotaku.twidere.data.processor.ParcelableActivityProcessor
 import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.promise
 import org.mariotaku.twidere.model.ParcelableActivity
@@ -60,12 +62,19 @@ class InteractionsActivitiesFragment : AbsActivitiesFragment() {
     override fun onCreateCursorObjectProcessor(): DataSourceItemProcessor<ParcelableActivity> {
         val extras: InteractionsTabExtras? = arguments!!.getParcelable(EXTRA_EXTRAS)
         var followingOnly = false
-        var mentionsOnly = false
         if (extras != null) {
             followingOnly = extras.isMyFollowingOnly
-            mentionsOnly = extras.isMentionsOnly
         }
-        return ParcelableActivityProcessor(filterScope, followingOnly, mentionsOnly)
+        return ParcelableActivityProcessor(filterScope, followingOnly)
+    }
+
+    override fun getExtraSelection(): Pair<Expression, Array<String>?>? {
+        val extras: InteractionsTabExtras? = arguments!!.getParcelable(EXTRA_EXTRAS)
+        if (extras?.isMentionsOnly == true) {
+            val actions = Activity.Action.MENTION_ACTIONS
+            return Pair(Expression.inArgs(Activities.ACTION, actions.size), actions)
+        }
+        return super.getExtraSelection()
     }
 
     companion object {
