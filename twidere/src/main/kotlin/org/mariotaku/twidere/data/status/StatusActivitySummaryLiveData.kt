@@ -38,7 +38,7 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.provider.TwidereDataStore
+import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.updateStatusInfo
 
@@ -62,19 +62,19 @@ class StatusActivitySummaryLiveData(val context: Context) : ComputableExceptionL
             twitter.getActivitySummary(statusId, account)
         }
         val countValues = ContentValues()
-        countValues.put(TwidereDataStore.Statuses.REPLY_COUNT, activitySummary.replyCount)
-        countValues.put(TwidereDataStore.Statuses.FAVORITE_COUNT, activitySummary.favoriteCount)
-        countValues.put(TwidereDataStore.Statuses.RETWEET_COUNT, activitySummary.retweetCount)
+        countValues.put(Statuses.REPLY_COUNT, activitySummary.replyCount)
+        countValues.put(Statuses.FAVORITE_COUNT, activitySummary.favoriteCount)
+        countValues.put(Statuses.RETWEET_COUNT, activitySummary.retweetCount)
 
         val cr = context.contentResolver
         val statusWhere = Expression.and(
-                Expression.equalsArgs(TwidereDataStore.Statuses.ACCOUNT_KEY),
+                Expression.equalsArgs(Statuses.ACCOUNT_KEY),
                 Expression.or(
-                        Expression.equalsArgs(TwidereDataStore.Statuses.ID),
-                        Expression.equalsArgs(TwidereDataStore.Statuses.RETWEET_ID)))
+                        Expression.equalsArgs(Statuses.ID),
+                        Expression.equalsArgs(Statuses.RETWEET_ID)))
         val statusWhereArgs = arrayOf(accountKey.toString(), statusId, statusId)
-        cr.update(TwidereDataStore.Statuses.HomeTimeline.CONTENT_URI, countValues, statusWhere.sql, statusWhereArgs)
-        cr.updateStatusInfo(DataStoreUtils.STATUSES_ACTIVITIES_URIS, TwidereDataStore.Statuses.COLUMNS,
+        cr.update(Statuses.HomeTimeline.CONTENT_URI, countValues, statusWhere.sql, statusWhereArgs)
+        cr.updateStatusInfo(DataStoreUtils.STATUSES_ACTIVITIES_URIS, Statuses.COLUMNS,
                 accountKey, statusId, ParcelableStatus::class.java) { item ->
             item.favorite_count = activitySummary.favoriteCount
             item.reply_count = activitySummary.replyCount
@@ -104,6 +104,7 @@ class StatusActivitySummaryLiveData(val context: Context) : ComputableExceptionL
         val relatedUsers = (getRetweetedBy(statusId, paging) + getFavoritedBy(statusId, paging))
                 .filterNot { DataStoreUtils.isFilteringUser(context, it.key) }
                 .map { it.toParcelable(account) }
+                .distinctBy(ParcelableUser::key)
 
         val result = StatusActivity(statusId, relatedUsers)
 
