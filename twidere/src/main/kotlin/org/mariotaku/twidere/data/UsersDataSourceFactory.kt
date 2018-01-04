@@ -29,20 +29,19 @@ import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.microblog.library.StatusNet
 import org.mariotaku.microblog.library.Twitter
 import org.mariotaku.microblog.library.model.Paging
+import org.mariotaku.microblog.library.model.microblog.CursorSupport
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.data.fetcher.UsersFetcher
 import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.extension.getDetailsOrThrow
+import org.mariotaku.twidere.extension.model.api.mastodon.mapToPaginated
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.pagination.PaginatedArrayList
-import org.mariotaku.twidere.model.pagination.PaginatedList
-import org.mariotaku.twidere.model.pagination.Pagination
-import org.mariotaku.twidere.model.pagination.SinceMaxPagination
+import org.mariotaku.twidere.model.pagination.*
 
 class UsersDataSourceFactory(
         private val context: Context,
@@ -108,17 +107,17 @@ class UsersDataSourceFactory(
                 AccountType.TWITTER -> {
                     val twitter = account.newMicroBlogInstance(context, Twitter::class.java)
                     val timeline = fetcher.forTwitter(account, twitter, paging)
-                    return timeline.mapToPaginated { it.toParcelable(account, profileImageSize = profileImageSize) }
+                    return timeline.map1 { it.toParcelable(account, profileImageSize = profileImageSize) }
                 }
                 AccountType.STATUSNET -> {
                     val statusnet = account.newMicroBlogInstance(context, StatusNet::class.java)
                     val timeline = fetcher.forStatusNet(account, statusnet, paging)
-                    return timeline.mapToPaginated { it.toParcelable(account, profileImageSize = profileImageSize) }
+                    return timeline.map1 { it.toParcelable(account, profileImageSize = profileImageSize) }
                 }
                 AccountType.FANFOU -> {
                     val fanfou = account.newMicroBlogInstance(context, Fanfou::class.java)
                     val timeline = fetcher.forFanfou(account, fanfou, paging)
-                    return timeline.mapToPaginated { it.toParcelable(account, profileImageSize = profileImageSize) }
+                    return timeline.map1 { it.toParcelable(account, profileImageSize = profileImageSize) }
                 }
                 AccountType.MASTODON -> {
                     val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
@@ -129,15 +128,25 @@ class UsersDataSourceFactory(
             }
         }
 
-        private fun <T> List<T>.mapToPaginated(transform: (T) -> ParcelableUser) = mapTo(PaginatedArrayList(), transform).apply {
-            val first = firstOrNull()
-            if (first != null) {
-                previousPage = SinceMaxPagination.sinceId(first.key.id, -1)
+        private fun <T> List<T>.map1(transform: (T) -> ParcelableUser): PaginatedArrayList<ParcelableUser> {
+            val mapped = mapTo(PaginatedArrayList(), transform)
+            when (this) {
+                is CursorSupport -> {
+                    mapped.nextPage = CursorPagination.valueOf(nextCursor)
+                    mapped.previousPage = CursorPagination.valueOf(previousCursor)
+                }
+                else -> {
+                    val first = mapped.firstOrNull()
+                    if (first != null) {
+                        mapped.previousPage = SinceMaxPagination.sinceId(first.key.id, -1)
+                    }
+                    val last = mapped.lastOrNull()
+                    if (last != null) {
+                        mapped.nextPage = SinceMaxPagination.maxId(last.key.id, -1)
+                    }
+                }
             }
-            val last = lastOrNull()
-            if (last != null) {
-                nextPage = SinceMaxPagination.maxId(last.key.id, -1)
-            }
+            return mapped
         }
 
     }

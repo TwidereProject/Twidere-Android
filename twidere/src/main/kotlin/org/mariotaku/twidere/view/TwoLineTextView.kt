@@ -28,6 +28,7 @@ import android.text.style.TextAppearanceSpan
 import android.util.AttributeSet
 import android.util.TypedValue
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.extension.text.appendCompat
 import org.mariotaku.twidere.model.theme.TextAppearance
 import org.mariotaku.twidere.text.style.PlaceholderLineSpan
 
@@ -95,7 +96,11 @@ open class TwoLineTextView(context: Context, attrs: AttributeSet? = null) : Fixe
 
     fun updateText(formatter: BidiFormatter? = null) {
         if (placeholder) {
-            text = placeholderText
+            if (twoLine) {
+                text = placeholderTextTwoLine
+            } else {
+                text = placeholderText
+            }
             return
         }
         val sb = SpannableStringBuilder()
@@ -139,6 +144,11 @@ open class TwoLineTextView(context: Context, attrs: AttributeSet? = null) : Fixe
     companion object {
         private val placeholderText = SpannableString(" ").apply {
             setSpan(PlaceholderLineSpan(0.6f), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+        private val placeholderTextTwoLine = SpannableStringBuilder().apply {
+            appendCompat(" ", PlaceholderLineSpan(0.4f), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            append('\n')
+            appendCompat(" ", PlaceholderLineSpan(0.25f), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
     }
 

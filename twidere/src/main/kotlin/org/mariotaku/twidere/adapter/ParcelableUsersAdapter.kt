@@ -126,7 +126,8 @@ class ParcelableUsersAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
             ITEM_VIEW_TYPE_USER -> {
-                (holder as UserViewHolder).display(getUser(position), obtainState(getUserKey(position)))
+                val user = getUserInternal(loadAround = true, position = position)
+                (holder as UserViewHolder).display(user, obtainState(getUserKey(position)))
             }
         }
     }

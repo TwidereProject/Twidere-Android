@@ -74,7 +74,7 @@ public class CursorPagination implements Pagination, Parcelable {
     };
 
     @Nullable
-    public static CursorPagination valueOf(String cursor) {
+    public static CursorPagination valueOf(@Nullable String cursor) {
         if (cursor == null) return null;
         final CursorPagination pagination = new CursorPagination();
         pagination.cursor = cursor;
