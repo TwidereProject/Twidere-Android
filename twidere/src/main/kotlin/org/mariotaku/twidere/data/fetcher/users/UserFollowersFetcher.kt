@@ -27,6 +27,7 @@ import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.mastodon.Account
 import org.mariotaku.microblog.library.model.mastodon.LinkHeaderList
 import org.mariotaku.microblog.library.model.microblog.User
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.data.fetcher.UsersFetcher
 import org.mariotaku.twidere.exception.RequiredFieldNotFoundException
 import org.mariotaku.twidere.model.AccountDetails
@@ -59,4 +60,7 @@ class UserFollowersFetcher(
         else -> throw RequiredFieldNotFoundException("user_id", "screen_name")
     }
 
+    override fun usePage(account: AccountDetails): Boolean {
+        return account.type == AccountType.FANFOU
+    }
 }

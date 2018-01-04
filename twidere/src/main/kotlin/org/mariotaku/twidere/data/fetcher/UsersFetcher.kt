@@ -43,4 +43,6 @@ interface UsersFetcher {
 
     fun forMastodon(account: AccountDetails, mastodon: Mastodon, paging: Paging): LinkHeaderList<Account>
             = throw APINotSupportedException(account.type)
+
+    fun usePage(account: AccountDetails): Boolean = false
 }

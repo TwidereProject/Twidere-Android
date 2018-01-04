@@ -127,7 +127,7 @@ class ParcelableUsersAdapter(
         when (holder.itemViewType) {
             ITEM_VIEW_TYPE_USER -> {
                 val user = getUserInternal(loadAround = true, position = position)
-                (holder as UserViewHolder).display(user, obtainState(getUserKey(position)))
+                (holder as UserViewHolder).display(user, obtainState(user.key))
             }
         }
     }

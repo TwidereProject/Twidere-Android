@@ -24,6 +24,7 @@ import android.accounts.AccountManager
 import android.arch.paging.DataSource
 import android.arch.paging.PageKeyedDataSource
 import android.content.Context
+import org.mariotaku.ktextension.toIntOr
 import org.mariotaku.microblog.library.Fanfou
 import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.microblog.library.StatusNet
@@ -39,6 +40,7 @@ import org.mariotaku.twidere.extension.model.api.mastodon.mapToPaginated
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.*
@@ -107,17 +109,17 @@ class UsersDataSourceFactory(
                 AccountType.TWITTER -> {
                     val twitter = account.newMicroBlogInstance(context, Twitter::class.java)
                     val timeline = fetcher.forTwitter(account, twitter, paging)
-                    return timeline.map1 { it.toParcelable(account, profileImageSize = profileImageSize) }
+                    return timeline.mapList(account, paging) { it.toParcelable(account, profileImageSize = profileImageSize) }
                 }
                 AccountType.STATUSNET -> {
                     val statusnet = account.newMicroBlogInstance(context, StatusNet::class.java)
                     val timeline = fetcher.forStatusNet(account, statusnet, paging)
-                    return timeline.map1 { it.toParcelable(account, profileImageSize = profileImageSize) }
+                    return timeline.mapList(account, paging) { it.toParcelable(account, profileImageSize = profileImageSize) }
                 }
                 AccountType.FANFOU -> {
                     val fanfou = account.newMicroBlogInstance(context, Fanfou::class.java)
                     val timeline = fetcher.forFanfou(account, fanfou, paging)
-                    return timeline.map1 { it.toParcelable(account, profileImageSize = profileImageSize) }
+                    return timeline.mapList(account, paging) { it.toParcelable(account, profileImageSize = profileImageSize) }
                 }
                 AccountType.MASTODON -> {
                     val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
@@ -128,10 +130,21 @@ class UsersDataSourceFactory(
             }
         }
 
-        private fun <T> List<T>.map1(transform: (T) -> ParcelableUser): PaginatedArrayList<ParcelableUser> {
+        private fun <T> List<T>.mapList(account: AccountDetails, paging: Paging,
+                transform: (T) -> ParcelableUser): PaginatedArrayList<ParcelableUser> {
             val mapped = mapTo(PaginatedArrayList(), transform)
-            when (this) {
-                is CursorSupport -> {
+            when {
+                fetcher.usePage(account) -> {
+                    val page = paging.get("page")?.toString().toIntOr(0)
+                    if (page > 1) {
+                        mapped.previousPage = PagePagination.valueOf(page - 1)
+                        mapped.nextPage = PagePagination.valueOf(page + 1)
+                    } else {
+                        // Initial load
+                        mapped.nextPage = PagePagination.valueOf(2)
+                    }
+                }
+                this is CursorSupport -> {
                     mapped.nextPage = CursorPagination.valueOf(nextCursor)
                     mapped.previousPage = CursorPagination.valueOf(previousCursor)
                 }
