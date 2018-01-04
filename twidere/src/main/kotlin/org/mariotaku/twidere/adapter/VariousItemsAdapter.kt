@@ -73,7 +73,7 @@ class VariousItemsAdapter(
                         displayInReplyTo = true)
             }
             VIEW_TYPE_USER -> {
-                (holder as UserViewHolder).display(obj as ParcelableUser)
+                (holder as UserViewHolder).display(obj as ParcelableUser, null)
             }
             VIEW_TYPE_USER_LIST -> {
                 (holder as UserListViewHolder).display(obj as ParcelableUserList)

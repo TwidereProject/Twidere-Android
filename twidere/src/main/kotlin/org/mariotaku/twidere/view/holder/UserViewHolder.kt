@@ -25,10 +25,12 @@ import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.list_item_user.view.*
+import org.mariotaku.ktextension.`true`
 import org.mariotaku.ktextension.hideIfEmpty
 import org.mariotaku.ktextension.spannable
 import org.mariotaku.ktextension.toString
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.adapter.ParcelableUsersAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.*
 import org.mariotaku.twidere.extension.loadProfileImage
@@ -45,6 +47,8 @@ class UserViewHolder(
         private val simple: Boolean = false,
         private val showFollow: Boolean = false
 ) : ViewHolder(itemView), OnClickListener, OnLongClickListener {
+
+    var showCheckbox: Boolean = false
 
     private val itemContent = itemView.itemContent
     private val profileImageView = itemView.profileImage
@@ -65,6 +69,8 @@ class UserViewHolder(
     private val followButton = itemView.follow
     private val processingRequestProgress = itemView.processingRequest
     private val countsContainer = itemView.countsContainer
+    private val checkBoxSpace = itemView.checkBoxSpace
+    private val checkBox = itemView.checkBox
 
     private var userClickListener: UserClickListener? = null
     private var requestClickListener: RequestClickListener? = null
@@ -80,7 +86,7 @@ class UserViewHolder(
         }
     }
 
-    fun display(user: ParcelableUser) {
+    fun display(user: ParcelableUser, selectionState: ParcelableUsersAdapter.SelectionState? = null) {
         val context = itemView.context
         val manager = adapter.userColorNameManager
 
@@ -160,6 +166,12 @@ class UserViewHolder(
             followersCountView.text = user.followers_count.toString(locale)
             friendsCountView.text = user.friends_count.toString(locale)
         }
+
+        checkBox.setVisible(showCheckbox)
+        checkBoxSpace.setVisible(showCheckbox)
+
+        checkBox.isChecked = selectionState?.checked == `true`
+        checkBox.isEnabled = selectionState?.locked != true
     }
 
     override fun onClick(v: View) {
@@ -204,10 +216,8 @@ class UserViewHolder(
         this.requestClickListener = requestClickListener
         this.friendshipClickListener = friendshipClickListener
         if (requestClickListener != null || friendshipClickListener != null) {
-            nameView.twoLine = true
             processingRequestProgress.visibility = View.VISIBLE
         } else {
-            nameView.twoLine = false
             processingRequestProgress.visibility = View.GONE
         }
         nameView.updateText()
@@ -249,5 +259,11 @@ class UserViewHolder(
             addRule(verb, 0)
         }
     }
+
+    fun toggleChecked(): Boolean {
+        checkBox.toggle()
+        return checkBox.isChecked
+    }
+
 
 }

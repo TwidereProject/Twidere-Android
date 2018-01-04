@@ -32,6 +32,7 @@ import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
+import org.mariotaku.twidere.view.holder.UserViewHolder
 import java.lang.ref.WeakReference
 
 abstract class BaseFiltersImportFragment : AbsUsersFragment() {
@@ -110,6 +111,10 @@ abstract class BaseFiltersImportFragment : AbsUsersFragment() {
 
     override fun onCreateAdapter(context: Context, requestManager: RequestManager): ParcelableUsersAdapter {
         val adapter = super.onCreateAdapter(context, requestManager)
+        adapter.showCheckbox = true
+        adapter.simpleLayout = true
+        adapter.friendshipClickListener = null
+        adapter.requestClickListener = null
         adapter.itemCheckedListener = listener@ { _, _ ->
             if (!extraFeaturesService.isAdvancedFiltersEnabled) {
                 ExtraFeaturesIntroductionDialogFragment.show(fragmentManager!!,
@@ -138,6 +143,15 @@ abstract class BaseFiltersImportFragment : AbsUsersFragment() {
                 adapter.setLockedState(user.key, true)
             }
         }
+    }
+
+    override fun onUserClick(holder: UserViewHolder, position: Int) {
+        if (adapter.isItemLocked(position)) return
+        adapter.setItemChecked(position, holder.toggleChecked())
+    }
+
+    override fun onUserLongClick(holder: UserViewHolder, position: Int): Boolean {
+        return false
     }
 
     private fun performImport(filterEverywhere: Boolean) {

@@ -74,6 +74,7 @@
     <dimen name="icon_size_alert_dialog">32dp</dimen>
     <dimen name="icon_size_card_details">@dimen/element_size_mlarge</dimen>
     <dimen name="icon_size_card_list_item">48dp</dimen>
+    <dimen name="icon_size_user_item">42dp</dimen>
     <dimen name="icon_size_list_item">56dp</dimen>
     <dimen name="icon_size_list_item_small">42dp</dimen>
     <dimen name="icon_size_profile_image_dashboard_current">72dp</dimen>

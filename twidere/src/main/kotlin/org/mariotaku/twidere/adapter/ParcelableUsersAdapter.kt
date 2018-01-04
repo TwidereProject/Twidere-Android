@@ -56,6 +56,7 @@ class ParcelableUsersAdapter(
     override var friendshipClickListener: IUsersAdapter.FriendshipClickListener? = null
     override var simpleLayout: Boolean = false
     override var showFollow: Boolean = false
+    var showCheckbox: Boolean = false
     override val itemCounts: ItemCounts = ItemCounts(3)
 
     var users: PagedList<ParcelableUser>?
@@ -73,9 +74,9 @@ class ParcelableUsersAdapter(
         get() = getItemStartPosition(ITEM_INDEX_USER)
 
     val checkedCount: Int
-        get() = states.count { (_, v) -> !v.locked && v.checked == yes }
+        get() = states.count { (_, v) -> !v.locked && v.checked == `true` }
 
-    private val states: MutableMap<UserKey, UserSelectionState> = ArrayMap()
+    private val states: MutableMap<UserKey, SelectionState> = ArrayMap()
 
     private val inflater = LayoutInflater.from(context)
 
@@ -125,7 +126,7 @@ class ParcelableUsersAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
             ITEM_VIEW_TYPE_USER -> {
-                bindUser(holder as UserViewHolder, position)
+                (holder as UserViewHolder).display(getUser(position), obtainState(getUserKey(position)))
             }
         }
     }
@@ -165,7 +166,7 @@ class ParcelableUsersAdapter(
     fun setItemChecked(position: Int, value: Boolean) {
         val userKey = getUserKey(position)
         setCheckState(userKey, value)
-        if (!(itemCheckedListener?.invoke(position, value) ?: true)) {
+        if (itemCheckedListener?.invoke(position, value) == false) {
             setCheckState(userKey, !value)
             notifyItemChanged(position)
         }
@@ -196,7 +197,7 @@ class ParcelableUsersAdapter(
     }
 
     fun isItemChecked(userKey: UserKey): Boolean {
-        return states[userKey]?.checked == yes
+        return states[userKey]?.checked == `true`
     }
 
     fun isItemLocked(position: Int): Boolean {
@@ -209,12 +210,8 @@ class ParcelableUsersAdapter(
 
     private fun getUserKey(position: Int) = getUser(position).key
 
-    private fun obtainState(userKey: UserKey): UserSelectionState {
-        return states.getOrPut(userKey, { UserSelectionState() })
-    }
-
-    private fun bindUser(holder: UserViewHolder, position: Int) {
-        holder.display(getUser(position))
+    private fun obtainState(userKey: UserKey): SelectionState {
+        return states.getOrPut(userKey, { SelectionState() })
     }
 
     private fun getUserInternal(loadAround: Boolean = false, position: Int,
@@ -234,7 +231,7 @@ class ParcelableUsersAdapter(
         throw IndexOutOfBoundsException("index: $position, valid range is $validStart..$validEnd")
     }
 
-    private data class UserSelectionState(var locked: Boolean = false, var checked: Trilean = unspecified)
+    data class SelectionState(var locked: Boolean = false, var checked: Trilean = unspecified)
 
     companion object {
 
@@ -246,6 +243,9 @@ class ParcelableUsersAdapter(
         fun createUserViewHolder(adapter: IUsersAdapter, inflater: LayoutInflater, parent: ViewGroup): UserViewHolder {
             val view = inflater.inflate(R.layout.list_item_user, parent, false)
             val holder = UserViewHolder(view, adapter, adapter.simpleLayout, adapter.showFollow)
+            if (adapter is ParcelableUsersAdapter) {
+                holder.showCheckbox = adapter.showCheckbox
+            }
             holder.setOnClickListeners()
             holder.setupViewOptions()
             return holder

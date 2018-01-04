@@ -21,8 +21,8 @@ package org.mariotaku.ktextension
 
 typealias Trilean = Byte
 
-const val yes: Trilean = 1
-const val no: Trilean = -1
+const val `true`: Trilean = 1
+const val `false`: Trilean = -1
 const val unspecified: Trilean = 0
 
-inline val Boolean.trilean get() = if (this) yes else no
+inline val Boolean.trilean get() = if (this) `true` else `false`
