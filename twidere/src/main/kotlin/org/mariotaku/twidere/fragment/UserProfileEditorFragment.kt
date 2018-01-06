@@ -25,7 +25,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
-import android.text.TextUtils.isEmpty
 import android.view.*
 import android.view.View.OnClickListener
 import android.widget.ImageView
@@ -33,6 +32,7 @@ import com.twitter.Validator
 import kotlinx.android.synthetic.main.fragment_user_profile_editor.*
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.combine.and
+import nl.komponents.kovenant.ui.alwaysUi
 import org.mariotaku.ktextension.string
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
@@ -43,11 +43,11 @@ import org.mariotaku.twidere.annotation.ImageShapeStyle
 import org.mariotaku.twidere.data.user.UserLiveData
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.data.observe
+import org.mariotaku.twidere.extension.model.expandedDescription
 import org.mariotaku.twidere.extension.model.urlPreferred
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.promise.UserProfilePromises
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.TwitterValidatorMETLengthChecker
@@ -102,9 +102,8 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
             displayUser(savedUser, savedAccount)
             editName.setText(savedInstanceState.getString(EXTRA_NAME, savedUser.name))
             editLocation.setText(savedInstanceState.getString(EXTRA_LOCATION, savedUser.location))
-            editDescription.setText(savedInstanceState.getString(EXTRA_DESCRIPTION,
-                    ParcelableUserUtils.getExpandedDescription(savedUser)))
-            editUrl.setText(savedInstanceState.getString(EXTRA_URL, savedUser.url_expanded))
+            editDescription.setText(savedInstanceState.getString(EXTRA_DESCRIPTION, savedUser.expandedDescription))
+            editUrl.setText(savedInstanceState.getString(EXTRA_URL, savedUser.urlPreferred))
         } else {
             getUserInfo(false)
         }
@@ -168,8 +167,9 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
                         editUrl.string.orEmpty(), editLocation.string.orEmpty(),
                         editDescription.string.orEmpty(), linkColor.color, backgroundColor.color)
                 runningPromise = showProgressDialog(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG)
-                        .and(UserProfilePromises.get(context!!).updateProfile(accountKey, update))
-                        .and(dismissProgressDialog(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG))
+                        .and(UserProfilePromises.get(context!!).updateProfile(accountKey, update)).alwaysUi {
+                    dismissProgressDialog(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG)
+                }
                 return true
             }
         }
@@ -200,22 +200,22 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
                 runningPromise = if (resultCode == RESULT_REMOVE_BANNER) {
                     showProgressDialog(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG)
                             .and(UserProfilePromises.get(context!!).removeBanner(accountKey))
-                            .and(dismissProgressDialog(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG))
+                            .alwaysUi { dismissProgressDialog(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG) }
                 } else {
                     showProgressDialog(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG)
                             .and(UserProfilePromises.get(context!!).updateBanner(accountKey, data.data, true))
-                            .and(dismissProgressDialog(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG))
+                            .alwaysUi { dismissProgressDialog(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG) }
                 }
             }
             REQUEST_UPLOAD_PROFILE_BACKGROUND_IMAGE -> {
                 runningPromise = showProgressDialog(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG)
                         .and(UserProfilePromises.get(context!!).updateBackground(accountKey, data.data, false, true))
-                        .and(dismissProgressDialog(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG))
+                        .alwaysUi { dismissProgressDialog(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG) }
             }
             REQUEST_UPLOAD_PROFILE_IMAGE -> {
                 runningPromise = showProgressDialog(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG)
                         .and(UserProfilePromises.get(context!!).updateProfileImage(accountKey, data.data, true))
-                        .and(dismissProgressDialog(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG))
+                        .alwaysUi { dismissProgressDialog(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG) }
             }
             REQUEST_PICK_LINK_COLOR -> {
                 if (resultCode == Activity.RESULT_OK) {
@@ -249,9 +249,9 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
         progressContainer.visibility = View.GONE
         editProfileContent.visibility = View.VISIBLE
         editName.setText(user.name)
-        editDescription.setText(ParcelableUserUtils.getExpandedDescription(user))
+        editDescription.setText(user.expandedDescription)
         editLocation.setText(user.location)
-        editUrl.setText(if (isEmpty(user.url_expanded)) user.url else user.url_expanded)
+        editUrl.setText(user.urlPreferred)
 
         requestManager.loadProfileImage(activity, user,
                 ImageShapeStyle.SHAPE_RECTANGLE).into(profileImage)
@@ -301,7 +301,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
         if (user.link_color != linkColor.color) return true
         if (user.background_color != backgroundColor.color) return true
         if (user.name != editName.string) return true
-        if (ParcelableUserUtils.getExpandedDescription(user) != editDescription.string) return true
+        if (user.expandedDescription != editDescription.string) return true
         if (user.location != editLocation.string) return true
         if (user.urlPreferred != editUrl.string) return true
         return false

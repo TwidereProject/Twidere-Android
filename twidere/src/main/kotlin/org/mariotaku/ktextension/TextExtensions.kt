@@ -44,3 +44,19 @@ fun Spannable.fixSHY() {
         }
     }
 }
+
+fun String.replaceRangesIndexed(vararg ranges: IntRange, action: (Int, IntRange) -> String): String {
+    val sb = StringBuilder()
+    var start = 0
+    ranges.forEachIndexed { index, range ->
+        if (start < range.start) {
+            sb.append(substring(start, range.start))
+        }
+        sb.append(action(index, range))
+        start = range.endInclusive + 1
+    }
+    if (start < length) {
+        sb.append(substring(start, length))
+    }
+    return sb.toString()
+}

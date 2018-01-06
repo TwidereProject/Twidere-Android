@@ -19,6 +19,8 @@
 
 package org.mariotaku.twidere.extension.model
 
+import org.mariotaku.ktextension.mapToArray
+import org.mariotaku.ktextension.replaceRangesIndexed
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_TWITTER_COM
 import org.mariotaku.twidere.extension.model.api.getUserHost
@@ -119,3 +121,12 @@ inline val ParcelableUser.acct: String
 inline val ParcelableUser.groupsCount: Long get() = extras?.groups_count ?: -1
 
 inline val ParcelableUser.isSelf: Boolean get() = key.maybeEquals(account_key)
+
+val ParcelableUser.expandedDescription: String?
+    get() {
+        val unescaped = description_unescaped ?: description_plain
+        val spans = description_spans ?: return description_plain
+        return unescaped.replaceRangesIndexed(*spans.mapToArray { it.start..it.end }) { index, _ ->
+            spans[index].link
+        }
+    }

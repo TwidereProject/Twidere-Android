@@ -1,7 +1,6 @@
 package org.mariotaku.twidere.model.util
 
 import android.graphics.Color
-import android.text.TextUtils
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.util.UserColorNameManager
@@ -33,13 +32,4 @@ object ParcelableUserUtils {
         user.nickname = manager.getUserNickname(user.key)
     }
 
-    fun getExpandedDescription(user: ParcelableUser): String {
-        if (TextUtils.isEmpty(user.description_unescaped)) {
-            return user.description_plain
-        }
-        if (user.description_spans != null) {
-            // TODO expand description
-        }
-        return user.description_unescaped
-    }
 }
