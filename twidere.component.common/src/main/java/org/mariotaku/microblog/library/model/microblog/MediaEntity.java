@@ -38,8 +38,8 @@ import java.util.Map;
 @ParcelablePlease
 @JsonObject
 public class MediaEntity extends UrlEntity implements Parcelable {
-    @JsonField(name = "id")
-    long id;
+    @JsonField(name = {"id_str", "id"})
+    protected String id;
 
     @JsonField(name = "indices", typeConverter = IndicesConverter.class)
     Indices indices;
@@ -125,7 +125,7 @@ public class MediaEntity extends UrlEntity implements Parcelable {
         return indices.getStart();
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 

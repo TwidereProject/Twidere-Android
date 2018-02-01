@@ -35,6 +35,7 @@ import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.microblog.DMResponse
 import org.mariotaku.microblog.library.model.microblog.DMResponse.Conversation
 import org.mariotaku.microblog.library.model.microblog.DirectMessage
+import org.mariotaku.microblog.library.model.twitter.dm.DirectMessageEvent
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_SHOW_NOTIFICATION
@@ -105,6 +106,7 @@ class GetMessagesTask(
                 if (details.isOfficial(context)) {
                     return getTwitterOfficialMessages(twitter, details, param, index)
                 }
+//                getTwitterMessages(twitter, details, param, index)
             }
         }
         // Use default method
@@ -140,34 +142,19 @@ class GetMessagesTask(
         val sincePagination = param.pagination?.get(accountsCount + index) as? SinceMaxPagination
 
         val firstFetch by lazy {
-            val noConversationsBefore = context.contentResolver.queryCount(Conversations.CONTENT_URI,
+            return@lazy context.contentResolver.queryCount(Conversations.CONTENT_URI,
                     Expression.equalsArgs(Conversations.ACCOUNT_KEY).sql, arrayOf(accountKey.toString())) <= 0
-            return@lazy noConversationsBefore
         }
 
         val updateLastRead = param.hasMaxIds || firstFetch
 
         val received = microBlog.getDirectMessages(Paging().apply {
             count(100)
-            val maxId = receivedPagination?.maxId
-            val sinceId = receivedPagination?.sinceId
-            if (maxId != null) {
-                maxId(maxId)
-            }
-            if (sinceId != null) {
-                sinceId(sinceId)
-            }
+            receivedPagination?.applyTo(this)
         })
         val sent = microBlog.getSentDirectMessages(Paging().apply {
             count(100)
-            val maxId = sincePagination?.maxId
-            val sinceId = sincePagination?.sinceId
-            if (maxId != null) {
-                maxId(maxId)
-            }
-            if (sinceId != null) {
-                sinceId(sinceId)
-            }
+            sincePagination?.applyTo(this)
         })
 
 
@@ -191,6 +178,50 @@ class GetMessagesTask(
         sent.forEachIndexed { i, dm ->
             addConversationMessage(insertMessages, conversations, details, dm, i, sent.size,
                     true, profileImageSize, updateLastRead)
+        }
+
+        return DatabaseUpdateData(conversations.values, insertMessages)
+    }
+
+
+    private fun getTwitterMessages(twitter: Twitter, details: AccountDetails,
+            param: RefreshMessagesParam, index: Int): DatabaseUpdateData {
+        val accountKey = details.key
+
+        val receivedPagination = param.pagination?.get(index) as? CursorPagination
+
+        val firstFetch by lazy {
+            return@lazy context.contentResolver.queryCount(Conversations.CONTENT_URI,
+                    Expression.equalsArgs(Conversations.ACCOUNT_KEY).sql, arrayOf(accountKey.toString())) <= 0
+        }
+
+        val updateLastRead = param.hasMaxIds || firstFetch
+
+        val events = twitter.getDirectMessageEvents(Paging().apply {
+            count(50)
+            receivedPagination?.applyTo(this)
+        }).events
+
+
+        val insertMessages = arrayListOf<ParcelableMessage>()
+        val conversations = hashMapOf<String, ParcelableMessageConversation>()
+
+        val conversationIds = hashSetOf<String>()
+        val users = twitter.lookupUsers(events.flatMap {
+            val mc = it.messageCreate ?: return@flatMap emptyList<String>()
+            return@flatMap listOf(mc.senderId, mc.target.recipientId)
+        }.distinct().toTypedArray())
+
+        events.forEach { event ->
+            val msg = event.messageCreate
+            conversationIds.add(ParcelableMessageUtils.incomingConversationId(msg.senderId, msg.target.recipientId))
+        }
+
+        conversations.addLocalConversations(context, accountKey, conversationIds)
+
+        events.forEachIndexed { i, dm ->
+            //            addConversationMessage(insertMessages, conversations, details, dm, i, events.size,
+//                    false, profileImageSize, updateLastRead)
         }
 
         return DatabaseUpdateData(conversations.values, insertMessages)
@@ -364,7 +395,6 @@ class GetMessagesTask(
     }
 
     companion object {
-        private const val KEY_FIRST_FETCH = "state_first_fetch_direct_messages"
 
         private val getMessageTasks = mutableSetOf<Uri>()
 
@@ -600,6 +630,25 @@ class GetMessagesTask(
             if (conversation.conversation_extras == null) {
                 conversation.conversation_extras = DefaultConversationExtras()
             }
+        }
+
+        internal fun addConversationMessage(messages: MutableCollection<ParcelableMessage>,
+                conversations: MutableMap<String, ParcelableMessageConversation>,
+                details: AccountDetails, dm: DirectMessageEvent.MessageCreate, index: Int, size: Int,
+                outgoing: Boolean, profileImageSize: String = "normal", updateLastRead: Boolean) {
+            val accountKey = details.key
+            val accountType = details.type
+//            val message = ParcelableMessageUtils.fromMessage(accountKey, dm, outgoing,
+//                    1.0 - (index.toDouble() / size))
+//            messages.add(message)
+//            val sender = dm.sender.toParcelable(accountKey, accountType, profileImageSize = profileImageSize)
+//            val recipient = dm.recipient.toParcelable(accountKey, accountType, profileImageSize = profileImageSize)
+//            val conversation = conversations.addConversation(message.conversation_id, details,
+//                    message, setOf(sender, recipient), updateLastRead = updateLastRead) ?: return
+//            conversation.conversation_extras_type = ParcelableMessageConversation.ExtrasType.DEFAULT
+//            if (conversation.conversation_extras == null) {
+//                conversation.conversation_extras = DefaultConversationExtras()
+//            }
         }
     }
 

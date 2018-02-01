@@ -106,7 +106,8 @@ inline val ParcelableUser.originalProfileImage: String?
                 ?: Utils.getOriginalTwitterProfileImage(profile_image_url)
     }
 
-inline val ParcelableUser.urlPreferred: String? get() = url_expanded?.takeIf(String::isNotEmpty) ?: url
+inline val ParcelableUser.urlFull: String? get() = url_expanded?.takeIf(String::isNotEmpty) ?: url
+inline val ParcelableUser.urlDisplay: String? get() = extras?.url_display ?: urlFull
 
 inline val ParcelableUser.acct: String
     get() {

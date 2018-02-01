@@ -36,6 +36,7 @@ import org.mariotaku.twidere.adapter.iface.IUsersAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.*
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.hasSameHost
+import org.mariotaku.twidere.extension.model.urlDisplay
 import org.mariotaku.twidere.extension.setVisible
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.placeholder.PlaceholderObject
@@ -169,7 +170,7 @@ class UserViewHolder(
             descriptionView.hideIfEmpty()
             locationView.spannable = user.location
             locationView.hideIfEmpty()
-            urlView.spannable = user.url_expanded
+            urlView.spannable = user.urlDisplay
             urlView.hideIfEmpty()
             val locale = Locale.getDefault()
             statusesCountView.text = user.statuses_count.toString(locale)

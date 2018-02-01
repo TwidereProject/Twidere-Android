@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.extension.model.api
 
 import android.text.TextUtils
-import org.mariotaku.ktextension.isNotNullOrEmpty
 import org.mariotaku.microblog.library.model.microblog.User
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_TWITTER_COM
@@ -84,9 +83,8 @@ fun User.toParcelableInternal(accountKey: UserKey?, @AccountType accountType: St
         obj.profile_background_url = profileBackgroundImageUrl
     }
     obj.url = url
-    if (obj.url != null && urlEntities.isNotNullOrEmpty()) {
-        obj.url_expanded = urlEntities[0].expandedUrl
-    }
+    val urlEntity = urlEntities?.find { it.url == url }
+    obj.url_expanded = urlEntity?.expandedUrl
     obj.is_follow_request_sent = isFollowRequestSent == true
     obj.followers_count = followersCount
     obj.friends_count = friendsCount
@@ -103,6 +101,7 @@ fun User.toParcelableInternal(accountKey: UserKey?, @AccountType accountType: St
     obj.is_basic = false
 
     val extras = ParcelableUser.Extras()
+    extras.url_display = urlEntity?.displayUrl
     extras.ostatus_uri = ostatusUri
     extras.blocking = isBlocking == true
     extras.blocked_by = isBlockedBy == true

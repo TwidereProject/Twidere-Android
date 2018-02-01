@@ -19,22 +19,20 @@
 
 package org.mariotaku.twidere.extension.model.api
 
-import org.mariotaku.microblog.library.model.microblog.DirectMessageEventObject
-import org.mariotaku.microblog.library.model.microblog.DirectMessageEventObject.Event
-import org.mariotaku.microblog.library.model.microblog.DirectMessageEventObject.Event.MessageCreate
+import org.mariotaku.microblog.library.model.twitter.dm.DirectMessageEvent
+import org.mariotaku.microblog.library.model.twitter.dm.DirectMessageEvent.MessageCreate
+import org.mariotaku.microblog.library.model.twitter.dm.DirectMessageEventObject
+import org.mariotaku.microblog.library.model.twitter.dm.Attachment
 
-/**
- * Created by mariotaku on 2017/5/11.
- */
-fun DirectMessageEventObject(action: Event.() -> Unit): DirectMessageEventObject {
+fun DirectMessageEventObject(action: DirectMessageEvent.() -> Unit): DirectMessageEventObject {
     val obj = DirectMessageEventObject()
-    val event = Event()
+    val event = DirectMessageEvent()
     action(event)
     obj.event = event
     return obj
 }
 
-fun Event.messageCreate(action: MessageCreate.() -> Unit) {
+fun DirectMessageEvent.messageCreate(action: MessageCreate.() -> Unit) {
     val messageCreate = MessageCreate()
     action(messageCreate)
     this.messageCreate = messageCreate
@@ -52,14 +50,14 @@ fun MessageCreate.messageData(action: MessageCreate.MessageData.() -> Unit) {
     this.messageData = messageData
 }
 
-fun MessageCreate.MessageData.attachment(action: MessageCreate.MessageData.Attachment.() -> Unit) {
-    val attachment = MessageCreate.MessageData.Attachment()
+fun MessageCreate.MessageData.attachment(action: Attachment.() -> Unit) {
+    val attachment = Attachment()
     action(attachment)
     this.attachment = attachment
 }
 
-fun MessageCreate.MessageData.Attachment.media(action: MessageCreate.MessageData.Attachment.Media.() -> Unit) {
-    val media = MessageCreate.MessageData.Attachment.Media()
+fun Attachment.media(action: Attachment.Media.() -> Unit) {
+    val media = Attachment.Media()
     action(media)
     this.media = media
 }

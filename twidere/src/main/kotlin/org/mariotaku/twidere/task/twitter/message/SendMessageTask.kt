@@ -24,7 +24,7 @@ import org.mariotaku.ktextension.isNotNullOrEmpty
 import org.mariotaku.microblog.library.*
 import org.mariotaku.microblog.library.annotation.twitter.MediaCategory
 import org.mariotaku.microblog.library.model.microblog.DirectMessage
-import org.mariotaku.microblog.library.model.twitter.NewDm
+import org.mariotaku.microblog.library.model.twitter.dm.NewDm
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType

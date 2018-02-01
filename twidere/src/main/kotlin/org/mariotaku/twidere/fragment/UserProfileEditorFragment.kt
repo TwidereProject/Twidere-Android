@@ -44,7 +44,7 @@ import org.mariotaku.twidere.data.user.UserLiveData
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.data.observe
 import org.mariotaku.twidere.extension.model.expandedDescription
-import org.mariotaku.twidere.extension.model.urlPreferred
+import org.mariotaku.twidere.extension.model.urlFull
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
@@ -103,7 +103,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
             editName.setText(savedInstanceState.getString(EXTRA_NAME, savedUser.name))
             editLocation.setText(savedInstanceState.getString(EXTRA_LOCATION, savedUser.location))
             editDescription.setText(savedInstanceState.getString(EXTRA_DESCRIPTION, savedUser.expandedDescription))
-            editUrl.setText(savedInstanceState.getString(EXTRA_URL, savedUser.urlPreferred))
+            editUrl.setText(savedInstanceState.getString(EXTRA_URL, savedUser.urlFull))
         } else {
             getUserInfo(false)
         }
@@ -251,7 +251,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
         editName.setText(user.name)
         editDescription.setText(user.expandedDescription)
         editLocation.setText(user.location)
-        editUrl.setText(user.urlPreferred)
+        editUrl.setText(user.urlFull)
 
         requestManager.loadProfileImage(activity, user,
                 ImageShapeStyle.SHAPE_RECTANGLE).into(profileImage)
@@ -303,7 +303,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
         if (user.name != editName.string) return true
         if (user.expandedDescription != editDescription.string) return true
         if (user.location != editLocation.string) return true
-        if (user.urlPreferred != editUrl.string) return true
+        if (user.urlFull != editUrl.string) return true
         return false
     }
 

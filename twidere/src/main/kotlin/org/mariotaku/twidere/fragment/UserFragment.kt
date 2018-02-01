@@ -862,7 +862,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 IntentUtils.openProfileEditor(context, accountKey)
             }
             R.id.url -> {
-                val uri = user.urlPreferred?.let(Uri::parse) ?: return
+                val uri = user.urlFull?.let(Uri::parse) ?: return
                 OnLinkClickHandler.openLink(context, preferences, uri)
             }
             R.id.profileBirthdayBanner -> {
@@ -1164,7 +1164,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         location.spannable = user.location
         location.hideIfEmpty()
 
-        url.spannable = user.urlPreferred?.let {
+        url.spannable = user.urlDisplay?.let {
             val ssb = SpannableStringBuilder(it)
             ssb.setSpan(TwidereURLSpan(it, highlightStyle = linkHighlightOption), 0, ssb.length,
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)

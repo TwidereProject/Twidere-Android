@@ -23,7 +23,7 @@ import android.support.annotation.Nullable;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.model.microblog.ConversationTimeline;
 import org.mariotaku.microblog.library.model.microblog.DMResponse;
-import org.mariotaku.microblog.library.model.twitter.NewDm;
+import org.mariotaku.microblog.library.model.twitter.dm.NewDm;
 import org.mariotaku.microblog.library.model.Paging;
 import org.mariotaku.microblog.library.model.microblog.ResponseCode;
 import org.mariotaku.microblog.library.model.microblog.UserEvents;

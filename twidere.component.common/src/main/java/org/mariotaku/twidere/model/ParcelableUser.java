@@ -365,6 +365,9 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
         @JsonField(name = "pinned_status_ids")
         @ParcelableThisPlease
         public String[] pinned_status_ids;
+        @JsonField(name = "url_display")
+        @ParcelableThisPlease
+        public String url_display;
 
 
         @Override

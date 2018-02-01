@@ -1,7 +1,7 @@
 /*
  *         Twidere - Twitter client for Android
  *
- * Copyright 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
+ * Copyright 2012-2018 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,11 @@
  * limitations under the License.
  */
 
-package org.mariotaku.microblog.library.model.twitter;
+package org.mariotaku.microblog.library.model.twitter.dm;
 
 import org.mariotaku.microblog.library.util.InternalArrayUtil;
 import org.mariotaku.restfu.http.SimpleValueMap;
 
-/**
- * Created by mariotaku on 16/3/1.
- */
 public class NewDm extends SimpleValueMap {
 
     public void setText(String text) {
