@@ -757,11 +757,11 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
     inner class CustomDownloadListener : DownloadListener()
     {
         override fun onDownloadJson(handle: Int, vararg emojiNames: String?) {
-            textView.setText(Emojidex.getInstance().emojify(textView.getText(), true, true, null, false))
+            textView.setText(Emojidex.getInstance().emojify(textView.getText(), null, false))
         }
 
-        override fun onDownloadImage(handle: Int, emojiName: String?, format: EmojiFormat?) {
-            textView.setText(Emojidex.getInstance().emojify(textView.getText(), true, true, null, false))
+        override fun onDownloadImages(handle: Int, format: EmojiFormat?, vararg emojiNames: String?) {
+            textView.setText(Emojidex.getInstance().emojify(textView.getText(), null, false))
         }
     }
 }
