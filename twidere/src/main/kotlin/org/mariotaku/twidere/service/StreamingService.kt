@@ -38,7 +38,6 @@ import org.mariotaku.twidere.extension.queryCount
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.notification.NotificationChannelSpec
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
-import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
@@ -288,13 +287,14 @@ class StreamingService : BaseService() {
                 } else {
                     parcelableStatus.position_key = parcelableStatus.timestamp
                 }
+                parcelableStatus.inserted_date = currentTimeMillis
 
                 lastStatusTimestamps[0] = parcelableStatus.position_key
-                lastStatusTimestamps[1] = currentTimeMillis
+                lastStatusTimestamps[1] = parcelableStatus.inserted_date
 
                 val values = ObjectCursor.valuesCreatorFrom(ParcelableStatus::class.java)
                         .create(parcelableStatus)
-                context.contentResolver.insert(Statuses.HomeTimeline.CONTENT_URI, values)
+                context.contentResolver.insert(Statuses.CONTENT_URI, values)
                 homeInsertGap = false
                 return true
             }
@@ -404,7 +404,7 @@ class StreamingService : BaseService() {
                 val deleteWhere = Expression.and(Expression.likeRaw(Columns.Column(Statuses.ACCOUNT_KEY), "'%@'||?"),
                         Expression.equalsArgs(Columns.Column(Statuses.ID))).sql
                 val deleteWhereArgs = arrayOf(account.key.host, event.id)
-                context.contentResolver.delete(Statuses.HomeTimeline.CONTENT_URI, deleteWhere, deleteWhereArgs)
+                context.contentResolver.delete(Statuses.CONTENT_URI, deleteWhere, deleteWhereArgs)
                 return true
             }
 
@@ -425,7 +425,7 @@ class StreamingService : BaseService() {
             @UiThread
             private fun getInteractions() {
                 val task = GetActivitiesAboutMeTask(context)
-                task.params = object : ContentRefreshParam {
+                task.params = object : RefreshTaskParam {
                     override val accountKeys: Array<UserKey> = arrayOf(account.key)
 
                     override val pagination by lazy {
@@ -446,7 +446,7 @@ class StreamingService : BaseService() {
             @UiThread
             private fun getMessages() {
                 val task = GetMessagesTask(context)
-                task.params = object : GetMessagesTask.RefreshMessagesParam(context) {
+                task.params = object : GetMessagesTask.RefreshMessagesTaskParam(context) {
                     override val accountKeys: Array<UserKey> = arrayOf(account.key)
                 }
                 TaskStarter.execute(task)

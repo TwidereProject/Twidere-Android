@@ -23,7 +23,6 @@ import android.annotation.TargetApi;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -173,7 +172,7 @@ public final class ViewSupport {
             view.setClipToOutline(clipToOutline);
         }
 
-        public static void setOutlineProvider(View view, @Nullable ViewOutlineProviderCompat outlineProvider) {
+        public static void setOutlineProvider(View view, ViewOutlineProviderCompat outlineProvider) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
             view.setOutlineProvider(new ViewOutlineProviderCompat.ViewOutlineProviderL(outlineProvider));
         }

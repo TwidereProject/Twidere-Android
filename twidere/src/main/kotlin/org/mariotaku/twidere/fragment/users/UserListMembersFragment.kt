@@ -31,10 +31,9 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.nameFirstKey
-import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.fragment.DeleteUserListMembersDialogFragment
 import org.mariotaku.twidere.fragment.ParcelableUsersFragment
-import org.mariotaku.twidere.fragment.userlist.UserListFragment
+import org.mariotaku.twidere.fragment.UserListFragment
 import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
 import org.mariotaku.twidere.loader.users.UserListMembersLoader
 import org.mariotaku.twidere.model.ParcelableUserList
@@ -58,7 +57,6 @@ class UserListMembersFragment : ParcelableUsersFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        linkHandlerTitle = getString(R.string.list_members)
         registerForContextMenu(recyclerView)
     }
 

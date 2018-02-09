@@ -64,7 +64,7 @@ import org.mariotaku.twidere.model.util.ParcelableStatusUpdateUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.task.CreateFavoriteTask
 import org.mariotaku.twidere.task.RetweetStatusTask
-import org.mariotaku.twidere.task.status.UpdateStatusTask
+import org.mariotaku.twidere.task.twitter.UpdateStatusTask
 import org.mariotaku.twidere.task.twitter.message.SendMessageTask
 import org.mariotaku.twidere.util.deleteDrafts
 import java.io.IOException

@@ -144,7 +144,7 @@ class ActivityTitleSummaryViewHolder(
         if (users.size > profileImageViews.size) {
             val moreNumber = users.size - profileImageViews.size
             profileImageMoreNumber.visibility = View.VISIBLE
-            profileImageMoreNumber.text = moreNumber.toString()
+            profileImageMoreNumber.setText(moreNumber.toString())
         } else {
             profileImageMoreNumber.visibility = View.GONE
         }

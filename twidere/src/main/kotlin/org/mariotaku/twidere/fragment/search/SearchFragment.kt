@@ -41,15 +41,13 @@ import org.mariotaku.twidere.activity.QuickSearchBarActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarOffsetListener
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.extension.linkHandlerSubtitle
-import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.fragment.AbsToolbarTabPagesFragment
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowInsetsCallback
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
-import org.mariotaku.twidere.fragment.timeline.MediaSearchTimelineFragment
-import org.mariotaku.twidere.fragment.timeline.SearchTimelineFragment
+import org.mariotaku.twidere.fragment.statuses.MediaStatusesSearchFragment
+import org.mariotaku.twidere.fragment.statuses.StatusesSearchFragment
 import org.mariotaku.twidere.fragment.users.SearchUsersFragment
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.analyzer.Search
@@ -86,9 +84,6 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface,
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
-
-        linkHandlerTitle = getString(R.string.title_search)
-        linkHandlerSubtitle = query
 
         if (savedInstanceState == null && !TextUtils.isEmpty(query)) {
             val suggestions = SearchRecentSuggestions(activity,
@@ -170,15 +165,15 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface,
     override fun addTabs(adapter: SupportTabsAdapter) {
         when (accountType) {
             AccountType.TWITTER -> {
-                adapter.add(cls = SearchTimelineFragment::class.java, args = arguments,
+                adapter.add(cls = StatusesSearchFragment::class.java, args = arguments,
                         name = getString(R.string.search_type_statuses),
                         icon = DrawableHolder.resource(R.drawable.ic_action_twitter))
-                adapter.add(cls = MediaSearchTimelineFragment::class.java, args = arguments,
+                adapter.add(cls = MediaStatusesSearchFragment::class.java, args = arguments,
                         name = getString(R.string.search_type_media),
                         icon = DrawableHolder.resource(R.drawable.ic_action_gallery))
             }
             else -> {
-                adapter.add(cls = SearchTimelineFragment::class.java, args = arguments,
+                adapter.add(cls = StatusesSearchFragment::class.java, args = arguments,
                         name = getString(R.string.search_type_statuses),
                         icon = DrawableHolder.resource(R.drawable.ic_action_twitter))
             }

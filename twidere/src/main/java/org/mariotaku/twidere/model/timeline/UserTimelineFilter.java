@@ -22,14 +22,15 @@ package org.mariotaku.twidere.model.timeline;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.model.ParcelableStatus;
 
+/**
+ * Created by mariotaku on 2017/3/31.
+ */
 @ParcelablePlease
 public class UserTimelineFilter implements TimelineFilter, Parcelable {
     @ParcelableThisPlease
@@ -53,9 +54,8 @@ public class UserTimelineFilter implements TimelineFilter, Parcelable {
         this.includeReplies = includeReplies;
     }
 
-    @NonNull
     @Override
-    public CharSequence getSummary(@NonNull final Context context) {
+    public CharSequence getSummary(final Context context) {
         if (includeRetweets && includeReplies) {
             return context.getString(R.string.label_statuses_retweets_replies);
         } else if (includeReplies) {
@@ -64,13 +64,6 @@ public class UserTimelineFilter implements TimelineFilter, Parcelable {
             return context.getString(R.string.label_statuses_retweets);
         }
         return context.getString(R.string.label_statuses);
-    }
-
-    @Override
-    public boolean check(@NonNull ParcelableStatus status) {
-        if (!includeRetweets && status.is_retweet) return false;
-        if (!includeReplies && status.in_reply_to_user_key != null) return false;
-        return true;
     }
 
     @Override

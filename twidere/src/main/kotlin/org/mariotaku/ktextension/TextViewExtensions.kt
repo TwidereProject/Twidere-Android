@@ -25,6 +25,9 @@ inline var TextView.charSequence: CharSequence?
         text = value
     }
 
+inline val TextView.textIfVisible: CharSequence?
+    get() = if (visibility == View.VISIBLE) text else null
+
 fun TextView.applyFontFamily(lightFont: Boolean) {
     if (lightFont) {
         typeface = Typeface.create("sans-serif-light", typeface?.style ?: Typeface.NORMAL)

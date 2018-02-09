@@ -5,17 +5,21 @@ import android.os.Parcelable;
 
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
+/**
+ * Created by mariotaku on 2017/1/17.
+ */
+
 @ParcelablePlease
 public class PurchaseResult implements Parcelable {
     String feature;
-    String price;
+    double price;
     String currency;
 
-    public String getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 

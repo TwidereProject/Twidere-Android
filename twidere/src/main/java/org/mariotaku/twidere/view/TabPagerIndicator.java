@@ -47,7 +47,7 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
     private final TabLayoutManager mLayoutManager;
     private final ExtendedDividerItemDecoration mItemDecoration;
     private ViewPager mViewPager;
-    private TabProvider mTabProvider;
+    private PagerAdapter mPagerProvider;
 
     private OnPageChangeListener mPageChangeListener;
     private int mOption;
@@ -84,10 +84,6 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
         mItemDecoration.setDecorationStart(0);
         mItemDecoration.setDecorationEndOffset(1);
         a.recycle();
-
-        if (isInEditMode()) {
-            mTabProvider = new DemoTabProvider();
-        }
     }
 
     public int getCount() {
@@ -172,18 +168,18 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
     private void dispatchTabClick(int position) {
         final int currentItem = getCurrentItem();
         setCurrentItem(position);
-        if (mTabProvider instanceof TabListener) {
+        if (mPagerProvider instanceof TabListener) {
             if (currentItem != position) {
-                ((TabListener) mTabProvider).onPageSelected(position);
+                ((TabListener) mPagerProvider).onPageSelected(position);
             } else {
-                ((TabListener) mTabProvider).onPageReselected(position);
+                ((TabListener) mPagerProvider).onPageReselected(position);
             }
         }
     }
 
     private boolean dispatchTabLongClick(int position) {
-        if (mTabProvider instanceof TabListener) {
-            return ((TabListener) mTabProvider).onTabLongClick(position);
+        if (mPagerProvider instanceof TabListener) {
+            return ((TabListener) mPagerProvider).onTabLongClick(position);
         }
         return false;
     }
@@ -214,7 +210,7 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
             throw new IllegalArgumentException();
         }
         mViewPager = view;
-        mTabProvider = (TabProvider) adapter;
+        mPagerProvider = adapter;
         view.addOnPageChangeListener(this);
         mIndicatorAdapter.setTabProvider((TabProvider) adapter);
     }
@@ -582,29 +578,6 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
 
         void setTabProvider(TabProvider tabProvider) {
             mTabProvider = tabProvider;
-        }
-    }
-
-    private static class DemoTabProvider implements TabProvider {
-
-        @Override
-        public int getCount() {
-            return 4;
-        }
-
-        @Override
-        public Drawable getPageIcon(int position) {
-            return null;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return "Title " + position;
-        }
-
-        @Override
-        public float getPageWidth(int position) {
-            return 1;
         }
     }
 }

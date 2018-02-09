@@ -31,7 +31,7 @@ import org.mariotaku.twidere.model.UserKey;
 public class FavoriteTaskEvent {
 
     private int action;
-    private UserKey accountKey;
+    private UserKey mAccountKey;
     private String statusId;
 
     @Nullable
@@ -41,7 +41,7 @@ public class FavoriteTaskEvent {
 
     public FavoriteTaskEvent(@Action final int action, final UserKey accountKey, final String statusId) {
         this.action = action;
-        this.accountKey = accountKey;
+        this.mAccountKey = accountKey;
         this.statusId = statusId;
     }
 
@@ -50,7 +50,7 @@ public class FavoriteTaskEvent {
     }
 
     public UserKey getAccountKey() {
-        return accountKey;
+        return mAccountKey;
     }
 
     public String getStatusId() {

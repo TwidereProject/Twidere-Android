@@ -64,7 +64,6 @@ import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
-import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.fragment.AbsContentListRecyclerViewFragment
@@ -117,17 +116,16 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         get() = super.reachingEnd
 
     override val controlBarHeight: Int
-        get() = fragmentToolbar.height
+        get() = toolbar.height
 
     override var controlBarOffset: Float = 1f
 
-    override val fragmentToolbar: Toolbar
+    override val toolbar: Toolbar
         get() = conversationContainer.toolbar
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
-        linkHandlerTitle = getString(R.string.title_direct_messages)
         val account = this.account ?: run {
             activity?.finish()
             return
@@ -235,7 +233,8 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
                         TaskStarter.execute(AddMediaTask(this, mediaUris, types, false, false))
                     }
                     RESULT_SEARCH_GIF -> {
-                        startActivityForResult(gifShareProvider.createGifSelectorIntent(), REQUEST_ADD_GIF)
+                        val provider = gifShareProvider ?: return
+                        startActivityForResult(provider.createGifSelectorIntent(), REQUEST_ADD_GIF)
                     }
                 }
 
@@ -318,7 +317,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         if (ILoadMoreSupportAdapter.START !in position) return
         val message = adapter.getMessage(adapter.messageRange.endInclusive)
         setLoadMoreIndicatorPosition(position)
-        val param = GetMessagesTask.LoadMoreMessagesParam(context, accountKey, conversationId,
+        val param = GetMessagesTask.LoadMoreMessageTaskParam(context, accountKey, conversationId,
                 message.id)
         param.taskTag = loadMoreTaskTag
         twitterWrapper.getMessagesAsync(param)
@@ -451,7 +450,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
                 MediaPickerActivity.SOURCE_CAMCORDER,
                 MediaPickerActivity.SOURCE_GALLERY,
                 MediaPickerActivity.SOURCE_CLIPBOARD))
-        if (gifShareProvider.supported) {
+        if (gifShareProvider != null) {
             builder.addEntry(getString(R.string.action_add_gif), "gif", RESULT_SEARCH_GIF)
         }
         builder.containsVideo(true)

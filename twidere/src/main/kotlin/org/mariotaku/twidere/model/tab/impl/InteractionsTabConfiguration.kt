@@ -30,7 +30,7 @@ import org.mariotaku.twidere.annotation.TabAccountFlags
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_MENTIONS_ONLY
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_MY_FOLLOWING_ONLY
 import org.mariotaku.twidere.extension.model.isOfficial
-import org.mariotaku.twidere.fragment.activities.InteractionsActivitiesFragment
+import org.mariotaku.twidere.fragment.InteractionsTimelineFragment
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.tab.BooleanHolder
@@ -54,7 +54,7 @@ class InteractionsTabConfiguration : TabConfiguration() {
     override val accountFlags = TabAccountFlags.FLAG_HAS_ACCOUNT or
             TabAccountFlags.FLAG_ACCOUNT_MULTIPLE or TabAccountFlags.FLAG_ACCOUNT_MUTABLE
 
-    override val fragmentClass = InteractionsActivitiesFragment::class.java
+    override val fragmentClass = InteractionsTimelineFragment::class.java
 
     override fun getExtraConfigurations(context: Context) = arrayOf(
             BooleanExtraConfiguration(EXTRA_MY_FOLLOWING_ONLY, R.string.following_only, false).mutable(true),

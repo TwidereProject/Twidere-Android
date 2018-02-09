@@ -52,7 +52,7 @@ class TranslationDestinationDialogFragment : BaseDialogFragment() {
         builder.setSingleChoiceItems(languages.mapToArray { it.name }, selectedIndex) { _, which ->
             currentIndex.set(which)
         }
-        builder.setPositiveButton(android.R.string.ok) lambda@ { _, _ ->
+        builder.setPositiveButton(android.R.string.ok) lambda@ { di, _ ->
             val idx = currentIndex.get()
             if (idx < 0) return@lambda
             preferences[translationDestinationKey] = languages[idx].code

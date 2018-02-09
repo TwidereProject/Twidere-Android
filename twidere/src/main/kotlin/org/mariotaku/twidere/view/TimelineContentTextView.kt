@@ -79,11 +79,11 @@ class TimelineContentTextView(
     }
 
     override fun onTextContextMenuItem(id: Int): Boolean {
-        return try {
-            super.onTextContextMenuItem(id)
+        try {
+            return super.onTextContextMenuItem(id)
         } catch (e: AbstractMethodError) {
             // http://crashes.to/s/69acd0ea0de
-            true
+            return true
         }
     }
 

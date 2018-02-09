@@ -12,7 +12,7 @@ import org.junit.runner.RunWith
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
-import org.mariotaku.twidere.task.status.UpdateStatusTask
+import org.mariotaku.twidere.task.twitter.UpdateStatusTask
 
 /**
  * Created by mariotaku on 2016/12/7.

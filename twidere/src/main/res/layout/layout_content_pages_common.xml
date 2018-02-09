@@ -50,7 +50,7 @@
             tools:listitem="@layout/layout_tab_item"/>
 
         <View
-            android:id="@+id/tabsShadow"
+            android:id="@+id/pagerWindowOverlay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/viewPager"

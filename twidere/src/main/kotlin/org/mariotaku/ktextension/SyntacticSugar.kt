@@ -19,4 +19,4 @@ fun LongArray.toStringArray(): Array<String> {
     return Array(this.size) { idx -> this[idx].toString() }
 }
 
-fun <T> T.toWeak(): WeakReference<T> = WeakReference(this)
+fun <T> T.weak(): WeakReference<T> = WeakReference(this)

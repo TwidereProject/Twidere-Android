@@ -43,7 +43,7 @@ class CreateUserMuteTask(
                 mastodon.muteUser(args.userKey.id)
                 return mastodon.getAccount(args.userKey.id).toParcelable(details)
             }
-            else -> throw APINotSupportedException("API", details.type)
+            else -> throw APINotSupportedException(details.type)
         }
     }
 
@@ -102,7 +102,7 @@ class CreateUserMuteTask(
                         mastodon.muteUser(userKey.id)
                     }
                 }
-                else -> throw APINotSupportedException("API", account.type)
+                else -> throw APINotSupportedException(account.type)
             }
         }
     }

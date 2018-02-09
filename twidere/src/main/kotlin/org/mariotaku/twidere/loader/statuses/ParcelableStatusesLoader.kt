@@ -29,6 +29,7 @@ import org.mariotaku.twidere.util.collection.NoDuplicatesArrayList
 abstract class ParcelableStatusesLoader(
         context: Context,
         adapterData: List<ParcelableStatus>?,
+        protected val tabPosition: Int,
         override var fromUser: Boolean
 ) : FixedAsyncTaskLoader<List<ParcelableStatus>>(context), IExtendedLoader {
 

@@ -77,7 +77,12 @@
 
 # Essential components
 -keep class * extends org.mariotaku.twidere.util.Analyzer
+-keep class * extends org.mariotaku.twidere.util.MapFragmentFactory
 -keep class * extends org.mariotaku.twidere.util.twitter.card.TwitterCardViewFactory
+
+# Extra feature service
+-keep class * extends org.mariotaku.twidere.util.premium.ExtraFeaturesService
+-keep class * extends org.mariotaku.twidere.util.promotion.PromotionService
 
 # Extra feature component factories
 -keep class * extends org.mariotaku.twidere.util.gifshare.GifShareProvider$Factory

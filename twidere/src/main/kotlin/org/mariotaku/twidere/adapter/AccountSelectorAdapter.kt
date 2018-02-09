@@ -36,7 +36,7 @@ class AccountSelectorAdapter(
         private val inflater: LayoutInflater,
         preferences: SharedPreferences,
         val requestManager: RequestManager
-) : RecyclerPagerAdapter<RecyclerPagerAdapter.ViewHolder>() {
+) : RecyclerPagerAdapter() {
 
     internal var profileImageStyle: Int = preferences[profileImageStyleKey]
 

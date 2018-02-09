@@ -17,9 +17,13 @@ import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.StatusDestroyedEvent
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
+import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.deleteActivityStatus
 
+/**
+ * Created by mariotaku on 2016/12/9.
+ */
 class DestroyStatusTask(
         context: Context,
         accountKey: UserKey,
@@ -48,12 +52,15 @@ class DestroyStatusTask(
     }
 
     override fun beforeExecute() {
-        addTaskId(accountKey, statusId)
+        val hashCode = AsyncTwitterWrapper.calculateHashCode(accountKey, statusId)
+        if (!microBlogWrapper.destroyingStatusIds.contains(hashCode)) {
+            microBlogWrapper.destroyingStatusIds.add(hashCode)
+        }
         bus.post(StatusListChangedEvent())
     }
 
     override fun afterExecute(callback: Any?, result: ParcelableStatus?, exception: MicroBlogException?) {
-        removeTaskId(accountKey, statusId)
+        microBlogWrapper.destroyingStatusIds.remove(AsyncTwitterWrapper.calculateHashCode(accountKey, statusId))
         if (result != null) {
             if (result.retweet_id != null) {
                 Toast.makeText(context, R.string.message_toast_retweet_cancelled, Toast.LENGTH_SHORT).show()
@@ -65,8 +72,5 @@ class DestroyStatusTask(
             Toast.makeText(context, exception?.getErrorMessage(context), Toast.LENGTH_SHORT).show()
         }
     }
-
-
-    companion object : ObjectIdTaskCompanion()
 
 }

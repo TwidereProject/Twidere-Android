@@ -21,7 +21,6 @@ package org.mariotaku.twidere.util.dagger
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.twitter.Validator
 import okhttp3.Cache
 import okhttp3.ConnectionPool
 import okhttp3.Dns
@@ -53,9 +52,6 @@ class DependencyHolder internal constructor(context: Context) {
         internal set
     @Inject
     lateinit var dns: Dns
-        internal set
-    @Inject
-    lateinit var validator: Validator
         internal set
     @Inject
     lateinit var preferences: SharedPreferences

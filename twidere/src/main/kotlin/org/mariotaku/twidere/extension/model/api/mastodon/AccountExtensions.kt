@@ -53,7 +53,7 @@ fun Account.toParcelable(accountKey: UserKey, position: Long = 0,
     obj.name = name
     obj.screen_name = username
     if (note?.isHtml == true) {
-        val descriptionHtml = HtmlSpanBuilder.fromHtml(note, note, MastodonSpanProcessor())
+        val descriptionHtml = HtmlSpanBuilder.fromHtml(note, note, MastodonSpanProcessor)
         obj.description_unescaped = descriptionHtml?.toString()
         obj.description_plain = obj.description_unescaped
         obj.description_spans = descriptionHtml?.spanItems

@@ -9,7 +9,7 @@ import android.view.MenuItem
 import com.squareup.otto.Subscribe
 import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.ui.alwaysUi
-import org.mariotaku.ktextension.toWeak
+import org.mariotaku.ktextension.weak
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.SYNC_PREFERENCES_NAME
 import org.mariotaku.twidere.constant.dataSyncProviderInfoKey
@@ -80,7 +80,7 @@ class SyncSettingsFragment : BasePreferenceFragment() {
 
     private fun cleanupAndDisconnect() {
         val providerInfo = kPreferences[dataSyncProviderInfoKey] ?: return
-        val weakThis = toWeak()
+        val weakThis = weak()
         val task = showProgressDialog("cleanup_sync_cache").
                 and(syncController.cleanupSyncCache(providerInfo))
         task.alwaysUi {

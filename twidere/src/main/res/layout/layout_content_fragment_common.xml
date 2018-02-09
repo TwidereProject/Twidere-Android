@@ -43,8 +43,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="gone"
-        tools:visibility="gone">
+        android:visibility="gone">
 
         <org.mariotaku.twidere.view.IconActionView
             android:id="@+id/errorIcon"
@@ -59,8 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:padding="@dimen/element_spacing_large"
-            android:textAppearance="?android:textAppearanceMedium"
-            tools:text="Error message"/>
+            android:textAppearance="?android:textAppearanceMedium"/>
     </LinearLayout>
 
 </merge>

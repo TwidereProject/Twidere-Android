@@ -30,6 +30,10 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.StatusPinEvent
 import org.mariotaku.twidere.task.AbsAccountRequestTask
 
+/**
+ * Created by mariotaku on 2017/4/28.
+ */
+
 class PinStatusTask(context: Context, accountKey: UserKey, val id: String) : AbsAccountRequestTask<Any?,
         PinTweetResult, Any?>(context, accountKey) {
 

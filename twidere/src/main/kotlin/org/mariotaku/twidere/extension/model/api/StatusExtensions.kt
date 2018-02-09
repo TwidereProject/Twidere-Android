@@ -38,7 +38,8 @@ import org.mariotaku.twidere.extension.toSpanItem
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
-import org.mariotaku.twidere.text.placeholder.CustomEmojiShortCodeSpan
+import org.mariotaku.twidere.text.AcctMentionSpan
+import org.mariotaku.twidere.text.HashtagSpan
 import org.mariotaku.twidere.util.EntityArrays
 import org.mariotaku.twidere.util.HtmlBuilder
 import org.mariotaku.twidere.util.HtmlSpanBuilder
@@ -336,13 +337,14 @@ internal fun findByOrigRange(spans: Array<SpanItem>, start: Int, end: Int): List
 
 internal inline val CharSequence.spanItems
     get() = (this as? Spanned)?.let { text ->
-        text.getSpans(0, length, Any::class.java).mapNotNull { span ->
-            return@mapNotNull when (span) {
-                is URLSpan -> span.toSpanItem(text)
-                is CustomEmojiShortCodeSpan -> span.toSpanItem(text)
-                else -> null
+        text.getSpans(0, length, URLSpan::class.java).mapToArray {
+            val item = it.toSpanItem(text)
+            when (it) {
+                is AcctMentionSpan -> item.type = SpanItem.SpanType.ACCT_MENTION
+                is HashtagSpan -> item.type = SpanItem.SpanType.HASHTAG
             }
-        }.toTypedArray()
+            return@mapToArray item
+        }
     }
 
 internal inline val String.isHtml get() = contains('<') && contains('>')

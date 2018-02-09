@@ -2,15 +2,26 @@ package org.mariotaku.twidere.util.premium
 
 import android.content.Context
 import android.content.Intent
+import android.support.annotation.CallSuper
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.view.ContainerView
+import java.util.*
 
 abstract class ExtraFeaturesService {
+    protected lateinit var context: Context
 
     abstract fun getDashboardControllers(): List<Class<out ContainerView.ViewController>>
 
+    @CallSuper
+    protected open fun init(context: Context) {
+        this.context = context
+    }
+
     open fun appStarted() {
 
+    }
+
+    open fun release() {
     }
 
     /**
@@ -39,6 +50,14 @@ abstract class ExtraFeaturesService {
         const val FEATURE_SYNC_DATA = "sync_data"
         const val FEATURE_SCHEDULE_STATUS = "schedule_status"
         const val FEATURE_SHARE_GIF = "share_gif"
+
+        fun newInstance(context: Context): ExtraFeaturesService {
+            val instance = ServiceLoader.load(ExtraFeaturesService::class.java).firstOrNull() ?: run {
+                return@run DummyExtraFeaturesService()
+            }
+            instance.init(context)
+            return instance
+        }
 
         fun getIntroduction(context: Context, feature: String): Introduction {
             return when (feature) {

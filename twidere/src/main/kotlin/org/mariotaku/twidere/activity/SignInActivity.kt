@@ -345,10 +345,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                 this[EXTRA_REQUEST_TOKEN_SECRET] = requestToken.oauthTokenSecret
             })
             activity.startActivityForResult(intent, REQUEST_BROWSER_TWITTER_SIGN_IN)
-        }.failUi { exception ->
+        }.failUi {
             val activity = weakThis.get() ?: return@failUi
-            Toast.makeText(activity, exception.getErrorMessage(activity), Toast.LENGTH_LONG).show()
-            DebugLog.w(tr = exception)
+            // TODO show error message
         }.alwaysUi {
             executeAfterFragmentResumed {
                 it.supportFragmentManager.dismissDialogFragment("get_request_token")

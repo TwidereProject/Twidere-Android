@@ -48,7 +48,6 @@ import org.mariotaku.twidere.model.message.conversation.TwitterOfficialConversat
 import org.mariotaku.twidere.model.pagination.CursorPagination
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
-import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.AccountUtils.getAccountDetails
 import org.mariotaku.twidere.model.util.ParcelableMessageUtils
@@ -66,11 +65,11 @@ import java.util.*
 
 class GetMessagesTask(
         context: Context
-) : BaseAbstractTask<GetMessagesTask.RefreshMessagesParam, Unit, (Boolean) -> Unit>(context) {
+) : BaseAbstractTask<GetMessagesTask.RefreshMessagesTaskParam, Unit, (Boolean) -> Unit>(context) {
 
     private val profileImageSize = context.getString(R.string.profile_image_size)
 
-    override fun doLongOperation(param: RefreshMessagesParam) {
+    override fun doLongOperation(param: RefreshMessagesTaskParam) {
         val accountKeys = param.accountKeys
         val am = android.accounts.AccountManager.get(context)
         accountKeys.forEachIndexed { i, accountKey ->
@@ -94,7 +93,7 @@ class GetMessagesTask(
         bus.post(GetMessagesTaskEvent(Messages.CONTENT_URI, params?.taskTag, false, null))
     }
 
-    private fun getMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesParam, index: Int): DatabaseUpdateData {
+    private fun getMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         when (details.type) {
             AccountType.FANFOU -> {
                 // Use fanfou DM api, disabled since it's conversation api is not suitable for paging
@@ -112,7 +111,7 @@ class GetMessagesTask(
     }
 
     private fun getTwitterOfficialMessages(microBlog: MicroBlog, details: AccountDetails,
-            param: RefreshMessagesParam, index: Int): DatabaseUpdateData {
+            param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val conversationId = param.conversationId
         if (conversationId == null) {
             return getTwitterOfficialUserInbox(microBlog, details, param, index)
@@ -121,7 +120,7 @@ class GetMessagesTask(
         }
     }
 
-    private fun getFanfouMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesParam, index: Int): DatabaseUpdateData {
+    private fun getFanfouMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val conversationId = param.conversationId
         if (conversationId == null) {
             return getFanfouConversations(microBlog, details, param, index)
@@ -131,7 +130,7 @@ class GetMessagesTask(
     }
 
     private fun getDefaultMessages(microBlog: MicroBlog, details: AccountDetails,
-            param: RefreshMessagesParam, index: Int): DatabaseUpdateData {
+            param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val accountKey = details.key
         val accountsCount = param.accountKeys.size
 
@@ -197,7 +196,7 @@ class GetMessagesTask(
 
 
     private fun getTwitterOfficialConversation(microBlog: MicroBlog, details: AccountDetails,
-            conversationId: String, param: RefreshMessagesParam, index: Int): DatabaseUpdateData {
+            conversationId: String, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val maxId = (param.pagination?.get(index) as? SinceMaxPagination)?.maxId
                 ?: return DatabaseUpdateData(emptyList(), emptyList())
         val paging = Paging().apply {
@@ -209,7 +208,7 @@ class GetMessagesTask(
     }
 
     private fun getTwitterOfficialUserInbox(microBlog: MicroBlog, details: AccountDetails,
-            param: RefreshMessagesParam, index: Int): DatabaseUpdateData {
+            param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val maxId = (param.pagination?.get(index) as? SinceMaxPagination)?.maxId
         val cursor = (param.pagination?.get(index) as? CursorPagination)?.cursor
         val response = if (cursor != null) {
@@ -226,7 +225,7 @@ class GetMessagesTask(
 
 
     private fun getFanfouConversations(microBlog: MicroBlog, details: AccountDetails,
-            param: RefreshMessagesParam, index: Int): DatabaseUpdateData {
+            param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val accountKey = details.key
         val accountType = details.type
         val cursor = (param.pagination?.get(index) as? CursorPagination)?.cursor
@@ -264,9 +263,9 @@ class GetMessagesTask(
             val conversationRequestCursor: String? = null
     )
 
-    abstract class RefreshNewParam(
+    abstract class RefreshNewTaskParam(
             context: Context
-    ) : RefreshMessagesParam(context) {
+    ) : RefreshMessagesTaskParam(context) {
 
         override val showNotification: Boolean = true
 
@@ -292,9 +291,9 @@ class GetMessagesTask(
 
     }
 
-    abstract class LoadMoreEntriesParam(
+    abstract class LoadMoreEntriesTaskParam(
             context: Context
-    ) : RefreshMessagesParam(context) {
+    ) : RefreshMessagesTaskParam(context) {
 
         override val pagination: Array<out Pagination?>? by lazy {
             val incomingIds = DataStoreUtils.getOldestMessageIds(context, Messages.CONTENT_URI,
@@ -313,19 +312,19 @@ class GetMessagesTask(
         }
     }
 
-    class LoadMoreMessagesParam(
+    class LoadMoreMessageTaskParam(
             context: Context,
             accountKey: UserKey,
             override val conversationId: String,
             maxId: String
-    ) : RefreshMessagesParam(context) {
+    ) : RefreshMessagesTaskParam(context) {
         override val accountKeys = arrayOf(accountKey)
         override val pagination = arrayOf(SinceMaxPagination.maxId(maxId, -1))
     }
 
-    abstract class RefreshMessagesParam(
+    abstract class RefreshMessagesTaskParam(
             val context: Context
-    ) : ContentRefreshParam {
+    ) : RefreshTaskParam {
 
         /**
          * If `conversationId` has value, load messages in conversationId

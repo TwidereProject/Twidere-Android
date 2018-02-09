@@ -57,7 +57,7 @@ class ConversationLoader(
         adapterData: List<ParcelableStatus>?,
         fromUser: Boolean,
         loadingMore: Boolean
-) : AbsRequestStatusesLoader(context, status.account_key, adapterData, fromUser, loadingMore) {
+) : AbsRequestStatusesLoader(context, status.account_key, adapterData, null, -1, fromUser, loadingMore) {
 
     override val comparator: Comparator<ParcelableStatus>? = null
 
@@ -113,7 +113,7 @@ class ConversationLoader(
                 }
             }
             else -> {
-                throw APINotSupportedException("API", account.type)
+                throw APINotSupportedException(account.type)
             }
         }
         canLoadAllReplies = true

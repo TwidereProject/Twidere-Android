@@ -24,8 +24,8 @@ import android.content.Intent
 import android.support.annotation.WorkerThread
 import org.mariotaku.twidere.model.ParcelableStatusUpdate
 import org.mariotaku.twidere.model.schedule.ScheduleInfo
-import org.mariotaku.twidere.task.status.UpdateStatusTask
-import org.mariotaku.twidere.task.status.UpdateStatusTask.PendingStatusUpdate
+import org.mariotaku.twidere.task.twitter.UpdateStatusTask
+import org.mariotaku.twidere.task.twitter.UpdateStatusTask.PendingStatusUpdate
 import java.util.*
 
 /**

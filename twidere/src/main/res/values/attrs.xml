@@ -57,22 +57,11 @@
         <attr name="android:background"/>
     </declare-styleable>
     <declare-styleable name="NameView">
-        <attr name="nvNameFirst" format="boolean"/>
-    </declare-styleable>
-    <declare-styleable name="TwoLineTextView">
-        <attr name="tltvTwoLine" format="boolean"/>
-        <attr name="tltvPrimaryTextAppearance" format="reference"/>
-        <attr name="tltvSecondaryTextAppearance" format="reference"/>
-        <attr name="tltvPrimaryText" format="string"/>
-        <attr name="tltvSecondaryText" format="string"/>
-        <attr name="tltvPrimaryTextColor" format="color"/>
-        <attr name="tltvSecondaryTextColor" format="color"/>
-        <attr name="tltvPrimaryLinkTextColor" format="color"/>
-        <attr name="tltvSecondaryLinkTextColor" format="color"/>
-        <attr name="tltvPrimaryTextStyle"/>
-        <attr name="tltvSecondaryTextStyle"/>
-        <attr name="tltvPrimaryTextSize" format="dimension"/>
-        <attr name="tltvSecondaryTextSize" format="dimension"/>
+        <attr name="nv_primaryTextColor" format="color"/>
+        <attr name="nv_secondaryTextColor" format="color"/>
+        <attr name="nv_twoLine" format="boolean"/>
+        <attr name="nv_primaryTextStyle"/>
+        <attr name="nv_secondaryTextStyle"/>
     </declare-styleable>
     <declare-styleable name="ValueDependencyPreference">
         <attr name="dependencyKey" format="string"/>
@@ -116,6 +105,10 @@
         <attr name="sivCornerRadiusRatio" format="fraction"/>
         <attr name="sivDrawShadow" format="boolean"/>
         <attr name="sivShape"/>
+    </declare-styleable>
+    <declare-styleable name="HeaderDrawerLayout">
+        <attr name="hdl_headerLayout" format="reference"/>
+        <attr name="hdl_contentLayout" format="reference"/>
     </declare-styleable>
     <declare-styleable name="TintedStatusLayout">
         <attr name="setPadding" format="boolean"/>
@@ -225,12 +218,12 @@
         <enum name="circle" value="0x1"/>
         <enum name="rectangle" value="0x2"/>
     </attr>
-    <attr name="tltvPrimaryTextStyle">
+    <attr name="nv_primaryTextStyle">
         <flag name="normal" value="0"/>
         <flag name="bold" value="1"/>
         <flag name="italic" value="2"/>
     </attr>
-    <attr name="tltvSecondaryTextStyle">
+    <attr name="nv_secondaryTextStyle">
         <flag name="normal" value="0"/>
         <flag name="bold" value="1"/>
         <flag name="italic" value="2"/>

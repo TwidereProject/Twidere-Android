@@ -38,7 +38,7 @@ import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.model.extractFanfouHashtags
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
-import org.mariotaku.twidere.fragment.activities.InteractionsActivitiesFragment
+import org.mariotaku.twidere.fragment.InteractionsTimelineFragment
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.UserKey
@@ -129,7 +129,7 @@ class GetActivitiesAboutMeTask(context: Context) : GetActivitiesTask(context) {
     }
 
     override fun syncFetchReadPosition(manager: TimelineSyncManager, accountKeys: Array<UserKey>) {
-        val tag = InteractionsActivitiesFragment.getTimelineSyncTag(accountKeys)
+        val tag = InteractionsTimelineFragment.getTimelineSyncTag(accountKeys)
         manager.fetchSingle(ReadPositionTag.ACTIVITIES_ABOUT_ME, tag)
     }
 }

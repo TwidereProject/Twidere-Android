@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.mariotaku.twidere.view.TwoLineTextView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/countItem"
     android:layout_width="wrap_content"
@@ -9,16 +8,30 @@
     android:layout_weight="0"
     android:background="?selectableItemBackground"
     android:clickable="true"
-    android:gravity="center"
+    android:gravity="center_vertical"
     android:minHeight="@dimen/element_size_normal"
     android:minWidth="@dimen/element_size_normal"
     android:orientation="vertical"
-    android:padding="@dimen/element_spacing_normal"
-    app:tltvPrimaryTextAppearance="?android:textAppearanceSmall"
-    app:tltvPrimaryTextColor="?android:textColorPrimary"
-    app:tltvPrimaryTextStyle="bold"
-    app:tltvSecondaryTextAppearance="?android:textAppearanceSmall"
-    app:tltvSecondaryTextColor="?android:textColorSecondary"
-    app:tltvTwoLine="true"
-    tools:tltvPrimaryText="255"
-    tools:tltvSecondaryText="Count"/>
+    android:padding="@dimen/element_spacing_normal">
+
+    <org.mariotaku.twidere.view.FixedTextView
+        android:id="@+id/count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/element_spacing_small"
+        android:layout_marginRight="@dimen/element_spacing_small"
+        android:maxLines="1"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:textColor="?android:textColorPrimary"
+        android:textStyle="bold"
+        tools:text="255"/>
+
+    <org.mariotaku.twidere.view.FixedTextView
+        android:id="@+id/label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:textColor="?android:textColorSecondary"
+        tools:text="Count"/>
+</LinearLayout>

@@ -126,7 +126,9 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
 
     private val filterItemsInfo: Array<FilterItemInfo>
         get() {
-            val status = arguments.getParcelable<ParcelableStatus>(EXTRA_STATUS) ?: return emptyArray()
+            val args = arguments
+            if (args == null || !args.containsKey(EXTRA_STATUS)) return emptyArray()
+            val status = args.getParcelable<ParcelableStatus>(EXTRA_STATUS) ?: return emptyArray()
             val list = ArrayList<FilterItemInfo>()
             if (status.is_retweet && status.retweeted_by_user_key != null) {
                 list.add(FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER,
@@ -141,8 +143,12 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
             list.add(FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER, UserItem(status.user_key,
                     status.user_name, status.user_screen_name)))
             val mentions = status.mentions
-            mentions?.filter { it.key != status.user_key }?.mapTo(list) {
-                FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER, it)
+            if (mentions != null) {
+                for (mention in mentions) {
+                    if (mention.key != status.user_key) {
+                        list.add(FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER, mention))
+                    }
+                }
             }
             val hashtags = HashSet<String>()
             hashtags.addAll(extractor.extractHashtags(status.text_plain))

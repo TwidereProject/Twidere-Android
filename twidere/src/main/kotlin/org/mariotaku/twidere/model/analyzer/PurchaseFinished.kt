@@ -12,7 +12,7 @@ import org.mariotaku.twidere.util.Analyzer
 data class PurchaseFinished(val productName: String) : Analyzer.Event {
     override val name: String = "Purchase Finished"
     override var accountType: String? = null
-    var price: String? = null
+    var price: Double = Double.NaN
     var currency: String? = null
 
     companion object {

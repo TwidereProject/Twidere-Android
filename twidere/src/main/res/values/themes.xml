@@ -20,7 +20,6 @@
         <item name="darkThemeResource">@style/Theme.Twidere.Dark.NoActionBar</item>
         <item name="lightThemeResource">@style/Theme.Twidere.Light.NoActionBar</item>
     </style>
-    >
 
     <style name="Theme.Twidere.Compose" parent="Theme.Twidere.Compose.DayNight">
         <item name="darkThemeResource">@style/Theme.Twidere.Dark.Compose</item>
@@ -62,7 +61,5 @@
         <item name="darkThemeResource">@style/Theme.Twidere.Dark.Launcher</item>
         <item name="lightThemeResource">@style/Theme.Twidere.Light.Launcher</item>
     </style>
-
-    <style name="Theme.Twidere.NoActionBar.TranslucentDecor" parent="Theme.Twidere.NoActionBar"/>
 
 </resources>

@@ -25,7 +25,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.TabAccountFlags
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
-import org.mariotaku.twidere.fragment.timeline.FavoritesTimelineFragment
+import org.mariotaku.twidere.fragment.statuses.UserFavoritesFragment
 import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.model.tab.StringHolder
@@ -47,7 +47,7 @@ class FavoriteTimelineTabConfiguration : TabConfiguration() {
     override val accountFlags = TabAccountFlags.FLAG_HAS_ACCOUNT or
             TabAccountFlags.FLAG_ACCOUNT_REQUIRED
 
-    override val fragmentClass = FavoritesTimelineFragment::class.java
+    override val fragmentClass = UserFavoritesFragment::class.java
 
     override fun getExtraConfigurations(context: Context) = arrayOf(
             UserExtraConfiguration(EXTRA_USER).headerTitle(R.string.title_user)

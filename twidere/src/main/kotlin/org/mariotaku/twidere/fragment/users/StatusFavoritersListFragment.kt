@@ -22,28 +22,16 @@ package org.mariotaku.twidere.fragment.users
 import android.content.Context
 import android.os.Bundle
 import com.bumptech.glide.RequestManager
-import org.mariotaku.kpreferences.get
-import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ParcelableUsersAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_STATUS_ID
-import org.mariotaku.twidere.constant.iWantMyStarsBackKey
-import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.fragment.ParcelableUsersFragment
 import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
 import org.mariotaku.twidere.loader.users.StatusFavoritersLoader
 import org.mariotaku.twidere.model.UserKey
 
 class StatusFavoritersListFragment : ParcelableUsersFragment() {
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        linkHandlerTitle = if (preferences[iWantMyStarsBackKey]) {
-            getString(R.string.title_users_favorited_this)
-        } else {
-            getString(R.string.title_users_liked_this)
-        }
-    }
 
     override fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean):
             AbsRequestUsersLoader {

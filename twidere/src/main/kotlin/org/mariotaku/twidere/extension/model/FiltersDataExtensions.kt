@@ -25,12 +25,12 @@ fun FiltersData.read(cr: ContentResolver, loadSubscription: Boolean = false) {
     fun readBaseItems(uri: Uri): List<FiltersData.BaseItem>? {
         val where = if (loadSubscription) null else Expression.lesserThan(Filters.SOURCE, 0).sql
         return cr.queryAll(uri, Filters.COLUMNS, where, null, null,
-                cls = FiltersData.BaseItem::class.java)
+                FiltersData.BaseItem::class.java)
     }
     this.users = run {
         val where = if (loadSubscription) null else Expression.lesserThan(Filters.Users.SOURCE, 0).sql
         return@run cr.queryAll(Filters.Users.CONTENT_URI, Filters.Users.COLUMNS, where, null,
-                null, cls = FiltersData.UserItem::class.java)
+                null, FiltersData.UserItem::class.java)
     }
     this.keywords = readBaseItems(Filters.Keywords.CONTENT_URI)
     this.sources = readBaseItems(Filters.Sources.CONTENT_URI)

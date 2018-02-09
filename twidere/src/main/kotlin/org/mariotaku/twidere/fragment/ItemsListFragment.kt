@@ -23,7 +23,7 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ITEMS
 import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.model.prefixedHashtag
-import org.mariotaku.twidere.fragment.timeline.AbsTimelineFragment
+import org.mariotaku.twidere.fragment.AbsStatusesFragment.Companion.handleActionClick
 import org.mariotaku.twidere.model.ParcelableHashtag
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.UserKey
@@ -31,6 +31,7 @@ import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.MenuUtils
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.view.ExtendedRecyclerView
+import org.mariotaku.twidere.view.holder.StatusViewHolder
 import org.mariotaku.twidere.view.holder.UserViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 
@@ -53,9 +54,9 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
-            AbsTimelineFragment.REQUEST_FAVORITE_SELECT_ACCOUNT,
-            AbsTimelineFragment.REQUEST_RETWEET_SELECT_ACCOUNT -> {
-                AbsTimelineFragment.handleActionActivityResult(this, requestCode, resultCode, data)
+            AbsStatusesFragment.REQUEST_FAVORITE_SELECT_ACCOUNT,
+            AbsStatusesFragment.REQUEST_RETWEET_SELECT_ACCOUNT -> {
+                AbsStatusesFragment.handleActionActivityResult(this, requestCode, resultCode, data)
             }
         }
     }
@@ -76,13 +77,12 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
 
             override fun onItemActionClick(holder: RecyclerView.ViewHolder, id: Int, position: Int) {
                 val status = dummyItemAdapter.getStatus(position)
-                AbsTimelineFragment.handleActionClick(this@ItemsListFragment, id, status,
-                        holder as IStatusViewHolder)
+                handleActionClick(this@ItemsListFragment, id, status, holder as StatusViewHolder)
             }
 
             override fun onItemActionLongClick(holder: RecyclerView.ViewHolder, id: Int, position: Int): Boolean {
                 val status = dummyItemAdapter.getStatus(position)
-                return AbsTimelineFragment.handleActionLongClick(this@ItemsListFragment, status,
+                return AbsStatusesFragment.handleActionLongClick(this@ItemsListFragment, status,
                         adapter.getItemId(position), id)
             }
 
@@ -148,8 +148,8 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
                 val dummyAdapter = adapter.dummyAdapter
                 val status = dummyAdapter.getStatus(contextMenuInfo.position)
                 inflater.inflate(R.menu.action_status, menu)
-                MenuUtils.setupForStatus(context, menu, preferences, userColorNameManager,
-                        status)
+                MenuUtils.setupForStatus(context, menu, preferences, twitterWrapper,
+                        userColorNameManager, status)
             }
         }
     }

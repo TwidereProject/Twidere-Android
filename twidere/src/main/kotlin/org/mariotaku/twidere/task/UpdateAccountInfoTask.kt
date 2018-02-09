@@ -49,7 +49,7 @@ class UpdateAccountInfoTask(
         val accountKeyWhere = Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY).sql
         val accountKeyWhereArgs = arrayOf(details.key.toString())
 
-        resolver.update(Statuses.HomeTimeline.CONTENT_URI, accountKeyValues, accountKeyWhere, accountKeyWhereArgs)
+        resolver.update(Statuses.CONTENT_URI, accountKeyValues, accountKeyWhere, accountKeyWhereArgs)
         resolver.update(Activities.AboutMe.CONTENT_URI, accountKeyValues, accountKeyWhere, accountKeyWhereArgs)
         resolver.update(Messages.CONTENT_URI, accountKeyValues, accountKeyWhere, accountKeyWhereArgs)
         resolver.update(Messages.Conversations.CONTENT_URI, accountKeyValues, accountKeyWhere, accountKeyWhereArgs)

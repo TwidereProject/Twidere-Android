@@ -136,12 +136,6 @@ public class Status {
     @JsonField(name = "application")
     Application application;
 
-    @JsonField(name = "language")
-    String language;
-
-    @JsonField(name = "emojis")
-    Emoji[] emojis;
-
     private long sortId = -1;
 
     public String getId() {
@@ -225,14 +219,6 @@ public class Status {
         return application;
     }
 
-    public String getLanguage() {
-        return language;
-    }
-
-    public Emoji[] getEmojis() {
-        return emojis;
-    }
-
     public long getSortId() {
         if (sortId != -1) return sortId;
         // Try use long id
@@ -271,9 +257,6 @@ public class Status {
                 ", mentions=" + Arrays.toString(mentions) +
                 ", tags=" + Arrays.toString(tags) +
                 ", application=" + application +
-                ", language='" + language + '\'' +
-                ", emojis=" + Arrays.toString(emojis) +
-                ", sortId=" + sortId +
                 '}';
     }
 }

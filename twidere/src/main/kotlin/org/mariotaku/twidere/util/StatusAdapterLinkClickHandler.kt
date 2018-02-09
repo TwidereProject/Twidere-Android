@@ -36,7 +36,7 @@ import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 class StatusAdapterLinkClickHandler<out D>(context: Context, preferences: SharedPreferences) :
         OnLinkClickHandler(context, null, preferences), Constants {
 
-    private var adapter: IStatusesAdapter? = null
+    private var adapter: IStatusesAdapter<D>? = null
 
     override fun openMedia(accountKey: UserKey, extraId: Long, sensitive: Boolean,
             link: String, start: Int, end: Int) {
@@ -62,7 +62,7 @@ class StatusAdapterLinkClickHandler<out D>(context: Context, preferences: Shared
         return super.isMedia(link, extraId)
     }
 
-    fun setAdapter(adapter: IStatusesAdapter) {
+    fun setAdapter(adapter: IStatusesAdapter<D>) {
         this.adapter = adapter
     }
 }

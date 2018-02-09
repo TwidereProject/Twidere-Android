@@ -19,15 +19,44 @@
 
 package org.mariotaku.twidere.util.promotion
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.view.ViewGroup
+import java.util.*
 
-interface PromotionService {
+/**
+ * Created by mariotaku on 2017/9/17.
+ */
+abstract class PromotionService {
 
-    fun appStarted()
+    protected lateinit var context: Context
+        private set
+    protected lateinit var preferences: SharedPreferences
+        private set
 
-    fun setupBanner(container: ViewGroup, type: BannerType, params: ViewGroup.LayoutParams? = null)
+    abstract fun appStarted()
 
-    fun loadBanner(container: ViewGroup, extras: BannerExtras? = null)
+    abstract fun setupBanner(container: ViewGroup, type: BannerType, params: ViewGroup.LayoutParams? = null)
+
+    abstract fun loadBanner(container: ViewGroup, extras: BannerExtras? = null)
+
+    protected open fun init(context: Context) {
+
+    }
+
+    companion object {
+
+        fun newInstance(context: Context, preferences: SharedPreferences): PromotionService {
+            val instance = ServiceLoader.load(PromotionService::class.java).firstOrNull() ?: run {
+                return@run DummyPromotionService()
+            }
+            instance.context = context
+            instance.preferences = preferences
+            instance.init(context)
+            return instance
+        }
+
+    }
 
     enum class BannerType {
         PREMIUM_DASHBOARD, QUICK_SEARCH, MEDIA_PAUSE

@@ -75,7 +75,7 @@ class StatusFavoritersLoader(
                 }
             }
             else -> {
-                throw APINotSupportedException("API", details.type)
+                throw APINotSupportedException(details.type)
             }
         }
     }

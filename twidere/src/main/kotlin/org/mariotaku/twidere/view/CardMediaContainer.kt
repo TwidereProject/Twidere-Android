@@ -137,7 +137,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
             }
             request.into(this)
             if (this is MediaPreviewImageView) {
-                hasPlayIcon = ParcelableMediaUtils.hasPlayIcon(item.type)
+                setHasPlayIcon(ParcelableMediaUtils.hasPlayIcon(item.type))
             }
             if (item.alt_text.isNullOrEmpty()) {
                 this.contentDescription = context.getString(R.string.media)

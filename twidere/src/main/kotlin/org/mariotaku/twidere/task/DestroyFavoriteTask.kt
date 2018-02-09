@@ -17,6 +17,8 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
+import org.mariotaku.twidere.util.AsyncTwitterWrapper
+import org.mariotaku.twidere.util.AsyncTwitterWrapper.Companion.calculateHashCode
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.updateStatusInfo
 
@@ -58,12 +60,15 @@ class DestroyFavoriteTask(
     }
 
     override fun beforeExecute() {
-        addTaskId(accountKey, statusId)
+        val hashCode = AsyncTwitterWrapper.calculateHashCode(accountKey, statusId)
+        if (!destroyingFavoriteIds.contains(hashCode)) {
+            destroyingFavoriteIds.add(hashCode)
+        }
         bus.post(StatusListChangedEvent())
     }
 
     override fun afterExecute(callback: Any?, result: ParcelableStatus?, exception: MicroBlogException?) {
-        removeTaskId(accountKey, statusId)
+        destroyingFavoriteIds.remove(AsyncTwitterWrapper.calculateHashCode(accountKey, statusId))
         val taskEvent = FavoriteTaskEvent(FavoriteTaskEvent.Action.DESTROY, accountKey, statusId)
         taskEvent.isFinished = true
         if (result != null) {
@@ -79,5 +84,12 @@ class DestroyFavoriteTask(
         bus.post(StatusListChangedEvent())
     }
 
-    companion object : ObjectIdTaskCompanion()
+    companion object {
+        private val destroyingFavoriteIds = ArrayList<Int>()
+
+        fun isDestroyingFavorite(accountKey: UserKey?, statusId: String?): Boolean {
+            return destroyingFavoriteIds.contains(calculateHashCode(accountKey, statusId))
+        }
+
+    }
 }

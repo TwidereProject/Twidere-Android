@@ -32,7 +32,7 @@ import android.util.AttributeSet;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.fragment.preference.ThemedPreferenceDialogFragmentCompat;
+import org.mariotaku.twidere.fragment.ThemedPreferenceDialogFragmentCompat;
 import org.mariotaku.twidere.preference.iface.IDialogPreference;
 
 public class NotificationTypePreference extends DialogPreference implements

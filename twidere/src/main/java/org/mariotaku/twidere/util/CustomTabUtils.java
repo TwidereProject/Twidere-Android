@@ -86,7 +86,8 @@ public class CustomTabUtils implements Constants {
     public static List<SupportTabSpec> getHomeTabs(@NonNull final Context context) {
         List<SupportTabSpec> specs = new ArrayList<>();
         for (Tab tab : getTabs(context)) {
-            @CustomTabType final String type = tab.getType();
+            @CustomTabType
+            final String type = tab.getType();
             final int position = tab.getPosition();
             final String iconType = tab.getIcon();
             final String name = tab.getName();
@@ -95,7 +96,8 @@ public class CustomTabUtils implements Constants {
             if (tabArguments != null) {
                 tabArguments.copyToBundle(args);
             }
-            @ReadPositionTag final String tag = getTagByType(type);
+            @ReadPositionTag
+            final String tag = getTagByType(type);
             args.putInt(EXTRA_TAB_POSITION, position);
             args.putLong(EXTRA_TAB_ID, tab.getId());
             final TabExtras tabExtras = tab.getExtras();
@@ -129,7 +131,6 @@ public class CustomTabUtils implements Constants {
                 return new TabArguments();
             }
             case CustomTabType.USER_TIMELINE:
-            case CustomTabType.USER_MEDIA_TIMELINE:
             case CustomTabType.FAVORITES: {
                 return new UserArguments();
             }

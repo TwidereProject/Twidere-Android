@@ -19,22 +19,19 @@
 
 package org.mariotaku.twidere.util.dagger
 
-import android.app.Application
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import dagger.Component
 import org.mariotaku.twidere.activity.*
 import org.mariotaku.twidere.adapter.*
 import org.mariotaku.twidere.app.TwidereApplication
-import org.mariotaku.twidere.dagger.module.ApplicationModule
-import org.mariotaku.twidere.dagger.module.ChannelModule
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.fragment.BasePreferenceFragment
+import org.mariotaku.twidere.fragment.ThemedPreferenceDialogFragmentCompat
 import org.mariotaku.twidere.fragment.filter.FilteredUsersFragment
 import org.mariotaku.twidere.fragment.media.ExoPlayerPageFragment
 import org.mariotaku.twidere.fragment.media.VideoPageFragment
-import org.mariotaku.twidere.fragment.preference.ThemedPreferenceDialogFragmentCompat
 import org.mariotaku.twidere.loader.CacheUserSearchLoader
 import org.mariotaku.twidere.loader.DefaultAPIConfigLoader
 import org.mariotaku.twidere.loader.ParcelableStatusLoader
@@ -53,13 +50,15 @@ import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.text.util.EmojiEditableFactory
 import org.mariotaku.twidere.text.util.EmojiSpannableFactory
 import org.mariotaku.twidere.util.MultiSelectEventHandler
-import org.mariotaku.twidere.util.SingletonHolder
 import org.mariotaku.twidere.util.filter.UrlFiltersSubscriptionProvider
 import org.mariotaku.twidere.util.sync.SyncTaskRunner
 import javax.inject.Singleton
 
+/**
+ * Created by mariotaku on 15/10/5.
+ */
 @Singleton
-@Component(modules = arrayOf(ApplicationModule::class, ChannelModule::class))
+@Component(modules = arrayOf(ApplicationModule::class))
 interface GeneralComponent {
     fun inject(adapter: DummyItemAdapter)
 
@@ -153,13 +152,17 @@ interface GeneralComponent {
 
     fun inject(fragment: VideoPageFragment)
 
-    companion object : SingletonHolder<GeneralComponent, Context>(creation@ { context ->
-        val application = context.applicationContext as Application
-        return@creation DaggerGeneralComponent.builder()
-                .applicationModule(ApplicationModule.getInstance(application))
-                .channelModule(ChannelModule.getInstance(application))
-                .build()
-    }) {
-        fun get(context: Context) = getInstance(context)
+    companion object {
+
+        private var instance: GeneralComponent? = null
+
+        fun get(context: Context): GeneralComponent {
+            return instance ?: run {
+                val helper = DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build()
+                instance = helper
+                return@run helper
+            }
+        }
+
     }
 }

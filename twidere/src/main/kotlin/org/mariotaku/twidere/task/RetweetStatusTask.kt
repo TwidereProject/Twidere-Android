@@ -22,13 +22,16 @@ import org.mariotaku.twidere.model.draft.StatusObjectActionExtras
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.model.event.StatusRetweetedEvent
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
-import org.mariotaku.twidere.task.status.UpdateStatusTask
+import org.mariotaku.twidere.task.twitter.UpdateStatusTask
+import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.updateStatusInfo
 
 /**
  * Retweet status
+ *
+ * Created by mariotaku on 2017/2/7.
  */
 class RetweetStatusTask(
         context: Context,
@@ -70,12 +73,15 @@ class RetweetStatusTask(
     }
 
     override fun beforeExecute() {
-        addTaskId(accountKey, statusId)
+        val hashCode = AsyncTwitterWrapper.calculateHashCode(accountKey, statusId)
+        if (!creatingRetweetIds.contains(hashCode)) {
+            creatingRetweetIds.add(hashCode)
+        }
         bus.post(StatusListChangedEvent())
     }
 
     override fun afterExecute(callback: Any?, result: ParcelableStatus?, exception: MicroBlogException?) {
-        removeTaskId(accountKey, statusId)
+        creatingRetweetIds.remove(AsyncTwitterWrapper.calculateHashCode(accountKey, statusId))
         if (result != null) {
             bus.post(StatusRetweetedEvent(result))
             Toast.makeText(context, R.string.message_toast_status_retweeted, Toast.LENGTH_SHORT).show()
@@ -107,6 +113,14 @@ class RetweetStatusTask(
         return exception.errorCode == TWITTER_ERROR_ALREADY_RETWEETED
     }
 
-    companion object : ObjectIdTaskCompanion()
+    companion object {
+
+        private val creatingRetweetIds = ArrayList<Int>()
+
+        fun isCreatingRetweet(accountKey: UserKey?, statusId: String?): Boolean {
+            return creatingRetweetIds.contains(AsyncTwitterWrapper.calculateHashCode(accountKey, statusId))
+        }
+
+    }
 
 }

@@ -190,7 +190,7 @@ open class MainActivity : ChameleonActivity(), IBaseActivity<MainActivity> {
     }
 
     override fun onPause() {
-        actionHelper.dispatchOnPause(this)
+        actionHelper.dispatchOnPause()
         super.onPause()
     }
 
@@ -206,10 +206,6 @@ open class MainActivity : ChameleonActivity(), IBaseActivity<MainActivity> {
 
     override fun executeAfterFragmentResumed(useHandler: Boolean, action: (MainActivity) -> Unit): Promise<Unit, Exception> {
         return actionHelper.executeAfterFragmentResumed(this, useHandler, action)
-    }
-
-    override fun executeBeforeFragmentPaused(useHandler: Boolean, action: (MainActivity) -> Unit): Promise<Unit, Exception> {
-        return actionHelper.executeBeforeFragmentPaused(this, useHandler, action)
     }
 
     override fun getOverrideTheme(): Chameleon.Theme? {

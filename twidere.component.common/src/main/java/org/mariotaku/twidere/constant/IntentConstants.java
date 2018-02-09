@@ -235,5 +235,4 @@ public interface IntentConstants {
     String EXTRA_SAVE_DRAFT = "save_draft";
     String EXTRA_HOST = "host";
     String EXTRA_LOCAL = "local";
-    String EXTRA_TIMELINE_STYLE = "timeline_style";
 }

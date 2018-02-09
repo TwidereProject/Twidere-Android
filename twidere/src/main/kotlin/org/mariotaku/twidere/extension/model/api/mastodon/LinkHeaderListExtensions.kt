@@ -27,6 +27,10 @@ import org.mariotaku.twidere.model.pagination.PaginatedList
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 
+/**
+ * Created by mariotaku on 2017/4/21.
+ */
+
 inline fun <T, R> LinkHeaderList<T>.mapToPaginated(transform: (T) -> R): PaginatedList<R> {
     val result = mapTo(PaginatedArrayList(size), transform)
     result.previousPage = getLinkPagination("prev")

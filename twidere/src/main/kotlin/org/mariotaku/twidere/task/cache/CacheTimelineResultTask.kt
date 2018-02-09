@@ -40,7 +40,7 @@ class CacheTimelineResultTask(
             val localRelationships = cr.queryAll(CachedRelationships.CONTENT_URI, CachedRelationships.COLUMNS,
                     Expression.and(Expression.equalsArgs(CachedRelationships.ACCOUNT_KEY),
                             Expression.inArgs(CachedRelationships.USER_KEY, users.size)).sql,
-                    selectionArgsList.toTypedArray(), cls = ParcelableRelationship::class.java)
+                    selectionArgsList.toTypedArray(), null, ParcelableRelationship::class.java)
             val relationships = users.mapTo(ArraySet<ParcelableRelationship>()) { user ->
                 val userKey = user.key
                 return@mapTo localRelationships.find {

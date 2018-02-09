@@ -36,7 +36,6 @@ import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
-import org.mariotaku.twidere.annotation.TimelineStyle
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.extension.model.originalId
 import org.mariotaku.twidere.extension.model.retweet_sort_id
@@ -53,7 +52,7 @@ import org.mariotaku.twidere.view.holder.status.DetailStatusViewHolder
 class StatusDetailsAdapter(
         val fragment: StatusFragment
 ) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(fragment.context, fragment.requestManager),
-        IStatusesAdapter, IItemCountsAdapter {
+        IStatusesAdapter<List<ParcelableStatus>>, IItemCountsAdapter {
 
     override val twidereLinkify: TwidereLinkify
 
@@ -99,47 +98,7 @@ class StatusDetailsAdapter(
     var statusAccount: AccountDetails? = null
         internal set
 
-    var data: List<ParcelableStatus>? = null
-        set(data) {
-            val status = this.status ?: return
-            field = data
-            if (data == null || data.isEmpty()) {
-                setTypeCount(ITEM_IDX_CONVERSATION, 0)
-                setTypeCount(ITEM_IDX_REPLY, 0)
-                replyStart = -1
-            } else {
-                val sortId = if (status.is_retweet) {
-                    status.retweet_sort_id
-                } else {
-                    status.sort_id
-                }
-
-                var conversationCount = 0
-                var replyCount = 0
-                var replyStart = -1
-                data.forEachIndexed { i, item ->
-                    if (item.sort_id < sortId) {
-                        if (!item.is_filtered) {
-                            conversationCount++
-                        }
-                    } else if (status.id == item.id) {
-                        this.status = item
-                    } else if (item.sort_id > sortId) {
-                        if (replyStart < 0) {
-                            replyStart = i
-                        }
-                        if (!item.is_filtered) {
-                            replyCount++
-                        }
-                    }
-                }
-                setTypeCount(ITEM_IDX_CONVERSATION, conversationCount)
-                setTypeCount(ITEM_IDX_REPLY, replyCount)
-                this.replyStart = replyStart
-            }
-            notifyDataSetChanged()
-            updateItemDecoration()
-        }
+    private var data: List<ParcelableStatus>? = null
     private var replyError: CharSequence? = null
     private var conversationError: CharSequence? = null
     private var replyStart: Int = 0
@@ -240,6 +199,48 @@ class StatusDetailsAdapter(
         }
     }
 
+    override fun setData(data: List<ParcelableStatus>?): Boolean {
+        val status = this.status ?: return false
+        val changed = this.data != data
+        this.data = data
+        if (data == null || data.isEmpty()) {
+            setTypeCount(ITEM_IDX_CONVERSATION, 0)
+            setTypeCount(ITEM_IDX_REPLY, 0)
+            replyStart = -1
+        } else {
+            val sortId = if (status.is_retweet) {
+                status.retweet_sort_id
+            } else {
+                status.sort_id
+            }
+
+            var conversationCount = 0
+            var replyCount = 0
+            var replyStart = -1
+            data.forEachIndexed { i, item ->
+                if (item.sort_id < sortId) {
+                    if (!item.is_filtered) {
+                        conversationCount++
+                    }
+                } else if (status.id == item.id) {
+                    this.status = item
+                } else if (item.sort_id > sortId) {
+                    if (replyStart < 0) {
+                        replyStart = i
+                    }
+                    if (!item.is_filtered) {
+                        replyCount++
+                    }
+                }
+            }
+            setTypeCount(ITEM_IDX_CONVERSATION, conversationCount)
+            setTypeCount(ITEM_IDX_REPLY, replyCount)
+            this.replyStart = replyStart
+        }
+        notifyDataSetChanged()
+        updateItemDecoration()
+        return changed
+    }
 
     override val showAccountsColor: Boolean
         get() = false
@@ -267,7 +268,7 @@ class StatusDetailsAdapter(
         get() = statusClickListener
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder? {
         when (viewType) {
             VIEW_TYPE_DETAIL_STATUS -> {
                 val view = inflater.inflate(R.layout.header_status, parent, false)
@@ -275,8 +276,7 @@ class StatusDetailsAdapter(
                 return DetailStatusViewHolder(this, view)
             }
             VIEW_TYPE_LIST_STATUS -> {
-                return ParcelableStatusesAdapter.createStatusViewHolder(this, inflater,
-                        parent, TimelineStyle.PLAIN) as RecyclerView.ViewHolder
+                return ListParcelableStatusesAdapter.createStatusViewHolder(this, inflater, parent)
             }
             VIEW_TYPE_CONVERSATION_LOAD_INDICATOR, VIEW_TYPE_REPLIES_LOAD_INDICATOR -> {
                 val view = inflater.inflate(R.layout.list_item_load_indicator, parent,
@@ -292,7 +292,7 @@ class StatusDetailsAdapter(
                 return StatusErrorItemViewHolder(view)
             }
         }
-        throw AssertionError()
+        return null
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>) {
@@ -483,6 +483,10 @@ class StatusDetailsAdapter(
         return RecyclerView.NO_POSITION
     }
 
+
+    fun getData(): List<ParcelableStatus>? {
+        return data
+    }
 
     var isConversationsLoading: Boolean
         get() = ILoadMoreSupportAdapter.START in loadMoreIndicatorPosition

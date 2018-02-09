@@ -19,21 +19,21 @@
 
 package org.mariotaku.twidere.extension.model
 
-import org.mariotaku.twidere.model.refresh.ContentRefreshParam
+import org.mariotaku.twidere.model.RefreshTaskParam
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 
-fun ContentRefreshParam.getMaxId(index: Int): String? {
+fun RefreshTaskParam.getMaxId(index: Int): String? {
     return (pagination?.get(index) as? SinceMaxPagination)?.maxId
 }
 
-fun ContentRefreshParam.getSinceId(index: Int): String? {
+fun RefreshTaskParam.getSinceId(index: Int): String? {
     return (pagination?.get(index) as? SinceMaxPagination)?.sinceId
 }
 
-fun ContentRefreshParam.getMaxSortId(index: Int): Long {
+fun RefreshTaskParam.getMaxSortId(index: Int): Long {
     return (pagination?.get(index) as? SinceMaxPagination)?.maxSortId ?: -1
 }
 
-fun ContentRefreshParam.getSinceSortId(index: Int): Long {
+fun RefreshTaskParam.getSinceSortId(index: Int): Long {
     return (pagination?.get(index) as? SinceMaxPagination)?.sinceSortId ?: -1
 }

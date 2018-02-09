@@ -22,7 +22,7 @@ package org.mariotaku.twidere.model.tab.impl
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.TabAccountFlags
-import org.mariotaku.twidere.fragment.timeline.PublicTimelineFragment
+import org.mariotaku.twidere.fragment.statuses.PublicTimelineFragment
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.model.tab.StringHolder

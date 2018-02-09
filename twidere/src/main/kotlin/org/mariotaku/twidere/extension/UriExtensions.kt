@@ -23,8 +23,6 @@ import android.net.Uri
 
 fun Uri.withAppendedPath(path: String): Uri = Uri.withAppendedPath(this, path)
 
-fun Uri.withAppendedPath(path: Long): Uri = this.withAppendedPath(path.toString())
-
 fun Uri.Builder.appendQueryParameterIgnoreNull(key: String, value: String?) {
     if (value == null) return
     appendQueryParameter(key, value)

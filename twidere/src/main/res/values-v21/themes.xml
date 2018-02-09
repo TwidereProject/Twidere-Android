@@ -27,9 +27,4 @@
         <item name="darkThemeResource">@style/Theme.Twidere.Dark.Launcher</item>
         <item name="lightThemeResource">@style/Theme.Twidere.Light.Launcher</item>
     </style>
-
-    <style name="Theme.Twidere.NoActionBar.TranslucentDecor" parent="Theme.Twidere.NoActionBar">
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowTranslucentNavigation">true</item>
-    </style>
 </resources>

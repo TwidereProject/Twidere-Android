@@ -26,6 +26,9 @@ import com.hannesdorfmann.parcelableplease.ParcelBagger;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Created by mariotaku on 16/4/28.
+ */
 public abstract class ParcelMapBagger<T extends Parcelable> implements ParcelBagger<Map<String, T>> {
     private final Class<T> cls;
 

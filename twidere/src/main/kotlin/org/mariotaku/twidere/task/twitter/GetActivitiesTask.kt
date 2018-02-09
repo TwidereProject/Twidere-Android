@@ -20,14 +20,13 @@ import org.mariotaku.twidere.extension.model.getMaxSortId
 import org.mariotaku.twidere.extension.model.getSinceId
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableActivity
-import org.mariotaku.twidere.model.refresh.ContentRefreshParam
+import org.mariotaku.twidere.model.RefreshTaskParam
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.GetActivitiesTaskEvent
 import org.mariotaku.twidere.model.task.GetTimelineResult
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.task.BaseAbstractTask
-import org.mariotaku.twidere.task.statuses.GetStatusesTask
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.ErrorInfoStore
@@ -42,7 +41,7 @@ import java.util.*
  */
 abstract class GetActivitiesTask(
         context: Context
-) : BaseAbstractTask<ContentRefreshParam, List<Pair<GetTimelineResult<ParcelableActivity>?, Exception?>>,
+) : BaseAbstractTask<RefreshTaskParam, List<Pair<GetTimelineResult<ParcelableActivity>?, Exception?>>,
         (Boolean) -> Unit>(context) {
 
     protected abstract val errorInfoKey: String
@@ -52,7 +51,7 @@ abstract class GetActivitiesTask(
 
     protected abstract val contentUri: Uri
 
-    override fun doLongOperation(param: ContentRefreshParam): List<Pair<GetTimelineResult<ParcelableActivity>?, Exception?>> {
+    override fun doLongOperation(param: RefreshTaskParam): List<Pair<GetTimelineResult<ParcelableActivity>?, Exception?>> {
         if (param.shouldAbort) return emptyList()
         val accountKeys = param.accountKeys.takeIf { it.isNotEmpty() } ?: return emptyList()
         val loadItemLimit = preferences[loadItemLimitKey]
@@ -155,6 +154,7 @@ abstract class GetActivitiesTask(
                     minPositionKey = activity.position_key
                 }
 
+                activity.inserted_date = System.currentTimeMillis()
                 valuesList.add(ObjectCursor.valuesCreatorFrom(ParcelableActivity::class.java)
                         .create(activity))
             }

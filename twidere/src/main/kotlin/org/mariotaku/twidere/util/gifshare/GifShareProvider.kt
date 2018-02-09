@@ -19,14 +19,31 @@
 
 package org.mariotaku.twidere.util.gifshare
 
+import android.content.Context
 import android.content.Intent
+import java.util.*
+
+/**
+ * Created by mariotaku on 2017/3/24.
+ */
 
 interface GifShareProvider {
-
-    val supported: Boolean get() = false
 
     fun createGifSelectorIntent(): Intent
 
     fun createSettingsIntent(): Intent?
 
+    interface Factory {
+        fun newInstance(context: Context): GifShareProvider?
+
+    }
+
+    companion object {
+        fun newFactory(): Factory = ServiceLoader.load(Factory::class.java)?.firstOrNull() ?: NullFactory
+
+        private object NullFactory : Factory {
+            override fun newInstance(context: Context) = null
+
+        }
+    }
 }

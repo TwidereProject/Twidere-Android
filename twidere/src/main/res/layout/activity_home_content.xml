@@ -44,7 +44,6 @@
         app:contentInsetStart="0dp">
 
         <LinearLayout
-            android:id="@+id/mainTabsContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">

@@ -19,16 +19,16 @@
 
 package org.mariotaku.twidere.model.event;
 
-import android.support.annotation.NonNull;
-
 import org.mariotaku.twidere.model.ParcelableStatus;
 
+/**
+ * Created by mariotaku on 14/12/10.
+ */
 public class StatusDestroyedEvent {
 
-    @NonNull
     public final ParcelableStatus status;
 
-    public StatusDestroyedEvent(@NonNull ParcelableStatus status) {
+    public StatusDestroyedEvent(ParcelableStatus status) {
         this.status = status;
     }
 }

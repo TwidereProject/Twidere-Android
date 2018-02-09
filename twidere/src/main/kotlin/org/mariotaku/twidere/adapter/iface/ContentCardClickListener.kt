@@ -22,6 +22,9 @@ package org.mariotaku.twidere.adapter.iface
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.View
 
+/**
+ * Created by mariotaku on 14/12/3.
+ */
 interface ContentCardClickListener {
     fun onItemActionClick(holder: ViewHolder, id: Int, position: Int) {}
 

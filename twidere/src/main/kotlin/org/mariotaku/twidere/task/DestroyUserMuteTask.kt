@@ -36,7 +36,7 @@ class DestroyUserMuteTask(context: Context) : AbsFriendshipOperationTask(context
                 mastodon.unmuteUser(args.userKey.id)
                 return mastodon.getAccount(args.userKey.id).toParcelable(details)
             }
-            else -> throw APINotSupportedException("API", details.type)
+            else -> throw APINotSupportedException(details.type)
         }
     }
 

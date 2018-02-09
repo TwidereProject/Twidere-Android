@@ -52,7 +52,7 @@ class DestroyFriendshipTask(context: Context) : AbsFriendshipOperationTask(conte
                         Expression.equalsArgs(Statuses.RETWEETED_BY_USER_KEY)))
         val whereArgs = arrayOf(args.accountKey.toString(), args.userKey.toString(), args.userKey.toString())
         val resolver = context.contentResolver
-        resolver.delete(Statuses.HomeTimeline.CONTENT_URI, where.sql, whereArgs)
+        resolver.delete(Statuses.CONTENT_URI, where.sql, whereArgs)
     }
 
     override fun showSucceededMessage(params: AbsFriendshipOperationTask.Arguments, user: ParcelableUser) {

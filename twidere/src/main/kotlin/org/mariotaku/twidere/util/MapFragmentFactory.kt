@@ -21,9 +21,20 @@ package org.mariotaku.twidere.util
 
 import android.content.Context
 import android.support.v4.app.Fragment
+import java.util.*
 
-interface MapFragmentFactory {
+/**
+ * Created by mariotaku on 15/4/27.
+ */
+abstract class MapFragmentFactory {
 
-    fun createMapFragment(context: Context): Fragment
+    abstract fun createMapFragment(context: Context): Fragment
+
+    companion object {
+
+        val instance: MapFragmentFactory by lazy {
+            ServiceLoader.load(MapFragmentFactory::class.java).first()
+        }
+    }
 
 }

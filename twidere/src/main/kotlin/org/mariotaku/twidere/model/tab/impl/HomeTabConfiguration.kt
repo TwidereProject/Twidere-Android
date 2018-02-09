@@ -23,7 +23,7 @@ import android.content.Context
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.TabAccountFlags
 import org.mariotaku.twidere.constant.IntentConstants.*
-import org.mariotaku.twidere.fragment.timeline.HomeTimelineFragment
+import org.mariotaku.twidere.fragment.HomeTimelineFragment
 import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.model.tab.StringHolder

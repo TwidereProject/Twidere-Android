@@ -66,7 +66,7 @@ class StatusRetweetersLoader(
                 }
             }
             else -> {
-                throw APINotSupportedException("API", details.type)
+                throw APINotSupportedException(details.type)
             }
         }
     }

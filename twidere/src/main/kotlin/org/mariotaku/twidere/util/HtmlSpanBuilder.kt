@@ -32,12 +32,15 @@ import org.attoparser.simple.AbstractSimpleMarkupHandler
 import org.attoparser.simple.SimpleMarkupParser
 import java.util.*
 
+/**
+ * Created by mariotaku on 15/11/4.
+ */
 object HtmlSpanBuilder {
 
     private val PARSER = SimpleMarkupParser(ParseConfiguration.htmlConfiguration())
 
     @Throws(HtmlParseException::class)
-    fun fromHtml(html: String, processor: SpanProcessor = EmptySpanProcessor): Spannable {
+    fun fromHtml(html: String, processor: SpanProcessor? = null): Spannable {
         val handler = HtmlSpanHandler(processor)
         try {
             PARSER.parse(html, handler)
@@ -48,18 +51,19 @@ object HtmlSpanBuilder {
         return handler.text
     }
 
-    fun fromHtml(html: String?, fallback: CharSequence?, processor: SpanProcessor = EmptySpanProcessor): CharSequence? {
+    fun fromHtml(html: String?, fallback: CharSequence?, processor: SpanProcessor? = null): CharSequence? {
         if (html == null) return fallback
-        return try {
-            fromHtml(html, processor)
+        try {
+            return fromHtml(html, processor)
         } catch (e: HtmlParseException) {
-            fallback
+            return fallback
         }
+
     }
 
     private fun applyTag(sb: SpannableStringBuilder, start: Int, end: Int, info: TagInfo,
             processor: SpanProcessor?) {
-        if (processor?.applySpan(sb, start, end, info) == true) return
+        if (processor?.applySpan(sb, start, end, info) ?: false) return
         if (info.nameLower == "br") {
             sb.append('\n')
         } else {
@@ -131,7 +135,7 @@ object HtmlSpanBuilder {
     }
 
     private class HtmlSpanHandler(
-            private val processor: SpanProcessor
+            val processor: SpanProcessor?
     ) : AbstractSimpleMarkupHandler() {
 
         private val sb = SpannableStringBuilder()
@@ -148,7 +152,7 @@ object HtmlSpanBuilder {
                     if (buffer[lineBreakIndex] == '\n') break
                     lineBreakIndex++
                 }
-                if (!processor.appendText(sb, buffer, cur, lineBreakIndex - cur, lastTag)) {
+                if (!(processor?.appendText(sb, buffer, cur, lineBreakIndex - cur, lastTag) ?: false)) {
                     sb.append(HtmlEscapeHelper.unescape(String(buffer, cur, lineBreakIndex - cur)))
                 }
                 cur = lineBreakIndex + 1
@@ -186,7 +190,5 @@ object HtmlSpanBuilder {
         val text: Spannable
             get() = sb
     }
-
-    private object EmptySpanProcessor : SpanProcessor
 
 }

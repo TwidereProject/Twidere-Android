@@ -122,8 +122,6 @@ class GroupViewHolder(private val adapter: IGroupsAdapter<*>, itemView: View) : 
         nameView.setSecondaryTextSize(textSize * 0.75f)
         membersCountView.textSize = textSize
         adminsCountView.textSize = textSize
-
-        nameView.updateTextAppearance()
     }
 
 }

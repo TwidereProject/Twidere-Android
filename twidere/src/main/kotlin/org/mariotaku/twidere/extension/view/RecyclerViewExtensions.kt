@@ -19,9 +19,7 @@
 
 package org.mariotaku.twidere.extension.view
 
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.StaggeredGridLayoutManager
 import android.support.v7.widget.recyclerView
 import android.view.View
 
@@ -45,17 +43,3 @@ fun RecyclerView.LayoutManager.calculateSpaceItemHeight(child: View, spaceViewTy
     }
     return -1
 }
-
-val RecyclerView.LayoutManager.firstVisibleItemPosition: Int
-    get() = when (this) {
-        is LinearLayoutManager -> findFirstVisibleItemPosition()
-        is StaggeredGridLayoutManager -> findFirstVisibleItemPositions(null).firstOrNull() ?: -1
-        else -> throw UnsupportedOperationException()
-    }
-
-val RecyclerView.LayoutManager.lastVisibleItemPosition: Int
-    get() = when (this) {
-        is LinearLayoutManager -> findLastVisibleItemPosition()
-        is StaggeredGridLayoutManager -> findLastVisibleItemPositions(null).lastOrNull() ?: -1
-        else -> throw UnsupportedOperationException()
-    }

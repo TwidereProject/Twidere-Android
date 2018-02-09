@@ -19,6 +19,14 @@
 
 package org.mariotaku.ktextension
 
+import java.text.Normalizer
+
 fun CharSequence.appendTo(sb: StringBuilder) {
     sb.append(this)
+}
+
+operator fun CharSequence.times(n: Int): String = repeat(n)
+
+fun CharSequence.normalized(form: Normalizer.Form): String {
+    return Normalizer.normalize(this, form)
 }

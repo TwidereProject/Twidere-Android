@@ -88,12 +88,6 @@ fun View.setVisible(visible: Boolean, hiddenVisibility: Int = View.GONE) {
 val ViewGroup.children: List<View>
     get() = (0 until childCount).map { getChildAt(it) }
 
-fun <T : ViewGroup.LayoutParams> View.setupLayoutParams(action: (T) -> Unit): Boolean {
-    @Suppress("UNCHECKED_CAST")
-    action(layoutParams as? T ?: return false)
-    return true
-}
-
 private fun offsetToRoot(view: View, rect: Rect) {
     var parent = view.parent as? View
     while (parent != null) {

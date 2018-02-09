@@ -21,20 +21,13 @@ package org.mariotaku.twidere.fragment.users
 
 import android.content.Context
 import android.os.Bundle
-import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
-import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.fragment.ParcelableUsersFragment
 import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
 import org.mariotaku.twidere.loader.users.UserListSubscribersLoader
 import org.mariotaku.twidere.model.UserKey
 
 class UserListSubscribersFragment : ParcelableUsersFragment() {
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        linkHandlerTitle = getString(R.string.list_subscribers)
-    }
 
     override fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean):
             AbsRequestUsersLoader {

@@ -23,12 +23,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import com.bumptech.glide.RequestManager
-import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
 import org.mariotaku.twidere.adapter.ParcelableUsersAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
-import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.fragment.ParcelableUsersFragment
 import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
 import org.mariotaku.twidere.loader.users.IncomingFriendshipsLoader
@@ -39,11 +37,6 @@ import org.mariotaku.twidere.view.holder.UserViewHolder
 
 class IncomingFriendshipsFragment : ParcelableUsersFragment(), IUsersAdapter.RequestClickListener {
     override val showFollow: Boolean = false
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        linkHandlerTitle = getString(R.string.incoming_friendships)
-    }
 
     override fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean):
             AbsRequestUsersLoader {

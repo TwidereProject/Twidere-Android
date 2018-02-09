@@ -27,6 +27,10 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 import org.mariotaku.microblog.library.twitter.model.Paging;
 
+/**
+ * Created by mariotaku on 2017/4/21.
+ */
+
 @ParcelablePlease
 public class SinceMaxPagination implements Pagination, Parcelable {
 

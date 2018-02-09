@@ -1,28 +1,27 @@
 package org.mariotaku.twidere.service
 
-import android.accounts.*
-import android.app.Service
+import android.accounts.AbstractAccountAuthenticator
+import android.accounts.Account
+import android.accounts.AccountAuthenticatorResponse
+import android.accounts.AccountManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.IBinder
-import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
 import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.activity.SignInActivity
-import org.mariotaku.twidere.util.notification.NotificationChannelsManager
 
 
-class AccountAuthenticatorService : Service() {
+/**
+ * Created by mariotaku on 2016/12/2.
+ */
+class AccountAuthenticatorService : BaseService() {
 
     private lateinit var authenticator: TwidereAccountAuthenticator
 
     override fun onCreate() {
         super.onCreate()
         authenticator = TwidereAccountAuthenticator(this)
-
-        AccountManager.get(this).addOnAccountsUpdatedListenerSafe(OnAccountsUpdateListener {
-            NotificationChannelsManager.updateAccountChannelsAndGroups(this)
-        }, updateImmediately = true)
     }
 
     override fun onBind(intent: Intent): IBinder {

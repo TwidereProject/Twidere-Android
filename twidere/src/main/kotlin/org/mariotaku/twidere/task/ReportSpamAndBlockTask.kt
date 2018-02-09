@@ -19,7 +19,7 @@ class ReportSpamAndBlockTask(context: Context) : CreateUserBlockTask(context) {
     override fun perform(details: AccountDetails, args: Arguments): ParcelableUser {
         when (details.type) {
             AccountType.MASTODON -> {
-                throw APINotSupportedException("API", details.type)
+                throw APINotSupportedException(details.type)
             }
             else -> {
                 val twitter = details.newMicroBlogInstance(context, MicroBlog::class.java)

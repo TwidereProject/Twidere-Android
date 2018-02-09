@@ -38,7 +38,7 @@ import org.mariotaku.twidere.model.ParcelableUserTableInfo;
 @SuppressWarnings("unused")
 public interface TwidereDataStore {
 
-    String AUTHORITY = "com.emojidex.twidere";
+    String AUTHORITY = "twidere";
 
     String TYPE_PRIMARY_KEY = "INTEGER PRIMARY KEY AUTOINCREMENT";
     String TYPE_INT = "INTEGER";
@@ -62,6 +62,11 @@ public interface TwidereDataStore {
     Uri CONTENT_URI_EMPTY = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH_EMPTY);
     Uri CONTENT_URI_RAW_QUERY = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH_RAW_QUERY);
     Uri CONTENT_URI_DATABASE_PREPARE = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH_DATABASE_PREPARE);
+
+    interface InsertedDateColumns {
+        String INSERTED_DATE = "inserted_date";
+        String INSERTED_DATE_TYPE = TYPE_INT;
+    }
 
     interface AccountSupportColumns {
 
@@ -337,7 +342,7 @@ public interface TwidereDataStore {
         String[] COLUMNS = {_ID, NAME, PATH};
     }
 
-    interface Messages extends BaseColumns, AccountSupportColumns {
+    interface Messages extends BaseColumns, InsertedDateColumns, AccountSupportColumns {
         String MESSAGE_ID = "message_id";
         String CONVERSATION_ID = "conversation_id";
         String MESSAGE_TYPE = "message_type";
@@ -573,7 +578,13 @@ public interface TwidereDataStore {
         String[] COLUMNS = {_ID, PACKAGE_NAME, PERMISSION};
     }
 
-    interface Statuses extends BaseColumns, AccountSupportColumns {
+    interface Statuses extends BaseColumns, InsertedDateColumns, AccountSupportColumns {
+
+        String TABLE_NAME = "statuses";
+        String CONTENT_PATH = TABLE_NAME;
+
+        @NonNull
+        Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
 
         /**
          * Id of the status.<br>
@@ -727,8 +738,6 @@ public interface TwidereDataStore {
         String FILTER_TEXTS = "filter_texts";
         String FILTER_DESCRIPTIONS = "filter_descriptions";
 
-        String TAB_ID = "tab_id";
-
         String DEFAULT_SORT_ORDER = TIMESTAMP + " DESC, " + SORT_ID + " DESC, " + ID
                 + " DESC";
 
@@ -736,119 +745,9 @@ public interface TwidereDataStore {
 
         String[] TYPES = ParcelableStatusTableInfo.TYPES;
 
-        String[] STATUSES_TABLES = {HomeTimeline.TABLE_NAME, Public.TABLE_NAME, NetworkPublic.TABLE_NAME,
-                Favorites.TABLE_NAME, UserTimeline.TABLE_NAME, UserMediaTimeline.TABLE_NAME,
-                ListTimeline.TABLE_NAME, GroupTimeline.TABLE_NAME, SearchTimeline.TABLE_NAME,
-                MediaSearchTimeline.TABLE_NAME, UserMentions.TABLE_NAME};
-
-        interface HomeTimeline extends Statuses {
-
-            String CONTENT_PATH = "statuses";
-            String TABLE_NAME = "statuses";
-
-            @NonNull
-            Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
-        }
-
-        interface Public extends Statuses {
-
-            String CONTENT_PATH = "statuses/public_timeline";
-            String TABLE_NAME = "public_timeline";
-
-            @NonNull
-            Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
-        }
-
-        interface NetworkPublic extends Statuses {
-
-            String CONTENT_PATH = "statuses/network_public_timeline";
-            String TABLE_NAME = "network_public_timeline";
-
-            @NonNull
-            Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
-        }
-
-        interface Favorites extends Statuses {
-
-            String CONTENT_PATH = "statuses/favorites_timeline";
-            String TABLE_NAME = "favorites_timeline";
-
-            @NonNull
-            Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
-        }
-
-        interface UserTimeline extends Statuses {
-
-            String CONTENT_PATH = "statuses/user_timeline";
-            String TABLE_NAME = "user_timeline";
-
-            @NonNull
-            Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
-        }
-
-
-        interface UserMediaTimeline extends Statuses {
-
-            String CONTENT_PATH = "statuses/user_media_timeline";
-            String TABLE_NAME = "user_media_timeline";
-
-            @NonNull
-            Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
-        }
-
-        interface ListTimeline extends Statuses {
-
-            String CONTENT_PATH = "statuses/list_timeline";
-            String TABLE_NAME = "list_timeline";
-
-            @NonNull
-            Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
-        }
-
-
-        interface GroupTimeline extends Statuses {
-
-            String CONTENT_PATH = "statuses/group_timeline";
-            String TABLE_NAME = "group_timeline";
-
-            @NonNull
-            Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
-        }
-
-        interface SearchTimeline extends Statuses {
-
-            String CONTENT_PATH = "statuses/search_timeline";
-            String TABLE_NAME = "search_timeline";
-
-            @NonNull
-            Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
-        }
-
-
-        interface MediaSearchTimeline extends Statuses {
-
-            String CONTENT_PATH = "statuses/media_search_timeline";
-            String TABLE_NAME = "media_search_timeline";
-
-            @NonNull
-            Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
-        }
-
-        interface UserMentions extends Statuses {
-
-            String CONTENT_PATH = "statuses/user_mentions";
-            String TABLE_NAME = "user_mentions_timeline";
-
-            @NonNull
-            Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
-        }
-
-        @NonNull
-        @Deprecated
-        Uri CONTENT_URI = HomeTimeline.CONTENT_URI;
     }
 
-    interface Activities extends Statuses, BaseColumns, AccountSupportColumns {
+    interface Activities extends Statuses, BaseColumns, InsertedDateColumns, AccountSupportColumns {
 
         String ACTIVITY_ID = "activity_id";
 

@@ -52,7 +52,6 @@ public class CursorReference<C extends Cursor> implements Closeable {
     }
 
     public static <Cur extends Cursor> CursorReference<Cur> get(Cur cursor) {
-        if (cursor == null) return null;
         return new CursorReference<>(cursor);
     }
 }

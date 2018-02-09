@@ -24,11 +24,9 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.text.BidiFormatter
-import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.squareup.otto.Bus
-import com.twitter.Validator
 import nl.komponents.kovenant.Promise
 import okhttp3.Dns
 import org.mariotaku.restfu.http.RestHttpClient
@@ -66,8 +64,6 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     @Inject
     lateinit var errorInfoStore: ErrorInfoStore
     @Inject
-    lateinit var validator: Validator
-    @Inject
     lateinit var extraFeaturesService: ExtraFeaturesService
     @Inject
     lateinit var permissionsManager: PermissionsManager
@@ -78,7 +74,7 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     @Inject
     lateinit var timelineSyncManagerFactory: TimelineSyncManager.Factory
     @Inject
-    lateinit var gifShareProvider: GifShareProvider
+    lateinit var gifShareProviderFactory: GifShareProvider.Factory
     @Inject
     lateinit var restHttpClient: RestHttpClient
     @Inject
@@ -99,6 +95,8 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     protected val timelineSyncManager: TimelineSyncManager?
         get() = timelineSyncManagerFactory.get()
 
+    protected val gifShareProvider: GifShareProvider?
+        get() = gifShareProviderFactory.newInstance(context)
 
     private val actionHelper = IBaseFragment.ActionHelper<BaseFragment>()
 
@@ -129,6 +127,7 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
 
     override fun onDestroy() {
         requestManager.onDestroy()
+        extraFeaturesService.release()
         super.onDestroy()
         DebugModeUtils.watchReferenceLeak(this)
     }
@@ -136,16 +135,6 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         GeneralComponent.get(context).inject(this)
-    }
-
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        view?.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-            if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
-                requestApplyInsets()
-            }
-        }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {

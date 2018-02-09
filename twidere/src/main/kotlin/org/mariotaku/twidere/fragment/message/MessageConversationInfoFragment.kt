@@ -91,7 +91,7 @@ import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationTyp
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ExtrasType
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
-import org.mariotaku.twidere.task.status.UpdateStatusTask
+import org.mariotaku.twidere.task.twitter.UpdateStatusTask
 import org.mariotaku.twidere.task.twitter.message.AddParticipantsTask
 import org.mariotaku.twidere.task.twitter.message.ClearMessagesTask
 import org.mariotaku.twidere.task.twitter.message.DestroyConversationTask
@@ -113,17 +113,15 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
     private lateinit var adapter: ConversationInfoAdapter
     private lateinit var itemDecoration: ConversationInfoDecoration
 
-    override val controlBarHeight: Int get() = fragmentToolbar.measuredHeight
+    override val controlBarHeight: Int get() = toolbar.measuredHeight
     override var controlBarOffset: Float = 0f
 
-    override val fragmentToolbar: Toolbar
+    override val toolbar: Toolbar
         get() = toolbarLayout.toolbar
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
-        linkHandlerTitle = getString(R.string.title_direct_messages_conversation_info)
-
         val activity = this.activity
 
         if (activity is AppCompatActivity) {

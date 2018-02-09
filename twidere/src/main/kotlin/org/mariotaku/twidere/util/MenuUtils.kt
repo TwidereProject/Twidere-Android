@@ -55,11 +55,11 @@ import org.mariotaku.twidere.constant.favoriteConfirmationKey
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.model.isOfficial
+import org.mariotaku.twidere.fragment.AbsStatusesFragment
 import org.mariotaku.twidere.fragment.AddStatusFilterDialogFragment
 import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.fragment.SetUserNicknameDialogFragment
 import org.mariotaku.twidere.fragment.status.*
-import org.mariotaku.twidere.fragment.timeline.AbsTimelineFragment
 import org.mariotaku.twidere.graphic.ActionIconDrawable
 import org.mariotaku.twidere.graphic.PaddingDrawable
 import org.mariotaku.twidere.menu.FavoriteItemProvider
@@ -69,11 +69,13 @@ import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.task.CreateFavoriteTask
 import org.mariotaku.twidere.task.DestroyFavoriteTask
-import org.mariotaku.twidere.task.DestroyStatusTask
 import org.mariotaku.twidere.task.RetweetStatusTask
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo
 import java.io.IOException
 
+/**
+ * Created by mariotaku on 15/4/12.
+ */
 object MenuUtils {
 
     fun addIntentToMenu(context: Context, menu: Menu, queryIntent: Intent,
@@ -102,15 +104,16 @@ object MenuUtils {
     }
 
     fun setupForStatus(context: Context, menu: Menu, preferences: SharedPreferences,
-            manager: UserColorNameManager, status: ParcelableStatus) {
+            twitter: AsyncTwitterWrapper, manager: UserColorNameManager, status: ParcelableStatus) {
         val account = AccountUtils.getAccountDetails(AccountManager.get(context),
                 status.account_key, true) ?: return
-        setupForStatus(context, menu, preferences, manager, status, account)
+        setupForStatus(context, menu, preferences, twitter, manager, status, account)
     }
 
     @UiThread
     fun setupForStatus(context: Context, menu: Menu, preferences: SharedPreferences,
-            manager: UserColorNameManager, status: ParcelableStatus, details: AccountDetails) {
+            twitter: AsyncTwitterWrapper, manager: UserColorNameManager, status: ParcelableStatus,
+            details: AccountDetails) {
         if (menu is ContextMenu) {
             val displayName = manager.getDisplayName(status.user_key, status.user_name,
                     status.user_screen_name, preferences[nameFirstKey])
@@ -120,10 +123,13 @@ object MenuUtils {
         val retweetHighlight = ContextCompat.getColor(context, R.color.highlight_retweet)
         val favoriteHighlight = ContextCompat.getColor(context, R.color.highlight_favorite)
         val likeHighlight = ContextCompat.getColor(context, R.color.highlight_like)
-        val isMyRetweet = when {
-            RetweetStatusTask.isRunning(status.account_key, status.id) -> true
-            DestroyStatusTask.isRunning(status.account_key, status.id) -> false
-            else -> status.retweeted || Utils.isMyRetweet(status)
+        val isMyRetweet: Boolean
+        if (RetweetStatusTask.isCreatingRetweet(status.account_key, status.id)) {
+            isMyRetweet = true
+        } else if (twitter.isDestroyingStatus(status.account_key, status.id)) {
+            isMyRetweet = false
+        } else {
+            isMyRetweet = status.retweeted || Utils.isMyRetweet(status)
         }
         val isMyStatus = Utils.isMyStatus(status)
         menu.setItemAvailability(R.id.delete, isMyStatus)
@@ -160,7 +166,7 @@ object MenuUtils {
             val isFavorite: Boolean
             if (CreateFavoriteTask.isCreatingFavorite(status.account_key, status.id)) {
                 isFavorite = true
-            } else if (DestroyFavoriteTask.isRunning(status.account_key, status.id)) {
+            } else if (DestroyFavoriteTask.isDestroyingFavorite(status.account_key, status.id)) {
                 isFavorite = false
             } else {
                 isFavorite = status.is_favorite
@@ -267,7 +273,8 @@ object MenuUtils {
                 } else {
                     val provider = MenuItemCompat.getActionProvider(item)
                     if (provider is FavoriteItemProvider) {
-                        provider.invokeItem(item, AbsTimelineFragment.DefaultOnLikedListener(twitter, status))
+                        provider.invokeItem(item,
+                                AbsStatusesFragment.DefaultOnLikedListener(twitter, status))
                     } else {
                         twitter.createFavoriteAsync(status.account_key, status)
                     }

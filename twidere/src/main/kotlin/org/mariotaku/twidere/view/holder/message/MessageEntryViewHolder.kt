@@ -56,8 +56,6 @@ class MessageEntryViewHolder(itemView: View, val adapter: MessagesEntriesAdapter
         text.textSize = textSize
         time.textSize = textSize * 0.85f
 
-        name.updateTextAppearance()
-
         profileImage.style = adapter.profileImageStyle
 
         itemView.setOnClickListener {

@@ -33,41 +33,27 @@ interface IBaseActivity<out A : FragmentActivity> {
 
     fun executeAfterFragmentResumed(useHandler: Boolean = false, action: (A) -> Unit): Promise<Unit, Exception>
 
-    fun executeBeforeFragmentPaused(useHandler: Boolean = false, action: (A) -> Unit): Promise<Unit, Exception>
-
-    fun executeAfterFragmentNextResumed(useHandler: Boolean = false, action: (A) -> Unit): Promise<Unit, Exception> {
-        val deferred = deferred<Unit, Exception>()
-        executeBeforeFragmentPaused(useHandler) {
-            executeAfterFragmentResumed(useHandler) { a ->
-                action(a)
-                deferred.resolve(Unit)
-            }
-        }
-        return deferred.promise
-    }
-
     class ActionHelper<A : FragmentActivity> {
 
         private var fragmentResumed: Boolean = false
-        private val resumeActionQueue = LinkedList<ExecuteInfo<A>>()
-        private val pauseActionQueue = LinkedList<ExecuteInfo<A>>()
+        private val actionQueue = LinkedList<ExecuteInfo<A>>()
         private val handler = Handler(Looper.getMainLooper())
 
-        fun dispatchOnPause(activity: A) {
+        fun dispatchOnPause() {
             fragmentResumed = false
-            pauseActionQueue.executePending(activity)
         }
 
         fun dispatchOnResumeFragments(activity: A) {
             fragmentResumed = true
-            resumeActionQueue.executePending(activity)
+            executePending(activity)
         }
 
-        private fun Queue<ExecuteInfo<A>>.executePending(activity: A, condition: Boolean = true) {
-            if (!condition) return
+
+        private fun executePending(activity: A) {
+            if (!fragmentResumed) return
             var info: ExecuteInfo<A>?
             do {
-                info = poll()
+                info = actionQueue.poll()
                 info?.let { i ->
                     if (i.useHandler) {
                         handler.post { i.invoke(activity) }
@@ -81,16 +67,8 @@ interface IBaseActivity<out A : FragmentActivity> {
         fun executeAfterFragmentResumed(activity: A, useHandler: Boolean = false, action: (A) -> Unit)
                 : Promise<Unit, Exception> {
             val info = ExecuteInfo(action, useHandler)
-            resumeActionQueue.add(info)
-            resumeActionQueue.executePending(activity, fragmentResumed)
-            return info.promise
-        }
-
-        fun executeBeforeFragmentPaused(activity: A, useHandler: Boolean = false, action: (A) -> Unit)
-                : Promise<Unit, Exception> {
-            val info = ExecuteInfo(action, useHandler)
-            pauseActionQueue.add(info)
-            pauseActionQueue.executePending(activity, !fragmentResumed)
+            actionQueue.add(info)
+            executePending(activity)
             return info.promise
         }
 

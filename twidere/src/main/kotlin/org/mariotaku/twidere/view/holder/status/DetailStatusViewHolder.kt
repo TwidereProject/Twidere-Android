@@ -58,8 +58,8 @@ import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.*
+import org.mariotaku.twidere.fragment.AbsStatusesFragment
 import org.mariotaku.twidere.fragment.status.StatusFragment
-import org.mariotaku.twidere.fragment.timeline.AbsTimelineFragment
 import org.mariotaku.twidere.menu.FavoriteItemProvider
 import org.mariotaku.twidere.menu.RetweetItemProvider
 import org.mariotaku.twidere.model.*
@@ -68,7 +68,6 @@ import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.twitter.card.TwitterCardViewFactory
 import org.mariotaku.twidere.view.ProfileImageView
-import org.mariotaku.twidere.view.TimelineContentTextView
 import java.util.*
 
 class DetailStatusViewHolder(
@@ -89,8 +88,6 @@ class DetailStatusViewHolder(
     private val translateChangeLanguageView = itemView.translateChangeLanguage
     private val translateContainer = itemView.translateContainer
     private val translateLabelView = itemView.translateLabel
-    private val quotedTextView: TimelineContentTextView = itemView.quotedText
-    private val quotedNameView = itemView.quotedName
 
     private val downloadListener: CustomDownloadListener = CustomDownloadListener()
 
@@ -116,6 +113,7 @@ class DetailStatusViewHolder(
         val fragment = adapter.fragment
         val context = adapter.context
         val formatter = adapter.bidiFormatter
+        val twitter = adapter.twitterWrapper
         val nameFirst = adapter.nameFirst
         val colorNameManager = adapter.userColorNameManager
 
@@ -143,27 +141,26 @@ class DetailStatusViewHolder(
             val quoteContentAvailable = status.quoted_text_plain != null && status.quoted_text_unescaped != null
 
             if (quoteContentAvailable) {
-                quotedNameView.visibility = View.VISIBLE
-                quotedTextView.visibility = View.VISIBLE
+                itemView.quotedName.visibility = View.VISIBLE
+                itemView.quotedText.visibility = View.VISIBLE
 
-                quotedNameView.name = colorNameManager.getUserNickname(status.quoted_user_key!!,
+                itemView.quotedName.name = colorNameManager.getUserNickname(status.quoted_user_key!!,
                         status.quoted_user_name)
-                quotedNameView.screenName = "@${status.quoted_user_acct}"
-                quotedNameView.updateText(formatter)
+                itemView.quotedName.screenName = "@${status.quoted_user_acct}"
+                itemView.quotedName.updateText(formatter)
 
 
                 val quotedDisplayEnd = status.extras?.quoted_display_text_range?.getOrNull(1) ?: -1
                 val quotedText = SpannableStringBuilder.valueOf(status.quoted_text_unescaped)
-                status.quoted_spans?.applyTo(quotedText, status.extras?.emojis,
-                        adapter.requestManager, quotedTextView)
+                status.quoted_spans?.applyTo(quotedText)
                 linkify.applyAllLinks(quotedText, status.account_key, layoutPosition.toLong(),
                         status.is_possibly_sensitive, skipLinksInText)
                 if (quotedDisplayEnd != -1 && quotedDisplayEnd <= quotedText.length) {
-                    quotedTextView.spannable = quotedText.subSequence(0, quotedDisplayEnd)
+                    itemView.quotedText.spannable = quotedText.subSequence(0, quotedDisplayEnd)
                 } else {
-                    quotedTextView.spannable = quotedText
+                    itemView.quotedText.spannable = quotedText
                 }
-                quotedTextView.hideIfEmpty()
+                itemView.quotedText.hideIfEmpty()
 
                 val quotedUserColor = colorNameManager.getUserColor(status.quoted_user_key!!)
                 if (quotedUserColor != 0) {
@@ -189,8 +186,8 @@ class DetailStatusViewHolder(
                     itemView.quotedMediaPreview.visibility = View.GONE
                 }
             } else {
-                quotedNameView.visibility = View.GONE
-                quotedTextView.visibility = View.VISIBLE
+                itemView.quotedName.visibility = View.GONE
+                itemView.quotedText.visibility = View.VISIBLE
                 itemView.quotedMediaLabel.visibility = View.GONE
                 itemView.quotedMediaPreview.visibility = View.GONE
 
@@ -199,7 +196,7 @@ class DetailStatusViewHolder(
                 string.setSpan(ForegroundColorSpan(ThemeUtils.getColorFromAttribute(context,
                         android.R.attr.textColorTertiary, textView.currentTextColor)), 0,
                         string.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                quotedTextView.spannable = string
+                itemView.quotedText.spannable = string
 
                 itemView.quotedView.drawStart(ThemeUtils.getColorFromAttribute(context,
                         R.attr.quoteIndicatorBackgroundColor))
@@ -253,15 +250,16 @@ class DetailStatusViewHolder(
         }
         itemView.timeSource.movementMethod = LinkMovementMethod.getInstance()
 
-        summaryView.spannable = status.extras?.summary_text
-        summaryView.hideIfEmpty()
-
         val displayEnd = status.extras?.display_text_range?.getOrNull(1) ?: -1
         val text = SpannableStringBuilder.valueOf(status.text_unescaped).apply {
-            status.spans?.applyTo(this, status.extras?.emojis, adapter.requestManager, textView)
+            status.spans?.applyTo(this)
             linkify.applyAllLinks(this, status.account_key, layoutPosition.toLong(),
                     status.is_possibly_sensitive, skipLinksInText)
         }
+
+        summaryView.spannable = status.extras?.summary_text
+        summaryView.hideIfEmpty()
+
 
         if (displayEnd != -1 && displayEnd <= text.length) {
             val displayText = text.subSequence(0, displayEnd)
@@ -348,8 +346,9 @@ class DetailStatusViewHolder(
             itemView.twitterCard.visibility = View.GONE
         }
 
-        MenuUtils.setupForStatus(context, itemView.menuBar.menu, fragment.preferences, colorNameManager,
-                status, adapter.statusAccount!!)
+        MenuUtils.setupForStatus(context, itemView.menuBar.menu, fragment.preferences, twitter,
+                colorNameManager, status, adapter.statusAccount!!)
+
 
 
         val lang = status.lang
@@ -378,7 +377,7 @@ class DetailStatusViewHolder(
         translateResultView.setTextIsSelectable(true)
 
         textView.movementMethod = LinkMovementMethod.getInstance()
-        quotedTextView.movementMethod = null
+        itemView.quotedText.movementMethod = null
 
         // Convert to emojidex.
         textView.setText(Emojidex.getInstance().emojify(textView.getText()))
@@ -469,7 +468,7 @@ class DetailStatusViewHolder(
             favoriteProvider.longClickListener = {
                 val status = adapter.getStatus(layoutPosition)
                 val itemId = adapter.getItemId(layoutPosition)
-                AbsTimelineFragment.handleActionLongClick(fragment, status, itemId, R.id.favorite)
+                AbsStatusesFragment.handleActionLongClick(fragment, status, itemId, R.id.favorite)
             }
             favoriteProvider.init(itemView.menuBar, favoriteItem)
         }
@@ -480,7 +479,7 @@ class DetailStatusViewHolder(
             retweetProvider.longClickListener = {
                 val status = adapter.getStatus(layoutPosition)
                 val itemId = adapter.getItemId(layoutPosition)
-                AbsTimelineFragment.handleActionLongClick(fragment, status, itemId, R.id.retweet)
+                AbsStatusesFragment.handleActionLongClick(fragment, status, itemId, R.id.retweet)
             }
             retweetProvider.init(itemView.menuBar, retweetItem)
         }
@@ -501,9 +500,9 @@ class DetailStatusViewHolder(
         summaryView.textSize = textSize * 1.25f
         textView.textSize = textSize * 1.25f
 
-        quotedNameView.setPrimaryTextSize(textSize * 1.25f)
-        quotedNameView.setSecondaryTextSize(textSize * 0.85f)
-        quotedTextView.textSize = textSize * 1.25f
+        itemView.quotedName.setPrimaryTextSize(textSize * 1.25f)
+        itemView.quotedName.setSecondaryTextSize(textSize * 0.85f)
+        itemView.quotedText.textSize = textSize * 1.25f
 
         locationView.textSize = textSize * 0.85f
         itemView.timeSource.textSize = textSize * 0.85f
@@ -511,17 +510,11 @@ class DetailStatusViewHolder(
         translateChangeLanguageView.textSize = textSize * 0.85f
         translateResultView.textSize = textSize * 1.05f
 
-        itemView.countsUsersHeightHolder.countItem.apply {
-            setPrimaryTextSize(textSize * 1.25f)
-            setSecondaryTextSize(textSize * 0.85f)
-            updateTextAppearance()
-        }
-
-        nameView.updateTextAppearance()
-        quotedNameView.updateTextAppearance()
+        itemView.countsUsersHeightHolder.count.textSize = textSize * 1.25f
+        itemView.countsUsersHeightHolder.label.textSize = textSize * 0.85f
 
         nameView.nameFirst = adapter.nameFirst
-        quotedNameView.nameFirst = adapter.nameFirst
+        itemView.quotedName.nameFirst = adapter.nameFirst
 
         itemView.mediaPreview.style = adapter.mediaPreviewStyle
         itemView.quotedMediaPreview.style = adapter.mediaPreviewStyle
@@ -542,8 +535,8 @@ class DetailStatusViewHolder(
         nameView.applyFontFamily(adapter.lightFont)
         summaryView.applyFontFamily(adapter.lightFont)
         textView.applyFontFamily(adapter.lightFont)
-        quotedNameView.applyFontFamily(adapter.lightFont)
-        quotedTextView.applyFontFamily(adapter.lightFont)
+        itemView.quotedName.applyFontFamily(adapter.lightFont)
+        itemView.quotedText.applyFontFamily(adapter.lightFont)
         itemView.locationView.applyFontFamily(adapter.lightFont)
         translateLabelView.applyFontFamily(adapter.lightFont)
         translateResultView.applyFontFamily(adapter.lightFont)
@@ -713,13 +706,11 @@ class DetailStatusViewHolder(
                 itemView: View
         ) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
-            private val labelView = itemView.countItem
-
             init {
                 itemView.setOnClickListener(this)
                 val textSize = adapter.textSize
-                labelView.setPrimaryTextSize(textSize * 1.25f)
-                labelView.setSecondaryTextSize(textSize * 0.85f)
+                itemView.count.textSize = textSize * 1.25f
+                itemView.label.textSize = textSize * 0.85f
             }
 
             override fun onClick(v: View) {
@@ -727,24 +718,23 @@ class DetailStatusViewHolder(
             }
 
             fun displayCount(count: LabeledCount) {
-                val label = when (count.type) {
+                val label: String
+                when (count.type) {
                     KEY_REPLY_COUNT -> {
-                        adapter.context.getString(R.string.replies)
+                        label = adapter.context.getString(R.string.replies)
                     }
                     KEY_RETWEET_COUNT -> {
-                        adapter.context.getString(R.string.count_label_retweets)
+                        label = adapter.context.getString(R.string.count_label_retweets)
                     }
                     KEY_FAVORITE_COUNT -> {
-                        adapter.context.getString(R.string.title_favorites)
+                        label = adapter.context.getString(R.string.title_favorites)
                     }
                     else -> {
                         throw UnsupportedOperationException("Unsupported type " + count.type)
                     }
                 }
-                labelView.primaryText = Utils.getLocalizedNumber(Locale.getDefault(), count.count)
-                labelView.secondaryText = label
-
-                labelView.updateText(adapter.bidiFormatter)
+                itemView.count.text = Utils.getLocalizedNumber(Locale.getDefault(), count.count)
+                itemView.label.text = label
             }
         }
 

@@ -29,7 +29,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.twitter.Extractor
-import org.mariotaku.ktextension.supportActionProvider
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.constant.IntentConstants.*
@@ -169,7 +168,7 @@ class MultiSelectEventHandler(
 
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
         mode.menuInflater.inflate(R.menu.action_multi_select_contents, menu)
-        accountActionProvider = menu.findItem(R.id.select_account).supportActionProvider as AccountActionProvider
+        accountActionProvider = menu.findItem(R.id.select_account).actionProvider as AccountActionProvider
         accountActionProvider?.selectedAccountKeys = arrayOf(multiSelectManager.firstSelectAccountKey)
         return true
     }

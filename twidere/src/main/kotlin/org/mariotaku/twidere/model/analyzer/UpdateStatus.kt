@@ -6,7 +6,7 @@ import org.mariotaku.twidere.extension.model.draftActionTypeString
 import org.mariotaku.twidere.extension.model.parcelableMediaTypeString
 import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.ParcelableMedia
-import org.mariotaku.twidere.task.status.UpdateStatusTask
+import org.mariotaku.twidere.task.twitter.UpdateStatusTask
 import org.mariotaku.twidere.util.Analyzer
 import java.io.IOException
 
