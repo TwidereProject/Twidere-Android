@@ -35,7 +35,6 @@ import android.view.ViewGroup
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.ExtractorsFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
-import com.google.android.exoplayer2.source.LoopingMediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
@@ -332,17 +331,14 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
             player.playWhenReady = !pausedByUser
             playerHasError = false
             player.addListener(playerListener)
+            player.repeatMode = if (isLoopEnabled) Player.REPEAT_MODE_ALL else Player.REPEAT_MODE_OFF
             return@run player
         }
 
         val uri = media?.getDownloadUri() ?: return
         val factory = AuthDelegatingDataSourceFactory(uri, account, dataSourceFactory)
         val uriSource = ExtractorMediaSource(uri, factory, extractorsFactory, null, null)
-        if (isLoopEnabled) {
-            playerView.player.prepare(LoopingMediaSource(uriSource))
-        } else {
-            playerView.player.prepare(uriSource)
-        }
+        playerView.player.prepare(uriSource)
         updateVolume()
     }
 
@@ -361,7 +357,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         if (bestVideoUrlAndType != null) {
             return Uri.parse(bestVideoUrlAndType.first)
         }
-        return arguments!!.getParcelable<Uri>(SubsampleImageViewerFragment.EXTRA_MEDIA_URI)
+        return arguments!!.getParcelable(SubsampleImageViewerFragment.EXTRA_MEDIA_URI)
     }
 
 

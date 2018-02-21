@@ -1,7 +1,7 @@
 /*
- *                 Twidere - Twitter client for Android
+ *             Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2018 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,21 +17,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.model
+package org.mariotaku.twidere.util
 
-import android.os.Bundle
-
-/**
- * Created by mariotaku on 15/10/11.
- */
-interface Response<out Data> {
-    val data: Data?
-
-    val exception: Exception?
-
-    val extras: Bundle
-
-    fun hasData(): Boolean = data != null
-
-    fun hasException(): Boolean = exception != null
+object Logcat {
+    fun get(filter: String?): String {
+        val builder = ProcessBuilder("logcat", "-d")
+        if (filter != null) {
+            builder.command("-s", filter)
+        }
+        return builder.start().inputStream.reader().readText()
+    }
 }

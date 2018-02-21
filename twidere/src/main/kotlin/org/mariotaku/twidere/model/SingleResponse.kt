@@ -31,14 +31,6 @@ data class SingleResponse<Data>(
 
     constructor(exception: Exception) : this(null, exception)
 
-    override fun hasData(): Boolean {
-        return data != null
-    }
-
-    override fun hasException(): Boolean {
-        return exception != null
-    }
-
     companion object {
 
         fun <T> getInstance(): SingleResponse<T> {

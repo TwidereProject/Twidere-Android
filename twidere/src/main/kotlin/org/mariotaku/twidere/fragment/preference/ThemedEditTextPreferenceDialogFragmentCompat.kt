@@ -21,8 +21,8 @@ import android.support.v7.preference.EditTextPreference
 import android.support.v7.preference.PreferenceDialogFragmentCompat
 import android.view.View
 import android.widget.EditText
-
 import org.mariotaku.chameleon.Chameleon
+import org.mariotaku.chameleon.internal.ColorStateLists
 import org.mariotaku.chameleon.view.ChameleonTextView
 
 class ThemedEditTextPreferenceDialogFragmentCompat : ThemedPreferenceDialogFragmentCompat() {
@@ -38,6 +38,7 @@ class ThemedEditTextPreferenceDialogFragmentCompat : ThemedPreferenceDialogFragm
         val theme = Chameleon.getOverrideTheme(context, context)
         editText = view.findViewById(android.R.id.edit)
         val appearance = ChameleonTextView.Appearance.create(editText, context, null, theme)
+        appearance.backgroundTintList = ColorStateLists.tintDefault(theme)
         ChameleonTextView.Appearance.apply(editText, appearance)
         return view
     }

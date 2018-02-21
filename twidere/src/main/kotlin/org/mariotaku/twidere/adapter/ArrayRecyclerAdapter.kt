@@ -5,9 +5,6 @@ import android.support.v7.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.RequestManager
 import java.util.*
 
-/**
- * Created by mariotaku on 14/10/27.
- */
 abstract class ArrayRecyclerAdapter<T, H : ViewHolder>(
         context: Context,
         requestManager: RequestManager
@@ -15,15 +12,13 @@ abstract class ArrayRecyclerAdapter<T, H : ViewHolder>(
 
     protected val data = ArrayList<T>()
 
-    override fun onBindViewHolder(holder: H, position: Int) {
+    override final fun onBindViewHolder(holder: H, position: Int) {
         onBindViewHolder(holder, position, getItem(position))
     }
 
     abstract fun onBindViewHolder(holder: H, position: Int, item: T)
 
-
-    fun add(item: T?) {
-        if (item == null) return
+    fun add(item: T) {
         data.add(item)
         notifyDataSetChanged()
     }

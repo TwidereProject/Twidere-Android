@@ -1391,4 +1391,6 @@
 
     <string name="users_blocked">Blocked these users.</string>
     <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>\'s lists</string>
+    <string name="hint_feedback_title">Title</string>
+    <string name="hint_feedback_content">Leave a comment</string>
 </resources>

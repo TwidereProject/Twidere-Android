@@ -35,7 +35,7 @@ allprojects {
 subprojects {
     buildscript {
         ext {
-            kotlinVersion = '1.2.10'
+            kotlinVersion = '1.2.21'
             pluginVersions = [
                     AndroidSvgDrawable: '3.0.0',
                     PlayServices      : '3.1.1',
@@ -80,8 +80,8 @@ subprojects {
                     AbstractTask           : '0.9.8',
                     Dagger                 : '2.11',
                     StethoBeanShellREPL    : '0.3',
-                    ArchLifecycleExtensions: '1.0.0',
-                    ArchPaging             : '1.0.0-alpha4-1',
+                    ArchLifecycleExtensions: '1.1.0',
+                    ArchPaging             : '1.0.0-alpha5',
                     ConstraintLayout       : '1.1.0-beta4',
                     MessageBubbleView      : '2.1',
             ]

@@ -39,5 +39,11 @@
     <Preference
         android:fragment="org.mariotaku.twidere.fragment.NetworkDiagnosticsFragment"
         android:title="@string/network_diagnostics"/>
+    <Preference
+        android:title="@string/title_user_feedback">
+        <intent
+            android:action="org.mariotaku.twidere.USER_FEEDBACK"
+            android:targetPackage="org.mariotaku.twidere"/>
+    </Preference>
 
 </PreferenceScreen>
