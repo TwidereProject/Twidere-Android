@@ -58,7 +58,7 @@ object ContentValuesCreator {
         val values = ContentValues()
         values.put(SavedSearches.ACCOUNT_KEY, accountKey.toString())
         values.put(SavedSearches.SEARCH_ID, savedSearch.id)
-        values.put(SavedSearches.CREATED_AT, savedSearch.createdAt.time)
+        values.put(SavedSearches.CREATED_AT, savedSearch.createdAt?.time ?: -1)
         values.put(SavedSearches.NAME, savedSearch.name)
         values.put(SavedSearches.QUERY, savedSearch.query)
         return values

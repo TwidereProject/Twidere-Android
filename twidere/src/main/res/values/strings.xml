@@ -1393,4 +1393,6 @@
     <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>\'s lists</string>
     <string name="hint_feedback_title">Title</string>
     <string name="hint_feedback_content">Leave a comment</string>
+    <string name="label_user_feedback_include_basic_info">Include basic information</string>
+    <string name="label_user_feedback_include_crash_log">Include crash log</string>
 </resources>

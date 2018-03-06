@@ -22,15 +22,15 @@ package org.mariotaku.twidere.util.glide
 import android.graphics.drawable.Drawable
 import com.bumptech.glide.request.animation.GlideAnimation
 import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.target.Target
 import nl.komponents.kovenant.Deferred
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.deferred
 
-/**
- * Created by mariotaku on 2017/3/21.
- */
-
-class DeferredTarget<R>(private val deferredInstance: Deferred<R, Exception> = deferred()) : SimpleTarget<R>() {
+class DeferredTarget<R>(
+        width: Int = Target.SIZE_ORIGINAL, height: Int = Target.SIZE_ORIGINAL,
+        private val deferredInstance: Deferred<R, Exception> = deferred()
+) : SimpleTarget<R>(width, height) {
 
     val promise: Promise<R, Exception> get() = deferredInstance.promise
 

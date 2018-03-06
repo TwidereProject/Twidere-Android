@@ -26,7 +26,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.content.res.ColorStateList
 import android.os.Parcelable
 import android.support.annotation.UiThread
 import android.support.v4.app.Fragment
@@ -54,9 +53,9 @@ import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.favoriteConfirmationKey
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
 import org.mariotaku.twidere.extension.getDetails
-import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.isAccountRetweet
 import org.mariotaku.twidere.extension.model.isAccountStatus
+import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.promise
 import org.mariotaku.twidere.fragment.AddStatusFilterDialogFragment
 import org.mariotaku.twidere.fragment.BaseFragment
@@ -116,9 +115,6 @@ object MenuUtils {
             menu.setHeaderTitle(context.getString(R.string.status_menu_title_format, displayName,
                     status.text_unescaped))
         }
-        val retweetHighlight = ContextCompat.getColor(context, R.color.highlight_retweet)
-        val favoriteHighlight = ContextCompat.getColor(context, R.color.highlight_favorite)
-        val likeHighlight = ContextCompat.getColor(context, R.color.highlight_like)
         val isMyRetweet = when {
             RetweetStatusTask.isRunning(status.account_key, status.id) -> true
             DestroyStatusTask.isRunning(status.account_key, status.id) -> false
@@ -151,7 +147,7 @@ object MenuUtils {
                 MenuItemCompat.setIconTintList(this, ContextCompat.getColorStateList(context, R.color.highlight_retweet))
                 setTitle(R.string.action_cancel_retweet)
             } else {
-                MenuItemCompat.setIconTintList(this, null)
+                MenuItemCompat.setIconTintList(this, ThemeUtils.getColorStateListFromAttribute(context, android.R.attr.textColorSecondary))
                 setTitle(R.string.action_retweet)
             }
         }
@@ -168,9 +164,9 @@ object MenuUtils {
                 provider.setIsFavorite(this, isFavorite)
             } else {
                 MenuItemCompat.setIconTintList(this, when {
-                    !isFavorite -> null
-                    useStar -> ColorStateList.valueOf(favoriteHighlight)
-                    else -> ColorStateList.valueOf(likeHighlight)
+                    !isFavorite -> ThemeUtils.getColorStateListFromAttribute(context, android.R.attr.textColorSecondary)
+                    useStar -> ContextCompat.getColorStateList(context, R.color.highlight_favorite)
+                    else -> ContextCompat.getColorStateList(context, R.color.highlight_like)
                 })
             }
             if (useStar) {
@@ -410,5 +406,6 @@ object MenuUtils {
 
         }
     }
+
 }
 

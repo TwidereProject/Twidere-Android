@@ -27,9 +27,6 @@ import org.mariotaku.microblog.library.util.twitter.TwitterDateConverter;
 
 import java.util.Date;
 
-/**
- * Created by mariotaku on 15/5/7.
- */
 @JsonObject
 public class SavedSearch extends MicroBlogResponseObject implements Comparable<SavedSearch>, MicroBlogResponse {
 

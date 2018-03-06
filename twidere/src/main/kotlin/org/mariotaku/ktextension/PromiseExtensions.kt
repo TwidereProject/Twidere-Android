@@ -25,6 +25,10 @@ fun <V> Promise<V, Exception>.deadline(time: Long, unit: TimeUnit): Promise<V, E
     return this
 }
 
+class DeadlineException : Exception()
+
+private object WatchdogTimer : Timer("promise-deadline-watchdog")
+
 
 fun <V, E> combine(promises: List<Promise<V, E>>): Promise<List<V>, E> {
     return concreteCombine(promises)
@@ -67,7 +71,3 @@ fun <V, E> concreteCombine(promises: List<Promise<V, E>>): Promise<List<V>, E> {
 
     return deferred.promise
 }
-
-class DeadlineException : Exception()
-
-private object WatchdogTimer : Timer("promise-deadline-watchdog")

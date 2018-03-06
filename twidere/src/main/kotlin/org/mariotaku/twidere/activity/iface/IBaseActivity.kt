@@ -26,9 +26,6 @@ import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.deferred
 import java.util.*
 
-/**
- * Created by mariotaku on 15/12/28.
- */
 interface IBaseActivity<out A : FragmentActivity> {
 
     fun executeAfterFragmentResumed(useHandler: Boolean = false, action: (A) -> Unit): Promise<Unit, Exception>
