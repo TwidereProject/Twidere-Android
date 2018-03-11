@@ -20,7 +20,7 @@ allprojects {
         projectVersionName = '4.0.0-SNAPSHOT'
 
         globalCompileSdkVersion = 27
-        globalBuildToolsVersion = '27.0.2'
+        globalBuildToolsVersion = '27.0.3'
     }
 
     repositories {
@@ -42,7 +42,8 @@ subprojects {
             ]
             libVersions = [
                     Kotlin                 : "${kotlinVersion}",
-                    SupportLib             : '27.0.2',
+                    MultiDex               : '1.0.3',
+                    SupportLib             : '27.1.0',
                     SupportTest            : '1.0.0',
                     MariotakuCommons       : '0.9.22',
                     RestFu                 : '0.9.61',
@@ -56,7 +57,7 @@ subprojects {
                     Toro                   : '2.1.0',
                     LoganSquare            : '1.3.7',
                     Mime4J                 : '0.7.2',
-                    OkHttp                 : '3.9.0',
+                    OkHttp                 : '3.10.0',
                     Stetho                 : '1.5.0',
                     OSMDroid               : '5.6.5',
                     LeakCanary             : '1.5.1',
@@ -68,7 +69,7 @@ subprojects {
                     KPreferences           : '0.9.7',
                     Kovenant               : '3.3.0',
                     ParcelablePlease       : '1.0.2',
-                    Chameleon              : '0.9.25',
+                    Chameleon              : '0.9.26',
                     UniqR                  : '0.9.6',
                     SQLiteQB               : '0.9.18',
                     Glide                  : '3.7.0',
@@ -81,8 +82,8 @@ subprojects {
                     Dagger                 : '2.11',
                     StethoBeanShellREPL    : '0.3',
                     ArchLifecycleExtensions: '1.1.0',
-                    ArchPaging             : '1.0.0-alpha5',
-                    ConstraintLayout       : '1.1.0-beta4',
+                    ArchPaging             : '1.0.0-alpha6',
+                    ConstraintLayout       : '1.1.0-beta5',
                     MessageBubbleView      : '2.1',
             ]
 

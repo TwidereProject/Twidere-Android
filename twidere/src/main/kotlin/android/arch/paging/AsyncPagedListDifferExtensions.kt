@@ -19,8 +19,8 @@
 
 package android.arch.paging
 
-fun <T> PagedListAdapterHelper<T>.setPagedListListener(listener: ((list: PagedList<T>?) -> Unit)?) {
-    mListener = if (listener != null) PagedListAdapterHelper.PagedListListener { pagedList ->
+fun <T> AsyncPagedListDiffer<T>.setPagedListListener(listener: ((list: PagedList<T>?) -> Unit)?) {
+    mListener = if (listener != null) AsyncPagedListDiffer.PagedListListener { pagedList ->
         listener(pagedList)
     } else null
 }

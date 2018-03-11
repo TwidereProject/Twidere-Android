@@ -37,7 +37,9 @@ import org.mariotaku.twidere.TwidereConstants.REQUEST_SELECT_USER
 import org.mariotaku.twidere.adapter.SimpleParcelableUserListsAdapter
 import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.extension.accountKey
 import org.mariotaku.twidere.extension.adapter.all
+import org.mariotaku.twidere.extension.userKey
 import org.mariotaku.twidere.loader.iface.IPaginationLoader
 import org.mariotaku.twidere.loader.userlists.UserListOwnershipsLoader
 import org.mariotaku.twidere.model.ParcelableUser
@@ -144,20 +146,20 @@ class UserListSelectorActivity : BaseActivity(),
         }
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableUserList>> {
-        val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-        val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableUserList>> {
+        val accountKey = args!!.accountKey!!
+        val userKey = args.userKey!!
         return UserListOwnershipsLoader(this, accountKey, userKey, null, adapter.all).apply {
             pagination = args.getParcelable(EXTRA_PAGINATION)
         }
     }
 
-    override fun onLoaderReset(loader: Loader<List<ParcelableUserList>>?) {
+    override fun onLoaderReset(loader: Loader<List<ParcelableUserList>>) {
         adapter.setData(null)
     }
 
 
-    override fun onLoadFinished(loader: Loader<List<ParcelableUserList>>?, data: List<ParcelableUserList>?) {
+    override fun onLoadFinished(loader: Loader<List<ParcelableUserList>>, data: List<ParcelableUserList>?) {
         adapter.loadMoreIndicatorPosition = LoadMorePosition.NONE
         adapter.loadMoreSupportedPosition = if (adapter.all != data) {
             LoadMorePosition.END

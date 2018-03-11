@@ -20,7 +20,7 @@ package org.mariotaku.twidere.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.IntDef;
+import android.support.annotation.LongDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -593,7 +593,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
      * <p>
      * DO NOT CHANGE ONCE DEFINED!
      */
-    @IntDef(value = {
+    @LongDef(value = {
             FilterFlags.QUOTE_NOT_AVAILABLE,
             FilterFlags.BLOCKING_USER,
             FilterFlags.BLOCKED_BY_USER,

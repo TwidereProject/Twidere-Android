@@ -247,10 +247,10 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         return ConversationInfoLoader(context!!, accountKey, conversationId)
     }
 
-    override fun onLoaderReset(loader: Loader<ParcelableMessageConversation?>?) {
+    override fun onLoaderReset(loader: Loader<ParcelableMessageConversation?>) {
     }
 
-    override fun onLoadFinished(loader: Loader<ParcelableMessageConversation?>?, data: ParcelableMessageConversation?) {
+    override fun onLoadFinished(loader: Loader<ParcelableMessageConversation?>, data: ParcelableMessageConversation?) {
         val context = this.context ?: return
         if (data == null) {
             activity?.finish()

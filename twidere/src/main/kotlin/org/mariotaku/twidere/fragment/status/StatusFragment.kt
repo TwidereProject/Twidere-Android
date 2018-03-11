@@ -113,12 +113,12 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     // Listeners
     private val conversationsLoaderCallback = object : LoaderCallbacks<List<ParcelableStatus>> {
-        override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableStatus>> {
+        override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableStatus>> {
             val adapter = this@StatusFragment.adapter
             adapter.isRepliesLoading = true
             adapter.isConversationsLoading = true
             adapter.updateItemDecoration()
-            val status: ParcelableStatus = args.getParcelable(EXTRA_STATUS)
+            val status: ParcelableStatus = args!!.getParcelable(EXTRA_STATUS)
             val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
             return ConversationLoader(activity!!, status, adapter.data, true, loadingMore).apply {
                 pagination = args.toPagination()
@@ -328,7 +328,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 repeatCount, event, metaState)
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<SingleResponse<ParcelableStatus>> {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<SingleResponse<ParcelableStatus>> {
         val fragmentArgs = arguments!!
         val accountKey = fragmentArgs.accountKey
         val statusId = fragmentArgs.statusId

@@ -19,12 +19,12 @@
 
 package org.mariotaku.twidere.adapter
 
+import android.arch.paging.AsyncPagedListDiffer
 import android.arch.paging.PagedList
-import android.arch.paging.PagedListAdapterHelper
 import android.arch.paging.setPagedListListener
 import android.content.Context
 import android.support.v4.widget.Space
-import android.support.v7.recyclerview.extensions.ListAdapterConfig
+import android.support.v7.recyclerview.extensions.AsyncDifferConfig
 import android.support.v7.widget.RecyclerView
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
@@ -139,7 +139,7 @@ class ParcelableStatusesAdapter(
     var statuses: PagedList<ParcelableStatus>?
         get() = pagedStatusesHelper.currentList
         set(value) {
-            pagedStatusesHelper.setList(value)
+            pagedStatusesHelper.submitList(value)
             gapLoadingIds.clear()
             if (value == null) {
                 itemCounts[ITEM_INDEX_STATUS] = 0
@@ -164,8 +164,8 @@ class ParcelableStatusesAdapter(
 
     private val showingFullTextStates = SparseBooleanArray()
 
-    private var pagedStatusesHelper = PagedListAdapterHelper<ParcelableStatus>(ItemCountsAdapterListUpdateCallback(this, ITEM_INDEX_STATUS),
-            ListAdapterConfig.Builder<ParcelableStatus>().setDiffCallback(DiffCallbacks.status).build())
+    private var pagedStatusesHelper = AsyncPagedListDiffer<ParcelableStatus>(ItemCountsAdapterListUpdateCallback(this, ITEM_INDEX_STATUS),
+            AsyncDifferConfig.Builder<ParcelableStatus>(DiffCallbacks.status).build())
 
     init {
         val handler = StatusAdapterLinkClickHandler<List<ParcelableStatus>>(context, preferences)
@@ -395,7 +395,8 @@ class ParcelableStatusesAdapter(
                 return if (loadAround) {
                     pagedStatusesHelper.getItem(dataPosition) ?: ParcelableStatusPlaceholder
                 } else {
-                    pagedStatusesHelper.currentList?.get(dataPosition) ?: ParcelableStatusPlaceholder
+                    pagedStatusesHelper.currentList?.get(dataPosition)
+                            ?: ParcelableStatusPlaceholder
                 }
             }
         }

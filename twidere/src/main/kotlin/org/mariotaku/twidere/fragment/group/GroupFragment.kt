@@ -46,9 +46,6 @@ import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.Utils
 
-/**
- * Created by mariotaku on 16/3/23.
- */
 class GroupFragment : AbsToolbarTabPagesFragment(), LoaderCallbacks<SingleResponse<ParcelableGroup>> {
     var group: ParcelableGroup? = null
         private set
@@ -70,8 +67,8 @@ class GroupFragment : AbsToolbarTabPagesFragment(), LoaderCallbacks<SingleRespon
         getGroupInfo(false)
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<SingleResponse<ParcelableGroup>> {
-        val accountKey = args.accountKey
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<SingleResponse<ParcelableGroup>> {
+        val accountKey = args!!.accountKey
         val groupId = args.groupId
         val groupName = args.groupName
         val omitIntentExtra = args.getBoolean(EXTRA_OMIT_INTENT_EXTRA, true)

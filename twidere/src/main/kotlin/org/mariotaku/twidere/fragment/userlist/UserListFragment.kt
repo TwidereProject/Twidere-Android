@@ -45,7 +45,6 @@ import com.squareup.otto.Subscribe
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.setItemAvailability
-import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.Twitter
 import org.mariotaku.twidere.Constants.*
@@ -279,8 +278,8 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
 
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<SingleResponse<ParcelableUserList>> {
-        val accountKey = args.accountKey
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<SingleResponse<ParcelableUserList>> {
+        val accountKey = args!!.accountKey
         val userKey = args.userKey
         val listId = args.listId
         val listName = args.listName

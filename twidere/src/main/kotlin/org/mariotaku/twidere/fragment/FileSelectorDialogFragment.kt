@@ -115,8 +115,8 @@ class FileSelectorDialogFragment : BaseDialogFragment(), LoaderCallbacks<List<Fi
         return dialog
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<List<File>> {
-        val extensions = args.getStringArray(EXTRA_FILE_EXTENSIONS)
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<File>> {
+        val extensions = args!!.getStringArray(EXTRA_FILE_EXTENSIONS)
         val path = args.getString(EXTRA_PATH)
         var currentDir: File? = if (path != null) File(path) else getExternalStorageDirectory()
         if (currentDir == null) {

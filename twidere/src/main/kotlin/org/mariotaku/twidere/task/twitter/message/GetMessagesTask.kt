@@ -103,10 +103,10 @@ class GetMessagesTask(
             AccountType.TWITTER -> {
                 val twitter = details.newMicroBlogInstance(context, cls = Twitter::class.java)
                 // Use official DM api
-                if (details.isOfficial(context)) {
-                    return getTwitterOfficialMessages(twitter, details, param, index)
-                }
-//                getTwitterMessages(twitter, details, param, index)
+//                if (details.isOfficial(context)) {
+//                    return getTwitterOfficialMessages(twitter, details, param, index)
+//                }
+                getTwitterMessages(twitter, details, param, index)
             }
         }
         // Use default method
@@ -336,7 +336,8 @@ class GetMessagesTask(
             val oldestConversations = DataStoreUtils.getOldestConversations(context,
                     Conversations.CONTENT_URI, twitterOfficialKeys)
             oldestConversations.forEachIndexed { i, conversation ->
-                val extras = conversation?.conversation_extras as? TwitterOfficialConversationExtras ?: return@forEachIndexed
+                val extras = conversation?.conversation_extras as? TwitterOfficialConversationExtras
+                        ?: return@forEachIndexed
                 incomingIds[i] = extras.maxEntryId
             }
             return@lazy (incomingIds + outgoingIds).mapToArray { maxId ->
@@ -463,11 +464,12 @@ class GetMessagesTask(
                 if (myLastReadTimestamp > 0) {
                     conversation.last_read_timestamp = myLastReadTimestamp
                 }
-                val conversationExtras = conversation.conversation_extras as? TwitterOfficialConversationExtras ?: run {
-                    val extras = TwitterOfficialConversationExtras()
-                    conversation.conversation_extras = extras
-                    return@run extras
-                }
+                val conversationExtras = conversation.conversation_extras as? TwitterOfficialConversationExtras
+                        ?: run {
+                            val extras = TwitterOfficialConversationExtras()
+                            conversation.conversation_extras = extras
+                            return@run extras
+                        }
                 conversationExtras.apply {
                     this.minEntryId = v.minEntryId
                     this.maxEntryId = v.maxEntryId

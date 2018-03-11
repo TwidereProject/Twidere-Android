@@ -20,11 +20,11 @@
 package org.mariotaku.twidere.adapter
 
 import android.annotation.SuppressLint
+import android.arch.paging.AsyncPagedListDiffer
 import android.arch.paging.PagedList
-import android.arch.paging.PagedListAdapterHelper
 import android.arch.paging.setPagedListListener
 import android.content.Context
-import android.support.v7.recyclerview.extensions.ListAdapterConfig
+import android.support.v7.recyclerview.extensions.AsyncDifferConfig
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -119,7 +119,7 @@ class ParcelableActivitiesAdapter(
     var activities: PagedList<ParcelableActivity>?
         get() = pagedActivitiesHelper.currentList
         set(value) {
-            pagedActivitiesHelper.setList(value)
+            pagedActivitiesHelper.submitList(value)
             gapLoadingIds.clear()
         }
 
@@ -137,8 +137,8 @@ class ParcelableActivitiesAdapter(
     private val eventListener: EventListener
     private val gapLoadingIds: MutableSet<ObjectId<String>> = HashSet()
 
-    private var pagedActivitiesHelper = PagedListAdapterHelper<ParcelableActivity>(ItemCountsAdapterListUpdateCallback(this, ITEM_INDEX_ACTIVITY),
-            ListAdapterConfig.Builder<ParcelableActivity>().setDiffCallback(DiffCallbacks.activity).build())
+    private var pagedActivitiesHelper = AsyncPagedListDiffer<ParcelableActivity>(ItemCountsAdapterListUpdateCallback(this, ITEM_INDEX_ACTIVITY),
+            AsyncDifferConfig.Builder<ParcelableActivity>(DiffCallbacks.activity).build())
 
     init {
         eventListener = EventListener(this)

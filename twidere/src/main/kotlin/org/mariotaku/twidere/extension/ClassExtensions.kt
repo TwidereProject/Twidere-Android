@@ -21,10 +21,6 @@ package org.mariotaku.twidere.extension
 
 import java.lang.reflect.Field
 
-/**
- * Created by mariotaku on 2017/4/17.
- */
-
 fun Class<*>.findFieldByTypes(vararg checkTypes: Class<*>): Field? {
     return declaredFields.firstOrNull { field ->
         checkTypes.all { it.isAssignableFrom(field.type) }

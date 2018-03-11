@@ -19,11 +19,11 @@
 
 package org.mariotaku.twidere.adapter
 
+import android.arch.paging.AsyncPagedListDiffer
 import android.arch.paging.PagedList
-import android.arch.paging.PagedListAdapterHelper
 import android.content.Context
 import android.support.v4.util.ArrayMap
-import android.support.v7.recyclerview.extensions.ListAdapterConfig
+import android.support.v7.recyclerview.extensions.AsyncDifferConfig
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -62,7 +62,7 @@ class ParcelableUsersAdapter(
     var users: PagedList<ParcelableUser>?
         get() = pagedStatusesHelper.currentList
         set(value) {
-            pagedStatusesHelper.setList(value)
+            pagedStatusesHelper.submitList(value)
             if (value == null) {
                 itemCounts[ITEM_INDEX_USER] = 0
             }
@@ -80,8 +80,8 @@ class ParcelableUsersAdapter(
 
     private val inflater = LayoutInflater.from(context)
 
-    private var pagedStatusesHelper = PagedListAdapterHelper<ParcelableUser>(ItemCountsAdapterListUpdateCallback(this, ITEM_INDEX_USER),
-            ListAdapterConfig.Builder<ParcelableUser>().setDiffCallback(DiffCallbacks.user).build())
+    private var pagedStatusesHelper = AsyncPagedListDiffer<ParcelableUser>(ItemCountsAdapterListUpdateCallback(this, ITEM_INDEX_USER),
+            AsyncDifferConfig.Builder<ParcelableUser>(DiffCallbacks.user).build())
 
     override fun getItemCount(): Int {
         val position = loadMoreIndicatorPosition

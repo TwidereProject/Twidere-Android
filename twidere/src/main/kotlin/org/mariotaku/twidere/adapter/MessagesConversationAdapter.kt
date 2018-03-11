@@ -19,12 +19,12 @@
 
 package org.mariotaku.twidere.adapter
 
+import android.arch.paging.AsyncPagedListDiffer
 import android.arch.paging.PagedList
-import android.arch.paging.PagedListAdapterHelper
 import android.content.Context
 import android.content.res.ColorStateList
 import android.support.v4.graphics.ColorUtils
-import android.support.v7.recyclerview.extensions.ListAdapterConfig
+import android.support.v7.recyclerview.extensions.AsyncDifferConfig
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -99,7 +99,7 @@ class MessagesConversationAdapter(
     var messages: PagedList<ParcelableMessage>?
         get() = pagedMessagesHelper.currentList
         set(value) {
-            pagedMessagesHelper.setList(value)
+            pagedMessagesHelper.submitList(value)
             if (value == null) {
                 itemCounts[0] = 0
             }
@@ -116,8 +116,8 @@ class MessagesConversationAdapter(
     val bubbleColorOutgoing: ColorStateList? = ThemeUtils.getColorStateListFromAttribute(context, R.attr.messageBubbleColor)
     val bubbleColorIncoming: ColorStateList? = context.getIncomingMessageColor()
 
-    private var pagedMessagesHelper = PagedListAdapterHelper<ParcelableMessage>(ItemCountsAdapterListUpdateCallback(this, 0),
-            ListAdapterConfig.Builder<ParcelableMessage>().setDiffCallback(DiffCallbacks.message).build())
+    private var pagedMessagesHelper = AsyncPagedListDiffer<ParcelableMessage>(ItemCountsAdapterListUpdateCallback(this, 0),
+            AsyncDifferConfig.Builder<ParcelableMessage>(DiffCallbacks.message).build())
 
     private val calendars = Pair(Calendar.getInstance(), Calendar.getInstance())
 

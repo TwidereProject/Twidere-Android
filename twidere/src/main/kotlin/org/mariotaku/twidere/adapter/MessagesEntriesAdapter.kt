@@ -1,9 +1,9 @@
 package org.mariotaku.twidere.adapter
 
+import android.arch.paging.AsyncPagedListDiffer
 import android.arch.paging.PagedList
-import android.arch.paging.PagedListAdapterHelper
 import android.content.Context
-import android.support.v7.recyclerview.extensions.ListAdapterConfig
+import android.support.v7.recyclerview.extensions.AsyncDifferConfig
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -38,7 +38,7 @@ class MessagesEntriesAdapter(
     var conversations: PagedList<ParcelableMessageConversation>?
         get() = pagedEntriesHelper.currentList
         set(value) {
-            pagedEntriesHelper.setList(value)
+            pagedEntriesHelper.submitList(value)
             if (value == null) {
                 itemCounts[0] = 0
             }
@@ -55,8 +55,8 @@ class MessagesEntriesAdapter(
 
     var listener: MessageConversationClickListener? = null
 
-    private var pagedEntriesHelper = PagedListAdapterHelper<ParcelableMessageConversation>(ItemCountsAdapterListUpdateCallback(this, 0),
-            ListAdapterConfig.Builder<ParcelableMessageConversation>().setDiffCallback(DiffCallbacks.conversation).build())
+    private var pagedEntriesHelper = AsyncPagedListDiffer<ParcelableMessageConversation>(ItemCountsAdapterListUpdateCallback(this, 0),
+            AsyncDifferConfig.Builder<ParcelableMessageConversation>(DiffCallbacks.conversation).build())
 
     override fun getItemCount(): Int {
         return itemCounts.itemCount

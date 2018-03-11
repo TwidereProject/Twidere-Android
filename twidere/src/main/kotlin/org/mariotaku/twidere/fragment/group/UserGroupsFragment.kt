@@ -30,9 +30,6 @@ import org.mariotaku.twidere.loader.group.UserGroupsLoader
 import org.mariotaku.twidere.model.ParcelableGroup
 import org.mariotaku.twidere.model.UserKey
 
-/**
- * Created by mariotaku on 16/3/9.
- */
 class UserGroupsFragment : ParcelableGroupsFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
