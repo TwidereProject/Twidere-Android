@@ -23,12 +23,12 @@ import android.arch.paging.AsyncPagedListDiffer
 import android.arch.paging.PagedList
 import android.arch.paging.setPagedListListener
 import android.content.Context
-import android.support.v4.widget.Space
 import android.support.v7.recyclerview.extensions.AsyncDifferConfig
 import android.support.v7.widget.RecyclerView
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Space
 import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.contains
@@ -56,7 +56,7 @@ import org.mariotaku.twidere.model.timeline.TimelineFilter
 import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler
 import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.util.Utils
-import org.mariotaku.twidere.util.paging.DiffCallbacks
+import org.mariotaku.twidere.util.paging.DiffItemCallbacks
 import org.mariotaku.twidere.view.holder.EmptyViewHolder
 import org.mariotaku.twidere.view.holder.GapViewHolder
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
@@ -165,7 +165,7 @@ class ParcelableStatusesAdapter(
     private val showingFullTextStates = SparseBooleanArray()
 
     private var pagedStatusesHelper = AsyncPagedListDiffer<ParcelableStatus>(ItemCountsAdapterListUpdateCallback(this, ITEM_INDEX_STATUS),
-            AsyncDifferConfig.Builder<ParcelableStatus>(DiffCallbacks.status).build())
+            AsyncDifferConfig.Builder<ParcelableStatus>(DiffItemCallbacks.status).build())
 
     init {
         val handler = StatusAdapterLinkClickHandler<List<ParcelableStatus>>(context, preferences)

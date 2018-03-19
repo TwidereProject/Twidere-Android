@@ -29,6 +29,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Space
 import android.widget.TextView
 import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
@@ -54,8 +55,9 @@ import org.mariotaku.twidere.model.placeholder.PlaceholderObject
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.OnLinkClickHandler
 import org.mariotaku.twidere.util.TwidereLinkify
-import org.mariotaku.twidere.util.paging.DiffCallbacks
+import org.mariotaku.twidere.util.paging.DiffItemCallbacks
 import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder
+import org.mariotaku.twidere.view.holder.EmptyViewHolder
 import org.mariotaku.twidere.view.holder.GapViewHolder
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
@@ -138,7 +140,7 @@ class ParcelableActivitiesAdapter(
     private val gapLoadingIds: MutableSet<ObjectId<String>> = HashSet()
 
     private var pagedActivitiesHelper = AsyncPagedListDiffer<ParcelableActivity>(ItemCountsAdapterListUpdateCallback(this, ITEM_INDEX_ACTIVITY),
-            AsyncDifferConfig.Builder<ParcelableActivity>(DiffCallbacks.activity).build())
+            AsyncDifferConfig.Builder<ParcelableActivity>(DiffItemCallbacks.activity).build())
 
     init {
         eventListener = EventListener(this)
@@ -193,8 +195,11 @@ class ParcelableActivitiesAdapter(
                 val view = inflater.inflate(R.layout.list_item_two_line, parent, false)
                 return StubViewHolder(view)
             }
+            ITEM_VIEW_TYPE_EMPTY -> {
+                return EmptyViewHolder(Space(context))
+            }
         }
-        throw UnsupportedOperationException("Unsupported viewType " + viewType)
+        throw UnsupportedOperationException("Unsupported viewType $viewType")
     }
 
 
@@ -217,6 +222,8 @@ class ParcelableActivitiesAdapter(
                 val loading = gapLoadingIds.any { it.accountKey == activity.account_key && it.id == activity.id }
                 (holder as GapViewHolder).display(loading)
             }
+            ITEM_VIEW_TYPE_EMPTY -> {
+            }
         }
     }
 
@@ -228,6 +235,7 @@ class ParcelableActivitiesAdapter(
                 return when {
                     activity is PlaceholderObject -> ITEM_VIEW_TYPE_TITLE_SUMMARY
                     activity.is_gap -> ITEM_VIEW_TYPE_GAP
+                    activity.is_filtered -> ITEM_VIEW_TYPE_EMPTY
                     else -> when (activity.action) {
                         Action.MENTION, Action.QUOTE, Action.REPLY -> ITEM_VIEW_TYPE_STATUS
                         Action.FOLLOW, Action.FAVORITE, Action.RETWEET,
@@ -407,6 +415,7 @@ class ParcelableActivitiesAdapter(
         const val ITEM_VIEW_TYPE_LOAD_INDICATOR = 2
         const val ITEM_VIEW_TYPE_TITLE_SUMMARY = 3
         const val ITEM_VIEW_TYPE_STATUS = 4
+        const val ITEM_VIEW_TYPE_EMPTY = 5
 
         const val ITEM_INDEX_ACTIVITY = 0
         const val ITEM_INDEX_LOAD_MORE_INDICATOR = 1

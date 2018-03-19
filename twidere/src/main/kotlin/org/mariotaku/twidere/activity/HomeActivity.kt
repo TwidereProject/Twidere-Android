@@ -161,11 +161,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         }
 
     override val currentVisibleFragment: Fragment?
-        get() {
-            val currentItem = mainPager.currentItem
-            if (currentItem < 0 || currentItem >= pagerAdapter.count) return null
-            return pagerAdapter.instantiateItem(mainPager, currentItem)
-        }
+        get() = mainPager.currentFragment
 
     private val homeDrawerToggleDelegate = object : ActionBarDrawerToggle.Delegate {
         override fun setActionBarUpIndicator(upDrawable: Drawable, @StringRes contentDescRes: Int) {
@@ -599,7 +595,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     }
 
     override fun triggerRefresh(position: Int): Boolean {
-        val f = pagerAdapter.instantiateItem(mainPager, position)
+        val f = pagerAdapter.instantiateItem(mainPager, position) as? Fragment ?: return false
         if (f.activity == null || f.isDetached) return false
         if (f !is RefreshScrollTopInterface) return false
         return f.triggerRefresh()
@@ -722,7 +718,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                 if (tabType == Tab.getTypeAlias(tab.type)) {
                     val args = tab.args
                     if (args != null && CustomTabUtils.hasAccountKey(this, args,
-                            activatedAccountKeys, accountKey)) {
+                                    activatedAccountKeys, accountKey)) {
                         initialTab = i
                         break
                     }
@@ -928,8 +924,9 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             }
             return@run f
         }
-        val info = fragment?.getActionInfo("home") ?: FloatingActionButtonInfo(R.drawable.ic_action_status_compose,
-                getString(R.string.action_compose))
+        val info = fragment?.getActionInfo("home")
+                ?: FloatingActionButtonInfo(R.drawable.ic_action_status_compose,
+                        getString(R.string.action_compose))
 
         actionsButton.setImageResource(info.icon)
         actionsButton.contentDescription = info.title

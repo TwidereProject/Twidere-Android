@@ -22,6 +22,7 @@ package org.mariotaku.twidere.adapter
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.support.v4.app.FixedFragmentStatePagerAdapter
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.view.PagerAdapter
@@ -42,7 +43,7 @@ class SupportTabsAdapter(
         private val context: Context,
         fm: FragmentManager,
         private val indicator: PagerIndicator? = null
-) : SupportFixedFragmentStatePagerAdapter(fm), TabProvider, TabListener {
+) : FixedFragmentStatePagerAdapter(fm), TabProvider, TabListener {
 
     var hasMultipleColumns: Boolean = false
     var preferredColumnWidth: Float = 0f

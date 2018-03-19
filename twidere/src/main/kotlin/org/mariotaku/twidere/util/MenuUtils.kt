@@ -46,7 +46,6 @@ import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.microblog.library.annotation.mastodon.StatusVisibility
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.activity.AccountSelectorActivity
 import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity
 import org.mariotaku.twidere.app.TwidereApplication
@@ -71,6 +70,7 @@ import org.mariotaku.twidere.task.CreateFavoriteTask
 import org.mariotaku.twidere.task.DestroyFavoriteTask
 import org.mariotaku.twidere.task.DestroyStatusTask
 import org.mariotaku.twidere.task.RetweetStatusTask
+import org.mariotaku.twidere.view.ExtendedRecyclerView
 import java.io.IOException
 
 object MenuUtils {
@@ -303,14 +303,12 @@ object MenuUtils {
                 df.show(fm, SetUserNicknameDialogFragment.FRAGMENT_TAG)
             }
             R.id.open_with_account -> {
-                val intent = Intent(INTENT_ACTION_SELECT_ACCOUNT)
-                intent.setClass(context, AccountSelectorActivity::class.java)
-                intent.putExtra(EXTRA_SINGLE_SELECTION, true)
-                intent.putExtra(EXTRA_ACCOUNT_HOST, status.user_key.host)
+                val itemId = (item.menuInfo as? ExtendedRecyclerView.ContextMenuInfo)?.itemId ?: -1
+                val intent = AbsTimelineFragment.selectAccountIntent(context, status, itemId, true)
                 if (fragment != null) {
-                    fragment.startActivityForResult(intent, REQUEST_SELECT_ACCOUNT)
+                    fragment.startActivityForResult(intent, AbsTimelineFragment.REQUEST_OPEN_SELECT_ACCOUNT)
                 } else if (context is Activity) {
-                    context.startActivityForResult(intent, REQUEST_SELECT_ACCOUNT)
+                    context.startActivityForResult(intent, AbsTimelineFragment.REQUEST_OPEN_SELECT_ACCOUNT)
                 }
             }
             R.id.open_in_browser -> {

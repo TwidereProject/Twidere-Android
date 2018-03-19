@@ -23,6 +23,7 @@ import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.annotation.DisplayOption
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_INITIAL_TAB
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
+import org.mariotaku.twidere.extension.currentFragment
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.fragment.iface.IToolBarSupportFragment
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
@@ -53,7 +54,7 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
         toolbarTabs.setViewPager(viewPager)
         toolbarTabs.setTabDisplayOption(DisplayOption.LABEL)
 
-        tabPagesFragmentView.applyWindowInsetsListener = OnApplyWindowInsetsListener listener@ { _, insets ->
+        tabPagesFragmentView.applyWindowInsetsListener = OnApplyWindowInsetsListener listener@{ _, insets ->
             val top = insets.systemWindowInsetTop
             tabPagesFragmentView.setPadding(0, top, 0, 0)
             return@listener insets
@@ -113,8 +114,7 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        val o = pagerAdapter.instantiateItem(viewPager, viewPager.currentItem)
-        o.onActivityResult(requestCode, resultCode, data)
+        currentVisibleFragment?.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun scrollToStart(): Boolean {
@@ -128,11 +128,7 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
     }
 
     override val currentVisibleFragment: Fragment?
-        get() {
-            val currentItem = viewPager.currentItem
-            if (currentItem < 0 || currentItem >= pagerAdapter.getCount()) return null
-            return pagerAdapter.instantiateItem(viewPager, currentItem)
-        }
+        get() = viewPager.currentFragment
 
     override fun triggerRefresh(position: Int): Boolean {
         return false

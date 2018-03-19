@@ -19,11 +19,11 @@
 
 package org.mariotaku.twidere.util.paging
 
-import android.support.v7.recyclerview.extensions.DiffCallback
+import android.support.v7.util.DiffUtil.ItemCallback
 import org.mariotaku.twidere.model.*
 
-object DiffCallbacks {
-    val status: DiffCallback<ParcelableStatus> = object : DiffCallback<ParcelableStatus>() {
+object DiffItemCallbacks {
+    val status: ItemCallback<ParcelableStatus> = object : ItemCallback<ParcelableStatus>() {
         override fun areContentsTheSame(oldItem: ParcelableStatus, newItem: ParcelableStatus): Boolean {
             return oldItem == newItem
         }
@@ -34,7 +34,7 @@ object DiffCallbacks {
         }
 
     }
-    val activity: DiffCallback<ParcelableActivity> = object : DiffCallback<ParcelableActivity>() {
+    val activity: ItemCallback<ParcelableActivity> = object : ItemCallback<ParcelableActivity>() {
         override fun areContentsTheSame(oldItem: ParcelableActivity, newItem: ParcelableActivity): Boolean {
             return oldItem == newItem
         }
@@ -46,7 +46,7 @@ object DiffCallbacks {
 
     }
 
-    val conversation: DiffCallback<ParcelableMessageConversation> = object : DiffCallback<ParcelableMessageConversation>() {
+    val conversation: ItemCallback<ParcelableMessageConversation> = object : ItemCallback<ParcelableMessageConversation>() {
         override fun areContentsTheSame(oldItem: ParcelableMessageConversation, newItem: ParcelableMessageConversation): Boolean {
             return oldItem == newItem
         }
@@ -58,7 +58,7 @@ object DiffCallbacks {
 
     }
 
-    val message: DiffCallback<ParcelableMessage> = object : DiffCallback<ParcelableMessage>() {
+    val message: ItemCallback<ParcelableMessage> = object : ItemCallback<ParcelableMessage>() {
         override fun areContentsTheSame(oldItem: ParcelableMessage, newItem: ParcelableMessage): Boolean {
             return oldItem == newItem
         }
@@ -69,7 +69,7 @@ object DiffCallbacks {
         }
 
     }
-    val user: DiffCallback<ParcelableUser> = object : DiffCallback<ParcelableUser>() {
+    val user: ItemCallback<ParcelableUser> = object : ItemCallback<ParcelableUser>() {
         override fun areContentsTheSame(oldItem: ParcelableUser, newItem: ParcelableUser): Boolean {
             return oldItem == newItem
         }

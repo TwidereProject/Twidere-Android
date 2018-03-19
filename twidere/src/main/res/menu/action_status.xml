@@ -46,6 +46,14 @@
         android:title="@string/action_status_unpin"
         android:visible="false"/>
     <item
+        android:id="@id/open_with_account"
+        android:icon="@drawable/ic_action_accounts"
+        android:title="@string/open_with_account"/>
+    <item
+        android:id="@id/open_in_browser"
+        android:icon="@drawable/ic_action_web"
+        android:title="@string/action_open_in_browser"/>
+    <item
         android:id="@+id/make_gap"
         android:enabled="@bool/debug"
         android:title="Make gap"

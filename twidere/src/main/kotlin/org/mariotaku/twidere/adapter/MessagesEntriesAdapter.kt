@@ -17,7 +17,7 @@ import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.exception.UnsupportedCountIndexException
 import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.model.ParcelableMessageConversation
-import org.mariotaku.twidere.util.paging.DiffCallbacks
+import org.mariotaku.twidere.util.paging.DiffItemCallbacks
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
 import org.mariotaku.twidere.view.holder.message.MessageEntryViewHolder
 
@@ -56,7 +56,7 @@ class MessagesEntriesAdapter(
     var listener: MessageConversationClickListener? = null
 
     private var pagedEntriesHelper = AsyncPagedListDiffer<ParcelableMessageConversation>(ItemCountsAdapterListUpdateCallback(this, 0),
-            AsyncDifferConfig.Builder<ParcelableMessageConversation>(DiffCallbacks.conversation).build())
+            AsyncDifferConfig.Builder<ParcelableMessageConversation>(DiffItemCallbacks.conversation).build())
 
     override fun getItemCount(): Int {
         return itemCounts.itemCount

@@ -52,6 +52,7 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
+            AbsTimelineFragment.REQUEST_OPEN_SELECT_ACCOUNT,
             AbsTimelineFragment.REQUEST_FAVORITE_SELECT_ACCOUNT,
             AbsTimelineFragment.REQUEST_RETWEET_SELECT_ACCOUNT -> {
                 AbsTimelineFragment.handleActionActivityResult(this, requestCode, resultCode, data)

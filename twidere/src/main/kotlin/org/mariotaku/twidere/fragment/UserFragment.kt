@@ -141,11 +141,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         IToolBarSupportFragment, AbsContentRecyclerViewFragment.RefreshCompleteListener {
 
     override val currentVisibleFragment: Fragment?
-        get() {
-            val currentItem = viewPager.currentItem
-            if (currentItem < 0 || currentItem >= pagerAdapter.count) return null
-            return pagerAdapter.instantiateItem(viewPager, currentItem)
-        }
+        get() = viewPager.currentFragment
 
     override val fragmentToolbar: Toolbar
         get() = toolbar

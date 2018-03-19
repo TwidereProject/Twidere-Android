@@ -99,20 +99,13 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
     }
 
     private val currentFragment: MediaViewerFragment?
-        get() {
-            val viewPager = findViewPager()
-            val adapter = viewPager.adapter ?: return null
-            val currentItem = viewPager.currentItem
-            if (currentItem < 0 || currentItem >= adapter.count) return null
-            return adapter.instantiateItem(viewPager, currentItem) as? MediaViewerFragment
-        }
+        get() = findViewPager().currentFragment as? MediaViewerFragment
 
     private fun getCurrentCacheFileInfo(position: Int): SaveFileInfo? {
         if (position == -1) return null
         val viewPager = findViewPager()
         val adapter = viewPager.adapter ?: return null
-        val f = adapter.instantiateItem(viewPager, position) as? MediaViewerFragment ?:
-                return null
+        val f = adapter.instantiateItem(viewPager, position) as? MediaViewerFragment ?: return null
         return f.cacheFileInfo()
     }
 
@@ -220,7 +213,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         val adapter = viewPager.adapter ?: return false
         val currentItem = viewPager.currentItem
         if (currentItem < 0 || currentItem >= adapter.count) return false
-        val obj = adapter.instantiateItem(viewPager, currentItem) as? MediaViewerFragment ?: return false
+        val obj = viewPager.currentFragment  as? MediaViewerFragment ?: return false
         when (item.itemId) {
             R.id.refresh -> {
                 if (obj is CacheDownloadMediaViewerFragment) {
@@ -361,7 +354,8 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         args.putParcelable(EXTRA_STATUS, intent.getParcelableExtra<Parcelable>(EXTRA_STATUS))
         when (media.type) {
             ParcelableMedia.Type.IMAGE -> {
-                val mediaUrl = media.media_url ?: return Fragment.instantiate(this, ExternalBrowserPageFragment::class.java.name, args) as MediaViewerFragment
+                val mediaUrl = media.media_url
+                        ?: return Fragment.instantiate(this, ExternalBrowserPageFragment::class.java.name, args) as MediaViewerFragment
                 args.putParcelable(EXTRA_MEDIA_URI, Uri.parse(mediaUrl))
                 if (mediaUrl.endsWith(".gif")) {
                     return Fragment.instantiate(this, GifPageFragment::class.java.name, args) as MediaViewerFragment
@@ -436,9 +430,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
 
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
         val result = super.onApplyWindowInsets(v, insets)
-        val adapter = viewPager.adapter ?: return result
-        if (adapter.count == 0) return insets
-        val fragment = adapter.instantiateItem(viewPager, viewPager.currentItem)
+        val fragment = viewPager.currentFragment
         if (fragment is IBaseFragment<*>) {
             fragment.requestApplyInsets()
         }

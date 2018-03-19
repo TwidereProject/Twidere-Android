@@ -65,6 +65,7 @@ import org.mariotaku.twidere.extension.view.firstVisibleItemPositionWithOffset
 import org.mariotaku.twidere.extension.view.lastVisibleItemPosition
 import org.mariotaku.twidere.fragment.AbsContentRecyclerViewFragment
 import org.mariotaku.twidere.fragment.timeline.AbsTimelineFragment
+import org.mariotaku.twidere.fragment.timeline.AbsTimelineFragment.Companion.RANGE_REQUEST_CODES
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -157,6 +158,15 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
             saveReadPosition(layoutManager.firstVisibleItemPosition)
         }
         super.onStop()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            in RANGE_REQUEST_CODES -> AbsTimelineFragment.handleActionActivityResult(this,
+                    requestCode, resultCode, data)
+            else -> super.onActivityResult(requestCode, resultCode, data)
+        }
+
     }
 
     override fun onCreateLayoutManager(context: Context): RecyclerView.LayoutManager {

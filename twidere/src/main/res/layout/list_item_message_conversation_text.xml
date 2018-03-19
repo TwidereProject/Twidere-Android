@@ -79,7 +79,7 @@
 
             </org.mariotaku.twidere.view.CardMediaContainer>
 
-            <android.support.v4.widget.Space
+            <Space
                 android:id="@+id/mediaTextSpace"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/element_spacing_normal"

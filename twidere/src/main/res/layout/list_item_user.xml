@@ -282,7 +282,7 @@
         app:layout_constraintTop_toBottomOf="@+id/url"
         tools:text="255"/>
 
-    <android.support.v4.widget.Space
+    <Space
         android:id="@+id/checkBoxSpace"
         android:layout_width="@dimen/element_spacing_normal"
         android:layout_height="wrap_content"

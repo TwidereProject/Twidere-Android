@@ -186,6 +186,10 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         super.onStop()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        handleActionActivityResult(this, requestCode, resultCode, data)
+    }
+
     override fun onCreateLayoutManager(context: Context): LayoutManager = when (timelineStyle) {
         TimelineStyle.STAGGERED -> StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         else -> FixedLinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -642,8 +646,12 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
     companion object {
 
-        const val REQUEST_FAVORITE_SELECT_ACCOUNT = 101
+        const val REQUEST_OPEN_SELECT_ACCOUNT = 101
         const val REQUEST_RETWEET_SELECT_ACCOUNT = 102
+        const val REQUEST_FAVORITE_SELECT_ACCOUNT = 103
+
+
+        val RANGE_REQUEST_CODES = 100 until 110
 
         val statusColumnsLite = Statuses.COLUMNS - arrayOf(Statuses.MENTIONS_JSON,
                 Statuses.CARD, Statuses.FILTER_FLAGS, Statuses.FILTER_USERS, Statuses.FILTER_LINKS,
@@ -701,7 +709,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                     if (resultCode != Activity.RESULT_OK || data == null) return
                     val accountKey = data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
                     val extras = data.getBundleExtra(EXTRA_EXTRAS)
-                    val status = extras.getParcelable<ParcelableStatus>(EXTRA_STATUS)
+                    val status = extras.status!!
                     if (fragment.preferences[favoriteConfirmationKey]) {
                         fragment.executeAfterFragmentResumed {
                             FavoriteConfirmDialogFragment.show(it.childFragmentManager,
@@ -731,6 +739,13 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                         RetweetQuoteDialogFragment.show(it.childFragmentManager, accountKey,
                                 status.id, status)
                     }
+                }
+                REQUEST_OPEN_SELECT_ACCOUNT -> {
+                    if (resultCode != Activity.RESULT_OK || data == null) return
+                    val accountKey = data.extras!!.accountKey
+                    val extras = data.getBundleExtra(EXTRA_EXTRAS)
+                    val status = extras.status!!
+                    IntentUtils.openStatus(fragment.context!!, accountKey, status.id)
                 }
             }
         }

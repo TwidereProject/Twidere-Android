@@ -50,7 +50,7 @@ import org.mariotaku.twidere.model.ParcelableMessage.MessageType
 import org.mariotaku.twidere.util.DirectMessageOnLinkClickHandler
 import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.TwidereLinkify
-import org.mariotaku.twidere.util.paging.DiffCallbacks
+import org.mariotaku.twidere.util.paging.DiffItemCallbacks
 import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
 import org.mariotaku.twidere.view.holder.message.AbsMessageViewHolder
@@ -117,7 +117,7 @@ class MessagesConversationAdapter(
     val bubbleColorIncoming: ColorStateList? = context.getIncomingMessageColor()
 
     private var pagedMessagesHelper = AsyncPagedListDiffer<ParcelableMessage>(ItemCountsAdapterListUpdateCallback(this, 0),
-            AsyncDifferConfig.Builder<ParcelableMessage>(DiffCallbacks.message).build())
+            AsyncDifferConfig.Builder<ParcelableMessage>(DiffItemCallbacks.message).build())
 
     private val calendars = Pair(Calendar.getInstance(), Calendar.getInstance())
 

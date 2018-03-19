@@ -133,8 +133,9 @@ class ExtendedRecyclerView(context: Context, attrs: AttributeSet? = null) :
             return false
         }
         val position = getChildLayoutPosition(originalView)
+        val itemId = getChildItemId(originalView)
         if (position == RecyclerView.NO_POSITION) return false
-        contextMenuInfo = ContextMenuInfo(id, position)
+        contextMenuInfo = ContextMenuInfo(id, position, itemId)
         return super.showContextMenuForChild(originalView)
     }
 
@@ -171,6 +172,10 @@ class ExtendedRecyclerView(context: Context, attrs: AttributeSet? = null) :
             return scrollFactor
         }
 
-    class ContextMenuInfo(val recyclerViewId: Int, val position: Int) : ContextMenu.ContextMenuInfo
+    class ContextMenuInfo(
+            val recyclerViewId: Int,
+            val position: Int,
+            val itemId: Long
+    ) : ContextMenu.ContextMenuInfo
 
 }

@@ -131,7 +131,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             val conversationLoader = loader as ConversationLoader
             var supportedPositions = 0
             if (data != null && !data.isEmpty()) {
-                val sinceSortId = (conversationLoader.pagination as? SinceMaxPagination)?.sinceSortId ?: -1
+                val sinceSortId = (conversationLoader.pagination as? SinceMaxPagination)?.sinceSortId
+                        ?: -1
                 if (sinceSortId < data[data.size - 1].sort_id) {
                     supportedPositions = supportedPositions or LoadMorePosition.END
                 }
@@ -172,14 +173,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 }
                 loaderManager.restartLoader(LOADER_ID_DETAIL_STATUS, arguments, this)
             }
-            REQUEST_SELECT_ACCOUNT -> {
-                val status = adapter.status ?: return
-                if (resultCode == Activity.RESULT_OK) {
-                    if (data == null || !data.hasExtra(EXTRA_ID)) return
-                    val accountKey = data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
-                    IntentUtils.openStatus(activity, accountKey, status.id)
-                }
-            }
+            AbsTimelineFragment.REQUEST_OPEN_SELECT_ACCOUNT,
             AbsTimelineFragment.REQUEST_FAVORITE_SELECT_ACCOUNT,
             AbsTimelineFragment.REQUEST_RETWEET_SELECT_ACCOUNT -> {
                 AbsTimelineFragment.handleActionActivityResult(this, requestCode, resultCode, data)
@@ -195,7 +189,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
         linkHandlerTitle = getString(R.string.title_status)
-        Utils.setNdefPushMessageCallback(activity!!, CreateNdefMessageCallback cb@ {
+        Utils.setNdefPushMessageCallback(activity!!, CreateNdefMessageCallback cb@{
             val status = status ?: return@cb null
             val link = LinkCreator.getStatusWebLink(status) ?: return@cb null
             return@cb NdefMessage(arrayOf(NdefRecord.createUri(link)))
@@ -309,12 +303,14 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         }
         if (position == -1) return false
         val status = adapter.getStatus(position)
-        val action = handler.getKeyAction(CONTEXT_TAG_STATUS, keyCode, event, metaState) ?: return false
+        val action = handler.getKeyAction(CONTEXT_TAG_STATUS, keyCode, event, metaState)
+                ?: return false
         return AbsTimelineFragment.handleKeyboardShortcutAction(this, action, status, position)
     }
 
     override fun isKeyboardShortcutHandled(handler: KeyboardShortcutsHandler, keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
-        val action = handler.getKeyAction(CONTEXT_TAG_STATUS, keyCode, event, metaState) ?: return false
+        val action = handler.getKeyAction(CONTEXT_TAG_STATUS, keyCode, event, metaState)
+                ?: return false
         when (action) {
             ACTION_STATUS_REPLY, ACTION_STATUS_RETWEET, ACTION_STATUS_FAVORITE -> return true
         }

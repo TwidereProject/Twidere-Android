@@ -97,12 +97,12 @@ class ActivityTitleSummaryViewHolder(
             return
         }
         val context = adapter.context
-        val sources = (activity.after_filtered_sources ?: activity.sources_lite).takeIf {
-            it.isNotEmpty()
-        } ?: run {
-            showNotSupported()
+        val sources = activity.after_filtered_sources ?: activity.sources_lite
+        if (sources == null || sources.isEmpty()) {
+            showEmpty()
             return
         }
+        itemView.visibility = View.VISIBLE
         val message = ActivityTitleSummaryMessage.get(context, adapter.userColorNameManager,
                 activity, sources, summaryView.currentTextColor, adapter.useStarsForLikes,
                 adapter.isNameFirst)
@@ -127,6 +127,10 @@ class ActivityTitleSummaryViewHolder(
 
     private fun showNotSupported() {
 
+    }
+
+    private fun showEmpty() {
+        itemView.visibility = View.GONE
     }
 
     fun setupViewOptions() {

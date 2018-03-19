@@ -40,7 +40,7 @@ import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.placeholder.ParcelableUserPlaceholder
-import org.mariotaku.twidere.util.paging.DiffCallbacks
+import org.mariotaku.twidere.util.paging.DiffItemCallbacks
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
 import org.mariotaku.twidere.view.holder.UserViewHolder
 
@@ -81,7 +81,7 @@ class ParcelableUsersAdapter(
     private val inflater = LayoutInflater.from(context)
 
     private var pagedStatusesHelper = AsyncPagedListDiffer<ParcelableUser>(ItemCountsAdapterListUpdateCallback(this, ITEM_INDEX_USER),
-            AsyncDifferConfig.Builder<ParcelableUser>(DiffCallbacks.user).build())
+            AsyncDifferConfig.Builder<ParcelableUser>(DiffItemCallbacks.user).build())
 
     override fun getItemCount(): Int {
         val position = loadMoreIndicatorPosition
