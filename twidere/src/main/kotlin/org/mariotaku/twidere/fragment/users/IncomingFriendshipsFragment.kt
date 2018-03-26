@@ -63,13 +63,13 @@ class IncomingFriendshipsFragment : AbsUsersFragment(), IUsersAdapter.RequestCli
     override fun onAcceptClicked(holder: UserViewHolder, position: Int) {
         val user = adapter.getUser(position) ?: return
         val accountKey = user.account_key ?: return
-        FriendshipPromises.getInstance(context!!).accept(accountKey, user.key)
+        FriendshipPromises.get(context!!).accept(accountKey, user.key)
     }
 
     override fun onDenyClicked(holder: UserViewHolder, position: Int) {
         val user = adapter.getUser(position) ?: return
         val accountKey = user.account_key ?: return
-        FriendshipPromises.getInstance(context!!).deny(accountKey, user.key)
+        FriendshipPromises.get(context!!).deny(accountKey, user.key)
     }
 
     @SuppressLint("SwitchIntDef")

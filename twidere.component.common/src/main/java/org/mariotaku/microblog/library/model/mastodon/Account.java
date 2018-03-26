@@ -18,6 +18,8 @@
 
 package org.mariotaku.microblog.library.model.mastodon;
 
+import android.support.annotation.Nullable;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
@@ -27,7 +29,7 @@ import java.util.Date;
 
 /**
  * {@see https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#account}
- *
+ * <p>
  * Created by mariotaku on 2017/4/17.
  */
 @JsonObject
@@ -107,6 +109,12 @@ public class Account {
      */
     @JsonField(name = "header_static")
     String headerStatic;
+    /**
+     * If the owner decided to switch accounts, new account is in this attribute
+     */
+    @JsonField(name = "moved")
+    @Nullable
+    Account moved;
 
     public String getId() {
         return id;
@@ -168,6 +176,11 @@ public class Account {
         return headerStatic;
     }
 
+    @Nullable
+    public Account getMoved() {
+        return moved;
+    }
+
     @OnJsonParseComplete
     void onJsonParseComplete() throws IOException {
         if (id == null) {
@@ -196,6 +209,7 @@ public class Account {
                 ", avatarStatic='" + avatarStatic + '\'' +
                 ", header='" + header + '\'' +
                 ", headerStatic='" + headerStatic + '\'' +
+                ", moved=" + moved +
                 '}';
     }
 }

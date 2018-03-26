@@ -33,6 +33,7 @@ import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.blockBulkInsert
 import org.mariotaku.twidere.extension.bulkDelete
+import org.mariotaku.twidere.extension.model.quoted
 import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUserMention
@@ -41,6 +42,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.util.ContentValuesCreator
 import org.mariotaku.twidere.util.HtmlEscapeHelper
 import org.mariotaku.twidere.util.UserColorNameManager
+import org.mariotaku.twidere.util.UserColorNameManager.Companion
 import java.util.*
 
 class AddStatusFilterDialogFragment : BaseDialogFragment() {
@@ -55,10 +57,10 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
                         UserItem(status.retweeted_by_user_key!!, status.retweeted_by_user_name,
                                 status.retweeted_by_user_screen_name)))
             }
-            if (status.is_quote && status.quoted_user_key != null) {
+            if (status.is_quote && status.quoted?.user_key != null) {
                 list.add(FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER,
-                        UserItem(status.quoted_user_key!!, status.quoted_user_name,
-                                status.quoted_user_screen_name)))
+                        UserItem(status.quoted?.user_key!!, status.quoted?.user_name!!,
+                                status.quoted?.user_screen_name!!)))
             }
             list.add(FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER, UserItem(status.user_key,
                     status.user_name, status.user_screen_name)))
@@ -81,6 +83,7 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
     private var filterItems: Array<FilterItemInfo>? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val manager = UserColorNameManager.get(context!!)
         val builder = AlertDialog.Builder(context!!)
         filterItems = filterItemsInfo
         val entries = arrayOfNulls<String>(filterItems!!.size)
@@ -89,15 +92,15 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
             val info = filterItems!![i]
             when (info.type) {
                 FilterItemInfo.FILTER_TYPE_USER -> {
-                    entries[i] = getString(R.string.user_filter_name, getName(userColorNameManager,
+                    entries[i] = getString(R.string.user_filter_name, getName(manager,
                             info.value, nameFirst))
                 }
                 FilterItemInfo.FILTER_TYPE_KEYWORD -> {
-                    entries[i] = getString(R.string.keyword_filter_name, getName(userColorNameManager,
+                    entries[i] = getString(R.string.keyword_filter_name, getName(manager,
                             info.value, nameFirst))
                 }
                 FilterItemInfo.FILTER_TYPE_SOURCE -> {
-                    entries[i] = getString(R.string.source_filter_name, getName(userColorNameManager,
+                    entries[i] = getString(R.string.source_filter_name, getName(manager,
                             info.value, nameFirst))
                 }
             }

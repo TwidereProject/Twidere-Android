@@ -48,12 +48,10 @@ import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.IntentUtils
+import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.glide.DeferredTarget
 import java.lang.ref.WeakReference
 
-/**
- * Created by mariotaku on 2017/8/23.
- */
 object ShortcutCreator {
 
     private val useAdaptiveIcon = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
@@ -63,7 +61,7 @@ object ShortcutCreator {
     fun user(context: Context, accountKey: UserKey?, user: ParcelableUser): Promise<ShortcutInfoCompat, Exception> {
         val holder = DependencyHolder.get(context)
         val preferences = holder.preferences
-        val userColorNameManager = holder.userColorNameManager
+        val userColorNameManager = UserColorNameManager.get(context)
 
         val profileImageStyle = if (useAdaptiveIcon) ImageShapeStyle.SHAPE_RECTANGLE else preferences[profileImageStyleKey]
         val profileImageCornerRadiusRatio = if (useAdaptiveIcon) 0f else 0.1f
@@ -88,7 +86,7 @@ object ShortcutCreator {
     fun userFavorites(context: Context, accountKey: UserKey?, user: ParcelableUser): Promise<ShortcutInfoCompat, Exception> {
         val holder = DependencyHolder.get(context)
         val preferences = holder.preferences
-        val userColorNameManager = holder.userColorNameManager
+        val userColorNameManager = UserColorNameManager.get(context)
 
         val launchIntent = IntentUtils.userFavorites(accountKey, user.key,
                 user.screen_name, profileUrl = user.extras?.statusnet_profile_url)
@@ -105,8 +103,7 @@ object ShortcutCreator {
 
     fun userTimeline(context: Context, accountKey: UserKey?, user: ParcelableUser): Promise<ShortcutInfoCompat, Exception> {
         val holder = DependencyHolder.get(context)
-        val preferences = holder.preferences
-        val userColorNameManager = holder.userColorNameManager
+        val userColorNameManager = UserColorNameManager.get(context)
 
         val launchIntent = IntentUtils.userTimeline(accountKey, user.key,
                 user.screen_name, profileUrl = user.extras?.statusnet_profile_url)
@@ -119,8 +116,7 @@ object ShortcutCreator {
 
     fun userMediaTimeline(context: Context, accountKey: UserKey?, user: ParcelableUser): Promise<ShortcutInfoCompat, Exception> {
         val holder = DependencyHolder.get(context)
-        val preferences = holder.preferences
-        val userColorNameManager = holder.userColorNameManager
+        val userColorNameManager = UserColorNameManager.get(context)
 
         val launchIntent = IntentUtils.userMediaTimeline(accountKey, user.key,
                 user.screen_name, profileUrl = user.extras?.statusnet_profile_url)

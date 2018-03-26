@@ -65,19 +65,19 @@ class DraftExtensionsTest {
         }
     }
 
-}
-
-private fun InputStream.contentEquals(that: InputStream): Boolean {
-    var len1 = 0
-    var len2 = 0
-    val buf1 = ByteArray(8192)
-    val buf2 = ByteArray(8192)
-    while (len1 != -1 && len2 != -1) {
-        len1 = this.read(buf1)
-        len2 = that.read(buf2)
-        if (!buf1.contentEquals(buf2)) {
-            return false
+    private fun InputStream.contentEquals(that: InputStream): Boolean {
+        var len1 = 0
+        var len2 = 0
+        val buf1 = ByteArray(8192)
+        val buf2 = ByteArray(8192)
+        while (len1 != -1 && len2 != -1) {
+            len1 = this.read(buf1)
+            len2 = that.read(buf2)
+            if (!buf1.contentEquals(buf2)) {
+                return false
+            }
         }
+        return len1 == len2
     }
-    return len1 == len2
+
 }

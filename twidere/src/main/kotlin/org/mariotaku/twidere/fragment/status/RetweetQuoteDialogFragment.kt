@@ -41,6 +41,7 @@ import org.mariotaku.twidere.constant.quickSendKey
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.canRetweet
 import org.mariotaku.twidere.extension.model.isAccountRetweet
+import org.mariotaku.twidere.extension.model.quoted
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.draft.QuoteStatusActionExtras
@@ -108,7 +109,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
             }
         })
 
-        quoteOriginal.visibility = if (status.retweet_id != null || status.quoted_id != null) {
+        quoteOriginal.visibility = if (status.retweet_id != null || status.attachment?.quoted?.id != null) {
             View.VISIBLE
         } else {
             View.GONE
@@ -116,7 +117,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
 
         getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
             if (!shouldQuoteRetweet(account) && status.isAccountRetweet) {
-                StatusPromises.getInstance(context).cancelRetweet(account.key, status.id, status.my_retweet_id)
+                StatusPromises.get(context).cancelRetweet(account.key, status.id, status.my_retweet_id)
                 dismiss()
             } else if (retweetOrQuote(account, status, showProtectedConfirm)) {
                 dismiss()
@@ -213,12 +214,12 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
                         commentText = getString(R.string.fanfou_repost_format, editingComment,
                                 status.user_screen_name, status.text_plain)
                     } else {
-                        if (status.quoted_user_is_protected && showProtectedConfirmation) {
+                        if (status.quoted?.user_is_protected == true && showProtectedConfirmation) {
                             return false
                         }
                         commentText = getString(R.string.fanfou_repost_format, editingComment,
-                                status.quoted_user_screen_name, status.quoted_text_plain)
-                        update.repost_status_id = status.quoted_id
+                                status.quoted?.user_screen_name, status.quoted?.text_plain)
+                        update.repost_status_id = status.quoted?.id
                     }
                     if (FanfouValidator.calculateLength(commentText) > FanfouValidator.textLimit) {
                         commentText = commentText.substring(0, Math.max(FanfouValidator.textLimit,
@@ -229,7 +230,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
                     val statusLink = if (!status.is_quote || !quoteOriginalStatus) {
                         LinkCreator.getStatusWebLink(status)
                     } else {
-                        LinkCreator.getQuotedStatusWebLink(status)
+                        LinkCreator.getQuotedStatusWebLink(status.quoted!!)
                     }
                     update.attachment_url = statusLink?.toString()
                     commentText = editingComment

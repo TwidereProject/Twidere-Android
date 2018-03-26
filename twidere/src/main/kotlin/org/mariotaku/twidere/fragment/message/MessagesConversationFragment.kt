@@ -40,6 +40,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.*
+import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.activity_premium_dashboard.*
@@ -84,6 +85,7 @@ import org.mariotaku.twidere.model.event.SendMessageTaskEvent
 import org.mariotaku.twidere.promise.MessagePromises
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.service.LengthyOperationsService
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.view.ExtendedRecyclerView
@@ -144,7 +146,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
                 return recyclerView.showContextMenuForChild(holder.itemView)
             }
         }
-        mediaPreviewAdapter = MediaPreviewAdapter(activity, requestManager)
+        mediaPreviewAdapter = MediaPreviewAdapter(activity, Glide.with(this))
 
         mediaPreviewAdapter.listener = object : MediaPreviewAdapter.Listener {
             override fun onRemoveClick(position: Int, holder: MediaPreviewViewHolder) {
@@ -210,11 +212,11 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
 
     override fun onStart() {
         super.onStart()
-        bus.register(this)
+        BusSingleton.register(this)
     }
 
     override fun onStop() {
-        bus.unregister(this)
+        BusSingleton.unregister(this)
         super.onStop()
     }
 
@@ -274,7 +276,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
     }
 
     override fun onCreateAdapter(context: Context, requestManager: RequestManager): MessagesConversationAdapter {
-        return MessagesConversationAdapter(context, this.requestManager)
+        return MessagesConversationAdapter(context, Glide.with(this))
     }
 
     override fun onCreateLayoutManager(context: Context): LinearLayoutManager {
@@ -304,7 +306,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             R.id.recyclerView -> {
                 val message = adapter.getMessage(menuInfo.position)
                 val conversation = adapter.conversation
-                menu.setHeaderTitle(message.getSummaryText(context!!, userColorNameManager, conversation,
+                menu.setHeaderTitle(message.getSummaryText(context!!, UserColorNameManager.get(context!!), conversation,
                         preferences[nameFirstKey]))
                 activity!!.menuInflater.inflate(R.menu.menu_conversation_message_item, menu)
             }
@@ -328,7 +330,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
                     }
                     R.id.delete -> {
                         // TODO show progress
-                        MessagePromises.getInstance(context!!).destroyMessage(message.account_key, message.conversation_id,
+                        MessagePromises.get(context!!).destroyMessage(message.account_key, message.conversation_id,
                                 message.id)
                     }
                 }
@@ -514,15 +516,14 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
 
     private fun markRead() {
         // TODO: Promise progress
-        MessagePromises.getInstance(context!!).markRead(accountKey, conversationId)
+        MessagePromises.get(context!!).markRead(accountKey, conversationId)
     }
 
     private fun updateConversationStatus() {
         val activity = this.activity ?: return
         if (isDetached || activity.isFinishing) return
         val conversation = adapter.conversation ?: return
-        val title = conversation.getTitle(activity, userColorNameManager,
-                preferences[nameFirstKey]).first
+        val title = conversation.getTitle(activity, UserColorNameManager.get(context!!)).first
         val subtitle = conversation.getSubtitle(activity)
         activity.title = title
         val readOnly = conversation.readOnly
@@ -550,7 +551,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(conversationTitle, null,
                 null, stateIcon, null)
 
-        requestManager.loadProfileImage(activity, conversation, preferences[profileImageStyleKey])
+        Glide.with(this).loadProfileImage(activity, conversation, preferences[profileImageStyleKey])
                 .into(conversationAvatar)
     }
 

@@ -30,6 +30,7 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.KeyEvent
+import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
@@ -57,6 +58,7 @@ import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 import org.mariotaku.twidere.promise.BlockPromises
 import org.mariotaku.twidere.promise.FriendshipPromises
 import org.mariotaku.twidere.promise.MutePromises
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
@@ -93,11 +95,11 @@ abstract class AbsUsersFragment : AbsContentListRecyclerViewFragment<ParcelableU
 
     override fun onStart() {
         super.onStart()
-        bus.register(usersBusCallback)
+        BusSingleton.register(usersBusCallback)
     }
 
     override fun onStop() {
-        bus.unregister(usersBusCallback)
+        BusSingleton.unregister(usersBusCallback)
         super.onStop()
     }
 
@@ -106,7 +108,7 @@ abstract class AbsUsersFragment : AbsContentListRecyclerViewFragment<ParcelableU
     }
 
     override fun onCreateAdapter(context: Context, requestManager: RequestManager): ParcelableUsersAdapter {
-        val adapter = ParcelableUsersAdapter(context, this.requestManager)
+        val adapter = ParcelableUsersAdapter(context, Glide.with(this))
         adapter.simpleLayout = simpleLayout
         adapter.showFollow = showFollow
         val accountType = arguments?.accountKey?.let { key ->
@@ -152,7 +154,7 @@ abstract class AbsUsersFragment : AbsContentListRecyclerViewFragment<ParcelableU
         if (user.is_following) {
             DestroyFriendshipDialogFragment.show(fragmentManager!!, user)
         } else {
-            FriendshipPromises.getInstance(context!!).create(accountKey, user.key, user.screen_name)
+            FriendshipPromises.get(context!!).create(accountKey, user.key, user.screen_name)
         }
     }
 
@@ -160,7 +162,7 @@ abstract class AbsUsersFragment : AbsContentListRecyclerViewFragment<ParcelableU
         val user = adapter.getUser(position) ?: return
         val accountKey = user.account_key ?: return
         if (FriendshipPromises.isRunning(accountKey, user.key)) return
-        BlockPromises.getInstance(context!!).unblock(accountKey, user.key)
+        BlockPromises.get(context!!).unblock(accountKey, user.key)
     }
 
     override fun onUnmuteClicked(holder: UserViewHolder, position: Int) {

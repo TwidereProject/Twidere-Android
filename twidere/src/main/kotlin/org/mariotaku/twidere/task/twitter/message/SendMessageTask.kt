@@ -28,6 +28,7 @@ import org.mariotaku.microblog.library.model.twitter.dm.NewDm
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.api.*
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
@@ -39,6 +40,7 @@ import org.mariotaku.twidere.model.event.SendMessageTaskEvent
 import org.mariotaku.twidere.model.util.ParcelableMessageUtils
 import org.mariotaku.twidere.promise.UpdateStatusPromise
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.task.ExceptionHandlingAbstractTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask.Companion.addConversation
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask.Companion.addLocalConversations
@@ -70,11 +72,11 @@ class SendMessageTask(
     }
 
     override fun onException(callback: Unit?, exception: MicroBlogException) {
-        bus.post(SendMessageTaskEvent(params.account.key, params.conversation_id, null, false))
+        BusSingleton.post(SendMessageTaskEvent(params.account.key, params.conversation_id, null, false))
     }
 
     override fun onSucceed(callback: Unit?, result: SendMessageResult) {
-        bus.post(SendMessageTaskEvent(params.account.key, params.conversation_id,
+        BusSingleton.post(SendMessageTaskEvent(params.account.key, params.conversation_id,
                 result.conversationIds.singleOrNull(), true))
     }
 

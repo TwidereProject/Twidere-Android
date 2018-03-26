@@ -145,19 +145,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @CursorField(Statuses.MY_RETWEET_ID)
     public String my_retweet_id;
 
-    @JsonField(name = "quoted_id")
-    @CursorField(Statuses.QUOTED_ID)
-    public String quoted_id;
-
-    @JsonField(name = "quoted_timestamp")
-    @CursorField(Statuses.QUOTED_TIMESTAMP)
-    public long quoted_timestamp;
-
-    @JsonField(name = "quoted_user_id", typeConverter = UserKeyConverter.class)
-    @CursorField(value = Statuses.QUOTED_USER_KEY, converter = UserKeyCursorFieldConverter.class)
-    @Nullable
-    public UserKey quoted_user_key;
-
     @JsonField(name = "is_gap")
     @CursorField(Statuses.IS_GAP)
     public boolean is_gap;
@@ -193,14 +180,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @JsonField(name = "is_quote")
     @CursorField(Statuses.IS_QUOTE)
     public boolean is_quote;
-
-    @JsonField(name = "quoted_user_is_protected")
-    @CursorField(Statuses.QUOTED_USER_IS_PROTECTED)
-    public boolean quoted_user_is_protected;
-
-    @JsonField(name = "quoted_user_is_verified")
-    @CursorField(Statuses.QUOTED_USER_IS_VERIFIED)
-    public boolean quoted_user_is_verified;
 
     @JsonField(name = "retweeted_by_user_name")
     @CursorField(Statuses.RETWEETED_BY_USER_NAME)
@@ -251,35 +230,11 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @JsonField(name = "text_unescaped")
     @CursorField(Statuses.TEXT_UNESCAPED)
     public String text_unescaped;
-    @Nullable
 
+    @Nullable
     @JsonField(name = "card_name")
     @CursorField(Statuses.CARD_NAME)
     public String card_name;
-
-    @JsonField(name = "quoted_text_plain")
-    @CursorField(Statuses.QUOTED_TEXT_PLAIN)
-    public String quoted_text_plain;
-
-    @JsonField(name = "quoted_text_unescaped")
-    @CursorField(Statuses.QUOTED_TEXT_UNESCAPED)
-    public String quoted_text_unescaped;
-
-    @JsonField(name = "quoted_source")
-    @CursorField(Statuses.QUOTED_SOURCE)
-    public String quoted_source;
-
-    @JsonField(name = "quoted_user_name")
-    @CursorField(Statuses.QUOTED_USER_NAME)
-    public String quoted_user_name;
-
-    @JsonField(name = "quoted_user_screen_name")
-    @CursorField(Statuses.QUOTED_USER_SCREEN_NAME)
-    public String quoted_user_screen_name;
-
-    @JsonField(name = "quoted_user_profile_image")
-    @CursorField(Statuses.QUOTED_USER_PROFILE_IMAGE)
-    public String quoted_user_profile_image;
 
     @JsonField(name = "location")
     @CursorField(value = Statuses.LOCATION, converter = ParcelableLocation.Converter.class)
@@ -295,22 +250,9 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @CursorField(value = Statuses.MENTIONS_JSON, converter = LoganSquareCursorFieldConverter.class)
     public ParcelableUserMention[] mentions;
 
-    // TODO: Simplify for list loader
-    @JsonField(name = "media")
-    @CursorField(value = Statuses.MEDIA_JSON, converter = LoganSquareCursorFieldConverter.class)
     @Nullable
-    public ParcelableMedia[] media;
-
-    // TODO: Simplify for list loader
-    @JsonField(name = "quoted_media")
-    @CursorField(value = Statuses.QUOTED_MEDIA_JSON, converter = LoganSquareCursorFieldConverter.class)
-    @Nullable
-    public ParcelableMedia[] quoted_media;
-
-    @JsonField(name = "card")
-    @CursorField(value = Statuses.CARD, converter = LoganSquareCursorFieldConverter.class)
-    @Nullable
-    public ParcelableCardEntity card;
+    @CursorField(value = Statuses.ATTACHMENT, converter = LoganSquareCursorFieldConverter.class)
+    public ParcelableStatusAttachment attachment;
 
     @JsonField(name = "extras")
     @CursorField(value = Statuses.EXTRAS, converter = LoganSquareCursorFieldConverter.class)
@@ -320,10 +262,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @JsonField(name = "spans")
     @CursorField(value = Statuses.SPANS, converter = LoganSquareCursorFieldConverter.class)
     public SpanItem[] spans;
-
-    @JsonField(name = "quoted_spans")
-    @CursorField(value = Statuses.QUOTED_SPANS, converter = LoganSquareCursorFieldConverter.class)
-    public SpanItem[] quoted_spans;
 
     @JsonField(name = "account_color")
     @CursorField(Statuses.ACCOUNT_COLOR)
@@ -420,9 +358,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                 ", in_reply_to_status_id='" + in_reply_to_status_id + '\'' +
                 ", in_reply_to_user_key=" + in_reply_to_user_key +
                 ", my_retweet_id='" + my_retweet_id + '\'' +
-                ", quoted_id='" + quoted_id + '\'' +
-                ", quoted_timestamp=" + quoted_timestamp +
-                ", quoted_user_key=" + quoted_user_key +
                 ", is_gap=" + is_gap +
                 ", is_retweet=" + is_retweet +
                 ", retweeted=" + retweeted +
@@ -432,8 +367,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                 ", user_is_protected=" + user_is_protected +
                 ", user_is_verified=" + user_is_verified +
                 ", is_quote=" + is_quote +
-                ", quoted_user_is_protected=" + quoted_user_is_protected +
-                ", quoted_user_is_verified=" + quoted_user_is_verified +
                 ", retweeted_by_user_name='" + retweeted_by_user_name + '\'' +
                 ", retweeted_by_user_screen_name='" + retweeted_by_user_screen_name + '\'' +
                 ", retweeted_by_user_profile_image='" + retweeted_by_user_profile_image + '\'' +
@@ -447,21 +380,12 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                 ", user_profile_image_url='" + user_profile_image_url + '\'' +
                 ", text_unescaped='" + text_unescaped + '\'' +
                 ", card_name='" + card_name + '\'' +
-                ", quoted_text_plain='" + quoted_text_plain + '\'' +
-                ", quoted_text_unescaped='" + quoted_text_unescaped + '\'' +
-                ", quoted_source='" + quoted_source + '\'' +
-                ", quoted_user_name='" + quoted_user_name + '\'' +
-                ", quoted_user_screen_name='" + quoted_user_screen_name + '\'' +
-                ", quoted_user_profile_image='" + quoted_user_profile_image + '\'' +
                 ", location=" + location +
                 ", place_full_name='" + place_full_name + '\'' +
                 ", mentions=" + Arrays.toString(mentions) +
-                ", media=" + Arrays.toString(media) +
-                ", quoted_media=" + Arrays.toString(quoted_media) +
-                ", card=" + card +
+                ", attachment=" + attachment +
                 ", extras=" + extras +
                 ", spans=" + Arrays.toString(spans) +
-                ", quoted_spans=" + Arrays.toString(quoted_spans) +
                 ", account_color=" + account_color +
                 ", filter_flags=" + filter_flags +
                 ", filter_users=" + Arrays.toString(filter_users) +
@@ -478,7 +402,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
 
     @AfterCursorObjectCreated
     void finishCursorObjectCreation() {
-        card_name = card != null ? card.name : null;
+        card_name = (attachment != null && attachment.card != null) ? attachment.card.name : null;
         fixSortId();
     }
 
@@ -531,9 +455,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
 
         @JsonField(name = "external_url")
         public String external_url;
-
-        @JsonField(name = "quoted_external_url")
-        public String quoted_external_url;
 
         @JsonField(name = "retweeted_external_url")
         public String retweeted_external_url;

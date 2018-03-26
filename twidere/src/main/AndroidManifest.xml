@@ -146,14 +146,6 @@
             android:name="override_tinted_status_bar_defaults"
             android:value="true"/>
 
-        <meta-data
-            android:name="com.bumptech.glide.integration.okhttp3.OkHttpGlideModule"
-            tools:node="remove"/>
-
-        <meta-data
-            android:name="org.mariotaku.twidere.util.glide.TwidereGlideModule"
-            android:value="GlideModule"/>
-
         <activity
             android:name=".activity.MainActivity"
             android:icon="@mipmap/ic_launcher"

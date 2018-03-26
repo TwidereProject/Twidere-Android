@@ -24,7 +24,6 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
 import android.widget.RelativeLayout
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.list_item_user.view.*
 import org.mariotaku.ktextension.`true`
 import org.mariotaku.ktextension.hideIfEmpty
@@ -41,6 +40,7 @@ import org.mariotaku.twidere.extension.setVisible
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.placeholder.PlaceholderObject
 import org.mariotaku.twidere.promise.FriendshipPromises
+import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.Utils.getUserTypeIconRes
 import org.mariotaku.twidere.view.holder.status.StatusViewHolder
 import java.util.*
@@ -98,7 +98,7 @@ class UserViewHolder(
             return
         }
         val context = itemView.context
-        val manager = adapter.userColorNameManager
+        val manager = UserColorNameManager.get(context)
 
         itemContent.drawStart(manager.getUserColor(user.key))
 
@@ -222,7 +222,7 @@ class UserViewHolder(
     }
 
     fun placeholder() {
-        Glide.clear(profileImageView)
+        adapter.requestManager.clear(profileImageView)
         profileImageView.setImageDrawable(null)
         profileTypeView.visibility = View.GONE
 

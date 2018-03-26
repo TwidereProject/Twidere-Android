@@ -32,6 +32,7 @@ import org.mariotaku.twidere.extension.model.notificationDisabled
 import org.mariotaku.twidere.extension.model.timestamp
 import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
+import org.mariotaku.twidere.util.UserColorNameManager
 
 /**
  * Created by mariotaku on 2017/2/9.
@@ -72,19 +73,20 @@ class MessageEntryViewHolder(itemView: View, val adapter: MessagesEntriesAdapter
     }
 
     fun display(conversation: ParcelableMessageConversation) {
+        val manager = UserColorNameManager.get(adapter.context)
         if (adapter.drawAccountColors) {
             content.drawEnd(conversation.account_color)
         } else {
             content.drawEnd()
         }
         val (name, secondaryName) = conversation.getTitle(itemView.context,
-                adapter.userColorNameManager, adapter.nameFirst)
+                manager)
         this.time.time = conversation.timestamp
         this.name.name = name
         this.name.screenName = secondaryName
         this.name.updateText(adapter.bidiFormatter)
         this.text.spannable = conversation.getSummaryText(itemView.context,
-                adapter.userColorNameManager, adapter.nameFirst)
+                manager, adapter.nameFirst)
         if (conversation.is_outgoing) {
             readIndicator.visibility = View.VISIBLE
             readIndicator.setImageResource(R.drawable.ic_message_type_outgoing)

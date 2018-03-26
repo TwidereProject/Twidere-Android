@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.promise
 
 import android.app.Application
-import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.then
@@ -33,7 +32,6 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.model.microblog.ErrorInfo
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
@@ -46,6 +44,7 @@ import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.StatusDestroyedEvent
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.task.AbsAccountRequestTask
 import org.mariotaku.twidere.task.CreateFavoriteTask
 import org.mariotaku.twidere.task.DestroyFavoriteTask
@@ -53,19 +52,12 @@ import org.mariotaku.twidere.task.RetweetStatusTask
 import org.mariotaku.twidere.util.deleteActivityStatus
 import org.mariotaku.twidere.util.deleteStatus
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
-import javax.inject.Inject
 
 class StatusPromises private constructor(private val application: Application) {
-    @Inject
-    lateinit var bus: Bus
-
-    init {
-        GeneralComponent.get(application).inject(this)
-    }
 
     fun destroy(accountKey: UserKey, id: String): Promise<ParcelableStatus, Exception> = (promiseOnUi {
         DestroyTasks.addTaskId(accountKey, id)
-        bus.post(StatusListChangedEvent())
+        BusSingleton.post(StatusListChangedEvent())
     } and accountTask(application, accountKey) { account ->
         when (account.type) {
             AccountType.MASTODON -> {
@@ -92,7 +84,7 @@ class StatusPromises private constructor(private val application: Application) {
     }.alwaysUi {
         DestroyTasks.removeTaskId(accountKey, id)
     }.successUi { status ->
-        bus.post(StatusDestroyedEvent(status))
+        BusSingleton.post(StatusDestroyedEvent(status))
     }.toastOnResult(application) { status ->
         if (status.retweet_id != null) {
             return@toastOnResult application.getString(R.string.message_toast_retweet_cancelled)

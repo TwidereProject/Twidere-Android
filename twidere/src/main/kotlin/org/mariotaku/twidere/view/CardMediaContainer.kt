@@ -26,8 +26,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
-import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
+import com.bumptech.glide.request.RequestOptions
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.PreviewStyle
 import org.mariotaku.twidere.extension.model.aspect_ratio
@@ -119,19 +119,19 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
                 item.media_url
             }
             val request = if (withCredentials) {
-                requestManager.load(AuthenticatedUri(Uri.parse(url), accountKey)).asBitmap()
+                requestManager.asBitmap().load(AuthenticatedUri(Uri.parse(url), accountKey))
             } else {
-                requestManager.load(url).asBitmap()
+                requestManager.asBitmap().load(url)
             }
             when (style) {
                 PreviewStyle.ACTUAL_SIZE -> {
-                    request.fitCenter()
+                    request.apply(RequestOptions.fitCenterTransform())
                 }
                 PreviewStyle.CROP -> {
-                    request.centerCrop()
+                    request.apply(RequestOptions.centerCropTransform())
                 }
                 PreviewStyle.SCALE -> {
-                    request.fitCenter()
+                    request.apply(RequestOptions.fitCenterTransform())
                 }
                 PreviewStyle.NONE -> {
                     // Ignore
@@ -150,7 +150,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
             this.visibility = View.VISIBLE
             findViewById<View>(lp.videoViewId)?.visibility = View.VISIBLE
         } else {
-            Glide.clear(this)
+            requestManager.clear(this)
             this.visibility = View.GONE
             findViewById<View>(lp.videoViewId)?.visibility = View.GONE
         }

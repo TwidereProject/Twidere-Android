@@ -32,25 +32,18 @@ import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.constant.showAbsoluteTimeKey
 import org.mariotaku.twidere.constant.textSizeKey
 import org.mariotaku.twidere.dagger.component.GeneralComponent
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.MultiSelectManager
 import org.mariotaku.twidere.util.ReadStateManager
-import org.mariotaku.twidere.util.UserColorNameManager
 import javax.inject.Inject
 
-/**
- * Created by mariotaku on 15/10/5.
- */
 abstract class BaseRecyclerViewAdapter<VH : RecyclerView.ViewHolder>(
         val context: Context,
         override val requestManager: RequestManager
 ) : RecyclerView.Adapter<VH>(), IContentAdapter {
 
     @Inject
-    override final lateinit var userColorNameManager: UserColorNameManager
-    @Inject
-    override final lateinit var bidiFormatter: BidiFormatter
+    override lateinit var bidiFormatter: BidiFormatter
     @Inject
     lateinit var preferences: SharedPreferences
     @Inject
@@ -60,11 +53,11 @@ abstract class BaseRecyclerViewAdapter<VH : RecyclerView.ViewHolder>(
     @Inject
     lateinit var defaultFeatures: DefaultFeatures
 
-    override final val profileImageSize: String = context.getString(R.string.profile_image_size)
-    override final val profileImageStyle: Int
-    override final val textSize: Float
-    override final val profileImageEnabled: Boolean
-    override final val showAbsoluteTime: Boolean
+    final override val profileImageSize: String = context.getString(R.string.profile_image_size)
+    final override val profileImageStyle: Int
+    final override val textSize: Float
+    final override val profileImageEnabled: Boolean
+    final override val showAbsoluteTime: Boolean
 
     init {
         @Suppress("UNCHECKED_CAST")

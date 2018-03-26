@@ -30,6 +30,7 @@ import org.mariotaku.twidere.TwidereConstants.USER_COLOR_PREFERENCES_NAME
 import org.mariotaku.twidere.TwidereConstants.USER_NICKNAME_PREFERENCES_NAME
 import org.mariotaku.twidere.extension.model.api.key
 import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 
 class UserColorNameManager(context: Context) {
 
@@ -139,6 +140,10 @@ class UserColorNameManager(context: Context) {
         return decideNickname(nick, name)
     }
 
+    fun decideDisplayName(nickname: String?, name: String, screenName: String): String {
+        return nickname ?: if (nameFirst) name else "@$screenName"
+    }
+
     fun registerColorChangedListener(listener: UserColorChangedListener) {
         val preferenceChangeListener = OnColorPreferenceChangeListener(listener)
         colorPreferences.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
@@ -200,7 +205,7 @@ class UserColorNameManager(context: Context) {
 
     }
 
-    companion object {
+    companion object : ApplicationContextSingletonHolder<UserColorNameManager>(::UserColorNameManager) {
 
         private val NICKNAME_NULL = ".#NULL#"
 

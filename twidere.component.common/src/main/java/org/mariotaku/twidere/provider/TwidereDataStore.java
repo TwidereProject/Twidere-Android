@@ -687,9 +687,9 @@ public interface TwidereDataStore {
 
         String MY_RETWEET_ID = "my_retweet_id";
 
-        String MEDIA_JSON = "media_json";
-
         String MENTIONS_JSON = "mentions_json";
+
+        String ATTACHMENT = "attachments";
 
         String CARD = "card";
 

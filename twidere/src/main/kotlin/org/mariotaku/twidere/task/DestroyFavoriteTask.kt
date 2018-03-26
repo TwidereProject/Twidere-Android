@@ -8,6 +8,7 @@ import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
@@ -18,6 +19,7 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.updateStatusInfo
 
@@ -60,7 +62,7 @@ class DestroyFavoriteTask(
 
     override fun beforeExecute() {
         addTaskId(accountKey, statusId)
-        bus.post(StatusListChangedEvent())
+        BusSingleton.post(StatusListChangedEvent())
     }
 
     override fun afterExecute(callback: Any?, result: ParcelableStatus?, exception: MicroBlogException?) {
@@ -76,8 +78,8 @@ class DestroyFavoriteTask(
             taskEvent.isSucceeded = false
             Toast.makeText(context, exception?.getErrorMessage(context), Toast.LENGTH_SHORT).show()
         }
-        bus.post(taskEvent)
-        bus.post(StatusListChangedEvent())
+        BusSingleton.post(taskEvent)
+        BusSingleton.post(StatusListChangedEvent())
     }
 
     companion object : ObjectIdTaskCompanion()

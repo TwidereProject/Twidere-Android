@@ -88,7 +88,7 @@
         android:paddingTop="@dimen/element_spacing_small"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="?android:attr/textColorSecondary"
-        tools:text="@string/sample_status_text"/>
+        tools:text="@tools:sample/lorem"/>
 
     <LinearLayout
         android:layout_width="match_parent"

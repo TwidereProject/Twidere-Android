@@ -322,7 +322,7 @@ class ContentNotificationManager(
             val remaining = cur.forEachRow(5) { c, pos ->
                 val conversation = indices.newObject(c)
                 if (conversation.notificationDisabled) return@forEachRow false
-                val title = conversation.getTitle(context, userColorNameManager, nameFirst)
+                val title = conversation.getTitle(context, userColorNameManager)
                 val summary = conversation.getSummaryText(context, userColorNameManager, nameFirst)
                 val line = SpanFormatter.format(context.getString(R.string.title_summary_line_format),
                         title.first, summary)

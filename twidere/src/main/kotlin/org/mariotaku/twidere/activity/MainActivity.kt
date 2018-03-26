@@ -37,6 +37,7 @@ import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.RequestManager
+import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.activity_main.*
 import nl.komponents.kovenant.Promise
 import org.mariotaku.chameleon.Chameleon
@@ -100,12 +101,10 @@ open class MainActivity : ChameleonActivity(), IBaseActivity<MainActivity> {
         return@lazy UserTheme.get(this, themePreferences)
     }
 
-    private lateinit var requestManager: RequestManager
-
     override fun onCreate(savedInstanceState: Bundle?) {
         if (BuildConfig.DEBUG) {
-            StrictModeUtils.detectAllVmPolicy()
-            StrictModeUtils.detectAllThreadPolicy()
+            StrictModeUtils.detectVmPolicies()
+            StrictModeUtils.detectThreadPolicies()
         }
         val themeColor = themePreferences[themeColorKey]
         val themeResource = getThemeResource(themePreferences, themePreferences[themeKey], themeColor)
@@ -114,7 +113,6 @@ open class MainActivity : ChameleonActivity(), IBaseActivity<MainActivity> {
         }
         super.onCreate(savedInstanceState)
         GeneralComponent.get(this).inject(this)
-        requestManager = Glide.with(this)
         setContentView(R.layout.activity_main)
 
         if (!preferences[promotionsEnabledKey]) {
@@ -175,21 +173,6 @@ open class MainActivity : ChameleonActivity(), IBaseActivity<MainActivity> {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        requestManager.onStart()
-    }
-
-    override fun onStop() {
-        requestManager.onStop()
-        super.onStop()
-    }
-
-    override fun onDestroy() {
-        requestManager.onDestroy()
-        super.onDestroy()
-    }
-
     override fun onPause() {
         actionHelper.dispatchOnPause(this)
         super.onPause()
@@ -246,7 +229,7 @@ open class MainActivity : ChameleonActivity(), IBaseActivity<MainActivity> {
         val image = images.firstOrNull() ?: return false
 
         Glide.with(this).load(image.url)
-                .priority(Priority.HIGH)
+                .apply(RequestOptions.priorityOf(Priority.HIGH))
                 .into(presentationView)
         return true
     }

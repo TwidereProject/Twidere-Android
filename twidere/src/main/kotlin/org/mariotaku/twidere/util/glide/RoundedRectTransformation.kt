@@ -19,54 +19,51 @@
 
 package org.mariotaku.twidere.util.glide
 
-import android.content.Context
-import android.graphics.*
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.Transformation
-import com.bumptech.glide.load.engine.Resource
+import android.graphics.Bitmap
+import com.bumptech.glide.load.Key
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool
-import com.bumptech.glide.load.resource.bitmap.BitmapResource
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation
+import com.bumptech.glide.load.resource.bitmap.TransformationUtils
+import com.bumptech.glide.util.Util
+import java.nio.ByteBuffer
+import java.security.MessageDigest
+import kotlin.math.roundToInt
 
 class RoundedRectTransformation(
-        private val bitmapPool: BitmapPool,
         private val radius: Float,
         private val radiusPercent: Float
-) : Transformation<Bitmap> {
-    val rectF = RectF()
+) : BitmapTransformation() {
 
-    constructor(context: Context, radius: Float, radiusPercent: Float) :
-            this(Glide.get(context).bitmapPool, radius, radiusPercent)
-
-    override fun transform(resource: Resource<Bitmap>, outWidth: Int, outHeight: Int): Resource<Bitmap> {
-        val source = resource.get()
-
-        val width = source.width
-        val height = source.height
-
-        val bitmap = bitmapPool.get(width, height, Bitmap.Config.ARGB_8888)
-                ?: Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-
-        val canvas = Canvas(bitmap)
-        val paint = Paint()
-        paint.isAntiAlias = true
-        paint.shader = BitmapShader(source, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
-        rectF.right = width.toFloat()
-        rectF.bottom = height.toFloat()
-
+    override fun transform(pool: BitmapPool, toTransform: Bitmap, outWidth: Int, outHeight: Int): Bitmap {
         val calculatedRadius = if (radiusPercent != 0f) {
-            width * radiusPercent
+            toTransform.width * radiusPercent
         } else {
             radius
+        }.roundToInt()
+        return TransformationUtils.roundedCorners(pool, toTransform, calculatedRadius)
+    }
+
+    override fun updateDiskCacheKey(messageDigest: MessageDigest) {
+        messageDigest.update(ID_BYTES)
+
+        val radiusData = ByteBuffer.allocate(4).putFloat(radius).putFloat(radiusPercent).array()
+        messageDigest.update(radiusData)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other is RoundedRectTransformation) {
+            return radius == other.radius
         }
-        drawRoundRect(canvas, calculatedRadius, paint)
-        return BitmapResource.obtain(bitmap, bitmapPool)
+        return false
     }
 
-    private fun drawRoundRect(canvas: Canvas, radius: Float, paint: Paint) {
-        canvas.drawRoundRect(rectF, radius, radius, paint)
+    override fun hashCode(): Int {
+        return Util.hashCode(ID.hashCode(),
+                Util.hashCode(radius, Util.hashCode(radiusPercent)))
     }
 
-    override fun getId(): String {
-        return "RoundedRectTransformation(radius=$radius, radiusPercent=$radius)"
+    companion object {
+        private val ID = "org.mariotaku.twidere.util.glide.RoundedRectTransformation"
+        private val ID_BYTES = ID.toByteArray(Key.CHARSET)
     }
 }

@@ -29,8 +29,8 @@ import android.widget.CompoundButton
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.ACCOUNT_PREFERENCES_NAME_PREFIX
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NAME_FIRST
 import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.util.UserColorNameManager
 
 abstract class BaseAccountPreferenceFragment : BasePreferenceFragment() {
 
@@ -67,8 +67,7 @@ abstract class BaseAccountPreferenceFragment : BasePreferenceFragment() {
         val activity = activity!!
         val intent = activity.intent
         if (intent.hasExtra(EXTRA_SHOW_FRAGMENT)) {
-            val nameFirst = prefs.getBoolean(KEY_NAME_FIRST, true)
-            val name = userColorNameManager.getDisplayName(account.key,
+            val name = UserColorNameManager.get(activity).getDisplayName(account.key,
                     account.user.name, account.user.screen_name)
             activity.title = name
         }

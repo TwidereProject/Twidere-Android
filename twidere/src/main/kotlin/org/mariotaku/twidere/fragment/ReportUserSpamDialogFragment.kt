@@ -26,15 +26,16 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.promise.BlockPromises
+import org.mariotaku.twidere.util.UserColorNameManager
 
 class ReportUserSpamDialogFragment : AbsUserMuteBlockDialogFragment() {
     override fun getMessage(user: ParcelableUser): String {
-        val displayName = userColorNameManager.getDisplayName(user)
+        val displayName = UserColorNameManager.get(context!!).getDisplayName(user)
         return getString(R.string.report_user_confirm_message, displayName)
     }
 
     override fun getTitle(user: ParcelableUser): String {
-        val displayName = userColorNameManager.getDisplayName(user)
+        val displayName = UserColorNameManager.get(context!!).getDisplayName(user)
         return getString(R.string.report_user, displayName)
     }
 
@@ -44,7 +45,7 @@ class ReportUserSpamDialogFragment : AbsUserMuteBlockDialogFragment() {
 
     override fun performUserAction(user: ParcelableUser, filterEverywhere: Boolean) {
         val accountKey = user.account_key ?: return
-        BlockPromises.getInstance(context!!).report(accountKey, user.key, filterEverywhere)
+        BlockPromises.get(context!!).report(accountKey, user.key, filterEverywhere)
     }
 
     companion object {

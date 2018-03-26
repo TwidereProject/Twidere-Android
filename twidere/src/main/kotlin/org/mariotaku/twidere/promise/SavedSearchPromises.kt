@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.promise
 
 import android.app.Application
-import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.all
 import nl.komponents.kovenant.toSuccessVoid
@@ -28,7 +27,6 @@ import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.microblog.library.model.microblog.SavedSearch
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.blockBulkInsert
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.promise.toastOnResult
@@ -36,26 +34,19 @@ import org.mariotaku.twidere.extension.promise.twitterTask
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.SavedSearchDestroyedEvent
 import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.util.ContentValuesCreator.createSavedSearch
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
-import javax.inject.Inject
 
 
 class SavedSearchPromises(private val application: Application) {
-
-    @Inject
-    lateinit var bus: Bus
-
-    init {
-        GeneralComponent.get(application).inject(this)
-    }
 
     fun destroy(accountKey: UserKey, id: Long): Promise<SavedSearch, Exception> = twitterTask(application, accountKey) { account, twitter ->
         return@twitterTask twitter.destroySavedSearch(id)
     }.toastOnResult(application) { search ->
         return@toastOnResult application.getString(R.string.destroy_saved_search, search.name)
     }.successUi {
-        bus.post(SavedSearchDestroyedEvent(accountKey, id))
+        BusSingleton.post(SavedSearchDestroyedEvent(accountKey, id))
     }
 
     fun create(accountKey: UserKey, query: String): Promise<SavedSearch, Exception> = twitterTask(application, accountKey) { account, twitter ->

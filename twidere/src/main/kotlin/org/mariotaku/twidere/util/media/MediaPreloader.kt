@@ -22,7 +22,6 @@ package org.mariotaku.twidere.util.media
 import android.content.Context
 import android.content.SharedPreferences
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.Target
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.constant.mediaPreloadKey
 import org.mariotaku.twidere.constant.mediaPreloadOnWifiOnlyKey
@@ -45,8 +44,8 @@ class MediaPreloader(val context: Context) {
     fun preloadStatus(status: ParcelableStatus) {
         if (!shouldPreload) return
         preLoadProfileImage(status)
-        preloadMedia(status.media)
-        preloadMedia(status.quoted_media)
+        preloadMedia(status.attachment?.media)
+        preloadMedia(status.attachment?.quoted?.media)
     }
 
     fun preloadActivity(activity: ParcelableActivity) {
@@ -70,13 +69,11 @@ class MediaPreloader(val context: Context) {
     }
 
     private fun preLoadProfileImage(status: ParcelableStatus) {
-        Glide.with(context).loadProfileImage(context, status, 0).into(Target.SIZE_ORIGINAL,
-                Target.SIZE_ORIGINAL)
+        Glide.with(context).loadProfileImage(context, status, 0).submit()
     }
 
     private fun preloadPreviewImage(url: String?) {
-        Glide.with(context).load(url).into(Target.SIZE_ORIGINAL,
-                Target.SIZE_ORIGINAL)
+        Glide.with(context).load(url).submit()
     }
 
 }

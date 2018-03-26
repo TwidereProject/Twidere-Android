@@ -66,7 +66,7 @@ class MediaStatusViewHolder(private val adapter: IStatusesAdapter, itemView: Vie
                 adapter.profileImageStyle, profileImageView.cornerRadius,
                 profileImageView.cornerRadiusRatio).into(profileImageView)
 
-        val firstMedia = status.media?.firstOrNull() ?: return
+        val firstMedia = status.attachment?.media?.firstOrNull() ?: return
 
         aspectRatioSource.setSize(firstMedia.width, firstMedia.height)
         mediaImageContainer.tag = firstMedia

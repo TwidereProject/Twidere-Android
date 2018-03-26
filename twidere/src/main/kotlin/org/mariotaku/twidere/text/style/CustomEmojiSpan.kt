@@ -28,8 +28,9 @@ import android.text.style.ReplacementSpan
 import android.widget.TextView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.DecodeFormat
-import com.bumptech.glide.request.animation.GlideAnimation
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.extension.setBoundsFitCenter
 
@@ -43,12 +44,11 @@ class CustomEmojiSpan(
     private val target = GlideTarget(textView, emojiSize, emojiSize)
 
     init {
-        requestManager.load(uri)
-                .asBitmap()
-                .placeholder(R.mipmap.ic_emoji_loading)
-                .error(R.mipmap.ic_emoji_error)
-                .format(DecodeFormat.PREFER_ARGB_8888)
-                .fitCenter()
+        requestManager.asBitmap().load(uri)
+                .apply(RequestOptions.placeholderOf(R.mipmap.ic_emoji_loading)
+                        .error(R.mipmap.ic_emoji_error)
+                        .format(DecodeFormat.PREFER_ARGB_8888)
+                        .fitCenter())
                 .into(target)
     }
 
@@ -91,7 +91,7 @@ class CustomEmojiSpan(
                 textView.postInvalidate()
             }
 
-        override fun onResourceReady(resource: Bitmap, glideAnimation: GlideAnimation<in Bitmap>) {
+        override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
             drawable = BitmapDrawable(textView.resources, resource)
         }
 
@@ -103,7 +103,7 @@ class CustomEmojiSpan(
             drawable = placeholder
         }
 
-        override fun onLoadFailed(e: Exception?, errorDrawable: Drawable?) {
+        override fun onLoadFailed(errorDrawable: Drawable?) {
             drawable = errorDrawable
         }
 

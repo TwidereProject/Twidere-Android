@@ -76,7 +76,7 @@ class NotificationReceiver : BroadcastReceiver() {
             NotificationType.DIRECT_MESSAGES -> {
                 if (accountKey == null) return
                 val appContext = context.applicationContext
-                MessagePromises.getInstance(appContext).batchMarkRead(accountKey,
+                MessagePromises.get(appContext).batchMarkRead(accountKey,
                         paramReadPosition.toLongOr(-1L))
             }
         }

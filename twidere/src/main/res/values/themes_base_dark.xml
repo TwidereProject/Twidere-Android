@@ -43,6 +43,7 @@
 
         <item name="actionBarTheme">@style/Theme.Twidere.Dark.ActionBar</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="coordinatorLayoutStyle">@style/Widget.Design.CoordinatorLayout</item>
     </style>
 
     <style name="Theme.Twidere.Dark.Content" parent="Theme.Twidere.Dark"/>
@@ -75,6 +76,7 @@
 
         <item name="actionBarTheme">@null</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="coordinatorLayoutStyle">@style/Widget.Design.CoordinatorLayout</item>
     </style>
 
     <style name="Theme.Twidere.Dark.NoActionBar" parent="Theme.Twidere.Dark">

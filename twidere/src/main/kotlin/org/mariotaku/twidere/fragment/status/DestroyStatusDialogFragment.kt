@@ -34,7 +34,7 @@ class DestroyStatusDialogFragment : AbsSimpleStatusOperationDialogFragment() {
         get() = getString(R.string.destroy_status_confirm_message)
 
     override fun onPerformAction(status: ParcelableStatus) {
-        StatusPromises.getInstance(context!!).destroy(status.account_key, status.id)
+        StatusPromises.get(context!!).destroy(status.account_key, status.id)
     }
 
     companion object {

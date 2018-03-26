@@ -29,6 +29,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AlertDialog.Builder
 import android.view.View
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.task
@@ -70,7 +71,7 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
 
         builder.setupAlertDialog()
 
-        adapter = DummyItemAdapter(context!!, requestManager = requestManager)
+        adapter = DummyItemAdapter(context!!, requestManager = Glide.with(this))
         adapter.showCardActions = false
         adapter.showAccountsColor = true
 

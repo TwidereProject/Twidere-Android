@@ -99,6 +99,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.receiver.NotificationReceiver
 import org.mariotaku.twidere.service.StreamingService
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
@@ -334,7 +335,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         super.onStart()
         multiSelectHandler.dispatchOnStart()
         AccountManager.get(this).addOnAccountsUpdatedListenerSafe(accountUpdatedListener, updateImmediately = false)
-        bus.register(this)
+        BusSingleton.register(this)
 
         readStateManager.registerOnSharedPreferenceChangeListener(readStateChangeListener)
         updateUnreadCount()
@@ -349,7 +350,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     override fun onStop() {
         multiSelectHandler.dispatchOnStop()
         readStateManager.unregisterOnSharedPreferenceChangeListener(readStateChangeListener)
-        bus.unregister(this)
+        BusSingleton.unregister(this)
         AccountManager.get(this).removeOnAccountsUpdatedListenerSafe(accountUpdatedListener)
         preferences.edit().putInt(KEY_SAVED_TAB_POSITION, mainPager.currentItem).apply()
         dataSyncProvider.newTimelineSyncManager()?.commit()

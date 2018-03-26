@@ -6,9 +6,6 @@ import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.util.promotion.PromotionService
 
-/**
- * Created by mariotaku on 2017/1/7.
- */
 
 fun parcelableMediaTypeString(@ParcelableMedia.Type type: Int): String? = when (type) {
     ParcelableMedia.Type.IMAGE -> "image"
@@ -29,7 +26,8 @@ fun ParcelableMedia.getBestVideoUrlAndType(supportedTypes: Array<String>): Pair<
             val videoInfo = video_info ?: return Pair(mediaUrl, null)
             val firstMatch = videoInfo.variants.filter { variant ->
                 supportedTypes.any { it.equals(variant.content_type, ignoreCase = true) }
-            }.sortedByDescending(ParcelableMedia.VideoInfo.Variant::bitrate).firstOrNull() ?: return null
+            }.sortedByDescending(ParcelableMedia.VideoInfo.Variant::bitrate).firstOrNull()
+                    ?: return null
             return Pair(firstMatch.url, firstMatch.content_type)
         }
         ParcelableMedia.Type.CARD_ANIMATED_GIF -> {
@@ -47,10 +45,17 @@ val ParcelableMedia.aspect_ratio: Double
         return this.width / this.height.toDouble()
     }
 
+
 val ParcelableMedia.bannerExtras: PromotionService.BannerExtras?
     get() {
         val contentUrl = this.page_url ?: this.url ?: return null
         return PromotionService.BannerExtras(contentUrl)
+    }
+
+val Array<ParcelableMedia?>.type: Int
+    get() {
+        forEach { if (it != null) return it.type }
+        return 0
     }
 
 @ParcelableMedia.Type

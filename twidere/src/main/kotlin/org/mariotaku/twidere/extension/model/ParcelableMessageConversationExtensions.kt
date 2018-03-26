@@ -83,8 +83,7 @@ var ParcelableMessageConversation.notificationDisabled: Boolean
         }
     }
 
-fun ParcelableMessageConversation.getTitle(context: Context, manager: UserColorNameManager,
-        nameFirst: Boolean): Pair<String, String?> {
+fun ParcelableMessageConversation.getTitle(context: Context, manager: UserColorNameManager): Pair<String, String?> {
     if (conversation_type == ConversationType.ONE_TO_ONE) {
         val user = this.user ?: return Pair(context.getString(R.string.title_direct_messages), null)
         return Pair(user.name, "@${user.screen_name}")

@@ -42,8 +42,8 @@ open class StatusLinkClickHandler(
 
     override fun openMedia(accountKey: UserKey, extraId: Long, sensitive: Boolean,
             link: String, start: Int, end: Int) {
-        val status = status
-        val current = findByLink(status!!.media, link)
+        val status = status!!
+        val current = findByLink(status.attachment?.media, link)
         if (current == null || current.open_browser) {
             openLink(accountKey, link)
         } else {

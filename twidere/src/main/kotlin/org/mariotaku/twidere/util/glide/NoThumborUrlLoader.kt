@@ -21,7 +21,7 @@ package org.mariotaku.twidere.util.glide
 
 import android.content.Context
 import com.bumptech.glide.integration.okhttp3.OkHttpStreamFetcher
-import com.bumptech.glide.load.data.DataFetcher
+import com.bumptech.glide.load.Options
 import com.bumptech.glide.load.model.*
 import okhttp3.OkHttpClient
 import org.mariotaku.twidere.model.media.NoThumborUrl
@@ -32,15 +32,17 @@ class NoThumborUrlLoader(
         val client: OkHttpClient
 ) : ModelLoader<NoThumborUrl, InputStream> {
 
-    override fun getResourceFetcher(model: NoThumborUrl, width: Int, height: Int): DataFetcher<InputStream> {
+    override fun buildLoadData(model: NoThumborUrl, width: Int, height: Int, options: Options): ModelLoader.LoadData<InputStream>? {
         val headersBuilder = LazyHeaders.Builder()
         headersBuilder.addHeader(HEADER_NO_THUMBOR, "true")
         val glideUrl = GlideUrl(model.url, headersBuilder.build())
-        return OkHttpStreamFetcher(client, glideUrl)
+        return ModelLoader.LoadData(glideUrl, OkHttpStreamFetcher(client, glideUrl))
     }
 
-    class Factory(val client: OkHttpClient) : ModelLoaderFactory<NoThumborUrl, InputStream> {
-        override fun build(context: Context, factories: GenericLoaderFactory) = NoThumborUrlLoader(context, client)
+    override fun handles(model: NoThumborUrl) = true
+
+    class Factory(val context: Context, val client: OkHttpClient) : ModelLoaderFactory<NoThumborUrl, InputStream> {
+        override fun build(multiFactory: MultiModelLoaderFactory) = NoThumborUrlLoader(context, client)
 
         override fun teardown() {}
     }

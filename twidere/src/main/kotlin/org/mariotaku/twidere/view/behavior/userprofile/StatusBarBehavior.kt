@@ -25,7 +25,6 @@ import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.lastWindowInsetsCompat
 import android.util.AttributeSet
 import android.view.View
-import android.view.Window
 import kotlinx.android.synthetic.main.fragment_user.view.*
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.twidere.R
@@ -36,8 +35,6 @@ import org.mariotaku.twidere.util.support.WindowSupport
 internal class StatusBarBehavior(context: Context, attrs: AttributeSet? = null) : CoordinatorLayout.Behavior<View>(context, attrs) {
 
     private val argbEvaluator = ArgbEvaluator()
-
-    private val window: Window = ChameleonUtils.getActivity(context)!!.window
 
     private var lightStatusBar: Int = 0
 
@@ -69,7 +66,10 @@ internal class StatusBarBehavior(context: Context, attrs: AttributeSet? = null) 
         child.setBackgroundColor(statusBarColor as Int)
         val lightStatusBar = if (ThemeUtils.isLightColor(statusBarColor)) 1 else -1
         if (this.lightStatusBar != lightStatusBar) {
-            WindowSupport.setLightStatusBar(window, lightStatusBar == 1)
+            val window = ChameleonUtils.getActivity(parent.context)?.window
+            if (window != null) {
+                WindowSupport.setLightStatusBar(window, lightStatusBar == 1)
+            }
         }
         this.lightStatusBar = lightStatusBar
     }

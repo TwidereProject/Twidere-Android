@@ -54,6 +54,7 @@ fun Status.toParcelable(accountKey: UserKey): ParcelableStatus {
 
 fun Status.applyTo(accountKey: UserKey, result: ParcelableStatus) {
     val extras = ParcelableStatus.Extras()
+    val attachment = ParcelableStatusAttachment()
     result.account_key = accountKey
     result.id = id
     result.sort_id = sortId
@@ -104,14 +105,14 @@ fun Status.applyTo(accountKey: UserKey, result: ParcelableStatus) {
     result.text_unescaped = html?.toString()
     result.text_plain = result.text_unescaped
     result.spans = html?.spanItems
-    result.media = status.mediaAttachments?.mapToArray { it.toParcelable() }
+    attachment.media = status.mediaAttachments?.mapToArray { it.toParcelable() }
     result.source = status.application?.sourceHtml
     result.is_favorite = status.isFavourited
     result.is_possibly_sensitive = status.isSensitive
     result.mentions = status.mentions?.mapToArray { it.toParcelable(accountKey) }
 
     extras.display_text_range = calculateDisplayTextRange(result.text_unescaped, result.spans,
-            result.media)
+            result.attachment?.media)
     extras.summary_text = status.spoilerText?.let(EmojioneTranslator::translate)
     extras.visibility = status.visibility
     extras.external_url = status.url
@@ -129,11 +130,12 @@ fun Status.applyTo(accountKey: UserKey, result: ParcelableStatus) {
         result.in_reply_to_name = inReplyToMention.name
         result.in_reply_to_screen_name = inReplyToMention.screen_name
     }
-    if (result.media.isNotNullOrEmpty()) {
+    if (result.attachment?.media.isNotNullOrEmpty()) {
         result.addFilterFlag(ParcelableStatus.FilterFlags.HAS_MEDIA)
     }
 
     result.extras = extras
+    result.attachment = attachment
 
     result.updateFilterInfo(setOf(accountDescriptionUnescaped, reblog?.accountDescriptionUnescaped,
             accountUrl, reblog?.accountUrl))

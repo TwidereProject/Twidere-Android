@@ -27,6 +27,7 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
+import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.model.UserKey;
 
 @ParcelablePlease
@@ -37,6 +38,14 @@ public class UserArguments extends TabArguments implements Parcelable {
     @JsonField(name = "user_key")
     UserKey userKey;
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public UserKey getUserKey() {
+        return userKey;
+    }
+
     public void setUserKey(UserKey userKey) {
         this.userKey = userKey;
     }
@@ -45,9 +54,9 @@ public class UserArguments extends TabArguments implements Parcelable {
     public void copyToBundle(@NonNull Bundle bundle) {
         super.copyToBundle(bundle);
         if (userKey == null) {
-            bundle.putParcelable(EXTRA_USER_KEY, UserKey.valueOf(userId));
+            bundle.putParcelable(TwidereConstants.EXTRA_USER_KEY, UserKey.valueOf(userId));
         } else {
-            bundle.putParcelable(EXTRA_USER_KEY, userKey);
+            bundle.putParcelable(TwidereConstants.EXTRA_USER_KEY, userKey);
         }
     }
 

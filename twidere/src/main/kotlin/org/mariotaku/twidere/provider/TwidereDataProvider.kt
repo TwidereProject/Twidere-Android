@@ -33,7 +33,6 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Process
 import android.support.v4.text.BidiFormatter
-import com.squareup.otto.Bus
 import okhttp3.Dns
 import org.mariotaku.ktextension.isNullOrEmpty
 import org.mariotaku.ktextension.mapToArray
@@ -53,6 +52,7 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.UnreadCountUpdatedEvent
 import org.mariotaku.twidere.promise.UpdateStatusPromise
 import org.mariotaku.twidere.provider.TwidereDataStore.*
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.SQLiteDatabaseWrapper.LazyLoadCallback
 import org.mariotaku.twidere.util.Utils
@@ -73,8 +73,6 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
     lateinit internal var preferences: SharedPreferences
     @Inject
     lateinit internal var dns: Dns
-    @Inject
-    lateinit internal var bus: Bus
     @Inject
     lateinit internal var userColorNameManager: UserColorNameManager
     @Inject
@@ -102,7 +100,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
     }
 
     override fun onCreateSQLiteDatabase(): SQLiteDatabase {
-        val helper = TwidereSQLiteOpenHelper.getInstance(context!!)
+        val helper = TwidereSQLiteOpenHelper.get(context!!)
         return helper.singletonWritableDatabase
     }
 
@@ -441,7 +439,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                     val where = Expression.and(Expression.equalsArgs(CachedRelationships.ACCOUNT_KEY),
                             Expression.equalsArgs(CachedRelationships.USER_KEY))
                     if (databaseWrapper.update(table, values, where.sql, arrayOf(accountKey,
-                            userKey)) > 0) {
+                                    userKey)) > 0) {
                         val projection = arrayOf(CachedRelationships._ID)
                         val c = databaseWrapper.query(table, projection, where.sql, null,
                                 null, null, null)
@@ -498,7 +496,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
     }
 
     private fun notifyUnreadCountChanged(position: Int) {
-        handler.post { bus.post(UnreadCountUpdatedEvent(position)) }
+        handler.post { BusSingleton.post(UnreadCountUpdatedEvent(position)) }
     }
 
     private fun onDatabaseUpdated(tableId: Int, uri: Uri?) {

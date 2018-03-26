@@ -36,7 +36,6 @@ import org.mariotaku.twidere.constant.displayProfileImageKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.appendQueryParameterIgnoreNull
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.SuggestionItem
@@ -52,6 +51,7 @@ class ComposeAutoCompleteAdapter(context: Context, val requestManager: RequestMa
     @Inject
     lateinit var preferences: SharedPreferences
     @Inject
+    @Deprecated(message = "Deprecated", replaceWith = ReplaceWith("UserColorNameManager.get(context!!)", imports = ["org.mariotaku.twidere.util.UserColorNameManager"]))
     lateinit var userColorNameManager: UserColorNameManager
 
     var account: AccountDetails? = null
@@ -78,7 +78,7 @@ class ComposeAutoCompleteAdapter(context: Context, val requestManager: RequestMa
 
         if (Suggestions.AutoComplete.TYPE_USERS == cursor.getString(indices.type)) {
             val userKey = UserKey.valueOf(cursor.getString(indices.extra_id))
-            text1.spannable = userColorNameManager.getUserNickname(userKey,
+            text1.spannable = UserColorNameManager.get(context).getUserNickname(userKey,
                     cursor.getString(indices.title))
             val screenName = cursor.getString(indices.summary)
             text2.spannable = "@${getScreenNameOrAcct(screenName, userKey)}"

@@ -24,6 +24,7 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.originalId
 import org.mariotaku.twidere.model.ParcelableStatus
+import org.mariotaku.twidere.model.ParcelableStatusAttachment
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 
@@ -117,20 +118,15 @@ object LinkCreator {
         }
     }
 
-    fun getQuotedStatusWebLink(status: ParcelableStatus): Uri {
-        val extras = status.extras
-        if (extras != null) {
-            extras.quoted_external_url?.takeIf(String::isNotEmpty)?.let {
-                return Uri.parse(it)
-            }
-            extras.external_url?.takeIf(String::isNotEmpty)?.let {
-                return Uri.parse(it)
-            }
+    fun getQuotedStatusWebLink(status: ParcelableStatusAttachment.QuotedStatus): Uri {
+        val externalUrl = status.external_url
+        if (externalUrl != null) {
+            return Uri.parse(externalUrl)
         }
         if (USER_TYPE_FANFOU_COM == status.account_key.host) {
-            return getFanfouStatusLink(status.quoted_id)
+            return getFanfouStatusLink(status.id)
         }
-        return getTwitterStatusLink(status.quoted_user_screen_name, status.quoted_id)
+        return getTwitterStatusLink(status.user_screen_name!!, status.id)
     }
 
     fun getUserWebLink(user: ParcelableUser): Uri? {

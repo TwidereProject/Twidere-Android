@@ -30,10 +30,7 @@ import org.mariotaku.microblog.library.model.microblog.ExtendedEntitySupport
 import org.mariotaku.microblog.library.model.microblog.MediaEntity
 import org.mariotaku.microblog.library.model.microblog.Status
 import org.mariotaku.twidere.exception.MalformedResponseException
-import org.mariotaku.twidere.extension.model.addFilterFlag
-import org.mariotaku.twidere.extension.model.toParcelable
-import org.mariotaku.twidere.extension.model.updateContentFilterInfo
-import org.mariotaku.twidere.extension.model.updateFilterInfo
+import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.toSpanItem
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
@@ -60,6 +57,7 @@ fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: S
         result: ParcelableStatus,
         updateFilterInfoAction: (Status, ParcelableStatus) -> Unit = ::updateFilterInfoDefault) {
     val extras = ParcelableStatus.Extras()
+    val attachment = ParcelableStatusAttachment()
     result.account_key = accountKey
     result.id = id
     result.sort_id = sortId
@@ -101,44 +99,47 @@ fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: S
         result.addFilterFlag(ParcelableStatus.FilterFlags.POSSIBLY_SENSITIVE)
     }
 
-    val quoted = status.quotedStatus
+    val quotedStatus = status.quotedStatus
     result.is_quote = status.isQuoteStatus
-    result.quoted_id = status.quotedStatusId
-    if (quoted != null) {
-        val quotedUser = quoted.user ?: throw MalformedResponseException()
-        result.quoted_id = quoted.id
-        extras.quoted_external_url = quoted.inferredExternalUrl
+    if (quotedStatus != null) {
+        val quoted = ParcelableStatusAttachment.QuotedStatus()
+        val quotedUser = quotedStatus.user ?: throw MalformedResponseException()
+        quoted.id = quotedStatus.id
+        quoted.account_key = accountKey
+        quoted.external_url = quotedStatus.inferredExternalUrl
 
-        val quotedText = quoted.htmlText
+        val quotedText = quotedStatus.htmlText
         // Twitter will escape <> to &lt;&gt;, so if a status contains those symbols unescaped
         // We should treat this as an html
         if (quotedText.isHtml) {
-            val html = HtmlSpanBuilder.fromHtml(quotedText, quoted.extendedText)
-            result.quoted_text_unescaped = html?.toString()
-            result.quoted_text_plain = result.quoted_text_unescaped
-            result.quoted_spans = html?.spanItems
+            val html = HtmlSpanBuilder.fromHtml(quotedText, quotedStatus.extendedText)
+            quoted.text_unescaped = html?.toString()
+            quoted.text_plain = quoted.text_unescaped
+            quoted.spans = html?.spanItems
         } else {
-            val textWithIndices = quoted.formattedTextWithIndices()
-            result.quoted_text_plain = quotedText.twitterUnescaped()
-            result.quoted_text_unescaped = textWithIndices.text
-            result.quoted_spans = textWithIndices.spans
+            val textWithIndices = quotedStatus.formattedTextWithIndices()
+            quoted.text_plain = quotedText.twitterUnescaped()
+            quoted.text_unescaped = textWithIndices.text
+            quoted.spans = textWithIndices.spans
             extras.quoted_display_text_range = textWithIndices.range
         }
 
-        result.quoted_timestamp = quoted.createdAt.time
-        result.quoted_source = quoted.source
-        result.quoted_media = ParcelableMediaUtils.fromStatus(quoted, accountKey, accountType)
+        quoted.timestamp = quotedStatus.createdAt.time
+        quoted.source = quotedStatus.source
+        quoted.media = ParcelableMediaUtils.fromStatus(quotedStatus, accountKey, accountType)
 
-        result.quoted_user_key = quotedUser.key
-        result.quoted_user_name = quotedUser.name
-        result.quoted_user_screen_name = quotedUser.screenName
-        result.quoted_user_profile_image = quotedUser.getProfileImageOfSize(profileImageSize)
-        result.quoted_user_is_protected = quotedUser.isProtected
-        result.quoted_user_is_verified = quotedUser.isVerified
+        quoted.user_key = quotedUser.key
+        quoted.user_name = quotedUser.name
+        quoted.user_screen_name = quotedUser.screenName
+        quoted.user_profile_image = quotedUser.getProfileImageOfSize(profileImageSize)
+        quoted.user_is_protected = quotedUser.isProtected
+        quoted.user_is_verified = quotedUser.isVerified
 
-        if (quoted.isPossiblySensitive) {
+        if (quotedStatus.isPossiblySensitive) {
             result.addFilterFlag(ParcelableStatus.FilterFlags.POSSIBLY_SENSITIVE)
         }
+
+        attachment.quoted = quoted
     } else if (status.isQuoteStatus) {
         result.addFilterFlag(ParcelableStatus.FilterFlags.QUOTE_NOT_AVAILABLE)
     }
@@ -177,7 +178,9 @@ fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: S
         extras.display_text_range = textWithIndices.range
     }
 
-    result.media = ParcelableMediaUtils.fromStatus(status, accountKey, accountType)
+    attachment.media = ParcelableMediaUtils.fromStatus(status, accountKey, accountType)
+    attachment.card = status.card?.toParcelable(accountKey, accountType)
+
     result.source = status.source
     result.location = status.parcelableLocation
     result.is_favorite = status.isFavorited
@@ -188,13 +191,15 @@ fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: S
     }
     result.is_possibly_sensitive = status.isPossiblySensitive
     result.mentions = status.userMentionEntities?.mapToArray { it.toParcelable(user.host) }
-    result.card = status.card?.toParcelable(accountKey, accountType)
-    result.card_name = result.card?.name
+
+    result.card_name = result.attachment?.card?.name
     result.place_full_name = status.placeFullName
     result.lang = status.lang
     result.extras = extras
 
-    if (result.media.isNotNullOrEmpty() || result.quoted_media.isNotNullOrEmpty()) {
+    result.attachment = attachment
+
+    if (result.attachment?.media.isNotNullOrEmpty() || result.quoted?.media.isNotNullOrEmpty()) {
         result.addFilterFlag(ParcelableStatus.FilterFlags.HAS_MEDIA)
     }
     if (user.isFollowing == false) {
@@ -291,8 +296,8 @@ fun updateFilterInfoForUserTimeline(status: Status, result: ParcelableStatus) {
     result.updateContentFilterInfo()
 
     if (result.is_retweet) {
-        result.filter_users = setOf(result.user_key, result.quoted_user_key).filterNotNull().toTypedArray()
-        result.filter_names = setOf(result.user_name, result.quoted_user_name).filterNotNull().toTypedArray()
+        result.filter_users = setOf(result.user_key, result.quoted?.user_key).filterNotNull().toTypedArray()
+        result.filter_names = setOf(result.user_name, result.quoted?.user_name).filterNotNull().toTypedArray()
         result.filter_descriptions = setOf(
                 status.retweetedStatus?.userDescriptionUnescaped,
                 status.retweetedStatus?.userUrlExpanded,
@@ -302,8 +307,8 @@ fun updateFilterInfoForUserTimeline(status: Status, result: ParcelableStatus) {
                 status.quotedStatus?.userUrlExpanded
         ).filterNotNull().joinToString("\n")
     } else {
-        result.filter_users = setOf(result.quoted_user_key).filterNotNull().toTypedArray()
-        result.filter_names = setOf(result.quoted_user_name).filterNotNull().toTypedArray()
+        result.filter_users = setOf(result.quoted?.user_key).filterNotNull().toTypedArray()
+        result.filter_names = setOf(result.quoted?.user_name).filterNotNull().toTypedArray()
         result.filter_descriptions = setOf(
                 status.quotedStatus?.userDescriptionUnescaped,
                 status.quotedStatus?.userLocation,

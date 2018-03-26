@@ -26,11 +26,13 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.util.DataStoreUtils
+import org.mariotaku.twidere.util.UserColorNameManager
 
 class AddUserFilterDialogFragment : AbsUserMuteBlockDialogFragment() {
     override fun getMessage(user: ParcelableUser): String {
-        return getString(R.string.filter_user_confirm_message, userColorNameManager.getDisplayName(user))
+        return getString(R.string.filter_user_confirm_message, UserColorNameManager.get(context!!).getDisplayName(user))
     }
 
     override fun getTitle(user: ParcelableUser): String {
@@ -40,7 +42,7 @@ class AddUserFilterDialogFragment : AbsUserMuteBlockDialogFragment() {
     override fun performUserAction(user: ParcelableUser, filterEverywhere: Boolean) {
         DataStoreUtils.addToFilter(context!!, listOf(user), filterEverywhere)
         val accountKey = user.account_key ?: return
-        bus.post(FriendshipTaskEvent(FriendshipTaskEvent.Action.FILTER, accountKey, user.key).apply {
+        BusSingleton.post(FriendshipTaskEvent(FriendshipTaskEvent.Action.FILTER, accountKey, user.key).apply {
             isFinished = true
             isSucceeded = true
         })

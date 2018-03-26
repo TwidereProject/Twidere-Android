@@ -28,6 +28,7 @@ import android.support.v4.app.FragmentActivity
 import android.view.*
 import android.view.View.OnClickListener
 import android.widget.ImageView
+import com.bumptech.glide.Glide
 import com.twitter.Validator
 import kotlinx.android.synthetic.main.fragment_user_profile_editor.*
 import nl.komponents.kovenant.Promise
@@ -253,11 +254,11 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
         editLocation.setText(user.location)
         editUrl.setText(user.urlFull)
 
-        requestManager.loadProfileImage(activity, user,
+        Glide.with(this).loadProfileImage(activity, user,
                 ImageShapeStyle.SHAPE_RECTANGLE).into(profileImage)
-        requestManager.loadProfileBanner(activity, user, resources.displayMetrics.widthPixels)
+        Glide.with(this).loadProfileBanner(activity, user, resources.displayMetrics.widthPixels)
                 .into(profileBanner)
-        requestManager.load(user.profile_background_url).into(profileBackground)
+        Glide.with(this).load(user.profile_background_url).into(profileBackground)
 
         linkColor.color = user.link_color
         backgroundColor.color = user.background_color

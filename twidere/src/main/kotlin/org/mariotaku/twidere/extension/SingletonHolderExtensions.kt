@@ -21,4 +21,4 @@ package org.mariotaku.twidere.extension
 
 import org.mariotaku.twidere.util.lang.SingletonHolder
 
-fun <T, A> SingletonHolder<T, A>.get(arg: A): T = getInstance(arg)
+fun <T> SingletonHolder<T, Unit>.get(): T = get(Unit)

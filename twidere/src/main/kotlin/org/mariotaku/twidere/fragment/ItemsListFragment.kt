@@ -22,12 +22,14 @@ import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.accountKey
 import org.mariotaku.twidere.extension.model.prefixedHashtag
+import org.mariotaku.twidere.extension.model.quoted
 import org.mariotaku.twidere.fragment.timeline.AbsTimelineFragment
 import org.mariotaku.twidere.model.ParcelableHashtag
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.MenuUtils
+import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.view.ExtendedRecyclerView
 import org.mariotaku.twidere.view.holder.UserViewHolder
@@ -71,7 +73,7 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
 
             override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
                 val status = dummyItemAdapter.getStatus(position)
-                IntentUtils.openStatus(context, status.account_key, status.quoted_id)
+                IntentUtils.openStatus(context, status.account_key, status.quoted?.id!!)
             }
 
             override fun onItemActionClick(holder: RecyclerView.ViewHolder, id: Int, position: Int) {
@@ -147,7 +149,7 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
                 val dummyAdapter = adapter.dummyAdapter
                 val status = dummyAdapter.getStatus(contextMenuInfo.position)
                 inflater.inflate(R.menu.action_status, menu)
-                MenuUtils.setupForStatus(context, menu, preferences, userColorNameManager,
+                MenuUtils.setupForStatus(context, menu, preferences, UserColorNameManager.get(context),
                         status)
             }
         }
@@ -169,7 +171,7 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
                     return true
                 }
                 return MenuUtils.handleStatusClick(context, this, fragmentManager!!,
-                        preferences, userColorNameManager, status, item)
+                        preferences, UserColorNameManager.get(context), status, item)
             }
         }
         return false

@@ -1,5 +1,6 @@
 package org.mariotaku.twidere.model.util
 
+import android.annotation.SuppressLint
 import org.mariotaku.ktextension.addAllTo
 import org.mariotaku.ktextension.isNullOrEmpty
 import org.mariotaku.ktextension.toIntOr
@@ -9,14 +10,12 @@ import org.mariotaku.microblog.library.model.microblog.Status
 import org.mariotaku.microblog.library.model.microblog.UrlEntity
 import org.mariotaku.twidere.extension.model.api.getEntityMedia
 import org.mariotaku.twidere.extension.model.api.gnusocial.toParcelable
+import org.mariotaku.twidere.extension.model.quoted
 import org.mariotaku.twidere.extension.model.toParcelable
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 
-/**
- * Created by mariotaku on 16/2/13.
- */
 object ParcelableMediaUtils {
 
     fun inferMediaType(mimeType: String, def: Int = ParcelableMedia.Type.IMAGE): Int {
@@ -92,7 +91,8 @@ object ParcelableMediaUtils {
                 return arrayOf(media)
             }
             "summary_large_image" -> {
-                val photoImageFullSize = card.getBindingValue("photo_image_full_size") as? CardEntity.ImageValue ?: return emptyArray()
+                val photoImageFullSize = card.getBindingValue("photo_image_full_size") as? CardEntity.ImageValue
+                        ?: return emptyArray()
 
                 val media = ParcelableMedia()
                 media.url = card.url
@@ -151,6 +151,7 @@ object ParcelableMediaUtils {
         return media
     }
 
+    @SuppressLint("SwitchIntDef")
     fun hasPlayIcon(@ParcelableMedia.Type type: Int): Boolean {
         return when (type) {
             ParcelableMedia.Type.VIDEO, ParcelableMedia.Type.ANIMATED_GIF,
@@ -165,17 +166,17 @@ object ParcelableMediaUtils {
     }
 
     fun getPrimaryMedia(status: ParcelableStatus): Array<ParcelableMedia>? {
-        if (status.is_quote && status.media.isNullOrEmpty()) {
-            return status.quoted_media
+        if (status.is_quote && status.attachment?.media.isNullOrEmpty()) {
+            return status.quoted?.media
         } else {
-            return status.media
+            return status.attachment?.media
         }
     }
 
     fun getAllMedia(status: ParcelableStatus): Array<ParcelableMedia> {
         val result = ArrayList<ParcelableMedia>()
-        status.media?.addAllTo(result)
-        status.quoted_media?.addAllTo(result)
+        status.attachment?.media?.addAllTo(result)
+        status.attachment?.quoted?.media?.addAllTo(result)
         return result.toTypedArray()
     }
 

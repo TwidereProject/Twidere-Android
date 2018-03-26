@@ -23,7 +23,6 @@ import android.accounts.AccountManager
 import android.content.ContentValues
 import android.content.Context
 import android.support.v4.util.ArraySet
-import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.then
@@ -33,7 +32,6 @@ import org.mariotaku.microblog.library.Twitter
 import org.mariotaku.sqliteqb.library.Expression.and
 import org.mariotaku.sqliteqb.library.Expression.equalsArgs
 import org.mariotaku.twidere.annotation.AccountType.FANFOU
-import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.ParcelableTrend
@@ -41,21 +39,15 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.TrendsRefreshedEvent
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 import java.util.*
-import javax.inject.Inject
 
 /**
  * Get local trends
  * Created by mariotaku on 16/2/24.
  */
 class GetTrendsPromise private constructor(private val application: Context) {
-    @Inject
-    lateinit var bus: Bus
-
-    init {
-        GeneralComponent.get(application).inject(this)
-    }
 
     fun local(accountKey: UserKey, woeId: Int): Promise<Boolean, Exception> = task {
         val details = AccountManager.get(application).getDetailsOrThrow(accountKey, true)
@@ -98,7 +90,7 @@ class GetTrendsPromise private constructor(private val application: Context) {
         })
         return@then true
     }.successUi {
-        bus.post(TrendsRefreshedEvent())
+        BusSingleton.post(TrendsRefreshedEvent())
     }
 
     companion object : ApplicationContextSingletonHolder<GetTrendsPromise>(::GetTrendsPromise)

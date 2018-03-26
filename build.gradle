@@ -35,7 +35,7 @@ allprojects {
 subprojects {
     buildscript {
         ext {
-            kotlinVersion = '1.2.30'
+            kotlinVersion = '1.2.31'
             pluginVersions = [
                     AndroidSvgDrawable: '3.0.0',
                     PlayServices      : '3.1.1',
@@ -53,7 +53,7 @@ subprojects {
                     MapsUtils              : '0.5',
                     DropboxCoreSdk         : '3.0.3',
                     GoogleDriveApi         : 'v3-rev81-1.22.0',
-                    Exoplayer              : 'r2.5.4',
+                    Exoplayer              : '2.6.0',
                     Toro                   : '2.1.0',
                     LoganSquare            : '1.3.7',
                     Mime4J                 : '0.7.2',
@@ -66,24 +66,23 @@ subprojects {
                     MultiValueSwitch       : '0.9.8',
                     PickNCrop              : '0.9.27',
                     AndroidGIFDrawable     : '1.2.6',
-                    KPreferences           : '0.9.7',
+                    KPreferences           : '0.9.8',
                     Kovenant               : '3.3.0',
                     ParcelablePlease       : '1.0.2',
                     Chameleon              : '0.9.26',
-                    UniqR                  : '0.9.6',
+                    UniqR                  : '0.9.10',
                     SQLiteQB               : '0.9.18',
-                    Glide                  : '3.7.0',
-                    GlideOkHttp3           : '1.4.0',
-                    GlideTransformations   : '2.0.2',
+                    Glide                  : '4.6.1',
+                    GlideOkHttp3           : '4.6.1',
                     AndroidImageCropper    : '2.4.6',
                     ExportablePreferences  : '0.9.7',
                     ACRA                   : '4.9.2',
                     AbstractTask           : '0.9.8',
                     Dagger                 : '2.11',
                     StethoBeanShellREPL    : '0.3',
-                    ArchLifecycleExtensions: '1.1.0',
+                    ArchLifecycleExtensions: '1.1.1',
                     ArchPaging             : '1.0.0-alpha6',
-                    ConstraintLayout       : '1.1.0-beta5',
+                    ConstraintLayout       : '1.1.0-beta6',
                     MessageBubbleView      : '2.1',
             ]
 

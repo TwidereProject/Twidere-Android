@@ -26,8 +26,6 @@ import org.mariotaku.twidere.util.UserColorNameManager
 
 interface IContentAdapter {
 
-    val userColorNameManager: UserColorNameManager
-
     fun getItemCount(): Int
 
     @ImageShapeStyle

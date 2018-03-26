@@ -28,7 +28,6 @@ import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.dagger.module.ApplicationModule
 import org.mariotaku.twidere.dagger.module.ChannelModule
 import org.mariotaku.twidere.data.user.UserLiveData
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.fragment.BasePreferenceFragment
@@ -132,10 +131,6 @@ interface GeneralComponent {
 
     fun inject(activity: MainActivity)
 
-    fun inject(promises: MessagePromises)
-
-    fun inject(promises: StatusPromises)
-
     fun inject(promises: FriendshipPromises)
 
     fun inject(promises: BlockPromises)
@@ -172,15 +167,13 @@ interface GeneralComponent {
 
     fun inject(promises: UserListPromises)
 
-    fun inject(promises: SavedSearchPromises)
-
     fun inject(promises: RefreshPromises)
 
     fun inject(liveData: UserLiveData)
 
     fun inject(adapter: AccountSelectorAdapter)
 
-    companion object : ApplicationContextSingletonHolder<GeneralComponent>(creation@ { application ->
+    companion object : ApplicationContextSingletonHolder<GeneralComponent>(creation@{ application ->
         return@creation DaggerGeneralComponent.builder()
                 .applicationModule(ApplicationModule.get(application))
                 .channelModule(ChannelModule.get(application))

@@ -23,9 +23,11 @@ import android.content.Context
 import android.os.Build
 import com.bumptech.glide.Glide
 import com.bumptech.glide.GlideBuilder
+import com.bumptech.glide.Registry
+import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader
 import com.bumptech.glide.load.model.GlideUrl
-import com.bumptech.glide.module.GlideModule
+import com.bumptech.glide.module.AppGlideModule
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.mariotaku.twidere.dagger.DependencyHolder
@@ -38,12 +40,13 @@ import org.mariotaku.twidere.util.media.ThumborWrapper
 import org.mariotaku.twidere.util.okhttp.ModifyRequestInterceptor
 import java.io.InputStream
 
-class TwidereGlideModule : GlideModule {
+@GlideModule
+class TwidereGlideModule : AppGlideModule() {
     override fun applyOptions(context: Context, builder: GlideBuilder) {
         // Do nothing.
     }
 
-    override fun registerComponents(context: Context, glide: Glide) {
+    override fun registerComponents(context: Context, glide: Glide, registry: Registry) {
         val holder = DependencyHolder.get(context)
         val builder = OkHttpClient.Builder()
         val conf = HttpClientFactory.HttpClientConfiguration(holder.preferences)
@@ -56,9 +59,9 @@ class TwidereGlideModule : GlideModule {
         }
         builder.addInterceptor(ModifyRequestInterceptor(ThumborModifier(thumbor), UserAgentModifier(userAgent)))
         val client = builder.build()
-        glide.register(GlideUrl::class.java, InputStream::class.java, OkHttpUrlLoader.Factory(client))
-        glide.register(AuthenticatedUri::class.java, InputStream::class.java, AuthenticatedUriLoader.Factory(client))
-        glide.register(NoThumborUrl::class.java, InputStream::class.java, NoThumborUrlLoader.Factory(client))
+        registry.replace(GlideUrl::class.java, InputStream::class.java, OkHttpUrlLoader.Factory(client))
+        registry.append(AuthenticatedUri::class.java, InputStream::class.java, AuthenticatedUriLoader.Factory(context, client))
+        registry.append(NoThumborUrl::class.java, InputStream::class.java, NoThumborUrlLoader.Factory(context,client))
     }
 
     class ThumborModifier(val thumbor: ThumborWrapper) : ModifyRequestInterceptor.RequestModifier {

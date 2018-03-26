@@ -54,6 +54,7 @@ import org.mariotaku.twidere.annotation.ThemeBackgroundOption.MIN_ALPHA
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_THEME_BACKGROUND_SOLID
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_THEME_BACKGROUND_TRANSPARENT
 import org.mariotaku.twidere.constant.themeColorKey
+import org.mariotaku.twidere.extension.findViewByType
 import org.mariotaku.twidere.graphic.WindowBackgroundDrawable
 import org.mariotaku.twidere.util.support.ViewSupport
 
@@ -344,8 +345,10 @@ object ThemeUtils {
         }
         getThemeForegroundColor(context)
         setActionBarOverflowColor(toolbar, contrastForegroundColor)
-        wrapToolbarMenuIcon(ViewSupport.findViewByType(toolbar, ActionMenuView::class.java),
-                contrastForegroundColor, popupItemColor)
+        val actionMenuView = toolbar.findViewByType(ActionMenuView::class.java)
+        if (actionMenuView != null) {
+            wrapToolbarMenuIcon(actionMenuView, contrastForegroundColor, popupItemColor)
+        }
         if (toolbar is TwidereToolbar) {
             toolbar.setItemColor(contrastForegroundColor)
         }

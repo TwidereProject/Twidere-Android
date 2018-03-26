@@ -26,24 +26,22 @@ import android.support.v4.widget.ImageViewCompat
 import android.support.v4.widget.TextViewCompat
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.ViewHolder
-import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.Spanned
-import android.text.style.ForegroundColorSpan
 import android.util.TypedValue
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
 import android.widget.ImageView
 import android.widget.TextView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.list_item_status.view.*
-import org.mariotaku.ktextension.*
+import org.mariotaku.ktextension.appendTo
+import org.mariotaku.ktextension.applyFontFamily
+import org.mariotaku.ktextension.hideIfEmpty
+import org.mariotaku.ktextension.spannable
 import org.mariotaku.microblog.library.annotation.mastodon.StatusVisibility
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE
 import org.mariotaku.twidere.extension.loadProfileImage
@@ -64,8 +62,8 @@ import org.mariotaku.twidere.text.TwidereClickableSpan
 import org.mariotaku.twidere.text.style.PlaceholderLineSpan
 import org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText
 import org.mariotaku.twidere.util.HtmlSpanBuilder
-import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.UnitConvertUtils
+import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.Utils.getUserTypeIconRes
 import org.mariotaku.twidere.view.ShapedImageView
 import org.mariotaku.twidere.view.ShortTimeView
@@ -80,27 +78,22 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
     override val profileTypeView: ImageView = itemView.profileType
 
     private val itemContent = itemView.itemContent
-    private val mediaPreview = itemView.mediaPreview
-    private val summaryView = itemView.summary
     private val textView = itemView.text
     private val nameView = itemView.name
     private val itemMenu = itemView.itemMenu
     private val statusInfoLabel = itemView.statusInfoLabel
     private val statusInfoIcon = itemView.statusInfoIcon
-    private val quotedNameView = itemView.quotedName
     private val timeView = itemView.time
-    private val quotedView = itemView.quotedView
-    private val quotedTextView = itemView.quotedText
-    private val mediaLabel = itemView.mediaLabel
-    private val quotedMediaLabel = itemView.quotedMediaLabel
-    private val quotedMediaPreview = itemView.quotedMediaPreview
     private val replyButton = itemView.reply
     private val retweetButton = itemView.retweet
     private val favoriteButton = itemView.favorite
     private val itemActionsGroup = itemView.itemActionsGroup
+    private val attachmentLabel = itemView.attachmentLabel
+    private val attachmentContainer = itemView.attachmentContainer
 
     private val eventHandler = EventHandler()
 
+    private var attachmentHolder: AttachmentHolder? = null
     private var statusClickListener: IStatusViewHolder.StatusClickListener? = null
 
     private val toggleFullTextSpan = TwidereClickableSpan(adapter.linkHighlightingStyle) {
@@ -113,12 +106,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
 
 
     init {
-        if (adapter.mediaPreviewEnabled) {
-            View.inflate(mediaPreview.context, R.layout.layout_card_media_preview,
-                    itemView.mediaPreview)
-            View.inflate(quotedMediaPreview.context, R.layout.layout_card_media_preview,
-                    itemView.quotedMediaPreview)
-        }
 
     }
 
@@ -132,7 +119,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         nameView.name = TWIDERE_PREVIEW_NAME
         nameView.screenName = "@$TWIDERE_PREVIEW_SCREEN_NAME"
         nameView.updateText(adapter.bidiFormatter)
-        summaryView.hideIfEmpty()
         if (adapter.linkHighlightingStyle == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
             textView.spannable = toPlainText(TWIDERE_PREVIEW_TEXT_HTML)
         } else {
@@ -144,25 +130,21 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         timeView.time = System.currentTimeMillis()
         val showCardActions = isCardActionsShown
         if (adapter.mediaPreviewEnabled) {
-            mediaPreview.visibility = View.VISIBLE
-            mediaLabel.visibility = View.GONE
+            attachmentContainer.visibility = View.VISIBLE
+            attachmentLabel.visibility = View.GONE
         } else {
-            mediaPreview.visibility = View.GONE
-            mediaLabel.visibility = View.VISIBLE
+            attachmentContainer.visibility = View.GONE
+            attachmentLabel.visibility = View.VISIBLE
         }
 
         itemActionsGroup.setVisible(showCardActions)
-
-        quotedView.visibility = View.GONE
-
-        mediaPreview.displayMedia(R.drawable.featured_graphics)
     }
 
     fun placeholder() {
         val showCardActions = isCardActionsShown
         val actionButtonsAlpha = PlaceholderLineSpan.placeholderAlpha / 255f
 
-        Glide.clear(profileImageView)
+        adapter.requestManager.clear(profileImageView)
         profileImageView.setImageDrawable(null)
 
         timeView.time = ShortTimeView.PLACEHOLDER
@@ -187,10 +169,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         itemActionsGroup.setVisible(showCardActions)
 
         profileTypeView.visibility = View.GONE
-        summaryView.visibility = View.GONE
-        mediaLabel.visibility = View.GONE
-        mediaPreview.visibility = View.GONE
-        quotedView.visibility = View.GONE
+        attachmentLabel.visibility = View.GONE
+        attachmentContainer.visibility = View.GONE
         statusInfoIcon.visibility = View.GONE
         statusInfoLabel.visibility = View.GONE
     }
@@ -204,7 +184,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         val requestManager = adapter.requestManager
         val linkify = adapter.twidereLinkify
         val formatter = adapter.bidiFormatter
-        val colorNameManager = adapter.userColorNameManager
+        val colorNameManager = UserColorNameManager.get(context)
         val showCardActions = isCardActionsShown
 
         replyButton.alpha = 1f
@@ -247,92 +227,18 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         }
 
         val skipLinksInText = status.extras?.support_entities ?: false
-        if (status.is_quote) {
 
-            quotedView.visibility = View.VISIBLE
+        val userColor = colorNameManager.getUserColor(status.user_key)
 
-            val quoteContentAvailable = status.quoted_text_plain != null && status.quoted_text_unescaped != null
-            val isFanfouStatus = status.account_key.host == USER_TYPE_FANFOU_COM
-            if (quoteContentAvailable && !isFanfouStatus) {
-                quotedNameView.visibility = View.VISIBLE
-                quotedTextView.visibility = View.VISIBLE
-
-                val quotedUserKey = status.quoted_user_key!!
-                quotedNameView.name = colorNameManager.getUserNickname(quotedUserKey,
-                        status.quoted_user_name)
-                quotedNameView.screenName = "@${status.quoted_user_acct}"
-
-                val quotedDisplayEnd = status.extras?.quoted_display_text_range?.getOrNull(1) ?: -1
-                val quotedText: CharSequence
-                if (adapter.linkHighlightingStyle != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
-                    quotedText = SpannableStringBuilder.valueOf(status.quoted_text_unescaped)
-                    status.quoted_spans?.applyTo(quotedText, status.extras?.emojis, requestManager,
-                            quotedTextView)
-                    linkify.applyAllLinks(quotedText, status.account_key, layoutPosition.toLong(),
-                            status.is_possibly_sensitive, adapter.linkHighlightingStyle,
-                            skipLinksInText)
-                } else {
-                    quotedText = status.quoted_text_unescaped
-                }
-                if (quotedDisplayEnd != -1 && quotedDisplayEnd <= quotedText.length) {
-                    quotedTextView.spannable = quotedText.subSequence(0, quotedDisplayEnd)
-                } else {
-                    quotedTextView.spannable = quotedText
-                }
-                quotedTextView.hideIfEmpty()
-
-                val quotedUserColor = colorNameManager.getUserColor(quotedUserKey)
-                if (quotedUserColor != 0) {
-                    quotedView.drawStart(quotedUserColor)
-                } else {
-                    quotedView.drawStart(ThemeUtils.getColorFromAttribute(context,
-                            R.attr.quoteIndicatorBackgroundColor))
-                }
-
-                displayQuotedMedia(requestManager, status)
-            } else {
-                quotedNameView.visibility = View.GONE
-                quotedTextView.visibility = View.VISIBLE
-
-                if (quoteContentAvailable) {
-                    displayQuotedMedia(requestManager, status)
-                } else {
-                    quotedMediaPreview.visibility = View.GONE
-                    quotedMediaLabel.visibility = View.GONE
-                }
-
-                quotedTextView.spannable = if (!quoteContentAvailable) {
-                    // Display 'not available' label
-                    SpannableString.valueOf(context.getString(R.string.label_status_not_available)).apply {
-                        setSpan(ForegroundColorSpan(ThemeUtils.getColorFromAttribute(context,
-                                android.R.attr.textColorTertiary, textView.currentTextColor)), 0,
-                                length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                    }
-                } else {
-                    // Display 'original status' label
-                    context.getString(R.string.label_original_status)
-                }
-
-                quotedView.drawStart(ThemeUtils.getColorFromAttribute(context,
-                        R.attr.quoteIndicatorBackgroundColor))
+        if (status.is_retweet) {
+            val retweetUserColor = colorNameManager.getUserColor(status.retweeted_by_user_key!!)
+            when {
+                retweetUserColor == 0 -> itemContent.drawStart(userColor)
+                userColor == 0 -> itemContent.drawStart(retweetUserColor)
+                else -> itemContent.drawStart(retweetUserColor, userColor)
             }
-
-            itemContent.drawStart(colorNameManager.getUserColor(status.user_key))
         } else {
-            quotedView.visibility = View.GONE
-
-            val userColor = colorNameManager.getUserColor(status.user_key)
-
-            if (status.is_retweet) {
-                val retweetUserColor = colorNameManager.getUserColor(status.retweeted_by_user_key!!)
-                when {
-                    retweetUserColor == 0 -> itemContent.drawStart(userColor)
-                    userColor == 0 -> itemContent.drawStart(retweetUserColor)
-                    else -> itemContent.drawStart(retweetUserColor, userColor)
-                }
-            } else {
-                itemContent.drawStart(userColor)
-            }
+            itemContent.drawStart(userColor)
         }
 
         timeView.time = if (status.is_retweet) {
@@ -366,41 +272,13 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
             itemContent.drawEnd()
         }
 
-        val hasMediaLabel = mediaLabel.displayMediaLabel(status.card_name, status.media, status.location,
-                status.place_full_name, status.is_possibly_sensitive)
-        if (status.media.isNotNullOrEmpty()) {
+        val textWithSummary = SpannableStringBuilder()
 
-            if (!adapter.sensitiveContentEnabled && status.is_possibly_sensitive) {
-                // Sensitive content, show label instead of media view
-                mediaLabel.contentDescription = status.media?.firstOrNull()?.alt_text
-                mediaLabel.setVisible(hasMediaLabel)
-                mediaPreview.visibility = View.GONE
-            } else if (!adapter.mediaPreviewEnabled) {
-                // Media preview disabled, just show label
-                mediaLabel.contentDescription = status.media?.firstOrNull()?.alt_text
-                mediaLabel.setVisible(hasMediaLabel)
-                mediaPreview.visibility = View.GONE
-            } else {
-                // Show media
-                mediaLabel.visibility = View.GONE
-                mediaPreview.visibility = View.VISIBLE
-
-                mediaPreview.displayMedia(requestManager = requestManager,
-                        media = status.media, accountKey = status.account_key,
-                        mediaClickListener = this)
-            }
-        } else {
-            // No media, hide media preview
-            mediaLabel.setVisible(hasMediaLabel)
-            mediaPreview.visibility = View.GONE
-        }
-
-        summaryView.spannable = status.extras?.summary_text
-        summaryView.hideIfEmpty()
+        status.extras?.summary_text?.appendTo(textWithSummary)
 
         val text: CharSequence
         val displayEnd: Int
-        if (!summaryView.empty && !isFullTextVisible) {
+        if (!textWithSummary.isEmpty() && !isFullTextVisible) {
             text = SpannableStringBuilder.valueOf(context.getString(R.string.label_status_show_more)).apply {
                 setSpan(toggleFullTextSpan, 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
@@ -419,10 +297,10 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         }
 
         if (displayEnd != -1 && displayEnd <= text.length) {
-            textView.spannable = text.subSequence(0, displayEnd)
-        } else {
-            textView.spannable = text
+            textWithSummary.append(text.subSequence(0, displayEnd))
         }
+
+        textView.spannable = textWithSummary
         textView.hideIfEmpty()
 
         if (replyCount > 0) {
@@ -483,8 +361,10 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         }
 
         nameView.updateText(formatter)
-        quotedNameView.updateText(formatter)
 
+        attachmentLabel.displayAttachmentLabel(status.card_name, status.attachment?.media, status.location,
+                status.place_full_name, status.is_possibly_sensitive)
+        attachmentContainer.visibility = View.GONE
 
         itemView.contentDescription = status.contentDescription(context, colorNameManager,
                 displayInReplyTo, timeView.showAbsoluteTime)
@@ -495,47 +375,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
 
     }
 
-    private fun displayQuotedMedia(requestManager: RequestManager, status: ParcelableStatus) {
-        val hasMediaLabel = quotedMediaLabel.displayMediaLabel(null, status.quoted_media,
-                null, null, status.is_possibly_sensitive)
-        if (status.quoted_media.isNotNullOrEmpty()) {
-
-            if (!adapter.sensitiveContentEnabled && status.is_possibly_sensitive) {
-                quotedMediaLabel.setVisible(hasMediaLabel)
-                // Sensitive content, show label instead of media view
-                quotedMediaPreview.visibility = View.GONE
-            } else if (!adapter.mediaPreviewEnabled) {
-                quotedMediaLabel.setVisible(hasMediaLabel)
-                // Media preview disabled, just show label
-                quotedMediaPreview.visibility = View.GONE
-            } else if (status.media.isNotNullOrEmpty()) {
-                quotedMediaLabel.setVisible(hasMediaLabel)
-                // Already displaying media, show label only
-                quotedMediaPreview.visibility = View.GONE
-            } else {
-                quotedMediaLabel.visibility = View.GONE
-
-                // Show media
-                quotedMediaPreview.visibility = View.VISIBLE
-
-                quotedMediaPreview.displayMedia(requestManager = requestManager,
-                        media = status.quoted_media, accountKey = status.account_key,
-                        mediaClickListener = this)
-            }
-        } else {
-            quotedMediaLabel.setVisible(hasMediaLabel)
-
-            // No media, hide all related views
-            quotedMediaPreview.visibility = View.GONE
-        }
-    }
-
     override fun onMediaClick(view: View, current: ParcelableMedia, accountKey: UserKey?, id: Long) {
-        if (view.parent == quotedMediaPreview) {
-            statusClickListener?.onQuotedMediaClick(this, view, current, layoutPosition)
-        } else {
-            statusClickListener?.onMediaClick(this, view, current, layoutPosition)
-        }
     }
 
     fun setOnClickListeners() {
@@ -555,32 +395,27 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         retweetButton.setOnLongClickListener(eventHandler)
         favoriteButton.setOnLongClickListener(eventHandler)
 
-        mediaLabel.setOnClickListener(eventHandler)
-
-        quotedView.setOnClickListener(eventHandler)
+        attachmentLabel.setOnClickListener(eventHandler)
+        attachmentContainer.setOnClickListener(eventHandler)
     }
 
 
     override fun setTextSize(textSize: Float) {
         nameView.setPrimaryTextSize(textSize)
-        quotedNameView.setPrimaryTextSize(textSize)
-        summaryView.textSize = textSize
         textView.textSize = textSize
-        quotedTextView.textSize = textSize
         nameView.setSecondaryTextSize(textSize * 0.85f)
-        quotedNameView.setSecondaryTextSize(textSize * 0.85f)
         timeView.textSize = textSize * 0.85f
         statusInfoLabel.textSize = textSize * 0.75f
 
-        mediaLabel.textSize = textSize * 0.95f
-        quotedMediaLabel.textSize = textSize * 0.95f
+        attachmentLabel.textSize = textSize * 0.95f
 
         replyButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize)
         retweetButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize)
         favoriteButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize)
 
         nameView.updateTextAppearance()
-        quotedNameView.updateTextAppearance()
+
+        attachmentHolder?.setTextSize(textSize)
     }
 
     fun setupViewOptions() {
@@ -588,12 +423,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
 
         profileImageView.style = adapter.profileImageStyle
 
-        mediaPreview.style = adapter.mediaPreviewStyle
-        quotedMediaPreview.style = adapter.mediaPreviewStyle
-
         val nameFirst = adapter.nameFirst
         nameView.nameFirst = nameFirst
-        quotedNameView.nameFirst = nameFirst
 
         val context = itemView.context
         val favoriteTint: ColorStateList
@@ -613,15 +444,11 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
 
         timeView.showAbsoluteTime = adapter.showAbsoluteTime
 
+        attachmentLabel.applyFontFamily(adapter.lightFont)
         nameView.applyFontFamily(adapter.lightFont)
         timeView.applyFontFamily(adapter.lightFont)
-        summaryView.applyFontFamily(adapter.lightFont)
         textView.applyFontFamily(adapter.lightFont)
-        mediaLabel.applyFontFamily(adapter.lightFont)
-
-        quotedNameView.applyFontFamily(adapter.lightFont)
-        quotedTextView.applyFontFamily(adapter.lightFont)
-        quotedMediaLabel.applyFontFamily(adapter.lightFont)
+        attachmentHolder?.setupViewOptions()
     }
 
     override fun playLikeAnimation(listener: LikeAnimationDrawable.OnLikedListener) {
@@ -661,7 +488,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         return !adapter.isFullTextVisible(RecyclerView.NO_POSITION)
     }
 
-    private fun TextView.displayMediaLabel(cardName: String?, media: Array<ParcelableMedia?>?,
+    private fun TextView.displayAttachmentLabel(cardName: String?, media: Array<ParcelableMedia?>?,
             location: ParcelableLocation?, placeFullName: String?, sensitive: Boolean): Boolean {
         var result = false
         when {
@@ -703,6 +530,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
 //            }
         }
         refreshDrawableState()
+        setVisible(result)
         return result
     }
 
@@ -710,11 +538,11 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(this, icon, 0, 0, 0)
     }
 
-    private val Array<ParcelableMedia?>.type: Int
-        get() {
-            forEach { if (it != null) return it.type }
-            return 0
-        }
+    abstract class AttachmentHolder(val adapter: IStatusesAdapter, val view: View) {
+        abstract fun onClick(listener: IStatusViewHolder.StatusClickListener, holder: StatusViewHolder, v: View, position: Int)
+        abstract fun setupViewOptions()
+        abstract fun setTextSize(textSize: Float)
+    }
 
     private inner class EventHandler : OnClickListener, OnLongClickListener {
 
@@ -724,9 +552,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
             when (v) {
                 itemContent -> {
                     listener.onStatusClick(this@StatusViewHolder, position)
-                }
-                quotedView -> {
-                    listener.onQuotedStatusClick(this@StatusViewHolder, position)
                 }
                 itemMenu -> {
                     listener.onItemMenuClick(this@StatusViewHolder, v, position)
@@ -743,14 +568,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
                 favoriteButton -> {
                     listener.onItemActionClick(this@StatusViewHolder, R.id.favorite, position)
                 }
-                mediaLabel -> {
-                    if (position < 0) return
-                    val firstMedia = adapter.getStatus(position).media?.firstOrNull()
-                    if (firstMedia != null) {
-                        listener.onMediaClick(this@StatusViewHolder, v, firstMedia, position)
-                    } else {
-                        listener.onStatusClick(this@StatusViewHolder, position)
-                    }
+                else -> {
+                    attachmentHolder?.onClick(listener, this@StatusViewHolder, v, position)
                 }
             }
         }

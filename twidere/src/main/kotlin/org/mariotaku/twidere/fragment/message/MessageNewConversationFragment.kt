@@ -33,6 +33,7 @@ import android.text.SpannableStringBuilder
 import android.text.TextUtils
 import android.text.style.ReplacementSpan
 import android.view.*
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_messages_conversation_new.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
@@ -53,6 +54,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.twitter.message.SendMessageTask
 import org.mariotaku.twidere.text.MarkForDeleteSpan
 import org.mariotaku.twidere.util.IntentUtils
+import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.view.SimpleTextWatcher
 import java.lang.ref.WeakReference
 
@@ -69,10 +71,10 @@ class MessageNewConversationFragment : BaseFragment() {
         set(value) {
             val roundRadius = resources.getDimension(R.dimen.element_spacing_xsmall)
             val spanPadding = resources.getDimension(R.dimen.element_spacing_xsmall)
-            val nameFirst = preferences[nameFirstKey]
             editParticipants.text = SpannableStringBuilder().apply {
+                val manager = UserColorNameManager.get(context!!)
                 value.forEach { user ->
-                    val displayName = userColorNameManager.getDisplayName(user)
+                    val displayName = manager.getDisplayName(user)
                     val span = ParticipantSpan(user, displayName, roundRadius, spanPadding)
                     appendCompat(user.screen_name, span, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                     append(" ")
@@ -89,7 +91,7 @@ class MessageNewConversationFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
         linkHandlerTitle = getString(R.string.title_direct_messages_conversation_new)
-        usersAdapter = SelectableUsersAdapter(context!!, requestManager)
+        usersAdapter = SelectableUsersAdapter(context!!, Glide.with(this))
         recyclerView.adapter = usersAdapter
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
@@ -140,10 +142,9 @@ class MessageNewConversationFragment : BaseFragment() {
                 }
             }
         })
-        val nameFirst = preferences[nameFirstKey]
         val roundRadius = resources.getDimension(R.dimen.element_spacing_xsmall)
         val spanPadding = resources.getDimension(R.dimen.element_spacing_xsmall)
-        usersAdapter.itemCheckedListener = itemChecked@ { pos, checked ->
+        usersAdapter.itemCheckedListener = itemChecked@{ pos, checked ->
             val text: Editable = editParticipants.editableText ?: return@itemChecked false
             val user = usersAdapter.getUser(pos)
             if (checked) {
@@ -154,7 +155,7 @@ class MessageNewConversationFragment : BaseFragment() {
                     if (start < 0 || end < 0 || end < start) return@forEach
                     text.delete(start, end)
                 }
-                val displayName = userColorNameManager.getDisplayName(user)
+                val displayName = UserColorNameManager.get(context!!).getDisplayName(user)
                 val span = ParticipantSpan(user, displayName, roundRadius, spanPadding)
                 text.appendCompat(user.screen_name, span, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 text.append(" ")

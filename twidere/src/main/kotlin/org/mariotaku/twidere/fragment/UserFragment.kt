@@ -59,6 +59,7 @@ import android.view.View.OnTouchListener
 import android.view.animation.AnimationUtils
 import android.widget.TextView
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_user.*
 import kotlinx.android.synthetic.main.header_user.*
@@ -119,13 +120,13 @@ import org.mariotaku.twidere.promise.MutePromises
 import org.mariotaku.twidere.promise.UserListPromises
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.task.UpdateAccountInfoPromise
 import org.mariotaku.twidere.text.TwidereURLSpan
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener
-import org.mariotaku.twidere.util.UserColorNameManager.UserColorChangedListener
-import org.mariotaku.twidere.util.UserColorNameManager.UserNicknameChangedListener
+import org.mariotaku.twidere.util.UserColorNameManager.*
 import org.mariotaku.twidere.util.shortcut.ShortcutCreator
 import org.mariotaku.twidere.util.support.ActivitySupport
 import org.mariotaku.twidere.util.support.ActivitySupport.TaskDescriptionCompat
@@ -235,9 +236,9 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 if (resultCode == Activity.RESULT_OK) {
                     if (data == null) return
                     val color = data.getIntExtra(EXTRA_COLOR, Color.TRANSPARENT)
-                    userColorNameManager.setUserColor(user.key, color)
+                    UserColorNameManager.get(context!!).setUserColor(user.key, color)
                 } else if (resultCode == ColorPickerDialogActivity.RESULT_CLEARED) {
-                    userColorNameManager.clearUserColor(user.key)
+                    UserColorNameManager.get(context!!).clearUserColor(user.key)
                 }
             }
             REQUEST_ADD_TO_LIST -> {
@@ -249,7 +250,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             REQUEST_SELECT_ACCOUNT -> {
                 if (resultCode == Activity.RESULT_OK) {
                     if (data == null || !data.hasExtra(EXTRA_ID)) return
-                    val selectedAccountKey: UserKey = data.getParcelableExtra(EXTRA_ACCOUNT_KEY) ?: return
+                    val selectedAccountKey: UserKey = data.getParcelableExtra(EXTRA_ACCOUNT_KEY)
+                            ?: return
                     var userKey = user.key
                     if (liveUser.account?.type == AccountType.MASTODON && liveUser.account?.key?.host != selectedAccountKey.host) {
                         userKey = AcctPlaceholderUserKey(user.key.host)
@@ -283,7 +285,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             return
         }
 
-        Utils.setNdefPushMessageCallback(activity, CreateNdefMessageCallback cb@ {
+        Utils.setNdefPushMessageCallback(activity, CreateNdefMessageCallback cb@{
             val user = liveUser.user ?: return@cb null
             val link = LinkCreator.getUserWebLink(user) ?: return@cb null
             return@cb NdefMessage(arrayOf(NdefRecord.createUri(link)))
@@ -352,16 +354,18 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
     override fun onStart() {
         super.onStart()
-        bus.register(this)
-        userColorNameManager.registerColorChangedListener(this)
-        userColorNameManager.registerNicknameChangedListener(this)
+        BusSingleton.register(this)
+        val manager = UserColorNameManager.get(context!!)
+        manager.registerColorChangedListener(this)
+        manager.registerNicknameChangedListener(this)
     }
 
 
     override fun onStop() {
-        userColorNameManager.unregisterColorChangedListener(this)
-        userColorNameManager.unregisterNicknameChangedListener(this)
-        bus.unregister(this)
+        val manager = UserColorNameManager.get(context!!)
+        manager.unregisterColorChangedListener(this)
+        manager.unregisterNicknameChangedListener(this)
+        BusSingleton.unregister(this)
         super.onStop()
     }
 
@@ -390,7 +394,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val mentionItem = menu.findItem(R.id.mention)
         if (mentionItem != null) {
             mentionItem.title = getString(R.string.mention_user_name,
-                    userColorNameManager.getDisplayName(user))
+                    UserColorNameManager.get(this.context!!).getDisplayName(user))
         }
 
         menu.setItemAvailability(R.id.qr_code, linkAvailable)
@@ -474,6 +478,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val context = context ?: return false
+        val manager = UserColorNameManager.get(context)
         val fragmentManager = fragmentManager ?: return false
         val user = liveUser.user ?: return false
         val accountKey = user.account_key ?: return false
@@ -482,7 +487,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             R.id.block -> {
                 if (userRelationship == null) return true
                 if (userRelationship.blocking) {
-                    BlockPromises.getInstance(context).unblock(accountKey, user.key)
+                    BlockPromises.get(context).unblock(accountKey, user.key)
                 } else {
                     CreateUserBlockDialogFragment.show(fragmentManager, user)
                 }
@@ -532,16 +537,16 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             }
             R.id.set_color -> {
                 val intent = Intent(activity, ColorPickerDialogActivity::class.java)
-                intent.putExtra(EXTRA_COLOR, userColorNameManager.getUserColor(user.key))
+                intent.putExtra(EXTRA_COLOR, manager.getUserColor(user.key))
                 intent.putExtra(EXTRA_ALPHA_SLIDER, false)
                 intent.putExtra(EXTRA_CLEAR_BUTTON, true)
                 startActivityForResult(intent, REQUEST_SET_COLOR)
             }
             R.id.clear_nickname -> {
-                userColorNameManager.clearUserNickname(user.key)
+                manager.clearUserNickname(user.key)
             }
             R.id.set_nickname -> {
-                val nick = userColorNameManager.getUserNickname(user.key)
+                val nick = manager.getUserNickname(user.key)
                 SetUserNicknameDialogFragment.show(fragmentManager, user.key, nick)
             }
             R.id.add_to_list -> {
@@ -565,7 +570,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     if (userRelationship.following) {
                         DestroyFriendshipDialogFragment.show(fragmentManager, user)
                     } else {
-                        FriendshipPromises.getInstance(context).create(accountKey, user.key, user.screen_name)
+                        FriendshipPromises.get(context).create(accountKey, user.key, user.screen_name)
                     }
                 }
                 return true
@@ -810,7 +815,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     val userRelationship = liveRelationship.relationship ?: return
                     when {
                         userRelationship.blocking -> {
-                            BlockPromises.getInstance(context).unblock(accountKey, user.key)
+                            BlockPromises.get(context).unblock(accountKey, user.key)
                         }
                         userRelationship.blocked_by -> {
                             CreateUserBlockDialogFragment.show(childFragmentManager, user)
@@ -819,7 +824,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                             DestroyFriendshipDialogFragment.show(fragmentManager, user)
                         }
                         else -> {
-                            FriendshipPromises.getInstance(context).create(accountKey, user.key, user.screen_name)
+                            FriendshipPromises.get(context).create(accountKey, user.key, user.screen_name)
                         }
                     }
                 }
@@ -990,7 +995,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         }
         val user = this.liveUser.user
         if (user != null) {
-            val name = userColorNameManager.getDisplayName(user)
+            val name = UserColorNameManager.get(activity).getDisplayName(user)
             ActivitySupport.setTaskDescription(activity, TaskDescriptionCompat(name, null, taskColor))
         } else {
             ActivitySupport.setTaskDescription(activity, TaskDescriptionCompat(null, null, taskColor))
@@ -1121,8 +1126,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         followContainer.drawEnd(user.account_color)
 
         linkHandlerTitle = run {
-            val nameNoNick = UserColorNameManager.decideDisplayName(null, user.name,
-                    user.screen_name, userColorNameManager.nameFirst)
+            val nameNoNick = UserColorNameManager.get(activity).decideDisplayName(null, user.name,
+                    user.screen_name)
             return@run bidiFormatter.unicodeWrap(when {
                 user.nickname.isNullOrEmpty() -> nameNoNick
                 else -> getString(R.string.name_with_nickname, nameNoNick, user.nickname)
@@ -1147,7 +1152,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
         if (user.description_unescaped != null) {
             val text = SpannableStringBuilder.valueOf(user.description_unescaped).apply {
-                user.description_spans?.applyTo(this, null, requestManager, description)
+                user.description_spans?.applyTo(this, null, Glide.with(this@UserFragment), description)
                 linkify.applyAllLinks(this, user.account_key, false, false)
             }
             description.spannable = text
@@ -1200,10 +1205,10 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             else -> Chameleon.getOverrideTheme(activity, activity).colorPrimary
         })
         val defWidth = resources.displayMetrics.widthPixels
-        requestManager.loadProfileBanner(activity, user, defWidth).into(profileBanner)
-        requestManager.loadOriginalProfileImage(activity, user, profileImage.style,
+        Glide.with(this).loadProfileBanner(activity, user, defWidth).into(profileBanner)
+        Glide.with(this).loadOriginalProfileImage(activity, user, profileImage.style,
                 profileImage.cornerRadius, profileImage.cornerRadiusRatio)
-                .thumbnail(requestManager.loadProfileImage(activity, user, profileImage.style,
+                .thumbnail(Glide.with(this).loadProfileImage(activity, user, profileImage.style,
                         profileImage.cornerRadius, profileImage.cornerRadiusRatio,
                         getString(R.string.profile_image_size))).into(profileImage)
 

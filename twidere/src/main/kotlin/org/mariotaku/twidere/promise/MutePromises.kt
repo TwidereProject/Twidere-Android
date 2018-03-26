@@ -23,7 +23,6 @@ import android.app.Application
 import android.content.ContentValues
 import android.content.Context
 import android.content.SharedPreferences
-import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.then
 import org.mariotaku.microblog.library.Mastodon
@@ -46,6 +45,7 @@ import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 import org.mariotaku.twidere.provider.TwidereDataStore.*
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.Utils
@@ -58,95 +58,90 @@ class MutePromises(private val application: Application) {
 
     @Inject
     lateinit var preferences: SharedPreferences
-    @Inject
-    lateinit var manager: UserColorNameManager
-    @Inject
-    lateinit var bus: Bus
 
     init {
         GeneralComponent.get(application).inject(this)
     }
 
-    fun mute(accountKey: UserKey, userKey: UserKey, filterEverywhere: Boolean): Promise<ParcelableUser, Exception>
-            = notifyCreatePromise(bus, FriendshipTaskEvent.Action.MUTE, accountKey, userKey)
+    fun mute(accountKey: UserKey, userKey: UserKey, filterEverywhere: Boolean): Promise<ParcelableUser, Exception> = notifyCreatePromise(BusSingleton, FriendshipTaskEvent.Action.MUTE, accountKey, userKey)
             .thenGetAccount(application, accountKey).then { account ->
-        when (account.type) {
-            AccountType.TWITTER -> {
-                val twitter = account.newMicroBlogInstance(application, Twitter::class.java)
-                return@then twitter.createMute(userKey.id).toParcelable(account,
-                        profileImageSize = profileImageSize)
-            }
-            AccountType.MASTODON -> {
-                val mastodon = account.newMicroBlogInstance(application, Mastodon::class.java)
-                mastodon.muteUser(userKey.id)
-                return@then mastodon.getAccount(userKey.id).toParcelable(account)
-            }
-            else -> throw APINotSupportedException("Muting", account.type)
-        }
-    }.then { user ->
-        val resolver = application.contentResolver
-        Utils.setLastSeen(application, userKey, -1)
-        for (uri in DataStoreUtils.STATUSES_URIS) {
-            val where = Expression.and(
-                    Expression.equalsArgs(Statuses.ACCOUNT_KEY),
-                    Expression.equalsArgs(Statuses.USER_KEY)
-            )
-            val whereArgs = arrayOf(accountKey.toString(), userKey.toString())
-            resolver.delete(uri, where.sql, whereArgs)
-        }
-        if (!user.is_following) {
-            for (uri in DataStoreUtils.ACTIVITIES_URIS) {
-                val where = Expression.and(
-                        Expression.equalsArgs(Activities.ACCOUNT_KEY),
-                        Expression.equalsArgs(Activities.USER_KEY)
-                )
-                val whereArgs = arrayOf(accountKey.toString(), userKey.toString())
-                resolver.delete(uri, where.sql, whereArgs)
-            }
-        }
-        // I bet you don't want to see this user in your auto complete list.
-        val values = ContentValues()
-        values.put(CachedRelationships.ACCOUNT_KEY, accountKey.toString())
-        values.put(CachedRelationships.USER_KEY, userKey.toString())
-        values.put(CachedRelationships.MUTING, true)
-        resolver.insert(CachedRelationships.CONTENT_URI, values)
-        if (filterEverywhere) {
-            DataStoreUtils.addToFilter(application, listOf(user), true)
-        }
-        return@then user
-    }.toastOnResult(application) { user ->
-        return@toastOnResult application.getString(R.string.muted_user, manager.getDisplayName(user))
-    }.notifyOnResult(bus, FriendshipTaskEvent.Action.MUTE, accountKey, userKey)
+                when (account.type) {
+                    AccountType.TWITTER -> {
+                        val twitter = account.newMicroBlogInstance(application, Twitter::class.java)
+                        return@then twitter.createMute(userKey.id).toParcelable(account,
+                                profileImageSize = profileImageSize)
+                    }
+                    AccountType.MASTODON -> {
+                        val mastodon = account.newMicroBlogInstance(application, Mastodon::class.java)
+                        mastodon.muteUser(userKey.id)
+                        return@then mastodon.getAccount(userKey.id).toParcelable(account)
+                    }
+                    else -> throw APINotSupportedException("Muting", account.type)
+                }
+            }.then { user ->
+                val resolver = application.contentResolver
+                Utils.setLastSeen(application, userKey, -1)
+                for (uri in DataStoreUtils.STATUSES_URIS) {
+                    val where = Expression.and(
+                            Expression.equalsArgs(Statuses.ACCOUNT_KEY),
+                            Expression.equalsArgs(Statuses.USER_KEY)
+                    )
+                    val whereArgs = arrayOf(accountKey.toString(), userKey.toString())
+                    resolver.delete(uri, where.sql, whereArgs)
+                }
+                if (!user.is_following) {
+                    for (uri in DataStoreUtils.ACTIVITIES_URIS) {
+                        val where = Expression.and(
+                                Expression.equalsArgs(Activities.ACCOUNT_KEY),
+                                Expression.equalsArgs(Activities.USER_KEY)
+                        )
+                        val whereArgs = arrayOf(accountKey.toString(), userKey.toString())
+                        resolver.delete(uri, where.sql, whereArgs)
+                    }
+                }
+                // I bet you don't want to see this user in your auto complete list.
+                val values = ContentValues()
+                values.put(CachedRelationships.ACCOUNT_KEY, accountKey.toString())
+                values.put(CachedRelationships.USER_KEY, userKey.toString())
+                values.put(CachedRelationships.MUTING, true)
+                resolver.insert(CachedRelationships.CONTENT_URI, values)
+                if (filterEverywhere) {
+                    DataStoreUtils.addToFilter(application, listOf(user), true)
+                }
+                return@then user
+            }.toastOnResult(application) { user ->
+                return@toastOnResult application.getString(R.string.muted_user,
+                        UserColorNameManager.get(application).getDisplayName(user))
+            }.notifyOnResult(BusSingleton, FriendshipTaskEvent.Action.MUTE, accountKey, userKey)
 
-    fun unmute(accountKey: UserKey, userKey: UserKey): Promise<ParcelableUser, Exception>
-            = notifyCreatePromise(bus, FriendshipTaskEvent.Action.UNMUTE, accountKey, userKey)
+    fun unmute(accountKey: UserKey, userKey: UserKey): Promise<ParcelableUser, Exception> = notifyCreatePromise(BusSingleton, FriendshipTaskEvent.Action.UNMUTE, accountKey, userKey)
             .thenGetAccount(application, accountKey).then { account ->
-        when (account.type) {
-            AccountType.TWITTER -> {
-                val twitter = account.newMicroBlogInstance(application, Twitter::class.java)
-                return@then twitter.destroyMute(userKey.id).toParcelable(account,
-                        profileImageSize = profileImageSize)
-            }
-            AccountType.MASTODON -> {
-                val mastodon = account.newMicroBlogInstance(application, Mastodon::class.java)
-                mastodon.unmuteUser(userKey.id)
-                return@then mastodon.getAccount(userKey.id).toParcelable(account)
-            }
-            else -> throw APINotSupportedException("API", account.type)
-        }
-    }.then { user ->
-        val resolver = application.contentResolver
-        // I bet you don't want to see this user in your auto complete list.
-        val values = ContentValues()
-        values.put(CachedRelationships.ACCOUNT_KEY, accountKey.toString())
-        values.put(CachedRelationships.USER_KEY, userKey.toString())
-        values.put(CachedRelationships.MUTING, false)
-        resolver.insert(CachedRelationships.CONTENT_URI, values)
-        return@then user
-    }.toastOnResult(application) { user ->
-        return@toastOnResult application.getString(R.string.unmuted_user,
-                manager.getDisplayName(user))
-    }.notifyOnResult(bus, FriendshipTaskEvent.Action.UNMUTE, accountKey, userKey)
+                when (account.type) {
+                    AccountType.TWITTER -> {
+                        val twitter = account.newMicroBlogInstance(application, Twitter::class.java)
+                        return@then twitter.destroyMute(userKey.id).toParcelable(account,
+                                profileImageSize = profileImageSize)
+                    }
+                    AccountType.MASTODON -> {
+                        val mastodon = account.newMicroBlogInstance(application, Mastodon::class.java)
+                        mastodon.unmuteUser(userKey.id)
+                        return@then mastodon.getAccount(userKey.id).toParcelable(account)
+                    }
+                    else -> throw APINotSupportedException("API", account.type)
+                }
+            }.then { user ->
+                val resolver = application.contentResolver
+                // I bet you don't want to see this user in your auto complete list.
+                val values = ContentValues()
+                values.put(CachedRelationships.ACCOUNT_KEY, accountKey.toString())
+                values.put(CachedRelationships.USER_KEY, userKey.toString())
+                values.put(CachedRelationships.MUTING, false)
+                resolver.insert(CachedRelationships.CONTENT_URI, values)
+                return@then user
+            }.toastOnResult(application) { user ->
+                return@toastOnResult application.getString(R.string.unmuted_user,
+                        UserColorNameManager.get(application).getDisplayName(user))
+            }.notifyOnResult(BusSingleton, FriendshipTaskEvent.Action.UNMUTE, accountKey, userKey)
 
     companion object : ApplicationContextSingletonHolder<MutePromises>(::MutePromises) {
         fun muteUsers(context: Context, account: AccountDetails, userKeys: Array<UserKey>) {

@@ -34,7 +34,9 @@ import kotlinx.android.synthetic.main.header_user.view.*
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.hasApplication
 import org.mariotaku.ktextension.weak
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.themeBackgroundAlphaKey
 import org.mariotaku.twidere.constant.themeBackgroundOptionKey
 import org.mariotaku.twidere.dagger.DependencyHolder
@@ -51,9 +53,13 @@ internal class HeaderBehavior(context: Context, attrs: AttributeSet? = null) :
     private var lastNestedScrollingChild by weak<View>()
 
     init {
-        val preferences = DependencyHolder.get(context).preferences
-        cardBackgroundColor = ThemeUtils.getCardBackgroundColor(context,
-                preferences[themeBackgroundOptionKey], preferences[themeBackgroundAlphaKey])
+        cardBackgroundColor = if (context.hasApplication) {
+            val preferences = DependencyHolder.get(context).preferences
+            ThemeUtils.getCardBackgroundColor(context,
+                    preferences[themeBackgroundOptionKey], preferences[themeBackgroundAlphaKey])
+        } else {
+            ThemeUtils.getColorFromAttribute(context, R.attr.cardItemBackgroundColor)
+        }
     }
 
     override fun onStartNestedScroll(parent: CoordinatorLayout, child: ViewGroup,
@@ -97,7 +103,7 @@ internal class HeaderBehavior(context: Context, attrs: AttributeSet? = null) :
             // If the scrolling view is scrolling down but not consuming, it's probably be at
             // the top of it's content
             if (scrollAccessor(coordinatorLayout, child, dyUnconsumed, -child.downNestedScrollRange,
-                    0) == 0) {
+                            0) == 0) {
                 if (target is RecyclerView) {
                     target.stopScroll()
                 } else {

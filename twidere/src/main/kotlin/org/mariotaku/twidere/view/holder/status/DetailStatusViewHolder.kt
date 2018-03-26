@@ -37,6 +37,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.adapter_item_status_count_label.view.*
 import kotlinx.android.synthetic.main.header_status.view.*
 import org.mariotaku.kpreferences.get
@@ -59,6 +60,7 @@ import org.mariotaku.twidere.menu.RetweetItemProvider
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.UserColorNameManager.Companion
 import org.mariotaku.twidere.util.twitter.card.StatusCardViewFactory
 import org.mariotaku.twidere.view.ProfileImageView
 import org.mariotaku.twidere.view.TimelineContentTextView
@@ -100,8 +102,7 @@ class DetailStatusViewHolder(
         val fragment = adapter.fragment
         val context = adapter.context
         val formatter = adapter.bidiFormatter
-        val nameFirst = adapter.nameFirst
-        val colorNameManager = adapter.userColorNameManager
+        val colorNameManager = UserColorNameManager.get(adapter.context)
 
         linkClickHandler.status = status
 
@@ -120,25 +121,26 @@ class DetailStatusViewHolder(
         val layoutPosition = layoutPosition
         val skipLinksInText = status.extras?.support_entities == true
 
-        if (status.is_quote) {
+        val quoted = status.quoted
+        if (status.is_quote && quoted != null) {
 
             itemView.quotedView.visibility = View.VISIBLE
 
-            val quoteContentAvailable = status.quoted_text_plain != null && status.quoted_text_unescaped != null
+            val quoteContentAvailable = quoted.text_plain != null && quoted.text_unescaped != null
 
             if (quoteContentAvailable) {
                 quotedNameView.visibility = View.VISIBLE
                 quotedTextView.visibility = View.VISIBLE
 
-                quotedNameView.name = colorNameManager.getUserNickname(status.quoted_user_key!!,
-                        status.quoted_user_name)
-                quotedNameView.screenName = "@${status.quoted_user_acct}"
+                quotedNameView.name = colorNameManager.getUserNickname(quoted.user_key!!,
+                        quoted.user_name)
+                quotedNameView.screenName = "@${quoted.user_acct}"
                 quotedNameView.updateText(formatter)
 
 
                 val quotedDisplayEnd = status.extras?.quoted_display_text_range?.getOrNull(1) ?: -1
-                val quotedText = SpannableStringBuilder.valueOf(status.quoted_text_unescaped)
-                status.quoted_spans?.applyTo(quotedText, status.extras?.emojis,
+                val quotedText = SpannableStringBuilder.valueOf(quoted.text_unescaped)
+                quoted.spans?.applyTo(quotedText, status.extras?.emojis,
                         adapter.requestManager, quotedTextView)
                 linkify.applyAllLinks(quotedText, status.account_key, layoutPosition.toLong(),
                         status.is_possibly_sensitive, skipLinksInText)
@@ -149,7 +151,7 @@ class DetailStatusViewHolder(
                 }
                 quotedTextView.hideIfEmpty()
 
-                val quotedUserColor = colorNameManager.getUserColor(status.quoted_user_key!!)
+                val quotedUserColor = colorNameManager.getUserColor(quoted.user_key!!)
                 if (quotedUserColor != 0) {
                     itemView.quotedView.drawStart(quotedUserColor)
                 } else {
@@ -157,7 +159,7 @@ class DetailStatusViewHolder(
                             R.attr.quoteIndicatorBackgroundColor))
                 }
 
-                val quotedMedia = status.quoted_media
+                val quotedMedia = quoted.media
 
                 if (quotedMedia?.isEmpty() != false) {
                     itemView.quotedMediaLabel.visibility = View.GONE
@@ -291,7 +293,7 @@ class DetailStatusViewHolder(
             itemView.countsUsersHeightHolder.visibility = View.GONE
         }
 
-        val media = status.media
+        val media = status.attachment?.media
 
         when {
             media.isNullOrEmpty() -> {
@@ -316,7 +318,7 @@ class DetailStatusViewHolder(
         }
 
         if (TwitterCardUtils.isCardSupported(status)) {
-            val size = TwitterCardUtils.getCardSize(status.card!!)
+            val size = TwitterCardUtils.getCardSize(status.attachment?.card!!)
 
             if (size != null) {
                 itemView.twitterCard.setCardSize(size.x, size.y)
@@ -399,7 +401,7 @@ class DetailStatusViewHolder(
                 IntentUtils.openMap(adapter.context, location.latitude, location.longitude)
             }
             itemView.quotedView -> {
-                val quotedId = status.quoted_id ?: return
+                val quotedId = status.quoted?.id ?: return
                 IntentUtils.openStatus(adapter.context, status.account_key, quotedId)
             }
             translateLabelView -> {
@@ -418,7 +420,7 @@ class DetailStatusViewHolder(
         val status = adapter.getStatus(layoutPosition)
         val activity = fragment.activity!!
         val preferences = fragment.preferences
-        val manager = fragment.userColorNameManager
+        val manager = UserColorNameManager.get(activity)
         return MenuUtils.handleStatusClick(activity, fragment, fragment.childFragmentManager,
                 preferences, manager, status, item)
     }
@@ -534,7 +536,7 @@ class DetailStatusViewHolder(
     private class CountsUsersAdapter(
             private val fragment: StatusFragment,
             private val statusAdapter: StatusDetailsAdapter
-    ) : BaseRecyclerViewAdapter<RecyclerView.ViewHolder>(statusAdapter.context, fragment.requestManager) {
+    ) : BaseRecyclerViewAdapter<RecyclerView.ViewHolder>(statusAdapter.context, Glide.with(fragment)) {
 
         private val inflater = LayoutInflater.from(statusAdapter.context)
 

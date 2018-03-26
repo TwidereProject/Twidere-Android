@@ -28,7 +28,6 @@ import android.content.res.Resources
 import android.net.ConnectivityManager
 import android.os.AsyncTask
 import android.support.multidex.MultiDex
-import com.bumptech.glide.Glide
 import nl.komponents.kovenant.android.startKovenant
 import nl.komponents.kovenant.android.stopKovenant
 import org.mariotaku.kpreferences.get
@@ -41,7 +40,6 @@ import org.mariotaku.twidere.activity.MainHondaJOJOActivity
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.firstLanguage
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.setLocale
 import org.mariotaku.twidere.promise.DefaultFeaturesPromises
 import org.mariotaku.twidere.receiver.ConnectivityStateReceiver
@@ -82,7 +80,7 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
     override fun onCreate() {
         instance = this
         if (BuildConfig.DEBUG) {
-            StrictModeUtils.detectAllVmPolicy()
+            StrictModeUtils.detectVmPolicies()
         }
         super.onCreate()
         applyLanguageSettings()
@@ -115,16 +113,6 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
         super.onConfigurationChanged(newConfig)
     }
 
-    override fun onTrimMemory(level: Int) {
-        Glide.with(this).onTrimMemory(level)
-        super.onTrimMemory(level)
-    }
-
-    override fun onLowMemory() {
-        Glide.with(this).onLowMemory()
-        super.onLowMemory()
-    }
-
     override fun onSharedPreferenceChanged(preferences: SharedPreferences, key: String) {
         when (key) {
             KEY_CREDENTIALS_TYPE, KEY_API_URL_FORMAT, KEY_CONSUMER_KEY, KEY_CONSUMER_SECRET,
@@ -153,8 +141,8 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
     }
 
     private fun applyLanguageSettings() {
-        val locale = sharedPreferences[overrideLanguageKey] ?: Resources.getSystem().
-                firstLanguage ?: return
+        val locale = sharedPreferences[overrideLanguageKey] ?: Resources.getSystem().firstLanguage
+        ?: return
         resources.setLocale(locale)
     }
 

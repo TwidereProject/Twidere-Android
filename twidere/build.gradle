@@ -148,6 +148,10 @@ android {
 
 }
 
+androidExtensions {
+    experimental = true
+}
+
 repositories {
     mavenLocal()
     maven { url 'https://s3.amazonaws.com/repo.commonsware.com' }
@@ -160,6 +164,7 @@ dependencies {
     kapt "com.hannesdorfmann.parcelableplease:processor:${libVersions['ParcelablePlease']}"
     kapt "com.google.dagger:dagger-compiler:${libVersions['Dagger']}"
     kapt "com.github.mariotaku.ObjectCursor:processor:${libVersions['ObjectCursor']}"
+    kapt "com.github.bumptech.glide:compiler:${libVersions['Glide']}"
 
     implementation project(':twidere.component.common')
     implementation project(':twidere.component.nyan')
@@ -250,7 +255,6 @@ dependencies {
     implementation "com.google.android.exoplayer:extension-okhttp:${libVersions['Exoplayer']}"
     implementation "com.github.bumptech.glide:glide:${libVersions['Glide']}"
     implementation "com.github.bumptech.glide:okhttp3-integration:${libVersions['GlideOkHttp3']}@aar"
-    implementation "jp.wasabeef:glide-transformations:${libVersions['GlideTransformations']}"
     implementation "com.theartofdev.edmodo:android-image-cropper:${libVersions['AndroidImageCropper']}"
 
     implementation "com.github.mariotaku.MediaViewerLibrary:base:${libVersions['MediaViewerLibrary']}"

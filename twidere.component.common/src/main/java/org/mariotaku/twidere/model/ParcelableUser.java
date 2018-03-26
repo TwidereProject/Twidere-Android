@@ -368,6 +368,9 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
         @JsonField(name = "url_display")
         @ParcelableThisPlease
         public String url_display;
+        @JsonField(name = "moved")
+        @Nullable
+        public ParcelableLiteUser moved;
 
 
         @Override

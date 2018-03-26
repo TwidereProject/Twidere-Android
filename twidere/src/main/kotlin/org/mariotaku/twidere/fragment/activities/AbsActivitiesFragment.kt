@@ -56,7 +56,9 @@ import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.readFromBottomKey
 import org.mariotaku.twidere.data.CursorObjectDataSourceFactory
 import org.mariotaku.twidere.data.processor.DataSourceItemProcessor
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.activityStatus
+import org.mariotaku.twidere.extension.model.quoted
 import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.extension.showContextMenuForChild
 import org.mariotaku.twidere.extension.view.PositionWithOffset
@@ -78,8 +80,10 @@ import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.refresh.BaseContentRefreshParam
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.task.statuses.GetStatusesTask
 import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.UserColorNameManager.Companion
 import org.mariotaku.twidere.view.ExtendedRecyclerView
 import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder
 import org.mariotaku.twidere.view.holder.GapViewHolder
@@ -148,11 +152,11 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
     override fun onStart() {
         super.onStart()
         recyclerView.addOnScrollListener(scrollHandler)
-        bus.register(busEventHandler)
+        BusSingleton.register(busEventHandler)
     }
 
     override fun onStop() {
-        bus.unregister(busEventHandler)
+        BusSingleton.unregister(busEventHandler)
         recyclerView.removeOnScrollListener(scrollHandler)
         if (userVisibleHint) {
             saveReadPosition(layoutManager.firstVisibleItemPosition)
@@ -189,7 +193,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
         val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo
         val status = adapter.getActivity(contextMenuInfo.position).activityStatus ?: return
         inflater.inflate(R.menu.action_status, menu)
-        MenuUtils.setupForStatus(context, menu, preferences, userColorNameManager, status)
+        MenuUtils.setupForStatus(context, menu, preferences, UserColorNameManager.get(this.context!!), status)
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
@@ -214,7 +218,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
                 return true
             }
             else -> return MenuUtils.handleStatusClick(context, this, fragmentManager!!,
-                    preferences, userColorNameManager, status, item)
+                    preferences, UserColorNameManager.get(this.context!!), status, item)
         }
     }
 
@@ -492,8 +496,8 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
         }
 
         override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
-            val status = getActivityStatus(position)?.takeIf { it.quoted_id != null } ?: return
-            IntentUtils.openStatus(context!!, status.account_key, status.quoted_id)
+            val status = getActivityStatus(position)?.takeIf { it.quoted?.id != null } ?: return
+            IntentUtils.openStatus(context!!, status.account_key, status.quoted?.id!!)
         }
 
         override fun onMediaClick(holder: IStatusViewHolder, view: View, media: ParcelableMedia, position: Int) {

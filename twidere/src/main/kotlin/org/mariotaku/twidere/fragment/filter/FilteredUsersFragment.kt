@@ -44,6 +44,7 @@ import org.mariotaku.twidere.text.style.EmojiSpan
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.UserColorNameManager
+import org.mariotaku.twidere.util.UserColorNameManager.Companion
 import javax.inject.Inject
 
 class FilteredUsersFragment : BaseFiltersFragment() {
@@ -163,7 +164,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
         val adapter = this.adapter as FilterUsersListAdapter
         val item = adapter.getFilterItem(position) ?: return
         if (item.source >= 0) return
-        addOrEditItem(item.id, userColorNameManager.getDisplayName(item), item.scope)
+        addOrEditItem(item.id, UserColorNameManager.get(context!!).getDisplayName(item), item.scope)
     }
 
     override fun addOrEditItem(id: Long, value: String?, scope: Int) {

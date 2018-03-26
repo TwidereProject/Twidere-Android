@@ -24,10 +24,12 @@ import android.widget.Toast
 import org.mariotaku.microblog.library.Twitter
 import org.mariotaku.microblog.library.model.twitter.PinTweetResult
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.StatusPinEvent
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.task.AbsAccountRequestTask
 
 class PinStatusTask(context: Context, accountKey: UserKey, val id: String) : AbsAccountRequestTask<Any?,
@@ -42,7 +44,7 @@ class PinStatusTask(context: Context, accountKey: UserKey, val id: String) : Abs
         super.onSucceed(callback, result)
         Toast.makeText(context, R.string.message_toast_status_pinned, Toast.LENGTH_SHORT).show()
         if (accountKey != null) {
-            bus.post(StatusPinEvent(accountKey, true))
+            BusSingleton.post(StatusPinEvent(accountKey, true))
         }
     }
 }

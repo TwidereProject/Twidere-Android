@@ -14,11 +14,9 @@ import org.mariotaku.twidere.adapter.iface.IUserListsAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.dagger.component.GeneralComponent
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.activityStatus
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.util.TwidereLinkify
-import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 import javax.inject.Inject
 
@@ -34,8 +32,6 @@ class DummyItemAdapter(
 
     @Inject
     lateinit var preferences: SharedPreferences
-    @Inject
-    override lateinit var userColorNameManager: UserColorNameManager
     @Inject
     override lateinit var bidiFormatter: BidiFormatter
 

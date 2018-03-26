@@ -27,10 +27,8 @@
     android:clipChildren="false"
     android:clipToPadding="false"
     android:focusable="true"
-    android:paddingEnd="@dimen/element_spacing_normal"
-    android:paddingLeft="@dimen/element_spacing_normal"
-    android:paddingRight="@dimen/element_spacing_normal"
-    android:paddingStart="@dimen/element_spacing_normal"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
     app:ignorePadding="true">
 
     <android.support.v7.widget.AppCompatImageView
@@ -43,7 +41,7 @@
         app:layout_constraintEnd_toEndOf="@+id/profileImage"
         app:tint="?android:textColorSecondary"
         tools:src="@drawable/ic_activity_action_retweet"
-        tools:visibility="gone"/>
+        tools:visibility="visible"/>
 
     <org.mariotaku.twidere.view.FixedTextView
         android:id="@+id/statusInfoLabel"
@@ -58,7 +56,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/name"
         tools:text="Retweeted by Mariotaku"
-        tools:textSize="@dimen/text_size_extra_small"/>
+        tools:textSize="@dimen/text_size_extra_small"
+        tools:visibility="visible"/>
 
     <org.mariotaku.twidere.view.ProfileImageView
         android:id="@+id/profileImage"
@@ -86,10 +85,12 @@
         android:id="@+id/name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/element_spacing_small"
         android:layout_marginEnd="@dimen/element_spacing_small"
         android:layout_marginLeft="@dimen/element_spacing_normal"
         android:layout_marginRight="@dimen/element_spacing_small"
         android:layout_marginStart="@dimen/element_spacing_normal"
+        android:layout_marginTop="@dimen/element_spacing_small"
         android:ellipsize="end"
         android:maxLines="1"
         app:layout_constraintEnd_toStartOf="@+id/time"
@@ -116,42 +117,27 @@
         tools:textSize="@dimen/text_size_extra_small"/>
 
     <org.mariotaku.twidere.view.TimelineContentTextView
-        android:id="@+id/summary"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/element_spacing_small"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="?android:attr/textColorPrimary"
-        android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/name"
-        app:layout_constraintTop_toBottomOf="@+id/name"
-        app:layout_goneMarginBottom="@dimen/element_spacing_normal"
-        tools:text="@string/sample_summary_text"
-        tools:visibility="visible"/>
-
-    <org.mariotaku.twidere.view.TimelineContentTextView
         android:id="@+id/text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/element_spacing_small"
+        android:layout_marginBottom="@dimen/element_spacing_small"
+        android:layout_marginTop="@dimen/element_spacing_small"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="?android:attr/textColorPrimary"
         android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/mediaLabel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/name"
-        app:layout_constraintTop_toBottomOf="@+id/summary"
-        app:layout_goneMarginBottom="@dimen/element_spacing_normal"
-        tools:text="@string/sample_status_text"
+        app:layout_constraintTop_toBottomOf="@+id/name"
+        tools:maxLength="140"
+        tools:text="@tools:sample/lorem/random"
         tools:visibility="visible"/>
 
     <org.mariotaku.twidere.view.DrawableTintTextView
-        android:id="@+id/mediaLabel"
+        android:id="@+id/attachmentLabel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/element_spacing_xsmall"
+        android:layout_marginBottom="@dimen/element_spacing_small"
+        android:layout_marginTop="@dimen/element_spacing_small"
         android:background="?selectableItemBackground"
         android:drawableLeft="@drawable/ic_label_gallery"
         android:drawableStart="@drawable/ic_label_gallery"
@@ -160,111 +146,33 @@
         android:textAppearance="?android:textAppearanceSmall"
         android:textStyle="bold"
         app:drawableTint="?android:textColorSecondary"
-        app:layout_constraintBottom_toTopOf="@+id/mediaPreview"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/name"
         app:layout_constraintTop_toBottomOf="@+id/text"
         app:layout_goneMarginBottom="@dimen/element_spacing_normal"
         tools:text="@string/label_media"/>
 
-    <org.mariotaku.twidere.view.CardMediaContainer
-        android:id="@+id/mediaPreview"
+    <org.mariotaku.twidere.view.ColorLabelConstraintLayout
+        android:id="@+id/attachmentContainer"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/element_spacing_xsmall"
-        android:horizontalSpacing="@dimen/element_spacing_xsmall"
-        android:verticalSpacing="@dimen/element_spacing_xsmall"
-        app:layout_constraintBottom_toTopOf="@+id/quotedView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/name"
-        app:layout_constraintTop_toBottomOf="@+id/mediaLabel"
-        app:layout_goneMarginBottom="@dimen/element_spacing_normal"
-        tools:layout="@layout/layout_card_media_preview"/>
-
-    <org.mariotaku.twidere.view.ColorLabelLinearLayout
-        android:id="@+id/quotedView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="4dp"
         android:layout_marginTop="@dimen/element_spacing_small"
-        android:background="?selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/element_spacing_small"
-        android:paddingEnd="@dimen/element_spacing_small"
-        android:paddingLeft="@dimen/element_spacing_normal"
-        android:paddingRight="@dimen/element_spacing_small"
-        android:paddingStart="@dimen/element_spacing_normal"
-        android:paddingTop="@dimen/element_spacing_small"
+        android:background="@drawable/bg_item_status_quote_view"
         android:visibility="gone"
-        app:ignorePadding="true"
-        app:layout_constraintBottom_toTopOf="@+id/reply"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/name"
-        app:layout_constraintTop_toBottomOf="@+id/mediaPreview"
-        app:layout_goneMarginBottom="@dimen/element_spacing_normal">
-
-        <org.mariotaku.twidere.view.NameView
-            android:id="@+id/quotedName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical|start"
-            android:paddingEnd="0dp"
-            android:paddingLeft="@dimen/element_spacing_small"
-            android:paddingRight="0dp"
-            android:paddingStart="@dimen/element_spacing_small"
-            android:visibility="gone"
-            app:tltvPrimaryTextColor="?android:textColorPrimary"
-            app:tltvPrimaryTextStyle="bold"
-            app:tltvSecondaryTextColor="?android:textColorSecondary"
-            tools:visibility="visible"/>
-
-        <org.mariotaku.twidere.view.TimelineContentTextView
-            android:id="@+id/quotedText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/element_spacing_small"
-            android:paddingEnd="0dp"
-            android:paddingLeft="@dimen/element_spacing_small"
-            android:paddingRight="0dp"
-            android:paddingStart="@dimen/element_spacing_small"
-            android:paddingTop="@dimen/element_spacing_small"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="?android:attr/textColorPrimary"
-            android:visibility="gone"
-            tools:text="@string/sample_status_text"
-            tools:visibility="visible"/>
-
-        <org.mariotaku.twidere.view.DrawableTintTextView
-            android:id="@+id/quotedMediaLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/element_spacing_xsmall"
-            android:drawableLeft="@drawable/ic_label_gallery"
-            android:drawableStart="@drawable/ic_label_gallery"
-            android:gravity="center_vertical"
-            android:textAppearance="?android:textAppearanceSmall"
-            android:textStyle="bold"
-            app:drawableTint="?android:textColorSecondary"
-            tools:text="@string/label_media"
-            tools:visibility="visible"/>
-
-        <org.mariotaku.twidere.view.CardMediaContainer
-            android:id="@+id/quotedMediaPreview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:horizontalSpacing="@dimen/element_spacing_xsmall"
-            android:verticalSpacing="@dimen/element_spacing_xsmall"
-            tools:layout="@layout/layout_card_media_preview"
-            tools:visibility="gone"/>
-    </org.mariotaku.twidere.view.ColorLabelLinearLayout>
-
+        app:layout_constraintTop_toBottomOf="@+id/attachmentLabel"
+        tools:layout="@layout/layout_card_media_preview"
+        tools:layout_constraintDimensionRatio="H,2:1"
+        tools:visibility="gone"/>
 
     <org.mariotaku.twidere.view.LabeledImageButton
         android:id="@+id/reply"
         style="?borderlessButtonStyle"
         android:layout_width="@dimen/button_size_content_card_action"
         android:layout_height="@dimen/button_size_content_card_action"
+        android:layout_marginTop="@dimen/element_spacing_normal"
         android:background="?selectableItemBackgroundBorderless"
         android:contentDescription="@string/action_reply"
         android:drawablePadding="@dimen/element_spacing_small"
@@ -272,9 +180,8 @@
         android:scaleType="centerInside"
         android:textAppearance="?android:textAppearanceSmall"
         android:textColor="?android:textColorSecondary"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/name"
-        app:layout_constraintTop_toBottomOf="@+id/quotedView"
+        app:layout_constraintTop_toBottomOf="@+id/attachmentContainer"
         app:srcCompat="@drawable/ic_action_reply"
         app:tint="?android:textColorSecondary"
         tools:text="255"/>
@@ -286,6 +193,7 @@
         android:layout_height="@dimen/button_size_content_card_action"
         android:layout_marginLeft="@dimen/element_spacing_normal"
         android:layout_marginStart="@dimen/element_spacing_normal"
+        android:layout_marginTop="@dimen/element_spacing_normal"
         android:background="?selectableItemBackgroundBorderless"
         android:contentDescription="@string/action_retweet"
         android:drawablePadding="@dimen/element_spacing_small"
@@ -293,9 +201,8 @@
         android:scaleType="centerInside"
         android:textAppearance="?android:textAppearanceSmall"
         android:textColor="?android:textColorSecondary"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/reply"
-        app:layout_constraintTop_toBottomOf="@+id/quotedView"
+        app:layout_constraintTop_toBottomOf="@+id/attachmentContainer"
         app:srcCompat="@drawable/ic_action_retweet"
         app:tint="@color/btn_tint_retweet_stateful"
         tools:text="255"/>
@@ -307,6 +214,7 @@
         android:layout_height="@dimen/button_size_content_card_action"
         android:layout_marginLeft="@dimen/element_spacing_normal"
         android:layout_marginStart="@dimen/element_spacing_normal"
+        android:layout_marginTop="@dimen/element_spacing_normal"
         android:background="?selectableItemBackgroundBorderless"
         android:contentDescription="@string/action_like"
         android:drawablePadding="@dimen/element_spacing_small"
@@ -314,9 +222,8 @@
         android:scaleType="centerInside"
         android:textAppearance="?android:textAppearanceSmall"
         android:textColor="?android:textColorSecondary"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/retweet"
-        app:layout_constraintTop_toBottomOf="@+id/quotedView"
+        app:layout_constraintTop_toBottomOf="@+id/attachmentContainer"
         app:srcCompat="@drawable/ic_action_heart"
         app:tint="@color/btn_tint_like_stateful"
         tools:text="255"/>
@@ -326,19 +233,19 @@
         style="?borderlessButtonStyle"
         android:layout_width="@dimen/button_size_content_card_action"
         android:layout_height="@dimen/button_size_content_card_action"
+        android:layout_marginTop="@dimen/element_spacing_normal"
         android:background="?selectableItemBackgroundBorderless"
         android:contentDescription="@string/action_more_actions"
         android:padding="@dimen/element_spacing_small"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/quotedView"
+        app:layout_constraintTop_toBottomOf="@+id/attachmentContainer"
         app:srcCompat="@drawable/ic_action_more_horizontal"
         app:tint="?android:textColorSecondary"/>
 
     <android.support.constraint.Group
         android:id="@+id/itemActionsGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:visibility="visible"
         app:constraint_referenced_ids="reply,retweet,favorite,itemMenu"/>
 

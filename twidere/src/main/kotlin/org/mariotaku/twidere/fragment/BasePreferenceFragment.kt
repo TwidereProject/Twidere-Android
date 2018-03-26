@@ -30,10 +30,8 @@ import android.os.Bundle
 import android.provider.Settings
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
-import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
 import org.mariotaku.twidere.dagger.component.GeneralComponent
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.preference.RingtonePreference
 import org.mariotaku.twidere.taskcontroller.sync.SyncTaskController
@@ -49,13 +47,12 @@ abstract class BasePreferenceFragment : PreferenceFragmentCompat(), IBaseFragmen
     @Inject
     lateinit var keyboardShortcutHandler: KeyboardShortcutsHandler
     @Inject
+    @Deprecated(message = "Deprecated", replaceWith = ReplaceWith("UserColorNameManager.get(context!!)", imports = ["org.mariotaku.twidere.util.UserColorNameManager"]))
     lateinit var userColorNameManager: UserColorNameManager
     @Inject
     lateinit var preferences: SharedPreferences
     @Inject
     lateinit var syncController: SyncTaskController
-    @Inject
-    lateinit var bus: Bus
     @Inject
     lateinit var dataSyncProvider: DataSyncProvider
     @Inject

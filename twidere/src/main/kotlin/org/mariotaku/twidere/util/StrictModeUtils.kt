@@ -26,26 +26,33 @@ import android.os.StrictMode.VmPolicy
 
 object StrictModeUtils {
 
-    fun detectAllThreadPolicy() {
-        val threadPolicyBuilder = ThreadPolicy.Builder()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            threadPolicyBuilder.detectUnbufferedIo()
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            threadPolicyBuilder.detectResourceMismatches()
-        }
-        threadPolicyBuilder.detectDiskReads()
-        threadPolicyBuilder.detectDiskWrites()
-        threadPolicyBuilder.detectCustomSlowCalls()
-        threadPolicyBuilder.penaltyLog()
-        StrictMode.setThreadPolicy(threadPolicyBuilder.build())
+    fun detectThreadPolicies() {
+        val builder = ThreadPolicy.Builder()
+        builder.detectAll()
+        builder.penaltyLog()
+        StrictMode.setThreadPolicy(builder.build())
     }
 
-    fun detectAllVmPolicy() {
-        val vmPolicyBuilder = VmPolicy.Builder()
-        vmPolicyBuilder.detectAll()
-        vmPolicyBuilder.penaltyLog()
-        StrictMode.setVmPolicy(vmPolicyBuilder.build())
+    fun detectVmPolicies() {
+        val builder = VmPolicy.Builder()
+        builder.detectActivityLeaks()
+        builder.detectLeakedClosableObjects()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            builder.detectLeakedRegistrationObjects()
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            builder.detectFileUriExposure()
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            builder.detectCleartextNetwork()
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            builder.detectContentUriWithoutPermission()
+            // https://github.com/square/okhttp/issues/3537
+            //builder.detectUntaggedSockets()
+        }
+        builder.penaltyLog()
+        StrictMode.setVmPolicy(builder.build())
     }
 
 }

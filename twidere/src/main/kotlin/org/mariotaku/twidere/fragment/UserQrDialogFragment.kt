@@ -24,6 +24,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.media.MediaScannerConnection
 import android.os.Build
 import android.os.Bundle
@@ -34,7 +35,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.GlideDrawable
 import com.bumptech.glide.request.target.Target
 import io.nayuki.qrcodegen.QrCode
 import io.nayuki.qrcodegen.QrSegment
@@ -203,7 +203,7 @@ class UserQrDialogFragment : BaseDialogFragment() {
         return@task SaveFileResult(saveFile, "image/png")
     }
 
-    private fun loadProfileImage(): Promise<GlideDrawable, Exception> {
+    private fun loadProfileImage(): Promise<Drawable, Exception> {
         val activity = this.activity ?: return Promise.ofFail(InterruptedException())
         if (isDetached || dialog == null || activity.isFinishing) {
             return Promise.ofFail(InterruptedException())
@@ -217,13 +217,13 @@ class UserQrDialogFragment : BaseDialogFragment() {
             val profileImageSize = context.getString(R.string.profile_image_size)
             try {
                 return@task requestManager.loadOriginalProfileImage(context, user, 0)
-                        .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get()
+                        .submit(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get()
             } catch (e: ExecutionException) {
                 // Ignore
             }
             // Return fallback profile image
             return@task requestManager.loadProfileImage(context, user, ImageShapeStyle.SHAPE_NONE,
-                    size = profileImageSize).into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get()
+                    size = profileImageSize).submit(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get()
         }
     }
 

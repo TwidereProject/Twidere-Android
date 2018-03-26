@@ -25,7 +25,6 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
-import android.graphics.PorterDuff.Mode
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.LoaderManager.LoaderCallbacks
@@ -43,6 +42,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.AdapterView.OnItemSelectedListener
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_quick_search_bar.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.empty
@@ -66,11 +66,8 @@ import org.mariotaku.twidere.model.SuggestionItem
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory
 import org.mariotaku.twidere.provider.TwidereDataStore.Suggestions
-import org.mariotaku.twidere.util.EditTextEnterHandler
+import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.EditTextEnterHandler.EnterListener
-import org.mariotaku.twidere.util.IntentUtils
-import org.mariotaku.twidere.util.KeyboardShortcutsHandler
-import org.mariotaku.twidere.util.SwipeDismissListViewTouchListener
 import org.mariotaku.twidere.util.promotion.PromotionService
 import org.mariotaku.twidere.view.ProfileImageView
 
@@ -100,7 +97,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         val am = AccountManager.get(this)
         val accounts = am.getAllDetails(am.ownedAccounts, true)
         val accountsSpinnerAdapter = AccountsSpinnerAdapter(this, R.layout.spinner_item_account_icon,
-                R.layout.list_item_simple_user, requestManager = requestManager)
+                R.layout.list_item_simple_user, requestManager = Glide.with(this))
         accountsSpinnerAdapter.accounts = accounts.toList()
         accountSpinner.adapter = accountsSpinnerAdapter
         accountSpinner.onItemSelectedListener = this
@@ -361,9 +358,9 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
 
         private val profileImageStyle = activity.preferences[profileImageStyleKey]
         private val profileImageSize = activity.getString(R.string.profile_image_size)
-        private val requestManager = activity.requestManager
+        private val requestManager = Glide.with(activity)
         private val inflater = LayoutInflater.from(activity)
-        private val userColorNameManager = activity.userColorNameManager
+        private val userColorNameManager = UserColorNameManager.get(activity)
         private val removedPositions = ArrayList<Int>()
 
         private var indices: SuggestionItem.Indices? = null

@@ -26,6 +26,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.MessagesConversationAdapter
 import org.mariotaku.twidere.extension.model.getSummaryText
 import org.mariotaku.twidere.model.ParcelableMessage
+import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.view.FixedTextView
 
 class NoticeSummaryEventViewHolder(itemView: View, adapter: MessagesConversationAdapter) : AbsMessageViewHolder(itemView, adapter) {
@@ -36,7 +37,7 @@ class NoticeSummaryEventViewHolder(itemView: View, adapter: MessagesConversation
 
     override fun display(message: ParcelableMessage, showDate: Boolean) {
         super.display(message, showDate)
-        text.spannable = message.getSummaryText(adapter.context, adapter.userColorNameManager,
+        text.spannable = message.getSummaryText(adapter.context, UserColorNameManager.get(adapter.context),
                 adapter.conversation, adapter.nameFirst)
     }
 

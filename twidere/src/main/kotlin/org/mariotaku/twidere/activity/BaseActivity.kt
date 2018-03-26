@@ -45,7 +45,6 @@ import android.view.View
 import android.view.WindowManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
-import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonActivity
@@ -66,7 +65,6 @@ import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.defaultSharedPreferences
 import org.mariotaku.twidere.extension.firstLanguage
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.overriding
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowInsetsCallback
 import org.mariotaku.twidere.model.DefaultFeatures
@@ -98,13 +96,9 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     @Inject
     lateinit var readStateManager: ReadStateManager
     @Inject
-    lateinit var bus: Bus
-    @Inject
     lateinit var preferences: SharedPreferences
     @Inject
     lateinit var notificationManager: NotificationManagerWrapper
-    @Inject
-    lateinit var userColorNameManager: UserColorNameManager
     @Inject
     lateinit var permissionsManager: PermissionsManager
     @Inject
@@ -127,9 +121,6 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     lateinit var mapFragmentFactory: MapFragmentFactory
     @Inject
     lateinit var dataSyncProvider: DataSyncProvider
-
-    lateinit var requestManager: RequestManager
-        private set
 
     protected val isDialogTheme: Boolean
         get() = ThemeUtils.getBooleanFromAttribute(this, R.attr.isDialogTheme)
@@ -241,8 +232,8 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
 
     override fun onCreate(savedInstanceState: Bundle?) {
         if (BuildConfig.DEBUG) {
-            StrictModeUtils.detectAllVmPolicy()
-            StrictModeUtils.detectAllThreadPolicy()
+            StrictModeUtils.detectVmPolicies()
+            StrictModeUtils.detectThreadPolicies()
         }
         val themeColor = themePreferences[themeColorKey]
         val themeResource = getThemeResource(themePreferences, themePreferences[themeKey], themeColor)
@@ -252,25 +243,9 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
         onApplyNavigationStyle(themeNavigationStyle, themeColor)
         super.onCreate(savedInstanceState)
         title = activityLabel
-        requestManager = Glide.with(this)
         ActivitySupport.setTaskDescription(this, TaskDescriptionCompat(title.toString(), null,
                 ColorUtils.setAlphaComponent(overrideTheme.colorToolbar, 0xFF)))
         GeneralComponent.get(this).inject(this)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        requestManager.onStart()
-    }
-
-    override fun onStop() {
-        requestManager.onStop()
-        super.onStop()
-    }
-
-    override fun onDestroy() {
-        requestManager.onDestroy()
-        super.onDestroy()
     }
 
     override fun onResume() {

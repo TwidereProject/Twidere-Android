@@ -42,6 +42,7 @@ import android.support.v7.widget.Toolbar
 import android.view.*
 import android.widget.CompoundButton
 import android.widget.EditText
+import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.activity_home_content.view.*
 import kotlinx.android.synthetic.main.fragment_messages_conversation_info.*
@@ -73,7 +74,6 @@ import org.mariotaku.twidere.annotation.ProfileImageSize
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER
-import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.exception.UnsupportedCountIndexException
 import org.mariotaku.twidere.extension.*
@@ -93,6 +93,7 @@ import org.mariotaku.twidere.promise.MessagePromises
 import org.mariotaku.twidere.promise.UpdateStatusPromise
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.util.IntentUtils
+import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.view.holder.SimpleUserViewHolder
 
 /**
@@ -124,7 +125,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         (activity as? AppCompatActivity)?.supportActionBar?.setDisplayShowTitleEnabled(false)
         val theme = Chameleon.getOverrideTheme(context, activity)
 
-        adapter = ConversationInfoAdapter(context, requestManager)
+        adapter = ConversationInfoAdapter(context, Glide.with(this))
         adapter.listener = object : ConversationInfoAdapter.Listener {
             override fun onUserClick(position: Int) {
                 val user = adapter.getUser(position) ?: return
@@ -257,12 +258,12 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             return
         }
 
-        val name = data.getTitle(context, userColorNameManager, preferences[nameFirstKey]).first
+        val name = data.getTitle(context, UserColorNameManager.get(context)).first
         val summary = data.getSubtitle(context)
 
         @ImageShapeStyle val profileImageStyle: Int = preferences[profileImageStyleKey]
-        requestManager.loadProfileImage(context, data, profileImageStyle).into(conversationAvatar)
-        requestManager.loadProfileImage(context, data, profileImageStyle, 0f,
+        Glide.with(this).loadProfileImage(context, data, profileImageStyle).into(conversationAvatar)
+        Glide.with(this).loadProfileImage(context, data, profileImageStyle, 0f,
                 0f, ProfileImageSize.REASONABLY_SMALL).into(appBarIcon)
         appBarTitle.spannable = name
         conversationTitle.spannable = name
@@ -292,7 +293,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     private fun performDestroyConversation() {
         val weakThis by weak(this)
-        showProgressDialog("leave_conversation_progress") and MessagePromises.getInstance(context!!).destroyConversation(accountKey, conversationId).successUi {
+        showProgressDialog("leave_conversation_progress") and MessagePromises.get(context!!).destroyConversation(accountKey, conversationId).successUi {
             val f = weakThis ?: return@successUi
             f.dismissProgressDialog("leave_conversation_progress")
             f.activity?.setResult(RESULT_CLOSE)
@@ -302,7 +303,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     private fun performClearMessages() {
         val weakThis by weak(this)
-        showProgressDialog("clear_messages_progress") and MessagePromises.getInstance(context!!).clearMessages(accountKey, conversationId).successUi { succeed ->
+        showProgressDialog("clear_messages_progress") and MessagePromises.get(context!!).clearMessages(accountKey, conversationId).successUi { succeed ->
             val f = weakThis ?: return@successUi
             f.dismissDialogThen("clear_messages_progress") {
                 if (succeed) {
@@ -315,7 +316,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
     private fun performAddParticipant(user: ParcelableUser) {
         ProgressDialogFragment.show(childFragmentManager, "add_participant_progress")
         val weakThis by weak(this)
-        ConversationPromises.getInstance(context!!).addParticipants(accountKey,
+        ConversationPromises.get(context!!).addParticipants(accountKey,
                 conversationId, listOf(user)).alwaysUi {
             weakThis?.dismissDialogThen("add_participant_progress") {
                 loaderManager.restartLoader(0, null, this)
@@ -325,7 +326,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     private fun performSetNotificationDisabled(disabled: Boolean) {
         val weakThis by weak(this)
-        showProgressDialog("set_notifications_disabled_progress") and ConversationPromises.getInstance(context!!).setNotificationDisabled(accountKey, conversationId, disabled).alwaysUi {
+        showProgressDialog("set_notifications_disabled_progress") and ConversationPromises.get(context!!).setNotificationDisabled(accountKey, conversationId, disabled).alwaysUi {
             weakThis?.dismissProgressDialog("set_notifications_disabled_progress")
         }
     }

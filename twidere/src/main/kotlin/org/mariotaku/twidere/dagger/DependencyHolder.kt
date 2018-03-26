@@ -26,7 +26,6 @@ import okhttp3.ConnectionPool
 import okhttp3.Dns
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.dagger.component.GeneralComponent
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.media.MediaPreloader
@@ -69,6 +68,7 @@ class DependencyHolder internal constructor(context: Context) {
     lateinit var mediaPreloader: MediaPreloader
         internal set
     @Inject
+    @Deprecated(message = "Deprecated", replaceWith = ReplaceWith("UserColorNameManager.get(context", imports = ["org.mariotaku.twidere.util.UserColorNameManager"]))
     lateinit var userColorNameManager: UserColorNameManager
         internal set
     @Inject

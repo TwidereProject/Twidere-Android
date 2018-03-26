@@ -51,6 +51,8 @@ import android.view.*
 import android.view.View.OnClickListener
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.header_drawer_account_selector.view.*
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.kpreferences.get
@@ -83,6 +85,7 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
+import org.mariotaku.twidere.util.UserColorNameManager.Companion
 import org.mariotaku.twidere.view.holder.AccountProfileImageViewHolder
 import org.mariotaku.twidere.view.transformer.AccountsSelectorTransformer
 import java.lang.ref.WeakReference
@@ -117,7 +120,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     @SuppressLint("RestrictedApi")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        accountsAdapter = AccountSelectorAdapter(context!!, preferences, requestManager).also {
+        accountsAdapter = AccountSelectorAdapter(context!!, preferences, Glide.with(this)).also {
             it.listener = this
         }
         accountsSelector.adapter = accountsAdapter
@@ -161,7 +164,8 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             } else {
                 when (item.itemId) {
                     R.id.compose -> {
-                        val account = accountsAdapter.selectedAccount ?: return@OnMenuItemClickListener true
+                        val account = accountsAdapter.selectedAccount
+                                ?: return@OnMenuItemClickListener true
                         val composeIntent = Intent(INTENT_ACTION_COMPOSE)
                         composeIntent.setClass(activity, ComposeActivity::class.java)
                         composeIntent.putExtra(EXTRA_ACCOUNT_KEY, account.key)
@@ -273,8 +277,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     }
 
     override fun onApplySystemWindowInsets(insets: Rect) {
-        view?.findViewById<View?>(android.support.design.R.id.design_navigation_view)?.
-                setPadding(0, 0, 0, insets.bottom)
+        view?.findViewById<View?>(android.support.design.R.id.design_navigation_view)?.setPadding(0, 0, 0, insets.bottom)
         systemWindowsInsets.set(insets)
         updateSystemWindowsInsets()
     }
@@ -473,7 +476,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
                 clickedColors = clickedImageView.borderColors
                 val oldSelectedAccount = accountsAdapter.selectedAccount ?: return
                 val profileImageStyle = preferences[profileImageStyleKey]
-                requestManager.loadProfileImage(activity, oldSelectedAccount,
+                Glide.with(this@AccountsDashboardFragment).loadProfileImage(activity, oldSelectedAccount,
                         profileImageStyle, clickedImageView.cornerRadius, clickedImageView.cornerRadiusRatio)
                         .into(clickedImageView).onLoadStarted(profileDrawable)
                 //TODO complete border color
@@ -536,7 +539,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             ColorDrawable(Chameleon.getOverrideTheme(activity, activity).colorPrimary)
         }
 
-        requestManager.loadProfileBanner(activity, account.user, width).fallback(fallbackBanner)
+        Glide.with(this).loadProfileBanner(activity, account.user, width).apply(RequestOptions().fallback(fallbackBanner))
                 .into(bannerView)
     }
 
@@ -551,11 +554,11 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         accountProfileNameView.updateText(bidiFormatter)
 
         profileContainer.contentDescription = getString(R.string.content_description_accounts_selector_current,
-                userColorNameManager.getDisplayName(user))
+                UserColorNameManager.get(context!!).getDisplayName(user))
 
-        requestManager.loadProfileImage(activity, account, preferences[profileImageStyleKey],
+        Glide.with(this).loadProfileImage(activity, account, preferences[profileImageStyleKey],
                 accountProfileImageView.cornerRadius, accountProfileImageView.cornerRadiusRatio,
-                ProfileImageSize.REASONABLY_SMALL).placeholder(profileImageSnapshot).into(accountProfileImageView)
+                ProfileImageSize.REASONABLY_SMALL).apply(RequestOptions.placeholderOf(profileImageSnapshot)).into(accountProfileImageView)
         //TODO complete border color
         accountProfileImageView.setBorderColors(account.color)
         accountProfileBanner.showNext()

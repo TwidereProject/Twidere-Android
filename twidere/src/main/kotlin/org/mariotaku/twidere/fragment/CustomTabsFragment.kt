@@ -40,6 +40,7 @@ import android.view.*
 import android.widget.*
 import android.widget.AbsListView.MultiChoiceModeListener
 import android.widget.AdapterView.OnItemClickListener
+import com.bumptech.glide.Glide
 import com.mobeta.android.dslv.SimpleDragSortCursorAdapter
 import kotlinx.android.synthetic.main.dialog_custom_tab_editor.*
 import kotlinx.android.synthetic.main.layout_draggable_list_with_empty_view.*
@@ -275,7 +276,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
             val positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
 
             val iconsAdapter = TabIconsAdapter(context!!)
-            val accountsAdapter = AccountsSpinnerAdapter(context!!, requestManager = requestManager)
+            val accountsAdapter = AccountsSpinnerAdapter(context!!, requestManager = Glide.with(this))
             iconSpinner.adapter = iconsAdapter
             accountSpinner.adapter = accountsAdapter
 

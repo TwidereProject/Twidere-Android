@@ -19,6 +19,8 @@
 package org.mariotaku.twidere.model.tab.argument;
 
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,6 +28,7 @@ import android.support.annotation.Nullable;
 import com.bluelinelabs.logansquare.LoganSquare;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.annotation.CustomTabType;
@@ -34,8 +37,9 @@ import org.mariotaku.twidere.model.UserKey;
 import java.io.IOException;
 import java.util.Arrays;
 
+@ParcelablePlease
 @JsonObject
-public class TabArguments implements TwidereConstants {
+public class TabArguments implements Parcelable {
     @JsonField(name = "account_id")
     String accountId;
 
@@ -63,7 +67,7 @@ public class TabArguments implements TwidereConstants {
             for (UserKey key : accountKeys) {
                 if (key == null) return;
             }
-            bundle.putParcelableArray(EXTRA_ACCOUNT_KEYS, accountKeys);
+            bundle.putParcelableArray(TwidereConstants.EXTRA_ACCOUNT_KEYS, accountKeys);
         } else if (accountId != null) {
             long id = Long.MIN_VALUE;
             try {
@@ -73,10 +77,10 @@ public class TabArguments implements TwidereConstants {
             }
             if (id != Long.MIN_VALUE && id <= 0) {
                 // account_id = -1, means no account selected
-                bundle.putParcelableArray(EXTRA_ACCOUNT_KEYS, null);
+                bundle.putParcelableArray(TwidereConstants.EXTRA_ACCOUNT_KEYS, null);
                 return;
             }
-            bundle.putParcelableArray(EXTRA_ACCOUNT_KEYS, new UserKey[]{UserKey.valueOf(accountId)});
+            bundle.putParcelableArray(TwidereConstants.EXTRA_ACCOUNT_KEYS, new UserKey[]{UserKey.valueOf(accountId)});
         }
     }
 
@@ -117,4 +121,26 @@ public class TabArguments implements TwidereConstants {
         }
         return null;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        TabArgumentsParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<TabArguments> CREATOR = new Creator<TabArguments>() {
+        public TabArguments createFromParcel(Parcel source) {
+            TabArguments target = new TabArguments();
+            TabArgumentsParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public TabArguments[] newArray(int size) {
+            return new TabArguments[size];
+        }
+    };
 }

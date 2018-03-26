@@ -17,7 +17,7 @@ inline val ParcelableStatus.originalId: String
     get() = if (is_retweet) (retweet_id ?: id) else id
 
 val ParcelableStatus.media_type: Int
-    get() = media?.firstOrNull()?.type ?: 0
+    get() = attachment?.media?.firstOrNull()?.type ?: 0
 
 val ParcelableStatus.user: ParcelableUser
     get() = ParcelableUser(account_key, user_key, user_name, user_screen_name, user_profile_image_url)
@@ -25,9 +25,10 @@ val ParcelableStatus.user: ParcelableUser
 val ParcelableStatus.referencedUsers: Array<ParcelableUser>
     get() {
         val resultList = mutableSetOf(user)
-        if (quoted_user_key != null) {
-            resultList.add(ParcelableUser(account_key, quoted_user_key, quoted_user_name,
-                    quoted_user_screen_name, quoted_user_profile_image))
+        val quoted = attachment?.quoted
+        if (quoted != null) {
+            resultList.add(ParcelableUser(account_key, quoted.user_key, quoted.user_name,
+                    quoted.user_screen_name, quoted.user_profile_image))
         }
         if (retweeted_by_user_key != null) {
             resultList.add(ParcelableUser(account_key, retweeted_by_user_key, retweeted_by_user_name,
@@ -66,11 +67,11 @@ inline val ParcelableStatus.retweeted_by_user_acct: String?
         "$retweeted_by_user_screen_name@${retweeted_by_user_key?.host}"
     }
 
-inline val ParcelableStatus.quoted_user_acct: String?
-    get() = if (account_key.host == quoted_user_key?.host) {
-        quoted_user_screen_name
+inline val ParcelableStatusAttachment.QuotedStatus.user_acct: String?
+    get() = if (account_key?.host == user_key?.host) {
+        user_screen_name
     } else {
-        "$quoted_user_screen_name@${quoted_user_key?.host}"
+        "$user_screen_name@${user_key?.host}"
     }
 
 inline val ParcelableStatus.isAccountRetweet: Boolean
@@ -90,25 +91,8 @@ inline val ParcelableStatus.canRetweet: Boolean
         }
     }
 
-val ParcelableStatus.quoted: ParcelableStatus?
-    get() {
-        val obj = ParcelableStatus()
-        obj.account_key = account_key
-        obj.id = quoted_id ?: return null
-        obj.timestamp = quoted_timestamp
-        obj.user_key = quoted_user_key ?: return null
-        obj.user_name = quoted_user_name ?: return null
-        obj.user_screen_name = quoted_user_screen_name ?: return null
-        obj.user_profile_image_url = quoted_user_profile_image ?: return null
-        obj.user_is_protected = quoted_user_is_protected
-        obj.user_is_verified = quoted_user_is_verified
-        obj.text_plain = quoted_text_plain
-        obj.text_unescaped = quoted_text_unescaped
-        obj.source = quoted_source
-        obj.spans = quoted_spans
-        obj.media = quoted_media
-        return obj
-    }
+inline val ParcelableStatus.quoted: ParcelableStatusAttachment.QuotedStatus?
+    get() = attachment?.quoted
 
 val ParcelableStatus.retweet_sort_id: Long
     get() {
@@ -162,8 +146,8 @@ fun ParcelableStatus.addFilterFlag(@ParcelableStatus.FilterFlags flags: Long) {
 
 fun ParcelableStatus.updateFilterInfo(descriptions: Collection<String?>?) {
     updateContentFilterInfo()
-    filter_users = setOf(user_key, quoted_user_key, retweeted_by_user_key).filterNotNull().toTypedArray()
-    filter_names = setOf(user_name, quoted_user_name, retweeted_by_user_name).filterNotNull().toTypedArray()
+    filter_users = setOf(user_key, quoted?.user_key, retweeted_by_user_key).filterNotNull().toTypedArray()
+    filter_names = setOf(user_name, quoted?.user_name, retweeted_by_user_name).filterNotNull().toTypedArray()
     filter_descriptions = descriptions?.filterNotNull()?.joinToString("\n")
 }
 
@@ -171,17 +155,17 @@ fun ParcelableStatus.updateContentFilterInfo() {
     filter_links = generateFilterLinks()
     filter_texts = generateFilterTexts()
 
-    filter_sources = setOf(source?.plainText, quoted_source?.plainText).filterNotNull().toTypedArray()
+    filter_sources = setOf(source?.plainText, quoted?.source?.plainText).filterNotNull().toTypedArray()
 }
 
 fun ParcelableStatus.generateFilterTexts(): String {
     val texts = StringBuilder()
     texts.appendNonEmptyLine(text_unescaped)
-    texts.appendNonEmptyLine(quoted_text_unescaped)
-    media?.forEach { item ->
+    texts.appendNonEmptyLine(quoted?.text_unescaped)
+    attachment?.media?.forEach { item ->
         texts.appendNonEmptyLine(item.alt_text)
     }
-    quoted_media?.forEach { item ->
+    quoted?.media?.forEach { item ->
         texts.appendNonEmptyLine(item.alt_text)
     }
     return texts.toString()
@@ -193,7 +177,7 @@ fun ParcelableStatus.generateFilterLinks(): Array<String> {
         if (span.type != SpanItem.SpanType.LINK) return@mapNotNullTo null
         return@mapNotNullTo span.link
     }
-    quoted_spans?.mapNotNullTo(links) { span ->
+    quoted?.spans?.mapNotNullTo(links) { span ->
         if (span.type != SpanItem.SpanType.LINK) return@mapNotNullTo null
         return@mapNotNullTo span.link
     }

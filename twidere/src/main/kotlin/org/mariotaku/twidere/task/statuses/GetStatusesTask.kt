@@ -27,7 +27,6 @@ import nl.komponents.kovenant.all
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.addTo
 import org.mariotaku.ktextension.toLongOr
-import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.*
 import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.microblog.Status
@@ -56,6 +55,7 @@ import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.task.GetTimelineResult
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.sync.SyncTaskRunner
@@ -137,7 +137,7 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
     override fun afterExecute(handler: ((Boolean) -> Unit)?, results: List<Pair<GetTimelineResult<ParcelableStatus>?, Exception?>>) {
         context.contentResolver.notifyChange(contentUri, null)
         val exception = results.firstOrNull { it.second != null }?.second
-        bus.post(GetStatusesTaskEvent(contentUri, false, exception))
+        BusSingleton.post(GetStatusesTaskEvent(contentUri, false, exception))
         getStatusTasks.remove(contentUri)
         cacheItems(context, results)
         handler?.invoke(true)
@@ -146,7 +146,7 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
 
     override fun beforeExecute() {
         getStatusTasks.add(contentUri)
-        bus.post(GetStatusesTaskEvent(contentUri, true, null))
+        BusSingleton.post(GetStatusesTaskEvent(contentUri, true, null))
     }
 
     @Throws(MicroBlogException::class)
@@ -242,7 +242,6 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
             // Get id diff of first and last item
             val sortDiff = firstSortId - lastSortId
 
-            val creator = ObjectCursor.valuesCreatorFrom(ParcelableStatus::class.java)
             statuses.forEachIndexed { i, status ->
                 status.position_key = getPositionKey(status.timestamp, status.sort_id, lastSortId,
                         sortDiff, i, statuses.size)

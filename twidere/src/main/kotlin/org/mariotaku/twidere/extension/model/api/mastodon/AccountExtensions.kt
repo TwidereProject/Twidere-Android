@@ -25,6 +25,7 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.api.isHtml
 import org.mariotaku.twidere.extension.model.api.spanItems
 import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.ParcelableLiteUser
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.HtmlEscapeHelper
@@ -40,6 +41,24 @@ fun Account.toParcelable(details: AccountDetails, position: Long = 0,
     return toParcelable(details.key, position, relationship).apply {
         account_color = details.color
     }
+}
+
+fun Account.toLiteParcelable(accountKey: UserKey): ParcelableLiteUser {
+    val obj = ParcelableLiteUser()
+    obj.account_key = accountKey
+    obj.key = getKey(accountKey.host)
+    obj.name = name
+    obj.screen_name = username
+    obj.profile_image_url = avatar
+
+    if (note?.isHtml == true) {
+        val descriptionHtml = HtmlSpanBuilder.fromHtml(note, note, MastodonSpanProcessor())
+        obj.description_unescaped = descriptionHtml?.toString()
+    } else {
+        obj.description_unescaped = note?.let(HtmlEscapeHelper::unescape)
+    }
+    obj.url_expanded = url
+    return obj
 }
 
 fun Account.toParcelable(accountKey: UserKey, position: Long = 0,
@@ -81,13 +100,15 @@ fun Account.toParcelable(accountKey: UserKey, position: Long = 0,
         extras.muting = relationship.isMuting
         extras.blocking = relationship.isBlocking
     }
+    extras.moved = moved?.toLiteParcelable(accountKey)
 
     return obj
 }
 
 inline val Account.host: String? get() = acct?.let(UserKey::valueOf)?.host
 
-inline val Account.name: String? get() = displayName?.takeIf(String::isNotEmpty)
-        ?.let(EmojioneTranslator::translate) ?: username
+inline val Account.name: String?
+    get() = displayName?.takeIf(String::isNotEmpty)
+            ?.let(EmojioneTranslator::translate) ?: username
 
 fun Account.getKey(host: String?) = UserKey(id, acct?.let(UserKey::valueOf)?.host ?: host)

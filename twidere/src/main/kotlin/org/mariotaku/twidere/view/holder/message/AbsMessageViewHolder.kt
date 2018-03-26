@@ -33,6 +33,7 @@ import org.mariotaku.twidere.adapter.MessagesConversationAdapter
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.timestamp
 import org.mariotaku.twidere.model.ParcelableMessage
+import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.view.ProfileImageView
 
 /**
@@ -55,7 +56,7 @@ abstract class AbsMessageViewHolder(itemView: View, val adapter: MessagesConvers
 
     open fun display(message: ParcelableMessage, showDate: Boolean) {
         val context = adapter.context
-        val manager = adapter.userColorNameManager
+        val manager = UserColorNameManager.get(adapter.context)
 
         setMessageContentGravity(messageContent, message.is_outgoing)
         if (showDate) {

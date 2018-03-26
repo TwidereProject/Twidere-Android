@@ -30,13 +30,11 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IUserListsAdapter
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.ParcelableUserList
+import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.view.ColorLabelRelativeLayout
 import org.mariotaku.twidere.view.ProfileImageView
 import java.util.*
 
-/**
- * Created by mariotaku on 15/4/29.
- */
 class UserListViewHolder(
         itemView: View,
         private val adapter: IUserListsAdapter<*>
@@ -58,11 +56,10 @@ class UserListViewHolder(
 
     fun display(userList: ParcelableUserList) {
         val context = itemView.context
-        val manager = adapter.userColorNameManager
+        val manager = UserColorNameManager.get(context)
 
         itemContent.drawStart(manager.getUserColor(userList.user_key))
         nameView.spannable = userList.name
-        val nameFirst = adapter.nameFirst
         val createdByDisplayName = manager.getDisplayName(userList)
         createdByView.spannable = context.getString(R.string.label_created_by_name, createdByDisplayName)
 

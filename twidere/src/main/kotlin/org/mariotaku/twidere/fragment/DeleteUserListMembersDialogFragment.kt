@@ -36,6 +36,8 @@ import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.promise.UserListPromises
+import org.mariotaku.twidere.util.UserColorNameManager
+import org.mariotaku.twidere.util.UserColorNameManager.Companion
 
 class DeleteUserListMembersDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
 
@@ -61,8 +63,7 @@ class DeleteUserListMembersDialogFragment : BaseDialogFragment(), DialogInterfac
         val userList = userList!!
         if (users.size == 1) {
             val user = users[0]
-            val nameFirst = preferences[nameFirstKey]
-            val displayName = userColorNameManager.getDisplayName(user)
+            val displayName = UserColorNameManager.get(context!!).getDisplayName(user)
             builder.setTitle(getString(R.string.delete_user, displayName))
             builder.setMessage(getString(R.string.delete_user_from_list_confirm, displayName, userList.name))
         } else {

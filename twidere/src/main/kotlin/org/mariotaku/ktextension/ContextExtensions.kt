@@ -1,14 +1,17 @@
 package org.mariotaku.ktextension
 
+import android.app.Application
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.pm.PackageManager
 import android.support.v4.content.ContextCompat
 import java.io.File
 
-/**
- * Created by mariotaku on 2016/12/13.
- */
+val Context.hasApplication: Boolean
+    get() = applicationContext is Application
+
+val Context.preferExternalCacheDir: File
+    get() = externalCacheDir ?: cacheDir
 
 fun Context.checkAllSelfPermissionsGranted(vararg permissions: String): Boolean {
     return permissions.none { ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED }
@@ -27,6 +30,3 @@ fun Context.unregisterReceiverSafe(receiver: BroadcastReceiver?): Boolean {
         return false
     }
 }
-
-val Context.preferExternalCacheDir: File
-    get() = externalCacheDir ?: cacheDir

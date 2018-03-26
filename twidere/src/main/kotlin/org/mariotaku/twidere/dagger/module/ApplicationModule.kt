@@ -31,8 +31,6 @@ import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.extractor.ExtractorsFactory
 import com.google.android.exoplayer2.upstream.DataSource
-import com.squareup.otto.Bus
-import com.squareup.otto.ThreadEnforcer
 import com.twitter.Extractor
 import dagger.Module
 import dagger.Provides
@@ -49,8 +47,10 @@ import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_CACHE_SIZE_LIMIT
 import org.mariotaku.twidere.constant.autoRefreshCompatibilityModeKey
 import org.mariotaku.twidere.constant.nameFirstKey
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.load
 import org.mariotaku.twidere.model.DefaultFeatures
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.taskcontroller.refresh.JobSchedulerRefreshTaskController
 import org.mariotaku.twidere.taskcontroller.refresh.LegacyRefreshTaskController
 import org.mariotaku.twidere.taskcontroller.refresh.RefreshTaskController
@@ -80,10 +80,6 @@ class ApplicationModule(private val application: Application) {
             throw RuntimeException("Module must be created inside main thread")
         }
     }
-
-    @Provides
-    @Singleton
-    fun bus(): Bus = Bus(ThreadEnforcer.MAIN)
 
     @Provides
     @Singleton
@@ -297,8 +293,8 @@ class ApplicationModule(private val application: Application) {
     @Provides
     @Singleton
     fun taskCreator(preferences: SharedPreferences, activityTracker: ActivityTracker,
-            dataSyncProvider: DataSyncProvider, bus: Bus): TaskServiceRunner {
-        return TaskServiceRunner(application, preferences, activityTracker, dataSyncProvider, bus)
+            dataSyncProvider: DataSyncProvider): TaskServiceRunner {
+        return TaskServiceRunner(application, preferences, activityTracker, dataSyncProvider, BusSingleton)
     }
 
     @Provides

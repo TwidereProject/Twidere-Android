@@ -50,15 +50,15 @@ fun View.getFrame(rect: Rect) {
 @UiThread
 fun View.getFrameRelatedTo(rect: Rect, other: View? = null) {
     this.getFrame(rect)
-    if (other == null) {
-        offsetToRoot(this, rect)
-    } else if (other === this) {
-        rect.offsetTo(0, 0)
-    } else if (other !== parent) {
-        offsetToRoot(this, rect)
-        other.getFrame(tempRect)
-        offsetToRoot(other, tempRect)
-        rect.offset(-tempRect.left, -tempRect.top)
+    when {
+        other == null -> offsetToRoot(this, rect)
+        other === this -> rect.offsetTo(0, 0)
+        other !== parent -> {
+            offsetToRoot(this, rect)
+            other.getFrame(tempRect)
+            offsetToRoot(other, tempRect)
+            rect.offset(-tempRect.left, -tempRect.top)
+        }
     }
 }
 
@@ -154,6 +154,18 @@ fun View.findViewByText(text: CharSequence?): TextView? {
         return (0 until childCount)
                 .mapNotNull { getChildAt(it).findViewByText(text) }
                 .firstOrNull()
+    }
+    return null
+}
+
+fun <T : View> View.findViewByType(cls: Class<T>): T? {
+    @Suppress("UNCHECKED_CAST")
+    if (cls.isAssignableFrom(javaClass)) return this as T?
+    if (this is ViewGroup) {
+        for (i in 0 until childCount) {
+            val found = getChildAt(i).findViewByType(cls)
+            if (found != null) return found
+        }
     }
     return null
 }

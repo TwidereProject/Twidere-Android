@@ -21,20 +21,14 @@ package org.mariotaku.twidere.fragment
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.Bundle
 import android.support.v4.app.DialogFragment
-import com.bumptech.glide.Glide
-import com.bumptech.glide.RequestManager
-import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
 import okhttp3.Dns
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.dagger.component.GeneralComponent
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.util.DebugModeUtils
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
-import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.sync.DataSyncProvider
 import javax.inject.Inject
@@ -42,13 +36,9 @@ import javax.inject.Inject
 open class BaseDialogFragment : DialogFragment(), IBaseFragment<BaseDialogFragment> {
 
     @Inject
-    lateinit var userColorNameManager: UserColorNameManager
-    @Inject
     lateinit var preferences: SharedPreferences
     @Inject
     lateinit var keyboardShortcutsHandler: KeyboardShortcutsHandler
-    @Inject
-    lateinit var bus: Bus
     @Inject
     lateinit var dns: Dns
     @Inject
@@ -58,25 +48,7 @@ open class BaseDialogFragment : DialogFragment(), IBaseFragment<BaseDialogFragme
     @Inject
     lateinit var dataSyncProvider: DataSyncProvider
 
-    lateinit var requestManager: RequestManager
-        private set
-
     private val actionHelper = IBaseFragment.ActionHelper<BaseDialogFragment>()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        requestManager = Glide.with(this)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        requestManager.onStart()
-    }
-
-    override fun onStop() {
-        requestManager.onStop()
-        super.onStop()
-    }
 
     override fun onResume() {
         super.onResume()
@@ -89,7 +61,6 @@ open class BaseDialogFragment : DialogFragment(), IBaseFragment<BaseDialogFragme
     }
 
     override fun onDestroy() {
-        requestManager.onDestroy()
         super.onDestroy()
         DebugModeUtils.watchReferenceLeak(this)
     }

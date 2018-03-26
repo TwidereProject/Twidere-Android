@@ -34,10 +34,12 @@ import org.mariotaku.microblog.library.model.microblog.SavedSearch
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.SavedSearchesAdapter
 import org.mariotaku.twidere.extension.accountKey
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.loader.SavedSearchesLoader
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.SavedSearchDestroyedEvent
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.util.IntentUtils.openTweetSearch
 import java.util.*
 
@@ -67,13 +69,13 @@ class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapte
     }
 
     override fun onStop() {
-        bus.unregister(this)
+        BusSingleton.unregister(this)
         super.onStop()
     }
 
     override fun onStart() {
         super.onStart()
-        bus.register(this)
+        BusSingleton.register(this)
     }
 
     override fun onCreateAdapter(context: Context, requestManager: RequestManager): SavedSearchesAdapter {

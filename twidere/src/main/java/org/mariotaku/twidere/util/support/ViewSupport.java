@@ -24,7 +24,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import org.mariotaku.twidere.util.support.view.ViewOutlineProviderCompat;
@@ -44,18 +43,6 @@ public final class ViewSupport {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
         ViewAccessorL.setOutlineProvider(view, outlineProvider);
 
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T extends View> T findViewByType(View view, Class<T> cls) {
-        if (cls.isAssignableFrom(view.getClass())) return (T) view;
-        if (view instanceof ViewGroup) {
-            for (int i = 0, j = ((ViewGroup) view).getChildCount(); i < j; i++) {
-                final View found = findViewByType(((ViewGroup) view).getChildAt(i), cls);
-                if (found != null) return (T) found;
-            }
-        }
-        return null;
     }
 
     public static void setForeground(View view, Drawable foreground) {

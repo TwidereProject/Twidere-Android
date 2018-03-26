@@ -5,6 +5,7 @@ import android.content.Context
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.getAllDetails
+import org.mariotaku.twidere.extension.model.quoted
 import org.mariotaku.twidere.extension.model.unique_id_non_null
 import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.ParcelableStatusUpdate
@@ -13,9 +14,6 @@ import org.mariotaku.twidere.model.draft.StatusObjectActionExtras
 import org.mariotaku.twidere.model.draft.UpdateStatusActionExtras
 import org.mariotaku.twidere.util.LinkCreator
 
-/**
- * Created by mariotaku on 16/2/12.
- */
 object ParcelableStatusUpdateUtils {
 
     fun fromDraftItem(context: Context, draft: Draft): ParcelableStatusUpdate {
@@ -35,8 +33,8 @@ object ParcelableStatusUpdateUtils {
                 statusUpdate.attachment_url = actionExtras.attachmentUrl
                 statusUpdate.excluded_reply_user_ids = actionExtras.excludedReplyUserIds
                 statusUpdate.extended_reply_mode = actionExtras.isExtendedReplyMode
-                statusUpdate.summary  = actionExtras.summaryText
-                statusUpdate.visibility  = actionExtras.visibility
+                statusUpdate.summary = actionExtras.summaryText
+                statusUpdate.visibility = actionExtras.visibility
             }
             is QuoteStatusActionExtras -> {
                 val onlyAccount = statusUpdate.accounts.singleOrNull()
@@ -51,16 +49,16 @@ object ParcelableStatusUpdateUtils {
                                         draft.text, status.user_screen_name, status.text_plain)
                             } else {
                                 statusUpdate.text = context.getString(R.string.fanfou_repost_format,
-                                        draft.text, status.quoted_user_screen_name,
-                                        status.quoted_text_plain)
-                                statusUpdate.repost_status_id = status.quoted_id
+                                        draft.text, status.quoted?.user_screen_name,
+                                        status.quoted?.text_plain)
+                                statusUpdate.repost_status_id = status.quoted?.id
                             }
                         }
                         else -> {
                             val statusLink = if (!status.is_quote || !quoteOriginalStatus) {
                                 LinkCreator.getStatusWebLink(status)
                             } else {
-                                LinkCreator.getQuotedStatusWebLink(status)
+                                LinkCreator.getQuotedStatusWebLink(status.quoted!!)
                             }
                             statusUpdate.attachment_url = statusLink?.toString()
                             statusUpdate.text = draft.text

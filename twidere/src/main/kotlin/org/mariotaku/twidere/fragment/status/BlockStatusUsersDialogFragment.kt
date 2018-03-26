@@ -32,6 +32,8 @@ import org.mariotaku.twidere.extension.status
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.CreateUserBlockDialogFragment
 import org.mariotaku.twidere.model.ParcelableStatus
+import org.mariotaku.twidere.util.UserColorNameManager
+import org.mariotaku.twidere.util.UserColorNameManager.Companion
 
 class BlockStatusUsersDialogFragment : BaseDialogFragment() {
 
@@ -41,9 +43,8 @@ class BlockStatusUsersDialogFragment : BaseDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(context!!)
         val referencedUsers = status.referencedUsers
-        val nameFirst = preferences[nameFirstKey]
         val displayNames = referencedUsers.map {
-            userColorNameManager.getDisplayName(it)
+            UserColorNameManager.get(context!!).getDisplayName(it)
         }.toTypedArray()
         builder.setTitle(R.string.action_status_block_users)
         builder.setItems(displayNames) { _, which ->

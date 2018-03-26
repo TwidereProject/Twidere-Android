@@ -28,6 +28,7 @@ import android.support.v4.content.Loader
 import android.view.View
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.layout_list_with_empty_view.*
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.contains
@@ -39,6 +40,7 @@ import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.extension.accountKey
 import org.mariotaku.twidere.extension.adapter.all
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.userKey
 import org.mariotaku.twidere.loader.iface.IPaginationLoader
 import org.mariotaku.twidere.loader.userlists.UserListOwnershipsLoader
@@ -46,6 +48,7 @@ import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.Pagination
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.util.ContentScrollHandler
 import org.mariotaku.twidere.util.ListViewScrollHandler
 
@@ -86,7 +89,7 @@ class UserListSelectorActivity : BaseActivity(),
         }
         setContentView(R.layout.activity_user_list_selector)
 
-        adapter = SimpleParcelableUserListsAdapter(this, requestManager)
+        adapter = SimpleParcelableUserListsAdapter(this, Glide.with(this))
         adapter.loadMoreSupportedPosition = LoadMorePosition.END
         listView.addFooterView(layoutInflater.inflate(R.layout.simple_list_item_activated_1,
                 listView, false).apply {
@@ -127,11 +130,11 @@ class UserListSelectorActivity : BaseActivity(),
 
     override fun onStart() {
         super.onStart()
-        bus.register(this)
+        BusSingleton.register(this)
     }
 
     override fun onStop() {
-        bus.unregister(this)
+        BusSingleton.unregister(this)
         super.onStop()
     }
 

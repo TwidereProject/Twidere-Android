@@ -24,7 +24,7 @@ import android.text.Spanned
 import org.mariotaku.twidere.text.ZeroWidthSpan
 import java.text.Normalizer
 
-fun CharSequence.appendTo(sb: StringBuilder) {
+fun CharSequence.appendTo(sb: Appendable) {
     sb.append(this)
 }
 

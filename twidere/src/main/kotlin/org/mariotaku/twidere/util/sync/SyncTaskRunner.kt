@@ -1,7 +1,6 @@
 package org.mariotaku.twidere.util.sync
 
 import android.content.Context
-import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.all
 import nl.komponents.kovenant.task
@@ -9,6 +8,7 @@ import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.util.TaskServiceRunner
 import org.mariotaku.twidere.util.UserColorNameManager
 import java.lang.Exception
@@ -17,8 +17,6 @@ import javax.inject.Inject
 abstract class SyncTaskRunner(val context: Context) {
     @Inject
     protected lateinit var userColorNameManager: UserColorNameManager
-    @Inject
-    protected lateinit var bus: Bus
     @Inject
     protected lateinit var syncPreferences: SyncPreferences
 
@@ -34,17 +32,19 @@ abstract class SyncTaskRunner(val context: Context) {
     protected abstract fun onCreatePromise(action: String): Promise<Boolean, Exception>?
 
     fun promise(action: String): Promise<Boolean, Exception> {
-        val syncType = SyncTaskRunner.getSyncType(action) ?: return Promise.ofFail(UnsupportedOperationException())
+        val syncType = SyncTaskRunner.getSyncType(action)
+                ?: return Promise.ofFail(UnsupportedOperationException())
         if (!syncPreferences.isSyncEnabled(syncType)) return Promise.ofFail(UnsupportedOperationException())
-        val promise = onCreatePromise(action) ?: return Promise.ofFail(UnsupportedOperationException())
+        val promise = onCreatePromise(action)
+                ?: return Promise.ofFail(UnsupportedOperationException())
         return promise.success { synced ->
             if (synced) {
                 syncPreferences.setLastSynced(syncType, System.currentTimeMillis())
             }
         }.successUi { synced ->
-            bus.post(TaskServiceRunner.SyncFinishedEvent(syncType, synced))
+            BusSingleton.post(TaskServiceRunner.SyncFinishedEvent(syncType, synced))
         }.failUi {
-            bus.post(TaskServiceRunner.SyncFinishedEvent(syncType, false))
+            BusSingleton.post(TaskServiceRunner.SyncFinishedEvent(syncType, false))
         }
     }
 

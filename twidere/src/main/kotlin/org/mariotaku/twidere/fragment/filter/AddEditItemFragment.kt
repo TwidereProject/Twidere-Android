@@ -31,6 +31,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.CheckBox
 import android.widget.Checkable
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.dialog_filter_rule_editor.*
 import org.mariotaku.ktextension.ContentValues
 import org.mariotaku.ktextension.set
@@ -115,7 +116,7 @@ class AddEditItemFragment : BaseDialogFragment() {
             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
             editText.setAdapter(when (contentUri) {
                 Filters.Sources.CONTENT_URI -> SourceAutoCompleteAdapter(activity!!)
-                Filters.Users.CONTENT_URI -> ComposeAutoCompleteAdapter(activity!!, requestManager).apply {
+                Filters.Users.CONTENT_URI -> ComposeAutoCompleteAdapter(activity!!, Glide.with(this@AddEditItemFragment)).apply {
                     val accountKey = arguments!!.accountKey
                     if (accountKey != null) {
                         val am = AccountManager.get(activity)

@@ -12,12 +12,10 @@ import nl.komponents.kovenant.ui.alwaysUi
 import org.mariotaku.ktextension.toWeak
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.SYNC_PREFERENCES_NAME
-import org.mariotaku.twidere.extension.applyTheme
-import org.mariotaku.twidere.extension.dismissProgressDialog
-import org.mariotaku.twidere.extension.onShow
-import org.mariotaku.twidere.extension.showProgressDialog
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BasePreferenceFragment
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.util.TaskServiceRunner
 
 class SyncSettingsFragment : BasePreferenceFragment() {
@@ -29,11 +27,11 @@ class SyncSettingsFragment : BasePreferenceFragment() {
 
     override fun onStart() {
         super.onStart()
-        bus.register(this)
+        BusSingleton.register(this)
     }
 
     override fun onStop() {
-        bus.unregister(this)
+        BusSingleton.unregister(this)
         super.onStop()
     }
 

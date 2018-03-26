@@ -19,9 +19,11 @@
 
 package org.mariotaku.twidere.view.holder.compose
 
+import android.graphics.drawable.Drawable
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import com.bumptech.glide.load.resource.drawable.GlideDrawable
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import kotlinx.android.synthetic.main.grid_item_media_editor.view.*
@@ -29,7 +31,6 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.MediaPreviewAdapter
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableMediaUpdate
-import java.lang.Exception
 
 class MediaPreviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
@@ -39,16 +40,15 @@ class MediaPreviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     private val removeView = itemView.remove
     private val editView = itemView.edit
 
-    private val requestListener = object : RequestListener<String, GlideDrawable> {
-        override fun onException(e: Exception?, model: String?, target: Target<GlideDrawable>?,
+    private val requestListener = object : RequestListener<Drawable> {
+        override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?,
                 isFirstResource: Boolean): Boolean {
             loadProgress.visibility = View.GONE
             return false
         }
 
-        override fun onResourceReady(resource: GlideDrawable?, model: String?,
-                target: Target<GlideDrawable>?, isFromMemoryCache: Boolean,
-                isFirstResource: Boolean): Boolean {
+        override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?,
+                dataSource: DataSource?, isFirstResource: Boolean): Boolean {
             loadProgress.visibility = View.GONE
             return false
         }

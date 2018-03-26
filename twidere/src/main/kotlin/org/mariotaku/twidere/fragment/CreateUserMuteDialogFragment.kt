@@ -23,19 +23,19 @@ import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.promise.MutePromises
+import org.mariotaku.twidere.util.UserColorNameManager
 
 class CreateUserMuteDialogFragment : AbsUserMuteBlockDialogFragment() {
 
     override fun getMessage(user: ParcelableUser): String {
-        val displayName = userColorNameManager.getDisplayName(user)
+        val displayName = UserColorNameManager.get(context!!).getDisplayName(user)
         return getString(R.string.mute_user_confirm_message, displayName)
     }
 
     override fun getTitle(user: ParcelableUser): String {
-        val displayName = userColorNameManager.getDisplayName(user)
+        val displayName = UserColorNameManager.get(context!!).getDisplayName(user)
         return getString(R.string.mute_user, displayName)
     }
 

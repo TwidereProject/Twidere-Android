@@ -69,10 +69,9 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.UserListSubscriptionEvent
 import org.mariotaku.twidere.model.event.UserListUpdatedEvent
 import org.mariotaku.twidere.promise.UserListPromises
-import org.mariotaku.twidere.util.IntentUtils
-import org.mariotaku.twidere.util.LinkCreator
-import org.mariotaku.twidere.util.MenuUtils
-import org.mariotaku.twidere.util.Utils
+import org.mariotaku.twidere.singleton.BusSingleton
+import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.UserColorNameManager.Companion
 import org.mariotaku.twidere.util.shortcut.ShortcutCreator
 
 class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
@@ -100,11 +99,11 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
 
     override fun onStart() {
         super.onStart()
-        bus.register(this)
+        BusSingleton.register(this)
     }
 
     override fun onStop() {
-        bus.unregister(this)
+        BusSingleton.unregister(this)
         super.onStop()
     }
 
@@ -401,7 +400,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
                 messageBuilder.append('\n')
             }
             messageBuilder.append(getString(R.string.label_created_by_name,
-                    userColorNameManager.getDisplayName(userList)))
+                    UserColorNameManager.get(context!!).getDisplayName(userList)))
             val builder = AlertDialog.Builder(context!!)
             builder.setTitle(userList.name)
             builder.setMessage(messageBuilder)

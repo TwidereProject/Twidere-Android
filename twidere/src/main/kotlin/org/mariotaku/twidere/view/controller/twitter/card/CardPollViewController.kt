@@ -54,7 +54,7 @@ class CardPollViewController : ContainerView.ViewController() {
     private var fetchedCard: ParcelableCardEntity? = null
     private var clickedChoice: Boolean = false
     private val card: ParcelableCardEntity?
-        get() = fetchedCard ?: status.card
+        get() = fetchedCard ?: status.attachment?.card
 
     override fun onCreate() {
         super.onCreate()

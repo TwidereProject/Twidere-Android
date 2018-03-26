@@ -32,6 +32,7 @@ import org.mariotaku.twidere.extension.model.notificationChannelGroupId
 import org.mariotaku.twidere.extension.model.notificationChannelId
 import org.mariotaku.twidere.extension.ownedAccounts
 import org.mariotaku.twidere.model.notification.NotificationChannelSpec
+import org.mariotaku.twidere.util.UserColorNameManager
 
 /**
  * Created by mariotaku on 2017/8/25.
@@ -80,8 +81,7 @@ object NotificationChannelsManager {
 
             val am = AccountManager.get(context)
             val nm = context.getSystemService(NotificationManager::class.java)
-            val pref = holder.preferences
-            val ucnm = holder.userColorNameManager
+            val ucnm = UserColorNameManager.get(context)
 
             val accounts = am.ownedAccounts
             val specs = NotificationChannelSpec.values()

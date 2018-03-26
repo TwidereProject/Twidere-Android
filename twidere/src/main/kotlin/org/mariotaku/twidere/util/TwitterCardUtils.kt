@@ -48,10 +48,10 @@ object TwitterCardUtils {
     }
 
     fun isCardSupported(status: ParcelableStatus): Boolean {
-        val card = status.card ?: return false
+        val card = status.attachment?.card ?: return false
         when (status.card_name) {
             CARD_NAME_PLAYER -> {
-                status.media?.let { mediaArray ->
+                status.attachment?.media?.let { mediaArray ->
                     val appUrlResolved = card.getString("app_url_resolved")
                     val cardUrl = card.url
                     mediaArray.forEach {
@@ -83,7 +83,7 @@ object TwitterCardUtils {
     }
 
     fun isPoll(status: ParcelableStatus): Boolean {
-        val card = status.card ?: return false
+        val card = status.attachment?.card ?: return false
         return isPoll(card)
     }
 }

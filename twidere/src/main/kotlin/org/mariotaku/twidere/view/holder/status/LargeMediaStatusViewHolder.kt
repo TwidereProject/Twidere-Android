@@ -25,6 +25,7 @@ import android.support.v7.widget.RecyclerView
 import android.text.SpannableStringBuilder
 import android.view.*
 import android.widget.ImageView
+import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.adapter_item_large_media_status.view.*
 import kotlinx.android.synthetic.main.adapter_item_large_media_status_preview_item.view.*
 import org.mariotaku.ktextension.applyFontFamily
@@ -44,6 +45,7 @@ import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.util.UnitConvertUtils
+import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.view.ProfileImageView
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 
@@ -115,7 +117,7 @@ class LargeMediaStatusViewHolder(private val adapter: IStatusesAdapter, itemView
         replyButton.isActivated = StatusViewHolder.isRetweetIconActivated(status)
         favoriteButton.isActivated = StatusViewHolder.isFavoriteIconActivated(status)
 
-        val aspectRatio = status.media?.fold(Double.NaN) { acc, media ->
+        val aspectRatio = status.attachment?.media?.fold(Double.NaN) { acc, media ->
             if (acc.isNaN()) return@fold media.aspect_ratio
             return@fold (acc + media.aspect_ratio) / 2
         } ?: Double.NaN
@@ -157,9 +159,9 @@ class LargeMediaStatusViewHolder(private val adapter: IStatusesAdapter, itemView
 
         mediaPreviewPager.setAspectRatio(if (aspectRatio > 0) (1 / aspectRatio).coerceIn(0.5, 1.5) else 1.0)
 
-        mediaPreviewAdapter.media = status.media
+        mediaPreviewAdapter.media = status.attachment?.media
 
-        itemView.contentDescription = status.contentDescription(context, adapter.userColorNameManager,
+        itemView.contentDescription = status.contentDescription(context, UserColorNameManager.get(context),
                 false, timeView.showAbsoluteTime)
     }
 
@@ -272,7 +274,7 @@ class LargeMediaStatusViewHolder(private val adapter: IStatusesAdapter, itemView
         private val mediaPreview = itemView.mediaPreview
 
         fun display(media: ParcelableMedia) {
-            adapter.parentAdapter.requestManager.load(media.preview_url).centerCrop().into(mediaPreview)
+            adapter.parentAdapter.requestManager.load(media.preview_url).apply(RequestOptions.centerCropTransform()).into(mediaPreview)
             mediaPreview.hasPlayIcon = ParcelableMediaUtils.hasPlayIcon(media.type)
         }
 

@@ -32,13 +32,13 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.ExoPlaybackException
+import com.google.android.exoplayer2.ExoPlayerFactory
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.extractor.ExtractorsFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
-import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.HttpDataSource
@@ -111,10 +111,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         AccountManager.get(context).getDetailsOrThrow(accountKey, true)
     }
 
-    private val playerListener = object : Player.EventListener {
-        override fun onLoadingChanged(isLoading: Boolean) {
-
-        }
+    private val playerListener = object : Player.DefaultEventListener() {
 
         override fun onPlayerError(error: ExoPlaybackException) {
             playerHasError = true
@@ -161,21 +158,6 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
             }
         }
 
-        override fun onPositionDiscontinuity() {
-        }
-
-        override fun onTimelineChanged(timeline: Timeline, manifest: Any?) {
-        }
-
-        override fun onTracksChanged(trackGroups: TrackGroupArray, trackSelections: TrackSelectionArray) {
-        }
-
-        override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters?) {
-
-        }
-
-        override fun onRepeatModeChanged(repeatMode: Int) {
-        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

@@ -26,12 +26,15 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
+import org.mariotaku.twidere.annotation.TimelineStyle;
+
 import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_TIMELINE_STYLE;
 
 @JsonObject
 @ParcelablePlease
 public class TimelineTabExtras extends TabExtras implements Parcelable {
     @JsonField(name = "timeline_style")
+    @TimelineStyle
     int timelineStyle;
 
     @Override
@@ -40,11 +43,12 @@ public class TimelineTabExtras extends TabExtras implements Parcelable {
         bundle.putInt(EXTRA_TIMELINE_STYLE, timelineStyle);
     }
 
+    @TimelineStyle
     public int getTimelineStyle() {
         return timelineStyle;
     }
 
-    public void setTimelineStyle(int timelineStyle) {
+    public void setTimelineStyle(@TimelineStyle int timelineStyle) {
         this.timelineStyle = timelineStyle;
     }
 

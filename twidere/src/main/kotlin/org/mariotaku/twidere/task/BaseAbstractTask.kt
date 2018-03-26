@@ -2,12 +2,10 @@ package org.mariotaku.twidere.task
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.squareup.otto.Bus
 import com.twitter.Extractor
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.dagger.component.GeneralComponent
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.ErrorInfoStore
 import org.mariotaku.twidere.util.ReadStateManager
@@ -23,8 +21,6 @@ import javax.inject.Inject
 abstract class BaseAbstractTask<Params, Result, Callback>(val context: Context) : AbstractTask<Params, Result, Callback>() {
 
     @Inject
-    lateinit var bus: Bus
-    @Inject
     lateinit var mediaPreloader: MediaPreloader
     @Inject
     lateinit var preferences: SharedPreferences
@@ -34,8 +30,6 @@ abstract class BaseAbstractTask<Params, Result, Callback>(val context: Context) 
     lateinit var errorInfoStore: ErrorInfoStore
     @Inject
     lateinit var readStateManager: ReadStateManager
-    @Inject
-    lateinit var userColorNameManager: UserColorNameManager
     @Inject
     lateinit var extraFeaturesService: ExtraFeaturesService
     @Inject

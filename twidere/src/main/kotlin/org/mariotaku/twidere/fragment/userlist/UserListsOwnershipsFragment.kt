@@ -29,12 +29,14 @@ import com.squareup.otto.Subscribe
 import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.fragment.CreateUserListDialogFragment
 import org.mariotaku.twidere.fragment.ParcelableUserListsFragment
 import org.mariotaku.twidere.loader.userlists.UserListOwnershipsLoader
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.UserListDestroyedEvent
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.util.Utils
 
 class UserListsOwnershipsFragment : ParcelableUserListsFragment() {
@@ -91,11 +93,11 @@ class UserListsOwnershipsFragment : ParcelableUserListsFragment() {
 
     override fun onStart() {
         super.onStart()
-        bus.register(this)
+        BusSingleton.register(this)
     }
 
     override fun onStop() {
-        bus.unregister(this)
+        BusSingleton.unregister(this)
         super.onStop()
     }
 

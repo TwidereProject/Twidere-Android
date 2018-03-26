@@ -9,6 +9,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.TWITTER_ERROR_ALREADY_FAVORITED
 import org.mariotaku.twidere.constant.TWITTER_ERROR_ALREADY_RETWEETED
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
@@ -23,6 +24,7 @@ import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.model.event.StatusRetweetedEvent
 import org.mariotaku.twidere.promise.UpdateStatusPromise
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.updateStatusInfo
@@ -71,13 +73,13 @@ class RetweetStatusTask(
 
     override fun beforeExecute() {
         addTaskId(accountKey, statusId)
-        bus.post(StatusListChangedEvent())
+        BusSingleton.post(StatusListChangedEvent())
     }
 
     override fun afterExecute(callback: Any?, result: ParcelableStatus?, exception: MicroBlogException?) {
         removeTaskId(accountKey, statusId)
         if (result != null) {
-            bus.post(StatusRetweetedEvent(result))
+            BusSingleton.post(StatusRetweetedEvent(result))
             Toast.makeText(context, R.string.message_toast_status_retweeted, Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(context, exception?.getErrorMessage(context), Toast.LENGTH_SHORT).show()

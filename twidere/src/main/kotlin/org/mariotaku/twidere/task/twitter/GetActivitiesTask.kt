@@ -21,6 +21,7 @@ import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.data.fetcher.ActivitiesFetcher
 import org.mariotaku.twidere.extension.api.batchGetRelationships
 import org.mariotaku.twidere.extension.bulkInsert
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.getDetailsOrThrow
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
@@ -32,6 +33,7 @@ import org.mariotaku.twidere.model.event.GetActivitiesTaskEvent
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.task.GetTimelineResult
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.task.statuses.GetStatusesTask
 import org.mariotaku.twidere.util.DataStoreUtils
@@ -111,14 +113,14 @@ abstract class GetActivitiesTask(
     override fun afterExecute(handler: ((Boolean) -> Unit)?, results: List<Pair<GetTimelineResult<ParcelableActivity>?, Exception?>>) {
         context.contentResolver.notifyChange(contentUri, null)
         val exception = results.firstOrNull { it.second != null }?.second
-        bus.post(GetActivitiesTaskEvent(contentUri, false, exception))
+        BusSingleton.post(GetActivitiesTaskEvent(contentUri, false, exception))
         GetStatusesTask.cacheItems(context, results)
         handler?.invoke(true)
     }
 
     @UiThread
     override fun beforeExecute() {
-        bus.post(GetActivitiesTaskEvent(contentUri, true, null))
+        BusSingleton.post(GetActivitiesTaskEvent(contentUri, true, null))
     }
 
     @Throws(MicroBlogException::class)

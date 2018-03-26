@@ -11,6 +11,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.TWITTER_ERROR_ALREADY_FAVORITED
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
+import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
@@ -24,6 +25,7 @@ import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.promise.UpdateStatusPromise
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.updateStatusInfo
@@ -68,7 +70,7 @@ class CreateFavoriteTask(context: Context, accountKey: UserKey, private val stat
 
     override fun beforeExecute() {
         addTaskId(accountKey, statusId)
-        bus.post(StatusListChangedEvent())
+        BusSingleton.post(StatusListChangedEvent())
     }
 
     override fun afterExecute(callback: Any?, result: ParcelableStatus?, exception: MicroBlogException?) {
@@ -89,8 +91,8 @@ class CreateFavoriteTask(context: Context, accountKey: UserKey, private val stat
             taskEvent.isSucceeded = false
             Toast.makeText(context, exception?.getErrorMessage(context), Toast.LENGTH_SHORT).show()
         }
-        bus.post(taskEvent)
-        bus.post(StatusListChangedEvent())
+        BusSingleton.post(taskEvent)
+        BusSingleton.post(StatusListChangedEvent())
     }
 
     override fun onCleanup(account: AccountDetails, params: Any?, exception: MicroBlogException) {

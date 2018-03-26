@@ -31,6 +31,7 @@ import android.view.ContextMenu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.activity_premium_dashboard.*
@@ -49,7 +50,6 @@ import org.mariotaku.twidere.adapter.MessagesEntriesAdapter.MessageConversationC
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_TYPES
-import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.data.CursorObjectDataSourceFactory
 import org.mariotaku.twidere.extension.accountKey
@@ -65,11 +65,9 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.GetMessagesTaskEvent
 import org.mariotaku.twidere.promise.MessagePromises
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
-import org.mariotaku.twidere.util.DataStoreUtils
-import org.mariotaku.twidere.util.ErrorInfoStore
-import org.mariotaku.twidere.util.IntentUtils
-import org.mariotaku.twidere.util.Utils
+import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.view.ExtendedRecyclerView
 
 /**
@@ -102,11 +100,11 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
 
     override fun onStart() {
         super.onStart()
-        bus.register(this)
+        BusSingleton.register(this)
     }
 
     override fun onStop() {
-        bus.unregister(this)
+        BusSingleton.unregister(this)
         super.onStop()
     }
 
@@ -124,7 +122,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
     }
 
     override fun onCreateAdapter(context: Context, requestManager: RequestManager): MessagesEntriesAdapter {
-        return MessagesEntriesAdapter(context, this.requestManager)
+        return MessagesEntriesAdapter(context, Glide.with(this))
     }
 
     override fun triggerRefresh(): Boolean {
@@ -189,8 +187,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
         val conversation = adapter.getConversation(info.position)
         val inflater = MenuInflater(context)
         inflater.inflate(R.menu.context_message_entry, menu)
-        menu.setHeaderTitle(conversation.getTitle(context!!, userColorNameManager,
-                preferences[nameFirstKey]).first)
+        menu.setHeaderTitle(conversation.getTitle(context!!, UserColorNameManager.get(context!!)).first)
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
@@ -200,7 +197,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
             R.id.mark_read -> {
                 val conversation = adapter.getConversation(menuInfo.position)
                 // TODO: Promise progress
-                MessagePromises.getInstance(context!!).markRead(conversation.account_key, conversation.id)
+                MessagePromises.get(context!!).markRead(conversation.account_key, conversation.id)
                 return true
             }
         }

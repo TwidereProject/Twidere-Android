@@ -31,7 +31,7 @@ import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
 class SourceAutoCompleteAdapter(context: Context) : SimpleCursorAdapter(context,
         android.R.layout.simple_list_item_1, null, emptyArray<String>(), IntArray(0), 0) {
 
-    private val database = TwidereSQLiteOpenHelper.getInstance(context).singletonWritableDatabase
+    private val database = TwidereSQLiteOpenHelper.get(context).singletonWritableDatabase
 
     private var sourceIdx: Int = 0
 

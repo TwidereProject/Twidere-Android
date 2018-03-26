@@ -32,9 +32,11 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.dagger.component.GeneralComponent
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.ItemCounts
-import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.MultiSelectManager
+import org.mariotaku.twidere.util.OnLinkClickHandler
+import org.mariotaku.twidere.util.PermissionsManager
+import org.mariotaku.twidere.util.TwidereLinkify
 import javax.inject.Inject
 
 open class BaseArrayAdapter<T>(
@@ -46,8 +48,6 @@ open class BaseArrayAdapter<T>(
         IItemCountsAdapter {
     val linkify: TwidereLinkify
 
-    @Inject
-    override lateinit var userColorNameManager: UserColorNameManager
     @Inject
     override lateinit var bidiFormatter: BidiFormatter
     @Inject

@@ -29,15 +29,17 @@ import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.data.fetcher.UsersFetcher
+import org.mariotaku.twidere.data.fetcher.users.UserListMembersFetcher
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.fragment.AbsUsersFragment
 import org.mariotaku.twidere.fragment.DeleteUserListMembersDialogFragment
 import org.mariotaku.twidere.fragment.userlist.UserListFragment
-import org.mariotaku.twidere.data.fetcher.users.UserListMembersFetcher
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.UserListMembersChangedEvent
 import org.mariotaku.twidere.model.util.ParcelableUserListUtils
+import org.mariotaku.twidere.singleton.BusSingleton
+import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.view.ExtendedRecyclerView
 import org.mariotaku.twidere.view.holder.UserViewHolder
 import java.util.*
@@ -71,11 +73,11 @@ class UserListMembersFragment : AbsUsersFragment() {
 
     override fun onStart() {
         super.onStart()
-        bus.register(this)
+        BusSingleton.register(this)
     }
 
     override fun onStop() {
-        bus.unregister(this)
+        BusSingleton.unregister(this)
         super.onStop()
     }
 
@@ -98,16 +100,16 @@ class UserListMembersFragment : AbsUsersFragment() {
         if (accountKey != userKey) return
         val inflater = MenuInflater(context)
         val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo?
-        val user = adapter.getUser(contextMenuInfo!!.position) ?: return
+        val user = adapter.getUser(contextMenuInfo!!.position)
         inflater.inflate(R.menu.action_user_list_member, menu)
-        menu.setHeaderTitle(userColorNameManager.getDisplayName(user))
+        menu.setHeaderTitle(UserColorNameManager.get(context!!).getDisplayName(user))
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         if (!userVisibleHint) return false
         val userList = userList ?: return false
         val contextMenuInfo = item.menuInfo as ExtendedRecyclerView.ContextMenuInfo
-        val user = adapter.getUser(contextMenuInfo.position) ?: return false
+        val user = adapter.getUser(contextMenuInfo.position)
         when (item.itemId) {
             R.id.delete_from_list -> {
                 DeleteUserListMembersDialogFragment.show(fragmentManager!!, userList, user)

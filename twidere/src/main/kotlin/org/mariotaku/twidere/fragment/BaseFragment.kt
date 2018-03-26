@@ -25,14 +25,10 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.text.BidiFormatter
 import android.view.View
-import com.bumptech.glide.Glide
-import com.bumptech.glide.RequestManager
-import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
 import okhttp3.Dns
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.dagger.component.GeneralComponent
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
@@ -49,10 +45,9 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     @Inject
     lateinit var readStateManager: ReadStateManager
     @Inject
-    lateinit var bus: Bus
-    @Inject
     lateinit var multiSelectManager: MultiSelectManager
     @Inject
+    @Deprecated(message = "Deprecated", replaceWith = ReplaceWith("UserColorNameManager.get(context!!)", imports = ["org.mariotaku.twidere.util.UserColorNameManager"]))
     lateinit var userColorNameManager: UserColorNameManager
     @Inject
     lateinit var preferences: SharedPreferences
@@ -83,25 +78,7 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     @Inject
     lateinit var promotionService: PromotionService
 
-    lateinit var requestManager: RequestManager
-        private set
-
     private val actionHelper = IBaseFragment.ActionHelper<BaseFragment>()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        requestManager = Glide.with(this)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        requestManager.onStart()
-    }
-
-    override fun onStop() {
-        requestManager.onStop()
-        super.onStop()
-    }
 
     override fun onResume() {
         super.onResume()
@@ -114,7 +91,6 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     }
 
     override fun onDestroy() {
-        requestManager.onDestroy()
         super.onDestroy()
         DebugModeUtils.watchReferenceLeak(this)
     }

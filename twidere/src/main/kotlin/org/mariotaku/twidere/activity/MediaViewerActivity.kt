@@ -516,7 +516,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         intent.addCategory(Intent.CATEGORY_OPENABLE)
         val extension = fileInfo.extension
         val saveFileName = if (extension != null) {
-            "${fileInfo.name?.removeSuffix("_$extension")}.$extension"
+            "${fileInfo.name.removeSuffix("_$extension")}.$extension"
         } else {
             fileInfo.name
         }

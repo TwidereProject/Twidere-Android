@@ -56,6 +56,7 @@ import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.util.ParcelableMessageUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.UriUtils
@@ -85,12 +86,12 @@ class GetMessagesTask(
 
     override fun beforeExecute() {
         getMessageTasks.add(Messages.CONTENT_URI)
-        bus.post(GetMessagesTaskEvent(Messages.CONTENT_URI, params?.taskTag, true, null))
+        BusSingleton.post(GetMessagesTaskEvent(Messages.CONTENT_URI, params?.taskTag, true, null))
     }
 
     override fun afterExecute(callback: ((Boolean) -> Unit)?, result: Unit) {
         callback?.invoke(true)
-        bus.post(GetMessagesTaskEvent(Messages.CONTENT_URI, params?.taskTag, false, null))
+        BusSingleton.post(GetMessagesTaskEvent(Messages.CONTENT_URI, params?.taskTag, false, null))
         getMessageTasks.remove(Messages.CONTENT_URI)
     }
 

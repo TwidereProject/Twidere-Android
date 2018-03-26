@@ -41,6 +41,7 @@ abstract class BaseService : Service() {
     @Inject
     lateinit var extractor: Extractor
     @Inject
+    @Deprecated(message = "Deprecated", replaceWith = ReplaceWith("UserColorNameManager.get(context!!)", imports = ["org.mariotaku.twidere.util.UserColorNameManager"]))
     lateinit var userColorNameManager: UserColorNameManager
     @Inject
     lateinit var taskServiceRunner: TaskServiceRunner

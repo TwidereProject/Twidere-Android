@@ -27,6 +27,8 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
+import org.mariotaku.twidere.TwidereConstants;
+
 /**
  * Created by mariotaku on 16/3/6.
  */
@@ -47,7 +49,7 @@ public class UserListArguments extends TabArguments implements Parcelable {
     @Override
     public void copyToBundle(@NonNull Bundle bundle) {
         super.copyToBundle(bundle);
-        bundle.putString(EXTRA_LIST_ID, listId);
+        bundle.putString(TwidereConstants.EXTRA_LIST_ID, listId);
     }
 
     @Override

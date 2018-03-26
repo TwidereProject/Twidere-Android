@@ -33,6 +33,8 @@ import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.user
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.promise.FriendshipPromises
+import org.mariotaku.twidere.util.UserColorNameManager
+import org.mariotaku.twidere.util.UserColorNameManager.Companion
 
 class DestroyFriendshipDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
 
@@ -41,7 +43,7 @@ class DestroyFriendshipDialogFragment : BaseDialogFragment(), DialogInterface.On
             DialogInterface.BUTTON_POSITIVE -> {
                 val user = arguments!!.user!!
                 val accountKey = user.account_key ?: return
-                FriendshipPromises.getInstance(context!!).destroy(accountKey, user.key)
+                FriendshipPromises.get(context!!).destroy(accountKey, user.key)
             }
             else -> {
             }
@@ -50,9 +52,8 @@ class DestroyFriendshipDialogFragment : BaseDialogFragment(), DialogInterface.On
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(context!!)
-        val nameFirst = preferences[nameFirstKey]
         val user = arguments!!.user!!
-        val displayName = userColorNameManager.getDisplayName(user)
+        val displayName = UserColorNameManager.get(context!!).getDisplayName(user)
         builder.setTitle(getString(R.string.unfollow_user, displayName))
         builder.setMessage(getString(R.string.unfollow_user_confirm_message, displayName))
         builder.setPositiveButton(android.R.string.ok, this)

@@ -45,7 +45,7 @@ object StatusCardViewFactory {
     }
 
     private fun createCardFragment(status: ParcelableStatus): ContainerView.ViewController? {
-        val card = status.card ?: return null
+        val card = status.attachment?.card ?: return null
         val name = card.name ?: return null
         return when {
             TwitterCardUtils.CARD_NAME_PLAYER == name -> createGenericPlayerFragment(card)

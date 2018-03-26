@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~             Twidere - Twitter client for Android
+  ~
+  ~  Copyright (C) 2012-2018 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:layout_height="wrap_content"
+    tools:layout_width="match_parent"
+    tools:parentTag="org.mariotaku.twidere.view.ColorLabelConstraintLayout">
+
+    <org.mariotaku.twidere.view.NameView
+        android:id="@+id/quotedName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|start"
+        android:paddingEnd="0dp"
+        android:paddingLeft="@dimen/element_spacing_small"
+        android:paddingRight="0dp"
+        android:paddingStart="@dimen/element_spacing_small"
+        android:visibility="gone"
+        app:tltvPrimaryTextColor="?android:textColorPrimary"
+        app:tltvPrimaryTextStyle="bold"
+        app:tltvSecondaryTextColor="?android:textColorSecondary"
+        tools:visibility="visible"/>
+
+    <org.mariotaku.twidere.view.TimelineContentTextView
+        android:id="@+id/quotedText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/element_spacing_small"
+        android:paddingEnd="0dp"
+        android:paddingLeft="@dimen/element_spacing_small"
+        android:paddingRight="0dp"
+        android:paddingStart="@dimen/element_spacing_small"
+        android:paddingTop="@dimen/element_spacing_small"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="?android:attr/textColorPrimary"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/quotedName"
+        tools:text="@string/sample_status_text"
+        tools:visibility="visible"/>
+
+    <org.mariotaku.twidere.view.DrawableTintTextView
+        android:id="@+id/quotedMediaLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/element_spacing_xsmall"
+        android:drawableLeft="@drawable/ic_label_gallery"
+        android:drawableStart="@drawable/ic_label_gallery"
+        android:gravity="center_vertical"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:textStyle="bold"
+        app:drawableTint="?android:textColorSecondary"
+        app:layout_constraintTop_toBottomOf="@id/quotedText"
+        tools:text="@string/label_media"
+        tools:visibility="visible"/>
+
+    <org.mariotaku.twidere.view.CardMediaContainer
+        android:id="@+id/quotedMediaPreview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:horizontalSpacing="@dimen/element_spacing_xsmall"
+        android:verticalSpacing="@dimen/element_spacing_xsmall"
+        app:layout_constraintTop_toBottomOf="@id/quotedMediaLabel"
+        tools:layout="@layout/layout_card_media_preview"
+        tools:visibility="gone"/>
+
+</merge>

@@ -18,6 +18,7 @@ import android.view.ContextMenu.ContextMenuInfo
 import android.widget.AdapterView
 import android.widget.AdapterView.AdapterContextMenuInfo
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.layout_draggable_list_with_empty_view.*
 import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.task
@@ -68,7 +69,7 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
         linkHandlerTitle = getString(R.string.title_accounts)
         val context = context!!
         val am = AccountManager.get(context)
-        adapter = AccountDetailsAdapter(context, requestManager).apply {
+        adapter = AccountDetailsAdapter(context, Glide.with(this)).apply {
             sortEnabled = true
             switchEnabled = true
             accountToggleListener = { pos, checked ->

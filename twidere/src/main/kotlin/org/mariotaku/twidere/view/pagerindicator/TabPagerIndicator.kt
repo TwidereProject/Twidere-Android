@@ -394,10 +394,6 @@ class TabPagerIndicator(context: Context, attrs: AttributeSet? = null) : Recycle
 
         internal var isTabExpandEnabled: Boolean = false
 
-        init {
-            isAutoMeasureEnabled = true
-        }
-
         override fun measureChildWithMargins(child: View, widthUsed: Int, heightUsed: Int) {
             // first get default measured size
             super.measureChildWithMargins(child, widthUsed, heightUsed)
@@ -415,9 +411,9 @@ class TabPagerIndicator(context: Context, attrs: AttributeSet? = null) : Recycle
             child.measure(widthMeasureSpec, heightMeasureSpec)
         }
 
-        override fun isLayoutRTL(): Boolean {
-            return false
-        }
+        override fun isLayoutRTL(): Boolean = false
+
+        override fun isAutoMeasureEnabled(): Boolean = true
     }
 
     private class TabPagerIndicatorAdapter internal constructor(private val indicator: TabPagerIndicator?) : RecyclerView.Adapter<TabItemHolder>() {

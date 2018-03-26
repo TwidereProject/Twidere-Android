@@ -27,6 +27,7 @@ import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener
 import android.view.*
 import android.widget.AbsListView
 import android.widget.ListAdapter
+import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.fragment_content_listview.*
 import kotlinx.android.synthetic.main.layout_content_fragment_common.*
@@ -132,7 +133,7 @@ abstract class AbsContentListViewFragment<A : ListAdapter> : BaseFragment(),
                 R.color.bg_refresh_progress_color_light, R.color.bg_refresh_progress_color_dark)
         swipeLayout.setOnRefreshListener(this)
         swipeLayout.setProgressBackgroundColorSchemeResource(colorRes)
-        adapter = onCreateAdapter(context!!, requestManager)
+        adapter = onCreateAdapter(context!!, Glide.with(this))
         listView.setOnTouchListener { _, event ->
             if (event.actionMasked == MotionEvent.ACTION_DOWN) {
                 updateRefreshProgressOffset()

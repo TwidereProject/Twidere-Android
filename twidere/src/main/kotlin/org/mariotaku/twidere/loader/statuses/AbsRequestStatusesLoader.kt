@@ -78,8 +78,6 @@ abstract class AbsRequestStatusesLoader(
 
     @Inject
     lateinit var preferences: SharedPreferences
-    @Inject
-    lateinit var userColorNameManager: UserColorNameManager
 
     private val exceptionRef = AtomicReference<MicroBlogException?>()
 

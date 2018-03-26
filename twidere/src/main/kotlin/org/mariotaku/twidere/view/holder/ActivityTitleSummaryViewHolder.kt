@@ -27,7 +27,6 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.view.View
 import android.view.ViewGroup
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.list_item_activity_summary_compact.view.*
 import org.mariotaku.ktextension.applyFontFamily
 import org.mariotaku.ktextension.spannable
@@ -35,11 +34,12 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter
 import org.mariotaku.twidere.adapter.iface.IActivitiesAdapter
 import org.mariotaku.twidere.extension.loadProfileImage
-import org.mariotaku.twidere.model.ActivityTitleSummaryMessage
+import org.mariotaku.twidere.model.ActivityTitleSummaryMessage.Companion.get
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.ParcelableLiteUser
 import org.mariotaku.twidere.model.placeholder.PlaceholderObject
 import org.mariotaku.twidere.text.style.PlaceholderLineSpan
+import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.view.ShortTimeView
 import org.mariotaku.twidere.view.holder.status.StatusViewHolder
 
@@ -86,7 +86,7 @@ class ActivityTitleSummaryViewHolder(
         profileImageMoreNumber.visibility = View.GONE
 
         profileImageViews.forEach {
-            Glide.clear(it)
+            adapter.requestManager.clear(it)
             it.setImageDrawable(null)
         }
     }
@@ -103,7 +103,7 @@ class ActivityTitleSummaryViewHolder(
             return
         }
         itemView.visibility = View.VISIBLE
-        val message = ActivityTitleSummaryMessage.get(context, adapter.userColorNameManager,
+        val message = get(context, UserColorNameManager.get(adapter.context),
                 activity, sources, summaryView.currentTextColor, adapter.useStarsForLikes,
                 adapter.isNameFirst)
         if (message == null) {

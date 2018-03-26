@@ -40,7 +40,6 @@ import org.mariotaku.twidere.activity.QuickSearchBarActivity
 import org.mariotaku.twidere.adapter.TrendsAdapter
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_EXTRAS
 import org.mariotaku.twidere.constant.localTrendsWoeIdKey
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.fragment.iface.IFloatingActionButtonFragment
 import org.mariotaku.twidere.model.FloatingActionButtonInfo
 import org.mariotaku.twidere.model.UserKey
@@ -48,6 +47,7 @@ import org.mariotaku.twidere.model.event.TrendsRefreshedEvent
 import org.mariotaku.twidere.model.tab.extra.TrendsTabExtras
 import org.mariotaku.twidere.promise.GetTrendsPromise
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.util.IntentUtils.openTweetSearch
 import org.mariotaku.twidere.util.Utils
 
@@ -129,11 +129,11 @@ class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), L
     override fun onStart() {
         super.onStart()
         loaderManager.restartLoader(0, null, this)
-        bus.register(this)
+        BusSingleton.register(this)
     }
 
     override fun onStop() {
-        bus.unregister(this)
+        BusSingleton.unregister(this)
         super.onStop()
     }
 

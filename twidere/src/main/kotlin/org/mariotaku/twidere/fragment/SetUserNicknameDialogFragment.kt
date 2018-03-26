@@ -34,22 +34,24 @@ import org.mariotaku.twidere.extension.name
 import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.extension.userKey
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.util.UserColorNameManager
 
 class SetUserNicknameDialogFragment : BaseDialogFragment(), OnClickListener {
 
     override fun onClick(dialog: DialogInterface, which: Int) {
         val editName = (dialog as AlertDialog).editName
         val userKey = arguments!!.userKey!!
+        val manager = UserColorNameManager.get(context!!)
         when (which) {
             DialogInterface.BUTTON_POSITIVE -> {
                 if (editName.empty) {
-                    userColorNameManager.clearUserNickname(userKey)
+                    manager.clearUserNickname(userKey)
                 } else {
-                    userColorNameManager.setUserNickname(userKey, editName.text.toString())
+                    manager.setUserNickname(userKey, editName.text.toString())
                 }
             }
             DialogInterface.BUTTON_NEUTRAL -> {
-                userColorNameManager.clearUserNickname(userKey)
+                manager.clearUserNickname(userKey)
             }
         }
 

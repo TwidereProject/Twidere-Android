@@ -67,6 +67,7 @@ import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.data.observe
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.model.originalId
+import org.mariotaku.twidere.extension.model.quoted
 import org.mariotaku.twidere.extension.view.calculateSpaceItemHeight
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BaseFragment
@@ -78,11 +79,13 @@ import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.task.AbsAccountRequestTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.ContentScrollHandler.ContentListSupport
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.util.RecyclerViewScrollHandler.RecyclerViewCallback
+import org.mariotaku.twidere.util.UserColorNameManager.Companion
 import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener
 import org.mariotaku.twidere.view.ExtendedRecyclerView
 import org.mariotaku.twidere.view.holder.GapViewHolder
@@ -160,16 +163,15 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     private lateinit var statusActivitySummaryLiveData: StatusActivitySummaryLiveData
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        val activity = activity ?: return
         when (requestCode) {
             REQUEST_SET_COLOR -> {
                 val status = adapter.status ?: return
                 if (resultCode == Activity.RESULT_OK) {
                     if (data == null) return
                     val color = data.getIntExtra(EXTRA_COLOR, Color.TRANSPARENT)
-                    userColorNameManager.setUserColor(status.user_key, color)
+                    UserColorNameManager.get(context!!).setUserColor(status.user_key, color)
                 } else if (resultCode == ColorPickerDialogActivity.RESULT_CLEARED) {
-                    userColorNameManager.clearUserColor(status.user_key)
+                    UserColorNameManager.get(context!!).clearUserColor(status.user_key)
                 }
                 loaderManager.restartLoader(LOADER_ID_DETAIL_STATUS, arguments, this)
             }
@@ -231,7 +233,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     override fun onQuotedMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia, statusPosition: Int) {
         val status = adapter.getStatus(statusPosition)
-        val quotedMedia = status.quoted_media ?: return
+        val quotedMedia = status.quoted?.media ?: return
         IntentUtils.openMedia(activity!!, status.account_key, status.is_possibly_sensitive, status,
                 current, quotedMedia, preferences[newDocumentApiKey],
                 preferences[displaySensitiveContentsKey])
@@ -258,7 +260,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
         val status = adapter.getStatus(position)
-        val quotedId = status.quoted_id ?: return
+        val quotedId = status.quoted?.id ?: return
         IntentUtils.openStatus(activity!!, status.account_key, quotedId)
     }
 
@@ -281,11 +283,11 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     override fun onMediaClick(view: View, current: ParcelableMedia, accountKey: UserKey?, id: Long) {
         val status = adapter.status ?: return
-        if ((view.parent as View).id == R.id.quotedMediaPreview && status.quoted_media != null) {
-            IntentUtils.openMediaDirectly(activity!!, accountKey, status.quoted_media!!, current,
+        if ((view.parent as View).id == R.id.quotedMediaPreview && status.attachment?.quoted?.media != null) {
+            IntentUtils.openMediaDirectly(activity!!, accountKey, status.attachment?.quoted?.media!!, current,
                     newDocument = preferences[newDocumentApiKey], status = status)
-        } else if (status.media != null) {
-            IntentUtils.openMediaDirectly(activity!!, accountKey, status.media!!, current,
+        } else if (status.attachment?.media != null) {
+            IntentUtils.openMediaDirectly(activity!!, accountKey, status.attachment?.media!!, current,
                     newDocument = preferences[newDocumentApiKey], status = status)
         }
     }
@@ -503,7 +505,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     override fun onStart() {
         super.onStart()
-        bus.register(this)
+        BusSingleton.register(this)
         recyclerView.addOnScrollListener(scrollListener)
         recyclerView.setOnTouchListener(scrollListener.touchListener)
     }
@@ -511,7 +513,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     override fun onStop() {
         recyclerView.setOnTouchListener(null)
         recyclerView.removeOnScrollListener(scrollListener)
-        bus.unregister(this)
+        BusSingleton.unregister(this)
         super.onStop()
     }
 
@@ -521,7 +523,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         val status = adapter.getStatus(contextMenuInfo.position)
         val inflater = MenuInflater(context)
         inflater.inflate(R.menu.action_status, menu)
-        MenuUtils.setupForStatus(context!!, menu, preferences, userColorNameManager, status)
+        MenuUtils.setupForStatus(context!!, menu, preferences, UserColorNameManager.get(context!!), status)
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
@@ -536,7 +538,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             return true
         }
         return MenuUtils.handleStatusClick(activity!!, this, fragmentManager!!,
-                preferences, userColorNameManager, status, item)
+                preferences, UserColorNameManager.get(context!!), status, item)
     }
 
     @Subscribe

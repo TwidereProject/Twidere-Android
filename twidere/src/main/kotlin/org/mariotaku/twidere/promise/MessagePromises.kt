@@ -49,6 +49,7 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.UnreadCountUpdatedEvent
 import org.mariotaku.twidere.model.message.conversation.TwitterOfficialConversationExtras
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
+import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.task.twitter.message.SendMessageTask
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.TwidereQueryBuilder
@@ -58,14 +59,8 @@ import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 import javax.inject.Inject
 
 class MessagePromises private constructor(private val application: Application) {
-    @Inject
-    lateinit var bus: Bus
 
     private val accountManager = AccountManager.get(application)
-
-    init {
-        GeneralComponent.get(application).inject(this)
-    }
 
     fun destroyConversation(accountKey: UserKey, conversationId: String): Promise<Boolean, Exception> = task {
         val account = accountManager.getDetailsOrThrow(accountKey, true)
@@ -138,7 +133,7 @@ class MessagePromises private constructor(private val application: Application) 
         updateLocalLastRead(application.contentResolver, accountKey, conversationId, lastReadEvent)
         return@task true
     }.successUi {
-        bus.post(UnreadCountUpdatedEvent(-1))
+        BusSingleton.post(UnreadCountUpdatedEvent(-1))
     }
 
 
@@ -171,7 +166,7 @@ class MessagePromises private constructor(private val application: Application) 
         }
         return@task true
     }.successUi {
-        bus.post(UnreadCountUpdatedEvent(-1))
+        BusSingleton.post(UnreadCountUpdatedEvent(-1))
     }
 
     private fun clearMessagesSync(account: AccountDetails, conversationId: String): Boolean {

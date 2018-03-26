@@ -212,7 +212,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         bottomMenuAnimator = ViewAnimator()
         bottomMenuAnimator.setupViews()
 
-        mediaPreviewAdapter = MediaPreviewAdapter(this, requestManager)
+        mediaPreviewAdapter = MediaPreviewAdapter(this, Glide.with(this))
         mediaPreviewAdapter.listener = object : MediaPreviewAdapter.Listener {
             override fun onEditClick(position: Int, holder: MediaPreviewViewHolder) {
                 attachedMediaPreview.showContextMenuForChild(holder.itemView)
@@ -832,11 +832,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
         val displayDoneIcon = isAccountSelectorVisible
 
+        val requestManager = Glide.with(this)
         if (single != null) {
             accountsCount.text = null
 
             if (displayDoneIcon) {
-                Glide.clear(accountProfileImage)
+                requestManager.clear(accountProfileImage)
                 accountProfileImage.setColorFilter(ThemeUtils.getColorFromAttribute(this,
                         android.R.attr.colorForeground))
                 accountProfileImage.scaleType = ImageView.ScaleType.CENTER_INSIDE
@@ -852,7 +853,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         } else {
             accountsCount.text = accounts.size.toString()
 
-            Glide.clear(accountProfileImage)
+            requestManager.clear(accountProfileImage)
             if (displayDoneIcon) {
                 accountProfileImage.setColorFilter(ThemeUtils.getColorFromAttribute(this,
                         android.R.attr.colorForeground))
@@ -965,14 +966,15 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         if (status.is_retweet && !TextUtils.isEmpty(status.retweeted_by_user_screen_name)) {
             status.retweeted_by_user_acct?.addTo(mentions)
         }
-        if (status.is_quote && !TextUtils.isEmpty(status.quoted_user_screen_name)) {
-            status.quoted_user_acct?.addTo(mentions)
+        if (status.is_quote && !TextUtils.isEmpty(status.quoted?.user_screen_name)) {
+            status.quoted?.user_acct?.addTo(mentions)
         }
         when (statusAccount.type) {
             AccountType.FANFOU -> {
                 addFanfouHtmlToMentions(status.text_unescaped, status.spans, mentions)
-                if (status.is_quote) {
-                    addFanfouHtmlToMentions(status.quoted_text_unescaped, status.quoted_spans, mentions)
+                val quoted = status.quoted
+                if (status.is_quote && quoted!= null) {
+                    addFanfouHtmlToMentions(quoted.text_unescaped, quoted.spans, mentions)
                 }
             }
             AccountType.MASTODON -> {
@@ -982,11 +984,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 status.mentions.filterNot {
                     it.key == status.account_key || it.screen_name.isNullOrEmpty()
                 }.mapTo(mentions) { it.getAcct(statusAccount.key) }
-                mentions.addAll(extractor.extractMentionedScreennames(status.quoted_text_plain))
+                mentions.addAll(extractor.extractMentionedScreennames(status.quoted?.text_plain))
             } else {
                 mentions.addAll(extractor.extractMentionedScreennames(status.text_plain))
                 if (status.is_quote) {
-                    mentions.addAll(extractor.extractMentionedScreennames(status.quoted_text_plain))
+                    mentions.addAll(extractor.extractMentionedScreennames(status.quoted?.text_plain))
                 }
             }
         }
@@ -1146,7 +1148,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             showDefaultLabelAndHint()
             return false
         }
-        val replyToName = userColorNameManager.getDisplayName(status)
+        val replyToName = UserColorNameManager.get(this).getDisplayName(status)
         replyLabel.spannable = getString(R.string.label_quote_name_text, replyToName, status.text_unescaped)
         replyLabel.visibility = View.VISIBLE
         editText.hint = getString(R.string.label_quote_name, replyToName)
@@ -1158,7 +1160,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             showDefaultLabelAndHint()
             return false
         }
-        val replyToName = userColorNameManager.getDisplayName(status)
+        val replyToName = UserColorNameManager.get(this).getDisplayName(status)
         replyLabel.spannable = getString(R.string.label_reply_name_text, replyToName, status.text_unescaped)
         replyLabel.visibility = View.VISIBLE
         editText.hint = getString(R.string.label_reply_name, replyToName)
@@ -2024,7 +2026,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private class AccountIconsAdapter(
             private val activity: ComposeActivity
-    ) : BaseRecyclerViewAdapter<AccountIconViewHolder>(activity, activity.requestManager) {
+    ) : BaseRecyclerViewAdapter<AccountIconViewHolder>(activity, Glide.with(activity)) {
         private val inflater: LayoutInflater = activity.layoutInflater
         private val selection: MutableMap<UserKey, Boolean> = HashMap()
 
