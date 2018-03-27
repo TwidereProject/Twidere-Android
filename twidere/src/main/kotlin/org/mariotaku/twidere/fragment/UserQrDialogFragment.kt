@@ -58,6 +58,7 @@ import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.SaveFileResult
 import org.mariotaku.twidere.provider.ShareProvider
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.LinkCreator
 import org.mariotaku.twidere.util.TwidereColorUtils
 import org.mariotaku.twidere.util.qr.QrCodeData
@@ -95,14 +96,14 @@ class UserQrDialogFragment : BaseDialogFragment() {
             saveQrImage()
         }
         qrContainer.setOnClickListener {
-            val artEnabled = !preferences[qrArtEnabledKey]
-            preferences[qrArtEnabledKey] = artEnabled
+            val artEnabled = !PreferencesSingleton.get(context!!)[qrArtEnabledKey]
+            PreferencesSingleton.get(context!!)[qrArtEnabledKey] = artEnabled
             displayQrCode(artEnabled)
         }
         view.setOnClickListener {
             dismiss()
         }
-        displayQrCode(preferences[qrArtEnabledKey])
+        displayQrCode(PreferencesSingleton.get(context!!)[qrArtEnabledKey])
     }
 
     private fun displayQrCode(art: Boolean) {

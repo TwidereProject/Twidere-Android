@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.promise
 
 import android.app.Application
-import android.content.SharedPreferences
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.task
 import org.mariotaku.kpreferences.get
@@ -29,10 +28,10 @@ import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.constant.defaultFeatureLastUpdated
 import org.mariotaku.twidere.dagger.component.GeneralComponent
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.loadRemoteSettings
 import org.mariotaku.twidere.extension.model.save
 import org.mariotaku.twidere.model.DefaultFeatures
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 import java.util.concurrent.TimeUnit
@@ -44,28 +43,29 @@ class DefaultFeaturesPromises(private val application: Application) {
     @Inject
     lateinit var defaultFeatures: DefaultFeatures
     @Inject
-    lateinit var preferences: SharedPreferences
-    @Inject
     lateinit var restHttpClient: RestHttpClient
 
     init {
         GeneralComponent.get(application).inject(this)
     }
 
-    fun fetch(): Promise<Boolean, Exception> = task {
-        val lastUpdated = preferences[defaultFeatureLastUpdated]
-        if (lastUpdated > 0 && TimeUnit.MILLISECONDS.toHours(System.currentTimeMillis() - lastUpdated) < 12) {
-            return@task false
-        }
-        defaultFeatures.loadRemoteSettings(restHttpClient)
+    fun fetch(): Promise<Boolean, Exception> {
+        val preferences = PreferencesSingleton.get(application)
+        return task {
+            val lastUpdated = preferences[defaultFeatureLastUpdated]
+            if (lastUpdated > 0 && TimeUnit.MILLISECONDS.toHours(System.currentTimeMillis() - lastUpdated) < 12) {
+                return@task false
+            }
+            defaultFeatures.loadRemoteSettings(restHttpClient)
 
-    }.success {
-        defaultFeatures.save(preferences)
-        DebugLog.d(TwidereConstants.LOGTAG, "Loaded remote features")
-    }.fail {
-        DebugLog.w(TwidereConstants.LOGTAG, "Unable to load remote features", it)
-    }.always {
-        preferences[defaultFeatureLastUpdated] = System.currentTimeMillis()
+        }.success {
+            defaultFeatures.save(preferences)
+            DebugLog.d(TwidereConstants.LOGTAG, "Loaded remote features")
+        }.fail {
+            DebugLog.w(TwidereConstants.LOGTAG, "Unable to load remote features", it)
+        }.always {
+            preferences[defaultFeatureLastUpdated] = System.currentTimeMillis()
+        }
     }
 
     companion object : ApplicationContextSingletonHolder<DefaultFeaturesPromises>(::DefaultFeaturesPromises)

@@ -66,6 +66,7 @@ import org.mariotaku.twidere.model.event.GetMessagesTaskEvent
 import org.mariotaku.twidere.promise.MessagePromises
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.singleton.BusSingleton
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.view.ExtendedRecyclerView
@@ -161,7 +162,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
     override fun onProfileImageClick(position: Int) {
         val conversation = adapter.getConversation(position)
         val user = conversation.user ?: return
-        IntentUtils.openUserProfile(context!!, user, preferences[newDocumentApiKey])
+        IntentUtils.openUserProfile(context!!, user, PreferencesSingleton.get(context!!)[newDocumentApiKey])
     }
 
     override fun getActionInfo(tag: String): FloatingActionButtonInfo? {

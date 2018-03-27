@@ -34,6 +34,7 @@ import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_LIVE_WALLPAP
 import org.mariotaku.twidere.nyan.NyanDaydreamService
 import org.mariotaku.twidere.nyan.NyanSurfaceHelper
 import org.mariotaku.twidere.nyan.NyanWallpaperService
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 
 class NyanActivity : BaseActivity(), OnLongClickListener, OnSharedPreferenceChangeListener {
 
@@ -97,7 +98,7 @@ class NyanActivity : BaseActivity(), OnLongClickListener, OnSharedPreferenceChan
 
     private fun updateSurface() {
         val def = resources.getInteger(R.integer.default_live_wallpaper_scale)
-        helper.setScale(preferences.getInt(KEY_LIVE_WALLPAPER_SCALE, def).toFloat())
+        helper.setScale(PreferencesSingleton.get(this).getInt(KEY_LIVE_WALLPAPER_SCALE, def).toFloat())
     }
 
 }

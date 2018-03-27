@@ -83,6 +83,7 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.SupportTabSpec
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.util.UserColorNameManager.Companion
@@ -120,7 +121,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     @SuppressLint("RestrictedApi")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        accountsAdapter = AccountSelectorAdapter(context!!, preferences, Glide.with(this)).also {
+        accountsAdapter = AccountSelectorAdapter(context!!, PreferencesSingleton.get(context!!), Glide.with(this)).also {
             it.listener = this
         }
         accountsSelector.adapter = accountsAdapter
@@ -145,7 +146,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         hasPrevAccountIndicator.alpha = 0f
         hasNextAccountIndicator.alpha = 0f
 
-        val profileImageStyle = preferences[profileImageStyleKey]
+        val profileImageStyle = PreferencesSingleton.get(context!!)[profileImageStyleKey]
         floatingProfileImageSnapshot.style = profileImageStyle
         accountProfileImageView.style = profileImageStyle
 
@@ -184,10 +185,10 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             layoutInflater.inflate(R.layout.layout_account_dashboard_profile_banner,
                     accountProfileBanner, false)
         }
-        accountProfileNameView.nameFirst = preferences[nameFirstKey]
+        accountProfileNameView.nameFirst = PreferencesSingleton.get(context!!)[nameFirstKey]
 
         navigationView.setNavigationItemSelectedListener(this)
-        preferences.registerOnSharedPreferenceChangeListener(this)
+        PreferencesSingleton.get(context!!).registerOnSharedPreferenceChangeListener(this)
 
         updateSystemWindowsInsets()
     }
@@ -247,10 +248,10 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
                 val activity = activity
                 if (account.user != null) {
                     IntentUtils.openUserProfile(activity!!, account.user!!,
-                            preferences[newDocumentApiKey], null)
+                            PreferencesSingleton.get(context!!)[newDocumentApiKey], null)
                 } else {
                     IntentUtils.openUserProfile(activity!!, account.key, account.key,
-                            account.user.screen_name, null, preferences[newDocumentApiKey],
+                            account.user.screen_name, null, PreferencesSingleton.get(context!!)[newDocumentApiKey],
                             null)
                 }
             }
@@ -300,9 +301,9 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             noAccountContainer.visibility = View.VISIBLE
             profileContainer.visibility = View.INVISIBLE
         }
-        useStarsForLikes = preferences[iWantMyStarsBackKey]
+        useStarsForLikes = PreferencesSingleton.get(context!!)[iWantMyStarsBackKey]
         accountsAdapter.accounts = accounts
-        val defaultKey = preferences.getString(KEY_DEFAULT_ACCOUNT_KEY, null)?.let(UserKey::valueOf)
+        val defaultKey = PreferencesSingleton.get(context!!).getString(KEY_DEFAULT_ACCOUNT_KEY, null)?.let(UserKey::valueOf)
                 ?: accounts.firstOrNull { it.activated }?.key
         val defaultAccount = accounts.firstOrNull { it.key.maybeEquals(defaultKey) }
         accountsAdapter.selectedAccount = defaultAccount
@@ -365,7 +366,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         menu.setItemAvailability(R.id.favorites, useStarsForLikes)
         menu.setItemAvailability(R.id.likes, !useStarsForLikes)
         menu.setItemAvailability(R.id.premium_features, extraFeaturesService.isSupported())
-        if (preferences[extraFeaturesNoticeVersionKey] < EXTRA_FEATURES_NOTICE_VERSION) {
+        if (PreferencesSingleton.get(context!!)[extraFeaturesNoticeVersionKey] < EXTRA_FEATURES_NOTICE_VERSION) {
             val icon = ContextCompat.getDrawable(activity, R.drawable.ic_action_infinity)!!
             val color = ContextCompat.getColor(activity, R.color.material_red)
             val size = resources.getDimensionPixelSize(R.dimen.element_spacing_msmall)
@@ -475,7 +476,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
                 //TODO complete border color
                 clickedColors = clickedImageView.borderColors
                 val oldSelectedAccount = accountsAdapter.selectedAccount ?: return
-                val profileImageStyle = preferences[profileImageStyleKey]
+                val profileImageStyle = PreferencesSingleton.get(context!!)[profileImageStyleKey]
                 Glide.with(this@AccountsDashboardFragment).loadProfileImage(activity, oldSelectedAccount,
                         profileImageStyle, clickedImageView.cornerRadius, clickedImageView.cornerRadiusRatio)
                         .into(clickedImageView).onLoadStarted(profileDrawable)
@@ -500,7 +501,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             }
 
             private fun finishAnimation() {
-                preferences.edit()
+                PreferencesSingleton.get(context!!).edit()
                         .putString(KEY_DEFAULT_ACCOUNT_KEY, details.key.toString())
                         .apply()
                 accountsAdapter.selectedAccount = details
@@ -556,7 +557,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         profileContainer.contentDescription = getString(R.string.content_description_accounts_selector_current,
                 UserColorNameManager.get(context!!).getDisplayName(user))
 
-        Glide.with(this).loadProfileImage(activity, account, preferences[profileImageStyleKey],
+        Glide.with(this).loadProfileImage(activity, account, PreferencesSingleton.get(context!!)[profileImageStyleKey],
                 accountProfileImageView.cornerRadius, accountProfileImageView.cornerRadiusRatio,
                 ProfileImageSize.REASONABLY_SMALL).apply(RequestOptions.placeholderOf(profileImageSnapshot)).into(accountProfileImageView)
         //TODO complete border color
@@ -625,7 +626,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             R.id.premium_features -> {
                 val intent = Intent(activity, PremiumDashboardActivity::class.java)
                 startActivity(intent)
-                preferences[extraFeaturesNoticeVersionKey] = EXTRA_FEATURES_NOTICE_VERSION
+                PreferencesSingleton.get(context!!)[extraFeaturesNoticeVersionKey] = EXTRA_FEATURES_NOTICE_VERSION
                 closeAccountsDrawer()
             }
             R.id.settings -> {

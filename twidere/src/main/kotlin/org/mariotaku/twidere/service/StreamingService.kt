@@ -42,6 +42,7 @@ import org.mariotaku.twidere.model.notification.NotificationChannelSpec
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.provider.TwidereDataStore.*
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
 import org.mariotaku.twidere.util.BatteryManagerCompat
@@ -110,7 +111,8 @@ class StreamingService : BaseService() {
      * @return True if there're enabled accounts, false if request not met and service should be stopped
      */
     private fun setupStreaming(): Boolean {
-        if (!preferences[streamingEnabledKey]) {
+        val preferences1 = PreferencesSingleton.get(this)
+        if (!preferences1[streamingEnabledKey]) {
             return false
         }
         if (!activityTracker.isHomeActivityLaunched) {
@@ -122,12 +124,12 @@ class StreamingService : BaseService() {
         }
         // Quit if connection metered (with preference)
         val isNetworkMetered = ConnectivityManagerCompat.isActiveNetworkMetered(connectivityManager)
-        if (preferences[streamingNonMeteredNetworkKey] && isNetworkMetered) {
+        if (preferences1[streamingNonMeteredNetworkKey] && isNetworkMetered) {
             return false
         }
         // Quit if not charging (with preference)
         val isCharging = BatteryManagerCompat.isCharging(this)
-        if (preferences[streamingPowerSavingKey] && !isCharging) {
+        if (preferences1[streamingPowerSavingKey] && !isCharging) {
             return false
         }
         // Quit if no streaming instance available
@@ -141,6 +143,7 @@ class StreamingService : BaseService() {
     private fun updateStreamingInstances(): Boolean {
         val am = AccountManager.get(this)
         val supportedAccounts = am.getAllDetails(true).filter { it.isStreamingSupported }
+        val preferences = PreferencesSingleton.get(this)
         val supportedPrefs = supportedAccounts.map { AccountPreferences(this, preferences, it.key) }
         val enabledAccounts = supportedAccounts.filter { account ->
             return@filter supportedPrefs.any {

@@ -26,6 +26,7 @@ import org.mariotaku.twidere.extension.setSelectedItem
 import org.mariotaku.twidere.loader.DefaultAPIConfigLoader
 import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.model.account.cred.Credentials
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.view.ConsumerKeySecretValidator
 
 class APIEditorDialogFragment : BaseDialogFragment() {
@@ -46,7 +47,7 @@ class APIEditorDialogFragment : BaseDialogFragment() {
             } else if (host is APIEditorCallback) {
                 host.onSaveAPIConfig(applyCustomAPIConfig())
             } else {
-                preferences[defaultAPIConfigKey] = applyCustomAPIConfig()
+                PreferencesSingleton.get(context!!)[defaultAPIConfigKey] = applyCustomAPIConfig()
             }
         }
         builder.setNegativeButton(android.R.string.cancel, null)
@@ -84,7 +85,7 @@ class APIEditorDialogFragment : BaseDialogFragment() {
             if (savedInstanceState != null) {
                 apiConfig = savedInstanceState.getParcelable(EXTRA_API_CONFIG)
             } else {
-                apiConfig = arguments?.getParcelable(EXTRA_API_CONFIG) ?: preferences[defaultAPIConfigKey]
+                apiConfig = arguments?.getParcelable(EXTRA_API_CONFIG) ?: PreferencesSingleton.get(context!!)[defaultAPIConfigKey]
             }
             displayCustomApiConfig()
         }

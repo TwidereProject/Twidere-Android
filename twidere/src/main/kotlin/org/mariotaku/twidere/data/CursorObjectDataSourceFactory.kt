@@ -42,7 +42,7 @@ class CursorObjectDataSourceFactory<T : Any>(
         val sortOrder: String? = null,
         val cls: Class<T>,
         val processor: DataSourceItemProcessor<T>? = null
-) : DataSource.Factory<Int, T> {
+) : DataSource.Factory<Int, T>() {
 
     @WorkerThread
     override fun create(): DataSource<Int, T> {

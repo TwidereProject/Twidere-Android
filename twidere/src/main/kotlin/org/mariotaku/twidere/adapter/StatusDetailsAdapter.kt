@@ -44,6 +44,7 @@ import org.mariotaku.twidere.extension.model.originalId
 import org.mariotaku.twidere.extension.model.retweet_sort_id
 import org.mariotaku.twidere.fragment.status.StatusFragment
 import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler
 import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.TwidereLinkify
@@ -63,17 +64,17 @@ class StatusDetailsAdapter(
 
     override val itemCounts = ItemCounts(ITEM_TYPES_SUM)
 
-    override val nameFirst = preferences[nameFirstKey]
-    override val mediaPreviewStyle = preferences[mediaPreviewStyleKey]
-    override val linkHighlightingStyle = preferences[linkHighlightOptionKey]
-    override val lightFont = preferences[lightFontKey]
-    override val mediaPreviewEnabled = preferences[mediaPreviewKey]
-    override val sensitiveContentEnabled = preferences[displaySensitiveContentsKey]
-    override val useStarsForLikes = preferences[iWantMyStarsBackKey]
+    override val nameFirst = PreferencesSingleton.get(context)[nameFirstKey]
+    override val mediaPreviewStyle = PreferencesSingleton.get(context)[mediaPreviewStyleKey]
+    override val linkHighlightingStyle = PreferencesSingleton.get(context)[linkHighlightOptionKey]
+    override val lightFont = PreferencesSingleton.get(context)[lightFontKey]
+    override val mediaPreviewEnabled = PreferencesSingleton.get(context)[mediaPreviewKey]
+    override val sensitiveContentEnabled = PreferencesSingleton.get(context)[displaySensitiveContentsKey]
+    override val useStarsForLikes = PreferencesSingleton.get(context)[iWantMyStarsBackKey]
 
     private val inflater: LayoutInflater
     private val cardBackgroundColor: Int
-    private val showCardActions = !preferences[hideCardActionsKey]
+    private val showCardActions = !PreferencesSingleton.get(context)[hideCardActionsKey]
     private var recyclerView: RecyclerView? = null
     private var detailMediaExpanded: Boolean = false
 
@@ -158,8 +159,8 @@ class StatusDetailsAdapter(
         itemCounts[ITEM_IDX_REPLY_LOAD_MORE] = 1
         inflater = LayoutInflater.from(context)
         cardBackgroundColor = ThemeUtils.getCardBackgroundColor(context,
-                preferences[themeBackgroundOptionKey], preferences[themeBackgroundAlphaKey])
-        val listener = StatusAdapterLinkClickHandler<List<ParcelableStatus>>(context, preferences)
+                PreferencesSingleton.get(this.context)[themeBackgroundOptionKey], PreferencesSingleton.get(this.context)[themeBackgroundAlphaKey])
+        val listener = StatusAdapterLinkClickHandler<List<ParcelableStatus>>(context, PreferencesSingleton.get(this.context))
         listener.setAdapter(this)
         twidereLinkify = TwidereLinkify(listener)
     }

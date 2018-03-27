@@ -2,14 +2,12 @@ package org.mariotaku.twidere.preference.sync
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.SharedPreferences
 import android.support.v7.preference.SwitchPreferenceCompat
 import android.util.AttributeSet
 import android.view.View
 import android.widget.TextView
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.dagger.component.GeneralComponent
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.sync.SyncPreferences
 import javax.inject.Inject
@@ -24,8 +22,6 @@ class SyncItemPreference(
 ) : SwitchPreferenceCompat(context, attrs) {
     @Inject
     lateinit var syncPreferences: SyncPreferences
-    @Inject
-    lateinit var preferences: SharedPreferences
 
     val syncType: String
 

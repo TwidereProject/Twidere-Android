@@ -25,11 +25,9 @@ import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AlertDialog
 import com.twitter.Extractor
-import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_STATUS
-import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.blockBulkInsert
 import org.mariotaku.twidere.extension.bulkDelete
@@ -42,7 +40,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.util.ContentValuesCreator
 import org.mariotaku.twidere.util.HtmlEscapeHelper
 import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.util.UserColorNameManager.Companion
 import java.util.*
 
 class AddStatusFilterDialogFragment : BaseDialogFragment() {
@@ -50,7 +47,8 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
     private val extractor = Extractor()
     private val filterItemsInfo: Array<FilterItemInfo>
         get() {
-            val status = arguments!!.getParcelable<ParcelableStatus>(EXTRA_STATUS) ?: return emptyArray()
+            val status = arguments!!.getParcelable<ParcelableStatus>(EXTRA_STATUS)
+                    ?: return emptyArray()
             val list = ArrayList<FilterItemInfo>()
             if (status.is_retweet && status.retweeted_by_user_key != null) {
                 list.add(FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER,
@@ -80,29 +78,19 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
             return list.toTypedArray()
         }
 
-    private var filterItems: Array<FilterItemInfo>? = null
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val manager = UserColorNameManager.get(context!!)
         val builder = AlertDialog.Builder(context!!)
-        filterItems = filterItemsInfo
-        val entries = arrayOfNulls<String>(filterItems!!.size)
-        val nameFirst = preferences[nameFirstKey]
-        for (i in 0 until entries.size) {
-            val info = filterItems!![i]
+        val filterItems = filterItemsInfo
+        val entries = filterItems.mapToArray { info ->
             when (info.type) {
-                FilterItemInfo.FILTER_TYPE_USER -> {
-                    entries[i] = getString(R.string.user_filter_name, getName(manager,
-                            info.value, nameFirst))
-                }
-                FilterItemInfo.FILTER_TYPE_KEYWORD -> {
-                    entries[i] = getString(R.string.keyword_filter_name, getName(manager,
-                            info.value, nameFirst))
-                }
-                FilterItemInfo.FILTER_TYPE_SOURCE -> {
-                    entries[i] = getString(R.string.source_filter_name, getName(manager,
-                            info.value, nameFirst))
-                }
+                FilterItemInfo.FILTER_TYPE_USER -> getString(R.string.user_filter_name,
+                        getName(manager, info.value))
+                FilterItemInfo.FILTER_TYPE_KEYWORD -> getString(R.string.keyword_filter_name,
+                        getName(manager, info.value))
+                FilterItemInfo.FILTER_TYPE_SOURCE -> getString(R.string.source_filter_name,
+                        getName(manager, info.value))
+                else -> throw UnsupportedOperationException()
             }
         }
         builder.setTitle(R.string.action_add_to_filter)
@@ -121,7 +109,7 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
                 if (!checkPositions.valueAt(i)) {
                     continue@loop
                 }
-                val info = filterItems!![checkPositions.keyAt(i)]
+                val info = filterItems[checkPositions.keyAt(i)]
                 val value = info.value
                 if (value is ParcelableUserMention) {
                     userKeys.add(value.key)
@@ -157,7 +145,7 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
         return dialog
     }
 
-    private fun getName(manager: UserColorNameManager, value: Any, nameFirst: Boolean): String {
+    private fun getName(manager: UserColorNameManager, value: Any): String {
         return when (value) {
             is ParcelableUserMention -> manager.getDisplayName(value.key, value.name, value.screen_name)
             is UserItem -> manager.getDisplayName(value.key, value.name, value.screen_name)
@@ -187,7 +175,7 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
 
     companion object {
 
-        val FRAGMENT_TAG = "add_status_filter"
+        const val FRAGMENT_TAG = "add_status_filter"
 
         private fun createFilteredUser(item: UserItem): ContentValues {
             val values = ContentValues()

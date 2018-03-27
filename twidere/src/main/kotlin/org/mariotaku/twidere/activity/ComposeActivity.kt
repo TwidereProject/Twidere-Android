@@ -92,6 +92,7 @@ import org.mariotaku.twidere.preference.ComponentPickerPreference
 import org.mariotaku.twidere.promise.UpdateStatusPromise
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.service.LengthyOperationsService
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.text.MarkForDeleteSpan
 import org.mariotaku.twidere.text.style.EmojiSpan
 import org.mariotaku.twidere.util.*
@@ -158,7 +159,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private var textChanged: Boolean = false
     private var composeKeyMetaState: Int = 0
     private var draft: Draft? = null
-    private var nameFirst: Boolean = false
     private var draftUniqueId: String? = null
     private var statusVisibility: String? = null
     private var scheduleInfo: ScheduleInfo? = null
@@ -206,7 +206,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         GeneralComponent.get(this).inject(this)
-        nameFirst = preferences[nameFirstKey]
         setContentView(R.layout.activity_compose)
 
         bottomMenuAnimator = ViewAnimator()
@@ -296,6 +295,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
             showLabelAndHint(intent)
             val selectedAccountKeys = accountsAdapter.selectedAccountKeys
+            val preferences = PreferencesSingleton.get(this)
             if (selectedAccountKeys.isNullOrEmpty()) {
                 val idsInPrefs = preferences[composeAccountsKey]?.asList() ?: emptyList()
                 val intersection = defaultAccountKeys.intersect(idsInPrefs)
@@ -353,9 +353,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     override fun onStart() {
         super.onStart()
 
-        imageUploaderUsed = !ComponentPickerPreference.isNoneValue(preferences[mediaUploaderKey])
-        statusShortenerUsed = !ComponentPickerPreference.isNoneValue(preferences[statusShortenerKey])
-        if (preferences[attachLocationKey]) {
+        imageUploaderUsed = !ComponentPickerPreference.isNoneValue(PreferencesSingleton.get(this)[mediaUploaderKey])
+        statusShortenerUsed = !ComponentPickerPreference.isNoneValue(PreferencesSingleton.get(this)[statusShortenerKey])
+        if (PreferencesSingleton.get(this)[attachLocationKey]) {
             if (checkAnySelfPermissionsGranted(AndroidPermission.ACCESS_COARSE_LOCATION,
                     AndroidPermission.ACCESS_FINE_LOCATION)) {
                 try {
@@ -366,7 +366,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
         setMenu()
         updateTextCount()
-        val textSize = preferences[textSizeKey]
+        val textSize = PreferencesSingleton.get(this)[textSizeKey]
         editText.textSize = textSize * 1.25f
     }
 
@@ -692,7 +692,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                     }
                 } else {
                     Toast.makeText(this, R.string.message_toast_cannot_get_location, Toast.LENGTH_SHORT).show()
-                    preferences.edit {
+                    PreferencesSingleton.get(this).edit {
                         this[attachLocationKey] = false
                         this[attachPreciseLocationKey] = false
                     }
@@ -746,7 +746,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 attachPreciseLocationChecked = false
             }
         }
-        preferences.edit {
+        PreferencesSingleton.get(this).edit {
             this[attachLocationKey] = attachLocationChecked
             this[attachPreciseLocationKey] = attachPreciseLocationChecked
         }
@@ -945,7 +945,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private fun handleQuoteIntent(status: ParcelableStatus?): Boolean {
         if (status == null) return false
-        editText.setText(preferences[quoteFormatKey].get(status))
+        editText.setText(PreferencesSingleton.get(this)[quoteFormatKey].get(status))
         editText.setSelection(0)
         accountsAdapter.selectedAccountKeys = arrayOf(status.account_key)
         showQuoteLabelAndHint(status)
@@ -1280,12 +1280,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private fun saveAccountSelection() {
         if (!shouldSaveAccounts) return
-        preferences[composeAccountsKey] = accountsAdapter.selectedAccountKeys
+        PreferencesSingleton.get(this)[composeAccountsKey] = accountsAdapter.selectedAccountKeys
     }
 
     private fun saveVisibility() {
         if (!shouldSaveVisibility) return
-        preferences[composeStatusVisibilityKey] = statusVisibility
+        PreferencesSingleton.get(this)[composeStatusVisibilityKey] = statusVisibility
     }
 
     private fun setMenu() {
@@ -1301,8 +1301,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         menu.setGroupAvailability(MENU_GROUP_IMAGE_EXTENSION, hasMedia)
         menu.setItemChecked(R.id.toggle_sensitive, possiblySensitive)
 
-        val attachLocation = preferences[attachLocationKey]
-        val attachPreciseLocation = preferences[attachPreciseLocationKey]
+        val attachLocation = PreferencesSingleton.get(this)[attachLocationKey]
+        val attachPreciseLocation = PreferencesSingleton.get(this)[attachPreciseLocationKey]
 
         if (!attachLocation) {
             menu.setItemChecked(R.id.location_off, true)
@@ -1357,7 +1357,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private fun setRecentLocation(location: ParcelableLocation?) {
         if (location == null) {
             locationLabel.setText(R.string.unknown_location)
-        } else if (preferences[attachPreciseLocationKey]) {
+        } else if (PreferencesSingleton.get(this)[attachPreciseLocationKey]) {
             locationLabel.spannable = location.getHumanReadableString(3)
         } else if (locationLabel.tag == null || location != recentLocation) {
             loadPlaceName(location)
@@ -1373,11 +1373,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     @Throws(SecurityException::class)
     private fun startLocationUpdateIfEnabled(): Boolean {
         if (locationListener != null) return true
-        val attachLocation = preferences[attachLocationKey]
+        val attachLocation = PreferencesSingleton.get(this)[attachLocationKey]
         if (!attachLocation) {
             return false
         }
-        val attachPreciseLocation = preferences[attachPreciseLocationKey]
+        val attachPreciseLocation = PreferencesSingleton.get(this)[attachPreciseLocationKey]
         val criteria = Criteria()
         if (attachPreciseLocation) {
             criteria.accuracy = Criteria.ACCURACY_FINE
@@ -1481,7 +1481,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun finishComposing() {
-        if (preferences[noCloseAfterTweetSentKey] && inReplyToStatus == null) {
+        if (PreferencesSingleton.get(this)[noCloseAfterTweetSentKey] && inReplyToStatus == null) {
             possiblySensitive = false
             shouldSaveAccounts = true
             shouldSaveVisibility = true
@@ -1562,8 +1562,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
         update.summary = summary
 
-        val attachLocation = preferences[attachLocationKey]
-        val attachPreciseLocation = preferences[attachPreciseLocationKey]
+        val attachLocation = PreferencesSingleton.get(this)[attachLocationKey]
+        val attachPreciseLocation = PreferencesSingleton.get(this)[attachPreciseLocationKey]
         update.draft_action = draftAction
         update.accounts = accounts
         if (attachLocation) {
@@ -1616,7 +1616,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun updateLocationState() {
-        if (preferences[attachLocationKey]) {
+        if (PreferencesSingleton.get(this)[attachLocationKey]) {
             locationLabel.visibility = View.VISIBLE
             if (recentLocation != null) {
                 setRecentLocation(recentLocation)
@@ -1728,11 +1728,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun updateViewStyle() {
-        accountProfileImage.style = preferences[profileImageStyleKey]
+        accountProfileImage.style = PreferencesSingleton.get(this)[profileImageStyleKey]
     }
 
     private fun setupEditText() {
-        val sendByEnter = preferences[quickSendKey]
+        val sendByEnter = PreferencesSingleton.get(this)[quickSendKey]
         EditTextEnterHandler.attach(editText, ComposeEnterListener(this), sendByEnter)
         editSummary.addTextChangedListener(object : SimpleTextWatcher {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -1822,10 +1822,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private fun updateLocationLabel(location: ParcelableLocation, finished: Boolean) {
         when {
-            !preferences[attachLocationKey] -> {
+            !PreferencesSingleton.get(this)[attachLocationKey] -> {
                 locationLabel.setText(R.string.no_location)
             }
-            preferences[attachPreciseLocationKey] -> {
+            PreferencesSingleton.get(this)[attachPreciseLocationKey] -> {
                 locationLabel.string = location.getHumanReadableString(3)
             }
             else -> {

@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.adapter
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.support.v4.text.BidiFormatter
 import android.widget.ArrayAdapter
 import com.bumptech.glide.RequestManager
@@ -33,6 +32,7 @@ import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.model.ItemCounts
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.MultiSelectManager
 import org.mariotaku.twidere.util.OnLinkClickHandler
 import org.mariotaku.twidere.util.PermissionsManager
@@ -52,8 +52,6 @@ open class BaseArrayAdapter<T>(
     override lateinit var bidiFormatter: BidiFormatter
     @Inject
     lateinit var multiSelectManager: MultiSelectManager
-    @Inject
-    lateinit var preferences: SharedPreferences
     @Inject
     lateinit var permissionsManager: PermissionsManager
 
@@ -83,6 +81,7 @@ open class BaseArrayAdapter<T>(
     init {
         @Suppress("UNCHECKED_CAST")
         GeneralComponent.get(context).inject(this as BaseArrayAdapter<Any>)
+        val preferences = PreferencesSingleton.get(context)
         linkify = TwidereLinkify(OnLinkClickHandler(context, multiSelectManager, preferences))
         profileImageStyle = preferences[profileImageStyleKey]
         textSize = preferences[textSizeKey].toFloat()

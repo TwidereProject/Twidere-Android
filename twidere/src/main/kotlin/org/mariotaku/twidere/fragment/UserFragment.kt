@@ -121,6 +121,7 @@ import org.mariotaku.twidere.promise.UserListPromises
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
 import org.mariotaku.twidere.singleton.BusSingleton
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.task.UpdateAccountInfoPromise
 import org.mariotaku.twidere.text.TwidereURLSpan
 import org.mariotaku.twidere.util.*
@@ -257,7 +258,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                         userKey = AcctPlaceholderUserKey(user.key.host)
                     }
                     IntentUtils.openUserProfile(context!!, selectedAccountKey, userKey, user.screen_name,
-                            user.extras?.statusnet_profile_url, preferences[newDocumentApiKey],
+                            user.extras?.statusnet_profile_url, PreferencesSingleton.get(context!!)[newDocumentApiKey],
                             null)
                 }
             }
@@ -276,9 +277,9 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val activity = activity!!
         val args = arguments!!
 
-        nameFirst = preferences[nameFirstKey]
+        nameFirst = PreferencesSingleton.get(context!!)[nameFirstKey]
         cardBackgroundColor = ThemeUtils.getCardBackgroundColor(activity,
-                preferences[themeBackgroundOptionKey], preferences[themeBackgroundAlphaKey])
+                PreferencesSingleton.get(context!!)[themeBackgroundOptionKey], PreferencesSingleton.get(context!!)[themeBackgroundAlphaKey])
         actionBarShadowColor = 0xA0000000.toInt()
         val accountKey = args.accountKey ?: run {
             activity.finish()
@@ -737,12 +738,12 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             }
             TAB_TYPE_FAVORITES -> {
                 if (user.favorites_count < 0) {
-                    if (preferences[iWantMyStarsBackKey]) {
+                    if (PreferencesSingleton.get(context!!)[iWantMyStarsBackKey]) {
                         actionBar.setSubtitle(R.string.title_favorites)
                     } else {
                         actionBar.setSubtitle(R.string.title_likes)
                     }
-                } else if (preferences[iWantMyStarsBackKey]) {
+                } else if (PreferencesSingleton.get(context!!)[iWantMyStarsBackKey]) {
                     actionBar.subtitle = resources.getQuantityString(R.plurals.N_favorites,
                             user.favorites_count.toInt(), user.favorites_count)
                 } else {
@@ -836,7 +837,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 profileImage.preview_url = user.profile_image_url
                 val media = arrayOf(profileImage)
                 IntentUtils.openMedia(context, accountKey, media, null, false,
-                        preferences[newDocumentApiKey], preferences[displaySensitiveContentsKey])
+                        PreferencesSingleton.get(this.context!!)[newDocumentApiKey], PreferencesSingleton.get(this.context!!)[displaySensitiveContentsKey])
             }
             R.id.profileBanner -> {
                 val url = user.getBestProfileBanner(0) ?: return
@@ -844,7 +845,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 profileBanner.type = ParcelableMedia.Type.IMAGE
                 val media = arrayOf(profileBanner)
                 IntentUtils.openMedia(context, accountKey, media, null, false,
-                        preferences[newDocumentApiKey], preferences[displaySensitiveContentsKey])
+                        PreferencesSingleton.get(this.context!!)[newDocumentApiKey], PreferencesSingleton.get(this.context!!)[displaySensitiveContentsKey])
             }
             R.id.listedCount -> {
                 IntentUtils.openUserLists(context, accountKey, user.key, user.screen_name)
@@ -864,7 +865,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             }
             R.id.url -> {
                 val uri = user.urlFull?.let(Uri::parse) ?: return
-                OnLinkClickHandler.openLink(context, preferences, uri)
+                OnLinkClickHandler.openLink(context, PreferencesSingleton.get(this.context!!), uri)
             }
             R.id.profileBirthdayBanner -> {
                 hideBirthdayView = true
@@ -883,7 +884,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         when (type) {
             TwidereLinkify.LINK_TYPE_MENTION -> {
                 IntentUtils.openUserProfile(activity, user.account_key, null, link, null,
-                        preferences[newDocumentApiKey], null)
+                        PreferencesSingleton.get(context!!)[newDocumentApiKey], null)
                 return true
             }
             TwidereLinkify.LINK_TYPE_HASHTAG -> {
@@ -1032,9 +1033,9 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
 
     private fun setupViewSettings() {
-        profileImage.style = preferences[profileImageStyleKey]
+        profileImage.style = PreferencesSingleton.get(context!!)[profileImageStyleKey]
 
-        val lightFont = preferences[lightFontKey]
+        val lightFont = PreferencesSingleton.get(context!!)[lightFontKey]
 
         nameContainer.name.applyFontFamily(lightFont)
         nameContainer.screenName.applyFontFamily(lightFont)
@@ -1076,7 +1077,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         }, name = getString(R.string.media), type = TAB_TYPE_MEDIA, position = TAB_POSITION_MEDIA)
 
         if (hasFavoriteTab()) {
-            if (preferences[iWantMyStarsBackKey]) {
+            if (PreferencesSingleton.get(context!!)[iWantMyStarsBackKey]) {
                 pagerAdapter.add(cls = FavoritesTimelineFragment::class.java, args = tabArgs,
                         name = getString(R.string.title_favorites), type = TAB_TYPE_FAVORITES,
                         position = TAB_POSITION_FAVORITES)
@@ -1147,7 +1148,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         }
         @SuppressLint("SetTextI18n")
         nameContainer.screenName.spannable = "@${user.acct}"
-        val linkHighlightOption = preferences[linkHighlightOptionKey]
+        val linkHighlightOption = PreferencesSingleton.get(context!!)[linkHighlightOptionKey]
         val linkify = TwidereLinkify(this, linkHighlightOption)
 
         if (user.description_unescaped != null) {

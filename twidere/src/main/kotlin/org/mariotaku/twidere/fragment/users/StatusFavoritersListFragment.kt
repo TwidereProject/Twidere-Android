@@ -32,11 +32,12 @@ import org.mariotaku.twidere.extension.linkHandlerTitle
 import org.mariotaku.twidere.extension.statusId
 import org.mariotaku.twidere.fragment.AbsUsersFragment
 import org.mariotaku.twidere.data.fetcher.users.StatusFavoritersFetcher
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 
 class StatusFavoritersListFragment : AbsUsersFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        linkHandlerTitle = if (preferences[iWantMyStarsBackKey]) {
+        linkHandlerTitle = if (PreferencesSingleton.get(context!!)[iWantMyStarsBackKey]) {
             getString(R.string.title_users_favorited_this)
         } else {
             getString(R.string.title_users_liked_this)

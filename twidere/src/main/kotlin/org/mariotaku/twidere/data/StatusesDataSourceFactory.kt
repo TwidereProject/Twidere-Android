@@ -51,7 +51,7 @@ class StatusesDataSourceFactory(
         private val accountKey: UserKey,
         private val timelineFilter: TimelineFilter?,
         private val errorHandler: (Exception) -> Unit
-) : DataSource.Factory<Pagination, ParcelableStatus> {
+) : DataSource.Factory<Pagination, ParcelableStatus>() {
 
     override fun create(): DataSource<Pagination, ParcelableStatus> {
         return StatusesDataSource(context, fetcher, accountKey, timelineFilter, errorHandler)

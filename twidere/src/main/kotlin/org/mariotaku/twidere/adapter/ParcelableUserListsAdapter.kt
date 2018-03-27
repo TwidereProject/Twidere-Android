@@ -32,6 +32,7 @@ import org.mariotaku.twidere.adapter.iface.IUserListsAdapter
 import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.model.ParcelableUserList
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
 import org.mariotaku.twidere.view.holder.UserListViewHolder
 
@@ -39,7 +40,7 @@ class ParcelableUserListsAdapter(
         context: Context, requestManager: RequestManager
 ) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context, requestManager), IUserListsAdapter<List<ParcelableUserList>> {
     override val showAccountsColor: Boolean = false
-    override val nameFirst: Boolean = preferences[nameFirstKey]
+    override val nameFirst: Boolean = PreferencesSingleton.get(this.context)[nameFirstKey]
     override var userListClickListener: IUserListsAdapter.UserListClickListener? = null
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)

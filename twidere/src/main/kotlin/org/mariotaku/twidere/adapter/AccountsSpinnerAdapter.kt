@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.adapter
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,12 +30,10 @@ import org.mariotaku.ktextension.spannable
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.displayProfileImageKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
-import org.mariotaku.twidere.dagger.component.GeneralComponent
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
-import javax.inject.Inject
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 
 class AccountsSpinnerAdapter(
         val context: Context,
@@ -44,9 +41,6 @@ class AccountsSpinnerAdapter(
         val dropDownViewResource: Int = R.layout.list_item_simple_user,
         val requestManager: RequestManager
 ) : ViewHolderListAdapter<AccountsSpinnerAdapter.AccountSpinnerViewHolder>() {
-
-    @Inject
-    lateinit var preferences: SharedPreferences
 
     var dummyItemText: String? = null
         set(value) {
@@ -63,7 +57,7 @@ class AccountsSpinnerAdapter(
     private var profileImageStyle: Int
 
     init {
-        GeneralComponent.get(context).inject(this)
+        val preferences = PreferencesSingleton.get(context)
         profileImageEnabled = preferences[displayProfileImageKey]
         profileImageStyle = preferences[profileImageStyleKey]
     }

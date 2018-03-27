@@ -53,6 +53,7 @@ import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.placeholder.ParcelableStatusPlaceholder
 import org.mariotaku.twidere.model.timeline.TimelineFilter
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler
 import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.util.Utils
@@ -77,14 +78,14 @@ class ParcelableStatusesAdapter(
     override val twidereLinkify: TwidereLinkify
 
     @PreviewStyle
-    override val mediaPreviewStyle: Int = preferences[mediaPreviewStyleKey]
-    override val nameFirst: Boolean = preferences[nameFirstKey]
-    override val useStarsForLikes: Boolean = preferences[iWantMyStarsBackKey]
+    override val mediaPreviewStyle: Int = PreferencesSingleton.get(this.context)[mediaPreviewStyleKey]
+    override val nameFirst: Boolean = PreferencesSingleton.get(this.context)[nameFirstKey]
+    override val useStarsForLikes: Boolean = PreferencesSingleton.get(this.context)[iWantMyStarsBackKey]
     @TwidereLinkify.HighlightStyle
-    override val linkHighlightingStyle: Int = preferences[linkHighlightOptionKey]
-    override val lightFont: Boolean = preferences[lightFontKey]
-    override val mediaPreviewEnabled: Boolean = Utils.isMediaPreviewEnabled(context, preferences)
-    override val sensitiveContentEnabled: Boolean = preferences.getBoolean(KEY_DISPLAY_SENSITIVE_CONTENTS, false)
+    override val linkHighlightingStyle: Int = PreferencesSingleton.get(this.context)[linkHighlightOptionKey]
+    override val lightFont: Boolean = PreferencesSingleton.get(this.context)[lightFontKey]
+    override val mediaPreviewEnabled: Boolean = Utils.isMediaPreviewEnabled(context, PreferencesSingleton.get(this.context))
+    override val sensitiveContentEnabled: Boolean = PreferencesSingleton.get(this.context).getBoolean(KEY_DISPLAY_SENSITIVE_CONTENTS, false)
 
     override val gapClickListener: IGapSupportedAdapter.GapClickListener?
         get() = statusClickListener
@@ -157,7 +158,7 @@ class ParcelableStatusesAdapter(
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
 
-    private val showCardActions: Boolean = !preferences[hideCardActionsKey]
+    private val showCardActions: Boolean = !PreferencesSingleton.get(this.context)[hideCardActionsKey]
 
     private val gapLoadingIds: MutableSet<ObjectId<String>> = HashSet()
     private var showingActionCardId = RecyclerView.NO_ID
@@ -168,7 +169,7 @@ class ParcelableStatusesAdapter(
             AsyncDifferConfig.Builder<ParcelableStatus>(DiffItemCallbacks.status).build())
 
     init {
-        val handler = StatusAdapterLinkClickHandler<List<ParcelableStatus>>(context, preferences)
+        val handler = StatusAdapterLinkClickHandler<List<ParcelableStatus>>(context, PreferencesSingleton.get(this.context))
         twidereLinkify = TwidereLinkify(handler)
         handler.setAdapter(this)
         isShowInReplyTo = true

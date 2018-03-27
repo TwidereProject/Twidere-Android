@@ -32,6 +32,7 @@ import org.mariotaku.twidere.extension.status
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.CreateUserMuteDialogFragment
 import org.mariotaku.twidere.model.ParcelableStatus
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.UserColorNameManager.Companion
 
@@ -43,7 +44,7 @@ class MuteStatusUsersDialogFragment : BaseDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(context!!)
         val referencedUsers = status.referencedUsers
-        val nameFirst = preferences[nameFirstKey]
+        val nameFirst = PreferencesSingleton.get(context!!)[nameFirstKey]
         val displayNames = referencedUsers.map {
             UserColorNameManager.get(context!!).getDisplayName(it)
         }.toTypedArray()

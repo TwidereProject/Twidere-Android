@@ -32,6 +32,7 @@ import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.refresh.UserRelatedContentRefreshParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.task.statuses.GetUserFavoritesTask
 
 class FavoritesTimelineFragment : AbsTimelineFragment() {
@@ -43,7 +44,7 @@ class FavoritesTimelineFragment : AbsTimelineFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        linkHandlerTitle = if (preferences[iWantMyStarsBackKey]) {
+        linkHandlerTitle = if (PreferencesSingleton.get(context!!)[iWantMyStarsBackKey]) {
             getString(R.string.title_favorites)
         } else {
             getString(R.string.title_likes)

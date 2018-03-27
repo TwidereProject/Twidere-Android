@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.fragment
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.text.BidiFormatter
@@ -49,8 +48,6 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     @Inject
     @Deprecated(message = "Deprecated", replaceWith = ReplaceWith("UserColorNameManager.get(context!!)", imports = ["org.mariotaku.twidere.util.UserColorNameManager"]))
     lateinit var userColorNameManager: UserColorNameManager
-    @Inject
-    lateinit var preferences: SharedPreferences
     @Inject
     lateinit var notificationManager: NotificationManagerWrapper
     @Inject

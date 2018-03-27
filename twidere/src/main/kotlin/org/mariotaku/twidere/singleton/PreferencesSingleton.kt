@@ -1,7 +1,7 @@
 /*
  *             Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2018 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,17 +17,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.data.processor
+package org.mariotaku.twidere.singleton
 
-import android.content.ContentResolver
+import android.content.Context
+import android.content.SharedPreferences
+import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
+import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 
-interface DataSourceItemProcessor<T> {
-    fun init(resolver: ContentResolver)
-
-    fun invalidate()
-
-    /**
-     * @return Processed object
-     */
-    fun process(obj: T): T?
-}
+object PreferencesSingleton : ApplicationContextSingletonHolder<SharedPreferences>({
+    it.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+})

@@ -22,7 +22,6 @@ package org.mariotaku.twidere.promise
 import android.app.Application
 import android.content.ContentValues
 import android.content.Context
-import android.content.SharedPreferences
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.then
 import org.mariotaku.microblog.library.Mastodon
@@ -30,9 +29,7 @@ import org.mariotaku.microblog.library.Twitter
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.exception.APINotSupportedException
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
@@ -50,18 +47,10 @@ import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
-import javax.inject.Inject
 
 class MutePromises(private val application: Application) {
 
     private val profileImageSize: String = application.getString(R.string.profile_image_size)
-
-    @Inject
-    lateinit var preferences: SharedPreferences
-
-    init {
-        GeneralComponent.get(application).inject(this)
-    }
 
     fun mute(accountKey: UserKey, userKey: UserKey, filterEverywhere: Boolean): Promise<ParcelableUser, Exception> = notifyCreatePromise(BusSingleton, FriendshipTaskEvent.Action.MUTE, accountKey, userKey)
             .thenGetAccount(application, accountKey).then { account ->

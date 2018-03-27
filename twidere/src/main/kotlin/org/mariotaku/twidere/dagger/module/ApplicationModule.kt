@@ -133,7 +133,7 @@ class ApplicationModule(private val application: Application) {
     @Provides
     @Singleton
     fun permissionsManager(): PermissionsManager {
-        return PermissionsManager(application)
+        return PermissionsManager.get(application)
     }
 
     @Provides

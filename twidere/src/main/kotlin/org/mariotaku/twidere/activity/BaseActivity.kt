@@ -96,8 +96,6 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     @Inject
     lateinit var readStateManager: ReadStateManager
     @Inject
-    lateinit var preferences: SharedPreferences
-    @Inject
     lateinit var notificationManager: NotificationManagerWrapper
     @Inject
     lateinit var permissionsManager: PermissionsManager

@@ -33,6 +33,7 @@ import org.mariotaku.twidere.constant.showAbsoluteTimeKey
 import org.mariotaku.twidere.constant.textSizeKey
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.model.DefaultFeatures
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.MultiSelectManager
 import org.mariotaku.twidere.util.ReadStateManager
 import javax.inject.Inject
@@ -45,6 +46,7 @@ abstract class BaseRecyclerViewAdapter<VH : RecyclerView.ViewHolder>(
     @Inject
     override lateinit var bidiFormatter: BidiFormatter
     @Inject
+    @Deprecated(message = "Deprecated", replaceWith = ReplaceWith("PreferencesSingleton.get(context)", imports = ["org.mariotaku.twidere.singleton.PreferencesSingleton"]))
     lateinit var preferences: SharedPreferences
     @Inject
     lateinit var readStateManager: ReadStateManager
@@ -62,10 +64,10 @@ abstract class BaseRecyclerViewAdapter<VH : RecyclerView.ViewHolder>(
     init {
         @Suppress("UNCHECKED_CAST")
         GeneralComponent.get(context).inject(this as BaseRecyclerViewAdapter<RecyclerView.ViewHolder>)
-        profileImageStyle = preferences[profileImageStyleKey]
-        textSize = preferences[textSizeKey].toFloat()
-        profileImageEnabled = preferences[displayProfileImageKey]
-        showAbsoluteTime = preferences[showAbsoluteTimeKey]
+        profileImageStyle = PreferencesSingleton.get(context)[profileImageStyleKey]
+        textSize = PreferencesSingleton.get(context)[textSizeKey].toFloat()
+        profileImageEnabled = PreferencesSingleton.get(context)[displayProfileImageKey]
+        showAbsoluteTime = PreferencesSingleton.get(context)[showAbsoluteTimeKey]
     }
 
 }

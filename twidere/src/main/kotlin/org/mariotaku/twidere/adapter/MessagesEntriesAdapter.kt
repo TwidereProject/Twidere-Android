@@ -17,6 +17,7 @@ import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.exception.UnsupportedCountIndexException
 import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.model.ParcelableMessageConversation
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.paging.DiffItemCallbacks
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
 import org.mariotaku.twidere.view.holder.message.MessageEntryViewHolder
@@ -51,7 +52,7 @@ class MessagesEntriesAdapter(
             notifyDataSetChanged()
         }
 
-    val nameFirst: Boolean = preferences[nameFirstKey]
+    val nameFirst: Boolean = PreferencesSingleton.get(this.context)[nameFirstKey]
 
     var listener: MessageConversationClickListener? = null
 

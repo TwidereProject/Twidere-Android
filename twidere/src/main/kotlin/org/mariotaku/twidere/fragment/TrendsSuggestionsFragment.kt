@@ -48,6 +48,7 @@ import org.mariotaku.twidere.model.tab.extra.TrendsTabExtras
 import org.mariotaku.twidere.promise.GetTrendsPromise
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends
 import org.mariotaku.twidere.singleton.BusSingleton
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.IntentUtils.openTweetSearch
 import org.mariotaku.twidere.util.Utils
 
@@ -60,13 +61,13 @@ class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), L
     private val accountKey: UserKey?
         get() {
             return Utils.getAccountKeys(context!!, arguments)?.firstOrNull()
-                    ?: Utils.getDefaultAccountKey(context!!, preferences)
+                    ?: Utils.getDefaultAccountKey(context!!, PreferencesSingleton.get(context!!))
         }
 
     private val woeId: Int
         get() {
             val id = tabExtras?.woeId ?: 0
-            return if (id > 0) id else preferences[localTrendsWoeIdKey]
+            return if (id > 0) id else PreferencesSingleton.get(context!!)[localTrendsWoeIdKey]
         }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

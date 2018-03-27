@@ -50,7 +50,7 @@ class UsersDataSourceFactory(
         private val fetcher: UsersFetcher,
         private val accountKey: UserKey,
         private val errorHandler: (Exception) -> Unit
-) : DataSource.Factory<Pagination, ParcelableUser> {
+) : DataSource.Factory<Pagination, ParcelableUser>() {
 
     override fun create(): DataSource<Pagination, ParcelableUser> {
         return UsersDataSource(context, fetcher, accountKey, errorHandler)

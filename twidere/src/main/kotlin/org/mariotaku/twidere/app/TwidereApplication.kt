@@ -44,6 +44,7 @@ import org.mariotaku.twidere.extension.setLocale
 import org.mariotaku.twidere.promise.DefaultFeaturesPromises
 import org.mariotaku.twidere.receiver.ConnectivityStateReceiver
 import org.mariotaku.twidere.service.StreamingService
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.taskcontroller.refresh.RefreshTaskController
 import org.mariotaku.twidere.taskcontroller.sync.SyncTaskController
 import org.mariotaku.twidere.util.*
@@ -65,12 +66,6 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
     lateinit internal var extraFeaturesService: ExtraFeaturesService
     @Inject
     lateinit internal var promotionService: PromotionService
-
-    private val sharedPreferences: SharedPreferences by lazy {
-        val prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-        prefs.registerOnSharedPreferenceChangeListener(this)
-        return@lazy prefs
-    }
 
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
@@ -105,7 +100,7 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
 
         DefaultFeaturesPromises.get(this).fetch()
 
-        Analyzer.preferencesChanged(sharedPreferences)
+        Analyzer.preferencesChanged(PreferencesSingleton.get(this))
     }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
@@ -141,8 +136,9 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
     }
 
     private fun applyLanguageSettings() {
-        val locale = sharedPreferences[overrideLanguageKey] ?: Resources.getSystem().firstLanguage
-        ?: return
+        val locale = PreferencesSingleton.get(this)[overrideLanguageKey]
+                ?: Resources.getSystem().firstLanguage
+                ?: return
         resources.setLocale(locale)
     }
 
@@ -173,7 +169,7 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
     }
 
     private fun initBugReport() {
-        if (!sharedPreferences[bugReportsKey]) return
+        if (!PreferencesSingleton.get(this)[bugReportsKey]) return
         Analyzer.implementation = ServiceLoader.load(Analyzer::class.java).firstOrNull()
         Analyzer.init(this)
     }

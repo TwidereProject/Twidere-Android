@@ -1,7 +1,6 @@
 package org.mariotaku.twidere.task
 
 import android.content.Context
-import android.content.SharedPreferences
 import com.twitter.Extractor
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.restfu.http.RestHttpClient
@@ -22,8 +21,6 @@ abstract class BaseAbstractTask<Params, Result, Callback>(val context: Context) 
 
     @Inject
     lateinit var mediaPreloader: MediaPreloader
-    @Inject
-    lateinit var preferences: SharedPreferences
     @Inject
     lateinit var manager: UserColorNameManager
     @Inject

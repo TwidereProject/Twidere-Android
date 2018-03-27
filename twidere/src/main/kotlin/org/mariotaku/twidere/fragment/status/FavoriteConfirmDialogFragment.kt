@@ -35,6 +35,7 @@ import org.mariotaku.twidere.extension.promise
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.task.CreateFavoriteTask
 import org.mariotaku.twidere.task.DestroyFavoriteTask
 
@@ -50,7 +51,7 @@ class FavoriteConfirmDialogFragment : AbsStatusDialogFragment() {
     override val Dialog.itemContent: android.view.View get() = findViewById(R.id.itemContent)
 
     override fun AlertDialog.Builder.setupAlertDialog() {
-        if (preferences[iWantMyStarsBackKey]) {
+        if (PreferencesSingleton.get(this@FavoriteConfirmDialogFragment.context!!)[iWantMyStarsBackKey]) {
             setTitle(R.string.title_favorite_confirm)
         } else {
             setTitle(R.string.title_like_confirm)
@@ -63,7 +64,7 @@ class FavoriteConfirmDialogFragment : AbsStatusDialogFragment() {
     override fun AlertDialog.onStatusLoaded(account: AccountDetails, status: ParcelableStatus,
             savedInstanceState: Bundle?) {
         val positiveButton = getButton(BUTTON_POSITIVE)
-        if (preferences[iWantMyStarsBackKey]) {
+        if (PreferencesSingleton.get(this@FavoriteConfirmDialogFragment.context!!)[iWantMyStarsBackKey]) {
             if (status.is_favorite) {
                 positiveButton.setText(R.string.action_unfavorite)
             } else {

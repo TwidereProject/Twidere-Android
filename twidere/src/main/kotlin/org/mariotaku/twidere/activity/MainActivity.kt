@@ -36,7 +36,6 @@ import android.view.View.MeasureSpec
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
-import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.activity_main.*
 import nl.komponents.kovenant.Promise
@@ -57,7 +56,6 @@ import org.mariotaku.twidere.constant.promotionsEnabledKey
 import org.mariotaku.twidere.constant.themeColorKey
 import org.mariotaku.twidere.constant.themeKey
 import org.mariotaku.twidere.dagger.component.GeneralComponent
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.hasInvalidAccount
 import org.mariotaku.twidere.extension.hasPermission
 import org.mariotaku.twidere.extension.model.displayingScore
@@ -65,6 +63,7 @@ import org.mariotaku.twidere.extension.model.shouldShow
 import org.mariotaku.twidere.model.presentation.LaunchPresentation
 import org.mariotaku.twidere.model.theme.UserTheme
 import org.mariotaku.twidere.promise.LaunchPresentationsPromises
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.DeviceUtils
 import org.mariotaku.twidere.util.OnLinkClickHandler
 import org.mariotaku.twidere.util.StrictModeUtils
@@ -79,9 +78,6 @@ open class MainActivity : ChameleonActivity(), IBaseActivity<MainActivity> {
 
     @Inject
     lateinit var restHttpClient: RestHttpClient
-
-    @Inject
-    lateinit var preferences: SharedPreferences
 
     @Inject
     lateinit var jsonCache: JsonCache
@@ -115,6 +111,7 @@ open class MainActivity : ChameleonActivity(), IBaseActivity<MainActivity> {
         GeneralComponent.get(this).inject(this)
         setContentView(R.layout.activity_main)
 
+        val preferences = PreferencesSingleton.get(this)
         if (!preferences[promotionsEnabledKey]) {
             main.visibility = View.GONE
             launchDirectly()
@@ -151,7 +148,7 @@ open class MainActivity : ChameleonActivity(), IBaseActivity<MainActivity> {
     }
 
     private fun showPresentationOrLaunch() {
-        val lastLaunchTime = preferences[lastLaunchTimeKey]
+        val lastLaunchTime = PreferencesSingleton.get(this)[lastLaunchTimeKey]
         val maximumDuration = if (BuildConfig.DEBUG) {
             TimeUnit.SECONDS.toMillis(30)
         } else {
@@ -249,7 +246,7 @@ open class MainActivity : ChameleonActivity(), IBaseActivity<MainActivity> {
     }
 
     private fun performLaunch() {
-        preferences[lastLaunchTimeKey] = System.currentTimeMillis()
+        PreferencesSingleton.get(this)[lastLaunchTimeKey] = System.currentTimeMillis()
         val am = AccountManager.get(this)
         if (!DeviceUtils.checkCompatibility()) {
             startActivity(Intent(this, IncompatibleAlertActivity::class.java))

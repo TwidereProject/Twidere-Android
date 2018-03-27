@@ -52,6 +52,7 @@ import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.placeholder.ParcelableActivityPlaceholder
 import org.mariotaku.twidere.model.placeholder.PlaceholderObject
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.OnLinkClickHandler
 import org.mariotaku.twidere.util.TwidereLinkify
@@ -134,7 +135,7 @@ class ParcelableActivitiesAdapter(
         }
 
     private val inflater = LayoutInflater.from(context)
-    private val twidereLinkify = TwidereLinkify(OnLinkClickHandler(context, null, preferences))
+    private val twidereLinkify = TwidereLinkify(OnLinkClickHandler(context, null, PreferencesSingleton.get(this.context)))
     private val statusAdapterDelegate = DummyItemAdapter(context, twidereLinkify, this, requestManager)
     private val eventListener: EventListener
     private val gapLoadingIds: MutableSet<ObjectId<String>> = HashSet()
@@ -374,7 +375,7 @@ class ParcelableActivitiesAdapter(
             val status = adapter.getActivity(position).activityStatus ?: return
             IntentUtils.openUserProfile(adapter.context, status.account_key, status.user_key,
                     status.user_screen_name, status.extras?.user_statusnet_profile_url,
-                    adapter.preferences[newDocumentApiKey], null)
+                    PreferencesSingleton.get(adapter.context)[newDocumentApiKey], null)
         }
 
         override fun onStatusClick(holder: IStatusViewHolder, position: Int) {

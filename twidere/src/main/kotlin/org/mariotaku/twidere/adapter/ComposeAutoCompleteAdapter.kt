@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.adapter
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.database.Cursor
 import android.support.v4.widget.ImageViewCompat
 import android.support.v4.widget.SimpleCursorAdapter
@@ -34,25 +33,18 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.displayProfileImageKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
-import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.appendQueryParameterIgnoreNull
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.SuggestionItem
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Suggestions
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.view.ProfileImageView
-import javax.inject.Inject
 
 class ComposeAutoCompleteAdapter(context: Context, val requestManager: RequestManager) : SimpleCursorAdapter(context,
         R.layout.list_item_auto_complete, null, emptyArray(), intArrayOf(), 0) {
-
-    @Inject
-    lateinit var preferences: SharedPreferences
-    @Inject
-    @Deprecated(message = "Deprecated", replaceWith = ReplaceWith("UserColorNameManager.get(context!!)", imports = ["org.mariotaku.twidere.util.UserColorNameManager"]))
-    lateinit var userColorNameManager: UserColorNameManager
 
     var account: AccountDetails? = null
 
@@ -63,7 +55,7 @@ class ComposeAutoCompleteAdapter(context: Context, val requestManager: RequestMa
     private var token: Char = ' '
 
     init {
-        GeneralComponent.get(context).inject(this)
+        val preferences = PreferencesSingleton.get(context)
         displayProfileImage = preferences[displayProfileImageKey]
         profileImageStyle = preferences[profileImageStyleKey]
     }

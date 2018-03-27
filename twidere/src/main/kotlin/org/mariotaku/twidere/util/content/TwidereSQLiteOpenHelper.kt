@@ -32,13 +32,13 @@ import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.query.SQLCreateTriggerQuery.Event
 import org.mariotaku.sqliteqb.library.query.SQLCreateTriggerQuery.Type
 import org.mariotaku.twidere.Constants
-import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.constant.defaultAPIConfigKey
 import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.tab.TabConfiguration
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.content.DatabaseUpgradeHelper.safeUpgrade
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 import org.mariotaku.twidere.util.migrateAccounts
@@ -203,7 +203,7 @@ class TwidereSQLiteOpenHelper(
         handleVersionChange(db, oldVersion, newVersion)
         if (oldVersion <= 43 && newVersion >= 44 && newVersion <= 153) {
             val values = ContentValues()
-            val prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+            val prefs = PreferencesSingleton.get(context)
             // Here I use old consumer key/secret because it's default key for
             // older versions
             val defaultAPIConfig = prefs[defaultAPIConfigKey]
@@ -346,5 +346,5 @@ class TwidereSQLiteOpenHelper(
                 Conversations.CONVERSATION_ID), OnConflict.REPLACE)
     }
 
-    companion object: ApplicationContextSingletonHolder<TwidereSQLiteOpenHelper>(::TwidereSQLiteOpenHelper)
+    companion object : ApplicationContextSingletonHolder<TwidereSQLiteOpenHelper>(::TwidereSQLiteOpenHelper)
 }

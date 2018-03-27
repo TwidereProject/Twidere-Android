@@ -8,9 +8,9 @@ import android.support.annotation.UiThread
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.addTo
 import org.mariotaku.microblog.library.*
+import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.twitter.Activity.Action
 import org.mariotaku.microblog.library.model.twitter.InternalActivityCreator
-import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
@@ -21,7 +21,6 @@ import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.data.fetcher.ActivitiesFetcher
 import org.mariotaku.twidere.extension.api.batchGetRelationships
 import org.mariotaku.twidere.extension.bulkInsert
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.getDetailsOrThrow
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
@@ -34,6 +33,7 @@ import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.task.GetTimelineResult
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.singleton.BusSingleton
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.task.statuses.GetStatusesTask
 import org.mariotaku.twidere.util.DataStoreUtils
@@ -61,7 +61,7 @@ abstract class GetActivitiesTask(
     override fun doLongOperation(param: ContentRefreshParam): List<Pair<GetTimelineResult<ParcelableActivity>?, Exception?>> {
         if (param.shouldAbort) return emptyList()
         val accountKeys = param.accountKeys.takeIf { it.isNotEmpty() } ?: return emptyList()
-        val loadItemLimit = preferences[loadItemLimitKey]
+        val loadItemLimit = PreferencesSingleton.get(context)[loadItemLimitKey]
         val result = accountKeys.mapIndexed { i, accountKey ->
             val noItemsBefore = DataStoreUtils.getActivitiesCount(context, contentUri, accountKey) <= 0
             val credentials = AccountManager.get(context).getDetailsOrThrow(accountKey, true)
@@ -246,7 +246,7 @@ abstract class GetActivitiesTask(
         }
         var olderCount = -1
         if (minPositionKey > 0) {
-            olderCount = DataStoreUtils.getActivitiesCount(context, preferences, contentUri,
+            olderCount = DataStoreUtils.getActivitiesCount(context, PreferencesSingleton.get(context), contentUri,
                     Activities.POSITION_KEY, minPositionKey, false, arrayOf(details.key), filterScopes)
         }
         val writeUri = UriUtils.appendQueryParameters(contentUri, QUERY_PARAM_NOTIFY_CHANGE, notify)

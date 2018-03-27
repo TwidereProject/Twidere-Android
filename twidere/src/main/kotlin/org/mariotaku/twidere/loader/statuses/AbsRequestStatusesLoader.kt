@@ -21,7 +21,6 @@ package org.mariotaku.twidere.loader.statuses
 
 import android.accounts.AccountManager
 import android.content.Context
-import android.content.SharedPreferences
 import android.support.annotation.WorkerThread
 import org.mariotaku.kpreferences.get
 import org.mariotaku.microblog.library.MicroBlogException
@@ -29,9 +28,7 @@ import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.microblog.Status
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.loadItemLimitKey
-import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.exception.AccountNotFoundException
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.getDetailsOrThrow
 import org.mariotaku.twidere.extension.model.api.applyLoadLimit
 import org.mariotaku.twidere.loader.iface.IPaginationLoader
@@ -43,12 +40,11 @@ import org.mariotaku.twidere.model.pagination.PaginatedArrayList
 import org.mariotaku.twidere.model.pagination.PaginatedList
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.task.statuses.GetStatusesTask
 import org.mariotaku.twidere.util.DebugLog
-import org.mariotaku.twidere.util.UserColorNameManager
 import java.util.*
 import java.util.concurrent.atomic.AtomicReference
-import javax.inject.Inject
 
 abstract class AbsRequestStatusesLoader(
         context: Context,
@@ -76,17 +72,10 @@ abstract class AbsRequestStatusesLoader(
 
     protected val profileImageSize: String = context.getString(R.string.profile_image_size)
 
-    @Inject
-    lateinit var preferences: SharedPreferences
-
     private val exceptionRef = AtomicReference<MicroBlogException?>()
 
-    init {
-        GeneralComponent.get(context).inject(this)
-    }
-
     @SuppressWarnings("unchecked")
-    override final fun loadInBackground(): ListResponse<ParcelableStatus> {
+    override fun loadInBackground(): ListResponse<ParcelableStatus> {
         val context = context
         val comparator = this.comparator
 
@@ -95,7 +84,7 @@ abstract class AbsRequestStatusesLoader(
             return ListResponse.getListInstance(data)
         }
         val noItemsBefore = data.isEmpty()
-        val loadItemLimit = preferences[loadItemLimitKey]
+        val loadItemLimit = PreferencesSingleton.get(context)[loadItemLimitKey]
         val statuses = try {
             val accountKey = accountKey ?: throw AccountNotFoundException()
             val account = AccountManager.get(context).getDetailsOrThrow(accountKey, true)
@@ -152,7 +141,7 @@ abstract class AbsRequestStatusesLoader(
         return ListResponse.getListInstance(data)
     }
 
-    override final fun onStartLoading() {
+    final override fun onStartLoading() {
         exception = null
         super.onStartLoading()
     }

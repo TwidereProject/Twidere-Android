@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.promise
 
 import android.content.Context
-import android.content.SharedPreferences
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.all
 import org.mariotaku.kpreferences.get
@@ -29,28 +28,20 @@ import org.mariotaku.ktextension.toNulls
 import org.mariotaku.twidere.constant.homeRefreshDirectMessagesKey
 import org.mariotaku.twidere.constant.homeRefreshMentionsKey
 import org.mariotaku.twidere.constant.homeRefreshSavedSearchesKey
-import org.mariotaku.twidere.dagger.component.GeneralComponent
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.promise
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.task.statuses.GetHomeTimelineTask
 import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
-import javax.inject.Inject
 
 class RefreshPromises private constructor(val application: Context) {
-    @Inject
-    lateinit var preferences: SharedPreferences
-
-    init {
-        GeneralComponent.get(application).inject(this)
-    }
 
     fun refreshAll(): Promise<List<*>, Exception> {
         return refreshAll(lazy { DataStoreUtils.getActivatedAccountKeys(application) })
@@ -75,6 +66,7 @@ class RefreshPromises private constructor(val application: Context) {
             }
         }
         promises += homeTask.promise()
+        val preferences = PreferencesSingleton.get(application)
         if (preferences[homeRefreshMentionsKey]) {
             val task = GetActivitiesAboutMeTask(application)
             task.params = object : ContentRefreshParam {

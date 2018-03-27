@@ -13,6 +13,7 @@ import org.mariotaku.twidere.model.ParcelableHashtag
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserList
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler
 import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.view.holder.HashtagViewHolder
@@ -36,7 +37,7 @@ class VariousItemsAdapter(
 
     init {
         val handler = StatusAdapterLinkClickHandler<Any>(context,
-                preferences)
+                PreferencesSingleton.get(this.context))
         dummyAdapter = DummyItemAdapter(context, TwidereLinkify(handler), this, requestManager)
         handler.setAdapter(dummyAdapter)
         dummyAdapter.updateOptions()

@@ -22,7 +22,6 @@ package org.mariotaku.twidere.promise
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
-import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Point
@@ -58,7 +57,6 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.calculateInSampleSize
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.insert
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
@@ -68,6 +66,7 @@ import org.mariotaku.twidere.model.account.AccountExtras
 import org.mariotaku.twidere.model.schedule.ScheduleInfo
 import org.mariotaku.twidere.preference.ComponentPickerPreference
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.io.ContentLengthInputStream
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
@@ -91,8 +90,6 @@ class UpdateStatusPromise(
         private val stateCallback: StateCallback
 ) {
 
-    @Inject
-    lateinit var preferences: SharedPreferences
     @Inject
     lateinit var extraFeaturesService: ExtraFeaturesService
     @Inject
@@ -508,7 +505,7 @@ class UpdateStatusPromise(
 
     @Throws(UploaderNotFoundException::class, UploadException::class, ShortenerNotFoundException::class, ShortenException::class)
     private fun getStatusShortener(app: TwidereApplication): StatusShortenerInterface? {
-        val shortenerComponent = preferences.getString(KEY_STATUS_SHORTENER, null)
+        val shortenerComponent = PreferencesSingleton.get(context).getString(KEY_STATUS_SHORTENER, null)
         if (ComponentPickerPreference.isNoneValue(shortenerComponent)) return null
 
         val shortener = StatusShortenerInterface.getInstance(app, shortenerComponent) ?: throw ShortenerNotFoundException()
@@ -530,7 +527,7 @@ class UpdateStatusPromise(
 
     @Throws(UploaderNotFoundException::class, UploadException::class)
     private fun getMediaUploader(app: TwidereApplication): MediaUploaderInterface? {
-        val uploaderComponent = preferences.getString(KEY_MEDIA_UPLOADER, null)
+        val uploaderComponent = PreferencesSingleton.get(context).getString(KEY_MEDIA_UPLOADER, null)
         if (ComponentPickerPreference.isNoneValue(uploaderComponent)) return null
         val uploader = MediaUploaderInterface.getInstance(app, uploaderComponent) ?:
                 throw UploaderNotFoundException(context.getString(R.string.error_message_media_uploader_not_found))

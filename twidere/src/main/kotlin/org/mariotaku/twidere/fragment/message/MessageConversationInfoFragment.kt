@@ -92,6 +92,7 @@ import org.mariotaku.twidere.promise.ConversationPromises
 import org.mariotaku.twidere.promise.MessagePromises
 import org.mariotaku.twidere.promise.UpdateStatusPromise
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.view.holder.SimpleUserViewHolder
@@ -154,7 +155,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         recyclerView.addItemDecoration(itemDecoration)
 
 
-        val profileImageStyle = preferences[profileImageStyleKey]
+        val profileImageStyle = PreferencesSingleton.get(this.context!!)[profileImageStyleKey]
         appBarIcon.style = profileImageStyle
         conversationAvatar.style = profileImageStyle
 
@@ -261,7 +262,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         val name = data.getTitle(context, UserColorNameManager.get(context)).first
         val summary = data.getSubtitle(context)
 
-        @ImageShapeStyle val profileImageStyle: Int = preferences[profileImageStyleKey]
+        @ImageShapeStyle val profileImageStyle: Int = PreferencesSingleton.get(this.context!!)[profileImageStyleKey]
         Glide.with(this).loadProfileImage(context, data, profileImageStyle).into(conversationAvatar)
         Glide.with(this).loadProfileImage(context, data, profileImageStyle, 0f,
                 0f, ProfileImageSize.REASONABLY_SMALL).into(appBarIcon)

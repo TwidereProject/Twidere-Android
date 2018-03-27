@@ -3,7 +3,6 @@ package org.mariotaku.twidere.fragment.filter
 import android.accounts.AccountManager
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
@@ -22,7 +21,6 @@ import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.fragment_content_listview.*
 import nl.komponents.kovenant.then
 import nl.komponents.kovenant.ui.alwaysUi
-import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.twidere.R
@@ -31,9 +29,10 @@ import org.mariotaku.twidere.activity.AccountSelectorActivity
 import org.mariotaku.twidere.activity.LinkHandlerActivity
 import org.mariotaku.twidere.activity.UserSelectorActivity
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_HOST
-import org.mariotaku.twidere.constant.nameFirstKey
-import org.mariotaku.twidere.dagger.component.GeneralComponent
-import org.mariotaku.twidere.extension.*
+import org.mariotaku.twidere.extension.bulkDelete
+import org.mariotaku.twidere.extension.dismissProgressDialog
+import org.mariotaku.twidere.extension.getDetailsOrThrow
+import org.mariotaku.twidere.extension.showProgressDialog
 import org.mariotaku.twidere.fragment.AddUserFilterDialogFragment
 import org.mariotaku.twidere.model.FiltersData
 import org.mariotaku.twidere.model.ParcelableUser
@@ -44,8 +43,6 @@ import org.mariotaku.twidere.text.style.EmojiSpan
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.util.UserColorNameManager.Companion
-import javax.inject.Inject
 
 class FilteredUsersFragment : BaseFiltersFragment() {
 
@@ -91,7 +88,8 @@ class FilteredUsersFragment : BaseFiltersFragment() {
             REQUEST_EXPORT_MUTES_SELECT_ACCOUNT -> {
                 if (resultCode != FragmentActivity.RESULT_OK || data == null) return
                 val accountKey = data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
-                val userKeys = data.getBundleExtra(EXTRA_EXTRAS)?.getNullableTypedArray<UserKey>(EXTRA_ITEMS) ?: return
+                val userKeys = data.getBundleExtra(EXTRA_EXTRAS)?.getNullableTypedArray<UserKey>(EXTRA_ITEMS)
+                        ?: return
                 exportToMutedUsers(accountKey, userKeys)
             }
             REQUEST_PURCHASE_EXTRA_FEATURES -> {
@@ -219,20 +217,8 @@ class FilteredUsersFragment : BaseFiltersFragment() {
     ) : SimpleCursorAdapter(context, R.layout.list_item_two_line, null,
             emptyArray(), IntArray(0), 0), IFilterAdapter {
 
-        @Inject
-        lateinit var userColorNameManager: UserColorNameManager
-        @Inject
-        lateinit var preferences: SharedPreferences
-
-        private val nameFirst: Boolean
-
         private var indices: ObjectCursor.CursorIndices<FiltersData.UserItem>? = null
         private val secondaryTextColor = ThemeUtils.getTextColorSecondary(context)
-
-        init {
-            GeneralComponent.get(context).inject(this)
-            nameFirst = preferences[nameFirstKey]
-        }
 
         override fun bindView(view: View, context: Context, cursor: Cursor) {
             super.bindView(view, context, cursor)
@@ -246,7 +232,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
             val userKey = UserKey.valueOf(cursor.getString(indices[Filters.Users.USER_KEY]))
             val name = cursor.getString(indices[Filters.Users.NAME])
             val screenName = cursor.getString(indices[Filters.Users.SCREEN_NAME])
-            val displayName = userColorNameManager.getDisplayName(userKey, name, screenName)
+            val displayName = UserColorNameManager.get(context).getDisplayName(userKey, name, screenName)
             text1.spannable = displayName
 
             val ssb = SpannableStringBuilder(displayName)

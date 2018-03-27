@@ -32,6 +32,7 @@ import org.mariotaku.twidere.constant.promotionsEnabledKey
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.promotion.PromotionService
 import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
@@ -82,7 +83,7 @@ class PremiumDashboardActivity : BaseActivity() {
     override fun onDestroy() {
         if (isFinishing) {
             // Make sure promotionsEnabled set
-            preferences[promotionsEnabledKey] = preferences[promotionsEnabledKey]
+            PreferencesSingleton.get(this)[promotionsEnabledKey] = PreferencesSingleton.get(this)[promotionsEnabledKey]
         }
         super.onDestroy()
     }
@@ -110,7 +111,7 @@ class PremiumDashboardActivity : BaseActivity() {
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         super.onPrepareOptionsMenu(menu)
-        val promotionsEnabled = preferences[promotionsEnabledKey]
+        val promotionsEnabled = PreferencesSingleton.get(this)[promotionsEnabledKey]
         menu.setItemAvailability(R.id.enable_promotions, BuildConfig.DEBUG && !promotionsEnabled)
         menu.setItemAvailability(R.id.disable_promotions, promotionsEnabled)
         return true
@@ -151,11 +152,11 @@ class PremiumDashboardActivity : BaseActivity() {
                 }
             }
             R.id.enable_promotions -> {
-                preferences[promotionsEnabledKey] = true
+                PreferencesSingleton.get(this)[promotionsEnabledKey] = true
                 recreate()
             }
             R.id.disable_promotions -> {
-                preferences[promotionsEnabledKey] = false
+                PreferencesSingleton.get(this)[promotionsEnabledKey] = false
                 recreate()
             }
         }

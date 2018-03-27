@@ -20,13 +20,11 @@
 package org.mariotaku.twidere.promise
 
 import android.app.Application
-import android.content.SharedPreferences
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.microblog.library.model.microblog.UserListUpdate
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.promise.toastOnResult
 import org.mariotaku.twidere.extension.promise.twitterTask
@@ -37,20 +35,10 @@ import org.mariotaku.twidere.model.event.*
 import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
-import javax.inject.Inject
 
 class UserListPromises private constructor(private val application: Application) {
 
     private val profileImageSize: String = application.getString(R.string.profile_image_size)
-
-    @Inject
-    lateinit var preferences: SharedPreferences
-    @Inject
-    lateinit var userColorNameManager: UserColorNameManager
-
-    init {
-        GeneralComponent.get(application).inject(this)
-    }
 
     fun create(accountKey: UserKey, update: UserListUpdate): Promise<ParcelableUserList, Exception> = twitterTask(application, accountKey) { account, twitter ->
         return@twitterTask twitter.createUserList(update).toParcelable(accountKey,
@@ -105,7 +93,7 @@ class UserListPromises private constructor(private val application: Application)
     }.toastOnResult(application) { list ->
         if (users.size == 1) {
             val user = users.first()
-            val displayName = userColorNameManager.getDisplayName(user.key, user.name,
+            val displayName = UserColorNameManager.get(application).getDisplayName(user.key, user.name,
                     user.screen_name)
             return@toastOnResult application.getString(R.string.message_toast_added_user_to_list,
                     displayName, list.name)
@@ -126,7 +114,7 @@ class UserListPromises private constructor(private val application: Application)
     }.toastOnResult(application) { list ->
         if (users.size == 1) {
             val user = users.first()
-            val displayName = userColorNameManager.getDisplayName(user.key, user.name,
+            val displayName = UserColorNameManager.get(application).getDisplayName(user.key, user.name,
                     user.screen_name)
             return@toastOnResult application.getString(R.string.deleted_user_from_list,
                     displayName, list.name)

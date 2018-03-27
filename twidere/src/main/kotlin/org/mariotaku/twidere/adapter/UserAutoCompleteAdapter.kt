@@ -38,11 +38,11 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.displayProfileImageKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.dagger.component.GeneralComponent
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.ParcelableLiteUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.view.ProfileImageView
@@ -55,8 +55,10 @@ class UserAutoCompleteAdapter(
 ) : SimpleCursorAdapter(context, R.layout.list_item_auto_complete, null, emptyArray(), intArrayOf(), 0) {
 
     @Inject
+    @Deprecated(message = "Deprecated", replaceWith = ReplaceWith("PreferencesSingleton.get(context)", imports = ["org.mariotaku.twidere.singleton.PreferencesSingleton"]))
     lateinit var preferences: SharedPreferences
     @Inject
+    @Deprecated(message = "Deprecated", replaceWith = ReplaceWith("UserColorNameManager.get(context)", imports = ["org.mariotaku.twidere.util.UserColorNameManager"]))
     lateinit var userColorNameManager: UserColorNameManager
 
     private val displayProfileImage: Boolean
@@ -68,6 +70,7 @@ class UserAutoCompleteAdapter(
 
     init {
         GeneralComponent.get(context).inject(this)
+        val preferences = PreferencesSingleton.get(context)
         displayProfileImage = preferences[displayProfileImageKey]
         profileImageStyle = preferences[profileImageStyleKey]
     }
@@ -108,7 +111,7 @@ class UserAutoCompleteAdapter(
         if (filter != null) return filter.runQuery(constraint)
         val query = constraint.toString()
         val queryEscaped = query.replace("_", "^_")
-        val nicknameKeys = Utils.getMatchedNicknameKeys(query, userColorNameManager)
+        val nicknameKeys = Utils.getMatchedNicknameKeys(query, UserColorNameManager.get(context))
         val usersSelection = Expression.or(
                 Expression.likeRaw(Columns.Column(CachedUsers.SCREEN_NAME), "?||'%'", "^"),
                 Expression.likeRaw(Columns.Column(CachedUsers.NAME), "?||'%'", "^"),

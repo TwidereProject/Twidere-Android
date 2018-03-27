@@ -50,6 +50,7 @@ abstract class BasePreferenceFragment : PreferenceFragmentCompat(), IBaseFragmen
     @Deprecated(message = "Deprecated", replaceWith = ReplaceWith("UserColorNameManager.get(context!!)", imports = ["org.mariotaku.twidere.util.UserColorNameManager"]))
     lateinit var userColorNameManager: UserColorNameManager
     @Inject
+    @Deprecated(message = "Deprecated", replaceWith = ReplaceWith("PreferencesSingleton.get(context!!)", imports = ["org.mariotaku.twidere.singleton.PreferencesSingleton"]))
     lateinit var preferences: SharedPreferences
     @Inject
     lateinit var syncController: SyncTaskController

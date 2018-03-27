@@ -24,7 +24,6 @@ import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import com.twitter.Extractor
 import org.mariotaku.twidere.dagger.component.GeneralComponent
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.util.ActivityTracker
 import org.mariotaku.twidere.util.NotificationManagerWrapper
 import org.mariotaku.twidere.util.TaskServiceRunner
@@ -35,13 +34,14 @@ import javax.inject.Inject
 abstract class BaseService : Service() {
 
     @Inject
+    @Deprecated(message = "Deprecated", replaceWith = ReplaceWith("PreferencesSingleton.get(this)", imports = ["org.mariotaku.twidere.singleton.PreferencesSingleton"]))
     lateinit var preferences: SharedPreferences
     @Inject
     lateinit var notificationManager: NotificationManagerWrapper
     @Inject
     lateinit var extractor: Extractor
     @Inject
-    @Deprecated(message = "Deprecated", replaceWith = ReplaceWith("UserColorNameManager.get(context!!)", imports = ["org.mariotaku.twidere.util.UserColorNameManager"]))
+    @Deprecated(message = "Deprecated", replaceWith = ReplaceWith("UserColorNameManager.get(this)", imports = ["org.mariotaku.twidere.util.UserColorNameManager"]))
     lateinit var userColorNameManager: UserColorNameManager
     @Inject
     lateinit var taskServiceRunner: TaskServiceRunner

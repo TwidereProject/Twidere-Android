@@ -50,8 +50,11 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.constant.refreshAfterTweetKey
-import org.mariotaku.twidere.extension.*
+import org.mariotaku.twidere.extension.getDetails
+import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.extension.model.notificationBuilder
+import org.mariotaku.twidere.extension.queryOne
+import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtras
 import org.mariotaku.twidere.model.draft.StatusObjectActionExtras
@@ -61,6 +64,7 @@ import org.mariotaku.twidere.model.util.ParcelableStatusUpdateUtils
 import org.mariotaku.twidere.promise.RefreshPromises
 import org.mariotaku.twidere.promise.UpdateStatusPromise
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.task.CreateFavoriteTask
 import org.mariotaku.twidere.task.RetweetStatusTask
 import org.mariotaku.twidere.task.twitter.message.SendMessageTask
@@ -268,7 +272,8 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
                     if (exception != null) {
                         val cause = exception.cause
                         if (cause is MicroBlogException) {
-                            Toast.makeText(context, cause.errors?.firstOrNull()?.message ?: cause.message,
+                            Toast.makeText(context, cause.errors?.firstOrNull()?.message
+                                    ?: cause.message,
                                     Toast.LENGTH_SHORT).show()
                         } else {
                             Toast.makeText(context, exception.message, Toast.LENGTH_SHORT).show()
@@ -309,7 +314,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
                 contentResolver.insert(Drafts.CONTENT_URI_NOTIFICATIONS.withAppendedPath(result.draftId.toString()), null)
             }
         }
-        if (preferences[refreshAfterTweetKey]) {
+        if (PreferencesSingleton.get(this)[refreshAfterTweetKey]) {
             handler.post { RefreshPromises.get(this).refreshAll() }
         }
         stopForeground(false)

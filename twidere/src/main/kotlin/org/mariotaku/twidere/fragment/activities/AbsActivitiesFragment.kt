@@ -81,6 +81,7 @@ import org.mariotaku.twidere.model.refresh.BaseContentRefreshParam
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.singleton.BusSingleton
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.task.statuses.GetStatusesTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.UserColorNameManager.Companion
@@ -193,7 +194,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
         val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo
         val status = adapter.getActivity(contextMenuInfo.position).activityStatus ?: return
         inflater.inflate(R.menu.action_status, menu)
-        MenuUtils.setupForStatus(context, menu, preferences, UserColorNameManager.get(this.context!!), status)
+        MenuUtils.setupForStatus(context, menu, PreferencesSingleton.get(this.context!!), UserColorNameManager.get(this.context!!), status)
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
@@ -218,7 +219,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
                 return true
             }
             else -> return MenuUtils.handleStatusClick(context, this, fragmentManager!!,
-                    preferences, UserColorNameManager.get(this.context!!), status, item)
+                    PreferencesSingleton.get(this.context!!), UserColorNameManager.get(this.context!!), status, item)
         }
     }
 
@@ -301,7 +302,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
 
     protected open fun onPagedListChanged(data: PagedList<ParcelableActivity>?) {
         val firstVisiblePosition = positionBackup.getAndSet(null) ?: return
-        if (firstVisiblePosition.position == 0 && !preferences[readFromBottomKey]) {
+        if (firstVisiblePosition.position == 0 && !PreferencesSingleton.get(context!!)[readFromBottomKey]) {
             scrollToPositionWithOffset(0, 0)
         } else {
             scrollToPositionWithOffset(firstVisiblePosition.position, firstVisiblePosition.offset)
@@ -370,7 +371,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
         val expressions = mutableListOf(Expression.inArgs(Activities.ACCOUNT_KEY, accountKeys.size))
         val expressionArgs = mutableListOf(*accountKeys.mapToArray(UserKey::toString))
         if (filtersEnabled) {
-            expressions.add(DataStoreUtils.buildStatusFilterWhereClause(preferences, table,
+            expressions.add(DataStoreUtils.buildStatusFilterWhereClause(PreferencesSingleton.get(context!!), table,
                     null, filterScope))
         }
         val extraSelection = getExtraSelection()
@@ -502,8 +503,8 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
 
         override fun onMediaClick(holder: IStatusViewHolder, view: View, media: ParcelableMedia, position: Int) {
             val status = getActivityStatus(position) ?: return
-            IntentUtils.openMedia(context!!, status, media, preferences[newDocumentApiKey],
-                    preferences[displaySensitiveContentsKey],
+            IntentUtils.openMedia(context!!, status, media, PreferencesSingleton.get(context!!)[newDocumentApiKey],
+                    PreferencesSingleton.get(context!!)[displaySensitiveContentsKey],
                     null)
         }
 

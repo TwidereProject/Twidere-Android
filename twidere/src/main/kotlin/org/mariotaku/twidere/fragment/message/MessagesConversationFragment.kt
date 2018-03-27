@@ -86,6 +86,7 @@ import org.mariotaku.twidere.promise.MessagePromises
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.service.LengthyOperationsService
 import org.mariotaku.twidere.singleton.BusSingleton
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.view.ExtendedRecyclerView
@@ -139,7 +140,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
                 val message = adapter.getMessage(position)
                 IntentUtils.openMediaDirectly(context = activity, accountKey = accountKey,
                         media = message.media, current = media,
-                        newDocument = preferences[newDocumentApiKey], message = message)
+                        newDocument = PreferencesSingleton.get(context!!)[newDocumentApiKey], message = message)
             }
 
             override fun onMessageLongClick(position: Int, holder: RecyclerView.ViewHolder): Boolean {
@@ -183,7 +184,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         conversationTitle.setTextColor(ChameleonUtils.getColorDependent(theme.colorToolbar))
         conversationSubtitle.setTextColor(ChameleonUtils.getColorDependent(theme.colorToolbar))
 
-        conversationAvatar.style = preferences[profileImageStyleKey]
+        conversationAvatar.style = PreferencesSingleton.get(context!!)[profileImageStyleKey]
 
         setupEditText()
 
@@ -307,7 +308,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
                 val message = adapter.getMessage(menuInfo.position)
                 val conversation = adapter.conversation
                 menu.setHeaderTitle(message.getSummaryText(context!!, UserColorNameManager.get(context!!), conversation,
-                        preferences[nameFirstKey]))
+                        PreferencesSingleton.get(context!!)[nameFirstKey]))
                 activity!!.menuInflater.inflate(R.menu.menu_conversation_message_item, menu)
             }
             R.id.attachedMediaPreview -> {
@@ -551,7 +552,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(conversationTitle, null,
                 null, stateIcon, null)
 
-        Glide.with(this).loadProfileImage(activity, conversation, preferences[profileImageStyleKey])
+        Glide.with(this).loadProfileImage(activity, conversation, PreferencesSingleton.get(context!!)[profileImageStyleKey])
                 .into(conversationAvatar)
     }
 

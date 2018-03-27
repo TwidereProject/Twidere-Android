@@ -26,10 +26,6 @@ import android.widget.TextView
 import org.acra.dialog.CrashReportDialog
 import org.mariotaku.twidere.R
 
-/**
- * Created by mariotaku on 2017/5/8.
- */
-
 class CrashReportDialogActivity : CrashReportDialog() {
 
     override fun buildCustomView(savedInstanceState: Bundle?): View {

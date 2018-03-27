@@ -31,6 +31,7 @@ import org.mariotaku.twidere.annotation.AutoRefreshType
 import org.mariotaku.twidere.constant.autoRefreshCompatibilityModeKey
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.get
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.TaskServiceRunner.Companion.ACTION_REFRESH_DIRECT_MESSAGES
 import org.mariotaku.twidere.util.TaskServiceRunner.Companion.ACTION_REFRESH_HOME_TIMELINE
 import org.mariotaku.twidere.util.TaskServiceRunner.Companion.ACTION_REFRESH_NOTIFICATIONS
@@ -54,7 +55,7 @@ class LegacyTaskService : BaseService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d(LOGTAG, "LegacyTaskService received $intent")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
-                !preferences[autoRefreshCompatibilityModeKey]) return serviceNotHandled(startId)
+                !PreferencesSingleton.get(this)[autoRefreshCompatibilityModeKey]) return serviceNotHandled(startId)
         val action = intent?.action ?: return serviceNotHandled(startId)
         val promise = taskServiceRunner.promise(action) ?: return serviceNotHandled(startId)
         promise.deadline(3, TimeUnit.MINUTES).alwaysUi {

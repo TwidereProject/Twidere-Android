@@ -100,6 +100,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.receiver.NotificationReceiver
 import org.mariotaku.twidere.service.StreamingService
 import org.mariotaku.twidere.singleton.BusSingleton
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
@@ -237,9 +238,9 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             signInIntent.setClass(this, SignInActivity::class.java)
             startActivity(signInIntent)
             finish()
-            if (defaultAutoRefreshAskedKey !in preferences) {
+            if (defaultAutoRefreshAskedKey !in PreferencesSingleton.get(this)) {
                 // Assume first install
-                preferences[defaultAutoRefreshAskedKey] = false
+                PreferencesSingleton.get(this)[defaultAutoRefreshAskedKey] = false
             }
             return
         } else {
@@ -256,12 +257,12 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
         ThemeUtils.setCompatContentViewOverlay(window, EmptyDrawable())
 
-        val refreshOnStart = preferences[refreshOnStartKey]
-        var tabDisplayOptionInt = Utils.getTabDisplayOption(this, preferences)
+        val refreshOnStart = PreferencesSingleton.get(this)[refreshOnStartKey]
+        var tabDisplayOptionInt = Utils.getTabDisplayOption(this, PreferencesSingleton.get(this))
 
         ViewCompat.setOnApplyWindowInsetsListener(homeContent, this)
         homeMenu.fitsSystemWindows = Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ||
-                preferences[navbarStyleKey] != NavbarStyle.TRANSPARENT
+                PreferencesSingleton.get(this)[navbarStyleKey] != NavbarStyle.TRANSPARENT
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP || !ViewCompat.getFitsSystemWindows(homeMenu)) {
             ViewCompat.setOnApplyWindowInsetsListener(homeMenu, null)
         }
@@ -274,10 +275,10 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         }
         mainTabs.setTabDisplayOption(tabDisplayOptionInt)
         mainTabs.isTabExpandEnabled = DisplayOption.LABEL !in tabDisplayOptionInt
-        mainTabs.setDisplayBadge(preferences[unreadCountKey])
+        mainTabs.setDisplayBadge(PreferencesSingleton.get(this)[unreadCountKey])
         mainTabs.updateAppearance()
 
-        if (preferences[fabVisibleKey]) {
+        if (PreferencesSingleton.get(this)[fabVisibleKey]) {
             actionsButton.visibility = View.VISIBLE
         } else {
             actionsButton.visibility = View.GONE
@@ -320,7 +321,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
         StreamingService.startOrStopService(this)
 
-        if (!showDrawerTutorial() && !preferences[defaultAutoRefreshAskedKey]) {
+        if (!showDrawerTutorial() && !PreferencesSingleton.get(this)[defaultAutoRefreshAskedKey]) {
             showAutoRefreshConfirm()
         }
     }
@@ -352,7 +353,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         readStateManager.unregisterOnSharedPreferenceChangeListener(readStateChangeListener)
         BusSingleton.unregister(this)
         AccountManager.get(this).removeOnAccountsUpdatedListenerSafe(accountUpdatedListener)
-        preferences.edit().putInt(KEY_SAVED_TAB_POSITION, mainPager.currentItem).apply()
+        PreferencesSingleton.get(this).edit().putInt(KEY_SAVED_TAB_POSITION, mainPager.currentItem).apply()
         dataSyncProvider.newTimelineSyncManager()?.commit()
         super.onStop()
     }
@@ -613,9 +614,9 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     fun updateUnreadCount() {
         if (mainTabs == null || updateUnreadCountTask != null && updateUnreadCountTask!!.status == AsyncTask.Status.RUNNING)
             return
-        updateUnreadCountTask = UpdateUnreadCountTask(this, preferences, readStateManager, mainTabs,
+        updateUnreadCountTask = UpdateUnreadCountTask(this, PreferencesSingleton.get(this), readStateManager, mainTabs,
                 pagerAdapter.tabs.toTypedArray()).apply { execute() }
-        mainTabs.setDisplayBadge(preferences.getBoolean(SharedPreferenceConstants.KEY_UNREAD_COUNT, true))
+        mainTabs.setDisplayBadge(PreferencesSingleton.get(this).getBoolean(SharedPreferenceConstants.KEY_UNREAD_COUNT, true))
     }
 
     val tabs: List<SupportTabSpec>
@@ -696,12 +697,12 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             val accountKey = if (appSearchData != null && appSearchData.containsKey(EXTRA_ACCOUNT_KEY)) {
                 appSearchData.getParcelable(EXTRA_ACCOUNT_KEY)
             } else {
-                Utils.getDefaultAccountKey(this, preferences)
+                Utils.getDefaultAccountKey(this, PreferencesSingleton.get(this))
             }
             IntentUtils.openSearch(this, accountKey, query)
             return -1
         }
-        val refreshOnStart = preferences.getBoolean(SharedPreferenceConstants.KEY_REFRESH_ON_START, false)
+        val refreshOnStart = PreferencesSingleton.get(this).getBoolean(SharedPreferenceConstants.KEY_REFRESH_ON_START, false)
         if (handleExtraIntent && refreshOnStart) {
             RefreshPromises.get(this).refreshAll()
         }
@@ -758,7 +759,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     }
 
     private fun showDrawerTutorial(): Boolean {
-        if (preferences[drawerTutorialCompleted]) return false
+        if (PreferencesSingleton.get(this)[drawerTutorialCompleted]) return false
         val targetSize = resources.getDimensionPixelSize(R.dimen.element_size_mlarge)
         val height = resources.displayMetrics.heightPixels
         val listener: TapTargetView.Listener = object : TapTargetView.Listener() {
@@ -770,7 +771,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             }
 
             override fun onTargetDismissed(view: TapTargetView?, userInitiated: Boolean) {
-                preferences[drawerTutorialCompleted] = true
+                PreferencesSingleton.get(this@HomeActivity)[drawerTutorialCompleted] = true
                 showAutoRefreshConfirm()
 
             }
@@ -797,11 +798,11 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     }
 
     private fun setTabPosition(initialTab: Int) {
-        val rememberPosition = preferences.getBoolean(SharedPreferenceConstants.KEY_REMEMBER_POSITION, true)
+        val rememberPosition = PreferencesSingleton.get(this).getBoolean(SharedPreferenceConstants.KEY_REMEMBER_POSITION, true)
         if (initialTab >= 0) {
             mainPager.currentItem = initialTab.coerceInOr(0 until pagerAdapter.count, 0)
         } else if (rememberPosition) {
-            val position = preferences.getInt(SharedPreferenceConstants.KEY_SAVED_TAB_POSITION, 0)
+            val position = PreferencesSingleton.get(this).getInt(SharedPreferenceConstants.KEY_SAVED_TAB_POSITION, 0)
             mainPager.currentItem = position.coerceInOr(0 until pagerAdapter.count, 0)
         }
     }
@@ -815,7 +816,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         if (useTabNavigation) {
             toolbar.setContentInsetsRelative(0, 0)
 
-            drawerToggleButton.visibility = if (preferences[drawerToggleKey]) View.VISIBLE else View.GONE
+            drawerToggleButton.visibility = if (PreferencesSingleton.get(this)[drawerToggleKey]) View.VISIBLE else View.GONE
         } else {
             val attrs = intArrayOf(R.attr.contentInsetStart, R.attr.contentInsetEnd)
             val toolbarStyle = obtainStyledAttributes(null, attrs, R.attr.toolbarStyle,
@@ -841,7 +842,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             mainPager.pageMargin = resources.getDimensionPixelOffset(R.dimen.home_page_margin)
             mainPager.setPageMarginDrawable(ThemeUtils.getDrawableFromThemeAttribute(this, R.attr.dividerVertical))
             pagerAdapter.hasMultipleColumns = true
-            pagerAdapter.preferredColumnWidth = when (preferences[multiColumnWidthKey]) {
+            pagerAdapter.preferredColumnWidth = when (PreferencesSingleton.get(this)[multiColumnWidthKey]) {
                 "narrow" -> resources.getDimension(R.dimen.preferred_tab_column_width_narrow)
                 "wide" -> resources.getDimension(R.dimen.preferred_tab_column_width_wide)
                 else -> resources.getDimension(R.dimen.preferred_tab_column_width_normal)
@@ -875,7 +876,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         if (!extraFeaturesService.isSupported()) return
         // Skip if already bought enhanced features pack or have set promotions options
         if (extraFeaturesService.isEnabled(ExtraFeaturesService.FEATURE_FEATURES_PACK)
-                || promotionsEnabledKey in preferences) {
+                || promotionsEnabledKey in PreferencesSingleton.get(this)) {
             return
         }
 
@@ -938,9 +939,9 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     private fun hasMultiColumns(): Boolean {
         if (!DeviceUtils.isDeviceTablet(this) || !DeviceUtils.isScreenTablet(this)) return false
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            return preferences.getBoolean("multi_column_tabs_landscape", resources.getBoolean(R.bool.default_multi_column_tabs_land))
+            return PreferencesSingleton.get(this).getBoolean("multi_column_tabs_landscape", resources.getBoolean(R.bool.default_multi_column_tabs_land))
         }
-        return preferences.getBoolean("multi_column_tabs_portrait", resources.getBoolean(R.bool.default_multi_column_tabs_port))
+        return PreferencesSingleton.get(this).getBoolean("multi_column_tabs_portrait", resources.getBoolean(R.bool.default_multi_column_tabs_port))
     }
 
 
@@ -1042,10 +1043,10 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             builder.setTitle(R.string.auto_refresh)
             builder.setMessage(R.string.message_auto_refresh_confirm)
             builder.setPositiveButton(android.R.string.ok) { _, _ ->
-                preferences[defaultAutoRefreshKey] = true
+                PreferencesSingleton.get(context!!)[defaultAutoRefreshKey] = true
             }
             builder.setNegativeButton(R.string.action_no_thanks) { _, _ ->
-                preferences[defaultAutoRefreshKey] = false
+                PreferencesSingleton.get(context!!)[defaultAutoRefreshKey] = false
             }
             val dialog = builder.create()
             dialog.onShow { it.applyTheme() }
@@ -1053,7 +1054,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         }
 
         override fun onDismiss(dialog: DialogInterface?) {
-            preferences[defaultAutoRefreshAskedKey] = true
+            PreferencesSingleton.get(context!!)[defaultAutoRefreshAskedKey] = true
             super.onDismiss(dialog)
         }
     }

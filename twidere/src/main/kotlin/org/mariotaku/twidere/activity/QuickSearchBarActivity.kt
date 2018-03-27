@@ -66,6 +66,7 @@ import org.mariotaku.twidere.model.SuggestionItem
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory
 import org.mariotaku.twidere.provider.TwidereDataStore.Suggestions
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.EditTextEnterHandler.EnterListener
 import org.mariotaku.twidere.util.promotion.PromotionService
@@ -273,12 +274,12 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
             SuggestionsAdapter.VIEW_TYPE_USER_SUGGESTION_ITEM -> {
                 IntentUtils.openUserProfile(this, details.key,
                         UserKey.valueOf(item.extra_id!!), item.summary, null,
-                        preferences[newDocumentApiKey], null)
+                        PreferencesSingleton.get(this)[newDocumentApiKey], null)
                 finish()
             }
             SuggestionsAdapter.VIEW_TYPE_USER_SCREEN_NAME -> {
                 IntentUtils.openUserProfile(this, details.key, null, item.title,
-                        null, preferences[newDocumentApiKey], null)
+                        null, PreferencesSingleton.get(this)[newDocumentApiKey], null)
                 finish()
             }
             SuggestionsAdapter.VIEW_TYPE_SAVED_SEARCH, SuggestionsAdapter.VIEW_TYPE_SEARCH_HISTORY -> {
@@ -356,7 +357,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
             private val activity: QuickSearchBarActivity
     ) : CursorAdapter(activity, null, 0), OnClickListener {
 
-        private val profileImageStyle = activity.preferences[profileImageStyleKey]
+        private val profileImageStyle = PreferencesSingleton.get(activity)[profileImageStyleKey]
         private val profileImageSize = activity.getString(R.string.profile_image_size)
         private val requestManager = Glide.with(activity)
         private val inflater = LayoutInflater.from(activity)

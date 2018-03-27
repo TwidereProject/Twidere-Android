@@ -59,6 +59,7 @@ import org.mariotaku.twidere.menu.FavoriteItemProvider
 import org.mariotaku.twidere.menu.RetweetItemProvider
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.UserColorNameManager.Companion
 import org.mariotaku.twidere.util.twitter.card.StatusCardViewFactory
@@ -89,7 +90,7 @@ class DetailStatusViewHolder(
 
     init {
         this.linkClickHandler = DetailStatusLinkClickHandler(adapter.context,
-                adapter.multiSelectManager, adapter, adapter.preferences)
+                adapter.multiSelectManager, adapter, PreferencesSingleton.get(adapter.context))
         this.linkify = TwidereLinkify(linkClickHandler)
 
         initViews()
@@ -338,7 +339,7 @@ class DetailStatusViewHolder(
             itemView.twitterCard.visibility = View.GONE
         }
 
-        MenuUtils.setupForStatus(context, itemView.menuBar.menu, fragment.preferences, colorNameManager,
+        MenuUtils.setupForStatus(context, itemView.menuBar.menu, PreferencesSingleton.get(fragment.context!!), colorNameManager,
                 status, adapter.statusAccount!!)
 
 
@@ -374,7 +375,7 @@ class DetailStatusViewHolder(
     override fun onClick(v: View) {
         val status = adapter.getStatus(layoutPosition)
         val fragment = adapter.fragment
-        val preferences = fragment.preferences
+        val preferences = PreferencesSingleton.get(fragment.context!!)
         when (v) {
             itemView.mediaPreviewLoad -> {
                 if (adapter.sensitiveContentEnabled || !status.is_possibly_sensitive) {
@@ -419,7 +420,7 @@ class DetailStatusViewHolder(
         val fragment = adapter.fragment
         val status = adapter.getStatus(layoutPosition)
         val activity = fragment.activity!!
-        val preferences = fragment.preferences
+        val preferences = PreferencesSingleton.get(fragment.context!!)
         val manager = UserColorNameManager.get(activity)
         return MenuUtils.handleStatusClick(activity, fragment, fragment.childFragmentManager,
                 preferences, manager, status, item)

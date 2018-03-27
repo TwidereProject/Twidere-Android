@@ -35,6 +35,7 @@ import org.mariotaku.twidere.constant.translationDestinationKey
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.fragment.BaseDialogFragment
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import java.text.Collator
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
@@ -46,7 +47,7 @@ class TranslationDestinationDialogFragment : BaseDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(context!!)
         val languages = arguments!!.getTypedArray<DisplayLanguage>(EXTRA_LANGUAGES).sortedArrayWith(LanguageComparator())
-        val selectedLanguage = preferences[translationDestinationKey] ?: arguments!!.getString(EXTRA_SELECTED_LANGUAGE)
+        val selectedLanguage = PreferencesSingleton.get(context!!)[translationDestinationKey] ?: arguments!!.getString(EXTRA_SELECTED_LANGUAGE)
         val selectedIndex = languages.indexOfFirst { selectedLanguage == it.code }
         builder.setTitle(R.string.title_translate_to)
         builder.setSingleChoiceItems(languages.mapToArray { it.name }, selectedIndex) { _, which ->
@@ -55,7 +56,7 @@ class TranslationDestinationDialogFragment : BaseDialogFragment() {
         builder.setPositiveButton(android.R.string.ok) lambda@ { _, _ ->
             val idx = currentIndex.get()
             if (idx < 0) return@lambda
-            preferences[translationDestinationKey] = languages[idx].code
+            PreferencesSingleton.get(context!!)[translationDestinationKey] = languages[idx].code
             (targetFragment as? StatusFragment)?.reloadTranslation()
         }
         builder.setNegativeButton(android.R.string.cancel, null)

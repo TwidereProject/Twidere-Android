@@ -47,6 +47,7 @@ import org.mariotaku.twidere.extension.isSameDay
 import org.mariotaku.twidere.extension.model.timestamp
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableMessage.MessageType
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.DirectMessageOnLinkClickHandler
 import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.TwidereLinkify
@@ -74,10 +75,10 @@ class MessagesConversationAdapter(
         }
 
     @PreviewStyle
-    val mediaPreviewStyle: Int = preferences[mediaPreviewStyleKey]
-    val linkHighlightingStyle: Int = preferences[linkHighlightOptionKey]
-    val nameFirst: Boolean = preferences[nameFirstKey]
-    val linkify: TwidereLinkify = TwidereLinkify(DirectMessageOnLinkClickHandler(context, null, preferences))
+    val mediaPreviewStyle: Int = PreferencesSingleton.get(this.context)[mediaPreviewStyleKey]
+    val linkHighlightingStyle: Int = PreferencesSingleton.get(this.context)[linkHighlightOptionKey]
+    val nameFirst: Boolean = PreferencesSingleton.get(this.context)[nameFirstKey]
+    val linkify: TwidereLinkify = TwidereLinkify(DirectMessageOnLinkClickHandler(context, null, PreferencesSingleton.get(this.context)))
     val mediaClickListener: OnMediaClickListener = object : OnMediaClickListener {
         override fun onMediaClick(view: View, current: ParcelableMedia, accountKey: UserKey?, id: Long) {
             listener?.onMediaClick(id.toInt(), current, accountKey)

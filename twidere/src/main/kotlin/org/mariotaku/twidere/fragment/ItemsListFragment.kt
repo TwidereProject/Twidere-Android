@@ -27,6 +27,7 @@ import org.mariotaku.twidere.fragment.timeline.AbsTimelineFragment
 import org.mariotaku.twidere.model.ParcelableHashtag
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.MenuUtils
 import org.mariotaku.twidere.util.UserColorNameManager
@@ -96,7 +97,7 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
 
             override fun onMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia, statusPosition: Int) {
                 val status = dummyItemAdapter.getStatus(statusPosition)
-                IntentUtils.openMedia(context, status, current, preferences[newDocumentApiKey], preferences[displaySensitiveContentsKey],
+                IntentUtils.openMedia(context, status, current, PreferencesSingleton.get(this@ItemsListFragment.context!!)[newDocumentApiKey], PreferencesSingleton.get(this@ItemsListFragment.context!!)[displaySensitiveContentsKey],
                         null)
             }
 
@@ -104,13 +105,13 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
                 val status = dummyItemAdapter.getStatus(position)
                 IntentUtils.openUserProfile(context, status.account_key, status.user_key,
                         status.user_screen_name, status.extras?.user_statusnet_profile_url,
-                        preferences[newDocumentApiKey])
+                        PreferencesSingleton.get(this@ItemsListFragment.context!!)[newDocumentApiKey])
             }
         }
         dummyItemAdapter.userClickListener = object : IUsersAdapter.SimpleUserClickListener() {
             override fun onUserClick(holder: UserViewHolder, position: Int) {
                 val user = dummyItemAdapter.getUser(position) ?: return
-                IntentUtils.openUserProfile(context, user, preferences[newDocumentApiKey],
+                IntentUtils.openUserProfile(context, user, PreferencesSingleton.get(this@ItemsListFragment.context!!)[newDocumentApiKey],
                         null)
             }
         }
@@ -149,7 +150,7 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
                 val dummyAdapter = adapter.dummyAdapter
                 val status = dummyAdapter.getStatus(contextMenuInfo.position)
                 inflater.inflate(R.menu.action_status, menu)
-                MenuUtils.setupForStatus(context, menu, preferences, UserColorNameManager.get(context),
+                MenuUtils.setupForStatus(context, menu, PreferencesSingleton.get(this.context!!), UserColorNameManager.get(context),
                         status)
             }
         }
@@ -171,7 +172,7 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
                     return true
                 }
                 return MenuUtils.handleStatusClick(context, this, fragmentManager!!,
-                        preferences, UserColorNameManager.get(context), status, item)
+                        PreferencesSingleton.get(this.context!!), UserColorNameManager.get(context), status, item)
             }
         }
         return false

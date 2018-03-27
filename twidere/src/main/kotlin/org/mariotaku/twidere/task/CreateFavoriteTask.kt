@@ -11,7 +11,6 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.TWITTER_ERROR_ALREADY_FAVORITED
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
@@ -26,6 +25,7 @@ import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.promise.UpdateStatusPromise
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.singleton.BusSingleton
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.updateStatusInfo
@@ -80,7 +80,7 @@ class CreateFavoriteTask(context: Context, accountKey: UserKey, private val stat
         if (result != null) {
             taskEvent.status = result
             taskEvent.isSucceeded = true
-            if (preferences[iWantMyStarsBackKey]) {
+            if (PreferencesSingleton.get(context)[iWantMyStarsBackKey]) {
                 Toast.makeText(context, R.string.message_toast_status_favorited,
                         Toast.LENGTH_SHORT).show()
             } else {

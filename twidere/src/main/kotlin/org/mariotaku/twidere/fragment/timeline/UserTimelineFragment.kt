@@ -38,6 +38,7 @@ import org.mariotaku.twidere.model.refresh.UserRelatedContentRefreshParam
 import org.mariotaku.twidere.model.timeline.TimelineFilter
 import org.mariotaku.twidere.model.timeline.UserTimelineFilter
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.task.statuses.GetUserTimelineTask
 
 class UserTimelineFragment : AbsTimelineFragment() {
@@ -47,7 +48,7 @@ class UserTimelineFragment : AbsTimelineFragment() {
         get() = Statuses.UserTimeline.CONTENT_URI.withAppendedPath(tabId)
 
     override val timelineFilter: TimelineFilter?
-        get() = if (arguments!!.getBoolean(EXTRA_ENABLE_TIMELINE_FILTER)) preferences[userTimelineFilterKey] else null
+        get() = if (arguments!!.getBoolean(EXTRA_ENABLE_TIMELINE_FILTER)) PreferencesSingleton.get(context!!)[userTimelineFilterKey] else null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -79,7 +80,7 @@ class UserTimelineFragment : AbsTimelineFragment() {
             val builder = AlertDialog.Builder(context!!)
             val values = resources.getStringArray(R.array.values_user_timeline_filter)
             val checkedItems = BooleanArray(values.size) {
-                val filter = preferences[userTimelineFilterKey]
+                val filter = PreferencesSingleton.get(context!!)[userTimelineFilterKey]
                 when (values[it]) {
                     "replies" -> filter.isIncludeReplies
                     "retweets" -> filter.isIncludeRetweets
@@ -96,7 +97,7 @@ class UserTimelineFragment : AbsTimelineFragment() {
                     isIncludeRetweets = listView.isItemChecked(values.indexOf("retweets"))
                     isIncludeReplies = listView.isItemChecked(values.indexOf("replies"))
                 }
-                preferences.edit().apply {
+                PreferencesSingleton.get(context!!).edit().apply {
                     this[userTimelineFilterKey] = filter
                 }.apply()
                 (targetFragment as UserTimelineFragment).reloadAll()

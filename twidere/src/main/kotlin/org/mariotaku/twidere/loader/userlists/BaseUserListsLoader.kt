@@ -34,7 +34,6 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.dagger.component.GeneralComponent
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.getDetails
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
@@ -43,6 +42,7 @@ import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.CursorPagination
 import org.mariotaku.twidere.model.pagination.Pagination
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.collection.NoDuplicatesArrayList
 import java.util.*
 import javax.inject.Inject
@@ -54,6 +54,7 @@ abstract class BaseUserListsLoader(
         data: List<ParcelableUserList>?
 ) : FixedAsyncTaskLoader<List<ParcelableUserList>>(context), IPaginationLoader {
     @Inject
+    @Deprecated(message = "Deprecated", replaceWith = ReplaceWith("PreferencesSingleton.get(context)", imports = ["org.mariotaku.twidere.singleton.PreferencesSingleton"]))
     lateinit var preferences: SharedPreferences
 
     protected val data = NoDuplicatesArrayList<ParcelableUserList>()
@@ -85,7 +86,7 @@ abstract class BaseUserListsLoader(
             val details = am.getDetails(accountKey, true) ?: return data
             val twitter = details.newMicroBlogInstance(context, Twitter::class.java)
             val paging = Paging()
-            paging.count(preferences[loadItemLimitKey].coerceIn(0, 100))
+            paging.count(PreferencesSingleton.get(context)[loadItemLimitKey].coerceIn(0, 100))
             pagination?.applyTo(paging)
             listLoaded = getUserLists(twitter, paging)
         } catch (e: MicroBlogException) {

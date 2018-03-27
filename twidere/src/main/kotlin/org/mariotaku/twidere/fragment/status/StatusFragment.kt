@@ -80,12 +80,12 @@ import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.singleton.BusSingleton
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.task.AbsAccountRequestTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.ContentScrollHandler.ContentListSupport
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.util.RecyclerViewScrollHandler.RecyclerViewCallback
-import org.mariotaku.twidere.util.UserColorNameManager.Companion
 import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener
 import org.mariotaku.twidere.view.ExtendedRecyclerView
 import org.mariotaku.twidere.view.holder.GapViewHolder
@@ -227,6 +227,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     override fun onMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia, statusPosition: Int) {
         val status = adapter.getStatus(statusPosition)
+        val preferences = PreferencesSingleton.get(context!!)
         IntentUtils.openMedia(activity!!, status, current, preferences[newDocumentApiKey],
                 preferences[displaySensitiveContentsKey])
     }
@@ -234,6 +235,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     override fun onQuotedMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia, statusPosition: Int) {
         val status = adapter.getStatus(statusPosition)
         val quotedMedia = status.quoted?.media ?: return
+        val preferences = PreferencesSingleton.get(context!!)
         IntentUtils.openMedia(activity!!, status.account_key, status.is_possibly_sensitive, status,
                 current, quotedMedia, preferences[newDocumentApiKey],
                 preferences[displaySensitiveContentsKey])
@@ -278,17 +280,17 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         val status = adapter.getStatus(position)
         IntentUtils.openUserProfile(activity!!, status.account_key, status.user_key,
                 status.user_screen_name, status.extras?.user_statusnet_profile_url,
-                preferences[newDocumentApiKey], null)
+                PreferencesSingleton.get(context!!)[newDocumentApiKey], null)
     }
 
     override fun onMediaClick(view: View, current: ParcelableMedia, accountKey: UserKey?, id: Long) {
         val status = adapter.status ?: return
         if ((view.parent as View).id == R.id.quotedMediaPreview && status.attachment?.quoted?.media != null) {
             IntentUtils.openMediaDirectly(activity!!, accountKey, status.attachment?.quoted?.media!!, current,
-                    newDocument = preferences[newDocumentApiKey], status = status)
+                    newDocument = PreferencesSingleton.get(context!!)[newDocumentApiKey], status = status)
         } else if (status.attachment?.media != null) {
             IntentUtils.openMediaDirectly(activity!!, accountKey, status.attachment?.media!!, current,
-                    newDocument = preferences[newDocumentApiKey], status = status)
+                    newDocument = PreferencesSingleton.get(context!!)[newDocumentApiKey], status = status)
         }
     }
 
@@ -523,7 +525,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         val status = adapter.getStatus(contextMenuInfo.position)
         val inflater = MenuInflater(context)
         inflater.inflate(R.menu.action_status, menu)
-        MenuUtils.setupForStatus(context!!, menu, preferences, UserColorNameManager.get(context!!), status)
+        MenuUtils.setupForStatus(context!!, menu, PreferencesSingleton.get(context!!), UserColorNameManager.get(context!!), status)
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
@@ -538,7 +540,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             return true
         }
         return MenuUtils.handleStatusClick(activity!!, this, fragmentManager!!,
-                preferences, UserColorNameManager.get(context!!), status, item)
+                PreferencesSingleton.get(context!!), UserColorNameManager.get(context!!), status, item)
     }
 
     @Subscribe
@@ -621,11 +623,11 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
         override fun onExecute(account: AccountDetails, params: Any?): TranslationResult {
             val twitter = account.newMicroBlogInstance(context, Twitter::class.java)
-            val prefDest = preferences.getString(KEY_TRANSLATION_DESTINATION, null)
+            val prefDest = PreferencesSingleton.get(context).getString(KEY_TRANSLATION_DESTINATION, null)
             val dest: String
             if (TextUtils.isEmpty(prefDest)) {
                 dest = twitter.accountSettings.language
-                val editor = preferences.edit()
+                val editor = PreferencesSingleton.get(context).edit()
                 editor.putString(KEY_TRANSLATION_DESTINATION, dest)
                 editor.apply()
             } else {

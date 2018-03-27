@@ -49,6 +49,7 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.AccountPreferences
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.deleteAccountData
@@ -161,7 +162,7 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
 
     override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         val account = adapter.getItem(position)
-        IntentUtils.openUserProfile(context!!, account.user, preferences[newDocumentApiKey],
+        IntentUtils.openUserProfile(context!!, account.user, PreferencesSingleton.get(context!!)[newDocumentApiKey],
                 null)
     }
 

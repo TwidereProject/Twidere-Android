@@ -59,6 +59,7 @@ import org.mariotaku.twidere.promise.BlockPromises
 import org.mariotaku.twidere.promise.FriendshipPromises
 import org.mariotaku.twidere.promise.MutePromises
 import org.mariotaku.twidere.singleton.BusSingleton
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
@@ -144,7 +145,7 @@ abstract class AbsUsersFragment : AbsContentListRecyclerViewFragment<ParcelableU
 
     override fun onUserClick(holder: UserViewHolder, position: Int) {
         val user = adapter.getUser(position) ?: return
-        IntentUtils.openUserProfile(activity!!, user, preferences[newDocumentApiKey])
+        IntentUtils.openUserProfile(activity!!, user, PreferencesSingleton.get(context!!)[newDocumentApiKey])
     }
 
     override fun onFollowClicked(holder: UserViewHolder, position: Int) {
@@ -229,7 +230,7 @@ abstract class AbsUsersFragment : AbsContentListRecyclerViewFragment<ParcelableU
             errorLiveData.postValue(SingleResponse(it))
         }
         val maxLoadLimit = getMaxLoadItemLimit(accountKey)
-        val loadLimit = preferences[loadItemLimitKey]
+        val loadLimit = PreferencesSingleton.get(this.context!!)[loadItemLimitKey]
         val apiLiveData = ExceptionLiveData.wrap(LivePagedListBuilder(factory, PagedList.Config.Builder()
                 .setPageSize(loadLimit.coerceAtMost(maxLoadLimit))
                 .setInitialLoadSizeHint(loadLimit.coerceAtMost(maxLoadLimit))

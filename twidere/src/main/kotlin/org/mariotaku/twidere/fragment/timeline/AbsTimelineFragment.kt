@@ -93,6 +93,7 @@ import org.mariotaku.twidere.model.timeline.TimelineFilter
 import org.mariotaku.twidere.promise.StatusPromises
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.singleton.BusSingleton
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.task.CreateFavoriteTask
 import org.mariotaku.twidere.task.statuses.GetStatusesTask
 import org.mariotaku.twidere.util.*
@@ -218,7 +219,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo
         val status = adapter.getStatus(contextMenuInfo.position)
         inflater.inflate(R.menu.action_status, menu)
-        MenuUtils.setupForStatus(context, menu, preferences, UserColorNameManager.get(this.context!!), status)
+        MenuUtils.setupForStatus(context, menu, PreferencesSingleton.get(this.context!!), UserColorNameManager.get(this.context!!), status)
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
@@ -243,7 +244,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                 return true
             }
             else -> return MenuUtils.handleStatusClick(context, this, fragmentManager!!,
-                    preferences, UserColorNameManager.get(this.context!!), status, item)
+                    PreferencesSingleton.get(this.context!!), UserColorNameManager.get(this.context!!), status, item)
         }
     }
 
@@ -342,7 +343,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
 
     protected open fun onPagedListChanged(data: PagedList<ParcelableStatus>?) {
         val firstVisiblePosition = positionBackup.getAndSet(null) ?: return
-        if (firstVisiblePosition.position == 0 && !preferences[readFromBottomKey]) {
+        if (firstVisiblePosition.position == 0 && !PreferencesSingleton.get(context!!)[readFromBottomKey]) {
             scrollToPositionWithOffset(0, 0)
         } else {
             scrollToPositionWithOffset(firstVisiblePosition.position, firstVisiblePosition.offset)
@@ -419,7 +420,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
             errorLiveData.postValue(SingleResponse(it))
         }
         val maxLoadLimit = getMaxLoadItemLimit(accountKey)
-        val loadLimit = preferences[loadItemLimitKey]
+        val loadLimit = PreferencesSingleton.get(this.context!!)[loadItemLimitKey]
         val apiLiveData = ExceptionLiveData.wrap(LivePagedListBuilder(factory, PagedList.Config.Builder()
                 .setPageSize(loadLimit.coerceAtMost(maxLoadLimit))
                 .setInitialLoadSizeHint(loadLimit.coerceAtMost(maxLoadLimit))
@@ -443,7 +444,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         val expressions = mutableListOf(Expression.inArgs(Statuses.ACCOUNT_KEY, accountKeys.size))
         val expressionArgs = mutableListOf(*accountKeys.mapToArray(UserKey::toString))
         if (filtersEnabled) {
-            expressions.add(DataStoreUtils.buildStatusFilterWhereClause(preferences, table,
+            expressions.add(DataStoreUtils.buildStatusFilterWhereClause(PreferencesSingleton.get(this.context!!), table,
                     null, filterScope))
         }
         val extraSelection = getExtraSelection()
@@ -566,8 +567,8 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         override fun onMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia, statusPosition: Int) {
             val context = context ?: return
             val status = getFullStatus(statusPosition)
-            IntentUtils.openMedia(context, status, current, preferences[newDocumentApiKey],
-                    preferences[displaySensitiveContentsKey])
+            IntentUtils.openMedia(context, status, current, PreferencesSingleton.get(this@AbsTimelineFragment.context!!)[newDocumentApiKey],
+                    PreferencesSingleton.get(this@AbsTimelineFragment.context!!)[displaySensitiveContentsKey])
         }
 
         override fun onQuotedMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia, statusPosition: Int) {
@@ -575,7 +576,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
             val status = getFullStatus(statusPosition)
             val quotedMedia = status.quoted?.media ?: return
             IntentUtils.openMedia(context, status.account_key, status.is_possibly_sensitive, status,
-                    current, quotedMedia, preferences[newDocumentApiKey], preferences[displaySensitiveContentsKey])
+                    current, quotedMedia, PreferencesSingleton.get(this@AbsTimelineFragment.context!!)[newDocumentApiKey], PreferencesSingleton.get(this@AbsTimelineFragment.context!!)[displaySensitiveContentsKey])
         }
 
         override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
@@ -589,7 +590,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
             val status = getFullStatus(position)
             val intent = IntentUtils.userProfile(status.account_key, status.user_key,
                     status.user_screen_name, status.extras?.user_statusnet_profile_url)
-            IntentUtils.applyNewDocument(intent, preferences[newDocumentApiKey])
+            IntentUtils.applyNewDocument(intent, PreferencesSingleton.get(context!!)[newDocumentApiKey])
             startActivity(intent)
         }
 
@@ -678,7 +679,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                 }
                 R.id.favorite -> {
                     when {
-                        fragment.preferences[favoriteConfirmationKey] -> fragment.executeAfterFragmentResumed {
+                        PreferencesSingleton.get(fragment.context!!)[favoriteConfirmationKey] -> fragment.executeAfterFragmentResumed {
                             FavoriteConfirmDialogFragment.show(it.childFragmentManager,
                                     status.account_key, status.id, status)
                         }
@@ -713,7 +714,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                     val accountKey = data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
                     val extras = data.getBundleExtra(EXTRA_EXTRAS)
                     val status = extras.status!!
-                    if (fragment.preferences[favoriteConfirmationKey]) {
+                    if (PreferencesSingleton.get(fragment.context!!)[favoriteConfirmationKey]) {
                         fragment.executeAfterFragmentResumed {
                             FavoriteConfirmDialogFragment.show(it.childFragmentManager,
                                     accountKey, status.id, status)
@@ -771,7 +772,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                     return true
                 }
                 ACTION_STATUS_FAVORITE -> {
-                    if (fragment.preferences[favoriteConfirmationKey]) {
+                    if (PreferencesSingleton.get(fragment.context!!)[favoriteConfirmationKey]) {
                         fragment.executeAfterFragmentResumed {
                             FavoriteConfirmDialogFragment.show(it.childFragmentManager,
                                     status.account_key, status.id, status)

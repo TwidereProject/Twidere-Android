@@ -103,6 +103,7 @@ import org.mariotaku.twidere.model.account.StatusNetAccountExtras
 import org.mariotaku.twidere.model.account.TwitterAccountExtras
 import org.mariotaku.twidere.model.account.cred.*
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.*
 import java.io.IOException
@@ -145,7 +146,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             apiConfig = savedInstanceState.getParcelable(EXTRA_API_CONFIG)
             apiChangeTimestamp = savedInstanceState.getLong(EXTRA_API_LAST_CHANGE)
         } else {
-            apiConfig = preferences[defaultAPIConfigKey]
+            apiConfig = PreferencesSingleton.get(this)[defaultAPIConfigKey]
         }
 
         updateSignInType()
@@ -228,7 +229,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         when (v) {
             signUp -> {
                 val uri = apiConfig.signUpUrl?.let(Uri::parse) ?: return
-                OnLinkClickHandler.openLink(this, preferences, uri)
+                OnLinkClickHandler.openLink(this, PreferencesSingleton.get(this), uri)
             }
             signIn -> {
                 if (usernamePasswordContainer.visibility != View.VISIBLE) {
@@ -413,7 +414,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             contentResolver.deleteAccountData(result.user.key)
             Toast.makeText(this, R.string.message_toast_already_logged_in, Toast.LENGTH_SHORT).show()
         } else {
-            result.addAccount(am, preferences[randomizeAccountNameKey])
+            result.addAccount(am, PreferencesSingleton.get(this)[randomizeAccountNameKey])
             finishSignIn()
         }
     }
@@ -480,9 +481,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
 
     private fun setDefaultAPI() {
         if (!apiConfig.isDefault) return
-        val apiLastChange = preferences[apiLastChangeKey]
+        val apiLastChange = PreferencesSingleton.get(this)[apiLastChangeKey]
         if (apiLastChange != apiChangeTimestamp) {
-            apiConfig = preferences[defaultAPIConfigKey]
+            apiConfig = PreferencesSingleton.get(this)[defaultAPIConfigKey]
             apiChangeTimestamp = apiLastChange
         }
         updateSignInType()
@@ -600,7 +601,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         override fun onLoadFinished(loader: Loader<List<CustomAPIConfig>>, data: List<CustomAPIConfig>) {
             val dialog = dialog ?: return
             val listView: ExpandableListView = dialog.findViewById(R.id.expandableList)
-            val defaultConfig = preferences[defaultAPIConfigKey]
+            val defaultConfig = PreferencesSingleton.get(context!!)[defaultAPIConfigKey]
             defaultConfig.name = getString(R.string.login_type_user_settings)
             val allConfig = ArraySet(data)
             allConfig.add(defaultConfig)

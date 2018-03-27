@@ -56,6 +56,7 @@ import org.mariotaku.twidere.model.task.GetTimelineResult
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.singleton.BusSingleton
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.sync.SyncTaskRunner
@@ -78,7 +79,7 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
     override final fun doLongOperation(param: P): List<Pair<GetTimelineResult<ParcelableStatus>?, Exception?>> {
         if (param.shouldAbort) return emptyList()
         val accountKeys = param.accountKeys.takeIf { it.isNotEmpty() } ?: return emptyList()
-        val loadItemLimit = preferences[loadItemLimitKey]
+        val loadItemLimit = PreferencesSingleton.get(context)[loadItemLimitKey]
         val result = accountKeys.mapIndexed { i, accountKey ->
             try {
                 val account = AccountManager.get(context).getDetailsOrThrow(accountKey, true)
@@ -265,7 +266,7 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
         val deleteWhereArgs = arrayOf(accountKey.toString(), *statusIds)
         var olderCount = -1
         if (minPositionKey > 0) {
-            olderCount = DataStoreUtils.getStatusesCount(context, preferences, uri, null,
+            olderCount = DataStoreUtils.getStatusesCount(context, PreferencesSingleton.get(context), uri, null,
                     Statuses.POSITION_KEY, minPositionKey, false, arrayOf(accountKey),
                     filterScopes)
         }

@@ -33,6 +33,7 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.Companion.ITE
 import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.model.ParcelableGroup
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.view.holder.GroupViewHolder
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
 
@@ -42,7 +43,7 @@ class ParcelableGroupsAdapter(
 ) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context, requestManager), IGroupsAdapter<List<ParcelableGroup>> {
     override val showAccountsColor: Boolean
         get() = false
-    override val nameFirst = preferences[nameFirstKey]
+    override val nameFirst = PreferencesSingleton.get(this.context)[nameFirstKey]
     override var groupAdapterListener: IGroupsAdapter.GroupAdapterListener? = null
 
     private val inflater = LayoutInflater.from(context)

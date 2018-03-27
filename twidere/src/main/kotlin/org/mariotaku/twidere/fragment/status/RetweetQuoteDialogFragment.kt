@@ -48,6 +48,7 @@ import org.mariotaku.twidere.model.draft.QuoteStatusActionExtras
 import org.mariotaku.twidere.promise.StatusPromises
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.service.LengthyOperationsService
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.EditTextEnterHandler
 import org.mariotaku.twidere.util.LinkCreator
 import org.mariotaku.twidere.util.text.FanfouValidator
@@ -101,7 +102,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
                 }
                 return false
             }
-        }, preferences[quickSendKey])
+        }, PreferencesSingleton.get(this@RetweetQuoteDialogFragment.context!!)[quickSendKey])
         enterHandler.addTextChangedListener(object : SimpleTextWatcher {
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {

@@ -70,6 +70,7 @@ import org.mariotaku.twidere.model.event.UserListSubscriptionEvent
 import org.mariotaku.twidere.model.event.UserListUpdatedEvent
 import org.mariotaku.twidere.promise.UserListPromises
 import org.mariotaku.twidere.singleton.BusSingleton
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.UserColorNameManager.Companion
 import org.mariotaku.twidere.util.shortcut.ShortcutCreator
@@ -271,7 +272,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
             R.id.profileImage -> {
                 val userList = this.userList ?: return
                 IntentUtils.openUserProfile(activity!!, userList.account_key, userList.user_key,
-                        userList.user_screen_name, null, preferences[newDocumentApiKey], null)
+                        userList.user_screen_name, null, PreferencesSingleton.get(context!!)[newDocumentApiKey], null)
             }
         }
 

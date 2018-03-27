@@ -36,8 +36,6 @@ import javax.inject.Inject
 open class BaseDialogFragment : DialogFragment(), IBaseFragment<BaseDialogFragment> {
 
     @Inject
-    lateinit var preferences: SharedPreferences
-    @Inject
     lateinit var keyboardShortcutsHandler: KeyboardShortcutsHandler
     @Inject
     lateinit var dns: Dns
