@@ -46,9 +46,6 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     @Inject
     lateinit var multiSelectManager: MultiSelectManager
     @Inject
-    @Deprecated(message = "Deprecated", replaceWith = ReplaceWith("UserColorNameManager.get(context!!)", imports = ["org.mariotaku.twidere.util.UserColorNameManager"]))
-    lateinit var userColorNameManager: UserColorNameManager
-    @Inject
     lateinit var notificationManager: NotificationManagerWrapper
     @Inject
     lateinit var bidiFormatter: BidiFormatter
@@ -56,8 +53,6 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     lateinit var errorInfoStore: ErrorInfoStore
     @Inject
     lateinit var extraFeaturesService: ExtraFeaturesService
-    @Inject
-    lateinit var permissionsManager: PermissionsManager
     @Inject
     lateinit var defaultFeatures: DefaultFeatures
     @Inject

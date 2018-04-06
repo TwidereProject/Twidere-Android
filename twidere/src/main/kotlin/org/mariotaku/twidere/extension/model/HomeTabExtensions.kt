@@ -33,6 +33,7 @@ import org.xmlpull.v1.XmlSerializer
 fun HomeTab.serialize(serializer: XmlSerializer) {
     serializer.startTag(null, "tab")
     serializer.attribute(null, "type", type)
+    serializer.attribute(null, "position", position.toString())
 
     serializer.writeNonEmptyStringTag("name", name)
     serializer.writeNonEmptyStringTag("icon", icon)

@@ -26,6 +26,7 @@ import org.mariotaku.twidere.adapter.AccountSelectorAdapter
 import org.mariotaku.twidere.adapter.RecyclerPagerAdapter
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.view.ShapedImageView
 
 class AccountProfileImageViewHolder(
@@ -45,7 +46,7 @@ class AccountProfileImageViewHolder(
     }
 
     fun display(account: AccountDetails) {
-        itemView.contentDescription = adapter.nameColorManger.getDisplayName(account.user)
+        itemView.contentDescription = UserColorNameManager.get(itemView.context).getDisplayName(account.user)
         iconView.setBorderColor(account.color)
         adapter.requestManager.loadProfileImage(itemView.context, account,
                 adapter.profileImageStyle, iconView.cornerRadius,

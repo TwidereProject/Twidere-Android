@@ -21,8 +21,10 @@ package org.mariotaku.twidere.util.preference
 
 import android.content.SharedPreferences
 import org.mariotaku.commons.collection.MultiMap
+import org.mariotaku.twidere.singleton.PreferencesSingleton
+import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 
-class PreferenceChangeNotifier(val preferences: SharedPreferences) {
+class PreferenceChangeNotifier private constructor(preferences: SharedPreferences) {
 
     private val listenersMap = MultiMap<String, (String) -> Unit>()
     private val changeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
@@ -41,4 +43,7 @@ class PreferenceChangeNotifier(val preferences: SharedPreferences) {
         keys.forEach { key -> listenersMap.add(key, callback) }
     }
 
+    companion object : ApplicationContextSingletonHolder<PreferenceChangeNotifier>({
+        PreferenceChangeNotifier(PreferencesSingleton.get(it))
+    })
 }

@@ -4,8 +4,6 @@ import android.content.Context
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.data.fetcher.users.UserSearchFetcher
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.util.UserColorNameManager
-import javax.inject.Inject
 
 class CacheUserSearchLoader(
         context: Context,
@@ -15,9 +13,6 @@ class CacheUserSearchLoader(
         private val fromCache: Boolean,
         fromUser: Boolean
 ) : UserSearchFetcher(query) {
-    @Inject
-    @Deprecated(message = "Deprecated", replaceWith = ReplaceWith("UserColorNameManager.get(context!!)", imports = ["org.mariotaku.twidere.util.UserColorNameManager"]))
-    internal lateinit var userColorNameManager: UserColorNameManager
 
     init {
         GeneralComponent.get(context).inject(this)

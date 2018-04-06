@@ -21,13 +21,15 @@ package org.mariotaku.twidere.dagger.component
 
 import android.support.v7.widget.RecyclerView
 import dagger.Component
-import org.mariotaku.twidere.activity.*
+import org.mariotaku.twidere.activity.BaseActivity
+import org.mariotaku.twidere.activity.ComposeActivity
+import org.mariotaku.twidere.activity.MediaViewerActivity
+import org.mariotaku.twidere.activity.PremiumDashboardActivity
 import org.mariotaku.twidere.adapter.*
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.dagger.module.ApplicationModule
 import org.mariotaku.twidere.dagger.module.ChannelModule
-import org.mariotaku.twidere.data.user.UserLiveData
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.fragment.BasePreferenceFragment
@@ -129,12 +131,6 @@ interface GeneralComponent {
 
     fun inject(service: BaseService)
 
-    fun inject(activity: MainActivity)
-
-    fun inject(promises: FriendshipPromises)
-
-    fun inject(promises: BlockPromises)
-
     fun inject(promises: MutePromises)
 
     fun inject(promises: DefaultFeaturesPromises)
@@ -164,12 +160,6 @@ interface GeneralComponent {
     fun inject(obj: ComposeAutoCompleteAdapter)
 
     fun inject(obj: UserAutoCompleteAdapter)
-
-    fun inject(promises: UserListPromises)
-
-    fun inject(promises: RefreshPromises)
-
-    fun inject(liveData: UserLiveData)
 
     fun inject(adapter: AccountSelectorAdapter)
 

@@ -7,16 +7,12 @@ import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.twidere.dagger.component.GeneralComponent
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.util.TaskServiceRunner
-import org.mariotaku.twidere.util.UserColorNameManager
 import java.lang.Exception
 import javax.inject.Inject
 
 abstract class SyncTaskRunner(val context: Context) {
-    @Inject
-    protected lateinit var userColorNameManager: UserColorNameManager
     @Inject
     protected lateinit var syncPreferences: SyncPreferences
 

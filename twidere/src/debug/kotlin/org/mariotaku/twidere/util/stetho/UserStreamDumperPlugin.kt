@@ -33,11 +33,10 @@ import org.mariotaku.microblog.library.TwitterUserStream
 import org.mariotaku.microblog.library.annotation.twitter.StreamWith
 import org.mariotaku.microblog.library.callback.mastodon.MastodonUserStreamCallback
 import org.mariotaku.microblog.library.model.mastodon.Notification
-import org.mariotaku.microblog.library.model.twitter.Activity
 import org.mariotaku.microblog.library.model.microblog.DirectMessage
 import org.mariotaku.microblog.library.model.microblog.Status
+import org.mariotaku.microblog.library.model.twitter.Activity
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.extension.getDetails
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
@@ -68,7 +67,7 @@ class UserStreamDumperPlugin(val context: Context) : DumperPlugin {
             return
         }
         val cmdLine = parser.parse(options, argsList.subArray(1..argsList.lastIndex))
-        val manager = DependencyHolder.get(context).userColorNameManager
+        val manager = UserColorNameManager.get(context)
         val includeTimeline = cmdLine.hasOption("timeline")
         val includeInteractions = cmdLine.hasOption("interactions")
         val verboseMode = cmdLine.hasOption("verbose")

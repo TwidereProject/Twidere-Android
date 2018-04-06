@@ -35,11 +35,13 @@
         android:paddingLeft="@dimen/element_spacing_small"
         android:paddingRight="0dp"
         android:paddingStart="@dimen/element_spacing_small"
-        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/quotedText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:tltvPrimaryTextColor="?android:textColorPrimary"
         app:tltvPrimaryTextStyle="bold"
-        app:tltvSecondaryTextColor="?android:textColorSecondary"
-        tools:visibility="visible"/>
+        app:tltvSecondaryTextColor="?android:textColorSecondary"/>
 
     <org.mariotaku.twidere.view.TimelineContentTextView
         android:id="@+id/quotedText"
@@ -53,10 +55,12 @@
         android:paddingTop="@dimen/element_spacing_small"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="?android:attr/textColorPrimary"
-        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/quotedMediaLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/quotedName"
-        tools:text="@string/sample_status_text"
-        tools:visibility="visible"/>
+        tools:maxLength="200"
+        tools:text="@tools:sample/lorem/random"/>
 
     <org.mariotaku.twidere.view.DrawableTintTextView
         android:id="@+id/quotedMediaLabel"
@@ -69,9 +73,11 @@
         android:textAppearance="?android:textAppearanceSmall"
         android:textStyle="bold"
         app:drawableTint="?android:textColorSecondary"
-        app:layout_constraintTop_toBottomOf="@id/quotedText"
-        tools:text="@string/label_media"
-        tools:visibility="visible"/>
+        app:layout_constraintBottom_toTopOf="@+id/quotedMediaPreview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/quotedText"
+        tools:text="@string/label_media"/>
 
     <org.mariotaku.twidere.view.CardMediaContainer
         android:id="@+id/quotedMediaPreview"
@@ -79,8 +85,10 @@
         android:layout_height="wrap_content"
         android:horizontalSpacing="@dimen/element_spacing_xsmall"
         android:verticalSpacing="@dimen/element_spacing_xsmall"
-        app:layout_constraintTop_toBottomOf="@id/quotedMediaLabel"
-        tools:layout="@layout/layout_card_media_preview"
-        tools:visibility="gone"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/quotedMediaLabel"
+        tools:layout="@layout/layout_card_media_preview"/>
 
 </merge>

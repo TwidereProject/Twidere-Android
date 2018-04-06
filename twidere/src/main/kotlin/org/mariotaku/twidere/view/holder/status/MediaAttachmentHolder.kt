@@ -19,19 +19,18 @@
 
 package org.mariotaku.twidere.view.holder.status
 
+import android.support.constraint.ConstraintLayout
 import android.view.View
-import kotlinx.android.synthetic.main.header_status.view.*
-import kotlinx.android.synthetic.main.list_item_status.view.*
+import android.widget.ImageView
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
+import org.mariotaku.twidere.model.ParcelableStatus
+import org.mariotaku.twidere.util.view.MediaAttachmentLayoutGenerator
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 
-class MediaAttachmentHolder(adapter: IStatusesAdapter, view: View) : StatusViewHolder.AttachmentHolder(adapter, view) {
+class MediaAttachmentHolder(parent: StatusViewHolder, adapter: IStatusesAdapter, view: ConstraintLayout) : StatusViewHolder.AttachmentHolder(parent, adapter, view) {
 
-    private val mediaLabel = view.attachmentLabel
-    private val mediaPreview = view.mediaPreview
 
     override fun setupViewOptions() {
-        mediaPreview.style = adapter.mediaPreviewStyle
 
     }
 
@@ -39,18 +38,22 @@ class MediaAttachmentHolder(adapter: IStatusesAdapter, view: View) : StatusViewH
 
     }
 
-    override fun onClick(listener: IStatusViewHolder.StatusClickListener, holder: StatusViewHolder, v: View, position: Int) {
-        when (v) {
-            mediaLabel -> {
-                if (position < 0) return
-                val firstMedia = adapter.getStatus(position).attachment?.media?.firstOrNull()
-                if (firstMedia != null) {
-                    listener.onMediaClick(holder, v, firstMedia, position)
-                } else {
-                    listener.onStatusClick(holder, position)
-                }
-            }
+    override fun display(status: ParcelableStatus) {
+        val media = status.attachment!!.media!!
+        when (media.size) {
+            1 -> MediaAttachmentLayoutGenerator.layout1(view, adapter.mediaPreviewStyle, media.first())
+            2 -> MediaAttachmentLayoutGenerator.layout2(view)
+            3 -> MediaAttachmentLayoutGenerator.layout3(view)
+            4 -> MediaAttachmentLayoutGenerator.layout4(view)
+        }
+        media.forEachIndexed { index, item ->
+            if (index >= view.childCount) return@forEachIndexed
+            adapter.requestManager.load(item.preview_url).into(view.getChildAt(index) as ImageView)
         }
     }
+
+    override fun onClick(listener: IStatusViewHolder.StatusClickListener, holder: StatusViewHolder, v: View, position: Int) {
+    }
+
 
 }

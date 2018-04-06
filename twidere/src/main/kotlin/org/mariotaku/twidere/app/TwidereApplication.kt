@@ -20,9 +20,11 @@
 package org.mariotaku.twidere.app
 
 import android.app.Application
-import android.content.*
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
-import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.ConnectivityManager
@@ -34,9 +36,6 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.TwidereConstants.*
-import org.mariotaku.twidere.activity.AssistLauncherActivity
-import org.mariotaku.twidere.activity.MainActivity
-import org.mariotaku.twidere.activity.MainHondaJOJOActivity
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.firstLanguage
@@ -47,7 +46,10 @@ import org.mariotaku.twidere.service.StreamingService
 import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.taskcontroller.refresh.RefreshTaskController
 import org.mariotaku.twidere.taskcontroller.sync.SyncTaskController
-import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.ActivityTracker
+import org.mariotaku.twidere.util.Analyzer
+import org.mariotaku.twidere.util.DebugModeUtils
+import org.mariotaku.twidere.util.StrictModeUtils
 import org.mariotaku.twidere.util.emoji.EmojiOneShortCodeMap
 import org.mariotaku.twidere.util.notification.NotificationChannelsManager
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
@@ -85,8 +87,6 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
         initBugReport()
         EmojiOneShortCodeMap.init(this)
         NotificationChannelsManager.initialize(this)
-
-        updateEasterEggIcon()
 
         GeneralComponent.get(this).inject(this)
 
@@ -141,28 +141,6 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
                 ?: return
         resources.setLocale(locale)
     }
-
-    private fun updateEasterEggIcon() {
-        val pm = packageManager
-        val main = ComponentName(this, MainActivity::class.java)
-        val main2 = ComponentName(this, MainHondaJOJOActivity::class.java)
-        val mainDisabled = pm.getComponentEnabledSetting(main) != PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-        val main2Disabled = pm.getComponentEnabledSetting(main2) != PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-        val noEntry = mainDisabled && main2Disabled
-        if (noEntry) {
-            pm.setComponentEnabledSetting(main, PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                    PackageManager.DONT_KILL_APP)
-        } else if (!mainDisabled) {
-            pm.setComponentEnabledSetting(main2, PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-                    PackageManager.DONT_KILL_APP)
-        }
-        if (!Utils.isComposeNowSupported(this)) {
-            val assist = ComponentName(this, AssistLauncherActivity::class.java)
-            pm.setComponentEnabledSetting(assist, PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-                    PackageManager.DONT_KILL_APP)
-        }
-    }
-
 
     private fun initDebugMode() {
         DebugModeUtils.initForApplication(this)

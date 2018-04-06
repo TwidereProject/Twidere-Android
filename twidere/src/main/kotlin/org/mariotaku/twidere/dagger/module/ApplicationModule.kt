@@ -38,21 +38,15 @@ import okhttp3.Cache
 import okhttp3.ConnectionPool
 import okhttp3.Dns
 import okhttp3.OkHttpClient
-import org.mariotaku.kpreferences.get
 import org.mariotaku.mediaviewer.library.FileCache
 import org.mariotaku.mediaviewer.library.MediaDownloader
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.restfu.okhttp3.OkHttpRestClient
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_CACHE_SIZE_LIMIT
-import org.mariotaku.twidere.constant.autoRefreshCompatibilityModeKey
-import org.mariotaku.twidere.constant.nameFirstKey
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.load
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.singleton.BusSingleton
-import org.mariotaku.twidere.taskcontroller.refresh.JobSchedulerRefreshTaskController
-import org.mariotaku.twidere.taskcontroller.refresh.LegacyRefreshTaskController
 import org.mariotaku.twidere.taskcontroller.refresh.RefreshTaskController
 import org.mariotaku.twidere.taskcontroller.sync.JobSchedulerSyncController
 import org.mariotaku.twidere.taskcontroller.sync.LegacySyncController
@@ -89,10 +83,9 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun externalThemeManager(preferences: SharedPreferences, notifier: PreferenceChangeNotifier):
-            ExternalThemeManager {
+    fun externalThemeManager(preferences: SharedPreferences): ExternalThemeManager {
         val manager = ExternalThemeManager(application, preferences)
-        notifier.register(KEY_EMOJI_SUPPORT) {
+        PreferenceChangeNotifier.get(application).register(KEY_EMOJI_SUPPORT) {
             manager.reloadEmojiPreferences()
         }
         val packageFilter = IntentFilter()
@@ -126,25 +119,8 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun preferenceChangeNotifier(preferences: SharedPreferences): PreferenceChangeNotifier {
-        return PreferenceChangeNotifier(preferences)
-    }
-
-    @Provides
-    @Singleton
-    fun permissionsManager(): PermissionsManager {
-        return PermissionsManager.get(application)
-    }
-
-    @Provides
-    @Singleton
-    fun userColorNameManager(preferences: SharedPreferences, notifier: PreferenceChangeNotifier): UserColorNameManager {
-        val manager = UserColorNameManager(application)
-        notifier.register(KEY_NAME_FIRST) changed@ {
-            manager.nameFirst = preferences[nameFirstKey]
-        }
-        manager.nameFirst = preferences[nameFirstKey]
-        return manager
+    fun preferenceChangeNotifier(): PreferenceChangeNotifier {
+        return PreferenceChangeNotifier.get(application)
     }
 
     @Provides
@@ -156,16 +132,16 @@ class ApplicationModule(private val application: Application) {
     @Provides
     @Singleton
     fun restHttpClient(prefs: SharedPreferences, dns: Dns, connectionPool: ConnectionPool,
-            cache: Cache, notifier: PreferenceChangeNotifier): RestHttpClient {
+            cache: Cache): RestHttpClient {
         val conf = HttpClientFactory.HttpClientConfiguration(prefs)
-        val client = HttpClientFactory.createRestHttpClient(conf, dns, connectionPool, cache)
-        notifier.register(KEY_ENABLE_PROXY, KEY_PROXY_ADDRESS, KEY_PROXY_TYPE,
+        val client = HttpClientFactory.createRestHttpClient(conf, dns, cache)
+        PreferenceChangeNotifier.get(application).register(KEY_ENABLE_PROXY, KEY_PROXY_ADDRESS, KEY_PROXY_TYPE,
                 KEY_PROXY_USERNAME, KEY_PROXY_PASSWORD, KEY_CONNECTION_TIMEOUT,
-                KEY_RETRY_ON_NETWORK_ISSUE) changed@ {
+                KEY_RETRY_ON_NETWORK_ISSUE) changed@{
             if (client !is OkHttpRestClient) return@changed
             val builder = OkHttpClient.Builder()
             HttpClientFactory.initOkHttpClient(HttpClientFactory.HttpClientConfiguration(prefs),
-                    builder, dns, connectionPool, cache)
+                    builder, dns, cache)
             client.client = builder.build()
         }
 
@@ -192,12 +168,11 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun contentNotificationManager(activityTracker: ActivityTracker, userColorNameManager: UserColorNameManager,
-            notificationManagerWrapper: NotificationManagerWrapper, preferences: SharedPreferences,
-            notifier: PreferenceChangeNotifier): ContentNotificationManager {
-        val manager = ContentNotificationManager(application, activityTracker, userColorNameManager,
+    fun contentNotificationManager(activityTracker: ActivityTracker, notificationManagerWrapper: NotificationManagerWrapper,
+            preferences: SharedPreferences): ContentNotificationManager {
+        val manager = ContentNotificationManager(application, activityTracker, UserColorNameManager.get(application),
                 notificationManagerWrapper, preferences)
-        notifier.register(KEY_NAME_FIRST, KEY_I_WANT_MY_STARS_BACK) {
+        PreferenceChangeNotifier.get(application).register(KEY_NAME_FIRST, KEY_I_WANT_MY_STARS_BACK) {
             manager.updatePreferences()
         }
         return manager
@@ -205,12 +180,12 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun mediaPreloader(preferences: SharedPreferences, notifier: PreferenceChangeNotifier): MediaPreloader {
+    fun mediaPreloader(preferences: SharedPreferences): MediaPreloader {
         val preloader = MediaPreloader(application)
         preloader.reloadOptions(preferences)
         val cm = application.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         preloader.isNetworkMetered = ConnectivityManagerCompat.isActiveNetworkMetered(cm)
-        notifier.register(KEY_MEDIA_PRELOAD, KEY_PRELOAD_WIFI_ONLY) {
+        PreferenceChangeNotifier.get(application).register(KEY_MEDIA_PRELOAD, KEY_PRELOAD_WIFI_ONLY) {
             preloader.reloadOptions(preferences)
         }
         return preloader
@@ -218,9 +193,9 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun dns(preferences: SharedPreferences, notifier: PreferenceChangeNotifier): Dns {
+    fun dns(preferences: SharedPreferences): Dns {
         val dns = TwidereDns(application, preferences)
-        notifier.register(KEY_DNS_SERVER, KEY_TCP_DNS_QUERY, KEY_BUILTIN_DNS_RESOLVER) {
+        PreferenceChangeNotifier.get(application).register(KEY_DNS_SERVER, KEY_TCP_DNS_QUERY, KEY_BUILTIN_DNS_RESOLVER) {
             dns.reloadDnsSettings()
         }
         return dns
@@ -246,10 +221,10 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun thumborWrapper(preferences: SharedPreferences, notifier: PreferenceChangeNotifier): ThumborWrapper {
+    fun thumborWrapper(preferences: SharedPreferences): ThumborWrapper {
         val thumbor = ThumborWrapper()
         thumbor.reloadSettings(preferences)
-        notifier.register(KEY_THUMBOR_ENABLED, KEY_THUMBOR_ADDRESS, KEY_THUMBOR_SECURITY_KEY) {
+        PreferenceChangeNotifier.get(application).register(KEY_THUMBOR_ENABLED, KEY_THUMBOR_ADDRESS, KEY_THUMBOR_SECURITY_KEY) {
             thumbor.reloadSettings(preferences)
         }
         return thumbor
@@ -263,16 +238,8 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun autoRefreshController(preferences: SharedPreferences, notifier: PreferenceChangeNotifier): RefreshTaskController {
-        val controller = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !preferences[autoRefreshCompatibilityModeKey]) {
-            JobSchedulerRefreshTaskController(application, preferences)
-        } else {
-            LegacyRefreshTaskController(application, preferences)
-        }
-        notifier.register(KEY_REFRESH_INTERVAL) {
-            controller.rescheduleAll()
-        }
-        return controller
+    fun autoRefreshController(): RefreshTaskController {
+        return RefreshTaskController.get(application)
     }
 
     @Provides
@@ -329,17 +296,16 @@ class ApplicationModule(private val application: Application) {
             cache: Cache): OkHttpClient {
         val conf = HttpClientFactory.HttpClientConfiguration(preferences)
         val builder = OkHttpClient.Builder()
-        HttpClientFactory.initOkHttpClient(conf, builder, dns, connectionPool, cache)
+        HttpClientFactory.initOkHttpClient(conf, builder, dns, cache)
         return builder.build()
     }
 
     @Provides
     @Singleton
-    fun dataSourceFactory(preferences: SharedPreferences, dns: Dns, connectionPool: ConnectionPool,
-            cache: Cache): DataSource.Factory {
+    fun dataSourceFactory(preferences: SharedPreferences, dns: Dns, cache: Cache): DataSource.Factory {
         val conf = HttpClientFactory.HttpClientConfiguration(preferences)
         val builder = OkHttpClient.Builder()
-        HttpClientFactory.initOkHttpClient(conf, builder, dns, connectionPool, cache)
+        HttpClientFactory.initOkHttpClient(conf, builder, dns, cache)
         val userAgent = UserAgentUtils.getDefaultUserAgentStringSafe(application)
         return OkHttpDataSourceFactory(builder.build(), userAgent, null)
     }
@@ -377,8 +343,8 @@ class ApplicationModule(private val application: Application) {
     }
 
     private fun getCacheDir(dirName: String, sizeInBytes: Long): File {
-        return Utils.getExternalCacheDir(application, dirName, sizeInBytes) ?:
-                Utils.getInternalCacheDir(application, dirName)
+        return Utils.getExternalCacheDir(application, dirName, sizeInBytes)
+                ?: Utils.getInternalCacheDir(application, dirName)
     }
 
     companion object : SingletonHolder<ApplicationModule, Application>(::ApplicationModule)

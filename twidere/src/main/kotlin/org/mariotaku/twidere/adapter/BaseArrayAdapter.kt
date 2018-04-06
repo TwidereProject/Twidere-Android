@@ -35,7 +35,6 @@ import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.MultiSelectManager
 import org.mariotaku.twidere.util.OnLinkClickHandler
-import org.mariotaku.twidere.util.PermissionsManager
 import org.mariotaku.twidere.util.TwidereLinkify
 import javax.inject.Inject
 
@@ -52,8 +51,6 @@ open class BaseArrayAdapter<T>(
     override lateinit var bidiFormatter: BidiFormatter
     @Inject
     lateinit var multiSelectManager: MultiSelectManager
-    @Inject
-    lateinit var permissionsManager: PermissionsManager
 
     final override val profileImageSize: String = context.getString(R.string.profile_image_size)
     final override val profileImageStyle: Int

@@ -132,40 +132,21 @@
         tools:text="@tools:sample/lorem/random"
         tools:visibility="visible"/>
 
-    <org.mariotaku.twidere.view.DrawableTintTextView
-        android:id="@+id/attachmentLabel"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/element_spacing_small"
-        android:layout_marginTop="@dimen/element_spacing_small"
-        android:background="?selectableItemBackground"
-        android:drawableLeft="@drawable/ic_label_gallery"
-        android:drawableStart="@drawable/ic_label_gallery"
-        android:gravity="center_vertical"
-        android:minHeight="@dimen/element_size_small"
-        android:textAppearance="?android:textAppearanceSmall"
-        android:textStyle="bold"
-        app:drawableTint="?android:textColorSecondary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/name"
-        app:layout_constraintTop_toBottomOf="@+id/text"
-        app:layout_goneMarginBottom="@dimen/element_spacing_normal"
-        tools:text="@string/label_media"/>
-
     <org.mariotaku.twidere.view.ColorLabelConstraintLayout
         android:id="@+id/attachmentContainer"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:layout_marginTop="@dimen/element_spacing_small"
         android:background="@drawable/bg_item_status_quote_view"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_default="wrap"
         app:layout_constraintStart_toStartOf="@+id/name"
-        app:layout_constraintTop_toBottomOf="@+id/attachmentLabel"
-        tools:layout="@layout/layout_card_media_preview"
-        tools:layout_constraintDimensionRatio="H,2:1"
-        tools:visibility="gone"/>
+        app:layout_constraintTop_toBottomOf="@+id/text"
+        tools:layout_constraintDimensionRatio="W,1:2"
+        tools:layout_height="0dp"
+        tools:visibility="visible"/>
 
     <org.mariotaku.twidere.view.LabeledImageButton
         android:id="@+id/reply"

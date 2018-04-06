@@ -27,8 +27,8 @@ import org.mariotaku.twidere.extension.queryAll
 import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs
 import org.xmlpull.v1.XmlPullParserFactory
-import java.io.File
-import java.util.*
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 
 @RunWith(AndroidJUnit4::class)
 class HomeTabExtensionsTest {
@@ -39,16 +39,22 @@ class HomeTabExtensionsTest {
                 null, null, Tabs.POSITION, cls = Tab::class.java)!!
         val tabs = legacyTabs.map { it.toHomeTab() }
 
-        File(context.cacheDir, "${UUID.randomUUID()}.xml").writer(Charsets.UTF_8).use {
+        val bytes = ByteArrayOutputStream().use {
             val serializer = XmlPullParserFactory.newInstance().newSerializer()
             serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true)
-            serializer.setOutput(it)
+            serializer.setOutput(it, "UTF-8")
             serializer.startDocument("UTF-8", true)
             serializer.startTag(null, "tabs")
             tabs.forEach { it.serialize(serializer) }
             serializer.endTag(null, "tabs")
             serializer.endDocument()
             it.flush()
+            return@use it.toByteArray()
+        }
+        val parsed = ByteArrayInputStream(bytes).use {
+            val parser = XmlPullParserFactory.newInstance().newPullParser()
+            parser.setInput(it, "UTF-8")
+
         }
     }
 }

@@ -29,14 +29,11 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.dagger.component.GeneralComponent
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.fragment.AccountsDashboardFragment
 import org.mariotaku.twidere.model.AccountDetails
-import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.view.holder.AccountProfileImageViewHolder
 import org.mariotaku.twidere.view.transformer.AccountsSelectorTransformer
 import java.util.*
-import javax.inject.Inject
 
 class AccountSelectorAdapter(
         context: Context,
@@ -80,8 +77,6 @@ class AccountSelectorAdapter(
             swap(from, to)
         }
 
-    @Inject
-    internal lateinit var nameColorManger: UserColorNameManager
 
     internal var profileImageStyle: Int = preferences[profileImageStyleKey]
     internal val nameFirst: Boolean = preferences[nameFirstKey]

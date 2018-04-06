@@ -43,8 +43,6 @@ import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
-import com.bumptech.glide.Glide
-import com.bumptech.glide.RequestManager
 import nl.komponents.kovenant.Promise
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonActivity
@@ -97,8 +95,6 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     lateinit var readStateManager: ReadStateManager
     @Inject
     lateinit var notificationManager: NotificationManagerWrapper
-    @Inject
-    lateinit var permissionsManager: PermissionsManager
     @Inject
     lateinit var extraFeaturesService: ExtraFeaturesService
     @Inject

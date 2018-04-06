@@ -89,7 +89,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
         slidingPane.setShadowResourceRight(R.drawable.sliding_pane_shadow_right)
         slidingPane.sliderFadeColor = 0
 
-        ViewCompat.setOnApplyWindowInsetsListener(slidingPane) listener@ { view, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(slidingPane) listener@{ view, insets ->
             onApplyWindowInsets(view, insets)
             entriesList.setPadding(0, insets.systemWindowInsetTop, 0, insets.systemWindowInsetBottom)
             return@listener insets
@@ -187,7 +187,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
         val f = Fragment.instantiate(this, preference.fragment, preference.extras)
         ft.replace(R.id.detailFragmentContainer, f)
         ft.addToBackStack(preference.title.toString())
-        ft.commit()
+        ft.commitNow()
         return true
     }
 
@@ -261,7 +261,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
                     entry.args))
         }
         ft.setBreadCrumbTitle(entry.title)
-        ft.commit()
+        ft.commitNow()
         slidingPane.closePane()
     }
 

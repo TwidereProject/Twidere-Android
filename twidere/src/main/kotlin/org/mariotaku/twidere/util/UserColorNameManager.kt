@@ -25,14 +25,20 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.graphics.Color
 import android.support.v4.util.ArrayMap
 import android.support.v4.util.LruCache
+import org.mariotaku.kpreferences.get
 import org.mariotaku.microblog.library.model.microblog.User
+import org.mariotaku.twidere.Constants.KEY_NAME_FIRST
 import org.mariotaku.twidere.TwidereConstants.USER_COLOR_PREFERENCES_NAME
 import org.mariotaku.twidere.TwidereConstants.USER_NICKNAME_PREFERENCES_NAME
+import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.model.api.key
 import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
+import org.mariotaku.twidere.util.preference.PreferenceChangeNotifier
+import kotlin.collections.set
 
-class UserColorNameManager(context: Context) {
+class UserColorNameManager private constructor(context: Context) {
 
     val colorPreferences: SharedPreferences = context.getSharedPreferences(USER_COLOR_PREFERENCES_NAME, Context.MODE_PRIVATE)
     val nicknamePreferences: SharedPreferences = context.getSharedPreferences(USER_NICKNAME_PREFERENCES_NAME, Context.MODE_PRIVATE)
@@ -205,7 +211,15 @@ class UserColorNameManager(context: Context) {
 
     }
 
-    companion object : ApplicationContextSingletonHolder<UserColorNameManager>(::UserColorNameManager) {
+    companion object : ApplicationContextSingletonHolder<UserColorNameManager>(creator@{
+        val preferences = PreferencesSingleton.get(it)
+        val manager = UserColorNameManager(it)
+        PreferenceChangeNotifier.get(it).register(KEY_NAME_FIRST) changed@{
+            manager.nameFirst = preferences[nameFirstKey]
+        }
+        manager.nameFirst = preferences[nameFirstKey]
+        return@creator manager
+    }) {
 
         private val NICKNAME_NULL = ".#NULL#"
 

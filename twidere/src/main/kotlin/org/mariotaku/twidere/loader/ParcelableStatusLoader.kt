@@ -31,14 +31,12 @@ import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.exception.AccountNotFoundException
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.getDetails
 import org.mariotaku.twidere.extension.model.updateExtraInformation
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.DataStoreUtils
-import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.deleteActivityStatus
 import org.mariotaku.twidere.util.deleteStatus
 import javax.inject.Inject
@@ -51,8 +49,6 @@ class ParcelableStatusLoader(
         private val statusId: String?
 ) : FixedAsyncTaskLoader<SingleResponse<ParcelableStatus>>(context) {
 
-    @Inject
-    internal lateinit var userColorNameManager: UserColorNameManager
     @Inject
     internal lateinit var restHttpClient: RestHttpClient
 

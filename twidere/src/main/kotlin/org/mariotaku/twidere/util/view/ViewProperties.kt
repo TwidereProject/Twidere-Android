@@ -19,13 +19,13 @@
 
 package org.mariotaku.twidere.util.view
 
-import android.util.FloatProperty
 import android.util.Property
 import android.view.View
 
 object ViewProperties {
-    val TRANSLATION_X_RELATIVE: Property<View, Float> = object : FloatProperty<View>("xRelative") {
-        override fun setValue(obj: View, value: Float) {
+    val TRANSLATION_X_RELATIVE: Property<View, Float> = object : Property<View, Float>(Float::class.java, "xRelative") {
+
+        override fun set(obj: View, value: Float) {
             obj.translationX = value * obj.width
         }
 

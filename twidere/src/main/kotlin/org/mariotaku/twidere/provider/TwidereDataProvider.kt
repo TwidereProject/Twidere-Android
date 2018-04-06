@@ -21,7 +21,6 @@ package org.mariotaku.twidere.provider
 
 import android.content.ContentProvider
 import android.content.ContentValues
-import android.content.SharedPreferences
 import android.database.Cursor
 import android.database.MatrixCursor
 import android.database.SQLException
@@ -45,7 +44,6 @@ import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.TableIds
 import org.mariotaku.twidere.dagger.component.GeneralComponent
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.model.AccountPreferences
 import org.mariotaku.twidere.model.UserKey
@@ -53,6 +51,7 @@ import org.mariotaku.twidere.model.event.UnreadCountUpdatedEvent
 import org.mariotaku.twidere.promise.UpdateStatusPromise
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.singleton.BusSingleton
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.SQLiteDatabaseWrapper.LazyLoadCallback
 import org.mariotaku.twidere.util.Utils
@@ -66,21 +65,15 @@ import javax.inject.Inject
 
 class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
     @Inject
-    lateinit internal var readStateManager: ReadStateManager
+    internal lateinit var readStateManager: ReadStateManager
     @Inject
-    lateinit internal var notificationManager: NotificationManagerWrapper
+    internal lateinit var notificationManager: NotificationManagerWrapper
     @Inject
-    lateinit internal var preferences: SharedPreferences
+    internal lateinit var dns: Dns
     @Inject
-    lateinit internal var dns: Dns
+    internal lateinit var bidiFormatter: BidiFormatter
     @Inject
-    lateinit internal var userColorNameManager: UserColorNameManager
-    @Inject
-    lateinit internal var bidiFormatter: BidiFormatter
-    @Inject
-    lateinit internal var permissionsManager: PermissionsManager
-    @Inject
-    lateinit internal var contentNotificationManager: ContentNotificationManager
+    internal lateinit var contentNotificationManager: ContentNotificationManager
 
     private lateinit var databaseWrapper: SQLiteDatabaseWrapper
     private lateinit var backgroundExecutor: Executor
@@ -154,13 +147,12 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                     val context = context ?: return null
                     val c = MatrixCursor(Permissions.MATRIX_COLUMNS)
                     val pm = context.packageManager
+                    val map = PermissionsManager.get(context).all
                     if (Binder.getCallingUid() == Process.myUid()) {
-                        val map = permissionsManager.all
                         for ((key, value) in map) {
                             c.addRow(arrayOf<Any>(key, value))
                         }
                     } else {
-                        val map = permissionsManager.all
                         val callingPackages = pm.getPackagesForUid(Binder.getCallingUid())
                         for ((key, value) in map) {
                             if (key in callingPackages) {
@@ -207,11 +199,11 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                 }
                 TableIds.VIRTUAL_SUGGESTIONS_AUTO_COMPLETE -> {
                     return SuggestionsCursorCreator.forAutoComplete(databaseWrapper,
-                            userColorNameManager, uri, projection)
+                            UserColorNameManager.get(context), uri, projection)
                 }
                 TableIds.VIRTUAL_SUGGESTIONS_SEARCH -> {
                     return SuggestionsCursorCreator.forSearch(databaseWrapper,
-                            userColorNameManager, uri, projection)
+                            UserColorNameManager.get(context), uri, projection)
                 }
                 TableIds.VIRTUAL_NULL -> {
                     return null
@@ -510,6 +502,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
     private fun onNewItemsInserted(uri: Uri, tableId: Int, valuesArray: Array<ContentValues?>?) {
         val context = context ?: return
         if (valuesArray.isNullOrEmpty()) return
+        val preferences = PreferencesSingleton.get(context)
         when (tableId) {
             TableIds.HOME_TIMELINE -> {
                 if (!uri.getBooleanQueryParameter(QUERY_PARAM_SHOW_NOTIFICATION, true)) return

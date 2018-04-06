@@ -8,7 +8,6 @@ import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.ErrorInfoStore
 import org.mariotaku.twidere.util.ReadStateManager
-import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.cache.JsonCache
 import org.mariotaku.twidere.util.media.MediaPreloader
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
@@ -21,8 +20,6 @@ abstract class BaseAbstractTask<Params, Result, Callback>(val context: Context) 
 
     @Inject
     lateinit var mediaPreloader: MediaPreloader
-    @Inject
-    lateinit var manager: UserColorNameManager
     @Inject
     lateinit var errorInfoStore: ErrorInfoStore
     @Inject

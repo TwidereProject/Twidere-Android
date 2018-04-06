@@ -26,16 +26,15 @@ import javax.net.ssl.X509TrustManager
 
 object HttpClientFactory {
 
-    fun createRestHttpClient(conf: HttpClientConfiguration, dns: Dns, connectionPool: ConnectionPool,
-            cache: Cache): RestHttpClient {
+    fun createRestHttpClient(conf: HttpClientConfiguration, dns: Dns, cache: Cache): RestHttpClient {
         val builder = OkHttpClient.Builder()
-        initOkHttpClient(conf, builder, dns, connectionPool, cache)
+        initOkHttpClient(conf, builder, dns, cache)
         return OkHttpRestClient(builder.build())
     }
 
     fun initOkHttpClient(conf: HttpClientConfiguration, builder: OkHttpClient.Builder, dns: Dns,
-            connectionPool: ConnectionPool, cache: Cache) {
-        updateHttpClientConfiguration(builder, conf, dns, connectionPool, cache)
+            cache: Cache) {
+        updateHttpClientConfiguration(builder, conf, dns, cache)
         if (Build.VERSION.SDK_INT in Build.VERSION_CODES.JELLY_BEAN until Build.VERSION_CODES.LOLLIPOP) {
             val trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
             trustManagerFactory.init(null as KeyStore?)
@@ -120,10 +119,9 @@ object HttpClientFactory {
     }
 
     private fun updateHttpClientConfiguration(builder: OkHttpClient.Builder, conf: HttpClientConfiguration,
-            dns: Dns, connectionPool: ConnectionPool, cache: Cache) {
+            dns: Dns, cache: Cache) {
         conf.applyTo(builder)
         builder.dns(dns)
-        builder.connectionPool(connectionPool)
         builder.cache(cache)
     }
 

@@ -43,6 +43,7 @@ import org.mariotaku.twidere.adapter.ExtensionsAdapter
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.loader.ExtensionsListLoader
 import org.mariotaku.twidere.loader.ExtensionsListLoader.ExtensionInfo
+import org.mariotaku.twidere.util.PermissionsManager
 
 class ExtensionsListFragment : AbsContentListViewFragment<ExtensionsAdapter>(),
         LoaderCallbacks<List<ExtensionInfo>>, AdapterView.OnItemClickListener {
@@ -112,7 +113,7 @@ class ExtensionsListFragment : AbsContentListViewFragment<ExtensionsAdapter>(),
                 uninstallExtension(extensionInfo)
             }
             R.id.revoke -> {
-                permissionsManager.revoke(extensionInfo.packageName)
+                PermissionsManager.get(context!!).revoke(extensionInfo.packageName)
                 adapter.notifyDataSetChanged()
             }
             else -> {

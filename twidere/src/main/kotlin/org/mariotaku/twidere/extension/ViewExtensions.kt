@@ -27,6 +27,7 @@ import android.os.Build
 import android.support.annotation.UiThread
 import android.support.v4.view.accessibility.AccessibilityEventCompat
 import android.text.TextUtils
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityEvent
@@ -168,6 +169,10 @@ fun <T : View> View.findViewByType(cls: Class<T>): T? {
         }
     }
     return null
+}
+
+fun ViewGroup.inflate(res: Int, attachToRoot: Boolean = true): View {
+    return LayoutInflater.from(context).inflate(res, this, attachToRoot)
 }
 
 private fun offsetToRoot(view: View, rect: Rect) {

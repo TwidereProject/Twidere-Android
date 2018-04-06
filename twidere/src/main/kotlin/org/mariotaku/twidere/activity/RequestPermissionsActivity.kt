@@ -46,7 +46,7 @@ class RequestPermissionsActivity : BaseActivity(), OnClickListener {
     override fun onClick(view: View) {
         when (view) {
             buttonsContainer.accept -> {
-                permissionsManager.accept(callingPackage, permissions)
+                PermissionsManager.get(this).accept(callingPackage, permissions)
                 setResult(Activity.RESULT_OK)
                 finish()
             }
@@ -69,7 +69,7 @@ class RequestPermissionsActivity : BaseActivity(), OnClickListener {
             finish()
             return
         }
-        if (permissionsManager.isDenied(caller)) {
+        if (PermissionsManager.get(this).isDenied(caller)) {
             setResult(Activity.RESULT_CANCELED)
             finish()
             return

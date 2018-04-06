@@ -27,7 +27,10 @@ import okhttp3.Dns
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.model.DefaultFeatures
-import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.ActivityTracker
+import org.mariotaku.twidere.util.ExternalThemeManager
+import org.mariotaku.twidere.util.NotificationManagerWrapper
+import org.mariotaku.twidere.util.ReadStateManager
 import org.mariotaku.twidere.util.media.MediaPreloader
 import org.mariotaku.twidere.util.media.ThumborWrapper
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
@@ -66,10 +69,6 @@ class DependencyHolder internal constructor(context: Context) {
         internal set
     @Inject
     lateinit var mediaPreloader: MediaPreloader
-        internal set
-    @Inject
-    @Deprecated(message = "Deprecated", replaceWith = ReplaceWith("UserColorNameManager.get(context", imports = ["org.mariotaku.twidere.util.UserColorNameManager"]))
-    lateinit var userColorNameManager: UserColorNameManager
         internal set
     @Inject
     lateinit var thumbor: ThumborWrapper

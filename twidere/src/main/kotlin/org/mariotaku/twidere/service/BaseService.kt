@@ -27,7 +27,6 @@ import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.util.ActivityTracker
 import org.mariotaku.twidere.util.NotificationManagerWrapper
 import org.mariotaku.twidere.util.TaskServiceRunner
-import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.notification.ContentNotificationManager
 import javax.inject.Inject
 
@@ -40,9 +39,6 @@ abstract class BaseService : Service() {
     lateinit var notificationManager: NotificationManagerWrapper
     @Inject
     lateinit var extractor: Extractor
-    @Inject
-    @Deprecated(message = "Deprecated", replaceWith = ReplaceWith("UserColorNameManager.get(this)", imports = ["org.mariotaku.twidere.util.UserColorNameManager"]))
-    lateinit var userColorNameManager: UserColorNameManager
     @Inject
     lateinit var taskServiceRunner: TaskServiceRunner
     @Inject

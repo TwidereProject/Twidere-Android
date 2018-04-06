@@ -51,7 +51,7 @@ class TwidereGlideModule : AppGlideModule() {
         val builder = OkHttpClient.Builder()
         val conf = HttpClientFactory.HttpClientConfiguration(holder.preferences)
         val thumbor = holder.thumbor
-        HttpClientFactory.initOkHttpClient(conf, builder, holder.dns, holder.connectionPool, holder.cache)
+        HttpClientFactory.initOkHttpClient(conf, builder, holder.dns, holder.cache)
         val userAgent = try {
             UserAgentUtils.getDefaultUserAgentStringSafe(context)
         } catch (e: Exception) {

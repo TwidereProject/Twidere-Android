@@ -19,18 +19,36 @@
 
 package org.mariotaku.twidere.view.holder.status
 
+import android.support.constraint.ConstraintLayout
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import android.view.View
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.layout_content_item_attachment_quote.view.*
 import org.mariotaku.ktextension.applyFontFamily
+import org.mariotaku.ktextension.hideIfEmpty
+import org.mariotaku.ktextension.spannable
+import org.mariotaku.twidere.R
+import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
+import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE
+import org.mariotaku.twidere.extension.model.applyTo
+import org.mariotaku.twidere.extension.model.user_acct
+import org.mariotaku.twidere.model.ParcelableStatus
+import org.mariotaku.twidere.util.ThemeUtils
+import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
+import org.mariotaku.twidere.view.iface.IColorLabelView
 
-class QuotedAttachmentHolder(adapter: IStatusesAdapter, view: View) : StatusViewHolder.AttachmentHolder(adapter, view) {
+class QuotedAttachmentHolder(parent: StatusViewHolder, adapter: IStatusesAdapter, view: ConstraintLayout) : StatusViewHolder.AttachmentHolder(parent, adapter, view) {
+
     private val quotedNameView = view.quotedName
-
     private val quotedTextView = view.quotedText
     private val quotedMediaLabel = view.quotedMediaLabel
     private val quotedMediaPreview = view.quotedMediaPreview
+
     override fun setupViewOptions() {
         quotedMediaPreview.style = adapter.mediaPreviewStyle
 
@@ -49,6 +67,79 @@ class QuotedAttachmentHolder(adapter: IStatusesAdapter, view: View) : StatusView
         quotedMediaLabel.textSize = textSize * 0.95f
 
         quotedNameView.updateTextAppearance()
+    }
+
+    override fun display(status: ParcelableStatus) {
+        val context = view.context
+        val colorNameManager = UserColorNameManager.get(context)
+
+        val quoted = status.attachment!!.quoted!!
+        val quoteContentAvailable = quoted.text_plain != null && quoted.text_unescaped != null
+        val isFanfouStatus = status.account_key.host == USER_TYPE_FANFOU_COM
+        if (quoteContentAvailable && !isFanfouStatus) {
+            val quotedUserKey = quoted.user_key!!
+            quotedNameView.name = colorNameManager.getUserNickname(quotedUserKey,
+                    quoted.user_name)
+            quotedNameView.screenName = "@${quoted.user_acct}"
+
+            val quotedDisplayEnd = status.extras?.quoted_display_text_range?.getOrNull(1) ?: -1
+            val quotedText: CharSequence
+            if (adapter.linkHighlightingStyle != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
+                quotedText = SpannableStringBuilder.valueOf(quoted.text_unescaped)
+                quoted.spans?.applyTo(quotedText, status.extras?.emojis, Glide.with(view),
+                        quotedTextView)
+//                linkify.applyAllLinks(quotedText, status.account_key, parent.layoutPosition.toLong(),
+//                        status.is_possibly_sensitive, adapter.linkHighlightingStyle,
+//                        skipLinksInText)
+            } else {
+                quotedText = quoted.text_unescaped
+            }
+            if (quotedDisplayEnd != -1 && quotedDisplayEnd <= quotedText.length) {
+                quotedTextView.spannable = quotedText.subSequence(0, quotedDisplayEnd)
+            } else {
+                quotedTextView.spannable = quotedText
+            }
+            quotedTextView.hideIfEmpty()
+
+            val quotedUserColor = colorNameManager.getUserColor(quotedUserKey)
+//            if (quotedUserColor != 0) {
+//                quotedView.drawStart(quotedUserColor)
+//            } else {
+//                quotedView.drawStart(ThemeUtils.getColorFromAttribute(context,
+//                        R.attr.quoteIndicatorBackgroundColor))
+//            }
+
+//            displayQuotedMedia(requestManager, status)
+
+            quotedNameView.updateText(adapter.bidiFormatter)
+        } else {
+            quotedNameView.visibility = View.GONE
+            quotedTextView.visibility = View.VISIBLE
+
+            if (quoteContentAvailable) {
+//                displayQuotedMedia(requestManager, status)
+            } else {
+                quotedMediaPreview.visibility = View.GONE
+                quotedMediaLabel.visibility = View.GONE
+            }
+
+            quotedTextView.spannable = if (!quoteContentAvailable) {
+                // Display 'not available' label
+                SpannableString.valueOf(context.getString(R.string.label_status_not_available)).apply {
+                    setSpan(ForegroundColorSpan(ThemeUtils.getColorFromAttribute(context,
+                            android.R.attr.textColorTertiary, quotedTextView.currentTextColor)), 0,
+                            length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                }
+            } else {
+                // Display 'original status' label
+                context.getString(R.string.label_original_status)
+            }
+
+//            quotedView.drawStart(ThemeUtils.getColorFromAttribute(context,
+//                    R.attr.quoteIndicatorBackgroundColor))
+        }
+
+        (view as? IColorLabelView)?.drawStart(colorNameManager.getUserColor(status.user_key))
     }
 
     override fun onClick(listener: IStatusViewHolder.StatusClickListener, holder: StatusViewHolder, v: View, position: Int) {

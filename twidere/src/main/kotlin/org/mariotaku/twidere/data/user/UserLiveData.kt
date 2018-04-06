@@ -27,13 +27,11 @@ import org.mariotaku.sqliteqb.library.Columns
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.data.ComputableExceptionLiveData
 import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.exception.RequiredFieldNotFoundException
 import org.mariotaku.twidere.extension.api.tryShowUser
 import org.mariotaku.twidere.extension.findMatchingDetailsOrThrow
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.insert
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
@@ -47,7 +45,6 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
 import org.mariotaku.twidere.util.UserColorNameManager
-import javax.inject.Inject
 
 class UserLiveData(
         val context: Context,
@@ -66,14 +63,7 @@ class UserLiveData(
     val user: ParcelableUser?
         get() = value?.data?.second
 
-    @Inject
-    internal lateinit var userColorNameManager: UserColorNameManager
-
     private val profileImageSize = context.getString(R.string.profile_image_size)
-
-    init {
-        GeneralComponent.get(context).inject(this)
-    }
 
     override fun compute(): Pair<AccountDetails, ParcelableUser> {
         val context = context
@@ -82,8 +72,9 @@ class UserLiveData(
         val am = AccountManager.get(context)
         val details = am.findMatchingDetailsOrThrow(accountKey)
         val extraUser = this.extraUser
+        val manager = UserColorNameManager.get(context)
         if (extraUser != null) {
-            ParcelableUserUtils.updateExtraInformation(extraUser, details, userColorNameManager)
+            ParcelableUserUtils.updateExtraInformation(extraUser, details, manager)
             resolver.insert(CachedUsers.CONTENT_URI, extraUser, ParcelableUser::class.java)
             return Pair(details, extraUser)
         }
@@ -122,7 +113,7 @@ class UserLiveData(
             else -> showMicroBlogUser(details)
         }
         resolver.insert(CachedUsers.CONTENT_URI, user, ParcelableUser::class.java)
-        ParcelableUserUtils.updateExtraInformation(user, details, userColorNameManager)
+        ParcelableUserUtils.updateExtraInformation(user, details, manager)
         return Pair(details, user)
     }
 
@@ -144,7 +135,8 @@ class UserLiveData(
             details.newMicroBlogInstance(context, MicroBlog::class.java).verifyCredentials()
         } else when (details.type) {
             AccountType.TWITTER -> details.newMicroBlogInstance(context, Twitter::class.java).tryShowUser(userKey?.id, screenName)
-            AccountType.FANFOU -> details.newMicroBlogInstance(context, Fanfou::class.java).showFanfouUser(userKey?.id ?: screenName)
+            AccountType.FANFOU -> details.newMicroBlogInstance(context, Fanfou::class.java).showFanfouUser(userKey?.id
+                    ?: screenName)
             AccountType.STATUSNET -> {
                 val statusNet = details.newMicroBlogInstance(context, StatusNet::class.java)
                 when {

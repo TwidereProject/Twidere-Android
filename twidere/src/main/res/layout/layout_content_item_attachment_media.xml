@@ -21,50 +21,72 @@
 <merge
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="@layout/list_item_status">
+    tools:layout_height="wrap_content"
+    tools:layout_width="match_parent"
+    tools:parentTag="android.support.constraint.ConstraintLayout">
 
     <org.mariotaku.twidere.view.MediaPreviewImageView
         android:id="@+id/mediaPreviewItem0"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:contentDescription="@string/media"
         android:foreground="?selectableItemBackground"
         android:foregroundGravity="center"
         android:scaleType="centerCrop"
-        tools:ignore="DuplicateIncludedIds"
+        tools:layout_constraintDimensionRatio="W,1:2"
+        tools:layout_constraintEnd_toEndOf="parent"
+        tools:layout_constraintHorizontal_bias="0"
+        tools:layout_constraintStart_toStartOf="parent"
+        tools:layout_constraintTop_toTopOf="parent"
+        tools:layout_constraintWidth_percent="0.5"
         tools:src="@drawable/featured_graphics"/>
 
     <org.mariotaku.twidere.view.MediaPreviewImageView
         android:id="@+id/mediaPreviewItem1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:contentDescription="@string/media"
         android:foreground="?selectableItemBackground"
         android:foregroundGravity="center"
         android:scaleType="centerCrop"
-        tools:ignore="DuplicateIncludedIds"
+        tools:layout_constraintDimensionRatio="W,1:2"
+        tools:layout_constraintEnd_toEndOf="parent"
+        tools:layout_constraintHorizontal_bias="1"
+        tools:layout_constraintStart_toStartOf="parent"
+        tools:layout_constraintTop_toTopOf="parent"
+        tools:layout_constraintWidth_percent="0.5"
         tools:src="@drawable/featured_graphics"/>
 
     <org.mariotaku.twidere.view.MediaPreviewImageView
         android:id="@+id/mediaPreviewItem2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:contentDescription="@string/media"
         android:foreground="?selectableItemBackground"
         android:foregroundGravity="center"
         android:scaleType="centerCrop"
-        tools:ignore="DuplicateIncludedIds"
+        tools:layout_constraintDimensionRatio="W,1:2"
+        tools:layout_constraintEnd_toEndOf="parent"
+        tools:layout_constraintHorizontal_bias="0"
+        tools:layout_constraintStart_toStartOf="parent"
+        tools:layout_constraintTop_toBottomOf="@+id/mediaPreviewItem0"
+        tools:layout_constraintWidth_percent="0.5"
         tools:src="@drawable/featured_graphics"/>
 
     <org.mariotaku.twidere.view.MediaPreviewImageView
         android:id="@+id/mediaPreviewItem3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:contentDescription="@string/media"
         android:foreground="?selectableItemBackground"
         android:foregroundGravity="center"
         android:scaleType="centerCrop"
-        tools:ignore="DuplicateIncludedIds"
+        tools:layout_constraintDimensionRatio="W,1:2"
+        tools:layout_constraintEnd_toEndOf="parent"
+        tools:layout_constraintHorizontal_bias="1"
+        tools:layout_constraintStart_toStartOf="parent"
+        tools:layout_constraintTop_toBottomOf="@+id/mediaPreviewItem1"
+        tools:layout_constraintWidth_percent="0.5"
         tools:src="@drawable/featured_graphics"/>
 
 </merge>

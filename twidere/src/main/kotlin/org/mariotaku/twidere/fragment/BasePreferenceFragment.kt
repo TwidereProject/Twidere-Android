@@ -22,7 +22,6 @@ package org.mariotaku.twidere.fragment
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.Rect
 import android.media.RingtoneManager
 import android.net.Uri
@@ -36,8 +35,6 @@ import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.preference.RingtonePreference
 import org.mariotaku.twidere.taskcontroller.sync.SyncTaskController
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
-import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.util.preference.PreferenceChangeNotifier
 import org.mariotaku.twidere.util.sync.DataSyncProvider
 import javax.inject.Inject
 
@@ -47,17 +44,9 @@ abstract class BasePreferenceFragment : PreferenceFragmentCompat(), IBaseFragmen
     @Inject
     lateinit var keyboardShortcutHandler: KeyboardShortcutsHandler
     @Inject
-    @Deprecated(message = "Deprecated", replaceWith = ReplaceWith("UserColorNameManager.get(context!!)", imports = ["org.mariotaku.twidere.util.UserColorNameManager"]))
-    lateinit var userColorNameManager: UserColorNameManager
-    @Inject
-    @Deprecated(message = "Deprecated", replaceWith = ReplaceWith("PreferencesSingleton.get(context!!)", imports = ["org.mariotaku.twidere.singleton.PreferencesSingleton"]))
-    lateinit var preferences: SharedPreferences
-    @Inject
     lateinit var syncController: SyncTaskController
     @Inject
     lateinit var dataSyncProvider: DataSyncProvider
-    @Inject
-    lateinit var preferenceChangeNotifier: PreferenceChangeNotifier
 
     private val actionHelper = IBaseFragment.ActionHelper<BasePreferenceFragment>()
 

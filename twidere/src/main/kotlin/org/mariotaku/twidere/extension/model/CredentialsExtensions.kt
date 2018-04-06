@@ -158,7 +158,7 @@ fun <T> newMicroBlogInstance(context: Context, endpoint: Endpoint, auth: Authori
             conf.writeTimeoutSecs = 30
             conf.connectionTimeoutSecs = 60
             val uploadHttpClient = HttpClientFactory.createRestHttpClient(conf, holder.dns,
-                    holder.connectionPool, holder.cache)
+                    holder.cache)
             factory.setHttpClient(uploadHttpClient)
         }
         TwitterUserStream::class.java, FanfouStream::class.java, MastodonStreaming::class.java -> {
@@ -166,7 +166,7 @@ fun <T> newMicroBlogInstance(context: Context, endpoint: Endpoint, auth: Authori
             // Use longer read timeout for streaming
             conf.readTimeoutSecs = 300
             val streamHttpClient = HttpClientFactory.createRestHttpClient(conf, holder.dns,
-                    holder.connectionPool, holder.cache)
+                    holder.cache)
             factory.setHttpClient(streamHttpClient)
         }
         else -> {

@@ -57,9 +57,6 @@ class UserAutoCompleteAdapter(
     @Inject
     @Deprecated(message = "Deprecated", replaceWith = ReplaceWith("PreferencesSingleton.get(context)", imports = ["org.mariotaku.twidere.singleton.PreferencesSingleton"]))
     lateinit var preferences: SharedPreferences
-    @Inject
-    @Deprecated(message = "Deprecated", replaceWith = ReplaceWith("UserColorNameManager.get(context)", imports = ["org.mariotaku.twidere.util.UserColorNameManager"]))
-    lateinit var userColorNameManager: UserColorNameManager
 
     private val displayProfileImage: Boolean
     private var profileImageStyle: Int
@@ -83,7 +80,7 @@ class UserAutoCompleteAdapter(
 
         icon.style = profileImageStyle
 
-        text1.spannable = userColorNameManager.getUserNickname(user.key, user.name)
+        text1.spannable = UserColorNameManager.get(context).getUserNickname(user.key, user.name)
         text2.spannable = "@${user.screen_name}"
         if (displayProfileImage) {
             requestManager.loadProfileImage(context, user, profileImageStyle).into(icon)

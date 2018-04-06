@@ -21,6 +21,7 @@ package org.mariotaku.twidere.view.holder.status
 
 import android.content.res.ColorStateList
 import android.support.annotation.DrawableRes
+import android.support.constraint.ConstraintLayout
 import android.support.v4.content.ContextCompat
 import android.support.v4.widget.ImageViewCompat
 import android.support.v4.widget.TextViewCompat
@@ -42,8 +43,10 @@ import org.mariotaku.ktextension.spannable
 import org.mariotaku.microblog.library.annotation.mastodon.StatusVisibility
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE
+import org.mariotaku.twidere.extension.inflate
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.setVisible
@@ -72,7 +75,8 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 /**
  * [ViewHolder] class for standard status list item
  */
-class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : ViewHolder(itemView), IStatusViewHolder {
+class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View, subtype: Int = 0) :
+        ViewHolder(itemView), IStatusViewHolder {
 
     override val profileImageView: ShapedImageView = itemView.profileImage
     override val profileTypeView: ImageView = itemView.profileType
@@ -88,13 +92,19 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
     private val retweetButton = itemView.retweet
     private val favoriteButton = itemView.favorite
     private val itemActionsGroup = itemView.itemActionsGroup
-    private val attachmentLabel = itemView.attachmentLabel
     private val attachmentContainer = itemView.attachmentContainer
 
     private val eventHandler = EventHandler()
 
-    private var attachmentHolder: AttachmentHolder? = null
-    private var statusClickListener: IStatusViewHolder.StatusClickListener? = null
+    private val attachmentHolder = when (subtype) {
+        ParcelableStatusesAdapter.VIEW_SUBTYPE_STATUS_MEDIA -> {
+            MediaAttachmentHolder(this, adapter, attachmentContainer.inflate(R.layout.layout_content_item_attachment_media) as ConstraintLayout)
+        }
+        ParcelableStatusesAdapter.VIEW_SUBTYPE_STATUS_QUOTE -> {
+            QuotedAttachmentHolder(this, adapter, attachmentContainer.inflate(R.layout.layout_content_item_attachment_quote) as ConstraintLayout)
+        }
+        else -> null
+    }
 
     private val toggleFullTextSpan = TwidereClickableSpan(adapter.linkHighlightingStyle) {
         if (adapter.isFullTextVisible(layoutPosition)) {
@@ -104,10 +114,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         }
     }
 
+    private var statusClickListener: IStatusViewHolder.StatusClickListener? = null
 
-    init {
-
-    }
 
     fun preview() {
         val profileImageEnabled = adapter.profileImageEnabled
@@ -131,10 +139,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         val showCardActions = isCardActionsShown
         if (adapter.mediaPreviewEnabled) {
             attachmentContainer.visibility = View.VISIBLE
-            attachmentLabel.visibility = View.GONE
         } else {
             attachmentContainer.visibility = View.GONE
-            attachmentLabel.visibility = View.VISIBLE
         }
 
         itemActionsGroup.setVisible(showCardActions)
@@ -169,7 +175,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         itemActionsGroup.setVisible(showCardActions)
 
         profileTypeView.visibility = View.GONE
-        attachmentLabel.visibility = View.GONE
         attachmentContainer.visibility = View.GONE
         statusInfoIcon.visibility = View.GONE
         statusInfoLabel.visibility = View.GONE
@@ -362,17 +367,14 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
 
         nameView.updateText(formatter)
 
-        attachmentLabel.displayAttachmentLabel(status.card_name, status.attachment?.media, status.location,
-                status.place_full_name, status.is_possibly_sensitive)
-        attachmentContainer.visibility = View.GONE
-
         itemView.contentDescription = status.contentDescription(context, colorNameManager,
                 displayInReplyTo, timeView.showAbsoluteTime)
 
         profileImageView.contentDescription = context.getString(R.string.content_description_open_user_name_profile,
                 colorNameManager.getDisplayName(status))
 
-
+        attachmentContainer.setVisible(attachmentHolder != null)
+        attachmentHolder?.display(status)
     }
 
     override fun onMediaClick(view: View, current: ParcelableMedia, accountKey: UserKey?, id: Long) {
@@ -395,7 +397,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         retweetButton.setOnLongClickListener(eventHandler)
         favoriteButton.setOnLongClickListener(eventHandler)
 
-        attachmentLabel.setOnClickListener(eventHandler)
         attachmentContainer.setOnClickListener(eventHandler)
     }
 
@@ -406,8 +407,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         nameView.setSecondaryTextSize(textSize * 0.85f)
         timeView.textSize = textSize * 0.85f
         statusInfoLabel.textSize = textSize * 0.75f
-
-        attachmentLabel.textSize = textSize * 0.95f
 
         replyButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize)
         retweetButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize)
@@ -444,7 +443,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
 
         timeView.showAbsoluteTime = adapter.showAbsoluteTime
 
-        attachmentLabel.applyFontFamily(adapter.lightFont)
         nameView.applyFontFamily(adapter.lightFont)
         timeView.applyFontFamily(adapter.lightFont)
         textView.applyFontFamily(adapter.lightFont)
@@ -538,10 +536,11 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View) : 
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(this, icon, 0, 0, 0)
     }
 
-    abstract class AttachmentHolder(val adapter: IStatusesAdapter, val view: View) {
+    abstract class AttachmentHolder(val parent: StatusViewHolder, val adapter: IStatusesAdapter, val view: ConstraintLayout) {
         abstract fun onClick(listener: IStatusViewHolder.StatusClickListener, holder: StatusViewHolder, v: View, position: Int)
         abstract fun setupViewOptions()
         abstract fun setTextSize(textSize: Float)
+        abstract fun display(status: ParcelableStatus)
     }
 
     private inner class EventHandler : OnClickListener, OnLongClickListener {
