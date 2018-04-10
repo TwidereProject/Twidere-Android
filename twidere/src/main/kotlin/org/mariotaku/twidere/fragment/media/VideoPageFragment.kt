@@ -42,7 +42,6 @@ import kotlinx.android.synthetic.main.layout_media_viewer_video_overlay.*
 import org.mariotaku.mediaviewer.library.CacheDownloadLoader
 import org.mariotaku.mediaviewer.library.CacheDownloadMediaViewerFragment
 import org.mariotaku.mediaviewer.library.MediaViewerFragment
-import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewerFragment
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.EXTRA_MEDIA
 import org.mariotaku.twidere.activity.MediaViewerActivity
@@ -50,9 +49,7 @@ import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_POSITION
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.extension.accountKey
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.bannerExtras
-import org.mariotaku.twidere.extension.model.getBestVideoUrlAndType
 import org.mariotaku.twidere.extension.setVisible
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.model.ParcelableMedia
@@ -189,10 +186,7 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
     override fun getDownloadExtra(): Any? {
         val extra = MediaExtra()
         extra.isUseThumbor = false
-        val fallbackUrlAndType = media?.getBestVideoUrlAndType(FALLBACK_VIDEO_TYPES)
-        if (fallbackUrlAndType != null) {
-            extra.fallbackUrl = fallbackUrlAndType.first
-        }
+        extra.fallbackUrl = media?.media_url
         return extra
     }
 
@@ -201,11 +195,7 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
     }
 
     override fun getDownloadUri(): Uri? {
-        val bestVideoUrlAndType = media?.getBestVideoUrlAndType(SUPPORTED_VIDEO_TYPES)
-        if (bestVideoUrlAndType != null) {
-            return Uri.parse(bestVideoUrlAndType.first)
-        }
-        return arguments!!.getParcelable(SubsampleImageViewerFragment.EXTRA_MEDIA_URI)
+        return Uri.parse(media?.media_url)
     }
 
     override fun displayMedia(result: CacheDownloadLoader.Result) {

@@ -29,6 +29,7 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 import com.hannesdorfmann.parcelableplease.annotation.Bagger;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelableNoThanks;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 import org.mariotaku.commons.objectcursor.LoganSquareCursorFieldConverter;
@@ -299,6 +300,8 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @CursorField(Statuses.TAB_ID)
     public long tab_id;
 
+    @ParcelableNoThanks
+    public transient Display display;
     public transient boolean is_pinned_status;
     public transient boolean is_filtered;
 
@@ -434,6 +437,12 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         ParcelableStatusParcelablePlease.writeToParcel(this, dest, flags);
     }
 
+    public static class Display {
+        public CharSequence text;
+
+        public CharSequence contentDescription;
+        public CharSequence profileImageContentDescription;
+    }
 
     @ParcelablePlease
     @JsonObject
@@ -535,31 +544,31 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
          * <li/>Original tweet was deleted
          * <li/>Original tweet author blocked or blocked by quoted tweet author
          */
-        long QUOTE_NOT_AVAILABLE = 0x1;
+        long QUOTE_NOT_AVAILABLE = 1L;
         /**
          * Original author of a quote/retweet was blocked by you
          */
-        long BLOCKING_USER = 0x2;
+        long BLOCKING_USER = 1L << 1;
         /**
          * You were blocked by original author of a quote/retweet
          */
-        long BLOCKED_BY_USER = 0x4;
+        long BLOCKED_BY_USER = 1L << 2;
         /**
          * Status possibly sensitive (NSFW etc)
          */
-        long POSSIBLY_SENSITIVE = 0x8;
+        long POSSIBLY_SENSITIVE = 1L << 3;
         /**
          * Status (or quote) has media
          */
-        long HAS_MEDIA = 0x10;
+        long HAS_MEDIA = 1L << 4;
         /**
          * Not following status user
          */
-        long NOT_FRIEND = 0x1000000000L;
+        long NOT_FRIEND = 1L << 36;
         /**
          * Not followed by status user
          */
-        long NOT_FOLLOWER = 0x2000000000L;
+        long NOT_FOLLOWER = 1L << 37;
 
         int FILTER_SCOPE_OPTION_SHIFT = 20;
     }

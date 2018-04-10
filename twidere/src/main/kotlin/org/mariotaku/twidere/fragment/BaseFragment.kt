@@ -82,11 +82,6 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
         super.onPause()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        DebugModeUtils.watchReferenceLeak(this)
-    }
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         GeneralComponent.get(context).inject(this)

@@ -55,8 +55,8 @@ fun EntitySupport.getEntityMedia(): Array<ParcelableMedia> {
 
 fun MediaEntity.toParcelable(): ParcelableMedia {
     val media = ParcelableMedia()
-    val mediaUrl = bestMediaUrl
-    media.url = mediaUrl.orEmpty()
+    val mediaUrl = bestMediaUrl.orEmpty()
+    media.url = mediaUrl
     media.media_url = mediaUrl
     media.preview_url = mediaUrl
     media.page_url = expandedUrl
@@ -70,7 +70,6 @@ fun MediaEntity.toParcelable(): ParcelableMedia {
         media.width = 0
         media.height = 0
     }
-    media.video_info = ParcelableMedia.VideoInfo.fromMediaEntityInfo(videoInfo)
     return media
 }
 

@@ -24,10 +24,6 @@ import org.mariotaku.twidere.alias.ItemClickListener
 import org.mariotaku.twidere.extension.model.prefixedHashtag
 import org.mariotaku.twidere.model.ParcelableHashtag
 
-/**
- * Created by mariotaku on 2017/4/23.
- */
-
 class HashtagViewHolder(itemView: View, hashtagClickListener: ItemClickListener?) : TwoLineWithIconViewHolder(itemView) {
 
     init {

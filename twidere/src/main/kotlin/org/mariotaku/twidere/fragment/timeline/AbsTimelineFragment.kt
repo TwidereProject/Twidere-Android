@@ -66,6 +66,7 @@ import org.mariotaku.twidere.data.CursorObjectDataSourceFactory
 import org.mariotaku.twidere.data.ExceptionLiveData
 import org.mariotaku.twidere.data.StatusesDataSourceFactory
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
+import org.mariotaku.twidere.data.processor.ParcelableStatusDisplayProcessor
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.adapter.removeStatuses
 import org.mariotaku.twidere.extension.data.observe
@@ -97,7 +98,6 @@ import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.task.CreateFavoriteTask
 import org.mariotaku.twidere.task.statuses.GetStatusesTask
 import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.util.UserColorNameManager.Companion
 import org.mariotaku.twidere.view.ExtendedRecyclerView
 import org.mariotaku.twidere.view.holder.GapViewHolder
 import org.mariotaku.twidere.view.holder.TimelineFilterHeaderViewHolder
@@ -452,10 +452,11 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
             extraSelection.first.addTo(expressions)
             extraSelection.second?.addAllTo(expressionArgs)
         }
+        val processor = ParcelableStatusDisplayProcessor(context)
         val factory = CursorObjectDataSourceFactory(context.contentResolver, contentUri,
                 statusColumnsLite, Expression.and(*expressions.toTypedArray()).sql,
                 expressionArgs.toTypedArray(), Statuses.DEFAULT_SORT_ORDER,
-                ParcelableStatus::class.java)
+                ParcelableStatus::class.java, processor)
 //        dataController = factory.obtainDataController()
         return ExceptionLiveData.wrap(LivePagedListBuilder(factory, databasePagedListConfig)
                 .setBoundaryCallback(timelineBoundaryCallback).build())
@@ -800,9 +801,9 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                     val itemViewType = adapter.getItemViewType(position)
                     var nextItemIsStatus = false
                     if (position < adapter.itemCount - 1) {
-                        nextItemIsStatus = adapter.getItemViewType(position + 1) == ParcelableStatusesAdapter.VIEW_TYPE_STATUS
+                        nextItemIsStatus = adapter.getItemViewType(position + 1) in RecyclerViewTypes.STATUS_TYPES
                     }
-                    if (nextItemIsStatus && itemViewType == ParcelableStatusesAdapter.VIEW_TYPE_STATUS) {
+                    if (nextItemIsStatus && itemViewType in RecyclerViewTypes.STATUS_TYPES) {
                         rect.left = decorPaddingLeft
                     } else {
                         rect.left = 0

@@ -38,9 +38,7 @@ import org.mariotaku.ktextension.rangeOfSize
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.callback.ItemCountsAdapterListUpdateCallback
 import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter
-import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter.Companion.ITEM_VIEW_TYPE_GAP
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.Companion.ITEM_VIEW_TYPE_LOAD_INDICATOR
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.annotation.PreviewStyle
@@ -266,23 +264,23 @@ class ParcelableStatusesAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        when (viewType.and(MASK_VIEW_TYPE).shr(BIT_SHIFT_VIEW_TYPE)) {
-            ITEM_VIEW_TYPE_GAP -> {
+        when (viewType) {
+            RecyclerViewTypes.GAP -> {
                 val view = inflater.inflate(GapViewHolder.layoutResource, parent, false)
                 return GapViewHolder(this, view)
             }
-            ITEM_VIEW_TYPE_LOAD_INDICATOR -> {
+            RecyclerViewTypes.LOAD_INDICATOR -> {
                 val view = inflater.inflate(R.layout.list_item_load_indicator, parent, false)
                 return LoadIndicatorViewHolder(view)
             }
-            VIEW_TYPE_STATUS -> {
-                val subtype = viewType.and(MASK_VIEW_SUBTYPE)
-                return createStatusViewHolder(this, inflater, parent, timelineStyle, subtype) as RecyclerView.ViewHolder
+            RecyclerViewTypes.STATUS, RecyclerViewTypes.MEDIA,
+            RecyclerViewTypes.QUOTE -> {
+                return createStatusViewHolder(this, inflater, parent, timelineStyle, viewType) as RecyclerView.ViewHolder
             }
-            VIEW_TYPE_EMPTY -> {
+            RecyclerViewTypes.EMPTY -> {
                 return EmptyViewHolder(Space(context))
             }
-            VIEW_TYPE_FILTER_HEADER -> {
+            RecyclerViewTypes.FILTER_HEADER -> {
                 val view = inflater.inflate(TimelineFilterHeaderViewHolder.layoutResource,
                         parent, false)
                 return TimelineFilterHeaderViewHolder(this, view)
@@ -293,8 +291,9 @@ class ParcelableStatusesAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val viewType = holder.itemViewType
-        when (viewType.and(MASK_VIEW_TYPE).shr(BIT_SHIFT_VIEW_TYPE)) {
-            VIEW_TYPE_STATUS -> {
+        when (viewType) {
+            RecyclerViewTypes.STATUS, RecyclerViewTypes.MEDIA,
+            RecyclerViewTypes.QUOTE -> {
                 holder as IStatusViewHolder
                 val countIndex: Int = getItemCountIndex(position)
                 val status = getStatusInternal(loadAround = true, position = position,
@@ -302,10 +301,10 @@ class ParcelableStatusesAdapter(
                 holder.display(status, displayInReplyTo = isShowInReplyTo,
                         displayPinned = countIndex == ITEM_INDEX_PINNED_STATUS)
             }
-            VIEW_TYPE_FILTER_HEADER -> {
+            RecyclerViewTypes.FILTER_HEADER -> {
                 (holder as TimelineFilterHeaderViewHolder).display(timelineFilter!!)
             }
-            ITEM_VIEW_TYPE_GAP -> {
+            RecyclerViewTypes.GAP -> {
                 val status = getStatusInternal(loadAround = true, position = position)
                 val loading = gapLoadingIds.any { it.accountKey == status.account_key && it.id == status.id }
                 (holder as GapViewHolder).display(loading)
@@ -317,26 +316,19 @@ class ParcelableStatusesAdapter(
         val countIndex = getItemCountIndex(position)
         when (countIndex) {
             ITEM_INDEX_LOAD_START_INDICATOR, ITEM_INDEX_LOAD_END_INDICATOR -> {
-                return ITEM_VIEW_TYPE_LOAD_INDICATOR.shl(BIT_SHIFT_VIEW_TYPE)
+                return RecyclerViewTypes.LOAD_INDICATOR
             }
-            ITEM_INDEX_PINNED_STATUS -> {
-                return VIEW_TYPE_STATUS.shl(BIT_SHIFT_VIEW_TYPE)
-            }
-            ITEM_INDEX_STATUS -> {
+            ITEM_INDEX_PINNED_STATUS, ITEM_INDEX_STATUS -> {
                 val status = getStatus(position)
-                if (status.is_gap) {
-                    return ITEM_VIEW_TYPE_GAP.shl(BIT_SHIFT_VIEW_TYPE)
-                } else {
-                    val subtype = when {
-                        status.attachment?.quoted != null -> VIEW_SUBTYPE_STATUS_QUOTE
-                        status.attachment?.media.isNotNullOrEmpty() -> VIEW_SUBTYPE_STATUS_MEDIA
-                        else -> 0
-                    }
-                    return VIEW_TYPE_STATUS.shl(BIT_SHIFT_VIEW_TYPE).or(subtype)
+                return when {
+                    status.is_gap -> RecyclerViewTypes.GAP
+                    status.attachment?.quoted != null -> RecyclerViewTypes.QUOTE
+                    status.attachment?.media.isNotNullOrEmpty() -> RecyclerViewTypes.MEDIA
+                    else -> RecyclerViewTypes.STATUS
                 }
             }
             ITEM_INDEX_FILTER_HEADER -> {
-                return VIEW_TYPE_FILTER_HEADER.shl(BIT_SHIFT_VIEW_TYPE)
+                return RecyclerViewTypes.FILTER_HEADER
             }
             else -> throw UnsupportedCountIndexException(countIndex, position)
         }
@@ -426,26 +418,14 @@ class ParcelableStatusesAdapter(
 
     companion object {
 
-        const val BIT_SHIFT_VIEW_TYPE = 8
-        const val MASK_VIEW_TYPE = 0xFF00
-        const val MASK_VIEW_SUBTYPE = 0x00FF
-
-        const val VIEW_TYPE_STATUS = 2
-        const val VIEW_TYPE_EMPTY = 3
-        const val VIEW_TYPE_FILTER_HEADER = 4
-
-        const val VIEW_SUBTYPE_STATUS_MEDIA = 1
-        const val VIEW_SUBTYPE_STATUS_QUOTE = 2
-
         const val ITEM_INDEX_LOAD_START_INDICATOR = 0
         const val ITEM_INDEX_FILTER_HEADER = 1
         const val ITEM_INDEX_PINNED_STATUS = 2
         const val ITEM_INDEX_STATUS = 3
         const val ITEM_INDEX_LOAD_END_INDICATOR = 4
 
-
         fun createStatusViewHolder(adapter: IStatusesAdapter, inflater: LayoutInflater,
-                parent: ViewGroup, @TimelineStyle timelineStyle: Int, subtype: Int = 0): IStatusViewHolder {
+                parent: ViewGroup, @TimelineStyle timelineStyle: Int, viewType: Int = 0): IStatusViewHolder {
             when (timelineStyle) {
                 TimelineStyle.STAGGERED -> {
                     val view = inflater.inflate(MediaStatusViewHolder.layoutResource, parent, false)
@@ -456,7 +436,7 @@ class ParcelableStatusesAdapter(
                 }
                 TimelineStyle.PLAIN -> {
                     val view = inflater.inflate(StatusViewHolder.layoutResource, parent, false)
-                    val holder = StatusViewHolder(adapter, view, subtype)
+                    val holder = StatusViewHolder(adapter, view, viewType)
                     holder.setOnClickListeners()
                     holder.setupViewOptions()
                     return holder

@@ -43,6 +43,7 @@ import org.mariotaku.twidere.adapter.iface.IUsersAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.UserClickListener
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.LoadMorePosition
+import org.mariotaku.twidere.constant.RecyclerViewTypes
 import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.data.ExceptionLiveData
@@ -189,9 +190,9 @@ abstract class AbsUsersFragment : AbsContentListRecyclerViewFragment<ParcelableU
                 val itemViewType = adapter.getItemViewType(position)
                 var nextItemIsUser = false
                 if (position < adapter.itemCount - 1) {
-                    nextItemIsUser = adapter.getItemViewType(position + 1) == ParcelableUsersAdapter.ITEM_VIEW_TYPE_USER
+                    nextItemIsUser = adapter.getItemViewType(position + 1) == RecyclerViewTypes.USER
                 }
-                if (nextItemIsUser && itemViewType == ParcelableUsersAdapter.ITEM_VIEW_TYPE_USER) {
+                if (nextItemIsUser && itemViewType == RecyclerViewTypes.USER) {
                     rect.left = decorPaddingLeft
                 } else {
                     rect.left = 0

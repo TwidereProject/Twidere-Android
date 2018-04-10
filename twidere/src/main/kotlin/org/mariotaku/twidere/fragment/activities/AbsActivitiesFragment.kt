@@ -47,16 +47,15 @@ import org.mariotaku.ktextension.*
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter
-import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter.Companion.ITEM_VIEW_TYPE_STATUS
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.annotation.ReadPositionTag
+import org.mariotaku.twidere.constant.RecyclerViewTypes
 import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.readFromBottomKey
 import org.mariotaku.twidere.data.CursorObjectDataSourceFactory
 import org.mariotaku.twidere.data.processor.DataSourceItemProcessor
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.activityStatus
 import org.mariotaku.twidere.extension.model.quoted
 import org.mariotaku.twidere.extension.queryOne
@@ -84,7 +83,6 @@ import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.task.statuses.GetStatusesTask
 import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.util.UserColorNameManager.Companion
 import org.mariotaku.twidere.view.ExtendedRecyclerView
 import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder
 import org.mariotaku.twidere.view.holder.GapViewHolder
@@ -481,7 +479,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
             if (activity == null) return
             val lm = layoutManager
             val view = lm.findViewByPosition(position) ?: return
-            if (lm.getItemViewType(view) != ITEM_VIEW_TYPE_STATUS) {
+            if (lm.getItemViewType(view) != RecyclerViewTypes.STATUS) {
                 return
             }
             recyclerView.showContextMenuForChild(view, menuView)

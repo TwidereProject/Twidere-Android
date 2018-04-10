@@ -11,7 +11,6 @@ import org.mariotaku.microblog.library.model.microblog.UrlEntity
 import org.mariotaku.twidere.extension.model.api.getEntityMedia
 import org.mariotaku.twidere.extension.model.api.gnusocial.toParcelable
 import org.mariotaku.twidere.extension.model.quoted
-import org.mariotaku.twidere.extension.model.toParcelable
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
@@ -58,7 +57,6 @@ object ParcelableMediaUtils {
             "animated_gif", "player" -> {
                 val media = ParcelableMedia()
                 val playerStreamUrl = card.getBindingValue("player_stream_url")
-                media.card = card.toParcelable(accountKey, accountType)
                 val appUrlResolved = card.getBindingValue("app_url_resolved") as? CardEntity.StringValue
                 media.url = appUrlResolved?.takeIf { it.checkUrl() }?.value ?: card.url
                 if (playerStreamUrl is CardEntity.StringValue) {
@@ -96,7 +94,6 @@ object ParcelableMediaUtils {
 
                 val media = ParcelableMedia()
                 media.url = card.url
-                media.card = card.toParcelable(accountKey, accountType)
                 media.type = ParcelableMedia.Type.IMAGE
                 media.media_url = photoImageFullSize.url
                 media.width = photoImageFullSize.width

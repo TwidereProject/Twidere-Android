@@ -37,7 +37,7 @@ import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.applyTo
-import org.mariotaku.twidere.extension.model.aspect_ratio
+import org.mariotaku.twidere.extension.model.aspectRatio
 import org.mariotaku.twidere.extension.model.contentDescription
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
 import org.mariotaku.twidere.model.ParcelableMedia
@@ -95,8 +95,8 @@ class LargeMediaStatusViewHolder(private val adapter: IStatusesAdapter, itemView
         val displayEnd: Int
         if (adapter.linkHighlightingStyle != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
             text = SpannableStringBuilder.valueOf(status.text_unescaped).apply {
-                status.spans?.applyTo(this, status.extras?.emojis,
-                        adapter.requestManager, textView)
+                status.spans?.applyTo(this, status.extras?.emojis
+                )
                 linkify.applyAllLinks(this, status.account_key, layoutPosition.toLong(),
                         status.is_possibly_sensitive, adapter.linkHighlightingStyle,
                         skipLinksInText)
@@ -118,8 +118,8 @@ class LargeMediaStatusViewHolder(private val adapter: IStatusesAdapter, itemView
         favoriteButton.isActivated = StatusViewHolder.isFavoriteIconActivated(status)
 
         val aspectRatio = status.attachment?.media?.fold(Double.NaN) { acc, media ->
-            if (acc.isNaN()) return@fold media.aspect_ratio
-            return@fold (acc + media.aspect_ratio) / 2
+            if (acc.isNaN()) return@fold media.aspectRatio
+            return@fold (acc + media.aspectRatio) / 2
         } ?: Double.NaN
 
         if (status.favorite_count > 0) {

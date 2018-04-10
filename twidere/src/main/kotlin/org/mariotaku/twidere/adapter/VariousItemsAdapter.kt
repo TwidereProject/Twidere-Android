@@ -9,6 +9,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.alias.ItemClickListener
 import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.annotation.TimelineStyle
+import org.mariotaku.twidere.constant.RecyclerViewTypes
 import org.mariotaku.twidere.model.ParcelableHashtag
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUser
@@ -21,9 +22,6 @@ import org.mariotaku.twidere.view.holder.UserListViewHolder
 import org.mariotaku.twidere.view.holder.UserViewHolder
 import org.mariotaku.twidere.view.holder.status.StatusViewHolder
 
-/**
- * Created by mariotaku on 16/3/20.
- */
 class VariousItemsAdapter(
         context: Context,
         requestManager: RequestManager
@@ -46,21 +44,20 @@ class VariousItemsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {
-            VIEW_TYPE_STATUS -> {
+            RecyclerViewTypes.STATUS -> {
                 return ParcelableStatusesAdapter.createStatusViewHolder(dummyAdapter,
                         inflater, parent, TimelineStyle.PLAIN) as RecyclerView.ViewHolder
             }
-            VIEW_TYPE_USER -> {
+            RecyclerViewTypes.USER -> {
                 return ParcelableUsersAdapter.createUserViewHolder(dummyAdapter, inflater, parent)
             }
-            VIEW_TYPE_USER_LIST -> {
+            RecyclerViewTypes.USER_LIST -> {
                 return ParcelableUserListsAdapter.createUserListViewHolder(dummyAdapter, inflater,
                         parent)
             }
-            VIEW_TYPE_HASHTAG -> {
+            RecyclerViewTypes.HASHTAG -> {
                 val view = inflater.inflate(R.layout.list_item_two_line_small, parent, false)
-                val holder = HashtagViewHolder(view, hashtagClickListener)
-                return holder
+                return HashtagViewHolder(view, hashtagClickListener)
             }
         }
         throw UnsupportedOperationException()
@@ -69,17 +66,17 @@ class VariousItemsAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val obj = getItem(position)
         when (holder.itemViewType) {
-            VIEW_TYPE_STATUS -> {
+            RecyclerViewTypes.STATUS -> {
                 (holder as StatusViewHolder).display(obj as ParcelableStatus,
                         displayInReplyTo = true)
             }
-            VIEW_TYPE_USER -> {
+            RecyclerViewTypes.USER -> {
                 (holder as UserViewHolder).display(obj as ParcelableUser, null)
             }
-            VIEW_TYPE_USER_LIST -> {
+            RecyclerViewTypes.USER_LIST -> {
                 (holder as UserListViewHolder).display(obj as ParcelableUserList)
             }
-            VIEW_TYPE_HASHTAG -> {
+            RecyclerViewTypes.HASHTAG -> {
                 (holder as HashtagViewHolder).display(obj as ParcelableHashtag)
             }
         }
@@ -91,11 +88,11 @@ class VariousItemsAdapter(
 
     private fun getItemViewType(obj: Any): Int {
         when (obj) {
-            is ParcelableStatus -> return VIEW_TYPE_STATUS
-            is ParcelableUser -> return VIEW_TYPE_USER
-            is ParcelableUserList -> return VIEW_TYPE_USER_LIST
-            is ParcelableHashtag -> return VIEW_TYPE_HASHTAG
-            else -> throw UnsupportedOperationException("Unsupported object " + obj)
+            is ParcelableStatus -> return RecyclerViewTypes.STATUS
+            is ParcelableUser -> return RecyclerViewTypes.USER
+            is ParcelableUserList -> return RecyclerViewTypes.USER_LIST
+            is ParcelableHashtag -> return RecyclerViewTypes.HASHTAG
+            else -> throw UnsupportedOperationException("Unsupported object $obj")
         }
     }
 
@@ -113,11 +110,4 @@ class VariousItemsAdapter(
         return data!![position]!!
     }
 
-    companion object {
-
-        val VIEW_TYPE_STATUS = 1
-        val VIEW_TYPE_USER = 2
-        val VIEW_TYPE_USER_LIST = 3
-        val VIEW_TYPE_HASHTAG = 4
-    }
 }

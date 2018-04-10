@@ -26,10 +26,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.RequestManager
 import org.mariotaku.ktextension.contains
+import org.mariotaku.ktextension.toInt
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.Companion.ITEM_VIEW_TYPE_LOAD_INDICATOR
 import org.mariotaku.twidere.annotation.LoadMorePosition
+import org.mariotaku.twidere.constant.RecyclerViewTypes
 import org.mariotaku.twidere.exception.UnsupportedCountIndexException
 import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.model.ParcelableUser
@@ -42,8 +43,6 @@ class SelectableUsersAdapter(
         requestManager: RequestManager
 ) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context, requestManager),
         IItemCountsAdapter {
-
-    val ITEM_VIEW_TYPE_USER = 2
 
     override val itemCounts: ItemCounts = ItemCounts(3)
 
@@ -69,22 +68,22 @@ class SelectableUsersAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {
-            ITEM_VIEW_TYPE_USER -> {
+            RecyclerViewTypes.USER_SIMPLE -> {
                 val view = inflater.inflate(R.layout.list_item_simple_user, parent, false)
                 val holder = SelectableUserViewHolder(view, this)
                 return holder
             }
-            ITEM_VIEW_TYPE_LOAD_INDICATOR -> {
+            RecyclerViewTypes.LOAD_INDICATOR -> {
                 val view = inflater.inflate(R.layout.list_item_load_indicator, parent, false)
                 return LoadIndicatorViewHolder(view)
             }
         }
-        throw IllegalStateException("Unknown view type " + viewType)
+        throw IllegalStateException("Unknown view type $viewType")
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
-            ITEM_VIEW_TYPE_USER -> {
+            RecyclerViewTypes.USER_SIMPLE -> {
                 bindUser(holder as SelectableUserViewHolder, position)
             }
         }
@@ -93,8 +92,8 @@ class SelectableUsersAdapter(
     override fun getItemViewType(position: Int): Int {
         val countIndex = itemCounts.getItemCountIndex(position)
         when (countIndex) {
-            ITEM_TYPE_START_INDICATOR, ITEM_TYPE_END_INDICATOR -> return ITEM_VIEW_TYPE_LOAD_INDICATOR
-            ITEM_TYPE_USER -> return ITEM_VIEW_TYPE_USER
+            ITEM_TYPE_START_INDICATOR, ITEM_TYPE_END_INDICATOR -> return RecyclerViewTypes.LOAD_INDICATOR
+            ITEM_TYPE_USER -> return RecyclerViewTypes.USER_SIMPLE
             else -> throw UnsupportedCountIndexException(countIndex, position)
         }
 
@@ -115,9 +114,9 @@ class SelectableUsersAdapter(
 
     override fun updateItemCounts() {
         val position = loadMoreIndicatorPosition
-        itemCounts[ITEM_TYPE_START_INDICATOR] = if (LoadMorePosition.START in position) 1 else 0
+        itemCounts[ITEM_TYPE_START_INDICATOR] = (LoadMorePosition.START in position).toInt()
         itemCounts[ITEM_TYPE_USER] = userCount
-        itemCounts[ITEM_TYPE_END_INDICATOR] = if (LoadMorePosition.END in position) 1 else 0
+        itemCounts[ITEM_TYPE_END_INDICATOR] = (LoadMorePosition.END in position).toInt()
     }
 
     fun getUser(position: Int): ParcelableUser {

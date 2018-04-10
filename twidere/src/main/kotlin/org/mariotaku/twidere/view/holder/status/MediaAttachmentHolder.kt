@@ -50,6 +50,7 @@ class MediaAttachmentHolder(parent: StatusViewHolder, adapter: IStatusesAdapter,
             if (index >= view.childCount) return@forEachIndexed
             adapter.requestManager.load(item.preview_url).into(view.getChildAt(index) as ImageView)
         }
+        view.requestLayout()
     }
 
     override fun onClick(listener: IStatusViewHolder.StatusClickListener, holder: StatusViewHolder, v: View, position: Int) {

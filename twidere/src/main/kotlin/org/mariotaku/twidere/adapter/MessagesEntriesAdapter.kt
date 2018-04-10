@@ -13,6 +13,7 @@ import org.mariotaku.ktextension.contains
 import org.mariotaku.twidere.adapter.callback.ItemCountsAdapterListUpdateCallback
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.annotation.LoadMorePosition
+import org.mariotaku.twidere.constant.RecyclerViewTypes
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.exception.UnsupportedCountIndexException
 import org.mariotaku.twidere.model.ItemCounts
@@ -65,7 +66,7 @@ class MessagesEntriesAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
-            ITEM_TYPE_MESSAGE_ENTRY -> {
+            RecyclerViewTypes.MESSAGE_ENTRY -> {
                 val conversation = getConversation(position)
                 (holder as MessageEntryViewHolder).display(conversation)
             }
@@ -75,11 +76,11 @@ class MessagesEntriesAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         when (viewType) {
-            ITEM_TYPE_MESSAGE_ENTRY -> {
+            RecyclerViewTypes.MESSAGE_ENTRY -> {
                 val itemView = inflater.inflate(MessageEntryViewHolder.layoutResource, parent, false)
                 return MessageEntryViewHolder(itemView, this)
             }
-            ITEM_VIEW_TYPE_LOAD_INDICATOR -> {
+            RecyclerViewTypes.LOAD_INDICATOR -> {
                 val itemView = inflater.inflate(LoadIndicatorViewHolder.layoutResource, parent, false)
                 return LoadIndicatorViewHolder(itemView)
 
@@ -91,8 +92,8 @@ class MessagesEntriesAdapter(
     override fun getItemViewType(position: Int): Int {
         val countIndex = itemCounts.getItemCountIndex(position)
         when (countIndex) {
-            0 -> return ITEM_TYPE_MESSAGE_ENTRY
-            1 -> return ITEM_VIEW_TYPE_LOAD_INDICATOR
+            0 -> return RecyclerViewTypes.MESSAGE_ENTRY
+            1 -> return RecyclerViewTypes.LOAD_INDICATOR
             else -> throw UnsupportedCountIndexException(countIndex, position)
         }
     }
@@ -111,11 +112,6 @@ class MessagesEntriesAdapter(
         fun onConversationClick(position: Int)
         fun onConversationLongClick(position: Int): Boolean
 
-    }
-
-    companion object {
-        const val ITEM_TYPE_MESSAGE_ENTRY = 1
-        const val ITEM_VIEW_TYPE_LOAD_INDICATOR = 2
     }
 
 

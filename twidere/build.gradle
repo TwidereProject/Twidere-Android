@@ -38,7 +38,6 @@ android {
         versionName projectVersionName
         multiDexEnabled true
 
-        buildConfigField 'boolean', 'LEAK_CANARY_ENABLED', 'Boolean.parseBoolean("false")'
         buildConfigField 'boolean', 'SHOW_CUSTOM_TOKEN_DIALOG', 'Boolean.parseBoolean("false")'
 
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
@@ -187,7 +186,6 @@ dependencies {
     debugImplementation "com.facebook.stetho:stetho:${libVersions['Stetho']}"
     debugImplementation "com.facebook.stetho:stetho-okhttp3:${libVersions['Stetho']}"
     debugImplementation "com.github.mariotaku:StethoBeanShellREPL:${libVersions['StethoBeanShellREPL']}"
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:${libVersions['LeakCanary']}"
     debugImplementation('com.jayway.jsonpath:json-path:2.2.0') {
         exclude group: 'net.minidev', module: 'json-smart'
     }

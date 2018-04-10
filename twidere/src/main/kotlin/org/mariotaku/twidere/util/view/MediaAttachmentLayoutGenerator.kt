@@ -3,7 +3,7 @@ package org.mariotaku.twidere.util.view
 import android.annotation.SuppressLint
 import android.support.constraint.ConstraintLayout
 import org.mariotaku.twidere.annotation.PreviewStyle
-import org.mariotaku.twidere.extension.model.aspect_ratio
+import org.mariotaku.twidere.extension.model.aspectRatio
 import org.mariotaku.twidere.extension.setVisible
 import org.mariotaku.twidere.model.ParcelableMedia
 
@@ -23,7 +23,7 @@ object MediaAttachmentLayoutGenerator {
         lp.matchConstraintPercentWidth = 1f
         when (style) {
             PreviewStyle.ACTUAL_SIZE -> {
-                val ratio = item.aspect_ratio
+                val ratio = item.aspectRatio
                 if (ratio.isNaN()) {
                     lp.dimensionRatio = "W,1:2"
                 } else {

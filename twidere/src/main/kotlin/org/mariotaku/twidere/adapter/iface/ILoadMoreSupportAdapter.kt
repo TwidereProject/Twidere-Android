@@ -30,7 +30,6 @@ interface ILoadMoreSupportAdapter {
     var loadMoreSupportedPosition: Int
 
     companion object {
-        val ITEM_VIEW_TYPE_LOAD_INDICATOR = 0
 
         @LoadMorePosition
         fun apply(@LoadMorePosition orig: Int, @LoadMorePosition supported: Int): Int {

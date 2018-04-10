@@ -32,10 +32,11 @@ import org.mariotaku.ktextension.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.callback.ItemCountsAdapterListUpdateCallback
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.Companion.ITEM_VIEW_TYPE_LOAD_INDICATOR
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter
 import org.mariotaku.twidere.annotation.LoadMorePosition
+import org.mariotaku.twidere.constant.RecyclerViewTypes
 import org.mariotaku.twidere.exception.UnsupportedCountIndexException
+import org.mariotaku.twidere.exception.UnsupportedViewTypeException
 import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
@@ -56,8 +57,8 @@ class ParcelableUsersAdapter(
     override var friendshipClickListener: IUsersAdapter.FriendshipClickListener? = null
     override var simpleLayout: Boolean = false
     override var showFollow: Boolean = false
-    var showCheckbox: Boolean = false
     override val itemCounts: ItemCounts = ItemCounts(3)
+    var showCheckbox: Boolean = false
 
     var users: PagedList<ParcelableUser>?
         get() = pagedStatusesHelper.currentList
@@ -112,20 +113,20 @@ class ParcelableUsersAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {
-            ITEM_VIEW_TYPE_USER -> {
+            RecyclerViewTypes.USER -> {
                 return createUserViewHolder(this, inflater, parent)
             }
-            ITEM_VIEW_TYPE_LOAD_INDICATOR -> {
+            RecyclerViewTypes.LOAD_INDICATOR -> {
                 val view = inflater.inflate(R.layout.list_item_load_indicator, parent, false)
                 return LoadIndicatorViewHolder(view)
             }
+            else -> throw UnsupportedViewTypeException(viewType)
         }
-        throw IllegalStateException("Unknown view type " + viewType)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
-            ITEM_VIEW_TYPE_USER -> {
+            RecyclerViewTypes.USER -> {
                 val user = getUserInternal(loadAround = true, position = position)
                 (holder as UserViewHolder).display(user, obtainState(user.key))
             }
@@ -136,9 +137,9 @@ class ParcelableUsersAdapter(
         val countIndex = getItemCountIndex(position)
         return when (countIndex) {
             ITEM_INDEX_LOAD_START_INDICATOR, ITEM_INDEX_LOAD_END_INDICATOR -> {
-                ITEM_VIEW_TYPE_LOAD_INDICATOR
+                RecyclerViewTypes.LOAD_INDICATOR
             }
-            ITEM_INDEX_USER -> ITEM_VIEW_TYPE_USER
+            ITEM_INDEX_USER -> RecyclerViewTypes.USER
             else -> throw UnsupportedCountIndexException(countIndex, position)
         }
     }
@@ -236,7 +237,6 @@ class ParcelableUsersAdapter(
 
     companion object {
 
-        const val ITEM_VIEW_TYPE_USER = 2
         const val ITEM_INDEX_LOAD_START_INDICATOR = 0
         const val ITEM_INDEX_USER = 1
         const val ITEM_INDEX_LOAD_END_INDICATOR = 2

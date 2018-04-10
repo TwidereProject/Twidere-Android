@@ -25,7 +25,6 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.view.View
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.layout_content_item_attachment_quote.view.*
 import org.mariotaku.ktextension.applyFontFamily
 import org.mariotaku.ktextension.hideIfEmpty
@@ -86,8 +85,8 @@ class QuotedAttachmentHolder(parent: StatusViewHolder, adapter: IStatusesAdapter
             val quotedText: CharSequence
             if (adapter.linkHighlightingStyle != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
                 quotedText = SpannableStringBuilder.valueOf(quoted.text_unescaped)
-                quoted.spans?.applyTo(quotedText, status.extras?.emojis, Glide.with(view),
-                        quotedTextView)
+                quoted.spans?.applyTo(quotedText, status.extras?.emojis
+                )
 //                linkify.applyAllLinks(quotedText, status.account_key, parent.layoutPosition.toLong(),
 //                        status.is_possibly_sensitive, adapter.linkHighlightingStyle,
 //                        skipLinksInText)

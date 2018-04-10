@@ -1153,7 +1153,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
         if (user.description_unescaped != null) {
             val text = SpannableStringBuilder.valueOf(user.description_unescaped).apply {
-                user.description_spans?.applyTo(this, null, Glide.with(this@UserFragment), description)
+                user.description_spans?.applyTo(this, null)
                 linkify.applyAllLinks(this, user.account_key, false, false)
             }
             description.spannable = text

@@ -30,7 +30,7 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.PreviewStyle
-import org.mariotaku.twidere.extension.model.aspect_ratio
+import org.mariotaku.twidere.extension.model.aspectRatio
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.media.AuthenticatedUri
@@ -225,7 +225,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         if (style == PreviewStyle.ACTUAL_SIZE) {
             val media = (child.layoutParams as MediaLayoutParams).media
             if (media != null) {
-                val aspectRatio = media.aspect_ratio
+                val aspectRatio = media.aspectRatio
                 if (!aspectRatio.isNaN()) {
                     childHeight = Math.round(contentWidth / aspectRatio.coerceIn(0.3, 20.0)).toInt()
                 }

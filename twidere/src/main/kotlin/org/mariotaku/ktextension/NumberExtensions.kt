@@ -70,3 +70,7 @@ val Int.nextPowerOf2: Int
         n = n or (n shr 1)
         return n + 1
     }
+
+fun Boolean.toInt(): Int {
+    return if (this) 1 else 0
+}

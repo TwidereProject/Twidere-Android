@@ -36,19 +36,21 @@ import android.view.View.OnLongClickListener
 import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.list_item_status.view.*
-import org.mariotaku.ktextension.appendTo
 import org.mariotaku.ktextension.applyFontFamily
 import org.mariotaku.ktextension.hideIfEmpty
 import org.mariotaku.ktextension.spannable
 import org.mariotaku.microblog.library.annotation.mastodon.StatusVisibility
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
+import org.mariotaku.twidere.constant.RecyclerViewTypes
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE
 import org.mariotaku.twidere.extension.inflate
 import org.mariotaku.twidere.extension.loadProfileImage
-import org.mariotaku.twidere.extension.model.*
+import org.mariotaku.twidere.extension.model.displayInfo
+import org.mariotaku.twidere.extension.model.retweeted_by_user_acct
+import org.mariotaku.twidere.extension.model.type
+import org.mariotaku.twidere.extension.model.user_acct
 import org.mariotaku.twidere.extension.setVisible
 import org.mariotaku.twidere.extension.text.appendCompat
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
@@ -97,10 +99,10 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View, su
     private val eventHandler = EventHandler()
 
     private val attachmentHolder = when (subtype) {
-        ParcelableStatusesAdapter.VIEW_SUBTYPE_STATUS_MEDIA -> {
+        RecyclerViewTypes.MEDIA -> {
             MediaAttachmentHolder(this, adapter, attachmentContainer.inflate(R.layout.layout_content_item_attachment_media) as ConstraintLayout)
         }
-        ParcelableStatusesAdapter.VIEW_SUBTYPE_STATUS_QUOTE -> {
+        RecyclerViewTypes.QUOTE -> {
             QuotedAttachmentHolder(this, adapter, attachmentContainer.inflate(R.layout.layout_content_item_attachment_quote) as ConstraintLayout)
         }
         else -> null
@@ -231,8 +233,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View, su
             statusInfoIcon.visibility = View.GONE
         }
 
-        val skipLinksInText = status.extras?.support_entities ?: false
-
         val userColor = colorNameManager.getUserColor(status.user_key)
 
         if (status.is_retweet) {
@@ -277,35 +277,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View, su
             itemContent.drawEnd()
         }
 
-        val textWithSummary = SpannableStringBuilder()
+        val display = status.displayInfo(context)
 
-        status.extras?.summary_text?.appendTo(textWithSummary)
-
-        val text: CharSequence
-        val displayEnd: Int
-        if (!textWithSummary.isEmpty() && !isFullTextVisible) {
-            text = SpannableStringBuilder.valueOf(context.getString(R.string.label_status_show_more)).apply {
-                setSpan(toggleFullTextSpan, 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            }
-            displayEnd = -1
-        } else if (adapter.linkHighlightingStyle != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
-            text = SpannableStringBuilder.valueOf(status.text_unescaped).apply {
-                status.spans?.applyTo(this, status.extras?.emojis, requestManager, textView)
-                linkify.applyAllLinks(this, status.account_key, layoutPosition.toLong(),
-                        status.is_possibly_sensitive, adapter.linkHighlightingStyle,
-                        skipLinksInText)
-            }
-            displayEnd = status.extras?.display_text_range?.getOrNull(1) ?: -1
-        } else {
-            text = status.text_unescaped
-            displayEnd = status.extras?.display_text_range?.getOrNull(1) ?: -1
-        }
-
-        if (displayEnd != -1 && displayEnd <= text.length) {
-            textWithSummary.append(text.subSequence(0, displayEnd))
-        }
-
-        textView.spannable = textWithSummary
+        textView.spannable = display.text
         textView.hideIfEmpty()
 
         if (replyCount > 0) {
@@ -367,11 +341,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View, su
 
         nameView.updateText(formatter)
 
-        itemView.contentDescription = status.contentDescription(context, colorNameManager,
-                displayInReplyTo, timeView.showAbsoluteTime)
+        itemView.contentDescription = display.contentDescription
 
-        profileImageView.contentDescription = context.getString(R.string.content_description_open_user_name_profile,
-                colorNameManager.getDisplayName(status))
+        profileImageView.contentDescription = display.profileImageContentDescription
 
         attachmentContainer.setVisible(attachmentHolder != null)
         attachmentHolder?.display(status)

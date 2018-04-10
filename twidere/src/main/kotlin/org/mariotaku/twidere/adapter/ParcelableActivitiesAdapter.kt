@@ -43,6 +43,7 @@ import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.annotation.TimelineStyle
+import org.mariotaku.twidere.constant.RecyclerViewTypes
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.exception.UnsupportedCountIndexException
 import org.mariotaku.twidere.extension.model.activityStatus
@@ -171,32 +172,32 @@ class ParcelableActivitiesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {
-            ITEM_VIEW_TYPE_STATUS -> {
+            RecyclerViewTypes.STATUS -> {
                 val holder = ParcelableStatusesAdapter.createStatusViewHolder(statusAdapterDelegate,
                         inflater, parent, TimelineStyle.PLAIN)
                 holder.setStatusClickListener(eventListener)
                 return holder as RecyclerView.ViewHolder
             }
-            ITEM_VIEW_TYPE_TITLE_SUMMARY -> {
+            RecyclerViewTypes.ACTIVITY_TITLE_SUMMARY -> {
                 val view = inflater.inflate(R.layout.list_item_activity_summary_compact, parent, false)
                 val holder = ActivityTitleSummaryViewHolder(view, this)
                 holder.setOnClickListeners()
                 holder.setupViewOptions()
                 return holder
             }
-            ITEM_VIEW_TYPE_GAP -> {
+            RecyclerViewTypes.GAP -> {
                 val view = inflater.inflate(GapViewHolder.layoutResource, parent, false)
                 return GapViewHolder(this, view)
             }
-            ITEM_VIEW_TYPE_LOAD_INDICATOR -> {
+            RecyclerViewTypes.LOAD_INDICATOR -> {
                 val view = inflater.inflate(R.layout.list_item_load_indicator, parent, false)
                 return LoadIndicatorViewHolder(view)
             }
-            ITEM_VIEW_TYPE_STUB -> {
+            RecyclerViewTypes.ACTIVITY_STUB -> {
                 val view = inflater.inflate(R.layout.list_item_two_line, parent, false)
                 return StubViewHolder(view)
             }
-            ITEM_VIEW_TYPE_EMPTY -> {
+            RecyclerViewTypes.EMPTY -> {
                 return EmptyViewHolder(Space(context))
             }
         }
@@ -206,24 +207,24 @@ class ParcelableActivitiesAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
-            ITEM_VIEW_TYPE_STATUS -> {
+            RecyclerViewTypes.STATUS -> {
                 val activity = getActivityInternal(true, position)
                 (holder as IStatusViewHolder).display(activity, displayInReplyTo = true)
             }
-            ITEM_VIEW_TYPE_TITLE_SUMMARY -> {
+            RecyclerViewTypes.ACTIVITY_TITLE_SUMMARY -> {
                 val activity = getActivityInternal(true, position)
                 (holder as ActivityTitleSummaryViewHolder).display(activity)
             }
-            ITEM_VIEW_TYPE_STUB -> {
+            RecyclerViewTypes.ACTIVITY_STUB -> {
                 val activity = getActivityInternal(true, position)
                 (holder as StubViewHolder).display(activity)
             }
-            ITEM_VIEW_TYPE_GAP -> {
+            RecyclerViewTypes.GAP -> {
                 val activity = getActivityInternal(true, position)
                 val loading = gapLoadingIds.any { it.accountKey == activity.account_key && it.id == activity.id }
                 (holder as GapViewHolder).display(loading)
             }
-            ITEM_VIEW_TYPE_EMPTY -> {
+            RecyclerViewTypes.EMPTY -> {
             }
         }
     }
@@ -234,23 +235,23 @@ class ParcelableActivitiesAdapter(
             ITEM_INDEX_ACTIVITY -> {
                 val activity = getActivity(position)
                 return when {
-                    activity is PlaceholderObject -> ITEM_VIEW_TYPE_TITLE_SUMMARY
-                    activity.is_gap -> ITEM_VIEW_TYPE_GAP
-                    activity.is_filtered -> ITEM_VIEW_TYPE_EMPTY
+                    activity is PlaceholderObject -> RecyclerViewTypes.ACTIVITY_TITLE_SUMMARY
+                    activity.is_gap -> RecyclerViewTypes.GAP
+                    activity.is_filtered -> RecyclerViewTypes.EMPTY
                     else -> when (activity.action) {
-                        Action.MENTION, Action.QUOTE, Action.REPLY -> ITEM_VIEW_TYPE_STATUS
+                        Action.MENTION, Action.QUOTE, Action.REPLY -> RecyclerViewTypes.STATUS
                         Action.FOLLOW, Action.FAVORITE, Action.RETWEET,
                         Action.FAVORITED_RETWEET, Action.RETWEETED_RETWEET,
                         Action.RETWEETED_MENTION, Action.FAVORITED_MENTION,
                         Action.LIST_CREATED, Action.LIST_MEMBER_ADDED,
                         Action.MEDIA_TAGGED, Action.RETWEETED_MEDIA_TAGGED,
-                        Action.FAVORITED_MEDIA_TAGGED, Action.JOINED_TWITTER -> ITEM_VIEW_TYPE_TITLE_SUMMARY
-                        else -> ITEM_VIEW_TYPE_STUB
+                        Action.FAVORITED_MEDIA_TAGGED, Action.JOINED_TWITTER -> RecyclerViewTypes.ACTIVITY_TITLE_SUMMARY
+                        else -> RecyclerViewTypes.ACTIVITY_STUB
                     }
                 }
             }
             ITEM_INDEX_LOAD_MORE_INDICATOR -> {
-                return ITEM_VIEW_TYPE_LOAD_INDICATOR
+                return RecyclerViewTypes.LOAD_INDICATOR
             }
             else -> throw UnsupportedCountIndexException(countIndex, position)
         }
@@ -411,12 +412,6 @@ class ParcelableActivitiesAdapter(
     }
 
     companion object {
-        const val ITEM_VIEW_TYPE_STUB = 0
-        const val ITEM_VIEW_TYPE_GAP = 1
-        const val ITEM_VIEW_TYPE_LOAD_INDICATOR = 2
-        const val ITEM_VIEW_TYPE_TITLE_SUMMARY = 3
-        const val ITEM_VIEW_TYPE_STATUS = 4
-        const val ITEM_VIEW_TYPE_EMPTY = 5
 
         const val ITEM_INDEX_ACTIVITY = 0
         const val ITEM_INDEX_LOAD_MORE_INDICATOR = 1

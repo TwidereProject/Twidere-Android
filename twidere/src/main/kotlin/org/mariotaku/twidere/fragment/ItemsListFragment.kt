@@ -18,6 +18,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.VariousItemsAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ITEMS
+import org.mariotaku.twidere.constant.RecyclerViewTypes
 import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.accountKey
@@ -146,7 +147,7 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
         val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo?
         val position = contextMenuInfo!!.position
         when (adapter.getItemViewType(position)) {
-            VariousItemsAdapter.VIEW_TYPE_STATUS -> {
+            RecyclerViewTypes.STATUS -> {
                 val dummyAdapter = adapter.dummyAdapter
                 val status = dummyAdapter.getStatus(contextMenuInfo.position)
                 inflater.inflate(R.menu.action_status, menu)
@@ -162,7 +163,7 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
         val contextMenuInfo = item.menuInfo as ExtendedRecyclerView.ContextMenuInfo
         val position = contextMenuInfo.position
         when (adapter.getItemViewType(position)) {
-            VariousItemsAdapter.VIEW_TYPE_STATUS -> {
+            RecyclerViewTypes.STATUS -> {
                 val dummyAdapter = adapter.dummyAdapter
                 val status = dummyAdapter.getStatus(position)
                 if (item.itemId == R.id.share) {

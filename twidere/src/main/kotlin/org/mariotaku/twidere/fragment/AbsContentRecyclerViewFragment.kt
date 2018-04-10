@@ -35,6 +35,7 @@ import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarShowHideHelper
 import org.mariotaku.twidere.adapter.LoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.LoadMorePosition
+import org.mariotaku.twidere.fragment.iface.RecycledViewPoolAwareHost
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.util.ContentScrollHandler
 import org.mariotaku.twidere.util.RecyclerViewScrollHandler
@@ -151,16 +152,18 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val backgroundColor = ThemeUtils.getColorBackground(context!!)
+        val context = context!!
+        val backgroundColor = ThemeUtils.getColorBackground(context)
         val colorRes = TwidereColorUtils.getContrastYIQ(backgroundColor,
                 R.color.bg_refresh_progress_color_light, R.color.bg_refresh_progress_color_dark)
         swipeLayout.setOnRefreshListener(this)
         swipeLayout.setProgressBackgroundColorSchemeResource(colorRes)
-        adapter = onCreateAdapter(context!!, Glide.with(this))
-        layoutManager = onCreateLayoutManager(context!!)
+        adapter = onCreateAdapter(context, Glide.with(this))
+        layoutManager = onCreateLayoutManager(context)
         scrollListener = RecyclerViewScrollHandler(this, RecyclerViewScrollHandler.RecyclerViewCallback(recyclerView))
 
         recyclerView.layoutManager = layoutManager
+        recyclerView.recycledViewPool = (host as? RecycledViewPoolAwareHost)?.recycledViewPool
         recyclerView.setHasFixedSize(true)
         val swipeLayout = swipeLayout
         if (swipeLayout is ExtendedSwipeRefreshLayout) {
@@ -185,7 +188,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
         } else {
             recyclerView.setOnTouchListener(scrollListener.touchListener)
         }
-        setupRecyclerView(context!!, recyclerView)
+        setupRecyclerView(context, recyclerView)
         recyclerView.adapter = adapter
 
         scrollListener.touchSlop = ViewConfiguration.get(context).scaledTouchSlop

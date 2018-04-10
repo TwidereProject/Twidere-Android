@@ -1,7 +1,9 @@
 package org.mariotaku.twidere.extension.model
 
 import android.content.Context
+import android.text.SpannableStringBuilder
 import org.mariotaku.ktextension.addAllTo
+import org.mariotaku.ktextension.appendTo
 import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.microblog.library.annotation.mastodon.StatusVisibility
 import org.mariotaku.twidere.R
@@ -209,6 +211,35 @@ fun ParcelableStatus.contentDescription(context: Context, manager: UserColorName
         else -> return context.getString(R.string.content_description_item_status, displayName, timeLabel,
                 text_unescaped)
     }
+}
+
+fun ParcelableStatus.displayInfo(context: Context): ParcelableStatus.Display {
+    if (display == null) {
+        display = generateDisplayInfo(context)
+    }
+    return display
+}
+
+fun ParcelableStatus.generateDisplayInfo(context: Context): ParcelableStatus.Display {
+    val colorNameManager = UserColorNameManager.get(context)
+    val displayInReplyTo = true
+    val showAbsoluteTime = true
+
+    val info = ParcelableStatus.Display()
+
+    val textWithSummary = SpannableStringBuilder()
+
+    extras?.summary_text?.appendTo(textWithSummary)
+    val start = textWithSummary.length
+    textWithSummary.append(text_unescaped)
+    spans?.applyTo(textWithSummary, extras?.emojis, start)
+
+    info.text = textWithSummary
+
+    info.contentDescription = contentDescription(context, colorNameManager, displayInReplyTo, showAbsoluteTime)
+    info.profileImageContentDescription = context.getString(R.string.content_description_open_user_name_profile,
+            colorNameManager.getDisplayName(this))
+    return info
 }
 
 internal inline val String.plainText: String get() = HtmlEscapeHelper.toPlainText(this)

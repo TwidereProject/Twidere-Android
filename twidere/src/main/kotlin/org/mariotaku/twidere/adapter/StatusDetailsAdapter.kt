@@ -520,14 +520,13 @@ class StatusDetailsAdapter(
 
     companion object {
 
-        const val VIEW_TYPE_LIST_STATUS = 0
-        const val VIEW_TYPE_DETAIL_STATUS = 1
-        const val VIEW_TYPE_CONVERSATION_LOAD_INDICATOR = 2
-        const val VIEW_TYPE_REPLIES_LOAD_INDICATOR = 3
-        const val VIEW_TYPE_REPLY_ERROR = 4
-        const val VIEW_TYPE_CONVERSATION_ERROR = 5
-        const val VIEW_TYPE_SPACE = 6
-        const val VIEW_TYPE_EMPTY = 7
+        const val VIEW_TYPE_LIST_STATUS = RecyclerViewTypes.STATUS
+        const val VIEW_TYPE_DETAIL_STATUS = 101
+        const val VIEW_TYPE_CONVERSATION_LOAD_INDICATOR = 102
+        const val VIEW_TYPE_REPLIES_LOAD_INDICATOR = 103
+        const val VIEW_TYPE_REPLY_ERROR = 104
+        const val VIEW_TYPE_CONVERSATION_ERROR = 105
+        const val VIEW_TYPE_SPACE = 106
 
         const val ITEM_IDX_CONVERSATION_LOAD_MORE = 0
         const val ITEM_IDX_CONVERSATION_ERROR = 1

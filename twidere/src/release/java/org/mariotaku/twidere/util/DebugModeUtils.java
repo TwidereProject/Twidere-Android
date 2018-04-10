@@ -29,16 +29,12 @@ import okhttp3.OkHttpClient;
  */
 public class DebugModeUtils {
 
-    public static void initForOkHttpClient(final OkHttpClient.Builder builder) {
-        // No-op
-    }
-
-
     public static void initForApplication(final Application application) {
         // No-op
     }
 
-    public static void watchReferenceLeak(final Object object) {
+    public static void initForOkHttpClient(final OkHttpClient.Builder builder) {
         // No-op
     }
+
 }

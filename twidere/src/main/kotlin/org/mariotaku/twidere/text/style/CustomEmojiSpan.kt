@@ -26,7 +26,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.text.style.ReplacementSpan
 import android.widget.TextView
-import com.bumptech.glide.RequestManager
+import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SimpleTarget
@@ -35,39 +35,28 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.extension.setBoundsFitCenter
 
 class CustomEmojiSpan(
-        uri: String,
-        requestManager: RequestManager,
-        textView: TextView
+        val uri: String
 ) : ReplacementSpan() {
 
-    private val emojiSize = textView.textSize.toInt()
-    private val target = GlideTarget(textView, emojiSize, emojiSize)
-
-    init {
-        requestManager.asBitmap().load(uri)
-                .apply(RequestOptions.placeholderOf(R.mipmap.ic_emoji_loading)
-                        .error(R.mipmap.ic_emoji_error)
-                        .format(DecodeFormat.PREFER_ARGB_8888)
-                        .fitCenter())
-                .into(target)
-    }
+    private var target: GlideTarget? = null
 
     override fun getSize(paint: Paint, text: CharSequence, start: Int, end: Int,
             fm: Paint.FontMetricsInt?): Int {
+        val size = paint.textSize.toInt()
         if (fm != null) {
-            fm.ascent = -target.height
+            fm.ascent = -size
             fm.descent = 0
 
             fm.top = fm.ascent
             fm.bottom = 0
         }
 
-        return target.width
+        return size
     }
 
     override fun draw(canvas: Canvas, text: CharSequence, start: Int, end: Int, x: Float, top: Int,
             y: Int, bottom: Int, paint: Paint) {
-        val b = target.drawable ?: return
+        val b = target?.drawable ?: return
 
         canvas.save()
 
@@ -76,6 +65,18 @@ class CustomEmojiSpan(
         canvas.translate(x, transY.toFloat())
         b.draw(canvas)
         canvas.restore()
+    }
+
+    fun load(view: TextView) {
+        val emojiSize = view.textSize.toInt()
+        val target = GlideTarget(view, emojiSize, emojiSize)
+        Glide.with(view).asBitmap().load(uri)
+                .apply(RequestOptions.placeholderOf(R.mipmap.ic_emoji_loading)
+                        .error(R.mipmap.ic_emoji_error)
+                        .format(DecodeFormat.PREFER_ARGB_8888)
+                        .fitCenter())
+                .into(target)
+        this.target = target
     }
 
     private class GlideTarget(

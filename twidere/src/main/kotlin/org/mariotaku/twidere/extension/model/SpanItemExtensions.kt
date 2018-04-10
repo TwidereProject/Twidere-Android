@@ -23,8 +23,6 @@ import android.annotation.SuppressLint
 import android.text.Spannable
 import android.text.Spanned
 import android.text.style.URLSpan
-import android.widget.TextView
-import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.model.CustomEmoji
 import org.mariotaku.twidere.model.SpanItem
 import org.mariotaku.twidere.text.AcctMentionSpan
@@ -35,31 +33,27 @@ import org.mariotaku.twidere.text.style.CustomEmojiSpan
 val SpanItem.length: Int get() = end - start
 
 @SuppressLint("SwitchIntDef")
-fun Array<SpanItem>.applyTo(spannable: Spannable, emojis: Map<String, CustomEmoji>?,
-        requestManager: RequestManager, textView: TextView) {
+fun Array<SpanItem>.applyTo(spannable: Spannable, emojis: Map<String, CustomEmoji>?, offset: Int = 0) {
     forEach { span ->
+        val start = span.start + offset
+        val end = span.end + offset
         when (span.type) {
             SpanItem.SpanType.HIDE -> {
-                spannable.setSpan(ZeroWidthSpan(), span.start, span.end,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                spannable.setSpan(ZeroWidthSpan(), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             SpanItem.SpanType.ACCT_MENTION -> {
-                spannable.setSpan(AcctMentionSpan(span.link), span.start, span.end,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                spannable.setSpan(AcctMentionSpan(span.link), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             SpanItem.SpanType.HASHTAG -> {
-                spannable.setSpan(HashtagSpan(span.link), span.start, span.end,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                spannable.setSpan(HashtagSpan(span.link), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             SpanItem.SpanType.EMOJI -> {
                 val shortCode = span.link ?: return@forEach
                 val emoji = emojis?.get(shortCode) ?: return@forEach
-                spannable.setSpan(CustomEmojiSpan(emoji.url, requestManager, textView),
-                        span.start, span.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                spannable.setSpan(CustomEmojiSpan(emoji.url), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             else -> {
-                spannable.setSpan(URLSpan(span.link), span.start, span.end,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                spannable.setSpan(URLSpan(span.link), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
         }
     }

@@ -29,9 +29,10 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.contains
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IGroupsAdapter
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.Companion.ITEM_VIEW_TYPE_LOAD_INDICATOR
 import org.mariotaku.twidere.annotation.LoadMorePosition
+import org.mariotaku.twidere.constant.RecyclerViewTypes
 import org.mariotaku.twidere.constant.nameFirstKey
+import org.mariotaku.twidere.exception.UnsupportedViewTypeException
 import org.mariotaku.twidere.model.ParcelableGroup
 import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.view.holder.GroupViewHolder
@@ -97,24 +98,24 @@ class ParcelableGroupsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {
-            ITEM_VIEW_TYPE_USER_LIST -> {
+            RecyclerViewTypes.USER_GROUP -> {
                 val view: View = inflater.inflate(R.layout.card_item_group_compact, parent, false)
                 val holder = GroupViewHolder(this, view)
                 holder.setOnClickListeners()
                 holder.setupViewOptions()
                 return holder
             }
-            ITEM_VIEW_TYPE_LOAD_INDICATOR -> {
+            RecyclerViewTypes.LOAD_INDICATOR -> {
                 val view = inflater.inflate(R.layout.list_item_load_indicator, parent, false)
                 return LoadIndicatorViewHolder(view)
             }
+            else -> throw UnsupportedViewTypeException(viewType)
         }
-        throw IllegalStateException("Unknown view type " + viewType)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
-            ITEM_VIEW_TYPE_USER_LIST -> {
+            RecyclerViewTypes.USER_GROUP -> {
                 bindGroup(holder as GroupViewHolder, position)
             }
         }
@@ -122,12 +123,12 @@ class ParcelableGroupsAdapter(
 
     override fun getItemViewType(position: Int): Int {
         if (position == 0 && LoadMorePosition.START in loadMoreIndicatorPosition) {
-            return ITEM_VIEW_TYPE_LOAD_INDICATOR
+            return RecyclerViewTypes.LOAD_INDICATOR
         }
         if (position == groupsCount) {
-            return ITEM_VIEW_TYPE_LOAD_INDICATOR
+            return RecyclerViewTypes.LOAD_INDICATOR
         }
-        return ITEM_VIEW_TYPE_USER_LIST
+        return RecyclerViewTypes.USER_GROUP
     }
 
     internal class EventListener(private val adapter: ParcelableGroupsAdapter) : IGroupsAdapter.GroupAdapterListener {
@@ -141,8 +142,4 @@ class ParcelableGroupsAdapter(
         }
     }
 
-    companion object {
-
-        val ITEM_VIEW_TYPE_USER_LIST = 2
-    }
 }

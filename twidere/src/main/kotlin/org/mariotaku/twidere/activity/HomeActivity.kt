@@ -53,6 +53,7 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.graphics.drawable.DrawerArrowDrawable
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.TintTypedArray
 import android.support.v7.widget.TooltipCompat
 import android.util.SparseIntArray
@@ -87,6 +88,7 @@ import org.mariotaku.twidere.extension.model.notificationBuilder
 import org.mariotaku.twidere.fragment.AccountsDashboardFragment
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.iface.IFloatingActionButtonFragment
+import org.mariotaku.twidere.fragment.iface.RecycledViewPoolAwareHost
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
 import org.mariotaku.twidere.graphic.EmptyDrawable
@@ -109,23 +111,7 @@ import org.mariotaku.twidere.view.pagerindicator.TabPagerIndicator
 import java.lang.ref.WeakReference
 
 class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, SupportFragmentCallback,
-        OnLongClickListener, DrawerLayout.DrawerListener {
-
-    private val accountUpdatedListener = AccountUpdatedListener(this)
-
-    private var selectedAccountToSearch: AccountDetails? = null
-
-    private lateinit var multiSelectHandler: MultiSelectEventHandler
-    private lateinit var pagerAdapter: SupportTabsAdapter
-    private lateinit var drawerToggle: ActionBarDrawerToggle
-
-    private var propertiesInitialized = false
-    private var actionsButtonBottomMargin: Int = 0
-
-    private var updateUnreadCountTask: UpdateUnreadCountTask? = null
-    private val readStateChangeListener = OnSharedPreferenceChangeListener { _, _ -> updateUnreadCount() }
-    private val controlBarShowHideHelper = ControlBarShowHideHelper(this)
-    private val useTabNavigation get() = pagerAdapter.count > 1
+        OnLongClickListener, DrawerLayout.DrawerListener, RecycledViewPoolAwareHost {
 
     override val controlBarHeight: Int
         get() {
@@ -165,46 +151,29 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     override val currentVisibleFragment: Fragment?
         get() = mainPager.currentFragment
 
-    private val homeDrawerToggleDelegate = object : ActionBarDrawerToggle.Delegate {
-        override fun setActionBarUpIndicator(upDrawable: Drawable, @StringRes contentDescRes: Int) {
-            if (upDrawable is DrawerArrowDrawable) {
-                upDrawable.color = ChameleonUtils.getColorDependent(overrideTheme.colorToolbar)
-            }
-            if (useTabNavigation) {
-                drawerToggleButton.setImageDrawable(upDrawable)
-                drawerToggleButton.contentDescription = getString(contentDescRes)
-            } else {
-                supportActionBar?.setHomeAsUpIndicator(upDrawable)
-                supportActionBar?.setHomeActionContentDescription(contentDescRes)
-            }
-        }
+    override val recycledViewPool: RecyclerView.RecycledViewPool = RecyclerView.RecycledViewPool()
 
-        override fun setActionBarDescription(@StringRes contentDescRes: Int) {
-            drawerToggleButton.contentDescription = getString(contentDescRes)
-            supportActionBar?.setHomeActionContentDescription(contentDescRes)
-        }
+    val tabs: List<SupportTabSpec>
+        get() = pagerAdapter.tabs
 
-        @SuppressLint("RestrictedApi")
-        override fun getThemeUpIndicator(): Drawable {
-            val a = TintTypedArray.obtainStyledAttributes(actionBarThemedContext, null,
-                    HOME_AS_UP_ATTRS)
-            val result = a.getDrawable(0)
-            a.recycle()
-            return result
-        }
+    private val homeDrawerToggleDelegate = HomeDrawerToggleDelegate()
 
-        override fun getActionBarThemedContext(): Context {
-            return toolbar.context
-        }
 
-        override fun isNavigationVisible(): Boolean {
-            return if (useTabNavigation) {
-                drawerToggleButton.visibility == View.VISIBLE
-            } else {
-                ActionBar.DISPLAY_HOME_AS_UP in (supportActionBar?.displayOptions ?: 0)
-            }
-        }
-    }
+    private val accountUpdatedListener = AccountUpdatedListener(this)
+
+    private var selectedAccountToSearch: AccountDetails? = null
+
+    private lateinit var multiSelectHandler: MultiSelectEventHandler
+    private lateinit var pagerAdapter: SupportTabsAdapter
+    private lateinit var drawerToggle: ActionBarDrawerToggle
+
+    private var propertiesInitialized = false
+    private var actionsButtonBottomMargin: Int = 0
+
+    private var updateUnreadCountTask: UpdateUnreadCountTask? = null
+    private val readStateChangeListener = OnSharedPreferenceChangeListener { _, _ -> updateUnreadCount() }
+    private val controlBarShowHideHelper = ControlBarShowHideHelper(this)
+    private val useTabNavigation get() = pagerAdapter.count > 1
 
     private val keyboardShortcutRecipient: Fragment?
         get() = when {
@@ -379,10 +348,6 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     override fun onAttachFragment(fragment: Fragment?) {
         super.onAttachFragment(fragment)
         updateActionsButton()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
     }
 
     override fun onClick(v: View) {
@@ -603,24 +568,6 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         return f.triggerRefresh()
     }
 
-    fun notifyAccountsChanged() {
-    }
-
-    @Subscribe
-    fun notifyUnreadCountUpdated(event: UnreadCountUpdatedEvent) {
-        updateUnreadCount()
-    }
-
-    fun updateUnreadCount() {
-        if (mainTabs == null || updateUnreadCountTask != null && updateUnreadCountTask!!.status == AsyncTask.Status.RUNNING)
-            return
-        updateUnreadCountTask = UpdateUnreadCountTask(this, PreferencesSingleton.get(this), readStateManager, mainTabs,
-                pagerAdapter.tabs.toTypedArray()).apply { execute() }
-        mainTabs.setDisplayBadge(PreferencesSingleton.get(this).getBoolean(SharedPreferenceConstants.KEY_UNREAD_COUNT, true))
-    }
-
-    val tabs: List<SupportTabSpec>
-        get() = pagerAdapter.tabs
 
     override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
 
@@ -641,7 +588,23 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         }
     }
 
-    override fun getDrawerToggleDelegate() = homeDrawerToggleDelegate
+    override fun getDrawerToggleDelegate(): ActionBarDrawerToggle.Delegate = homeDrawerToggleDelegate
+
+    fun notifyAccountsChanged() {
+    }
+
+    @Subscribe
+    fun notifyUnreadCountUpdated(event: UnreadCountUpdatedEvent) {
+        updateUnreadCount()
+    }
+
+    fun updateUnreadCount() {
+        if (mainTabs == null || updateUnreadCountTask != null && updateUnreadCountTask!!.status == AsyncTask.Status.RUNNING)
+            return
+        updateUnreadCountTask = UpdateUnreadCountTask(this, PreferencesSingleton.get(this), readStateManager, mainTabs,
+                pagerAdapter.tabs.toTypedArray()).apply { execute() }
+        mainTabs.setDisplayBadge(PreferencesSingleton.get(this).getBoolean(SharedPreferenceConstants.KEY_UNREAD_COUNT, true))
+    }
 
     fun closeAccountsDrawer() {
         if (homeMenu == null) return
@@ -1056,6 +1019,47 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         override fun onDismiss(dialog: DialogInterface?) {
             PreferencesSingleton.get(context!!)[defaultAutoRefreshAskedKey] = true
             super.onDismiss(dialog)
+        }
+    }
+
+    private inner class HomeDrawerToggleDelegate : ActionBarDrawerToggle.Delegate {
+        override fun setActionBarUpIndicator(upDrawable: Drawable, @StringRes contentDescRes: Int) {
+            if (upDrawable is DrawerArrowDrawable) {
+                upDrawable.color = ChameleonUtils.getColorDependent(overrideTheme.colorToolbar)
+            }
+            if (useTabNavigation) {
+                drawerToggleButton.setImageDrawable(upDrawable)
+                drawerToggleButton.contentDescription = getString(contentDescRes)
+            } else {
+                supportActionBar?.setHomeAsUpIndicator(upDrawable)
+                supportActionBar?.setHomeActionContentDescription(contentDescRes)
+            }
+        }
+
+        override fun setActionBarDescription(@StringRes contentDescRes: Int) {
+            drawerToggleButton.contentDescription = getString(contentDescRes)
+            supportActionBar?.setHomeActionContentDescription(contentDescRes)
+        }
+
+        @SuppressLint("RestrictedApi")
+        override fun getThemeUpIndicator(): Drawable {
+            val a = TintTypedArray.obtainStyledAttributes(actionBarThemedContext, null,
+                    HOME_AS_UP_ATTRS)
+            val result = a.getDrawable(0)
+            a.recycle()
+            return result
+        }
+
+        override fun getActionBarThemedContext(): Context {
+            return toolbar.context
+        }
+
+        override fun isNavigationVisible(): Boolean {
+            return if (useTabNavigation) {
+                drawerToggleButton.visibility == View.VISIBLE
+            } else {
+                ActionBar.DISPLAY_HOME_AS_UP in (supportActionBar?.displayOptions ?: 0)
+            }
         }
     }
 

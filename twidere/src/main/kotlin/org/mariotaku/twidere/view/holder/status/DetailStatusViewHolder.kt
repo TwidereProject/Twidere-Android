@@ -61,7 +61,6 @@ import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.util.UserColorNameManager.Companion
 import org.mariotaku.twidere.util.twitter.card.StatusCardViewFactory
 import org.mariotaku.twidere.view.ProfileImageView
 import org.mariotaku.twidere.view.TimelineContentTextView
@@ -141,8 +140,8 @@ class DetailStatusViewHolder(
 
                 val quotedDisplayEnd = status.extras?.quoted_display_text_range?.getOrNull(1) ?: -1
                 val quotedText = SpannableStringBuilder.valueOf(quoted.text_unescaped)
-                quoted.spans?.applyTo(quotedText, status.extras?.emojis,
-                        adapter.requestManager, quotedTextView)
+                quoted.spans?.applyTo(quotedText, status.extras?.emojis
+                )
                 linkify.applyAllLinks(quotedText, status.account_key, layoutPosition.toLong(),
                         status.is_possibly_sensitive, skipLinksInText)
                 if (quotedDisplayEnd != -1 && quotedDisplayEnd <= quotedText.length) {
@@ -245,7 +244,7 @@ class DetailStatusViewHolder(
 
         val displayEnd = status.extras?.display_text_range?.getOrNull(1) ?: -1
         val text = SpannableStringBuilder.valueOf(status.text_unescaped).apply {
-            status.spans?.applyTo(this, status.extras?.emojis, adapter.requestManager, textView)
+            status.spans?.applyTo(this, status.extras?.emojis)
             linkify.applyAllLinks(this, status.account_key, layoutPosition.toLong(),
                     status.is_possibly_sensitive, skipLinksInText)
         }

@@ -27,10 +27,11 @@ import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.contains
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.Companion.ITEM_VIEW_TYPE_LOAD_INDICATOR
 import org.mariotaku.twidere.adapter.iface.IUserListsAdapter
 import org.mariotaku.twidere.annotation.LoadMorePosition
+import org.mariotaku.twidere.constant.RecyclerViewTypes
 import org.mariotaku.twidere.constant.nameFirstKey
+import org.mariotaku.twidere.exception.UnsupportedViewTypeException
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
@@ -92,20 +93,21 @@ class ParcelableUserListsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {
-            ITEM_VIEW_TYPE_USER_LIST -> {
+            RecyclerViewTypes.USER_LIST -> {
                 return createUserListViewHolder(this, inflater, parent)
             }
-            ITEM_VIEW_TYPE_LOAD_INDICATOR -> {
+            RecyclerViewTypes.LOAD_INDICATOR -> {
                 val view = inflater.inflate(R.layout.list_item_load_indicator, parent, false)
                 return LoadIndicatorViewHolder(view)
             }
+            else -> throw UnsupportedViewTypeException(viewType)
         }
-        throw IllegalStateException("Unknown view type " + viewType)
+
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
-            ITEM_VIEW_TYPE_USER_LIST -> {
+            RecyclerViewTypes.USER_LIST -> {
                 bindUserList(holder as UserListViewHolder, position)
             }
         }
@@ -113,17 +115,15 @@ class ParcelableUserListsAdapter(
 
     override fun getItemViewType(position: Int): Int {
         if (position == 0 && LoadMorePosition.START in loadMoreIndicatorPosition) {
-            return ITEM_VIEW_TYPE_LOAD_INDICATOR
+            return RecyclerViewTypes.LOAD_INDICATOR
         }
         if (position == userListsCount) {
-            return ITEM_VIEW_TYPE_LOAD_INDICATOR
+            return RecyclerViewTypes.LOAD_INDICATOR
         }
-        return ITEM_VIEW_TYPE_USER_LIST
+        return RecyclerViewTypes.USER_LIST
     }
 
     companion object {
-
-        val ITEM_VIEW_TYPE_USER_LIST = 2
 
         fun createUserListViewHolder(adapter: IUserListsAdapter<*>,
                 inflater: LayoutInflater,

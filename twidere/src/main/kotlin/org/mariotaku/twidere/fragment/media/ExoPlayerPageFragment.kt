@@ -49,22 +49,18 @@ import okhttp3.Request
 import okhttp3.Response
 import org.mariotaku.ktextension.contains
 import org.mariotaku.mediaviewer.library.MediaViewerFragment
-import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewerFragment
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.MediaViewerActivity
 import org.mariotaku.twidere.annotation.CacheFileType
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_POSITION
 import org.mariotaku.twidere.dagger.component.GeneralComponent
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.getDetailsOrThrow
 import org.mariotaku.twidere.extension.model.authorizationHeader
 import org.mariotaku.twidere.extension.model.bannerExtras
-import org.mariotaku.twidere.extension.model.getBestVideoUrlAndType
 import org.mariotaku.twidere.extension.setVisible
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.EXTRA_PAUSED_BY_USER
 import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.EXTRA_PLAY_AUDIO
-import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.SUPPORTED_VIDEO_TYPES
 import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.accountKey
 import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.isControlDisabled
 import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.isLoopEnabled
@@ -335,11 +331,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
     }
 
     private fun ParcelableMedia.getDownloadUri(): Uri? {
-        val bestVideoUrlAndType = this.getBestVideoUrlAndType(SUPPORTED_VIDEO_TYPES)
-        if (bestVideoUrlAndType != null) {
-            return Uri.parse(bestVideoUrlAndType.first)
-        }
-        return arguments!!.getParcelable(SubsampleImageViewerFragment.EXTRA_MEDIA_URI)
+        return Uri.parse(media_url)
     }
 
 
