@@ -22,13 +22,14 @@ package org.mariotaku.twidere.view.holder.status
 import android.support.constraint.ConstraintLayout
 import android.view.View
 import android.widget.ImageView
+import kotlinx.android.synthetic.main.layout_content_item_attachment_media.view.*
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.util.view.MediaAttachmentLayoutGenerator
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 
 class MediaAttachmentHolder(parent: StatusViewHolder, adapter: IStatusesAdapter, view: ConstraintLayout) : StatusViewHolder.AttachmentHolder(parent, adapter, view) {
 
+    private val mediaContainerHelper = view.mediaContainerHelper
 
     override fun setupViewOptions() {
 
@@ -41,10 +42,10 @@ class MediaAttachmentHolder(parent: StatusViewHolder, adapter: IStatusesAdapter,
     override fun display(status: ParcelableStatus) {
         val media = status.attachment!!.media!!
         when (media.size) {
-            1 -> MediaAttachmentLayoutGenerator.layout1(view, adapter.mediaPreviewStyle, media.first())
-            2 -> MediaAttachmentLayoutGenerator.layout2(view)
-            3 -> MediaAttachmentLayoutGenerator.layout3(view)
-            4 -> MediaAttachmentLayoutGenerator.layout4(view)
+            1 -> mediaContainerHelper.layout1(adapter.mediaPreviewStyle, media.first())
+            2 -> mediaContainerHelper.layoutGrid(2, 2, "W,1:1")
+            3 -> mediaContainerHelper.layout3()
+            4 -> mediaContainerHelper.layoutGrid(2, 4, "W,1:2")
         }
         media.forEachIndexed { index, item ->
             if (index >= view.childCount) return@forEachIndexed

@@ -541,7 +541,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
     private inner class StatusClickHandler : IStatusViewHolder.StatusClickListener {
         override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
             val context = context ?: return
-            val status = getFullStatus(position) ?: return
+            val status = getFullStatus(position)
             IntentUtils.openStatus(context, status, null)
         }
 
@@ -550,13 +550,13 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
         }
 
         override fun onItemActionClick(holder: RecyclerView.ViewHolder, id: Int, position: Int) {
-            val status = getFullStatus(position) ?: return
+            val status = getFullStatus(position)
             handleActionClick(this@AbsTimelineFragment, id, status,
                     holder as IStatusViewHolder)
         }
 
         override fun onItemActionLongClick(holder: RecyclerView.ViewHolder, id: Int, position: Int): Boolean {
-            val status = getFullStatus(position) ?: return false
+            val status = getFullStatus(position)
             return handleActionLongClick(this@AbsTimelineFragment, status,
                     adapter.getItemId(position), id)
         }

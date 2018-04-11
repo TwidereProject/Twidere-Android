@@ -97,8 +97,13 @@ public class UserKey implements Comparable<UserKey>, Parcelable {
 
     @Override
     public String toString() {
-        if (host != null) return escapeText(id) + "@" + escapeText(host);
-        return id;
+        StringBuilder sb = new StringBuilder();
+        escapeText(id, sb);
+        if (host != null) {
+            sb.append('@');
+            escapeText(host, sb);
+        }
+        return sb.toString();
     }
 
     @Override
@@ -210,18 +215,15 @@ public class UserKey implements Comparable<UserKey>, Parcelable {
         return result;
     }
 
-    public static String escapeText(String host) {
-        final StringBuilder sb = new StringBuilder();
+    private static void escapeText(String host, StringBuilder target) {
         for (int i = 0, j = host.length(); i < j; i++) {
             final char ch = host.charAt(i);
             if (isSpecialChar(ch)) {
-                sb.append('\\');
+                target.append('\\');
             }
-            sb.append(ch);
+            target.append(ch);
         }
-        return sb.toString();
     }
-
 
     private static boolean isSpecialChar(char ch) {
         return ch == '\\' || ch == '@' || ch == ',';

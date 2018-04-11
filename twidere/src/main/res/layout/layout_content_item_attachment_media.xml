@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~             Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2018 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -18,8 +17,8 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<merge
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:layout_height="wrap_content"
     tools:layout_width="match_parent"
@@ -39,7 +38,7 @@
         tools:layout_constraintStart_toStartOf="parent"
         tools:layout_constraintTop_toTopOf="parent"
         tools:layout_constraintWidth_percent="0.5"
-        tools:src="@drawable/featured_graphics"/>
+        tools:src="@drawable/featured_graphics" />
 
     <org.mariotaku.twidere.view.MediaPreviewImageView
         android:id="@+id/mediaPreviewItem1"
@@ -55,7 +54,7 @@
         tools:layout_constraintStart_toStartOf="parent"
         tools:layout_constraintTop_toTopOf="parent"
         tools:layout_constraintWidth_percent="0.5"
-        tools:src="@drawable/featured_graphics"/>
+        tools:src="@drawable/featured_graphics" />
 
     <org.mariotaku.twidere.view.MediaPreviewImageView
         android:id="@+id/mediaPreviewItem2"
@@ -71,7 +70,7 @@
         tools:layout_constraintStart_toStartOf="parent"
         tools:layout_constraintTop_toBottomOf="@+id/mediaPreviewItem0"
         tools:layout_constraintWidth_percent="0.5"
-        tools:src="@drawable/featured_graphics"/>
+        tools:src="@drawable/featured_graphics" />
 
     <org.mariotaku.twidere.view.MediaPreviewImageView
         android:id="@+id/mediaPreviewItem3"
@@ -87,6 +86,11 @@
         tools:layout_constraintStart_toStartOf="parent"
         tools:layout_constraintTop_toBottomOf="@+id/mediaPreviewItem1"
         tools:layout_constraintWidth_percent="0.5"
-        tools:src="@drawable/featured_graphics"/>
+        tools:src="@drawable/featured_graphics" />
 
+    <org.mariotaku.twidere.view.constraint.MediaContainerHelper
+        android:id="@+id/mediaContainerHelper"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:constraint_referenced_ids="mediaPreviewItem0,mediaPreviewItem1,mediaPreviewItem2,mediaPreviewItem3" />
 </merge>

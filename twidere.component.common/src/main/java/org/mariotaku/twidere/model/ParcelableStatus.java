@@ -20,6 +20,7 @@ package org.mariotaku.twidere.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.ColorInt;
 import android.support.annotation.LongDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -442,6 +443,11 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
 
         public CharSequence contentDescription;
         public CharSequence profileImageContentDescription;
+
+        @ColorInt
+        public int userColor;
+        @ColorInt
+        public int retweetUserColor;
     }
 
     @ParcelablePlease

@@ -66,9 +66,17 @@ fun MediaEntity.toParcelable(): ParcelableMedia {
     if (size != null) {
         media.width = size.width
         media.height = size.height
-    } else {
-        media.width = 0
-        media.height = 0
+    }
+    val videoInfo = videoInfo
+    if (videoInfo != null) {
+        val variant = videoInfo.variants.filter { variant ->
+            "video/mp4".equals(variant.contentType, ignoreCase = true)
+        }.sortedByDescending(MediaEntity.VideoInfo.Variant::getBitrate).firstOrNull()
+        if (variant != null) {
+            media.duration = videoInfo.duration
+            media.mime_type = variant.contentType
+            media.media_url = variant.url
+        }
     }
     return media
 }

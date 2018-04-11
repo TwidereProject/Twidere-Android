@@ -36,6 +36,7 @@ import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.extension.getDetailsOrThrow
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.model.generateDisplayInfo
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
@@ -71,8 +72,9 @@ class StatusesDataSourceFactory(
             val paging = Paging().count(params.requestedLoadSize)
             try {
                 val loaded = load(paging)
-                val filtered = loaded.filter(::filterCheck)
-                callback.onResult(filtered, null, loaded.nextPage)
+                val filtered = filtered(loaded)
+                val processed = processed(filtered)
+                callback.onResult(processed, null, loaded.nextPage)
             } catch (e: Exception) {
                 errorHandler(e)
                 invalidate()
@@ -84,8 +86,9 @@ class StatusesDataSourceFactory(
             params.key.applyTo(paging)
             try {
                 val loaded = load(paging)
-                val filtered = loaded.filter(::filterCheck).filterNot { params.key.isFromStatus(it) }
-                callback.onResult(filtered, null)
+                val filtered = filtered(loaded).filterNot { params.key.isFromStatus(it) }
+                val processed = processed(filtered)
+                callback.onResult(processed, null)
             } catch (e: Exception) {
                 errorHandler(e)
                 callback.onResult(emptyList(), null)
@@ -97,8 +100,9 @@ class StatusesDataSourceFactory(
             params.key.applyTo(paging)
             try {
                 val loaded = load(paging)
-                val filtered = loaded.filter(::filterCheck).filterNot { params.key.isFromStatus(it) }
-                callback.onResult(filtered, loaded.nextPage)
+                val filtered = filtered(loaded).filterNot { params.key.isFromStatus(it) }
+                val processed = processed(filtered)
+                callback.onResult(processed, loaded.nextPage)
             } catch (e: Exception) {
                 errorHandler(e)
                 callback.onResult(emptyList(), null)
@@ -133,7 +137,17 @@ class StatusesDataSourceFactory(
             }
         }
 
-        private fun filterCheck(item: ParcelableStatus) = timelineFilter?.check(item) != false
+        private fun filtered(list: List<ParcelableStatus>): List<ParcelableStatus> {
+            val filter = timelineFilter ?: return list
+            return list.filter(filter::check)
+        }
+
+        private fun processed(list: List<ParcelableStatus>): List<ParcelableStatus> {
+            list.forEach {
+                it.display = it.generateDisplayInfo(context)
+            }
+            return list
+        }
 
         private fun <T> List<T>.mapToPaginated(transform: (T) -> ParcelableStatus) = mapTo(PaginatedArrayList(), transform).apply {
             val first = firstOrNull()

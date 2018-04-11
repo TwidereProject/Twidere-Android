@@ -233,10 +233,11 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View, su
             statusInfoIcon.visibility = View.GONE
         }
 
-        val userColor = colorNameManager.getUserColor(status.user_key)
+        val display = status.displayInfo(context)
+        val userColor = display.userColor
 
         if (status.is_retweet) {
-            val retweetUserColor = colorNameManager.getUserColor(status.retweeted_by_user_key!!)
+            val retweetUserColor = display.retweetUserColor
             when {
                 retweetUserColor == 0 -> itemContent.drawStart(userColor)
                 userColor == 0 -> itemContent.drawStart(retweetUserColor)
@@ -277,7 +278,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View, su
             itemContent.drawEnd()
         }
 
-        val display = status.displayInfo(context)
 
         textView.spannable = display.text
         textView.hideIfEmpty()

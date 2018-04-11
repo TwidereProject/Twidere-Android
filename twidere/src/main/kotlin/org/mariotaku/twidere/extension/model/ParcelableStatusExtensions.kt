@@ -239,6 +239,13 @@ fun ParcelableStatus.generateDisplayInfo(context: Context): ParcelableStatus.Dis
     info.contentDescription = contentDescription(context, colorNameManager, displayInReplyTo, showAbsoluteTime)
     info.profileImageContentDescription = context.getString(R.string.content_description_open_user_name_profile,
             colorNameManager.getDisplayName(this))
+
+
+    info.userColor = colorNameManager.getUserColor(user_key)
+
+    if (is_retweet) {
+        info.retweetUserColor = colorNameManager.getUserColor(retweeted_by_user_key!!)
+    }
     return info
 }
 
