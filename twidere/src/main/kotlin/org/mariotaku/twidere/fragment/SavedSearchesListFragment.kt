@@ -21,22 +21,20 @@ package org.mariotaku.twidere.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.app.hasRunningLoadersSafe
-import android.support.v4.content.Loader
 import android.view.View
 import android.widget.AdapterView
 import com.bumptech.glide.RequestManager
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_listview.*
-import org.mariotaku.microblog.library.model.microblog.ResponseList
 import org.mariotaku.microblog.library.model.microblog.SavedSearch
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.SavedSearchesAdapter
+import org.mariotaku.twidere.data.SavedSearchesLiveData
 import org.mariotaku.twidere.extension.accountKey
-import org.mariotaku.twidere.extension.get
+import org.mariotaku.twidere.extension.data.observe
+import org.mariotaku.twidere.extension.getErrorMessage
 import org.mariotaku.twidere.extension.linkHandlerTitle
-import org.mariotaku.twidere.loader.SavedSearchesLoader
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.SavedSearchDestroyedEvent
 import org.mariotaku.twidere.singleton.BusSingleton
@@ -44,8 +42,7 @@ import org.mariotaku.twidere.util.IntentUtils.openTweetSearch
 import java.util.*
 
 class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapter>(),
-        LoaderCallbacks<ResponseList<SavedSearch>?>, AdapterView.OnItemClickListener,
-        AdapterView.OnItemLongClickListener {
+        AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     override var refreshing: Boolean
         get() = loaderManager.hasRunningLoadersSafe()
@@ -56,15 +53,29 @@ class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapte
     val accountKey: UserKey
         get() = arguments!!.accountKey!!
 
+    private lateinit var savedSearchesLiveData: SavedSearchesLiveData
     private val positionComparator = Comparator<SavedSearch> { object1, object2 -> object1.position - object2.position }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         linkHandlerTitle = getString(R.string.saved_searches)
 
+        savedSearchesLiveData = SavedSearchesLiveData(activity!!, accountKey)
+
         listView.onItemClickListener = this
         listView.onItemLongClickListener = this
-        loaderManager.initLoader(0, null, this)
+
+        savedSearchesLiveData.observe(this, success = { data ->
+            adapter.setData(data)
+            showContent()
+            refreshing = false
+        }, fail = { ex ->
+            showError(R.drawable.ic_info_error_generic, ex.getErrorMessage(context!!))
+            refreshing = false
+        })
+
+        savedSearchesLiveData.load()
+
         showProgress()
     }
 
@@ -82,10 +93,6 @@ class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapte
         return SavedSearchesAdapter(activity)
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<ResponseList<SavedSearch>?> {
-        return SavedSearchesLoader(activity!!, accountKey)
-    }
-
     override fun onItemLongClick(view: AdapterView<*>, child: View, position: Int, id: Long): Boolean {
         val item = adapter.findItem(id) ?: return false
         DestroySavedSearchDialogFragment.show(fragmentManager!!, accountKey, item.id, item.name)
@@ -97,22 +104,9 @@ class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapte
         openTweetSearch(activity!!, accountKey, item.query)
     }
 
-    override fun onLoaderReset(loader: Loader<ResponseList<SavedSearch>?>) {
-        adapter.setData(null)
-    }
-
-    override fun onLoadFinished(loader: Loader<ResponseList<SavedSearch>?>, data: ResponseList<SavedSearch>?) {
-        if (data != null) {
-            Collections.sort(data, positionComparator)
-        }
-        adapter.setData(data)
-        showContent()
-        refreshing = false
-    }
-
     override fun onRefresh() {
         if (refreshing) return
-        loaderManager.restartLoader(0, null, this)
+        savedSearchesLiveData.load()
     }
 
     @Subscribe
