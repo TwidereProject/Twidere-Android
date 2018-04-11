@@ -25,14 +25,16 @@ import org.apache.commons.text.translate.LookupTranslator
 import org.mariotaku.commons.text.CodePointArray
 import org.mariotaku.ktextension.isNotNullOrEmpty
 import org.mariotaku.ktextension.mapToArray
-import org.mariotaku.microblog.library.model.microblog.EntitySupport
-import org.mariotaku.microblog.library.model.microblog.ExtendedEntitySupport
-import org.mariotaku.microblog.library.model.microblog.MediaEntity
-import org.mariotaku.microblog.library.model.microblog.Status
+import org.mariotaku.microblog.library.model.microblog.*
 import org.mariotaku.twidere.exception.MalformedResponseException
-import org.mariotaku.twidere.extension.model.*
+import org.mariotaku.twidere.extension.model.addFilterFlag
+import org.mariotaku.twidere.extension.model.quoted
+import org.mariotaku.twidere.extension.model.updateContentFilterInfo
+import org.mariotaku.twidere.extension.model.updateFilterInfo
 import org.mariotaku.twidere.extension.toSpanItem
 import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.model.attachment.QuotedStatus
+import org.mariotaku.twidere.model.attachment.SummaryCard
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.text.placeholder.CustomEmojiShortCodeSpan
 import org.mariotaku.twidere.util.EntityArrays
@@ -102,7 +104,7 @@ fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: S
     val quotedStatus = status.quotedStatus
     result.is_quote = status.isQuoteStatus
     if (quotedStatus != null) {
-        val quoted = ParcelableStatusAttachment.QuotedStatus()
+        val quoted = QuotedStatus()
         val quotedUser = quotedStatus.user ?: throw MalformedResponseException()
         quoted.id = quotedStatus.id
         quoted.account_key = accountKey
@@ -179,7 +181,11 @@ fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: S
     }
 
     attachment.media = ParcelableMediaUtils.fromStatus(status, accountKey, accountType)
-    attachment.card = status.card?.toParcelable(accountKey, accountType)
+    when (status.card?.name) {
+        "summary" -> {
+            attachment.summary_card = status.card?.toSummaryCard(100)
+        }
+    }
 
     result.source = status.source
     result.location = status.parcelableLocation
@@ -315,6 +321,24 @@ fun updateFilterInfoForUserTimeline(status: Status, result: ParcelableStatus) {
                 status.quotedStatus?.userUrlExpanded
         ).filterNotNull().joinToString("\n")
     }
+}
+
+private fun CardEntity.toSummaryCard(thumbnailSize: Int): SummaryCard? {
+    val values = bindingValues ?: return null
+    val obj = SummaryCard()
+    obj.title = (values["title"] as? CardEntity.StringValue)?.value ?: return null
+    obj.description = (values["description"] as? CardEntity.StringValue)?.value
+    obj.domain = (values["domain"] as? CardEntity.StringValue)?.value
+    obj.url = url
+    val thumbnails = values.mapNotNull { (k, v) ->
+        if (!k.startsWith("thumbnail_")) return@mapNotNull null
+        return@mapNotNull v as? CardEntity.ImageValue
+    }.sortedBy { Math.min(it.width, it.height) }
+    val bestThumbnail = thumbnails.firstOrNull {
+        thumbnailSize >= Math.min(it.width, it.height)
+    } ?: thumbnails.lastOrNull()
+    obj.thumbnail = bestThumbnail?.url
+    return obj
 }
 
 private fun String.twitterUnescaped(): String {

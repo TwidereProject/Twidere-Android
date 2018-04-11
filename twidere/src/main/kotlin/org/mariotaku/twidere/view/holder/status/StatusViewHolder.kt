@@ -99,11 +99,14 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View, su
     private val eventHandler = EventHandler()
 
     private val attachmentHolder = when (subtype) {
-        RecyclerViewTypes.MEDIA -> {
+        RecyclerViewTypes.STATUS_MEDIA -> {
             MediaAttachmentHolder(this, adapter, attachmentContainer.inflate(R.layout.layout_content_item_attachment_media) as ConstraintLayout)
         }
-        RecyclerViewTypes.QUOTE -> {
+        RecyclerViewTypes.STATUS_QUOTE -> {
             QuotedAttachmentHolder(this, adapter, attachmentContainer.inflate(R.layout.layout_content_item_attachment_quote) as ConstraintLayout)
+        }
+        RecyclerViewTypes.STATUS_SUMMARY -> {
+            SummaryAttachmentHolder(this, adapter, attachmentContainer.inflate(R.layout.layout_content_item_attachment_summary) as ConstraintLayout)
         }
         else -> null
     }
@@ -509,9 +512,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View, su
     }
 
     abstract class AttachmentHolder(val parent: StatusViewHolder, val adapter: IStatusesAdapter, val view: ConstraintLayout) {
-        abstract fun onClick(listener: IStatusViewHolder.StatusClickListener, holder: StatusViewHolder, v: View, position: Int)
-        abstract fun setupViewOptions()
-        abstract fun setTextSize(textSize: Float)
+        open fun onClick(listener: IStatusViewHolder.StatusClickListener, holder: StatusViewHolder, v: View, position: Int) {}
+        open fun setupViewOptions() {}
+        open fun setTextSize(textSize: Float) {}
         abstract fun display(status: ParcelableStatus)
     }
 

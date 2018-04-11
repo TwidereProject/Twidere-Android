@@ -273,8 +273,7 @@ class ParcelableStatusesAdapter(
                 val view = inflater.inflate(R.layout.list_item_load_indicator, parent, false)
                 return LoadIndicatorViewHolder(view)
             }
-            RecyclerViewTypes.STATUS, RecyclerViewTypes.MEDIA,
-            RecyclerViewTypes.QUOTE -> {
+            in RecyclerViewTypes.STATUS_TYPES -> {
                 return createStatusViewHolder(this, inflater, parent, timelineStyle, viewType) as RecyclerView.ViewHolder
             }
             RecyclerViewTypes.EMPTY -> {
@@ -292,8 +291,7 @@ class ParcelableStatusesAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val viewType = holder.itemViewType
         when (viewType) {
-            RecyclerViewTypes.STATUS, RecyclerViewTypes.MEDIA,
-            RecyclerViewTypes.QUOTE -> {
+            in RecyclerViewTypes.STATUS_TYPES -> {
                 holder as IStatusViewHolder
                 val countIndex: Int = getItemCountIndex(position)
                 val status = getStatusInternal(loadAround = true, position = position,
@@ -322,8 +320,9 @@ class ParcelableStatusesAdapter(
                 val status = getStatus(position)
                 return when {
                     status.is_gap -> RecyclerViewTypes.GAP
-                    status.attachment?.quoted != null -> RecyclerViewTypes.QUOTE
-                    status.attachment?.media.isNotNullOrEmpty() -> RecyclerViewTypes.MEDIA
+                    status.attachment?.quoted != null -> RecyclerViewTypes.STATUS_QUOTE
+                    status.attachment?.media.isNotNullOrEmpty() -> RecyclerViewTypes.STATUS_MEDIA
+                    status.attachment?.summary_card != null -> RecyclerViewTypes.STATUS_SUMMARY
                     else -> RecyclerViewTypes.STATUS
                 }
             }

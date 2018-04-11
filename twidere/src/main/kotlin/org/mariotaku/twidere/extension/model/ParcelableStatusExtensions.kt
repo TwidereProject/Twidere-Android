@@ -9,6 +9,7 @@ import org.mariotaku.microblog.library.annotation.mastodon.StatusVisibility
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
 import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.model.attachment.QuotedStatus
 import org.mariotaku.twidere.util.HtmlEscapeHelper
 import org.mariotaku.twidere.util.UriUtils
 import org.mariotaku.twidere.util.UserColorNameManager
@@ -69,7 +70,7 @@ inline val ParcelableStatus.retweeted_by_user_acct: String?
         "$retweeted_by_user_screen_name@${retweeted_by_user_key?.host}"
     }
 
-inline val ParcelableStatusAttachment.QuotedStatus.user_acct: String?
+inline val QuotedStatus.user_acct: String?
     get() = if (account_key?.host == user_key?.host) {
         user_screen_name
     } else {
@@ -93,7 +94,7 @@ inline val ParcelableStatus.canRetweet: Boolean
         }
     }
 
-inline val ParcelableStatus.quoted: ParcelableStatusAttachment.QuotedStatus?
+inline val ParcelableStatus.quoted: QuotedStatus?
     get() = attachment?.quoted
 
 val ParcelableStatus.retweet_sort_id: Long

@@ -63,6 +63,7 @@ import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.data.status.StatusActivitySummaryLiveData
+import org.mariotaku.twidere.data.status.StatusLiveData
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.data.observe
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
@@ -72,7 +73,6 @@ import org.mariotaku.twidere.extension.view.calculateSpaceItemHeight
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.fragment.timeline.AbsTimelineFragment
-import org.mariotaku.twidere.loader.ParcelableStatusLoader
 import org.mariotaku.twidere.loader.statuses.ConversationLoader
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.event.FavoriteTaskEvent
@@ -97,9 +97,8 @@ import java.lang.ref.WeakReference
  * Displays status details
  * Created by mariotaku on 14/12/5.
  */
-class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<ParcelableStatus>>,
-        OnMediaClickListener, StatusClickListener, KeyboardShortcutCallback,
-        ContentListSupport<StatusDetailsAdapter> {
+class StatusFragment : BaseFragment(), OnMediaClickListener, StatusClickListener,
+        KeyboardShortcutCallback, ContentListSupport<StatusDetailsAdapter> {
     private var mItemDecoration: ExtendedDividerItemDecoration? = null
 
     override lateinit var adapter: StatusDetailsAdapter
@@ -161,6 +160,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     }
 
     private lateinit var statusActivitySummaryLiveData: StatusActivitySummaryLiveData
+    private lateinit var statusLiveData: StatusLiveData
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
@@ -173,7 +173,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 } else if (resultCode == ColorPickerDialogActivity.RESULT_CLEARED) {
                     UserColorNameManager.get(context!!).clearUserColor(status.user_key)
                 }
-                loaderManager.restartLoader(LOADER_ID_DETAIL_STATUS, arguments, this)
+                statusLiveData.load()
             }
             AbsTimelineFragment.REQUEST_OPEN_SELECT_ACCOUNT,
             AbsTimelineFragment.REQUEST_FAVORITE_SELECT_ACCOUNT,
@@ -216,13 +216,43 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         setState(STATE_LOADING)
 
         statusActivitySummaryLiveData = StatusActivitySummaryLiveData(context!!)
+        val fragmentArgs = arguments!!
+        val accountKey = fragmentArgs.accountKey
+        val statusId = fragmentArgs.statusId
+        statusLiveData = StatusLiveData(activity!!, false, fragmentArgs, accountKey, statusId)
         statusActivitySummaryLiveData.observe(this, success = { data ->
             adapter.updateItemDecoration()
             adapter.statusActivity = data
         }, fail = {
             DebugLog.w(tr = it)
         })
-        loaderManager.initLoader(LOADER_ID_DETAIL_STATUS, arguments, this)
+        statusLiveData.observe(this, success = { (account, status) ->
+            val readPosition = saveReadPosition()
+            if (adapter.setStatus(status, account)) {
+                adapter.loadMoreSupportedPosition = LoadMorePosition.BOTH
+                adapter.data = null
+                loadConversation(status, null, null)
+                loadActivity(status)
+
+                val position = adapter.getFirstPositionOfItem(StatusDetailsAdapter.ITEM_IDX_STATUS)
+                if (position != RecyclerView.NO_POSITION) {
+                    layoutManager.scrollToPositionWithOffset(position, 0)
+                }
+            } else if (readPosition != null) {
+                restoreReadPosition(readPosition)
+            }
+            setState(STATE_LOADED)
+            activity?.invalidateOptionsMenu()
+        }, fail = {
+            adapter.loadMoreSupportedPosition = LoadMorePosition.NONE
+            setState(STATE_ERROR)
+            val errorInfo = StatusCodeMessageUtils.getErrorInfo(context!!, it)
+            errorText.spannable = errorInfo.message
+            errorIcon.setImageResource(errorInfo.icon)
+            activity?.invalidateOptionsMenu()
+        })
+
+        statusLiveData.load()
     }
 
     override fun onMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia, statusPosition: Int) {
@@ -326,49 +356,6 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             event: KeyEvent, metaState: Int): Boolean {
         return navigationHelper.handleKeyboardShortcutRepeat(handler, keyCode,
                 repeatCount, event, metaState)
-    }
-
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<SingleResponse<ParcelableStatus>> {
-        val fragmentArgs = arguments!!
-        val accountKey = fragmentArgs.accountKey
-        val statusId = fragmentArgs.statusId
-        return ParcelableStatusLoader(activity!!, false, fragmentArgs, accountKey, statusId)
-    }
-
-
-    override fun onLoadFinished(loader: Loader<SingleResponse<ParcelableStatus>>,
-            data: SingleResponse<ParcelableStatus>) {
-        val activity = activity ?: return
-        val status = data.data
-        if (status != null) {
-            val readPosition = saveReadPosition()
-            val dataExtra = data.extras
-            val details: AccountDetails? = dataExtra.getParcelable(EXTRA_ACCOUNT)
-            if (adapter.setStatus(status, details)) {
-                adapter.loadMoreSupportedPosition = LoadMorePosition.BOTH
-                adapter.data = null
-                loadConversation(status, null, null)
-                loadActivity(status)
-
-                val position = adapter.getFirstPositionOfItem(StatusDetailsAdapter.ITEM_IDX_STATUS)
-                if (position != RecyclerView.NO_POSITION) {
-                    layoutManager.scrollToPositionWithOffset(position, 0)
-                }
-            } else if (readPosition != null) {
-                restoreReadPosition(readPosition)
-            }
-            setState(STATE_LOADED)
-        } else {
-            adapter.loadMoreSupportedPosition = LoadMorePosition.NONE
-            setState(STATE_ERROR)
-            val errorInfo = StatusCodeMessageUtils.getErrorInfo(context!!, data.exception!!)
-            errorText.spannable = errorInfo.message
-            errorIcon.setImageResource(errorInfo.icon)
-        }
-        activity.invalidateOptionsMenu()
-    }
-
-    override fun onLoaderReset(loader: Loader<SingleResponse<ParcelableStatus>>) {
     }
 
     override val refreshing: Boolean

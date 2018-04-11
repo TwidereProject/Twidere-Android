@@ -7,10 +7,11 @@ object RecyclerViewTypes {
     const val EMPTY = 2
 
     const val STATUS = 10
-    const val MEDIA = 11
-    const val QUOTE = 12
+    const val STATUS_MEDIA = 11
+    const val STATUS_QUOTE = 12
+    const val STATUS_SUMMARY = 13
 
-    val STATUS_TYPES = STATUS..QUOTE
+    val STATUS_TYPES = STATUS..STATUS_SUMMARY
 
     const val ACTIVITY_TITLE_SUMMARY = 20
     const val ACTIVITY_STUB = 21

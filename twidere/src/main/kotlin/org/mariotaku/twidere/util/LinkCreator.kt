@@ -24,9 +24,9 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.originalId
 import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.ParcelableStatusAttachment
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.attachment.QuotedStatus
 
 /**
  * Creates links for sharing
@@ -118,7 +118,7 @@ object LinkCreator {
         }
     }
 
-    fun getQuotedStatusWebLink(status: ParcelableStatusAttachment.QuotedStatus): Uri {
+    fun getQuotedStatusWebLink(status: QuotedStatus): Uri {
         val externalUrl = status.external_url
         if (externalUrl != null) {
             return Uri.parse(externalUrl)
