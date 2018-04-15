@@ -39,7 +39,6 @@ import org.mariotaku.twidere.fragment.media.VideoPageFragment
 import org.mariotaku.twidere.fragment.preference.ThemedPreferenceDialogFragmentCompat
 import org.mariotaku.twidere.loader.CacheUserSearchLoader
 import org.mariotaku.twidere.loader.DefaultAPIConfigLoader
-import org.mariotaku.twidere.loader.ParcelableStatusLoader
 import org.mariotaku.twidere.loader.statuses.AbsRequestStatusesLoader
 import org.mariotaku.twidere.loader.userlists.BaseUserListsLoader
 import org.mariotaku.twidere.preference.AccountsListPreference
@@ -105,8 +104,6 @@ interface GeneralComponent {
 
     fun inject(preference: KeyboardShortcutPreference)
 
-    fun inject(loader: ParcelableStatusLoader)
-
     fun inject(loader: DefaultAPIConfigLoader)
 
     fun inject(service: BaseIntentService)
@@ -134,8 +131,6 @@ interface GeneralComponent {
     fun inject(promises: MutePromises)
 
     fun inject(promises: DefaultFeaturesPromises)
-
-    fun inject(promises: LaunchPresentationsPromises)
 
     fun inject(promise: UpdateStatusPromise)
 

@@ -171,7 +171,7 @@ class ImageCropperActivity : BaseActivity(), CropImageView.OnSetImageUriComplete
     private fun getResultIntent(uri: Uri?, error: Exception?, sampleSize: Int): Intent {
         val result = CropImage.ActivityResult(cropImageView.imageUri, uri, error,
                 cropImageView.cropPoints, cropImageView.cropRect, cropImageView.rotatedDegrees,
-                sampleSize)
+                cropImageView.wholeImageRect, sampleSize)
         val intent = Intent()
         intent.putExtra(CropImage.CROP_IMAGE_EXTRA_RESULT, result)
         return intent

@@ -31,7 +31,6 @@ import org.mariotaku.twidere.annotation.AutoRefreshType
 import org.mariotaku.twidere.constant.refreshIntervalKey
 import org.mariotaku.twidere.service.JobTaskService
 import org.mariotaku.twidere.service.JobTaskService.Companion.JOB_ID_REFRESH_FILTERS_SUBSCRIPTIONS
-import org.mariotaku.twidere.service.JobTaskService.Companion.JOB_ID_REFRESH_LAUNCH_PRESENTATIONS
 import java.util.concurrent.TimeUnit
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -52,9 +51,6 @@ class JobSchedulerRefreshTaskController(
         }
         if (allJobs.none { job -> job.id == JOB_ID_REFRESH_FILTERS_SUBSCRIPTIONS }) {
             scheduleJob(JOB_ID_REFRESH_FILTERS_SUBSCRIPTIONS, TimeUnit.HOURS.toMillis(4))
-        }
-        if (allJobs.none { job -> job.id == JOB_ID_REFRESH_LAUNCH_PRESENTATIONS }) {
-            scheduleJob(JOB_ID_REFRESH_LAUNCH_PRESENTATIONS, TimeUnit.HOURS.toMillis(6))
         }
     }
 

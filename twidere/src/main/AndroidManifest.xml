@@ -564,16 +564,6 @@
             android:name=".activity.content.FavoriteConfirmDialogActivity"
             android:theme="@style/Theme.Twidere.NoDisplay"/>
         <activity
-            android:name=".activity.presentation.ToggleRefreshActivity"
-            android:exported="false"
-            android:label="@string/action_refresh_launch_presentations"
-            android:theme="@style/Theme.Twidere.NoDisplay">
-            <intent-filter>
-                <action android:name="org.mariotaku.twidere.HIDDEN_SETTINGS_ENTRY"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".activity.feedback.FeedbackActivity"
             android:exported="false"
             android:label="@string/title_user_feedback"
