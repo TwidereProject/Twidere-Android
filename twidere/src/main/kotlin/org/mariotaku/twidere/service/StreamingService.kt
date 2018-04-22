@@ -246,7 +246,7 @@ class StreamingService : BaseService() {
             accountPreferences: AccountPreferences
     ) : StreamingRunnable<TwitterUserStream>(context, account, accountPreferences) {
 
-        private val profileImageSize = context.getString(R.string.profile_image_size)
+        private val profileImageSize = ModelCreationConfig.obtain(context)
         private val isOfficial = account.isOfficial(context)
 
         private var canGetInteractions: Boolean = true
@@ -280,7 +280,7 @@ class StreamingService : BaseService() {
                     homeInsertGap = true
                     return false
                 }
-                val parcelableStatus = status.toParcelable(account, profileImageSize = profileImageSize)
+                val parcelableStatus = status.toParcelable(account, statusConfig = profileImageSize)
                 parcelableStatus.is_gap = homeInsertGap
 
                 val currentTimeMillis = System.currentTimeMillis()
@@ -396,7 +396,7 @@ class StreamingService : BaseService() {
                         Expression.equals(CachedRelationships.NOTIFICATIONS_ENABLED, 1)).sql
                 val whereArgs = arrayOf(account.key.toString(), userKey.toString())
                 if (context.contentResolver.queryCount(CachedRelationships.CONTENT_URI,
-                        where, whereArgs) <= 0) return
+                                where, whereArgs) <= 0) return
 
                 contentNotificationManager.showUserNotification(account.key, status, userKey)
             }

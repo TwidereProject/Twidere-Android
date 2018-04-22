@@ -62,9 +62,8 @@ class MediaStatusViewHolder(private val adapter: IStatusesAdapter, itemView: Vie
         } else {
             mediaTextView.spannable = status.text_unescaped
         }
-        adapter.requestManager.loadProfileImage(context, status,
-                adapter.profileImageStyle, profileImageView.cornerRadius,
-                profileImageView.cornerRadiusRatio).into(profileImageView)
+        adapter.requestManager.loadProfileImage(status, adapter.profileImageStyle,
+                profileImageView.cornerRadius, profileImageView.cornerRadiusRatio).into(profileImageView)
 
         val firstMedia = status.attachment?.media?.firstOrNull() ?: return
 

@@ -37,7 +37,6 @@ import org.mariotaku.microblog.library.model.microblog.DMResponse.Conversation
 import org.mariotaku.microblog.library.model.microblog.DirectMessage
 import org.mariotaku.microblog.library.model.twitter.dm.DirectMessageEvent
 import org.mariotaku.sqliteqb.library.Expression
-import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_SHOW_NOTIFICATION
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.exception.APINotSupportedException
@@ -67,7 +66,7 @@ class GetMessagesTask(
         context: Context
 ) : BaseAbstractTask<GetMessagesTask.RefreshMessagesParam, Unit, (Boolean) -> Unit>(context) {
 
-    private val profileImageSize = context.getString(R.string.profile_image_size)
+    private val profileImageSize = ModelCreationConfig.obtain(context)
 
     override fun doLongOperation(param: RefreshMessagesParam) {
         val accountKeys = param.accountKeys
@@ -401,7 +400,7 @@ class GetMessagesTask(
         private val getMessageTasks = mutableSetOf<Uri>()
 
         fun createDatabaseUpdateData(context: Context, account: AccountDetails,
-                response: DMResponse, profileImageSize: String = "normal"): DatabaseUpdateData {
+                response: DMResponse, profileImageSize: ModelCreationConfig = ModelCreationConfig.DEFAULT): DatabaseUpdateData {
             val accountKey = account.key
 
             val respConversations = response.conversations.orEmpty()
@@ -443,7 +442,7 @@ class GetMessagesTask(
                 val participants = respUsers.filterKeys { userId ->
                     v.participants.any { it.userId == userId }
                 }.values.map {
-                    it.toParcelable(account, profileImageSize = profileImageSize)
+                    it.toParcelable(account, creationConfig = profileImageSize)
                 }
                 val conversationType = when (v.type?.toUpperCase(Locale.US)) {
                     Conversation.Type.ONE_TO_ONE -> ConversationType.ONE_TO_ONE
@@ -619,14 +618,15 @@ class GetMessagesTask(
         internal fun addConversationMessage(messages: MutableCollection<ParcelableMessage>,
                 conversations: MutableMap<String, ParcelableMessageConversation>,
                 details: AccountDetails, dm: DirectMessage, index: Int, size: Int,
-                outgoing: Boolean, profileImageSize: String = "normal", updateLastRead: Boolean) {
+                outgoing: Boolean, profileImageSize: ModelCreationConfig = ModelCreationConfig.DEFAULT,
+                updateLastRead: Boolean) {
             val accountKey = details.key
             val accountType = details.type
             val message = ParcelableMessageUtils.fromMessage(accountKey, dm, outgoing,
                     1.0 - (index.toDouble() / size))
             messages.add(message)
-            val sender = dm.sender.toParcelable(accountKey, accountType, profileImageSize = profileImageSize)
-            val recipient = dm.recipient.toParcelable(accountKey, accountType, profileImageSize = profileImageSize)
+            val sender = dm.sender.toParcelable(accountKey, accountType, creationConfig = profileImageSize)
+            val recipient = dm.recipient.toParcelable(accountKey, accountType, creationConfig = profileImageSize)
             val conversation = conversations.addConversation(message.conversation_id, details,
                     message, setOf(sender, recipient), updateLastRead = updateLastRead) ?: return
             conversation.conversation_extras_type = ParcelableMessageConversation.ExtrasType.DEFAULT

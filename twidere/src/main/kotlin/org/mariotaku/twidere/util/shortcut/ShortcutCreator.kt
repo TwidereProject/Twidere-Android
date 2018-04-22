@@ -66,9 +66,8 @@ object ShortcutCreator {
         val profileImageStyle = if (useAdaptiveIcon) ImageShapeStyle.SHAPE_RECTANGLE else preferences[profileImageStyleKey]
         val profileImageCornerRadiusRatio = if (useAdaptiveIcon) 0f else 0.1f
 
-        val deferred = Glide.with(context).loadProfileImage(context, user,
-                shapeStyle = profileImageStyle, cornerRadiusRatio = profileImageCornerRadiusRatio,
-                size = context.getString(R.string.profile_image_size)).into(DeferredTarget())
+        val deferred = Glide.with(context).loadProfileImage(user, shapeStyle = profileImageStyle,
+                cornerRadiusRatio = profileImageCornerRadiusRatio, size = context.getString(R.string.profile_image_size)).into(DeferredTarget())
 
         val weakContext = WeakReference(context)
         return deferred.promise.then { drawable ->

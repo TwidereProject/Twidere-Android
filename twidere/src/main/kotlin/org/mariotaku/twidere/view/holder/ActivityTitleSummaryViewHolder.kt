@@ -162,7 +162,7 @@ class ActivityTitleSummaryViewHolder(
             if (i < length) {
                 view.visibility = View.VISIBLE
                 val context = adapter.context
-                adapter.requestManager.loadProfileImage(context, users[i], adapter.profileImageStyle)
+                adapter.requestManager.loadProfileImage(users[i], adapter.profileImageStyle)
                         .into(view)
             } else {
                 view.visibility = View.GONE

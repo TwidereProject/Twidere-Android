@@ -20,18 +20,15 @@
 package org.mariotaku.twidere.extension.model.api.microblog
 
 import org.mariotaku.ktextension.mapToArray
+import org.mariotaku.microblog.library.model.microblog.Status
 import org.mariotaku.microblog.library.model.twitter.Activity
 import org.mariotaku.microblog.library.model.twitter.Activity.Action
-import org.mariotaku.microblog.library.model.microblog.Status
 import org.mariotaku.twidere.extension.model.api.applyTo
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.toLite
 import org.mariotaku.twidere.extension.model.toSummaryLine
 import org.mariotaku.twidere.extension.model.updateActivityFilterInfo
-import org.mariotaku.twidere.model.AccountDetails
-import org.mariotaku.twidere.model.ParcelableActivity
-import org.mariotaku.twidere.model.ParcelableUserList
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.*
 
 inline val Activity.activityStatus: Status?
     get() = when (action) {
@@ -48,14 +45,14 @@ inline val Activity.activityStatus: Status?
     }
 
 fun Activity.toParcelable(details: AccountDetails, isGap: Boolean = false,
-        profileImageSize: String = "normal"): ParcelableActivity {
+        profileImageSize: ModelCreationConfig = ModelCreationConfig.DEFAULT): ParcelableActivity {
     return toParcelable(details.key, details.type, isGap, profileImageSize).apply {
         account_color = details.color
     }
 }
 
 fun Activity.toParcelable(accountKey: UserKey, accountType: String, isGap: Boolean = false,
-        profileImageSize: String = "normal"): ParcelableActivity {
+        creationConfig: ModelCreationConfig = ModelCreationConfig.DEFAULT): ParcelableActivity {
     val result = ParcelableActivity()
     result.account_key = accountKey
     result.id = "$minPosition-$maxPosition"
@@ -68,30 +65,30 @@ fun Activity.toParcelable(accountKey: UserKey, accountType: String, isGap: Boole
     result.action = action
 
     result.sources = sources?.mapToArray {
-        it.toParcelable(accountKey, accountType, profileImageSize = profileImageSize)
+        it.toParcelable(accountKey, accountType, creationConfig = creationConfig)
     }
 
     result.targets = ParcelableActivity.RelatedObject().also {
         it.statuses = targetStatuses?.mapToArray {
-            it.toParcelable(accountKey, accountType, profileImageSize)
+            it.toParcelable(accountKey, accountType, creationConfig)
         }
         it.users = targetUsers?.mapToArray {
-            it.toParcelable(accountKey, accountType, profileImageSize = profileImageSize)
+            it.toParcelable(accountKey, accountType, creationConfig = creationConfig)
         }
         it.user_lists = targetUserLists?.mapToArray {
-            it.toParcelable(accountKey, profileImageSize = profileImageSize)
+            it.toParcelable(accountKey, creationConfig = creationConfig)
         }
     }
 
     result.target_objects = ParcelableActivity.RelatedObject().also {
         it.statuses = targetObjectStatuses?.mapToArray {
-            it.toParcelable(accountKey, accountType, profileImageSize)
+            it.toParcelable(accountKey, accountType, creationConfig)
         }
         it.users = targetObjectUsers?.mapToArray {
-            it.toParcelable(accountKey, accountType, profileImageSize = profileImageSize)
+            it.toParcelable(accountKey, accountType, creationConfig = creationConfig)
         }
         it.user_lists = targetObjectUserLists?.mapToArray {
-            it.toParcelable(accountKey, profileImageSize = profileImageSize)
+            it.toParcelable(accountKey, creationConfig = creationConfig)
         }
     }
 
@@ -143,7 +140,7 @@ fun Activity.toParcelable(accountKey: UserKey, accountType: String, isGap: Boole
         result.user_name = singleSource?.name
         result.user_screen_name = singleSource?.screen_name
     } else {
-        status.applyTo(accountKey, accountType, profileImageSize, result)
+        status.applyTo(accountKey, accountType, creationConfig, result)
         result.summary_line = arrayOf(result.toSummaryLine())
     }
 

@@ -64,8 +64,8 @@ class AccountViewHolder(
         screenName.spannable = "@${details.user.screen_name}"
         setAccountColor(details.color)
         profileImage.visibility = View.VISIBLE
-        adapter.requestManager.loadProfileImage(adapter.context, details, adapter.profileImageStyle,
-                profileImage.cornerRadius, profileImage.cornerRadiusRatio).into(profileImage)
+        adapter.requestManager.loadProfileImage(details, adapter.profileImageStyle, profileImage.cornerRadius,
+                profileImage.cornerRadiusRatio).into(profileImage)
         accountType.setImageResource(getAccountTypeIcon(details.type))
         toggle.setOnCheckedChangeListener(null)
         toggle.isChecked = details.activated

@@ -25,7 +25,6 @@ import org.mariotaku.microblog.library.*
 import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.sqliteqb.library.Columns
 import org.mariotaku.sqliteqb.library.Expression
-import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.data.ComputableExceptionLiveData
 import org.mariotaku.twidere.exception.APINotSupportedException
@@ -40,6 +39,7 @@ import org.mariotaku.twidere.extension.model.isAcctPlaceholder
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.ModelCreationConfig
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
@@ -63,7 +63,7 @@ class UserLiveData(
     val user: ParcelableUser?
         get() = value?.data?.second
 
-    private val profileImageSize = context.getString(R.string.profile_image_size)
+    private val profileImageSize = ModelCreationConfig.obtain(context)
 
     override fun compute(): Pair<AccountDetails, ParcelableUser> {
         val context = context
@@ -152,7 +152,7 @@ class UserLiveData(
             }
             else -> throw APINotSupportedException(platform = details.type)
         }
-        return response.toParcelable(details, profileImageSize = profileImageSize)
+        return response.toParcelable(details, creationConfig = profileImageSize)
     }
 
     private fun isRemoteUser(details: AccountDetails) =

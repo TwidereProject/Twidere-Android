@@ -41,21 +41,21 @@ import org.mariotaku.twidere.util.EntityArrays
 import org.mariotaku.twidere.util.HtmlBuilder
 import org.mariotaku.twidere.util.HtmlSpanBuilder
 
-fun Status.toParcelable(details: AccountDetails, profileImageSize: String = "normal",
+fun Status.toParcelable(details: AccountDetails, statusConfig: ModelCreationConfig = ModelCreationConfig.DEFAULT,
         updateFilterInfoAction: (Status, ParcelableStatus) -> Unit = ::updateFilterInfoDefault): ParcelableStatus {
-    return toParcelable(details.key, details.type, profileImageSize, updateFilterInfoAction).apply {
+    return toParcelable(details.key, details.type, statusConfig, updateFilterInfoAction).apply {
         account_color = details.color
     }
 }
 
-fun Status.toParcelable(accountKey: UserKey, accountType: String, profileImageSize: String = "normal",
+fun Status.toParcelable(accountKey: UserKey, accountType: String, statusConfig: ModelCreationConfig = ModelCreationConfig.DEFAULT,
         updateFilterInfoAction: (Status, ParcelableStatus) -> Unit = ::updateFilterInfoDefault): ParcelableStatus {
     val result = ParcelableStatus()
-    applyTo(accountKey, accountType, profileImageSize, result, updateFilterInfoAction)
+    applyTo(accountKey, accountType, statusConfig, result, updateFilterInfoAction)
     return result
 }
 
-fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: String = "normal",
+fun Status.applyTo(accountKey: UserKey, accountType: String, statusConfig: ModelCreationConfig = ModelCreationConfig.DEFAULT,
         result: ParcelableStatus,
         updateFilterInfoAction: (Status, ParcelableStatus) -> Unit = ::updateFilterInfoDefault) {
     val extras = ParcelableStatus.Extras()
@@ -83,7 +83,7 @@ fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: S
         result.retweeted_by_user_key = retweetUser.key
         result.retweeted_by_user_name = retweetUser.name
         result.retweeted_by_user_screen_name = retweetUser.screenName
-        result.retweeted_by_user_profile_image = retweetUser.getProfileImageOfSize(profileImageSize)
+        result.retweeted_by_user_profile_image = retweetUser.getProfileImageOfSize(statusConfig.profileImageSize)
 
         extras.retweeted_external_url = retweetedStatus.inferredExternalUrl
     } else {
@@ -133,7 +133,7 @@ fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: S
         quoted.user_key = quotedUser.key
         quoted.user_name = quotedUser.name
         quoted.user_screen_name = quotedUser.screenName
-        quoted.user_profile_image = quotedUser.getProfileImageOfSize(profileImageSize)
+        quoted.user_profile_image = quotedUser.getProfileImageOfSize(statusConfig.profileImageSize)
         quoted.user_is_protected = quotedUser.isProtected
         quoted.user_is_verified = quotedUser.isVerified
 
@@ -158,7 +158,7 @@ fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: S
     result.user_key = user.key
     result.user_name = user.name
     result.user_screen_name = user.screenName
-    result.user_profile_image_url = user.getProfileImageOfSize(profileImageSize)
+    result.user_profile_image_url = user.getProfileImageOfSize(statusConfig.profileImageSize)
     result.user_is_protected = user.isProtected
     result.user_is_verified = user.isVerified
     result.user_is_following = user.isFollowing == true
@@ -183,7 +183,7 @@ fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: S
     attachment.media = ParcelableMediaUtils.fromStatus(status, accountKey, accountType)
     when (status.card?.name) {
         "summary" -> {
-            attachment.summary_card = status.card?.toSummaryCard(100)
+            attachment.summary_card = status.card?.toSummaryCard(statusConfig.summaryThumbnailSize)
         }
     }
 

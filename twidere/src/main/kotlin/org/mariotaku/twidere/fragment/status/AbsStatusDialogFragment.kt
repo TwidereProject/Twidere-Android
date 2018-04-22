@@ -45,6 +45,7 @@ import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.ModelCreationConfig
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.view.holder.status.StatusViewHolder
@@ -87,7 +88,7 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
             }
             val weakThis by weak(this)
             val weakHolder by weak(StatusViewHolder(adapter = adapter, itemView = it.itemContent).apply {
-                setupViewOptions()
+                setupViewOptions(adapter)
             })
             val extraStatus = status
             if (extraStatus != null) {
@@ -144,7 +145,7 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
 
         fun showStatus(context: Context, details: AccountDetails, statusId: String): Promise<ParcelableStatus, Exception> {
             val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
-            val profileImageSize = context.getString(R.string.profile_image_size)
+            val profileImageSize = ModelCreationConfig.obtain(context)
             return task { microBlog.showStatus(statusId).toParcelable(details, profileImageSize) }
         }
 

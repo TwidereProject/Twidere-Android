@@ -68,7 +68,7 @@ class CardPreviewPreference(
             }
         }
         this.holder?.let {
-            it.setupViewOptions()
+            it.setupViewOptions(adapter)
             it.preview()
         }
         super.onBindViewHolder(holder)

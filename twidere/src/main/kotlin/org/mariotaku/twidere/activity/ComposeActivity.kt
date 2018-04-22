@@ -845,7 +845,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             } else {
                 accountProfileImage.clearColorFilter()
                 accountProfileImage.scaleType = ImageView.ScaleType.CENTER_CROP
-                requestManager.loadProfileImage(this, single, accountProfileImage.style)
+                requestManager.loadProfileImage(single, accountProfileImage.style)
                         .into(accountProfileImage)
             }
 
@@ -2018,7 +2018,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         fun showAccount(adapter: AccountIconsAdapter, account: AccountDetails, isSelected: Boolean) {
             itemView.alpha = if (isSelected) 1f else 0.33f
             val context = adapter.context
-            adapter.requestManager.loadProfileImage(context, account, adapter.profileImageStyle).into(iconView)
+            adapter.requestManager.loadProfileImage(account, adapter.profileImageStyle).into(iconView)
             iconView.setBorderColor(account.color)
         }
 

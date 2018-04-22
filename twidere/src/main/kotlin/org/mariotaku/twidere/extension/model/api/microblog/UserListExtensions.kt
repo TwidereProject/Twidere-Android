@@ -23,11 +23,12 @@ import org.mariotaku.microblog.library.model.microblog.UserList
 import org.mariotaku.microblog.library.model.microblog.UserList.Mode
 import org.mariotaku.twidere.extension.model.api.getProfileImageOfSize
 import org.mariotaku.twidere.extension.model.api.key
+import org.mariotaku.twidere.model.ModelCreationConfig
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
 
 fun UserList.toParcelable(accountKey: UserKey, position: Long = 0, isFollowing: Boolean = false,
-        profileImageSize: String = "normal"): ParcelableUserList {
+        creationConfig: ModelCreationConfig = ModelCreationConfig.DEFAULT): ParcelableUserList {
     val obj = ParcelableUserList()
     val user = user
     obj.position = position
@@ -40,7 +41,7 @@ fun UserList.toParcelable(accountKey: UserKey, position: Long = 0, isFollowing: 
     obj.user_key = user.key
     obj.user_name = user.name
     obj.user_screen_name = user.screenName
-    obj.user_profile_image_url = user.getProfileImageOfSize(profileImageSize)
+    obj.user_profile_image_url = user.getProfileImageOfSize(creationConfig.profileImageSize)
     obj.members_count = memberCount
     obj.subscribers_count = subscriberCount
     return obj

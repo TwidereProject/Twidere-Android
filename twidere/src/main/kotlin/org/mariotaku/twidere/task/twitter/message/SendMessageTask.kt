@@ -26,16 +26,11 @@ import org.mariotaku.microblog.library.annotation.twitter.MediaCategory
 import org.mariotaku.microblog.library.model.microblog.DirectMessage
 import org.mariotaku.microblog.library.model.twitter.dm.NewDm
 import org.mariotaku.sqliteqb.library.Expression
-import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.api.*
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
-import org.mariotaku.twidere.model.AccountDetails
-import org.mariotaku.twidere.model.ParcelableMedia
-import org.mariotaku.twidere.model.ParcelableMessageConversation
-import org.mariotaku.twidere.model.ParcelableNewMessage
+import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.event.SendMessageTaskEvent
 import org.mariotaku.twidere.model.util.ParcelableMessageUtils
 import org.mariotaku.twidere.promise.UpdateStatusPromise
@@ -53,7 +48,7 @@ class SendMessageTask(
 ) : ExceptionHandlingAbstractTask<ParcelableNewMessage, SendMessageTask.SendMessageResult,
         MicroBlogException, Unit>(context) {
 
-    private val profileImageSize = context.getString(R.string.profile_image_size)
+    private val profileImageSize = ModelCreationConfig.obtain(context)
 
     override val exceptionClass = MicroBlogException::class.java
 
@@ -142,7 +137,8 @@ class SendMessageTask(
 
     private fun sendTwitterMessageEvent(twitter: Twitter, account: AccountDetails,
             message: ParcelableNewMessage): GetMessagesTask.DatabaseUpdateData {
-        val recipientId = message.recipient_ids.singleOrNull() ?: throw MicroBlogException("No recipient")
+        val recipientId = message.recipient_ids.singleOrNull()
+                ?: throw MicroBlogException("No recipient")
         val category = when (message.media?.firstOrNull()?.type) {
             ParcelableMedia.Type.IMAGE -> MediaCategory.DM_IMAGE
             ParcelableMedia.Type.VIDEO -> MediaCategory.DM_VIDEO
@@ -173,13 +169,15 @@ class SendMessageTask(
     }
 
     private fun sendFanfouDM(fanfou: Fanfou, account: AccountDetails, message: ParcelableNewMessage): GetMessagesTask.DatabaseUpdateData {
-        val recipientId = message.recipient_ids.singleOrNull() ?: throw MicroBlogException("No recipient")
+        val recipientId = message.recipient_ids.singleOrNull()
+                ?: throw MicroBlogException("No recipient")
         val response = fanfou.sendFanfouDirectMessage(recipientId, message.text)
         return createDatabaseUpdateData(account, response)
     }
 
     private fun sendDefaultDM(microBlog: MicroBlog, account: AccountDetails, message: ParcelableNewMessage): GetMessagesTask.DatabaseUpdateData {
-        val recipientId = message.recipient_ids.singleOrNull() ?: throw MicroBlogException("No recipient")
+        val recipientId = message.recipient_ids.singleOrNull()
+                ?: throw MicroBlogException("No recipient")
         val response = uploadMediaThen(account, message) { mediaId ->
             if (mediaId != null) {
                 microBlog.sendDirectMessage(recipientId, message.text, mediaId)
@@ -223,8 +221,8 @@ class SendMessageTask(
         val conversations = hashMapOf<String, ParcelableMessageConversation>()
         conversations.addLocalConversations(context, accountKey, conversationIds)
         val message = ParcelableMessageUtils.fromMessage(accountKey, dm, true)
-        val sender = dm.sender.toParcelable(details, profileImageSize = profileImageSize)
-        val recipient = dm.recipient.toParcelable(details, profileImageSize = profileImageSize)
+        val sender = dm.sender.toParcelable(details, creationConfig = profileImageSize)
+        val recipient = dm.recipient.toParcelable(details, creationConfig = profileImageSize)
         conversations.addConversation(message.conversation_id, details, message, setOf(sender, recipient), appendUsers = true)
         return GetMessagesTask.DatabaseUpdateData(conversations.values, listOf(message))
     }

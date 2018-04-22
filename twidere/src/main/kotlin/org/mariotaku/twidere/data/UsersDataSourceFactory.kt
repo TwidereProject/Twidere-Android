@@ -31,7 +31,6 @@ import org.mariotaku.microblog.library.StatusNet
 import org.mariotaku.microblog.library.Twitter
 import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.microblog.CursorSupport
-import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.data.fetcher.UsersFetcher
 import org.mariotaku.twidere.exception.APINotSupportedException
@@ -41,6 +40,7 @@ import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.ModelCreationConfig
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.*
@@ -63,7 +63,7 @@ class UsersDataSourceFactory(
             val errorHandler: (Exception) -> Unit
     ) : PageKeyedDataSource<Pagination, ParcelableUser>() {
 
-        private val profileImageSize = context.getString(R.string.profile_image_size)
+        private val profileImageSize  = ModelCreationConfig.obtain(context)
 
         override fun loadInitial(params: LoadInitialParams<Pagination>, callback: LoadInitialCallback<Pagination, ParcelableUser>) {
             val paging = Paging().count(params.requestedLoadSize)
@@ -109,17 +109,17 @@ class UsersDataSourceFactory(
                 AccountType.TWITTER -> {
                     val twitter = account.newMicroBlogInstance(context, Twitter::class.java)
                     val timeline = fetcher.forTwitter(account, twitter, paging)
-                    return timeline.mapList(account, paging) { it.toParcelable(account, profileImageSize = profileImageSize) }
+                    return timeline.mapList(account, paging) { it.toParcelable(account, creationConfig = profileImageSize) }
                 }
                 AccountType.STATUSNET -> {
                     val statusnet = account.newMicroBlogInstance(context, StatusNet::class.java)
                     val timeline = fetcher.forStatusNet(account, statusnet, paging)
-                    return timeline.mapList(account, paging) { it.toParcelable(account, profileImageSize = profileImageSize) }
+                    return timeline.mapList(account, paging) { it.toParcelable(account, creationConfig = profileImageSize) }
                 }
                 AccountType.FANFOU -> {
                     val fanfou = account.newMicroBlogInstance(context, Fanfou::class.java)
                     val timeline = fetcher.forFanfou(account, fanfou, paging)
-                    return timeline.mapList(account, paging) { it.toParcelable(account, profileImageSize = profileImageSize) }
+                    return timeline.mapList(account, paging) { it.toParcelable(account, creationConfig = profileImageSize) }
                 }
                 AccountType.MASTODON -> {
                     val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)

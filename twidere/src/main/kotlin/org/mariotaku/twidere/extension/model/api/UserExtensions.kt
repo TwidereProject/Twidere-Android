@@ -24,10 +24,7 @@ import org.mariotaku.microblog.library.model.microblog.User
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_TWITTER_COM
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.model.AccountDetails
-import org.mariotaku.twidere.model.ParcelableUser
-import org.mariotaku.twidere.model.SpanItem
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.util.HtmlBuilder
 import org.mariotaku.twidere.util.UriUtils
@@ -43,22 +40,25 @@ fun User.getProfileImageOfSize(size: String): String {
 }
 
 
-fun User.toParcelable(details: AccountDetails, position: Long = 0, profileImageSize: String = "normal"): ParcelableUser {
-    return this.toParcelableInternal(details.key, details.type, position, profileImageSize).apply {
+fun User.toParcelable(details: AccountDetails, position: Long = 0,
+        creationConfig: ModelCreationConfig = ModelCreationConfig.DEFAULT): ParcelableUser {
+    return this.toParcelableInternal(details.key, details.type, position, creationConfig).apply {
         account_color = details.color
     }
 }
 
-fun User.toParcelable(accountKey: UserKey, accountType: String, position: Long = 0, profileImageSize: String = "normal"): ParcelableUser {
-    return this.toParcelableInternal(accountKey, accountType, position, profileImageSize)
+fun User.toParcelable(accountKey: UserKey, accountType: String, position: Long = 0,
+        creationConfig: ModelCreationConfig = ModelCreationConfig.DEFAULT): ParcelableUser {
+    return this.toParcelableInternal(accountKey, accountType, position, creationConfig)
 }
 
-fun User.toParcelable(accountType: String, position: Long = 0, profileImageSize: String = "normal"): ParcelableUser {
-    return this.toParcelableInternal(null, accountType, position, profileImageSize)
+fun User.toParcelable(accountType: String, position: Long = 0,
+        creationConfig: ModelCreationConfig = ModelCreationConfig.DEFAULT): ParcelableUser {
+    return this.toParcelableInternal(null, accountType, position, creationConfig)
 }
 
 fun User.toParcelableInternal(accountKey: UserKey?, @AccountType accountType: String?,
-        position: Long = 0, profileImageSize: String = "normal"): ParcelableUser {
+        position: Long = 0, creationConfig: ModelCreationConfig = ModelCreationConfig.DEFAULT): ParcelableUser {
     val urlEntities = urlEntities
     val obj = ParcelableUser()
     obj.position = position
@@ -76,7 +76,7 @@ fun User.toParcelableInternal(accountKey: UserKey?, @AccountType accountType: St
         obj.description_spans = userDescription.second
     }
     obj.location = location
-    obj.profile_image_url = getProfileImageOfSize(profileImageSize)
+    obj.profile_image_url = getProfileImageOfSize(creationConfig.profileImageSize)
     obj.profile_banner_url = profileBannerUrl
     obj.profile_background_url = profileBackgroundImageUrlHttps
     if (TextUtils.isEmpty(obj.profile_background_url)) {

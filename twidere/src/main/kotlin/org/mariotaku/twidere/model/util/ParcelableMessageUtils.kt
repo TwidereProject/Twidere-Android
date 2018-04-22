@@ -10,11 +10,8 @@ import org.mariotaku.twidere.extension.model.api.addEntities
 import org.mariotaku.twidere.extension.model.api.getEntityMedia
 import org.mariotaku.twidere.extension.model.api.key
 import org.mariotaku.twidere.extension.model.api.toParcelable
-import org.mariotaku.twidere.model.ParcelableMedia
-import org.mariotaku.twidere.model.ParcelableMessage
+import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableMessage.MessageType
-import org.mariotaku.twidere.model.SpanItem
-import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.message.ConversationInfoUpdatedExtras
 import org.mariotaku.twidere.model.message.MessageExtras
 import org.mariotaku.twidere.model.message.StickerExtras
@@ -40,7 +37,7 @@ object ParcelableMessageUtils {
     }
 
     fun fromEntry(accountKey: UserKey, accountType: String, entry: DMResponse.Entry,
-            users: Map<String, User>, profileImageSize: String = "normal"): ParcelableMessage? {
+            users: Map<String, User>, profileImageSize: ModelCreationConfig = ModelCreationConfig.DEFAULT): ParcelableMessage? {
         when {
             entry.message != null -> {
                 return ParcelableMessage().apply { applyMessage(accountKey, entry.message) }
@@ -131,14 +128,14 @@ object ParcelableMessageUtils {
 
     private fun ParcelableMessage.applyInfoUpdatedEvent(accountKey: UserKey, accountType: String,
             message: Message, users: Map<String, User>, @MessageType type: String,
-            profileImageSize: String = "normal") {
+            profileImageSize: ModelCreationConfig = ModelCreationConfig.DEFAULT) {
         this.commonEntry(accountKey, message)
         this.message_type = type
         this.extras = ConversationInfoUpdatedExtras().apply {
             this.name = message.conversationName
             this.avatar = message.conversationAvatarImageHttps
             this.user = users[message.byUserId]?.toParcelable(accountKey, accountType,
-                    profileImageSize = profileImageSize)
+                    creationConfig = profileImageSize)
         }
         this.is_outgoing = false
     }
@@ -221,8 +218,8 @@ object ParcelableMessageUtils {
             }
             attachment.sticker != null -> {
                 val sticker = attachment.sticker
-                val image = sticker.images["size_2x"] ?: sticker.images.values.firstOrNull() ?:
-                        return Triple(MessageType.TEXT, null, null)
+                val image = sticker.images["size_2x"] ?: sticker.images.values.firstOrNull()
+                ?: return Triple(MessageType.TEXT, null, null)
                 val extras = StickerExtras(image.url)
                 extras.displayName = sticker.displayName
                 return Triple(MessageType.STICKER, extras, null)

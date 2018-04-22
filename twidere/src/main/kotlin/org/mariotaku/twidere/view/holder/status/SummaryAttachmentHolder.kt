@@ -10,7 +10,7 @@ class SummaryAttachmentHolder(
         parent: StatusViewHolder,
         adapter: IStatusesAdapter,
         view: ConstraintLayout
-) : StatusViewHolder.AttachmentHolder(parent, adapter, view) {
+) : StatusViewHolder.AttachmentHolder(parent, view) {
 
     private val summaryThumbnail = view.summaryThumbnail
     private val summaryTitle = view.summaryTitle

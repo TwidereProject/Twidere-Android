@@ -26,16 +26,12 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.microblog.Status
-import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.extension.getDetailsOrThrow
 import org.mariotaku.twidere.extension.model.api.applyLoadLimit
 import org.mariotaku.twidere.loader.iface.IPaginationLoader
-import org.mariotaku.twidere.model.AccountDetails
-import org.mariotaku.twidere.model.ListResponse
-import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.pagination.PaginatedArrayList
 import org.mariotaku.twidere.model.pagination.PaginatedList
 import org.mariotaku.twidere.model.pagination.Pagination
@@ -70,7 +66,7 @@ abstract class AbsRequestStatusesLoader(
 
     protected open val isGapEnabled: Boolean = true
 
-    protected val profileImageSize: String = context.getString(R.string.profile_image_size)
+    protected val profileImageSize: ModelCreationConfig = ModelCreationConfig.obtain(context)
 
     private val exceptionRef = AtomicReference<MicroBlogException?>()
 

@@ -437,7 +437,7 @@ class ParcelableStatusesAdapter(
                     val view = inflater.inflate(StatusViewHolder.layoutResource, parent, false)
                     val holder = StatusViewHolder(adapter, view, viewType)
                     holder.setOnClickListeners()
-                    holder.setupViewOptions()
+                    holder.setupViewOptions(adapter)
                     return holder
                 }
                 TimelineStyle.GALLERY -> {

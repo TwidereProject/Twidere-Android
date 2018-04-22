@@ -8,4 +8,5 @@
     <integer name="min_database_item_limit">50</integer>
 
     <string name="profile_image_size" translatable="false">normal</string>
+    <dimen name="summary_thumbnail_size">100dp</dimen>
 </resources>

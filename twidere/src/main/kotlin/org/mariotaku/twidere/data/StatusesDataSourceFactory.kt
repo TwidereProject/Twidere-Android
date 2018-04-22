@@ -29,7 +29,6 @@ import org.mariotaku.microblog.library.Mastodon
 import org.mariotaku.microblog.library.StatusNet
 import org.mariotaku.microblog.library.Twitter
 import org.mariotaku.microblog.library.model.Paging
-import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.data.fetcher.StatusesFetcher
 import org.mariotaku.twidere.exception.APINotSupportedException
@@ -38,6 +37,7 @@ import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.generateDisplayInfo
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.model.ModelCreationConfig
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.PaginatedArrayList
@@ -66,7 +66,7 @@ class StatusesDataSourceFactory(
             val errorHandler: (Exception) -> Unit
     ) : PageKeyedDataSource<Pagination, ParcelableStatus>() {
 
-        private val profileImageSize = context.getString(R.string.profile_image_size)
+        private val profileImageSize = ModelCreationConfig.obtain(context)
 
         override fun loadInitial(params: LoadInitialParams<Pagination>, callback: LoadInitialCallback<Pagination, ParcelableStatus>) {
             val paging = Paging().count(params.requestedLoadSize)

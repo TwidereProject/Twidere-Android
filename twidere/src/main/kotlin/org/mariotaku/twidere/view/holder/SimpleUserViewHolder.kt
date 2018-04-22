@@ -35,9 +35,8 @@ open class SimpleUserViewHolder<out A : IContentAdapter>(
         secondaryNameView.spannable = "@${user.screen_name}"
         if (adapter.profileImageEnabled) {
             val context = itemView.context
-            adapter.requestManager.loadProfileImage(context, user, adapter.profileImageStyle,
-                    profileImageView.cornerRadius, profileImageView.cornerRadiusRatio,
-                    adapter.profileImageSize).into(profileImageView)
+            adapter.requestManager.loadProfileImage(user, adapter.profileImageStyle, profileImageView.cornerRadius,
+                    profileImageView.cornerRadiusRatio, adapter.profileImageSize).into(profileImageView)
             profileImageView.visibility = View.VISIBLE
         } else {
             profileImageView.visibility = View.GONE

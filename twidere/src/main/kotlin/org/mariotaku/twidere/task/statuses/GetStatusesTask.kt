@@ -46,10 +46,7 @@ import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.applyLoadLimit
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
-import org.mariotaku.twidere.model.AccountDetails
-import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.ParcelableUser
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.event.GetStatusesTaskEvent
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.task.GetTimelineResult
@@ -74,7 +71,7 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
 
     protected abstract val errorInfoKey: String
 
-    private val profileImageSize = context.getString(R.string.profile_image_size)
+    private val creationConfig = ModelCreationConfig.obtain(context)
 
     override final fun doLongOperation(param: P): List<Pair<GetTimelineResult<ParcelableStatus>?, Exception?>> {
         if (param.shouldAbort) return emptyList()
@@ -158,7 +155,7 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
                 val twitter = account.newMicroBlogInstance(context, Twitter::class.java)
                 val timeline = fetcher.forTwitter(account, twitter, paging, null)
                 val statuses = timeline.map {
-                    it.toParcelable(account, profileImageSize)
+                    it.toParcelable(account, creationConfig)
                 }
                 val hashtags = timeline.flatMap { status ->
                     status.entities?.hashtags?.map { it.text }.orEmpty()
@@ -169,7 +166,7 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
                 val statusnet = account.newMicroBlogInstance(context, StatusNet::class.java)
                 val timeline = fetcher.forStatusNet(account, statusnet, paging, null)
                 val statuses = timeline.map {
-                    it.toParcelable(account, profileImageSize)
+                    it.toParcelable(account, creationConfig)
                 }
                 val hashtags = timeline.flatMap { status ->
                     status.entities?.hashtags?.map { it.text }.orEmpty()
@@ -180,7 +177,7 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
                 val fanfou = account.newMicroBlogInstance(context, Fanfou::class.java)
                 val timeline = fetcher.forFanfou(account, fanfou, paging, null)
                 val statuses = timeline.map {
-                    it.toParcelable(account, profileImageSize)
+                    it.toParcelable(account, creationConfig)
                 }
                 val hashtags = statuses.flatMap { status ->
                     return@flatMap status.extractFanfouHashtags()
@@ -216,11 +213,11 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
     private fun extractMicroBlogUsers(timeline: List<Status>, account: AccountDetails): List<ParcelableUser> {
         return timeline.flatMap { status ->
             val mapResult = mutableListOf(status.user.toParcelable(account,
-                    profileImageSize = profileImageSize))
+                    creationConfig = creationConfig))
             status.retweetedStatus?.user?.toParcelable(account,
-                    profileImageSize = profileImageSize)?.addTo(mapResult)
+                    creationConfig = creationConfig)?.addTo(mapResult)
             status.quotedStatus?.user?.toParcelable(account,
-                    profileImageSize = profileImageSize)?.addTo(mapResult)
+                    creationConfig = creationConfig)?.addTo(mapResult)
             return@flatMap mapResult
         }
     }

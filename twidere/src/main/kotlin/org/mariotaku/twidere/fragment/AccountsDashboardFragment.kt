@@ -86,7 +86,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
-import org.mariotaku.twidere.util.UserColorNameManager.Companion
 import org.mariotaku.twidere.view.holder.AccountProfileImageViewHolder
 import org.mariotaku.twidere.view.transformer.AccountsSelectorTransformer
 import java.lang.ref.WeakReference
@@ -477,8 +476,8 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
                 clickedColors = clickedImageView.borderColors
                 val oldSelectedAccount = accountsAdapter.selectedAccount ?: return
                 val profileImageStyle = PreferencesSingleton.get(context!!)[profileImageStyleKey]
-                Glide.with(this@AccountsDashboardFragment).loadProfileImage(activity, oldSelectedAccount,
-                        profileImageStyle, clickedImageView.cornerRadius, clickedImageView.cornerRadiusRatio)
+                Glide.with(this@AccountsDashboardFragment).loadProfileImage(oldSelectedAccount, profileImageStyle,
+                        clickedImageView.cornerRadius, clickedImageView.cornerRadiusRatio)
                         .into(clickedImageView).onLoadStarted(profileDrawable)
                 //TODO complete border color
                 clickedImageView.setBorderColors(*profileImageView.borderColors)
@@ -557,9 +556,8 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         profileContainer.contentDescription = getString(R.string.content_description_accounts_selector_current,
                 UserColorNameManager.get(context!!).getDisplayName(user))
 
-        Glide.with(this).loadProfileImage(activity, account, PreferencesSingleton.get(context!!)[profileImageStyleKey],
-                accountProfileImageView.cornerRadius, accountProfileImageView.cornerRadiusRatio,
-                ProfileImageSize.REASONABLY_SMALL).apply(RequestOptions.placeholderOf(profileImageSnapshot)).into(accountProfileImageView)
+        Glide.with(this).loadProfileImage(account, PreferencesSingleton.get(context!!)[profileImageStyleKey], accountProfileImageView.cornerRadius,
+                accountProfileImageView.cornerRadiusRatio, ProfileImageSize.REASONABLY_SMALL).apply(RequestOptions.placeholderOf(profileImageSnapshot)).into(accountProfileImageView)
         //TODO complete border color
         accountProfileImageView.setBorderColors(account.color)
         accountProfileBanner.showNext()

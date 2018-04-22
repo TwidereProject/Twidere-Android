@@ -43,7 +43,6 @@ import org.mariotaku.microblog.library.model.twitter.Activity.Action
 import org.mariotaku.sqliteqb.library.*
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.query.SQLSelectQuery
-import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.FilterScope
@@ -849,7 +848,7 @@ object DataStoreUtils {
     @Throws(MicroBlogException::class)
     fun findStatus(context: Context, accountKey: UserKey, statusId: String): ParcelableStatus {
         val cached = findStatusInDatabases(context, accountKey, statusId)
-        val profileImageSize = context.getString(R.string.profile_image_size)
+        val profileImageSize = ModelCreationConfig.obtain(context)
         if (cached != null) return cached
         val details = AccountManager.get(context).getDetailsOrThrow(accountKey, true)
         val status = when (details.type) {

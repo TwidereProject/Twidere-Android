@@ -208,9 +208,8 @@ class DetailStatusViewHolder(
         nameView.screenName = "@${status.user_acct}"
         nameView.updateText(formatter)
 
-        adapter.requestManager.loadProfileImage(context, status, adapter.profileImageStyle,
-                itemView.profileImage.cornerRadius, itemView.profileImage.cornerRadiusRatio,
-                size = ProfileImageSize.ORIGINAL).into(itemView.profileImage)
+        adapter.requestManager.loadProfileImage(status, adapter.profileImageStyle, itemView.profileImage.cornerRadius,
+                itemView.profileImage.cornerRadiusRatio, size = ProfileImageSize.ORIGINAL).into(itemView.profileImage)
 
         val typeIconRes = Utils.getUserTypeIconRes(status.user_is_verified, status.user_is_protected)
         val typeDescriptionRes = Utils.getUserTypeDescriptionRes(status.user_is_verified, status.user_is_protected)
@@ -681,9 +680,8 @@ class DetailStatusViewHolder(
             fun displayUser(item: ParcelableUser) {
                 val context = adapter.context
                 val requestManager = adapter.requestManager
-                requestManager.loadProfileImage(context, item, adapter.profileImageStyle,
-                        profileImageView.cornerRadius, profileImageView.cornerRadiusRatio,
-                        adapter.profileImageSize).into(profileImageView)
+                requestManager.loadProfileImage(item, adapter.profileImageStyle, profileImageView.cornerRadius,
+                        profileImageView.cornerRadiusRatio, adapter.profileImageSize).into(profileImageView)
             }
 
             override fun onClick(v: View) {

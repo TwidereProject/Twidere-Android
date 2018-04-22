@@ -76,7 +76,7 @@ class ComposeAutoCompleteAdapter(context: Context, val requestManager: RequestMa
             text2.spannable = "@${getScreenNameOrAcct(screenName, userKey)}"
             if (displayProfileImage) {
                 val profileImageUrl = cursor.getString(indices.icon)
-                requestManager.loadProfileImage(context, profileImageUrl, profileImageStyle).into(icon)
+                requestManager.loadProfileImage(profileImageUrl, profileImageStyle).into(icon)
             } else {
                 //TODO cancel image load
             }

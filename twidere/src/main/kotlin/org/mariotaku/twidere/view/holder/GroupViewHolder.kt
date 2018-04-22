@@ -68,8 +68,8 @@ class GroupViewHolder(private val adapter: IGroupsAdapter<*>, itemView: View) : 
         }
         if (adapter.profileImageEnabled) {
             profileImageView.visibility = View.VISIBLE
-            adapter.requestManager.loadProfileImage(context, group, adapter.profileImageStyle,
-                    profileImageView.cornerRadius, profileImageView.cornerRadiusRatio)
+            adapter.requestManager.loadProfileImage(group, adapter.profileImageStyle, profileImageView.cornerRadius,
+                    profileImageView.cornerRadiusRatio)
                     .into(profileImageView)
         } else {
             profileImageView.visibility = View.GONE

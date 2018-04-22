@@ -35,8 +35,8 @@ import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.glide.RoundedRectTransformation
 
-fun RequestManager.loadProfileImage(context: Context, url: String?, @ImageShapeStyle style: Int,
-        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f, size: String? = null): RequestBuilder<Drawable> {
+fun RequestManager.loadProfileImage(url: String?, @ImageShapeStyle style: Int, cornerRadius: Float = 0f,
+        cornerRadiusRatio: Float = 0f, size: String? = null): RequestBuilder<Drawable> {
     return configureLoadProfileImage(style, cornerRadius, cornerRadiusRatio) {
         if (url == null || size == null) {
             return@configureLoadProfileImage load(url)
@@ -46,24 +46,24 @@ fun RequestManager.loadProfileImage(context: Context, url: String?, @ImageShapeS
     }
 }
 
-fun RequestManager.loadProfileImage(context: Context, resourceId: Int, @ImageShapeStyle shapeStyle: Int,
-        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f): RequestBuilder<Drawable> {
+fun RequestManager.loadProfileImage(resourceId: Int, @ImageShapeStyle shapeStyle: Int, cornerRadius: Float = 0f,
+        cornerRadiusRatio: Float = 0f): RequestBuilder<Drawable> {
     return configureLoadProfileImage(shapeStyle, cornerRadius, cornerRadiusRatio) {
         return@configureLoadProfileImage load(resourceId)
     }
 }
 
-fun RequestManager.loadProfileImage(context: Context, account: AccountDetails, @ImageShapeStyle shapeStyle: Int,
-        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f, size: String? = null): RequestBuilder<Drawable> {
-    return loadProfileImage(context, account.user, shapeStyle, cornerRadius, cornerRadiusRatio, size)
+fun RequestManager.loadProfileImage(account: AccountDetails, @ImageShapeStyle shapeStyle: Int, cornerRadius: Float = 0f,
+        cornerRadiusRatio: Float = 0f, size: String? = null): RequestBuilder<Drawable> {
+    return loadProfileImage(account.user, shapeStyle, cornerRadius, cornerRadiusRatio, size)
 }
 
-fun RequestManager.loadProfileImage(context: Context, user: ParcelableUser, @ImageShapeStyle shapeStyle: Int,
-        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f, size: String? = null): RequestBuilder<Drawable> {
+fun RequestManager.loadProfileImage(user: ParcelableUser, @ImageShapeStyle shapeStyle: Int, cornerRadius: Float = 0f,
+        cornerRadiusRatio: Float = 0f, size: String? = null): RequestBuilder<Drawable> {
     if (user.extras != null && user.extras?.profile_image_url_fallback == null) {
         // No fallback image, use compatible logic
-        return loadProfileImage(context, user.profile_image_url, shapeStyle, cornerRadius,
-                cornerRadiusRatio, size)
+        return loadProfileImage(user.profile_image_url, shapeStyle, cornerRadius, cornerRadiusRatio,
+                size)
     }
     return configureLoadProfileImage(shapeStyle, cornerRadius, cornerRadiusRatio) {
         if (size != null) {
@@ -74,8 +74,8 @@ fun RequestManager.loadProfileImage(context: Context, user: ParcelableUser, @Ima
     }
 }
 
-fun RequestManager.loadProfileImage(context: Context, user: ParcelableLiteUser, @ImageShapeStyle shapeStyle: Int,
-        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f, size: String? = null): RequestBuilder<Drawable> {
+fun RequestManager.loadProfileImage(user: ParcelableLiteUser, @ImageShapeStyle shapeStyle: Int, cornerRadius: Float = 0f,
+        cornerRadiusRatio: Float = 0f, size: String? = null): RequestBuilder<Drawable> {
     return configureLoadProfileImage(shapeStyle, cornerRadius, cornerRadiusRatio) {
         if (size != null) {
             return@configureLoadProfileImage load(Utils.getTwitterProfileImageOfSize(user.profile_image_url, size))
@@ -85,59 +85,58 @@ fun RequestManager.loadProfileImage(context: Context, user: ParcelableLiteUser, 
     }
 }
 
-fun RequestManager.loadProfileImage(context: Context, userList: ParcelableUserList,
-        @ImageShapeStyle shapeStyle: Int,
-        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f): RequestBuilder<Drawable> {
+fun RequestManager.loadProfileImage(userList: ParcelableUserList, @ImageShapeStyle shapeStyle: Int,
+        cornerRadius: Float = 0f,
+        cornerRadiusRatio: Float = 0f): RequestBuilder<Drawable> {
     return configureLoadProfileImage(shapeStyle, cornerRadius, cornerRadiusRatio) {
         return@configureLoadProfileImage load(userList.user_profile_image_url)
     }
 }
 
-fun RequestManager.loadProfileImage(context: Context, group: ParcelableGroup,
-        @ImageShapeStyle shapeStyle: Int,
-        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f): RequestBuilder<Drawable> {
+fun RequestManager.loadProfileImage(group: ParcelableGroup, @ImageShapeStyle shapeStyle: Int,
+        cornerRadius: Float = 0f,
+        cornerRadiusRatio: Float = 0f): RequestBuilder<Drawable> {
     return configureLoadProfileImage(shapeStyle, cornerRadius, cornerRadiusRatio) {
         return@configureLoadProfileImage load(group.homepage_logo)
     }
 }
 
-fun RequestManager.loadProfileImage(context: Context, status: ParcelableStatus, @ImageShapeStyle shapeStyle: Int,
-        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f, size: String? = null): RequestBuilder<Drawable> {
+fun RequestManager.loadProfileImage(status: ParcelableStatus, @ImageShapeStyle shapeStyle: Int, cornerRadius: Float = 0f,
+        cornerRadiusRatio: Float = 0f, size: String? = null): RequestBuilder<Drawable> {
     if (status.extras?.user_profile_image_url_fallback == null) {
         // No fallback image, use compatible logic
-        return loadProfileImage(context, status.user_profile_image_url, shapeStyle, cornerRadius,
-                cornerRadiusRatio, size)
+        return loadProfileImage(status.user_profile_image_url, shapeStyle, cornerRadius, cornerRadiusRatio,
+                size)
     }
     return configureLoadProfileImage(shapeStyle, cornerRadius, cornerRadiusRatio) {
         return@configureLoadProfileImage load(status.user_profile_image_url)
     }
 }
 
-fun RequestManager.loadProfileImage(context: Context, conversation: ParcelableMessageConversation,
-        @ImageShapeStyle shapeStyle: Int, cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f,
-        size: String? = null): RequestBuilder<*> {
+fun RequestManager.loadProfileImage(conversation: ParcelableMessageConversation, @ImageShapeStyle shapeStyle: Int,
+        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f, size: String? = null): RequestBuilder<*> {
     if (conversation.conversation_type == ParcelableMessageConversation.ConversationType.ONE_TO_ONE) {
         val user = conversation.user
         if (user != null) {
-            return loadProfileImage(context, user, shapeStyle, cornerRadius, cornerRadiusRatio, size)
+            return loadProfileImage(user, shapeStyle, cornerRadius, cornerRadiusRatio, size)
         } else {
             // TODO: show default conversation icon
-            return loadProfileImage(context, R.drawable.ic_profile_image_default_group, shapeStyle,
-                    cornerRadius, cornerRadiusRatio)
+            return loadProfileImage(R.drawable.ic_profile_image_default_group, shapeStyle, cornerRadius,
+                    cornerRadiusRatio)
         }
     } else {
         if (conversation.conversation_avatar != null) {
-            return loadProfileImage(context, conversation.conversation_avatar, shapeStyle, cornerRadius,
-                    cornerRadiusRatio, size)
+            return loadProfileImage(conversation.conversation_avatar, shapeStyle, cornerRadius, cornerRadiusRatio,
+                    size)
         } else {
-            return loadProfileImage(context, R.drawable.ic_profile_image_default_group, shapeStyle,
-                    cornerRadius, cornerRadiusRatio)
+            return loadProfileImage(R.drawable.ic_profile_image_default_group, shapeStyle, cornerRadius,
+                    cornerRadiusRatio)
         }
     }
 }
 
-fun RequestManager.loadOriginalProfileImage(context: Context, user: ParcelableUser,
-        @ImageShapeStyle shapeStyle: Int, cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f
+fun RequestManager.loadOriginalProfileImage(user: ParcelableUser, @ImageShapeStyle shapeStyle: Int,
+        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f
 ): RequestBuilder<Drawable> {
     return configureLoadProfileImage(shapeStyle, cornerRadius, cornerRadiusRatio) {
         return@configureLoadProfileImage load(user.originalProfileImage)

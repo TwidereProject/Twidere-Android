@@ -104,9 +104,8 @@ class MessageEntryViewHolder(itemView: View, val adapter: MessagesEntriesAdapter
         } else {
             stateIndicator.visibility = View.GONE
         }
-        adapter.requestManager.loadProfileImage(adapter.context, conversation,
-                adapter.profileImageStyle, profileImage.cornerRadius,
-                profileImage.cornerRadiusRatio).into(profileImage)
+        adapter.requestManager.loadProfileImage(conversation, adapter.profileImageStyle,
+                profileImage.cornerRadius, profileImage.cornerRadiusRatio).into(profileImage)
         if (conversation.unread_count > 0) {
             unreadCount.visibility = View.VISIBLE
             unreadCount.text = conversation.unread_count.toString()

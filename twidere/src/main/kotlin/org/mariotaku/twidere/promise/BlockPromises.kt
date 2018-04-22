@@ -37,6 +37,7 @@ import org.mariotaku.twidere.extension.promise.notifyCreatePromise
 import org.mariotaku.twidere.extension.promise.notifyOnResult
 import org.mariotaku.twidere.extension.promise.thenGetAccount
 import org.mariotaku.twidere.extension.promise.toastOnResult
+import org.mariotaku.twidere.model.ModelCreationConfig
 import org.mariotaku.twidere.model.ParcelableRelationship
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
@@ -50,7 +51,7 @@ import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 
 
 class BlockPromises private constructor(private val application: Application) {
-    private val profileImageSize: String = application.getString(R.string.profile_image_size)
+    private val profileImageSize: ModelCreationConfig = ModelCreationConfig.obtain(application)
 
     fun block(accountKey: UserKey, userKey: UserKey, filterEverywhere: Boolean = false): Promise<ParcelableUser, Exception> = notifyCreatePromise(BusSingleton, FriendshipTaskEvent.Action.BLOCK, accountKey, userKey)
             .thenGetAccount(application, accountKey).then { account ->
@@ -63,12 +64,12 @@ class BlockPromises private constructor(private val application: Application) {
                     AccountType.FANFOU -> {
                         val fanfou = account.newMicroBlogInstance(application, Fanfou::class.java)
                         return@then fanfou.createFanfouBlock(userKey.id).toParcelable(account,
-                                profileImageSize = profileImageSize)
+                                creationConfig = profileImageSize)
                     }
                     else -> {
                         val twitter = account.newMicroBlogInstance(application, Twitter::class.java)
                         return@then twitter.createBlock(userKey.id).toParcelable(account,
-                                profileImageSize = profileImageSize)
+                                creationConfig = profileImageSize)
                     }
                 }
             }.thenUpdateRelationship(accountKey, userKey) { relationship ->
@@ -98,12 +99,12 @@ class BlockPromises private constructor(private val application: Application) {
                     AccountType.FANFOU -> {
                         val fanfou = account.newMicroBlogInstance(application, Fanfou::class.java)
                         return@then fanfou.destroyFanfouBlock(userKey.id).toParcelable(account,
-                                profileImageSize = profileImageSize)
+                                creationConfig = profileImageSize)
                     }
                     else -> {
                         val twitter = account.newMicroBlogInstance(application, Twitter::class.java)
                         return@then twitter.destroyBlock(userKey.id).toParcelable(account,
-                                profileImageSize = profileImageSize)
+                                creationConfig = profileImageSize)
                     }
                 }
             }.thenUpdateRelationship(accountKey, userKey) { relationship ->
@@ -126,7 +127,7 @@ class BlockPromises private constructor(private val application: Application) {
                     AccountType.TWITTER -> {
                         val twitter = account.newMicroBlogInstance(application, Twitter::class.java)
                         return@then twitter.reportSpam(userKey.id).toParcelable(account,
-                                profileImageSize = profileImageSize)
+                                creationConfig = profileImageSize)
                     }
                     else -> throw APINotSupportedException(platform = account.type)
                 }

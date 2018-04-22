@@ -30,7 +30,6 @@ import org.mariotaku.microblog.library.Twitter
 import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.microblog.PageableResponseList
 import org.mariotaku.microblog.library.model.microblog.UserList
-import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.dagger.component.GeneralComponent
@@ -38,6 +37,7 @@ import org.mariotaku.twidere.extension.getDetails
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.loader.iface.IPaginationLoader
+import org.mariotaku.twidere.model.ModelCreationConfig
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.pagination.CursorPagination
@@ -59,7 +59,7 @@ abstract class BaseUserListsLoader(
 
     protected val data = NoDuplicatesArrayList<ParcelableUserList>()
 
-    private val profileImageSize = context.getString(R.string.profile_image_size)
+    private val profileImageSize = ModelCreationConfig.obtain(context)
 
     override var pagination: Pagination? = null
 

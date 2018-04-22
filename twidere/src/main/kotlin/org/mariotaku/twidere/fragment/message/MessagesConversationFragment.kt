@@ -552,7 +552,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(conversationTitle, null,
                 null, stateIcon, null)
 
-        Glide.with(this).loadProfileImage(activity, conversation, PreferencesSingleton.get(context!!)[profileImageStyleKey])
+        Glide.with(this).loadProfileImage(conversation, PreferencesSingleton.get(context!!)[profileImageStyleKey])
                 .into(conversationAvatar)
     }
 

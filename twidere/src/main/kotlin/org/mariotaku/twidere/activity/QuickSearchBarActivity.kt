@@ -417,9 +417,8 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
                     holder.text2.visibility = View.VISIBLE
                     holder.text2.spannable = "@${cursor.getString(indices.summary)}"
                     ImageViewCompat.setImageTintList(holder.icon, null)
-                    requestManager.loadProfileImage(context, cursor.getString(indices.icon),
-                            profileImageStyle, cornerRadius = holder.icon.cornerRadius,
-                            cornerRadiusRatio = holder.icon.cornerRadiusRatio,
+                    requestManager.loadProfileImage(cursor.getString(indices.icon), profileImageStyle,
+                            cornerRadius = holder.icon.cornerRadius, cornerRadiusRatio = holder.icon.cornerRadiusRatio,
                             size = profileImageSize).into(holder.icon)
                 }
                 VIEW_TYPE_USER_SCREEN_NAME -> {

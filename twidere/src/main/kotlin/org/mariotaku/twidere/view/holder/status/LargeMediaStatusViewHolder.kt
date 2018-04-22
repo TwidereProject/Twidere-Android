@@ -79,9 +79,8 @@ class LargeMediaStatusViewHolder(private val adapter: IStatusesAdapter, itemView
         val context = itemView.context
         val linkify = adapter.twidereLinkify
 
-        adapter.requestManager.loadProfileImage(context, status,
-                adapter.profileImageStyle, profileImageView.cornerRadius,
-                profileImageView.cornerRadiusRatio).into(profileImageView)
+        adapter.requestManager.loadProfileImage(status, adapter.profileImageStyle,
+                profileImageView.cornerRadius, profileImageView.cornerRadiusRatio).into(profileImageView)
 
         nameView.name = status.user_name
         nameView.screenName = "@${status.user_screen_name}"

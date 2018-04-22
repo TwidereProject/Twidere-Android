@@ -13,23 +13,17 @@ import org.mariotaku.twidere.extension.setVisible
 import org.mariotaku.twidere.model.ParcelableMedia
 
 class MediaContainerHelper(context: Context, attrs: AttributeSet?) : ConstraintHelper(context, attrs) {
+    val referencedCount: Int
+        get() = mCount
 
-
-    override fun updatePreLayout(container: ConstraintLayout) {
-        super.updatePreLayout(container)
-    }
-
-    override fun validateParams() {
-        super.validateParams()
-    }
 
 
     @SuppressLint("SwitchIntDef")
     fun layout1(@PreviewStyle style: Int, item: ParcelableMedia) {
         for (i in 0 until mCount) {
-            getViewAt(i).setVisible(i <= 0)
+            getReferencedViewAt(i).setVisible(i <= 0)
         }
-        val child = getViewAt(0)
+        val child = getReferencedViewAt(0)
 
         val lp = child.layoutParams as ConstraintLayout.LayoutParams
         lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
@@ -54,11 +48,11 @@ class MediaContainerHelper(context: Context, attrs: AttributeSet?) : ConstraintH
 
     fun layout3() {
         for (i in 0 until mCount) {
-            getViewAt(i).setVisible(i <= 2)
+            getReferencedViewAt(i).setVisible(i <= 2)
         }
-        val child0 = getViewAt(0)
-        val child1 = getViewAt(1)
-        val child2 = getViewAt(2)
+        val child0 = getReferencedViewAt(0)
+        val child1 = getReferencedViewAt(1)
+        val child2 = getReferencedViewAt(2)
 
         (child0.layoutParams as ConstraintLayout.LayoutParams).also {
             it.reset()
@@ -92,13 +86,13 @@ class MediaContainerHelper(context: Context, attrs: AttributeSet?) : ConstraintH
 
     fun layoutGrid(numColumns: Int, count: Int, dimensionRatio: String) {
         for (i in count until mCount) {
-            getViewAt(i).setVisible(false)
+            getReferencedViewAt(i).setVisible(false)
         }
 
         val widthPercent = 1f / numColumns
 
         for (i in 0 until count.coerceAtMost(mCount)) {
-            val view = getViewAt(i)
+            val view = getReferencedViewAt(i)
             view.setVisible(true)
 
             val row = i / numColumns
@@ -123,7 +117,7 @@ class MediaContainerHelper(context: Context, attrs: AttributeSet?) : ConstraintH
         }
     }
 
-    private fun getViewAt(index: Int): View {
+    fun getReferencedViewAt(index: Int): View {
         return (parent as ViewGroup).findViewById(mIds[index])
     }
 }

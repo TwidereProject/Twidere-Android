@@ -108,8 +108,7 @@ class AccountsSpinnerAdapter(
                     if (adapter.profileImageEnabled) {
                         icon.visibility = View.VISIBLE
                         icon.style = adapter.profileImageStyle
-                        adapter.requestManager.loadProfileImage(adapter.context, account.user,
-                                adapter.profileImageStyle).into(icon)
+                        adapter.requestManager.loadProfileImage(account.user, adapter.profileImageStyle).into(icon)
                     } else {
                         icon.visibility = View.GONE
                     }

@@ -24,15 +24,19 @@ import android.view.View
 import android.widget.ImageView
 import kotlinx.android.synthetic.main.layout_content_item_attachment_media.view.*
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
+import org.mariotaku.twidere.annotation.PreviewStyle
 import org.mariotaku.twidere.model.ParcelableStatus
+import org.mariotaku.twidere.util.glide.GlideApp
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 
-class MediaAttachmentHolder(parent: StatusViewHolder, adapter: IStatusesAdapter, view: ConstraintLayout) : StatusViewHolder.AttachmentHolder(parent, adapter, view) {
+class MediaAttachmentHolder(parent: StatusViewHolder, view: ConstraintLayout) : StatusViewHolder.AttachmentHolder(parent, view) {
+
+    private var mediaPreviewStyle: Int = PreviewStyle.CROP
 
     private val mediaContainerHelper = view.mediaContainerHelper
 
-    override fun setupViewOptions() {
-
+    override fun setupViewOptions(adapter: IStatusesAdapter) {
+        mediaPreviewStyle = adapter.mediaPreviewStyle
     }
 
     override fun setTextSize(textSize: Float) {
@@ -42,14 +46,17 @@ class MediaAttachmentHolder(parent: StatusViewHolder, adapter: IStatusesAdapter,
     override fun display(status: ParcelableStatus) {
         val media = status.attachment!!.media!!
         when (media.size) {
-            1 -> mediaContainerHelper.layout1(adapter.mediaPreviewStyle, media.first())
+            1 -> mediaContainerHelper.layout1(mediaPreviewStyle, media.first())
             2 -> mediaContainerHelper.layoutGrid(2, 2, "W,1:1")
             3 -> mediaContainerHelper.layout3()
             4 -> mediaContainerHelper.layoutGrid(2, 4, "W,1:2")
         }
         media.forEachIndexed { index, item ->
-            if (index >= view.childCount) return@forEachIndexed
-            adapter.requestManager.load(item.preview_url).into(view.getChildAt(index) as ImageView)
+            if (index >= mediaContainerHelper.referencedCount) return@forEachIndexed
+            val child = mediaContainerHelper.getReferencedViewAt(index) as ImageView
+            GlideApp.with(child)
+                    .load(item.preview_url)
+                    .into(child)
         }
         view.requestLayout()
     }

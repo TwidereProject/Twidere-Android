@@ -83,7 +83,7 @@ class UserAutoCompleteAdapter(
         text1.spannable = UserColorNameManager.get(context).getUserNickname(user.key, user.name)
         text2.spannable = "@${user.screen_name}"
         if (displayProfileImage) {
-            requestManager.loadProfileImage(context, user, profileImageStyle).into(icon)
+            requestManager.loadProfileImage(user, profileImageStyle).into(icon)
         } else {
             //TODO cancel image load
         }

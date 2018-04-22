@@ -263,9 +263,9 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         val summary = data.getSubtitle(context)
 
         @ImageShapeStyle val profileImageStyle: Int = PreferencesSingleton.get(this.context!!)[profileImageStyleKey]
-        Glide.with(this).loadProfileImage(context, data, profileImageStyle).into(conversationAvatar)
-        Glide.with(this).loadProfileImage(context, data, profileImageStyle, 0f,
-                0f, ProfileImageSize.REASONABLY_SMALL).into(appBarIcon)
+        Glide.with(this).loadProfileImage(data, profileImageStyle).into(conversationAvatar)
+        Glide.with(this).loadProfileImage(data, profileImageStyle, 0f, 0f,
+                ProfileImageSize.REASONABLY_SMALL).into(appBarIcon)
         appBarTitle.spannable = name
         conversationTitle.spannable = name
         if (summary != null) {

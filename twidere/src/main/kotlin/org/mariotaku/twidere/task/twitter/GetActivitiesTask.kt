@@ -12,7 +12,6 @@ import org.mariotaku.microblog.library.model.Paging
 import org.mariotaku.microblog.library.model.twitter.Activity.Action
 import org.mariotaku.microblog.library.model.twitter.InternalActivityCreator
 import org.mariotaku.sqliteqb.library.Expression
-import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_NOTIFY_CHANGE
 import org.mariotaku.twidere.annotation.AccountType
@@ -26,6 +25,7 @@ import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.ModelCreationConfig
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.GetActivitiesTaskEvent
@@ -56,7 +56,7 @@ abstract class GetActivitiesTask(
 
     protected abstract val contentUri: Uri
 
-    private val profileImageSize = context.getString(R.string.profile_image_size)
+    private val profileImageSize = ModelCreationConfig.obtain(context)
 
     override fun doLongOperation(param: ContentRefreshParam): List<Pair<GetTimelineResult<ParcelableActivity>?, Exception?>> {
         if (param.shouldAbort) return emptyList()

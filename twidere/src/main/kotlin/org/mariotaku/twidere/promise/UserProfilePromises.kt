@@ -34,16 +34,13 @@ import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.promise.accountTask
 import org.mariotaku.twidere.extension.promise.toastOnResult
-import org.mariotaku.twidere.model.AccountDetails
-import org.mariotaku.twidere.model.ParcelableMedia
-import org.mariotaku.twidere.model.ParcelableUser
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.util.HtmlEscapeHelper
 import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 
 class UserProfilePromises private constructor(val application: Application) {
 
-    private val profileImageSize: String = application.getString(R.string.profile_image_size)
+    private val profileImageSize = ModelCreationConfig.obtain(application)
 
     fun updateProfileImage(accountKey: UserKey, imageUri: Uri, deleteImage: Boolean): Promise<ParcelableUser, Exception> = accountTask(application, accountKey) { account ->
         return@accountTask UpdateStatusPromise.getBodyFromMedia(application, imageUri, ParcelableMedia.Type.IMAGE,
@@ -61,7 +58,7 @@ class UserProfilePromises private constructor(val application: Application) {
                     // https://dev.twitter.com/docs/api/1.1/post/account/update_profile_image
                     Thread.sleep(5000L)
                     return@use microBlog.verifyCredentials().toParcelable(account,
-                            profileImageSize = profileImageSize)
+                            creationConfig = profileImageSize)
                 }
             }
         }
@@ -81,7 +78,7 @@ class UserProfilePromises private constructor(val application: Application) {
                     // https://dev.twitter.com/docs/api/1.1/post/account/update_profile_image
                     Thread.sleep(5000L)
                     return@use microBlog.verifyCredentials().toParcelable(account,
-                            profileImageSize = profileImageSize)
+                            creationConfig = profileImageSize)
                 }
                 else -> {
                     throw APINotSupportedException("Update background image", account.type)
@@ -101,7 +98,7 @@ class UserProfilePromises private constructor(val application: Application) {
                 // https://dev.twitter.com/docs/api/1.1/post/account/update_profile_image
                 Thread.sleep(5000L)
                 return@accountTask microBlog.verifyCredentials().toParcelable(account,
-                        profileImageSize = profileImageSize)
+                        creationConfig = profileImageSize)
             }
             else -> {
                 throw APINotSupportedException("Remove banner", account.type)
@@ -122,7 +119,7 @@ class UserProfilePromises private constructor(val application: Application) {
                     // https://dev.twitter.com/docs/api/1.1/post/account/update_profile_image
                     Thread.sleep(5000L)
                     return@use microBlog.verifyCredentials().toParcelable(account,
-                            profileImageSize = profileImageSize)
+                            creationConfig = profileImageSize)
                 }
                 else -> {
                     throw APINotSupportedException("Update banner", account.type)
@@ -155,7 +152,7 @@ class UserProfilePromises private constructor(val application: Application) {
         profileUpdate.linkColor(update.linkColor)
         profileUpdate.backgroundColor(update.backgroundColor)
         return microBlog.updateProfile(profileUpdate).toParcelable(account,
-                profileImageSize = profileImageSize)
+                creationConfig = profileImageSize)
     }
 
     private fun updateMastodonProfile(account: AccountDetails, update: ProfileUpdate): ParcelableUser {

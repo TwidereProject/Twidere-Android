@@ -1207,11 +1207,10 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         })
         val defWidth = resources.displayMetrics.widthPixels
         Glide.with(this).loadProfileBanner(activity, user, defWidth).into(profileBanner)
-        Glide.with(this).loadOriginalProfileImage(activity, user, profileImage.style,
-                profileImage.cornerRadius, profileImage.cornerRadiusRatio)
-                .thumbnail(Glide.with(this).loadProfileImage(activity, user, profileImage.style,
-                        profileImage.cornerRadius, profileImage.cornerRadiusRatio,
-                        getString(R.string.profile_image_size))).into(profileImage)
+        Glide.with(this).loadOriginalProfileImage(user, profileImage.style, profileImage.cornerRadius,
+                profileImage.cornerRadiusRatio)
+                .thumbnail(Glide.with(this).loadProfileImage(user, profileImage.style, profileImage.cornerRadius,
+                        profileImage.cornerRadiusRatio, getString(R.string.profile_image_size))).into(profileImage)
 
         val userCreationDay = condition@ if (user.created_at >= 0) {
             val cal = Calendar.getInstance()

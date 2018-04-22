@@ -35,6 +35,7 @@ import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.list_item_status.view.*
 import org.mariotaku.ktextension.applyFontFamily
 import org.mariotaku.ktextension.hideIfEmpty
@@ -59,6 +60,7 @@ import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.placeholder.PlaceholderObject
+import org.mariotaku.twidere.singleton.BidiFormatterSingleton
 import org.mariotaku.twidere.task.CreateFavoriteTask
 import org.mariotaku.twidere.task.DestroyFavoriteTask
 import org.mariotaku.twidere.task.DestroyStatusTask
@@ -100,10 +102,10 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View, su
 
     private val attachmentHolder = when (subtype) {
         RecyclerViewTypes.STATUS_MEDIA -> {
-            MediaAttachmentHolder(this, adapter, attachmentContainer.inflate(R.layout.layout_content_item_attachment_media) as ConstraintLayout)
+            MediaAttachmentHolder(this, attachmentContainer.inflate(R.layout.layout_content_item_attachment_media) as ConstraintLayout)
         }
         RecyclerViewTypes.STATUS_QUOTE -> {
-            QuotedAttachmentHolder(this, adapter, attachmentContainer.inflate(R.layout.layout_content_item_attachment_quote) as ConstraintLayout)
+            QuotedAttachmentHolder(this, attachmentContainer.inflate(R.layout.layout_content_item_attachment_quote) as ConstraintLayout)
         }
         RecyclerViewTypes.STATUS_SUMMARY -> {
             SummaryAttachmentHolder(this, adapter, attachmentContainer.inflate(R.layout.layout_content_item_attachment_summary) as ConstraintLayout)
@@ -126,12 +128,11 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View, su
         val profileImageEnabled = adapter.profileImageEnabled
         profileImageView.visibility = if (profileImageEnabled) View.VISIBLE else View.GONE
 
-        adapter.requestManager.loadProfileImage(itemView.context, R.drawable.ic_profile_image_twidere,
-                adapter.profileImageStyle, profileImageView.cornerRadius,
-                profileImageView.cornerRadiusRatio).into(profileImageView)
+        adapter.requestManager.loadProfileImage(R.drawable.ic_profile_image_twidere, adapter.profileImageStyle,
+                profileImageView.cornerRadius, profileImageView.cornerRadiusRatio).into(profileImageView)
         nameView.name = TWIDERE_PREVIEW_NAME
         nameView.screenName = "@$TWIDERE_PREVIEW_SCREEN_NAME"
-        nameView.updateText(adapter.bidiFormatter)
+        nameView.updateText(BidiFormatterSingleton.get())
         if (adapter.linkHighlightingStyle == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
             textView.spannable = toPlainText(TWIDERE_PREVIEW_TEXT_HTML)
         } else {
@@ -191,8 +192,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View, su
             return
         }
         val context = itemView.context
-        val requestManager = adapter.requestManager
-        val linkify = adapter.twidereLinkify
         val formatter = adapter.bidiFormatter
         val colorNameManager = UserColorNameManager.get(context)
         val showCardActions = isCardActionsShown
@@ -262,9 +261,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View, su
 
         if (adapter.profileImageEnabled) {
             profileImageView.visibility = View.VISIBLE
-            requestManager.loadProfileImage(context, status, adapter.profileImageStyle,
-                    profileImageView.cornerRadius, profileImageView.cornerRadiusRatio,
-                    adapter.profileImageSize).into(profileImageView)
+            Glide.with(context).loadProfileImage(status, adapter.profileImageStyle, profileImageView.cornerRadius,
+                    profileImageView.cornerRadiusRatio, adapter.profileImageSize).into(profileImageView)
 
             profileTypeView.setImageResource(getUserTypeIconRes(status.user_is_verified, status.user_is_protected))
             profileTypeView.visibility = View.VISIBLE
@@ -392,7 +390,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View, su
         attachmentHolder?.setTextSize(textSize)
     }
 
-    fun setupViewOptions() {
+    fun setupViewOptions(adapter: IStatusesAdapter) {
         setTextSize(adapter.textSize)
 
         profileImageView.style = adapter.profileImageStyle
@@ -421,7 +419,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View, su
         nameView.applyFontFamily(adapter.lightFont)
         timeView.applyFontFamily(adapter.lightFont)
         textView.applyFontFamily(adapter.lightFont)
-        attachmentHolder?.setupViewOptions()
+        attachmentHolder?.setupViewOptions(adapter)
     }
 
     override fun playLikeAnimation(listener: LikeAnimationDrawable.OnLikedListener) {
@@ -511,9 +509,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View, su
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(this, icon, 0, 0, 0)
     }
 
-    abstract class AttachmentHolder(val parent: StatusViewHolder, val adapter: IStatusesAdapter, val view: ConstraintLayout) {
+    abstract class AttachmentHolder(val parent: StatusViewHolder, val view: ConstraintLayout) {
         open fun onClick(listener: IStatusViewHolder.StatusClickListener, holder: StatusViewHolder, v: View, position: Int) {}
-        open fun setupViewOptions() {}
+        open fun setupViewOptions(adapter: IStatusesAdapter) {}
         open fun setTextSize(textSize: Float) {}
         abstract fun display(status: ParcelableStatus)
     }

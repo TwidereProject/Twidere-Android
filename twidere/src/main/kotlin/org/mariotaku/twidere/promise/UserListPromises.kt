@@ -28,6 +28,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.promise.toastOnResult
 import org.mariotaku.twidere.extension.promise.twitterTask
+import org.mariotaku.twidere.model.ModelCreationConfig
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
@@ -38,11 +39,11 @@ import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 
 class UserListPromises private constructor(private val application: Application) {
 
-    private val profileImageSize: String = application.getString(R.string.profile_image_size)
+    private val profileImageSize = ModelCreationConfig.obtain(application)
 
     fun create(accountKey: UserKey, update: UserListUpdate): Promise<ParcelableUserList, Exception> = twitterTask(application, accountKey) { account, twitter ->
         return@twitterTask twitter.createUserList(update).toParcelable(accountKey,
-                profileImageSize = profileImageSize)
+                creationConfig = profileImageSize)
     }.toastOnResult(application) { list ->
         return@toastOnResult application.getString(R.string.created_list, list.name)
     }.successUi { list ->
@@ -51,7 +52,7 @@ class UserListPromises private constructor(private val application: Application)
 
     fun update(accountKey: UserKey, id: String, update: UserListUpdate): Promise<ParcelableUserList, Exception> = twitterTask(application, accountKey) { account, twitter ->
         return@twitterTask twitter.updateUserList(id, update).toParcelable(accountKey,
-                profileImageSize = profileImageSize)
+                creationConfig = profileImageSize)
     }.toastOnResult(application) { list ->
         return@toastOnResult application.getString(R.string.updated_list_details, list.name)
     }.successUi { list ->
@@ -60,7 +61,7 @@ class UserListPromises private constructor(private val application: Application)
 
     fun destroy(accountKey: UserKey, id: String): Promise<ParcelableUserList, Exception> = twitterTask(application, accountKey) { account, twitter ->
         return@twitterTask twitter.destroyUserList(id).toParcelable(accountKey,
-                profileImageSize = profileImageSize)
+                creationConfig = profileImageSize)
     }.toastOnResult(application) { list ->
         return@toastOnResult application.getString(R.string.deleted_list, list.name)
     }.successUi { list ->
@@ -69,7 +70,7 @@ class UserListPromises private constructor(private val application: Application)
 
     fun subscribe(accountKey: UserKey, id: String): Promise<ParcelableUserList, Exception> = twitterTask(application, accountKey) { account, twitter ->
         return@twitterTask twitter.createUserListSubscription(id).toParcelable(accountKey,
-                profileImageSize = profileImageSize)
+                creationConfig = profileImageSize)
     }.toastOnResult(application) { list ->
         return@toastOnResult application.getString(R.string.subscribed_to_list, list.name)
     }.successUi { list ->
@@ -78,7 +79,7 @@ class UserListPromises private constructor(private val application: Application)
 
     fun unsubscribe(accountKey: UserKey, id: String): Promise<ParcelableUserList, Exception> = twitterTask(application, accountKey) { account, twitter ->
         return@twitterTask twitter.destroyUserListSubscription(id).toParcelable(accountKey,
-                profileImageSize = profileImageSize)
+                creationConfig = profileImageSize)
     }.toastOnResult(application) { list ->
         return@toastOnResult application.getString(R.string.unsubscribed_from_list, list.name)
     }.successUi { list ->

@@ -93,10 +93,7 @@ import org.mariotaku.twidere.fragment.APIEditorDialogFragment
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.loader.DefaultAPIConfigLoader
-import org.mariotaku.twidere.model.CustomAPIConfig
-import org.mariotaku.twidere.model.ParcelableUser
-import org.mariotaku.twidere.model.SingleResponse
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.account.AccountExtras
 import org.mariotaku.twidere.model.account.MastodonAccountExtras
 import org.mariotaku.twidere.model.account.StatusNetAccountExtras
@@ -814,7 +811,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             var color = analyseUserProfileColor(apiUser)
             val (type, extras) = detectAccountType(context, apiUser, endpoint, auth, apiConfig.type)
             val accountKey = apiUser.key
-            val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
+            val user = apiUser.toParcelable(accountKey, type, creationConfig = profileImageSize)
             val am = AccountManager.get(context)
             val account = am.findAccount(accountKey)
             if (account != null) {
@@ -951,7 +948,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             var color = analyseUserProfileColor(apiUser)
             val (type, extras) = detectAccountType(activity, apiUser, endpoint, auth, apiConfig.type)
             val accountKey = apiUser.key
-            val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
+            val user = apiUser.toParcelable(accountKey, type, creationConfig = profileImageSize)
             val am = AccountManager.get(activity)
             val account = am.findAccount(accountKey)
             if (account != null) {
@@ -980,7 +977,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             var color = analyseUserProfileColor(apiUser)
             val (type, extras) = detectAccountType(activity, apiUser, endpoint, auth, apiConfig.type)
             val accountKey = apiUser.key
-            val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
+            val user = apiUser.toParcelable(accountKey, type, creationConfig = profileImageSize)
             val am = AccountManager.get(activity)
             val account = am.findAccount(accountKey)
             if (account != null) {
@@ -1007,7 +1004,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             var color = analyseUserProfileColor(apiUser)
             val (type, extras) = detectAccountType(activity, apiUser, endpoint, auth, apiConfig.type)
             val accountKey = apiUser.key
-            val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
+            val user = apiUser.toParcelable(accountKey, type, creationConfig = profileImageSize)
             val am = AccountManager.get(activity)
             val account = am.findAccount(accountKey)
             if (account != null) {
@@ -1071,7 +1068,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
     internal abstract class AbstractSignInTask(activity: SignInActivity) : AsyncTask<Any, Runnable, SingleResponse<SignInResponse>>() {
         protected val activityRef = WeakReference(activity)
 
-        protected val profileImageSize: String = activity.getString(R.string.profile_image_size)
+        protected val profileImageSize: ModelCreationConfig = ModelCreationConfig.obtain(activity)
 
         override final fun doInBackground(vararg args: Any?): SingleResponse<SignInResponse> {
             try {

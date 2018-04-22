@@ -36,20 +36,25 @@ import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_LINK_HIGHL
 import org.mariotaku.twidere.extension.model.applyTo
 import org.mariotaku.twidere.extension.model.user_acct
 import org.mariotaku.twidere.model.ParcelableStatus
+import org.mariotaku.twidere.singleton.BidiFormatterSingleton
 import org.mariotaku.twidere.util.ThemeUtils
+import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 import org.mariotaku.twidere.view.iface.IColorLabelView
 
-class QuotedAttachmentHolder(parent: StatusViewHolder, adapter: IStatusesAdapter, view: ConstraintLayout) : StatusViewHolder.AttachmentHolder(parent, adapter, view) {
+class QuotedAttachmentHolder(parent: StatusViewHolder, view: ConstraintLayout) : StatusViewHolder.AttachmentHolder(parent, view) {
 
     private val quotedNameView = view.quotedName
     private val quotedTextView = view.quotedText
     private val quotedMediaLabel = view.quotedMediaLabel
     private val quotedMediaPreview = view.quotedMediaPreview
 
-    override fun setupViewOptions() {
+    private var linkHighlightingStyle: Int = TwidereLinkify.VALUE_LINK_HIGHLIGHT_OPTION_CODE_BOTH
+
+    override fun setupViewOptions(adapter: IStatusesAdapter) {
         quotedMediaPreview.style = adapter.mediaPreviewStyle
+        linkHighlightingStyle = adapter.linkHighlightingStyle
 
         quotedNameView.nameFirst = adapter.nameFirst
 
@@ -83,7 +88,7 @@ class QuotedAttachmentHolder(parent: StatusViewHolder, adapter: IStatusesAdapter
 
             val quotedDisplayEnd = status.extras?.quoted_display_text_range?.getOrNull(1) ?: -1
             val quotedText: CharSequence
-            if (adapter.linkHighlightingStyle != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
+            if (linkHighlightingStyle != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
                 quotedText = SpannableStringBuilder.valueOf(quoted.text_unescaped)
                 quoted.spans?.applyTo(quotedText, status.extras?.emojis
                 )
@@ -110,7 +115,7 @@ class QuotedAttachmentHolder(parent: StatusViewHolder, adapter: IStatusesAdapter
 
 //            displayQuotedMedia(requestManager, status)
 
-            quotedNameView.updateText(adapter.bidiFormatter)
+            quotedNameView.updateText(BidiFormatterSingleton.get())
         } else {
             quotedNameView.visibility = View.GONE
             quotedTextView.visibility = View.VISIBLE

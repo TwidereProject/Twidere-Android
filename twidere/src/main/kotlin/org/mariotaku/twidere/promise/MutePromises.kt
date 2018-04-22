@@ -38,6 +38,7 @@ import org.mariotaku.twidere.extension.promise.notifyOnResult
 import org.mariotaku.twidere.extension.promise.thenGetAccount
 import org.mariotaku.twidere.extension.promise.toastOnResult
 import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.ModelCreationConfig
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
@@ -50,7 +51,7 @@ import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 
 class MutePromises(private val application: Application) {
 
-    private val profileImageSize: String = application.getString(R.string.profile_image_size)
+    private val profileImageSize = ModelCreationConfig.obtain(application)
 
     fun mute(accountKey: UserKey, userKey: UserKey, filterEverywhere: Boolean): Promise<ParcelableUser, Exception> = notifyCreatePromise(BusSingleton, FriendshipTaskEvent.Action.MUTE, accountKey, userKey)
             .thenGetAccount(application, accountKey).then { account ->
@@ -58,7 +59,7 @@ class MutePromises(private val application: Application) {
                     AccountType.TWITTER -> {
                         val twitter = account.newMicroBlogInstance(application, Twitter::class.java)
                         return@then twitter.createMute(userKey.id).toParcelable(account,
-                                profileImageSize = profileImageSize)
+                                creationConfig = profileImageSize)
                     }
                     AccountType.MASTODON -> {
                         val mastodon = account.newMicroBlogInstance(application, Mastodon::class.java)
@@ -109,7 +110,7 @@ class MutePromises(private val application: Application) {
                     AccountType.TWITTER -> {
                         val twitter = account.newMicroBlogInstance(application, Twitter::class.java)
                         return@then twitter.destroyMute(userKey.id).toParcelable(account,
-                                profileImageSize = profileImageSize)
+                                creationConfig = profileImageSize)
                     }
                     AccountType.MASTODON -> {
                         val mastodon = account.newMicroBlogInstance(application, Mastodon::class.java)

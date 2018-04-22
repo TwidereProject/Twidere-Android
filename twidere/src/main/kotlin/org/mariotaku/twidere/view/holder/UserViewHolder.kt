@@ -115,9 +115,8 @@ class UserViewHolder(
 
         if (adapter.profileImageEnabled) {
             profileImageView.setVisible(true)
-            adapter.requestManager.loadProfileImage(context, user, adapter.profileImageStyle,
-                    profileImageView.cornerRadius, profileImageView.cornerRadiusRatio,
-                    adapter.profileImageSize).into(profileImageView)
+            adapter.requestManager.loadProfileImage(user, adapter.profileImageStyle, profileImageView.cornerRadius,
+                    profileImageView.cornerRadiusRatio, adapter.profileImageSize).into(profileImageView)
         } else {
             profileImageView.setVisible(false)
         }
