@@ -6,7 +6,7 @@ buildscript {
         maven { url 'https://plugins.gradle.org/m2/' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.1'
+        classpath 'com.android.tools.build:gradle:3.1.2'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -43,12 +43,12 @@ subprojects {
             libVersions = [
                     Kotlin                 : "${kotlinVersion}",
                     MultiDex               : '1.0.3',
-                    SupportLib             : '27.1.0',
+                    SupportLib             : '27.1.1',
                     SupportTest            : '1.0.0',
                     MariotakuCommons       : '0.9.22',
                     RestFu                 : '0.9.61',
                     ObjectCursor           : '0.9.21',
-                    PlayServices           : '11.8.0',
+                    PlayServices           : '15.0.0',
                     PlayBilling            : '1.0',
                     MapsUtils              : '0.5',
                     DropboxCoreSdk         : '3.0.3',
@@ -78,9 +78,9 @@ subprojects {
                     ACRA                   : '4.9.2',
                     AbstractTask           : '0.9.8',
                     Dagger                 : '2.11',
-                    StethoBeanShellREPL    : '0.3',
+                    StethoBeanShellREPL    : '0.5',
                     ArchLifecycleExtensions: '1.1.1',
-                    ArchPaging             : '1.0.0-alpha7',
+                    ArchPaging             : '1.0.0-rc1',
                     ConstraintLayout       : '1.1.0-beta6',
                     MessageBubbleView      : '2.1',
             ]

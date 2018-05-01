@@ -78,8 +78,7 @@ class UserQrDialogFragment : BaseDialogFragment() {
     private val user: ParcelableUser
         get() = arguments!!.user!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    init {
         setStyle(STYLE_NO_FRAME, R.style.Theme_Twidere_Dark_Dialog_NoFrame)
     }
 
@@ -134,7 +133,8 @@ class UserQrDialogFragment : BaseDialogFragment() {
             background.recycle()
             return@then result
         }.successUi { bitmap ->
-            val fragment = weakThis?.takeIf { it.context != null && it.view != null } ?: return@successUi
+            val fragment = weakThis?.takeIf { it.context != null && it.view != null }
+                    ?: return@successUi
             fragment.qrView.visibility = View.VISIBLE
             fragment.qrProgress.visibility = View.GONE
             fragment.qrView.setImageDrawable(BitmapDrawable(fragment.resources, bitmap).apply {
