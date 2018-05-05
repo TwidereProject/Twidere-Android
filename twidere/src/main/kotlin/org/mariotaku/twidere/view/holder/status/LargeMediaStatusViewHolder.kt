@@ -44,6 +44,7 @@ import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
+import org.mariotaku.twidere.singleton.BidiFormatterSingleton
 import org.mariotaku.twidere.util.UnitConvertUtils
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.view.ProfileImageView
@@ -84,7 +85,7 @@ class LargeMediaStatusViewHolder(private val adapter: IStatusesAdapter, itemView
 
         nameView.name = status.user_name
         nameView.screenName = "@${status.user_screen_name}"
-        nameView.updateText(adapter.bidiFormatter)
+        nameView.updateText(BidiFormatterSingleton.get())
 
         timeView.time = status.timestamp
 

@@ -29,6 +29,7 @@ import org.mariotaku.twidere.adapter.iface.IGroupsAdapter
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.api.getUserHost
 import org.mariotaku.twidere.model.ParcelableGroup
+import org.mariotaku.twidere.singleton.BidiFormatterSingleton
 
 /**
  * Created by mariotaku on 15/4/29.
@@ -52,7 +53,7 @@ class GroupViewHolder(private val adapter: IGroupsAdapter<*>, itemView: View) : 
 
     fun displayGroup(group: ParcelableGroup) {
         val context = itemView.context
-        val formatter = adapter.bidiFormatter
+        val formatter = BidiFormatterSingleton.get()
 
         nameView.name = group.fullname
         nameView.screenName = "!${group.nickname}"

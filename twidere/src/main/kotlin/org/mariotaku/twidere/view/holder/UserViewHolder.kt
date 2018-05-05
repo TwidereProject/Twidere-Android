@@ -40,6 +40,7 @@ import org.mariotaku.twidere.extension.setVisible
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.placeholder.PlaceholderObject
 import org.mariotaku.twidere.promise.FriendshipPromises
+import org.mariotaku.twidere.singleton.BidiFormatterSingleton
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.Utils.getUserTypeIconRes
 import org.mariotaku.twidere.view.holder.status.StatusViewHolder
@@ -111,7 +112,7 @@ class UserViewHolder(
         nameView.placeholder = false
         nameView.name = manager.getUserNickname(user.key, user.name)
         nameView.screenName = "@${user.screen_name}"
-        nameView.updateText(adapter.bidiFormatter)
+        nameView.updateText(BidiFormatterSingleton.get())
 
         if (adapter.profileImageEnabled) {
             profileImageView.setVisible(true)

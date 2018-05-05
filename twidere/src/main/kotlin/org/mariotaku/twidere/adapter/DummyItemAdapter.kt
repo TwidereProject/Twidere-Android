@@ -2,7 +2,6 @@ package org.mariotaku.twidere.adapter
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.support.v4.text.BidiFormatter
 import android.support.v7.widget.RecyclerView
 import android.util.SparseBooleanArray
 import com.bumptech.glide.RequestManager
@@ -32,8 +31,6 @@ class DummyItemAdapter(
 
     @Inject
     lateinit var preferences: SharedPreferences
-    @Inject
-    override lateinit var bidiFormatter: BidiFormatter
 
     override var profileImageSize: String = context.getString(R.string.profile_image_size)
     override var profileImageStyle: Int = 0

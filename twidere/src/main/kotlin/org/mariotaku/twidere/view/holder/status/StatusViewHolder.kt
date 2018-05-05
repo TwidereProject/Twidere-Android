@@ -79,8 +79,7 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 /**
  * [ViewHolder] class for standard status list item
  */
-class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View, subtype: Int = 0) :
-        ViewHolder(itemView), IStatusViewHolder {
+class StatusViewHolder(var adapter: IStatusesAdapter, itemView: View, subtype: Int = 0) : ViewHolder(itemView), IStatusViewHolder {
 
     override val profileImageView: ShapedImageView = itemView.profileImage
     override val profileTypeView: ImageView = itemView.profileType
@@ -123,7 +122,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View, su
 
     private var statusClickListener: IStatusViewHolder.StatusClickListener? = null
 
-
     fun preview() {
         val profileImageEnabled = adapter.profileImageEnabled
         profileImageView.visibility = if (profileImageEnabled) View.VISIBLE else View.GONE
@@ -156,7 +154,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View, su
         val showCardActions = isCardActionsShown
         val actionButtonsAlpha = PlaceholderLineSpan.placeholderAlpha / 255f
 
-        adapter.requestManager.clear(profileImageView)
+        Glide.with(itemView).clear(profileImageView)
         profileImageView.setImageDrawable(null)
 
         timeView.time = ShortTimeView.PLACEHOLDER
@@ -192,7 +190,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View, su
             return
         }
         val context = itemView.context
-        val formatter = adapter.bidiFormatter
+        val formatter = BidiFormatterSingleton.get()
         val colorNameManager = UserColorNameManager.get(context)
         val showCardActions = isCardActionsShown
 
@@ -351,10 +349,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter, itemView: View, su
     }
 
     override fun onMediaClick(view: View, current: ParcelableMedia, accountKey: UserKey?, id: Long) {
-    }
-
-    fun setOnClickListeners() {
-        setStatusClickListener(adapter.statusClickListener)
     }
 
     override fun setStatusClickListener(listener: IStatusViewHolder.StatusClickListener?) {

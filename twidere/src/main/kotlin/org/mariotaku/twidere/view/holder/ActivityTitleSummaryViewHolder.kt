@@ -177,14 +177,9 @@ class ActivityTitleSummaryViewHolder(
         }
     }
 
-    fun setOnClickListeners() {
-        setActivityEventListener(adapter.activityEventListener!!)
-    }
-
-    fun setActivityEventListener(listener: IActivitiesAdapter.ActivityEventListener) {
+    fun setActivityEventListener(listener: IActivitiesAdapter.ActivityEventListener?) {
         activityEventListener = listener
         (itemContent as View).setOnClickListener(this)
-        //        ((View) itemContent).setOnLongClickListener(this);
 
     }
 

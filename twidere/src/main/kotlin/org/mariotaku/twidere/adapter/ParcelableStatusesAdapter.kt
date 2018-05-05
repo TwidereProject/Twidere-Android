@@ -267,7 +267,7 @@ class ParcelableStatusesAdapter(
         when (viewType) {
             RecyclerViewTypes.GAP -> {
                 val view = inflater.inflate(GapViewHolder.layoutResource, parent, false)
-                return GapViewHolder(this, view)
+                return GapViewHolder(view)
             }
             RecyclerViewTypes.LOAD_INDICATOR -> {
                 val view = inflater.inflate(R.layout.list_item_load_indicator, parent, false)
@@ -306,6 +306,20 @@ class ParcelableStatusesAdapter(
                 val status = getStatusInternal(loadAround = true, position = position)
                 val loading = gapLoadingIds.any { it.accountKey == status.account_key && it.id == status.id }
                 (holder as GapViewHolder).display(loading)
+            }
+        }
+    }
+
+    override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
+        when (holder.itemViewType) {
+            in RecyclerViewTypes.STATUS_TYPES -> {
+                holder as StatusViewHolder
+                holder.adapter = this
+                holder.setStatusClickListener(statusClickListener)
+            }
+            RecyclerViewTypes.GAP -> {
+                holder as GapViewHolder
+                holder.clickListener = statusClickListener
             }
         }
     }
@@ -352,6 +366,13 @@ class ParcelableStatusesAdapter(
             }
         }
         return null
+    }
+
+    override fun updateItemCounts() {
+        itemCounts[ITEM_INDEX_LOAD_START_INDICATOR] = if (LoadMorePosition.START in loadMoreIndicatorPosition) 1 else 0
+        itemCounts[ITEM_INDEX_FILTER_HEADER] = if (timelineFilter != null) 1 else 0
+        itemCounts[ITEM_INDEX_PINNED_STATUS] = pinnedStatuses?.size ?: 0
+        itemCounts[ITEM_INDEX_LOAD_END_INDICATOR] = if (LoadMorePosition.END in loadMoreIndicatorPosition) 1 else 0
     }
 
     fun isStatus(position: Int): Boolean {
@@ -408,13 +429,6 @@ class ParcelableStatusesAdapter(
         throw IndexOutOfBoundsException("index: $position, valid range is $validStart..$validEnd")
     }
 
-    override fun updateItemCounts() {
-        itemCounts[ITEM_INDEX_LOAD_START_INDICATOR] = if (LoadMorePosition.START in loadMoreIndicatorPosition) 1 else 0
-        itemCounts[ITEM_INDEX_FILTER_HEADER] = if (timelineFilter != null) 1 else 0
-        itemCounts[ITEM_INDEX_PINNED_STATUS] = pinnedStatuses?.size ?: 0
-        itemCounts[ITEM_INDEX_LOAD_END_INDICATOR] = if (LoadMorePosition.END in loadMoreIndicatorPosition) 1 else 0
-    }
-
     companion object {
 
         const val ITEM_INDEX_LOAD_START_INDICATOR = 0
@@ -429,21 +443,18 @@ class ParcelableStatusesAdapter(
                 TimelineStyle.STAGGERED -> {
                     val view = inflater.inflate(MediaStatusViewHolder.layoutResource, parent, false)
                     val holder = MediaStatusViewHolder(adapter, view)
-                    holder.setOnClickListeners()
                     holder.setupViewOptions()
                     return holder
                 }
                 TimelineStyle.PLAIN -> {
                     val view = inflater.inflate(StatusViewHolder.layoutResource, parent, false)
                     val holder = StatusViewHolder(adapter, view, viewType)
-                    holder.setOnClickListeners()
                     holder.setupViewOptions(adapter)
                     return holder
                 }
                 TimelineStyle.GALLERY -> {
                     val view = inflater.inflate(LargeMediaStatusViewHolder.layoutResource, parent, false)
                     val holder = LargeMediaStatusViewHolder(adapter, view)
-                    holder.setOnClickListeners()
                     holder.setupViewOptions()
                     return holder
                 }

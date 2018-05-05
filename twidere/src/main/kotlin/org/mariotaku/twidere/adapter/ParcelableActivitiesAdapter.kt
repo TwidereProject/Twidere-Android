@@ -35,6 +35,8 @@ import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.contains
 import org.mariotaku.ktextension.rangeOfSize
+import org.mariotaku.ktextension.toInt
+import org.mariotaku.ktextension.weak
 import org.mariotaku.microblog.library.model.twitter.Activity.Action
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.callback.ItemCountsAdapterListUpdateCallback
@@ -64,7 +66,6 @@ import org.mariotaku.twidere.view.holder.GapViewHolder
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 import org.mariotaku.twidere.view.holder.status.StatusViewHolder
-import java.lang.ref.WeakReference
 import java.util.*
 
 class ParcelableActivitiesAdapter(
@@ -181,13 +182,12 @@ class ParcelableActivitiesAdapter(
             RecyclerViewTypes.ACTIVITY_TITLE_SUMMARY -> {
                 val view = inflater.inflate(R.layout.list_item_activity_summary_compact, parent, false)
                 val holder = ActivityTitleSummaryViewHolder(view, this)
-                holder.setOnClickListeners()
                 holder.setupViewOptions()
                 return holder
             }
             RecyclerViewTypes.GAP -> {
                 val view = inflater.inflate(GapViewHolder.layoutResource, parent, false)
-                return GapViewHolder(this, view)
+                return GapViewHolder(view)
             }
             RecyclerViewTypes.LOAD_INDICATOR -> {
                 val view = inflater.inflate(R.layout.list_item_load_indicator, parent, false)
@@ -225,6 +225,24 @@ class ParcelableActivitiesAdapter(
                 (holder as GapViewHolder).display(loading)
             }
             RecyclerViewTypes.EMPTY -> {
+            }
+        }
+    }
+
+    override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
+        when (holder.itemViewType) {
+            in RecyclerViewTypes.STATUS_TYPES -> {
+                holder as StatusViewHolder
+                holder.adapter = statusAdapterDelegate
+                holder.setStatusClickListener(eventListener)
+            }
+            RecyclerViewTypes.ACTIVITY_TITLE_SUMMARY -> {
+                holder as ActivityTitleSummaryViewHolder
+                holder.setActivityEventListener(eventListener)
+            }
+            RecyclerViewTypes.GAP -> {
+                holder as GapViewHolder
+                holder.clickListener = eventListener
             }
         }
     }
@@ -270,11 +288,7 @@ class ParcelableActivitiesAdapter(
     }
 
     override fun updateItemCounts() {
-        itemCounts[1] = if (LoadMorePosition.END in loadMoreIndicatorPosition) 1 else 0
-    }
-
-    fun setListener(listener: ActivityAdapterListener) {
-        activityClickListener = listener
+        itemCounts[1] = (LoadMorePosition.END in loadMoreIndicatorPosition).toInt()
     }
 
     fun findPositionBySortTimestamp(timestamp: Long): Int {
@@ -352,27 +366,27 @@ class ParcelableActivitiesAdapter(
             IStatusViewHolder.StatusClickListener, IGapSupportedAdapter.GapClickListener,
             IActivitiesAdapter.ActivityEventListener {
 
-        val adapterRef = WeakReference(adapter)
+        val adapterRef by weak(adapter)
 
         override fun onGapClick(holder: GapViewHolder, position: Int) {
-            val adapter = adapterRef.get() ?: return
+            val adapter = adapterRef ?: return
             val activity = adapter.getActivity(position)
             adapter.addGapLoadingId(ObjectId(activity.account_key, activity.id))
             adapter.activityClickListener?.onGapClick(holder, position)
         }
 
         override fun onItemActionClick(holder: RecyclerView.ViewHolder, id: Int, position: Int) {
-            val listener = adapterRef.get()?.activityClickListener ?: return
+            val listener = adapterRef?.activityClickListener ?: return
             listener.onStatusActionClick(holder as IStatusViewHolder, id, position)
         }
 
         override fun onItemActionLongClick(holder: RecyclerView.ViewHolder, id: Int, position: Int): Boolean {
-            val listener = adapterRef.get()?.activityClickListener ?: return false
+            val listener = adapterRef?.activityClickListener ?: return false
             return listener.onStatusActionLongClick(holder as IStatusViewHolder, id, position)
         }
 
         override fun onUserProfileClick(holder: IStatusViewHolder, position: Int) {
-            val adapter = adapterRef.get() ?: return
+            val adapter = adapterRef ?: return
             val status = adapter.getActivity(position).activityStatus ?: return
             IntentUtils.openUserProfile(adapter.context, status.account_key, status.user_key,
                     status.user_screen_name, status.extras?.user_statusnet_profile_url,
@@ -380,33 +394,33 @@ class ParcelableActivitiesAdapter(
         }
 
         override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
-            val adapter = adapterRef.get() ?: return
+            val adapter = adapterRef ?: return
             adapter.activityClickListener?.onStatusClick(holder, position)
         }
 
         override fun onStatusLongClick(holder: IStatusViewHolder, position: Int): Boolean {
-            val listener = adapterRef.get()?.activityClickListener ?: return false
+            val listener = adapterRef?.activityClickListener ?: return false
             return listener.onStatusLongClick(holder, position)
         }
 
 
         override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
-            val adapter = adapterRef.get() ?: return
+            val adapter = adapterRef ?: return
             adapter.activityClickListener?.onQuotedStatusClick(holder, position)
         }
 
         override fun onMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia, statusPosition: Int) {
-            val adapter = adapterRef.get() ?: return
+            val adapter = adapterRef ?: return
             adapter.activityClickListener?.onMediaClick(holder, view, current, statusPosition)
         }
 
         override fun onActivityClick(holder: ActivityTitleSummaryViewHolder, position: Int) {
-            val adapter = adapterRef.get() ?: return
+            val adapter = adapterRef ?: return
             adapter.activityClickListener?.onActivityClick(holder, position)
         }
 
         override fun onItemMenuClick(holder: RecyclerView.ViewHolder, menuView: View, position: Int) {
-            val adapter = adapterRef.get() ?: return
+            val adapter = adapterRef ?: return
             adapter.activityClickListener?.onStatusMenuClick(holder as StatusViewHolder, menuView, position)
         }
     }

@@ -32,6 +32,7 @@ import org.mariotaku.twidere.extension.model.notificationDisabled
 import org.mariotaku.twidere.extension.model.timestamp
 import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
+import org.mariotaku.twidere.singleton.BidiFormatterSingleton
 import org.mariotaku.twidere.util.UserColorNameManager
 
 /**
@@ -84,7 +85,7 @@ class MessageEntryViewHolder(itemView: View, val adapter: MessagesEntriesAdapter
         this.time.time = conversation.timestamp
         this.name.name = name
         this.name.screenName = secondaryName
-        this.name.updateText(adapter.bidiFormatter)
+        this.name.updateText(BidiFormatterSingleton.get())
         this.text.spannable = conversation.getSummaryText(itemView.context,
                 manager, adapter.nameFirst)
         if (conversation.is_outgoing) {

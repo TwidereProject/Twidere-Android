@@ -19,10 +19,8 @@
 
 package org.mariotaku.twidere.adapter.iface
 
-import android.support.v4.text.BidiFormatter
 import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.annotation.ImageShapeStyle
-import org.mariotaku.twidere.util.UserColorNameManager
 
 interface IContentAdapter {
 
@@ -38,8 +36,6 @@ interface IContentAdapter {
     val textSize: Float
 
     val requestManager: RequestManager
-
-    val bidiFormatter: BidiFormatter
 
     val showAbsoluteTime: Boolean
 

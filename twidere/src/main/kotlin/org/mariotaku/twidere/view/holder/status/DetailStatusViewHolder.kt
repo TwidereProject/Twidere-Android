@@ -59,6 +59,7 @@ import org.mariotaku.twidere.menu.FavoriteItemProvider
 import org.mariotaku.twidere.menu.RetweetItemProvider
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
+import org.mariotaku.twidere.singleton.BidiFormatterSingleton
 import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.twitter.card.StatusCardViewFactory
@@ -101,7 +102,7 @@ class DetailStatusViewHolder(
         if (account == null || status == null) return
         val fragment = adapter.fragment
         val context = adapter.context
-        val formatter = adapter.bidiFormatter
+        val formatter = BidiFormatterSingleton.get()
         val colorNameManager = UserColorNameManager.get(adapter.context)
 
         linkClickHandler.status = status
@@ -726,7 +727,7 @@ class DetailStatusViewHolder(
                 labelView.primaryText = count.count.toString(Locale.getDefault())
                 labelView.secondaryText = label
 
-                labelView.updateText(adapter.bidiFormatter)
+                labelView.updateText(BidiFormatterSingleton.get())
             }
         }
 

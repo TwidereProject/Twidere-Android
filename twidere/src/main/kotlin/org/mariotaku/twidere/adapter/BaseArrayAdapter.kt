@@ -48,8 +48,6 @@ open class BaseArrayAdapter<T>(
     val linkify: TwidereLinkify
 
     @Inject
-    override lateinit var bidiFormatter: BidiFormatter
-    @Inject
     lateinit var multiSelectManager: MultiSelectManager
 
     final override val profileImageSize: String = context.getString(R.string.profile_image_size)

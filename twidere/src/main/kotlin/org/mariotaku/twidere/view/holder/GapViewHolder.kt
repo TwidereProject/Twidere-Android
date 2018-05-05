@@ -21,7 +21,6 @@ package org.mariotaku.twidere.view.holder
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import android.view.View.OnClickListener
 import kotlinx.android.synthetic.main.card_item_gap.view.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter
@@ -29,21 +28,19 @@ import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter
 /**
  * Created by mariotaku on 14/12/3.
  */
-class GapViewHolder(
-        private val adapter: IGapSupportedAdapter,
-        itemView: View
-) : RecyclerView.ViewHolder(itemView), OnClickListener {
+class GapViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+    var clickListener: IGapSupportedAdapter.GapClickListener? = null
 
     private val gapText = itemView.gapText
+
     private val gapProgress = itemView.gapProgress
 
     init {
-        itemView.setOnClickListener(this)
-    }
-
-    override fun onClick(v: View) {
-        adapter.gapClickListener?.onGapClick(this, layoutPosition)
-        display(true)
+        itemView.setOnClickListener {
+            clickListener?.onGapClick(this, layoutPosition)
+            display(true)
+        }
     }
 
     fun display(showProgress: Boolean) {
