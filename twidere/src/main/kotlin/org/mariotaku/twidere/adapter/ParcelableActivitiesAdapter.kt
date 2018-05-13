@@ -176,7 +176,6 @@ class ParcelableActivitiesAdapter(
             RecyclerViewTypes.STATUS -> {
                 val holder = ParcelableStatusesAdapter.createStatusViewHolder(statusAdapterDelegate,
                         inflater, parent, TimelineStyle.PLAIN)
-                holder.setStatusClickListener(eventListener)
                 return holder as RecyclerView.ViewHolder
             }
             RecyclerViewTypes.ACTIVITY_TITLE_SUMMARY -> {

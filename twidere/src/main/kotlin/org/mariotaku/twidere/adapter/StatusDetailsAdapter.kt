@@ -49,9 +49,11 @@ import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler
 import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.view.holder.EmptyViewHolder
+import org.mariotaku.twidere.view.holder.GapViewHolder
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 import org.mariotaku.twidere.view.holder.status.DetailStatusViewHolder
+import org.mariotaku.twidere.view.holder.status.StatusViewHolder
 
 class StatusDetailsAdapter(
         val fragment: StatusFragment
@@ -430,6 +432,20 @@ class StatusDetailsAdapter(
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         super.onDetachedFromRecyclerView(recyclerView)
         this.recyclerView = null
+    }
+
+    override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
+        when (holder.itemViewType) {
+            in RecyclerViewTypes.STATUS_TYPES -> {
+                holder as StatusViewHolder
+                holder.adapter = this
+                holder.setStatusClickListener(statusClickListener)
+            }
+            RecyclerViewTypes.GAP -> {
+                holder as GapViewHolder
+                holder.clickListener = statusClickListener
+            }
+        }
     }
 
     private fun setTypeCount(idx: Int, size: Int) {

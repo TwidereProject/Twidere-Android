@@ -17,6 +17,7 @@ import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler
 import org.mariotaku.twidere.util.TwidereLinkify
+import org.mariotaku.twidere.view.holder.GapViewHolder
 import org.mariotaku.twidere.view.holder.HashtagViewHolder
 import org.mariotaku.twidere.view.holder.UserListViewHolder
 import org.mariotaku.twidere.view.holder.UserViewHolder
@@ -78,6 +79,20 @@ class VariousItemsAdapter(
             }
             RecyclerViewTypes.HASHTAG -> {
                 (holder as HashtagViewHolder).display(obj as ParcelableHashtag)
+            }
+        }
+    }
+
+    override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
+        when (holder.itemViewType) {
+            in RecyclerViewTypes.STATUS_TYPES -> {
+                holder as StatusViewHolder
+                holder.adapter = dummyAdapter
+                holder.setStatusClickListener(dummyAdapter.statusClickListener)
+            }
+            RecyclerViewTypes.GAP -> {
+                holder as GapViewHolder
+                holder.clickListener = dummyAdapter.gapClickListener
             }
         }
     }

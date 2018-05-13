@@ -313,8 +313,10 @@ class ParcelableStatusesAdapter(
     override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
         when (holder.itemViewType) {
             in RecyclerViewTypes.STATUS_TYPES -> {
-                holder as StatusViewHolder
-                holder.adapter = this
+                if (holder is StatusViewHolder) {
+                    holder.adapter = this
+                }
+                holder as IStatusViewHolder
                 holder.setStatusClickListener(statusClickListener)
             }
             RecyclerViewTypes.GAP -> {

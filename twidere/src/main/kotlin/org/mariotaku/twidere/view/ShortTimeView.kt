@@ -43,6 +43,7 @@ class ShortTimeView(
     private val ticker = TickerRunnable(this)
 
     private val invalidateTimeRunnable = Runnable {
+        if (!isAttachedToWindow) return@Runnable
         val time = this.time
         if (time < 0) return@Runnable
         val label = getTimeLabel(context, time, showAbsoluteTime)
