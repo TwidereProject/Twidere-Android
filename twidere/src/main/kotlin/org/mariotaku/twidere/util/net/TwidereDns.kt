@@ -26,15 +26,18 @@ import android.util.TimingLogger
 import okhttp3.Dns
 import org.mariotaku.ktextension.toIntOr
 import org.mariotaku.twidere.BuildConfig
+import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.TwidereConstants.HOST_MAPPING_PREFERENCES_NAME
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.*
+import org.mariotaku.twidere.singleton.PreferencesSingleton
+import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
+import org.mariotaku.twidere.util.preference.PreferenceChangeNotifier
 import org.xbill.DNS.*
 import java.io.IOException
 import java.net.InetAddress
 import java.net.UnknownHostException
 import java.util.*
 
-class TwidereDns(val context: Context, private val preferences: SharedPreferences) : Dns {
+class TwidereDns private constructor(val context: Context) : Dns {
 
     private val hostMapping = context.getSharedPreferences(HOST_MAPPING_PREFERENCES_NAME,
             Context.MODE_PRIVATE)
@@ -44,6 +47,11 @@ class TwidereDns(val context: Context, private val preferences: SharedPreference
     private var useResolver: Boolean = false
 
     init {
+        PreferenceChangeNotifier.get(context).register(KEY_DNS_SERVER, KEY_TCP_DNS_QUERY,
+                KEY_BUILTIN_DNS_RESOLVER) {
+            reloadDnsSettings()
+        }
+
         reloadDnsSettings()
     }
 
@@ -75,6 +83,7 @@ class TwidereDns(val context: Context, private val preferences: SharedPreference
 
     fun reloadDnsSettings() {
         this.resolver = null
+        val preferences = PreferencesSingleton.get(context)
         useResolver = preferences.getBoolean(KEY_BUILTIN_DNS_RESOLVER, false)
     }
 
@@ -188,7 +197,7 @@ class TwidereDns(val context: Context, private val preferences: SharedPreference
             if (hostMatches(host, key)) {
                 val value = value1 as String
                 val resolved = getResolvedIPAddress(origHost, value) ?: // Maybe another hostname
-                        return getFromMappingInternal(value, origHost, true)
+                return getFromMappingInternal(value, origHost, true)
                 return listOf(resolved)
             }
         }
@@ -197,9 +206,10 @@ class TwidereDns(val context: Context, private val preferences: SharedPreference
 
     private fun getResolver(): Resolver {
         return this.resolver ?: run {
+            val preferences = PreferencesSingleton.get(context)
             val tcp = preferences.getBoolean(KEY_TCP_DNS_QUERY, false)
-            val servers = preferences.getString(KEY_DNS_SERVER, null)?.split(';', ',', ' ') ?:
-                    SystemDnsFetcher.get(context)
+            val servers = preferences.getString(KEY_DNS_SERVER, null)?.split(';', ',', ' ')
+                    ?: SystemDnsFetcher.get(context)
             val resolvers = servers?.mapNotNull {
                 val segs = it.split("#", limit = 2)
                 if (segs.isEmpty()) return@mapNotNull null
@@ -232,7 +242,7 @@ class TwidereDns(val context: Context, private val preferences: SharedPreference
         return listOf(resolved)
     }
 
-    companion object {
+    companion object : ApplicationContextSingletonHolder<TwidereDns>(::TwidereDns) {
 
         private val RESOLVER_LOGTAG = "TwidereDns"
 

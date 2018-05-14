@@ -36,17 +36,16 @@ import dagger.Module
 import dagger.Provides
 import okhttp3.Cache
 import okhttp3.ConnectionPool
-import okhttp3.Dns
 import okhttp3.OkHttpClient
 import org.mariotaku.mediaviewer.library.FileCache
 import org.mariotaku.mediaviewer.library.MediaDownloader
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.restfu.okhttp3.OkHttpRestClient
 import org.mariotaku.twidere.Constants.*
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_CACHE_SIZE_LIMIT
 import org.mariotaku.twidere.extension.model.load
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.singleton.BusSingleton
+import org.mariotaku.twidere.singleton.CacheSingleton
 import org.mariotaku.twidere.taskcontroller.refresh.RefreshTaskController
 import org.mariotaku.twidere.taskcontroller.sync.JobSchedulerSyncController
 import org.mariotaku.twidere.taskcontroller.sync.LegacySyncController
@@ -131,8 +130,9 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun restHttpClient(prefs: SharedPreferences, dns: Dns, connectionPool: ConnectionPool,
-            cache: Cache): RestHttpClient {
+    fun restHttpClient(prefs: SharedPreferences): RestHttpClient {
+        val dns = TwidereDns.get(application)
+        val cache = CacheSingleton.get(application)
         val conf = HttpClientFactory.HttpClientConfiguration(prefs)
         val client = HttpClientFactory.createRestHttpClient(conf, dns, cache)
         PreferenceChangeNotifier.get(application).register(KEY_ENABLE_PROXY, KEY_PROXY_ADDRESS, KEY_PROXY_TYPE,
@@ -189,16 +189,6 @@ class ApplicationModule(private val application: Application) {
             preloader.reloadOptions(preferences)
         }
         return preloader
-    }
-
-    @Provides
-    @Singleton
-    fun dns(preferences: SharedPreferences): Dns {
-        val dns = TwidereDns(application, preferences)
-        PreferenceChangeNotifier.get(application).register(KEY_DNS_SERVER, KEY_TCP_DNS_QUERY, KEY_BUILTIN_DNS_RESOLVER) {
-            dns.reloadDnsSettings()
-        }
-        return dns
     }
 
     @Provides
@@ -292,8 +282,9 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun okHttpClient(preferences: SharedPreferences, dns: Dns, connectionPool: ConnectionPool,
-            cache: Cache): OkHttpClient {
+    fun okHttpClient(preferences: SharedPreferences): OkHttpClient {
+        val dns = TwidereDns.get(application)
+        val cache = CacheSingleton.get(application)
         val conf = HttpClientFactory.HttpClientConfiguration(preferences)
         val builder = OkHttpClient.Builder()
         HttpClientFactory.initOkHttpClient(conf, builder, dns, cache)
@@ -302,7 +293,9 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun dataSourceFactory(preferences: SharedPreferences, dns: Dns, cache: Cache): DataSource.Factory {
+    fun dataSourceFactory(preferences: SharedPreferences): DataSource.Factory {
+        val dns = TwidereDns.get(application)
+        val cache = CacheSingleton.get(application)
         val conf = HttpClientFactory.HttpClientConfiguration(preferences)
         val builder = OkHttpClient.Builder()
         HttpClientFactory.initOkHttpClient(conf, builder, dns, cache)
@@ -312,10 +305,8 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun cache(preferences: SharedPreferences): Cache {
-        val cacheSizeMB = preferences.getInt(KEY_CACHE_SIZE_LIMIT, 300).coerceIn(100..500)
-        // Convert to bytes
-        return Cache(getCacheDir("network", cacheSizeMB * 1048576L), cacheSizeMB * 1048576L)
+    fun cache(): Cache {
+        return CacheSingleton.get(application)
     }
 
     @Provides

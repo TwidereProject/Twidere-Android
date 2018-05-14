@@ -25,7 +25,6 @@ import android.support.v4.app.Fragment
 import android.support.v4.text.BidiFormatter
 import android.view.View
 import nl.komponents.kovenant.Promise
-import okhttp3.Dns
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
@@ -61,8 +60,6 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     lateinit var gifShareProvider: GifShareProvider
     @Inject
     lateinit var restHttpClient: RestHttpClient
-    @Inject
-    lateinit var dns: Dns
     @Inject
     lateinit var syncPreferences: SyncPreferences
     @Inject

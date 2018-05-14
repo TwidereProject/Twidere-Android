@@ -20,14 +20,11 @@
 package org.mariotaku.twidere.fragment
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.support.v4.app.DialogFragment
 import nl.komponents.kovenant.Promise
-import okhttp3.Dns
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.dagger.component.GeneralComponent
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
-import org.mariotaku.twidere.util.DebugModeUtils
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.sync.DataSyncProvider
@@ -37,8 +34,6 @@ open class BaseDialogFragment : DialogFragment(), IBaseFragment<BaseDialogFragme
 
     @Inject
     lateinit var keyboardShortcutsHandler: KeyboardShortcutsHandler
-    @Inject
-    lateinit var dns: Dns
     @Inject
     lateinit var extraFeaturesService: ExtraFeaturesService
     @Inject

@@ -23,6 +23,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import org.mariotaku.twidere.TwidereConstants
+import org.mariotaku.twidere.util.Utils
+import java.io.File
 import java.util.*
 
 val Context.defaultSharedPreferences: SharedPreferences
@@ -35,4 +37,9 @@ fun Context.overriding(withLocale: Locale): Context {
     } else {
         this
     }
+}
+
+fun Context.getCacheDir(dirName: String, sizeInBytes: Long): File {
+    return Utils.getExternalCacheDir(this, dirName, sizeInBytes)
+            ?: Utils.getInternalCacheDir(this, dirName)
 }

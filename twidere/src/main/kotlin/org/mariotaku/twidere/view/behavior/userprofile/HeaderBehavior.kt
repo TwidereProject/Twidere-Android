@@ -42,6 +42,7 @@ import org.mariotaku.twidere.constant.themeBackgroundOptionKey
 import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.extension.view.measureChildIgnoringInsets
 import org.mariotaku.twidere.graphic.drawable.userprofile.ActionBarDrawable
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.ThemeUtils
 
 internal class HeaderBehavior(context: Context, attrs: AttributeSet? = null) :
@@ -54,7 +55,7 @@ internal class HeaderBehavior(context: Context, attrs: AttributeSet? = null) :
 
     init {
         cardBackgroundColor = if (context.hasApplication) {
-            val preferences = DependencyHolder.get(context).preferences
+            val preferences = PreferencesSingleton.get(context)
             ThemeUtils.getCardBackgroundColor(context,
                     preferences[themeBackgroundOptionKey], preferences[themeBackgroundAlphaKey])
         } else {

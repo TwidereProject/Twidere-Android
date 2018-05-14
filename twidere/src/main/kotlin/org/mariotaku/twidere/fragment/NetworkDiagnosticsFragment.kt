@@ -39,6 +39,7 @@ import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.restfu.headers
 import org.mariotaku.twidere.extension.restfu.set
 import org.mariotaku.twidere.model.account.cred.OAuthCredentials
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import org.mariotaku.twidere.util.net.SystemDnsFetcher
@@ -106,9 +107,8 @@ class NetworkDiagnosticsFragment : BaseFragment() {
             logPrintln("Text below may have personal information, BE CAREFUL TO MAKE IT PUBLIC",
                     LogText.State.WARNING)
             logPrintln()
-            val holder = DependencyHolder.get(context)
-            val dns = holder.dns
-            val prefs = holder.preferences
+            val dns = TwidereDns.get(context)
+            val prefs = PreferencesSingleton.get(context)
             logPrintln(("Network preferences"))
             logPrintln(("using_resolver: ${prefs.getBoolean(KEY_BUILTIN_DNS_RESOLVER, false)}"))
             logPrintln(("tcp_dns_query: ${prefs.getBoolean(KEY_TCP_DNS_QUERY, false)}"))

@@ -32,7 +32,6 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Process
 import android.support.v4.text.BidiFormatter
-import okhttp3.Dns
 import org.mariotaku.ktextension.isNullOrEmpty
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.toLongOr
@@ -68,8 +67,6 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
     internal lateinit var readStateManager: ReadStateManager
     @Inject
     internal lateinit var notificationManager: NotificationManagerWrapper
-    @Inject
-    internal lateinit var dns: Dns
     @Inject
     internal lateinit var bidiFormatter: BidiFormatter
     @Inject

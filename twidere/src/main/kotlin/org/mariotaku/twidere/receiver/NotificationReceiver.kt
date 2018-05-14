@@ -32,6 +32,7 @@ import org.mariotaku.twidere.constant.promotionsEnabledKey
 import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.promise.MessagePromises
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.Utils
 
 /**
@@ -84,7 +85,7 @@ class NotificationReceiver : BroadcastReceiver() {
 
     private fun setPromotionsEnabled(context: Context, intent: Intent, enabled: Boolean) {
         val holder = DependencyHolder.get(context)
-        holder.preferences[promotionsEnabledKey] = enabled
+        PreferencesSingleton.get(context)[promotionsEnabledKey] = enabled
         val notificationId = intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1)
         if (notificationId != -1) {
             holder.notificationManager.cancel(notificationId)

@@ -20,26 +20,20 @@
 package org.mariotaku.twidere.dagger
 
 import android.content.Context
-import android.content.SharedPreferences
-import okhttp3.Cache
-import okhttp3.ConnectionPool
-import okhttp3.Dns
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.dagger.component.GeneralComponent
-import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.ActivityTracker
-import org.mariotaku.twidere.util.ExternalThemeManager
 import org.mariotaku.twidere.util.NotificationManagerWrapper
 import org.mariotaku.twidere.util.ReadStateManager
+import org.mariotaku.twidere.util.lang.ApplicationContextSingletonHolder
 import org.mariotaku.twidere.util.media.MediaPreloader
 import org.mariotaku.twidere.util.media.ThumborWrapper
-import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import javax.inject.Inject
 
 /**
  * Created by mariotaku on 15/12/31.
  */
-class DependencyHolder internal constructor(context: Context) {
+class DependencyHolder internal constructor(val context: Context) {
     @Inject
     lateinit var readStateManager: ReadStateManager
         internal set
@@ -47,25 +41,7 @@ class DependencyHolder internal constructor(context: Context) {
     lateinit var restHttpClient: RestHttpClient
         internal set
     @Inject
-    lateinit var externalThemeManager: ExternalThemeManager
-        internal set
-    @Inject
     lateinit var activityTracker: ActivityTracker
-        internal set
-    @Inject
-    lateinit var dns: Dns
-        internal set
-    @Inject
-    lateinit var preferences: SharedPreferences
-        internal set
-    @Inject
-    lateinit var connectionPool: ConnectionPool
-        internal set
-    @Inject
-    lateinit var cache: Cache
-        internal set
-    @Inject
-    lateinit var defaultFeatures: DefaultFeatures
         internal set
     @Inject
     lateinit var mediaPreloader: MediaPreloader
@@ -75,9 +51,6 @@ class DependencyHolder internal constructor(context: Context) {
         internal set
 
     @Inject
-    lateinit var extraFeaturesService: ExtraFeaturesService
-        internal set
-    @Inject
     lateinit var notificationManager: NotificationManagerWrapper
         internal set
 
@@ -85,14 +58,5 @@ class DependencyHolder internal constructor(context: Context) {
         GeneralComponent.get(context).inject(this)
     }
 
-    companion object {
-
-        private var sInstance: DependencyHolder? = null
-
-        fun get(context: Context): DependencyHolder {
-            if (sInstance != null) return sInstance!!
-            sInstance = DependencyHolder(context)
-            return sInstance!!
-        }
-    }
+    companion object :ApplicationContextSingletonHolder<DependencyHolder>(::DependencyHolder)
 }

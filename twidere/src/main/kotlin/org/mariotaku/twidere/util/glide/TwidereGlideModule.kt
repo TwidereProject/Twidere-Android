@@ -33,10 +33,13 @@ import okhttp3.Request
 import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.model.media.AuthenticatedUri
 import org.mariotaku.twidere.model.media.NoThumborUrl
+import org.mariotaku.twidere.singleton.CacheSingleton
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.HttpClientFactory
 import org.mariotaku.twidere.util.UserAgentUtils
 import org.mariotaku.twidere.util.glide.NoThumborUrlLoader.Companion.HEADER_NO_THUMBOR
 import org.mariotaku.twidere.util.media.ThumborWrapper
+import org.mariotaku.twidere.util.net.TwidereDns
 import org.mariotaku.twidere.util.okhttp.ModifyRequestInterceptor
 import java.io.InputStream
 
@@ -49,9 +52,11 @@ class TwidereGlideModule : AppGlideModule() {
     override fun registerComponents(context: Context, glide: Glide, registry: Registry) {
         val holder = DependencyHolder.get(context)
         val builder = OkHttpClient.Builder()
-        val conf = HttpClientFactory.HttpClientConfiguration(holder.preferences)
+        val conf = HttpClientFactory.HttpClientConfiguration(PreferencesSingleton.get(context))
         val thumbor = holder.thumbor
-        HttpClientFactory.initOkHttpClient(conf, builder, holder.dns, holder.cache)
+        val dns = TwidereDns.get(context)
+        val cache = CacheSingleton.get(context)
+        HttpClientFactory.initOkHttpClient(conf, builder, dns, cache)
         val userAgent = try {
             UserAgentUtils.getDefaultUserAgentStringSafe(context)
         } catch (e: Exception) {

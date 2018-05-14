@@ -1,6 +1,7 @@
 package org.mariotaku.twidere.model.tab;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import org.mariotaku.kpreferences.SharedPreferencesExtensionsKt;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.constant.PreferenceKeysKt;
 import org.mariotaku.twidere.dagger.DependencyHolder;
+import org.mariotaku.twidere.singleton.PreferencesSingleton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -203,7 +205,8 @@ public abstract class DrawableHolder {
             @Override
             public Drawable createDrawable(Context context) {
                 final DependencyHolder holder = DependencyHolder.Companion.get(context);
-                if (SharedPreferencesExtensionsKt.get(holder.preferences, PreferenceKeysKt.getIWantMyStarsBackKey())) {
+                final SharedPreferences preferences = PreferencesSingleton.INSTANCE.get(context);
+                if (SharedPreferencesExtensionsKt.get(preferences, PreferenceKeysKt.getIWantMyStarsBackKey())) {
                     return ContextCompat.getDrawable(context, R.drawable.ic_action_star);
                 }
                 return ContextCompat.getDrawable(context, R.drawable.ic_action_heart);

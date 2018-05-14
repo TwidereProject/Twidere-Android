@@ -4,13 +4,9 @@ import android.content.Context
 import android.net.Uri
 import android.text.TextUtils
 import org.mariotaku.microblog.library.*
-import org.mariotaku.microblog.library.FanfouStream
-import org.mariotaku.microblog.library.Mastodon
-import org.mariotaku.microblog.library.MastodonOAuth2
-import org.mariotaku.microblog.library.MastodonStreaming
-import org.mariotaku.microblog.library.twitter.*
 import org.mariotaku.microblog.library.auth.BasicAuthorization
 import org.mariotaku.microblog.library.auth.EmptyAuthorization
+import org.mariotaku.microblog.library.twitter.TwitterWeb
 import org.mariotaku.restfu.RestAPIFactory
 import org.mariotaku.restfu.RestRequest
 import org.mariotaku.restfu.http.Authorization
@@ -24,6 +20,8 @@ import org.mariotaku.twidere.Constants.DEFAULT_TWITTER_API_URL_FORMAT
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.model.account.cred.*
+import org.mariotaku.twidere.singleton.CacheSingleton
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.HttpClientFactory
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
 import org.mariotaku.twidere.util.MicroBlogAPIFactory
@@ -31,6 +29,7 @@ import org.mariotaku.twidere.util.MicroBlogAPIFactory.sFanfouConstantPool
 import org.mariotaku.twidere.util.MicroBlogAPIFactory.sTwitterConstantPool
 import org.mariotaku.twidere.util.api.*
 import org.mariotaku.twidere.util.media.TwidereMediaDownloader
+import org.mariotaku.twidere.util.net.TwidereDns
 
 fun Credentials.getAuthorization(cls: Class<*>?): Authorization {
     if (cls != null) {
@@ -152,21 +151,23 @@ fun <T> newMicroBlogInstance(context: Context, endpoint: Endpoint, auth: Authori
     var extraRequestParams: Map<String, String>? = null
     when (cls) {
         TwitterUpload::class.java -> {
-            val conf = HttpClientFactory.HttpClientConfiguration(holder.preferences)
+            val conf = HttpClientFactory.HttpClientConfiguration(PreferencesSingleton.get(context))
             // Use longer timeout for uploading
             conf.readTimeoutSecs = 30
             conf.writeTimeoutSecs = 30
             conf.connectionTimeoutSecs = 60
-            val uploadHttpClient = HttpClientFactory.createRestHttpClient(conf, holder.dns,
-                    holder.cache)
+            val dns = TwidereDns.get(context)
+            val cache = CacheSingleton.get(context)
+            val uploadHttpClient = HttpClientFactory.createRestHttpClient(conf, dns, cache)
             factory.setHttpClient(uploadHttpClient)
         }
         TwitterUserStream::class.java, FanfouStream::class.java, MastodonStreaming::class.java -> {
-            val conf = HttpClientFactory.HttpClientConfiguration(holder.preferences)
+            val conf = HttpClientFactory.HttpClientConfiguration(PreferencesSingleton.get(context))
             // Use longer read timeout for streaming
             conf.readTimeoutSecs = 300
-            val streamHttpClient = HttpClientFactory.createRestHttpClient(conf, holder.dns,
-                    holder.cache)
+            val dns = TwidereDns.get(context)
+            val cache = CacheSingleton.get(context)
+            val streamHttpClient = HttpClientFactory.createRestHttpClient(conf, dns, cache)
             factory.setHttpClient(streamHttpClient)
         }
         else -> {

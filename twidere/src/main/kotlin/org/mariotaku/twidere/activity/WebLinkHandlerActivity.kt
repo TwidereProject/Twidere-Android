@@ -12,9 +12,9 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.content.FavoriteConfirmDialogActivity
 import org.mariotaku.twidere.activity.content.RetweetQuoteDialogActivity
 import org.mariotaku.twidere.app.TwidereApplication
-import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.theme.UserTheme
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.IntentUtils
 import java.util.*
@@ -22,7 +22,7 @@ import java.util.*
 class WebLinkHandlerActivity : Activity() {
 
     private val userTheme: Chameleon.Theme by lazy {
-        val preferences = DependencyHolder.get(this).preferences
+        val preferences = PreferencesSingleton.get(this)
         return@lazy UserTheme.get(this, preferences)
     }
 
@@ -315,7 +315,7 @@ class WebLinkHandlerActivity : Activity() {
         if (pathSegments.size < 2) return Pair(null, false)
         when (pathSegments[1]) {
             "moments" -> {
-                val preferences = DependencyHolder.get(this).preferences
+                val preferences = PreferencesSingleton.get(this)
                 val (intent, _) = IntentUtils.browse(this, preferences, userTheme, uri, true)
                 return Pair(intent, true)
             }
@@ -335,7 +335,7 @@ class WebLinkHandlerActivity : Activity() {
             }
             "redirect" -> {
                 val url = uri.getQueryParameter("url")?.let(Uri::parse) ?: return Pair(null, false)
-                val preferences = DependencyHolder.get(this).preferences
+                val preferences = PreferencesSingleton.get(this)
                 val (intent, _) = IntentUtils.browse(this, preferences, userTheme, url, false)
                 return Pair(intent, true)
             }

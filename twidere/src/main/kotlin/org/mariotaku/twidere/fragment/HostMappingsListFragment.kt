@@ -78,7 +78,7 @@ class HostMappingsListFragment : AbsContentListViewFragment<HostMappingsListFrag
         when (item.itemId) {
             R.id.delete -> {
                 val array = listView.checkedItemPositions ?: return false
-                (dns as? TwidereDns)?.beginMappingTransaction {
+                TwidereDns.get(context!!).beginMappingTransaction {
                     (0 until array.size()).filter {
                         array.valueAt(it)
                     }.forEach {
@@ -207,7 +207,7 @@ class HostMappingsListFragment : AbsContentListViewFragment<HostMappingsListFrag
             } else {
                 dialog.editAddress.string
             }).takeUnless(String?::isNullOrEmpty) ?: return
-            (dns as? TwidereDns)?.putMapping(host, address)
+            TwidereDns.get(context!!).putMapping(host, address)
         }
 
         override fun onSaveInstanceState(outState: Bundle) {

@@ -47,6 +47,7 @@ import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.glide.DeferredTarget
@@ -60,7 +61,7 @@ object ShortcutCreator {
 
     fun user(context: Context, accountKey: UserKey?, user: ParcelableUser): Promise<ShortcutInfoCompat, Exception> {
         val holder = DependencyHolder.get(context)
-        val preferences = holder.preferences
+        val preferences = PreferencesSingleton.get(context)
         val userColorNameManager = UserColorNameManager.get(context)
 
         val profileImageStyle = if (useAdaptiveIcon) ImageShapeStyle.SHAPE_RECTANGLE else preferences[profileImageStyleKey]
@@ -84,7 +85,7 @@ object ShortcutCreator {
 
     fun userFavorites(context: Context, accountKey: UserKey?, user: ParcelableUser): Promise<ShortcutInfoCompat, Exception> {
         val holder = DependencyHolder.get(context)
-        val preferences = holder.preferences
+        val preferences = PreferencesSingleton.get(context)
         val userColorNameManager = UserColorNameManager.get(context)
 
         val launchIntent = IntentUtils.userFavorites(accountKey, user.key,

@@ -20,14 +20,37 @@
 package org.mariotaku.twidere.activity.feedback
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.BaseActivity
+import org.mariotaku.twidere.fragment.BaseDialogFragment
 
 class FeedbackActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_feedback)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.menu_feedback, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.send -> {
+
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
+    class SendMethodDialogFragment: BaseDialogFragment() {
+
     }
 
 }

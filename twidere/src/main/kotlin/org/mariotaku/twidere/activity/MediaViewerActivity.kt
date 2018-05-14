@@ -355,7 +355,6 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         when (media.type) {
             ParcelableMedia.Type.IMAGE -> {
                 val mediaUrl = media.media_url
-                        ?: return Fragment.instantiate(this, ExternalBrowserPageFragment::class.java.name, args) as MediaViewerFragment
                 args.putParcelable(EXTRA_MEDIA_URI, Uri.parse(mediaUrl))
                 if (mediaUrl.endsWith(".gif")) {
                     return Fragment.instantiate(this, GifPageFragment::class.java.name, args) as MediaViewerFragment
