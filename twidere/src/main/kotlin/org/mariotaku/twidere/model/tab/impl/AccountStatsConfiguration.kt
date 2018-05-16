@@ -17,33 +17,24 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.data
+package org.mariotaku.twidere.model.tab.impl
 
-import android.arch.lifecycle.LiveData
-import android.support.annotation.WorkerThread
-import nl.komponents.kovenant.task
-import nl.komponents.kovenant.ui.failUi
-import nl.komponents.kovenant.ui.successUi
-import org.mariotaku.twidere.util.DebugLog
+import org.mariotaku.twidere.R
+import org.mariotaku.twidere.annotation.TabAccountFlags
+import org.mariotaku.twidere.fragment.stats.AccountStatsFragment
+import org.mariotaku.twidere.model.tab.DrawableHolder
+import org.mariotaku.twidere.model.tab.StringHolder
+import org.mariotaku.twidere.model.tab.TabConfiguration
 
-abstract class ComputableLiveData<T>(loadOnInstantiate: Boolean) : LiveData<T>() {
+class AccountStatsConfiguration : TabConfiguration() {
 
-    init {
-        if (loadOnInstantiate) {
-            load()
-        }
-    }
+    override val name = StringHolder.resource(R.string.title_account_stats)
 
-    fun load() {
-        task(body = this::compute).successUi {
-            postValue(it)
-        }.failUi {
-            DebugLog.e(msg = "Exception in ComputableLiveData", tr = it)
-            postValue(null)
-        }
-    }
+    override val icon = DrawableHolder.Builtin.TRENDS
 
-    @WorkerThread
-    protected abstract fun compute(): T
+    override val accountFlags = TabAccountFlags.FLAG_HAS_ACCOUNT or
+            TabAccountFlags.FLAG_ACCOUNT_REQUIRED or TabAccountFlags.FLAG_ACCOUNT_MUTABLE
+
+    override val fragmentClass = AccountStatsFragment::class.java
 
 }

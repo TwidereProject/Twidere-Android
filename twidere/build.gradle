@@ -57,6 +57,16 @@ android {
         additionalParameters '--no-version-vectors'
     }
 
+    kapt {
+        arguments {
+            arg("room.schemaLocation", "$projectDir/schemas")
+        }
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
     flavorDimensions 'channel'
 
     productFlavors {
@@ -164,6 +174,7 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:${libVersions['Dagger']}"
     kapt "com.github.mariotaku.ObjectCursor:processor:${libVersions['ObjectCursor']}"
     kapt "com.github.bumptech.glide:compiler:${libVersions['Glide']}"
+    kapt "android.arch.persistence.room:compiler:${libVersions['Room']}"
 
     implementation project(':twidere.component.common')
     implementation project(':twidere.component.nyan')
@@ -204,6 +215,8 @@ dependencies {
 
     implementation "android.arch.lifecycle:extensions:${libVersions['ArchLifecycleExtensions']}"
     implementation "android.arch.paging:runtime:${libVersions['ArchPaging']}"
+    implementation "android.arch.persistence.room:runtime:${libVersions['Room']}"
+    implementation "android.arch.work:work-runtime-ktx:${libVersions['WorkManager']}"
     implementation "com.android.support:multidex:${libVersions['MultiDex']}"
     implementation "com.android.support:support-annotations:${libVersions['SupportLib']}"
     implementation "com.android.support:support-compat:${libVersions['SupportLib']}"

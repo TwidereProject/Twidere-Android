@@ -2,231 +2,240 @@
 <resources>
 
     <declare-styleable name="Twidere">
-        <attr name="cardActionButtonStyle" format="reference"/>
-        <attr name="profileImageStyle" format="reference"/>
-        <attr name="profileImageStyleLarge" format="reference"/>
-        <attr name="menuIconColor" format="color"/>
-        <attr name="menuIconColorDisabled" format="color"/>
-        <attr name="menuIconColorActionBar" format="color"/>
-        <attr name="messageBubbleColor" format="color"/>
-        <attr name="cardItemBackgroundColor" format="color"/>
-        <attr name="quoteIndicatorBackgroundColor" format="color"/>
-        <attr name="linePageIndicatorStyle" format="reference"/>
-        <attr name="mediaLabelBackground" format="color"/>
-        <attr name="isDialogTheme" format="boolean"/>
+        <attr name="cardActionButtonStyle" format="reference" />
+        <attr name="profileImageStyle" format="reference" />
+        <attr name="profileImageStyleLarge" format="reference" />
+        <attr name="menuIconColor" format="color" />
+        <attr name="menuIconColorDisabled" format="color" />
+        <attr name="menuIconColorActionBar" format="color" />
+        <attr name="messageBubbleColor" format="color" />
+        <attr name="cardItemBackgroundColor" format="color" />
+        <attr name="quoteIndicatorBackgroundColor" format="color" />
+        <attr name="linePageIndicatorStyle" format="reference" />
+        <attr name="mediaLabelBackground" format="color" />
+        <attr name="isDialogTheme" format="boolean" />
     </declare-styleable>
     <declare-styleable name="TwidereTheme">
-        <attr name="darkThemeResource" format="reference"/>
-        <attr name="lightThemeResource" format="reference"/>
+        <attr name="darkThemeResource" format="reference" />
+        <attr name="lightThemeResource" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="ColorLabelView">
-        <attr name="ignorePadding" format="boolean"/>
-        <attr name="backgroundColor" format="color"/>
+        <attr name="ignorePadding" format="boolean" />
+        <attr name="backgroundColor" format="color" />
     </declare-styleable>
     <declare-styleable name="ColorPickerPreferences">
-        <attr name="defaultColor" format="color"/>
-        <attr name="alphaSlider" format="boolean"/>
+        <attr name="defaultColor" format="color" />
+        <attr name="alphaSlider" format="boolean" />
     </declare-styleable>
     <declare-styleable name="TabPagerIndicator">
-        <attr name="tabStripColor" format="color"/>
-        <attr name="tabIconColor" format="color"/>
-        <attr name="tabLabelColor" format="color"/>
-        <attr name="tabStripHeight" format="dimension"/>
-        <attr name="tabHorizontalPadding" format="dimension"/>
-        <attr name="tabVerticalPadding" format="dimension"/>
-        <attr name="tabDividerVerticalPadding" format="dimension"/>
-        <attr name="tabDividerHorizontalPadding" format="dimension"/>
-        <attr name="tabExpandEnabled" format="boolean"/>
-        <attr name="tabShowDivider" format="boolean"/>
-        <attr name="tabDisplayOption"/>
+        <attr name="tabStripColor" format="color" />
+        <attr name="tabIconColor" format="color" />
+        <attr name="tabLabelColor" format="color" />
+        <attr name="tabStripHeight" format="dimension" />
+        <attr name="tabHorizontalPadding" format="dimension" />
+        <attr name="tabVerticalPadding" format="dimension" />
+        <attr name="tabDividerVerticalPadding" format="dimension" />
+        <attr name="tabDividerHorizontalPadding" format="dimension" />
+        <attr name="tabExpandEnabled" format="boolean" />
+        <attr name="tabShowDivider" format="boolean" />
+        <attr name="tabDisplayOption" />
     </declare-styleable>
     <declare-styleable name="NameView">
-        <attr name="nvNameFirst" format="boolean"/>
+        <attr name="nvNameFirst" format="boolean" />
     </declare-styleable>
     <declare-styleable name="TwoLineTextView">
-        <attr name="tltvTwoLine" format="boolean"/>
-        <attr name="tltvPrimaryTextAppearance" format="reference"/>
-        <attr name="tltvSecondaryTextAppearance" format="reference"/>
-        <attr name="tltvPrimaryText" format="string"/>
-        <attr name="tltvSecondaryText" format="string"/>
-        <attr name="tltvPrimaryTextColor" format="color"/>
-        <attr name="tltvSecondaryTextColor" format="color"/>
-        <attr name="tltvPrimaryLinkTextColor" format="color"/>
-        <attr name="tltvSecondaryLinkTextColor" format="color"/>
-        <attr name="tltvPrimaryTextStyle"/>
-        <attr name="tltvSecondaryTextStyle"/>
-        <attr name="tltvPrimaryTextSize" format="dimension"/>
-        <attr name="tltvSecondaryTextSize" format="dimension"/>
+        <attr name="tltvTwoLine" format="boolean" />
+        <attr name="tltvPrimaryTextAppearance" format="reference" />
+        <attr name="tltvSecondaryTextAppearance" format="reference" />
+        <attr name="tltvPrimaryText" format="string" />
+        <attr name="tltvSecondaryText" format="string" />
+        <attr name="tltvPrimaryTextColor" format="color" />
+        <attr name="tltvSecondaryTextColor" format="color" />
+        <attr name="tltvPrimaryLinkTextColor" format="color" />
+        <attr name="tltvSecondaryLinkTextColor" format="color" />
+        <attr name="tltvPrimaryTextStyle" />
+        <attr name="tltvSecondaryTextStyle" />
+        <attr name="tltvPrimaryTextSize" format="dimension" />
+        <attr name="tltvSecondaryTextSize" format="dimension" />
     </declare-styleable>
     <declare-styleable name="ValueDependencyPreference">
-        <attr name="dependencyKey" format="string"/>
-        <attr name="dependencyValues" format="reference"/>
-        <attr name="dependencyValueDefault" format="string"/>
+        <attr name="dependencyKey" format="string" />
+        <attr name="dependencyValues" format="reference" />
+        <attr name="dependencyValueDefault" format="string" />
     </declare-styleable>
     <declare-styleable name="AccountsListPreference">
-        <attr name="switchKey" format="string"/>
-        <attr name="switchDefault" format="boolean"/>
+        <attr name="switchKey" format="string" />
+        <attr name="switchDefault" format="boolean" />
     </declare-styleable>
     <declare-styleable name="NotificationTypePreference">
-        <attr name="notificationType"/>
+        <attr name="notificationType" />
     </declare-styleable>
     <declare-styleable name="SeekBarDialogPreference">
-        <attr name="max" format="integer"/>
-        <attr name="min" format="integer"/>
-        <attr name="step" format="integer"/>
-        <attr name="progressTextSuffix" format="string"/>
+        <attr name="max" format="integer" />
+        <attr name="min" format="integer" />
+        <attr name="step" format="integer" />
+        <attr name="progressTextSuffix" format="string" />
     </declare-styleable>
     <declare-styleable name="KeyboardShortcutPreference">
-        <attr name="android:action"/>
-        <attr name="android:tag"/>
+        <attr name="android:action" />
+        <attr name="android:tag" />
     </declare-styleable>
     <declare-styleable name="SyncItemPreference">
-        <attr name="syncType" format="string"/>
+        <attr name="syncType" format="string" />
     </declare-styleable>
     <declare-styleable name="DrawableTintTextView">
-        <attr name="drawableTint" format="reference"/>
+        <attr name="drawableTint" format="reference" />
     </declare-styleable>
     <declare-styleable name="ShapedImageView">
-        <attr name="sivBorder" format="boolean"/>
-        <attr name="sivBorderWidth" format="dimension"/>
-        <attr name="sivBorderColor" format="color"/>
-        <attr name="sivBackgroundColor" format="color"/>
-        <attr name="sivElevation" format="dimension"/>
-        <attr name="sivCornerRadius" format="dimension"/>
-        <attr name="sivCornerRadiusRatio" format="fraction"/>
-        <attr name="sivDrawShadow" format="boolean"/>
-        <attr name="sivShape"/>
+        <attr name="sivBorder" format="boolean" />
+        <attr name="sivBorderWidth" format="dimension" />
+        <attr name="sivBorderColor" format="color" />
+        <attr name="sivBackgroundColor" format="color" />
+        <attr name="sivElevation" format="dimension" />
+        <attr name="sivCornerRadius" format="dimension" />
+        <attr name="sivCornerRadiusRatio" format="fraction" />
+        <attr name="sivDrawShadow" format="boolean" />
+        <attr name="sivShape" />
     </declare-styleable>
     <declare-styleable name="TintedStatusLayout">
-        <attr name="setPadding" format="boolean"/>
+        <attr name="setPadding" format="boolean" />
     </declare-styleable>
     <declare-styleable name="BadgeView">
-        <attr name="android:textColor"/>
-        <attr name="android:text"/>
+        <attr name="android:textColor" />
+        <attr name="android:text" />
     </declare-styleable>
     <declare-styleable name="CardMediaContainer">
-        <attr name="android:horizontalSpacing"/>
-        <attr name="android:verticalSpacing"/>
-        <attr name="android:layout"/>
+        <attr name="android:horizontalSpacing" />
+        <attr name="android:verticalSpacing" />
+        <attr name="android:layout" />
     </declare-styleable>
     <declare-styleable name="MessageViewHolder">
-        <attr name="android:textColorPrimary"/>
-        <attr name="android:textColorPrimaryInverse"/>
-        <attr name="android:textColorSecondary"/>
-        <attr name="android:textColorSecondaryInverse"/>
+        <attr name="android:textColorPrimary" />
+        <attr name="android:textColorPrimaryInverse" />
+        <attr name="android:textColorSecondary" />
+        <attr name="android:textColorSecondaryInverse" />
     </declare-styleable>
     <declare-styleable name="RingtonePreference">
-        <attr name="android:ringtoneType"/>
-        <attr name="android:showDefault"/>
-        <attr name="android:showSilent"/>
+        <attr name="android:ringtoneType" />
+        <attr name="android:showDefault" />
+        <attr name="android:showSilent" />
     </declare-styleable>
     <declare-styleable name="ForegroundView">
-        <attr name="android:foreground"/>
-        <attr name="android:foregroundGravity"/>
+        <attr name="android:foreground" />
+        <attr name="android:foregroundGravity" />
     </declare-styleable>
     <declare-styleable name="AccountDashboardHeaderView">
-        <attr name="sizeMeasurementId" format="reference"/>
+        <attr name="sizeMeasurementId" format="reference" />
     </declare-styleable>
     <declare-styleable name="PremiumEntryPreference">
-        <attr name="requiredFeature" format="string"/>
+        <attr name="requiredFeature" format="string" />
     </declare-styleable>
     <declare-styleable name="ProfileBannerSpace">
-        <attr name="bannerAspectRatio"/>
+        <attr name="bannerAspectRatio" />
     </declare-styleable>
     <declare-styleable name="ProfileBannerImageView">
-        <attr name="bannerAspectRatio"/>
+        <attr name="bannerAspectRatio" />
     </declare-styleable>
     <declare-styleable name="AppBarChildBehavior">
-        <attr name="behavior_appBarId" format="reference"/>
-        <attr name="behavior_toolbarId" format="reference"/>
-        <attr name="behavior_dependencyViewId" format="reference"/>
-        <attr name="behavior_targetViewId" format="reference"/>
+        <attr name="behavior_appBarId" format="reference" />
+        <attr name="behavior_toolbarId" format="reference" />
+        <attr name="behavior_dependencyViewId" format="reference" />
+        <attr name="behavior_targetViewId" format="reference" />
 
-        <attr name="behavior_marginLeft" format="dimension"/>
-        <attr name="behavior_marginRight" format="dimension"/>
-        <attr name="behavior_marginStart" format="dimension"/>
-        <attr name="behavior_marginEnd" format="dimension"/>
-        <attr name="behavior_marginTop" format="dimension"/>
-        <attr name="behavior_marginBottom" format="dimension"/>
+        <attr name="behavior_marginLeft" format="dimension" />
+        <attr name="behavior_marginRight" format="dimension" />
+        <attr name="behavior_marginStart" format="dimension" />
+        <attr name="behavior_marginEnd" format="dimension" />
+        <attr name="behavior_marginTop" format="dimension" />
+        <attr name="behavior_marginBottom" format="dimension" />
 
-        <attr name="behavior_alignmentRule"/>
+        <attr name="behavior_alignmentRule" />
 
-        <attr name="behavior_childTransformation" format="string"/>
+        <attr name="behavior_childTransformation" format="string" />
     </declare-styleable>
     <declare-styleable name="IExtendedViewPadding">
-        <attr name="android:paddingTop"/>
-        <attr name="android:paddingBottom"/>
-        <attr name="android:paddingLeft"/>
-        <attr name="android:paddingRight"/>
-        <attr name="android:paddingStart"/>
-        <attr name="android:paddingEnd"/>
-        <attr name="android:padding"/>
+        <attr name="android:paddingTop" />
+        <attr name="android:paddingBottom" />
+        <attr name="android:paddingLeft" />
+        <attr name="android:paddingRight" />
+        <attr name="android:paddingStart" />
+        <attr name="android:paddingEnd" />
+        <attr name="android:padding" />
     </declare-styleable>
     <declare-styleable name="MediaLayoutParams">
-        <attr name="layout_isMediaItemView" format="boolean"/>
-        <attr name="layout_videoViewId" format="reference"/>
+        <attr name="layout_isMediaItemView" format="boolean" />
+        <attr name="layout_videoViewId" format="reference" />
     </declare-styleable>
     <declare-styleable name="MaxHeightScrollView">
-        <attr name="android:maxHeight"/>
+        <attr name="android:maxHeight" />
     </declare-styleable>
     <declare-styleable name="LabeledImageButton">
-        <attr name="android:text"/>
-        <attr name="android:textAppearance"/>
-        <attr name="android:textColor"/>
-        <attr name="android:textSize"/>
-        <attr name="android:textStyle"/>
-        <attr name="android:drawablePadding"/>
+        <attr name="android:text" />
+        <attr name="android:textAppearance" />
+        <attr name="android:textColor" />
+        <attr name="android:textSize" />
+        <attr name="android:textStyle" />
+        <attr name="android:drawablePadding" />
     </declare-styleable>
     <declare-styleable name="BannerBehavior">
-        <attr name="bannerAspectRatio"/>
+        <attr name="bannerAspectRatio" />
+    </declare-styleable>
+    <declare-styleable name="LineChartView">
+        <attr name="chartBaseline" format="dimension" />
+        <attr name="chartBaselineColor" format="color" />
+        <attr name="chartLineColor" format="color" />
+        <attr name="chartLineSize" format="dimension" />
+        <attr name="chartBaselineSize" format="dimension" />
+        <attr name="chartEndpointColor" format="color" />
+        <attr name="chartEndpointSize" format="dimension" />
     </declare-styleable>
     <attr name="behavior_alignmentRule">
-        <flag name="left" value="0x00000001"/>
-        <flag name="right" value="0x00000002"/>
-        <flag name="toLeftOf" value="0x00000004"/>
-        <flag name="toRightOf" value="0x00000008"/>
-        <flag name="toLeftOfCenter" value="0x00000010"/>
-        <flag name="toRightOfCenter" value="0x00000020"/>
-        <flag name="centerHorizontal" value="0x00000003"/>
-        <flag name="start" value="0x00001001"/>
-        <flag name="end" value="0x00001002"/>
-        <flag name="toStartOf" value="0x00001004"/>
-        <flag name="toEndOf" value="0x00001008"/>
-        <flag name="toStartOfCenter" value="0x00001010"/>
-        <flag name="toEndOfCenter" value="0x00001020"/>
-        <flag name="top" value="0x00010000"/>
-        <flag name="bottom" value="0x00020000"/>
-        <flag name="above" value="0x00040000"/>
-        <flag name="below" value="0x00080000"/>
-        <flag name="aboveCenter" value="0x00100000"/>
-        <flag name="belowCenter" value="0x00200000"/>
-        <flag name="centerVertical" value="0x00030000"/>
-        <flag name="center" value="0x00030003"/>
+        <flag name="left" value="0x00000001" />
+        <flag name="right" value="0x00000002" />
+        <flag name="toLeftOf" value="0x00000004" />
+        <flag name="toRightOf" value="0x00000008" />
+        <flag name="toLeftOfCenter" value="0x00000010" />
+        <flag name="toRightOfCenter" value="0x00000020" />
+        <flag name="centerHorizontal" value="0x00000003" />
+        <flag name="start" value="0x00001001" />
+        <flag name="end" value="0x00001002" />
+        <flag name="toStartOf" value="0x00001004" />
+        <flag name="toEndOf" value="0x00001008" />
+        <flag name="toStartOfCenter" value="0x00001010" />
+        <flag name="toEndOfCenter" value="0x00001020" />
+        <flag name="top" value="0x00010000" />
+        <flag name="bottom" value="0x00020000" />
+        <flag name="above" value="0x00040000" />
+        <flag name="below" value="0x00080000" />
+        <flag name="aboveCenter" value="0x00100000" />
+        <flag name="belowCenter" value="0x00200000" />
+        <flag name="centerVertical" value="0x00030000" />
+        <flag name="center" value="0x00030003" />
     </attr>
     <attr name="notificationType">
-        <flag name="none" value="0"/>
-        <flag name="ringtone" value="1"/>
-        <flag name="vibration" value="2"/>
-        <flag name="light" value="4"/>
+        <flag name="none" value="0" />
+        <flag name="ringtone" value="1" />
+        <flag name="vibration" value="2" />
+        <flag name="light" value="4" />
     </attr>
     <attr name="tabDisplayOption">
-        <flag name="label" value="0x1"/>
-        <flag name="icon" value="0x2"/>
+        <flag name="label" value="0x1" />
+        <flag name="icon" value="0x2" />
     </attr>
     <attr name="sivShape">
-        <enum name="circle" value="0x1"/>
-        <enum name="rectangle" value="0x2"/>
+        <enum name="circle" value="0x1" />
+        <enum name="rectangle" value="0x2" />
     </attr>
     <attr name="tltvPrimaryTextStyle">
-        <flag name="normal" value="0"/>
-        <flag name="bold" value="1"/>
-        <flag name="italic" value="2"/>
+        <flag name="normal" value="0" />
+        <flag name="bold" value="1" />
+        <flag name="italic" value="2" />
     </attr>
     <attr name="tltvSecondaryTextStyle">
-        <flag name="normal" value="0"/>
-        <flag name="bold" value="1"/>
-        <flag name="italic" value="2"/>
+        <flag name="normal" value="0" />
+        <flag name="bold" value="1" />
+        <flag name="italic" value="2" />
     </attr>
-    <attr name="bannerAspectRatio" format="fraction"/>
+    <attr name="bannerAspectRatio" format="fraction" />
 </resources>

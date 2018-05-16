@@ -1316,6 +1316,7 @@
     <string name="translators">Translators</string>
 
     <string name="trends">Trends</string>
+    <string name="title_account_stats">Stats</string>
     <string name="trends_location">Trends location</string>
     <string name="trends_location_summary">Set location for local trends.</string>
 

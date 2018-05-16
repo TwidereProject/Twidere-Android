@@ -150,7 +150,8 @@ abstract class TabConfiguration {
                 CustomTabType.TRENDS_SUGGESTIONS, CustomTabType.DIRECT_MESSAGES,
                 CustomTabType.FAVORITES, CustomTabType.USER_TIMELINE, CustomTabType.USER_MEDIA_TIMELINE,
                 CustomTabType.SEARCH_STATUSES, CustomTabType.LIST_TIMELINE,
-                CustomTabType.PUBLIC_TIMELINE, CustomTabType.NETWORK_PUBLIC_TIMELINE)
+                CustomTabType.PUBLIC_TIMELINE, CustomTabType.NETWORK_PUBLIC_TIMELINE,
+                CustomTabType.ACCOUNT_STATS)
 
         val all: List<Pair<String, TabConfiguration>> = allTypes.mapNotNull {
             val conf = ofType(it) ?: return@mapNotNull null
@@ -170,6 +171,7 @@ abstract class TabConfiguration {
                 CustomTabType.SEARCH_STATUSES -> SearchTabConfiguration()
                 CustomTabType.PUBLIC_TIMELINE -> PublicTimelineTabConfiguration()
                 CustomTabType.NETWORK_PUBLIC_TIMELINE -> NetworkPublicTimelineTabConfiguration()
+                CustomTabType.ACCOUNT_STATS -> AccountStatsConfiguration()
                 else -> null
             }
         }

@@ -342,8 +342,9 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
     }
 
     protected open fun onPagedListChanged(data: PagedList<ParcelableStatus>?) {
+        val context = context ?: return
         val firstVisiblePosition = positionBackup.getAndSet(null) ?: return
-        if (firstVisiblePosition.position == 0 && !PreferencesSingleton.get(context!!)[readFromBottomKey]) {
+        if (firstVisiblePosition.position == 0 && !PreferencesSingleton.get(context)[readFromBottomKey]) {
             scrollToPositionWithOffset(0, 0)
         } else {
             scrollToPositionWithOffset(firstVisiblePosition.position, firstVisiblePosition.offset)

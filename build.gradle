@@ -81,8 +81,10 @@ subprojects {
                     StethoBeanShellREPL    : '0.5',
                     ArchLifecycleExtensions: '1.1.1',
                     ArchPaging             : '1.0.0',
+                    Room                   : '1.1.0',
                     ConstraintLayout       : '1.1.0',
                     MessageBubbleView      : '2.1',
+                    WorkManager            : '1.0.0-alpha01',
             ]
 
         }

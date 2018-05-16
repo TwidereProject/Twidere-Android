@@ -38,6 +38,7 @@ import java.lang.annotation.RetentionPolicy;
         CustomTabType.LIST_TIMELINE,
         CustomTabType.PUBLIC_TIMELINE,
         CustomTabType.NETWORK_PUBLIC_TIMELINE,
+        CustomTabType.ACCOUNT_STATS,
 })
 @Retention(RetentionPolicy.SOURCE)
 public @interface CustomTabType {
@@ -52,4 +53,5 @@ public @interface CustomTabType {
     String LIST_TIMELINE = "list_timeline";
     String PUBLIC_TIMELINE = "public_timeline";
     String NETWORK_PUBLIC_TIMELINE = "network_public_timeline";
+    String ACCOUNT_STATS = "account_stats";
 }

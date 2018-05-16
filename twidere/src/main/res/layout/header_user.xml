@@ -246,7 +246,7 @@
         android:baselineAligned="false"
         android:orientation="horizontal"
         android:splitMotionEvents="false"
-        app:layout_constraintTop_toBottomOf="@+id/createdAt">
+        app:layout_constraintTop_toBottomOf="@+id/date">
 
         <org.mariotaku.twidere.view.TwoLineTextView
             android:id="@+id/followersCount"

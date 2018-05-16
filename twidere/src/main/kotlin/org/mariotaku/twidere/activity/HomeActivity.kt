@@ -62,6 +62,8 @@ import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
 import android.view.ViewGroup.MarginLayoutParams
 import android.widget.Toast
+import androidx.work.WorkManager
+import androidx.work.ktx.OneTimeWorkRequestBuilder
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetView
 import com.squareup.otto.Subscribe
@@ -103,6 +105,7 @@ import org.mariotaku.twidere.receiver.NotificationReceiver
 import org.mariotaku.twidere.service.StreamingService
 import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.singleton.PreferencesSingleton
+import org.mariotaku.twidere.task.worker.AccountDailyStatWorker
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
@@ -293,6 +296,8 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         if (!showDrawerTutorial() && !PreferencesSingleton.get(this)[defaultAutoRefreshAskedKey]) {
             showAutoRefreshConfirm()
         }
+
+        WorkManager.getInstance().enqueue(OneTimeWorkRequestBuilder<AccountDailyStatWorker>().build())
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

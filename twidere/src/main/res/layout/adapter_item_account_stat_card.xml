@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="summary"
+            type="org.mariotaku.twidere.content.model.AccountStats.DisplaySummary" />
+    </data>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/statTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:textAppearanceSmall"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="Tweets" />
+
+            <TextView
+                android:id="@+id/statValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@{summary.numberDisplay}"
+                android:textAppearance="?android:textAppearanceLarge"
+                app:layout_constraintTop_toBottomOf="@+id/statTitle"
+                tools:text="335" />
+
+            <TextView
+                android:id="@+id/statGrowth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{summary.growthDisplay}"
+                android:textAppearance="?android:textAppearanceMedium"
+                app:layout_constraintBaseline_toBaselineOf="@+id/statValue"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="+204.5%"
+                tools:textColor="@color/material_light_green" />
+
+            <android.support.constraint.Barrier
+                android:id="@+id/statBarrier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="statValue,statGrowth" />
+
+            <org.mariotaku.twidere.view.chart.LineChartView
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:layout_marginTop="8dp"
+                app:chartBaseline="16dp"
+                app:chartBaselineColor="#ccd6dd"
+                app:chartBaselineSize="1dp"
+                app:chartEndpointColor="#a6d388"
+                app:chartEndpointSize="6dp"
+                app:chartLineColor="#ccd6dd"
+                app:chartLineSize="2dp"
+                app:layout_constraintTop_toBottomOf="@+id/statBarrier"
+                bind:chartValues="@{summary.values}"
+                bind:chartValuesCount="@{summary.valuesCount}" />
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v7.widget.CardView>
+</layout>
