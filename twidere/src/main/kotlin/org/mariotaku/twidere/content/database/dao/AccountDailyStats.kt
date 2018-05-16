@@ -81,22 +81,21 @@ abstract class AccountDailyStats {
         val firstNonNullIndex = indexOfFirst { it != null }
         if (firstNonNullIndex < 0) throw DataNotReadyException()
 
-        val diffs = LongArray(size - firstNonNullIndex) item@{ index ->
-            val statIndex = index + firstNonNullIndex
-            if (statIndex == 0) return@item 0
+        val diffs = LongArray(size - firstNonNullIndex - 1) item@{ index ->
+            val statIndex = index + firstNonNullIndex + 1
             return@item numberAt(statIndex, AccountStats::statusesCount) - numberAt(statIndex - 1,
                     AccountStats::statusesCount)
         }
-        var maxDiff = diffs.max()!!
-        if (maxDiff <= 0L) {
-            maxDiff = Math.abs(diffs.min()!!)
+        var positiveRange = diffs.max()!!
+        if (positiveRange <= 0L) {
+            positiveRange = Math.abs(diffs.min()!!)
         }
-        if (maxDiff <= 0L) {
-            maxDiff = 10
+        if (positiveRange <= 0L) {
+            positiveRange = 10
         }
 
-        val values = FloatArray(size - firstNonNullIndex) item@{ index ->
-            return@item diffs[index] / maxDiff.toFloat()
+        val values = FloatArray(diffs.size) item@{ index ->
+            return@item diffs[index] / positiveRange.toFloat()
         }
 
         val periodSum = lastNumber - firstNumber
@@ -104,20 +103,27 @@ abstract class AccountDailyStats {
     }
 
     private fun Array<AccountStats?>.followersSummary(): AccountStats.DisplaySummary {
+        val maxNumber = maxBy { it?.followersCount ?: Long.MIN_VALUE }!!.followersCount
 
-        val firstNumber = numberAt(0, AccountStats::followersCount)
+        val firstNonNullIndex = indexOfFirst { it != null }
+        if (firstNonNullIndex < 0) throw DataNotReadyException()
+
+        val firstNumber = numberAt(firstNonNullIndex, AccountStats::followersCount)
         val lastNumber = numberAt(lastIndex, AccountStats::followersCount)
 
-        val maxNumber = maxBy { it?.followersCount ?: Long.MIN_VALUE }!!.followersCount
-        val valuesCount = size
-        val values = indices.map { index ->
+        var positiveRange = maxNumber - firstNumber
+        if (positiveRange <= 0L) {
+            positiveRange = 10
+        }
+
+        val values = (firstNonNullIndex..lastIndex).map { index ->
             val number = numberAt(index, AccountStats::followersCount)
-            return@map (number - firstNumber) / (maxNumber - firstNumber).toFloat()
+            return@map (number - firstNumber) / positiveRange.toFloat()
         }.toFloatArray()
 
         val growth = lastNumber - firstNumber
         return AccountStats.DisplaySummary(firstNumber, growth.sign, Math.abs(growth).toString(),
-                valuesCount, values)
+                size, values)
     }
 
     private fun Array<AccountStats?>.numberAt(index: Int, selector: (AccountStats) -> Long): Long {

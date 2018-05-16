@@ -22,10 +22,7 @@ class AccountDailyStatWorker : Worker() {
         val am = AccountManager.get(applicationContext)
         val dao = TwidereDatabase.get(applicationContext).accountDailyStats()
         val date = Date()
-        val existingStats = dao.list(date)
-        val accounts = am.getAllDetails(true).filterNot { account ->
-            existingStats.any { it.accountKey == account.key }
-        }
+        val accounts = am.getAllDetails(true)
         val stats = accounts.mapNotNull {
             val user = try {
                 when (it.type) {
