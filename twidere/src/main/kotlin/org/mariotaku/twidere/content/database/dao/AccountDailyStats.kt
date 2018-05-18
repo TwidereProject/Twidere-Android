@@ -67,9 +67,13 @@ abstract class AccountDailyStats {
         val firstNumber = numberAt(0, AccountStats::statusesCount)
         val lastNumber = numberAt(lastIndex, AccountStats::statusesCount)
 
+
+        val firstNonNullIndex = indexOfFirst { it != null }
+        if (firstNonNullIndex < 0) throw DataNotReadyException()
+
         var growthText: String? = null
         var growthSign = 0
-        if (prevPeriodFirst != null) {
+        if (prevPeriodFirst != null && prevPeriodFirst.createdAt < this[firstNonNullIndex]!!.createdAt) {
             val prevPeriodCount = firstNumber - prevPeriodFirst.statusesCount
             val currPeriodCount = lastNumber - firstNumber
 
@@ -77,9 +81,6 @@ abstract class AccountDailyStats {
             growthText = String.format(Locale.US, "%.1f%%", Math.abs(growthPercent * 100))
             growthSign = growthPercent.sign.toInt()
         }
-
-        val firstNonNullIndex = indexOfFirst { it != null }
-        if (firstNonNullIndex < 0) throw DataNotReadyException()
 
         val diffs = LongArray(size - firstNonNullIndex - 1) item@{ index ->
             val statIndex = index + firstNonNullIndex + 1
@@ -98,7 +99,7 @@ abstract class AccountDailyStats {
             return@item diffs[index] / positiveRange.toFloat()
         }
 
-        val periodSum = lastNumber - firstNumber
+        val periodSum = lastNumber - numberAt(firstNonNullIndex, AccountStats::statusesCount)
         return AccountStats.DisplaySummary(periodSum, growthSign, growthText, size, values)
     }
 
