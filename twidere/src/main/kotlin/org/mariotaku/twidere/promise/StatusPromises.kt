@@ -32,7 +32,6 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.model.microblog.ErrorInfo
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
@@ -62,7 +61,7 @@ class StatusPromises private constructor(private val application: Application) {
         when (account.type) {
             AccountType.MASTODON -> {
                 val mastodon = account.newMicroBlogInstance(application, cls = Mastodon::class.java)
-                val result = mastodon.favouriteStatus(id)
+                val result = mastodon.fetchStatus(id)
                 mastodon.deleteStatus(id)
                 return@accountTask result.toParcelable(account)
             }

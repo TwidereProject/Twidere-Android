@@ -83,7 +83,7 @@ subprojects {
                     ArchPaging             : '1.0.0',
                     Room                   : '1.1.0',
                     ConstraintLayout       : '1.1.0',
-                    MessageBubbleView      : '2.1',
+                    MessageBubbleView      : '2.4',
                     WorkManager            : '1.0.0-alpha01',
             ]
 
