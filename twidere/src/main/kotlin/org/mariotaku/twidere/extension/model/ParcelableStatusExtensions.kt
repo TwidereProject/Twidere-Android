@@ -223,6 +223,8 @@ fun ParcelableStatus.displayInfo(context: Context): ParcelableStatus.Display {
 
 fun ParcelableStatus.generateDisplayInfo(context: Context): ParcelableStatus.Display {
     val colorNameManager = UserColorNameManager.get(context)
+    val extras = this.extras
+
     val displayInReplyTo = true
     val showAbsoluteTime = true
 
@@ -232,7 +234,13 @@ fun ParcelableStatus.generateDisplayInfo(context: Context): ParcelableStatus.Dis
 
     extras?.summary_text?.appendTo(textWithSummary)
     val start = textWithSummary.length
-    textWithSummary.append(text_unescaped)
+
+    var textEnd = text_unescaped.length
+    val displayTextRange = extras?.display_text_range
+    if (displayTextRange != null && displayTextRange.size == 2) {
+        textEnd = displayTextRange[1]
+    }
+    textWithSummary.append(text_unescaped, 0, textEnd)
     spans?.applyTo(textWithSummary, extras?.emojis, start)
 
     info.text = textWithSummary

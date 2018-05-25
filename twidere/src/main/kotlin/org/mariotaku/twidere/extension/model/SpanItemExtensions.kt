@@ -33,10 +33,13 @@ import org.mariotaku.twidere.text.style.CustomEmojiSpan
 val SpanItem.length: Int get() = end - start
 
 @SuppressLint("SwitchIntDef")
-fun Array<SpanItem>.applyTo(spannable: Spannable, emojis: Map<String, CustomEmoji>?, offset: Int = 0) {
+fun Array<SpanItem>.applyTo(spannable: Spannable, emojis: Map<String, CustomEmoji>?, offset: Int = 0,
+        length: Int = spannable.length - offset) {
+    val stopIndex = 0 + length
     forEach { span ->
         val start = span.start + offset
-        val end = span.end + offset
+        val end = (span.end + offset).coerceAtMost(stopIndex)
+        if (end <= start) return@forEach
         when (span.type) {
             SpanItem.SpanType.HIDE -> {
                 spannable.setSpan(ZeroWidthSpan(), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)

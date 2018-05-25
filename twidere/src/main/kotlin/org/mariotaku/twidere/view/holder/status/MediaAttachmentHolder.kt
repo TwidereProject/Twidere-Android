@@ -21,12 +21,13 @@ package org.mariotaku.twidere.view.holder.status
 
 import android.support.constraint.ConstraintLayout
 import android.view.View
-import android.widget.ImageView
 import kotlinx.android.synthetic.main.layout_content_item_attachment_media.view.*
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.annotation.PreviewStyle
+import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.util.glide.GlideApp
+import org.mariotaku.twidere.view.MediaPreviewImageView
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 
 class MediaAttachmentHolder(parent: StatusViewHolder, view: ConstraintLayout) : StatusViewHolder.AttachmentHolder(parent, view) {
@@ -53,10 +54,16 @@ class MediaAttachmentHolder(parent: StatusViewHolder, view: ConstraintLayout) : 
         }
         media.forEachIndexed { index, item ->
             if (index >= mediaContainerHelper.referencedCount) return@forEachIndexed
-            val child = mediaContainerHelper.getReferencedViewAt(index) as ImageView
-            GlideApp.with(child)
-                    .load(item.preview_url)
-                    .into(child)
+            val child = mediaContainerHelper.getReferencedViewAt(index) as MediaPreviewImageView
+            val request = GlideApp.with(child).load(item.preview_url)
+            when (mediaPreviewStyle) {
+                PreviewStyle.ACTUAL_SIZE, PreviewStyle.SCALE -> {
+                    request.fitCenter()
+                }
+                else -> request.centerCrop()
+            }
+            request.into(child)
+            child.hasPlayIcon = item.type == ParcelableMedia.Type.VIDEO
         }
         view.requestLayout()
     }
