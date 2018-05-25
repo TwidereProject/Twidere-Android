@@ -335,7 +335,7 @@ private fun CardEntity.toSummaryCard(thumbnailSize: Int): SummaryCard? {
         return@mapNotNull v as? CardEntity.ImageValue
     }.sortedBy { Math.min(it.width, it.height) }
     val bestThumbnail = thumbnails.firstOrNull {
-        thumbnailSize >= Math.min(it.width, it.height)
+        Math.min(it.width, it.height) >= thumbnailSize
     } ?: thumbnails.lastOrNull()
     obj.thumbnail = bestThumbnail?.url
     return obj
