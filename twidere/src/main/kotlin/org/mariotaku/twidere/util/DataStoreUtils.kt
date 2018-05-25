@@ -448,10 +448,10 @@ object DataStoreUtils {
                 Expression.likeRaw(Column(Table(table), dataField), "'%'||$filterTable.$filterField||'%'")
 
         fun lineContainsExpression(dataField: String, filterTable: String, filterField: String) =
-                Expression.likeRaw(Column(Table(table), dataField), "'\\\\%'||$filterTable.$filterField||'%\\\\'")
+                Expression.likeRaw(Column(Table(table), dataField), "'\\%'||$filterTable.$filterField||'%\\'")
 
         fun lineMatchExpression(dataField: String, filterTable: String, filterField: String) =
-                Expression.likeRaw(Column(Table(table), dataField), "'%\\\\'||$filterTable.$filterField||'\\\\%'")
+                Expression.likeRaw(Column(Table(table), dataField), "'%\\'||$filterTable.$filterField||'\\%'")
 
         val filteredUsersWhere = Expression.and(
                 scopeMatchesExpression(Filters.Users.TABLE_NAME, Filters.Users.SCOPE),
