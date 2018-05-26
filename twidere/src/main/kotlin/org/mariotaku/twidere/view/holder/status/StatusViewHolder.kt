@@ -35,7 +35,6 @@ import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
 import android.widget.ImageView
 import android.widget.TextView
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.list_item_status.view.*
 import org.mariotaku.ktextension.applyFontFamily
 import org.mariotaku.ktextension.hideIfEmpty
@@ -47,7 +46,6 @@ import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.constant.RecyclerViewTypes
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE
 import org.mariotaku.twidere.extension.inflate
-import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.displayInfo
 import org.mariotaku.twidere.extension.model.retweeted_by_user_acct
 import org.mariotaku.twidere.extension.model.type
@@ -70,9 +68,10 @@ import org.mariotaku.twidere.text.style.PlaceholderLineSpan
 import org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText
 import org.mariotaku.twidere.util.HtmlSpanBuilder
 import org.mariotaku.twidere.util.UnitConvertUtils
+import org.mariotaku.twidere.util.UriCreator
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.Utils.getUserTypeIconRes
-import org.mariotaku.twidere.view.ShapedImageView
+import org.mariotaku.twidere.view.ProfileImageView
 import org.mariotaku.twidere.view.ShortTimeView
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 
@@ -81,7 +80,7 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
  */
 class StatusViewHolder(var adapter: IStatusesAdapter, itemView: View, subtype: Int = 0) : ViewHolder(itemView), IStatusViewHolder {
 
-    override val profileImageView: ShapedImageView = itemView.profileImage
+    override val profileImageView: ProfileImageView = itemView.profileImage
     override val profileTypeView: ImageView = itemView.profileType
 
     private val itemContent = itemView.itemContent
@@ -126,8 +125,8 @@ class StatusViewHolder(var adapter: IStatusesAdapter, itemView: View, subtype: I
         val profileImageEnabled = adapter.profileImageEnabled
         profileImageView.visibility = if (profileImageEnabled) View.VISIBLE else View.GONE
 
-        adapter.requestManager.loadProfileImage(R.drawable.ic_profile_image_twidere, adapter.profileImageStyle,
-                profileImageView.cornerRadius, profileImageView.cornerRadiusRatio).into(profileImageView)
+        profileImageView.profileImage = UriCreator.resourceIdString(itemView.context.packageName,
+                R.drawable.ic_profile_image_twidere)
         nameView.name = TWIDERE_PREVIEW_NAME
         nameView.screenName = "@$TWIDERE_PREVIEW_SCREEN_NAME"
         nameView.updateText(BidiFormatterSingleton.get())
@@ -154,8 +153,7 @@ class StatusViewHolder(var adapter: IStatusesAdapter, itemView: View, subtype: I
         val showCardActions = isCardActionsShown
         val actionButtonsAlpha = PlaceholderLineSpan.placeholderAlpha / 255f
 
-        Glide.with(itemView).clear(profileImageView)
-        profileImageView.setImageDrawable(null)
+        profileImageView.profileImage = null
 
         timeView.time = ShortTimeView.PLACEHOLDER
         textView.spannable = placeholderText
@@ -259,8 +257,7 @@ class StatusViewHolder(var adapter: IStatusesAdapter, itemView: View, subtype: I
 
         if (adapter.profileImageEnabled) {
             profileImageView.visibility = View.VISIBLE
-            Glide.with(context).loadProfileImage(status, adapter.profileImageStyle, profileImageView.cornerRadius,
-                    profileImageView.cornerRadiusRatio, adapter.profileImageSize).into(profileImageView)
+            profileImageView.profileImage = status.user_profile_image_url
 
             profileTypeView.setImageResource(getUserTypeIconRes(status.user_is_verified, status.user_is_protected))
             profileTypeView.visibility = View.VISIBLE
