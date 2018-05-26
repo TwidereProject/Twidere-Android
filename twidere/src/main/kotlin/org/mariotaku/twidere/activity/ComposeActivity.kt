@@ -104,7 +104,7 @@ import org.mariotaku.twidere.util.view.ViewAnimator
 import org.mariotaku.twidere.util.view.ViewProperties
 import org.mariotaku.twidere.view.CheckableLinearLayout
 import org.mariotaku.twidere.view.ExtendedRecyclerView
-import org.mariotaku.twidere.view.ShapedImageView
+import org.mariotaku.twidere.view.ProfileImageView
 import org.mariotaku.twidere.view.helper.SimpleItemTouchHelperCallback
 import org.mariotaku.twidere.view.holder.compose.MediaPreviewViewHolder
 import java.text.Normalizer
@@ -357,7 +357,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         statusShortenerUsed = !ComponentPickerPreference.isNoneValue(PreferencesSingleton.get(this)[statusShortenerKey])
         if (PreferencesSingleton.get(this)[attachLocationKey]) {
             if (checkAnySelfPermissionsGranted(AndroidPermission.ACCESS_COARSE_LOCATION,
-                    AndroidPermission.ACCESS_FINE_LOCATION)) {
+                            AndroidPermission.ACCESS_FINE_LOCATION)) {
                 try {
                     startLocationUpdateIfEnabled()
                 } catch (e: SecurityException) {
@@ -408,9 +408,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             REQUEST_EXTENSION_COMPOSE -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     // The latter two is for compatibility
-                    val text = data.getCharSequenceExtra(Intent.EXTRA_TEXT) ?:
-                            data.getStringExtra(EXTRA_TEXT) ?:
-                            data.getStringExtra(EXTRA_APPEND_TEXT)
+                    val text = data.getCharSequenceExtra(Intent.EXTRA_TEXT)
+                            ?: data.getStringExtra(EXTRA_TEXT)
+                            ?: data.getStringExtra(EXTRA_APPEND_TEXT)
                     val isReplaceMode = data.getBooleanExtra(EXTRA_IS_REPLACE_MODE,
                             data.getStringExtra(EXTRA_APPEND_TEXT) == null)
                     if (text != null) {
@@ -424,8 +424,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                         updateTextCount()
                     }
 
-                    val src = MediaPickerActivity.getMediaUris(data)?.takeIf(Array<Uri>::isNotEmpty) ?:
-                            data.getParcelableExtra<Uri>(EXTRA_IMAGE_URI)?.let { arrayOf(it) }
+                    val src = MediaPickerActivity.getMediaUris(data)?.takeIf(Array<Uri>::isNotEmpty)
+                            ?: data.getParcelableExtra<Uri>(EXTRA_IMAGE_URI)?.let { arrayOf(it) }
                     if (src != null) {
                         performObtainMedia(src, null, false, false)
                     }
@@ -841,12 +841,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 accountProfileImage.setColorFilter(ThemeUtils.getColorFromAttribute(this,
                         android.R.attr.colorForeground))
                 accountProfileImage.scaleType = ImageView.ScaleType.CENTER_INSIDE
+                accountProfileImage.profileImage = null
                 accountProfileImage.setImageResource(R.drawable.ic_action_confirm)
             } else {
                 accountProfileImage.clearColorFilter()
                 accountProfileImage.scaleType = ImageView.ScaleType.CENTER_CROP
-                requestManager.loadProfileImage(single, accountProfileImage.style)
-                        .into(accountProfileImage)
+                accountProfileImage.profileImage = single.user.profile_image_url
             }
 
             accountProfileImage.setBorderColor(single.color)
@@ -973,7 +973,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             AccountType.FANFOU -> {
                 addFanfouHtmlToMentions(status.text_unescaped, status.spans, mentions)
                 val quoted = status.quoted
-                if (status.is_quote && quoted!= null) {
+                if (status.is_quote && quoted != null) {
                     addFanfouHtmlToMentions(quoted.text_unescaped, quoted.spans, mentions)
                 }
             }
@@ -2000,7 +2000,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private class AccountIconViewHolder(val adapter: AccountIconsAdapter, itemView: View) : ViewHolder(itemView) {
-        private val iconView = itemView.findViewById<ShapedImageView>(android.R.id.icon)
+        private val iconView = itemView.findViewById<ProfileImageView>(android.R.id.icon)
 
         init {
             itemView.setOnClickListener {
@@ -2015,10 +2015,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             iconView.style = adapter.profileImageStyle
         }
 
-        fun showAccount(adapter: AccountIconsAdapter, account: AccountDetails, isSelected: Boolean) {
+        fun showAccount(account: AccountDetails, isSelected: Boolean) {
             itemView.alpha = if (isSelected) 1f else 0.33f
-            val context = adapter.context
-            adapter.requestManager.loadProfileImage(account, adapter.profileImageStyle).into(iconView)
+            iconView.profileImage = account.user.profile_image_url
             iconView.setBorderColor(account.color)
         }
 
@@ -2065,7 +2064,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         override fun onBindViewHolder(holder: AccountIconViewHolder, position: Int) {
             val account = accounts!![position]
             val isSelected = selection[account.key] ?: false
-            holder.showAccount(this, account, isSelected)
+            holder.showAccount(account, isSelected)
         }
 
         override fun getItemCount(): Int {

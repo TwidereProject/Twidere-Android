@@ -223,7 +223,7 @@ class UserQrDialogFragment : BaseDialogFragment() {
                 // Ignore
             }
             // Return fallback profile image
-            return@task requestManager.loadProfileImage(user, ImageShapeStyle.SHAPE_NONE, size = profileImageSize).submit(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get()
+            return@task requestManager.load(user.profile_image_url).submit(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get()
         }
     }
 

@@ -55,23 +55,7 @@ fun RequestManager.loadProfileImage(resourceId: Int, @ImageShapeStyle shapeStyle
 
 fun RequestManager.loadProfileImage(account: AccountDetails, @ImageShapeStyle shapeStyle: Int, cornerRadius: Float = 0f,
         cornerRadiusRatio: Float = 0f, size: String? = null): RequestBuilder<Drawable> {
-    return loadProfileImage(account.user, shapeStyle, cornerRadius, cornerRadiusRatio, size)
-}
-
-fun RequestManager.loadProfileImage(user: ParcelableUser, @ImageShapeStyle shapeStyle: Int, cornerRadius: Float = 0f,
-        cornerRadiusRatio: Float = 0f, size: String? = null): RequestBuilder<Drawable> {
-    if (user.extras != null && user.extras?.profile_image_url_fallback == null) {
-        // No fallback image, use compatible logic
-        return loadProfileImage(user.profile_image_url, shapeStyle, cornerRadius, cornerRadiusRatio,
-                size)
-    }
-    return configureLoadProfileImage(shapeStyle, cornerRadius, cornerRadiusRatio) {
-        if (size != null) {
-            return@configureLoadProfileImage load(Utils.getTwitterProfileImageOfSize(user.profile_image_url, size))
-        } else {
-            return@configureLoadProfileImage load(user.profile_image_url)
-        }
-    }
+    return loadProfileImage(account.user.profile_image_url, shapeStyle, cornerRadius, cornerRadiusRatio, size)
 }
 
 fun RequestManager.loadProfileImage(user: ParcelableLiteUser, @ImageShapeStyle shapeStyle: Int, cornerRadius: Float = 0f,
@@ -101,24 +85,12 @@ fun RequestManager.loadProfileImage(group: ParcelableGroup, @ImageShapeStyle sha
     }
 }
 
-fun RequestManager.loadProfileImage(status: ParcelableStatus, @ImageShapeStyle shapeStyle: Int, cornerRadius: Float = 0f,
-        cornerRadiusRatio: Float = 0f, size: String? = null): RequestBuilder<Drawable> {
-    if (status.extras?.user_profile_image_url_fallback == null) {
-        // No fallback image, use compatible logic
-        return loadProfileImage(status.user_profile_image_url, shapeStyle, cornerRadius, cornerRadiusRatio,
-                size)
-    }
-    return configureLoadProfileImage(shapeStyle, cornerRadius, cornerRadiusRatio) {
-        return@configureLoadProfileImage load(status.user_profile_image_url)
-    }
-}
-
 fun RequestManager.loadProfileImage(conversation: ParcelableMessageConversation, @ImageShapeStyle shapeStyle: Int,
         cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f, size: String? = null): RequestBuilder<*> {
     if (conversation.conversation_type == ParcelableMessageConversation.ConversationType.ONE_TO_ONE) {
         val user = conversation.user
         if (user != null) {
-            return loadProfileImage(user, shapeStyle, cornerRadius, cornerRadiusRatio, size)
+            return loadProfileImage(user.profile_image_url, shapeStyle, cornerRadius, cornerRadiusRatio, size)
         } else {
             // TODO: show default conversation icon
             return loadProfileImage(R.drawable.ic_profile_image_default_group, shapeStyle, cornerRadius,
@@ -152,17 +124,20 @@ internal inline fun <T> configureLoadProfileImage(@ImageShapeStyle shapeStyle: I
         cornerRadiusRatio: Float = 0f, create: () -> RequestBuilder<T>
 ): RequestBuilder<T> {
     val builder = create()
-    val requestOptions = RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.DATA).dontAnimate().centerCrop()
+    return builder.apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.DATA).dontAnimate()
+            .configTransform(shapeStyle, cornerRadius, cornerRadiusRatio))
+}
+
+fun RequestOptions.configTransform(shapeStyle: Int, cornerRadius: Float, cornerRadiusRatio: Float) = apply {
     when (shapeStyle) {
         ImageShapeStyle.SHAPE_CIRCLE -> {
-            requestOptions.transform(CircleCrop())
+            transform(CircleCrop())
         }
         ImageShapeStyle.SHAPE_RECTANGLE -> {
-            requestOptions.transform(RoundedRectTransformation(cornerRadius, cornerRadiusRatio))
+            transform(RoundedRectTransformation(cornerRadius, cornerRadiusRatio))
         }
         ImageShapeStyle.SHAPE_NONE -> {
-            // No-op
+            centerCrop()
         }
     }
-    return builder.apply(requestOptions)
 }

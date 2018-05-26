@@ -26,7 +26,7 @@ import org.mariotaku.twidere.R
 
 abstract class ViewHolderListAdapter<VH : ViewHolderListAdapter.ViewHolder> : BaseAdapter() {
 
-    override final fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+    final override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val viewHolder: VH
         @Suppress("UNCHECKED_CAST")
         if (convertView != null) {
@@ -42,7 +42,7 @@ abstract class ViewHolderListAdapter<VH : ViewHolderListAdapter.ViewHolder> : Ba
         return viewHolder.itemView
     }
 
-    override final fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+    final override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
         val viewHolder: VH
         @Suppress("UNCHECKED_CAST")
         if (convertView != null) {

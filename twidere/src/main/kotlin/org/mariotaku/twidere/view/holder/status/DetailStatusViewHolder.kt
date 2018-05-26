@@ -47,11 +47,9 @@ import org.mariotaku.twidere.Constants.MENU_GROUP_STATUS_SHARE
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter
 import org.mariotaku.twidere.adapter.StatusDetailsAdapter
-import org.mariotaku.twidere.annotation.ProfileImageSize
 import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.data.status.StatusActivitySummaryLiveData
-import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.fragment.status.StatusFragment
 import org.mariotaku.twidere.fragment.timeline.AbsTimelineFragment
@@ -209,8 +207,7 @@ class DetailStatusViewHolder(
         nameView.screenName = "@${status.user_acct}"
         nameView.updateText(formatter)
 
-        adapter.requestManager.loadProfileImage(status, adapter.profileImageStyle, itemView.profileImage.cornerRadius,
-                itemView.profileImage.cornerRadiusRatio, size = ProfileImageSize.ORIGINAL).into(itemView.profileImage)
+        itemView.profileImage.profileImage = status.user_profile_image_url
 
         val typeIconRes = Utils.getUserTypeIconRes(status.user_is_verified, status.user_is_protected)
         val typeDescriptionRes = Utils.getUserTypeDescriptionRes(status.user_is_verified, status.user_is_protected)
@@ -386,7 +383,7 @@ class DetailStatusViewHolder(
             }
             itemView.profileContainer -> {
                 IntentUtils.openUserProfile(adapter.context, status.account_key, status.user_key,
-                        status.user_screen_name, status.extras?.user_statusnet_profile_url,
+                        status.user_screen_name, status.user_profile_image_url,
                         preferences[newDocumentApiKey], null)
             }
             retweetedByView -> {
@@ -679,10 +676,7 @@ class DetailStatusViewHolder(
             }
 
             fun displayUser(item: ParcelableUser) {
-                val context = adapter.context
-                val requestManager = adapter.requestManager
-                requestManager.loadProfileImage(item, adapter.profileImageStyle, profileImageView.cornerRadius,
-                        profileImageView.cornerRadiusRatio, adapter.profileImageSize).into(profileImageView)
+                profileImageView.profileImage = item.profile_image_url
             }
 
             override fun onClick(v: View) {

@@ -309,7 +309,7 @@ class StatusFragment : BaseFragment(), OnMediaClickListener, StatusClickListener
     override fun onUserProfileClick(holder: IStatusViewHolder, position: Int) {
         val status = adapter.getStatus(position)
         IntentUtils.openUserProfile(activity!!, status.account_key, status.user_key,
-                status.user_screen_name, status.extras?.user_statusnet_profile_url,
+                status.user_screen_name, status.user_profile_image_url,
                 PreferencesSingleton.get(context!!)[newDocumentApiKey], null)
     }
 

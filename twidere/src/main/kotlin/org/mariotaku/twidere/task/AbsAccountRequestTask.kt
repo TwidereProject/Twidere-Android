@@ -39,9 +39,9 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 
 abstract class AbsAccountRequestTask<Params, Result, Callback>(context: Context, val accountKey: UserKey?) :
         ExceptionHandlingAbstractTask<Params, Result, MicroBlogException, Callback>(context) {
-    override final val exceptionClass = MicroBlogException::class.java
+    final override val exceptionClass = MicroBlogException::class.java
 
-    override final fun onExecute(params: Params): Result {
+    final override fun onExecute(params: Params): Result {
         if (accountKey == null) throw AccountNotFoundException()
         val account = AccountManager.get(context).getDetailsOrThrow(accountKey, true)
         val draft = createDraft()

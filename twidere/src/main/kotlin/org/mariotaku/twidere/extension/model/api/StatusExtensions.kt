@@ -162,8 +162,6 @@ fun Status.applyTo(accountKey: UserKey, accountType: String, statusConfig: Model
     result.user_is_protected = user.isProtected
     result.user_is_verified = user.isVerified
     result.user_is_following = user.isFollowing == true
-    extras.user_statusnet_profile_url = user.statusnetProfileUrl
-    extras.user_profile_image_url_fallback = user.profileImageUrlHttps ?: user.profileImageUrl
     val text = status.htmlText
     // Twitter will escape <> to &lt;&gt;, so if a status contains those symbols unescaped
     // We should treat this as an html

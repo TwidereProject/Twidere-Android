@@ -388,7 +388,7 @@ class ParcelableActivitiesAdapter(
             val adapter = adapterRef ?: return
             val status = adapter.getActivity(position).activityStatus ?: return
             IntentUtils.openUserProfile(adapter.context, status.account_key, status.user_key,
-                    status.user_screen_name, status.extras?.user_statusnet_profile_url,
+                    status.user_screen_name, status.user_profile_image_url,
                     PreferencesSingleton.get(adapter.context)[newDocumentApiKey], null)
         }
 

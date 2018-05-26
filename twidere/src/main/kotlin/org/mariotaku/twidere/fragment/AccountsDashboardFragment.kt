@@ -478,8 +478,8 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
                 val profileImageStyle = PreferencesSingleton.get(context!!)[profileImageStyleKey]
                 Glide.with(this@AccountsDashboardFragment).loadProfileImage(oldSelectedAccount, profileImageStyle,
                         clickedImageView.cornerRadius, clickedImageView.cornerRadiusRatio)
-                        .into(clickedImageView).onLoadStarted(profileDrawable)
-                //TODO complete border color
+                        .apply(RequestOptions.placeholderOf(profileDrawable))
+                        .into(clickedImageView)
                 clickedImageView.setBorderColors(*profileImageView.borderColors)
 
                 displayAccountBanner(details)

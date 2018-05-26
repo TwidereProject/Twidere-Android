@@ -127,7 +127,8 @@ import org.mariotaku.twidere.text.TwidereURLSpan
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener
-import org.mariotaku.twidere.util.UserColorNameManager.*
+import org.mariotaku.twidere.util.UserColorNameManager.UserColorChangedListener
+import org.mariotaku.twidere.util.UserColorNameManager.UserNicknameChangedListener
 import org.mariotaku.twidere.util.shortcut.ShortcutCreator
 import org.mariotaku.twidere.util.support.ActivitySupport
 import org.mariotaku.twidere.util.support.ActivitySupport.TaskDescriptionCompat
@@ -1209,8 +1210,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         Glide.with(this).loadProfileBanner(activity, user, defWidth).into(profileBanner)
         Glide.with(this).loadOriginalProfileImage(user, profileImage.style, profileImage.cornerRadius,
                 profileImage.cornerRadiusRatio)
-                .thumbnail(Glide.with(this).loadProfileImage(user, profileImage.style, profileImage.cornerRadius,
-                        profileImage.cornerRadiusRatio, getString(R.string.profile_image_size))).into(profileImage)
+                .thumbnail(Glide.with(this).load(user.profile_image_url)).into(profileImage)
 
         val userCreationDay = condition@ if (user.created_at >= 0) {
             val cal = Calendar.getInstance()

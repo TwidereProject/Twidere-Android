@@ -36,12 +36,10 @@ import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.weak
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.annotation.ImageShapeStyle
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
-import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.dagger.DependencyHolder
 import org.mariotaku.twidere.extension.dismissProgressDialog
-import org.mariotaku.twidere.extension.loadProfileImage
+import org.mariotaku.twidere.extension.model.originalProfileImage
 import org.mariotaku.twidere.extension.showProgressDialog
 import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.model.ParcelableUser
@@ -60,15 +58,9 @@ object ShortcutCreator {
     private const val adaptiveIconOuterSidesDp = 18
 
     fun user(context: Context, accountKey: UserKey?, user: ParcelableUser): Promise<ShortcutInfoCompat, Exception> {
-        val holder = DependencyHolder.get(context)
-        val preferences = PreferencesSingleton.get(context)
         val userColorNameManager = UserColorNameManager.get(context)
 
-        val profileImageStyle = if (useAdaptiveIcon) ImageShapeStyle.SHAPE_RECTANGLE else preferences[profileImageStyleKey]
-        val profileImageCornerRadiusRatio = if (useAdaptiveIcon) 0f else 0.1f
-
-        val deferred = Glide.with(context).loadProfileImage(user, shapeStyle = profileImageStyle,
-                cornerRadiusRatio = profileImageCornerRadiusRatio, size = context.getString(R.string.profile_image_size)).into(DeferredTarget())
+        val deferred = Glide.with(context).load(user.originalProfileImage).into(DeferredTarget())
 
         val weakContext = WeakReference(context)
         return deferred.promise.then { drawable ->
@@ -84,7 +76,6 @@ object ShortcutCreator {
     }
 
     fun userFavorites(context: Context, accountKey: UserKey?, user: ParcelableUser): Promise<ShortcutInfoCompat, Exception> {
-        val holder = DependencyHolder.get(context)
         val preferences = PreferencesSingleton.get(context)
         val userColorNameManager = UserColorNameManager.get(context)
 

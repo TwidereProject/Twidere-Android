@@ -27,7 +27,6 @@ import android.widget.TextView
 import org.mariotaku.ktextension.spannable
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.AccountDetailsAdapter
-import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.getAccountTypeIcon
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.view.ProfileImageView
@@ -64,8 +63,7 @@ class AccountViewHolder(
         screenName.spannable = "@${details.user.screen_name}"
         setAccountColor(details.color)
         profileImage.visibility = View.VISIBLE
-        adapter.requestManager.loadProfileImage(details, adapter.profileImageStyle, profileImage.cornerRadius,
-                profileImage.cornerRadiusRatio).into(profileImage)
+        profileImage.profileImage = details.user.profile_image_url
         accountType.setImageResource(getAccountTypeIcon(details.type))
         toggle.setOnCheckedChangeListener(null)
         toggle.isChecked = details.activated

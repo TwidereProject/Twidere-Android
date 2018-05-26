@@ -480,13 +480,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         @JsonField(name = "support_entities")
         public boolean support_entities;
 
-        @JsonField(name = "user_profile_image_url_fallback")
-        @Nullable
-        public String user_profile_image_url_fallback;
-
-        @JsonField(name = "user_statusnet_profile_url")
-        public String user_statusnet_profile_url;
-
         @JsonField(name = "display_text_range")
         @Nullable
         public int[] display_text_range;

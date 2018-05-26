@@ -40,7 +40,6 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity
 import org.mariotaku.twidere.activity.ThemedMediaPickerActivity
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.annotation.ImageShapeStyle
 import org.mariotaku.twidere.data.user.UserLiveData
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.data.observe
@@ -169,8 +168,8 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
                         editDescription.string.orEmpty(), linkColor.color, backgroundColor.color)
                 runningPromise = showProgressDialog(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG)
                         .and(UserProfilePromises.get(context!!).updateProfile(accountKey, update)).alwaysUi {
-                    dismissProgressDialog(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG)
-                }
+                            dismissProgressDialog(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG)
+                        }
                 return true
             }
         }
@@ -254,10 +253,11 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
         editLocation.setText(user.location)
         editUrl.setText(user.urlFull)
 
-        Glide.with(this).loadProfileImage(user, ImageShapeStyle.SHAPE_RECTANGLE).into(profileImage)
-        Glide.with(this).loadProfileBanner(activity, user, resources.displayMetrics.widthPixels)
+        val requestManager = Glide.with(this)
+        requestManager.load(user).into(profileImage)
+        requestManager.loadProfileBanner(activity, user, resources.displayMetrics.widthPixels)
                 .into(profileBanner)
-        Glide.with(this).load(user.profile_background_url).into(profileBackground)
+        requestManager.load(user.profile_background_url).into(profileBackground)
 
         linkColor.color = user.link_color
         backgroundColor.color = user.background_color

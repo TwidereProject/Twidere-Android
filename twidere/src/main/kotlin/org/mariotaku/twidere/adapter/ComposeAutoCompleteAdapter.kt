@@ -34,7 +34,6 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.displayProfileImageKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.extension.appendQueryParameterIgnoreNull
-import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.SuggestionItem
 import org.mariotaku.twidere.model.UserKey
@@ -75,10 +74,9 @@ class ComposeAutoCompleteAdapter(context: Context, val requestManager: RequestMa
             val screenName = cursor.getString(indices.summary)
             text2.spannable = "@${getScreenNameOrAcct(screenName, userKey)}"
             if (displayProfileImage) {
-                val profileImageUrl = cursor.getString(indices.icon)
-                requestManager.loadProfileImage(profileImageUrl, profileImageStyle).into(icon)
+                icon.profileImage = cursor.getString(indices.icon)
             } else {
-                //TODO cancel image load
+                icon.profileImage = null
             }
 
             icon.clearColorFilter()

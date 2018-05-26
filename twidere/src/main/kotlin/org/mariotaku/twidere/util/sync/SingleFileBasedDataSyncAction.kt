@@ -13,7 +13,7 @@ abstract class SingleFileBasedDataSyncAction<Data, SnapshotStore, DownloadSessio
 
     private val ATTR_KEY = "key"
 
-    override final fun execute(): Boolean {
+    final override fun execute(): Boolean {
         DebugLog.d(LOGTAG_SYNC, "Begin syncing $whatData")
 
         if (!setup()) {

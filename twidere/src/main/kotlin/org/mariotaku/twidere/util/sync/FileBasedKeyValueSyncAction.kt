@@ -22,17 +22,17 @@ abstract class FileBasedKeyValueSyncAction<DownloadSession : Closeable, UploadSe
 
     protected abstract val snapshotFileName: String
 
-    override final fun MutableMap<String, String>.addAllData(data: MutableMap<String, String>): Boolean {
+    final override fun MutableMap<String, String>.addAllData(data: MutableMap<String, String>): Boolean {
         this.putAll(data)
         return true
     }
 
-    override final fun MutableMap<String, String>.removeAllData(data: MutableMap<String, String>): Boolean {
+    final override fun MutableMap<String, String>.removeAllData(data: MutableMap<String, String>): Boolean {
         this.removeAll(data.keys)
         return true
     }
 
-    override final fun MutableMap<String, String>.minus(data: MutableMap<String, String>): MutableMap<String, String> {
+    final override fun MutableMap<String, String>.minus(data: MutableMap<String, String>): MutableMap<String, String> {
         val diff = HashMap<String, String>()
         for ((k, v) in this) {
             val dv = data[k]
@@ -43,7 +43,7 @@ abstract class FileBasedKeyValueSyncAction<DownloadSession : Closeable, UploadSe
         return diff
     }
 
-    override final fun File.loadSnapshot(): HashMap<String, String> {
+    final override fun File.loadSnapshot(): HashMap<String, String> {
         return reader().use {
             val snapshot = HashMap<String, String>()
             val parser = Xml.newPullParser()
@@ -53,7 +53,7 @@ abstract class FileBasedKeyValueSyncAction<DownloadSession : Closeable, UploadSe
         }
     }
 
-    override final fun File.saveSnapshot(data: MutableMap<String, String>) {
+    final override fun File.saveSnapshot(data: MutableMap<String, String>) {
         writer().use {
             val serializer = Xml.newSerializer()
             serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true)
@@ -62,20 +62,20 @@ abstract class FileBasedKeyValueSyncAction<DownloadSession : Closeable, UploadSe
         }
     }
 
-    override final var File.snapshotLastModified: Long
+    final override var File.snapshotLastModified: Long
         get() = this.lastModified()
         set(value) {
             this.setLastModified(value)
         }
 
-    override final fun newData(): MutableMap<String, String> = HashMap()
+    final override fun newData(): MutableMap<String, String> = HashMap()
 
-    override final fun newSnapshotStore(): File {
+    final override fun newSnapshotStore(): File {
         val syncDataDir: File = context.syncDataDir.mkdirIfNotExists() ?: throw IOException()
         return File(syncDataDir, snapshotFileName)
     }
 
-    override final fun MutableMap<String, String>.isDataEmpty(): Boolean = this.isEmpty()
+    final override fun MutableMap<String, String>.isDataEmpty(): Boolean = this.isEmpty()
 
     override fun MutableMap<String, String>.dataContentEquals(localData: MutableMap<String, String>): Boolean {
         return this.entries.contentEquals(localData.entries)

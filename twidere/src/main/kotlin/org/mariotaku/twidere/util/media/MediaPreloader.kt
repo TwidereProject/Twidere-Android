@@ -25,7 +25,6 @@ import com.bumptech.glide.Glide
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.constant.mediaPreloadKey
 import org.mariotaku.twidere.constant.mediaPreloadOnWifiOnlyKey
-import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.activityStatus
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.ParcelableMedia
@@ -69,7 +68,7 @@ class MediaPreloader(val context: Context) {
     }
 
     private fun preLoadProfileImage(status: ParcelableStatus) {
-        Glide.with(context).loadProfileImage(status, 0).submit()
+        Glide.with(context).load(status.user_profile_image_url).submit()
     }
 
     private fun preloadPreviewImage(url: String?) {

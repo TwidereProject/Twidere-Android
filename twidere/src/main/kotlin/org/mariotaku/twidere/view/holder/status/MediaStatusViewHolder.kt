@@ -27,7 +27,6 @@ import kotlinx.android.synthetic.main.adapter_item_media_status.view.*
 import org.mariotaku.ktextension.spannable
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
-import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -62,8 +61,8 @@ class MediaStatusViewHolder(private val adapter: IStatusesAdapter, itemView: Vie
         } else {
             mediaTextView.spannable = status.text_unescaped
         }
-        adapter.requestManager.loadProfileImage(status, adapter.profileImageStyle,
-                profileImageView.cornerRadius, profileImageView.cornerRadiusRatio).into(profileImageView)
+
+        profileImageView.profileImage = status.user_profile_image_url
 
         val firstMedia = status.attachment?.media?.firstOrNull() ?: return
 

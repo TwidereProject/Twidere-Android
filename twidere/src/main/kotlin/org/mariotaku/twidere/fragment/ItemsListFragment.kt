@@ -105,7 +105,7 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
             override fun onUserProfileClick(holder: IStatusViewHolder, position: Int) {
                 val status = dummyItemAdapter.getStatus(position)
                 IntentUtils.openUserProfile(context, status.account_key, status.user_key,
-                        status.user_screen_name, status.extras?.user_statusnet_profile_url,
+                        status.user_screen_name, status.user_profile_image_url,
                         PreferencesSingleton.get(this@ItemsListFragment.context!!)[newDocumentApiKey])
             }
         }
@@ -127,7 +127,7 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
         return ItemsLoader(context!!, arguments!!)
     }
 
-    override final fun onLoadFinished(loader: Loader<List<Any>?>, data: List<Any>?) {
+    final override fun onLoadFinished(loader: Loader<List<Any>?>, data: List<Any>?) {
         adapter.setData(data)
         showContent()
     }

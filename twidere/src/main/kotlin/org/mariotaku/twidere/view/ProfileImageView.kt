@@ -26,7 +26,9 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
-import org.mariotaku.twidere.extension.loadProfileImage
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
+import org.mariotaku.twidere.extension.configTransform
 
 @BindingMethods(
         BindingMethod(type = ProfileImageView::class, attribute = "profileImage", method = "setProfileImage")
@@ -39,7 +41,12 @@ class ProfileImageView(context: Context, attrs: AttributeSet? = null) : ShapedIm
             if (value == null) {
                 Glide.with(this).clear(this)
             } else {
-                Glide.with(this).loadProfileImage(value, style, cornerRadius, cornerRadiusRatio).into(this)
+                Glide.with(this)
+                        .load(value)
+                        .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.DATA)
+                                .dontAnimate()
+                                .configTransform(style, cornerRadius, cornerRadiusRatio))
+                        .into(this)
             }
         }
 

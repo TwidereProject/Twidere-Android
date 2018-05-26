@@ -417,17 +417,15 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
                     holder.text2.visibility = View.VISIBLE
                     holder.text2.spannable = "@${cursor.getString(indices.summary)}"
                     ImageViewCompat.setImageTintList(holder.icon, null)
-                    requestManager.loadProfileImage(cursor.getString(indices.icon), profileImageStyle,
-                            cornerRadius = holder.icon.cornerRadius, cornerRadiusRatio = holder.icon.cornerRadiusRatio,
-                            size = profileImageSize).into(holder.icon)
+                    holder.icon.profileImage = cursor.getString(indices.icon)
                 }
                 VIEW_TYPE_USER_SCREEN_NAME -> {
                     val holder = view.tag as UserViewHolder
                     holder.text1.spannable = "@${cursor.getString(indices.title)}"
                     holder.text2.visibility = View.GONE
                     ImageViewCompat.setImageTintList(holder.icon, holder.text1.textColors)
-                    //TODO cancel image load
-                    holder.icon.setImageResource(R.drawable.ic_action_user)
+                    holder.icon.profileImage = UriCreator.resourceIdString(context.packageName,
+                            R.drawable.ic_action_user)
                 }
             }
         }

@@ -33,7 +33,6 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ParcelableUsersAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.*
-import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.hasSameHost
 import org.mariotaku.twidere.extension.model.urlDisplay
 import org.mariotaku.twidere.extension.setVisible
@@ -116,10 +115,10 @@ class UserViewHolder(
 
         if (adapter.profileImageEnabled) {
             profileImageView.setVisible(true)
-            adapter.requestManager.loadProfileImage(user, adapter.profileImageStyle, profileImageView.cornerRadius,
-                    profileImageView.cornerRadiusRatio, adapter.profileImageSize).into(profileImageView)
+            profileImageView.profileImage = user.profile_image_url
         } else {
             profileImageView.setVisible(false)
+            profileImageView.profileImage = null
         }
 
         val accountKey = user.account_key
@@ -222,8 +221,7 @@ class UserViewHolder(
     }
 
     fun placeholder() {
-        adapter.requestManager.clear(profileImageView)
-        profileImageView.setImageDrawable(null)
+        profileImageView.profileImage = null
         profileTypeView.visibility = View.GONE
 
         nameView.placeholder = true

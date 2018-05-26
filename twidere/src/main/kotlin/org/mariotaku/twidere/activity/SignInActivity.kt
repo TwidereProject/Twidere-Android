@@ -1070,7 +1070,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
 
         protected val profileImageSize: ModelCreationConfig = ModelCreationConfig.obtain(activity)
 
-        override final fun doInBackground(vararg args: Any?): SingleResponse<SignInResponse> {
+        final override fun doInBackground(vararg args: Any?): SingleResponse<SignInResponse> {
             try {
                 return SingleResponse.getInstance(performLogin())
             } catch (e: Exception) {

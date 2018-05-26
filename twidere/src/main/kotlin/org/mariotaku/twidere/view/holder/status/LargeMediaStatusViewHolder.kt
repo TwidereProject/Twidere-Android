@@ -35,7 +35,6 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.RecyclerPagerAdapter
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE
-import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.applyTo
 import org.mariotaku.twidere.extension.model.aspectRatio
 import org.mariotaku.twidere.extension.model.contentDescription
@@ -80,8 +79,7 @@ class LargeMediaStatusViewHolder(private val adapter: IStatusesAdapter, itemView
         val context = itemView.context
         val linkify = adapter.twidereLinkify
 
-        adapter.requestManager.loadProfileImage(status, adapter.profileImageStyle,
-                profileImageView.cornerRadius, profileImageView.cornerRadiusRatio).into(profileImageView)
+        profileImageView.profileImage = status.user_profile_image_url
 
         nameView.name = status.user_name
         nameView.screenName = "@${status.user_screen_name}"

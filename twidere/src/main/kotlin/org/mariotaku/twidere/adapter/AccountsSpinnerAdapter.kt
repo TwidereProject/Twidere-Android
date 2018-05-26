@@ -30,7 +30,6 @@ import org.mariotaku.ktextension.spannable
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.displayProfileImageKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
-import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.singleton.PreferencesSingleton
@@ -108,7 +107,7 @@ class AccountsSpinnerAdapter(
                     if (adapter.profileImageEnabled) {
                         icon.visibility = View.VISIBLE
                         icon.style = adapter.profileImageStyle
-                        adapter.requestManager.loadProfileImage(account.user, adapter.profileImageStyle).into(icon)
+                        icon.profileImage = account.user.profile_image_url
                     } else {
                         icon.visibility = View.GONE
                     }

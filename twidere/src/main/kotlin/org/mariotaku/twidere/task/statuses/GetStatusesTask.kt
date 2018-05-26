@@ -73,7 +73,7 @@ abstract class GetStatusesTask<P : ContentRefreshParam>(
 
     private val creationConfig = ModelCreationConfig.obtain(context)
 
-    override final fun doLongOperation(param: P): List<Pair<GetTimelineResult<ParcelableStatus>?, Exception?>> {
+    final override fun doLongOperation(param: P): List<Pair<GetTimelineResult<ParcelableStatus>?, Exception?>> {
         if (param.shouldAbort) return emptyList()
         val accountKeys = param.accountKeys.takeIf { it.isNotEmpty() } ?: return emptyList()
         val loadItemLimit = PreferencesSingleton.get(context)[loadItemLimitKey]

@@ -12,7 +12,7 @@ abstract class ArrayRecyclerAdapter<T, H : ViewHolder>(
 
     protected val data = ArrayList<T>()
 
-    override final fun onBindViewHolder(holder: H, position: Int) {
+    final override fun onBindViewHolder(holder: H, position: Int) {
         onBindViewHolder(holder, position, getItem(position))
     }
 
