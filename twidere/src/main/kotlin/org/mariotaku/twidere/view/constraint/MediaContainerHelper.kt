@@ -10,12 +10,12 @@ import android.view.ViewGroup
 import org.mariotaku.twidere.annotation.PreviewStyle
 import org.mariotaku.twidere.extension.model.aspectRatio
 import org.mariotaku.twidere.extension.setVisible
+import org.mariotaku.twidere.extension.view.resetValues
 import org.mariotaku.twidere.model.ParcelableMedia
 
 class MediaContainerHelper(context: Context, attrs: AttributeSet?) : ConstraintHelper(context, attrs) {
     val referencedCount: Int
         get() = mCount
-
 
 
     @SuppressLint("SwitchIntDef")
@@ -26,6 +26,9 @@ class MediaContainerHelper(context: Context, attrs: AttributeSet?) : ConstraintH
         val child = getReferencedViewAt(0)
 
         val lp = child.layoutParams as ConstraintLayout.LayoutParams
+        lp.resetValues()
+        lp.width = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT
+        lp.height = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT
         lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
         lp.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
         lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
@@ -55,7 +58,9 @@ class MediaContainerHelper(context: Context, attrs: AttributeSet?) : ConstraintH
         val child2 = getReferencedViewAt(2)
 
         (child0.layoutParams as ConstraintLayout.LayoutParams).also {
-            it.reset()
+            it.resetValues()
+            it.width = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT
+            it.height = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT
             it.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
             it.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
             it.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
@@ -65,7 +70,9 @@ class MediaContainerHelper(context: Context, attrs: AttributeSet?) : ConstraintH
         }
 
         (child1.layoutParams as ConstraintLayout.LayoutParams).also {
-            it.reset()
+            it.resetValues()
+            it.width = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT
+            it.height = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT
             it.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
             it.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
             it.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
@@ -74,7 +81,9 @@ class MediaContainerHelper(context: Context, attrs: AttributeSet?) : ConstraintH
             it.horizontalBias = 1f
         }
         (child2.layoutParams as ConstraintLayout.LayoutParams).also {
-            it.reset()
+            it.resetValues()
+            it.width = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT
+            it.height = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT
             it.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
             it.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
             it.topToBottom = child1.id
@@ -99,7 +108,9 @@ class MediaContainerHelper(context: Context, attrs: AttributeSet?) : ConstraintH
             val column = i % numColumns
 
             val lp = view.layoutParams as ConstraintLayout.LayoutParams
-            lp.reset()
+            lp.resetValues()
+            lp.width = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT
+            lp.height = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT
             lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
             lp.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
             if (row == 0) {
@@ -121,3 +132,4 @@ class MediaContainerHelper(context: Context, attrs: AttributeSet?) : ConstraintH
         return (parent as ViewGroup).findViewById(mIds[index])
     }
 }
+
