@@ -32,7 +32,7 @@ import org.mariotaku.twidere.util.ErrorInfoStore
 class GetListTimelineTask(context: Context) : GetStatusesTask<ListTimelineContentRefreshParam>(context) {
 
     override val contentUri: Uri
-        get() = Statuses.GroupTimeline.CONTENT_URI.withAppendedPath(params.tabId)
+        get() = Statuses.ListTimeline.CONTENT_URI.withAppendedPath(params.tabId)
 
     override val filterScopes: Int = FilterScope.LIST_GROUP_TIMELINE
 

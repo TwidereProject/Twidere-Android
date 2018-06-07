@@ -44,11 +44,19 @@ class CursorObjectDataSourceFactory<T : Any>(
         val processor: DataSourceItemProcessor<T>? = null
 ) : DataSource.Factory<Int, T>() {
 
+    private val observerInfo = mutableListOf<ObserverInfo>()
+
     @WorkerThread
     override fun create(): DataSource<Int, T> {
         return CursorObjectDataSource(resolver, uri, projection, selection, selectionArgs,
-                sortOrder, cls, processor)
+                sortOrder, cls, processor, observerInfo)
     }
+
+    fun registerContentObserver(uri: Uri, notifyForDescendants: Boolean) {
+        observerInfo.add(ObserverInfo(uri, notifyForDescendants))
+    }
+
+    private data class ObserverInfo(val uri: Uri, val notifyForDescendants: Boolean)
 
     private class CursorObjectDataSource<T : Any>(
             val resolver: ContentResolver,
@@ -58,7 +66,8 @@ class CursorObjectDataSourceFactory<T : Any>(
             val selectionArgs: Array<String>? = null,
             val sortOrder: String? = null,
             val cls: Class<T>,
-            val processor: DataSourceItemProcessor<T>?
+            val processor: DataSourceItemProcessor<T>?,
+            val observerInfo: List<ObserverInfo>
     ) : PositionalDataSource<T>() {
 
         private val totalCount: Int by lazy { resolver.queryCount(uri, selection, selectionArgs) }
@@ -69,10 +78,16 @@ class CursorObjectDataSourceFactory<T : Any>(
             val observer: ContentObserver = object : ContentObserver(MainHandler) {
                 override fun onChange(selfChange: Boolean) {
                     resolver.unregisterContentObserver(this)
+                    observerInfo.forEach {
+                        resolver.unregisterContentObserver(this)
+                    }
                     weakThis?.invalidate()
                 }
             }
             resolver.registerContentObserver(uri, false, observer)
+            observerInfo.forEach {
+                resolver.registerContentObserver(it.uri, it.notifyForDescendants, observer)
+            }
             processor?.init(resolver)
         }
 
@@ -118,7 +133,7 @@ class CursorObjectDataSourceFactory<T : Any>(
                         "$offset,$limit", cls) ?: return false
                 DebugLog.d(msg = "Querying $uri:$startPosition,$count took ${System.currentTimeMillis() - start} ms.")
                 val reachedEnd = list.size < count
-                list.mapIndexedNotNullTo(result) lambda@ { index, item ->
+                list.mapIndexedNotNullTo(result) lambda@{ index, item ->
                     val processed = processor.process(item)
                     filterStates[offset + index] = processed != null
                     return@lambda processed

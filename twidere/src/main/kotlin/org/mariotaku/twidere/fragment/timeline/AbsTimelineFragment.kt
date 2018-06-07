@@ -92,6 +92,7 @@ import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.model.tab.extra.TimelineTabExtras
 import org.mariotaku.twidere.model.timeline.TimelineFilter
 import org.mariotaku.twidere.promise.StatusPromises
+import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.singleton.PreferencesSingleton
@@ -458,6 +459,7 @@ abstract class AbsTimelineFragment : AbsContentRecyclerViewFragment<ParcelableSt
                 statusColumnsLite, Expression.and(*expressions.toTypedArray()).sql,
                 expressionArgs.toTypedArray(), Statuses.DEFAULT_SORT_ORDER,
                 ParcelableStatus::class.java, processor)
+        factory.registerContentObserver(Filters.CONTENT_URI, true)
 //        dataController = factory.obtainDataController()
         return ExceptionLiveData.wrap(LivePagedListBuilder(factory, databasePagedListConfig)
                 .setBoundaryCallback(timelineBoundaryCallback).build())

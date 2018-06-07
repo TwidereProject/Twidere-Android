@@ -17,6 +17,11 @@ class MediaContainerHelper(context: Context, attrs: AttributeSet?) : ConstraintH
     val referencedCount: Int
         get() = mCount
 
+    fun hideAll() {
+        for (i in 0 until mCount) {
+            getReferencedViewAt(i).setVisible(false)
+        }
+    }
 
     @SuppressLint("SwitchIntDef")
     fun layout1(@PreviewStyle style: Int, item: ParcelableMedia) {

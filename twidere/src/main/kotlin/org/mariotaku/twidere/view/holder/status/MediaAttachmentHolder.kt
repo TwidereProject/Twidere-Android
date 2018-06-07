@@ -24,6 +24,7 @@ import android.view.View
 import kotlinx.android.synthetic.main.layout_content_item_attachment_media.view.*
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.annotation.PreviewStyle
+import org.mariotaku.twidere.extension.setVisible
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.util.glide.GlideApp
@@ -33,11 +34,14 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 class MediaAttachmentHolder(parent: StatusViewHolder, view: ConstraintLayout) : StatusViewHolder.AttachmentHolder(parent, view) {
 
     private var mediaPreviewStyle: Int = PreviewStyle.CROP
+    private var mediaPreviewEnabled: Boolean = false
 
     private val mediaContainerHelper = view.mediaContainerHelper
+    private val mediaPreviewIndicator = view.mediaPreviewIndicator
 
     override fun setupViewOptions(adapter: IStatusesAdapter) {
         mediaPreviewStyle = adapter.mediaPreviewStyle
+        mediaPreviewEnabled = adapter.mediaPreviewEnabled
     }
 
     override fun setTextSize(textSize: Float) {
@@ -45,6 +49,12 @@ class MediaAttachmentHolder(parent: StatusViewHolder, view: ConstraintLayout) : 
     }
 
     override fun display(status: ParcelableStatus) {
+        if (!mediaPreviewEnabled) {
+            mediaPreviewIndicator.setVisible(true)
+            mediaContainerHelper.hideAll()
+            return
+        }
+        mediaPreviewIndicator.setVisible(false)
         val media = status.attachment!!.media!!
         when (media.size) {
             1 -> mediaContainerHelper.layout1(mediaPreviewStyle, media.first())

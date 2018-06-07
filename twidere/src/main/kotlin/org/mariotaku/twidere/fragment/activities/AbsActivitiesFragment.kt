@@ -79,6 +79,7 @@ import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.refresh.BaseContentRefreshParam
 import org.mariotaku.twidere.model.refresh.ContentRefreshParam
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
+import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.singleton.PreferencesSingleton
 import org.mariotaku.twidere.task.statuses.GetStatusesTask
@@ -381,6 +382,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
                 activityColumnsLite, Expression.and(*expressions.toTypedArray()).sql,
                 expressionArgs.toTypedArray(), Activities.DEFAULT_SORT_ORDER,
                 ParcelableActivity::class.java, onCreateCursorObjectProcessor())
+        factory.registerContentObserver(Filters.CONTENT_URI, true)
 //        dataController = factory.obtainDataController()
         return LivePagedListBuilder(factory, AbsTimelineFragment.databasePagedListConfig).build()
     }
