@@ -38,7 +38,7 @@ import org.mariotaku.twidere.model.ParcelableUserTableInfo;
 @SuppressWarnings("unused")
 public interface TwidereDataStore {
 
-    String AUTHORITY = "twidere";
+    String AUTHORITY = "com.emojidex.twidere";
 
     String TYPE_PRIMARY_KEY = "INTEGER PRIMARY KEY AUTOINCREMENT";
     String TYPE_INT = "INTEGER";
