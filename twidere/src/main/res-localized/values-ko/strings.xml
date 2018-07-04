@@ -172,7 +172,7 @@
   <string name="api_url_format">API 주소 형식</string>
   <string name="app_description">당신만의 트위터 앱</string>
   <!-- App name, normally you don't need to translate this. -->
-  <string name="app_name">Twidere</string>
+  <string name="app_name">emojidex-Twidere</string>
   <string name="app_restart_confirm">Twidere가 설정을 적용하기 위해 재시작됩니다.</string>
   <string name="app_terminate_confirm">Twidere가 설정을 적용하기 위해 재시작됩니다.</string>
   <string name="appearance">모양</string>
@@ -773,7 +773,6 @@
   <string name="remove_sensitive_mark">민감한 콘텐츠 등록 해제</string>
   <string name="replies">답글</string>
   <string name="report_for_spam">스팸으로 신고</string>
-  <string name="report_usage_statistics_now">현재 사용 통계 보고</string>
   <string name="report_user"><xliff:g id="name">%s</xliff:g>님을 스팸 신고하기</string>
   <string name="report_user_confirm_message"><xliff:g id="name">%s</xliff:g>님을 스팸 신고하겠습니까? 이 사용자를 차단하게 됩니다.</string>
   <string name="reported_user_for_spam">이 사용자를 스팸으로 신고하였습니다.</string>
@@ -992,9 +991,6 @@
   <string name="updated_list_details">\"<xliff:g id="list">%s</xliff:g>\" 리스트의 상세 정보를 변경했습니다.</string>
   <string name="updating_status_notification">트윗을 보내는 중...</string>
   <string name="uploader_version_incompatible">호환되지 않는 미디어 업로더</string>
-  <string name="usage_statistics">사용 통계</string>
-  <string name="usage_statistics_header_summary">Twidere는 일부 연구 프로젝트에 참여하고 있습니다. 프로젝트에 참여하면 Twidere와 다른 앱들을 향상시킬 수 있을 것입니다.</string>
-  <string name="usage_statistics_notification_summary">Twidere를 보완하는데 도와주세요!</string>
   <string name="user_blocked">사용자 차단</string>
   <string name="user_filter_name">사용자: <xliff:g id="name">%s</xliff:g></string>
   <string name="user_list_details">리스트 상세 정보</string>

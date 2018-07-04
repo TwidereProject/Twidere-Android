@@ -70,7 +70,7 @@
   <string name="api_url_format">פורמט URL של הAPI</string>
   <string name="app_description">אפליקציית טוויטר משלך</string>
   <!-- App name, normally you don't need to translate this. -->
-  <string name="app_name">טווידר</string>
+  <string name="app_name">emojidex-Twidere</string>
   <string name="auth_type_basic">בסיסי</string>
   <string name="auth_type_twip_o">בסיסי</string>
   <string name="auto_refresh">רענון אוטומטי</string>
@@ -416,7 +416,6 @@
   <string name="unknown_location">מיקום לא ידוע</string>
   <string name="updated_list_details">פרטי הרשימה \"<xliff:g id="list">%s</xliff:g>\" עודכנו.</string>
   <string name="updating_status_notification">שולח ציוץ&#8230;</string>
-  <string name="usage_statistics">סטטיסטיקות שימוש</string>
   <string name="user_blocked">משתמש זה נחסם.</string>
   <string name="user_filter_name">משתמש: <xliff:g id="name">%s</xliff:g></string>
   <!-- User list description -->

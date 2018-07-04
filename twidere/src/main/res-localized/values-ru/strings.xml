@@ -153,7 +153,7 @@
   <string name="api_url_format">Формат API URL</string>
   <string name="app_description">Ваш собственный Твиттер-клиент</string>
   <!-- App name, normally you don't need to translate this. -->
-  <string name="app_name">Twidere</string>
+  <string name="app_name">emojidex-Twidere</string>
   <string name="app_restart_confirm">Twidere будет перезапущен для применения настроек.</string>
   <string name="app_terminate_confirm">Twidere будет остановлен для применения настроек.</string>
   <string name="appearance">Внешний вид</string>
@@ -652,7 +652,6 @@
   <string name="remove_sensitive_mark">Удалить отметку особого контента</string>
   <string name="replies">Ответы</string>
   <string name="report_for_spam">Сообщить о спаме</string>
-  <string name="report_usage_statistics_now">Сообщить статистику использования</string>
   <string name="report_user">Пожаловаться на <xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">Пожаловаться на <xliff:g id="name">%s</xliff:g> за спам? Вы также заблокируете этого пользователя.</string>
   <string name="reported_user_for_spam">Сообщить о спаме от этого пользователя.</string>
@@ -852,9 +851,6 @@
   <string name="updated_list_details">Обновлен список деталей \"<xliff:g id="list">%s</xliff:g>\"\'.</string>
   <string name="updating_status_notification">Отправление твита&#8230;</string>
   <string name="uploader_version_incompatible">Несовместимый загрузчик медиа-файлов</string>
-  <string name="usage_statistics">Статистика использования</string>
-  <string name="usage_statistics_header_summary">Twidere принимает участие в некоторых исследовательских проектах, присоединившись к которым вы сделаете Twidere и другие приложения лучше.</string>
-  <string name="usage_statistics_notification_summary">Помогите нам улучшить Twidere!</string>
   <string name="user_blocked">Заблокировать этого пользователя.</string>
   <string name="user_filter_name">Пользователь:<xliff:g id="name">%s</xliff:g></string>
   <string name="user_list_details">Детали списка</string>

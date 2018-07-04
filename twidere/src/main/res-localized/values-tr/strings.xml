@@ -151,7 +151,7 @@
   <string name="api_url_format">API URL Format</string>
   <string name="app_description">Senin Twitter uygulaman</string>
   <!-- App name, normally you don't need to translate this. -->
-  <string name="app_name">Twidere</string>
+  <string name="app_name">emojidex-Twidere</string>
   <string name="app_restart_confirm">Ayarların etkin olması için Twidere\'yi yeniden başlat.</string>
   <string name="appearance">Görünüm</string>
   <string name="auth_type_basic">Temel</string>
@@ -590,7 +590,6 @@
   <string name="remove_sensitive_mark">Hassas işaretini kaldır</string>
   <string name="replies">Yanıtlar</string>
   <string name="report_for_spam">Spam bildir</string>
-  <string name="report_usage_statistics_now">Kullanım istatistiklerini şimdi gönder</string>
   <string name="report_user"><xliff:g id="name">%s</xliff:g> Şikayet Et</string>
   <string name="report_user_confirm_message"><xliff:g id="name">%s</xliff:g> spam yaptığı için raporlamak ister misiniz? Ayrıca bu kullanıcı engellenecek.</string>
   <string name="reported_user_for_spam">Bu kullanıcının spam yolladığını bildirdiniz.</string>
@@ -778,9 +777,6 @@
   <string name="updated_list_details">\"<xliff:g id="list">%s</xliff:g>\" listesinin detayları güncellendi.</string>
   <string name="updating_status_notification">Tweet gönderiliyor&#8230;</string>
   <string name="uploader_version_incompatible">Medya yükleme desteklenmiyor</string>
-  <string name="usage_statistics">Kullanım istatistikleri</string>
-  <string name="usage_statistics_header_summary">Twidere bazı araştırma projelerinde yer aldı, bu projelere katılmak Twidere ve bazı diğer uygulamalar için iyi olacak.</string>
-  <string name="usage_statistics_notification_summary">Twidere\'yi geliştirmemize yardımcı ol!</string>
   <string name="user_blocked">Bu kullanıcıyı engellediniz.</string>
   <string name="user_filter_name">Kullanıcı: <xliff:g id="name">%s</xliff:g></string>
   <string name="user_list_details">Liste ayrıntıları</string>

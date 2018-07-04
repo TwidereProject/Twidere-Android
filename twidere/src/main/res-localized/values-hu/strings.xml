@@ -182,7 +182,7 @@
   <string name="api_url_format">API URL formátum</string>
   <string name="app_description">A te Twitter alkalmazásod</string>
   <!-- App name, normally you don't need to translate this. -->
-  <string name="app_name">Twidere</string>
+  <string name="app_name">emojidex-Twidere</string>
   <string name="app_restart_confirm">A Twidere újraindul a beállítások alkalmazásához.</string>
   <string name="app_terminate_confirm">A Twidere újraindul, hogy a beállítások alkalmazásra kerüljenek.</string>
   <string name="appearance">Megjelenés</string>
@@ -828,7 +828,6 @@
   <string name="remove_sensitive_mark">Érzékenység jelölés visszavonása</string>
   <string name="replies">Válaszok</string>
   <string name="report_for_spam">Spam jelentése</string>
-  <string name="report_usage_statistics_now">Használati statisztikák küldése most</string>
   <string name="report_user"><xliff:g id="name">%s</xliff:g> jelentése</string>
   <string name="report_user_confirm_message">Jelentsem <xliff:g id="name">%s</xliff:g> felhasználót spam miatt? Egyúttal blokkolni is fogod a felhasználót.</string>
   <string name="reported_user_for_spam">Felhasználó megjelölve spammerként.</string>
@@ -1067,9 +1066,6 @@
   <string name="updated_list_details">\"<xliff:g id="list">%s</xliff:g>\" lista adatai frissítve.</string>
   <string name="updating_status_notification">Tweet küldése&#8230;</string>
   <string name="uploader_version_incompatible">Inkompatibilis média feltöltő</string>
-  <string name="usage_statistics">Használati statisztikák</string>
-  <string name="usage_statistics_header_summary">A Twidere részt vesz néhány kutatási projektben. Csatlakozz ezekhez, hogy a Twidere és néhány másik alkalmazás jobb lehessen.</string>
-  <string name="usage_statistics_notification_summary">Segíts fejleszteni a Twidere-t!</string>
   <string name="user_blocked">Felhasználó blokkolva.</string>
   <string name="user_filter_name">Felhasználó: <xliff:g id="name">%s</xliff:g></string>
   <string name="user_list_details">Részletek listázása</string>

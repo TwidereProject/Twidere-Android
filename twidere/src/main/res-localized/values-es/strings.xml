@@ -186,7 +186,7 @@
   <string name="api_url_format">Formato URL de la API</string>
   <string name="app_description">Tu propia aplicación de Twitter</string>
   <!-- App name, normally you don't need to translate this. -->
-  <string name="app_name">Twidere</string>
+  <string name="app_name">emojidex-Twidere</string>
   <string name="app_restart_confirm">Twidere se reiniciará para aplicar los ajustes.</string>
   <string name="app_terminate_confirm">Twidere se reiniciará para aplicar los cambios.</string>
   <string name="appearance">Apariencia</string>
@@ -846,7 +846,6 @@
   <string name="remove_sensitive_mark">Quitar marca de contenido sensible</string>
   <string name="replies">Respuestas</string>
   <string name="report_for_spam">Reportar por spam</string>
-  <string name="report_usage_statistics_now">Enviar estadísticas de uso ahora</string>
   <string name="report_user">Reportar a <xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">¿Reportar a <xliff:g id="name">%s</xliff:g> por spam? Esto bloqueará al usuario.</string>
   <string name="reported_user_for_spam">Reportat a este usuario por spam.</string>
@@ -1086,9 +1085,6 @@
   <string name="updated_list_details">La lista \"<xliff:g id="list">%s</xliff:g>\" ha sido actualizada.</string>
   <string name="updating_status_notification">Enviando tweet&#8230;</string>
   <string name="uploader_version_incompatible">Uploader de medios incompatible</string>
-  <string name="usage_statistics">Estadísticas de uso</string>
-  <string name="usage_statistics_header_summary">Twidere forma parte de un proyecto de investigación, unirse a estos proyectos hará de Twidere, y otras, una aplicación mejor.</string>
-  <string name="usage_statistics_notification_summary">Ayúdanos a mejorar Twidere!</string>
   <string name="user_blocked">Bloquear a este usuario.</string>
   <string name="user_filter_name">Usuario: <xliff:g id="name">%s</xliff:g></string>
   <string name="user_list_details">Detalles de la lista</string>

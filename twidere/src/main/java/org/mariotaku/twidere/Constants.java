@@ -109,7 +109,6 @@ public interface Constants extends TwidereConstants {
             R.color.material_orange, R.color.material_deep_orange};
 
     // SharedPreferences constants
-    String KEY_USAGE_STATISTICS = "usage_statistics";
     String KEY_DEVICE_SERIAL = "device_serial";
 
     // Intent constants

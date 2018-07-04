@@ -86,7 +86,7 @@
   <string name="api_url_format">Format de la URL de l\'API</string>
   <string name="app_description">La vostra app de Twitter</string>
   <!-- App name, normally you don't need to translate this. -->
-  <string name="app_name">Twidere</string>
+  <string name="app_name">emojidex-Twidere</string>
   <string name="app_restart_confirm">Per tal d\'aplicar els canvis, el Twidere es reinciarà.</string>
   <string name="appearance">Aparença</string>
   <string name="auth_type_basic">Bàsic</string>
@@ -519,7 +519,6 @@
   <string name="remove_sensitive_mark">Elimina la marca de sensible</string>
   <string name="replies">Respostes</string>
   <string name="report_for_spam">Informa d\'abús</string>
-  <string name="report_usage_statistics_now">Informa ara d\'estadístiques d\'ús</string>
   <string name="report_user">Informa d\'abús l\'usuari <xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">Voleu reportar l\'usuari <xliff:g id="name">%s</xliff:g> per abús? Automàticament, també el bloquejareu.</string>
   <string name="reported_user_for_spam">S\'ha informat de l\'abús d\'aquest usuari.</string>
@@ -706,9 +705,6 @@
   <string name="updated_list_details">S\'han actualitzat els detalls de la llista «<xliff:g id="list">%s</xliff:g>».</string>
   <string name="updating_status_notification">S\'està enviant la piulada&#8230;</string>
   <string name="uploader_version_incompatible">El carregador de continguts multimèdia és incompatible</string>
-  <string name="usage_statistics">Estadístiques d\'ús</string>
-  <string name="usage_statistics_header_summary">Twidere forma part en alguns projectes d\'investigació; contribuint a aquests projectes faràs Twidere i altres aplicacions futures millor.</string>
-  <string name="usage_statistics_notification_summary">Ajuda\'ns a millorar Twidere!</string>
   <string name="user_blocked">S\'ha bloquejat aquest usuari.</string>
   <string name="user_filter_name">Usuari: <xliff:g id="name">%s</xliff:g></string>
   <string name="user_list_details">Detalls de la llista</string>

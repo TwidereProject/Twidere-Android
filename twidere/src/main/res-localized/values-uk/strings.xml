@@ -87,7 +87,7 @@
   <string name="api_url_format">Формат API URL</string>
   <string name="app_description">Свій власний додаток Twitter</string>
   <!-- App name, normally you don't need to translate this. -->
-  <string name="app_name">Twidere</string>
+  <string name="app_name">emojidex-Twidere</string>
   <string name="app_restart_confirm">Twidere буде перезавантажено для прйняття налаштувань.</string>
   <string name="appearance">Зовнішній вигляд</string>
   <string name="auth_type_basic">Basic</string>
@@ -526,7 +526,6 @@
   <string name="remove_sensitive_mark">Вилучити мітку делікатного вмісту</string>
   <string name="replies">Відповіді</string>
   <string name="report_for_spam">Повідомити про спам</string>
-  <string name="report_usage_statistics_now">Надіслати звіт про використання</string>
   <string name="report_user">Повідомлення про <xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">Повідомити про <xliff:g id="name">%s</xliff:g> як про спамера? Ви також заблокуєте цього користувача.</string>
   <string name="reported_user_for_spam">Повідомив про спам від цього користувача.</string>
@@ -715,9 +714,6 @@
   <string name="updated_list_details">Оновлено дані списку \"<xliff:g id="list">%s</xliff:g>\"\'.</string>
   <string name="updating_status_notification">Надсилання твіту&#8230;</string>
   <string name="uploader_version_incompatible">Несумісний завантажувач медіафайлів</string>
-  <string name="usage_statistics">Статистика  використання</string>
-  <string name="usage_statistics_header_summary">Twidere бере участь у деяких дослідницких проектах, щоб покращити Twidere та деякі інші програми.</string>
-  <string name="usage_statistics_notification_summary">Допоможіть нам покращити Twidere!</string>
   <string name="user_blocked">Заблокував цього користувача.</string>
   <string name="user_filter_name">Користувач: <xliff:g id="name">%s</xliff:g></string>
   <string name="user_list_details">Дані списку</string>

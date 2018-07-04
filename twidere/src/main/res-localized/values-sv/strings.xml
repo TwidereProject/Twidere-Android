@@ -166,7 +166,7 @@
   <string name="api_url_format">API URL-format</string>
   <string name="app_description">Din egna Twitter-app</string>
   <!-- App name, normally you don't need to translate this. -->
-  <string name="app_name">Twidere</string>
+  <string name="app_name">emojidex-Twidere</string>
   <string name="app_restart_confirm">Twidere kommer att starta om sig för att verkställa inställningarna.</string>
   <string name="app_terminate_confirm">Twidere kommer att avsluta för att verkställa inställningarna.</string>
   <string name="appearance">Utseende</string>
@@ -761,7 +761,6 @@
   <string name="remove_sensitive_mark">Ta bort stötande markering</string>
   <string name="replies">Svar</string>
   <string name="report_for_spam">Rapportera spam</string>
-  <string name="report_usage_statistics_now">Rapportera användningsstatistik nu</string>
   <string name="report_user">Rapportera <xliff:g id="name">%s</xliff:g></string>
   <string name="reported_user_for_spam">Rapporterade den här användaren för skräppost.</string>
   <string name="reported_users_for_spam">Rapporterade de här användarna för skräppost.</string>
@@ -974,9 +973,6 @@
   <string name="updated_list_details">Uppdaterade listan \"<xliff:g id="list">%s</xliff:g>\"\'s detaljer.</string>
   <string name="updating_status_notification">Skickar tweetet...</string>
   <string name="uploader_version_incompatible">Inkompatibel mediauppladdare</string>
-  <string name="usage_statistics">Användningsstatistik</string>
-  <string name="usage_statistics_header_summary">Twidere deltar i vissa forskningsprojekt och om du väljer delta i dessa projekt kommer du att hjälpa till med att göra Twidere och andra program bättre.</string>
-  <string name="usage_statistics_notification_summary">Hjälp oss förbättra Twidere!</string>
   <string name="user_blocked">Användaren är blockerad.</string>
   <string name="user_filter_name">Användare: <xliff:g id="name">%s</xliff:g></string>
   <string name="user_list_details">Lista deajer</string>

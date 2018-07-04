@@ -174,7 +174,7 @@
   <string name="api_url_format">รูปแบบ URL ของ API</string>
   <string name="app_description">แอพทวิตเตอร์ของคุณเอง</string>
   <!-- App name, normally you don't need to translate this. -->
-  <string name="app_name">Twidere</string>
+  <string name="app_name">emojidex-Twidere</string>
   <string name="app_restart_confirm">เริ่มต้น Twidere ใหม่เพื่อปรับใช้การตั้งค่า</string>
   <string name="app_terminate_confirm">Twidere จะเริ่มต้นใหม่เพื่อใช้การตั้งค่า</string>
   <string name="appearance">หน้าตา</string>
@@ -804,7 +804,6 @@
   <string name="remove_sensitive_mark">เลิกระบุว่าเป็นเนื้อหาที่อ่อนไหว</string>
   <string name="replies">การตอบกลับ</string>
   <string name="report_for_spam">รายงานสแปม</string>
-  <string name="report_usage_statistics_now">รายงานสถิติการใช้งาน</string>
   <string name="report_user">รายงาน <xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">รายงาน <xliff:g id="name">%s</xliff:g> ว่าเป็นสแปมหรือไม่ คุณจะบล็อคผู้ใช้รายนี้ด้วย</string>
   <string name="reported_user_for_spam">รายงานว่าผู้ใช้นี้เป็นสแปมแล้ว</string>
@@ -1039,9 +1038,6 @@
   <string name="updated_list_details">ปรับปรุงรายละเอียดของลิสต์ \"<xliff:g id="list">%s</xliff:g>\" แล้ว</string>
   <string name="updating_status_notification">กำลังส่งทวีต...</string>
   <string name="uploader_version_incompatible">บริการอัพโหลดรูปภาพไม่สามารถใช้งานได้</string>
-  <string name="usage_statistics">สถิติการใช้งาน</string>
-  <string name="usage_statistics_header_summary">Twidere มีส่วนร่วมในโครงการวิจัยต่างๆ เข้าร่วมกับเราเพื่อทำให้ Twidere และแอพอื่นๆ ดีขึ้น</string>
-  <string name="usage_statistics_notification_summary">มาช่วยเราปรับปรุง Twidere!</string>
   <string name="user_blocked">บล็อคผู้ใช้นี้แล้ว</string>
   <string name="user_filter_name">ผู้ใช้: <xliff:g id="name">%s</xliff:g></string>
   <string name="user_list_details">รายละเอียดลิสต์</string>

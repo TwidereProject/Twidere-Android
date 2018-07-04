@@ -682,26 +682,26 @@
 
         <provider
             android:name=".provider.TwidereDataProvider"
-            android:authorities="twidere"
+            android:authorities="com.emojidex.twidere"
             android:exported="true"
             android:label="@string/label_data_provider"
             android:permission="org.mariotaku.twidere.permission.ACCESS_DATABASE"/>
         <provider
             android:name=".provider.RecentSearchProvider"
-            android:authorities="org.mariotaku.twidere.provider.SearchRecentSuggestions"
+            android:authorities="com.emojidex.twidere.provider.SearchRecentSuggestions"
             tools:ignore="ExportedContentProvider"/>
         <provider
             android:name=".provider.CacheProvider"
-            android:authorities="twidere.cache"
+            android:authorities="com.emojidex.twidere.cache"
             android:exported="false"/>
         <provider
             android:name=".provider.ShareProvider"
-            android:authorities="twidere.share"
+            android:authorities="com.emojidex.twidere.share"
             android:exported="true"
             tools:ignore="ExportedContentProvider"/>
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="org.mariotaku.twidere.pncfileprovider"
+            android:authorities="com.emojidex.twidere.pncfileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

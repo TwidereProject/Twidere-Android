@@ -84,7 +84,7 @@
   <string name="api_url_format">API-URL-format</string>
   <string name="app_description">Din egen Twitter-app</string>
   <!-- App name, normally you don't need to translate this. -->
-  <string name="app_name">Twidere</string>
+  <string name="app_name">emojidex-Twidere</string>
   <string name="app_restart_confirm">Twidere må starte på nytt for å bruke innstillingene.</string>
   <string name="appearance">Utseende</string>
   <string name="auth_type_basic">Basic</string>
@@ -458,7 +458,6 @@
   <string name="remove_sensitive_mark">Fjern sensitivmarkering</string>
   <string name="replies">Svar</string>
   <string name="report_for_spam">Rapporter spam</string>
-  <string name="report_usage_statistics_now">Rapporter bruksstatistikk nå</string>
   <string name="report_user">Rapporter <xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">Rapportere <xliff:g id="name">%s</xliff:g> for spam? Brukeren vil også bli blokkert.</string>
   <string name="reported_user_for_spam">Rapporterte denne brukeren for spam.</string>
@@ -624,9 +623,6 @@
   <string name="update_status">Send tweet</string>
   <string name="updated_list_details">Oppdaterte detaljer for listen «<xliff:g id="list">%s</xliff:g>».</string>
   <string name="updating_status_notification">Sender tweet&#8230;</string>
-  <string name="usage_statistics">Bruksstatistikk</string>
-  <string name="usage_statistics_header_summary">Twidere tok del i noen forskningsprosjekter. Ved å bidra til disse prosjektene gjør du Twidere og fremtidige apper bedre.</string>
-  <string name="usage_statistics_notification_summary">Hjelp oss å forbedre Twidere!</string>
   <string name="user_blocked">Blokkerte denne brukeren.</string>
   <string name="user_filter_name">Bruker: <xliff:g id="name">%s</xliff:g></string>
   <string name="user_list_details">Listedetaljer</string>

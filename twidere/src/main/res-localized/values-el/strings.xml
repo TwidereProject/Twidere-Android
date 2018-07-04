@@ -50,7 +50,7 @@
   <string name="api_url_format">API URL Τύπος</string>
   <string name="app_description">Η δική σου Twitter εφαρμογή</string>
   <!-- App name, normally you don't need to translate this. -->
-  <string name="app_name">Twidere</string>
+  <string name="app_name">emojidex-Twidere</string>
   <string name="auth_type_basic">Βασικός</string>
   <string name="auth_type_oauth">OAuth</string>
   <string name="auth_type_twip_o">Λειτουργία twip O</string>

@@ -87,7 +87,7 @@
   <string name="api_url_format">API-URL:n muoto</string>
   <string name="app_description">Oma Twitter-sovelluksesi</string>
   <!-- App name, normally you don't need to translate this. -->
-  <string name="app_name">Twidere</string>
+  <string name="app_name">emojidex-Twidere</string>
   <string name="app_restart_confirm">Twidere käynnistyy uudelleen käyttääkseen asetuksia.</string>
   <string name="appearance">Ulkonäkö</string>
   <string name="auth_type_basic">Perus</string>
@@ -507,7 +507,6 @@
   <string name="remove_sensitive_mark">Älä merkitse arkaluontoiseksi</string>
   <string name="replies">Vastaukset</string>
   <string name="report_for_spam">Ilmoita roskapostista</string>
-  <string name="report_usage_statistics_now">Raportoi käyttötilastot nyt</string>
   <string name="report_user">Ilmianna <xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">Ilmiannetaanko käyttäjä <xliff:g id="name">%s</xliff:g> roskapostittamisesta? Tulet myös estämään tämän käyttäjän.</string>
   <string name="reported_user_for_spam">Käyttäjä ilmiannettu roskapostittamisesta.</string>
@@ -688,9 +687,6 @@
   <string name="update_status">Lähetä twiitti</string>
   <string name="updated_list_details">Päivitettiin listan \"<xliff:g id="list">%s</xliff:g>\" lisätiedot.</string>
   <string name="updating_status_notification">Lähetetään twiittiä&#8230;</string>
-  <string name="usage_statistics">Käyttötilasto</string>
-  <string name="usage_statistics_header_summary">Twidere otti osaa tutkimusprojektiin. Osallistumalla kehität Twidereä ja muita sovelluksia.</string>
-  <string name="usage_statistics_notification_summary">Auta meitä kehittämään Twidereä!</string>
   <string name="user_blocked">Käyttäjä on estetty.</string>
   <string name="user_filter_name">Käyttäjä: <xliff:g id="name">%s</xliff:g></string>
   <string name="user_list_details">Listaa lisätiedot</string>

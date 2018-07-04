@@ -49,7 +49,7 @@
   <string name="add_host_mapping">Tambah pemetaan hos</string>
   <string name="add_image">Tambah gambar</string>
   <!-- App name, normally you don't need to translate this. -->
-  <string name="app_name">Twidere</string>
+  <string name="app_name">emojidex-Twidere</string>
   <string name="background">Latar belakang</string>
   <string name="clear_databases_summary">Bersihkan semua tweet, profail, mesej. Maklumat akaun anda tidak akan hilang.</string>
   <string name="color">Warna</string>

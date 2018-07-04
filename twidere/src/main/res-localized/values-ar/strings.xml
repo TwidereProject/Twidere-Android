@@ -117,7 +117,7 @@
   <string name="api_url_format">صيغة رابط الAPI</string>
   <string name="app_description">برنامجك الخاص لتويتر</string>
   <!-- App name, normally you don't need to translate this. -->
-  <string name="app_name">Twidere</string>
+  <string name="app_name">emojidex-Twidere</string>
   <string name="appearance">المظهر</string>
   <string name="auth_type_basic">الأساسي</string>
   <string name="auth_type_oauth">OAuth</string>
@@ -637,8 +637,6 @@
   <string name="update_status">إرسال التغريدة</string>
   <string name="updated_list_details">تم تحديث لائحة تفاصيل <xliff:g id="list">%s</xliff:g>.</string>
   <string name="updating_status_notification">يرسل التغريدة&#8230;</string>
-  <string name="usage_statistics">إحصائيات الاستخدام</string>
-  <string name="usage_statistics_notification_summary">ساعدنا كي نحسن تويدر!</string>
   <string name="user_blocked">تم حظر هذا المستخدم.</string>
   <string name="user_filter_name">المستخدم : <xliff:g id="name">%s</xliff:g></string>
   <string name="user_list_details">تفاصيل القائمة</string>

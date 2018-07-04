@@ -438,7 +438,6 @@
   <string name="remove_sensitive_mark">Ukloni oznaku osjetljivosti</string>
   <string name="replies">Odgovori</string>
   <string name="report_for_spam">Prijavi spam</string>
-  <string name="report_usage_statistics_now">Podnesi sada statistiku o korištenju</string>
   <string name="report_user">Prijavi <xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">Prijaviti <xliff:g id="name">%s</xliff:g> zbog spama? Također ćete blokirati korisnika.</string>
   <string name="reported_user_for_spam">Korisnika prijavljen za spam.</string>
@@ -602,9 +601,6 @@
   <string name="update_status">Pošalji tweet</string>
   <string name="updated_list_details">Ažurirana lista \"<xliff:g id="list">%s</xliff:g>\".</string>
   <string name="updating_status_notification">Šaljem tweet&#8230;</string>
-  <string name="usage_statistics">Statistika korištenja</string>
-  <string name="usage_statistics_header_summary">Twidere je sudjelovao u nekim istraživačkim projektima, pridružite se tim projektima kako bi učinili Twidere i ostale aplikacije boljima.</string>
-  <string name="usage_statistics_notification_summary">Pomozite nam poboljšati Twidere!</string>
   <string name="user_blocked">Ovaj korisnik je blokiran.</string>
   <string name="user_filter_name">Korisnik: <xliff:g id="name">%s</xliff:g></string>
   <string name="user_list_details">Detalji o listi</string>

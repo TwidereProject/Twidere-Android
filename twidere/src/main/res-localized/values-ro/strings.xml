@@ -34,7 +34,7 @@
   <string name="api_url_format">Formatul API URL</string>
   <string name="app_description">Propria dvs. aplicatie Twitter</string>
   <!-- App name, normally you don't need to translate this. -->
-  <string name="app_name">Twidere</string>
+  <string name="app_name">emojidex-Twidere</string>
   <!-- [noun] Count label for retweets, e.g. (N retweets)-->
   <!-- Enhanced (paid) features description -->
   <!-- Enhanced (paid) features title -->

@@ -174,7 +174,7 @@
   <string name="api_url_format">Format de l\'adresse API</string>
   <string name="app_description">Votre propre application Twitter</string>
   <!-- App name, normally you don't need to translate this. -->
-  <string name="app_name">Twidere</string>
+  <string name="app_name">emojidex-Twidere</string>
   <string name="app_restart_confirm">Twidere va redémarrer pour appliquer les paramètres.</string>
   <string name="app_terminate_confirm">Twidere va fermer pour appliquer les paramètres.</string>
   <string name="appearance">Apparence</string>
@@ -804,7 +804,6 @@
   <string name="remove_sensitive_mark">Ne plus marquer comme sensible</string>
   <string name="replies">Réponses</string>
   <string name="report_for_spam">Signaler comme spam</string>
-  <string name="report_usage_statistics_now">Rapporter les statistiques d\'utilisation maintenant</string>
   <string name="report_user">Signaler <xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">Signaler <xliff:g id="name">%s</xliff:g>comme spam ? Vous bloquerez aussi cet utilisateur.</string>
   <string name="reported_user_for_spam">Utilisateur signalé pour spam.</string>
@@ -1043,9 +1042,6 @@
   <string name="updated_list_details">Détails de la liste \"<xliff:g id="list">%s</xliff:g>\" mis à jour.</string>
   <string name="updating_status_notification">Envoi du tweet&#8230;</string>
   <string name="uploader_version_incompatible">Fonction de téléversement de contenu incompatible</string>
-  <string name="usage_statistics">Statistiques d\'utilisation</string>
-  <string name="usage_statistics_header_summary">Twidere prend part à plusieurs projets de recherche, rejoindre ces projets permettra d\'améliorer Twidere et d\'autres applications.</string>
-  <string name="usage_statistics_notification_summary">Aidez-nous à améliorer Twidere !</string>
   <string name="user_blocked">Utilisateur bloqué.</string>
   <string name="user_filter_name">Utilisateur : <xliff:g id="name">%s</xliff:g></string>
   <string name="user_list_details">Détails de la liste</string>

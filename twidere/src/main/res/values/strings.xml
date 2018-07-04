@@ -197,7 +197,7 @@
 
     <string name="app_description">Your own Twitter app</string>
     <!-- App name, normally you don't need to translate this. -->
-    <string name="app_name">Twidere</string>
+    <string name="app_name">emojidex-Twidere</string>
     <string name="app_restart_confirm">Twidere will restart to apply settings.</string>
     <string name="app_terminate_confirm">Twidere will quit to apply settings.</string>
 
@@ -1017,7 +1017,6 @@
     <string name="replies">Replies</string>
 
     <string name="report_for_spam">Report spam</string>
-    <string name="report_usage_statistics_now">Report usage statistics now</string>
     <string name="report_user">Report <xliff:g id="name">%s</xliff:g></string>
     <string name="report_user_confirm_message">Report <xliff:g id="name">%s</xliff:g> for spam? You\'ll also block this user.</string>
 
@@ -1336,10 +1335,6 @@
 
     <string name="uploader_version_incompatible">Incompatible media uploader</string>
 
-    <string name="usage_statistics">Usage statistics</string>
-    <string name="usage_statistics_header_summary">Twidere took part in some research project, join these projects will make Twidere and some other application better.</string>
-    <string name="usage_statistics_notification_summary">Help us improve Twidere!</string>
-
     <string name="user_blocked">Blocked this user.</string>
     <string name="user_filter_name">User: <xliff:g id="name">%s</xliff:g></string>
     <string name="user_list_details">List details</string>
@@ -1363,8 +1358,4 @@
 
     <string name="users_blocked">Blocked these users.</string>
     <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>\'s lists</string>
-    <string name="users_statuses">User\'s tweets</string>
-    <string name="label_drafts_all">All</string>
-    <string name="label_drafts_statuses">Tweets</string>
-    <string name="label_drafts_others">Others</string>
 </resources>

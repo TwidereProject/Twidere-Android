@@ -170,7 +170,7 @@
   <string name="api_url_format">قالب نشانی API</string>
   <string name="app_description">کارهٔ توییتر خودتان</string>
   <!-- App name, normally you don't need to translate this. -->
-  <string name="app_name">توییدر</string>
+  <string name="app_name">emojidex-Twidere</string>
   <string name="app_restart_confirm">تویدر برای اعمال تنظیمات، شروع مجدّد خواهد کرد.</string>
   <string name="app_terminate_confirm">برای اعمال تنظیمات، توییدر خارج خواهد شد.</string>
   <string name="appearance">ظاهر</string>
@@ -787,7 +787,6 @@
   <string name="remove_sensitive_mark">حذف علامت حساس</string>
   <string name="replies">پاسخ‌ها</string>
   <string name="report_for_spam">گزارش هرزنامه</string>
-  <string name="report_usage_statistics_now">اکنون آمار استفاده را گزارش کن</string>
   <string name="report_user">گزارش <xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">گزارش <xliff:g id="name">%s</xliff:g> برای هرزنامه؟ هم‌چنین این کاربر را مسدود خواهید کرد.</string>
   <string name="reported_user_for_spam">این کاربر را برای هرزنامه گزارش کرد.</string>
@@ -1018,9 +1017,6 @@
   <string name="updated_list_details">جزییات فهرست «<xliff:g id="list">%s</xliff:g>» را به‌روز کرد.</string>
   <string name="updating_status_notification">فرستادن توییت&#8230;</string>
   <string name="uploader_version_incompatible">بارکنندهٔ رسانهٔ ناسازگار</string>
-  <string name="usage_statistics">آمار استفاده</string>
-  <string name="usage_statistics_header_summary">تویدر در برهی پروژه‌های تحقیقاتی شرکت می‌کند،شرکت در این پروژه‌های تویدر و برخی برنامه‌های دیگر را بهتر خواهد کرد.</string>
-  <string name="usage_statistics_notification_summary">کمک کنید تویدر را بهتر کنیم!</string>
   <string name="user_blocked">این کاربر مسدود شده است.</string>
   <string name="user_filter_name">کاربر: <xliff:g id="name">%s</xliff:g></string>
   <string name="user_list_details">فهرست کردن جزییات</string>

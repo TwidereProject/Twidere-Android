@@ -190,7 +190,7 @@
   <string name="api_url_format">API URL 格式</string>
   <string name="app_description">属于您的 Twitter 应用</string>
   <!-- App name, normally you don't need to translate this. -->
-  <string name="app_name">Twidere</string>
+  <string name="app_name">emojidex-Twidere</string>
   <string name="app_restart_confirm">Twidere 将重启以应用设置。</string>
   <string name="app_terminate_confirm">Twidere 将退出以应用设置。</string>
   <string name="appearance">外观</string>
@@ -853,7 +853,6 @@
   <string name="remove_sensitive_mark">删除敏感标记</string>
   <string name="replies">回复</string>
   <string name="report_for_spam">报告垃圾信息</string>
-  <string name="report_usage_statistics_now">立即汇报使用情况</string>
   <string name="report_user">报告 <xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">报告 <xliff:g id="name">%s</xliff:g> 发送垃圾信息吗？您将同时阻止这位用户。</string>
   <string name="reported_user_for_spam">您已报告这位用户发送垃圾信息</string>
@@ -1094,9 +1093,6 @@
   <string name="updated_list_details">更新了列表 “<xliff:g id="list">%s</xliff:g>” 的详细信息</string>
   <string name="updating_status_notification">正在发送推文&#8230;</string>
   <string name="uploader_version_incompatible">不兼容的媒体上传服务</string>
-  <string name="usage_statistics">使用信息统计</string>
-  <string name="usage_statistics_header_summary">Twidere 参与了一些研究项目，加入这些项目帮助 Twidere 和更多应用做得更好。</string>
-  <string name="usage_statistics_notification_summary">帮助我们改进 Twidere！</string>
   <string name="user_blocked">您阻止了这位用户</string>
   <string name="user_filter_name">用户：<xliff:g id="name">%s</xliff:g></string>
   <string name="user_list_details">列表详情</string>

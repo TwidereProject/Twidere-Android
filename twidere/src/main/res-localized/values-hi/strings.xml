@@ -53,7 +53,7 @@
   <string name="api_url_format">एपीआई यूआरएल प्रारूप</string>
   <string name="app_description">तुम्हारा अपना ट्विटर एप्प</string>
   <!-- App name, normally you don't need to translate this. -->
-  <string name="app_name">ट्विदेर</string>
+  <string name="app_name">emojidex-Twidere</string>
   <string name="auth_type_basic">बुनियादी</string>
   <string name="auth_type_twip_o">twip O मोड</string>
   <string name="auto_refresh">ऑटो ताज़ा करें</string>

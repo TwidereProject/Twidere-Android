@@ -64,8 +64,8 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String ETAG_MASTODON_APPS_PREFERENCES_NAME = "mastodon_apps";
     String ACCOUNT_PREFERENCES_NAME_PREFIX = "account_preferences_";
 
-    String TWITTER_CONSUMER_KEY = "0WEJk1x6AlgtjGRhyABXw";
-    String TWITTER_CONSUMER_SECRET = "gWXNqEFhO3fMkAqoIKpTdjK0MOJs68xnOky0FRdDTP8";
+    String TWITTER_CONSUMER_KEY = "eGhsWfndW5tqIDAR10BxhYCZX";
+    String TWITTER_CONSUMER_SECRET = "CVB2nVrXUn7xUVjzVHph2Mr5b4ynR9iDZMqXyKwBKqHInZixN9";
 
     String DEFAULT_TWITTER_API_URL_FORMAT = "https://[DOMAIN.]twitter.com/";
 
@@ -81,8 +81,8 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String PROTOCOL_CONTENT = SCHEME_CONTENT + "://";
     String PROTOCOL_TWIDERE = SCHEME_TWIDERE + "://";
 
-    String AUTHORITY_TWIDERE_SHARE = "twidere.share";
-    String AUTHORITY_TWIDERE_CACHE = "twidere.cache";
+    String AUTHORITY_TWIDERE_SHARE = "com.emojidex.twidere.share";
+    String AUTHORITY_TWIDERE_CACHE = "com.emojidex.twidere.cache";
 
     String AUTHORITY_USER = "user";
     String AUTHORITY_ITEMS = "items";
@@ -240,7 +240,6 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     int NOTIFICATION_ID_USER_NOTIFICATION = 10;
     int NOTIFICATION_ID_UPDATE_STATUS = 101;
     int NOTIFICATION_ID_SEND_DIRECT_MESSAGE = 102;
-
 
     String METADATA_KEY_EXTENSION = "org.mariotaku.twidere.extension";
     String METADATA_KEY_EXTENSION_PERMISSIONS = "org.mariotaku.twidere.extension.permissions";

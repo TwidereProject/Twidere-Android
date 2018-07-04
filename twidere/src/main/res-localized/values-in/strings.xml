@@ -150,7 +150,7 @@
   <string name="api_url_format">Format URL API</string>
   <string name="app_description">Aplikasi Twitter anda</string>
   <!-- App name, normally you don't need to translate this. -->
-  <string name="app_name">Twidere</string>
+  <string name="app_name">emojidex-Twidere</string>
   <string name="app_restart_confirm">Twidere akan memulai ulang untuk menerapkan pengaturan.</string>
   <string name="appearance">Tampilan</string>
   <string name="auth_type_basic">Dasar</string>
@@ -645,7 +645,6 @@
   <string name="remove_sensitive_mark">Hilangkan tanda konten sensitif</string>
   <string name="replies">Balasan</string>
   <string name="report_for_spam">Laporkan sebagai spam</string>
-  <string name="report_usage_statistics_now">Laporkan statistik penggunaan sekarang</string>
   <string name="report_user">Laporkan <xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">Laporkan <xliff:g id="name">%s</xliff:g> karena spam? Kamu juga bisa blokir pengguna ini.</string>
   <string name="reported_user_for_spam">Laporkan sebagai spam.</string>
@@ -841,9 +840,6 @@
   <string name="updated_list_details">Perbarui detil daftar \"<xliff:g id="list">%s</xliff:g>\"\'.</string>
   <string name="updating_status_notification">Mengirim cuit&#8230;</string>
   <string name="uploader_version_incompatible">Pengunggah media tidak kompatibel</string>
-  <string name="usage_statistics">Statistik penggunaan</string>
-  <string name="usage_statistics_header_summary">Twidere mengambil bagian dalam beberapa proyek penelitian, bergabung dengan proyek ini akan membuat Twidere dan beberapa aplikasi lain menjadi lebih baik.</string>
-  <string name="usage_statistics_notification_summary">Bantu kami memperbaiki Twidere!</string>
   <string name="user_blocked">Unlock pengguna ini.</string>
   <string name="user_filter_name">Pengguna: <xliff:g id="name">%s</xliff:g></string>
   <string name="user_list_details">Daftar rincian</string>

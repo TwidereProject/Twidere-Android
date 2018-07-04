@@ -117,7 +117,7 @@
   <string name="api_url_format">Format API URL</string>
   <string name="app_description">Twoja własna aplikacja Twitter</string>
   <!-- App name, normally you don't need to translate this. -->
-  <string name="app_name">Twidere</string>
+  <string name="app_name">emojidex-Twidere</string>
   <string name="app_restart_confirm">Twidere zostanie uruchomione ponownie by zastosować nowe ustawienia.</string>
   <string name="app_terminate_confirm">Twidere zostanie zamknięte, aby zastosować ustawienia.</string>
   <string name="appearance">Wygląd</string>
@@ -690,8 +690,6 @@
   <string name="update_status">Wyślij tweet</string>
   <string name="updated_list_details">Zaktualizowano szczegóły listy \"<xliff:g id="list">%s</xliff:g>\".</string>
   <string name="updating_status_notification">Wysyłanie tweeta&#8230;</string>
-  <string name="usage_statistics">Statystyki użytkowania</string>
-  <string name="usage_statistics_notification_summary">Pomóż nam ulepszyć Twidere!</string>
   <string name="user_blocked">Zablokowano tego użytkownika.</string>
   <string name="user_filter_name">Użytkownik: <xliff:g id="name">%s</xliff:g></string>
   <!-- User list description -->

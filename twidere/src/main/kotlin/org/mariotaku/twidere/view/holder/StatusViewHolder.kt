@@ -15,6 +15,9 @@ import android.view.View.OnLongClickListener
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.RequestManager
+import com.emojidex.emojidexandroid.EmojiFormat
+import com.emojidex.emojidexandroid.Emojidex
+import com.emojidex.emojidexandroid.downloader.DownloadListener
 import kotlinx.android.synthetic.main.list_item_status.view.*
 import org.mariotaku.ktextension.*
 import org.mariotaku.microblog.library.mastodon.annotation.StatusVisibility
@@ -90,6 +93,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
     private var statusClickListener: IStatusViewHolder.StatusClickListener? = null
 
+    private val downloadListener: CustomDownloadListener = CustomDownloadListener()
+
 
     init {
         this.eventListener = EventListener(this)
@@ -101,6 +106,12 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                     itemView.quotedMediaPreview)
         }
 
+        Emojidex.getInstance().addDownloadListener(downloadListener)
+    }
+
+    protected fun finalize()
+    {
+        Emojidex.getInstance().removeDownloadListener(downloadListener)
     }
 
 
@@ -139,6 +150,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         quotedMediaPreview.visibility = View.GONE
         quotedMediaLabel.visibility = View.GONE
         mediaPreview.displayMedia(R.drawable.featured_graphics)
+
+        // Convert to emojidex.
+        textView.setText(Emojidex.getInstance().emojify(textView.getText()))
     }
 
     override fun display(status: ParcelableStatus, displayInReplyTo: Boolean,
@@ -430,6 +444,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         nameView.updateText(formatter)
         quotedNameView.updateText(formatter)
 
+        // Convert to emojidex.
+        textView.setText(Emojidex.getInstance().emojify(textView.getText()))
     }
 
     private fun displayQuotedMedia(requestManager: RequestManager, status: ParcelableStatus) {
@@ -727,6 +743,17 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
         private val videoTypes = intArrayOf(ParcelableMedia.Type.VIDEO, ParcelableMedia.Type.ANIMATED_GIF,
                 ParcelableMedia.Type.EXTERNAL_PLAYER)
+    }
+
+    inner class CustomDownloadListener : DownloadListener()
+    {
+        override fun onDownloadJson(handle: Int, vararg emojiNames: String?) {
+            textView.setText(Emojidex.getInstance().emojify(textView.getText(), null, false))
+        }
+
+        override fun onDownloadImages(handle: Int, format: EmojiFormat?, vararg emojiNames: String?) {
+            textView.setText(Emojidex.getInstance().emojify(textView.getText(), null, false))
+        }
     }
 }
 

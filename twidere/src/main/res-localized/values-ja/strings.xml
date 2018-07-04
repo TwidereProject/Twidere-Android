@@ -189,7 +189,7 @@
   <string name="api_url_format">API URL の形式</string>
   <string name="app_description">あなた自身の Twitter アプリ</string>
   <!-- App name, normally you don't need to translate this. -->
-  <string name="app_name">Twidere</string>
+  <string name="app_name">emojidex-Twidere</string>
   <string name="app_restart_confirm">設定を適用するため、Twidere を再起動します。</string>
   <string name="app_terminate_confirm">設定を適用するため、Twidere を終了します。</string>
   <string name="appearance">外観</string>
@@ -859,7 +859,6 @@
   <string name="remove_sensitive_mark">不適切な内容のマークを消去</string>
   <string name="replies">返信</string>
   <string name="report_for_spam">スパム報告</string>
-  <string name="report_usage_statistics_now">現在の使用状況を報告する。</string>
   <string name="report_user"><xliff:g id="name">%s</xliff:g>をスパム報告</string>
   <string name="report_user_confirm_message"><xliff:g id="name">%s</xliff:g> をスパム報告しますか？同時にブロックもします。</string>
   <string name="reported_user_for_spam">このユーザーをスパム報告しました。</string>
@@ -1100,9 +1099,6 @@
   <string name="updated_list_details">リスト \"<xliff:g id="list">%s</xliff:g>\" の詳細を更新しました。</string>
   <string name="updating_status_notification">ツイートの送信中...</string>
   <string name="uploader_version_incompatible">互換性のないメディアのアップロード先</string>
-  <string name="usage_statistics">匿名利用状況データ</string>
-  <string name="usage_statistics_header_summary">Twidere は研究プロジェクトに参加しています。プロジェクトに参加する事で、Twidere や他のアプリがより良くなります。</string>
-  <string name="usage_statistics_notification_summary">Twidereの機能向上にご協力ください</string>
   <string name="user_blocked">このユーザーをブロックしました。</string>
   <string name="user_filter_name">ユーザー: <xliff:g id="name">%s</xliff:g></string>
   <string name="user_list_details">リストの詳細</string>

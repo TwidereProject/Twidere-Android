@@ -171,7 +171,7 @@
   <string name="api_url_format">Formatu d\'URL d\'API</string>
   <string name="app_description">El to veceru propiu de Twitter</string>
   <!-- App name, normally you don't need to translate this. -->
-  <string name="app_name">Twidere</string>
+  <string name="app_name">emojidex-Twidere</string>
   <string name="app_restart_confirm">Twidere reaniciaráse p\'aplicar los axustes.</string>
   <string name="app_terminate_confirm">Twidere colará p\'aplicar los axustes.</string>
   <string name="appearance">Aspeutu</string>
@@ -796,7 +796,6 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="remove_sensitive_mark">Desaniciar marca sensible</string>
   <string name="replies">Rempuestes</string>
   <string name="report_for_spam">Informar de spam</string>
-  <string name="report_usage_statistics_now">Reportar agora les estadístiques d\'usu</string>
   <string name="report_user">Informar de <xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">¿Informar de <xliff:g id="name">%s</xliff:g> por spam? Tamién bloquiarás esti usuariu.</string>
   <string name="reported_user_for_spam">Informóse a esti usuariu de spam.</string>
@@ -1027,9 +1026,6 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="updated_list_details">Anováronse los detalles del llistáu «<xliff:g id="list">%s</xliff:g>».</string>
   <string name="updating_status_notification">Unviando\'l tuit&#8230;</string>
   <string name="uploader_version_incompatible">Xubidor multimedia non compatible</string>
-  <string name="usage_statistics">Estadístiques d\'usu</string>
-  <string name="usage_statistics_header_summary">Twidere participa en dellos proyeutos d\'investigación, xunise a ellos ameyorarán Twidere y daqué otra aplicación.</string>
-  <string name="usage_statistics_notification_summary">¡Ayúdamos a ameyorar Twidere!</string>
   <string name="user_blocked">Bloquióse a esti usuariu.</string>
   <string name="user_filter_name">Usuariu: <xliff:g id="name">%s</xliff:g></string>
   <string name="user_list_details">Detalles del llistáu</string>
