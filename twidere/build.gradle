@@ -20,7 +20,7 @@ buildscript {
         }
 
         // START Non-FOSS component
-        classpath "com.google.gms:google-services:${pluginVersions['PlayServices']}"
+        //classpath "com.google.gms:google-services:${pluginVersions['PlayServices']}"
         // END Non-FOSS component
     }
 }
@@ -33,7 +33,7 @@ android {
     defaultConfig {
         applicationId "org.mariotaku.twidere"
         minSdkVersion 14
-        targetSdkVersion 26
+        targetSdkVersion 28
         versionCode projectVersionCode
         versionName projectVersionName
         multiDexEnabled true
@@ -136,7 +136,7 @@ android {
         exclude 'jsr305_annotations/**'
         exclude 'error_prone/**'
         exclude 'third_party/java_src/**'
-        exclude 'sdk-version.​txt'
+        exclude 'sdk-version.txt'
         exclude 'build-data.properties'
     }
 
@@ -302,5 +302,5 @@ task svgToMipmap(type: SvgDrawableTask) {
 }
 
 // START Non-FOSS component
-apply plugin: 'com.google.gms.google-services'
+//apply plugin: 'com.google.gms.google-services'
 // END Non-FOSS component

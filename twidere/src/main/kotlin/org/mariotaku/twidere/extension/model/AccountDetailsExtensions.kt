@@ -68,6 +68,11 @@ fun AccountDetails.getMediaSizeLimit(@MediaCategory mediaCategory: String? = nul
             }
             return UpdateStatusTask.SizeLimit(imageLimit, videoLimit)
         }
+        AccountType.MASTODON -> {
+            val imageLimit = AccountExtras.ImageLimit.ofSize(8 * 1024 * 1024)
+            val videoLimit = AccountExtras.VideoLimit.twitterDefault()
+            return UpdateStatusTask.SizeLimit(imageLimit, videoLimit)
+        }
         else -> return null
     }
 }
