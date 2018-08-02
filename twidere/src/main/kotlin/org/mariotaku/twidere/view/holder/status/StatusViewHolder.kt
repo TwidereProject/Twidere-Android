@@ -35,9 +35,7 @@ import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
 import android.widget.ImageView
 import android.widget.TextView
-import kotlinx.android.synthetic.main.list_item_status.view.*
 import org.mariotaku.ktextension.applyFontFamily
-import org.mariotaku.ktextension.hideIfEmpty
 import org.mariotaku.ktextension.spannable
 import org.mariotaku.microblog.library.annotation.mastodon.StatusVisibility
 import org.mariotaku.twidere.Constants.*
@@ -45,6 +43,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.constant.RecyclerViewTypes
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE
+import org.mariotaku.twidere.databinding.ItemStatusBinding
 import org.mariotaku.twidere.extension.inflate
 import org.mariotaku.twidere.extension.model.displayInfo
 import org.mariotaku.twidere.extension.model.retweeted_by_user_acct
@@ -67,7 +66,6 @@ import org.mariotaku.twidere.text.TwidereClickableSpan
 import org.mariotaku.twidere.text.style.PlaceholderLineSpan
 import org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText
 import org.mariotaku.twidere.util.HtmlSpanBuilder
-import org.mariotaku.twidere.util.UnitConvertUtils
 import org.mariotaku.twidere.util.UriCreator
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.Utils.getUserTypeIconRes
@@ -78,23 +76,23 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 /**
  * [ViewHolder] class for standard status list item
  */
-class StatusViewHolder(var adapter: IStatusesAdapter, itemView: View, subtype: Int = 0) : ViewHolder(itemView), IStatusViewHolder {
+class StatusViewHolder(var adapter: IStatusesAdapter, val binding: ItemStatusBinding, subtype: Int = 0) : ViewHolder(binding.root), IStatusViewHolder {
 
-    override val profileImageView: ProfileImageView = itemView.profileImage
-    override val profileTypeView: ImageView = itemView.profileType
+    override val profileImageView: ProfileImageView = binding.profileImage
+    override val profileTypeView: ImageView = binding.profileType
 
-    private val itemContent = itemView.itemContent
-    private val textView = itemView.text
-    private val nameView = itemView.name
-    private val itemMenu = itemView.itemMenu
-    private val statusInfoLabel = itemView.statusInfoLabel
-    private val statusInfoIcon = itemView.statusInfoIcon
-    private val timeView = itemView.time
-    private val replyButton = itemView.reply
-    private val retweetButton = itemView.retweet
-    private val favoriteButton = itemView.favorite
-    private val itemActionsGroup = itemView.itemActionsGroup
-    private val attachmentContainer = itemView.attachmentContainer
+    private val itemContent = binding.itemContent
+    private val textView = binding.text
+    private val nameView = binding.name
+    private val itemMenu = binding.itemMenu
+    private val statusInfoLabel = binding.statusInfoLabel
+    private val statusInfoIcon = binding.statusInfoIcon
+    private val timeView = binding.time
+    private val replyButton = binding.reply
+    private val retweetButton = binding.retweet
+    private val favoriteButton = binding.favorite
+    private val itemActionsGroup = binding.itemActionsGroup
+    private val attachmentContainer = binding.attachmentContainer
 
     private val eventHandler = EventHandler()
 
@@ -183,11 +181,15 @@ class StatusViewHolder(var adapter: IStatusesAdapter, itemView: View, subtype: I
     }
 
     override fun display(status: ParcelableStatus, displayInReplyTo: Boolean, displayPinned: Boolean) {
+        val context = itemView.context
+        val display = status.displayInfo(context)
+
+        binding.status = status
+
         if (status is PlaceholderObject) {
             placeholder()
             return
         }
-        val context = itemView.context
         val formatter = BidiFormatterSingleton.get()
         val colorNameManager = UserColorNameManager.get(context)
         val showCardActions = isCardActionsShown
@@ -198,10 +200,6 @@ class StatusViewHolder(var adapter: IStatusesAdapter, itemView: View, subtype: I
         itemMenu.alpha = 1f
 
         itemActionsGroup.setVisible(showCardActions)
-
-        val replyCount = status.reply_count
-        val retweetCount = status.retweet_count
-        val favoriteCount = status.favorite_count
 
         if (displayPinned && status.is_pinned_status) {
             statusInfoLabel.setText(R.string.pinned_status)
@@ -231,7 +229,6 @@ class StatusViewHolder(var adapter: IStatusesAdapter, itemView: View, subtype: I
             statusInfoIcon.visibility = View.GONE
         }
 
-        val display = status.displayInfo(context)
         val userColor = display.userColor
 
         if (status.is_retweet) {
@@ -245,19 +242,12 @@ class StatusViewHolder(var adapter: IStatusesAdapter, itemView: View, subtype: I
             itemContent.drawStart(userColor)
         }
 
-        timeView.time = if (status.is_retweet) {
-            status.retweet_timestamp
-        } else {
-            status.timestamp
-        }
-
         nameView.placeholder = false
         nameView.name = colorNameManager.getUserNickname(status.user_key, status.user_name)
         nameView.screenName = "@${status.user_acct}"
 
         if (adapter.profileImageEnabled) {
             profileImageView.visibility = View.VISIBLE
-            profileImageView.profileImage = status.user_profile_image_url
 
             profileTypeView.setImageResource(getUserTypeIconRes(status.user_is_verified, status.user_is_protected))
             profileTypeView.visibility = View.VISIBLE
@@ -275,18 +265,6 @@ class StatusViewHolder(var adapter: IStatusesAdapter, itemView: View, subtype: I
         }
 
 
-        textView.spannable = display.text
-        textView.hideIfEmpty()
-
-        if (replyCount > 0) {
-            val properCount = UnitConvertUtils.calculateProperCount(replyCount)
-            replyButton.text = properCount
-            replyButton.contentDescription = context.resources.getQuantityString(R.plurals.N_replies_abbrev,
-                    replyCount.toInt(), properCount)
-        } else {
-            replyButton.text = null
-            replyButton.contentDescription = context.getString(R.string.action_reply)
-        }
         replyButton.drawable?.mutate()
 
         when (status.extras?.visibility) {
@@ -304,42 +282,9 @@ class StatusViewHolder(var adapter: IStatusesAdapter, itemView: View, subtype: I
 
         retweetButton.isActivated = isRetweetIconActivated(status)
 
-        if (retweetCount > 0) {
-            val properCount = UnitConvertUtils.calculateProperCount(retweetCount)
-            retweetButton.text = properCount
-            retweetButton.contentDescription = context.resources.getQuantityString(R.plurals.N_retweets_abbrev,
-                    retweetCount.toInt(), properCount)
-        } else {
-            retweetButton.text = null
-            retweetButton.contentDescription = context.getString(R.string.action_retweet)
-        }
-
         favoriteButton.isActivated = isFavoriteIconActivated(status)
 
-        if (favoriteCount > 0) {
-            val properCount = UnitConvertUtils.calculateProperCount(favoriteCount)
-            favoriteButton.text = properCount
-            if (adapter.useStarsForLikes) {
-                favoriteButton.contentDescription = context.resources.getQuantityString(R.plurals.N_favorites_abbrev,
-                        favoriteCount.toInt(), properCount)
-            } else {
-                favoriteButton.contentDescription = context.resources.getQuantityString(R.plurals.N_likes_abbrev,
-                        favoriteCount.toInt(), properCount)
-            }
-        } else {
-            favoriteButton.text = null
-            if (adapter.useStarsForLikes) {
-                favoriteButton.contentDescription = context.getString(R.string.action_favorite)
-            } else {
-                favoriteButton.contentDescription = context.getString(R.string.action_like)
-            }
-        }
-
         nameView.updateText(formatter)
-
-        itemView.contentDescription = display.contentDescription
-
-        profileImageView.contentDescription = display.profileImageContentDescription
 
         attachmentContainer.setVisible(attachmentHolder != null)
         attachmentHolder?.display(status)

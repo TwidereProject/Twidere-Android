@@ -45,6 +45,7 @@ import org.mariotaku.twidere.annotation.PreviewStyle
 import org.mariotaku.twidere.annotation.TimelineStyle
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_DISPLAY_SENSITIVE_CONTENTS
+import org.mariotaku.twidere.databinding.ItemStatusBinding
 import org.mariotaku.twidere.exception.UnsupportedCountIndexException
 import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.model.ObjectId
@@ -449,8 +450,8 @@ class ParcelableStatusesAdapter(
                     return holder
                 }
                 TimelineStyle.PLAIN -> {
-                    val view = inflater.inflate(StatusViewHolder.layoutResource, parent, false)
-                    val holder = StatusViewHolder(adapter, view, viewType)
+                    val binding = ItemStatusBinding.inflate(inflater, parent, false)
+                    val holder = StatusViewHolder(adapter, binding, viewType)
                     holder.setupViewOptions(adapter)
                     return holder
                 }

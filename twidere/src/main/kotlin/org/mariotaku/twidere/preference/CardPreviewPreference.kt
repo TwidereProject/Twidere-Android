@@ -22,24 +22,22 @@ package org.mariotaku.twidere.preference
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
+import android.databinding.DataBindingUtil
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceViewHolder
-import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import com.bumptech.glide.Glide
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
 import org.mariotaku.twidere.adapter.DummyItemAdapter
-import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
-import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
-import org.mariotaku.twidere.view.holder.status.StatusViewHolder
+import org.mariotaku.twidere.databinding.ItemStatusBinding
 
 class CardPreviewPreference(
         context: Context,
         attrs: AttributeSet? = null
 ) : Preference(context, attrs), OnSharedPreferenceChangeListener {
 
-    private var holder: StatusViewHolder? = null
+    private lateinit var binding: ItemStatusBinding
     private val adapter: DummyItemAdapter = DummyItemAdapter(context, requestManager = Glide.with(context))
 
     init {
@@ -51,25 +49,16 @@ class CardPreviewPreference(
 
     override fun onSharedPreferenceChanged(preferences: SharedPreferences, key: String) {
         adapter.updateOptions()
-        holder = null
         notifyChanged()
     }
 
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
-        if (this.holder == null) {
-            this.holder = StatusViewHolder(adapter, holder.itemView).apply {
-                setStatusClickListener(object : IStatusViewHolder.StatusClickListener {
-                    override fun onItemActionClick(holder: RecyclerView.ViewHolder, id: Int, position: Int) {
-                        if (id == R.id.favorite) {
-                            (holder as StatusViewHolder).playLikeAnimation(LikeAnimationDrawable.OnLikedListener { false })
-                        }
-                    }
-                })
-            }
+        if (!this::binding.isInitialized) {
+            val widget = holder.findViewById(R.id.itemContent)
+            binding = DataBindingUtil.getBinding(widget) ?: ItemStatusBinding.bind(widget)
         }
-        this.holder?.let {
-            it.setupViewOptions(adapter)
-            it.preview()
+        binding.favorite.setOnClickListener {
+            //            (holder as StatusViewHolder).playLikeAnimation(LikeAnimationDrawable.OnLikedListener { false })
         }
         super.onBindViewHolder(holder)
     }

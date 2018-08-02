@@ -19,8 +19,7 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -32,7 +31,7 @@
         android:paddingRight="@dimen/element_spacing_large"
         android:paddingTop="@dimen/element_spacing_normal">
 
-        <include layout="@layout/list_item_status"/>
+        <include layout="@layout/item_status" />
 
         <FrameLayout
             android:id="@+id/loadProgress"
@@ -43,7 +42,7 @@
             <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center" />
         </FrameLayout>
     </FrameLayout>
 

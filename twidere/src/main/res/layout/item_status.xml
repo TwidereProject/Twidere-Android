@@ -23,11 +23,17 @@
 
     <data>
 
+        <import type="org.mariotaku.twidere.R" />
+
         <import type="org.mariotaku.twidere.model.ParcelableStatus" />
 
         <variable
             name="status"
-            type="ParcelableStatus" />
+            type="org.mariotaku.twidere.model.ParcelableStatus" />
+
+        <variable
+            name="useFavorite"
+            type="boolean" />
     </data>
 
     <org.mariotaku.twidere.view.ColorLabelConstraintLayout
@@ -37,6 +43,7 @@
         android:background="?selectableItemBackground"
         android:clipChildren="false"
         android:clipToPadding="false"
+        android:contentDescription="@{status.display.contentDescription}"
         android:focusable="true"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
@@ -75,6 +82,7 @@
             style="?profileImageStyle"
             android:layout_width="@dimen/icon_size_status_profile_image"
             android:layout_height="@dimen/icon_size_status_profile_image"
+            android:contentDescription="@{status.display.profileImageContentDescription}"
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/name"
@@ -125,6 +133,7 @@
             android:textAppearance="?android:textAppearanceSmall"
             app:layout_constraintBaseline_toBaselineOf="@+id/name"
             app:layout_constraintEnd_toEndOf="parent"
+            bind:time="@{status.is_retweet ? status.retweet_timestamp : status.timestamp}"
             tools:text="42 mins ago"
             tools:textSize="@dimen/text_size_extra_small" />
 
@@ -134,6 +143,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/element_spacing_small"
             android:layout_marginTop="@dimen/element_spacing_small"
+            android:text="@{status.display.text}"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorPrimary"
             android:visibility="visible"
@@ -177,6 +187,9 @@
             app:layout_constraintTop_toBottomOf="@+id/attachmentContainer"
             app:srcCompat="@drawable/ic_action_reply"
             app:tint="?android:textColorSecondary"
+            bind:pluralRes="@{R.plurals.N_replies_abbrev}"
+            bind:properCount="@{status.reply_count}"
+            bind:zeroRes="@{R.string.action_reply}"
             tools:text="255" />
 
         <org.mariotaku.twidere.view.LabeledImageButton
@@ -198,6 +211,9 @@
             app:layout_constraintTop_toBottomOf="@+id/attachmentContainer"
             app:srcCompat="@drawable/ic_action_retweet"
             app:tint="@color/btn_tint_retweet_stateful"
+            bind:pluralRes="@{R.plurals.N_retweets_abbrev}"
+            bind:properCount="@{status.retweet_count}"
+            bind:zeroRes="@{R.string.action_retweet}"
             tools:text="255" />
 
         <org.mariotaku.twidere.view.LabeledImageButton
@@ -219,6 +235,9 @@
             app:layout_constraintTop_toBottomOf="@+id/attachmentContainer"
             app:srcCompat="@drawable/ic_action_heart"
             app:tint="@color/btn_tint_like_stateful"
+            bind:pluralRes="@{useFavorite ? R.plurals.N_favorites_abbrev : R.plurals.N_likes_abbrev}"
+            bind:properCount="@{status.favorite_count}"
+            bind:zeroRes="@{useFavorite ? R.string.action_favorite : R.string.action_like}"
             tools:text="255" />
 
         <android.support.v7.widget.AppCompatImageButton

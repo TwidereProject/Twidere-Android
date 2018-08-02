@@ -40,6 +40,7 @@ import org.mariotaku.ktextension.weak
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.DummyItemAdapter
+import org.mariotaku.twidere.databinding.ItemStatusBinding
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
@@ -48,7 +49,6 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ModelCreationConfig
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.view.holder.status.StatusViewHolder
 
 abstract class AbsStatusDialogFragment : BaseDialogFragment() {
 
@@ -67,7 +67,7 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
     private lateinit var adapter: DummyItemAdapter
 
     final override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = Builder(context!!)
+        val builder = AlertDialog.Builder(context!!)
         val accountKey = this.accountKey
 
         builder.setupAlertDialog()
@@ -87,16 +87,15 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
                 return@onShow
             }
             val weakThis by weak(this)
-            val weakHolder by weak(StatusViewHolder(adapter = adapter, itemView = it.itemContent).apply {
-                setupViewOptions(adapter)
-            })
+            val binding = ItemStatusBinding.bind(it.itemContent)
+            val weakBinding by weak(binding)
             val extraStatus = status
             if (extraStatus != null) {
-                showStatus(weakHolder!!, extraStatus, details, savedInstanceState)
+                showStatus(binding, extraStatus, details, savedInstanceState)
             } else promiseOnUi {
                 weakThis?.showProgress()
             } and AbsStatusDialogFragment.showStatus(context, details, statusId).successUi { status ->
-                val holder = weakHolder ?: return@successUi
+                val holder = weakBinding ?: return@successUi
                 weakThis?.showStatus(holder, status, details, savedInstanceState)
             }.failUi {
                 val fragment = weakThis?.takeIf { it.dialog != null } ?: return@failUi
@@ -116,7 +115,7 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
         currentDialog.getButton(BUTTON_NEUTRAL)?.isEnabled = false
     }
 
-    private fun showStatus(holder: StatusViewHolder, status: ParcelableStatus,
+    private fun showStatus(holder: ItemStatusBinding, status: ParcelableStatus,
             details: AccountDetails, savedInstanceState: Bundle?) {
         status.apply {
             if (account_key != details.key) {
@@ -132,7 +131,7 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
         currentDialog.itemContent.visibility = View.VISIBLE
         currentDialog.loadProgress.visibility = View.GONE
         currentDialog.itemContent.isFocusable = false
-        holder.display(status = status, displayInReplyTo = false)
+        holder.status = status
         currentDialog.onStatusLoaded(details, status, savedInstanceState)
     }
 

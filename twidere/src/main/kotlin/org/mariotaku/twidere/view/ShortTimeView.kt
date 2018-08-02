@@ -20,9 +20,12 @@
 package org.mariotaku.twidere.view
 
 import android.content.Context
+import android.databinding.BindingMethod
+import android.databinding.BindingMethods
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
+import android.support.v4.view.ViewCompat
 import android.support.v7.widget.AppCompatTextView
 import android.text.Spannable
 import android.text.SpannableString
@@ -35,6 +38,9 @@ import org.mariotaku.twidere.util.Utils.formatSameDayTime
 import java.lang.ref.WeakReference
 import java.util.concurrent.TimeUnit
 
+@BindingMethods(
+        BindingMethod(type = ShortTimeView::class, attribute = "time", method = "setTime")
+)
 class ShortTimeView(
         context: Context,
         attrs: AttributeSet? = null
@@ -43,7 +49,7 @@ class ShortTimeView(
     private val ticker = TickerRunnable(this)
 
     private val invalidateTimeRunnable = Runnable {
-        if (!isAttachedToWindow) return@Runnable
+        if (!ViewCompat.isAttachedToWindow(this)) return@Runnable
         val time = this.time
         if (time < 0) return@Runnable
         val label = getTimeLabel(context, time, showAbsoluteTime)
