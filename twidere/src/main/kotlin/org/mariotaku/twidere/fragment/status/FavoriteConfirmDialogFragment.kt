@@ -23,7 +23,10 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.content.DialogInterface.BUTTON_POSITIVE
 import android.os.Bundle
+import android.support.v4.app.FragmentManager
 import android.support.v7.app.AlertDialog
+import android.view.LayoutInflater
+import android.view.View
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
@@ -31,6 +34,8 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.content.FavoriteConfirmDialogActivity
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
+import org.mariotaku.twidere.databinding.DialogStatusFavoriteConfirmBinding
+import org.mariotaku.twidere.databinding.ItemStatusBinding
 import org.mariotaku.twidere.extension.promise
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -46,25 +51,29 @@ import org.mariotaku.twidere.task.DestroyFavoriteTask
  */
 class FavoriteConfirmDialogFragment : AbsStatusDialogFragment() {
 
-    override val Dialog.loadProgress: android.view.View get() = findViewById(R.id.loadProgress)
+    private lateinit var viewBinding: DialogStatusFavoriteConfirmBinding
 
-    override val Dialog.itemContent: android.view.View get() = findViewById(R.id.itemContent)
+    override val Dialog.loadProgress: View get() = findViewById(R.id.loadProgress)
 
-    override fun AlertDialog.Builder.setupAlertDialog() {
-        if (PreferencesSingleton.get(this@FavoriteConfirmDialogFragment.context!!)[iWantMyStarsBackKey]) {
-            setTitle(R.string.title_favorite_confirm)
+    override val itemBinding: ItemStatusBinding
+        get() = viewBinding.statusItemBinding
+
+    override fun onPrepareDialogBuilder(builder: AlertDialog.Builder) {
+        if (PreferencesSingleton.get(builder.context)[iWantMyStarsBackKey]) {
+            builder.setTitle(R.string.title_favorite_confirm)
         } else {
-            setTitle(R.string.title_like_confirm)
+            builder.setTitle(R.string.title_like_confirm)
         }
-        setView(R.layout.dialog_status_favorite_confirm)
-        setPositiveButton(R.string.action_favorite, null)
-        setNegativeButton(android.R.string.cancel, null)
+        viewBinding = DialogStatusFavoriteConfirmBinding.inflate(LayoutInflater.from(builder.context))!!
+        builder.setView(viewBinding.root)
+        builder.setPositiveButton(R.string.action_favorite, null)
+        builder.setNegativeButton(android.R.string.cancel, null)
     }
 
     override fun AlertDialog.onStatusLoaded(account: AccountDetails, status: ParcelableStatus,
             savedInstanceState: Bundle?) {
         val positiveButton = getButton(BUTTON_POSITIVE)
-        if (PreferencesSingleton.get(this@FavoriteConfirmDialogFragment.context!!)[iWantMyStarsBackKey]) {
+        if (PreferencesSingleton.get(context)[iWantMyStarsBackKey]) {
             if (status.is_favorite) {
                 positiveButton.setText(R.string.action_unfavorite)
             } else {
@@ -106,9 +115,9 @@ class FavoriteConfirmDialogFragment : AbsStatusDialogFragment() {
 
     companion object {
 
-        val FRAGMENT_TAG = "favorite_confirm"
+        const val FRAGMENT_TAG = "favorite_confirm"
 
-        fun show(fm: android.support.v4.app.FragmentManager, accountKey: UserKey, statusId: String,
+        fun show(fm: FragmentManager, accountKey: UserKey, statusId: String,
                 status: ParcelableStatus? = null): FavoriteConfirmDialogFragment {
             val f = FavoriteConfirmDialogFragment()
             f.arguments = Bundle {
@@ -116,7 +125,7 @@ class FavoriteConfirmDialogFragment : AbsStatusDialogFragment() {
                 this[EXTRA_STATUS_ID] = statusId
                 this[EXTRA_STATUS] = status
             }
-            f.show(fm, FavoriteConfirmDialogFragment.FRAGMENT_TAG)
+            f.show(fm, FRAGMENT_TAG)
             return f
         }
     }

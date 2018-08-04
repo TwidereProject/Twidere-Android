@@ -35,8 +35,8 @@ interface IContentAdapter {
 
     val textSize: Float
 
-    val requestManager: RequestManager
-
     val showAbsoluteTime: Boolean
+
+    val requestManager: RequestManager
 
 }

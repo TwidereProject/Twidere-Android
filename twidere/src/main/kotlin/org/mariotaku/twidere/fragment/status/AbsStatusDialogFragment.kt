@@ -43,6 +43,7 @@ import org.mariotaku.twidere.adapter.DummyItemAdapter
 import org.mariotaku.twidere.databinding.ItemStatusBinding
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.model.displayInfo
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.AccountDetails
@@ -53,7 +54,7 @@ import org.mariotaku.twidere.model.UserKey
 abstract class AbsStatusDialogFragment : BaseDialogFragment() {
 
     protected abstract val Dialog.loadProgress: View
-    protected abstract val Dialog.itemContent: View
+    protected abstract val itemBinding: ItemStatusBinding
 
     protected val status: ParcelableStatus?
         get() = arguments!!.status
@@ -70,7 +71,7 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
         val builder = AlertDialog.Builder(context!!)
         val accountKey = this.accountKey
 
-        builder.setupAlertDialog()
+        onPrepareDialogBuilder(builder)
 
         adapter = DummyItemAdapter(context!!, requestManager = Glide.with(this))
         adapter.showCardActions = false
@@ -87,11 +88,10 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
                 return@onShow
             }
             val weakThis by weak(this)
-            val binding = ItemStatusBinding.bind(it.itemContent)
-            val weakBinding by weak(binding)
+            val weakBinding by weak(itemBinding)
             val extraStatus = status
             if (extraStatus != null) {
-                showStatus(binding, extraStatus, details, savedInstanceState)
+                showStatus(itemBinding, extraStatus, details, savedInstanceState)
             } else promiseOnUi {
                 weakThis?.showProgress()
             } and AbsStatusDialogFragment.showStatus(context, details, statusId).successUi { status ->
@@ -110,12 +110,12 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
     private fun showProgress() {
         val currentDialog = this.dialog as? AlertDialog ?: return
         currentDialog.loadProgress.visibility = View.VISIBLE
-        currentDialog.itemContent.visibility = View.GONE
+        itemBinding.root.visibility = View.GONE
         currentDialog.getButton(BUTTON_POSITIVE)?.isEnabled = false
         currentDialog.getButton(BUTTON_NEUTRAL)?.isEnabled = false
     }
 
-    private fun showStatus(holder: ItemStatusBinding, status: ParcelableStatus,
+    private fun showStatus(binding: ItemStatusBinding, status: ParcelableStatus,
             details: AccountDetails, savedInstanceState: Bundle?) {
         status.apply {
             if (account_key != details.key) {
@@ -124,18 +124,19 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
             }
             account_key = details.key
             account_color = details.color
+            displayInfo(context!!)
         }
         val currentDialog = this.dialog as? AlertDialog ?: return
         currentDialog.getButton(BUTTON_POSITIVE)?.isEnabled = true
         currentDialog.getButton(BUTTON_NEUTRAL)?.isEnabled = true
-        currentDialog.itemContent.visibility = View.VISIBLE
         currentDialog.loadProgress.visibility = View.GONE
-        currentDialog.itemContent.isFocusable = false
-        holder.status = status
+        itemBinding.root.visibility = View.VISIBLE
+        itemBinding.root.isFocusable = false
+        binding.status = status
         currentDialog.onStatusLoaded(details, status, savedInstanceState)
     }
 
-    protected abstract fun Builder.setupAlertDialog()
+    protected abstract fun onPrepareDialogBuilder(builder: Builder)
 
     protected abstract fun AlertDialog.onStatusLoaded(account: AccountDetails, status: ParcelableStatus,
             savedInstanceState: Bundle?)
@@ -144,8 +145,8 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
 
         fun showStatus(context: Context, details: AccountDetails, statusId: String): Promise<ParcelableStatus, Exception> {
             val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
-            val profileImageSize = ModelCreationConfig.obtain(context)
-            return task { microBlog.showStatus(statusId).toParcelable(details, profileImageSize) }
+            val creationConfig = ModelCreationConfig.obtain(context)
+            return task { microBlog.showStatus(statusId).toParcelable(details, creationConfig) }
         }
 
     }

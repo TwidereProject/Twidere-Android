@@ -40,6 +40,7 @@ import org.mariotaku.twidere.annotation.LoadMorePosition
 import org.mariotaku.twidere.annotation.TimelineStyle
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.data.status.StatusActivitySummaryLiveData
+import org.mariotaku.twidere.exception.UnsupportedViewTypeException
 import org.mariotaku.twidere.extension.model.originalId
 import org.mariotaku.twidere.extension.model.retweet_sort_id
 import org.mariotaku.twidere.fragment.status.StatusFragment
@@ -270,14 +271,14 @@ class StatusDetailsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {
+            in RecyclerViewTypes.STATUS_TYPES -> {
+                return ParcelableStatusesAdapter.createStatusViewHolder(this, inflater,
+                        parent, TimelineStyle.PLAIN, viewType) as RecyclerView.ViewHolder
+            }
             VIEW_TYPE_DETAIL_STATUS -> {
                 val view = inflater.inflate(R.layout.header_status, parent, false)
                 view.setBackgroundColor(cardBackgroundColor)
                 return DetailStatusViewHolder(this, view)
-            }
-            VIEW_TYPE_LIST_STATUS -> {
-                return ParcelableStatusesAdapter.createStatusViewHolder(this, inflater,
-                        parent, TimelineStyle.PLAIN) as RecyclerView.ViewHolder
             }
             VIEW_TYPE_CONVERSATION_LOAD_INDICATOR, VIEW_TYPE_REPLIES_LOAD_INDICATOR -> {
                 val view = inflater.inflate(R.layout.list_item_load_indicator, parent,
@@ -321,12 +322,7 @@ class StatusDetailsAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
-            VIEW_TYPE_DETAIL_STATUS -> {
-                val status = getStatus(position)
-                val detailHolder = holder as DetailStatusViewHolder
-                detailHolder.displayStatus(statusAccount, status, statusActivity, translationResult)
-            }
-            VIEW_TYPE_LIST_STATUS -> {
+            in RecyclerViewTypes.STATUS_TYPES -> {
                 val status = getStatus(position)
                 val statusHolder = holder as IStatusViewHolder
                 // Display 'in reply to' for first item
@@ -335,6 +331,11 @@ class StatusDetailsAdapter(
                 val itemType = getItemType(position)
                 val displayInReplyTo = itemType == ITEM_IDX_CONVERSATION && position - getItemTypeStart(position) == 0
                 statusHolder.display(status = status, displayInReplyTo = displayInReplyTo)
+            }
+            VIEW_TYPE_DETAIL_STATUS -> {
+                val status = getStatus(position)
+                val detailHolder = holder as DetailStatusViewHolder
+                detailHolder.displayStatus(statusAccount, status, statusActivity, translationResult)
             }
             VIEW_TYPE_REPLY_ERROR -> {
                 val errorHolder = holder as StatusErrorItemViewHolder
@@ -356,7 +357,7 @@ class StatusDetailsAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return getItemViewTypeByItemType(getItemType(position))
+        return getItemViewTypeByItemType(position, getItemType(position))
     }
 
     override fun addGapLoadingId(id: ObjectId<String>) {
@@ -367,9 +368,9 @@ class StatusDetailsAdapter(
 
     }
 
-    private fun getItemViewTypeByItemType(type: Int): Int {
+    private fun getItemViewTypeByItemType(position: Int, type: Int): Int {
         when (type) {
-            ITEM_IDX_CONVERSATION, ITEM_IDX_REPLY -> return VIEW_TYPE_LIST_STATUS
+            ITEM_IDX_CONVERSATION, ITEM_IDX_REPLY -> return ParcelableStatusesAdapter.statusItemViewType(getStatus(position))
             ITEM_IDX_CONVERSATION_LOAD_MORE -> return VIEW_TYPE_CONVERSATION_LOAD_INDICATOR
             ITEM_IDX_REPLY_LOAD_MORE -> return VIEW_TYPE_REPLIES_LOAD_INDICATOR
             ITEM_IDX_STATUS -> return VIEW_TYPE_DETAIL_STATUS
@@ -377,7 +378,7 @@ class StatusDetailsAdapter(
             ITEM_IDX_REPLY_ERROR -> return VIEW_TYPE_REPLY_ERROR
             ITEM_IDX_CONVERSATION_ERROR -> return VIEW_TYPE_CONVERSATION_ERROR
         }
-        throw IllegalStateException()
+        throw UnsupportedViewTypeException(type)
     }
 
     private fun getItemCountIndex(position: Int, raw: Boolean): Int {

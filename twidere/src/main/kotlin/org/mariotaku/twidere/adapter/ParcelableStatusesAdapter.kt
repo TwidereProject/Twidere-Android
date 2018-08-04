@@ -266,6 +266,9 @@ class ParcelableStatusesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {
+            in RecyclerViewTypes.STATUS_TYPES -> {
+                return createStatusViewHolder(this, inflater, parent, timelineStyle, viewType) as RecyclerView.ViewHolder
+            }
             RecyclerViewTypes.GAP -> {
                 val view = inflater.inflate(GapViewHolder.layoutResource, parent, false)
                 return GapViewHolder(view)
@@ -273,9 +276,6 @@ class ParcelableStatusesAdapter(
             RecyclerViewTypes.LOAD_INDICATOR -> {
                 val view = inflater.inflate(R.layout.list_item_load_indicator, parent, false)
                 return LoadIndicatorViewHolder(view)
-            }
-            in RecyclerViewTypes.STATUS_TYPES -> {
-                return createStatusViewHolder(this, inflater, parent, timelineStyle, viewType) as RecyclerView.ViewHolder
             }
             RecyclerViewTypes.EMPTY -> {
                 return EmptyViewHolder(Space(context))
@@ -335,13 +335,7 @@ class ParcelableStatusesAdapter(
             }
             ITEM_INDEX_PINNED_STATUS, ITEM_INDEX_STATUS -> {
                 val status = getStatus(position)
-                return when {
-                    status.is_gap -> RecyclerViewTypes.GAP
-                    status.attachment?.quoted != null -> RecyclerViewTypes.STATUS_QUOTE
-                    status.attachment?.media.isNotNullOrEmpty() -> RecyclerViewTypes.STATUS_MEDIA
-                    status.attachment?.summary_card != null -> RecyclerViewTypes.STATUS_SUMMARY
-                    else -> RecyclerViewTypes.STATUS
-                }
+                return statusItemViewType(status)
             }
             ITEM_INDEX_FILTER_HEADER -> {
                 return RecyclerViewTypes.FILTER_HEADER
@@ -441,7 +435,7 @@ class ParcelableStatusesAdapter(
         const val ITEM_INDEX_LOAD_END_INDICATOR = 4
 
         fun createStatusViewHolder(adapter: IStatusesAdapter, inflater: LayoutInflater,
-                parent: ViewGroup, @TimelineStyle timelineStyle: Int, viewType: Int = 0): IStatusViewHolder {
+                parent: ViewGroup, @TimelineStyle timelineStyle: Int, viewType: Int): IStatusViewHolder {
             when (timelineStyle) {
                 TimelineStyle.STAGGERED -> {
                     val view = inflater.inflate(MediaStatusViewHolder.layoutResource, parent, false)
@@ -462,6 +456,16 @@ class ParcelableStatusesAdapter(
                     return holder
                 }
                 else -> throw AssertionError()
+            }
+        }
+
+        fun statusItemViewType(status: ParcelableStatus): Int {
+            return when {
+                status.is_gap -> RecyclerViewTypes.GAP
+                status.attachment?.quoted != null -> RecyclerViewTypes.STATUS_QUOTE
+                status.attachment?.media.isNotNullOrEmpty() -> RecyclerViewTypes.STATUS_MEDIA
+                status.attachment?.summary_card != null -> RecyclerViewTypes.STATUS_SUMMARY
+                else -> RecyclerViewTypes.STATUS
             }
         }
     }

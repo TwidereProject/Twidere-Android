@@ -173,9 +173,9 @@ class ParcelableActivitiesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {
-            RecyclerViewTypes.STATUS -> {
+            in RecyclerViewTypes.STATUS_TYPES -> {
                 val holder = ParcelableStatusesAdapter.createStatusViewHolder(statusAdapterDelegate,
-                        inflater, parent, TimelineStyle.PLAIN)
+                        inflater, parent, TimelineStyle.PLAIN, viewType)
                 return holder as RecyclerView.ViewHolder
             }
             RecyclerViewTypes.ACTIVITY_TITLE_SUMMARY -> {
@@ -206,7 +206,7 @@ class ParcelableActivitiesAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
-            RecyclerViewTypes.STATUS -> {
+            in RecyclerViewTypes.STATUS_TYPES -> {
                 val activity = getActivityInternal(true, position)
                 (holder as IStatusViewHolder).display(activity, displayInReplyTo = true)
             }
@@ -256,7 +256,7 @@ class ParcelableActivitiesAdapter(
                     activity.is_gap -> RecyclerViewTypes.GAP
                     activity.is_filtered -> RecyclerViewTypes.EMPTY
                     else -> when (activity.action) {
-                        Action.MENTION, Action.QUOTE, Action.REPLY -> RecyclerViewTypes.STATUS
+                        Action.MENTION, Action.QUOTE, Action.REPLY -> ParcelableStatusesAdapter.statusItemViewType(activity)
                         Action.FOLLOW, Action.FAVORITE, Action.RETWEET,
                         Action.FAVORITED_RETWEET, Action.RETWEETED_RETWEET,
                         Action.RETWEETED_MENTION, Action.FAVORITED_MENTION,

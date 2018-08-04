@@ -18,94 +18,97 @@
   ~  You should have received a copy of the GNU General Public License
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
+<layout>
 
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <LinearLayout
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/element_spacing_normal"
-        android:paddingLeft="@dimen/element_spacing_large"
-        android:paddingRight="@dimen/element_spacing_large"
-        android:paddingTop="@dimen/element_spacing_normal">
+        android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:id="@+id/commentContainer"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/element_spacing_normal"
+            android:paddingLeft="@dimen/element_spacing_large"
+            android:paddingRight="@dimen/element_spacing_large"
+            android:paddingTop="@dimen/element_spacing_normal">
 
-            <org.mariotaku.twidere.view.ComposeEditText
-                android:id="@+id/editComment"
+            <RelativeLayout
+                android:id="@+id/commentContainer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentStart="true"
-                android:completionThreshold="1"
-                android:focusable="true"
-                android:gravity="start|center_vertical"
-                android:hint="@string/comment_hint"
-                android:inputType="textMultiLine|textLongMessage|textCapSentences"
-                android:visibility="visible"
-                app:backgroundTint="?colorControlStateful">
+                android:layout_height="wrap_content">
 
-                <requestFocus/>
-            </org.mariotaku.twidere.view.ComposeEditText>
+                <org.mariotaku.twidere.view.ComposeEditText
+                    android:id="@+id/editComment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentStart="true"
+                    android:completionThreshold="1"
+                    android:focusable="true"
+                    android:gravity="start|center_vertical"
+                    android:hint="@string/comment_hint"
+                    android:inputType="textMultiLine|textLongMessage|textCapSentences"
+                    android:visibility="visible"
+                    app:backgroundTint="?colorControlStateful">
 
-            <org.mariotaku.twidere.view.StatusTextCountView
-                android:id="@+id/commentTextCount"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/element_size_normal"
-                android:layout_alignLeft="@+id/editComment"
-                android:layout_alignStart="@+id/editComment"
-                android:layout_below="@+id/editComment"
-                android:layout_toLeftOf="@+id/quoteOriginal"
-                android:layout_toStartOf="@+id/quoteOriginal"
-                android:gravity="center_vertical|start"
-                android:paddingLeft="@dimen/element_spacing_normal"
-                android:paddingRight="@dimen/element_spacing_normal"
-                android:textColor="?android:textColorSecondary"
-                tools:text="140"/>
+                    <requestFocus />
+                </org.mariotaku.twidere.view.ComposeEditText>
 
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/quoteOriginal"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/element_size_normal"
-                android:layout_alignEnd="@+id/editComment"
-                android:layout_alignRight="@+id/editComment"
-                android:layout_below="@+id/editComment"
-                android:focusable="false"
-                android:gravity="center_vertical"
-                android:text="@string/quote_original_status"
-                android:visibility="gone"/>
-        </RelativeLayout>
+                <org.mariotaku.twidere.view.StatusTextCountView
+                    android:id="@+id/commentTextCount"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/element_size_normal"
+                    android:layout_alignLeft="@+id/editComment"
+                    android:layout_alignStart="@+id/editComment"
+                    android:layout_below="@+id/editComment"
+                    android:layout_toLeftOf="@+id/quoteOriginal"
+                    android:layout_toStartOf="@+id/quoteOriginal"
+                    android:gravity="center_vertical|start"
+                    android:paddingLeft="@dimen/element_spacing_normal"
+                    android:paddingRight="@dimen/element_spacing_normal"
+                    android:textColor="?android:textColorSecondary"
+                    tools:text="140" />
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <include layout="@layout/list_item_status"/>
+                <android.support.v7.widget.AppCompatCheckBox
+                    android:id="@+id/quoteOriginal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/element_size_normal"
+                    android:layout_alignEnd="@+id/editComment"
+                    android:layout_alignRight="@+id/editComment"
+                    android:layout_below="@+id/editComment"
+                    android:focusable="false"
+                    android:gravity="center_vertical"
+                    android:text="@string/quote_original_status"
+                    android:visibility="gone" />
+            </RelativeLayout>
 
             <FrameLayout
-                android:id="@+id/loadProgress"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="@dimen/element_size_mlarge"
-                android:visibility="gone">
+                android:layout_height="wrap_content">
 
-                <ProgressBar
-                    android:layout_width="wrap_content"
+                <include
+                    android:id="@+id/statusItemBinding"
+                    layout="@layout/item_status" />
+
+                <FrameLayout
+                    android:id="@+id/loadProgress"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"/>
-            </FrameLayout>
-        </FrameLayout>
-    </LinearLayout>
+                    android:minHeight="@dimen/element_size_mlarge"
+                    android:visibility="gone">
 
-</ScrollView>
+                    <ProgressBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center" />
+                </FrameLayout>
+            </FrameLayout>
+        </LinearLayout>
+
+    </ScrollView>
+</layout>

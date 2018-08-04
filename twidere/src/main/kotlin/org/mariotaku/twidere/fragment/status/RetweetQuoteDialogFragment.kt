@@ -27,6 +27,7 @@ import android.os.Bundle
 import android.support.annotation.CheckResult
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AlertDialog
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.CheckBox
 import android.widget.RelativeLayout
@@ -38,6 +39,8 @@ import org.mariotaku.twidere.activity.content.RetweetQuoteDialogActivity
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.quickSendKey
+import org.mariotaku.twidere.databinding.DialogStatusQuoteRetweetBinding
+import org.mariotaku.twidere.databinding.ItemStatusBinding
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.canRetweet
 import org.mariotaku.twidere.extension.model.isAccountRetweet
@@ -64,7 +67,8 @@ import java.util.*
 class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
 
     override val Dialog.loadProgress: View get() = findViewById(R.id.loadProgress)
-    override val Dialog.itemContent: View get() = findViewById(R.id.itemContent)
+    override val itemBinding: ItemStatusBinding
+        get() = viewBinding.statusItemBinding
 
     private val Dialog.textCountView: StatusTextCountView get() = findViewById(R.id.commentTextCount)
 
@@ -72,15 +76,18 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
     private val Dialog.editComment: ComposeEditText get() = findViewById(R.id.editComment)
     private val Dialog.quoteOriginal: CheckBox get() = findViewById(R.id.quoteOriginal)
 
+    private lateinit var viewBinding: DialogStatusQuoteRetweetBinding
+
     private val text: CharSequence?
         get() = arguments!!.text
 
-    override fun AlertDialog.Builder.setupAlertDialog() {
-        setTitle(R.string.title_retweet_quote_confirm)
-        setView(R.layout.dialog_status_quote_retweet)
-        setPositiveButton(R.string.action_retweet, null)
-        setNegativeButton(android.R.string.cancel, null)
-        setNeutralButton(R.string.action_quote, null)
+    override fun onPrepareDialogBuilder(builder: AlertDialog.Builder) {
+        builder.setTitle(R.string.title_retweet_quote_confirm)
+        viewBinding = DialogStatusQuoteRetweetBinding.inflate(LayoutInflater.from(builder.context))!!
+        builder.setView(viewBinding.root)
+        builder.setPositiveButton(R.string.action_retweet, null)
+        builder.setNegativeButton(android.R.string.cancel, null)
+        builder.setNeutralButton(R.string.action_quote, null)
     }
 
     override fun AlertDialog.onStatusLoaded(account: AccountDetails, status: ParcelableStatus,

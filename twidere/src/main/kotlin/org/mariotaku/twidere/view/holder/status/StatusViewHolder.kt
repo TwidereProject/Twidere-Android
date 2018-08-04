@@ -37,7 +37,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import org.mariotaku.ktextension.applyFontFamily
 import org.mariotaku.ktextension.spannable
-import org.mariotaku.microblog.library.annotation.mastodon.StatusVisibility
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
@@ -48,7 +47,6 @@ import org.mariotaku.twidere.extension.inflate
 import org.mariotaku.twidere.extension.model.displayInfo
 import org.mariotaku.twidere.extension.model.retweeted_by_user_acct
 import org.mariotaku.twidere.extension.model.type
-import org.mariotaku.twidere.extension.model.user_acct
 import org.mariotaku.twidere.extension.setVisible
 import org.mariotaku.twidere.extension.text.appendCompat
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
@@ -181,18 +179,19 @@ class StatusViewHolder(var adapter: IStatusesAdapter, val binding: ItemStatusBin
     }
 
     override fun display(status: ParcelableStatus, displayInReplyTo: Boolean, displayPinned: Boolean) {
-        val context = itemView.context
-        val display = status.displayInfo(context)
-
-        binding.status = status
-
         if (status is PlaceholderObject) {
             placeholder()
             return
         }
+
+        val context = itemView.context
         val formatter = BidiFormatterSingleton.get()
         val colorNameManager = UserColorNameManager.get(context)
         val showCardActions = isCardActionsShown
+
+        val display = status.displayInfo(context)
+
+        binding.status = status
 
         replyButton.alpha = 1f
         retweetButton.alpha = 1f
@@ -243,8 +242,6 @@ class StatusViewHolder(var adapter: IStatusesAdapter, val binding: ItemStatusBin
         }
 
         nameView.placeholder = false
-        nameView.name = colorNameManager.getUserNickname(status.user_key, status.user_name)
-        nameView.screenName = "@${status.user_acct}"
 
         if (adapter.profileImageEnabled) {
             profileImageView.visibility = View.VISIBLE
@@ -267,24 +264,11 @@ class StatusViewHolder(var adapter: IStatusesAdapter, val binding: ItemStatusBin
 
         replyButton.drawable?.mutate()
 
-        when (status.extras?.visibility) {
-            StatusVisibility.PRIVATE -> {
-                retweetButton.setImageResource(R.drawable.ic_action_lock)
-            }
-            StatusVisibility.DIRECT -> {
-                retweetButton.setImageResource(R.drawable.ic_action_message)
-            }
-            else -> {
-                retweetButton.setImageResource(R.drawable.ic_action_retweet)
-            }
-        }
         retweetButton.drawable?.mutate()
 
         retweetButton.isActivated = isRetweetIconActivated(status)
 
         favoriteButton.isActivated = isFavoriteIconActivated(status)
-
-        nameView.updateText(formatter)
 
         attachmentContainer.setVisible(attachmentHolder != null)
         attachmentHolder?.display(status)

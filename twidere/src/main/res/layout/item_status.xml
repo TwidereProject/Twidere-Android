@@ -123,6 +123,8 @@
             app:tltvPrimaryTextStyle="bold"
             app:tltvSecondaryTextAppearance="?android:textAppearanceSmall"
             app:tltvSecondaryTextColor="?android:textColorSecondary"
+            bind:name="@{status.display.name}"
+            bind:screenName="@{status.display.screenName}"
             tools:tltvPrimaryText="Name"
             tools:tltvSecondaryText="\@screenname" />
 
@@ -213,6 +215,7 @@
             app:tint="@color/btn_tint_retweet_stateful"
             bind:pluralRes="@{R.plurals.N_retweets_abbrev}"
             bind:properCount="@{status.retweet_count}"
+            bind:statusVisibility="@{status.extras.visibility}"
             bind:zeroRes="@{R.string.action_retweet}"
             tools:text="255" />
 

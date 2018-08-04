@@ -45,9 +45,9 @@ class VariousItemsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {
-            RecyclerViewTypes.STATUS -> {
+            in RecyclerViewTypes.STATUS_TYPES -> {
                 return ParcelableStatusesAdapter.createStatusViewHolder(dummyAdapter,
-                        inflater, parent, TimelineStyle.PLAIN) as RecyclerView.ViewHolder
+                        inflater, parent, TimelineStyle.PLAIN, viewType) as RecyclerView.ViewHolder
             }
             RecyclerViewTypes.USER -> {
                 return ParcelableUsersAdapter.createUserViewHolder(dummyAdapter, inflater, parent)
@@ -67,7 +67,7 @@ class VariousItemsAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val obj = getItem(position)
         when (holder.itemViewType) {
-            RecyclerViewTypes.STATUS -> {
+            in RecyclerViewTypes.STATUS_TYPES -> {
                 (holder as StatusViewHolder).display(obj as ParcelableStatus,
                         displayInReplyTo = true)
             }
@@ -103,7 +103,7 @@ class VariousItemsAdapter(
 
     private fun getItemViewType(obj: Any): Int {
         when (obj) {
-            is ParcelableStatus -> return RecyclerViewTypes.STATUS
+            is ParcelableStatus -> return ParcelableStatusesAdapter.statusItemViewType(obj)
             is ParcelableUser -> return RecyclerViewTypes.USER
             is ParcelableUserList -> return RecyclerViewTypes.USER_LIST
             is ParcelableHashtag -> return RecyclerViewTypes.HASHTAG

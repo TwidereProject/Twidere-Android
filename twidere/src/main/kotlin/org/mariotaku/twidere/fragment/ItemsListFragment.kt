@@ -147,7 +147,7 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
         val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo?
         val position = contextMenuInfo!!.position
         when (adapter.getItemViewType(position)) {
-            RecyclerViewTypes.STATUS -> {
+            in RecyclerViewTypes.STATUS_TYPES -> {
                 val dummyAdapter = adapter.dummyAdapter
                 val status = dummyAdapter.getStatus(contextMenuInfo.position)
                 inflater.inflate(R.menu.action_status, menu)
@@ -163,7 +163,7 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
         val contextMenuInfo = item.menuInfo as ExtendedRecyclerView.ContextMenuInfo
         val position = contextMenuInfo.position
         when (adapter.getItemViewType(position)) {
-            RecyclerViewTypes.STATUS -> {
+            in RecyclerViewTypes.STATUS_TYPES -> {
                 val dummyAdapter = adapter.dummyAdapter
                 val status = dummyAdapter.getStatus(position)
                 if (item.itemId == R.id.share) {

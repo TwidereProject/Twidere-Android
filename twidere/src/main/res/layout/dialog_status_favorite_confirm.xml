@@ -19,31 +19,36 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout>
 
-    <FrameLayout
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/element_spacing_normal"
-        android:paddingLeft="@dimen/element_spacing_large"
-        android:paddingRight="@dimen/element_spacing_large"
-        android:paddingTop="@dimen/element_spacing_normal">
-
-        <include layout="@layout/item_status" />
+        android:layout_height="match_parent">
 
         <FrameLayout
-            android:id="@+id/loadProgress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="@dimen/element_size_mlarge">
+            android:paddingBottom="@dimen/element_spacing_normal"
+            android:paddingLeft="@dimen/element_spacing_large"
+            android:paddingRight="@dimen/element_spacing_large"
+            android:paddingTop="@dimen/element_spacing_normal">
 
-            <ProgressBar
-                android:layout_width="wrap_content"
+            <include
+                android:id="@+id/statusItemBinding"
+                layout="@layout/item_status" />
+
+            <FrameLayout
+                android:id="@+id/loadProgress"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center" />
-        </FrameLayout>
-    </FrameLayout>
+                android:minHeight="@dimen/element_size_mlarge">
 
-</ScrollView>
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+            </FrameLayout>
+        </FrameLayout>
+
+    </ScrollView>
+</layout>

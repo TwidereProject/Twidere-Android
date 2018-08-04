@@ -441,6 +441,9 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     public static class Display {
         public CharSequence text;
 
+        public String name;
+        public String screenName;
+
         public CharSequence contentDescription;
         public CharSequence profileImageContentDescription;
 

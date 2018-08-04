@@ -481,7 +481,7 @@ abstract class AbsActivitiesFragment : AbsContentRecyclerViewFragment<Parcelable
             if (activity == null) return
             val lm = layoutManager
             val view = lm.findViewByPosition(position) ?: return
-            if (lm.getItemViewType(view) != RecyclerViewTypes.STATUS) {
+            if (lm.getItemViewType(view) !in RecyclerViewTypes.STATUS_TYPES) {
                 return
             }
             recyclerView.showContextMenuForChild(view, menuView)

@@ -245,6 +245,9 @@ fun ParcelableStatus.generateDisplayInfo(context: Context): ParcelableStatus.Dis
 
     info.text = textWithSummary
 
+    info.name = colorNameManager.getUserNickname(user_key, user_name)
+    info.screenName = "@$user_acct"
+
     info.contentDescription = contentDescription(context, colorNameManager, displayInReplyTo, showAbsoluteTime)
     info.profileImageContentDescription = context.getString(R.string.content_description_open_user_name_profile,
             colorNameManager.getDisplayName(this))
