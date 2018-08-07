@@ -187,18 +187,16 @@ class StatusViewHolder(var adapter: IStatusesAdapter, val binding: ItemStatusBin
         val context = itemView.context
         val formatter = BidiFormatterSingleton.get()
         val colorNameManager = UserColorNameManager.get(context)
-        val showCardActions = isCardActionsShown
 
         val display = status.displayInfo(context)
 
         binding.status = status
+        binding.showActions = isCardActionsShown
 
         replyButton.alpha = 1f
         retweetButton.alpha = 1f
         favoriteButton.alpha = 1f
         itemMenu.alpha = 1f
-
-        itemActionsGroup.setVisible(showCardActions)
 
         if (displayPinned && status.is_pinned_status) {
             statusInfoLabel.setText(R.string.pinned_status)

@@ -7,5 +7,6 @@ data class ItemDisplayOption(
         @ImageShapeStyle
         var profileImageStyle: Int,
         var textSize: Float,
-        var showAbsoluteTime: Boolean
+        var showAbsoluteTime: Boolean,
+        var showActions: Boolean
 )

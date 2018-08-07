@@ -23,6 +23,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <import type="org.mariotaku.twidere.R" />
 
         <import type="org.mariotaku.twidere.model.ParcelableStatus" />
@@ -32,7 +34,15 @@
             type="org.mariotaku.twidere.model.ParcelableStatus" />
 
         <variable
+            name="displayOption"
+            type="org.mariotaku.twidere.model.adapter.ItemDisplayOption" />
+
+        <variable
             name="useFavorite"
+            type="boolean" />
+
+        <variable
+            name="showActions"
             type="boolean" />
     </data>
 
@@ -261,7 +271,7 @@
             android:id="@+id/itemActionsGroup"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:visibility="visible"
+            android:visibility="@{showActions ? View.VISIBLE : View.GONE}"
             app:constraint_referenced_ids="reply,retweet,favorite,itemMenu" />
 
 
