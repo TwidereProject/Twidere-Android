@@ -76,7 +76,7 @@
   <string name="action_open_in_browser">Ouvrir dans un navigateur</string>
   <string name="action_pick_color">Choisir une couleur</string>
   <string name="action_purchase">Acheter</string>
-  <string name="action_purchase_features_pack">Acheter le « feature pack »</string>
+  <string name="action_purchase_features_pack">Acheter le « feature pack »</string>
   <string name="action_qr_code">QR Code</string>
   <string name="action_quote">Citer</string>
   <string name="action_record_video">Enregistrer une vidéo</string>
@@ -101,6 +101,7 @@
   <string name="action_set_color">Définir la couleur</string>
   <string name="action_set_nickname">Définir le pseudo</string>
   <string name="action_set_status_visibility">Assigner la confidentialité</string>
+  <string name="action_settings">Paramètres</string>
   <string name="action_share">Partager</string>
   <string name="action_sign_in">Connexion</string>
   <!-- [verb] Used for skip some settings -->
@@ -227,6 +228,7 @@
   <!-- [noun] Count label for retweets, e.g. (N retweets)-->
   <string name="count_label_retweets">Retweets</string>
   <string name="created_by">Créé par <xliff:g id="created_by">%s</xliff:g></string>
+  <string name="label_created_by_name">Créé par <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">Liste \"<xliff:g id="list">%s</xliff:g>\" créée.</string>
   <string name="current_status">Tweet en cours</string>
   <string name="custom_host_mapping">Mappage d\'hôte personnalisée</string>
@@ -308,13 +310,13 @@
   <string name="extra_features_description">Soutenez Twidere et accédez à des fonctionnalités avancées</string>
   <string name="extra_features_pack_description">Ou achetez le «feature pack» pour bénéficier de toutes les fonctionnalités (y compris les fonctionnalités prévues dans les future versions)</string>
   <!-- Enhanced (paid) features title -->
-  <string name="extra_features_restore_purchase_hint">Si vous avez déjà acheté des fonctionnalités avancées, vous pouvez utiliser « Restaurer » pour importer vos achats.</string>
+  <string name="extra_features_restore_purchase_hint">Si vous avez déjà acheté des fonctionnalités avancées, vous pouvez utiliser « Restaurer » pour importer vos achats.</string>
   <string name="fab_visible">Bouton d’action flottant</string>
   <string name="fab_visible_summary">Voir le bouton d\'action flottant</string>
   <string name="fast_image_loading">Chargement de l\'image rapide</string>
   <string name="fast_image_loading_summary">Activer pour permettre aux images de se charger plus rapidement, désactiver si des images ne s\'affichent pas.</string>
   <string name="filter_everywhere">Filtrer partout</string>
-  <string name="filter_everywhere_description">Le filtre va s\'appliquer dans Twidere sur :\n  ·Les tweets de l\'utilisateur\n  ·Les tweets mentionnant l\'utilisateur\n  ·Les retweets/citation de cet utilisateur</string>
+  <string name="filter_everywhere_description">Le filtre va s\'appliquer dans Twidere sur :\n  ·Les tweets de l\'utilisateur\n  ·Les tweets mentionnant l\'utilisateur\n  ·Les retweets/citation de cet utilisateur</string>
   <string name="filter_type_keywords">Mots-clés</string>
   <string name="filter_type_links">Liens</string>
   <string name="filter_type_sources">Sources</string>
@@ -456,8 +458,8 @@
   <string name="link_highlight_option">Option de surbrillance des liens</string>
   <string name="link_to_quoted_status">Lien vers le tweet cité</string>
   <string name="list_members">Lister les membres</string>
-  <string name="list_subscribers">Liste « abonnés »</string>
-  <string name="list_timeline">Liste « fil d\'actualité »</string>
+  <string name="list_subscribers">Liste « abonnés »</string>
+  <string name="list_timeline">Liste « fil d\'actualité »</string>
   <string name="listed">Listé</string>
   <string name="lists">Listes</string>
   <string name="lists_following_user">Liste dont cet utilisateur est membre</string>
@@ -496,9 +498,9 @@
   <string name="message_app_crashed">Twidere a planté. Veuillez envoyer un rapport de bug pour m\'aider à corriger ce problème.</string>
   <string name="message_auto_refresh_confirm">Activer le rafraîchissement automatique pour récupérer les nouveaux tweets ?</string>
   <string name="message_blocked_user"><xliff:g id="user">%s</xliff:g> bloqué.</string>
-  <string name="message_buffer_delete_schedule_confirm">Supprimer cette programmation ?</string>
-  <string name="message_buffer_disconnect_confirm">Se déconnecter de Buffer ?</string>
-  <string name="message_clear_messages_confirm">Effacer tous les messages ?</string>
+  <string name="message_buffer_delete_schedule_confirm">Supprimer cette programmation ?</string>
+  <string name="message_buffer_disconnect_confirm">Se déconnecter de Buffer ?</string>
+  <string name="message_clear_messages_confirm">Effacer tous les messages ?</string>
   <string name="message_conversation_created">Conversation créée.</string>
   <string name="message_destroy_conversation_confirm">Quitter la conversation ?</string>
   <string name="message_direct_message_deleted">Message supprimé.</string>
@@ -521,7 +523,7 @@
   <string name="message_permission_request_compose_location">Twidere a besoin que vous autorisiez la localisation pour ajouter la position de vos tweets.</string>
   <string name="message_permission_request_save_media">Twidere a besoin que vous autorisiez l\'accès aux fichiers pour sauver les médias.</string>
   <string name="message_permission_request_share_media">Twidere nécessite des autorisations de stockage pour le partage de médias à certaines applications.</string>
-  <string name="message_pin_status_confirm">Épingler ce tweet ? Cela remplacera le tweet déjà épinglé.</string>
+  <string name="message_pin_status_confirm">Épingler ce tweet ? Cela remplacera le tweet déjà épinglé.</string>
   <string name="message_please_wait">Veuillez patienter.</string>
   <string name="message_status_reply_to_user_removed_explanation">Twitter mentionne toujours l\'auteur du tweet dans les réponses. Si l\'auteur a été supprimé, Twidere enverra la réponse comme une citation, afin de préserver le contexte.</string>
   <string name="message_status_scheduling_connect_buffer_hint">Se connecter au tampon pour programmer des tweets même hors ligne</string>
@@ -531,7 +533,7 @@
   <string name="message_sync_data_synced_with_name">Twidere est maintenant synchronisé avec <xliff:g example="ownCloud" id="name">%s</xliff:g></string>
   <string name="message_sync_disconnect_from_name_confirm">Se déconnecter de <xliff:g example="ownCloud" id="name">%s</xliff:g>?</string>
   <string name="message_sync_last_synced_time">Dernière synchronisation : <xliff:g example="2017/1/1 12:00" id="time">%s</xliff:g></string>
-  <string name="message_tab_field_is_required">Le champ « <xliff:g example="Field" id="name">%s </xliff:g> » est obligatoire</string>
+  <string name="message_tab_field_is_required">Le champ « <xliff:g example="Field" id="name">%s </xliff:g> » est obligatoire</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
@@ -546,7 +548,7 @@
   <string name="message_toast_error_occurred">Une erreur s\'est produite, veuillez réessayer.</string>
   <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_extra_features_not_purchased">Fonctionnalité avancée, non disponible sans achat</string>
-  <string name="message_toast_filters_import_hint">Appuyez sur « + » pour importer</string>
+  <string name="message_toast_filters_import_hint">Appuyez sur « + » pour importer</string>
   <string name="message_toast_internal_storage_install_required">L\'installation sur carte SD n\'est pas pris en charge, les comptes risquent d\'être perdus après un redémarrage.</string>
   <string name="message_toast_invalid_mastodon_host">Hôte Mastodon non valide</string>
   <string name="message_toast_link_copied_to_clipboard">Lien copié dans le presse-papier</string>
@@ -578,7 +580,7 @@
   <string name="message_toast_ssl_tls_error">Erreur TLS, veuilez vérifier vos paramètres de proxy ou d\'horloge</string>
   <string name="message_toast_status_deleted">Tweet supprimé</string>
   <string name="message_toast_status_favorited">Tweet ajouté aux favoris</string>
-  <string name="message_toast_status_like_removed">« J\'aime » supprimé</string>
+  <string name="message_toast_status_like_removed">« J\'aime » supprimé</string>
   <string name="message_toast_status_liked">Tweet aimé</string>
   <string name="message_toast_status_pinned">Tweet épinglé</string>
   <string name="message_toast_status_retweeted">Retweeté</string>
@@ -592,7 +594,7 @@
   <string name="message_toast_users_filters_added">Ajouté au filtres</string>
   <string name="message_toast_wrong_api_key">L\'URL de l\'API ou la clé utilisateur est incorrecte, merci de vérifier à nouveau.</string>
   <string name="message_toast_wrong_username_password">Mauvais nom d\'utilisateur/mot de passe</string>
-  <string name="message_unpin_status_confirm">Désépingler ce tweet ?</string>
+  <string name="message_unpin_status_confirm">Désépingler ce tweet ?</string>
   <string name="message_video_too_long">Vidéo trop longue</string>
   <string name="message_video_too_short">Vidéo trop courte</string>
   <string name="multi_select">Sélection multiple</string>
@@ -702,7 +704,7 @@
   <string name="preference_summary_media_preload_non_metered_network">Précharger les médias uniquement sur des réseaux sans surcoût comme une connexion Wi-Fi</string>
   <string name="preference_summary_streaming_non_metered_network">Diffusion seulement sur des réseaux gratuits comme le Wi-Fi</string>
   <string name="preference_summary_streaming_power_saving">Diffusion seulement en charge</string>
-  <string name="preference_summary_sync_timeline_positions">Lorsque « Se souvenir de la position » est activé</string>
+  <string name="preference_summary_sync_timeline_positions">Lorsque « Se souvenir de la position » est activé</string>
   <string name="preference_summary_trends_location">Vous pouvez maintenant fixer votre emplacement séparément dans les réglages d\'onglets.</string>
   <string name="preference_title_accounts">Comptes</string>
   <string name="preference_title_advanced">Avancé</string>

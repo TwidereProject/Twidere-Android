@@ -20,8 +20,8 @@ allprojects {
         projectVersionCode = 397
         projectVersionName = '3.7.3'
 
-        globalCompileSdkVersion = 28
-        globalBuildToolsVersion = '28.0.1'
+        globalCompileSdkVersion = 27
+        globalBuildToolsVersion = '27.0.3'
     }
 
     repositories {
@@ -36,7 +36,7 @@ allprojects {
 subprojects {
     buildscript {
         ext {
-            kotlinVersion = '1.1.51'
+            kotlinVersion = '1.2.51'
             pluginVersions = [
                     AndroidSvgDrawable: '3.0.0',
                     PlayServices      : '3.1.1',
