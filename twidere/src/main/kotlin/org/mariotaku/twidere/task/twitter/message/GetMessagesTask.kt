@@ -36,6 +36,7 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_SHOW_NOTIFICATION
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.queryCount
@@ -80,6 +81,7 @@ class GetMessagesTask(
             }
             val microBlog = details.newMicroBlogInstance(context, cls = MicroBlog::class.java)
             val messages = try {
+                if (!details.hasDm) throw APINotSupportedException(details.type)
                 getMessages(microBlog, details, param, i)
             } catch (e: MicroBlogException) {
                 return@forEachIndexed
@@ -97,7 +99,7 @@ class GetMessagesTask(
         when (details.type) {
             AccountType.FANFOU -> {
                 // Use fanfou DM api, disabled since it's conversation api is not suitable for paging
-                // return getFanfouMessages(microBlog, details, param, index)
+                return getFanfouMessages(microBlog, details, param, index)
             }
             AccountType.TWITTER -> {
                 // Use official DM api
