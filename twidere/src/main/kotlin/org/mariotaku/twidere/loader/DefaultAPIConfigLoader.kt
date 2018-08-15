@@ -21,13 +21,9 @@ package org.mariotaku.twidere.loader
 
 import android.content.Context
 import android.support.v4.content.FixedAsyncTaskLoader
-import org.mariotaku.restfu.annotation.method.GET
-import org.mariotaku.restfu.http.HttpRequest
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.model.CustomAPIConfig
-import org.mariotaku.twidere.util.JsonSerializer
 import org.mariotaku.twidere.util.dagger.GeneralComponent
-import java.io.IOException
 import javax.inject.Inject
 
 class DefaultAPIConfigLoader(context: Context) : FixedAsyncTaskLoader<List<CustomAPIConfig>>(context) {
@@ -39,29 +35,11 @@ class DefaultAPIConfigLoader(context: Context) : FixedAsyncTaskLoader<List<Custo
     }
 
     override fun loadInBackground(): List<CustomAPIConfig> {
-        val request = HttpRequest(GET.METHOD, DEFAULT_API_CONFIGS_URL,
-                null, null, null)
-        try {
-            client.newCall(request).execute().use { response ->
-                // Save to cache
-                if (!response.isSuccessful) {
-                    throw IOException()
-                }
-                // Save to cache
-                return JsonSerializer.parseList(response.body.stream(), CustomAPIConfig::class.java)
-            }
-        } catch (e: IOException) {
-            // Ignore
-        }
         return CustomAPIConfig.listDefault(context)
     }
 
     override fun onStartLoading() {
         deliverResult(CustomAPIConfig.listDefault(context))
         forceLoad()
-    }
-
-    companion object {
-        const val DEFAULT_API_CONFIGS_URL = "https://twidere.mariotaku.org/assets/data/default_api_configs.json"
     }
 }
