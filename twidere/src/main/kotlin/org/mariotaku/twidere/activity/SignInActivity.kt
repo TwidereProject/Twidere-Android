@@ -615,10 +615,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         override fun onLoadFinished(loader: Loader<List<CustomAPIConfig>>, data: List<CustomAPIConfig>) {
             val dialog = dialog ?: return
             val listView: ExpandableListView = dialog.findViewById(R.id.expandableList)
-            val defaultConfig = preferences[defaultAPIConfigKey]
-            defaultConfig.name = getString(R.string.login_type_user_settings)
             val allConfig = ArraySet(data)
-            allConfig.add(defaultConfig)
             val configGroup = allConfig.groupBy { it.safeType }
             val supportedAccountTypes = arrayOf(AccountType.TWITTER, AccountType.FANFOU,
                     AccountType.MASTODON, AccountType.STATUSNET)
