@@ -64,8 +64,8 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String ETAG_MASTODON_APPS_PREFERENCES_NAME = "mastodon_apps";
     String ACCOUNT_PREFERENCES_NAME_PREFIX = "account_preferences_";
 
-    String TWITTER_CONSUMER_KEY = "0WEJk1x6AlgtjGRhyABXw";
-    String TWITTER_CONSUMER_SECRET = "gWXNqEFhO3fMkAqoIKpTdjK0MOJs68xnOky0FRdDTP8";
+    String TWITTER_CONSUMER_KEY = "3nVuSoBZnx6U4vzUxf5w";
+    String TWITTER_CONSUMER_SECRET = "Bcs59EFbbsdF6Sl9Ng71smgStWEGwXXKSjYvPVt7qys";
 
     String DEFAULT_TWITTER_API_URL_FORMAT = "https://[DOMAIN.]twitter.com/";
 
