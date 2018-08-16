@@ -45,7 +45,6 @@ import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
 import org.mariotaku.ktextension.isCurrentThreadCompat
 import org.mariotaku.mediaviewer.library.MediaDownloader
 import org.mariotaku.restfu.http.RestHttpClient
-import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.AssistLauncherActivity
@@ -116,7 +115,6 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
     lateinit internal var thumbor: ThumborWrapper
 
     val sqLiteDatabase: SQLiteDatabase by lazy {
-        StrictModeUtils.checkDiskIO()
         sqLiteOpenHelper.writableDatabase
     }
 
@@ -141,9 +139,6 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
 
     override fun onCreate() {
         instance = this
-        if (BuildConfig.DEBUG) {
-            StrictModeUtils.detectAllVmPolicy()
-        }
         super.onCreate()
         applyLanguageSettings()
         startKovenant()

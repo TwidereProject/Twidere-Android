@@ -56,7 +56,6 @@ import org.mariotaku.ktextension.getSystemWindowInsets
 import org.mariotaku.ktextension.systemWindowInsets
 import org.mariotaku.ktextension.unregisterReceiverSafe
 import org.mariotaku.restfu.http.RestHttpClient
-import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
 import org.mariotaku.twidere.activity.iface.IBaseActivity
@@ -250,10 +249,6 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (BuildConfig.DEBUG) {
-            StrictModeUtils.detectAllVmPolicy()
-            StrictModeUtils.detectAllThreadPolicy()
-        }
         val themeColor = themePreferences[themeColorKey]
         val themeResource = getThemeResource(themePreferences, themePreferences[themeKey], themeColor)
         if (themeResource != 0) {

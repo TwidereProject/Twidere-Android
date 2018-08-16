@@ -63,7 +63,6 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.task.filter.RefreshLaunchPresentationsTask
 import org.mariotaku.twidere.util.DeviceUtils
 import org.mariotaku.twidere.util.OnLinkClickHandler
-import org.mariotaku.twidere.util.StrictModeUtils
 import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.cache.JsonCache
 import org.mariotaku.twidere.util.dagger.GeneralComponent
@@ -102,10 +101,6 @@ open class MainActivity : ChameleonActivity(), IBaseActivity<MainActivity> {
     private lateinit var requestManager: RequestManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (BuildConfig.DEBUG) {
-            StrictModeUtils.detectAllVmPolicy()
-            StrictModeUtils.detectAllThreadPolicy()
-        }
         val themeColor = themePreferences[themeColorKey]
         val themeResource = getThemeResource(themePreferences, themePreferences[themeKey], themeColor)
         if (themeResource != 0) {

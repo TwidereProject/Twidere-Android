@@ -227,7 +227,11 @@ public final class TwidereLinkify implements Constants {
                             || string.getSpans(start, end, URLSpan.class).length > 0) {
                         continue;
                     }
-                    applyLink(entity.getValue(), null, start, end, string, accountKey, extraId,
+                    String entity_url = entity.getValue();
+                    if (!entity_url.startsWith("http")) {
+                        entity_url = "http://" + entity_url;
+                    }
+                    applyLink(entity_url, null, start, end, string, accountKey, extraId,
                             LINK_TYPE_LINK_IN_TEXT, sensitive, highlightOption, listener);
                 }
                 break;
