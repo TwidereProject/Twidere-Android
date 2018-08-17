@@ -787,7 +787,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val accountKey = user.account_key ?: return
         val account = this.account
         val relationship = this.relationship
-
+        val linkAvailable = LinkCreator.hasWebLink(user)
         val isMyself = accountKey.maybeEquals(user.key)
         val mentionItem = menu.findItem(R.id.mention)
         if (mentionItem != null) {
@@ -795,6 +795,10 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     user.name, user.screen_name, nameFirst)
             mentionItem.title = getString(R.string.mention_user_name, displayName)
         }
+
+        menu.setItemAvailability(R.id.qr_code, linkAvailable)
+        menu.setItemAvailability(R.id.open_in_browser, linkAvailable)
+
         menu.setItemAvailability(R.id.mention, !isMyself)
         menu.setItemAvailability(R.id.incoming_friendships, isMyself)
         menu.setItemAvailability(R.id.saved_searches, isMyself)
@@ -1017,7 +1021,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 return true
             }
             R.id.open_in_browser -> {
-                val uri = LinkCreator.getUserWebLink(user)
+                val uri = LinkCreator.getUserWebLink(user) ?: return true
                 val intent = Intent(Intent.ACTION_VIEW, uri)
                 intent.addCategory(Intent.CATEGORY_BROWSABLE)
                 intent.`package` = IntentUtils.getDefaultBrowserPackage(context, uri, true)

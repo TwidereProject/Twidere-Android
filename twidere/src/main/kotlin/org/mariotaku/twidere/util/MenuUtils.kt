@@ -194,6 +194,10 @@ object MenuUtils {
             val isOfficialKey = details.isOfficial(context)
             menu.setItemAvailability(R.id.translate, isOfficialKey)
         }
+
+        val linkAvailable = LinkCreator.hasWebLink(status)
+        menu.setItemAvailability(R.id.open_in_browser, linkAvailable)
+
         menu.removeGroup(MENU_GROUP_STATUS_EXTENSION)
         addIntentToMenuForExtension(context, menu, MENU_GROUP_STATUS_EXTENSION,
                 INTENT_ACTION_EXTENSION_OPEN_STATUS, EXTRA_STATUS, EXTRA_STATUS_JSON, status)
@@ -329,7 +333,7 @@ object MenuUtils {
                 }
             }
             R.id.open_in_browser -> {
-                val uri = LinkCreator.getStatusWebLink(status)
+                val uri = LinkCreator.getStatusWebLink(status) ?: return true
                 val intent = Intent(Intent.ACTION_VIEW, uri)
                 intent.addCategory(Intent.CATEGORY_BROWSABLE)
                 intent.`package` = IntentUtils.getDefaultBrowserPackage(context, uri, true)
