@@ -144,8 +144,6 @@ interface GeneralComponent {
 
     fun inject(fragment: ExoPlayerPageFragment)
 
-    fun inject(service: StreamingService)
-
     fun inject(service: BaseService)
 
     fun inject(activity: MainActivity)

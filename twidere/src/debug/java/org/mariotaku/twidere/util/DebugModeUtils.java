@@ -32,7 +32,6 @@ import org.mariotaku.stethoext.bsh.BshRuntimeReplFactoryBuilder;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.util.net.NoIntercept;
 import org.mariotaku.twidere.util.stetho.AccountsDumperPlugin;
-import org.mariotaku.twidere.util.stetho.UserStreamDumperPlugin;
 
 import okhttp3.OkHttpClient;
 
@@ -61,7 +60,6 @@ public class DebugModeUtils {
         Stetho.initialize(Stetho.newInitializerBuilder(application)
                 .enableDumpapp(() -> new Stetho.DefaultDumperPluginsBuilder(application)
                         .provide(new AccountsDumperPlugin(application))
-                        .provide(new UserStreamDumperPlugin(application))
                         .finish())
                 .enableWebKitInspector(() -> new Stetho.DefaultInspectorModulesBuilder(application)
                         .runtimeRepl(new BshRuntimeReplFactoryBuilder(application).build())

@@ -57,7 +57,6 @@ import org.mariotaku.twidere.extension.model.save
 import org.mariotaku.twidere.extension.setLocale
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.receiver.ConnectivityStateReceiver
-import org.mariotaku.twidere.service.StreamingService
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.concurrent.ConstantFuture
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
@@ -214,15 +213,6 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
             }
             KEY_NAME_FIRST, KEY_I_WANT_MY_STARS_BACK -> {
                 contentNotificationManager.updatePreferences()
-            }
-            streamingEnabledKey.key, streamingPowerSavingKey.key,
-            streamingNonMeteredNetworkKey.key -> {
-                val streamingIntent = Intent(this, StreamingService::class.java)
-                if (activityTracker.isHomeActivityLaunched) {
-                    startService(streamingIntent)
-                } else {
-                    stopService(streamingIntent)
-                }
             }
             KEY_OVERRIDE_LANGUAGE -> {
                 applyLanguageSettings()

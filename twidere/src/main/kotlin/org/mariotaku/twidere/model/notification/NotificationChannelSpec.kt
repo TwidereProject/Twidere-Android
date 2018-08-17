@@ -48,13 +48,6 @@ enum class NotificationChannelSpec(
             importance = NotificationManager.IMPORTANCE_MIN),
 
     /**
-     * For ongoing notifications indicating service statuses.
-     * Such as notification showing streaming service running
-     */
-    serviceStatuses("service_statuses", R.string.notification_channel_name_service_statuses,
-            importance = NotificationManager.IMPORTANCE_MIN),
-
-    /**
      * For updates related to micro-blogging features.
      * Such as new statuses posted by friends.
      */
