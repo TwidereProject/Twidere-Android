@@ -114,5 +114,14 @@
                 android:data="twidere://user?user_key=514378421@twitter.com&amp;account_host=twitter.com&amp;finish_only=true"/>
         </Preference>
     </org.mariotaku.twidere.preference.TintedPreferenceCategory>
-
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory android:title="Forked by">
+        <Preference
+            android:icon="@mipmap/ic_launcher_xefir"
+            android:summary="@xefir@toot.crystalyx.net on Mastodon"
+            android:title="Xefir_Destiny">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="twidere://user?user_key=448680215@twitter.com&amp;account_host=twitter.com&amp;finish_only=true"/>
+        </Preference>
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 </PreferenceScreen>
