@@ -32,7 +32,7 @@ object EmojioneTranslator: CharSequenceTranslator() {
     private var implementation: ShortnameToUnicodeTranslator? = null
 
     fun init(context: Context) {
-        if (implementation != null)return
+        if (null != implementation)return
         implementation = ShortnameToUnicodeTranslator(context)
     }
 
