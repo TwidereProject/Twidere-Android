@@ -50,6 +50,3 @@ fun <T : Dialog> T.onShow(action: (dialog: T) -> Unit) {
         action(dialog as T)
     }
 }
-
-inline val AlertDialog.positiveButton: Button get() = getButton(BUTTON_POSITIVE)
-inline val AlertDialog.negativeButton: Button get() = getButton(BUTTON_NEGATIVE)
