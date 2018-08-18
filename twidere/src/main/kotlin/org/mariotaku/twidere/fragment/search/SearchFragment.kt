@@ -110,6 +110,7 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface,
                 customView.setOnClickListener {
                     val searchIntent = Intent(context, QuickSearchBarActivity::class.java).apply {
                         putExtra(EXTRA_QUERY, query)
+                        putExtra(EXTRA_ACCOUNT_KEY, accountKey)
                     }
                     startActivityForResult(searchIntent, REQUEST_OPEN_SEARCH)
                 }

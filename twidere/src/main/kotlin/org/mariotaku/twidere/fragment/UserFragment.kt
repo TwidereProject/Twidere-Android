@@ -797,6 +797,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         }
 
         menu.setItemAvailability(R.id.qr_code, linkAvailable)
+        menu.setItemAvailability(R.id.copy_url, linkAvailable)
         menu.setItemAvailability(R.id.open_in_browser, linkAvailable)
 
         menu.setItemAvailability(R.id.mention, !isMyself)
@@ -1024,6 +1025,12 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 if (intent.resolveActivity(context.packageManager) != null) {
                     startActivity(intent)
                 }
+                return true
+            }
+            R.id.copy_url -> {
+                val uri = LinkCreator.getUserWebLink(user) ?: return true
+                ClipboardUtils.setText(context, uri.toString())
+                Toast.makeText(context, R.string.message_toast_link_copied_to_clipboard, Toast.LENGTH_SHORT).show()
                 return true
             }
             R.id.qr_code -> {

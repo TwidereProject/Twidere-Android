@@ -87,6 +87,10 @@
         android:icon="@drawable/ic_action_web"
         android:title="@string/action_open_in_browser"/>
     <item
+        android:id="@id/copy_url"
+        android:icon="@drawable/ic_action_copy"
+        android:title="@android:string/copyUrl"/>
+    <item
         android:id="@+id/add_to_home_screen_submenu"
         android:icon="@drawable/ic_action_home"
         android:title="@string/action_add_to_home_screen_more">
