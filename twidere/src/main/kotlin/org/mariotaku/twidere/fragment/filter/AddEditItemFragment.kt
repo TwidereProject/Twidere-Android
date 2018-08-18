@@ -114,7 +114,6 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
                     }
                     saveItem(value, scope)
                 }
-                dismiss()
             }
         }
 
