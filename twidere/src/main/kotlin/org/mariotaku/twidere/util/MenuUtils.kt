@@ -196,6 +196,7 @@ object MenuUtils {
         }
 
         val linkAvailable = LinkCreator.hasWebLink(status)
+        menu.setItemAvailability(R.id.copy_url, linkAvailable)
         menu.setItemAvailability(R.id.open_in_browser, linkAvailable)
 
         menu.removeGroup(MENU_GROUP_STATUS_EXTENSION)
@@ -345,7 +346,7 @@ object MenuUtils {
                 }
             }
             R.id.copy_url -> {
-                val uri = LinkCreator.getStatusWebLink(status)
+                val uri = LinkCreator.getStatusWebLink(status) ?: return true
                 ClipboardUtils.setText(context, uri.toString())
                 Toast.makeText(context, R.string.message_toast_link_copied_to_clipboard,
                         Toast.LENGTH_SHORT).show()
