@@ -5,7 +5,6 @@ import android.content.DialogInterface.*
 import android.content.res.ColorStateList
 import android.support.annotation.StringRes
 import android.support.v7.app.AlertDialog
-import android.widget.Button
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.twidere.util.ThemeUtils
