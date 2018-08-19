@@ -46,7 +46,6 @@ abstract class ExtraFeaturesService {
 
     companion object {
         const val FEATURE_FEATURES_PACK = "features_pack"
-        const val FEATURE_ADVANCED_FILTERS = "import_filters"
         const val FEATURE_SYNC_DATA = "sync_data"
         const val FEATURE_SCHEDULE_STATUS = "schedule_status"
         const val FEATURE_SHARE_GIF = "share_gif"
@@ -62,8 +61,6 @@ abstract class ExtraFeaturesService {
         fun getIntroduction(context: Context, feature: String): Introduction {
             return when (feature) {
                 FEATURE_FEATURES_PACK -> Introduction(R.drawable.ic_action_infinity, "")
-                FEATURE_ADVANCED_FILTERS -> Introduction(R.drawable.ic_action_speaker_muted,
-                        context.getString(R.string.extra_feature_description_advanced_filters))
                 FEATURE_SYNC_DATA -> Introduction(R.drawable.ic_action_refresh,
                         context.getString(R.string.extra_feature_description_sync_data))
                 FEATURE_SCHEDULE_STATUS -> Introduction(R.drawable.ic_action_time,
