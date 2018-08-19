@@ -1,4 +1,4 @@
-# Twidere for Android #
+# Twidere Fork for Android #
 
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Twidere-brightgreen.svg?style=flat)](http://android-arsenal.com/details/3/2453)
 [![Travis status](https://api.travis-ci.org/TwidereProject/Twidere-Android.png)](https://travis-ci.org/TwidereProject/Twidere-Android/)
@@ -17,13 +17,13 @@ Material Design ready and feature rich Twitter app for Android 4.0+
 * Powerful mute filters
 * Multiple account support
 * Custom API settings
+* Filters subscription
+* Filters import
 * Free, open source, NO ads, forever!
 
 ## Enhanced Features (Available on Google Play) ##
 
 * Data sync with your cloud drive (Dropbox, Google Drive)
-* Filters subscription
-* Filters import
 * Schedule tweets even when you're offline by [Buffer](https://buffer.com/)
 * Search & share GIFs by [GIPHY](https://giphy.com/)
 
