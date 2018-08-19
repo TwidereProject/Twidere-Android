@@ -29,7 +29,6 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.onShow
-import org.mariotaku.twidere.extension.util.isAdvancedFiltersEnabled
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
@@ -38,7 +37,6 @@ import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.DataStoreUtils
-import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import java.lang.ref.WeakReference
 
 /**
@@ -104,12 +102,6 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
             R.id.perform_import -> {
                 if (adapter.checkedCount == 0) {
                     Toast.makeText(context, R.string.message_toast_no_user_selected, Toast.LENGTH_SHORT).show()
-                    return true
-                }
-                if (!extraFeaturesService.isAdvancedFiltersEnabled) {
-                    ExtraFeaturesIntroductionDialogFragment.show(fragmentManager,
-                            feature = ExtraFeaturesService.FEATURE_ADVANCED_FILTERS,
-                            requestCode = REQUEST_PURCHASE_EXTRA_FEATURES)
                     return true
                 }
                 val df = ImportConfirmDialogFragment()
@@ -186,12 +178,6 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
     override fun onCreateAdapter(context: Context, requestManager: RequestManager): SelectableUsersAdapter {
         val adapter = SelectableUsersAdapter(context, this.requestManager)
         adapter.itemCheckedListener = listener@ { _, _ ->
-            if (!extraFeaturesService.isAdvancedFiltersEnabled) {
-                ExtraFeaturesIntroductionDialogFragment.show(fragmentManager,
-                        feature = ExtraFeaturesService.FEATURE_ADVANCED_FILTERS,
-                        requestCode = REQUEST_PURCHASE_EXTRA_FEATURES)
-                return@listener false
-            }
             val count = adapter.checkedCount
             val actionBar = (activity as BaseActivity).supportActionBar
             actionBar?.subtitle = if (count > 0) {

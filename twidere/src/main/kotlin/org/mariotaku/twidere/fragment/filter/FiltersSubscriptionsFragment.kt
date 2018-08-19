@@ -31,10 +31,8 @@ import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.getComponentLabel
 import org.mariotaku.twidere.extension.model.instantiateComponent
 import org.mariotaku.twidere.extension.model.setupUrl
-import org.mariotaku.twidere.extension.util.isAdvancedFiltersEnabled
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BaseFragment
-import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.model.FiltersSubscription
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
@@ -42,7 +40,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.task.filter.RefreshFiltersSubscriptionsTask
 import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.content.ContentResolverUtils
-import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.view.SimpleTextWatcher
 import java.lang.ref.WeakReference
 
@@ -78,22 +75,7 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
         if (savedInstanceState == null) {
             when (arguments?.getString(EXTRA_ACTION)) {
                 ACTION_ADD_URL_SUBSCRIPTION -> {
-                    if (!extraFeaturesService.isAdvancedFiltersEnabled) {
-                        val df = ExtraFeaturesIntroductionDialogFragment.create(
-                                ExtraFeaturesService.FEATURE_ADVANCED_FILTERS)
-                        df.setTargetFragment(this, REQUEST_ADD_URL_SUBSCRIPTION_PURCHASE)
-                        df.show(fragmentManager, ExtraFeaturesIntroductionDialogFragment.FRAGMENT_TAG)
-                    } else {
-                        showAddUrlSubscription()
-                    }
-                }
-                else -> {
-                    if (!extraFeaturesService.isAdvancedFiltersEnabled) {
-                        val df = ExtraFeaturesIntroductionDialogFragment.create(
-                                ExtraFeaturesService.FEATURE_ADVANCED_FILTERS)
-                        df.setTargetFragment(this, REQUEST_PURCHASE_EXTRA_FEATURES)
-                        df.show(fragmentManager, ExtraFeaturesIntroductionDialogFragment.FRAGMENT_TAG)
-                    }
+                    showAddUrlSubscription()
                 }
             }
         }

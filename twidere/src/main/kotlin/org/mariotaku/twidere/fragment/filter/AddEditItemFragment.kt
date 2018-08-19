@@ -41,13 +41,10 @@ import org.mariotaku.twidere.adapter.SourceAutoCompleteAdapter
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.extension.*
-import org.mariotaku.twidere.extension.util.isAdvancedFiltersEnabled
 import org.mariotaku.twidere.fragment.BaseDialogFragment
-import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
 import org.mariotaku.twidere.model.filter.FilterScopesHolder
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
-import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 
 class AddEditItemFragment : BaseDialogFragment() {
 
@@ -83,9 +80,7 @@ class AddEditItemFragment : BaseDialogFragment() {
 
     private var Dialog.scopes: FilterScopesHolder?
         get() = defaultScopes.also {
-            if (extraFeaturesService.isAdvancedFiltersEnabled) {
-                saveScopes(it)
-            }
+            saveScopes(it)
         }
         set(value) {
             loadScopes(value ?: defaultScopes)
@@ -127,18 +122,6 @@ class AddEditItemFragment : BaseDialogFragment() {
                 advancedExpanded = !advancedExpanded
             }
             positiveButton.setOnClickListener(this@AddEditItemFragment::handlePositiveClick)
-            advancedContainer.children.filter { it is CheckBox }.forEach {
-                val checkBox = it as CheckBox
-                checkBox.setOnClickListener onClick@ {
-                    if (extraFeaturesService.isAdvancedFiltersEnabled) return@onClick
-                    // Revert check state
-                    checkBox.isChecked = !checkBox.isChecked
-                    val df = ExtraFeaturesIntroductionDialogFragment.create(
-                            ExtraFeaturesService.FEATURE_ADVANCED_FILTERS)
-                    df.setTargetFragment(this@AddEditItemFragment, REQUEST_CHANGE_SCOPE_PURCHASE)
-                    df.show(fragmentManager, ExtraFeaturesIntroductionDialogFragment.FRAGMENT_TAG)
-                }
-            }
 
             if (savedInstanceState == null) {
                 value = defaultValue
