@@ -40,8 +40,6 @@ import org.mariotaku.twidere.loader.statuses.AbsRequestStatusesLoader
 import org.mariotaku.twidere.loader.userlists.BaseUserListsLoader
 import org.mariotaku.twidere.preference.AccountsListPreference
 import org.mariotaku.twidere.preference.KeyboardShortcutPreference
-import org.mariotaku.twidere.preference.PremiumEntryPreference
-import org.mariotaku.twidere.preference.PremiumEntryPreferenceCategory
 import org.mariotaku.twidere.preference.sync.SyncItemPreference
 import org.mariotaku.twidere.provider.CacheProvider
 import org.mariotaku.twidere.provider.TwidereDataProvider
@@ -131,10 +129,6 @@ interface GeneralComponent {
     fun inject(preference: SyncItemPreference)
 
     fun inject(provider: UrlFiltersSubscriptionProvider)
-
-    fun inject(preference: PremiumEntryPreference)
-
-    fun inject(preference: PremiumEntryPreferenceCategory)
 
     fun inject(loader: CacheUserSearchLoader)
 

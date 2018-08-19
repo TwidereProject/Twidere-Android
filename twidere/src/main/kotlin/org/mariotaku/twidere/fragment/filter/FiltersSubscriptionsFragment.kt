@@ -1,10 +1,8 @@
 package org.mariotaku.twidere.fragment.filter
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
-import android.content.Intent
 import android.database.Cursor
 import android.os.Bundle
 import android.support.v4.app.LoaderManager
@@ -24,7 +22,6 @@ import org.mariotaku.ktextension.*
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.TwidereConstants.REQUEST_PURCHASE_EXTRA_FEATURES
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACTION
 import org.mariotaku.twidere.constant.IntentConstants.INTENT_PACKAGE_PREFIX
 import org.mariotaku.twidere.extension.*
@@ -35,10 +32,8 @@ import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.model.FiltersSubscription
-import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.task.filter.RefreshFiltersSubscriptionsTask
-import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.mariotaku.twidere.util.view.SimpleTextWatcher
 import java.lang.ref.WeakReference
@@ -66,38 +61,10 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
         progressContainer.visibility = View.VISIBLE
         loaderManager.initLoader(0, null, this)
 
-
-        if (!extraFeaturesService.isSupported()) {
-            activity?.finish()
-            return
-        }
-
         if (savedInstanceState == null) {
             when (arguments?.getString(EXTRA_ACTION)) {
                 ACTION_ADD_URL_SUBSCRIPTION -> {
                     showAddUrlSubscription()
-                }
-            }
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (requestCode) {
-            REQUEST_ADD_URL_SUBSCRIPTION_PURCHASE -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    Analyzer.log(PurchaseFinished.create(data!!))
-                    executeAfterFragmentResumed { fragment ->
-                        (fragment as FiltersSubscriptionsFragment).showAddUrlSubscription()
-                    }
-                } else {
-                    activity?.finish()
-                }
-            }
-            REQUEST_PURCHASE_EXTRA_FEATURES -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    Analyzer.log(PurchaseFinished.create(data!!))
-                } else {
-                    activity?.finish()
                 }
             }
         }
@@ -316,7 +283,6 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
         const val ACTION_ADD_URL_SUBSCRIPTION = "${INTENT_PACKAGE_PREFIX}ADD_URL_FILTERS_SUBSCRIPTION"
         const val EXTRA_ADD_SUBSCRIPTION_URL = "add_subscription.url"
         const val EXTRA_ADD_SUBSCRIPTION_NAME = "add_subscription.name"
-        private const val REQUEST_ADD_URL_SUBSCRIPTION_PURCHASE = 101
         private const val FRAGMENT_TAG_RREFRESH_FILTERS = "refresh_filters"
     }
 }

@@ -139,9 +139,6 @@
     <declare-styleable name="AccountDashboardHeaderView">
         <attr name="sizeMeasurementId" format="reference"/>
     </declare-styleable>
-    <declare-styleable name="PremiumEntryPreference">
-        <attr name="requiredFeature" format="string"/>
-    </declare-styleable>
     <declare-styleable name="ProfileBannerSpace">
         <attr name="bannerAspectRatio"/>
     </declare-styleable>
