@@ -243,8 +243,4 @@ class AddEditItemFragment : BaseDialogFragment() {
         }
     }
 
-    companion object {
-        private const val REQUEST_CHANGE_SCOPE_PURCHASE = 101
-    }
-
 }
