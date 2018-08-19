@@ -21,6 +21,33 @@ Material Design ready and feature rich Twitter app for Android 4.0+
 * Filters import
 * Free, open source, NO ads, forever!
 
+## About this fork
+
+* Based on master (3.7.3)
+* Backported fixes
+[#981](https://github.com/TwidereProject/Twidere-Android/issues/981)
+[#999](https://github.com/TwidereProject/Twidere-Android/issues/999)
+[#1003](https://github.com/TwidereProject/Twidere-Android/issues/1003)
+[#1005](https://github.com/TwidereProject/Twidere-Android/issues/1005)
+[#1006](https://github.com/TwidereProject/Twidere-Android/issues/1006)
+[#1007](https://github.com/TwidereProject/Twidere-Android/issues/1007)
+[#1012](https://github.com/TwidereProject/Twidere-Android/issues/1012)
+[#1021](https://github.com/TwidereProject/Twidere-Android/issues/1021)
+[#1030](https://github.com/TwidereProject/Twidere-Android/issues/1030)
+[#1038](https://github.com/TwidereProject/Twidere-Android/issues/1038)
+[#1127](https://github.com/TwidereProject/Twidere-Android/issues/1127)
+* Premium features witch doesnt required third party services like advanced filters are unlocked for anyone
+* Removed all streaming services
+* Use official Twitter Android API keys by default
+* Fix linkification of some badly parsed URL
+* Fix mentions on Mastodon
+* Fix upload of big images/videos on Mastodon
+* Cleaning stuff
+
+## Roadmap
+
+* Implement server's custom emojis on Mastodon
+
 ## Enhanced Features (Available on Google Play) ##
 
 * Data sync with your cloud drive (Dropbox, Google Drive)
