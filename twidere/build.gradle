@@ -158,9 +158,6 @@ dependencies {
     implementation project(':twidere.component.common')
     implementation project(':twidere.component.nyan')
 
-    fdroidImplementation "org.osmdroid:osmdroid-android:${libVersions['OSMDroid']}"
-    fdroidImplementation "ch.acra:acra:${libVersions['ACRA']}"
-
     // START Non-FOSS component
     googleImplementation "com.google.android.gms:play-services-maps:${libVersions['PlayServices']}"
     googleImplementation "com.google.android.gms:play-services-auth:${libVersions['PlayServices']}"
@@ -172,6 +169,9 @@ dependencies {
         exclude group: 'org.apache.httpcomponents'
     }
     // END Non-FOSS component
+
+    fdroidImplementation "org.osmdroid:osmdroid-android:${libVersions['OSMDroid']}"
+    fdroidImplementation "ch.acra:acra:${libVersions['ACRA']}"
 
     debugImplementation "com.facebook.stetho:stetho:${libVersions['Stetho']}"
     debugImplementation "com.facebook.stetho:stetho-okhttp3:${libVersions['Stetho']}"
