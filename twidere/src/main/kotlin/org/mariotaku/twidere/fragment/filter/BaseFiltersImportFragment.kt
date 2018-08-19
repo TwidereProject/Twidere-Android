@@ -1,10 +1,8 @@
 package org.mariotaku.twidere.fragment.filter
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
@@ -21,7 +19,6 @@ import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.alwaysUi
 import org.mariotaku.ktextension.*
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.TwidereConstants.REQUEST_PURCHASE_EXTRA_FEATURES
 import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.adapter.SelectableUsersAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
@@ -33,9 +30,7 @@ import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
 import org.mariotaku.twidere.model.ParcelableUser
-import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.model.pagination.Pagination
-import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.DataStoreUtils
 import java.lang.ref.WeakReference
 
@@ -57,16 +52,6 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
         val loaderArgs = Bundle(arguments)
         loaderArgs.putBoolean(EXTRA_FROM_USER, true)
         loaderManager.initLoader(0, loaderArgs, this)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (requestCode) {
-            REQUEST_PURCHASE_EXTRA_FEATURES -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    Analyzer.log(PurchaseFinished.create(data!!))
-                }
-            }
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

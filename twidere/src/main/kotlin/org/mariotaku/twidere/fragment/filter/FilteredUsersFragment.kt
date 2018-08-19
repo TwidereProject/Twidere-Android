@@ -1,7 +1,6 @@
 package org.mariotaku.twidere.fragment.filter
 
 import android.accounts.AccountManager
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
@@ -40,12 +39,10 @@ import org.mariotaku.twidere.fragment.AddUserFilterDialogFragment
 import org.mariotaku.twidere.model.FiltersData
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.task.CreateUserMuteTask
 import org.mariotaku.twidere.text.style.EmojiSpan
-import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.UserColorNameManager
@@ -100,11 +97,6 @@ class FilteredUsersFragment : BaseFiltersFragment() {
                 val userKeys = data.getBundleExtra(EXTRA_EXTRAS)?.getNullableTypedArray<UserKey>(EXTRA_ITEMS) ?: return
                 exportToMutedUsers(accountKey, userKeys)
             }
-            REQUEST_PURCHASE_EXTRA_FEATURES -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    Analyzer.log(PurchaseFinished.create(data!!))
-                }
-            }
         }
     }
 
@@ -114,12 +106,6 @@ class FilteredUsersFragment : BaseFiltersFragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_filters_users, menu)
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        super.onPrepareOptionsMenu(menu)
-        val isFeaturesSupported = extraFeaturesService.isSupported()
-        menu.setGroupAvailability(R.id.import_export, isFeaturesSupported)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -146,13 +132,6 @@ class FilteredUsersFragment : BaseFiltersFragment() {
         super.onCreateActionMode(mode, menu)
         mode.menuInflater.inflate(R.menu.action_multi_select_filtered_users, menu)
         return true
-    }
-
-    override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
-        val result = super.onPrepareActionMode(mode, menu)
-        val isFeaturesSupported = extraFeaturesService.isSupported()
-        menu.setGroupAvailability(R.id.import_export, isFeaturesSupported)
-        return result && menu.hasVisibleItems()
     }
 
     override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
