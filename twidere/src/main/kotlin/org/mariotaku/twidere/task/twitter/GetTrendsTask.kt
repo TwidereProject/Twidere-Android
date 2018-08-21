@@ -39,7 +39,6 @@ import org.mariotaku.twidere.model.RefreshTaskParam
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.TrendsRefreshedEvent
 import org.mariotaku.twidere.model.util.AccountUtils.getAccountDetails
-import org.mariotaku.twidere.provider.TwidereDataStore
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends
 import org.mariotaku.twidere.task.BaseAbstractTask
@@ -63,7 +62,7 @@ class GetTrendsTask(
             if (param.extraId == (-1).toLong()) {
                 val loaderWhere = equalsArgs(CachedTrends.ACCOUNT_KEY).sql
                 val loaderWhereArgs = arrayOf(accountKey.toString())
-                val cursorResult = context.contentResolver.query(TwidereDataStore.CachedTrends.Local.CONTENT_URI, TwidereDataStore.CachedTrends.COLUMNS, loaderWhere, loaderWhereArgs, null)
+                val cursorResult = context.contentResolver.query(CachedTrends.Local.CONTENT_URI, CachedTrends.COLUMNS, loaderWhere, loaderWhereArgs, null)
                 if (cursorResult.count > 0) {
                     cursorResult.moveToFirst()
                     woeId = cursorResult.getInt(0)

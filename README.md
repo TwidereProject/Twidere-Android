@@ -42,6 +42,7 @@ Material Design ready and feature rich Twitter app for Android 4.0+
 * Fix linkification of some badly parsed URL
 * Fix mentions on Mastodon
 * Fix upload of big images/videos on Mastodon
+* Fix refreshing trends
 * Cleaning stuff
 
 ## Roadmap
