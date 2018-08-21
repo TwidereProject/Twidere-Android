@@ -36,7 +36,6 @@ import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.extractFanfouHashtags
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.fragment.HomeTimelineFragment
-import org.mariotaku.twidere.loader.statuses.AbsRequestStatusesLoader.Companion.mapMicroBlogToPaginated
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
@@ -63,8 +62,6 @@ class GetHomeTimelineTask(context: Context) : GetStatusesTask(context) {
         when (account.type) {
             AccountType.MASTODON -> {
                 val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
-                mastodon.getPublicTimeline(paging, false).mapToPaginated { it.toParcelable(account) }
-                mastodon.getPublicTimeline(paging, true).mapToPaginated { it.toParcelable(account) }
                 val timeline = mastodon.getHomeTimeline(paging)
                 return GetTimelineResult(account, timeline.map {
                     it.toParcelable(account)
