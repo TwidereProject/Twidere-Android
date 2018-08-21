@@ -78,8 +78,6 @@ class GetHomeTimelineTask(context: Context) : GetStatusesTask(context) {
             }
             else -> {
                 val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
-                microBlog.getNetworkPublicTimeline(paging).mapMicroBlogToPaginated { it.toParcelable(account, profileImageSize = profileImageSize) }
-                microBlog.getPublicTimeline(paging).mapMicroBlogToPaginated { it.toParcelable(account, profileImageSize = profileImageSize) }
                 val timeline = microBlog.getHomeTimeline(paging)
                 val statuses = timeline.map {
                     it.toParcelable(account, profileImageSize)
