@@ -303,7 +303,7 @@ class AsyncTwitterWrapper(
         if (preferences[homeRefreshSavedSearchesKey]) {
             getSavedSearchesAsync(action())
         }
-        if (preferences[trendsRefreshSavedSearchesKey]) {
+        if (preferences[homeRefreshTrendsKey]) {
             getLocalTrendsAsync(object : RefreshTaskParam {
                 override val accountKeys by lazy { action() }
             })
