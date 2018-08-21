@@ -19,5 +19,5 @@ public @interface AutoRefreshType {
     String DIRECT_MESSAGES = "direct_messages";
     String TRENDS = "trends";
 
-    String[] ALL = {HOME_TIMELINE, INTERACTIONS_TIMELINE, DIRECT_MESSAGES};
+    String[] ALL = {HOME_TIMELINE, INTERACTIONS_TIMELINE, DIRECT_MESSAGES, TRENDS};
 }
