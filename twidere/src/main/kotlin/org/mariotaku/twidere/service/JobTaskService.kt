@@ -101,7 +101,7 @@ class JobTaskService : JobService() {
             AutoRefreshType.HOME_TIMELINE -> JOB_ID_REFRESH_HOME_TIMELINE
             AutoRefreshType.INTERACTIONS_TIMELINE -> JOB_ID_REFRESH_NOTIFICATIONS
             AutoRefreshType.DIRECT_MESSAGES -> JOB_ID_REFRESH_DIRECT_MESSAGES
-            AutoRefreshType.TRENDS -> JOB_ID_REFRESH_DIRECT_MESSAGES
+            AutoRefreshType.TRENDS -> JOB_ID_REFRESH_TRENDS
             else -> 0
         }
 
