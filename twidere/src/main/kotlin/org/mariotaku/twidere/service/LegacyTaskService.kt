@@ -30,6 +30,7 @@ import org.mariotaku.twidere.constant.autoRefreshCompatibilityModeKey
 import org.mariotaku.twidere.util.TaskServiceRunner.Companion.ACTION_REFRESH_DIRECT_MESSAGES
 import org.mariotaku.twidere.util.TaskServiceRunner.Companion.ACTION_REFRESH_HOME_TIMELINE
 import org.mariotaku.twidere.util.TaskServiceRunner.Companion.ACTION_REFRESH_NOTIFICATIONS
+import org.mariotaku.twidere.util.TaskServiceRunner.Companion.ACTION_REFRESH_TRENDS
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 
 class LegacyTaskService : BaseService() {
@@ -65,6 +66,7 @@ class LegacyTaskService : BaseService() {
             AutoRefreshType.HOME_TIMELINE -> ACTION_REFRESH_HOME_TIMELINE
             AutoRefreshType.INTERACTIONS_TIMELINE -> ACTION_REFRESH_NOTIFICATIONS
             AutoRefreshType.DIRECT_MESSAGES -> ACTION_REFRESH_DIRECT_MESSAGES
+            AutoRefreshType.TRENDS -> ACTION_REFRESH_TRENDS
             else -> null
         }
 

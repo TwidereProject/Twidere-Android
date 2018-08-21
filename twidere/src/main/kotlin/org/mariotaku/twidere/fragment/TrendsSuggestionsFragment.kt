@@ -42,6 +42,7 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_EXTRAS
 import org.mariotaku.twidere.constant.localTrendsWoeIdKey
 import org.mariotaku.twidere.fragment.iface.IFloatingActionButtonFragment
 import org.mariotaku.twidere.fragment.iface.IFloatingActionButtonFragment.ActionInfo
+import org.mariotaku.twidere.model.RefreshTaskParam
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.TrendsRefreshedEvent
 import org.mariotaku.twidere.model.tab.extra.TrendsTabExtras
@@ -113,7 +114,10 @@ class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), L
     override fun onRefresh() {
         if (refreshing) return
         val accountKey = this.accountKey ?: return
-        twitterWrapper.getLocalTrendsAsync(accountKey, woeId)
+        twitterWrapper.getLocalTrendsAsync(object : RefreshTaskParam {
+            override val accountKeys by lazy { arrayOf(accountKey) }
+            override val extraId by lazy { woeId.toLong() }
+        })
     }
 
     override var refreshing: Boolean

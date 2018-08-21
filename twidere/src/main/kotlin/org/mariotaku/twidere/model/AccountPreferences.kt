@@ -92,6 +92,9 @@ class AccountPreferences(
         get() = accountPreferences.getBoolean(KEY_AUTO_REFRESH_DIRECT_MESSAGES,
                 DEFAULT_AUTO_REFRESH_DIRECT_MESSAGES)
 
+    val isAutoRefreshTrendsEnabled: Boolean
+        get() = accountPreferences.getBoolean(KEY_AUTO_REFRESH_TRENDS, DEFAULT_AUTO_REFRESH_TRENDS)
+
     val isDirectMessagesNotificationEnabled: Boolean
         get() = accountPreferences.getBoolean(KEY_DIRECT_MESSAGES_NOTIFICATION,
                 DEFAULT_DIRECT_MESSAGES_NOTIFICATION)

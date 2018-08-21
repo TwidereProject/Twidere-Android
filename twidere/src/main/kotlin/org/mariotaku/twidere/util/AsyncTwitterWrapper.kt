@@ -38,10 +38,7 @@ import org.mariotaku.microblog.library.twitter.model.UserListUpdate
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants
-import org.mariotaku.twidere.constant.homeRefreshDirectMessagesKey
-import org.mariotaku.twidere.constant.homeRefreshMentionsKey
-import org.mariotaku.twidere.constant.homeRefreshSavedSearchesKey
-import org.mariotaku.twidere.constant.nameFirstKey
+import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.*
@@ -235,8 +232,9 @@ class AsyncTwitterWrapper(
         return true
     }
 
-    fun getLocalTrendsAsync(accountKey: UserKey, woeId: Int) {
-        val task = GetTrendsTask(context, accountKey, woeId)
+    fun getLocalTrendsAsync(param: RefreshTaskParam) {
+        val task = GetTrendsTask(context)
+        task.params = param
         TaskStarter.execute(task)
     }
 
@@ -304,6 +302,11 @@ class AsyncTwitterWrapper(
         }
         if (preferences[homeRefreshSavedSearchesKey]) {
             getSavedSearchesAsync(action())
+        }
+        if (preferences[trendsRefreshSavedSearchesKey]) {
+            getLocalTrendsAsync(object : RefreshTaskParam {
+                override val accountKeys by lazy { action() }
+            })
         }
         return true
     }

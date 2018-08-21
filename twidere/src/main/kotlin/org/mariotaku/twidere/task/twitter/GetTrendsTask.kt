@@ -35,9 +35,11 @@ import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.annotation.AccountType.FANFOU
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.ParcelableTrend
+import org.mariotaku.twidere.model.RefreshTaskParam
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.TrendsRefreshedEvent
 import org.mariotaku.twidere.model.util.AccountUtils.getAccountDetails
+import org.mariotaku.twidere.provider.TwidereDataStore
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends
 import org.mariotaku.twidere.task.BaseAbstractTask
@@ -51,30 +53,45 @@ import java.util.*
  * Created by mariotaku on 16/2/24.
  */
 class GetTrendsTask(
-        context: Context,
-        private val accountKey: UserKey,
-        private val woeId: Int
-) : BaseAbstractTask<Any?, Unit, Any?>(context) {
+        context: Context
+) : BaseAbstractTask<RefreshTaskParam, Unit, (Boolean) -> Unit>(context) {
 
-    override fun doLongOperation(param: Any?) {
-        val details = getAccountDetails(AccountManager.get(context), accountKey, true) ?: return
-        val twitter = details.newMicroBlogInstance(context, cls = MicroBlog::class.java)
-        try {
-            val trends = when (details.type) {
-                FANFOU -> twitter.fanfouTrends
-                else -> twitter.getLocationTrends(woeId).firstOrNull()
-            } ?: return
-            storeTrends(context.contentResolver, CachedTrends.Local.CONTENT_URI, trends)
-        } catch (e: MicroBlogException) {
-            w(LOGTAG, tr = e)
+    override fun doLongOperation(param: RefreshTaskParam) {
+        val accountKeys = param.accountKeys.takeIf { it.isNotEmpty() }
+        accountKeys?.map { accountKey ->
+            var woeId = param.extraId.toInt()
+            if (param.extraId == (-1).toLong()) {
+                val loaderWhere = equalsArgs(CachedTrends.ACCOUNT_KEY).sql
+                val loaderWhereArgs = arrayOf(accountKey.toString())
+                val cursorResult = context.contentResolver.query(TwidereDataStore.CachedTrends.Local.CONTENT_URI, TwidereDataStore.CachedTrends.COLUMNS, loaderWhere, loaderWhereArgs, null)
+                if (cursorResult.count > 0) {
+                    cursorResult.moveToFirst()
+                    woeId = cursorResult.getInt(0)
+                }
+                cursorResult.close()
+            }
+
+            if (woeId > 0) {
+                val details = getAccountDetails(AccountManager.get(context), accountKey, true) ?: return
+                val twitter = details.newMicroBlogInstance(context, cls = MicroBlog::class.java)
+                try {
+                    val trends = when (details.type) {
+                        FANFOU -> twitter.fanfouTrends
+                        else -> twitter.getLocationTrends(woeId).firstOrNull()
+                    } ?: return
+                    storeTrends(context.contentResolver, CachedTrends.Local.CONTENT_URI, trends, accountKey, woeId)
+                } catch (e: MicroBlogException) {
+                    w(LOGTAG, tr = e)
+                }
+            }
         }
     }
 
-    override fun afterExecute(callback: Any?, results: Unit) {
+    override fun afterExecute(callback: ((Boolean) -> Unit)?, results: Unit?) {
         bus.post(TrendsRefreshedEvent())
     }
 
-    private fun storeTrends(cr: ContentResolver, uri: Uri, trends: Trends) {
+    private fun storeTrends(cr: ContentResolver, uri: Uri, trends: Trends, accountKey: UserKey, woeId: Int) {
         val hashtags = ArraySet<String>()
         val deleteWhere = and(equalsArgs(CachedTrends.ACCOUNT_KEY), equalsArgs(CachedTrends.WOEID)).sql
         val deleteWhereArgs = arrayOf(accountKey.toString(), woeId.toString())
