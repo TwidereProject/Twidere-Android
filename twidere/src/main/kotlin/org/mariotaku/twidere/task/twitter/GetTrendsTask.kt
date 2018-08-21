@@ -58,29 +58,32 @@ class GetTrendsTask(
     override fun doLongOperation(param: RefreshTaskParam) {
         val accountKeys = param.accountKeys.takeIf { it.isNotEmpty() }
         accountKeys?.map { accountKey ->
-            var woeId = param.extraId.toInt()
+            var woeIds = arrayOf(param.extraId.toInt())
             if (param.extraId == (-1).toLong()) {
-                val loaderWhere = equalsArgs(CachedTrends.ACCOUNT_KEY).sql
+                val loaderWhere = equalsArgs(CachedTrends.ACCOUNT_KEY).sql + " GROUP BY " + CachedTrends.WOEID
                 val loaderWhereArgs = arrayOf(accountKey.toString())
                 val cursorResult = context.contentResolver.query(CachedTrends.Local.CONTENT_URI, CachedTrends.COLUMNS, loaderWhere, loaderWhereArgs, null)
-                if (cursorResult.count > 0) {
-                    cursorResult.moveToFirst()
-                    woeId = cursorResult.getInt(0)
+                cursorResult.moveToFirst()
+                while (cursorResult.moveToNext()) {
+                    woeIds += cursorResult.getInt(0)
                 }
                 cursorResult.close()
             }
 
-            if (woeId > 0) {
-                val details = getAccountDetails(AccountManager.get(context), accountKey, true) ?: return
-                val twitter = details.newMicroBlogInstance(context, cls = MicroBlog::class.java)
-                try {
-                    val trends = when (details.type) {
-                        FANFOU -> twitter.fanfouTrends
-                        else -> twitter.getLocationTrends(woeId).firstOrNull()
-                    } ?: return
-                    storeTrends(context.contentResolver, CachedTrends.Local.CONTENT_URI, trends, accountKey, woeId)
-                } catch (e: MicroBlogException) {
-                    w(LOGTAG, tr = e)
+            val details = getAccountDetails(AccountManager.get(context), accountKey, true) ?: return
+            val twitter = details.newMicroBlogInstance(context, cls = MicroBlog::class.java)
+
+            woeIds.map { woeId ->
+                if (woeId > 0) {
+                    try {
+                        val trends = when (details.type) {
+                            FANFOU -> twitter.fanfouTrends
+                            else -> twitter.getLocationTrends(woeId).firstOrNull()
+                        } ?: return
+                        storeTrends(context.contentResolver, CachedTrends.Local.CONTENT_URI, trends, accountKey, woeId)
+                    } catch (e: MicroBlogException) {
+                        w(LOGTAG, tr = e)
+                    }
                 }
             }
         }
