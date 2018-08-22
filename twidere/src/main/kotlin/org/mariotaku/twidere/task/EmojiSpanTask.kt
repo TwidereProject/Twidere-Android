@@ -20,7 +20,7 @@ class EmojiSpanTask(
     override fun doInBackground(vararg params: Any?) {
         spans.map { span ->
             if (span.type == SpanItem.SpanType.EMOJI) {
-                if (spannable.length > 0) {
+                if (spannable.length > 0 && spannable.length >= span.start && spannable.length >= span.end) {
                     val url = URL(span.link)
                     val bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream())
                     spannable.setSpan(EmojiSpan(BitmapDrawable(bmp)), span.start, span.end,
