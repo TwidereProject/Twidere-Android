@@ -30,6 +30,7 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.HtmlEscapeHelper
 import org.mariotaku.twidere.util.HtmlSpanBuilder
 import org.mariotaku.twidere.util.emoji.EmojioneTranslator
+import org.mariotaku.twidere.util.emoji.addEmojisHtml
 
 /**
  * Created by mariotaku on 2017/4/18.
@@ -53,7 +54,8 @@ fun Account.toParcelable(accountKey: UserKey, position: Long = 0,
     obj.name = name
     obj.screen_name = username
     if (note?.isHtml == true) {
-        val descriptionHtml = HtmlSpanBuilder.fromHtml(note, note, MastodonSpanProcessor)
+        val noteContent = addEmojisHtml(note, emojis)
+        val descriptionHtml = HtmlSpanBuilder.fromHtml(noteContent, noteContent, MastodonSpanProcessor)
         obj.description_unescaped = descriptionHtml?.toString()
         obj.description_plain = obj.description_unescaped
         obj.description_spans = descriptionHtml?.spanItems

@@ -44,7 +44,8 @@ fun Array<SpanItem>.applyTo(spannable: Spannable) {
                 spannable.setSpan(HashtagSpan(span.link), span.start, span.end,
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
-            else -> {
+            SpanItem.SpanType.EMOJI -> {}
+            SpanItem.SpanType.LINK -> {
                 spannable.setSpan(URLSpan(span.link), span.start, span.end,
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }

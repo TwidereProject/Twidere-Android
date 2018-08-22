@@ -35,6 +35,7 @@ import org.mariotaku.twidere.text.HashtagSpan
 import org.mariotaku.twidere.util.HtmlEscapeHelper
 import org.mariotaku.twidere.util.HtmlSpanBuilder
 import org.mariotaku.twidere.util.emoji.EmojioneTranslator
+import org.mariotaku.twidere.util.emoji.addEmojisHtml
 
 fun Status.toParcelable(details: AccountDetails): ParcelableStatus {
     return toParcelable(details.key).apply {
@@ -95,7 +96,8 @@ fun Status.applyTo(accountKey: UserKey, result: ParcelableStatus) {
     result.user_profile_image_url = account.avatar
     result.user_is_protected = account.isLocked
     // Mastodon has HTML formatted content text
-    val html = HtmlSpanBuilder.fromHtml(status.content, status.content, MastodonSpanProcessor)
+    val statusContent = addEmojisHtml(status.content, emojis)
+    val html = HtmlSpanBuilder.fromHtml(statusContent, statusContent, MastodonSpanProcessor)
     result.text_unescaped = html?.toString()
     result.text_plain = result.text_unescaped
     result.spans = html?.spanItems

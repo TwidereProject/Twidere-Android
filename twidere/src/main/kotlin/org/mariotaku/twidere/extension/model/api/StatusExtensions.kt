@@ -39,6 +39,7 @@ import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.text.AcctMentionSpan
+import org.mariotaku.twidere.text.EmojiURLSpan
 import org.mariotaku.twidere.text.HashtagSpan
 import org.mariotaku.twidere.util.EntityArrays
 import org.mariotaku.twidere.util.HtmlBuilder
@@ -342,6 +343,8 @@ internal inline val CharSequence.spanItems
             when (it) {
                 is AcctMentionSpan -> item.type = SpanItem.SpanType.ACCT_MENTION
                 is HashtagSpan -> item.type = SpanItem.SpanType.HASHTAG
+                is EmojiURLSpan -> item.type = SpanItem.SpanType.EMOJI
+                else -> item.type = SpanItem.SpanType.LINK
             }
             return@mapToArray item
         }

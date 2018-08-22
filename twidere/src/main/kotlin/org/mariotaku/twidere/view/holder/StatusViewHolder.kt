@@ -5,6 +5,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.widget.TextViewCompat
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.ViewHolder
+import android.text.Spannable
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.Spanned
@@ -36,6 +37,7 @@ import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.task.CreateFavoriteTask
 import org.mariotaku.twidere.task.DestroyFavoriteTask
+import org.mariotaku.twidere.task.EmojiSpanTask
 import org.mariotaku.twidere.task.RetweetStatusTask
 import org.mariotaku.twidere.text.TwidereClickableSpan
 import org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText
@@ -347,7 +349,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         summaryView.spannable = status.extras?.summary_text
         summaryView.hideIfEmpty()
 
-        val text: CharSequence
+        val text: Spannable
         val displayEnd: Int
         if (!summaryView.empty && !isFullTextVisible) {
             text = SpannableStringBuilder.valueOf(context.getString(R.string.label_status_show_more)).apply {
@@ -367,7 +369,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             }
             displayEnd = status.extras?.display_text_range?.getOrNull(1) ?: -1
         } else {
-            text = status.text_unescaped
+            text = SpannableStringBuilder.valueOf(status.text_unescaped)
             displayEnd = status.extras?.display_text_range?.getOrNull(1) ?: -1
         }
 
@@ -377,6 +379,16 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             textView.spannable = text
         }
         textView.hideIfEmpty()
+
+        class OnImageLoadedListener : EmojiSpanTask.OnImageDownloadedListener {
+            override fun onImageDownloaded(spannable: Spannable) {
+                textView.spannable = spannable
+            }
+        }
+
+        val taskEmoji = EmojiSpanTask(status.spans, text)
+        taskEmoji.setOnImageDownloadedListener(OnImageLoadedListener())
+        taskEmoji.execute()
 
         if (replyCount > 0) {
             replyCountView.spannable = UnitConvertUtils.calculateProperCount(replyCount)

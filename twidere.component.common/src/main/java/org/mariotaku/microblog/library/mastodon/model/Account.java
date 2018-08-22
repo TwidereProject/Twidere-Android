@@ -23,6 +23,7 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -107,6 +108,11 @@ public class Account {
      */
     @JsonField(name = "header_static")
     String headerStatic;
+    /**
+     * Array of Emoji in account username and note
+     */
+    @JsonField(name = "emojis")
+    Emoji[] emojis;
 
     public String getId() {
         return id;
@@ -168,6 +174,10 @@ public class Account {
         return headerStatic;
     }
 
+    public Emoji[] getEmojis() {
+        return emojis;
+    }
+
     @OnJsonParseComplete
     void onJsonParseComplete() throws IOException {
         if (id == null) {
@@ -196,6 +206,7 @@ public class Account {
                 ", avatarStatic='" + avatarStatic + '\'' +
                 ", header='" + header + '\'' +
                 ", headerStatic='" + headerStatic + '\'' +
+                ", emojis=" + Arrays.toString(emojis) +
                 '}';
     }
 }

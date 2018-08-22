@@ -79,6 +79,11 @@ public class Status {
     @JsonField(name = "created_at")
     Date createdAt;
     /**
+     * Array of Emoji in account username and note
+     */
+    @JsonField(name = "emojis")
+    Emoji[] emojis;
+    /**
      * The number of reblogs for the status
      */
     @JsonField(name = "reblogs_count")
@@ -174,6 +179,10 @@ public class Status {
         return createdAt;
     }
 
+    public Emoji[] getEmojis() {
+        return emojis;
+    }
+
     public long getReblogsCount() {
         return reblogsCount;
     }
@@ -246,6 +255,7 @@ public class Status {
                 ", reblog=" + reblog +
                 ", content='" + content + '\'' +
                 ", createdAt=" + createdAt +
+                ", emojis=" + Arrays.toString(emojis) +
                 ", reblogsCount=" + reblogsCount +
                 ", favouritesCount=" + favouritesCount +
                 ", reblogged=" + reblogged +

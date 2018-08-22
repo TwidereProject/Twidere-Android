@@ -30,6 +30,7 @@ import org.attoparser.ParseException
 import org.attoparser.config.ParseConfiguration
 import org.attoparser.simple.AbstractSimpleMarkupHandler
 import org.attoparser.simple.SimpleMarkupParser
+import org.mariotaku.twidere.text.EmojiURLSpan
 import java.util.*
 
 /**
@@ -83,6 +84,10 @@ object HtmlSpanBuilder {
             }
             "em", "cite", "dfn", "i" -> {
                 return StyleSpan(Typeface.ITALIC)
+            }
+            "emoji" -> {
+                val src = info.getAttribute("src") ?: return null
+                return EmojiURLSpan(src)
             }
         }
         return null

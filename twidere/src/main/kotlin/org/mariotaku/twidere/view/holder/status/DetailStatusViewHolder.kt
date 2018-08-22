@@ -28,10 +28,7 @@ import android.support.v4.view.ViewCompat
 import android.support.v7.widget.ActionMenuView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.text.SpannableString
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.TextUtils
+import android.text.*
 import android.text.method.LinkMovementMethod
 import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
@@ -62,6 +59,7 @@ import org.mariotaku.twidere.menu.RetweetItemProvider
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
+import org.mariotaku.twidere.task.EmojiSpanTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.twitter.card.TwitterCardViewFactory
 import org.mariotaku.twidere.view.ProfileImageView
@@ -260,6 +258,16 @@ class DetailStatusViewHolder(
             }
         }
         textView.hideIfEmpty()
+
+        class OnImageLoadedListener : EmojiSpanTask.OnImageDownloadedListener {
+            override fun onImageDownloaded(spannable: Spannable) {
+                textView.spannable = spannable
+            }
+        }
+
+        val taskEmoji = EmojiSpanTask(status.spans, text)
+        taskEmoji.setOnImageDownloadedListener(OnImageLoadedListener())
+        taskEmoji.execute()
 
         val location: ParcelableLocation? = status.location
         val placeFullName: String? = status.place_full_name
