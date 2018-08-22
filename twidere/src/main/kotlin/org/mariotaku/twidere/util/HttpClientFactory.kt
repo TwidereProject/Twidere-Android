@@ -7,7 +7,6 @@ import android.os.Build
 import android.util.Base64
 import android.util.Log
 import okhttp3.*
-import okhttp3.internal.platform.Platform
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.toIntOr
 import org.mariotaku.restfu.http.RestHttpClient
@@ -43,9 +42,14 @@ object HttpClientFactory {
             connectionPool: ConnectionPool, cache: Cache) {
         updateHttpClientConfiguration(builder, conf, dns, connectionPool, cache)
         if (Build.VERSION.SDK_INT in Build.VERSION_CODES.JELLY_BEAN until Build.VERSION_CODES.LOLLIPOP) {
-            val tlsSocketFactory = TLSSocketFactory()
-            val trustManager = Platform.get().trustManager(tlsSocketFactory) ?:
-                    systemDefaultTrustManager()
+            val trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
+            trustManagerFactory.init(null as KeyStore?)
+            val trustManagers = trustManagerFactory.trustManagers
+            if (trustManagers.single() !is X509TrustManager) {
+                throw IllegalStateException("Unexpected default trust managers:" + Arrays.toString(trustManagers))
+            }
+            val trustManager = trustManagers[0] as X509TrustManager
+            val tlsSocketFactory = TLSSocketFactory(trustManagers)
             builder.sslSocketFactory(tlsSocketFactory, trustManager)
         }
         updateTLSConnectionSpecs(builder)
@@ -177,17 +181,6 @@ object HttpClientFactory {
     private fun String.urlEncoded() = Uri.encode(this)
 
     private fun String.prefix(prefix: String) = prefix + this
-
-    private fun systemDefaultTrustManager(): X509TrustManager {
-        val trustManagerFactory = TrustManagerFactory.getInstance(
-                TrustManagerFactory.getDefaultAlgorithm())
-        trustManagerFactory.init(null as KeyStore?)
-        val trustManagers = trustManagerFactory.trustManagers
-        if (trustManagers.size != 1 || trustManagers[0] !is X509TrustManager) {
-            throw IllegalStateException("Unexpected default trust managers:" + Arrays.toString(trustManagers))
-        }
-        return trustManagers[0] as X509TrustManager
-    }
 
     private val urlSupportedPatterns = listOf("[SCHEME]", "[HOST]", "[PORT]", "[AUTHORITY]",
             "[PATH]", "[/PATH]", "[PATH_ENCODED]", "[QUERY]", "[?QUERY]", "[QUERY_ENCODED]",

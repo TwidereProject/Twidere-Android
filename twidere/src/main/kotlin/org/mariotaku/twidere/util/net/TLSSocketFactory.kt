@@ -27,17 +27,18 @@ import java.net.Socket
 import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLSocket
 import javax.net.ssl.SSLSocketFactory
+import javax.net.ssl.TrustManager
 
 /**
  * @author fkrauthan
  */
-class TLSSocketFactory : SSLSocketFactory() {
+class TLSSocketFactory(tm: Array<TrustManager>) : SSLSocketFactory() {
 
     private val delegate: SSLSocketFactory
 
     init {
         val context = SSLContext.getInstance("TLS").apply {
-            init(null, null, null)
+            init(null, tm, null)
         }
         delegate = context.socketFactory
     }
