@@ -247,6 +247,16 @@ class DetailStatusViewHolder(
         summaryView.spannable = status.extras?.summary_text
         summaryView.hideIfEmpty()
 
+        class OnSummaryImageLoadedListener : EmojiSpanTask.OnImageDownloadedListener {
+            override fun onImageDownloaded(spannable: Spannable) {
+                summaryView.spannable = spannable
+            }
+        }
+
+        val taskSummaryEmoji = EmojiSpanTask(status.spans, SpannableStringBuilder.valueOf(status.extras?.summary_text))
+        taskSummaryEmoji.setOnImageDownloadedListener(OnSummaryImageLoadedListener())
+        taskSummaryEmoji.execute()
+
         if (displayEnd != -1 && displayEnd <= text.length) {
             val displayText = text.subSequence(0, displayEnd)
             if (!TextUtils.equals(textView.text, displayText)) {
@@ -259,15 +269,15 @@ class DetailStatusViewHolder(
         }
         textView.hideIfEmpty()
 
-        class OnImageLoadedListener : EmojiSpanTask.OnImageDownloadedListener {
+        class OnTextImageLoadedListener : EmojiSpanTask.OnImageDownloadedListener {
             override fun onImageDownloaded(spannable: Spannable) {
                 textView.spannable = spannable
             }
         }
 
-        val taskEmoji = EmojiSpanTask(status.spans, text)
-        taskEmoji.setOnImageDownloadedListener(OnImageLoadedListener())
-        taskEmoji.execute()
+        val taskTextEmoji = EmojiSpanTask(status.spans, text)
+        taskTextEmoji.setOnImageDownloadedListener(OnTextImageLoadedListener())
+        taskTextEmoji.execute()
 
         val location: ParcelableLocation? = status.location
         val placeFullName: String? = status.place_full_name

@@ -109,7 +109,9 @@ fun Status.applyTo(accountKey: UserKey, result: ParcelableStatus) {
 
     extras.display_text_range = calculateDisplayTextRange(result.text_unescaped, result.spans,
             result.media)
-    extras.summary_text = status.spoilerText?.let(EmojioneTranslator::translate)
+    val summaryContent = addEmojisHtml(status.spoilerText, emojis)
+    val summaryHtml = HtmlSpanBuilder.fromHtml(summaryContent, summaryContent, MastodonSpanProcessor)
+    extras.summary_text = summaryHtml?.toString()
     extras.visibility = status.visibility
     extras.external_url = status.url
 

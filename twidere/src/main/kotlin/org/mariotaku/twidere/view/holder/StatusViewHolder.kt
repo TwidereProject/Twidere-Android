@@ -349,6 +349,16 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         summaryView.spannable = status.extras?.summary_text
         summaryView.hideIfEmpty()
 
+        class OnSummaryImageLoadedListener : EmojiSpanTask.OnImageDownloadedListener {
+            override fun onImageDownloaded(spannable: Spannable) {
+                summaryView.spannable = spannable
+            }
+        }
+
+        val taskSummaryEmoji = EmojiSpanTask(status.spans, SpannableStringBuilder.valueOf(status.extras?.summary_text))
+        taskSummaryEmoji.setOnImageDownloadedListener(OnSummaryImageLoadedListener())
+        taskSummaryEmoji.execute()
+
         val text: Spannable
         val displayEnd: Int
         if (!summaryView.empty && !isFullTextVisible) {
@@ -380,15 +390,15 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         }
         textView.hideIfEmpty()
 
-        class OnImageLoadedListener : EmojiSpanTask.OnImageDownloadedListener {
+        class OnTextImageLoadedListener : EmojiSpanTask.OnImageDownloadedListener {
             override fun onImageDownloaded(spannable: Spannable) {
                 textView.spannable = spannable
             }
         }
 
-        val taskEmoji = EmojiSpanTask(status.spans, text)
-        taskEmoji.setOnImageDownloadedListener(OnImageLoadedListener())
-        taskEmoji.execute()
+        val taskTextEmoji = EmojiSpanTask(status.spans, text)
+        taskTextEmoji.setOnImageDownloadedListener(OnTextImageLoadedListener())
+        taskTextEmoji.execute()
 
         if (replyCount > 0) {
             replyCountView.spannable = UnitConvertUtils.calculateProperCount(replyCount)
