@@ -247,15 +247,17 @@ class DetailStatusViewHolder(
         summaryView.spannable = status.extras?.summary_text
         summaryView.hideIfEmpty()
 
-        class OnSummaryImageLoadedListener : EmojiSpanTask.OnImageDownloadedListener {
-            override fun onImageDownloaded(spannable: Spannable) {
-                summaryView.spannable = spannable
+        if (status.extras?.summary_text != null) {
+            class OnSummaryImageLoadedListener : EmojiSpanTask.OnImageDownloadedListener {
+                override fun onImageDownloaded(spannable: Spannable) {
+                    summaryView.spannable = spannable
+                }
             }
-        }
 
-        val taskSummaryEmoji = EmojiSpanTask(status.spans, SpannableStringBuilder.valueOf(status.extras?.summary_text))
-        taskSummaryEmoji.setOnImageDownloadedListener(OnSummaryImageLoadedListener())
-        taskSummaryEmoji.execute()
+            val taskSummaryEmoji = EmojiSpanTask(status.spans, SpannableStringBuilder.valueOf(status.extras?.summary_text))
+            taskSummaryEmoji.setOnImageDownloadedListener(OnSummaryImageLoadedListener())
+            taskSummaryEmoji.execute()
+        }
 
         if (displayEnd != -1 && displayEnd <= text.length) {
             val displayText = text.subSequence(0, displayEnd)
