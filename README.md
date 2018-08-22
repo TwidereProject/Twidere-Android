@@ -40,6 +40,7 @@ Material Design ready and feature rich Twitter app for Android 4.0+
 * Removed all streaming services
 * Use official Twitter Android API keys by default
 * Show server's custom emojis on Mastodon
+* Updated OkHttp library
 * Fix linkification of some badly parsed URL
 * Fix mentions on Mastodon
 * Fix upload of big images/videos on Mastodon
