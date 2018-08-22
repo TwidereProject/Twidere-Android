@@ -16,6 +16,7 @@ class EmojiSpanTask(
 ) : AsyncTask<Any, Any, Any>() {
 
     private var mOnImageDownloadedListener: OnImageDownloadedListener? = null
+    private var hasChanged = false
 
     override fun doInBackground(vararg params: Any?) {
         spans.map { span ->
@@ -25,6 +26,7 @@ class EmojiSpanTask(
                     val bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream())
                     spannable.setSpan(EmojiSpan(BitmapDrawable(bmp)), span.start, span.end,
                             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    hasChanged = true
                 }
             }
         }
@@ -36,7 +38,9 @@ class EmojiSpanTask(
     }
 
     override fun onPostExecute(result: Any?) {
-        mOnImageDownloadedListener?.onImageDownloaded(spannable)
+        if (hasChanged) {
+            mOnImageDownloadedListener?.onImageDownloaded(spannable)
+        }
     }
 
     // Setter.
