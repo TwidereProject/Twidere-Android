@@ -38,7 +38,7 @@ fun Attachment.toParcelable(): ParcelableMedia {
         "gifv" -> ParcelableMedia.Type.ANIMATED_GIF
         else -> ParcelableMedia.Type.UNKNOWN
     }
-    result.url = remoteUrl
+    result.url = remoteUrl ?: url
     result.media_url = result.url
     result.preview_url = previewUrl
     result.page_url = textUrl
