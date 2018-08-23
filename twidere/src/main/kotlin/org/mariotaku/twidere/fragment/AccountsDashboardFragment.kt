@@ -382,11 +382,11 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         when (account.type) {
             AccountType.TWITTER -> {
                 hasDirectMessages = !hasDmTab
-                hasLists = true
+                hasLists = !hasLists
             }
             AccountType.STATUSNET -> {
                 hasDirectMessages = !hasDmTab
-                hasGroups = true
+                hasGroups = !hasGroups
                 hasPublicTimeline = !hasPublicTimelineTab
                 hasNetworkPublicTimeline = !hasNetworkPublicTimelineTab
             }
@@ -397,6 +397,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             AccountType.MASTODON -> {
                 hasPublicTimeline = !hasPublicTimelineTab
                 hasNetworkPublicTimeline = !hasNetworkPublicTimelineTab
+                //hasLists = !hasLists
             }
         }
         menu.setItemAvailability(R.id.messages, hasDirectMessages)
