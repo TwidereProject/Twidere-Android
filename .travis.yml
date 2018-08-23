@@ -11,11 +11,6 @@ android:
     - build-tools-26.0.2
     - android-26
 
-env:
-  global:
-    # COMPONENT_GOOGLE_REPO
-    - secure: "OQ/wkORxY2qv4CmAdMxyW4ihRt5GRyxKxQRZpsdjMbwIKf3DlY6vBoNIEQ46sRRLAKOzkQ3LirodbWRCBlDN9WFw4XRsLTveqqtslMGeLf04peazXMIa6rJ22BCDGEmnzRNx6r3JRb9wEK1plNv4u4G9DgQ7ShzbwdZ8A5grlg8="
-
 addons:
   apt:
     packages:
@@ -36,48 +31,9 @@ cache:
     - $HOME/.gradle/wrapper/
     - $HOME/.m2/
 
-before_install:
-  - ./travis/scripts/decode_private_configs.sh
-
 install:
   - rvm default exec gem install fastlane
-  - ./travis/scripts/fetch_private_files.sh
   - cat ./travis/configs/gradle.properties > ./gradle.properties
-
-before_script:
-  # Validate if patches work
-  - ./travis/scripts/patch_sources.sh
-  # Validate if Google components fetched successfully
-  - ./travis/scripts/test_private_files.sh
 
 script:
   - ./gradlew build
-
-after_failure:
-  - ./travis/scripts/upload_error_logs.sh
-
-deploy:
-  - provider: releases
-    prerelease: true
-    api_key:
-      secure: "WKtKwda3hegqO9QVujdonNoL2ESJUR80WHNq/13wDsbCABo/GNnuqHNYZmml3wAifEKKeCEYfNZRUuHQ8eHs54Lj5BlGRX5i+1LrGhhgnVFQgmrhIv4RJuVQ663kDEh+Jwo4vowJ2mxNDvLvOhfZwxjULPDiknqy6u5PyW3id5M="
-    file_glob: true
-    file: '**/*-release.apk'
-    skip_cleanup: true
-    on:
-      repo: TwidereProject/Twidere-Android
-      tags: true
-  # Publish to Google Play store
-  - provider: script
-    script: ./travis/scripts/google_play_deploy.sh ./twidere/src/google/.supplyrc
-    skip_cleanup: true
-    on:
-      repo: TwidereProject/Twidere-Android
-      tags: true
-  # Upload common component library to Bintray
-  - provider: script
-    script: ./gradlew twidere.component.common:bintrayUpload
-    skip_cleanup: true
-    on:
-      repo: TwidereProject/Twidere-Android
-      tags: true
