@@ -104,6 +104,11 @@ public class Status {
     @JsonField(name = "favourited")
     boolean favourited;
     /**
+     * Whether the authenticated user has muted the conversation this status from
+     */
+    @JsonField(name = "muted")
+    boolean muted;
+    /**
      * Whether media attachments should be hidden by default
      */
     @JsonField(name = "sensitive")
@@ -140,6 +145,16 @@ public class Status {
      */
     @JsonField(name = "application")
     Application application;
+    /**
+     * The detected language for the status, if detected
+     */
+    @JsonField(name = "language")
+    String language;
+    /**
+     * Whether this is the pinned status for the account that posted it
+     */
+    @JsonField(name = "pinned")
+    boolean pinned;
 
     private long sortId = -1;
 
@@ -199,6 +214,10 @@ public class Status {
         return favourited;
     }
 
+    public boolean isMuted() {
+        return muted;
+    }
+
     public boolean isSensitive() {
         return sensitive;
     }
@@ -226,6 +245,14 @@ public class Status {
 
     public Application getApplication() {
         return application;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public boolean isPinned() {
+        return pinned;
     }
 
     public long getSortId() {
@@ -260,6 +287,7 @@ public class Status {
                 ", favouritesCount=" + favouritesCount +
                 ", reblogged=" + reblogged +
                 ", favourited=" + favourited +
+                ", muted=" + muted +
                 ", sensitive=" + sensitive +
                 ", spoilerText='" + spoilerText + '\'' +
                 ", visibility='" + visibility + '\'' +
@@ -267,6 +295,8 @@ public class Status {
                 ", mentions=" + Arrays.toString(mentions) +
                 ", tags=" + Arrays.toString(tags) +
                 ", application=" + application +
+                ", language='" + language + '\'' +
+                ", pinned=" + pinned +
                 '}';
     }
 }

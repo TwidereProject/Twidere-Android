@@ -34,5 +34,7 @@ fun Relationship.toParcelable(accountKey: UserKey, userKey: UserKey, filtering: 
     obj.blocking = isBlocking
     obj.muting = isMuting
     obj.filtering = filtering
+    obj.notifications_enabled = !isMutingNotifications
+    obj.retweet_enabled = isShowingReblogs
     return obj
 }

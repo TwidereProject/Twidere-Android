@@ -54,10 +54,25 @@ public class Relationship {
     @JsonField(name = "muting")
     boolean muting;
     /**
+     * Whether the user is also muting notifications
+     */
+    @JsonField(name = "muting_notifications")
+    boolean muting_notifications;
+    /**
      * Whether the user has requested to follow the account
      */
     @JsonField(name = "requested")
     boolean requested;
+    /**
+     * Whether the user is currently blocking the accounts's domain
+     */
+    @JsonField(name = "domain_blocking")
+    boolean domain_blocking;
+    /**
+     * Whether the user's reblogs will show up in the home timeline
+     */
+    @JsonField(name = "showing_reblogs")
+    boolean showing_reblogs;
 
     public String getId() {
         return id;
@@ -79,8 +94,20 @@ public class Relationship {
         return muting;
     }
 
+    public boolean isMutingNotifications() {
+        return muting_notifications;
+    }
+
     public boolean isRequested() {
         return requested;
+    }
+
+    public boolean isDomainBlocking() {
+        return domain_blocking;
+    }
+
+    public boolean isShowingReblogs() {
+        return showing_reblogs;
     }
 
     @Override
@@ -91,7 +118,10 @@ public class Relationship {
                 ", followedBy=" + followedBy +
                 ", blocking=" + blocking +
                 ", muting=" + muting +
+                ", muting_notifications=" + muting_notifications +
                 ", requested=" + requested +
+                ", domain_blocking=" + domain_blocking +
+                ", showing_reblogs=" + showing_reblogs +
                 '}';
     }
 }

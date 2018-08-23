@@ -38,7 +38,7 @@ class CreateFriendshipTask(context: Context) : AbsFriendshipOperationTask(contex
                     return mastodon.followRemoteUser("${args.screenName}@${args.userKey.host}")
                             .toParcelable(details)
                 }
-                mastodon.followUser(args.userKey.id)
+                mastodon.followUser(args.userKey.id, true)
                 return mastodon.getAccount(args.userKey.id).toParcelable(details)
             }
             else -> {

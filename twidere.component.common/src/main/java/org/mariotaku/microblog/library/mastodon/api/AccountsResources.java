@@ -31,6 +31,7 @@ import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.PATCH;
 import org.mariotaku.restfu.annotation.method.POST;
+import org.mariotaku.restfu.annotation.param.BooleanEncoding;
 import org.mariotaku.restfu.annotation.param.Param;
 import org.mariotaku.restfu.annotation.param.Path;
 import org.mariotaku.restfu.annotation.param.Query;
@@ -63,7 +64,8 @@ public interface AccountsResources {
             @Query TimelineOption option) throws MicroBlogException;
 
     @POST("/v1/accounts/{id}/follow")
-    Relationship followUser(@Path("id") String id) throws MicroBlogException;
+    Relationship followUser(@Path("id") String id,
+            @Query(value = "reblogs", booleanEncoding = BooleanEncoding.IGNORE_IF_TRUE) boolean reblogs) throws MicroBlogException;
 
     @POST("/v1/accounts/{id}/unfollow")
     Relationship unfollowUser(@Path("id") String id) throws MicroBlogException;
@@ -75,7 +77,8 @@ public interface AccountsResources {
     Relationship unblockUser(@Path("id") String id) throws MicroBlogException;
 
     @POST("/v1/accounts/{id}/mute")
-    Relationship muteUser(@Path("id") String id) throws MicroBlogException;
+    Relationship muteUser(@Path("id") String id,
+            @Query(value = "notifications", booleanEncoding = BooleanEncoding.IGNORE_IF_TRUE) boolean notifications) throws MicroBlogException;
 
     @POST("/v1/accounts/{id}/unmute")
     Relationship unmuteUser(@Path("id") String id) throws MicroBlogException;

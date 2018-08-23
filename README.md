@@ -39,15 +39,22 @@ Material Design ready and feature rich Twitter app for Android 4.0+
 * Premium features witch doesnt required third party services like advanced filters are unlocked for anyone
 * Removed all streaming services
 * Use official Twitter Android API keys by default
-* Show server's custom emojis on Mastodon
 * Updated OkHttp library
 * Fix linkification of some badly parsed URL
-* Fix mentions on Mastodon
-* Fix upload of big images/videos on Mastodon
 * Fix refreshing trends
 * Cleaning stuff
+* Mastodon fixes and features :
+  * Fix mentions
+  * Fix upload of big images/videos
+  * Fix remote video
+  * Add ability to mute user
+  * Add ability to disable reblogs from a user
+  * Show server's custom emojis
+  * Updated API
 
 ## Roadmap
+
+* Implement lists on Mastodon
 
 ## Enhanced Features (Available on Google Play) ##
 

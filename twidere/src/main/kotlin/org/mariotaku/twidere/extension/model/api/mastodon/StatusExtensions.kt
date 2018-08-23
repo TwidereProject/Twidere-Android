@@ -106,6 +106,8 @@ fun Status.applyTo(accountKey: UserKey, result: ParcelableStatus) {
     result.is_favorite = status.isFavourited
     result.is_possibly_sensitive = status.isSensitive
     result.mentions = status.mentions?.mapToArray { it.toParcelable(accountKey) }
+    result.lang = status.language
+    result.is_pinned_status = isPinned
 
     extras.display_text_range = calculateDisplayTextRange(result.text_unescaped, result.spans,
             result.media)

@@ -58,6 +58,11 @@ public class Attachment {
      */
     @JsonField(name = "text_url")
     String textUrl;
+    /**
+     * A description of the image for the visually impaired (maximum 420 characters), or null if none provided
+     */
+    @JsonField(name = "description")
+    String description;
 
     public String getId() {
         return id;
@@ -83,6 +88,10 @@ public class Attachment {
         return textUrl;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     @Override
     public String toString() {
         return "Attachment{" +
@@ -92,6 +101,7 @@ public class Attachment {
                 ", remoteUrl='" + remoteUrl + '\'' +
                 ", previewUrl='" + previewUrl + '\'' +
                 ", textUrl='" + textUrl + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

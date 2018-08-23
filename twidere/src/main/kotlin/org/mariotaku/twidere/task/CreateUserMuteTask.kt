@@ -40,7 +40,7 @@ class CreateUserMuteTask(
             }
             AccountType.MASTODON -> {
                 val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
-                mastodon.muteUser(args.userKey.id)
+                mastodon.muteUser(args.userKey.id, true)
                 return mastodon.getAccount(args.userKey.id).toParcelable(details)
             }
             else -> throw APINotSupportedException(details.type)
@@ -99,7 +99,7 @@ class CreateUserMuteTask(
                 AccountType.MASTODON -> {
                     val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
                     userKeys.forEach { userKey ->
-                        mastodon.muteUser(userKey.id)
+                        mastodon.muteUser(userKey.id, true)
                     }
                 }
                 else -> throw APINotSupportedException(account.type)

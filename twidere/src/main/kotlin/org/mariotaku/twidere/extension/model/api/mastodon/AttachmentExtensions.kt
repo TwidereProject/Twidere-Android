@@ -42,5 +42,6 @@ fun Attachment.toParcelable(): ParcelableMedia {
     result.media_url = result.url
     result.preview_url = previewUrl
     result.page_url = textUrl
+    result.alt_text = description
     return result
 }

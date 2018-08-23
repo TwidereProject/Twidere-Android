@@ -48,6 +48,11 @@ public class Instance {
      */
     @JsonField(name = "email")
     String email;
+    /**
+     * The Mastodon version used by instance.
+     */
+    @JsonField(name = "version")
+    String version;
 
     public String getUri() {
         return uri;
@@ -65,6 +70,10 @@ public class Instance {
         return email;
     }
 
+    public String getVersion() {
+        return version;
+    }
+
     @Override
     public String toString() {
         return "Instance{" +
@@ -72,6 +81,7 @@ public class Instance {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", email='" + email + '\'' +
+                ", version='" + version + '\'' +
                 '}';
     }
 }

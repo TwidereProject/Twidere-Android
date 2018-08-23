@@ -837,6 +837,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             }
             AccountType.MASTODON -> {
                 canMute = true
+                canEnableRetweet = true
+                canEnableNotifications = true
             }
         }
 
@@ -859,6 +861,11 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 menu.setItemAvailability(R.id.block, true)
                 menu.setItemAvailability(R.id.enable_notifications, canEnableNotifications &&
                         relationship.following)
+
+                if (account?.type == AccountType.MASTODON) {
+                    menu.setItemAvailability(R.id.enable_retweets, relationship.following)
+                    menu.setItemAvailability(R.id.enable_notifications, relationship.muting)
+                }
 
                 menu.findItem(R.id.block)?.apply {
                     ActionIconDrawable.setMenuHighlight(this, TwidereMenuInfo(relationship.blocking))

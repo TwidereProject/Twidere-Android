@@ -31,6 +31,7 @@ import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.toNulls
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.twitter.model.FriendshipUpdate
 import org.mariotaku.microblog.library.twitter.model.SavedSearch
 import org.mariotaku.microblog.library.twitter.model.UserList
@@ -38,7 +39,9 @@ import org.mariotaku.microblog.library.twitter.model.UserListUpdate
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.*
+import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.*
@@ -342,8 +345,18 @@ class AsyncTwitterWrapper(
         TaskStarter.execute(object : AbsAccountRequestTask<Any?, ParcelableRelationship, Any>(context, accountKey) {
 
             override fun onExecute(account: AccountDetails, params: Any?): ParcelableRelationship {
-                val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
-                val relationship = microBlog.updateFriendship(userKey.id, update).toParcelable(accountKey, userKey)
+                var relationship = ParcelableRelationship()
+                if (account.type == AccountType.MASTODON) {
+                    val microBlog = account.newMicroBlogInstance(context, Mastodon::class.java)
+                    if (update["retweets"] != null) {
+                        relationship = microBlog.followUser(userKey.id, update["retweets"] as Boolean).toParcelable(accountKey, userKey)
+                    } else if (update["device"] != null) {
+                        relationship = microBlog.muteUser(userKey.id, update["device"] as Boolean).toParcelable(accountKey, userKey)
+                    }
+                } else {
+                    val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                    relationship = microBlog.updateFriendship(userKey.id, update).toParcelable(accountKey, userKey)
+                }
                 val cr = context.contentResolver
                 if (update["retweets"] == false) {
                     val where = Expression.and(

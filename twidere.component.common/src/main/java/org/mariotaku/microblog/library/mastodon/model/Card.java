@@ -48,6 +48,11 @@ public class Card {
      */
     @JsonField(name = "image")
     String image;
+    /**
+     * One of: {@code link}, {@code photo}, {@code video}, {@code rich}
+     */
+    @JsonField(name = "type")
+    String type;
 
     public String getUrl() {
         return url;
@@ -65,6 +70,10 @@ public class Card {
         return image;
     }
 
+    public String getType() {
+        return type;
+    }
+
     @Override
     public String toString() {
         return "Card{" +
@@ -72,6 +81,7 @@ public class Card {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", image='" + image + '\'' +
+                ", type='" + type + '\'' +
                 '}';
     }
 }
