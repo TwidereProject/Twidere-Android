@@ -491,8 +491,8 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable {
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            //noinspection unchecked
             mObjects = (List<T>) results.values;
             if (results.count > 0) {
                 notifyDataSetChanged();

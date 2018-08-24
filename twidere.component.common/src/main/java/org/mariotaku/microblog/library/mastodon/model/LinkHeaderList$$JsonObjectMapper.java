@@ -35,9 +35,8 @@ import java.io.IOException;
 public final class LinkHeaderList$$JsonObjectMapper<T> extends JsonMapper<LinkHeaderList<T>> {
     private final JsonMapper<T> m69ClassJsonMapper;
 
-    public LinkHeaderList$$JsonObjectMapper(ParameterizedType type, ParameterizedType TType, SimpleArrayMap<ParameterizedType, JsonMapper> partialMappers) {
+    public LinkHeaderList$$JsonObjectMapper(ParameterizedType type, ParameterizedType<T> TType, SimpleArrayMap<ParameterizedType, JsonMapper> partialMappers) {
         partialMappers.put(type, this);
-        //noinspection unchecked
         m69ClassJsonMapper = LoganSquare.mapperFor(TType, partialMappers);
     }
 

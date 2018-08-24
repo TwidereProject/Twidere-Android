@@ -30,13 +30,8 @@
             android:taskAffinity="com.squareup.leakcanary.${applicationId}"
             android:theme="@style/leak_canary_LeakCanary.Base">
             <intent-filter>
-                <action
-                    android:name="android.intent.action.MAIN"
-                    tools:node="remove"/>
-
-                <category
-                    android:name="android.intent.category.LAUNCHER"
-                    tools:node="remove"/>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <intent-filter>
                 <action android:name="org.mariotaku.twidere.HIDDEN_SETTINGS_ENTRY"/>

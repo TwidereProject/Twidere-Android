@@ -35,9 +35,8 @@ import java.io.IOException;
 public final class PageableResponseList$$JsonObjectMapper<T> extends JsonMapper<PageableResponseList<T>> {
     private final JsonMapper<T> m84ClassJsonMapper;
 
-    public PageableResponseList$$JsonObjectMapper(ParameterizedType type, ParameterizedType TType, SimpleArrayMap<ParameterizedType, JsonMapper> partialMappers) {
+    public PageableResponseList$$JsonObjectMapper(ParameterizedType type, ParameterizedType<T> TType, SimpleArrayMap<ParameterizedType, JsonMapper> partialMappers) {
         partialMappers.put(type, this);
-        //noinspection unchecked
         m84ClassJsonMapper = LoganSquare.mapperFor(TType, partialMappers);
     }
 

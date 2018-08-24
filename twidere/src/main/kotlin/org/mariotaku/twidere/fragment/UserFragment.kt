@@ -458,15 +458,17 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             }
             descriptionContainer.description.spannable = text
 
-            class OnTextImageLoadedListener : EmojiSpanTask.OnImageDownloadedListener {
-                override fun onImageDownloaded(spannable: Spannable) {
-                    descriptionContainer.description.spannable = spannable
+            if (user.description_spans != null) {
+                class OnTextImageLoadedListener : EmojiSpanTask.OnImageDownloadedListener {
+                    override fun onImageDownloaded(spannable: Spannable) {
+                        descriptionContainer.description.spannable = spannable
+                    }
                 }
-            }
 
-            val taskTextEmoji = EmojiSpanTask(user.description_spans, text)
-            taskTextEmoji.setOnImageDownloadedListener(OnTextImageLoadedListener())
-            taskTextEmoji.execute()
+                val taskTextEmoji = EmojiSpanTask(user.description_spans, text)
+                taskTextEmoji.setOnImageDownloadedListener(OnTextImageLoadedListener())
+                taskTextEmoji.execute()
+            }
         } else {
             descriptionContainer.description.spannable = user.description_plain
             Linkify.addLinks(descriptionContainer.description, Linkify.WEB_URLS)

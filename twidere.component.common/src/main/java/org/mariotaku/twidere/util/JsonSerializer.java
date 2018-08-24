@@ -103,19 +103,19 @@ public class JsonSerializer {
     }
 
     @NonNull
+    @SuppressWarnings("unchecked")
     public static <T> String serialize(@Nullable final T object) throws IOException {
         if (object == null) throw new IOException();
-        //noinspection unchecked
         final Class<T> cls = (Class<T>) object.getClass();
         final JsonMapper<T> mapper = LoganSquareMapperFinder.mapperFor(cls);
         return mapper.serialize(object);
     }
 
     @NonNull
+    @SuppressWarnings("unchecked")
     public static <T> T[] parseArray(@Nullable final String string, final Class<T> cls) throws IOException {
         if (string == null) throw new IOException();
         final List<T> list = LoganSquareMapperFinder.mapperFor(cls).parseList(string);
-        //noinspection unchecked
         return list.toArray((T[]) Array.newInstance(cls, list.size()));
     }
 

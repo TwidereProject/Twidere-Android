@@ -32,9 +32,8 @@ import java.io.IOException;
 public final class ResponseList$$JsonObjectMapper<T> extends JsonMapper<ResponseList<T>> {
     private final JsonMapper<T> m84ClassJsonMapper;
 
-    public ResponseList$$JsonObjectMapper(ParameterizedType type, ParameterizedType TType, SimpleArrayMap<ParameterizedType, JsonMapper> partialMappers) {
+    public ResponseList$$JsonObjectMapper(ParameterizedType type, ParameterizedType<T> TType, SimpleArrayMap<ParameterizedType, JsonMapper> partialMappers) {
         partialMappers.put(type, this);
-        //noinspection unchecked
         m84ClassJsonMapper = LoganSquare.mapperFor(TType, partialMappers);
     }
 

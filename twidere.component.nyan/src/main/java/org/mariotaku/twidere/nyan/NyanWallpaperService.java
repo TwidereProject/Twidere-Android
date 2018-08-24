@@ -27,6 +27,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.PowerManager;
 import android.service.wallpaper.WallpaperService;
 import android.view.SurfaceHolder;
@@ -115,10 +116,12 @@ public class NyanWallpaperService extends WallpaperService implements NyanConsta
 
         private void updateHelperState() {
             final PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
-            if (pm.isScreenOn()) {
-                mHelper.start();
-            } else {
-                mHelper.stop();
+            if (pm != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+                if (pm.isInteractive()) {
+                    mHelper.start();
+                } else {
+                    mHelper.stop();
+                }
             }
         }
 

@@ -31,6 +31,10 @@ allprojects {
         maven { url 'https://jitpack.io' }
     }
 
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:unchecked"
+    }
+
 }
 
 subprojects {
