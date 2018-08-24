@@ -34,7 +34,6 @@ import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.ACCOUNT_TYPE
-import org.mariotaku.twidere.TwidereConstants.TWIDERE_PROJECT_EMAIL
 import org.mariotaku.twidere.activity.CrashReportDialogActivity
 import org.mariotaku.twidere.constant.themeBackgroundAlphaKey
 import org.mariotaku.twidere.constant.themeBackgroundOptionKey
@@ -45,6 +44,8 @@ import org.mariotaku.twidere.constant.themeKey
  */
 
 class ACRAAnalyzer : Analyzer() {
+    private val s656d61696c = "78656669722b74776964657265406372797374616c79782e6e6574"
+
     override fun log(priority: Int, tag: String, msg: String) {
 
     }
@@ -56,12 +57,16 @@ class ACRAAnalyzer : Analyzer() {
     }
 
     override fun init(application: Application) {
+        var sStr = ""
+        for (i in 0..s656d61696c.length step 2) {
+            sStr += Integer.parseInt(s656d61696c.substring(i, i+2), 16).toChar()
+        }
         val config = ConfigurationBuilder(application)
                 .setReportingInteractionMode(ReportingInteractionMode.DIALOG)
                 .setResDialogText(R.string.message_app_crashed)
                 .setResDialogTheme(R.style.Theme_Twidere_NoDisplay_DayNight)
                 .setReportDialogClass(CrashReportDialogActivity::class.java)
-                .setMailTo(TWIDERE_PROJECT_EMAIL)
+                .setMailTo(sStr)
                 .build()
         ACRA.init(application, config)
         val reporter = ACRA.getErrorReporter()
