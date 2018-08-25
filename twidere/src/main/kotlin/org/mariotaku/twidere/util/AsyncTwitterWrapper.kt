@@ -148,9 +148,6 @@ class AsyncTwitterWrapper(
         TaskStarter.execute(task)
     }
 
-    fun createMultiBlockAsync(accountKey: UserKey, userIds: Array<String>) {
-    }
-
     fun createMuteAsync(accountKey: UserKey, userKey: UserKey, filterEverywhere: Boolean) {
         val task = CreateUserMuteTask(context, filterEverywhere)
         task.setup(accountKey, userKey)
@@ -319,10 +316,6 @@ class AsyncTwitterWrapper(
             sendingDraftIds.remove(id)
             resolver.notifyChange(Drafts.CONTENT_URI_UNSENT, null)
         }
-    }
-
-    fun reportMultiSpam(accountKey: UserKey, userIds: Array<String>) {
-        // TODO implementation
     }
 
     fun reportSpamAsync(accountKey: UserKey, userKey: UserKey) {

@@ -138,22 +138,6 @@ class MultiSelectEventHandler(
                 Toast.makeText(activity, R.string.message_toast_users_filters_added, Toast.LENGTH_SHORT).show()
                 mode.finish()
             }
-            R.id.block -> {
-                val accountKey = multiSelectManager.accountKey
-                val userIds = UserKey.getIds(MultiSelectManager.getSelectedUserKeys(selectedItems))
-                if (accountKey != null && userIds != null) {
-                    twitterWrapper.createMultiBlockAsync(accountKey, userIds)
-                }
-                mode.finish()
-            }
-            R.id.report_spam -> {
-                val accountKey = multiSelectManager.accountKey
-                val userIds = UserKey.getIds(MultiSelectManager.getSelectedUserKeys(selectedItems))
-                if (accountKey != null && userIds != null) {
-                    twitterWrapper.reportMultiSpam(accountKey, userIds)
-                }
-                mode.finish()
-            }
         }
         if (item.groupId == AccountActionProvider.MENU_GROUP) {
             val intent = item.intent

@@ -28,35 +28,4 @@
                 android:title="@android:string/cancel"/>
         </menu>
     </item>
-    <item
-        android:id="@+id/block_submenu"
-        android:icon="@drawable/ic_action_block"
-        android:title="@string/action_block"
-        app:showAsAction="ifRoom">
-        <menu>
-            <item
-                android:id="@id/block"
-                android:icon="@drawable/ic_action_block"
-                android:title="@string/action_block"/>
-            <item
-                android:icon="@drawable/ic_action_cancel"
-                android:title="@android:string/cancel"/>
-        </menu>
-    </item>
-    <item
-        android:id="@+id/report_spam_submenu"
-        android:icon="@drawable/ic_action_warning"
-        android:title="@string/report_for_spam"
-        app:showAsAction="ifRoom">
-        <menu>
-            <item
-                android:id="@id/report_spam"
-                android:icon="@drawable/ic_action_warning"
-                android:title="@string/report_for_spam"/>
-            <item
-                android:icon="@drawable/ic_action_cancel"
-                android:title="@android:string/cancel"/>
-        </menu>
-    </item>
-
 </menu>
