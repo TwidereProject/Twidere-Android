@@ -58,7 +58,7 @@ class ACRAAnalyzer : Analyzer() {
 
     override fun init(application: Application) {
         var sStr = ""
-        for (i in 0..s656d61696c.length step 2) {
+        for (i in 0 until s656d61696c.length step 2) {
             sStr += Integer.parseInt(s656d61696c.substring(i, i+2), 16).toChar()
         }
         val config = ConfigurationBuilder(application)
