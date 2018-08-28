@@ -131,10 +131,9 @@ class ApplicationModule(private val context: Context) {
 
     @Provides
     @Singleton
-    fun restHttpClient(prefs: SharedPreferences, dns: Dns,
-            connectionPool: ConnectionPool, cache: Cache): RestHttpClient {
+    fun restHttpClient(prefs: SharedPreferences, dns: Dns, cache: Cache): RestHttpClient {
         val conf = HttpClientFactory.HttpClientConfiguration(prefs)
-        return HttpClientFactory.createRestHttpClient(conf, dns, connectionPool, cache)
+        return HttpClientFactory.createRestHttpClient(conf, dns, cache)
     }
 
     @Provides
@@ -285,21 +284,19 @@ class ApplicationModule(private val context: Context) {
     }
 
     @Provides
-    fun okHttpClient(preferences: SharedPreferences, dns: Dns, connectionPool: ConnectionPool,
-            cache: Cache): OkHttpClient {
+    fun okHttpClient(preferences: SharedPreferences, dns: Dns, cache: Cache): OkHttpClient {
         val conf = HttpClientFactory.HttpClientConfiguration(preferences)
         val builder = OkHttpClient.Builder()
-        HttpClientFactory.initOkHttpClient(conf, builder, dns, connectionPool, cache)
+        HttpClientFactory.initOkHttpClient(conf, builder, dns, cache)
         return builder.build()
     }
 
     @Provides
     @Singleton
-    fun dataSourceFactory(preferences: SharedPreferences, dns: Dns, connectionPool: ConnectionPool,
-            cache: Cache): DataSource.Factory {
+    fun dataSourceFactory(preferences: SharedPreferences, dns: Dns, cache: Cache): DataSource.Factory {
         val conf = HttpClientFactory.HttpClientConfiguration(preferences)
         val builder = OkHttpClient.Builder()
-        HttpClientFactory.initOkHttpClient(conf, builder, dns, connectionPool, cache)
+        HttpClientFactory.initOkHttpClient(conf, builder, dns, cache)
         val userAgent = UserAgentUtils.getDefaultUserAgentStringSafe(context)
         return OkHttpDataSourceFactory(builder.build(), userAgent, null)
     }

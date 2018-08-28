@@ -147,8 +147,7 @@ fun <T> newMicroBlogInstance(context: Context, endpoint: Endpoint, auth: Authori
             conf.readTimeoutSecs = 30
             conf.writeTimeoutSecs = 30
             conf.connectionTimeoutSecs = 60
-            val uploadHttpClient = HttpClientFactory.createRestHttpClient(conf, holder.dns,
-                    holder.connectionPool, holder.cache)
+            val uploadHttpClient = HttpClientFactory.createRestHttpClient(conf, holder.dns, holder.cache)
             factory.setHttpClient(uploadHttpClient)
         }
         else -> {
