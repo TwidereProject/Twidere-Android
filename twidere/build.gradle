@@ -49,6 +49,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    kotlinOptions {
+        suppressWarnings = true
+    }
+
     aaptOptions {
         additionalParameters "--no-version-vectors"
     }
