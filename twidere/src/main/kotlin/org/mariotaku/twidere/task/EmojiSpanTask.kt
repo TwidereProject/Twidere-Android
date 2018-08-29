@@ -3,44 +3,28 @@ package org.mariotaku.twidere.task
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.os.AsyncTask
-import android.text.Spannable
-import android.text.Spanned
-import org.mariotaku.twidere.model.SpanItem
 import org.mariotaku.twidere.text.style.EmojiSpan
 import java.net.URL
 
 
 class EmojiSpanTask(
-        private val spans: Array<SpanItem>,
-        private val spannable: Spannable
+        private val emojiurl: String
 ) : AsyncTask<Any, Any, Any>() {
 
     private var mOnImageDownloadedListener: OnImageDownloadedListener? = null
-    private var hasChanged = false
+    private var retEmojiSpan: EmojiSpan? = null
 
     override fun doInBackground(vararg params: Any?) {
-        spans.map { span ->
-            if (span.type == SpanItem.SpanType.EMOJI) {
-                if (spannable.length > 0 && spannable.length >= span.start && spannable.length >= span.end) {
-                    val url = URL(span.link)
-                    val bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream())
-                    spannable.setSpan(EmojiSpan(BitmapDrawable(bmp)), span.start, span.end,
-                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                    hasChanged = true
-                }
-            }
-        }
+        retEmojiSpan = EmojiSpan(BitmapDrawable(BitmapFactory.decodeStream(URL(emojiurl).openConnection().getInputStream())))
     }
 
     // Interface the task will use to communicate with your activity method.
     interface OnImageDownloadedListener {
-        fun onImageDownloaded(spannable: Spannable)  // No need for context.
+        fun onImageDownloaded(retEmojiSpan: EmojiSpan?)  // No need for context.
     }
 
     override fun onPostExecute(result: Any?) {
-        if (hasChanged) {
-            mOnImageDownloadedListener?.onImageDownloaded(spannable)
-        }
+        mOnImageDownloadedListener?.onImageDownloaded(retEmojiSpan)
     }
 
     // Setter.

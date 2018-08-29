@@ -32,7 +32,9 @@ import com.twitter.Regex;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.task.EmojiSpanTask;
 import org.mariotaku.twidere.text.AcctMentionSpan;
+import org.mariotaku.twidere.text.EmojiURLSpan;
 import org.mariotaku.twidere.text.HashtagSpan;
 import org.mariotaku.twidere.text.TwidereURLSpan;
 
@@ -196,6 +198,11 @@ public final class TwidereLinkify implements Constants {
                         linkType = LINK_TYPE_USER_ACCT;
                     } else if (span instanceof HashtagSpan) {
                         linkType = LINK_TYPE_HASHTAG;
+                    } else if (span instanceof EmojiURLSpan) {
+                        final int emojistart = start, emojiend = end;
+                        EmojiSpanTask task = new EmojiSpanTask(url);
+                        task.setOnImageDownloadedListener(retEmojiSpan -> string.setSpan(retEmojiSpan, emojistart, emojiend, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE));
+                        break;
                     } else if (accountKey != null && USER_TYPE_FANFOU_COM.equals(accountKey.getHost())) {
                         // Fix search path
                         if (url.startsWith("/")) {

@@ -63,7 +63,6 @@ import android.support.v4.view.WindowCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.util.Linkify
@@ -133,7 +132,6 @@ import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.model.util.ParcelableRelationshipUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
-import org.mariotaku.twidere.task.EmojiSpanTask
 import org.mariotaku.twidere.text.TwidereURLSpan
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
@@ -457,18 +455,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 linkify.applyAllLinks(this, user.account_key, false, false)
             }
             descriptionContainer.description.spannable = text
-
-            if (user.description_spans != null) {
-                class OnTextImageLoadedListener : EmojiSpanTask.OnImageDownloadedListener {
-                    override fun onImageDownloaded(spannable: Spannable) {
-                        descriptionContainer.description.spannable = spannable
-                    }
-                }
-
-                val taskTextEmoji = EmojiSpanTask(user.description_spans, text)
-                taskTextEmoji.setOnImageDownloadedListener(OnTextImageLoadedListener())
-                taskTextEmoji.execute()
-            }
         } else {
             descriptionContainer.description.spannable = user.description_plain
             Linkify.addLinks(descriptionContainer.description, Linkify.WEB_URLS)

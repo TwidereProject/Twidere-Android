@@ -24,6 +24,7 @@ import android.text.Spanned
 import android.text.style.URLSpan
 import org.mariotaku.twidere.model.SpanItem
 import org.mariotaku.twidere.text.AcctMentionSpan
+import org.mariotaku.twidere.text.EmojiURLSpan
 import org.mariotaku.twidere.text.HashtagSpan
 import org.mariotaku.twidere.text.ZeroWidthSpan
 
@@ -44,7 +45,10 @@ fun Array<SpanItem>.applyTo(spannable: Spannable) {
                 spannable.setSpan(HashtagSpan(span.link), span.start, span.end,
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
-            SpanItem.SpanType.EMOJI -> {}
+            SpanItem.SpanType.EMOJI -> {
+                spannable.setSpan(EmojiURLSpan(span.link), span.start, span.end,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
             SpanItem.SpanType.LINK -> {
                 spannable.setSpan(URLSpan(span.link), span.start, span.end,
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)

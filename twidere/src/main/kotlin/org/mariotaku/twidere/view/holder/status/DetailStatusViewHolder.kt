@@ -28,7 +28,10 @@ import android.support.v4.view.ViewCompat
 import android.support.v7.widget.ActionMenuView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.text.*
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.TextUtils
 import android.text.method.LinkMovementMethod
 import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
@@ -59,7 +62,6 @@ import org.mariotaku.twidere.menu.RetweetItemProvider
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
-import org.mariotaku.twidere.task.EmojiSpanTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.twitter.card.TwitterCardViewFactory
 import org.mariotaku.twidere.view.ProfileImageView
@@ -247,18 +249,6 @@ class DetailStatusViewHolder(
         summaryView.spannable = status.extras?.summary_text
         summaryView.hideIfEmpty()
 
-        if (status.extras?.summary_text != null && status.spans != null) {
-            class OnSummaryImageLoadedListener : EmojiSpanTask.OnImageDownloadedListener {
-                override fun onImageDownloaded(spannable: Spannable) {
-                    summaryView.spannable = spannable
-                }
-            }
-
-            val taskSummaryEmoji = EmojiSpanTask(status.spans, SpannableStringBuilder.valueOf(status.extras?.summary_text))
-            taskSummaryEmoji.setOnImageDownloadedListener(OnSummaryImageLoadedListener())
-            taskSummaryEmoji.execute()
-        }
-
         if (displayEnd != -1 && displayEnd <= text.length) {
             val displayText = text.subSequence(0, displayEnd)
             if (!TextUtils.equals(textView.text, displayText)) {
@@ -270,18 +260,6 @@ class DetailStatusViewHolder(
             }
         }
         textView.hideIfEmpty()
-
-        if (status.spans != null) {
-            class OnTextImageLoadedListener : EmojiSpanTask.OnImageDownloadedListener {
-                override fun onImageDownloaded(spannable: Spannable) {
-                    textView.spannable = spannable
-                }
-            }
-
-            val taskTextEmoji = EmojiSpanTask(status.spans, text)
-            taskTextEmoji.setOnImageDownloadedListener(OnTextImageLoadedListener())
-            taskTextEmoji.execute()
-        }
 
         val location: ParcelableLocation? = status.location
         val placeFullName: String? = status.place_full_name
