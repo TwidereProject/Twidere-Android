@@ -141,13 +141,15 @@ public final class TwidereLinkify implements Constants {
     public void addEmojiLinks(final Spannable string, final TextView textView) {
         final EmojiURLSpan[] spans = string.getSpans(0, string.length(), EmojiURLSpan.class);
         for (final EmojiURLSpan span : spans) {
+            final int start = string.getSpanStart(span), end = string.getSpanEnd(span);
             string.removeSpan(span);
             String url = span.getURL();
             EmojiSpanTask task = new EmojiSpanTask(url);
             task.setOnImageDownloadedListener(retEmojiSpan -> {
-                string.setSpan(retEmojiSpan, string.getSpanStart(span), string.getSpanEnd(span), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                string.setSpan(retEmojiSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 textView.setText(string);
             });
+            task.execute();
         }
     }
 
@@ -201,7 +203,7 @@ public final class TwidereLinkify implements Constants {
                 final URLSpan[] spans = string.getSpans(0, length, URLSpan.class);
                 for (final URLSpan span : spans) {
                     int start = string.getSpanStart(span), end = string.getSpanEnd(span);
-                    if (span instanceof TwidereURLSpan || start < 0 || end > length || start > end) {
+                    if (span instanceof TwidereURLSpan || span instanceof EmojiURLSpan || start < 0 || end > length || start > end) {
                         continue;
                     }
                     string.removeSpan(span);

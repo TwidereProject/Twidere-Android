@@ -36,4 +36,4 @@ install:
   - cat ./travis/configs/gradle.properties > ./gradle.properties
 
 script:
-  - ./gradlew assembleFdroid
+  - ./gradlew assembleFdroidDebug
