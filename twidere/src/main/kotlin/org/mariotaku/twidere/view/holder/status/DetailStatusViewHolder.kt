@@ -146,8 +146,10 @@ class DetailStatusViewHolder(
                         status.is_possibly_sensitive, skipLinksInText)
                 if (quotedDisplayEnd != -1 && quotedDisplayEnd <= quotedText.length) {
                     itemView.quotedText.spannable = quotedText.subSequence(0, quotedDisplayEnd)
+                    linkify.addEmojiLinks(SpannableStringBuilder(quotedText.subSequence(0, quotedDisplayEnd)), itemView.quotedText)
                 } else {
                     itemView.quotedText.spannable = quotedText
+                    linkify.addEmojiLinks(quotedText, itemView.quotedText)
                 }
                 itemView.quotedText.hideIfEmpty()
 
@@ -253,10 +255,12 @@ class DetailStatusViewHolder(
             val displayText = text.subSequence(0, displayEnd)
             if (!TextUtils.equals(textView.text, displayText)) {
                 textView.spannable = displayText
+                linkify.addEmojiLinks(SpannableStringBuilder(displayText), textView)
             }
         } else {
             if (!TextUtils.equals(textView.text, text)) {
                 textView.spannable = text
+                linkify.addEmojiLinks(text, textView)
             }
         }
         textView.hideIfEmpty()

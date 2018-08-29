@@ -123,6 +123,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             val text = HtmlSpanBuilder.fromHtml(TWIDERE_PREVIEW_TEXT_HTML)
             linkify.applyAllLinks(text, null, -1, false, adapter.linkHighlightingStyle, true)
             textView.spannable = text
+            linkify.addEmojiLinks(text, textView)
         }
         timeView.time = System.currentTimeMillis()
         val showCardActions = isCardActionsShown
@@ -226,8 +227,10 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                 }
                 if (quotedDisplayEnd != -1 && quotedDisplayEnd <= quotedText.length) {
                     quotedTextView.spannable = quotedText.subSequence(0, quotedDisplayEnd)
+                    linkify.addEmojiLinks(SpannableStringBuilder(quotedText.subSequence(0, quotedDisplayEnd)), quotedTextView)
                 } else {
                     quotedTextView.spannable = quotedText
+                    linkify.addEmojiLinks(SpannableStringBuilder(quotedText), quotedTextView)
                 }
                 quotedTextView.hideIfEmpty()
 
@@ -373,8 +376,10 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
         if (displayEnd != -1 && displayEnd <= text.length) {
             textView.spannable = text.subSequence(0, displayEnd)
+            linkify.addEmojiLinks(SpannableStringBuilder(text.subSequence(0, displayEnd)), textView)
         } else {
             textView.spannable = text
+            linkify.addEmojiLinks(SpannableStringBuilder(text), textView)
         }
         textView.hideIfEmpty()
 

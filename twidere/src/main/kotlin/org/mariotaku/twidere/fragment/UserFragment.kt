@@ -455,6 +455,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 linkify.applyAllLinks(this, user.account_key, false, false)
             }
             descriptionContainer.description.spannable = text
+            linkify.addEmojiLinks(text, descriptionContainer.description)
         } else {
             descriptionContainer.description.spannable = user.description_plain
             Linkify.addLinks(descriptionContainer.description, Linkify.WEB_URLS)

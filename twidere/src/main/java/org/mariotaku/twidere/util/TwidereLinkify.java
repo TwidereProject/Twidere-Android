@@ -26,6 +26,7 @@ import android.text.Spannable;
 import android.text.Spanned;
 import android.text.style.URLSpan;
 
+import android.widget.TextView;
 import com.twitter.Extractor;
 import com.twitter.Extractor.Entity;
 import com.twitter.Regex;
@@ -137,6 +138,19 @@ public final class TwidereLinkify implements Constants {
         }
     }
 
+    public void addEmojiLinks(final Spannable string, final TextView textView) {
+        final EmojiURLSpan[] spans = string.getSpans(0, string.length(), EmojiURLSpan.class);
+        for (final EmojiURLSpan span : spans) {
+            string.removeSpan(span);
+            String url = span.getURL();
+            EmojiSpanTask task = new EmojiSpanTask(url);
+            task.setOnImageDownloadedListener(retEmojiSpan -> {
+                string.setSpan(retEmojiSpan, string.getSpanStart(span), string.getSpanEnd(span), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                textView.setText(string);
+            });
+        }
+    }
+
     public void setHighlightOption(@HighlightStyle final int style) {
         mHighlightOption = style;
     }
@@ -198,11 +212,6 @@ public final class TwidereLinkify implements Constants {
                         linkType = LINK_TYPE_USER_ACCT;
                     } else if (span instanceof HashtagSpan) {
                         linkType = LINK_TYPE_HASHTAG;
-                    } else if (span instanceof EmojiURLSpan) {
-                        final int emojistart = start, emojiend = end;
-                        EmojiSpanTask task = new EmojiSpanTask(url);
-                        task.setOnImageDownloadedListener(retEmojiSpan -> string.setSpan(retEmojiSpan, emojistart, emojiend, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE));
-                        break;
                     } else if (accountKey != null && USER_TYPE_FANFOU_COM.equals(accountKey.getHost())) {
                         // Fix search path
                         if (url.startsWith("/")) {
