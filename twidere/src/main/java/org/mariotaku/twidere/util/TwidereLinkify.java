@@ -143,8 +143,7 @@ public final class TwidereLinkify implements Constants {
         for (final EmojiURLSpan span : spans) {
             final int start = string.getSpanStart(span), end = string.getSpanEnd(span);
             string.removeSpan(span);
-            String url = span.getURL();
-            EmojiSpanTask task = new EmojiSpanTask(url);
+            EmojiSpanTask task = new EmojiSpanTask(span.getURL());
             task.setOnImageDownloadedListener(retEmojiSpan -> {
                 string.setSpan(retEmojiSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 textView.setText(string);

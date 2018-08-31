@@ -47,6 +47,7 @@ Material Design ready and feature rich Twitter app for Android 4.0+
   * Fix mentions
   * Fix upload of big images/videos
   * Fix remote video
+  * Disable crossposters user's linkification
   * Add ability to mute user
   * Add ability to disable reblogs from a user
   * Show server's custom emojis
