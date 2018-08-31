@@ -24,6 +24,7 @@ import android.text.Editable
 import android.text.Spanned
 import org.mariotaku.ktextension.isNotNullOrEmpty
 import org.mariotaku.ktextension.mapToArray
+import org.mariotaku.microblog.library.mastodon.model.Emoji
 import org.mariotaku.microblog.library.mastodon.model.Status
 import org.mariotaku.twidere.extension.model.addFilterFlag
 import org.mariotaku.twidere.extension.model.api.isHtml
@@ -60,8 +61,10 @@ fun Status.applyTo(accountKey: UserKey, result: ParcelableStatus) {
     result.is_retweet = retweetedStatus != null
     result.retweeted = isReblogged
     val status: Status
+    val emojisToProcess: Array<Emoji>
     if (retweetedStatus != null) {
         status = retweetedStatus
+        emojisToProcess = retweetedStatus.emojis
         val retweetAccount = account
         result.retweet_id = retweetedStatus.id
         result.retweet_timestamp = retweetedStatus.createdAt?.time ?: 0
@@ -77,6 +80,7 @@ fun Status.applyTo(accountKey: UserKey, result: ParcelableStatus) {
         }
     } else {
         status = this
+        emojisToProcess = emojis
         if (status.isSensitive) {
             result.addFilterFlag(ParcelableStatus.FilterFlags.POSSIBLY_SENSITIVE)
         }
@@ -96,7 +100,7 @@ fun Status.applyTo(accountKey: UserKey, result: ParcelableStatus) {
     result.user_profile_image_url = account.avatar
     result.user_is_protected = account.isLocked
     // Mastodon has HTML formatted content text
-    val statusContent = addEmojisHtml(status.content, emojis)
+    val statusContent = addEmojisHtml(status.content, emojisToProcess)
     val html = HtmlSpanBuilder.fromHtml(statusContent, statusContent, MastodonSpanProcessor)
     result.text_unescaped = html?.toString()
     result.text_plain = result.text_unescaped
@@ -111,7 +115,7 @@ fun Status.applyTo(accountKey: UserKey, result: ParcelableStatus) {
 
     extras.display_text_range = calculateDisplayTextRange(result.text_unescaped, result.spans,
             result.media)
-    val summaryContent = addEmojisHtml(status.spoilerText, emojis)
+    val summaryContent = addEmojisHtml(status.spoilerText, emojisToProcess)
     val summaryHtml = HtmlSpanBuilder.fromHtml(summaryContent, summaryContent, MastodonSpanProcessor)
     extras.summary_text = summaryHtml?.toString()
     extras.visibility = status.visibility
