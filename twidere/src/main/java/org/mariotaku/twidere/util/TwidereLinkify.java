@@ -272,8 +272,8 @@ public final class TwidereLinkify implements Constants {
                                           final long extraId, final int highlightOption, final OnLinkClickListener listener) {
         boolean hasMatches = false;
         // Extract lists from status text
-        final Pattern VALID_MENTION_OR_LIST_DOMAINS = Pattern.compile("(" + Regex.AT_SIGNS.pattern() + "(" + USER_TYPE_TWITTER_COM.replace(".", "\\.") + "|" + USER_TYPE_FANFOU_COM.replace(".", "\\.") + "))?");
-        final Pattern VALID_MENTION_OR_LIST_INCLUDE_DOMAINS = Pattern.compile(Regex.VALID_MENTION_OR_LIST.pattern() + VALID_MENTION_OR_LIST_DOMAINS.pattern());
+        final Pattern VALID_MENTION_OR_LIST_DOMAINS = Pattern.compile("(" + Regex.AT_SIGNS.pattern() + "(" + USER_TYPE_TWITTER_COM + "|" + USER_TYPE_FANFOU_COM + "))?");
+        final Pattern VALID_MENTION_OR_LIST_INCLUDE_DOMAINS = Pattern.compile(Regex.VALID_MENTION_OR_LIST.pattern() + VALID_MENTION_OR_LIST_DOMAINS.pattern(), Pattern.CASE_INSENSITIVE);
         final Matcher matcher = VALID_MENTION_OR_LIST_INCLUDE_DOMAINS.matcher(spannable);
         while (matcher.find()) {
             final int start = matcherStart(matcher, Regex.VALID_MENTION_OR_LIST_GROUP_AT);
