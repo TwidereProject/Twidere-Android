@@ -273,7 +273,9 @@ public final class TwidereLinkify implements Constants {
                                           final long extraId, final int highlightOption, final OnLinkClickListener listener) {
         boolean hasMatches = false;
         // Extract lists from status text
-        final Matcher matcher = Regex.VALID_MENTION_OR_LIST.matcher(spannable);
+        final Pattern VALID_MENTION_OR_LIST_DOMAINS = Pattern.compile("(" + Regex.AT_SIGNS.pattern() + "(" + USER_TYPE_TWITTER_COM.replace(".", "\\.") + "|" + USER_TYPE_FANFOU_COM.replace(".", "\\.") + "))");
+        final Pattern VALID_MENTION_OR_LIST_INCLUDE_DOMAINS = Pattern.compile(Regex.VALID_MENTION_OR_LIST.pattern() + VALID_MENTION_OR_LIST_DOMAINS.pattern());
+        final Matcher matcher = VALID_MENTION_OR_LIST_INCLUDE_DOMAINS.matcher(spannable);
         while (matcher.find()) {
             final int start = matcherStart(matcher, Regex.VALID_MENTION_OR_LIST_GROUP_AT);
             final int usernameEnd = matcherEnd(matcher, Regex.VALID_MENTION_OR_LIST_GROUP_USERNAME);
@@ -281,7 +283,8 @@ public final class TwidereLinkify implements Constants {
             final int listEnd = matcherEnd(matcher, Regex.VALID_MENTION_OR_LIST_GROUP_LIST);
             final String username = matcherGroup(matcher, Regex.VALID_MENTION_OR_LIST_GROUP_USERNAME);
             final String list = matcherGroup(matcher, Regex.VALID_MENTION_OR_LIST_GROUP_LIST);
-            if (username != null) {
+            final String domain = matcherGroup(matcher, Regex.VALID_MENTION_OR_LIST_GROUP_LIST + 1);
+            if (username != null && domain == null) {
                 applyLink(username, null, start, usernameEnd, spannable, accountKey, extraId,
                         LINK_TYPE_MENTION, false, highlightOption, listener);
                 if (listStart >= 0 && listEnd >= 0 && list != null) {
