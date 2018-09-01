@@ -18,6 +18,7 @@
 
 package org.mariotaku.microblog.library.mastodon.model;
 
+import android.support.annotation.Nullable;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
@@ -109,6 +110,12 @@ public class Account {
     @JsonField(name = "header_static")
     String headerStatic;
     /**
+     * If the owner decided to switch accounts, new account is in this attribute
+     */
+    @JsonField(name = "moved")
+    @Nullable
+    Account moved;
+    /**
      * Array of Emoji in account username and note
      */
     @JsonField(name = "emojis")
@@ -174,6 +181,11 @@ public class Account {
         return headerStatic;
     }
 
+    @Nullable
+    public Account getMoved() {
+        return moved;
+    }
+
     public Emoji[] getEmojis() {
         return emojis;
     }
@@ -206,6 +218,7 @@ public class Account {
                 ", avatarStatic='" + avatarStatic + '\'' +
                 ", header='" + header + '\'' +
                 ", headerStatic='" + headerStatic + '\'' +
+                ", moved=" + moved +
                 ", emojis=" + Arrays.toString(emojis) +
                 '}';
     }

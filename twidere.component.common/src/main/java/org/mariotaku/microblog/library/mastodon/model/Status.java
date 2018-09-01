@@ -282,7 +282,6 @@ public class Status {
                 ", reblog=" + reblog +
                 ", content='" + content + '\'' +
                 ", createdAt=" + createdAt +
-                ", emojis=" + Arrays.toString(emojis) +
                 ", reblogsCount=" + reblogsCount +
                 ", favouritesCount=" + favouritesCount +
                 ", reblogged=" + reblogged +
@@ -296,6 +295,8 @@ public class Status {
                 ", tags=" + Arrays.toString(tags) +
                 ", application=" + application +
                 ", language='" + language + '\'' +
+                ", emojis=" + Arrays.toString(emojis) +
+                ", sortId=" + sortId +
                 ", pinned=" + pinned +
                 '}';
     }

@@ -18,6 +18,7 @@
 
 package org.mariotaku.microblog.library.mastodon.model;
 
+import android.support.annotation.StringDef;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
@@ -83,5 +84,13 @@ public class Card {
                 ", image='" + image + '\'' +
                 ", type='" + type + '\'' +
                 '}';
+    }
+
+    @StringDef({Type.LINK, Type.PHOTO, Type.VIDEO, Type.RICH})
+    public @interface Type {
+        String LINK = "link";
+        String PHOTO = "photo";
+        String VIDEO = "video";
+        String RICH = "rich";
     }
 }
