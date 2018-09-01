@@ -136,7 +136,7 @@ abstract class AbsRequestStatusesLoader(
         } catch (e: MicroBlogException) {
             // mHandler.post(new ShowErrorRunnable(e));
             exception = e
-            DebugLog.w(tr = e)
+            //DebugLog.w(tr = e)
             return ListResponse.getListInstance(data, e)
         }
         nextPagination = statuses.nextPage
