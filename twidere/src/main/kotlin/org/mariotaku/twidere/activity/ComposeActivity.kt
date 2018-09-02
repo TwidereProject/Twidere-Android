@@ -1023,6 +1023,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             return@filterNot it.equals(userAcct, ignoreCase = true)
         }.forEach { editText.append("@$it ") }
 
+        // For non-Twitter instances, put current user mention at last
+        if (statusAccount.type != AccountType.TWITTER && accountUser.key == status.user_key) {
+            selectionStart = editText.length()
+            editText.append("@$userAcct ")
+        }
+
         val text = intent.getStringExtra(EXTRA_TEXT)
         if (text != null) {
             editText.append(text)
