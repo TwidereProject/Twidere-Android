@@ -63,10 +63,8 @@ fun Status.applyTo(accountKey: UserKey, result: ParcelableStatus) {
     result.is_retweet = retweetedStatus != null
     result.retweeted = isReblogged
     val status: Status
-    val emojisToProcess: Array<Emoji>
     if (retweetedStatus != null) {
         status = retweetedStatus
-        emojisToProcess = retweetedStatus.emojis
         val retweetAccount = account
         result.retweet_id = retweetedStatus.id
         result.retweet_timestamp = retweetedStatus.createdAt?.time ?: 0
@@ -82,7 +80,6 @@ fun Status.applyTo(accountKey: UserKey, result: ParcelableStatus) {
         }
     } else {
         status = this
-        emojisToProcess = emojis
         if (status.isSensitive) {
             result.addFilterFlag(ParcelableStatus.FilterFlags.POSSIBLY_SENSITIVE)
         }

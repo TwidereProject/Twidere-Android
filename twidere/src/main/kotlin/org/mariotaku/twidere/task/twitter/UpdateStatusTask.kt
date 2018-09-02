@@ -748,17 +748,17 @@ class UpdateStatusTask(
                 chucked: Boolean, callback: UploadCallback?): SharedMediaUploadResult {
             val deleteOnSuccess = ArrayList<MediaDeletionItem>()
             val deleteAlways = ArrayList<MediaDeletionItem>()
-            val mediaIds = media.mapIndexedToArray { index, item ->
+            val mediaIds = media.mapIndexedToArray { index, media ->
                 val resp: Attachment
                 //noinspection TryWithIdenticalCatches
                 var body: MediaStreamBody? = null
                 try {
                     val sizeLimit = account.getMediaSizeLimit()
-                    body = getBodyFromMedia(context, item, sizeLimit, chucked,
+                    body = getBodyFromMedia(context, media, sizeLimit, chucked,
                             ContentLengthInputStream.ReadListener { length, position ->
                                 callback?.onUploadingProgressChanged(index, position, length)
                             })
-                    resp = mastodon.uploadMediaAttachment(body.body, item.alt_text)
+                    resp = mastodon.uploadMediaAttachment(body.body, media.alt_text)
                 } catch (e: IOException) {
                     throw UploadException(e).apply {
                         this.deleteAlways = deleteAlways
