@@ -154,6 +154,9 @@ class AsyncTwitterWrapper(
         TaskStarter.execute(task)
     }
 
+    fun createMultiBlockAsync(accountKey: UserKey, userIds: Array<String>) {
+    }
+
     fun createSavedSearchAsync(accountKey: UserKey, query: String) {
         val task = CreateSavedSearchTask(context, accountKey, query)
         TaskStarter.execute(task)
@@ -316,6 +319,10 @@ class AsyncTwitterWrapper(
             sendingDraftIds.remove(id)
             resolver.notifyChange(Drafts.CONTENT_URI_UNSENT, null)
         }
+    }
+
+    fun reportMultiSpam(accountKey: UserKey, userIds: Array<String>) {
+        // TODO implementation
     }
 
     fun reportSpamAsync(accountKey: UserKey, userKey: UserKey) {

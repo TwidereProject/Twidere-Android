@@ -26,6 +26,7 @@ Material Design ready and feature rich Twitter app for Android 4.0+
 * Based on master (3.7.3)
 * Backported fixes
 [#981](https://github.com/TwidereProject/Twidere-Android/issues/981)
+[#990](https://github.com/TwidereProject/Twidere-Android/issues/990)
 [#999](https://github.com/TwidereProject/Twidere-Android/issues/999)
 [#1003](https://github.com/TwidereProject/Twidere-Android/issues/1003)
 [#1005](https://github.com/TwidereProject/Twidere-Android/issues/1005)
@@ -50,7 +51,6 @@ Material Design ready and feature rich Twitter app for Android 4.0+
   * Disable crossposters user's linkification
   * Add ability to mute user
   * Add ability to disable reblogs from a user
-  * Show server's custom emojis
   * Updated API
 
 ## Roadmap
