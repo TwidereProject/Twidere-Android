@@ -12,7 +12,7 @@ public class Emoji {
      * The shortcode of the emoji
      */
     @JsonField(name = "shortcode")
-    String shortcode;
+    String shortCode;
     /**
      * URL to the emoji static image
      */
@@ -29,8 +29,8 @@ public class Emoji {
     @JsonField(name = "visible_in_picker")
     boolean visible_in_picker;
 
-    public String getShortcode() {
-        return shortcode;
+    public String getShortCode() {
+        return shortCode;
     }
 
     public String getStaticUrl() {
@@ -48,7 +48,7 @@ public class Emoji {
     @Override
     public String toString() {
         return "Emoji{" +
-                "shortcode='" + shortcode + '\'' +
+                "shortcode='" + shortCode + '\'' +
                 ", static_url='" + static_url + '\'' +
                 ", url='" + url + '\'' +
                 ", visible_in_picker=" + visible_in_picker +

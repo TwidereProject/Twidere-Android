@@ -62,7 +62,7 @@ import org.mariotaku.twidere.util.concurrent.ConstantFuture
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
 import org.mariotaku.twidere.util.dagger.ApplicationModule
 import org.mariotaku.twidere.util.dagger.GeneralComponent
-import org.mariotaku.twidere.util.emoji.EmojioneTranslator
+import org.mariotaku.twidere.util.emoji.EmojiOneShortCodeMap
 import org.mariotaku.twidere.util.kovenant.startKovenant
 import org.mariotaku.twidere.util.kovenant.stopKovenant
 import org.mariotaku.twidere.util.media.MediaPreloader
@@ -144,7 +144,7 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
         initializeAsyncTask()
         initDebugMode()
         initBugReport()
-        EmojioneTranslator.init(this)
+        EmojiOneShortCodeMap.init(this)
         NotificationChannelsManager.initialize(this)
 
         updateEasterEggIcon()

@@ -26,16 +26,13 @@ import android.text.Spannable;
 import android.text.Spanned;
 import android.text.style.URLSpan;
 
-import android.widget.TextView;
 import com.twitter.Extractor;
 import com.twitter.Extractor.Entity;
 import com.twitter.Regex;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.UserKey;
-import org.mariotaku.twidere.task.EmojiSpanTask;
 import org.mariotaku.twidere.text.AcctMentionSpan;
-import org.mariotaku.twidere.text.EmojiURLSpan;
 import org.mariotaku.twidere.text.HashtagSpan;
 import org.mariotaku.twidere.text.TwidereURLSpan;
 
@@ -138,20 +135,6 @@ public final class TwidereLinkify implements Constants {
         }
     }
 
-    public void addEmojiLinks(final Spannable string, final TextView textView) {
-        final EmojiURLSpan[] spans = string.getSpans(0, string.length(), EmojiURLSpan.class);
-        for (final EmojiURLSpan span : spans) {
-            final int start = string.getSpanStart(span), end = string.getSpanEnd(span);
-            string.removeSpan(span);
-            EmojiSpanTask task = new EmojiSpanTask(span.getURL());
-            task.setOnImageDownloadedListener(retEmojiSpan -> {
-                string.setSpan(retEmojiSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                textView.setText(string);
-            });
-            task.execute();
-        }
-    }
-
     public void setHighlightOption(@HighlightStyle final int style) {
         mHighlightOption = style;
     }
@@ -202,7 +185,7 @@ public final class TwidereLinkify implements Constants {
                 final URLSpan[] spans = string.getSpans(0, length, URLSpan.class);
                 for (final URLSpan span : spans) {
                     int start = string.getSpanStart(span), end = string.getSpanEnd(span);
-                    if (span instanceof TwidereURLSpan || span instanceof EmojiURLSpan || start < 0 || end > length || start > end) {
+                    if (span instanceof TwidereURLSpan || start < 0 || end > length || start > end) {
                         continue;
                     }
                     string.removeSpan(span);

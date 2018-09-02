@@ -123,7 +123,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             val text = HtmlSpanBuilder.fromHtml(TWIDERE_PREVIEW_TEXT_HTML)
             linkify.applyAllLinks(text, null, -1, false, adapter.linkHighlightingStyle, true)
             textView.spannable = text
-            linkify.addEmojiLinks(text, textView)
         }
         timeView.time = System.currentTimeMillis()
         val showCardActions = isCardActionsShown
@@ -218,7 +217,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                 val quotedText: CharSequence
                 if (adapter.linkHighlightingStyle != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
                     quotedText = SpannableStringBuilder.valueOf(status.quoted_text_unescaped)
-                    status.quoted_spans?.applyTo(quotedText)
+                    status.quoted_spans?.applyTo(quotedText, status.extras?.emojis, requestManager,
+                            quotedTextView)
                     linkify.applyAllLinks(quotedText, status.account_key, layoutPosition.toLong(),
                             status.is_possibly_sensitive, adapter.linkHighlightingStyle,
                             skipLinksInText)
@@ -227,10 +227,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                 }
                 if (quotedDisplayEnd != -1 && quotedDisplayEnd <= quotedText.length) {
                     quotedTextView.spannable = quotedText.subSequence(0, quotedDisplayEnd)
-                    linkify.addEmojiLinks(SpannableStringBuilder(quotedText.subSequence(0, quotedDisplayEnd)), quotedTextView)
                 } else {
                     quotedTextView.spannable = quotedText
-                    linkify.addEmojiLinks(SpannableStringBuilder(quotedText), quotedTextView)
                 }
                 quotedTextView.hideIfEmpty()
 
@@ -363,7 +361,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             displayEnd = -1
         } else if (adapter.linkHighlightingStyle != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
             text = SpannableStringBuilder.valueOf(status.text_unescaped).apply {
-                status.spans?.applyTo(this)
+                status.spans?.applyTo(this, status.extras?.emojis, requestManager, textView)
                 linkify.applyAllLinks(this, status.account_key, layoutPosition.toLong(),
                         status.is_possibly_sensitive, adapter.linkHighlightingStyle,
                         skipLinksInText)
@@ -376,10 +374,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
         if (displayEnd != -1 && displayEnd <= text.length) {
             textView.spannable = text.subSequence(0, displayEnd)
-            linkify.addEmojiLinks(SpannableStringBuilder(text.subSequence(0, displayEnd)), textView)
         } else {
             textView.spannable = text
-            linkify.addEmojiLinks(SpannableStringBuilder(text), textView)
         }
         textView.hideIfEmpty()
 

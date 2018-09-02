@@ -50,6 +50,14 @@ class EmojiSpan(private val drawable: Drawable) : DynamicDrawableSpan(DynamicDra
         val top = Math.round(fontMetrics.bottom) - textHeightPx
         val left = 0
         drawable.setBounds(left, top, left + scaledWidth, top + textHeightPx)
+
+        if (fm != null) {
+            fm.ascent = -(top + textHeightPx)
+            fm.descent = 0
+
+            fm.top = fm.ascent
+            fm.bottom = 0
+        }
         return scaledWidth
     }
 

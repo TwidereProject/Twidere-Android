@@ -141,15 +141,14 @@ class DetailStatusViewHolder(
 
                 val quotedDisplayEnd = status.extras?.quoted_display_text_range?.getOrNull(1) ?: -1
                 val quotedText = SpannableStringBuilder.valueOf(status.quoted_text_unescaped)
-                status.quoted_spans?.applyTo(quotedText)
+                status.quoted_spans?.applyTo(quotedText, status.extras?.emojis,
+                        adapter.requestManager, itemView.quotedText)
                 linkify.applyAllLinks(quotedText, status.account_key, layoutPosition.toLong(),
                         status.is_possibly_sensitive, skipLinksInText)
                 if (quotedDisplayEnd != -1 && quotedDisplayEnd <= quotedText.length) {
                     itemView.quotedText.spannable = quotedText.subSequence(0, quotedDisplayEnd)
-                    linkify.addEmojiLinks(SpannableStringBuilder(quotedText.subSequence(0, quotedDisplayEnd)), itemView.quotedText)
                 } else {
                     itemView.quotedText.spannable = quotedText
-                    linkify.addEmojiLinks(quotedText, itemView.quotedText)
                 }
                 itemView.quotedText.hideIfEmpty()
 
@@ -243,7 +242,7 @@ class DetailStatusViewHolder(
 
         val displayEnd = status.extras?.display_text_range?.getOrNull(1) ?: -1
         val text = SpannableStringBuilder.valueOf(status.text_unescaped).apply {
-            status.spans?.applyTo(this)
+            status.spans?.applyTo(this, status.extras?.emojis, adapter.requestManager, textView)
             linkify.applyAllLinks(this, status.account_key, layoutPosition.toLong(),
                     status.is_possibly_sensitive, skipLinksInText)
         }
@@ -255,12 +254,10 @@ class DetailStatusViewHolder(
             val displayText = text.subSequence(0, displayEnd)
             if (!TextUtils.equals(textView.text, displayText)) {
                 textView.spannable = displayText
-                linkify.addEmojiLinks(SpannableStringBuilder(displayText), textView)
             }
         } else {
             if (!TextUtils.equals(textView.text, text)) {
                 textView.spannable = text
-                linkify.addEmojiLinks(text, textView)
             }
         }
         textView.hideIfEmpty()

@@ -19,15 +19,29 @@
 
 package org.mariotaku.twidere.util.emoji
 
-/**
- * Created by mariotaku on 2017/4/26.
- */
-object EmojioneTranslator {
+import android.content.Context
+import org.mariotaku.twidere.R
 
-    val shortCodePattern = Regex(":[-+\\w]+:")
 
-    fun translate(text: CharSequence): String = text.replace(shortCodePattern) { matchResult ->
-        EmojiOneShortCodeMap[matchResult.value] ?: matchResult.value
+object EmojiOneShortCodeMap {
+
+    val ready: Boolean
+        get() = map != null
+
+    private var map: HashMap<String, String>? = null
+
+    fun init(context: Context) {
+        if (map != null) return
+        map = context.resources.openRawResource(R.raw.emojione_mapping).reader(Charsets.UTF_8).use {
+            val newMap = HashMap<String, String>()
+            it.forEachLine { line ->
+                val equalIdx = line.indexOf('=')
+                if (equalIdx < 0) return@forEachLine
+                newMap[line.substring(0, equalIdx)] = line.substring(equalIdx + 1)
+            }
+            return@use newMap
+        }
     }
 
+    operator fun get(str: String): String? = map?.get(str)
 }

@@ -451,11 +451,10 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val linkify = TwidereLinkify(this, linkHighlightOption)
         if (user.description_unescaped != null) {
             val text = SpannableStringBuilder.valueOf(user.description_unescaped).apply {
-                user.description_spans?.applyTo(this)
+                user.description_spans?.applyTo(this, null, requestManager, description)
                 linkify.applyAllLinks(this, user.account_key, false, false)
             }
             descriptionContainer.description.spannable = text
-            linkify.addEmojiLinks(text, descriptionContainer.description)
         } else {
             descriptionContainer.description.spannable = user.description_plain
             Linkify.addLinks(descriptionContainer.description, Linkify.WEB_URLS)

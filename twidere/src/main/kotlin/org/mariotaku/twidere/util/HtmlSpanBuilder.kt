@@ -41,7 +41,7 @@ object HtmlSpanBuilder {
     private val PARSER = SimpleMarkupParser(ParseConfiguration.htmlConfiguration())
 
     @Throws(HtmlParseException::class)
-    fun fromHtml(html: String, processor: SpanProcessor? = null): Spannable {
+    fun fromHtml(html: String, processor: SpanProcessor = EmptySpanProcessor): Spannable {
         val handler = HtmlSpanHandler(processor)
         try {
             PARSER.parse(html, handler)
@@ -52,7 +52,7 @@ object HtmlSpanBuilder {
         return handler.text
     }
 
-    fun fromHtml(html: String?, fallback: CharSequence?, processor: SpanProcessor? = null): CharSequence? {
+    fun fromHtml(html: String?, fallback: CharSequence?, processor: SpanProcessor = EmptySpanProcessor): CharSequence? {
         if (html == null) return fallback
         try {
             return fromHtml(html, processor)
@@ -84,10 +84,6 @@ object HtmlSpanBuilder {
             }
             "em", "cite", "dfn", "i" -> {
                 return StyleSpan(Typeface.ITALIC)
-            }
-            "emoji" -> {
-                val src = info.getAttribute("src") ?: return null
-                return EmojiURLSpan(src)
             }
         }
         return null
@@ -140,7 +136,7 @@ object HtmlSpanBuilder {
     }
 
     private class HtmlSpanHandler(
-            val processor: SpanProcessor?
+            private val processor: SpanProcessor
     ) : AbstractSimpleMarkupHandler() {
 
         private val sb = SpannableStringBuilder()
@@ -195,5 +191,7 @@ object HtmlSpanBuilder {
         val text: Spannable
             get() = sb
     }
+
+    private object EmptySpanProcessor : SpanProcessor
 
 }

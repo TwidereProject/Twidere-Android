@@ -102,7 +102,7 @@ class MessageViewHolder(itemView: View, adapter: MessagesConversationAdapter) : 
 
 
         text.spannable = SpannableStringBuilder.valueOf(message.text_unescaped).apply {
-            message.spans?.applyTo(this)
+            message.spans?.applyTo(this, null, adapter.requestManager, text)
             adapter.linkify.applyAllLinks(this, message.account_key, layoutPosition.toLong(),
                     false, adapter.linkHighlightingStyle, true)
         }
