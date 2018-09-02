@@ -24,10 +24,6 @@ import org.mariotaku.twidere.R
 
 
 object EmojiOneShortCodeMap {
-
-    val ready: Boolean
-        get() = map != null
-
     private var map: HashMap<String, String>? = null
 
     fun init(context: Context) {
