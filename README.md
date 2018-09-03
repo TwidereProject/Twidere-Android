@@ -40,7 +40,6 @@ Material Design ready and feature rich Twitter app for Android 4.0+
 * Premium features witch doesnt required third party services like advanced filters are unlocked for anyone
 * Removed all streaming services
 * Use official Twitter Android API keys by default
-* Updated OkHttp library
 * Fix linkification of some badly parsed URL
 * Fix refreshing trends
 * Cleaning stuff

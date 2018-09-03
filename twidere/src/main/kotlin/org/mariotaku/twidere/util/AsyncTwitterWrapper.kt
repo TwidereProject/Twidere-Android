@@ -148,13 +148,13 @@ class AsyncTwitterWrapper(
         TaskStarter.execute(task)
     }
 
+    fun createMultiBlockAsync(accountKey: UserKey, userIds: Array<String>) {
+    }
+
     fun createMuteAsync(accountKey: UserKey, userKey: UserKey, filterEverywhere: Boolean) {
         val task = CreateUserMuteTask(context, filterEverywhere)
         task.setup(accountKey, userKey)
         TaskStarter.execute(task)
-    }
-
-    fun createMultiBlockAsync(accountKey: UserKey, userIds: Array<String>) {
     }
 
     fun createSavedSearchAsync(accountKey: UserKey, query: String) {
