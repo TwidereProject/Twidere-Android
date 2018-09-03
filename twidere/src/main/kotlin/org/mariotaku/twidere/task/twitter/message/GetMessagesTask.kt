@@ -58,6 +58,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.singleton.BusSingleton
 import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.util.DataStoreUtils
+import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.UriUtils
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import java.util.*
@@ -76,7 +77,8 @@ class GetMessagesTask(
             val messages = try {
                 if (!details.hasDm) throw APINotSupportedException("DM", details.type)
                 getMessages(details, param, i)
-            } catch (e: MicroBlogException) {
+            } catch (e: Exception) {
+                DebugLog.w(tr = e)
                 return@forEachIndexed
             }
             storeMessages(context, messages, details, param.showNotification)
@@ -103,10 +105,10 @@ class GetMessagesTask(
             AccountType.TWITTER -> {
                 val twitter = details.newMicroBlogInstance(context, cls = Twitter::class.java)
                 // Use official DM api
-//                if (details.isOfficial(context)) {
-//                    return getTwitterOfficialMessages(twitter, details, param, index)
-//                }
-                getTwitterMessages(twitter, details, param, index)
+                if (details.isOfficial(context)) {
+                    return getTwitterOfficialMessages(twitter, details, param, index)
+                }
+                return getTwitterMessages(twitter, details, param, index)
             }
         }
         // Use default method
@@ -210,7 +212,7 @@ class GetMessagesTask(
         val users = twitter.lookupUsers(events.flatMap {
             val mc = it.messageCreate ?: return@flatMap emptyList<String>()
             return@flatMap listOf(mc.senderId, mc.target.recipientId)
-        }.distinct().toTypedArray())
+        }.distinct().toTypedArray()).map { it.toParcelable(details) }
 
         events.forEach { event ->
             val msg = event.messageCreate
@@ -220,8 +222,8 @@ class GetMessagesTask(
         conversations.addLocalConversations(context, accountKey, conversationIds)
 
         events.forEachIndexed { i, dm ->
-            //            addConversationMessage(insertMessages, conversations, details, dm, i, events.size,
-//                    false, profileImageSize, updateLastRead)
+            addConversationMessage(insertMessages, users, conversations, details, dm, i, events.size,
+                    false, updateLastRead = updateLastRead)
         }
 
         return DatabaseUpdateData(conversations.values, insertMessages)
@@ -618,15 +620,15 @@ class GetMessagesTask(
         internal fun addConversationMessage(messages: MutableCollection<ParcelableMessage>,
                 conversations: MutableMap<String, ParcelableMessageConversation>,
                 details: AccountDetails, dm: DirectMessage, index: Int, size: Int,
-                outgoing: Boolean, profileImageSize: ModelCreationConfig = ModelCreationConfig.DEFAULT,
+                outgoing: Boolean, creationConfig: ModelCreationConfig = ModelCreationConfig.DEFAULT,
                 updateLastRead: Boolean) {
             val accountKey = details.key
             val accountType = details.type
             val message = ParcelableMessageUtils.fromMessage(accountKey, dm, outgoing,
                     1.0 - (index.toDouble() / size))
             messages.add(message)
-            val sender = dm.sender.toParcelable(accountKey, accountType, creationConfig = profileImageSize)
-            val recipient = dm.recipient.toParcelable(accountKey, accountType, creationConfig = profileImageSize)
+            val sender = dm.sender.toParcelable(details, creationConfig = creationConfig)
+            val recipient = dm.recipient.toParcelable(details, creationConfig = creationConfig)
             val conversation = conversations.addConversation(message.conversation_id, details,
                     message, setOf(sender, recipient), updateLastRead = updateLastRead) ?: return
             conversation.conversation_extras_type = ParcelableMessageConversation.ExtrasType.DEFAULT
@@ -636,22 +638,23 @@ class GetMessagesTask(
         }
 
         internal fun addConversationMessage(messages: MutableCollection<ParcelableMessage>,
-                conversations: MutableMap<String, ParcelableMessageConversation>,
-                details: AccountDetails, dm: DirectMessageEvent.MessageCreate, index: Int, size: Int,
-                outgoing: Boolean, profileImageSize: String = "normal", updateLastRead: Boolean) {
+                users: List<ParcelableUser>, conversations: MutableMap<String, ParcelableMessageConversation>,
+                details: AccountDetails, event: DirectMessageEvent, index: Int, size: Int,
+                outgoing: Boolean, updateLastRead: Boolean) {
             val accountKey = details.key
-            val accountType = details.type
-//            val message = ParcelableMessageUtils.fromMessage(accountKey, dm, outgoing,
-//                    1.0 - (index.toDouble() / size))
-//            messages.add(message)
-//            val sender = dm.sender.toParcelable(accountKey, accountType, profileImageSize = profileImageSize)
-//            val recipient = dm.recipient.toParcelable(accountKey, accountType, profileImageSize = profileImageSize)
-//            val conversation = conversations.addConversation(message.conversation_id, details,
-//                    message, setOf(sender, recipient), updateLastRead = updateLastRead) ?: return
-//            conversation.conversation_extras_type = ParcelableMessageConversation.ExtrasType.DEFAULT
-//            if (conversation.conversation_extras == null) {
-//                conversation.conversation_extras = DefaultConversationExtras()
-//            }
+            val message = ParcelableMessageUtils.fromMessage(accountKey, event, outgoing,
+                    1.0 - (index.toDouble() / size))
+            val dm = event.messageCreate
+            messages.add(message)
+            val sender = users.find { it.key.id == dm.senderId }
+            val recipient = users.find { it.key.id == dm.target.recipientId }
+            val conversation = conversations.addConversation(message.conversation_id, details,
+                    message, setOf(sender, recipient).filterNotNull(), updateLastRead = updateLastRead)
+                    ?: return
+            conversation.conversation_extras_type = ParcelableMessageConversation.ExtrasType.DEFAULT
+            if (conversation.conversation_extras == null) {
+                conversation.conversation_extras = DefaultConversationExtras()
+            }
         }
     }
 

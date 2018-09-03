@@ -56,17 +56,12 @@ import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.placeholder.PlaceholderObject
 import org.mariotaku.twidere.singleton.BidiFormatterSingleton
-import org.mariotaku.twidere.task.CreateFavoriteTask
-import org.mariotaku.twidere.task.DestroyFavoriteTask
-import org.mariotaku.twidere.task.DestroyStatusTask
-import org.mariotaku.twidere.task.RetweetStatusTask
 import org.mariotaku.twidere.text.TwidereClickableSpan
 import org.mariotaku.twidere.text.style.PlaceholderLineSpan
 import org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText
 import org.mariotaku.twidere.util.HtmlSpanBuilder
 import org.mariotaku.twidere.util.UriCreator
 import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.util.Utils.getUserTypeIconRes
 import org.mariotaku.twidere.view.ProfileImageView
 import org.mariotaku.twidere.view.ShortTimeView
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
@@ -241,18 +236,6 @@ class StatusViewHolder(var adapter: IStatusesAdapter, val binding: ItemStatusBin
 
         nameView.placeholder = false
 
-        if (adapter.profileImageEnabled) {
-            profileImageView.visibility = View.VISIBLE
-
-            profileTypeView.setImageResource(getUserTypeIconRes(status.user_is_verified, status.user_is_protected))
-            profileTypeView.visibility = View.VISIBLE
-        } else {
-            profileImageView.visibility = View.GONE
-
-            profileTypeView.setImageDrawable(null)
-            profileTypeView.visibility = View.GONE
-        }
-
         if (adapter.showAccountsColor) {
             itemContent.drawEnd(status.account_color)
         } else {
@@ -263,10 +246,6 @@ class StatusViewHolder(var adapter: IStatusesAdapter, val binding: ItemStatusBin
         replyButton.drawable?.mutate()
 
         retweetButton.drawable?.mutate()
-
-        retweetButton.isActivated = isRetweetIconActivated(status)
-
-        favoriteButton.isActivated = isFavoriteIconActivated(status)
 
         attachmentContainer.setVisible(attachmentHolder != null)
         attachmentHolder?.display(status)
@@ -502,18 +481,6 @@ class StatusViewHolder(var adapter: IStatusesAdapter, val binding: ItemStatusBin
             appendCompat(" ", PlaceholderLineSpan(1f), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             appendln()
             appendCompat(" ", PlaceholderLineSpan(.5f), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
-
-        fun isRetweetIconActivated(status: ParcelableStatus): Boolean {
-            return !DestroyStatusTask.isRunning(status.account_key, status.my_retweet_id) &&
-                    (RetweetStatusTask.isRunning(status.account_key, status.id) ||
-                            status.retweeted || status.account_key == status.retweeted_by_user_key ||
-                            status.my_retweet_id != null)
-        }
-
-        fun isFavoriteIconActivated(status: ParcelableStatus): Boolean {
-            return !DestroyFavoriteTask.isRunning(status.account_key, status.id) &&
-                    (CreateFavoriteTask.isRunning(status.account_key, status.id) || status.is_favorite)
         }
 
     }

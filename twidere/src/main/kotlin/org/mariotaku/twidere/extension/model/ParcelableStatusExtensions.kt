@@ -1,6 +1,9 @@
+@file:JvmName("ParcelableStatusExtensions")
+
 package org.mariotaku.twidere.extension.model
 
 import android.content.Context
+import android.support.annotation.DrawableRes
 import android.text.SpannableStringBuilder
 import org.mariotaku.ktextension.addAllTo
 import org.mariotaku.ktextension.appendTo
@@ -10,14 +13,23 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.attachment.QuotedStatus
+import org.mariotaku.twidere.task.CreateFavoriteTask
+import org.mariotaku.twidere.task.DestroyFavoriteTask
+import org.mariotaku.twidere.task.DestroyStatusTask
+import org.mariotaku.twidere.task.RetweetStatusTask
 import org.mariotaku.twidere.util.HtmlEscapeHelper
 import org.mariotaku.twidere.util.UriUtils
 import org.mariotaku.twidere.util.UserColorNameManager
+import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.view.ShortTimeView
 
 
 inline val ParcelableStatus.originalId: String
     get() = if (is_retweet) (retweet_id ?: id) else id
+
+
+val ParcelableStatus.userTypeIcon: Int
+    @DrawableRes    get() = Utils.getUserTypeIconRes(user_is_verified, user_is_protected)
 
 val ParcelableStatus.media_type: Int
     get() = attachment?.media?.firstOrNull()?.type ?: 0
@@ -260,6 +272,19 @@ fun ParcelableStatus.generateDisplayInfo(context: Context): ParcelableStatus.Dis
     }
     return info
 }
+
+fun ParcelableStatus.retweetIconActivated(): Boolean {
+    return !DestroyStatusTask.isRunning(account_key, my_retweet_id) &&
+            (RetweetStatusTask.isRunning(account_key, id) ||
+                    retweeted || account_key == retweeted_by_user_key ||
+                    my_retweet_id != null)
+}
+
+fun ParcelableStatus.favoriteIconActivated(): Boolean {
+    return !DestroyFavoriteTask.isRunning(account_key, id) &&
+            (CreateFavoriteTask.isRunning(account_key, id) || is_favorite)
+}
+
 
 internal inline val String.plainText: String get() = HtmlEscapeHelper.toPlainText(this)
 

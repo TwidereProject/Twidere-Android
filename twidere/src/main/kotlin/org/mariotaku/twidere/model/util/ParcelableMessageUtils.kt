@@ -6,6 +6,7 @@ import org.mariotaku.microblog.library.model.microblog.DMResponse.Entry.Message
 import org.mariotaku.microblog.library.model.microblog.DMResponse.Entry.Message.Data
 import org.mariotaku.microblog.library.model.microblog.DirectMessage
 import org.mariotaku.microblog.library.model.microblog.User
+import org.mariotaku.microblog.library.model.twitter.dm.DirectMessageEvent
 import org.mariotaku.twidere.extension.model.api.addEntities
 import org.mariotaku.twidere.extension.model.api.getEntityMedia
 import org.mariotaku.twidere.extension.model.api.key
@@ -17,6 +18,7 @@ import org.mariotaku.twidere.model.message.MessageExtras
 import org.mariotaku.twidere.model.message.StickerExtras
 import org.mariotaku.twidere.model.message.UserArrayExtras
 import org.mariotaku.twidere.util.HtmlBuilder
+import java.util.*
 
 /**
  * Created by mariotaku on 2017/2/9.
@@ -32,6 +34,20 @@ object ParcelableMessageUtils {
             result.conversation_id = outgoingConversationId(message.senderId, message.recipientId)
         } else {
             result.conversation_id = incomingConversationId(message.senderId, message.recipientId)
+        }
+        return result
+    }
+
+    fun fromMessage(accountKey: UserKey, event: DirectMessageEvent, outgoing: Boolean,
+            @FloatRange(from = 0.0, to = 1.0) sortIdAdj: Double = 0.0): ParcelableMessage {
+        val result = ParcelableMessage()
+        val message = event.messageCreate
+        result.applyMessage(accountKey, event, sortIdAdj)
+        result.is_outgoing = outgoing
+        if (outgoing) {
+            result.conversation_id = outgoingConversationId(message.senderId, message.target.recipientId)
+        } else {
+            result.conversation_id = incomingConversationId(message.senderId, message.target.recipientId)
         }
         return result
     }
@@ -104,6 +120,16 @@ object ParcelableMessageUtils {
         }
         val builder = HtmlBuilder(text, false, true, false)
         builder.addEntities(message)
+        return builder.buildWithIndices()
+    }
+
+    private fun formatDirectMessageText(message: DirectMessageEvent.MessageCreate): Pair<String, Array<SpanItem>> {
+        var text: String? = message.messageData.text
+        if (text == null) {
+            text = ""
+        }
+        val builder = HtmlBuilder(text, false, true, false)
+//        builder.addEntities(message.messageData)
         return builder.buildWithIndices()
     }
 
@@ -182,6 +208,32 @@ object ParcelableMessageUtils {
         this.media = message.getEntityMedia()
     }
 
+    private fun ParcelableMessage.applyMessage(
+            accountKey: UserKey,
+            event: DirectMessageEvent,
+            @FloatRange(from = 0.0, to = 1.0) sortIdAdj: Double = 0.0
+    ) {
+        val message = event.messageCreate
+        this.account_key = accountKey
+        this.id = UUID.randomUUID().toString()
+        this.sender_key = UserKey(message.senderId, account_key.host)
+        this.recipient_key = UserKey(message.target.recipientId, account_key.host)
+        this.message_timestamp = event.createdTimestamp
+        this.local_timestamp = this.message_timestamp
+        this.sort_id = this.message_timestamp + (499 * sortIdAdj).toLong()
+
+        val (type, extras) = typeAndExtras(message)
+        val (text, spans) = formatDirectMessageText(message)
+        val messageMedia = message.messageData.attachment.media
+        this.message_type = type
+        this.extras = extras
+        this.text_unescaped = text
+        this.spans = spans
+        if (messageMedia != null) {
+            this.media = arrayOf(messageMedia.toParcelable())
+        }
+    }
+
     private fun formatDirectMessageText(message: DirectMessage): Pair<String, Array<SpanItem>> {
         val builder = HtmlBuilder(message.text, false, true, false)
         builder.addEntities(message)
@@ -195,6 +247,9 @@ object ParcelableMessageUtils {
                 return Pair(MessageType.STICKER, StickerExtras(singleUrl.expandedUrl))
             }
         }
+        return Pair(MessageType.TEXT, null)
+    }
+    private fun typeAndExtras(message: DirectMessageEvent.MessageCreate): Pair<String, MessageExtras?> {
         return Pair(MessageType.TEXT, null)
     }
 

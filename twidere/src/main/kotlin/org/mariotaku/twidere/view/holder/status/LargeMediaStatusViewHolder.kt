@@ -35,9 +35,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.RecyclerPagerAdapter
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE
-import org.mariotaku.twidere.extension.model.applyTo
-import org.mariotaku.twidere.extension.model.aspectRatio
-import org.mariotaku.twidere.extension.model.contentDescription
+import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -112,8 +110,8 @@ class LargeMediaStatusViewHolder(private val adapter: IStatusesAdapter, itemView
         }
         textView.hideIfEmpty()
 
-        replyButton.isActivated = StatusViewHolder.isRetweetIconActivated(status)
-        favoriteButton.isActivated = StatusViewHolder.isFavoriteIconActivated(status)
+        replyButton.isActivated = status.retweetIconActivated()
+        favoriteButton.isActivated = status.favoriteIconActivated(status)
 
         val aspectRatio = status.attachment?.media?.fold(Double.NaN) { acc, media ->
             if (acc.isNaN()) return@fold media.aspectRatio

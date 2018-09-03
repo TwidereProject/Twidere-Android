@@ -29,7 +29,7 @@ public class DirectMessageEvent {
     String id;
 
     @JsonField(name = "created_timestamp")
-    long created_timestamp;
+    long createdTimestamp;
 
     @JsonField(name = "type")
     String type;
@@ -44,6 +44,10 @@ public class DirectMessageEvent {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public long getCreatedTimestamp() {
+        return createdTimestamp;
     }
 
     public MessageCreate getMessageCreate() {

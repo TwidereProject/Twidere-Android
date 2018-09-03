@@ -27,7 +27,7 @@
 
         <import type="org.mariotaku.twidere.R" />
 
-        <import type="org.mariotaku.twidere.model.ParcelableStatus" />
+        <import type="org.mariotaku.twidere.extension.model.ParcelableStatusExtensions" />
 
         <variable
             name="status"
@@ -94,6 +94,7 @@
             android:layout_height="@dimen/icon_size_status_profile_image"
             android:contentDescription="@{status.display.profileImageContentDescription}"
             android:scaleType="centerCrop"
+            android:visibility="@{displayOption.profileImageEnabled ? View.VISIBLE : View.GONE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/name"
             bind:profileImage="@{status.user_profile_image_url}"
@@ -106,6 +107,8 @@
             android:layout_width="@dimen/icon_size_profile_type"
             android:layout_height="@dimen/icon_size_profile_type"
             android:scaleType="fitCenter"
+            android:src="@{ParcelableStatusExtensions.getUserTypeIcon(status)}"
+            android:visibility="@{displayOption.profileImageEnabled ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@+id/profileImage"
             app:layout_constraintEnd_toEndOf="@+id/profileImage"
             tools:src="@drawable/ic_user_type_verified"
@@ -223,6 +226,7 @@
             app:layout_constraintTop_toBottomOf="@+id/attachmentContainer"
             app:srcCompat="@drawable/ic_action_retweet"
             app:tint="@color/btn_tint_retweet_stateful"
+            bind:activated="@{ParcelableStatusExtensions.retweetIconActivated(status)}"
             bind:pluralRes="@{R.plurals.N_retweets_abbrev}"
             bind:properCount="@{status.retweet_count}"
             bind:statusVisibility="@{status.extras.visibility}"
@@ -248,6 +252,7 @@
             app:layout_constraintTop_toBottomOf="@+id/attachmentContainer"
             app:srcCompat="@drawable/ic_action_heart"
             app:tint="@color/btn_tint_like_stateful"
+            bind:activated="@{ParcelableStatusExtensions.favoriteIconActivated(status)}"
             bind:pluralRes="@{useFavorite ? R.plurals.N_favorites_abbrev : R.plurals.N_likes_abbrev}"
             bind:properCount="@{status.favorite_count}"
             bind:zeroRes="@{useFavorite ? R.string.action_favorite : R.string.action_like}"
