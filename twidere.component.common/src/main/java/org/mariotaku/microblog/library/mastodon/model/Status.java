@@ -84,6 +84,11 @@ public class Status {
     @JsonField(name = "emojis")
     Emoji[] emojis;
     /**
+     * The number of replies for the status
+     */
+    @JsonField(name = "replies_count")
+    long repliesCount;
+    /**
      * The number of reblogs for the status
      */
     @JsonField(name = "reblogs_count")
@@ -198,6 +203,10 @@ public class Status {
         return emojis;
     }
 
+    public long getRepliesCount() {
+        return repliesCount;
+    }
+
     public long getReblogsCount() {
         return reblogsCount;
     }
@@ -282,6 +291,7 @@ public class Status {
                 ", reblog=" + reblog +
                 ", content='" + content + '\'' +
                 ", createdAt=" + createdAt +
+                ", repliesCount=" + repliesCount +
                 ", reblogsCount=" + reblogsCount +
                 ", favouritesCount=" + favouritesCount +
                 ", reblogged=" + reblogged +

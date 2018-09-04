@@ -85,7 +85,7 @@ fun Status.applyTo(accountKey: UserKey, result: ParcelableStatus) {
         }
     }
 
-    result.reply_count = -1
+    result.reply_count = status.repliesCount
     result.retweet_count = status.reblogsCount
     result.favorite_count = status.favouritesCount
 
