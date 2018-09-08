@@ -43,19 +43,18 @@ class GetSavedSearchesTask(
     override fun doLongOperation(params: Array<UserKey>): SingleResponse<Unit> {
         val cr = context.contentResolver
         for (accountKey in params) {
-            if (accountKey.host == USER_TYPE_TWITTER_COM) {
-                val twitter = MicroBlogAPIFactory.getInstance(context, accountKey) ?: continue
-                try {
-                    val searches = twitter.savedSearches
-                    val values = ContentValuesCreator.createSavedSearches(searches,
-                            accountKey)
-                    val where = Expression.equalsArgs(SavedSearches.ACCOUNT_KEY)
-                    val whereArgs = arrayOf(accountKey.toString())
-                    cr.delete(SavedSearches.CONTENT_URI, where.sql, whereArgs)
-                    ContentResolverUtils.bulkInsert(cr, SavedSearches.CONTENT_URI, values)
-                } catch (e: MicroBlogException) {
-                    DebugLog.w(LOGTAG, tr = e)
-                }
+            if (accountKey.host != USER_TYPE_TWITTER_COM) continue
+            val twitter = MicroBlogAPIFactory.getInstance(context, accountKey) ?: continue
+            try {
+                val searches = twitter.savedSearches
+                val values = ContentValuesCreator.createSavedSearches(searches,
+                        accountKey)
+                val where = Expression.equalsArgs(SavedSearches.ACCOUNT_KEY)
+                val whereArgs = arrayOf(accountKey.toString())
+                cr.delete(SavedSearches.CONTENT_URI, where.sql, whereArgs)
+                ContentResolverUtils.bulkInsert(cr, SavedSearches.CONTENT_URI, values)
+            } catch (e: MicroBlogException) {
+                DebugLog.w(LOGTAG, tr = e)
             }
         }
         return SingleResponse(Unit)
