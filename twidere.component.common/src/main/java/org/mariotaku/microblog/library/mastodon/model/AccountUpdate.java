@@ -61,4 +61,9 @@ public class AccountUpdate extends SimpleValueMap {
         }
         return this;
     }
+
+    public AccountUpdate locked(boolean locked) {
+        put("locked", locked);
+        return this;
+    }
 }
