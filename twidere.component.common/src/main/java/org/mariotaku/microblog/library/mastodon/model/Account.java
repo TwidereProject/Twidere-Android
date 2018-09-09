@@ -116,6 +116,12 @@ public class Account {
     @Nullable
     Account moved;
     /**
+     * Boolean to indicate that the account performs automated actions
+     */
+    @JsonField(name = "bot")
+    @Nullable
+    boolean bot;
+    /**
      * Array of Emoji in account username and note
      */
     @JsonField(name = "emojis")
@@ -186,6 +192,10 @@ public class Account {
         return moved;
     }
 
+    public boolean isBot() {
+        return bot;
+    }
+
     public Emoji[] getEmojis() {
         return emojis;
     }
@@ -219,6 +229,7 @@ public class Account {
                 ", header='" + header + '\'' +
                 ", headerStatic='" + headerStatic + '\'' +
                 ", moved=" + moved +
+                ", bot=" + bot +
                 ", emojis=" + Arrays.toString(emojis) +
                 '}';
     }

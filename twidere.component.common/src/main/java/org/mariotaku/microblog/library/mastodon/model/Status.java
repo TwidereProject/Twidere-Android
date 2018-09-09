@@ -18,6 +18,7 @@
 
 package org.mariotaku.microblog.library.mastodon.model;
 
+import android.support.annotation.Nullable;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
@@ -112,6 +113,7 @@ public class Status {
      * Whether the authenticated user has muted the conversation this status from
      */
     @JsonField(name = "muted")
+    @Nullable
     boolean muted;
     /**
      * Whether media attachments should be hidden by default
@@ -154,11 +156,13 @@ public class Status {
      * The detected language for the status, if detected
      */
     @JsonField(name = "language")
+    @Nullable
     String language;
     /**
      * Whether this is the pinned status for the account that posted it
      */
     @JsonField(name = "pinned")
+    @Nullable
     boolean pinned;
 
     private long sortId = -1;
@@ -256,6 +260,7 @@ public class Status {
         return application;
     }
 
+    @Nullable
     public String getLanguage() {
         return language;
     }

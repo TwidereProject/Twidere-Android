@@ -18,6 +18,7 @@
 
 package org.mariotaku.microblog.library.mastodon.model;
 
+import android.support.annotation.Nullable;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
@@ -61,6 +62,7 @@ public class Attachment {
     /**
      * A description of the image for the visually impaired (maximum 420 characters), or null if none provided
      */
+    @Nullable
     @JsonField(name = "description")
     String description;
 
@@ -88,6 +90,7 @@ public class Attachment {
         return textUrl;
     }
 
+    @Nullable
     public String getDescription() {
         return description;
     }
