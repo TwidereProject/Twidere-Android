@@ -36,6 +36,9 @@ Material Design ready and feature rich Twitter app for Android 4.0+
 [#1021](https://github.com/TwidereProject/Twidere-Android/issues/1021)
 [#1030](https://github.com/TwidereProject/Twidere-Android/issues/1030)
 [#1038](https://github.com/TwidereProject/Twidere-Android/issues/1038)
+[#1044](https://github.com/TwidereProject/Twidere-Android/issues/1044)
+[#1108](https://github.com/TwidereProject/Twidere-Android/issues/1108)
+[#1118](https://github.com/TwidereProject/Twidere-Android/issues/1118)
 [#1127](https://github.com/TwidereProject/Twidere-Android/issues/1127)
 * Premium features witch doesnt required third party services like advanced filters are unlocked for anyone
 * Removed all streaming services
@@ -48,8 +51,6 @@ Material Design ready and feature rich Twitter app for Android 4.0+
   * Fix upload of big images/videos
   * Fix remote video
   * Disable crossposters user's linkification
-  * Add ability to mute user
-  * Add ability to disable reblogs from a user
   * Updated API
 
 ## Roadmap
