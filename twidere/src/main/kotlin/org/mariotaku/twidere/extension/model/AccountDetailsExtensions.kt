@@ -37,9 +37,6 @@ val AccountExtras.official: Boolean
         return false
     }
 
-val AccountDetails.hasDm: Boolean
-    get() = type in arrayOf(AccountType.FANFOU, AccountType.TWITTER)
-
 fun <T> AccountDetails.newMicroBlogInstance(context: Context, cls: Class<T>): T {
     return credentials.newMicroBlogInstance(context, type, cls)
 }
@@ -122,3 +119,6 @@ val Array<AccountDetails>.textLimit: Int
         return limit
     }
 
+
+val AccountDetails.hasDm: Boolean
+    get() = type in arrayOf(AccountType.FANFOU, AccountType.TWITTER)
