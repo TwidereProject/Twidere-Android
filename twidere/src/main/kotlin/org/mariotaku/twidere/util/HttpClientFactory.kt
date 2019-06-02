@@ -228,7 +228,16 @@ object HttpClientFactory {
                     }
                     val address = InetSocketAddress.createUnresolved(proxyHost, proxyPort)
                     builder.proxy(Proxy(Proxy.Type.HTTP, address))
-
+                    builder.proxyAuthenticator { _, response ->
+                        val b = response.request().newBuilder()
+                        if (response.code() == 407) {
+                        if (username != null && password != null) {
+                            val credential = Credentials.basic(username, password)
+                            b.header("Proxy-Authorization", credential)
+                        }
+                        }
+                        b.build()
+                    }
                     builder.authenticator { _, response ->
                         val b = response.request().newBuilder()
                         if (response.code() == 407) {
