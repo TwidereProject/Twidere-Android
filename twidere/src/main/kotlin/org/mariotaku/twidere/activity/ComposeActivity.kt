@@ -1372,7 +1372,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         menu.setItemAvailability(R.id.attachment_visibility_submenu, hasAttachmentStatusVisibility)
         menu.setItemAvailability(R.id.location_submenu, hasLocationOption)
 
-        ThemeUtils.wrapMenuIcon(menuBar, excludeGroups = MENU_GROUP_IMAGE_EXTENSION)
+        ThemeUtils.wrapMenuIcon(menuBar, excludeGroups = *intArrayOf(MENU_GROUP_IMAGE_EXTENSION))
         ThemeUtils.resetCheatSheet(menuBar)
     }
 
@@ -1510,7 +1510,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             return
         }
 
-        LengthyOperationsService.updateStatusesAsync(this, update.draft_action, statuses = update,
+        LengthyOperationsService.updateStatusesAsync(this, update.draft_action, statuses = *arrayOf(update),
                 scheduleInfo = scheduleInfo)
         finishComposing()
     }
