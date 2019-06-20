@@ -89,7 +89,9 @@ class ConversationLoader(
         canLoadAllReplies = false
         when (account.type) {
             AccountType.TWITTER -> {
-                val isOfficial = account.isOfficial(context)
+                // TODO: temporary workaround for issue #1181
+                // val isOfficial = account.isOfficial(context)
+                val isOfficial = false
                 canLoadAllReplies = isOfficial
                 if (isOfficial) {
                     return microBlog.showConversation(status.id, paging).mapMicroBlogToPaginated {
