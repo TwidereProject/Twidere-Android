@@ -468,7 +468,7 @@ class DetailStatusViewHolder(
             retweetProvider.init(itemView.menuBar, retweetItem)
         }
 
-        ThemeUtils.wrapMenuIcon(itemView.menuBar, excludeGroups = Constants.MENU_GROUP_STATUS_SHARE)
+        ThemeUtils.wrapMenuIcon(itemView.menuBar, excludeGroups = *intArrayOf(Constants.MENU_GROUP_STATUS_SHARE))
         itemView.mediaPreviewLoad.setOnClickListener(this)
         itemView.profileContainer.setOnClickListener(this)
         retweetedByView.setOnClickListener(this)
