@@ -117,6 +117,7 @@ android {
     }
 
     lintOptions {
+        checkReleaseBuilds false
         abortOnError false
         lintConfig rootProject.file('lint.xml')
     }
