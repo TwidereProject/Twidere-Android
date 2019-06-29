@@ -62,7 +62,7 @@ deploy:
   - provider: releases
     prerelease: true
     api_key:
-      secure: "WKtKwda3hegqO9QVujdonNoL2ESJUR80WHNq/13wDsbCABo/GNnuqHNYZmml3wAifEKKeCEYfNZRUuHQ8eHs54Lj5BlGRX5i+1LrGhhgnVFQgmrhIv4RJuVQ663kDEh+Jwo4vowJ2mxNDvLvOhfZwxjULPDiknqy6u5PyW3id5M="
+      secure: "S1GSwQPN1ffS1wMmkNwKY7HlZbVysfn3LJa318gKbIB2RdnNoLT6xuZSWhe5mAI41yG45wkUpfK9fah6ueZFEd74+xy4q2aqaJDhhi/xqys/8VkODaNsHMkE2aWqnWqAcRBNRA1j8eFFZDjgge1t2x924U7jDEQaOOHHHQ58lxA="
     file_glob: true
     file: '**/*-release.apk'
     skip_cleanup: true
