@@ -312,9 +312,6 @@ object MenuUtils {
             R.id.set_nickname -> {
                 val nick = colorNameManager.getUserNickname(status.user_key)
                 val df = SetUserNicknameDialogFragment.create(status.user_key, nick)
-                if (fragment != null) {
-                    df.setTargetFragment(fragment, REQUEST_SET_NICKNAME)
-                }
                 df.show(fm, SetUserNicknameDialogFragment.FRAGMENT_TAG)
             }
             R.id.open_with_account -> {
