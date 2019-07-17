@@ -46,6 +46,7 @@ import org.mariotaku.ktextension.set
 import org.mariotaku.ktextension.toDoubleOr
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarShowHideHelper
 import org.mariotaku.twidere.constant.*
@@ -131,9 +132,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
             selectIntent.putExtra(EXTRA_SELECT_ONLY_ITEM_AUTOMATICALLY, true)
             selectIntent.putExtra(EXTRA_ACCOUNT_HOST, accountHost)
             selectIntent.putExtra(EXTRA_ACCOUNT_TYPE, accountType)
-            selectIntent.putExtra(EXTRA_START_INTENT, intent)
-            startActivity(selectIntent)
-            finish()
+            startActivityForResult(selectIntent, REQUEST_SELECT_ACCOUNT)
             return
         }
 
@@ -209,6 +208,13 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
                 if (resultCode == Activity.RESULT_OK) {
                     Analyzer.log(PurchaseFinished.create(data!!))
                 }
+            }
+            REQUEST_SELECT_ACCOUNT -> {
+                if (requestCode == Activity.RESULT_OK && data != null) {
+                    startActivity(Intent(intent).putExtra(TwidereConstants.EXTRA_ACCOUNT_KEY,
+                            data.getParcelableExtra<UserKey>(TwidereConstants.EXTRA_ACCOUNT_KEY)))
+                }
+                finish()
             }
             else -> {
                 super.onActivityResult(requestCode, resultCode, data)
@@ -927,5 +933,9 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
     private fun Uri.getUserKeyQueryParameter(): UserKey? {
         val value = getQueryParameter(QUERY_PARAM_USER_KEY) ?: getQueryParameter(QUERY_PARAM_USER_ID)
         return value?.let(UserKey::valueOf)
+    }
+
+    companion object {
+        const val REQUEST_SELECT_ACCOUNT = 101
     }
 }

@@ -705,7 +705,6 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         if (handleExtraIntent && refreshOnStart) {
             twitterWrapper.refreshAll()
         }
-        val extraIntent = intent.getParcelableExtra<Intent>(EXTRA_EXTRA_INTENT)
 
         val uri = intent.data
         @CustomTabType
@@ -725,7 +724,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                     }
                 }
             }
-            if (initialTab == -1 && (extraIntent == null || !handleExtraIntent)) {
+            if (initialTab == -1 && !handleExtraIntent) {
                 // Tab not found, open account specific page
                 when (tabType) {
                     CustomTabType.NOTIFICATIONS_TIMELINE -> {
@@ -738,10 +737,6 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                     }
                 }
             }
-        }
-        if (extraIntent != null && handleExtraIntent) {
-            extraIntent.setExtrasClassLoader(classLoader)
-            startActivity(extraIntent)
         }
         return initialTab
     }
