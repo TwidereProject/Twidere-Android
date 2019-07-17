@@ -20,6 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import kotlin.collections.ArraysKt;
+import kotlin.io.FilesKt;
 
 /**
  * Created by mariotaku on 16/4/4.
@@ -70,7 +71,15 @@ public class ShareProvider extends ContentProvider {
     private File getFile(@NonNull Uri uri) throws FileNotFoundException {
         final String lastPathSegment = uri.getLastPathSegment();
         if (lastPathSegment == null) throw new FileNotFoundException(uri.toString());
-        return new File(getFilesDir(getContext()), lastPathSegment);
+        File filesDir = getFilesDir(getContext());
+        if (filesDir == null) throw new FileNotFoundException(uri.toString());
+        try {
+            File file = new File(filesDir, lastPathSegment).getCanonicalFile();
+            if (!FilesKt.startsWith(file, filesDir)) throw new SecurityException(uri.toString());
+            return file;
+        } catch (IOException e) {
+            throw new FileNotFoundException(uri.toString());
+        }
     }
 
     @Nullable
