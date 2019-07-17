@@ -69,11 +69,14 @@ public class ShareProvider extends ContentProvider {
     }
 
     private File getFile(@NonNull Uri uri) throws FileNotFoundException {
+        final Context context = getContext();
+        if (context == null) throw new IllegalStateException();
         final String lastPathSegment = uri.getLastPathSegment();
         if (lastPathSegment == null) throw new FileNotFoundException(uri.toString());
-        File filesDir = getFilesDir(getContext());
+        File filesDir = getFilesDir(context);
         if (filesDir == null) throw new FileNotFoundException(uri.toString());
         try {
+            filesDir = filesDir.getCanonicalFile();
             File file = new File(filesDir, lastPathSegment).getCanonicalFile();
             if (!FilesKt.startsWith(file, filesDir)) throw new SecurityException(uri.toString());
             return file;
