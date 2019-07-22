@@ -17,8 +17,8 @@ allprojects {
 
     ext {
         projectGroupId = 'org.mariotaku.twidere'
-        projectVersionCode = 401
-        projectVersionName = '3.7.7'
+        projectVersionCode = 402
+        projectVersionName = '3.7.8'
 
         globalCompileSdkVersion = 26
         globalBuildToolsVersion = '28.0.3'

@@ -210,7 +210,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowInsetsCallback, IControl
                 }
             }
             REQUEST_SELECT_ACCOUNT -> {
-                if (requestCode == Activity.RESULT_OK && data != null) {
+                if (resultCode == Activity.RESULT_OK && data != null) {
                     startActivity(Intent(intent).putExtra(TwidereConstants.EXTRA_ACCOUNT_KEY,
                             data.getParcelableExtra<UserKey>(TwidereConstants.EXTRA_ACCOUNT_KEY)))
                 }
