@@ -148,7 +148,7 @@ class UserViewHolder(
             denyRequestButton.visibility = View.GONE
         }
         if (friendshipClickListener != null && !isMySelf) {
-            if (user.extras?.blocking ?: false) {
+            if (user.extras?.blocking == true) {
                 followButton.visibility = View.GONE
                 unblockButton.visibility = View.VISIBLE
             } else {
@@ -159,7 +159,7 @@ class UserViewHolder(
                 }
                 unblockButton.visibility = View.GONE
             }
-            unmuteButton.visibility = if (user.extras?.muting ?: false) View.VISIBLE else View.GONE
+            unmuteButton.visibility = if (user.extras?.muting == true) View.VISIBLE else View.GONE
         } else {
             followButton.visibility = View.GONE
             unblockButton.visibility = View.GONE

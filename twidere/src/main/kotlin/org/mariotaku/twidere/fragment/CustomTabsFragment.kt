@@ -202,10 +202,6 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
         return true
     }
 
-    override fun onStop() {
-        super.onStop()
-    }
-
     private fun saveTabPositions() {
         val positions = adapter.cursorPositions
         val c = adapter.cursor

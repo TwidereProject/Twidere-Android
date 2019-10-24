@@ -13,7 +13,7 @@ buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:${kotlinVersion}"
-        classpath 'com.github.mariotaku:imgenie-plugin:0.0.5'
+        classpath 'com.github.mariotaku:imgenie-plugin:0.2.5'
 
         // START Non-FOSS component
         classpath "com.google.gms:google-services:${pluginVersions['PlayServices']}"

@@ -177,7 +177,7 @@ class SelectableUsersAdapter(
     fun setItemChecked(position: Int, value: Boolean) {
         val userKey = getUserKey(position)
         setCheckState(userKey, value)
-        if (!(itemCheckedListener?.invoke(position, value) ?: true)) {
+        if (itemCheckedListener?.invoke(position, value) == false) {
             setCheckState(userKey, !value)
             notifyItemChanged(position)
         }

@@ -78,7 +78,7 @@ open class MediaStatusesSearchLoader(
 
     protected open fun processQuery(details: AccountDetails, query: String): String {
         if (details.type == AccountType.TWITTER) {
-            if (details.extras?.official ?: false) {
+            if (details.extras?.official == true) {
                 return TweetSearchLoader.smQuery("$query filter:media", pagination)
             }
             return "$query filter:media exclude:retweets"
@@ -92,7 +92,7 @@ open class MediaStatusesSearchLoader(
         val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
         when (account.type) {
             AccountType.TWITTER -> {
-                if (account.extras?.official ?: false) {
+                if (account.extras?.official == true) {
                     val universalQuery = UniversalSearchQuery(queryText)
                     universalQuery.setModules(UniversalSearchQuery.Module.TWEET)
                     universalQuery.setResultType(UniversalSearchQuery.ResultType.RECENT)

@@ -257,7 +257,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     loaderManager.restartLoader(LOADER_ID_USER, args, this)
                 }
                 updateOptionsMenuVisibility()
-            } else if (user?.is_cache ?: false) {
+            } else if (user?.is_cache == true) {
                 cardContent.visibility = View.VISIBLE
                 errorContainer.visibility = View.GONE
                 progressContainer.visibility = View.GONE

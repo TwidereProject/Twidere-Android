@@ -83,7 +83,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
         listView.choiceMode = ListView.CHOICE_MODE_MULTIPLE_MODAL
-        listView.setOnItemClickListener { _, _, pos, _ ->
+        listView.onItemClickListener = { _, _, pos, _ ->
             onItemClick(pos)
         }
         listView.setMultiChoiceModeListener(this)

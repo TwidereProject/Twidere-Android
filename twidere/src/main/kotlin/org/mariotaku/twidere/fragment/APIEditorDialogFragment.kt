@@ -64,7 +64,7 @@ class APIEditorDialogFragment : BaseDialogFragment() {
         val dialog = builder.create()
         dialog.onShow {
             it.applyTheme()
-            if (arguments?.getBoolean(EXTRA_SHOW_LOAD_DEFAULTS) ?: false) {
+            if (arguments?.getBoolean(EXTRA_SHOW_LOAD_DEFAULTS) == true) {
                 loadDefaults.visibility = View.VISIBLE
             } else {
                 loadDefaults.visibility = View.GONE

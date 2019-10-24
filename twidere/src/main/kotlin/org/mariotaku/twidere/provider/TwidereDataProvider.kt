@@ -61,25 +61,25 @@ import javax.inject.Inject
 
 class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
     @Inject
-    lateinit internal var readStateManager: ReadStateManager
+    internal lateinit var readStateManager: ReadStateManager
     @Inject
-    lateinit internal var twitterWrapper: AsyncTwitterWrapper
+    internal lateinit var twitterWrapper: AsyncTwitterWrapper
     @Inject
-    lateinit internal var notificationManager: NotificationManagerWrapper
+    internal lateinit var notificationManager: NotificationManagerWrapper
     @Inject
-    lateinit internal var preferences: SharedPreferences
+    internal lateinit var preferences: SharedPreferences
     @Inject
-    lateinit internal var dns: Dns
+    internal lateinit var dns: Dns
     @Inject
-    lateinit internal var bus: Bus
+    internal lateinit var bus: Bus
     @Inject
-    lateinit internal var userColorNameManager: UserColorNameManager
+    internal lateinit var userColorNameManager: UserColorNameManager
     @Inject
-    lateinit internal var bidiFormatter: BidiFormatter
+    internal lateinit var bidiFormatter: BidiFormatter
     @Inject
-    lateinit internal var permissionsManager: PermissionsManager
+    internal lateinit var permissionsManager: PermissionsManager
     @Inject
-    lateinit internal var contentNotificationManager: ContentNotificationManager
+    internal lateinit var contentNotificationManager: ContentNotificationManager
 
     private lateinit var databaseWrapper: SQLiteDatabaseWrapper
     private lateinit var backgroundExecutor: Executor

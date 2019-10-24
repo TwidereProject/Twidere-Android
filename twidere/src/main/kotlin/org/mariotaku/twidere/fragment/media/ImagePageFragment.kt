@@ -55,10 +55,6 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
 
     private var mediaLoadState: Int = 0
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-    }
-
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         if (isVisibleToUser) {

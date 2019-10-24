@@ -202,10 +202,6 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         updateDefaultAccountState()
     }
 
-    override fun onStop() {
-        super.onStop()
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_accounts_dashboard, container, false)
     }
@@ -263,7 +259,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
 
 
     override fun onLoadFinished(loader: Loader<AccountsInfo>, data: AccountsInfo) {
-        if (context == null || isDetached || (activity?.isFinishing ?: true)) return
+        if (context == null || isDetached || (activity?.isFinishing != false)) return
         updateAccountProviderData(data)
     }
 
@@ -467,7 +463,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             private var clickedColors: IntArray? = null
 
             override fun onAnimationStart(animation: Animator) {
-                if (context == null || isDetached || (activity?.isFinishing ?: true)) return
+                if (context == null || isDetached || (activity?.isFinishing != false)) return
                 snapshotView.visibility = View.VISIBLE
                 snapshotView.setImageBitmap(snapshotBitmap)
                 val profileDrawable = profileImageView.drawable
@@ -523,7 +519,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     }
 
     private fun displayAccountBanner(account: AccountDetails) {
-        if (context == null || isDetached || (activity?.isFinishing ?: true)) return
+        if (context == null || isDetached || (activity?.isFinishing != false)) return
         val bannerWidth = accountProfileBanner.width
         val res = resources
         val defWidth = res.displayMetrics.widthPixels
@@ -543,7 +539,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     }
 
     private fun displayCurrentAccount(profileImageSnapshot: Drawable?) {
-        if (context == null || isDetached || (activity?.isFinishing ?: true)) return
+        if (context == null || isDetached || (activity?.isFinishing != false)) return
         val account = accountsAdapter.selectedAccount ?: return
         accountProfileNameView.spannable = account.user.name
         accountProfileScreenNameView.spannable = "@${account.user.screen_name}"

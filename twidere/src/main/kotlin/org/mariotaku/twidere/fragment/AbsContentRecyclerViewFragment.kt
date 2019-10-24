@@ -104,7 +104,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
         updateRefreshProgressOffset()
     }
 
-    override final fun onRefresh() {
+    final override fun onRefresh() {
         if (!triggerRefresh()) {
             refreshing = false
         }

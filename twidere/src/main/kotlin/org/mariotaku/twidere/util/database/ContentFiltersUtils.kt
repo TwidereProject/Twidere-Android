@@ -41,7 +41,7 @@ object ContentFiltersUtils {
     private fun isFilteredQuery(users: Array<UserKey>?, texts: String?, sources: Array<String>?,
             links: Array<String>?, names: Array<String>?, descriptions: String?,
             filterRts: Boolean, @FilterScope scope: Int, allowedKeywords: Array<String>? = null): Pair<String, Array<String>> {
-        var numExpressions = 0;
+        var numExpressions = 0
         val selectionArgs = mutableListOf<String>()
         val queryBuilder = StringBuilder("SELECT ")
 
@@ -87,7 +87,7 @@ object ContentFiltersUtils {
             }
             extraWhereAppend?.invoke(queryBuilder, selectionArgs, ruleField)
             queryBuilder.append(")")
-            numExpressions += 1;
+            numExpressions += 1
         }
 
         fun allowKeywordsWhere(sb: StringBuilder, args: MutableList<String>, ruleField: String) {

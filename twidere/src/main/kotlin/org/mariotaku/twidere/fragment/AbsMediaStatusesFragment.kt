@@ -46,7 +46,7 @@ abstract class AbsMediaStatusesFragment : AbsContentRecyclerViewFragment<Stagger
         StaggeredGridLayoutManager>(), LoaderCallbacks<List<ParcelableStatus>?>, DrawerCallback,
         IStatusViewHolder.StatusClickListener {
 
-    override final var refreshing: Boolean
+    final override var refreshing: Boolean
         get() {
             if (context == null || isDetached) return false
             return loaderManager.hasRunningLoadersSafe()
@@ -55,10 +55,10 @@ abstract class AbsMediaStatusesFragment : AbsContentRecyclerViewFragment<Stagger
             super.refreshing = value
         }
 
-    override final val reachingEnd: Boolean
+    final override val reachingEnd: Boolean
         get() = layoutManager.reachingEnd
 
-    override final val reachingStart: Boolean
+    final override val reachingStart: Boolean
         get() = layoutManager.reachingStart
 
     protected open val loaderId: Int
@@ -73,15 +73,15 @@ abstract class AbsMediaStatusesFragment : AbsContentRecyclerViewFragment<Stagger
         showProgress()
     }
 
-    override final fun onCreateLayoutManager(context: Context): StaggeredGridLayoutManager {
+    final override fun onCreateLayoutManager(context: Context): StaggeredGridLayoutManager {
         return StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
     }
 
-    override final fun scrollToPositionWithOffset(position: Int, offset: Int) {
+    final override fun scrollToPositionWithOffset(position: Int, offset: Int) {
         layoutManager.scrollToPositionWithOffset(position, offset)
     }
 
-    override final fun onCreateAdapter(context: Context, requestManager: RequestManager): StaggeredGridParcelableStatusesAdapter {
+    final override fun onCreateAdapter(context: Context, requestManager: RequestManager): StaggeredGridParcelableStatusesAdapter {
         return StaggeredGridParcelableStatusesAdapter(context, requestManager)
     }
 
@@ -91,7 +91,7 @@ abstract class AbsMediaStatusesFragment : AbsContentRecyclerViewFragment<Stagger
         return onCreateStatusesLoader(activity, args, fromUser)
     }
 
-    override final fun onLoadFinished(loader: Loader<List<ParcelableStatus>?>, data: List<ParcelableStatus>?) {
+    final override fun onLoadFinished(loader: Loader<List<ParcelableStatus>?>, data: List<ParcelableStatus>?) {
         val changed = adapter.setData(data)
         if ((loader as IExtendedLoader).fromUser) {
             adapter.loadMoreSupportedPosition = if (hasMoreData(loader, data, changed)) {
@@ -106,11 +106,11 @@ abstract class AbsMediaStatusesFragment : AbsContentRecyclerViewFragment<Stagger
         setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.NONE)
     }
 
-    override final fun onLoaderReset(loader: Loader<List<ParcelableStatus>?>) {
+    final override fun onLoaderReset(loader: Loader<List<ParcelableStatus>?>) {
         adapter.setData(null)
     }
 
-    override final fun onLoadMoreContents(position: Long) {
+    final override fun onLoadMoreContents(position: Long) {
         // Only supports load from end
         if (ILoadMoreSupportAdapter.END != position) return
         super.onLoadMoreContents(position)
@@ -124,13 +124,13 @@ abstract class AbsMediaStatusesFragment : AbsContentRecyclerViewFragment<Stagger
         getStatuses(maxId, null)
     }
 
-    override final fun onStatusClick(holder: IStatusViewHolder, position: Int) {
+    final override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
         val status = adapter.getStatus(position)
         IntentUtils.openStatus(context, status, null)
     }
 
 
-    override final fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
+    final override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
         val status = adapter.getStatus(position)
         IntentUtils.openStatus(context, status.account_key, status.quoted_id)
     }

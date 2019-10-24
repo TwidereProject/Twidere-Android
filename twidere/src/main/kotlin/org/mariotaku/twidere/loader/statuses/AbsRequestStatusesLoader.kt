@@ -102,7 +102,7 @@ abstract class AbsRequestStatusesLoader(
     }
 
     @SuppressWarnings("unchecked")
-    override final fun loadInBackground(): ListResponse<ParcelableStatus> {
+    final override fun loadInBackground(): ListResponse<ParcelableStatus> {
         val context = context
         val comparator = this.comparator
         val accountKey = accountKey ?: return ListResponse.getListInstance<ParcelableStatus>(MicroBlogException("No Account"))
@@ -183,7 +183,7 @@ abstract class AbsRequestStatusesLoader(
         return ListResponse.getListInstance(data)
     }
 
-    override final fun onStartLoading() {
+    final override fun onStartLoading() {
         exception = null
         super.onStartLoading()
     }

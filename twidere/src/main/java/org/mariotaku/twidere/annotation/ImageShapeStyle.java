@@ -27,7 +27,7 @@ import java.lang.annotation.RetentionPolicy;
 /**
  * Created by mariotaku on 2017/3/2.
  */
-@IntDef({ImageShapeStyle.SHAPE_CIRCLE, ImageShapeStyle.SHAPE_RECTANGLE})
+@IntDef({0, ImageShapeStyle.SHAPE_CIRCLE, ImageShapeStyle.SHAPE_RECTANGLE})
 @Retention(RetentionPolicy.SOURCE)
 public @interface ImageShapeStyle {
     int SHAPE_CIRCLE = 0x1;

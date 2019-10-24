@@ -144,11 +144,11 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     protected val isDialogTheme: Boolean
         get() = ThemeUtils.getBooleanFromAttribute(this, R.attr.isDialogTheme)
 
-    override final val currentThemeBackgroundAlpha by lazy {
+    final override val currentThemeBackgroundAlpha by lazy {
         themeBackgroundAlpha
     }
 
-    override final val currentThemeBackgroundOption by lazy {
+    final override val currentThemeBackgroundOption by lazy {
         themeBackgroundOption
     }
 

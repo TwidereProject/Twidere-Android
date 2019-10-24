@@ -97,10 +97,6 @@ class SupportTabsAdapter(
         return fragment
     }
 
-    override fun startUpdate(container: ViewGroup) {
-        super.startUpdate(container)
-    }
-
     override fun getPageIcon(position: Int): Drawable {
         return getTabIconDrawable(context, this.tabs[position].icon)
     }

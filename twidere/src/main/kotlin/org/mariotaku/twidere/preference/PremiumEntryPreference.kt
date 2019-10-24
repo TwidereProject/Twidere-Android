@@ -28,7 +28,7 @@ class PremiumEntryPreference(context: Context, attrs: AttributeSet) : Preference
         val requiredFeature = a.getString(R.styleable.PremiumEntryPreference_requiredFeature)
         a.recycle()
         isEnabled = extraFeaturesService.isSupported()
-        setOnPreferenceClickListener {
+        onPreferenceClickListener = {
             if (requiredFeature != null && !extraFeaturesService.isEnabled(requiredFeature)) {
                 val activity = ChameleonUtils.getActivity(context)
                 if (activity is FragmentActivity) {

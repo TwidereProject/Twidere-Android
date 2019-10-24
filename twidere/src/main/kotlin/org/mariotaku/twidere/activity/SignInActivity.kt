@@ -164,10 +164,6 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.menu_sign_in, menu)
@@ -1087,7 +1083,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
 
         protected val profileImageSize: String = activity.getString(R.string.profile_image_size)
 
-        override final fun doInBackground(vararg args: Any?): SingleResponse<SignInResponse> {
+        final override fun doInBackground(vararg args: Any?): SingleResponse<SignInResponse> {
             try {
                 return SingleResponse.getInstance(performLogin())
             } catch (e: Exception) {

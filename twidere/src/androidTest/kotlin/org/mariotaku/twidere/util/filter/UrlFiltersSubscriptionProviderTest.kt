@@ -18,7 +18,7 @@ class UrlFiltersSubscriptionProviderTest {
         val context = InstrumentationRegistry.getTargetContext()
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-        if (!(cm.activeNetworkInfo?.isConnected ?: false)) return
+        if (cm.activeNetworkInfo?.isConnected != true) return
 
         val url = "https://raw.githubusercontent.com/mariotaku/wtb/master/twidere/bots.xml"
         val arguments = UrlFiltersSubscriptionProviderArguments().apply {

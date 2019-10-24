@@ -60,10 +60,6 @@ class FilteredUsersFragment : BaseFiltersFragment() {
     override val sortOrder: String? = "${Filters.Users.SOURCE} >= 0"
     override val supportsEdit: Boolean = false
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             REQUEST_SELECT_USER -> {

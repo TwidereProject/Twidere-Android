@@ -88,7 +88,7 @@ class StatusFavoritersLoader(
             override fun handleOpenElement(elementName: String, attributes: Map<String, String>?,
                     line: Int, col: Int) {
                 if (elementName == "div" && attributes != null) {
-                    if (attributes["class"]?.split(" ")?.contains("account") ?: false) {
+                    if (attributes["class"]?.split(" ")?.contains("account") == true) {
                         attributes["data-user-id"]?.let { userIds.add(it) }
                     }
                 }

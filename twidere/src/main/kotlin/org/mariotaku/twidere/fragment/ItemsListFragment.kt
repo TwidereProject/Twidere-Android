@@ -124,7 +124,7 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
         return ItemsLoader(context, arguments)
     }
 
-    override final fun onLoadFinished(loader: Loader<List<Any>?>, data: List<Any>?) {
+    final override fun onLoadFinished(loader: Loader<List<Any>?>, data: List<Any>?) {
         adapter.setData(data)
         showContent()
     }

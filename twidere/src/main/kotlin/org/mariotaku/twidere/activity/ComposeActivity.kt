@@ -395,7 +395,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                     val src = MediaPickerActivity.getMediaUris(data)
                     TaskStarter.execute(AddMediaTask(this, src, null, false, false))
                     val extras = data.getBundleExtra(MediaPickerActivity.EXTRA_EXTRAS)
-                    if (extras?.getBoolean(EXTRA_IS_POSSIBLY_SENSITIVE) ?: false) {
+                    if (extras?.getBoolean(EXTRA_IS_POSSIBLY_SENSITIVE) == true) {
                         possiblySensitive = true
                     }
                 }
@@ -701,11 +701,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             return true
         }
         return super.handleKeyboardShortcutSingle(handler, keyCode, event, metaState)
-    }
-
-    override fun handleKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler, keyCode: Int,
-            repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
-        return super.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {

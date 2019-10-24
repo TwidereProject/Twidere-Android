@@ -68,10 +68,6 @@ abstract class ParcelableGroupsFragment : AbsContentListRecyclerViewFragment<Par
         return ParcelableGroupsAdapter(context, this.requestManager)
     }
 
-    override fun setupRecyclerView(context: Context, recyclerView: RecyclerView) {
-        super.setupRecyclerView(context, recyclerView)
-    }
-
     protected val accountKey: UserKey?
         get() = arguments.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
 

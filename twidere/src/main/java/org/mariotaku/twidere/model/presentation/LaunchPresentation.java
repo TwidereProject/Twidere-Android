@@ -119,7 +119,7 @@ public class LaunchPresentation {
             int dashIndex = str.indexOf('-');
             if (dashIndex == -1) return new Locale(str, null);
             return new Locale(str.substring(0, dashIndex),
-                    str.substring(dashIndex + 1, str.length()));
+                    str.substring(dashIndex + 1));
         }
 
         static class ListConverter extends StringBasedListTypeConverter<Locale> {

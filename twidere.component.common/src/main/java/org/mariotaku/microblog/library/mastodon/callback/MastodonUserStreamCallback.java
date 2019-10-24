@@ -31,6 +31,7 @@ import org.mariotaku.twidere.util.JsonSerializer;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Created by mariotaku on 15/5/26.
@@ -50,7 +51,7 @@ public abstract class MastodonUserStreamCallback implements RawCallback<MicroBlo
             onException(cause);
             return;
         }
-        final CRLFLineReader reader = new CRLFLineReader(new InputStreamReader(response.getBody().stream(), "UTF-8"));
+        final CRLFLineReader reader = new CRLFLineReader(new InputStreamReader(response.getBody().stream(), StandardCharsets.UTF_8));
         try {
             String event = null;
             for (String line; (line = reader.readLine()) != null && !disconnected; ) {

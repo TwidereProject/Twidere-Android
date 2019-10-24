@@ -140,7 +140,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         if (loader is IExtendedLoader) {
             loader.fromUser = false
         }
-        if (loader is IPaginationLoader && data?.loadSuccess() ?: false) {
+        if (loader is IPaginationLoader && data?.loadSuccess() == true) {
             nextPagination = loader.nextPagination
             prevPagination = loader.prevPagination
         }

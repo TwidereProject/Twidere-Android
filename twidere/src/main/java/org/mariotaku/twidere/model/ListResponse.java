@@ -61,7 +61,7 @@ public class ListResponse<Data> extends AbstractList<Data> implements Response<L
     }
 
     public static <Data> ListResponse<Data> emptyListInstance() {
-        return new ListResponse<>(Collections.<Data>emptyList(), null);
+        return new ListResponse<>(Collections.emptyList(), null);
     }
 
     public static <Data> ListResponse<Data> getListInstance(List<Data> list, Exception e) {

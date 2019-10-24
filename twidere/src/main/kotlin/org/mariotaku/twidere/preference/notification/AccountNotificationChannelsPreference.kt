@@ -51,7 +51,7 @@ class AccountNotificationChannelsPreference(context: Context, attrs: AttributeSe
             val preference = Preference(context)
             preference.title = spec.getName(context)
             preference.summary = spec.getDescription(context)
-            preference.setOnPreferenceClickListener lambda@ {
+            preference.onPreferenceClickListener = lambda@ {
                 val account = this.account ?: return@lambda true
                 val intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
                         .putExtra(Settings.EXTRA_APP_PACKAGE, BuildConfig.APPLICATION_ID)

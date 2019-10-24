@@ -129,7 +129,7 @@ public class MicroBlogAPIFactory implements TwidereConstants {
         final int endOfHost = format.indexOf('/', startOfHost);
         final String host = endOfHost != -1 ? format.substring(startOfHost, endOfHost) : format.substring(startOfHost);
         final StringBuilder sb = new StringBuilder();
-        sb.append(format.substring(0, startOfHost));
+        sb.append(format, 0, startOfHost);
         if (host.equalsIgnoreCase("api.twitter.com")) {
             if (domain != null) {
                 sb.append(domain);

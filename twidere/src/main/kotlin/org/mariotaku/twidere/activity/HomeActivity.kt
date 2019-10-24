@@ -350,10 +350,6 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         updateActionsButton()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-    }
-
     override fun onClick(v: View) {
         when (v) {
             actionsButton -> {

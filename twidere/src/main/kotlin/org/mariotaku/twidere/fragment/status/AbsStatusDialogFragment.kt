@@ -67,7 +67,7 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
 
     private lateinit var adapter: DummyItemAdapter
 
-    override final fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    final override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = Builder(context)
         val accountKey = this.accountKey
 

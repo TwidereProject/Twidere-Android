@@ -112,10 +112,6 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
                 }
             }
 
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-                super.beforeTextChanged(s, start, count, after)
-            }
-
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if (s !is Spannable) return
                 s.getSpans(0, s.length, PendingQuerySpan::class.java).forEach { span ->

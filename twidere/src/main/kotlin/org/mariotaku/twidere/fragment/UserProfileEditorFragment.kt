@@ -50,6 +50,7 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity
 import org.mariotaku.twidere.activity.ThemedMediaPickerActivity
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.annotation.ImageShapeStyle
 import org.mariotaku.twidere.extension.loadProfileBanner
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
@@ -71,7 +72,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
 
     private var currentTask: AbstractTask<*, *, UserProfileEditorFragment>? = null
     private val accountKey: UserKey
-        get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)
+        get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)!!
     private var user: ParcelableUser? = null
     private var account: AccountDetails? = null
     private var userInfoLoaderInitialized: Boolean = false
@@ -229,20 +230,20 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
                     currentTask = RemoveProfileBannerTaskInternal(context, accountKey)
                 } else {
                     currentTask = UpdateProfileBannerImageTaskInternal(this, accountKey,
-                            data.data, true)
+                            data.data!!, true)
                 }
             }
             REQUEST_UPLOAD_PROFILE_BACKGROUND_IMAGE -> {
                 val task = currentTask
                 if (task != null && !task.isFinished) return
                 currentTask = UpdateProfileBackgroundImageTaskInternal(this, accountKey,
-                        data.data, false, true)
+                        data.data!!, false, true)
             }
             REQUEST_UPLOAD_PROFILE_IMAGE -> {
                 val task = currentTask
                 if (task != null && !task.isFinished) return
                 currentTask = UpdateProfileImageTaskInternal(this, accountKey,
-                        data.data, true)
+                        data.data!!, true)
             }
             REQUEST_PICK_LINK_COLOR -> {
                 if (resultCode == Activity.RESULT_OK) {
@@ -265,7 +266,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
 
     private fun displayUser(user: ParcelableUser?, account: AccountDetails?) {
         if (!getUserInfoCalled) return
-        if (context == null || isDetached || (activity?.isFinishing ?: true)) return
+        if (context == null || isDetached || (activity?.isFinishing != false)) return
         getUserInfoCalled = false
         this.user = user
         this.account = account

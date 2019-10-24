@@ -65,7 +65,7 @@ abstract class AccountsListPreference(context: Context, attrs: AttributeSet? = n
         addPreference(preference)
     }
 
-    override final fun onAttachedToHierarchy(preferenceManager: PreferenceManager) {
+    final override fun onAttachedToHierarchy(preferenceManager: PreferenceManager) {
         super.onAttachedToHierarchy(preferenceManager)
         if (preferenceCount > 0) return
         setAccountsData(AccountUtils.getAllAccountDetails(AccountManager.get(context), true))

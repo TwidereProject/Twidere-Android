@@ -73,10 +73,6 @@ abstract class ParcelableUserListsFragment : AbsContentListRecyclerViewFragment<
         return ParcelableUserListsAdapter(context, this.requestManager)
     }
 
-    override fun setupRecyclerView(context: Context, recyclerView: RecyclerView) {
-        super.setupRecyclerView(context, recyclerView)
-    }
-
     protected fun hasMoreData(data: List<ParcelableUserList>?): Boolean {
         return data == null || !data.isEmpty()
     }

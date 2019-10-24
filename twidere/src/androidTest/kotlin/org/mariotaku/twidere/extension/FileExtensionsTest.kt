@@ -39,7 +39,7 @@ class FileExtensionsTest {
         random.nextBytes(testData)
         val compareData = context.cacheDir.tempInputStream { os ->
             os.write(testData)
-        }.use { it.readBytes(1024) }
+        }.use { it.readBytes() }
         Assert.assertArrayEquals(testData, compareData)
     }
 

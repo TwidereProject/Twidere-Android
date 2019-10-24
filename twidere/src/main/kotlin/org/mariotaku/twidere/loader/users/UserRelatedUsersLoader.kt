@@ -37,7 +37,7 @@ abstract class UserRelatedUsersLoader(
 ) : AbsRequestUsersLoader(context, accountKey, data, fromUser) {
 
     @Throws(MicroBlogException::class)
-    override final fun getUsers(details: AccountDetails, paging: Paging): PaginatedList<ParcelableUser> {
+    final override fun getUsers(details: AccountDetails, paging: Paging): PaginatedList<ParcelableUser> {
         return when {
             userKey != null -> getUsersByKey(details, paging, userKey)
             screenName != null -> getUsersByScreenName(details, paging, screenName)

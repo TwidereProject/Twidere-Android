@@ -46,10 +46,10 @@ abstract class BaseGroupsLoader(
 
     override var pagination: Pagination? = null
 
-    override final var nextPagination: Pagination? = null
+    final override var nextPagination: Pagination? = null
         private set
 
-    override final var prevPagination: Pagination? = null
+    final override var prevPagination: Pagination? = null
         private set
 
     protected val data = NoDuplicatesArrayList<ParcelableGroup>()

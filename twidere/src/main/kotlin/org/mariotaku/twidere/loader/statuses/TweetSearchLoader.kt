@@ -108,7 +108,7 @@ open class TweetSearchLoader(
         val queryText = processQuery(account, query)
         when (account.type) {
             AccountType.TWITTER -> {
-                if (account.extras?.official ?: false) {
+                if (account.extras?.official == true) {
                     val universalQuery = UniversalSearchQuery(queryText)
                     universalQuery.setModules(UniversalSearchQuery.Module.TWEET)
                     universalQuery.setResultType(UniversalSearchQuery.ResultType.RECENT)

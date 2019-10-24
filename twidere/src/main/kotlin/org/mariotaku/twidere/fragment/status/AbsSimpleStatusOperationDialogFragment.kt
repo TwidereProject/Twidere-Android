@@ -37,7 +37,7 @@ abstract class AbsSimpleStatusOperationDialogFragment : BaseDialogFragment(), Di
     protected val status: ParcelableStatus
         get() = arguments.getParcelable<ParcelableStatus>(EXTRA_STATUS)
 
-    override final fun onClick(dialog: DialogInterface, which: Int) {
+    final override fun onClick(dialog: DialogInterface, which: Int) {
         when (which) {
             DialogInterface.BUTTON_POSITIVE -> {
                 onPerformAction(status)
@@ -45,7 +45,7 @@ abstract class AbsSimpleStatusOperationDialogFragment : BaseDialogFragment(), Di
         }
     }
 
-    override final fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    final override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(context)
         builder.setTitle(title)
         builder.setMessage(message)

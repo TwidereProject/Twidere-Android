@@ -164,10 +164,6 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
         return ACTION_NAVIGATION_BACK == action
     }
 
-    override fun handleKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler, keyCode: Int, repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
-        return super.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
-    }
-
     override fun onSupportNavigateUp(): Boolean {
         if (notifyUnsavedChange()) {
             return true

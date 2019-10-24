@@ -33,6 +33,7 @@ import org.mariotaku.twidere.util.JsonSerializer;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 /**
@@ -53,7 +54,7 @@ public abstract class FanfouUserStreamCallback implements RawCallback<MicroBlogE
             onException(cause);
             return;
         }
-        final CRLFLineReader reader = new CRLFLineReader(new InputStreamReader(response.getBody().stream(), "UTF-8"));
+        final CRLFLineReader reader = new CRLFLineReader(new InputStreamReader(response.getBody().stream(), StandardCharsets.UTF_8));
         try {
             for (String line; (line = reader.readLine()) != null && !disconnected; ) {
                 if (Thread.currentThread().isInterrupted()) {
