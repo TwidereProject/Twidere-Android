@@ -20,7 +20,7 @@ allprojects {
         projectVersionCode = 400
         projectVersionName = '3.7.6'
 
-        globalCompileSdkVersion = 26
+        globalCompileSdkVersion = 28
         globalBuildToolsVersion = '28.0.3'
     }
 
