@@ -1,23 +1,19 @@
-import fr.avianey.androidsvgdrawable.gradle.SvgDrawableTask
-
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'androidsvgdrawable'
+apply plugin: 'imgenie'
 
 buildscript {
     repositories {
+        maven { url 'https://jitpack.io' }
         jcenter()
     }
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:${kotlinVersion}"
-        classpath("fr.avianey.androidsvgdrawable:gradle-plugin:${pluginVersions['AndroidSvgDrawable']}") {
-            // should be excluded to avoid conflict
-            exclude group: 'xerces'
-        }
+        classpath 'com.github.mariotaku:imgenie-plugin:0.0.5'
 
         // START Non-FOSS component
         classpath "com.google.gms:google-services:${pluginVersions['PlayServices']}"
@@ -33,7 +29,7 @@ android {
     defaultConfig {
         applicationId "org.mariotaku.twidere"
         minSdkVersion 14
-        targetSdkVersion 26
+        targetSdkVersion 29
         versionCode projectVersionCode
         versionName projectVersionName
         multiDexEnabled true
@@ -108,7 +104,6 @@ android {
 
     sourceSets.each {
         it.res.srcDirs += project.files("src/${it.name}/res-localized")
-        it.res.srcDirs += project.files("src/${it.name}/res-svg2png")
         it.java.srcDirs += "src/${it.name}/kotlin"
     }
 
@@ -268,38 +263,6 @@ dependencies {
     implementation "nl.komponents.kovenant:kovenant-android:${libVersions['Kovenant']}"
     implementation "nl.komponents.kovenant:kovenant-functional:${libVersions['Kovenant']}"
     implementation "nl.komponents.kovenant:kovenant-combine:${libVersions['Kovenant']}"
-}
-
-task svgToDrawable(type: SvgDrawableTask) {
-    // specify where to pick SVG from
-    from = files(android.sourceSets.collect { "src/${it.name}/svg/drawable" })
-    // specify the android res folder
-    to = file('src/main/res-svg2png')
-    // override files only if necessary
-    overwriteMode = 'ifModified'
-    // let generate PNG for the following densities only
-    targetedDensities = ['hdpi', 'mdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi']
-    // relative path of the file specifying nine patch specs
-    ninePatchConfig = file('src/main/svg/drawable/9patch.json')
-    // output format of the generated resources
-    outputFormat = 'PNG'
-
-    outputType = 'drawable'
-}
-
-task svgToMipmap(type: SvgDrawableTask) {
-    // specify where to pick SVG from
-    from = files(android.sourceSets.collect { "src/${it.name}/svg/mipmap" })
-    // specify the android res folder
-    to = file('src/main/res-svg2png')
-    // override files only if necessary
-    overwriteMode = 'ifModified'
-    // let generate PNG for the following densities only
-    targetedDensities = ['hdpi', 'mdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi']
-    // output format of the generated resources
-    outputFormat = 'PNG'
-
-    outputType = 'mipmap'
 }
 
 // START Non-FOSS component

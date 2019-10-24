@@ -7,7 +7,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.2'
+        classpath 'com.android.tools.build:gradle:3.5.1'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -20,7 +20,7 @@ allprojects {
         projectVersionCode = 402
         projectVersionName = '3.7.8'
 
-        globalCompileSdkVersion = 26
+        globalCompileSdkVersion = 29
         globalBuildToolsVersion = '28.0.3'
     }
 
@@ -36,7 +36,7 @@ allprojects {
 subprojects {
     buildscript {
         ext {
-            kotlinVersion = '1.3.0'
+            kotlinVersion = '1.3.50'
             pluginVersions = [
                     AndroidSvgDrawable: '3.0.0',
                     PlayServices      : '3.1.1',
