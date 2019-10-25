@@ -367,7 +367,7 @@ class ContentNotificationManager(
     }
 
     fun showDraft(draftUri: Uri): Long {
-        val draftId = draftUri.lastPathSegment.toLongOrNull() ?: return -1
+        val draftId = draftUri.lastPathSegment?.toLongOrNull() ?: return -1
         val where = Expression.equals(Drafts._ID, draftId)
         val item = context.contentResolver.queryOne(Drafts.CONTENT_URI, Drafts.COLUMNS, where.sql,
                 null, null, Draft::class.java) ?: return -1

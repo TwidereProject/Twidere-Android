@@ -45,7 +45,7 @@ operator fun Bundle.set(key: String, value: Array<String>?) {
 }
 
 inline fun <reified T: Parcelable> Bundle.getTypedArray(key: String): Array<T> {
-    val parcelable = getParcelableArray(key)
+    val parcelable = getParcelableArray(key)!!
     return Array(parcelable.size) { parcelable[it] as T }
 }
 

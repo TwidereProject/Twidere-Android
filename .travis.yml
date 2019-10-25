@@ -22,7 +22,6 @@ addons:
       - curl
       - tar
       - gzip
-      - patch
       - openssh-client
       - git
       - ruby
@@ -47,8 +46,6 @@ install:
   - cat ./travis/configs/gradle.properties > ./gradle.properties
 
 before_script:
-  # Validate if patches work
-  - ./travis/scripts/patch_sources.sh
   # Validate if Google components fetched successfully
   - ./travis/scripts/test_private_files.sh
 

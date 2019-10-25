@@ -19,9 +19,8 @@
 
 package android.support.v4.view
 
-/**
- * Created by mariotaku on 2017/6/25.
- */
+fun WindowInsetsCompat(obj: Any) = WindowInsetsCompat.wrap(obj)
+
 val WindowInsetsCompat.unwrapped: Any?
     @Suppress("RestrictedApi")
     get() = WindowInsetsCompat.unwrap(this)

@@ -5,6 +5,9 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'imgenie'
 
 buildscript {
+    ext {
+        enableGoogleVariant = project.file('google-services.json').exists()
+    }
     repositories {
         maven { url 'https://jitpack.io' }
         jcenter()
@@ -15,9 +18,11 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:${kotlinVersion}"
         classpath 'com.github.mariotaku:imgenie-plugin:0.2.5'
 
-        // START Non-FOSS component
-        classpath "com.google.gms:google-services:${pluginVersions['PlayServices']}"
-        // END Non-FOSS component
+        if (enableGoogleVariant) {
+            // START Non-FOSS component
+            classpath "com.google.gms:google-services:${pluginVersions['PlayServices']}"
+            // END Non-FOSS component
+        }
     }
 }
 
@@ -52,11 +57,13 @@ android {
     flavorDimensions 'channel'
 
     productFlavors {
-        // START Non-FOSS component
-        google {
-            dimension 'channel'
+        if (enableGoogleVariant) {
+            // START Non-FOSS component
+            google {
+                dimension 'channel'
+            }
+            // END Non-FOSS component
         }
-        // END Non-FOSS component
         fdroid {
             dimension 'channel'
         }
@@ -154,17 +161,19 @@ dependencies {
     implementation project(':twidere.component.common')
     implementation project(':twidere.component.nyan')
 
-    // START Non-FOSS component
-    googleImplementation "com.google.android.gms:play-services-maps:${libVersions['PlayServices']}"
-    googleImplementation "com.google.android.gms:play-services-auth:${libVersions['PlayServices']}"
-    googleImplementation "com.google.android.gms:play-services-ads:${libVersions['PlayServices']}"
-    googleImplementation "com.google.maps.android:android-maps-utils:${libVersions['MapsUtils']}"
-    googleImplementation "com.anjlab.android.iab.v3:library:${libVersions['IABv3']}"
-    googleImplementation "com.dropbox.core:dropbox-core-sdk:${libVersions['DropboxCoreSdk']}"
-    googleImplementation("com.google.apis:google-api-services-drive:${libVersions['GoogleDriveApi']}") {
-        exclude group: 'org.apache.httpcomponents'
+    if (enableGoogleVariant) {
+        // START Non-FOSS component
+        googleImplementation "com.google.android.gms:play-services-maps:${libVersions['PlayServices']}"
+        googleImplementation "com.google.android.gms:play-services-auth:${libVersions['PlayServices']}"
+        googleImplementation "com.google.android.gms:play-services-ads:${libVersions['PlayServices']}"
+        googleImplementation "com.google.maps.android:android-maps-utils:${libVersions['MapsUtils']}"
+        googleImplementation "com.anjlab.android.iab.v3:library:${libVersions['IABv3']}"
+        googleImplementation "com.dropbox.core:dropbox-core-sdk:${libVersions['DropboxCoreSdk']}"
+        googleImplementation("com.google.apis:google-api-services-drive:${libVersions['GoogleDriveApi']}") {
+            exclude group: 'org.apache.httpcomponents'
+        }
+        // END Non-FOSS component
     }
-    // END Non-FOSS component
 
     fdroidImplementation "org.osmdroid:osmdroid-android:${libVersions['OSMDroid']}"
     fdroidImplementation "ch.acra:acra:${libVersions['ACRA']}"
@@ -219,6 +228,7 @@ dependencies {
     implementation "org.apache.james:apache-mime4j-core:${libVersions['Mime4J']}"
     implementation "org.apache.james:apache-mime4j-storage:${libVersions['Mime4J']}"
     implementation "com.bluelinelabs:logansquare:${libVersions['LoganSquare']}"
+    implementation "com.fasterxml.jackson.core:jackson-core:2.7.4"
     implementation "com.hannesdorfmann.parcelableplease:annotation:${libVersions['ParcelablePlease']}"
     implementation "com.github.mariotaku:PickNCrop:${libVersions['PickNCrop']}"
     implementation "com.github.mariotaku.RestFu:library:${libVersions['RestFu']}"
@@ -265,6 +275,8 @@ dependencies {
     implementation "nl.komponents.kovenant:kovenant-combine:${libVersions['Kovenant']}"
 }
 
+if (enableGoogleVariant) {
 // START Non-FOSS component
-apply plugin: 'com.google.gms.google-services'
+    apply plugin: 'com.google.gms.google-services'
 // END Non-FOSS component
+}

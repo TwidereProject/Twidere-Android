@@ -37,7 +37,7 @@ class DataImportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
             REQUEST_PICK_FILE -> {
                 resumeFragmentsRunnable = Runnable {
                     if (resultCode == RESULT_OK && data != null) {
-                        val path = data.data.path
+                        val path = data.data?.path
                         if (openImportTypeTask == null || openImportTypeTask!!.status != AsyncTask.Status.RUNNING) {
                             openImportTypeTask = OpenImportTypeTask(this@DataImportActivity, path)
                             openImportTypeTask!!.execute()

@@ -447,7 +447,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             REQUEST_ADD_GIF -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     val intent = ThemedMediaPickerActivity.withThemed(this@ComposeActivity)
-                            .getMedia(data.data)
+                            .getMedia(data.data!!)
                             .extras(Bundle {
                                 this[EXTRA_IS_POSSIBLY_SENSITIVE] = data.getBooleanExtra(EXTRA_IS_POSSIBLY_SENSITIVE, false)
                             })
@@ -1706,13 +1706,13 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             applyUpdateStatus(statusUpdate)
         }
         val values = ObjectCursor.valuesCreatorFrom(Draft::class.java).create(draft)
-        val draftUri = contentResolver.insert(Drafts.CONTENT_URI, values)
+        val draftUri = contentResolver.insert(Drafts.CONTENT_URI, values)!!
         displayNewDraftNotification(draftUri)
         return draftUri
     }
 
     private fun displayNewDraftNotification(draftUri: Uri) {
-        val notificationUri = Drafts.CONTENT_URI_NOTIFICATIONS.withAppendedPath(draftUri.lastPathSegment)
+        val notificationUri = Drafts.CONTENT_URI_NOTIFICATIONS.withAppendedPath(draftUri.lastPathSegment!!)
         contentResolver.insert(notificationUri, null)
     }
 
@@ -1778,7 +1778,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                     val imageSpans = s.getSpans(start, start + count, ImageSpan::class.java)
                     val imageSources = ArrayList<String>()
                     for (imageSpan in imageSpans) {
-                        imageSources.add(imageSpan.source)
+                        imageSources.add(imageSpan.source!!)
                         s.setSpan(MarkForDeleteSpan(), start, start + count,
                                 Spanned.SPAN_INCLUSIVE_INCLUSIVE)
                     }
@@ -1849,7 +1849,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     class DirectMessageConfirmFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
 
-        private val screenName: String get() = arguments.getString(EXTRA_SCREEN_NAME)
+        private val screenName: String get() = arguments.getString(EXTRA_SCREEN_NAME).orEmpty()
 
         override fun onClick(dialog: DialogInterface, which: Int) {
             val activity = activity

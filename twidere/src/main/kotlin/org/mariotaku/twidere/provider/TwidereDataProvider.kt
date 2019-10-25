@@ -140,6 +140,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
 
     override fun query(uri: Uri, projection: Array<String>?, selection: String?, selectionArgs: Array<String>?,
             sortOrder: String?): Cursor? {
+        val context = this.context ?: return null
         try {
             val tableId = DataStoreUtils.getTableId(uri)
             val table = DataStoreUtils.getTableNameById(tableId)
@@ -149,7 +150,6 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                     return MatrixCursor(projection ?: arrayOfNulls<String>(0))
                 }
                 VIRTUAL_TABLE_ID_PERMISSIONS -> {
-                    val context = context ?: return null
                     val c = MatrixCursor(Permissions.MATRIX_COLUMNS)
                     val pm = context.packageManager
                     if (Binder.getCallingUid() == Process.myUid()) {
@@ -159,7 +159,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                         }
                     } else {
                         val map = permissionsManager.all
-                        val callingPackages = pm.getPackagesForUid(Binder.getCallingUid())
+                        val callingPackages = pm.getPackagesForUid(Binder.getCallingUid()).orEmpty()
                         for ((key, value) in map) {
                             if (key in callingPackages) {
                                 c.addRow(arrayOf<Any>(key, value))
@@ -169,7 +169,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                     return c
                 }
                 VIRTUAL_TABLE_ID_CACHED_USERS_WITH_RELATIONSHIP -> {
-                    val accountKey = UserKey.valueOf(uri.lastPathSegment)
+                    val accountKey = UserKey.valueOf(uri.lastPathSegment!!)
                     val accountHost = uri.getQueryParameter(EXTRA_ACCOUNT_HOST)
                     val accountType = uri.getQueryParameter(EXTRA_ACCOUNT_TYPE)
                     val query = CachedUsersQueryBuilder.withRelationship(projection,
@@ -180,7 +180,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                     return c
                 }
                 VIRTUAL_TABLE_ID_CACHED_USERS_WITH_SCORE -> {
-                    val accountKey = UserKey.valueOf(uri.lastPathSegment)
+                    val accountKey = UserKey.valueOf(uri.lastPathSegment!!)
                     val accountHost = uri.getQueryParameter(EXTRA_ACCOUNT_HOST)
                     val accountType = uri.getQueryParameter(EXTRA_ACCOUNT_TYPE)
                     val query = CachedUsersQueryBuilder.withScore(projection, Expression(selection),

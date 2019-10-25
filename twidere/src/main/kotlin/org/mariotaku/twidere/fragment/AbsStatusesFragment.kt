@@ -636,9 +636,9 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
             when (requestCode) {
                 AbsStatusesFragment.REQUEST_FAVORITE_SELECT_ACCOUNT -> {
                     if (resultCode != Activity.RESULT_OK || data == null) return
-                    val accountKey = data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
-                    val extras = data.getBundleExtra(EXTRA_EXTRAS)
-                    val status = extras.getParcelable<ParcelableStatus>(EXTRA_STATUS)
+                    val accountKey = data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)!!
+                    val extras = data.getBundleExtra(EXTRA_EXTRAS)!!
+                    val status = extras.getParcelable<ParcelableStatus>(EXTRA_STATUS)!!
                     if (fragment.preferences[favoriteConfirmationKey]) {
                         fragment.executeAfterFragmentResumed {
                             FavoriteConfirmDialogFragment.show(it.childFragmentManager,
@@ -650,9 +650,9 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
                 }
                 AbsStatusesFragment.REQUEST_RETWEET_SELECT_ACCOUNT -> {
                     if (resultCode != Activity.RESULT_OK || data == null) return
-                    val accountKey = data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
-                    val extras = data.getBundleExtra(EXTRA_EXTRAS)
-                    val status = extras.getParcelable<ParcelableStatus>(EXTRA_STATUS)
+                    val accountKey = data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)!!
+                    val extras = data.getBundleExtra(EXTRA_EXTRAS)!!
+                    val status = extras.getParcelable<ParcelableStatus>(EXTRA_STATUS)!!
                     if (status.account_key.host != accountKey.host) {
                         val composeIntent = Intent(fragment.context, ComposeActivity::class.java)
                         composeIntent.putExtra(Intent.EXTRA_TEXT, "${status.text_plain} ${LinkCreator.getStatusWebLink(status)}")

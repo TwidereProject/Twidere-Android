@@ -108,8 +108,8 @@ class UserSelectorActivity : BaseActivity(), OnItemClickListener, LoaderManager.
     }
 
     override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableUser>> {
-        val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-        val query = args.getString(EXTRA_QUERY)
+        val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)!!
+        val query = args.getString(EXTRA_QUERY).orEmpty()
         val fromCache = args.getBoolean(EXTRA_FROM_CACHE)
         if (!fromCache) {
             showProgress()

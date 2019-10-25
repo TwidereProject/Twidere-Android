@@ -206,7 +206,7 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
     class AccountDeletionDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
 
         override fun onClick(dialog: DialogInterface, which: Int) {
-            val account: Account = arguments.getParcelable(EXTRA_ACCOUNT)
+            val account: Account = arguments.getParcelable(EXTRA_ACCOUNT)!!
             val resolver = context.contentResolver
             val am = AccountManager.get(context)
             when (which) {

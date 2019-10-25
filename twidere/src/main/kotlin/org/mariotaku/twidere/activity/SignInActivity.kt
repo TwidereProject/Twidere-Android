@@ -143,7 +143,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
 
 
         if (savedInstanceState != null) {
-            apiConfig = savedInstanceState.getParcelable(EXTRA_API_CONFIG)
+            apiConfig = savedInstanceState.getParcelable(EXTRA_API_CONFIG)!!
             apiChangeTimestamp = savedInstanceState.getLong(EXTRA_API_LAST_CHANGE)
         } else {
             apiConfig = kPreferences[defaultAPIConfigKey]
@@ -188,10 +188,10 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             REQUEST_BROWSER_MASTODON_SIGN_IN -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     val code = data.getStringExtra(EXTRA_CODE)
-                    val extras = data.getBundleExtra(EXTRA_EXTRAS)
-                    val host = extras.getString(EXTRA_HOST)
-                    val clientId = extras.getString(EXTRA_CLIENT_ID)
-                    val clientSecret = extras.getString(EXTRA_CLIENT_SECRET)
+                    val extras = data.getBundleExtra(EXTRA_EXTRAS)!!
+                    val host = extras.getString(EXTRA_HOST)!!
+                    val clientId = extras.getString(EXTRA_CLIENT_ID)!!
+                    val clientSecret = extras.getString(EXTRA_CLIENT_SECRET)!!
 
                     finishMastodonBrowserLogin(host, clientId, clientSecret, code)
                 }

@@ -305,8 +305,8 @@ object Utils {
 
     fun getQuoteStatus(context: Context?, status: ParcelableStatus): String? {
         if (context == null) return null
-        var quoteFormat: String = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).getString(
-                KEY_QUOTE_FORMAT, DEFAULT_QUOTE_FORMAT)
+        var quoteFormat: String = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+                .getString(KEY_QUOTE_FORMAT, DEFAULT_QUOTE_FORMAT).orEmpty()
         if (TextUtils.isEmpty(quoteFormat)) {
             quoteFormat = DEFAULT_QUOTE_FORMAT
         }

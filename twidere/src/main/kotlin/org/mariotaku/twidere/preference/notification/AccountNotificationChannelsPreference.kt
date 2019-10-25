@@ -25,6 +25,7 @@ import android.content.Intent
 import android.os.Build
 import android.provider.Settings
 import android.support.v7.preference.Preference
+import android.support.v7.preference.Preference.OnPreferenceClickListener
 import android.support.v7.preference.PreferenceManager
 import android.util.AttributeSet
 import org.mariotaku.twidere.BuildConfig
@@ -51,7 +52,7 @@ class AccountNotificationChannelsPreference(context: Context, attrs: AttributeSe
             val preference = Preference(context)
             preference.title = spec.getName(context)
             preference.summary = spec.getDescription(context)
-            preference.onPreferenceClickListener = lambda@ {
+            preference.onPreferenceClickListener = OnPreferenceClickListener lambda@{
                 val account = this.account ?: return@lambda true
                 val intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
                         .putExtra(Settings.EXTRA_APP_PACKAGE, BuildConfig.APPLICATION_ID)

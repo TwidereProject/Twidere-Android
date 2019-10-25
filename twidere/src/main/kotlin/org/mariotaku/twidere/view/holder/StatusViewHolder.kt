@@ -352,7 +352,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         if (!summaryView.empty && !isFullTextVisible) {
             text = SpannableStringBuilder.valueOf(context.getString(R.string.label_status_show_more)).apply {
                 setSpan(object : TwidereClickableSpan(adapter.linkHighlightingStyle) {
-                    override fun onClick(widget: View?) {
+                    override fun onClick(widget: View) {
                         showFullText()
                     }
                 }, 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)

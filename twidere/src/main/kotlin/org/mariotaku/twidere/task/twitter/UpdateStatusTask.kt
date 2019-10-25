@@ -896,7 +896,7 @@ class UpdateStatusTask(
                 inJustDecodeBounds = true
             }
             var imageSize = -1L
-            resolver.openInputStream(mediaUri).use {
+            resolver.openInputStream(mediaUri)?.use {
                 imageSize = it.available().toLong()
                 BitmapFactory.decodeStream(it, null, o)
             }
@@ -997,7 +997,7 @@ class UpdateStatusTask(
                     framerate = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_CAPTURE_FRAMERATE).toDoubleOr(-1.0)
                 }
 
-                size = resolver.openFileDescriptor(mediaUri, "r").use { it.statSize }
+                size = resolver.openFileDescriptor(mediaUri, "r")?.use { it.statSize } ?: 0
             } catch (e: Exception) {
                 DebugLog.w(LOGTAG, "Unable to retrieve video info", e)
             } finally {
@@ -1026,7 +1026,7 @@ class UpdateStatusTask(
             }
             DebugLog.d(LOGTAG, "Transcoding video")
 
-            val ext = mediaUri.lastPathSegment.substringAfterLast(".")
+            val ext = mediaUri.lastPathSegment!!.substringAfterLast(".")
             val strategy = MediaFormatStrategyPresets.createAndroid720pStrategy()
             val listener = object : MediaTranscoder.Listener {
                 override fun onTranscodeFailed(exception: Exception?) {
@@ -1044,7 +1044,7 @@ class UpdateStatusTask(
             }
             val pfd = resolver.openFileDescriptor(mediaUri, "r")
             val tempFile = File.createTempFile("twidere__encoded_video_", ".$ext", context.cacheDir)
-            val future = MediaTranscoder.getInstance().transcodeVideo(pfd.fileDescriptor,
+            val future = MediaTranscoder.getInstance().transcodeVideo(pfd!!.fileDescriptor,
                     tempFile.absolutePath, strategy, listener)
             try {
                 future.get()

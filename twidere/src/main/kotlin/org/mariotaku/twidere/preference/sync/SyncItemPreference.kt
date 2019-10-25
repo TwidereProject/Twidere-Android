@@ -30,7 +30,7 @@ class SyncItemPreference(
     init {
         GeneralComponent.get(context).inject(this)
         val a = context.obtainStyledAttributes(attrs, R.styleable.SyncItemPreference)
-        syncType = a.getString(R.styleable.SyncItemPreference_syncType)
+        syncType = a.getString(R.styleable.SyncItemPreference_syncType)!!
         key = SyncPreferences.getSyncEnabledKey(syncType)
         a.recycle()
     }

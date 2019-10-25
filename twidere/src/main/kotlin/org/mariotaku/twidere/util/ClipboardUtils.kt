@@ -27,7 +27,7 @@ object ClipboardUtils {
 
     fun setText(context: Context, text: CharSequence): Boolean {
         val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        clipboardManager.primaryClip = ClipData.newPlainText(text, text)
+        clipboardManager.setPrimaryClip(ClipData.newPlainText(text, text))
         return true
     }
 

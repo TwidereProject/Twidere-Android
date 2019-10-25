@@ -96,7 +96,7 @@ class APIEditorDialogFragment : BaseDialogFragment() {
             }
 
             if (savedInstanceState != null) {
-                apiConfig = savedInstanceState.getParcelable(EXTRA_API_CONFIG)
+                apiConfig = savedInstanceState.getParcelable(EXTRA_API_CONFIG)!!
             } else {
                 apiConfig = arguments?.getParcelable(EXTRA_API_CONFIG) ?: kPreferences[defaultAPIConfigKey]
             }

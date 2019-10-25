@@ -273,7 +273,7 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
         registerReceiver(object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 val uid = intent.getIntExtra(Intent.EXTRA_UID, -1)
-                val packages = packageManager.getPackagesForUid(uid)
+                val packages = packageManager.getPackagesForUid(uid).orEmpty()
                 val manager = externalThemeManager
                 if (manager.emojiPackageName in packages) {
                     manager.reloadEmojiPreferences()

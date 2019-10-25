@@ -34,7 +34,7 @@ import org.mariotaku.twidere.model.ParcelableUser
 
 abstract class AbsUserMuteBlockDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
 
-    private val user: ParcelableUser by lazy { arguments.getParcelable<ParcelableUser>(EXTRA_USER) }
+    private val user: ParcelableUser by lazy { arguments.getParcelable<ParcelableUser>(EXTRA_USER)!! }
 
     override fun onClick(dialog: DialogInterface, which: Int) {
         when (which) {

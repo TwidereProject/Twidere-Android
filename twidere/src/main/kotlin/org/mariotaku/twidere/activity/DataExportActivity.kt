@@ -39,7 +39,7 @@ class DataExportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
             REQUEST_PICK_DIRECTORY -> {
                 executeAfterFragmentResumed {
                     if (resultCode == RESULT_OK && data != null) {
-                        val path = data.data.path
+                        val path = data.data?.path
                         val df = DataExportImportTypeSelectorDialogFragment()
                         val args = Bundle()
                         args.putString(EXTRA_PATH, path)

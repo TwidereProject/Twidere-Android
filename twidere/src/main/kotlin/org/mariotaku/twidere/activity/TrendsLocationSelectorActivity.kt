@@ -285,10 +285,11 @@ class TrendsLocationSelectorActivity : BaseActivity() {
             }
 
             companion object {
+                @JvmField
                 val CREATOR = object : Parcelable.Creator<LocationsData> {
                     override fun createFromParcel(source: Parcel): LocationsData {
-                        val root = source.readParcelable<Location>(Location::class.java.classLoader)
-                        val children = source.createTypedArray(Location.CREATOR)
+                        val root = source.readParcelable<Location>(Location::class.java.classLoader)!!
+                        val children = source.createTypedArray(Location.CREATOR)!!
                         return LocationsData(root, children)
                     }
 

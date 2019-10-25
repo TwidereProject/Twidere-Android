@@ -540,7 +540,9 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         (showProgressDialog("save_media_to_progress") and task {
             val a = weakThis.get() ?: throw InterruptedException()
             fileInfo.inputStream().use { st ->
-                st.copyTo(a.contentResolver.openOutputStream(data))
+                a.contentResolver.openOutputStream(data)?.use {
+                    st.copyTo(it)
+                }
             }
         }).successUi {
             val a = weakThis.get() ?: return@successUi

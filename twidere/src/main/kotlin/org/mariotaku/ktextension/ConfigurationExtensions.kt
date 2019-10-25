@@ -56,6 +56,6 @@ private object ConfigurationExtensionsApi18 {
 private object ConfigurationExtensionsApi24 {
 
     fun setLocalesCompat(configuration: Configuration, locales: LocaleListCompat) {
-        configuration.locales = locales.unwrap() as? LocaleList
+        configuration.setLocales(locales.unwrap() as? LocaleList)
     }
 }

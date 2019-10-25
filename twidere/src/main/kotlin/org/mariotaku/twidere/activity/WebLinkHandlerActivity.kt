@@ -36,7 +36,7 @@ class WebLinkHandlerActivity : Activity() {
             return
         }
 
-        val (handledIntent, handledSuccessfully) = when (uri.host.toLowerCase(Locale.US)) {
+        val (handledIntent, handledSuccessfully) = when (uri.host?.toLowerCase(Locale.US)) {
             "twitter.com", "www.twitter.com", "mobile.twitter.com" -> handleTwitterLink(regulateTwitterUri(uri))
             "fanfou.com" -> handleFanfouLink(uri)
             "twidere.org", "twidere.mariotaku.org" -> handleTwidereExternalLink(uri)
