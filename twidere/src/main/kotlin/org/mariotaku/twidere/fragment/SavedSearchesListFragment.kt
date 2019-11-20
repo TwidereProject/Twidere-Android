@@ -50,7 +50,7 @@ class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapte
         }
 
     val accountKey: UserKey
-        get() = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+        get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)!!
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

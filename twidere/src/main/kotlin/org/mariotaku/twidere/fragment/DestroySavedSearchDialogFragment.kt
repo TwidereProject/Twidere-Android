@@ -60,13 +60,13 @@ class DestroySavedSearchDialogFragment : BaseDialogFragment(), DialogInterface.O
     }
 
     private val accountKey: UserKey
-        get() = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+        get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)!!
 
     private val searchId: Long
         get() = arguments.getLong(EXTRA_SEARCH_ID, -1)
 
     private val searchName: String
-        get() = arguments.getString(EXTRA_NAME)
+        get() = arguments.getString(EXTRA_NAME)!!
 
     companion object {
 

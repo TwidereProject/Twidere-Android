@@ -32,7 +32,7 @@ import org.mariotaku.twidere.loader.MastodonSearchLoader
 class MastodonSearchFragment : ItemsListFragment() {
 
     val query: String
-        get() = arguments.getString(EXTRA_QUERY)
+        get() = arguments.getString(EXTRA_QUERY)!!
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<Any>?> {
         return MastodonSearchLoader(context, accountKey, query)

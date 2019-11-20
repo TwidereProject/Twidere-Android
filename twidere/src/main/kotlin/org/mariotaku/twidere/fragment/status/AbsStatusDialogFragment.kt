@@ -57,13 +57,13 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
     protected abstract val Dialog.itemContent: View
 
     protected val status: ParcelableStatus?
-        get() = arguments.getParcelable<ParcelableStatus>(EXTRA_STATUS)
+        get() = arguments.getParcelable(EXTRA_STATUS)
 
     protected val statusId: String
-        get() = arguments.getString(EXTRA_STATUS_ID)
+        get() = arguments.getString(EXTRA_STATUS_ID)!!
 
     protected val accountKey: UserKey
-        get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)
+        get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)!!
 
     private lateinit var adapter: DummyItemAdapter
 

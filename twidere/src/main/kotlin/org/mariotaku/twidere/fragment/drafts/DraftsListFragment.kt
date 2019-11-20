@@ -282,7 +282,7 @@ class DraftsListFragment : AbsContentListViewFragment<DraftsAdapter>(), LoaderCa
             when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {
                     val args = arguments ?: return
-                    DeleteDraftsTask(activity, args.getLongArray(EXTRA_IDS)).execute()
+                    DeleteDraftsTask(activity, args.getLongArray(EXTRA_IDS)!!).execute()
                 }
             }
         }

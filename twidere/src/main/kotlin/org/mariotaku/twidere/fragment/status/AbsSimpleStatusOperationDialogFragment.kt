@@ -35,7 +35,7 @@ abstract class AbsSimpleStatusOperationDialogFragment : BaseDialogFragment(), Di
     protected abstract val message: String
 
     protected val status: ParcelableStatus
-        get() = arguments.getParcelable<ParcelableStatus>(EXTRA_STATUS)
+        get() = arguments.getParcelable(EXTRA_STATUS)!!
 
     final override fun onClick(dialog: DialogInterface, which: Int) {
         when (which) {

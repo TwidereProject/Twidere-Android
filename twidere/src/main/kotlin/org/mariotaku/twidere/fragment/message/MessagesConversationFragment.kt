@@ -96,9 +96,9 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         EditAltTextDialogFragment.EditAltTextCallback {
     private lateinit var mediaPreviewAdapter: MediaPreviewAdapter
 
-    private val accountKey: UserKey get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)
+    private val accountKey: UserKey get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)!!
 
-    private val conversationId: String get() = arguments.getString(EXTRA_CONVERSATION_ID)
+    private val conversationId: String get() = arguments.getString(EXTRA_CONVERSATION_ID)!!
 
     private val account: AccountDetails? by lazy {
         AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)
@@ -247,7 +247,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             REQUEST_ADD_GIF -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     val intent = ThemedMediaPickerActivity.withThemed(context)
-                            .getMedia(data.data)
+                            .getMedia(data.data!!)
                             .extras(Bundle { this[EXTRA_TYPES] = intArrayOf(ParcelableMedia.Type.ANIMATED_GIF) })
                             .build()
                     startActivityForResult(intent, REQUEST_PICK_MEDIA)

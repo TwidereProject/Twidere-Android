@@ -38,7 +38,7 @@ class SetUserNicknameDialogFragment : BaseDialogFragment(), OnClickListener {
 
     override fun onClick(dialog: DialogInterface, which: Int) {
         val editName = (dialog as AlertDialog).editName
-        val userKey = arguments.getParcelable<UserKey>(EXTRA_USER_KEY)
+        val userKey = arguments.getParcelable<UserKey>(EXTRA_USER_KEY)!!
         when (which) {
             DialogInterface.BUTTON_POSITIVE -> {
                 if (editName.empty) {

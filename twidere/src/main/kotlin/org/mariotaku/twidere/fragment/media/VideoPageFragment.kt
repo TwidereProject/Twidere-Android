@@ -204,7 +204,7 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         if (bestVideoUrlAndType != null) {
             return Uri.parse(bestVideoUrlAndType.first)
         }
-        return arguments.getParcelable<Uri>(SubsampleImageViewerFragment.EXTRA_MEDIA_URI)
+        return arguments.getParcelable(SubsampleImageViewerFragment.EXTRA_MEDIA_URI)
     }
 
     override fun displayMedia(result: CacheDownloadLoader.Result) {
@@ -409,9 +409,9 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         internal val MediaViewerFragment.isMutedByDefault: Boolean
             get() = arguments.getBoolean(EXTRA_DEFAULT_MUTE, false)
         internal val MediaViewerFragment.media: ParcelableMedia?
-            get() = arguments.getParcelable<ParcelableMedia>(EXTRA_MEDIA)
+            get() = arguments.getParcelable(EXTRA_MEDIA)
         internal val MediaViewerFragment.accountKey: UserKey
-            get() = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+            get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)!!
 
     }
 }

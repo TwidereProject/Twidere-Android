@@ -35,6 +35,7 @@ import android.text.Spanned
 import android.view.*
 import android.widget.AbsListView
 import android.widget.AbsListView.MultiChoiceModeListener
+import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.TextView
 import com.bumptech.glide.RequestManager
@@ -83,7 +84,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
         listView.choiceMode = ListView.CHOICE_MODE_MULTIPLE_MODAL
-        listView.onItemClickListener = { _, _, pos, _ ->
+        listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, pos, _ ->
             onItemClick(pos)
         }
         listView.setMultiChoiceModeListener(this)

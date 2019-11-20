@@ -107,8 +107,8 @@ import java.lang.ref.WeakReference
 class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         LoaderManager.LoaderCallbacks<ParcelableMessageConversation?> {
 
-    private val accountKey: UserKey get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)
-    private val conversationId: String get() = arguments.getString(EXTRA_CONVERSATION_ID)
+    private val accountKey: UserKey get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)!!
+    private val conversationId: String get() = arguments.getString(EXTRA_CONVERSATION_ID)!!
 
     private lateinit var adapter: ConversationInfoAdapter
     private lateinit var itemDecoration: ConversationInfoDecoration

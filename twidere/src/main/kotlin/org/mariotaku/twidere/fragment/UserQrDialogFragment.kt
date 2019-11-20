@@ -61,7 +61,7 @@ import java.util.concurrent.ExecutionException
  */
 class UserQrDialogFragment : BaseDialogFragment() {
 
-    private val user: ParcelableUser get() = arguments.getParcelable(EXTRA_USER)
+    private val user: ParcelableUser get() = arguments.getParcelable(EXTRA_USER)!!
 
     init {
         setStyle(STYLE_NO_TITLE, 0)

@@ -389,7 +389,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
 
     class UserListDetailsDialogFragment : BaseDialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val userList = arguments.getParcelable<ParcelableUserList>(EXTRA_USER_LIST)
+            val userList = arguments.getParcelable<ParcelableUserList>(EXTRA_USER_LIST)!!
             val builder = AlertDialog.Builder(context)
             builder.setTitle(userList.name)
             builder.setMessage(userList.description)

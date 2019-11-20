@@ -178,7 +178,7 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
     class ItemsLoader(context: Context, private val arguments: Bundle) : FixedAsyncTaskLoader<List<Any>>(context) {
 
         override fun loadInBackground(): List<Any> {
-            return arguments.getParcelableArrayList<Parcelable>(EXTRA_ITEMS)
+            return arguments.getParcelableArrayList(EXTRA_ITEMS)!!
         }
 
         override fun onStartLoading() {

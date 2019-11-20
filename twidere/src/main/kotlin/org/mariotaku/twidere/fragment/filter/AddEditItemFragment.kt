@@ -53,7 +53,7 @@ import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
 
     private val contentUri: Uri
-        get() = arguments.getParcelable(EXTRA_URI)
+        get() = arguments.getParcelable(EXTRA_URI)!!
 
     private val rowId: Long
         get() = arguments.getLong(EXTRA_ID, -1)
@@ -129,7 +129,7 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
         val dialog = builder.create()
         dialog.applyOnShow {
             applyTheme()
-            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+            window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
             editText.setAdapter(when (contentUri) {
                 Filters.Sources.CONTENT_URI -> SourceAutoCompleteAdapter(activity)
                 Filters.Users.CONTENT_URI -> ComposeAutoCompleteAdapter(activity, requestManager).apply {

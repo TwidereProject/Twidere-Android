@@ -63,10 +63,10 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface,
         OnPageChangeListener, LinkHandlerActivity.HideUiOnScroll {
 
     val accountKey: UserKey
-        get() = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+        get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)!!
 
     val query: String
-        get() = arguments.getString(EXTRA_QUERY)
+        get() = arguments.getString(EXTRA_QUERY)!!
 
     val composePrefix: String
         get() = when {

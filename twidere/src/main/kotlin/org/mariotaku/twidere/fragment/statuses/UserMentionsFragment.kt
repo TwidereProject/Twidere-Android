@@ -45,7 +45,7 @@ class UserMentionsFragment : StatusesSearchFragment() {
     override fun onCreateStatusesLoader(context: Context,
             args: Bundle,
             fromUser: Boolean): Loader<List<ParcelableStatus>?> {
-        val screenName = args.getString(EXTRA_SCREEN_NAME)
+        val screenName = args.getString(EXTRA_SCREEN_NAME)!!
         val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
         val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
         val makeGap = args.getBoolean(EXTRA_MAKE_GAP, true)

@@ -61,7 +61,7 @@ class DestroyFriendshipDialogFragment : BaseDialogFragment(), DialogInterface.On
     }
 
     private val user: ParcelableUser
-        get() = arguments.getParcelable(EXTRA_USER)
+        get() = arguments.getParcelable(EXTRA_USER)!!
 
     companion object {
 

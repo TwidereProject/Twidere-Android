@@ -246,7 +246,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 cardContent.visibility = View.VISIBLE
                 errorContainer.visibility = View.GONE
                 progressContainer.visibility = View.GONE
-                val account: AccountDetails = data.extras.getParcelable(EXTRA_ACCOUNT)
+                val account: AccountDetails = data.extras.getParcelable(EXTRA_ACCOUNT)!!
                 displayUser(user, account)
                 if (user.is_cache) {
                     val args = Bundle()
@@ -1789,8 +1789,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val lists = arguments.getTypedArray<ParcelableUserList>(EXTRA_USER_LISTS)
-            val userKey = arguments.getParcelable<UserKey>(EXTRA_USER_KEY)
-            val accountKey = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+            val userKey = arguments.getParcelable<UserKey>(EXTRA_USER_KEY)!!
+            val accountKey = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)!!
             val builder = AlertDialog.Builder(context)
             builder.setTitle(R.string.title_add_or_remove_from_list)
             val entries = Array(lists.size) { idx ->

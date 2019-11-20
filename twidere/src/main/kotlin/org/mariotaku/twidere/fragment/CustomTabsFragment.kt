@@ -238,7 +238,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
             val conf: TabConfiguration
             when (tag) {
                 TAG_ADD_TAB -> {
-                    tabType = arguments.getString(EXTRA_TAB_TYPE)
+                    tabType = arguments.getString(EXTRA_TAB_TYPE)!!
                     tab = Tab()
                     conf = TabConfiguration.ofType(tabType)!!
                     tab.type = tabType
@@ -246,7 +246,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
                     tab.position = arguments.getInt(EXTRA_TAB_POSITION)
                 }
                 TAG_EDIT_TAB -> {
-                    tab = arguments.getParcelable(EXTRA_OBJECT)
+                    tab = arguments.getParcelable(EXTRA_OBJECT)!!
                     tabType = tab.type
                     conf = TabConfiguration.ofType(tabType) ?: run {
                         dismiss()

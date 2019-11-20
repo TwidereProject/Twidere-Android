@@ -92,7 +92,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
                     reloadStatuses()
                 }
             }
-            context.contentResolver.registerContentObserver(Filters.CONTENT_URI, true, contentObserver)
+            context.contentResolver.registerContentObserver(Filters.CONTENT_URI, true, contentObserver!!)
         }
         AccountManager.get(context).addOnAccountsUpdatedListenerSafe(accountListener, updateImmediately = false)
         updateRefreshState()
@@ -101,7 +101,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
     override fun onStop() {
         if (contentObserver != null) {
-            context.contentResolver.unregisterContentObserver(contentObserver)
+            context.contentResolver.unregisterContentObserver(contentObserver!!)
             contentObserver = null
         }
         AccountManager.get(context).removeOnAccountsUpdatedListenerSafe(accountListener)

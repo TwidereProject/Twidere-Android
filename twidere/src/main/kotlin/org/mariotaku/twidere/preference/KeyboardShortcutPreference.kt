@@ -41,7 +41,7 @@ class KeyboardShortcutPreference(context: Context, attrs: AttributeSet? = null) 
         GeneralComponent.get(context).inject(this)
         val a = context.obtainStyledAttributes(attrs, R.styleable.KeyboardShortcutPreference)
         contextTag = a.getString(R.styleable.KeyboardShortcutPreference_android_tag)
-        action = a.getString(R.styleable.KeyboardShortcutPreference_android_action)
+        action = a.getString(R.styleable.KeyboardShortcutPreference_android_action)!!
         a.recycle()
 
         key = action

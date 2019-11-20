@@ -13,7 +13,7 @@ import org.mariotaku.twidere.model.UserKey
  */
 class UserGroupsFragment : ParcelableGroupsFragment() {
     override fun onCreateUserListsLoader(context: Context, args: Bundle, fromUser: Boolean): Loader<List<ParcelableGroup>?> {
-        val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+        val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)!!
         val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
         val screenName = args.getString(EXTRA_SCREEN_NAME)
         return UserGroupsLoader(context, accountKey, userKey, screenName, adapter.getData())

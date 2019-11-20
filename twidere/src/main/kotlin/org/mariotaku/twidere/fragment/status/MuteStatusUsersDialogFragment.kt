@@ -39,7 +39,7 @@ import org.mariotaku.twidere.model.ParcelableStatus
 
 class MuteStatusUsersDialogFragment : BaseDialogFragment() {
 
-    private val status: ParcelableStatus get() = arguments.getParcelable(EXTRA_STATUS)
+    private val status: ParcelableStatus get() = arguments.getParcelable(EXTRA_STATUS)!!
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(context)

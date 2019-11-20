@@ -36,8 +36,8 @@ import org.mariotaku.twidere.text.validator.UserListNameValidator
 
 class EditUserListDialogFragment : BaseDialogFragment() {
 
-    private val accountKey by lazy { arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY) }
-    private val listId: String by lazy { arguments.getString(EXTRA_LIST_ID) }
+    private val accountKey by lazy { arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)!! }
+    private val listId: String by lazy { arguments.getString(EXTRA_LIST_ID)!! }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(context)

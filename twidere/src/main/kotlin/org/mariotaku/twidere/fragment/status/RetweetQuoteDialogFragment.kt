@@ -284,14 +284,14 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
         }
         val values = ObjectCursor.valuesCreatorFrom(Draft::class.java).create(draft)
         val contentResolver = context.contentResolver
-        val draftUri = contentResolver.insert(Drafts.CONTENT_URI, values)
+        val draftUri = contentResolver.insert(Drafts.CONTENT_URI, values)!!
         displayNewDraftNotification(draftUri)
     }
 
 
     private fun displayNewDraftNotification(draftUri: Uri) {
         val contentResolver = context.contentResolver
-        val notificationUri = Drafts.CONTENT_URI_NOTIFICATIONS.withAppendedPath(draftUri.lastPathSegment)
+        val notificationUri = Drafts.CONTENT_URI_NOTIFICATIONS.withAppendedPath(draftUri.lastPathSegment!!)
         contentResolver.insert(notificationUri, null)
     }
 
@@ -302,8 +302,8 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
             when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {
                     val args = arguments
-                    val account: AccountDetails = args.getParcelable(EXTRA_ACCOUNT)
-                    val status: ParcelableStatus = args.getParcelable(EXTRA_STATUS)
+                    val account: AccountDetails = args.getParcelable(EXTRA_ACCOUNT)!!
+                    val status: ParcelableStatus = args.getParcelable(EXTRA_STATUS)!!
                     if (fragment.retweetOrQuote(account, status, false)) {
                         fragment.dismiss()
                     }

@@ -49,6 +49,7 @@ import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.extension.text.appendCompat
 import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.loader.CacheUserSearchLoader
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
 import org.mariotaku.twidere.model.ParcelableUser
@@ -66,9 +67,9 @@ import java.lang.ref.WeakReference
  */
 class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<ParcelableUser>?> {
 
-    private val accountKey by lazy { arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY) }
-    private val account by lazy {
-        AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)
+    private val accountKey: UserKey by lazy { arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)!! }
+    private val account: AccountDetails by lazy {
+        AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)!!
     }
 
     private var selectedRecipients: List<ParcelableUser>
@@ -200,7 +201,7 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
     }
 
     override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableUser>?> {
-        val query = args.getString(EXTRA_QUERY)
+        val query = args.getString(EXTRA_QUERY)!!
         val fromCache = args.getBoolean(EXTRA_FROM_CACHE)
         val fromUser = args.getBoolean(EXTRA_FROM_USER)
         return CacheUserSearchLoader(context, accountKey, query, !fromCache, true, fromUser)

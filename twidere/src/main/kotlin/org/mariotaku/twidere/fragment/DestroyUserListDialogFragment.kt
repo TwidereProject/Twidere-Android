@@ -58,7 +58,7 @@ class DestroyUserListDialogFragment : BaseDialogFragment(), DialogInterface.OnCl
     }
 
     private val userList: ParcelableUserList
-        get() = arguments.getParcelable<ParcelableUserList>(EXTRA_USER_LIST)
+        get() = arguments.getParcelable(EXTRA_USER_LIST)!!
 
     companion object {
 

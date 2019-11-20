@@ -137,7 +137,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             adapter.isRepliesLoading = true
             adapter.isConversationsLoading = true
             adapter.updateItemDecoration()
-            val status: ParcelableStatus = args.getParcelable(EXTRA_STATUS)
+            val status: ParcelableStatus = args.getParcelable(EXTRA_STATUS)!!
             val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
             return ConversationLoader(activity, status, adapter.getData(), true, loadingMore).apply {
                 pagination = args.toPagination()
@@ -177,8 +177,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     private val statusActivityLoaderCallback = object : LoaderCallbacks<StatusActivity?> {
         override fun onCreateLoader(id: Int, args: Bundle): Loader<StatusActivity?> {
-            val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-            val statusId = args.getString(EXTRA_STATUS_ID)
+            val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)!!
+            val statusId = args.getString(EXTRA_STATUS_ID)!!
             return StatusActivitySummaryLoader(activity, accountKey, statusId)
         }
 
@@ -675,7 +675,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
         override fun onExecute(account: AccountDetails, params: Any?): TranslationResult {
             val twitter = account.newMicroBlogInstance(context, MicroBlog::class.java)
-            val prefDest = preferences.getString(KEY_TRANSLATION_DESTINATION, null)
+            val prefDest = preferences.getString(KEY_TRANSLATION_DESTINATION, null).orEmpty()
             val dest: String
             if (TextUtils.isEmpty(prefDest)) {
                 dest = twitter.accountSettings.language
