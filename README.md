@@ -1,3 +1,11 @@
+# Good bye, my friends! #
+
+Months ago, I started a long and slow migration to fit new Android frameworks. Unfortunately, Twidere has hundreds of thousands lines of code, and over 50% needs to be rewritten because there're breaking changes. It's even impossible to maintain as publishing to Google Play requires new API target, and that target requires new libraries, and those libraries will break current code.
+
+So It's time to say goodbye. Don't worry, I don't like Twitter's new timeline & ads as much as you do. I can't give any promise, but my plan is to start a new one, focusing on cleaness & simplicity. And before this proposed product, I want to build a web service to help you manage your Twitter data, such as removing spam followers (like [TwitBlock](https://twitblock.org/)). 
+
+Let's looking forward to something better come to this world.
+
 # Twidere for Android #
 
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Twidere-brightgreen.svg?style=flat)](http://android-arsenal.com/details/3/2453)
