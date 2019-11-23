@@ -93,6 +93,7 @@ public class HeaderDrawerLayout extends ViewGroup {
                 break;
             }
             case MotionEvent.ACTION_CANCEL:
+              break; // pass
             case MotionEvent.ACTION_UP: {
                 mTouchDown = false;
                 mTouchingScrollableContent = false;

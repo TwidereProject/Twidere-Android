@@ -63,6 +63,7 @@ public final class InternalParseUtil {
                     break;
                 default:
                     accessLevel = TwitterResponse.AccessLevel.NONE;
+                    break;
                     // unknown access level;
             }
         }
