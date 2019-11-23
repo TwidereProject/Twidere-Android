@@ -65,7 +65,7 @@ public abstract class FanfouUserStreamCallback implements RawCallback<MicroBlogE
                 }
                 if (TextUtils.isEmpty(line)) continue;
                 FanfouStreamObject object = JsonSerializer.parse(line, FanfouStreamObject.class);
-                if (!handleEvent(object, line)) {
+                if (!handleEvent(object)) {
                     onUnhandledEvent(object.getEvent(), line);
                 }
             }
@@ -85,7 +85,7 @@ public abstract class FanfouUserStreamCallback implements RawCallback<MicroBlogE
         disconnected = true;
     }
 
-    private boolean handleEvent(final FanfouStreamObject object, final String json) throws IOException {
+    private boolean handleEvent(final FanfouStreamObject object) throws IOException {
         switch (object.getEvent()) {
             case "message.create": {
                 return onStatusCreation(object.getCreatedAt(), object.getSource(),

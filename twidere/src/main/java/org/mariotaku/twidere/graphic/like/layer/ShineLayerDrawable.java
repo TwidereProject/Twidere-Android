@@ -39,7 +39,7 @@ public class ShineLayerDrawable extends AnimationLayerDrawable {
         } else if (progress < 0.75f) {
             calcPhase3(startEnd, progress);
         } else {
-            calcPhase4(startEnd, progress);
+            calcPhase4(startEnd);
             paint.setAlpha(Math.round(0xFF * (1 - (progress - 0.75f) * 4)));
         }
 
@@ -72,7 +72,7 @@ public class ShineLayerDrawable extends AnimationLayerDrawable {
         state.setFullRadius(fullRadius);
     }
 
-    private void calcPhase4(float[] startEnd, float progress) {
+    private void calcPhase4(float[] startEnd) {
         calcPhase3(startEnd, 0.75f);
     }
 

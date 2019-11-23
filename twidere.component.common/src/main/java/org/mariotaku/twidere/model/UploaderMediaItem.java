@@ -56,7 +56,7 @@ public class UploaderMediaItem implements Parcelable {
     public UploaderMediaItem() {
     }
 
-    public UploaderMediaItem(final Context context, final ParcelableMediaUpdate media) throws FileNotFoundException {
+    public UploaderMediaItem(final ParcelableMediaUpdate media) throws FileNotFoundException {
         path = Uri.parse(media.uri).getPath();
         final File file = new File(path);
         fd = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
@@ -91,7 +91,7 @@ public class UploaderMediaItem implements Parcelable {
         if (status.media == null) return null;
         final UploaderMediaItem[] uploaderItems = new UploaderMediaItem[status.media.length];
         for (int i = 0, j = uploaderItems.length; i < j; i++) {
-            uploaderItems[i] = new UploaderMediaItem(context, status.media[i]);
+            uploaderItems[i] = new UploaderMediaItem(status.media[i]);
         }
         return uploaderItems;
     }

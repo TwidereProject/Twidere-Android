@@ -41,7 +41,7 @@ public class ColorLabelFrameLayout extends FrameLayout implements IColorLabelVie
 
     public ColorLabelFrameLayout(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
-        mHelper = new Helper(this, context, attrs, defStyle);
+        mHelper = new Helper(this, context, attrs);
     }
 
     @Override

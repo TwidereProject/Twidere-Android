@@ -41,7 +41,7 @@ public class ColorLabelLinearLayout extends LinearLayout implements IColorLabelV
 
     public ColorLabelLinearLayout(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
-        mHelper = new Helper(this, context, attrs, defStyle);
+        mHelper = new Helper(this, context, attrs);
     }
 
     @Override

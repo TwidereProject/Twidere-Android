@@ -39,8 +39,6 @@ import java.util.List;
 public class UserKey implements Comparable<UserKey>, Parcelable {
 
     @NonNull
-    private static final String ID_PLACEHOLDER = "#placeholder";
-    @NonNull
     public static final UserKey SELF = new UserKey("#self#", "#self#");
     @NonNull
     public static final UserKey INVALID = new UserKey("#invalid#", "#invalid#");

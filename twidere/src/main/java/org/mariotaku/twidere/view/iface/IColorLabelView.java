@@ -65,7 +65,7 @@ public interface IColorLabelView {
 
         private boolean mIgnorePadding;
 
-        public Helper(final View view, final Context context, final AttributeSet attrs, final int defStyle) {
+        public Helper(final View view, final Context context, final AttributeSet attrs) {
             mView = view;
             final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ColorLabelView);
             mIgnorePadding = a.getBoolean(R.styleable.ColorLabelView_ignorePadding, false);

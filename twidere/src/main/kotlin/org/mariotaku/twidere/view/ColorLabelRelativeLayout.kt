@@ -27,7 +27,7 @@ import org.mariotaku.twidere.view.iface.IColorLabelView
 
 class ColorLabelRelativeLayout(context: Context, attrs: AttributeSet? = null) : ExtendedRelativeLayout(context, attrs), IColorLabelView {
 
-    private val helper = IColorLabelView.Helper(this, context, attrs, 0)
+    private val helper = IColorLabelView.Helper(this, context, attrs)
 
     override fun drawBackground(color: Int) {
         helper.drawBackground(color)

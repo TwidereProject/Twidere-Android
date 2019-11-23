@@ -218,10 +218,6 @@ public class MicroBlogException extends Exception implements TwitterResponse, Ht
         return statusCode;
     }
 
-    private void setStatusCode(int statusCode) {
-        this.statusCode = statusCode;
-    }
-
     /**
      * Tests if the exception is caused by network issue
      *

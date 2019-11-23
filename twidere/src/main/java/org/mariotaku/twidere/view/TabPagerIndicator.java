@@ -267,10 +267,6 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
         return (mOption & DisplayOption.LABEL) != 0;
     }
 
-    private boolean isTabExpandEnabled() {
-        return mLayoutManager.isTabExpandEnabled();
-    }
-
     public void setTabExpandEnabled(boolean expandEnabled) {
         mLayoutManager.setTabExpandEnabled(expandEnabled);
     }
