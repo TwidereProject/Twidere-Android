@@ -31,7 +31,6 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.view.ViewPropertyAnimator;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
@@ -70,8 +69,6 @@ import java.util.List;
  * listView.setOnScrollListener(touchListener.makeScrollListener());
  * </pre>
  * <p/>
- * <p>This class Requires API level 12 or later due to use of {@link
- * ViewPropertyAnimator}.</p>
  */
 public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
     // Cached ViewConfiguration and system-wide constant values
