@@ -112,7 +112,7 @@ public final class QrSegment {
 	public static List<QrSegment> makeSegments(@NonNull String text) {
 		// Select the most efficient segment encoding automatically
 		List<QrSegment> result = new ArrayList<>();
-		if (text.equals(""))
+		if ("".equals(text))
 			return result;
 		else if (NUMERIC_REGEX.matcher(text).matches())
 			result.add(makeNumeric(text));

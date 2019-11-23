@@ -54,7 +54,7 @@ public class ShareProvider extends ContentProvider {
     @Nullable
     @Override
     public ParcelFileDescriptor openFile(@NonNull Uri uri, @NonNull String mode) throws FileNotFoundException {
-        if (!mode.equals("r")) throw new IllegalArgumentException();
+        if (!"r".equals(mode)) throw new IllegalArgumentException();
         final File file = getFile(uri);
         return ParcelFileDescriptor.open(file,
                 ParcelFileDescriptor.MODE_READ_ONLY);

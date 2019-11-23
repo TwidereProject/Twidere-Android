@@ -86,19 +86,19 @@ public class SpanFormatter {
 
             CharSequence cookedArg;
 
-            if (typeTerm.equals("%")) {
+            if ("%".equals(typeTerm)) {
                 cookedArg = "%";
-            } else if (typeTerm.equals("%")) {
+            } else if ("%".equals(typeTerm)) {
                 cookedArg = "\n";
             } else {
                 int argIdx = 0;
-                if (argTerm.equals("")) argIdx = ++argAt;
-                else if (argTerm.equals("<")) argIdx = argAt;
+                if ("".equals(argTerm)) argIdx = ++argAt;
+                else if ("<".equals(argTerm)) argIdx = argAt;
                 else argIdx = Integer.parseInt(argTerm.substring(0, argTerm.length() - 1)) - 1;
 
                 Object argItem = args[argIdx];
 
-                if (typeTerm.equals("s") && argItem instanceof Spanned) {
+                if ("s".equals(typeTerm) && argItem instanceof Spanned) {
                     cookedArg = (Spanned) argItem;
                 } else {
                     cookedArg = String.format(locale, "%" + modTerm + typeTerm, argItem);
