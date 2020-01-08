@@ -60,7 +60,6 @@ import org.mariotaku.twidere.adapter.ArrayAdapter
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.TabAccountFlags
 import org.mariotaku.twidere.extension.applyTheme
-import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.tab.DrawableHolder
@@ -290,7 +289,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
                 }
                 val officialKeyOnly = arguments.getBoolean(EXTRA_OFFICIAL_KEY_ONLY, false)
                 accountsAdapter.addAll(AccountUtils.getAllAccountDetails(AccountManager.get(context), true).filter {
-                    if (officialKeyOnly && !it.isOfficial(context)) {
+                    if (officialKeyOnly) {
                         return@filter false
                     }
                     return@filter conf.checkAccountAvailability(it)

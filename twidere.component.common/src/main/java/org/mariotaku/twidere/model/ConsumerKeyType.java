@@ -24,8 +24,7 @@ import android.support.annotation.NonNull;
  * Created by mariotaku on 15/4/20.
  */
 public enum ConsumerKeyType {
-    TWITTER_FOR_ANDROID, TWITTER_FOR_IPHONE, TWITTER_FOR_IPAD, TWITTER_FOR_MAC,
-    TWITTER_FOR_WINDOWS_PHONE, TWITTER_FOR_GOOGLE_TV, TWEETDECK, UNKNOWN;
+    UNKNOWN;
 
     @NonNull
     public static ConsumerKeyType parse(String type) {

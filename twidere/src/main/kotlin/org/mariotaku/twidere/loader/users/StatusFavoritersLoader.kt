@@ -36,7 +36,6 @@ import org.mariotaku.twidere.extension.api.lookupUsersMapPaginated
 import org.mariotaku.twidere.extension.model.api.mastodon.mapToPaginated
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
-import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
@@ -63,9 +62,7 @@ class StatusFavoritersLoader(
             }
             AccountType.TWITTER -> {
                 val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
-                val ids = if (details.isOfficial(context)) {
-                    microBlog.getStatusActivitySummary(statusId).favoriters
-                } else {
+                val ids = run {
                     val web = details.newMicroBlogInstance(context, TwitterWeb::class.java)
                     val htmlUsers = web.getFavoritedPopup(statusId).htmlUsers
                     IDsAccessor.setIds(IDs(), parseUserIds(htmlUsers))

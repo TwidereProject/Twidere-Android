@@ -339,26 +339,8 @@ class DetailStatusViewHolder(
 
 
         val lang = status.lang
-        if (CheckUtils.isValidLocale(lang) && account.isOfficial(context)) {
-            translateContainer.visibility = View.VISIBLE
-            if (translation != null) {
-                val locale = Locale(translation.translatedLang)
-                translateLabelView.text = context.getString(R.string.label_translated_to_language,
-                        locale.displayLanguage)
-                translateResultView.visibility = View.VISIBLE
-                translateChangeLanguageView.visibility = View.VISIBLE
-                translateResultView.text = translation.text
-            } else {
-                val locale = Locale(lang)
-                translateLabelView.text = context.getString(R.string.label_translate_from_language,
-                        locale.displayLanguage)
-                translateResultView.visibility = View.GONE
-                translateChangeLanguageView.visibility = View.GONE
-            }
-        } else {
-            translateLabelView.setText(R.string.unknown_language)
-            translateContainer.visibility = View.GONE
-        }
+        translateLabelView.setText(R.string.unknown_language)
+        translateContainer.visibility = View.GONE
 
         textView.setTextIsSelectable(true)
         translateResultView.setTextIsSelectable(true)

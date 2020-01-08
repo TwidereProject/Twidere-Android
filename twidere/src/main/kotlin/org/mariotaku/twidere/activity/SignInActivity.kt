@@ -70,7 +70,6 @@ import org.mariotaku.microblog.library.mastodon.annotation.AuthScope
 import org.mariotaku.microblog.library.twitter.TwitterOAuth
 import org.mariotaku.microblog.library.twitter.auth.BasicAuthorization
 import org.mariotaku.microblog.library.twitter.auth.EmptyAuthorization
-import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.restfu.http.Endpoint
 import org.mariotaku.restfu.oauth.OAuthToken
@@ -411,7 +410,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             result.addAccount(am, preferences[randomizeAccountNameKey])
             Analyzer.log(SignIn(true, accountType = result.type,
                     credentialsType = apiConfig.credentialsType,
-                    officialKey = result.extras?.official == true))
+                    officialKey = false))
             finishSignIn()
         }
     }
@@ -1221,17 +1220,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         }
 
         private fun getTwitterAccountExtras(twitter: MicroBlog): TwitterAccountExtras {
-            val extras = TwitterAccountExtras()
-            try {
-                // Get Twitter official only resource
-                val paging = Paging()
-                paging.count(1)
-                twitter.getActivitiesAboutMe(paging)
-                extras.setIsOfficialCredentials(true)
-            } catch (e: MicroBlogException) {
-                // Ignore
-            }
-            return extras
+            return TwitterAccountExtras()
         }
 
         private fun getMastodonAccountExtras(mastodon: Mastodon): MastodonAccountExtras {

@@ -24,7 +24,6 @@ import android.content.Context
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.model.notificationDisabled
 import org.mariotaku.twidere.model.AccountDetails
@@ -61,24 +60,6 @@ class SetConversationNotificationDisabledTask(
 
     private fun requestSetNotificationDisabled(microBlog: MicroBlog, account: AccountDetails):
             GetMessagesTask.DatabaseUpdateData {
-        when (account.type) {
-            AccountType.TWITTER -> {
-                if (account.isOfficial(context)) {
-                    val response = if (notificationDisabled) {
-                        microBlog.disableDmConversations(conversationId)
-                    } else {
-                        microBlog.enableDmConversations(conversationId)
-                    }
-                    val conversation = DataStoreUtils.findMessageConversation(context, accountKey,
-                            conversationId) ?: return GetMessagesTask.DatabaseUpdateData(emptyList(), emptyList())
-                    if (response.isSuccessful) {
-                        conversation.notificationDisabled = notificationDisabled
-                    }
-                    return GetMessagesTask.DatabaseUpdateData(listOf(conversation), emptyList())
-                }
-            }
-        }
-
         val conversation = DataStoreUtils.findMessageConversation(context, accountKey,
                 conversationId) ?: return GetMessagesTask.DatabaseUpdateData(emptyList(), emptyList())
         conversation.notificationDisabled = notificationDisabled

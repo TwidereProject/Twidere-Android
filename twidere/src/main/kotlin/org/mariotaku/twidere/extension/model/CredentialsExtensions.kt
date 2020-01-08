@@ -23,6 +23,7 @@ import org.mariotaku.restfu.oauth.OAuthToken
 import org.mariotaku.restfu.oauth2.OAuth2Authorization
 import org.mariotaku.twidere.TwidereConstants.DEFAULT_TWITTER_API_URL_FORMAT
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.model.ConsumerKeyType
 import org.mariotaku.twidere.model.account.cred.*
 import org.mariotaku.twidere.util.HttpClientFactory
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
@@ -148,9 +149,7 @@ fun <T> newMicroBlogInstance(context: Context, endpoint: Endpoint, auth: Authori
     val factory = RestAPIFactory<MicroBlogException>()
     val extraHeaders = run {
         if (auth !is OAuthAuthorization) return@run null
-        val officialKeyType = InternalTwitterContentUtils.getOfficialKeyType(context,
-                auth.consumerKey, auth.consumerSecret)
-        return@run MicroBlogAPIFactory.getExtraHeaders(context, officialKeyType)
+        return@run MicroBlogAPIFactory.getExtraHeaders(context, ConsumerKeyType.UNKNOWN)
     } ?: UserAgentExtraHeaders(MicroBlogAPIFactory.getTwidereUserAgent(context))
     val holder = DependencyHolder.get(context)
     var extraRequestParams: Map<String, String>? = null

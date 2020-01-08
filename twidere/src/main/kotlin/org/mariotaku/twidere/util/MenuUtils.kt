@@ -54,7 +54,6 @@ import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.favoriteConfirmationKey
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
 import org.mariotaku.twidere.constant.nameFirstKey
-import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.fragment.AbsStatusesFragment
 import org.mariotaku.twidere.fragment.AddStatusFilterDialogFragment
 import org.mariotaku.twidere.fragment.BaseFragment
@@ -189,11 +188,7 @@ object MenuUtils {
                 favorite.setTitle(if (isFavorite) R.string.action_undo_like else R.string.action_like)
             }
         }
-        val translate = menu.findItem(R.id.translate)
-        if (translate != null) {
-            val isOfficialKey = details.isOfficial(context)
-            menu.setItemAvailability(R.id.translate, isOfficialKey)
-        }
+        menu.setItemAvailability(R.id.translate, false)
         menu.removeGroup(MENU_GROUP_STATUS_EXTENSION)
         addIntentToMenuForExtension(context, menu, MENU_GROUP_STATUS_EXTENSION,
                 INTENT_ACTION_EXTENSION_OPEN_STATUS, EXTRA_STATUS, EXTRA_STATUS_JSON, status)
@@ -284,10 +279,8 @@ object MenuUtils {
                 DestroyStatusDialogFragment.show(fm, status)
             }
             R.id.pin -> {
-                PinStatusDialogFragment.show(fm, status)
             }
             R.id.unpin -> {
-                UnpinStatusDialogFragment.show(fm, status)
             }
             R.id.add_to_filter -> {
                 AddStatusFilterDialogFragment.show(fm, status)
