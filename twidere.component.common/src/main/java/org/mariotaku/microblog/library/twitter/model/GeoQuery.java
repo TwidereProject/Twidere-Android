@@ -58,7 +58,7 @@ public final class GeoQuery implements ValueMap {
     }
 
     public GeoQuery accuracy(final String accuracy) {
-        setAccuracy(accuracy);
+        this.accuracy = accuracy;
         return this;
     }
 
