@@ -24,11 +24,11 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
-import android.support.v7.internal.widget.PreferenceImageView
-import android.support.v7.preference.Preference
-import android.support.v7.preference.PreferenceManager
-import android.support.v7.preference.PreferenceViewHolder
-import android.support.v7.widget.SwitchCompat
+import androidx.preference.internal.PreferenceImageView
+import androidx.preference.Preference
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceViewHolder
+import androidx.appcompat.widget.SwitchCompat
 import android.util.AttributeSet
 import android.view.View
 import android.widget.ImageView

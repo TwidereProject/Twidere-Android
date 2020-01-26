@@ -23,8 +23,8 @@ import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
-import android.support.v4.view.WindowInsetsCompat
-import android.support.v7.widget.AppCompatImageView
+import androidx.core.view.WindowInsetsCompat
+import androidx.appcompat.widget.AppCompatImageView
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.WindowInsets

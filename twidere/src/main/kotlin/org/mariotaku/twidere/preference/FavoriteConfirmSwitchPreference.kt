@@ -20,8 +20,8 @@
 package org.mariotaku.twidere.preference
 
 import android.content.Context
-import android.support.v7.preference.PreferenceManager
-import android.support.v7.preference.SwitchPreferenceCompat
+import androidx.preference.PreferenceManager
+import androidx.preference.SwitchPreferenceCompat
 import android.util.AttributeSet
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R

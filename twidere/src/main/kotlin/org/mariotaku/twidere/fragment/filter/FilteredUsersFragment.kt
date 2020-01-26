@@ -8,11 +8,11 @@ import android.database.Cursor
 import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.CursorLoader
-import android.support.v4.content.Loader
-import android.support.v4.widget.SimpleCursorAdapter
+import androidx.fragment.app.FragmentActivity
+import androidx.core.content.ContextCompat
+import androidx.loader.content.CursorLoader
+import androidx.loader.content.Loader
+import androidx.cursoradapter.widget.SimpleCursorAdapter
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.view.*
@@ -86,7 +86,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
             REQUEST_ADD_USER_SELECT_ACCOUNT -> {
                 if (resultCode != FragmentActivity.RESULT_OK || data == null) return
                 val intent = Intent(INTENT_ACTION_SELECT_USER)
-                intent.setClass(context, UserSelectorActivity::class.java)
+                context?.let { intent.setClass(it, UserSelectorActivity::class.java) }
                 intent.putExtra(EXTRA_ACCOUNT_KEY, data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY))
                 startActivityForResult(intent, REQUEST_SELECT_USER)
             }
@@ -105,7 +105,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor?> {
-        return CursorLoader(activity, contentUri, contentColumns, null, null, sortOrder)
+        return CursorLoader(activity!!, contentUri, contentColumns, null, null, sortOrder)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -180,6 +180,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
     }
 
     override fun performDeletion() {
+        val context = context ?: return
         val positions = listView.checkedItemPositions
         val keys = (0 until positions.size()).mapNotNull {
             if (!positions.valueAt(it)) return@mapNotNull null
@@ -217,7 +218,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
             val am = AccountManager.get(fragment.context)
             val account = AccountUtils.getAccountDetails(am, accountKey, true) ?:
                     throw AccountNotFoundException()
-            CreateUserMuteTask.muteUsers(fragment.context, account, items)
+            CreateUserMuteTask.muteUsers(fragment.context!!, account, items)
         }.alwaysUi {
             weakThis.get()?.dismissProgressDialog("export_to_muted")
         }
@@ -264,9 +265,10 @@ class FilteredUsersFragment : BaseFiltersFragment() {
                 val start = ssb.length
                 ssb.append("*")
                 val end = start + 1
-                val drawable = ContextCompat.getDrawable(context, R.drawable.ic_action_sync)
-                drawable.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_ATOP)
-                ssb.setSpan(EmojiSpan(drawable), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                ContextCompat.getDrawable(context, R.drawable.ic_action_sync) ?.let { drawable ->
+                    drawable.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_ATOP)
+                    ssb.setSpan(EmojiSpan(drawable), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                }
             }
             text1.spannable = ssb
             text2.spannable = userKey.host

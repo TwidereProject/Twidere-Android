@@ -21,7 +21,7 @@ package org.mariotaku.twidere.util
 
 import android.content.Context
 import android.os.Build
-import android.support.v7.view.menu.MenuBuilder
+import androidx.appcompat.view.menu.MenuBuilder
 import android.util.DisplayMetrics
 import android.view.Menu
 import android.view.WindowManager

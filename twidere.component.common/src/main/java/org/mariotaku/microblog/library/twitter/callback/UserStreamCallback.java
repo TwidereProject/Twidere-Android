@@ -18,7 +18,7 @@
 
 package org.mariotaku.microblog.library.twitter.callback;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.mariotaku.microblog.library.MicroBlogException;

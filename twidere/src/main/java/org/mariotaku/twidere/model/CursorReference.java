@@ -21,7 +21,7 @@ package org.mariotaku.twidere.model;
 
 
 import android.database.Cursor;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.io.Closeable;
 import java.io.IOException;

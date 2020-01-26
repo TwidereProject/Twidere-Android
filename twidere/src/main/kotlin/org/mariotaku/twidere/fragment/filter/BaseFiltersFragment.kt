@@ -24,12 +24,12 @@ import android.database.Cursor
 import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.LoaderManager
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.CursorLoader
-import android.support.v4.content.Loader
-import android.support.v4.view.ViewCompat
-import android.support.v4.widget.SimpleCursorAdapter
+import androidx.loader.app.LoaderManager
+import androidx.core.content.ContextCompat
+import androidx.loader.content.CursorLoader
+import androidx.loader.content.Loader
+import androidx.core.view.ViewCompat
+import androidx.cursoradapter.widget.SimpleCursorAdapter
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.view.*
@@ -179,7 +179,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor?> {
         val selection = Expression.isNull(Columns.Column(Filters.USER_KEY))
-        return CursorLoader(activity, contentUri, contentColumns, selection.sql, null, sortOrder)
+        return CursorLoader(activity!!, contentUri, contentColumns, selection.sql, null, sortOrder)
     }
 
     override fun onLoadFinished(loader: Loader<Cursor?>, data: Cursor?) {
@@ -224,7 +224,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
     protected open fun performDeletion() {
         val ids = listView.checkedItemIds
         val where = Expression.inArgs(Columns.Column(Filters._ID), ids.size)
-        context.contentResolver.delete(contentUri, where.sql, Array(ids.size) { ids[it].toString() })
+        context?.contentResolver?.delete(contentUri, where.sql, Array(ids.size) { ids[it].toString() })
     }
 
     protected open fun addOrEditItem(id: Long = -1, value: String? = null, scope: Int = FilterScope.DEFAULT) {
@@ -235,7 +235,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
             this[EXTRA_VALUE] = value
             this[EXTRA_SCOPE] = scope
         }
-        dialog.show(fragmentManager, "add_rule")
+        fragmentManager?.let { dialog.show(it, "add_rule") }
     }
 
 
@@ -273,9 +273,11 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
                 val start = ssb.length
                 ssb.append("*")
                 val end = start + 1
-                val drawable = ContextCompat.getDrawable(context, R.drawable.ic_action_sync)
-                drawable.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_ATOP)
-                ssb.setSpan(EmojiSpan(drawable), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                ContextCompat.getDrawable(context, R.drawable.ic_action_sync)?.let { drawable ->
+                    drawable.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_ATOP)
+                    ssb.setSpan(EmojiSpan(drawable), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                }
+
             }
             text1.text = ssb
         }

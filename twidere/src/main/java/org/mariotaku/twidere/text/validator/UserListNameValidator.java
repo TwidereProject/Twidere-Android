@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.text.validator;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.rengwuxian.materialedittext.validation.METValidator;
 

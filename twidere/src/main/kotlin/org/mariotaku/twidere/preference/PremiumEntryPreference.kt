@@ -1,9 +1,9 @@
 package org.mariotaku.twidere.preference
 
 import android.content.Context
-import android.support.v4.app.FragmentActivity
-import android.support.v7.preference.Preference
-import android.support.v7.preference.Preference.OnPreferenceClickListener
+import androidx.fragment.app.FragmentActivity
+import androidx.preference.Preference
+import androidx.preference.Preference.OnPreferenceClickListener
 import android.util.AttributeSet
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.twidere.R

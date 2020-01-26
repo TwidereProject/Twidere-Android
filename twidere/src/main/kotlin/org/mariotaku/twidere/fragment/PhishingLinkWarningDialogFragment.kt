@@ -25,7 +25,7 @@ import android.content.DialogInterface.OnClickListener
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_URI
 import org.mariotaku.twidere.extension.applyTheme
@@ -47,7 +47,7 @@ class PhishingLinkWarningDialogFragment : BaseDialogFragment(), OnClickListener 
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context)
+        val builder = AlertDialog.Builder(context!!)
         builder.setTitle(android.R.string.dialog_alert_title)
         builder.setView(R.layout.dialog_phishing_link_warning)
         builder.setPositiveButton(android.R.string.ok, this)

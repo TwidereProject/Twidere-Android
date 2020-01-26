@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.view.holder
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.View.OnClickListener
 import kotlinx.android.synthetic.main.card_item_gap.view.*

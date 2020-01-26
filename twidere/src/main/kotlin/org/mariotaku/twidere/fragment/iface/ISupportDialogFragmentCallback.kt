@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.fragment.iface
 
-import android.support.v4.app.DialogFragment
+import androidx.fragment.app.DialogFragment
 
 interface ISupportDialogFragmentCallback {
 

@@ -22,7 +22,7 @@ package org.mariotaku.twidere.loader
 import android.accounts.AccountManager
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.content.FixedAsyncTaskLoader
+import androidx.loader.content.FixedAsyncTaskLoader
 import android.text.TextUtils
 import android.util.Log
 import org.mariotaku.abstask.library.TaskStarter
@@ -195,9 +195,9 @@ class ParcelableUserLoader(
         forceLoad()
     }
 
-    override fun deliverResult(data: SingleResponse<ParcelableUser>) {
+    override fun deliverResult(data: SingleResponse<ParcelableUser>?) {
         super.deliverResult(data)
-        val user = data.data ?: return
+        val user = data?.data ?: return
         if (user.is_cache) return
         val account = data.extras.getParcelable<AccountDetails>(EXTRA_ACCOUNT)
         if (account != null) {

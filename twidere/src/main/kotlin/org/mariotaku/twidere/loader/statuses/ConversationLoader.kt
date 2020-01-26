@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.loader.statuses
 
 import android.content.Context
-import android.support.annotation.WorkerThread
+import androidx.annotation.WorkerThread
 import org.attoparser.config.ParseConfiguration
 import org.attoparser.dom.DOMMarkupParser
 import org.mariotaku.commons.parcel.ParcelUtils

@@ -1,7 +1,7 @@
 package org.mariotaku.twidere.fragment.iface
 
-import android.support.v4.app.FragmentActivity
-import android.support.v7.widget.Toolbar
+import androidx.fragment.app.FragmentActivity
+import androidx.appcompat.widget.Toolbar
 
 /**
  * Created by mariotaku on 16/3/16.

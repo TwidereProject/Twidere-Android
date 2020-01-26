@@ -28,12 +28,12 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.PorterDuff
 import android.os.Parcelable
-import android.support.annotation.UiThread
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.content.ContextCompat
-import android.support.v4.view.MenuItemCompat
-import android.support.v7.widget.ShareActionProvider
+import androidx.annotation.UiThread
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.core.content.ContextCompat
+import androidx.core.view.MenuItemCompat
+import androidx.appcompat.widget.ShareActionProvider
 import android.util.Log
 import android.view.ContextMenu
 import android.view.Menu
@@ -213,8 +213,8 @@ object MenuUtils {
     }
 
     fun handleStatusClick(context: Context, fragment: Fragment?, fm: FragmentManager,
-            preferences: SharedPreferences, colorNameManager: UserColorNameManager,
-            twitter: AsyncTwitterWrapper, status: ParcelableStatus, item: MenuItem): Boolean {
+                          preferences: SharedPreferences, colorNameManager: UserColorNameManager,
+                          twitter: AsyncTwitterWrapper, status: ParcelableStatus, item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.copy -> {
                 if (ClipboardUtils.setText(context, status.text_plain)) {

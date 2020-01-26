@@ -70,7 +70,7 @@ class UserBlocksLoader(
         }
     }
 
-    override fun onLoadInBackground(): List<ParcelableUser> {
+    override fun onLoadInBackground(): List<ParcelableUser>? {
         filteredUsers = DataStoreUtils.getFilteredUserKeys(context, FilterScope.ALL)
         return super.onLoadInBackground()
     }

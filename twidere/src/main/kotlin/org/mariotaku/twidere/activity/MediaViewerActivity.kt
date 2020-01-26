@@ -26,16 +26,16 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.Parcelable
-import android.support.annotation.RequiresApi
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
-import android.support.v4.view.ViewCompat
-import android.support.v4.view.ViewPager
-import android.support.v4.view.WindowInsetsCompat
-import android.support.v4.widget.ViewDragHelper
-import android.support.v7.app.WindowDecorActionBar
-import android.support.v7.app.decorToolbar
+import androidx.annotation.RequiresApi
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.viewpager.widget.ViewPager
+import androidx.core.view.WindowInsetsCompat
+import androidx.customview.widget.ViewDragHelper
+import androidx.appcompat.app.WindowDecorActionBar
+import androidx.appcompat.app.decorToolbar
 import android.view.*
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_media_viewer.*
@@ -103,7 +103,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
     private val currentFragment: MediaViewerFragment?
         get() {
             val viewPager = findViewPager()
-            val adapter = viewPager.adapter
+            val adapter = viewPager.adapter ?: return null
             val currentItem = viewPager.currentItem
             if (currentItem < 0 || currentItem >= adapter.count) return null
             return adapter.instantiateItem(viewPager, currentItem) as? MediaViewerFragment
@@ -112,7 +112,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
     private fun getCurrentCacheFileInfo(position: Int): SaveFileTask.FileInfo? {
         if (position == -1) return null
         val viewPager = findViewPager()
-        val adapter = viewPager.adapter
+        val adapter = viewPager.adapter ?: return null
         val f = adapter.instantiateItem(viewPager, position) as? MediaViewerFragment ?:
                 return null
         return f.cacheFileInfo()
@@ -219,7 +219,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val viewPager = findViewPager()
-        val adapter = viewPager.adapter
+        val adapter = viewPager.adapter ?: return false
         val currentItem = viewPager.currentItem
         if (currentItem < 0 || currentItem >= adapter.count) return false
         val obj = adapter.instantiateItem(viewPager, currentItem) as? MediaViewerFragment ?: return false
@@ -438,7 +438,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
 
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
         val result = super.onApplyWindowInsets(v, insets)
-        val adapter = viewPager.adapter
+        val adapter = viewPager.adapter ?: return insets
         if (adapter.count == 0) return insets
         val fragment = adapter.instantiateItem(viewPager, viewPager.currentItem)
         if (fragment is IBaseFragment<*>) {
@@ -554,7 +554,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
     }
 
     private fun MediaViewerFragment.cacheFileInfo(): SaveFileTask.FileInfo? {
-        return when (this) {
+        when (this) {
             is CacheDownloadMediaViewerFragment -> {
                 val cacheUri = downloadResult?.cacheUri ?: return null
                 val type = when (this) {
@@ -563,7 +563,9 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
                     is GifPageFragment -> CacheFileType.IMAGE
                     else -> return null
                 }
-                CacheProvider.ContentUriFileInfo(activity, cacheUri, type)
+                return activity?.let {
+                    CacheProvider.ContentUriFileInfo(it, cacheUri, type)
+                }
             }
             is ExoPlayerPageFragment -> {
                 return getRequestFileInfo()

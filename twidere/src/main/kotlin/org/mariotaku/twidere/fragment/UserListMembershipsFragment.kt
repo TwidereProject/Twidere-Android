@@ -21,7 +21,7 @@ package org.mariotaku.twidere.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.content.Loader
+import androidx.loader.content.Loader
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.loader.userlists.UserListMembershipsLoader
 import org.mariotaku.twidere.model.ParcelableUserList
@@ -34,7 +34,7 @@ class UserListMembershipsFragment : ParcelableUserListsFragment() {
         val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
         val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
         val screenName = args.getString(EXTRA_SCREEN_NAME)
-        return UserListMembershipsLoader(activity, accountKey, userKey, screenName, data).apply {
+        return UserListMembershipsLoader(activity!!, accountKey, userKey, screenName, data).apply {
             pagination = args.getParcelable(EXTRA_PAGINATION)
         }
     }

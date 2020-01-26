@@ -22,8 +22,8 @@ package org.mariotaku.twidere.fragment
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.v4.app.FragmentManager
-import android.support.v7.app.AlertDialog
+import androidx.fragment.app.FragmentManager
+import androidx.appcompat.app.AlertDialog
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
@@ -48,7 +48,7 @@ class DestroyFriendshipDialogFragment : BaseDialogFragment(), DialogInterface.On
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context)
+        val builder = AlertDialog.Builder(context!!)
         val nameFirst = preferences[nameFirstKey]
         val displayName = userColorNameManager.getDisplayName(user, nameFirst)
         builder.setTitle(getString(R.string.unfollow_user, displayName))
@@ -61,7 +61,7 @@ class DestroyFriendshipDialogFragment : BaseDialogFragment(), DialogInterface.On
     }
 
     private val user: ParcelableUser
-        get() = arguments.getParcelable(EXTRA_USER)!!
+        get() = arguments?.getParcelable(EXTRA_USER)!!
 
     companion object {
 

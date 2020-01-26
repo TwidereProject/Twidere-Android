@@ -3,8 +3,8 @@ package org.mariotaku.twidere.preference
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.support.v7.preference.Preference
-import android.support.v7.preference.PreferenceManager
+import androidx.preference.Preference
+import androidx.preference.PreferenceManager
 import android.util.AttributeSet
 import org.mariotaku.twidere.constant.IntentConstants.INTENT_ACTION_HIDDEN_SETTINGS_ENTRY
 

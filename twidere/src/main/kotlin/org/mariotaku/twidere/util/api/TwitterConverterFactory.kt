@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.util.api
 
-import android.support.v4.util.SimpleArrayMap
+import androidx.collection.SimpleArrayMap
 import com.bluelinelabs.logansquare.JsonMapper
 import com.bluelinelabs.logansquare.ParameterizedType
 import org.mariotaku.commons.logansquare.LoganSquareMapperFinder

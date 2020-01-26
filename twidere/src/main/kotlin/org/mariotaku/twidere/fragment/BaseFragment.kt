@@ -22,8 +22,8 @@ package org.mariotaku.twidere.fragment
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.text.BidiFormatter
+import androidx.fragment.app.Fragment
+import androidx.core.text.BidiFormatter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.squareup.otto.Bus
@@ -90,19 +90,19 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
         private set
 
     protected val statusScheduleProvider: StatusScheduleProvider?
-        get() = statusScheduleProviderFactory.newInstance(context)
+        get() = context?.let { statusScheduleProviderFactory.newInstance(it) }
 
     protected val timelineSyncManager: TimelineSyncManager?
         get() = timelineSyncManagerFactory.get()
 
     protected val gifShareProvider: GifShareProvider?
-        get() = gifShareProviderFactory.newInstance(context)
+        get() = context?.let { gifShareProviderFactory.newInstance(it) }
 
     private val actionHelper = IBaseFragment.ActionHelper<BaseFragment>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestManager = Glide.with(this)
+        requestManager = Glide.with(context)// TODO: Upgrade Glide usage
     }
 
     override fun onStart() {
@@ -129,7 +129,7 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
         requestManager.onDestroy()
         extraFeaturesService.release()
         super.onDestroy()
-        DebugModeUtils.watchReferenceLeak(this)
+//        DebugModeUtils.watchReferenceLeak(this)
     }
 
     override fun onAttach(context: Context) {

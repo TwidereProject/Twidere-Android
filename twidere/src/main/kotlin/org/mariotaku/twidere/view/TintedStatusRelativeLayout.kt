@@ -24,7 +24,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Build
-import android.support.v4.view.ViewCompat
+import androidx.core.view.ViewCompat
 import android.util.AttributeSet
 import android.view.View
 import org.mariotaku.chameleon.Chameleon
@@ -33,7 +33,7 @@ import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.chameleon.ChameleonView
 import org.mariotaku.chameleon.internal.SupportMethods
 import org.mariotaku.twidere.R
-import android.support.v4.view.OnApplyWindowInsetsListener as OnApplyWindowInsetsListenerCompat
+import androidx.core.view.OnApplyWindowInsetsListener as OnApplyWindowInsetsListenerCompat
 
 class TintedStatusRelativeLayout(context: Context, attrs: AttributeSet? = null) :
         ExtendedRelativeLayout(context, attrs), TintedStatusLayout, ChameleonView,

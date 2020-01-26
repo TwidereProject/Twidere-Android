@@ -26,7 +26,7 @@ import android.database.ContentObserver
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
-import android.support.v4.content.Loader
+import androidx.loader.content.Loader
 import android.widget.Toast
 import com.bumptech.glide.RequestManager
 import com.squareup.otto.Subscribe
@@ -70,7 +70,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
         get() = false
 
     override val accountKeys: Array<UserKey>
-        get() = Utils.getAccountKeys(context, arguments) ?: DataStoreUtils.getActivatedAccountKeys(context)
+        get() = Utils.getAccountKeys(context!!, arguments) ?: DataStoreUtils.getActivatedAccountKeys(context!!)
 
     abstract val errorInfoKey: String
     abstract val isFilterEnabled: Boolean
@@ -92,7 +92,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
                     reloadStatuses()
                 }
             }
-            context.contentResolver.registerContentObserver(Filters.CONTENT_URI, true, contentObserver!!)
+            context?.contentResolver?.registerContentObserver(Filters.CONTENT_URI, true, contentObserver!!)
         }
         AccountManager.get(context).addOnAccountsUpdatedListenerSafe(accountListener, updateImmediately = false)
         updateRefreshState()
@@ -101,7 +101,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
     override fun onStop() {
         if (contentObserver != null) {
-            context.contentResolver.unregisterContentObserver(contentObserver!!)
+            context?.contentResolver?.unregisterContentObserver(contentObserver!!)
             contentObserver = null
         }
         AccountManager.get(context).removeOnAccountsUpdatedListenerSafe(accountListener)
@@ -143,7 +143,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
     }
 
     override fun hasMoreData(loader: Loader<List<ParcelableStatus>?>,
-            data: List<ParcelableStatus>?): Boolean {
+                             data: List<ParcelableStatus>?): Boolean {
         return data.isNotNullOrEmpty()
     }
 
@@ -158,6 +158,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
     override fun onLoadMoreContents(@IndicatorPosition position: Long) {
         // Only supports load from end, skip START flag
         if (ILoadMoreSupportAdapter.START in position) return
+        val currentContext = context ?: return
         super.onLoadMoreContents(position)
         if (position == 0L) return
         getStatuses(object : RefreshTaskParam {
@@ -167,8 +168,8 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
             override val pagination by lazy {
                 val keys = accountKeys.toNulls()
-                val maxIds = DataStoreUtils.getOldestStatusIds(context, contentUri, keys)
-                val maxSortIds = DataStoreUtils.getOldestStatusSortIds(context, contentUri, keys)
+                val maxIds = DataStoreUtils.getOldestStatusIds(currentContext, contentUri, keys)
+                val maxSortIds = DataStoreUtils.getOldestStatusSortIds(currentContext, contentUri, keys)
                 return@lazy Array(keys.size) { idx ->
                     SinceMaxPagination.maxId(maxIds[idx], maxSortIds[idx])
                 }
@@ -186,8 +187,8 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
             override val pagination by lazy {
                 val keys = accountKeys.toNulls()
-                val sinceIds = DataStoreUtils.getNewestStatusIds(context, contentUri, keys)
-                val sinceSortIds = DataStoreUtils.getNewestStatusSortIds(context, contentUri, keys)
+                val sinceIds = DataStoreUtils.getNewestStatusIds(context!!, contentUri, keys)
+                val sinceSortIds = DataStoreUtils.getNewestStatusSortIds(context!!, contentUri, keys)
                 return@lazy Array(keys.size) { idx ->
                     SinceMaxPagination.sinceId(sinceIds[idx], sinceSortIds[idx])
                 }
@@ -212,7 +213,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
     override fun getFullStatus(position: Int): ParcelableStatus? {
         val _id = adapter.getRowId(position)
         val where = Expression.equals(Statuses._ID, _id).sql
-        return context.contentResolver.queryOne(contentUri, Statuses.COLUMNS, where, null, null,
+        return context?.contentResolver?.queryOne(contentUri, Statuses.COLUMNS, where, null, null,
                 ParcelableStatus::class.java)
     }
 
@@ -240,10 +241,11 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
     private fun showContentOrError() {
         val accountKeys = this.accountKeys
+        val currentContext = context ?: return
         if (adapter.itemCount > 0) {
             showContent()
         } else if (accountKeys.isNotEmpty()) {
-            val errorInfo = ErrorInfoStore.getErrorInfo(context,
+            val errorInfo = ErrorInfoStore.getErrorInfo(currentContext,
                     errorInfoStore[errorInfoKey, accountKeys[0]])
             if (errorInfo != null) {
                 showEmpty(errorInfo.icon, errorInfo.message)
@@ -268,6 +270,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
         @Subscribe
         fun notifyGetStatusesTaskChanged(event: GetStatusesTaskEvent) {
             if (event.uri != contentUri) return
+            val currentContext = context ?: return
             refreshing = event.running
             if (!event.running) {
                 setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.NONE)
@@ -276,7 +279,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
                 val exception = event.exception
                 if (exception is GetStatusesTask.GetTimelineException && userVisibleHint) {
-                    Toast.makeText(context, exception.getToastMessage(context), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, exception.getToastMessage(currentContext), Toast.LENGTH_SHORT).show()
                 }
             }
         }

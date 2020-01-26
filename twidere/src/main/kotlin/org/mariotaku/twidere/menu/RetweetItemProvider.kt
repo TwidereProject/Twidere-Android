@@ -20,9 +20,9 @@
 package org.mariotaku.twidere.menu
 
 import android.content.Context
-import android.support.v4.view.ActionProvider
-import android.support.v4.view.MenuItemCompat
-import android.support.v7.widget.ActionMenuView
+import androidx.core.view.ActionProvider
+import androidx.core.view.MenuItemCompat
+import androidx.appcompat.widget.ActionMenuView
 import android.view.MenuItem
 import org.mariotaku.twidere.extension.view.findItemView
 

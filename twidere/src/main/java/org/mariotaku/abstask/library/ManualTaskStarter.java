@@ -1,7 +1,7 @@
 package org.mariotaku.abstask.library;
 
-import android.support.annotation.UiThread;
-import android.support.annotation.WorkerThread;
+import androidx.annotation.UiThread;
+import androidx.annotation.WorkerThread;
 
 /**
  * Created by mariotaku on 16/5/25.

@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.model.event;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.mariotaku.twidere.model.ParcelableRelationship;

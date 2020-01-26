@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"/>
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
@@ -25,7 +25,7 @@
         app:popupTheme="?actionBarPopupTheme"
         tools:elevation="0dp"/>
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/actionsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

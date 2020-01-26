@@ -2,7 +2,7 @@ package org.mariotaku.twidere.preference.sync
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.support.v7.preference.SwitchPreferenceCompat
+import androidx.preference.SwitchPreferenceCompat
 import android.util.AttributeSet
 import android.view.View
 import android.widget.TextView

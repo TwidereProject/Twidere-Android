@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.task
 
 import android.content.Context
-import android.support.v4.app.DialogFragment
+import androidx.fragment.app.DialogFragment
 import org.mariotaku.twidere.activity.iface.IBaseActivity
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import java.io.File

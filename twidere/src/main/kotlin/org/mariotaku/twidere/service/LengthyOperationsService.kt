@@ -26,9 +26,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
-import android.support.annotation.UiThread
-import android.support.annotation.WorkerThread
-import android.support.v4.app.NotificationCompat
+import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
+import androidx.core.app.NotificationCompat
 import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast

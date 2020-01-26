@@ -21,7 +21,7 @@ package org.mariotaku.twidere.adapter
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.support.v4.text.BidiFormatter
+import androidx.core.text.BidiFormatter
 import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R

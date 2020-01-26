@@ -10,9 +10,9 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v4.app.LoaderManager
-import android.support.v4.content.Loader
-import android.support.v7.app.AlertDialog
+import androidx.loader.app.LoaderManager
+import androidx.loader.content.Loader
+import androidx.appcompat.app.AlertDialog
 import android.view.*
 import android.view.ContextMenu.ContextMenuInfo
 import android.widget.AdapterView
@@ -60,7 +60,7 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
         val am = AccountManager.get(context)
-        adapter = AccountDetailsAdapter(context, requestManager).apply {
+        adapter = AccountDetailsAdapter(context!!, requestManager).apply {
             sortEnabled = true
             switchEnabled = true
             accountToggleListener = { pos, checked ->
@@ -100,9 +100,9 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
                 val details = adapter.findItem(accountKey) ?: return
                 details.color = color
                 details.account.setColor(am, color)
-                val resolver = context.contentResolver
+                val resolver = context?.contentResolver
                 task {
-                    updateContentsColor(resolver, details)
+                    resolver?.let { updateContentsColor(it, details) }
                 }
                 adapter.notifyDataSetChanged()
                 return
@@ -151,12 +151,14 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
 
     override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         val account = adapter.getItem(position)
-        IntentUtils.openUserProfile(context, account.user, preferences[newDocumentApiKey],
+        context?.let {
+            IntentUtils.openUserProfile(it, account.user, preferences[newDocumentApiKey],
                 null)
+        }
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<AccountDetails>> {
-        return AccountDetailsLoader(context)
+        return AccountDetailsLoader(context!!)
     }
 
     override fun onLoaderReset(loader: Loader<List<AccountDetails>>) {
@@ -171,7 +173,7 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
         setListShown(true)
     }
 
-    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenuInfo) {
+    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenuInfo?) {
         if (menuInfo !is AdapterContextMenuInfo) return
         val account = adapter.getItem(menuInfo.position)!!
         menu.setHeaderTitle(account.user.name)
@@ -206,15 +208,17 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
     class AccountDeletionDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
 
         override fun onClick(dialog: DialogInterface, which: Int) {
-            val account: Account = arguments.getParcelable(EXTRA_ACCOUNT)!!
-            val resolver = context.contentResolver
+            val account: Account = arguments?.getParcelable(EXTRA_ACCOUNT)!!
+            val resolver = context?.contentResolver
             val am = AccountManager.get(context)
             when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {
                     val accountKey = account.getAccountKey(am)
-                    resolver.deleteAccountData(accountKey)
-                    AccountPreferences.getSharedPreferencesForAccount(context, accountKey).edit()
-                            .clear().apply()
+                    resolver?.deleteAccountData(accountKey)
+                    context?.let {
+                        AccountPreferences.getSharedPreferencesForAccount(it, accountKey).edit()
+                                .clear().apply()
+                    }
                     am.removeAccountSupport(account)
                 }
             }
@@ -223,7 +227,7 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val context = context
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context!!)
             builder.setNegativeButton(android.R.string.cancel, null)
             builder.setPositiveButton(android.R.string.ok, this)
             builder.setTitle(R.string.title_account_delete_confirm)

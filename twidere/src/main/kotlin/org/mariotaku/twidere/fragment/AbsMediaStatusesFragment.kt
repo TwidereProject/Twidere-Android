@@ -21,10 +21,10 @@ package org.mariotaku.twidere.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.LoaderManager.LoaderCallbacks
-import android.support.v4.app.hasRunningLoadersSafe
-import android.support.v4.content.Loader
-import android.support.v7.widget.StaggeredGridLayoutManager
+import androidx.loader.app.LoaderManager.LoaderCallbacks
+import androidx.loader.app.hasRunningLoadersSafe
+import androidx.loader.content.Loader
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.adapter.StaggeredGridParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
@@ -85,10 +85,10 @@ abstract class AbsMediaStatusesFragment : AbsContentRecyclerViewFragment<Stagger
         return StaggeredGridParcelableStatusesAdapter(context, requestManager)
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableStatus>?> {
-        val fromUser = args.getBoolean(EXTRA_FROM_USER)
-        args.remove(EXTRA_FROM_USER)
-        return onCreateStatusesLoader(activity, args, fromUser)
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableStatus>?> {
+        val fromUser = args?.getBoolean(EXTRA_FROM_USER)
+        args?.remove(EXTRA_FROM_USER)
+        return onCreateStatusesLoader(activity!!, args!!, fromUser!!)
     }
 
     final override fun onLoadFinished(loader: Loader<List<ParcelableStatus>?>, data: List<ParcelableStatus>?) {
@@ -126,17 +126,21 @@ abstract class AbsMediaStatusesFragment : AbsContentRecyclerViewFragment<Stagger
 
     final override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
         val status = adapter.getStatus(position)
-        IntentUtils.openStatus(context, status, null)
+        context?.let {
+            IntentUtils.openStatus(it, status, null)
+        }
     }
 
 
     final override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
         val status = adapter.getStatus(position)
-        IntentUtils.openStatus(context, status.account_key, status.quoted_id)
+        context?.let {
+            IntentUtils.openStatus(it, status.account_key, status.quoted_id)
+        }
     }
 
     protected open fun hasMoreData(loader: Loader<List<ParcelableStatus>?>,
-            data: List<ParcelableStatus>?, changed: Boolean): Boolean {
+                                   data: List<ParcelableStatus>?, changed: Boolean): Boolean {
         if (loader !is AbsRequestStatusesLoader) return false
         val pagination = loader.pagination as? SinceMaxPagination
         val maxId = pagination?.maxId?.takeIf(String::isNotEmpty)

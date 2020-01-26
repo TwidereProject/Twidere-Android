@@ -25,8 +25,6 @@ import android.webkit.WebView;
 
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
 
 import org.mariotaku.stethoext.bsh.BshRuntimeReplFactoryBuilder;
 import org.mariotaku.twidere.BuildConfig;
@@ -40,8 +38,6 @@ import okhttp3.OkHttpClient;
  * Created by mariotaku on 15/5/27.
  */
 public class DebugModeUtils {
-
-    private static RefWatcher sRefWatcher;
 
     private DebugModeUtils() {
     }
@@ -67,25 +63,8 @@ public class DebugModeUtils {
                         .runtimeRepl(new BshRuntimeReplFactoryBuilder(application).build())
                         .finish())
                 .build());
-        initLeakCanary(application);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            WebView.setWebContentsDebuggingEnabled(true);
+//            WebView.setWebContentsDebuggingEnabled(true);
         }
-    }
-
-    static void initLeakCanary(Application application) {
-        if (!BuildConfig.LEAK_CANARY_ENABLED) return;
-        LeakCanary.enableDisplayLeakActivity(application);
-        if (LeakCanary.isInAnalyzerProcess(application)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not init your app in this process.
-            return;
-        }
-        sRefWatcher = LeakCanary.install(application);
-    }
-
-    public static void watchReferenceLeak(final Object object) {
-        if (sRefWatcher == null) return;
-        sRefWatcher.watch(object);
     }
 }

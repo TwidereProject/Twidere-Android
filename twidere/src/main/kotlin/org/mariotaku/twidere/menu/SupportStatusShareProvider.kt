@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.menu
 
 import android.content.Context
-import android.support.v4.view.ActionProvider
+import androidx.core.view.ActionProvider
 import android.view.MenuItem
 import android.view.SubMenu
 import org.mariotaku.twidere.Constants.MENU_GROUP_STATUS_SHARE

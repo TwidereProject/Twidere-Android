@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.view.holder
 
-import android.support.v7.widget.RecyclerView.ViewHolder
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import android.view.View
 import kotlinx.android.synthetic.main.card_item_group_compact.view.*
 import org.mariotaku.ktextension.hideIfEmpty

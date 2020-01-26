@@ -3,8 +3,8 @@ package org.mariotaku.twidere.model.util;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.annotation.AccountType;

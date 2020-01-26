@@ -20,9 +20,9 @@
 package org.mariotaku.twidere.fragment
 
 import android.content.Context
-import android.support.v7.widget.FixedLinearLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.FixedLinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import org.mariotaku.ktextension.contains
 
 import org.mariotaku.twidere.adapter.LoadMoreSupportAdapter
@@ -38,7 +38,7 @@ abstract class AbsContentListRecyclerViewFragment<A : LoadMoreSupportAdapter<Rec
     : AbsContentRecyclerViewFragment<A, LinearLayoutManager>() {
 
     override fun onCreateItemDecoration(context: Context, recyclerView: RecyclerView,
-            layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
+                                        layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
         return ExtendedDividerItemDecoration(context, layoutManager.orientation)
     }
 

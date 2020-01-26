@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.view.holder
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.list_item_draft.view.*

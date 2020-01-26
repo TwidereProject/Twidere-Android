@@ -18,7 +18,7 @@
 
 package org.mariotaku.microblog.library.twitter.callback;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.mariotaku.microblog.library.twitter.model.DeletionEvent;
 import org.mariotaku.microblog.library.twitter.model.DirectMessage;

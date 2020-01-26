@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.adapter
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.text.TextUtils
 import android.text.method.LinkMovementMethod
 import android.util.SparseBooleanArray
@@ -51,7 +51,7 @@ import org.mariotaku.twidere.view.holder.status.DetailStatusViewHolder
 
 class StatusDetailsAdapter(
         val fragment: StatusFragment
-) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(fragment.context, fragment.requestManager),
+) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(fragment.context!!, fragment.requestManager),
         IStatusesAdapter<List<ParcelableStatus>>, IItemCountsAdapter {
 
     override val twidereLinkify: TwidereLinkify
@@ -114,9 +114,9 @@ class StatusDetailsAdapter(
         itemCounts[ITEM_IDX_CONVERSATION_LOAD_MORE] = 1
         itemCounts[ITEM_IDX_REPLY_LOAD_MORE] = 1
         inflater = LayoutInflater.from(context)
-        cardBackgroundColor = ThemeUtils.getCardBackgroundColor(context,
+        cardBackgroundColor = ThemeUtils.getCardBackgroundColor(context!!,
                 preferences[themeBackgroundOptionKey], preferences[themeBackgroundAlphaKey])
-        val listener = StatusAdapterLinkClickHandler<List<ParcelableStatus>>(context, preferences)
+        val listener = StatusAdapterLinkClickHandler<List<ParcelableStatus>>(context!!, preferences)
         listener.setAdapter(this)
         twidereLinkify = TwidereLinkify(listener)
     }
@@ -268,7 +268,7 @@ class StatusDetailsAdapter(
         get() = statusClickListener
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder? {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {
             VIEW_TYPE_DETAIL_STATUS -> {
                 val view = inflater.inflate(R.layout.header_status, parent, false)
@@ -292,7 +292,7 @@ class StatusDetailsAdapter(
                 return StatusErrorItemViewHolder(view)
             }
         }
-        return null
+        return EmptyViewHolder(View(context))
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>) {
@@ -423,12 +423,12 @@ class StatusDetailsAdapter(
         return itemCounts.itemCount
     }
 
-    override fun onAttachedToRecyclerView(recyclerView: RecyclerView?) {
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         this.recyclerView = recyclerView
     }
 
-    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView?) {
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         super.onDetachedFromRecyclerView(recyclerView)
         this.recyclerView = null
     }

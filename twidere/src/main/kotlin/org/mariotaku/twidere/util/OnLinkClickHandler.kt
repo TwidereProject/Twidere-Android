@@ -25,7 +25,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.BadParcelableException
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import okhttp3.HttpUrl
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_TWITTER_COM

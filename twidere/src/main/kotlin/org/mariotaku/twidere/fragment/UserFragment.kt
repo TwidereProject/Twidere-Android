@@ -42,27 +42,27 @@ import android.nfc.NfcAdapter.CreateNdefMessageCallback
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.annotation.ColorRes
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
-import android.support.annotation.UiThread
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v4.app.LoaderManager.LoaderCallbacks
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.FixedAsyncTaskLoader
-import android.support.v4.content.Loader
-import android.support.v4.content.pm.ShortcutManagerCompat
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v4.graphics.ColorUtils
-import android.support.v4.view.OnApplyWindowInsetsListener
-import android.support.v4.view.ViewCompat
-import android.support.v4.view.ViewPager.OnPageChangeListener
-import android.support.v4.view.WindowCompat
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.annotation.UiThread
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.loader.app.LoaderManager.LoaderCallbacks
+import androidx.core.content.ContextCompat
+import androidx.loader.content.FixedAsyncTaskLoader
+import androidx.loader.content.Loader
+import androidx.core.content.pm.ShortcutManagerCompat
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.ColorUtils
+import androidx.core.view.OnApplyWindowInsetsListener
+import androidx.core.view.ViewCompat
+import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import androidx.core.view.WindowCompat
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.util.Linkify
@@ -186,10 +186,10 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
     private val friendshipLoaderCallbacks = object : LoaderCallbacks<SingleResponse<ParcelableRelationship>> {
 
-        override fun onCreateLoader(id: Int, args: Bundle): Loader<SingleResponse<ParcelableRelationship>> {
-            activity.invalidateOptionsMenu()
-            val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-            val user = args.getParcelable<ParcelableUser>(EXTRA_USER)
+        override fun onCreateLoader(id: Int, args: Bundle?): Loader<SingleResponse<ParcelableRelationship>> {
+            activity!!.invalidateOptionsMenu()
+            val accountKey = args?.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+            val user = args?.getParcelable<ParcelableUser>(EXTRA_USER)
             if (user != null && user.key == accountKey) {
                 followingYouIndicator.visibility = View.GONE
                 followContainer.follow.visibility = View.VISIBLE
@@ -199,7 +199,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 followContainer.follow.visibility = View.GONE
                 followProgress.visibility = View.VISIBLE
             }
-            return UserRelationshipLoader(activity, accountKey, user)
+            return UserRelationshipLoader(activity!!, accountKey, user)
         }
 
         override fun onLoaderReset(loader: Loader<SingleResponse<ParcelableRelationship>>) {
@@ -207,7 +207,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         }
 
         override fun onLoadFinished(loader: Loader<SingleResponse<ParcelableRelationship>>,
-                data: SingleResponse<ParcelableRelationship>) {
+                                    data: SingleResponse<ParcelableRelationship>) {
             followProgress.visibility = View.GONE
             displayRelationship(data.data)
             updateOptionsMenuVisibility()
@@ -216,8 +216,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
     private val userInfoLoaderCallbacks = object : LoaderCallbacks<SingleResponse<ParcelableUser>> {
 
-        override fun onCreateLoader(id: Int, args: Bundle): Loader<SingleResponse<ParcelableUser>> {
-            val omitIntentExtra = args.getBoolean(EXTRA_OMIT_INTENT_EXTRA, true)
+        override fun onCreateLoader(id: Int, args: Bundle?): Loader<SingleResponse<ParcelableUser>> {
+            val omitIntentExtra = args!!.getBoolean(EXTRA_OMIT_INTENT_EXTRA, true)
             val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
             val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
             val screenName = args.getString(EXTRA_SCREEN_NAME)
@@ -230,7 +230,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             }
             val user = this@UserFragment.user
             val loadFromCache = user == null || !user.is_cache && user.key.maybeEquals(userKey)
-            return ParcelableUserLoader(activity, accountKey, userKey, screenName, arguments,
+            return ParcelableUserLoader(activity!!, accountKey, userKey, screenName, arguments,
                     omitIntentExtra, loadFromCache)
         }
 
@@ -239,7 +239,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         }
 
         override fun onLoadFinished(loader: Loader<SingleResponse<ParcelableUser>>,
-                data: SingleResponse<ParcelableUser>) {
+                                    data: SingleResponse<ParcelableUser>) {
             val activity = activity ?: return
             if (data.data != null) {
                 val user = data.data
@@ -300,7 +300,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         } else {
             this.relationship = relationship
         }
-        activity.invalidateOptionsMenu()
+        activity?.invalidateOptionsMenu()
         when {
             relationship.blocked_by -> {
                 pagesErrorContainer.visibility = View.GONE
@@ -333,10 +333,11 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         }
         followingYouIndicator.visibility = if (relationship.followed_by) View.VISIBLE else View.GONE
 
-        val resolver = context.applicationContext.contentResolver
-        task {
-            resolver.insert(CachedUsers.CONTENT_URI, user, ParcelableUser::class.java)
-            resolver.insert(CachedRelationships.CONTENT_URI, relationship, ParcelableRelationship::class.java)
+        context?.applicationContext?.contentResolver?.let { resolver ->
+            task {
+                resolver.insert(CachedUsers.CONTENT_URI, user, ParcelableUser::class.java)
+                resolver.insert(CachedRelationships.CONTENT_URI, relationship, ParcelableRelationship::class.java)
+            }
         }
         followContainer.follow.visibility = View.VISIBLE
     }
@@ -501,12 +502,14 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         }
         val defWidth = resources.displayMetrics.widthPixels
         val width = if (bannerWidth > 0) bannerWidth else defWidth
-        requestManager.loadProfileBanner(context, user, width).into(profileBanner)
-        requestManager.loadOriginalProfileImage(context, user, profileImage.style,
+        context?.let { requestManager.loadProfileBanner(it, user, width).into(profileBanner) }
+        context?.let {
+            requestManager.loadOriginalProfileImage(it, user, profileImage.style,
                 profileImage.cornerRadius, profileImage.cornerRadiusRatio)
-                .thumbnail(requestManager.loadProfileImage(context, user, profileImage.style,
+                .thumbnail(requestManager.loadProfileImage(it, user, profileImage.style,
                         profileImage.cornerRadius, profileImage.cornerRadiusRatio,
                         getString(R.string.profile_image_size))).into(profileImage)
+        }
         val relationship = relationship
         if (relationship == null) {
             getFriendship()
@@ -608,7 +611,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
     @Subscribe
     fun notifyTaskStateChanged(event: TaskStateChangedEvent) {
-        activity.invalidateOptionsMenu()
+        activity?.invalidateOptionsMenu()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -639,9 +642,11 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     if (account?.type == AccountType.MASTODON && account?.key?.host != selectedAccountKey.host) {
                         userKey = AcctPlaceholderUserKey(user.key.host)
                     }
-                    IntentUtils.openUserProfile(activity, selectedAccountKey, userKey, user.screen_name,
-                            user.extras?.statusnet_profile_url, preferences[newDocumentApiKey],
-                            null)
+                    activity?.let {
+                        IntentUtils.openUserProfile(it, selectedAccountKey, userKey, user.screen_name,
+                                user.extras?.statusnet_profile_url, preferences[newDocumentApiKey],
+                                null)
+                    }
                 }
             }
         }
@@ -656,12 +661,12 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         super.onActivityCreated(savedInstanceState)
         val activity = activity
         nameFirst = preferences[nameFirstKey]
-        cardBackgroundColor = ThemeUtils.getCardBackgroundColor(activity,
+        cardBackgroundColor = ThemeUtils.getCardBackgroundColor(activity!!,
                 preferences[themeBackgroundOptionKey], preferences[themeBackgroundAlphaKey])
         actionBarShadowColor = 0xA0000000.toInt()
         val args = arguments
-        val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY) ?: run {
-            activity.finish()
+        val accountKey = args?.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY) ?: run {
+            activity?.finish()
             return
         }
         val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
@@ -682,7 +687,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             if (profileBannerSpace.toolbarHeight == 0) {
                 var toolbarHeight = toolbar.measuredHeight
                 if (toolbarHeight == 0) {
-                    toolbarHeight = ThemeUtils.getActionBarHeight(context)
+                    toolbarHeight = ThemeUtils.getActionBarHeight(context!!)
                 }
                 profileBannerSpace.toolbarHeight = toolbarHeight
             }
@@ -803,7 +808,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         menu.setItemAvailability(R.id.block, !isMyself)
 
         menu.setItemAvailability(R.id.add_to_home_screen_submenu,
-                ShortcutManagerCompat.isRequestPinShortcutSupported(context))
+                ShortcutManagerCompat.isRequestPinShortcutSupported(context!!))
 
         var canAddToList = false
         var canMute = false
@@ -867,7 +872,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         extras.putParcelable(EXTRA_USER, user)
         intent.putExtras(extras)
         menu.removeGroup(MENU_GROUP_USER_EXTENSION)
-        MenuUtils.addIntentToMenu(activity, menu, intent, MENU_GROUP_USER_EXTENSION)
+        activity?.let { MenuUtils.addIntentToMenu(it, menu, intent, MENU_GROUP_USER_EXTENSION) }
         val drawer = userProfileDrawer
         if (drawer != null) {
             val offset = drawer.paddingTop - drawer.headerTop
@@ -878,10 +883,11 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val context = context
+        val context = context ?: return false
         val twitter = twitterWrapper
         val user = user ?: return false
         val accountKey = user.account_key ?: return false
+        val currentFragmentManager = fragmentManager ?: return false
         val userRelationship = relationship
         when (item.itemId) {
             R.id.block -> {
@@ -889,11 +895,11 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 if (userRelationship.blocking) {
                     twitter.destroyBlockAsync(accountKey, user.key)
                 } else {
-                    CreateUserBlockDialogFragment.show(fragmentManager, user)
+                    CreateUserBlockDialogFragment.show(currentFragmentManager, user)
                 }
             }
             R.id.report_spam -> {
-                ReportUserSpamDialogFragment.show(fragmentManager, user)
+                ReportUserSpamDialogFragment.show(currentFragmentManager, user)
             }
             R.id.add_to_filter -> {
                 if (userRelationship == null) return true
@@ -903,7 +909,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                             Toast.LENGTH_SHORT).show()
                     getFriendship()
                 } else {
-                    AddUserFilterDialogFragment.show(fragmentManager, user)
+                    AddUserFilterDialogFragment.show(currentFragmentManager, user)
                 }
             }
             R.id.mute_user -> {
@@ -911,7 +917,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 if (userRelationship.muting) {
                     twitter.destroyMuteAsync(accountKey, user.key)
                 } else {
-                    CreateUserMuteDialogFragment.show(fragmentManager, user)
+                    CreateUserMuteDialogFragment.show(currentFragmentManager, user)
                 }
             }
             R.id.mention -> {
@@ -948,14 +954,14 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             }
             R.id.set_nickname -> {
                 val nick = userColorNameManager.getUserNickname(user.key)
-                SetUserNicknameDialogFragment.show(fragmentManager, user.key, nick)
+                SetUserNicknameDialogFragment.show(currentFragmentManager, user.key, nick)
             }
             R.id.add_to_list -> {
                 showAddToListDialog(user)
             }
             R.id.open_with_account -> {
                 val intent = Intent(INTENT_ACTION_SELECT_ACCOUNT)
-                intent.setClass(activity, AccountSelectorActivity::class.java)
+                activity?.let { intent.setClass(it, AccountSelectorActivity::class.java) }
                 intent.putExtra(EXTRA_SINGLE_SELECTION, true)
                 when (account?.type) {
                     AccountType.MASTODON -> intent.putExtra(EXTRA_ACCOUNT_TYPE, AccountType.MASTODON)
@@ -969,7 +975,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                         user.key)
                 if (!updatingRelationship) {
                     if (userRelationship.following) {
-                        DestroyFriendshipDialogFragment.show(fragmentManager, user)
+                        DestroyFriendshipDialogFragment.show(currentFragmentManager, user)
                     } else {
                         twitter.createFriendshipAsync(accountKey, user.key, user.screen_name)
                     }
@@ -997,7 +1003,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 return true
             }
             R.id.muted_users -> {
-                IntentUtils.openMutesUsers(activity, accountKey)
+                activity?.let { IntentUtils.openMutesUsers(it, accountKey) }
                 return true
             }
             R.id.blocked_users -> {
@@ -1005,7 +1011,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 return true
             }
             R.id.incoming_friendships -> {
-                IntentUtils.openIncomingFriendships(activity, accountKey)
+                activity?.let { IntentUtils.openIncomingFriendships(it, accountKey) }
                 return true
             }
             R.id.user_mentions -> {
@@ -1197,6 +1203,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
     override fun onClick(view: View) {
         val activity = activity ?: return
+        val fragmentManager = fragmentManager ?: return
         val user = user ?: return
         val accountKey = user.account_key ?: return
         when (view.id) {
@@ -1205,7 +1212,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             }
             R.id.follow -> {
                 if (accountKey.maybeEquals(user.key)) {
-                    IntentUtils.openProfileEditor(getActivity(), accountKey)
+                    IntentUtils.openProfileEditor(activity, accountKey)
                 } else {
                     val userRelationship = relationship
                     val twitter = twitterWrapper
@@ -1239,32 +1246,32 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                         preferences[newDocumentApiKey], preferences[displaySensitiveContentsKey])
             }
             R.id.listedContainer -> {
-                IntentUtils.openUserLists(getActivity(), accountKey, user.key,
+                IntentUtils.openUserLists(activity, accountKey, user.key,
                         user.screen_name)
             }
             R.id.groupsContainer -> {
-                IntentUtils.openUserGroups(getActivity(), accountKey, user.key,
+                IntentUtils.openUserGroups(activity, accountKey, user.key,
                         user.screen_name)
             }
             R.id.followersContainer -> {
-                IntentUtils.openUserFollowers(getActivity(), accountKey, user.key,
+                IntentUtils.openUserFollowers(activity, accountKey, user.key,
                         user.screen_name)
             }
             R.id.friendsContainer -> {
-                IntentUtils.openUserFriends(getActivity(), accountKey, user.key,
+                IntentUtils.openUserFriends(activity, accountKey, user.key,
                         user.screen_name)
             }
             R.id.nameContainer -> {
                 if (accountKey == user.key) return
-                IntentUtils.openProfileEditor(getActivity(), accountKey)
+                IntentUtils.openProfileEditor(activity, accountKey)
             }
             R.id.urlContainer -> {
                 val uri = user.urlPreferred?.let(Uri::parse) ?: return
-                OnLinkClickHandler.openLink(context, preferences, uri)
+                OnLinkClickHandler.openLink(activity, preferences, uri)
             }
             R.id.profileBirthdayBanner -> {
                 hideBirthdayView = true
-                profileBirthdayBanner.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out))
+                profileBirthdayBanner.startAnimation(AnimationUtils.loadAnimation(activity, android.R.anim.fade_out))
                 profileBirthdayBanner.visibility = View.GONE
             }
         }
@@ -1275,6 +1282,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             extraId: Long, type: Int, sensitive: Boolean,
             start: Int, end: Int): Boolean {
         val user = user ?: return false
+        val activity = activity ?: return false
         when (type) {
             TwidereLinkify.LINK_TYPE_MENTION -> {
                 IntentUtils.openUserProfile(activity, user.account_key, null, link, null,
@@ -1383,12 +1391,12 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     private fun setUiColor(color: Int) {
+        val activity = activity as? BaseActivity ?: return
         val theme = Chameleon.getOverrideTheme(activity, activity)
         uiColor = if (color != 0) color else theme.colorPrimary
         previousActionBarItemIsDark = 0
         previousTabItemIsDark = 0
         setupBaseActionBar()
-        val activity = activity as BaseActivity
         if (theme.isToolbarColored) {
             primaryColor = color
         } else {
@@ -1450,7 +1458,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     private fun setupUserPages() {
-        val args = arguments
+        val args = arguments ?: return
         val tabArgs = Bundle()
         val user = args.getParcelable<ParcelableUser>(EXTRA_USER)
         val userKey: UserKey?
@@ -1593,7 +1601,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val followButton = followContainer.follow
         followButton.setImageResource(icon)
         ViewCompat.setBackgroundTintMode(followButton, PorterDuff.Mode.SRC_ATOP)
-        ViewCompat.setBackgroundTintList(followButton, ContextCompat.getColorStateList(context, color))
+        ViewCompat.setBackgroundTintList(followButton, context?.let { ContextCompat.getColorStateList(it, color) })
         followButton.contentDescription = getString(label)
     }
 
@@ -1619,7 +1627,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 return result
             }
 
-            val microBlog = MicroBlogAPIFactory.getInstance(fragment.context, accountKey)
+            val microBlog = MicroBlogAPIFactory.getInstance(fragment.context!!, accountKey)
             val ownedLists = ArrayList<ParcelableUserList>()
             val listMemberships = microBlog.getUserListOwnerMemberships(user.key.id)
             val paging = Paging()
@@ -1654,7 +1662,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             }
         }.failUi {
             val fragment = weakThis.get() ?: return@failUi
-            Toast.makeText(fragment.context, it.getErrorMessage(fragment.context),
+            Toast.makeText(fragment.context, it.getErrorMessage(fragment.context!!),
                     Toast.LENGTH_SHORT).show()
         }
     }
@@ -1788,10 +1796,10 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     class AddRemoveUserListDialogFragment : BaseDialogFragment() {
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val lists = arguments.getTypedArray<ParcelableUserList>(EXTRA_USER_LISTS)
-            val userKey = arguments.getParcelable<UserKey>(EXTRA_USER_KEY)!!
-            val accountKey = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)!!
-            val builder = AlertDialog.Builder(context)
+            val lists = arguments!!.getTypedArray<ParcelableUserList>(EXTRA_USER_LISTS)
+            val userKey = arguments!!.getParcelable<UserKey>(EXTRA_USER_KEY)!!
+            val accountKey = arguments!!.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)!!
+            val builder = AlertDialog.Builder(context!!)
             builder.setTitle(R.string.title_add_or_remove_from_list)
             val entries = Array(lists.size) { idx ->
                 lists[idx].name
@@ -1851,7 +1859,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                                 states[pos] = checked
                             }
                         }
-                        Toast.makeText(context, e.getErrorMessage(context), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, e.getErrorMessage(context!!), Toast.LENGTH_SHORT).show()
                     }
                 }
                 d.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener {
@@ -1859,7 +1867,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     df.arguments = Bundle {
                         this[EXTRA_ACCOUNT_KEY] = accountKey
                     }
-                    df.show(fragmentManager, "create_user_list")
+                    df.show(fragmentManager!!, "create_user_list")
                 }
             }
             return dialog

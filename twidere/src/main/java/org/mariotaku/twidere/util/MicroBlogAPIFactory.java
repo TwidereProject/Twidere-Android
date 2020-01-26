@@ -6,9 +6,9 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.WorkerThread;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 import android.text.TextUtils;
 import android.webkit.URLUtil;
 
@@ -25,9 +25,6 @@ import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.account.cred.Credentials;
 import org.mariotaku.twidere.model.util.AccountUtils;
-import org.mariotaku.twidere.util.api.TwitterAndroidExtraHeaders;
-import org.mariotaku.twidere.util.api.TwitterMacExtraHeaders;
-import org.mariotaku.twidere.util.api.UserAgentExtraHeaders;
 
 import java.util.List;
 import java.util.Locale;

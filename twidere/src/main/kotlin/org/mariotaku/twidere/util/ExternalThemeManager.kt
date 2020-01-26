@@ -25,7 +25,7 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
-import android.support.v4.content.res.ResourcesCompat
+import androidx.core.content.res.ResourcesCompat
 import android.util.LruCache
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_EMOJI_SUPPORT
 

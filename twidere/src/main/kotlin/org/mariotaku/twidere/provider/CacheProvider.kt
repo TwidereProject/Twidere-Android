@@ -9,6 +9,8 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.ParcelFileDescriptor
 import okio.ByteString
+import okio.ByteString.Companion.decodeBase64
+import okio.ByteString.Companion.encodeUtf8
 import org.mariotaku.mediaviewer.library.FileCache
 import org.mariotaku.twidere.TwidereConstants.AUTHORITY_TWIDERE_CACHE
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_TYPE
@@ -148,7 +150,7 @@ class CacheProvider : ContentProvider() {
             val builder = Uri.Builder()
             builder.scheme(ContentResolver.SCHEME_CONTENT)
             builder.authority(AUTHORITY_TWIDERE_CACHE)
-            builder.appendPath(ByteString.encodeUtf8(key).base64Url())
+            builder.appendPath(key.encodeUtf8().base64Url())
             if (type != null) {
                 builder.appendQueryParameter(QUERY_PARAM_TYPE, type)
             }
@@ -160,7 +162,7 @@ class CacheProvider : ContentProvider() {
                 throw IllegalArgumentException(uri.toString())
             if (AUTHORITY_TWIDERE_CACHE != uri.authority)
                 throw IllegalArgumentException(uri.toString())
-            return ByteString.decodeBase64(uri.lastPathSegment)!!.utf8()
+            return uri.lastPathSegment?.decodeBase64()!!.utf8()
         }
 
 

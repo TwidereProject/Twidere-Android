@@ -22,7 +22,7 @@ package org.mariotaku.twidere.fragment
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
+import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.squareup.otto.Bus
@@ -63,7 +63,7 @@ open class BaseDialogFragment : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestManager = Glide.with(this)
+        requestManager = Glide.with(context)// TODO: Upgrade Glide usage
     }
 
     override fun onStart() {
@@ -80,12 +80,12 @@ open class BaseDialogFragment : DialogFragment() {
         requestManager.onDestroy()
         extraFeaturesService.release()
         super.onDestroy()
-        DebugModeUtils.watchReferenceLeak(this)
+//        DebugModeUtils.watchReferenceLeak(this)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
-        GeneralComponent.get(context!!).inject(this)
+        GeneralComponent.get(context).inject(this)
     }
 
 }

@@ -1,6 +1,6 @@
 package org.mariotaku.twidere.adapter
 
-import android.support.v4.view.PagerAdapter
+import androidx.viewpager.widget.PagerAdapter
 import android.util.SparseArray
 import android.view.View
 import android.view.ViewGroup
@@ -22,13 +22,13 @@ abstract class RecyclerPagerAdapter : PagerAdapter() {
         return holder
     }
 
-    final override fun destroyItem(container: ViewGroup, position: Int, obj: Any?) {
+    final override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {
         val holder = obj as ViewHolder
         viewHolders.remove(position)
         container.removeView(holder.itemView)
     }
 
-    final override fun getItemPosition(obj: Any?): Int {
+    final override fun getItemPosition(obj: Any): Int {
         for (i in 0 until viewHolders.size()) {
             val position = viewHolders.keyAt(i)
             val holder = viewHolders.valueAt(i)

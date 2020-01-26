@@ -3,12 +3,12 @@ package org.mariotaku.twidere.preference
 import android.accounts.AccountManager
 import android.content.Context
 import android.content.res.TypedArray
-import android.support.v4.util.ArraySet
-import android.support.v7.preference.DialogPreference
-import android.support.v7.preference.PreferenceDialogFragmentCompat
-import android.support.v7.preference.PreferenceFragmentCompat
-import android.support.v7.preference.PreferenceViewHolder
-import android.support.v7.widget.SwitchCompat
+import androidx.collection.ArraySet
+import androidx.preference.DialogPreference
+import androidx.preference.PreferenceDialogFragmentCompat
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceViewHolder
+import androidx.appcompat.widget.SwitchCompat
 import android.util.AttributeSet
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
@@ -41,7 +41,7 @@ class RandomizeAccountNamePreference @JvmOverloads constructor(
 
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
-        val switchView = holder.findViewById(android.support.v7.preference.R.id.switchWidget) as SwitchCompat
+        val switchView = holder.findViewById(androidx.preference.R.id.switchWidget) as SwitchCompat
         switchView.isChecked = getPersistedBoolean(false)
     }
 
@@ -58,14 +58,14 @@ class RandomizeAccountNamePreference @JvmOverloads constructor(
     override fun displayDialog(fragment: PreferenceFragmentCompat) {
         val df = RenameAccountsConfirmDialogFragment.newInstance(key, getPersistedBoolean(false))
         df.setTargetFragment(fragment, 0)
-        df.show(fragment.fragmentManager, key)
+        fragment.fragmentManager?.let { df.show(it, key) }
     }
 
     class RenameAccountsConfirmDialogFragment : PreferenceDialogFragmentCompat() {
 
         override fun onDialogClosed(positiveResult: Boolean) {
             val am = AccountManager.get(context)
-            val enabled = arguments.getBoolean(ARG_VALUE)
+            val enabled = arguments?.getBoolean(ARG_VALUE) ?: false
             if (enabled) {
                 val usedNames = ArraySet<String>()
                 AccountUtils.getAccounts(am).forEach { oldAccount ->

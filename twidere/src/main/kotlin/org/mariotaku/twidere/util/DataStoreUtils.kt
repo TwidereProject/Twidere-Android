@@ -26,7 +26,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.provider.BaseColumns
-import android.support.annotation.WorkerThread
+import androidx.annotation.WorkerThread
 import android.text.TextUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.mapToArray

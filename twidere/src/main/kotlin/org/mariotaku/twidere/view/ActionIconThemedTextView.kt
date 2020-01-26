@@ -22,7 +22,7 @@ package org.mariotaku.twidere.view
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PorterDuff.Mode
-import android.support.annotation.ColorInt
+import androidx.annotation.ColorInt
 import android.util.AttributeSet
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonView

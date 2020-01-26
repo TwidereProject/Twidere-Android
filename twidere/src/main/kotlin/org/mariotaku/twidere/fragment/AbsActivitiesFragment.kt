@@ -26,12 +26,12 @@ import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.annotation.CallSuper
-import android.support.v4.app.LoaderManager.LoaderCallbacks
-import android.support.v4.content.Loader
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.RecyclerView.OnScrollListener
+import androidx.annotation.CallSuper
+import androidx.loader.app.LoaderManager.LoaderCallbacks
+import androidx.loader.content.Loader
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import android.view.*
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
@@ -84,7 +84,7 @@ abstract class AbsActivitiesFragment protected constructor() :
     private lateinit var pauseOnScrollListener: OnScrollListener
 
     private val onScrollListener = object : OnScrollListener() {
-        override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                 val layoutManager = layoutManager
                 saveReadPosition(layoutManager.findFirstVisibleItemPosition())
@@ -155,7 +155,9 @@ abstract class AbsActivitiesFragment protected constructor() :
     private fun openActivity(activity: ParcelableActivity) {
         val status = activity.activityStatus
         if (status != null) {
-            IntentUtils.openStatus(context, activity, null)
+            context?.let {
+                IntentUtils.openStatus(it, activity, null)
+            }
         }
     }
 
@@ -180,10 +182,10 @@ abstract class AbsActivitiesFragment protected constructor() :
         return navigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableActivity>> {
-        val fromUser = args.getBoolean(EXTRA_FROM_USER)
-        args.remove(EXTRA_FROM_USER)
-        return onCreateActivitiesLoader(activity, args, fromUser)
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableActivity>> {
+        val fromUser = args?.getBoolean(EXTRA_FROM_USER)
+        args?.remove(EXTRA_FROM_USER)
+        return onCreateActivitiesLoader(activity!!, args!!, fromUser!!)
     }
 
     protected fun saveReadPosition() {
@@ -319,9 +321,11 @@ abstract class AbsActivitiesFragment protected constructor() :
 
     override fun onMediaClick(holder: IStatusViewHolder, view: View, media: ParcelableMedia, position: Int) {
         val status = adapter.getActivity(position).activityStatus ?: return
-        IntentUtils.openMedia(activity, status, media, preferences[newDocumentApiKey],
+        activity?.let {
+            IntentUtils.openMedia(it, status, media, preferences[newDocumentApiKey],
                 preferences[displaySensitiveContentsKey],
                 null)
+        }
     }
 
     override fun onStatusActionClick(holder: IStatusViewHolder, id: Int, position: Int) {
@@ -343,7 +347,7 @@ abstract class AbsActivitiesFragment protected constructor() :
             activity.targets?.statuses?.addAllTo(list)
         }
         activity.sources?.addAllTo(list)
-        IntentUtils.openItems(getActivity(), list)
+        getActivity()?.let { IntentUtils.openItems(it, list) }
     }
 
     override fun onStatusMenuClick(holder: IStatusViewHolder, menuView: View, position: Int) {
@@ -358,12 +362,14 @@ abstract class AbsActivitiesFragment protected constructor() :
 
     override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
         val status = getActivityStatus(position) ?: return
-        IntentUtils.openStatus(context, status, null)
+        context?.let {
+            IntentUtils.openStatus(it, status, null)
+        }
     }
 
     override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
         val status = getActivityStatus(position)?.takeIf { it.quoted_id != null } ?: return
-        IntentUtils.openStatus(context, status.account_key, status.quoted_id)
+        context?.let { IntentUtils.openStatus(it, status.account_key, status.quoted_id) }
     }
 
     protected open fun getFullActivity(position: Int): ParcelableActivity? {
@@ -483,8 +489,10 @@ abstract class AbsActivitiesFragment protected constructor() :
             ITEM_VIEW_TYPE_STATUS -> {
                 val status = getActivityStatus(position) ?: return
                 inflater.inflate(R.menu.action_status, menu)
-                MenuUtils.setupForStatus(context, menu, preferences, twitterWrapper, userColorNameManager,
-                        status)
+                context?.let {
+                    MenuUtils.setupForStatus(it, menu, preferences, twitterWrapper, userColorNameManager,
+                            status)
+                }
             }
         }
     }
@@ -498,7 +506,7 @@ abstract class AbsActivitiesFragment protected constructor() :
                 val status = getActivityStatus(position) ?: return false
                 when (item.itemId) {
                     R.id.share -> {
-                        val shareIntent = Utils.createStatusShareIntent(activity, status)
+                        val shareIntent = activity?.let { Utils.createStatusShareIntent(it, status) }
                         val chooser = Intent.createChooser(shareIntent, getString(R.string.share_status))
                         startActivity(chooser)
 
@@ -509,16 +517,20 @@ abstract class AbsActivitiesFragment protected constructor() :
                     }
                     R.id.make_gap -> {
                         if (this !is CursorActivitiesFragment) return true
-                        val resolver = context.contentResolver
+                        val resolver = context?.contentResolver
                         val values = ContentValues()
                         values.put(Activities.IS_GAP, 1)
                         val _id = adapter.getActivity(position)._id
                         val where = Expression.equals(Activities._ID, _id).sql
-                        resolver.update(contentUri, values, where, null)
+                        resolver?.update(contentUri, values, where, null)
                         return true
                     }
-                    else -> MenuUtils.handleStatusClick(activity, this, fragmentManager,
-                            preferences, userColorNameManager, twitterWrapper, status, item)
+                    else -> activity?.let {
+                        fragmentManager?.let { fragmentManager ->
+                            MenuUtils.handleStatusClick(it, this, fragmentManager,
+                                    preferences, userColorNameManager, twitterWrapper, status, item)
+                        }
+                    }
                 }
             }
         }
@@ -527,7 +539,7 @@ abstract class AbsActivitiesFragment protected constructor() :
 
 
     override fun onCreateItemDecoration(context: Context, recyclerView: RecyclerView,
-            layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
+                                        layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
         val itemDecoration = object : ExtendedDividerItemDecoration(context,
                 (recyclerView.layoutManager as LinearLayoutManager).orientation) {
             override fun isDividerEnabled(childPos: Int): Boolean {

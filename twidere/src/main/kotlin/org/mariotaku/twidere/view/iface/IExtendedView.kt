@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.view.iface
 
-import android.support.v4.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsCompat
 import android.view.MotionEvent
 import android.view.View
 

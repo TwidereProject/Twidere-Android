@@ -19,13 +19,13 @@
 
 package org.mariotaku.twidere.extension
 
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 
 /**
  * Created by mariotaku on 2017/10/4.
  */
 var Fragment.title: CharSequence?
-    get() = activity.title
+    get() = activity?.title
     set(value) {
-        activity.title
+        activity?.title
     }

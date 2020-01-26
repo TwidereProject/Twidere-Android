@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.loader.statuses
 
 import android.content.Context
-import android.support.annotation.WorkerThread
+import androidx.annotation.WorkerThread
 import android.text.TextUtils
 import okhttp3.HttpUrl
 import org.attoparser.ParseException

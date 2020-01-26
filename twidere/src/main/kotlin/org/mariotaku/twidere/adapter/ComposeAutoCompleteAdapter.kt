@@ -23,7 +23,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.database.Cursor
 import android.graphics.PorterDuff.Mode
-import android.support.v4.widget.SimpleCursorAdapter
+import androidx.cursoradapter.widget.SimpleCursorAdapter
 import android.view.View
 import android.widget.TextView
 import com.bumptech.glide.RequestManager
