@@ -2,7 +2,7 @@
 
 Months ago, I started a long and slow migration to fit new Android frameworks. Unfortunately, Twidere has hundreds of thousands lines of code, and over 50% needs to be rewritten because there're breaking changes. It's even impossible to maintain as publishing to Google Play requires new API target, and that target requires new libraries, and those libraries will break current code.
 
-So It's time to say goodbye. Don't worry, I don't like Twitter's new timeline & ads as much as you do. I can't give any promise, but my plan is to start a new one, focusing on cleaness & simplicity. And before this proposed product, I want to build a web service to help you manage your Twitter data, such as removing spam followers (like [TwitBlock](https://twitblock.org/)). 
+Don't worry, I don't like Twitter's new timeline & ads as much as you do. I can't give any promise, but my plan is to start a new one, focusing on cleaness & simplicity. And before this proposed product, I want to build a web service to help you manage your Twitter data, such as removing spam followers (like [TwitBlock](https://twitblock.org/)). 
 
 Twidere-Android will be maintained by community and supporter including [Dimension](https://dimension.im/). Stay tuned and we'll back soon!
 
