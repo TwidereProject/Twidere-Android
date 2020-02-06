@@ -186,7 +186,7 @@ dependencies {
         exclude group: 'net.minidev', module: 'json-smart'
     }
     // Stetho dependency, see https://g.co/androidstudio/app-test-app-conflict
-    debugImplementation "com.google.code.findbugs:jsr305:3.0.1"
+    debugImplementation "com.google.code.findbugs:jsr305:3.0.2"
 
     compileOnly 'javax.annotation:jsr250-api:1.0'
 
@@ -200,7 +200,7 @@ dependencies {
 
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.annotation:annotation:1.1.0'
-    implementation 'androidx.core:core:1.1.0'
+    implementation 'androidx.core:core:1.2.0'
     implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
     implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
@@ -210,7 +210,7 @@ dependencies {
     implementation 'androidx.palette:palette:1.0.0'
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
     implementation 'androidx.browser:browser:1.2.0'
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.exifinterface:exifinterface:1.1.0'
     implementation "com.twitter:twitter-text:${libVersions['TwitterText']}"
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.6.0'
