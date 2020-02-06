@@ -18,6 +18,7 @@
 
 -dontobfuscate
 
+-dontwarn org.codehaus.mojo.animal_sniffer.*
 -dontwarn com.squareup.haha.**
 -dontwarn com.makeramen.roundedimageview.**
 -dontwarn jnamed**

@@ -237,6 +237,7 @@ dependencies {
     implementation "com.github.mariotaku.RestFu:okhttp3:${libVersions['RestFu']}"
     implementation "com.github.mariotaku.RestFu:logansquare:${libVersions['RestFu']}"
     implementation "com.squareup.okhttp3:okhttp:${libVersions['OkHttp']}"
+    implementation("com.squareup.okio:okio:2.4.3")
     implementation 'com.lnikkila:extendedtouchview:0.1.1'
     implementation "com.google.dagger:dagger:${libVersions['Dagger']}"
     implementation 'org.attoparser:attoparser:2.0.4.RELEASE'

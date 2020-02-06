@@ -19,8 +19,8 @@
 
 package androidx.core.view
 
-fun WindowInsetsCompat(obj: Any) = WindowInsetsCompat.wrap(obj)
+fun createWindowInsetsCompat(obj: Any) = WindowInsetsCompat(obj)
 
 val WindowInsetsCompat.unwrapped: Any?
     @Suppress("RestrictedApi")
-    get() = WindowInsetsCompat.unwrap(this)
+    get() = this.toWindowInsets()

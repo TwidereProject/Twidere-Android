@@ -53,7 +53,6 @@ import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.activityLabel
 import org.mariotaku.ktextension.getSystemWindowInsets
-import org.mariotaku.ktextension.systemWindowInsets
 import org.mariotaku.ktextension.unregisterReceiverSafe
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.BuildConfig
@@ -204,7 +203,10 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
 
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
         if (systemWindowsInsets == null) {
-            systemWindowsInsets = insets.systemWindowInsets
+            systemWindowsInsets = Rect(insets.systemWindowInsets.left,
+                    insets.systemWindowInsets.top,
+                    insets.systemWindowInsets.right,
+                    insets.systemWindowInsets.bottom)
         } else {
             insets.getSystemWindowInsets(systemWindowsInsets!!)
         }
