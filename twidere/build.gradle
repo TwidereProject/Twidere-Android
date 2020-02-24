@@ -11,6 +11,11 @@ buildscript {
     repositories {
         maven { url 'https://jitpack.io' }
         jcenter()
+        if (enableGoogleVariant) {
+            // START Non-FOSS component
+            google()
+            // END Non-FOSS component
+        }
     }
 
     dependencies {
@@ -172,6 +177,7 @@ dependencies {
         googleImplementation("com.google.apis:google-api-services-drive:${libVersions['GoogleDriveApi']}") {
             exclude group: 'org.apache.httpcomponents'
         }
+        implementation("com.google.guava:guava:28.2-android")
         // END Non-FOSS component
     }
 
